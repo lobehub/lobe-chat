@@ -14,8 +14,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -32,8 +32,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -51,8 +51,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -72,8 +72,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -89,8 +89,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -104,8 +104,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -122,8 +122,8 @@ const ai360ChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

@@ -17,10 +17,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 32_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-08-05',
@@ -45,10 +45,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 32_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-23',
@@ -74,10 +74,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 64_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-23',
@@ -103,10 +103,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 64_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-02-24',
@@ -130,10 +130,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-10-22',
@@ -156,10 +156,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-06-20',
@@ -183,10 +183,10 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInputCacheWrite', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheWrite', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-11-05',
@@ -208,8 +208,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-03-07',
@@ -231,8 +231,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-02-29',
@@ -251,8 +251,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-02-29',
@@ -270,8 +270,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2023-11-21',
@@ -286,8 +286,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2023-07-11',

@@ -16,8 +16,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-16',
@@ -42,8 +42,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-15',

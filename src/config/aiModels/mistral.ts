@@ -15,8 +15,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'mistral-medium-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -32,8 +32,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'open-mistral-nemo',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -49,8 +49,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'mistral-small-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -67,8 +67,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'mistral-large-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -84,8 +84,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'codestral-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-13',
@@ -104,8 +104,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'pixtral-large-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -122,8 +122,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'pixtral-12b-2409',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -138,8 +138,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'ministral-3b-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -154,8 +154,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'ministral-8b-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -168,8 +168,8 @@ const mistralChatModels: AIChatModelCard[] = [
     id: 'open-codestral-mamba',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

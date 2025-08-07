@@ -125,9 +125,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-17',
@@ -152,9 +152,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-26',
@@ -179,8 +179,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-10',
@@ -206,9 +206,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-16',
@@ -233,9 +233,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-26',
@@ -258,9 +258,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-31',
@@ -283,8 +283,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 150, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 600, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 150, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 600, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-19',
@@ -305,9 +305,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -330,9 +330,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 7.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -353,8 +353,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -376,9 +376,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -401,9 +401,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -424,9 +424,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -445,9 +445,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 37.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 150, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 37.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 150, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-02-27',
@@ -467,9 +467,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-07-18',
@@ -490,8 +490,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-11',
@@ -512,8 +512,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -537,9 +537,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o',
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-05-13',
@@ -560,8 +560,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-11',
@@ -583,9 +583,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-2024-11-20',
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-11-20',
@@ -607,8 +607,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-2024-05-13',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-05-13',
@@ -629,8 +629,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -652,8 +652,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'chatgpt-4o-latest',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-08-14',
@@ -671,8 +671,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -689,8 +689,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo-2024-04-09',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-04-09',
@@ -707,8 +707,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo-preview',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -724,8 +724,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-0125-preview',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-01-25',
@@ -742,8 +742,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-1106-preview',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2023-11-06',
@@ -760,8 +760,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -777,8 +777,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4-0613',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2023-06-13',
@@ -795,8 +795,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -812,8 +812,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-0125',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-01-25',
@@ -830,8 +830,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-1106',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2023-11-06',
@@ -844,8 +844,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-instruct',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -864,9 +864,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'CachedTextInput', rate: 0.375, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.375, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-01',
@@ -889,8 +889,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     maxOutput: 1024,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-11',
@@ -910,7 +910,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
     maxDimension: 3072,
     pricing: {
       currency: 'USD',
-      units: [{ name: 'TextInput', rate: 0.13, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     releasedAt: '2024-01-25',
     type: 'embedding',
@@ -923,7 +923,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
     maxDimension: 1536,
     pricing: {
       currency: 'USD',
-      units: [{ name: 'TextInput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     releasedAt: '2024-01-25',
     type: 'embedding',
@@ -937,7 +937,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1',
     id: 'tts-1',
     pricing: {
-      units: [{ name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     type: 'tts',
   },
@@ -946,7 +946,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1 HD',
     id: 'tts-1-hd',
     pricing: {
-      units: [{ name: 'TextInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     type: 'tts',
   },
@@ -957,8 +957,8 @@ export const openaiTTSModels: AITTSModelCard[] = [
     id: 'gpt-4o-mini-tts',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'tts',
@@ -972,7 +972,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
     displayName: 'Whisper',
     id: 'whisper-1',
     pricing: {
-      units: [{ name: 'TextInput', rate: 0.006, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 0.006, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     type: 'stt',
   },
@@ -985,8 +985,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
     maxOutput: 2000,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'stt',
@@ -1000,8 +1000,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
     maxOutput: 2000,
     pricing: {
       units: [
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'stt',
@@ -1035,7 +1035,6 @@ export const openaiImageModels: AIImageModelCard[] = [
       units: [
         {
           lookup: {
-            pricingParams: ['size', 'quality'],
             prices: {
               '1024x1024_hd': 0.08,
               '1024x1024_standard': 0.04,
@@ -1044,8 +1043,9 @@ export const openaiImageModels: AIImageModelCard[] = [
               '1792x1024_hd': 0.12,
               '1792x1024_standard': 0.08,
             },
+            pricingParams: ['size', 'quality'],
           },
-          name: 'ImageGeneration',
+          name: 'imageGeneration',
           strategy: 'lookup',
           unit: 'Image',
         },
@@ -1067,7 +1067,7 @@ export const openaiImageModels: AIImageModelCard[] = [
       },
     },
     pricing: {
-      units: [{ name: 'TextInput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' }],
+      units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' }],
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
     type: 'image',
@@ -1084,12 +1084,12 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'AudioInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'AudioOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedAudioInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -1103,12 +1103,12 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'AudioInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'AudioOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedAudioInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-03',
@@ -1122,12 +1122,12 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'AudioInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'AudioOutput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedAudioInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioOutput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput_cacheRead', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-10-01',
@@ -1141,12 +1141,12 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'AudioInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'AudioOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedAudioInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'audioInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-17',

@@ -14,8 +14,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -30,8 +30,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -49,8 +49,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -65,8 +65,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -84,8 +84,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -103,8 +103,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -122,8 +122,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -141,8 +141,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -157,8 +157,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.88, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.88, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -176,8 +176,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -191,8 +191,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.216, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.36, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.216, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.36, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -207,8 +207,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -223,8 +223,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -239,8 +239,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.45, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.82, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.45, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.82, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -255,8 +255,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -271,8 +271,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -287,8 +287,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -302,8 +302,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -318,8 +318,8 @@ const ppioChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

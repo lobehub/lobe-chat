@@ -16,8 +16,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -40,8 +40,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -64,8 +64,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -87,8 +87,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -106,8 +106,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -122,8 +122,8 @@ const baichuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

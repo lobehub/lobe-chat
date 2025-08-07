@@ -27,7 +27,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextOutput',
+            name: 'textOutput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.002,
@@ -41,7 +41,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.001,
@@ -55,7 +55,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'tiered',
             unit: 'MillionTokens',
             tiers: [
@@ -72,7 +72,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'tiered',
             unit: 'MillionTokens',
             tiers: undefined as any,
@@ -86,7 +86,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'lookup',
             unit: 'MillionTokens',
             lookup: {
@@ -106,7 +106,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'lookup',
             unit: 'MillionTokens',
             lookup: {
@@ -123,7 +123,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'unknown' as any,
             unit: 'MillionTokens',
           } as any,
@@ -142,7 +142,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.001,
@@ -156,7 +156,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextOutput',
+            name: 'textOutput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.002,
@@ -176,7 +176,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'AudioInput',
+            name: 'audioInput',
             strategy: 'fixed',
             unit: 'Second',
             rate: 0.01,
@@ -192,7 +192,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'AudioOutput',
+            name: 'audioOutput',
             strategy: 'fixed',
             unit: 'Second',
             rate: 0.015,
@@ -208,7 +208,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'CachedTextInput',
+            name: 'textInput_cacheRead',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.0005,
@@ -224,7 +224,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInputCacheWrite',
+            name: 'textInput_cacheWrite',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.001,
@@ -240,7 +240,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'CachedAudioInput',
+            name: 'audioInput_cacheRead',
             strategy: 'fixed',
             unit: 'Second',
             rate: 0.005,
@@ -257,19 +257,19 @@ describe('pricing utilities', () => {
         currency: 'USD',
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.001,
           },
           {
-            name: 'TextOutput',
+            name: 'textOutput',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.002,
           },
           {
-            name: 'AudioInput',
+            name: 'audioInput',
             strategy: 'tiered',
             unit: 'Second',
             tiers: [
@@ -289,7 +289,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'lookup',
             unit: 'MillionTokens',
             lookup: undefined as any,
@@ -303,7 +303,7 @@ describe('pricing utilities', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'TextInput',
+            name: 'textInput',
             strategy: 'tiered',
             unit: 'MillionTokens',
             tiers: [],

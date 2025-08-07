@@ -15,8 +15,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 14, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-28',
@@ -35,8 +35,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-28',
@@ -54,8 +54,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-17',
@@ -70,8 +70,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-30',
@@ -86,8 +86,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-11',
@@ -102,8 +102,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-11',
@@ -121,8 +121,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-17',
@@ -140,8 +140,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-27',
@@ -159,8 +159,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-06-16',
@@ -178,8 +178,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-26',
@@ -199,8 +199,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-25',
@@ -219,8 +219,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-21',
@@ -239,8 +239,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-29',
@@ -260,8 +260,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-28',
@@ -284,8 +284,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-28',
@@ -308,8 +308,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-28',
@@ -332,8 +332,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-28',
@@ -357,8 +357,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-28',
@@ -381,8 +381,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-02',
@@ -401,8 +401,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-02',
@@ -420,8 +420,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -440,8 +440,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -460,8 +460,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -479,8 +479,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -498,8 +498,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -517,8 +517,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-06-04',
@@ -536,8 +536,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-06-04',
@@ -556,8 +556,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -575,8 +575,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -593,8 +593,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -612,8 +612,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -630,8 +630,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -649,8 +649,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -668,8 +668,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -687,8 +687,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -706,8 +706,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -724,8 +724,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.33, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.33, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.33, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.33, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -742,8 +742,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -761,8 +761,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 9.9, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 9.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 9.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 9.9, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -780,8 +780,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -798,8 +798,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -816,8 +816,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -834,8 +834,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -852,8 +852,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -870,8 +870,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -888,8 +888,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -903,8 +903,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -918,8 +918,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -933,8 +933,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -948,8 +948,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -963,8 +963,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -981,8 +981,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -999,8 +999,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -1017,8 +1017,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1.89, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -1035,8 +1035,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -1053,8 +1053,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

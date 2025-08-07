@@ -12,8 +12,8 @@ const ai21ChatModels: AIChatModelCard[] = [
     id: 'jamba-mini',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-06',
@@ -30,8 +30,8 @@ const ai21ChatModels: AIChatModelCard[] = [
     id: 'jamba-large',
     pricing: {
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-03-06',
