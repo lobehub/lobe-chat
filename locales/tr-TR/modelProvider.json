@@ -306,6 +306,7 @@
         "latestTime": "Son güncelleme zamanı: {{time}}",
         "noLatestTime": "Henüz liste alınmadı"
       },
+      "noModelsInCategory": "Bu kategoride etkinleştirilmiş model yok",
       "resetAll": {
         "conform": "Mevcut modelin tüm değişikliklerini sıfırlamak istediğinize emin misiniz? Sıfırladıktan sonra mevcut model listesi varsayılan duruma dönecektir.",
         "success": "Sıfırlama başarılı",
@@ -316,7 +317,15 @@
       "title": "Model Listesi",
       "total": "Toplam {{count}} adet model mevcut"
     },
-    "searchNotFound": "Arama sonuçları bulunamadı"
+    "searchNotFound": "Arama sonuçları bulunamadı",
+    "tabs": {
+      "all": "Tümü",
+      "chat": "Sohbet",
+      "embedding": "Vektörleştirme",
+      "image": "Resim",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sıralama güncellemesi başarılı",

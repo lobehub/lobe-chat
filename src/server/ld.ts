@@ -22,7 +22,7 @@ export const AUTHOR_LIST = {
     avatar: 'https://avatars.githubusercontent.com/u/17870709?v=4',
     desc: 'Founder, Design Engineer',
     name: 'CanisMinor',
-    url: 'https://github.com/arvinxx',
+    url: 'https://github.com/canisminor1990',
   },
   lobehub: {
     avatar: 'https://avatars.githubusercontent.com/u/131470832?v=4',

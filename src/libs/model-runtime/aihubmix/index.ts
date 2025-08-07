@@ -1,6 +1,5 @@
 import urlJoin from 'url-join';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import AiHubMixModels from '@/config/aiModels/aihubmix';
 import type { ChatModelCard } from '@/types/llm';
 
@@ -98,14 +97,20 @@ export const LobeAiHubMixAI = createRouterRuntime({
   routers: [
     {
       apiType: 'anthropic',
-      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
-        (id) => id.startsWith('claude') || id.startsWith('kimi-k2'),
-      ),
+      models: async () => {
+        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+        return LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
+          (id) => id.startsWith('claude') || id.startsWith('kimi-k2'),
+        );
+      },
       options: { baseURL },
     },
     {
       apiType: 'google',
-      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter((id) => id.startsWith('gemini')),
+      models: async () => {
+        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+        return LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter((id) => id.startsWith('gemini'));
+      },
       options: { baseURL: urlJoin(baseURL, '/gemini') },
     },
     {

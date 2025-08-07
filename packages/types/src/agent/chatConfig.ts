@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { z } from 'zod';
 
-import { SearchMode } from '@/types/search';
+import { SearchMode } from '../search';
 
 export interface WorkingModel {
   model: string;

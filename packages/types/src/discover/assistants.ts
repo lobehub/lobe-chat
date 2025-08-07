@@ -1,6 +1,6 @@
-import { FewShots } from '@/types/llm';
-import { MetaData } from '@/types/meta';
-import { LobeAgentSettings } from '@/types/session';
+import { FewShots } from '../llm';
+import { MetaData } from '../meta';
+import { LobeAgentSettings } from '../session';
 
 export enum AssistantCategory {
   Academic = 'academic',

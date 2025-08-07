@@ -1,7 +1,6 @@
-import { FileItem } from '@/types/files';
-import { KnowledgeBaseItem } from '@/types/knowledgeBase';
-import { FewShots, LLMParams } from '@/types/llm';
-
+import { FileItem } from '../files';
+import { KnowledgeBaseItem } from '../knowledgeBase';
+import { FewShots, LLMParams } from '../llm';
 import { LobeAgentChatConfig } from './chatConfig';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';

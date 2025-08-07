@@ -2,7 +2,6 @@ import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/model-runtime';
 import { UserStore } from '@/store/user';
 import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
@@ -28,7 +27,7 @@ export interface ModelListAction {
   /**
    * make sure the default model provider list is sync to latest state
    */
-  refreshDefaultModelProviderList: (params?: { trigger?: string }) => void;
+  refreshDefaultModelProviderList: (params?: { trigger?: string }) => Promise<void>;
   refreshModelProviderList: (params?: { trigger?: string }) => void;
   removeEnabledModels: (provider: GlobalLLMProviderKey, model: string) => Promise<void>;
   setModelProviderConfig: <T extends GlobalLLMProviderKey>(
@@ -69,7 +68,7 @@ export const createModelListSlice: StateCreator<
       remoteModelCards: [],
     });
 
-    get().refreshDefaultModelProviderList();
+    await get().refreshDefaultModelProviderList();
   },
   dispatchCustomModelCards: async (provider, payload) => {
     const prevState = settingsSelectors.providerConfig(provider)(get());
@@ -80,7 +79,7 @@ export const createModelListSlice: StateCreator<
 
     await get().setModelProviderConfig(provider, { customModelCards: nextState });
   },
-  refreshDefaultModelProviderList: (params) => {
+  refreshDefaultModelProviderList: async (params) => {
     /**
      * Because we have several model cards sources, we need to merge the model cards
      * the priority is below:
@@ -106,6 +105,7 @@ export const createModelListSlice: StateCreator<
       return providerCard.chatModels;
     };
 
+    const { DEFAULT_MODEL_PROVIDER_LIST } = await import('@/config/modelProviders');
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
       Object.values(ModelProvider).forEach((id) => {
         const provider = draft.find((d) => d.id === id);
