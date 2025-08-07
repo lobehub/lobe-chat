@@ -125,7 +125,7 @@ export class FileUploadService extends BaseService {
       // 3. 检查文件是否已存在（去重逻辑）
       if (!options.skipDeduplication) {
         const existingFileCheck = await this.fileModel.checkHash(hash);
-        
+
         if (existingFileCheck.isExist) {
           this.log('info', 'File already exists, checking user file record', {
             existingUrl: existingFileCheck.url,
@@ -135,7 +135,7 @@ export class FileUploadService extends BaseService {
 
           // 检查当前用户是否已经有这个文件的记录
           const existingUserFile = await this.findExistingUserFile(hash);
-          
+
           if (existingUserFile) {
             // 用户已有此文件记录，直接返回
             this.log('info', 'User already has this file record', {
@@ -554,7 +554,7 @@ export class FileUploadService extends BaseService {
       // 3. 检查文件是否已存在（去重逻辑）
       if (!options.skipDeduplication) {
         const existingFileCheck = await this.fileModel.checkHash(hash);
-        
+
         if (existingFileCheck.isExist) {
           this.log('info', 'Public file already exists, checking user file record', {
             existingUrl: existingFileCheck.url,
@@ -564,7 +564,7 @@ export class FileUploadService extends BaseService {
 
           // 检查当前用户是否已经有这个文件的记录
           const existingUserFile = await this.findExistingUserFile(hash);
-          
+
           if (existingUserFile) {
             // 用户已有此文件记录，直接返回
             this.log('info', 'User already has this public file record', {
@@ -1253,10 +1253,7 @@ export class FileUploadService extends BaseService {
   private async findExistingUserFile(hash: string): Promise<FileItem | null> {
     try {
       const existingFile = await this.db.query.files.findFirst({
-        where: and(
-          eq(files.fileHash, hash),
-          eq(files.userId, this.userId),
-        ),
+        where: and(eq(files.fileHash, hash), eq(files.userId, this.userId)),
       });
 
       return existingFile || null;

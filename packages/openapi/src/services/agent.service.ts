@@ -308,7 +308,9 @@ export class AgentService extends BaseService {
       const session = await this.db.query.sessions.findFirst({
         where: and(
           eq(sessions.id, sessionId),
-          permissionResult.condition?.userId ? eq(sessions.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(sessions.userId, permissionResult.condition.userId)
+            : undefined,
         ),
       });
 
@@ -391,7 +393,9 @@ export class AgentService extends BaseService {
       });
 
       if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权为此 Agent 创建 Session');
+        throw this.createAuthorizationError(
+          permissionResult.message || '无权为此 Agent 创建 Session',
+        );
       }
 
       return await this.db.transaction(async (tx) => {
@@ -461,7 +465,9 @@ export class AgentService extends BaseService {
       });
 
       if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问此 Agent 的 Session');
+        throw this.createAuthorizationError(
+          permissionResult.message || '无权访问此 Agent 的 Session',
+        );
       }
 
       // 验证 Agent 存在且属于当前用户
