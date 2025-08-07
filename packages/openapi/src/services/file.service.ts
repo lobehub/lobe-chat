@@ -9,7 +9,7 @@ import { idGenerator } from '@/database/utils/idGenerator';
 import { S3 } from '@/server/modules/S3';
 import { DocumentService } from '@/server/services/document';
 import { FileService as CoreFileService } from '@/server/services/file';
-import { FileMetadata } from '@/types/files';
+import { FileMetadata } from '@lobechat/types';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { nanoid } from '@/utils/uuid';
 

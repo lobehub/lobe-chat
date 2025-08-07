@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { AgentItem } from '@/database/schemas';
-import { LobeAgentChatConfig } from '@/types/agent';
+import { LobeAgentChatConfig } from '@lobechat/types';
 
 /**
  * 模型参数接口

@@ -1,3 +1,4 @@
+import { ChatSessionList, LobeAgentConfig } from '@lobechat/types';
 import { SQL, and, desc, eq, ilike, inArray, like, not, or, sql } from 'drizzle-orm';
 import { groupBy } from 'lodash';
 
@@ -6,8 +7,6 @@ import { SessionModel } from '@/database/models/session';
 import { SessionItem, agents, agentsToSessions, messages, sessions } from '@/database/schemas';
 import { UserItem } from '@/database/schemas/user';
 import { LobeChatDatabase } from '@/database/type';
-import { LobeAgentConfig } from '@/types/agent';
-import { ChatSessionList } from '@/types/session';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';

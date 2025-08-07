@@ -3,8 +3,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { LobeAgentConfig } from '@/types/agent';
-import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
+import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 
 import { BaseService } from '../common/base.service';
 import { NO_THINKING_CHAT_OPTIONS } from '../constant/chat';
