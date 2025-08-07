@@ -19,6 +19,25 @@ const transformGoogleGenerativeAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
+  // Handle promptFeedback with blockReason (e.g., PROHIBITED_CONTENT)
+  if ('promptFeedback' in chunk && (chunk as any).promptFeedback?.blockReason) {
+    const blockReason = (chunk as any).promptFeedback.blockReason;
+    return {
+      data: {
+        body: {
+          context: {
+            blockReason,
+            promptFeedback: (chunk as any).promptFeedback,
+          },
+          message: `Content blocked by Google AI: ${blockReason}`,
+        },
+        type: 'ProviderBizError',
+      },
+      id: context?.id || 'error',
+      type: 'error',
+    };
+  }
+
   // maybe need another structure to add support for multiple choices
   const candidate = chunk.candidates?.[0];
   const usage = chunk.usageMetadata;
