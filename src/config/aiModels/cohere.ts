@@ -14,8 +14,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 8000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -32,8 +32,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -51,8 +51,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -69,8 +69,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -87,8 +87,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -105,8 +105,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -123,8 +123,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.0375, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.0375, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -138,8 +138,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -156,8 +156,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -170,8 +170,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -185,8 +185,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -201,8 +201,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -217,8 +217,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -236,8 +236,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -255,8 +255,8 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

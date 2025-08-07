@@ -10,11 +10,11 @@ describe('getDetailsToken', () => {
   const mockModelCard: LobeDefaultAiModelListItem = {
     pricing: {
       units: [
-        { name: 'textInput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.01 },
-        { name: 'textOutput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.02 },
-        { name: 'textInput_cacheRead', unit: 'MillionTokens', strategy: 'fixed', rate: 0.005 },
-        { name: 'audioInput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.03 },
-        { name: 'audioOutput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.04 },
+        { name: 'textInput', unit: 'millionTokens', strategy: 'fixed', rate: 0.01 },
+        { name: 'textOutput', unit: 'millionTokens', strategy: 'fixed', rate: 0.02 },
+        { name: 'textInput_cacheRead', unit: 'millionTokens', strategy: 'fixed', rate: 0.005 },
+        { name: 'audioInput', unit: 'millionTokens', strategy: 'fixed', rate: 0.03 },
+        { name: 'audioOutput', unit: 'millionTokens', strategy: 'fixed', rate: 0.04 },
       ],
     },
   } as LobeDefaultAiModelListItem;

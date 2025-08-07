@@ -13,8 +13,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -31,8 +31,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -50,8 +50,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -65,8 +65,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -84,8 +84,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -103,8 +103,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -117,8 +117,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -131,8 +131,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -145,8 +145,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -162,8 +162,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -179,8 +179,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -196,8 +196,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -213,8 +213,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -227,8 +227,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -241,8 +241,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -255,8 +255,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -269,8 +269,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -283,8 +283,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -300,8 +300,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -317,8 +317,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -373,8 +373,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -413,8 +413,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -430,8 +430,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -446,8 +446,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -461,8 +461,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -476,8 +476,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -491,8 +491,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -506,8 +506,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -521,8 +521,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -537,8 +537,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -556,8 +556,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -570,8 +570,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -588,8 +588,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -602,8 +602,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -616,8 +616,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -634,8 +634,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -652,8 +652,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -669,8 +669,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -687,8 +687,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -705,8 +705,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -723,8 +723,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -741,8 +741,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -758,8 +758,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -775,8 +775,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -793,8 +793,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -810,8 +810,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -824,8 +824,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -838,8 +838,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -855,8 +855,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -875,8 +875,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -892,8 +892,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -909,8 +909,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -925,8 +925,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -940,8 +940,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -956,8 +956,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -972,8 +972,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -987,8 +987,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1003,8 +1003,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1018,8 +1018,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1034,8 +1034,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1050,8 +1050,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1065,8 +1065,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1080,8 +1080,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1097,8 +1097,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1114,8 +1114,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1131,8 +1131,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1151,8 +1151,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1171,8 +1171,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1200,8 +1200,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 18, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 18, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1216,8 +1216,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1235,8 +1235,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1251,8 +1251,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1269,8 +1269,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1287,8 +1287,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1305,8 +1305,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1323,8 +1323,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1340,8 +1340,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 95, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 300, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 95, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 300, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1358,8 +1358,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 38, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 38, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1377,8 +1377,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1396,8 +1396,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1414,8 +1414,8 @@ const higressChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 35, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 35, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1490,8 +1490,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -1507,8 +1507,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -1528,8 +1528,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 16_385,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1547,8 +1547,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4o',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1565,8 +1565,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-2024-08-06',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1583,8 +1583,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-2024-05-13',
     pricing: {
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1601,8 +1601,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'chatgpt-4o-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1619,8 +1619,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo',
     pricing: {
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1637,8 +1637,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo-2024-04-09',
     pricing: {
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1654,8 +1654,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-turbo-preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1671,8 +1671,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-0125-preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1688,8 +1688,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-1106-preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1705,8 +1705,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4',
     pricing: {
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1722,8 +1722,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-0613',
     pricing: {
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1739,8 +1739,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-32k',
     pricing: {
       units: [
-        { name: 'textInput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1756,8 +1756,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-4-32k-0613',
     pricing: {
       units: [
-        { name: 'textInput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1773,8 +1773,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1790,8 +1790,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-0125',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1807,8 +1807,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-1106',
     pricing: {
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1821,8 +1821,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gpt-3.5-turbo-instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2160,8 +2160,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2179,8 +2179,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2198,8 +2198,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2217,8 +2217,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2233,8 +2233,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'llama3-groq-8b-8192-tool-use-preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.19, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.19, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.19, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.19, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2249,8 +2249,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'llama3-groq-70b-8192-tool-use-preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.89, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.89, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.89, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.89, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2265,8 +2265,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'llama3-8b-8192',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2281,8 +2281,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'llama3-70b-8192',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2298,8 +2298,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gemma2-9b-it',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2314,8 +2314,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'gemma-7b-it',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.07, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2330,8 +2330,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'mixtral-8x7b-32768',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2358,9 +2358,9 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'deepseek-chat',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.014, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.14, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.014, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.14, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-05',
@@ -2379,10 +2379,10 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput_cacheWrite', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-11-05',
@@ -2402,10 +2402,10 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-10-22',
@@ -2424,10 +2424,10 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 3.75, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-06-20',
@@ -2446,8 +2446,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-03-07',
@@ -2466,8 +2466,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-02-29',
@@ -2487,8 +2487,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-02-29',
@@ -2503,8 +2503,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2023-11-21',
@@ -2519,8 +2519,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       units: [
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2023-07-11',
@@ -2540,9 +2540,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2560,9 +2560,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-25',
@@ -2580,9 +2580,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2599,9 +2599,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-08-27',
@@ -2620,9 +2620,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-10-03',
@@ -2641,9 +2641,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-24',
@@ -2663,9 +2663,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-02-15',
@@ -2685,9 +2685,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.315, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.315, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-24',
@@ -2705,9 +2705,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-02-15',
@@ -2725,9 +2725,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-08-27',
@@ -2745,9 +2745,9 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.875, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-08-01',
@@ -2761,8 +2761,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 2048,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2023-12-06',
@@ -2780,8 +2780,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 2048,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2023-12-06',
@@ -2795,8 +2795,8 @@ const higressChatModels: AIChatModelCard[] = [
     maxOutput: 2048,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2023-12-06',
@@ -2814,8 +2814,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'open-mistral-nemo',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2831,8 +2831,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'mistral-small-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2849,8 +2849,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'mistral-large-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2862,8 +2862,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'codestral-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2880,8 +2880,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'pixtral-12b-2409',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2893,8 +2893,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'ministral-3b-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2906,8 +2906,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'ministral-8b-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2920,8 +2920,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'open-mistral-7b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2934,8 +2934,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'open-mixtral-8x7b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2951,8 +2951,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'open-mixtral-8x22b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -2965,8 +2965,8 @@ const higressChatModels: AIChatModelCard[] = [
     id: 'open-codestral-mamba',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

@@ -13,8 +13,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.3-70B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -26,8 +26,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.2-1B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -39,8 +39,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.2-3B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -56,8 +56,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Llama-3.2-11B-Vision-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -73,8 +73,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Llama-3.2-90B-Vision-Instruct	',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -90,8 +90,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.1-8B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -107,8 +107,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.1-70B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -124,8 +124,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Meta-Llama-3.1-405B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -136,8 +136,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Llama-3.1-Tulu-3-405B',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -152,8 +152,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'DeepSeek-R1',
     pricing: {
       units: [
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -170,8 +170,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'DeepSeek-R1-Distill-Llama-70B',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -187,8 +187,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'QwQ-32B-Preview',
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -201,8 +201,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Qwen2.5-72B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -215,8 +215,8 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Qwen2.5-Coder-32B-Instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

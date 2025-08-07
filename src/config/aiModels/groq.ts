@@ -36,8 +36,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',
@@ -56,8 +56,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',
@@ -76,8 +76,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-07-11',
@@ -91,8 +91,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.11, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.34, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.11, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.34, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -108,8 +108,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -124,8 +124,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 131_072,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.59, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -141,8 +141,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 131_072,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -158,8 +158,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -176,8 +176,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 131_072,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -194,8 +194,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -207,8 +207,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -220,8 +220,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 1024,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

@@ -15,9 +15,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-17',
@@ -38,9 +38,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-17',
@@ -59,9 +59,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -81,9 +81,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -101,9 +101,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -122,9 +122,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-01-31',
@@ -142,9 +142,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -163,9 +163,9 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -183,8 +183,8 @@ const githubChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-12',

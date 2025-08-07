@@ -17,9 +17,9 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-4',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-07-09',
@@ -42,9 +42,9 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-3',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-03',
@@ -65,9 +65,9 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-3-fast',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-03',
@@ -90,9 +90,9 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-3-mini',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-03',
@@ -115,9 +115,9 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-3-mini-fast',
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-03',
@@ -138,8 +138,8 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-2-1212', // legacy
     pricing: {
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-12-12',
@@ -160,8 +160,8 @@ const xaiChatModels: AIChatModelCard[] = [
     id: 'grok-2-vision-1212',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-12-12',

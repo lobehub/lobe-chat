@@ -15,8 +15,8 @@ const internlmChatModels: AIChatModelCard[] = [
     id: 'internlm3-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -32,8 +32,8 @@ const internlmChatModels: AIChatModelCard[] = [
     id: 'internlm2.5-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -50,8 +50,8 @@ const internlmChatModels: AIChatModelCard[] = [
     id: 'internvl3-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -67,8 +67,8 @@ const internlmChatModels: AIChatModelCard[] = [
     id: 'internvl2.5-latest',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
