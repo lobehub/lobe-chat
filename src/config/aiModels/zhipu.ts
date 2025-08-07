@@ -126,7 +126,6 @@ const zhipuChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -140,15 +139,11 @@ const zhipuChatModels: AIChatModelCard[] = [
       input: 2,
       output: 2,
     },
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -162,9 +157,6 @@ const zhipuChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0,
       output: 0,
-    },
-    settings: {
-      searchImpl: 'params',
     },
     type: 'chat',
   },
