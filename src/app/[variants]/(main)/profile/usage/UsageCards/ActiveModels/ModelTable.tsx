@@ -1,5 +1,3 @@
-'use client'
-
 import { CategoryBar, useThemeColorRange } from '@lobehub/charts';
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Collapse, CopyButton, Tag } from '@lobehub/ui';

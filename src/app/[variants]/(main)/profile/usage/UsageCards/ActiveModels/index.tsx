@@ -1,7 +1,5 @@
-'use client';
-
 import { useTheme } from 'antd-style';
-import { CSSProperties, memo, useState } from 'react';
+import { useMemo, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit'
 import { ActionIcon, Modal } from '@lobehub/ui'
@@ -43,11 +41,12 @@ const ActiveModels = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
 
   const [open, setOpen] = useState(false);
 
-  const iconList = computeList(data || [], groupBy || GroupBy.Model);
+  const iconList = useMemo(() => computeList(data || [], groupBy || GroupBy.Model), [data, groupBy]);
 
   return (
     <>
       <StatisticCard
+        key={groupBy}
         statistic={
           {
             description: (
@@ -90,7 +89,7 @@ const ActiveModels = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
         loading={isLoading}
         title={
           <TitleWithPercentage
-            title={groupBy === GroupBy.Model ? 'Active Models' : 'Active Providers'}
+            title={groupBy === GroupBy.Model ? 'Active Models' : ' Active Providers'}
           />
         }
         extra={

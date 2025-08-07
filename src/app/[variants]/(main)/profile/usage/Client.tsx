@@ -95,7 +95,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         {data && <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />}
       </Flexbox>
       <Flexbox>
-        {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
+        <Row gutter={[16, 16]}>
+            <Col span={16}>
+              {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
+            </Col>
+        </Row>
       </Flexbox>
       <Row>
         <UsageCategories data={data} />
