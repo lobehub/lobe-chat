@@ -45,6 +45,7 @@ describe('aiModelSelectors', () => {
           functionCall: true,
           vision: true,
           reasoning: true,
+          files: true,
         },
         contextWindowTokens: 4000,
         type: 'chat',
@@ -56,6 +57,7 @@ describe('aiModelSelectors', () => {
           functionCall: false,
           vision: false,
           reasoning: false,
+          files: false,
         },
         type: 'chat',
       },
@@ -204,6 +206,11 @@ describe('aiModelSelectors', () => {
       expect(aiModelSelectors.isModelSupportReasoning('model4', 'provider2')(mockState)).toBe(
         false,
       );
+    });
+
+    it('should check file support', () => {
+      expect(aiModelSelectors.isModelSupportFile('model1', 'provider1')(mockState)).toBe(true);
+      expect(aiModelSelectors.isModelSupportFile('model4', 'provider2')(mockState)).toBe(false);
     });
   });
 
