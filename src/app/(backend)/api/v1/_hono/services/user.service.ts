@@ -178,7 +178,7 @@ export class UserService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '没有权限创建用户');
       }
 
-      // 检查用户名和邮箱是否已存在
+      // 检查用户名、邮箱和手机号是否已存在
       if (userData.username) {
         const existingUserByUsername = await this.db.query.users.findFirst({
           where: eq(users.username, userData.username),
@@ -194,6 +194,15 @@ export class UserService extends BaseService {
         });
         if (existingUserByEmail) {
           throw this.createBusinessError('邮箱已存在');
+        }
+      }
+
+      if (userData.phone) {
+        const existingUserByPhone = await this.db.query.users.findFirst({
+          where: eq(users.phone, userData.phone),
+        });
+        if (existingUserByPhone) {
+          throw this.createBusinessError('手机号已存在');
         }
       }
 
@@ -255,7 +264,7 @@ export class UserService extends BaseService {
         throw this.createNotFoundError('用户不存在');
       }
 
-      // 检查用户名和邮箱是否被其他用户使用
+      // 检查用户名、邮箱和手机号是否被其他用户使用
       if (userData.username && userData.username !== existingUser.username) {
         const existingUserByUsername = await this.db.query.users.findFirst({
           where: eq(users.username, userData.username),
@@ -271,6 +280,15 @@ export class UserService extends BaseService {
         });
         if (existingUserByEmail && existingUserByEmail.id !== userId) {
           throw this.createBusinessError('邮箱已被其他用户使用');
+        }
+      }
+
+      if (userData.phone && userData.phone !== existingUser.phone) {
+        const existingUserByPhone = await this.db.query.users.findFirst({
+          where: eq(users.phone, userData.phone),
+        });
+        if (existingUserByPhone && existingUserByPhone.id !== userId) {
+          throw this.createBusinessError('手机号已被其他用户使用');
         }
       }
 
@@ -448,6 +466,7 @@ export class UserService extends BaseService {
             ilike(users.fullName, searchTerm),
             ilike(users.email, searchTerm),
             ilike(users.username, searchTerm),
+            ilike(users.phone, searchTerm),
           ),
         });
       }
