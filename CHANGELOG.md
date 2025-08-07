@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.110.5](https://github.com/lobehub/lobe-chat/compare/v1.110.4...v1.110.5)
+
+<sup>Released on **2025-08-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Optimize Gemini error message display & Filter empty messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Optimize Gemini error message display & Filter empty messages, closes [#8489](https://github.com/lobehub/lobe-chat/issues/8489) ([5b409cc](https://github.com/lobehub/lobe-chat/commit/5b409cc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.110.4](https://github.com/lobehub/lobe-chat/compare/v1.110.3...v1.110.4)
 
 <sup>Released on **2025-08-06**</sup>
