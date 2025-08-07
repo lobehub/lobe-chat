@@ -128,6 +128,7 @@ export class DeprecatedDataImporterRepos {
               shouldInsertSessionAgents.map(({ config, meta }) => ({
                 ...config,
                 ...meta,
+                chatConfig: config.chatConfig,
                 userId: this.userId,
               })),
             )
