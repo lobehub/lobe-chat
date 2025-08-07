@@ -110,22 +110,22 @@ export interface ChatModelPricing extends BasicModelPricing {
 // New pricing system types
 export type PricingUnitName =
   // Text-based pricing units
-  | 'TextInput' // corresponds to ChatModelPricing.input
-  | 'TextOutput' // corresponds to ChatModelPricing.output
-  | 'CachedTextInput' // corresponds to ChatModelPricing.cachedInput
-  | 'TextInputCacheWrite' // corresponds to ChatModelPricing.writeCacheInput
+  | 'textInput' // corresponds to ChatModelPricing.input
+  | 'textOutput' // corresponds to ChatModelPricing.output
+  | 'textInput_cacheRead' // corresponds to ChatModelPricing.cachedInput
+  | 'textInput_cacheWrite' // corresponds to ChatModelPricing.writeCacheInput
 
   // Audio-based pricing units
-  | 'AudioInput' // corresponds to ChatModelPricing.audioInput
-  | 'AudioOutput' // corresponds to ChatModelPricing.audioOutput
-  | 'CachedAudioInput' // corresponds to ChatModelPricing.cachedAudioInput
+  | 'audioInput' // corresponds to ChatModelPricing.audioInput
+  | 'audioOutput' // corresponds to ChatModelPricing.audioOutput
+  | 'audioInput_cacheRead' // corresponds to ChatModelPricing.cachedAudioInput
 
   // Image-based pricing units
-  | 'ImageGeneration' // for image generation models
+  | 'imageGeneration' // for image generation models
 
   // Speech-based pricing units
-  | 'SpeechInput' // for TTS/STT input
-  | 'SpeechOutput'; // for TTS/STT output
+  | 'speechInput' // for TTS/STT input
+  | 'speechOutput'; // for TTS/STT output
 
 export type PricingUnitType =
   | 'MillionTokens' // per 1M tokens
@@ -162,7 +162,7 @@ export interface TieredPricingUnit extends PricingUnitBase {
 
 export interface LookupPricingUnit extends PricingUnitBase {
   lookup: {
-    generateParams: string[];
+    pricingParams: string[];
     prices: Record<string, number>;
   };
   strategy: 'lookup';

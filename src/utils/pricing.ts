@@ -9,7 +9,7 @@ import { Pricing } from '@/types/aiModel';
 export function getTextInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const textInputUnit = pricing.units.find((unit) => unit.name === 'TextInput');
+  const textInputUnit = pricing.units.find((unit) => unit.name === 'textInput');
   if (!textInputUnit) return undefined;
 
   switch (textInputUnit.strategy) {
@@ -35,7 +35,7 @@ export function getTextInputUnitRate(pricing?: Pricing): number | undefined {
 export function getTextOutputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const textOutputUnit = pricing.units.find((unit) => unit.name === 'TextOutput');
+  const textOutputUnit = pricing.units.find((unit) => unit.name === 'textOutput');
   if (!textOutputUnit) return undefined;
 
   switch (textOutputUnit.strategy) {
@@ -61,7 +61,7 @@ export function getTextOutputUnitRate(pricing?: Pricing): number | undefined {
 export function getAudioInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const audioInputUnit = pricing.units.find((unit) => unit.name === 'AudioInput');
+  const audioInputUnit = pricing.units.find((unit) => unit.name === 'audioInput');
   if (!audioInputUnit) return undefined;
 
   switch (audioInputUnit.strategy) {
@@ -87,7 +87,7 @@ export function getAudioInputUnitRate(pricing?: Pricing): number | undefined {
 export function getAudioOutputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const audioOutputUnit = pricing.units.find((unit) => unit.name === 'AudioOutput');
+  const audioOutputUnit = pricing.units.find((unit) => unit.name === 'audioOutput');
   if (!audioOutputUnit) return undefined;
 
   switch (audioOutputUnit.strategy) {
@@ -113,7 +113,7 @@ export function getAudioOutputUnitRate(pricing?: Pricing): number | undefined {
 export function getCachedTextInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const cachedInputUnit = pricing.units.find((unit) => unit.name === 'CachedTextInput');
+  const cachedInputUnit = pricing.units.find((unit) => unit.name === 'textInput_cacheRead');
   if (!cachedInputUnit) return undefined;
 
   switch (cachedInputUnit.strategy) {
@@ -139,7 +139,7 @@ export function getCachedTextInputUnitRate(pricing?: Pricing): number | undefine
 export function getWriteCacheInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const writeCacheUnit = pricing.units.find((unit) => unit.name === 'TextInputCacheWrite');
+  const writeCacheUnit = pricing.units.find((unit) => unit.name === 'textInput_cacheWrite');
   if (!writeCacheUnit) return undefined;
 
   switch (writeCacheUnit.strategy) {
@@ -165,7 +165,7 @@ export function getWriteCacheInputUnitRate(pricing?: Pricing): number | undefine
 export function getCachedAudioInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const cachedAudioUnit = pricing.units.find((unit) => unit.name === 'CachedAudioInput');
+  const cachedAudioUnit = pricing.units.find((unit) => unit.name === 'audioInput_cacheRead');
   if (!cachedAudioUnit) return undefined;
 
   switch (cachedAudioUnit.strategy) {

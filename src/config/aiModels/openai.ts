@@ -1035,7 +1035,7 @@ export const openaiImageModels: AIImageModelCard[] = [
       units: [
         {
           lookup: {
-            generateParams: ['size', 'quality'],
+            pricingParams: ['size', 'quality'],
             prices: {
               '1024x1024_hd': 0.08,
               '1024x1024_standard': 0.04,
