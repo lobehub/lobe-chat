@@ -13,9 +13,8 @@ import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';
 
 import Welcome from '../stats/features/Welcome';
-import TotalRequest from './features/TotalRequest';
-import TotalSpend from './features/TotalSpend';
 import UsageCategories from './features/UsageCategories';
+import UsageTrends from './features/UsageTrends';
 
 export interface UsageChartProps {
   data?: UsageLog[];
@@ -25,7 +24,7 @@ export interface UsageChartProps {
   mobile?: boolean;
 }
 
-enum GroupBy {
+export enum GroupBy {
   Model = 'model',
   Provider = 'provider',
 }
@@ -91,9 +90,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           </Col>
         </Row>
       </Flexbox>
-      <Flexbox>{data && <TotalSpend data={data} isLoading={isLoading} mobile={mobile} />}</Flexbox>
       <Flexbox>
-        {data && <TotalRequest data={data} isLoading={isLoading} mobile={mobile} />}
+        {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
       </Flexbox>
       <Row>
         <UsageCategories data={data} />
