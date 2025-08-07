@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.110.7](https://github.com/lobehub/lobe-chat/compare/v1.110.6...v1.110.7)
+
+<sup>Released on **2025-08-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Missing languages it-IT, pl-PL, nl-NL.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Missing languages it-IT, pl-PL, nl-NL, closes [#8710](https://github.com/lobehub/lobe-chat/issues/8710) ([b46fa8e](https://github.com/lobehub/lobe-chat/commit/b46fa8e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.110.6](https://github.com/lobehub/lobe-chat/compare/v1.110.5...v1.110.6)
 
 <sup>Released on **2025-08-07**</sup>
