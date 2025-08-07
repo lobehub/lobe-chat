@@ -1,7 +1,5 @@
+import { LobeAgentChatConfig , OpenAIChatMessage } from '@lobechat/types';
 import { z } from 'zod';
-
-import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
-import { OpenAIChatMessage } from '@/types/openai/chat';
 
 /**
  * 聊天服务参数

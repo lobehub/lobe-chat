@@ -1,7 +1,7 @@
+import { AiFullModelCard, AiModelSourceType } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AiModelSelectItem } from '@/database/schemas';
-import { AiFullModelCard, AiModelSourceType } from '@/types/aiModel';
 
 // Request schemas
 export const GetModelConfigRequestSchema = z.object({
