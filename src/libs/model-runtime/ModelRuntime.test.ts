@@ -1,11 +1,11 @@
 // @vitest-environment node
+import { TraceNameMap } from '@lobechat/types';
 import { Langfuse } from 'langfuse';
 import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as langfuseCfg from '@/config/langfuse';
 import { ClientSecretPayload } from '@/const/auth';
-import { TraceNameMap } from '@/const/trace';
 import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '@/libs/model-runtime';
 import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
 import { CreateImagePayload } from '@/libs/model-runtime/types/image';

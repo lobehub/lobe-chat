@@ -2,6 +2,165 @@
 
 # Changelog
 
+### [Version 1.110.5](https://github.com/lobehub/lobe-chat/compare/v1.110.4...v1.110.5)
+
+<sup>Released on **2025-08-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Optimize Gemini error message display & Filter empty messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Optimize Gemini error message display & Filter empty messages, closes [#8489](https://github.com/lobehub/lobe-chat/issues/8489) ([5b409cc](https://github.com/lobehub/lobe-chat/commit/5b409cc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.110.4](https://github.com/lobehub/lobe-chat/compare/v1.110.3...v1.110.4)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor trace type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor trace type, closes [#8699](https://github.com/lobehub/lobe-chat/issues/8699) ([4e71af7](https://github.com/lobehub/lobe-chat/commit/4e71af7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.110.3](https://github.com/lobehub/lobe-chat/compare/v1.110.2...v1.110.3)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix provider setting page hydration error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix provider setting page hydration error, closes [#8695](https://github.com/lobehub/lobe-chat/issues/8695) ([88e7d2a](https://github.com/lobehub/lobe-chat/commit/88e7d2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.110.2](https://github.com/lobehub/lobe-chat/compare/v1.110.1...v1.110.2)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fail to fetch aihubmix model on client mode.
+
+#### 💄 Styles
+
+- **misc**: Add context menu for desktop, support different model tabs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fail to fetch aihubmix model on client mode, closes [#8689](https://github.com/lobehub/lobe-chat/issues/8689) ([3dcc5da](https://github.com/lobehub/lobe-chat/commit/3dcc5da))
+
+#### Styles
+
+- **misc**: Add context menu for desktop, closes [#8691](https://github.com/lobehub/lobe-chat/issues/8691) ([0b30d05](https://github.com/lobehub/lobe-chat/commit/0b30d05))
+- **misc**: Support different model tabs, closes [#8693](https://github.com/lobehub/lobe-chat/issues/8693) ([6d531d7](https://github.com/lobehub/lobe-chat/commit/6d531d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.110.1](https://github.com/lobehub/lobe-chat/compare/v1.110.0...v1.110.1)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remote avatar broken in desktop again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remote avatar broken in desktop again, closes [#8688](https://github.com/lobehub/lobe-chat/issues/8688) ([41b4363](https://github.com/lobehub/lobe-chat/commit/41b4363))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.110.0](https://github.com/lobehub/lobe-chat/compare/v1.109.1...v1.110.0)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Support mcp plugin install from web.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support mcp plugin install from web, closes [#8680](https://github.com/lobehub/lobe-chat/issues/8680) ([022d858](https://github.com/lobehub/lobe-chat/commit/022d858))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.109.1](https://github.com/lobehub/lobe-chat/compare/v1.109.0...v1.109.1)
 
 <sup>Released on **2025-08-06**</sup>

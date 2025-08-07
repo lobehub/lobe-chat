@@ -306,6 +306,7 @@
         "latestTime": "Last updated: {{time}}",
         "noLatestTime": "Model list not yet fetched"
       },
+      "noModelsInCategory": "No enabled models in this category",
       "resetAll": {
         "conform": "Are you sure you want to reset all modifications to the current model? After resetting, the current model list will return to its default state.",
         "success": "Reset successful",
@@ -316,7 +317,15 @@
       "title": "Model List",
       "total": "{{count}} models available"
     },
-    "searchNotFound": "No search results found"
+    "searchNotFound": "No search results found",
+    "tabs": {
+      "all": "All",
+      "chat": "Chat",
+      "embedding": "Embedding",
+      "image": "Image",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sort update successful",
