@@ -1,9 +1,9 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 /* eslint-disable typescript-sort-keys/interface */
+import { MessageItem } from '@lobechat/types';
 import { z } from 'zod';
 
 import { SessionItem, TopicItem, UserItem } from '@/database/schemas';
-import { MessageItem } from '@/types/message';
 
 // Request schemas
 export const MessagesQueryByTopicRequestSchema = z.object({

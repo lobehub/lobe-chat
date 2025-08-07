@@ -1,11 +1,15 @@
+import {
+  AIChatModelCard,
+  AiModelSourceEnum,
+  AiProviderListItem,
+  AiProviderModelListItem,
+} from '@lobechat/types';
 import { and, eq } from 'drizzle-orm';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { agents, agentsToSessions, aiModels, aiProviders } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
-import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
-import { AiProviderListItem } from '@/types/aiProvider';
 import { mergeArrayById } from '@/utils/merge';
 
 import { BaseService } from '../common/base.service';

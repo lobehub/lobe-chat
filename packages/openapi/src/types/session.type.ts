@@ -1,8 +1,7 @@
+import { LobeAgentConfig, MetaData } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AgentItem, SessionGroupItem, SessionItem, UserItem } from '@/database/schemas';
-import { LobeAgentConfig } from '@/types/agent';
-import { MetaData } from '@/types/meta';
 
 /**
  * 创建会话请求参数

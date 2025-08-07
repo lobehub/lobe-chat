@@ -1,6 +1,5 @@
+import { FileMetadata } from '@lobechat/types';
 import { z } from 'zod';
-
-import { FileMetadata } from '@/types/files';
 
 /**
  * 文件上传请求类型

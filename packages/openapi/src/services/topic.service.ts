@@ -1,9 +1,9 @@
+import { LLMRoleType } from '@lobechat/types';
 import { and, asc, count, eq, ilike } from 'drizzle-orm';
 
 import { MessageItem, messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
-import { LLMRoleType } from '@/types/llm';
 
 import { BaseService } from '../common/base.service';
 import { NO_THINKING_CHAT_OPTIONS } from '../constant/chat';
