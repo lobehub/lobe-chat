@@ -15,6 +15,7 @@ import { usageService } from '@/services/usage';
 import Welcome from '../stats/features/Welcome';
 import UsageCategories from './features/UsageCategories';
 import UsageTrends from './features/UsageTrends';
+import UsageCards from './UsageCards';
 
 export interface UsageChartProps {
   data?: UsageLog[];
@@ -89,6 +90,9 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
             </Flexbox>
           </Col>
         </Row>
+      </Flexbox>
+      <Flexbox>
+        {data && <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />}
       </Flexbox>
       <Flexbox>
         {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
