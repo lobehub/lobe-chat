@@ -4,19 +4,19 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { Adapter, AdapterAccount } from 'next-auth/adapters';
-
-import { appEnv } from '@/envs/app';
 import debug from 'debug';
+import { Adapter, AdapterAccount } from 'next-auth/adapters';
 import urlJoin from 'url-join';
+
 import { serverDBEnv } from '@/config/db';
+import { appEnv } from '@/envs/app';
 
 const log = debug('lobe-next-auth:adapter');
 
 interface BackendAdapterResponse {
-  success: boolean;
   data?: any;
   error?: string;
+  success: boolean;
 }
 
 /**
@@ -31,7 +31,7 @@ export function LobeNextAuthDbAdapter(): Adapter {
   if (!baseUrl) {
     throw new Error('LobeNextAuthDbAdapter: APP_URL is not set in environment variables');
   }
-  const interactionUrl = urlJoin(baseUrl, '/api/auth/adapter')
+  const interactionUrl = urlJoin(baseUrl, '/api/auth/adapter');
   log(`LobeNextAuthDbAdapter initialized with url: ${interactionUrl}`);
 
   // Ensure serverDBEnv.KEY_VAULTS_SECRET is set, otherwise throw an error
@@ -39,14 +39,15 @@ export function LobeNextAuthDbAdapter(): Adapter {
     throw new Error('LobeNextAuthDbAdapter: KEY_VAULTS_SECRET is not set in environment variables');
   }
 
-  const fetcher = (action: string, data: any) => fetch(interactionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
-    },
-    body: JSON.stringify({ data, action }),
-  });
+  const fetcher = (action: string, data: any) =>
+    fetch(interactionUrl, {
+      body: JSON.stringify({ action, data }),
+      headers: {
+        'Authorization': `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
   const postProcessor = async (res: Response) => {
     const data = (await res.json()) as BackendAdapterResponse;
     log('LobeNextAuthDbAdapter: postProcessor called with data:', data);
@@ -54,8 +55,8 @@ export function LobeNextAuthDbAdapter(): Adapter {
       log('LobeNextAuthDbAdapter: Error in postProcessor:', data.error);
       throw new Error(`LobeNextAuthDbAdapter: ${data.error}`);
     }
-    return data.data
-  }
+    return data.data;
+  };
 
   return {
     async createAuthenticator(authenticator): Promise<AdapterAuthenticator> {
@@ -64,7 +65,7 @@ export function LobeNextAuthDbAdapter(): Adapter {
     },
     async createSession(session): Promise<AdapterSession> {
       const data = await fetcher('createSession', session);
-      return await postProcessor(data)
+      return await postProcessor(data);
     },
     async createUser(user): Promise<AdapterUser> {
       const data = await fetcher('createUser', user);
@@ -87,8 +88,8 @@ export function LobeNextAuthDbAdapter(): Adapter {
 
     async getAccount(providerAccountId, provider): Promise<AdapterAccount | null> {
       const data = await fetcher('getAccount', {
-        providerAccountId,
         provider,
+        providerAccountId,
       });
       return await postProcessor(data);
     },
@@ -108,12 +109,12 @@ export function LobeNextAuthDbAdapter(): Adapter {
 
     async getUser(id): Promise<AdapterUser | null> {
       log('getUser called with id:', id);
-      const result = await fetcher('getUser', id)
+      const result = await fetcher('getUser', id);
       return await postProcessor(result);
     },
 
     async getUserByAccount(account): Promise<AdapterUser | null> {
-      const data = await fetcher('getUserByAccount', account)
+      const data = await fetcher('getUserByAccount', account);
       return await postProcessor(data);
     },
 
@@ -136,13 +137,13 @@ export function LobeNextAuthDbAdapter(): Adapter {
     async unlinkAccount(account): Promise<void | AdapterAccount | undefined> {
       const result = await fetcher('unlinkAccount', account);
       await postProcessor(result);
-      return
+      return;
     },
 
     async updateAuthenticatorCounter(credentialID, counter): Promise<AdapterAuthenticator> {
       const result = await fetcher('updateAuthenticatorCounter', {
-        credentialID,
         counter,
+        credentialID,
       });
       return await postProcessor(result);
     },

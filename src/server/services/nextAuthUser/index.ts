@@ -1,32 +1,27 @@
-import { NextResponse } from 'next/server';
+import { and, eq } from 'drizzle-orm';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
-
-import { merge } from '@/utils/merge'
+import { NextResponse } from 'next/server';
 
 import { UserModel } from '@/database/models/user';
-import { UserItem } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
-import { pino } from '@/libs/logger';
-
 import {
-  mapAdapterUserToLobeUser,
-  mapLobeUserToAdapterUser,
-  mapAuthenticatorQueryResutlToAdapterAuthenticator,
-  partialMapAdapterUserToLobeUser
-} from './utils';
-
-import { and, eq } from 'drizzle-orm';
-
-import * as schema from '@/database/schemas';
-import { AgentService } from '../agent';
-
-const {
+  UserItem,
   nextauthAccounts,
   nextauthAuthenticators,
   nextauthSessions,
   nextauthVerificationTokens,
-  users,
-} = schema;
+  users
+} from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
+import { pino } from '@/libs/logger';
+import { merge } from '@/utils/merge';
+
+import { AgentService } from '../agent';
+import {
+  mapAdapterUserToLobeUser,
+  mapAuthenticatorQueryResutlToAdapterAuthenticator,
+  mapLobeUserToAdapterUser,
+  partialMapAdapterUserToLobeUser,
+} from './utils';
 
 export class NextAuthUserService {
   private db: LobeChatDatabase;
@@ -70,7 +65,7 @@ export class NextAuthUserService {
       .values(authenticator)
       .returning()
       .then((res: any) => res[0] ?? undefined);
-  }
+  };
 
   createSession: NonNullable<Adapter['createSession']> = async (data) => {
     return this.db
@@ -78,7 +73,7 @@ export class NextAuthUserService {
       .values(data)
       .returning()
       .then((res: any) => res[0]);
-  }
+  };
 
   createUser: NonNullable<Adapter['createUser']> = async (user) => {
     const { id, name, email, emailVerified, image, providerAccountId } = user;
@@ -117,7 +112,7 @@ export class NextAuthUserService {
     await agentService.createInbox();
 
     return { ...user, id: uid };
-  }
+  };
 
   createVerificationToken: NonNullable<Adapter['createVerificationToken']> = async (data) => {
     return await this.db
@@ -125,7 +120,7 @@ export class NextAuthUserService {
       .values(data)
       .returning()
       .then((res: any) => res[0]);
-  }
+  };
 
   deleteSession: NonNullable<Adapter['deleteSession']> = async (sessionToken) => {
     await this.db
@@ -150,7 +145,7 @@ export class NextAuthUserService {
         ),
       )
       .then((res: any) => res[0] ?? null) as Promise<AdapterAccount | null>;
-  }
+  };
 
   getAuthenticator: NonNullable<Adapter['getAuthenticator']> = async (credentialID) => {
     const result = await this.db
@@ -160,7 +155,7 @@ export class NextAuthUserService {
       .then((res) => res[0] ?? null);
     if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator');
     return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
-  }
+  };
 
   getSessionAndUser: NonNullable<Adapter['getSessionAndUser']> = async (sessionToken) => {
     const result = await this.db
@@ -180,13 +175,13 @@ export class NextAuthUserService {
       session: result.session,
       user: adapterUser,
     };
-  }
+  };
 
   getUser: NonNullable<Adapter['getUser']> = async (id) => {
     const lobeUser = await UserModel.findById(this.db, id);
     if (!lobeUser) return null;
     return mapLobeUserToAdapterUser(lobeUser);
-  }
+  };
 
   getUserByAccount: NonNullable<Adapter['getUserByAccount']> = async (account) => {
     const result = await this.db
@@ -205,7 +200,7 @@ export class NextAuthUserService {
       .then((res: any) => res[0]);
 
     return result?.users ? mapLobeUserToAdapterUser(result.users) : null;
-  }
+  };
 
   getUserByEmail: NonNullable<Adapter['getUserByEmail']> = async (email) => {
     const lobeUser =
@@ -213,7 +208,7 @@ export class NextAuthUserService {
         ? await UserModel.findByEmail(this.db, email)
         : undefined;
     return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
-  }
+  };
 
   linkAccount: NonNullable<Adapter['linkAccount']> = async (data) => {
     const [account] = await this.db
@@ -223,7 +218,7 @@ export class NextAuthUserService {
     if (!account) throw new Error('NextAuthAccountModel: Failed to create account');
     // TODO Update type annotation
     return account as any;
-  }
+  };
 
   listAuthenticatorsByUserId: NonNullable<Adapter['listAuthenticatorsByUserId']> = async (userId) => {
     const result = await this.db
@@ -234,7 +229,7 @@ export class NextAuthUserService {
     if (result.length === 0)
       throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator list');
     return result.map((r: any) => mapAuthenticatorQueryResutlToAdapterAuthenticator(r));
-  }
+  };
 
   unlinkAccount: NonNullable<Adapter['unlinkAccount']> = async (account) => {
     await this.db
@@ -245,7 +240,7 @@ export class NextAuthUserService {
           eq(nextauthAccounts.providerAccountId, account.providerAccountId),
         ),
       );
-  }
+  };
 
   updateAuthenticatorCounter: NonNullable<Adapter['updateAuthenticatorCounter']> = async (credentialID, counter) => {
     const result = await this.db
@@ -256,7 +251,7 @@ export class NextAuthUserService {
       .then((res: any) => res[0]);
     if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to update authenticator counter');
     return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
-  }
+  };
 
   updateSession: NonNullable<Adapter['updateSession']> = async (data) => {
     const res = await this.db
@@ -265,7 +260,7 @@ export class NextAuthUserService {
       .where(eq(nextauthSessions.sessionToken, data.sessionToken))
       .returning();
     return res[0];
-  }
+  };
 
   updateUser: NonNullable<Adapter['updateUser']> = async (user) => {
     const lobeUser = await UserModel.findById(this.db, user?.id);
@@ -283,7 +278,7 @@ export class NextAuthUserService {
       throw new Error('NextAuth: Failed to map user data to adapter user');
     }
     return merge(newAdapterUser, user);
-  }
+  };
 
   useVerificationToken: NonNullable<Adapter['useVerificationToken']> = async (identifier_token) => {
     return this.db
@@ -296,5 +291,5 @@ export class NextAuthUserService {
       )
       .returning()
       .then((res: any) => (res.length > 0 ? res[0] : null));
-  }
+  };
 }
