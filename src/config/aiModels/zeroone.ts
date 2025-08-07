@@ -10,8 +10,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -28,8 +28,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -42,8 +42,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -56,8 +56,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -70,8 +70,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -84,8 +84,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -99,8 +99,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -117,8 +117,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -131,8 +131,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -148,8 +148,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -162,8 +162,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -176,8 +176,8 @@ const zerooneChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

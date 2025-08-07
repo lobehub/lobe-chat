@@ -16,8 +16,8 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -33,8 +33,8 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -48,8 +48,8 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

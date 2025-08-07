@@ -128,16 +128,16 @@ export type PricingUnitName =
   | 'speechOutput'; // for TTS/STT output
 
 export type PricingUnitType =
-  | 'MillionTokens' // per 1M tokens
-  | 'MillionCharacters' // per 1M characters
-  | 'Image' // per image
-  | 'Video' // per video
-  | 'Megapixel' // per megapixel
-  | 'Second' // per second
-  | 'Minute' // per minute
-  | 'Container' // per container
-  | 'GB' // per GB
-  | 'Call'; // per call
+  | 'millionTokens' // per 1M tokens
+  | 'millionCharacters' // per 1M characters
+  | 'image' // per image
+  | 'video' // per video
+  | 'megapixel' // per megapixel
+  | 'second' // per second
+  | 'minute' // per minute
+  | 'container' // per container
+  | 'gb' // per GB
+  | 'call'; // per call
 
 export type PricingStrategy = 'fixed' | 'tiered' | 'lookup';
 
@@ -162,8 +162,8 @@ export interface TieredPricingUnit extends PricingUnitBase {
 
 export interface LookupPricingUnit extends PricingUnitBase {
   lookup: {
-    pricingParams: string[];
     prices: Record<string, number>;
+    pricingParams: string[];
   };
   strategy: 'lookup';
 }

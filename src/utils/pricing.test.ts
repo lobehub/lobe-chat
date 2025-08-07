@@ -29,7 +29,7 @@ describe('pricing utilities', () => {
           {
             name: 'textOutput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.002,
           },
         ],
@@ -43,7 +43,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.001,
           },
         ],
@@ -57,7 +57,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'tiered',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             tiers: [
               { rate: 0.001, upTo: 1000000 },
               { rate: 0.0008, upTo: 'infinity' },
@@ -74,7 +74,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'tiered',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             tiers: undefined as any,
           },
         ],
@@ -88,7 +88,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'lookup',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             lookup: {
               pricingParams: ['model'],
               prices: {
@@ -108,7 +108,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'lookup',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             lookup: {
               pricingParams: ['model'],
               prices: {},
@@ -125,7 +125,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'unknown' as any,
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
           } as any,
         ],
       };
@@ -144,7 +144,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.001,
           },
         ],
@@ -158,7 +158,7 @@ describe('pricing utilities', () => {
           {
             name: 'textOutput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.002,
           },
         ],
@@ -178,7 +178,7 @@ describe('pricing utilities', () => {
           {
             name: 'audioInput',
             strategy: 'fixed',
-            unit: 'Second',
+            unit: 'second',
             rate: 0.01,
           },
         ],
@@ -194,7 +194,7 @@ describe('pricing utilities', () => {
           {
             name: 'audioOutput',
             strategy: 'fixed',
-            unit: 'Second',
+            unit: 'second',
             rate: 0.015,
           },
         ],
@@ -210,7 +210,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput_cacheRead',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.0005,
           },
         ],
@@ -226,7 +226,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput_cacheWrite',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.001,
           },
         ],
@@ -242,7 +242,7 @@ describe('pricing utilities', () => {
           {
             name: 'audioInput_cacheRead',
             strategy: 'fixed',
-            unit: 'Second',
+            unit: 'second',
             rate: 0.005,
           },
         ],
@@ -259,19 +259,19 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.001,
           },
           {
             name: 'textOutput',
             strategy: 'fixed',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             rate: 0.002,
           },
           {
             name: 'audioInput',
             strategy: 'tiered',
-            unit: 'Second',
+            unit: 'second',
             tiers: [
               { rate: 0.01, upTo: 3600 },
               { rate: 0.008, upTo: 'infinity' },
@@ -291,7 +291,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'lookup',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             lookup: undefined as any,
           },
         ],
@@ -305,7 +305,7 @@ describe('pricing utilities', () => {
           {
             name: 'textInput',
             strategy: 'tiered',
-            unit: 'MillionTokens',
+            unit: 'millionTokens',
             tiers: [],
           },
         ],

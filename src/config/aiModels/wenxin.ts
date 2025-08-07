@@ -13,8 +13,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-24',
@@ -32,8 +32,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-15',
@@ -51,8 +51,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-03-16',
@@ -72,8 +72,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-24',
@@ -95,8 +95,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-24',
@@ -118,8 +118,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-24',
@@ -137,8 +137,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-03-16',
@@ -157,8 +157,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -179,8 +179,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -201,8 +201,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -223,8 +223,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -245,8 +245,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -267,8 +267,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -289,8 +289,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -311,8 +311,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -329,8 +329,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -347,8 +347,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -361,8 +361,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -376,8 +376,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -391,8 +391,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -406,8 +406,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -421,8 +421,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -435,8 +435,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -450,8 +450,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -468,8 +468,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -485,8 +485,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -502,8 +502,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -519,8 +519,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -536,8 +536,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -553,8 +553,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -570,8 +570,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -588,8 +588,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -606,8 +606,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -624,8 +624,8 @@ const wenxinChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

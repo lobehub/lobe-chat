@@ -18,9 +18,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.31, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.31, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-17',
@@ -45,8 +45,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-06',
@@ -66,8 +66,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-09',
@@ -88,9 +88,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-17',
@@ -114,8 +114,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-17',
@@ -136,9 +136,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 64_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-07-22',
@@ -163,8 +163,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 64_000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-17',
@@ -187,9 +187,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.0375, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.0375, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-02-05',
@@ -207,9 +207,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.018, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-02-05',
@@ -227,8 +227,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-25',
@@ -247,8 +247,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-09-24',

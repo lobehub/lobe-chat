@@ -36,8 +36,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-21',
@@ -59,8 +59,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-07-11',
@@ -83,8 +83,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-29',
@@ -107,8 +107,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-03',
@@ -131,8 +131,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-03-21',
@@ -152,8 +152,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-10-30',
@@ -172,8 +172,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-02-10',
@@ -195,8 +195,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-02-10',
@@ -219,8 +219,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-02-10',
@@ -242,8 +242,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-12-18',
@@ -266,8 +266,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-01-10',
@@ -290,8 +290,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-01-10',
@@ -314,8 +314,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-03-25',
@@ -338,8 +338,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-20',
@@ -362,8 +362,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-04',
@@ -386,8 +386,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-16',
@@ -410,8 +410,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-03-13',
@@ -458,8 +458,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 80, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-11-26',
@@ -492,8 +492,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-19',
@@ -513,8 +513,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-16',
@@ -533,8 +533,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-06-19',
@@ -553,8 +553,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-05-23',
@@ -572,8 +572,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 18, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 18, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 18, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-01-03',
@@ -589,8 +589,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 7, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-11-12',
@@ -609,8 +609,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-22',
@@ -626,8 +626,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-07-04',
