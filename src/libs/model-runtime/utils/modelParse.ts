@@ -232,6 +232,10 @@ const processReleasedAt = (model: any, knownModel?: any): string | undefined => 
     }
     // 如果 created 是字符串且已经是日期格式，直接返回
     if (typeof model.created === 'string') {
+      // Anthropic：若为 '2025-02-19T00:00:00Z' 只取日期部分
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(model.created)) {
+        return model.created.split('T')[0];
+      }
       return model.created;
     }
   }
