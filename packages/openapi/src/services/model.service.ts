@@ -475,7 +475,10 @@ export class ModelService extends BaseService {
   /**
    * 获取指定提供商的用户自定义模型配置
    */
-  private async getUserModels(providerId: string, userId?: string): Promise<AiProviderModelListItem[]> {
+  private async getUserModels(
+    providerId: string,
+    userId?: string,
+  ): Promise<AiProviderModelListItem[]> {
     const result = await this.db
       .select({
         abilities: aiModels.abilities,
@@ -491,10 +494,9 @@ export class ModelService extends BaseService {
         type: aiModels.type,
       })
       .from(aiModels)
-      .where(and(
-        eq(aiModels.providerId, providerId),
-        userId ? eq(aiModels.userId, userId) : undefined,
-      ))
+      .where(
+        and(eq(aiModels.providerId, providerId), userId ? eq(aiModels.userId, userId) : undefined),
+      )
       .orderBy(aiModels.sort, aiModels.id);
 
     return result as AiProviderModelListItem[];

@@ -109,7 +109,9 @@ export class MessageService extends BaseService {
         where: and(
           eq(messages.topicId, topicId),
           // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(messages.userId, permissionResult.condition.userId)
+            : undefined,
         ),
         with: {
           messagesFiles: {
@@ -158,7 +160,9 @@ export class MessageService extends BaseService {
         where: and(
           eq(messages.id, messageId),
           // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(messages.userId, permissionResult.condition.userId)
+            : undefined,
         ),
         with: {
           messagesFiles: {
@@ -253,7 +257,10 @@ export class MessageService extends BaseService {
         where: and(
           eq(messages.id, newMessage.id),
           // 添加权限相关的查询条件
-          permissionSession.condition?.userId && permissionSession.condition?.userId === permissionTopic.condition?.userId ? eq(messages.userId, permissionSession.condition.userId) : undefined,
+          permissionSession.condition?.userId &&
+            permissionSession.condition?.userId === permissionTopic.condition?.userId
+            ? eq(messages.userId, permissionSession.condition.userId)
+            : undefined,
         ),
         with: {
           messagesFiles: {
@@ -478,12 +485,16 @@ export class MessageService extends BaseService {
       const contentMatchedMessages = await this.db
         .select({ id: messages.id })
         .from(messages)
-        .where(and(
-          eq(messages.sessionId, sessionId),
-          ilike(messages.content, `%${keyword}%`),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
-        ));
+        .where(
+          and(
+            eq(messages.sessionId, sessionId),
+            ilike(messages.content, `%${keyword}%`),
+            // 添加权限相关的查询条件
+            permissionResult.condition?.userId
+              ? eq(messages.userId, permissionResult.condition.userId)
+              : undefined,
+          ),
+        );
 
       // 步骤2: 查询标题匹配关键词的话题，并获取这些话题下的消息ID
       const titleMatchedTopics = await this.db
@@ -524,7 +535,9 @@ export class MessageService extends BaseService {
           eq(messages.userId, this.userId!),
           inArray(messages.id, allMessageIds),
           // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(messages.userId, permissionResult.condition.userId)
+            : undefined,
         ),
         with: {
           messagesFiles: {

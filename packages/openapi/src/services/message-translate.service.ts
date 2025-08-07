@@ -208,7 +208,6 @@ export class MessageTranslateService extends BaseService {
         userId: this.userId,
       };
     } catch (error) {
-
       this.log('error', '更新翻译信息失败', {
         error,
         messageId: data.messageId,
