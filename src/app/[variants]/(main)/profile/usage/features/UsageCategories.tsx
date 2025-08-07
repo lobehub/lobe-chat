@@ -1,9 +1,9 @@
+import { UsageLog } from '@lobechat/types/src/usage';
 import { BarChartProps } from '@lobehub/charts';
 import { FormGroup, Grid, Tabs } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { UsageLog } from '@/types/usage';
 
 import { UsageChartProps } from '../Client';
 import { UsageBarChart } from './components/UsageBarChart';
@@ -15,26 +15,35 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
     if (!data || data.length === 0) return [];
 
     // Group providers across all logs
-    const providerCategories: string[] = Array.from(new Set(
-      data.map((log) => log.requestLogs.map(item => item.provider)).flat()
-    ));
+    const providerCategories: string[] = Array.from(
+      new Set(data.flatMap((log) => log.requestLogs.map((item) => item.provider))),
+    );
 
     // Create chart data for each provider
     return providerCategories.map((provider) => {
-      const modelCategories: string[] = Array.from(new Set(
-        data.map((log) => log.requestLogs.filter((item) => item.provider === provider).map(item => item.model)).flat()
-      ));
+      const modelCategories: string[] = Array.from(
+        new Set(
+          data
+            .flatMap((log) =>
+              log.requestLogs
+                .filter((item) => item.provider === provider)
+                .map((item) => item.model),
+            ),
+        ),
+      );
 
       const chartData = data.map((log) => {
-        const providerSpend = log.requestLogs
-          .filter((item) => item.provider === provider)
+        const providerSpend = log.requestLogs.filter((item) => item.provider === provider);
 
         let dataBody: any = {
           day: log.day,
-        }
+        };
 
         modelCategories.forEach((model) => {
-          const modelSpend = providerSpend.reduce((sum, item) => item.model === model ? sum + item.spend : sum, 0);
+          const modelSpend = providerSpend.reduce(
+            (sum, item) => (item.model === model ? sum + item.spend : sum),
+            0,
+          );
           dataBody[model] = modelSpend;
         });
 
@@ -56,13 +65,13 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
       {formattedData &&
         formattedData.map((item) => (
           <UsageBarChart
-            title={item.provider}
             categories={item.categories}
             data={item.data}
             index={'day'}
             key={item.provider}
             loading={isLoading || !data}
             stack
+            title={item.provider}
           />
         ))}
     </Grid>
@@ -76,26 +85,33 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
     if (!data || data.length === 0) return [];
 
     // Group models across all logs
-    const modelCategories: string[] = Array.from(new Set(
-      data.map((log) => log.requestLogs.map(item => item.model)).flat()
-    ));
+    const modelCategories: string[] = Array.from(
+      new Set(data.flatMap((log) => log.requestLogs.map((item) => item.model))),
+    );
 
     // Create chart data for each model
     return modelCategories.map((model) => {
-      const providerCategories: string[] = Array.from(new Set(
-        data.map((log) => log.requestLogs.filter((item) => item.model === model).map(item => item.provider)).flat()
-      ));
+      const providerCategories: string[] = Array.from(
+        new Set(
+          data
+            .flatMap((log) =>
+              log.requestLogs.filter((item) => item.model === model).map((item) => item.provider),
+            ),
+        ),
+      );
 
       const chartData = data.map((log) => {
-        const modelSpend = log.requestLogs
-          .filter((item) => item.model === model)
+        const modelSpend = log.requestLogs.filter((item) => item.model === model);
 
         let dataBody: any = {
           day: log.day,
-        }
+        };
 
         providerCategories.forEach((provider) => {
-          const providerSpend = modelSpend.reduce((sum, item) => item.provider === provider ? sum + item.spend : sum, 0);
+          const providerSpend = modelSpend.reduce(
+            (sum, item) => (item.provider === provider ? sum + item.spend : sum),
+            0,
+          );
           dataBody[provider] = providerSpend;
         });
 
@@ -117,13 +133,13 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
       {formattedData &&
         formattedData.map((item) => (
           <UsageBarChart
-            title={item.model}
             categories={item.categories}
             data={item.data}
             index={'day'}
             key={item.model}
             loading={isLoading || !data}
             stack
+            title={item.model}
           />
         ))}
     </Grid>
