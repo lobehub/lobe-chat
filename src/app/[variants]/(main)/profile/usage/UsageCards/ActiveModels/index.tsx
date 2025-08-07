@@ -41,7 +41,10 @@ const ActiveModels = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
 
   const [open, setOpen] = useState(false);
 
-  const iconList = useMemo(() => computeList(data || [], groupBy || GroupBy.Model), [data, groupBy]);
+  const iconList = useMemo(
+    () => computeList(data || [], groupBy || GroupBy.Model),
+    [data, groupBy],
+  );
 
   return (
     <>
