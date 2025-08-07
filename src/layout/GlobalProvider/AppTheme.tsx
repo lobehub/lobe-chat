@@ -109,9 +109,7 @@ const AppTheme = memo<AppThemeProps>(
       userGeneralSettingsSelectors.neutralColor(s),
       userGeneralSettingsSelectors.animationMode(s),
     ]);
-    console.log('animationMode', animationMode);
 
-    console.log('rerender');
     useEffect(() => {
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
     }, [primaryColor]);
