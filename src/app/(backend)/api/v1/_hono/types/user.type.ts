@@ -51,29 +51,29 @@ export const UserIdParamSchema = z.object({
  * 创建用户请求验证Schema
  */
 export const CreateUserRequestSchema = z.object({
-  avatar: z.string().optional(),
-  email: z.string().email('邮箱格式不正确').optional(),
-  firstName: z.string().optional(),
-  fullName: z.string().optional(),
-  id: z.string().optional(),
-  lastName: z.string().optional(),
-  phone: z.string().optional(),
-  username: z.string().min(1, '用户名不能为空').optional(),
+  avatar: z.string().nullish(),
+  email: z.string().email('邮箱格式不正确').nullish(),
+  firstName: z.string().nullish(),
+  fullName: z.string().nullish(),
+  id: z.string().nullish(),
+  lastName: z.string().nullish(),
+  phone: z.string().nullish(),
+  username: z.string().min(1, '用户名不能为空').nullish(),
 });
 
 /**
  * 更新用户请求验证Schema
  */
 export const UpdateUserRequestSchema = z.object({
-  avatar: z.string().optional(),
-  email: z.string().email('邮箱格式不正确').optional(),
-  firstName: z.string().optional(),
-  fullName: z.string().optional(),
-  isOnboarded: z.boolean().optional(),
-  lastName: z.string().optional(),
-  phone: z.string().optional(),
-  preference: z.any().optional(),
-  username: z.string().min(1, '用户名不能为空').optional(),
+  avatar: z.string().nullish(),
+  email: z.string().email('邮箱格式不正确').nullish(),
+  firstName: z.string().nullish(),
+  fullName: z.string().nullish(),
+  isOnboarded: z.boolean().nullish(),
+  lastName: z.string().nullish(),
+  phone: z.string().nullish(),
+  preference: z.any().nullish(),
+  username: z.string().min(1, '用户名不能为空').nullish(),
 });
 
 /**
@@ -82,7 +82,7 @@ export const UpdateUserRequestSchema = z.object({
 export const UserSearchRequestSchema = z.object({
   keyword: z
     .string()
-    .optional()
+    .nullish()
     .transform((val) => {
       if (!val) return ''; // 允许为空，转换为空字符串
       return val.trim();
@@ -90,7 +90,7 @@ export const UserSearchRequestSchema = z.object({
     .refine((val) => val.length <= 100, '搜索关键词长度不能超过100个字符'),
   page: z
     .string()
-    .optional()
+    .nullish()
     .transform((val) => {
       if (!val) return 1; // 默认值
       const num = parseInt(val, 10);
@@ -99,7 +99,7 @@ export const UserSearchRequestSchema = z.object({
     }),
   pageSize: z
     .string()
-    .optional()
+    .nullish()
     .transform((val) => {
       if (!val) return 10; // 默认值
       const num = parseInt(val, 10);
@@ -155,7 +155,7 @@ export interface UserRoleOperationResult {
  * 添加角色请求验证Schema
  */
 export const AddRoleRequestSchema = z.object({
-  expiresAt: z.string().datetime('过期时间必须是有效的ISO 8601格式').optional(),
+  expiresAt: z.string().datetime('过期时间必须是有效的ISO 8601格式').nullish(),
   roleId: z.number().int().positive('角色ID必须是正整数'),
 });
 
@@ -164,8 +164,8 @@ export const AddRoleRequestSchema = z.object({
  */
 export const UpdateUserRolesRequestSchema = z
   .object({
-    addRoles: z.array(AddRoleRequestSchema).optional(),
-    removeRoles: z.array(z.number().int().positive('角色ID必须是正整数')).optional(),
+    addRoles: z.array(AddRoleRequestSchema).nullish(),
+    removeRoles: z.array(z.number().int().positive('角色ID必须是正整数')).nullish(),
   })
   .refine(
     (data) => {

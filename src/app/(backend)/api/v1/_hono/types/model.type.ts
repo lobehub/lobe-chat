@@ -22,26 +22,26 @@ export const GetModelsRequestSchema = z.object({
     .string()
     .transform((val) => val === 'true')
     .pipe(z.boolean())
-    .optional(),
+    .nullish(),
   groupedByProvider: z
     .string()
-    .optional()
+    .nullish()
     .default('true')
     .transform((val) => val === 'true'),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
-    .optional(),
+    .nullish(),
   pageSize: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(200))
-    .optional(),
-  provider: z.string().optional(),
+    .nullish(),
+  provider: z.string().nullish(),
   type: z
     .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
-    .optional(),
+    .nullish(),
 });
 
 export interface GetModelsRequest {

@@ -242,32 +242,32 @@ export interface SessionBatchOperationResult {
 
 // Zod Schemas for validation
 export const CreateSessionRequestSchema = z.object({
-  agentId: z.string().optional(),
-  avatar: z.string().optional(),
-  backgroundColor: z.string().optional(),
-  config: z.object({}).passthrough().optional(),
-  description: z.string().optional(),
-  groupId: z.string().optional(),
-  meta: z.object({}).passthrough().optional(),
-  pinned: z.boolean().optional(),
-  title: z.string().optional(),
-  type: z.enum(['agent', 'group']).optional(),
+  agentId: z.string().nullish(),
+  avatar: z.string().nullish(),
+  backgroundColor: z.string().nullish(),
+  config: z.object({}).passthrough().nullish(),
+  description: z.string().nullish(),
+  groupId: z.string().nullish(),
+  meta: z.object({}).passthrough().nullish(),
+  pinned: z.boolean().nullish(),
+  title: z.string().nullish(),
+  type: z.enum(['agent', 'group']).nullish(),
 });
 
 export const UpdateSessionRequestSchema = z.object({
-  agentId: z.string().optional(),
-  avatar: z.string().optional(),
-  backgroundColor: z.string().optional(),
-  description: z.string().optional(),
-  groupId: z.string().optional(),
-  pinned: z.boolean().optional(),
-  title: z.string().optional(),
-  userId: z.string().optional(),
+  agentId: z.string().nullish(),
+  avatar: z.string().nullish(),
+  backgroundColor: z.string().nullish(),
+  description: z.string().nullish(),
+  groupId: z.string().nullish(),
+  pinned: z.boolean().nullish(),
+  title: z.string().nullish(),
+  userId: z.string().nullish(),
 });
 
 export const UpdateSessionConfigRequestSchema = z.object({
-  config: z.object({}).passthrough().optional(),
-  meta: z.object({}).passthrough().optional(),
+  config: z.object({}).passthrough().nullish(),
+  meta: z.object({}).passthrough().nullish(),
 });
 
 export const CloneSessionRequestSchema = z.object({
@@ -280,44 +280,44 @@ export const SearchSessionsRequestSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
-    .optional(),
+    .nullish(),
   pageSize: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
-    .optional(),
+    .nullish(),
 });
 
 export const GetSessionsRequestSchema = z.object({
-  agentId: z.string().optional(),
-  keyword: z.string().optional(),
+  agentId: z.string().nullish(),
+  keyword: z.string().nullish(),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
-    .optional(),
+    .nullish(),
   pageSize: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
-    .optional(),
-  targetUserId: z.string().optional(),
+    .nullish(),
+  targetUserId: z.string().nullish(),
 });
 
 export const CountSessionsRequestSchema = z.object({
-  endDate: z.string().optional(),
-  range: z.array(z.string()).length(2).optional(),
-  startDate: z.string().optional(),
+  endDate: z.string().nullish(),
+  range: z.array(z.string()).length(2).nullish(),
+  startDate: z.string().nullish(),
 });
 
 export const CreateSessionGroupRequestSchema = z.object({
   name: z.string().min(1, '会话组名称不能为空'),
-  sort: z.number().optional(),
+  sort: z.number().nullish(),
 });
 
 export const UpdateSessionGroupRequestSchema = z.object({
-  name: z.string().min(1, '会话组名称不能为空').optional(),
-  sort: z.number().optional(),
+  name: z.string().min(1, '会话组名称不能为空').nullish(),
+  sort: z.number().nullish(),
 });
 
 export const UpdateSessionGroupOrderRequestSchema = z.object({
@@ -352,14 +352,14 @@ export const BatchUpdateSessionsRequestSchema = z.object({
   sessions: z
     .array(
       z.object({
-        avatar: z.string().optional(),
-        backgroundColor: z.string().optional(),
-        description: z.string().optional(),
-        groupId: z.string().optional(),
+        avatar: z.string().nullish(),
+        backgroundColor: z.string().nullish(),
+        description: z.string().nullish(),
+        groupId: z.string().nullish(),
         id: z.string().min(1, '会话 ID 不能为空'),
-        pinned: z.boolean().optional(),
-        title: z.string().optional(),
-        userId: z.string().optional(),
+        pinned: z.boolean().nullish(),
+        title: z.string().nullish(),
+        userId: z.string().nullish(),
       }),
     )
     .min(1, '至少需要提供一个要更新的会话'),

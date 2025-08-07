@@ -6,7 +6,7 @@ export const TopicListParamSchema = z.object({
 });
 
 export const TopicListQuerySchema = z.object({
-  keyword: z.string().optional(),
+  keyword: z.string().nullish(),
 });
 
 export const TopicGetParamSchema = z.object({
@@ -20,7 +20,7 @@ export const TopicCreateRequestSchema = z.object({
 
 export const TopicSummaryParamSchema = z.object({
   id: z.string().min(1, '话题ID不能为空'),
-  lang: z.string().optional(),
+  lang: z.string().nullish(),
 });
 
 export const TopicDeleteParamSchema = z.object({
