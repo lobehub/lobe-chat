@@ -49,22 +49,12 @@ export const useSwitchAgentHotkey = () => {
   };
 };
 
-// 仅切换到会话标签
+// 切换到会话标签(并聚焦到随便聊聊)
 export const useNavigateToChatHotkey = () => {
-  const currentSessionId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
   const [, { unpinAgent }] = usePinnedAgentState();
 
   return useHotkeyById(HotkeyEnum.NavigateToChat, () => {
-    switchSession(currentSessionId);
-    unpinAgent();
-  });
-};
-
-export const useNavigateToJustChatHotkey = () => {
-  const switchSession = useSwitchSession();
-  const [, { unpinAgent }] = usePinnedAgentState();
-  return useHotkeyById(HotkeyEnum.NavigateToInbox, () => {
     switchSession(INBOX_SESSION_ID);
     unpinAgent();
   });
@@ -87,6 +77,5 @@ export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useSwitchAgentHotkey();
   useNavigateToChatHotkey();
-  useNavigateToJustChatHotkey();
   useOpenHotkeyHelperHotkey();
 };

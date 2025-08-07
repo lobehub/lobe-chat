@@ -62,7 +62,6 @@ export const HotkeyEnum = {
   ClearCurrentMessages: 'clearCurrentMessages',
   EditMessage: 'editMessage',
   NavigateToChat: 'navigateToChat',
-  NavigateToInbox: 'navigateToInbox',
   OpenChatSettings: 'openChatSettings',
   OpenHotkeyHelper: 'openHotkeyHelper',
   RegenerateMessage: 'regenerateMessage',

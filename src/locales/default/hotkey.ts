@@ -26,12 +26,8 @@ const hotkey: HotkeyI18nTranslations & {
     title: '编辑消息',
   },
   navigateToChat: {
-    desc: '切换至会话标签',
-    title: '会话标签',
-  },
-  navigateToInbox: {
     desc: '切换至会话标签并进入随便聊聊',
-    title: '随便聊聊',
+    title: '切换至默认会话',
   },
   openChatSettings: {
     desc: '查看和修改当前会话的设置',

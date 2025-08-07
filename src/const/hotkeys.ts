@@ -31,13 +31,7 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.NavigateToChat,
-    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Zero]),
-    scopes: [HotkeyScopeEnum.Global],
-  },
-  {
-    group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.NavigateToInbox,
-    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.Zero]),
+    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Backquote]),
     scopes: [HotkeyScopeEnum.Global],
   },
   {
