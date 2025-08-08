@@ -10,11 +10,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT2 o1',
       enabled: true,
       id: '360gpt2-o1',
-      pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 50,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -22,11 +17,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT2 Pro',
       enabled: true,
       id: '360gpt2-pro',
-      pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -35,11 +25,6 @@ const Ai360: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: '360gpt-pro',
-      pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
-      },
     },
     {
       contextWindowTokens: 7000,
@@ -47,11 +32,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT Turbo',
       enabled: true,
       id: '360gpt-turbo',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
-      },
     },
   ],
   checkModel: '360gpt-turbo',

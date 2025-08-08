@@ -14,8 +14,10 @@ const mistralChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistral-medium-latest',
     pricing: {
-      input: 0.4,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -29,8 +31,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Nemo',
     id: 'open-mistral-nemo',
     pricing: {
-      input: 0.15,
-      output: 0.15,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -44,8 +48,10 @@ const mistralChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistral-small-latest',
     pricing: {
-      input: 0.1,
-      output: 0.3,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -60,8 +66,10 @@ const mistralChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistral-large-latest',
     pricing: {
-      input: 2,
-      output: 6,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -90,8 +98,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Codestral 2508',
     id: 'codestral-latest',
     pricing: {
-      input: 0.3,
-      output: 0.9,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-30',
     type: 'chat',
@@ -108,8 +118,10 @@ const mistralChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'pixtral-large-latest',
     pricing: {
-      input: 2,
-      output: 6,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -124,8 +136,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Pixtral 12B',
     id: 'pixtral-12b-2409',
     pricing: {
-      input: 0.15,
-      output: 0.15,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -138,8 +152,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Ministral 3B',
     id: 'ministral-3b-latest',
     pricing: {
-      input: 0.04,
-      output: 0.04,
+      units: [
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -152,8 +168,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Ministral 8B',
     id: 'ministral-8b-latest',
     pricing: {
-      input: 0.1,
-      output: 0.1,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -164,8 +182,10 @@ const mistralChatModels: AIChatModelCard[] = [
     displayName: 'Codestral Mamba',
     id: 'open-codestral-mamba',
     pricing: {
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

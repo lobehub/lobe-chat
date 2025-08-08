@@ -15,10 +15,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4.5',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.8,
       currency: 'CNY',
-      input: 4, // 输入长度 [32k, 128k]
-      output: 16,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -33,16 +35,17 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
+    description: 'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
     displayName: 'GLM-4.5-X',
     id: 'glm-4.5-x',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 3.2,
       currency: 'CNY',
-      input: 16, // 输入长度 [32k, 128k]
-      output: 64,
+      units: [
+        { name: 'textInput_cacheRead', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -57,16 +60,17 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
+    description: 'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
     displayName: 'GLM-4.5-Air',
     id: 'glm-4.5-air',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.24,
       currency: 'CNY',
-      input: 1.2, // 输入长度 [32k, 128k]
-      output: 8,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -81,16 +85,17 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
+    description: 'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
     displayName: 'GLM-4.5-AirX',
     id: 'glm-4.5-airx',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 1.6,
       currency: 'CNY',
-      input: 8, // 输入长度 [32k, 128k]
-      output: 32,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -105,17 +110,18 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
+    description: 'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
     displayName: 'GLM-4.5-Flash',
     enabled: true,
     id: 'glm-4.5-flash',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0,
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -136,8 +142,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -155,8 +163,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -170,8 +180,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-zero-preview',
     pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -187,8 +199,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -207,8 +221,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 30_000,
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -227,8 +243,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
-      input: 0.1,
-      output: 0.1,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -241,15 +259,16 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
+    description: 'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
     displayName: 'GLM-Z1-Flash',
     id: 'glm-z1-flash',
     maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -268,8 +287,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -288,8 +309,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 0.1,
-      output: 0.1,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -308,8 +331,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 1,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -328,8 +353,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -348,8 +375,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -368,8 +397,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-alltools',
     pricing: {
       currency: 'CNY',
-      input: 100,
-      output: 100,
+      units: [
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -388,8 +419,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -407,8 +440,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-0520', // 弃用时间 2025年12月30日
     pricing: {
       currency: 'CNY',
-      input: 100,
-      output: 100,
+      units: [
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -426,8 +461,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4', // 弃用时间 2025年6月30日
     pricing: {
       currency: 'CNY',
-      input: 100,
-      output: 100,
+      units: [
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -445,8 +482,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4v-flash',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-09',
     type: 'chat',
@@ -461,8 +500,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4v-plus-0111',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -476,8 +517,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4v',
     pricing: {
       currency: 'CNY',
-      input: 50,
-      output: 50,
+      units: [
+        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -490,8 +533,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
-      input: 0.1,
-      output: 0.1,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -503,8 +548,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 1,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -516,8 +563,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

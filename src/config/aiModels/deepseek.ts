@@ -14,10 +14,12 @@ const deepseekChatModels: AIChatModelCard[] = [
     id: 'deepseek-chat',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 0.5,
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-24',
     type: 'chat',
@@ -35,10 +37,12 @@ const deepseekChatModels: AIChatModelCard[] = [
     id: 'deepseek-reasoner',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 1,
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-05-28',
     type: 'chat',
