@@ -11,7 +11,6 @@ export const fluxSchnellParamsSchema: ModelParamsSchema = {
 
 
 export const fluxKreaParamsSchema: ModelParamsSchema = {
-  // Krea 官网默认分辨率为 832 x 1248，这里遵循 width x height 的顺序
   width: { default: 832, max: 2048, min: 512, step: 1 },
   height: { default: 1248, max: 2048, min: 512, step: 1 },
   steps: { default: 28, max: 50, min: 1, step: 1 },
