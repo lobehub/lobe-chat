@@ -14,6 +14,7 @@
   "edit": {
     "copy": "Copiar",
     "cut": "Cortar",
+    "delete": "Excluir",
     "paste": "Colar",
     "redo": "Refazer",
     "selectAll": "Selecionar Tudo",

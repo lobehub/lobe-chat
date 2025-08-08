@@ -306,6 +306,7 @@
         "latestTime": "Ostatnia aktualizacja: {{time}}",
         "noLatestTime": "Lista nie została jeszcze pobrana"
       },
+      "noModelsInCategory": "Brak włączonych modeli w tej kategorii",
       "resetAll": {
         "conform": "Czy na pewno chcesz zresetować wszystkie zmiany w bieżącym modelu? Po zresetowaniu lista modeli wróci do stanu domyślnego",
         "success": "Resetowanie zakończone sukcesem",
@@ -316,7 +317,15 @@
       "title": "Lista modeli",
       "total": "Łącznie dostępnych modeli: {{count}}"
     },
-    "searchNotFound": "Nie znaleziono wyników wyszukiwania"
+    "searchNotFound": "Nie znaleziono wyników wyszukiwania",
+    "tabs": {
+      "all": "Wszystkie",
+      "chat": "Czat",
+      "embedding": "Wektoryzacja",
+      "image": "Obraz",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Aktualizacja sortowania zakończona sukcesem",

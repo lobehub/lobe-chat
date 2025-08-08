@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Modellanbieter: sophnet-Plattform. DeepSeek V3 Fast ist die Hochgeschwindigkeitsversion mit hohem TPS des DeepSeek V3 0324 Modells, voll funktionsfähig ohne Quantisierung, mit stärkerer Code- und mathematischer Leistungsfähigkeit und schnellerer Reaktionszeit!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite bietet extrem schnelle Reaktionszeiten und ein hervorragendes Preis-Leistungs-Verhältnis, um Kunden in verschiedenen Szenarien flexiblere Optionen zu bieten. Unterstützt Inferenz und Feintuning mit einem Kontextfenster von 128k."
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 ist ein mehrsprachiges Modell von Cohere, das 23 Sprachen unterstützt und die Anwendung in einer Vielzahl von Sprachen erleichtert."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Bereitgestellt von Microsoft; Das DeepSeek R1 Modell wurde in einer kleinen Versionsaktualisierung verbessert, die aktuelle Version ist DeepSeek-R1-0528. Im neuesten Update wurde die Rechentiefe und Inferenzfähigkeit von DeepSeek R1 durch Erhöhung der Rechenressourcen und Einführung eines Algorithmus-Optimierungsmechanismus in der Nachtrainingsphase erheblich gesteigert. Dieses Modell zeigt hervorragende Leistungen in mehreren Benchmark-Tests wie Mathematik, Programmierung und allgemeiner Logik und nähert sich in der Gesamtleistung führenden Modellen wie O3 und Gemini 2.5 Pro an."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B ist ein Open-Source-Sprachmodell mit 13 Milliarden Parametern, das von Baichuan Intelligence entwickelt wurde und in autorisierten chinesischen und englischen Benchmarks die besten Ergebnisse in seiner Größenordnung erzielt hat."
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet bietet eine ideale Balance zwischen Intelligenz und Geschwindigkeit für Unternehmensarbeitslasten. Es bietet maximalen Nutzen zu einem niedrigeren Preis, ist zuverlässig und für großflächige Bereitstellungen geeignet."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 ist das neueste und leistungsstärkste Modell von Anthropic zur Bewältigung hochkomplexer Aufgaben. Es überzeugt durch herausragende Leistung, Intelligenz, Flüssigkeit und Verständnis."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 ist das leistungsstärkste Modell von Anthropic zur Bewältigung hochkomplexer Aufgaben. Es zeichnet sich durch hervorragende Leistung, Intelligenz, Flüssigkeit und Verständnis aus."
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und Text- und Bild-Eingaben unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und über 60 % günstiger als GPT-3.5 Turbo. Es behält die fortschrittlichste Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B ist ein Spitzen-Sprachmodell mit 120 Milliarden Parametern, integriertem Browser-Such- und Code-Ausführungsfunktionen sowie ausgeprägten Inferenzfähigkeiten."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B ist ein Spitzen-Sprachmodell mit 20 Milliarden Parametern, integriertem Browser-Such- und Code-Ausführungsfunktionen sowie ausgeprägten Inferenzfähigkeiten."
+  },
   "openai/o1": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das Bild- und Texteingaben unterstützt und Text ausgibt. Es eignet sich für komplexe Aufgaben, die umfangreiches Allgemeinwissen erfordern. Das Modell verfügt über einen Kontext von 200K und einen Wissensstand bis Oktober 2023."
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Open-Source-Code-Modell von Tongyi Qianwen. Das neueste qwen3-coder-480b-a35b-instruct basiert auf Qwen3, verfügt über starke Coding-Agent-Fähigkeiten, ist versiert im Werkzeugaufruf und in der Umgebungskommunikation und ermöglicht selbstständiges Programmieren mit hervorragender Codequalität und allgemeinen Fähigkeiten."
   },
+  "qwen3-coder-flash": {
+    "description": "Tongyi Qianwen Code-Modell. Die neueste Qwen3-Coder Modellreihe basiert auf Qwen3 und ist ein Code-Generierungsmodell mit starker Coding-Agent-Fähigkeit, spezialisiert auf Werkzeugaufrufe und Umgebungsinteraktion, das selbstständiges Programmieren ermöglicht und neben hervorragenden Code-Fähigkeiten auch allgemeine Kompetenzen besitzt."
+  },
   "qwen3-coder-plus": {
-    "description": "Tongyi Qianwen Code-Modell. Die neueste Qwen3-Coder-Plus-Serie basiert auf Qwen3, verfügt über starke Coding-Agent-Fähigkeiten, ist versiert im Werkzeugaufruf und in der Umgebungskommunikation und ermöglicht selbstständiges Programmieren mit hervorragender Codequalität und allgemeinen Fähigkeiten."
+    "description": "Tongyi Qianwen Code-Modell. Die neueste Qwen3-Coder Modellreihe basiert auf Qwen3 und ist ein Code-Generierungsmodell mit starker Coding-Agent-Fähigkeit, spezialisiert auf Werkzeugaufrufe und Umgebungsinteraktion, das selbstständiges Programmieren ermöglicht und neben hervorragenden Code-Fähigkeiten auch allgemeine Kompetenzen besitzt."
   },
   "qwq": {
     "description": "QwQ ist ein experimentelles Forschungsmodell, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."

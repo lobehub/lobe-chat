@@ -23,6 +23,7 @@ interface GlobalLayoutProps {
   locale: string;
   neutralColor?: string;
   primaryColor?: string;
+  variants?: string;
 }
 
 const GlobalLayout = async ({
@@ -32,6 +33,7 @@ const GlobalLayout = async ({
   locale: userLocale,
   appearance,
   isMobile,
+  variants,
 }: GlobalLayoutProps) => {
   const antdLocale = await getAntdLocale(userLocale);
 
@@ -52,6 +54,7 @@ const GlobalLayout = async ({
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
+            segmentVariants={variants}
             serverConfig={serverConfig}
           >
             <QueryProvider>

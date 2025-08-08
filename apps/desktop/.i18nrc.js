@@ -23,8 +23,9 @@ module.exports = defineConfig({
     'vi-VN',
     'fa-IR',
   ],
+  saveImmediately: true,
   temperature: 0,
-  modelName: 'gpt-4o-mini',
+  modelName: 'gpt-4.1-mini',
   experimental: {
     jsonMode: true,
   },

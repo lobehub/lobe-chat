@@ -135,9 +135,9 @@ export const createRouterRuntime = ({
       this._runtimes = routers.map((router) => {
         const providerAI = router.runtime ?? baseRuntimeMap[router.apiType] ?? LobeOpenAI;
 
-        const finalOptions = { ...router.options, ...options };
+        const finalOptions = { ...params, ...options, ...router.options };
         // @ts-ignore
-        const runtime: LobeRuntimeAI = new providerAI({ ...params, ...finalOptions, id });
+        const runtime: LobeRuntimeAI = new providerAI({ ...finalOptions, id });
 
         return { id: router.apiType, models: router.models, runtime };
       });

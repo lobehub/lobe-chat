@@ -1,8 +1,22 @@
 import { PluginQueryParams, SystemDependency } from '@lobehub/market-sdk';
 
 import { MCPErrorType } from '@/libs/mcp';
-import { MCPInstallStep } from '@/store/tool/slices/mcpStore';
 
+import { CustomPluginMetadata } from '../tool/plugin';
+
+/* eslint-disable typescript-sort-keys/string-enum */
+export enum MCPInstallStep {
+  FETCHING_MANIFEST = 'FETCHING_MANIFEST',
+  CHECKING_INSTALLATION = 'CHECKING_INSTALLATION',
+  DEPENDENCIES_REQUIRED = 'DEPENDENCIES_REQUIRED',
+  GETTING_SERVER_MANIFEST = 'GETTING_SERVER_MANIFEST',
+  CONFIGURATION_REQUIRED = 'CONFIGURATION_REQUIRED',
+  INSTALLING_PLUGIN = 'INSTALLING_PLUGIN',
+  COMPLETED = 'COMPLETED',
+  ERROR = 'Error',
+}
+
+/* eslint-enable */
 export interface CheckMcpInstallParams {
   /**
    * 安装详情
@@ -179,6 +193,29 @@ export interface MCPInstallProgress {
     version?: string;
     versionParsingRequired?: boolean;
   }>;
+}
+
+export interface McpConnection {
+  args?: string[];
+  auth?: {
+    accessToken?: string;
+    token?: string;
+    type: 'none' | 'bearer' | 'oauth2';
+  };
+  // STDIO 连接参数
+  command?: string;
+  env?: Record<string, string>;
+  headers?: Record<string, string>;
+  type: 'http' | 'stdio';
+  // HTTP 连接参数
+  url?: string;
+}
+
+// 测试连接参数类型
+export interface McpConnectionParams {
+  connection: McpConnection;
+  identifier: string;
+  metadata?: CustomPluginMetadata;
 }
 
 export type MCPInstallProgressMap = Record<string, MCPInstallProgress | undefined>;
