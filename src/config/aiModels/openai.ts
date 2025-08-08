@@ -34,7 +34,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-5',
     maxOutput: 128_000,
     pricing: {
-      cachedInput: 0.13,
+      cachedInput: 0.125,
       input: 1.25,
       output: 10,
     },
@@ -60,7 +60,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-5-mini',
     maxOutput: 128_000,
     pricing: {
-      cachedInput: 0.03,
+      cachedInput: 0.025,
       input: 0.25,
       output: 2,
     },
@@ -83,7 +83,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-5-nano',
     maxOutput: 128_000,
     pricing: {
-      cachedInput: 0.01,
+      cachedInput: 0.005,
       input: 0.05,
       output: 0.4,
     },
@@ -102,7 +102,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-5-chat-latest',
     maxOutput: 128_000,
     pricing: {
-      cachedInput: 0.13,
+      cachedInput: 0.125,
       input: 1.25,
       output: 10,
     },
