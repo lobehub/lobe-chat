@@ -195,6 +195,7 @@
     "framer-motion": "^12.23.12",
     "gpt-tokenizer": "^3.0.0",
     "gray-matter": "^4.0.3",
+    "hono": "^4.7.11",
     "html-to-text": "^9.0.5",
     "i18next": "^25.3.2",
     "i18next-browser-languagedetector": "^8.2.0",

@@ -4,8 +4,7 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@hono/zod-validator": "^0.7.2",
-    "hono": "^4.7.11"
+    "@hono/zod-validator": "^0.7.2"
   },
   "devDependencies": {
     "@lobechat/types": "workspace:*",
@@ -22,6 +21,7 @@
     "@types/node": "^22.16.5",
     "debug": "^4.4.1",
     "drizzle-orm": "^0.44.0",
+    "hono": "^4.7.11",
     "js-sha256": "^0.11.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
