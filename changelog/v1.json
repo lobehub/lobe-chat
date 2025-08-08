@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add GPT-5 series models."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
       "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
     },
     "date": "2025-08-07",
