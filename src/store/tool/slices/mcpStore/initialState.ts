@@ -2,19 +2,6 @@ import { PluginItem } from '@lobehub/market-sdk';
 
 import { MCPInstallProgressMap } from '@/types/plugins';
 
-/* eslint-disable typescript-sort-keys/string-enum */
-export enum MCPInstallStep {
-  FETCHING_MANIFEST = 'FETCHING_MANIFEST',
-  CHECKING_INSTALLATION = 'CHECKING_INSTALLATION',
-  DEPENDENCIES_REQUIRED = 'DEPENDENCIES_REQUIRED',
-  GETTING_SERVER_MANIFEST = 'GETTING_SERVER_MANIFEST',
-  CONFIGURATION_REQUIRED = 'CONFIGURATION_REQUIRED',
-  INSTALLING_PLUGIN = 'INSTALLING_PLUGIN',
-  COMPLETED = 'COMPLETED',
-  ERROR = 'Error',
-}
-/* eslint-enable */
-
 export interface MCPStoreState {
   activeMCPIdentifier?: string;
   categories: string[];
@@ -25,6 +12,10 @@ export interface MCPStoreState {
   mcpInstallProgress: MCPInstallProgressMap;
   mcpPluginItems: PluginItem[];
   mcpSearchKeywords?: string;
+  // 测试连接相关状态
+  mcpTestAbortControllers: Record<string, AbortController>;
+  mcpTestErrors: Record<string, string>;
+  mcpTestLoading: Record<string, boolean>;
   searchLoading?: boolean;
   tags?: string[];
   totalCount?: number;
@@ -37,4 +28,8 @@ export const initialMCPStoreState: MCPStoreState = {
   mcpInstallAbortControllers: {},
   mcpInstallProgress: {},
   mcpPluginItems: [],
+  // 测试连接相关状态初始化
+  mcpTestAbortControllers: {},
+  mcpTestErrors: {},
+  mcpTestLoading: {},
 };

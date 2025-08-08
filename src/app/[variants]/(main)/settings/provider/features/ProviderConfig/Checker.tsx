@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircleFilled } from '@ant-design/icons';
+import { TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -9,7 +10,6 @@ import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { TraceNameMap } from '@/const/trace';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';

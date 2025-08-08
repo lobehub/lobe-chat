@@ -2,6 +2,7 @@ import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://platform.openai.com/docs/deprecations
 const OpenAI: ModelProviderCard = {
+  apiKeyUrl: 'https://platform.openai.com/api-keys?utm_source=lobehub',
   chatModels: [
     {
       contextWindowTokens: 1_047_576,

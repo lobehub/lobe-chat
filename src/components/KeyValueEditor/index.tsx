@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import fastDeepEqual from 'fast-deep-equal';
 import { LucidePlus, LucideTrash } from 'lucide-react';
-import { memo, useEffect, useRef, useState } from 'react';
+import { CSSProperties, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,6 +44,7 @@ export interface KeyValueEditorProps {
   duplicateKeyErrorText?: string;
   keyPlaceholder?: string;
   onChange?: (value: Record<string, string>) => void;
+  style?: CSSProperties;
   value?: Record<string, string>;
   valuePlaceholder?: string;
 }
@@ -57,6 +58,7 @@ const KeyValueEditor = memo<KeyValueEditorProps>(
     addButtonText,
     duplicateKeyErrorText,
     deleteTooltip,
+    style,
   }) => {
     const { styles } = useStyles();
     const { t } = useTranslation('components');
@@ -125,7 +127,7 @@ const KeyValueEditor = memo<KeyValueEditorProps>(
     const duplicateKeys = getDuplicateKeys(items);
 
     return (
-      <div className={styles.container}>
+      <div className={styles.container} style={style}>
         <Flexbox className={styles.title} gap={8} horizontal>
           <Flexbox flex={1}>{keyPlaceholder || t('KeyValueEditor.keyPlaceholder')}</Flexbox>
           <Flexbox flex={2}>{valuePlaceholder || t('KeyValueEditor.valuePlaceholder')}</Flexbox>

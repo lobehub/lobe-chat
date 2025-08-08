@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
-import { MCPInstallStep } from '@/store/tool/slices/mcpStore';
+import { MCPInstallStep } from '@/types/plugins';
 
 import InstallError from './InstallError';
 import MCPConfigForm from './MCPConfigForm';

@@ -1,6 +1,49 @@
 [
   {
     "children": {
+      "fixes": ["Optimize Gemini error message display & Filter empty messages."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor trace type."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider setting page hydration error."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fail to fetch aihubmix model on client mode."],
+      "improvements": ["Add context menu for desktop, support different model tabs."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop again."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.1"
+  },
+  {
+    "children": {
+      "features": ["Support mcp plugin install from web."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix ollama model output without thinking."],
       "improvements": ["Add Claude Opus 4.1 model, update i18n."]
     },
