@@ -1053,14 +1053,14 @@ export const openaiImageModels: AIImageModelCard[] = [
         {
           lookup: {
             prices: {
-              '1024x1024_hd': 0.08,
-              '1024x1024_standard': 0.04,
-              '1024x1792_hd': 0.12,
-              '1024x1792_standard': 0.08,
-              '1792x1024_hd': 0.12,
-              '1792x1024_standard': 0.08,
+              hd_1024x1024: 0.08,
+              hd_1024x1792: 0.12,
+              hd_1792x1024: 0.12,
+              standard_1024x1024: 0.04,
+              standard_1024x1792: 0.08,
+              standard_1792x1024: 0.08,
             },
-            pricingParams: ['size', 'quality'],
+            pricingParams: ['quality', 'size'],
           },
           name: 'imageGeneration',
           strategy: 'lookup',
