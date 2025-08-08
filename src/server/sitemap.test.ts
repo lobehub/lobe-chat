@@ -5,6 +5,8 @@ import { getCanonicalUrl } from '@/server/utils/url';
 
 import { LAST_MODIFIED, Sitemap, SitemapType } from './sitemap';
 
+const LOCALE_COUNT = 18;
+
 describe('Sitemap', () => {
   const sitemap = new Sitemap();
 
@@ -80,7 +82,7 @@ describe('Sitemap', () => {
       ]);
 
       const assistantsSitemap = await sitemap.getAssistants();
-      expect(assistantsSitemap.length).toBe(15);
+      expect(assistantsSitemap.length).toBe(LOCALE_COUNT);
       expect(assistantsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/assistant/test-assistant'),
@@ -108,7 +110,7 @@ describe('Sitemap', () => {
 
       // Test first page (should have 100 items)
       const firstPageSitemap = await sitemap.getAssistants(1);
-      expect(firstPageSitemap.length).toBe(100 * 15); // 100 items * 15 locales
+      expect(firstPageSitemap.length).toBe(100 * LOCALE_COUNT); // 100 items * LOCALE_COUNT locales
       expect(firstPageSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/assistant/test-assistant-0'),
@@ -118,7 +120,7 @@ describe('Sitemap', () => {
 
       // Test second page (should have 50 items)
       const secondPageSitemap = await sitemap.getAssistants(2);
-      expect(secondPageSitemap.length).toBe(50 * 15); // 50 items * 15 locales
+      expect(secondPageSitemap.length).toBe(50 * LOCALE_COUNT); // 50 items * LOCALE_COUNT locales
       expect(secondPageSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/assistant/test-assistant-100'),
@@ -136,7 +138,7 @@ describe('Sitemap', () => {
       ]);
 
       const pluginsSitemap = await sitemap.getPlugins();
-      expect(pluginsSitemap.length).toBe(15);
+      expect(pluginsSitemap.length).toBe(LOCALE_COUNT);
       expect(pluginsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/plugin/test-plugin'),
@@ -164,11 +166,11 @@ describe('Sitemap', () => {
 
       // Test first page (should have 100 items)
       const firstPageSitemap = await sitemap.getPlugins(1);
-      expect(firstPageSitemap.length).toBe(100 * 15); // 100 items * 15 locales
+      expect(firstPageSitemap.length).toBe(100 * LOCALE_COUNT); // 100 items * 15 locales
 
       // Test third page (should have 50 items)
       const thirdPageSitemap = await sitemap.getPlugins(3);
-      expect(thirdPageSitemap.length).toBe(50 * 15); // 50 items * 15 locales
+      expect(thirdPageSitemap.length).toBe(50 * LOCALE_COUNT); // 50 items * 15 locales
     });
   });
 
@@ -180,7 +182,7 @@ describe('Sitemap', () => {
       ]);
 
       const modelsSitemap = await sitemap.getModels();
-      expect(modelsSitemap.length).toBe(15);
+      expect(modelsSitemap.length).toBe(LOCALE_COUNT);
       expect(modelsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/model/test:model'),
@@ -208,11 +210,11 @@ describe('Sitemap', () => {
 
       // Test first page (should have 100 items)
       const firstPageSitemap = await sitemap.getModels(1);
-      expect(firstPageSitemap.length).toBe(100 * 15); // 100 items * 15 locales
+      expect(firstPageSitemap.length).toBe(100 * LOCALE_COUNT); // 100 items * LOCALE_COUNT locales
 
       // Test second page (should have 20 items)
       const secondPageSitemap = await sitemap.getModels(2);
-      expect(secondPageSitemap.length).toBe(20 * 15); // 20 items * 15 locales
+      expect(secondPageSitemap.length).toBe(20 * LOCALE_COUNT); // 20 items * LOCALE_COUNT locales
     });
   });
 
@@ -224,7 +226,7 @@ describe('Sitemap', () => {
       ]);
 
       const providersSitemap = await sitemap.getProviders();
-      expect(providersSitemap.length).toBe(15);
+      expect(providersSitemap.length).toBe(LOCALE_COUNT);
       expect(providersSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/provider/test-provider'),
