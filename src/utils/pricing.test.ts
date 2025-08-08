@@ -9,265 +9,35 @@ import {
   getCachedTextInputUnitRate,
   getTextInputUnitRate,
   getTextOutputUnitRate,
+  getUnitRateByName,
   getWriteCacheInputUnitRate,
 } from './pricing';
 
-describe('pricing utilities', () => {
-  describe('getTextInputUnitRate', () => {
-    it('should return undefined when pricing is undefined', () => {
-      expect(getTextInputUnitRate()).toBeUndefined();
+describe('pricing utilities (new)', () => {
+  describe('getUnitRateByName', () => {
+    it('returns undefined when pricing or unitName is missing', () => {
+      expect(getUnitRateByName()).toBeUndefined();
+      const p = { units: [] } as Pricing;
+      expect(getUnitRateByName(p)).toBeUndefined();
     });
 
-    it('should return undefined when pricing.units is undefined', () => {
-      const pricing: Pricing = { units: undefined as any };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
-    });
-
-    it('should return undefined when TextInput unit is not found', () => {
+    it('returns undefined when unit not found', () => {
       const pricing: Pricing = {
-        units: [
-          {
-            name: 'textOutput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.002,
-          },
-        ],
+        units: [{ name: 'textOutput', strategy: 'fixed', unit: 'millionTokens', rate: 0.002 }],
       };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
+      expect(getUnitRateByName(pricing, 'textInput')).toBeUndefined();
     });
 
-    it('should return rate for fixed strategy', () => {
+    it('handles fixed strategy', () => {
       const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.001,
-          },
-        ],
+        units: [{ name: 'textInput', strategy: 'fixed', unit: 'millionTokens', rate: 0.001 }],
       };
-      expect(getTextInputUnitRate(pricing)).toBe(0.001);
+      expect(getUnitRateByName(pricing, 'textInput')).toBe(0.001);
     });
 
-    it('should return first tier rate for tiered strategy', () => {
+    it('handles tiered strategy (first tier)', () => {
       const pricing: Pricing = {
         units: [
-          {
-            name: 'textInput',
-            strategy: 'tiered',
-            unit: 'millionTokens',
-            tiers: [
-              { rate: 0.001, upTo: 1000000 },
-              { rate: 0.0008, upTo: 'infinity' },
-            ],
-          },
-        ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBe(0.001);
-    });
-
-    it('should return undefined when tiered strategy has no tiers', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'tiered',
-            unit: 'millionTokens',
-            tiers: undefined as any,
-          },
-        ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
-    });
-
-    it('should return first price for lookup strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'lookup',
-            unit: 'millionTokens',
-            lookup: {
-              pricingParams: ['model'],
-              prices: {
-                'gpt-3.5-turbo': 0.001,
-                'gpt-4': 0.03,
-              },
-            },
-          },
-        ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBe(0.001);
-    });
-
-    it('should return undefined when lookup has no prices', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'lookup',
-            unit: 'millionTokens',
-            lookup: {
-              pricingParams: ['model'],
-              prices: {},
-            },
-          },
-        ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
-    });
-
-    it('should return undefined for unknown strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'unknown' as any,
-            unit: 'millionTokens',
-          } as any,
-        ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
-    });
-  });
-
-  describe('getTextOutputUnitRate', () => {
-    it('should return undefined when pricing is undefined', () => {
-      expect(getTextOutputUnitRate()).toBeUndefined();
-    });
-
-    it('should return undefined when TextOutput unit is not found', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.001,
-          },
-        ],
-      };
-      expect(getTextOutputUnitRate(pricing)).toBeUndefined();
-    });
-
-    it('should return rate for fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textOutput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.002,
-          },
-        ],
-      };
-      expect(getTextOutputUnitRate(pricing)).toBe(0.002);
-    });
-  });
-
-  describe('getAudioInputUnitRate', () => {
-    it('should return undefined when pricing is undefined', () => {
-      expect(getAudioInputUnitRate()).toBeUndefined();
-    });
-
-    it('should return rate for AudioInput unit with fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'audioInput',
-            strategy: 'fixed',
-            unit: 'second',
-            rate: 0.01,
-          },
-        ],
-      };
-      expect(getAudioInputUnitRate(pricing)).toBe(0.01);
-    });
-  });
-
-  describe('getAudioOutputUnitRate', () => {
-    it('should return rate for AudioOutput unit with fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'audioOutput',
-            strategy: 'fixed',
-            unit: 'second',
-            rate: 0.015,
-          },
-        ],
-      };
-      expect(getAudioOutputUnitRate(pricing)).toBe(0.015);
-    });
-  });
-
-  describe('getCachedTextInputUnitRate', () => {
-    it('should return rate for CachedTextInput unit with fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput_cacheRead',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.0005,
-          },
-        ],
-      };
-      expect(getCachedTextInputUnitRate(pricing)).toBe(0.0005);
-    });
-  });
-
-  describe('getWriteCacheInputUnitRate', () => {
-    it('should return rate for TextInputCacheWrite unit with fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'textInput_cacheWrite',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.001,
-          },
-        ],
-      };
-      expect(getWriteCacheInputUnitRate(pricing)).toBe(0.001);
-    });
-  });
-
-  describe('getCachedAudioInputUnitRate', () => {
-    it('should return rate for CachedAudioInput unit with fixed strategy', () => {
-      const pricing: Pricing = {
-        units: [
-          {
-            name: 'audioInput_cacheRead',
-            strategy: 'fixed',
-            unit: 'second',
-            rate: 0.005,
-          },
-        ],
-      };
-      expect(getCachedAudioInputUnitRate(pricing)).toBe(0.005);
-    });
-  });
-
-  describe('edge cases and comprehensive scenarios', () => {
-    it('should handle pricing with multiple units correctly', () => {
-      const pricing: Pricing = {
-        currency: 'USD',
-        units: [
-          {
-            name: 'textInput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.001,
-          },
-          {
-            name: 'textOutput',
-            strategy: 'fixed',
-            unit: 'millionTokens',
-            rate: 0.002,
-          },
           {
             name: 'audioInput',
             strategy: 'tiered',
@@ -279,14 +49,41 @@ describe('pricing utilities', () => {
           },
         ],
       };
-
-      expect(getTextInputUnitRate(pricing)).toBe(0.001);
-      expect(getTextOutputUnitRate(pricing)).toBe(0.002);
-      expect(getAudioInputUnitRate(pricing)).toBe(0.01);
+      expect(getUnitRateByName(pricing, 'audioInput')).toBe(0.01);
     });
 
-    it('should handle lookup strategy with missing lookup object', () => {
+    it('returns undefined when tiered.tiers is absent or empty', () => {
+      const noTiers: Pricing = {
+        units: [
+          { name: 'textInput', strategy: 'tiered', unit: 'millionTokens', tiers: undefined as any },
+        ],
+      };
+      const emptyTiers: Pricing = {
+        units: [{ name: 'textInput', strategy: 'tiered', unit: 'millionTokens', tiers: [] }],
+      };
+      expect(getUnitRateByName(noTiers, 'textInput')).toBeUndefined();
+      expect(getUnitRateByName(emptyTiers, 'textInput')).toBeUndefined();
+    });
+
+    it('handles lookup strategy (first price value)', () => {
       const pricing: Pricing = {
+        units: [
+          {
+            name: 'textInput',
+            strategy: 'lookup',
+            unit: 'millionTokens',
+            lookup: {
+              pricingParams: ['model'],
+              prices: { a: 0.001, b: 0.03 },
+            },
+          },
+        ],
+      };
+      expect(getUnitRateByName(pricing, 'textInput')).toBe(0.001);
+    });
+
+    it('returns undefined when lookup missing or has no prices', () => {
+      const missingLookup: Pricing = {
         units: [
           {
             name: 'textInput',
@@ -295,22 +92,92 @@ describe('pricing utilities', () => {
             lookup: undefined as any,
           },
         ],
-      };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
-    });
-
-    it('should return undefined when tiers array is empty', () => {
-      const pricing: Pricing = {
+      } as any;
+      const emptyPrices: Pricing = {
         units: [
           {
             name: 'textInput',
-            strategy: 'tiered',
+            strategy: 'lookup',
             unit: 'millionTokens',
-            tiers: [],
+            lookup: { pricingParams: ['model'], prices: {} },
           },
         ],
       };
-      expect(getTextInputUnitRate(pricing)).toBeUndefined();
+      expect(getUnitRateByName(missingLookup, 'textInput')).toBeUndefined();
+      expect(getUnitRateByName(emptyPrices, 'textInput')).toBeUndefined();
+    });
+
+    it('works with multiple units', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', strategy: 'fixed', unit: 'millionTokens', rate: 0.001 },
+          { name: 'textOutput', strategy: 'fixed', unit: 'millionTokens', rate: 0.002 },
+          {
+            name: 'audioInput',
+            strategy: 'tiered',
+            unit: 'second',
+            tiers: [
+              { rate: 0.01, upTo: 3600 },
+              { rate: 0.008, upTo: 'infinity' },
+            ],
+          },
+        ],
+      };
+      expect(getUnitRateByName(pricing, 'textInput')).toBe(0.001);
+      expect(getUnitRateByName(pricing, 'textOutput')).toBe(0.002);
+      expect(getUnitRateByName(pricing, 'audioInput')).toBe(0.01);
+    });
+  });
+
+  describe('wrapper helpers', () => {
+    it('return the same values as getUnitRateByName for each unit', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', strategy: 'fixed', unit: 'millionTokens', rate: 0.001 },
+          { name: 'textOutput', strategy: 'fixed', unit: 'millionTokens', rate: 0.002 },
+          {
+            name: 'audioInput',
+            strategy: 'tiered',
+            unit: 'second',
+            tiers: [
+              { rate: 0.01, upTo: 3600 },
+              { rate: 0.008, upTo: 'infinity' },
+            ],
+          },
+          { name: 'audioOutput', strategy: 'fixed', unit: 'second', rate: 0.015 },
+          { name: 'textInput_cacheRead', strategy: 'fixed', unit: 'millionTokens', rate: 0.0005 },
+          {
+            name: 'textInput_cacheWrite',
+            strategy: 'lookup',
+            unit: 'millionTokens',
+            lookup: { pricingParams: ['ttl'], prices: { '5': 0.2, '60': 0.6 } },
+          },
+          { name: 'audioInput_cacheRead', strategy: 'fixed', unit: 'second', rate: 0.005 },
+        ],
+      };
+
+      expect(getTextInputUnitRate(pricing)).toBe(getUnitRateByName(pricing, 'textInput'));
+      expect(getTextOutputUnitRate(pricing)).toBe(getUnitRateByName(pricing, 'textOutput'));
+      expect(getAudioInputUnitRate(pricing)).toBe(getUnitRateByName(pricing, 'audioInput'));
+      expect(getAudioOutputUnitRate(pricing)).toBe(getUnitRateByName(pricing, 'audioOutput'));
+      expect(getCachedTextInputUnitRate(pricing)).toBe(
+        getUnitRateByName(pricing, 'textInput_cacheRead'),
+      );
+      expect(getWriteCacheInputUnitRate(pricing)).toBe(
+        getUnitRateByName(pricing, 'textInput_cacheWrite'),
+      );
+      expect(getCachedAudioInputUnitRate(pricing)).toBe(
+        getUnitRateByName(pricing, 'audioInput_cacheRead'),
+      );
+
+      // also validate expected concrete values for clarity
+      expect(getTextInputUnitRate(pricing)).toBe(0.001);
+      expect(getTextOutputUnitRate(pricing)).toBe(0.002);
+      expect(getAudioInputUnitRate(pricing)).toBe(0.01);
+      expect(getAudioOutputUnitRate(pricing)).toBe(0.015);
+      expect(getCachedTextInputUnitRate(pricing)).toBe(0.0005);
+      expect(getWriteCacheInputUnitRate(pricing)).toBe(0.2);
+      expect(getCachedAudioInputUnitRate(pricing)).toBe(0.005);
     });
   });
 });
