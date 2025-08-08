@@ -56,9 +56,9 @@ export class LobeFalAI implements LobeRuntimeAI {
     }
 
     const modelsAcceleratedByDefault = new Set<string>(['flux/krea']);
-    if (modelsAcceleratedByDefault.has(model) && userInput['enable_accelerate'] == null) {
-      defaultInput.enable_accelerate = true;
-      log('Applied default enable_accelerate for model: %s', model);
+    if (modelsAcceleratedByDefault.has(model)) {
+      defaultInput['acceleration'] = 'high';
+      log('Applied default acceleration=high for model: %s', model);
     }
 
     const endpoint = `fal-ai/${model}`;
