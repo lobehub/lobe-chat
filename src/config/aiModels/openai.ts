@@ -937,7 +937,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1',
     id: 'tts-1',
     pricing: {
-      units: [{ name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' }],
+      units: [{ name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionCharacters' }],
     },
     type: 'tts',
   },
@@ -946,7 +946,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1 HD',
     id: 'tts-1-hd',
     pricing: {
-      units: [{ name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' }],
+      units: [{ name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionCharacters' }],
     },
     type: 'tts',
   },
@@ -958,7 +958,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'tts',
@@ -992,7 +992,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
     maxOutput: 2000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -1007,7 +1008,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
     maxOutput: 2000,
     pricing: {
       units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -1074,7 +1076,21 @@ export const openaiImageModels: AIImageModelCard[] = [
       },
     },
     pricing: {
-      units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' }],
+      units: [
+        {
+          lookup: {
+            prices: {
+              '1024x1024': 0.02,
+              '256x256': 0.016,
+              '512x512': 0.018,
+            },
+            pricingParams: ['size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
     type: 'image',

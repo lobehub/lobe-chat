@@ -121,23 +121,14 @@ export type PricingUnitName =
   | 'audioInput_cacheRead' // corresponds to ChatModelPricing.cachedAudioInput
 
   // Image-based pricing units
-  | 'imageGeneration' // for image generation models
-
-  // Speech-based pricing units
-  | 'speechInput' // for TTS/STT input
-  | 'speechOutput'; // for TTS/STT output
+  | 'imageGeneration'; // for image generation models
 
 export type PricingUnitType =
   | 'millionTokens' // per 1M tokens
   | 'millionCharacters' // per 1M characters
   | 'image' // per image
-  | 'video' // per video
   | 'megapixel' // per megapixel
-  | 'second' // per second
-  | 'minute' // per minute
-  | 'container' // per container
-  | 'gb' // per GB
-  | 'call'; // per call
+  | 'second'; // per second
 
 export type PricingStrategy = 'fixed' | 'tiered' | 'lookup';
 
