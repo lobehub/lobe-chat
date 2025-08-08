@@ -96,7 +96,7 @@ export const renderWithTheme = (ui: React.ReactElement, options = {}) => {
   return render(ui, { wrapper: TestWrapper, ...options });
 };
 
-// Create a rerender function that also uses the theme wrapper
+// Create a rerender function that also uses the theme wrapper (deprecated, use rerender from renderWithTheme)
 export const rerenderWithTheme = (ui: React.ReactElement, options = {}) => {
   return render(ui, { wrapper: TestWrapper, ...options });
 };

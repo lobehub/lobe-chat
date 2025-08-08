@@ -1,6 +1,7 @@
 // Mock React Native polyfills that use Flow types
 jest.mock('@react-native/js-polyfills/error-guard', () => ({}));
 jest.mock('@react-native/js-polyfills/console', () => ({}));
+jest.mock('@react-native/js-polyfills', () => ({}));
 
 // Mock crypto for React Native
 if (typeof global.crypto === 'undefined') {
