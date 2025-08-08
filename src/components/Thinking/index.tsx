@@ -42,7 +42,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
   headerExpand: css`
     color: ${token.colorTextSecondary};
-    background: ${token.colorBgContainerSecondary};
   `,
   shinyText: css`
     color: ${rgba(token.colorText, 0.45)};
