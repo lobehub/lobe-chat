@@ -25,7 +25,7 @@ export interface LobeAgentChatConfig {
    */
   enableReasoningEffort?: boolean;
   reasoningBudgetToken?: number;
-  reasoningEffort?: 'low' | 'medium' | 'high';
+  reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
   thinkingBudget?: number;
   /**

@@ -11,6 +11,7 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import ContextCachingSwitch from './ContextCachingSwitch';
+import GPT5ReasoningEffortSlider from './GPT5ReasoningEffortSlider';
 import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
 import ThinkingBudgetSlider from './ThinkingBudgetSlider';
@@ -86,6 +87,17 @@ const ControlsForm = memo(() => {
     },
     {
       children: <ReasoningEffortSlider />,
+      desc: 'reasoning_effort',
+      label: t('extendParams.reasoningEffort.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'reasoningEffort',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <GPT5ReasoningEffortSlider />,
       desc: 'reasoning_effort',
       label: t('extendParams.reasoningEffort.title'),
       layout: 'horizontal',
