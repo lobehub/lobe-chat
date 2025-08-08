@@ -43,16 +43,16 @@ The project uses the following technologies:
 
 Note: All tools and libraries used are the latest versions. The application only needs to be compatible with the latest browsers;
 
-## Often used npm scripts
+## Often used npm scripts and commands
 
 ```bash
+# !: don't  any build script to check weather code can work after modify
 # type check
-bun type-check
+bun run type-check
 
 # install dependencies
 pnpm install
 
-# !: don't  any build script to check weather code can work after modify
+# run tests
+npx vitest run --config vitest.config.ts '[file-path-pattern]'
 ```
-
-check [testing guide](./testing-guide/testing-guide.mdc) to learn test scripts.

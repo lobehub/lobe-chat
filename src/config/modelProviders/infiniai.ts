@@ -11,11 +11,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek-r1',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -24,11 +19,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'DeepSeek V3',
       enabled: true,
       id: 'deepseek-v3',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -37,11 +27,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'QwQ',
       enabled: true,
       id: 'qwq-32b',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -50,11 +35,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 32B',
       enabled: true,
       id: 'deepseek-r1-distill-qwen-32b',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -63,11 +43,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen2.5 72B Instruct',
       enabled: true,
       id: 'qwen2.5-72b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -76,11 +51,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen2.5 32B Instruct',
       enabled: true,
       id: 'qwen2.5-32b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -89,11 +59,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 32B Instruct',
       enabled: true,
       id: 'qwen2.5-coder-32b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -102,11 +67,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen2.5 14B Instruct',
       enabled: true,
       id: 'qwen2.5-14b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -115,11 +75,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen2.5 7B Instruct',
       enabled: true,
       id: 'qwen2.5-7b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -128,11 +83,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen 2 72B Instruct',
       enabled: true,
       id: 'qwen2-72b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -141,11 +91,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Qwen 2 7B Instruct',
       enabled: true,
       id: 'qwen2-7b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -154,11 +99,6 @@ const InfiniAI: ModelProviderCard = {
       displayName: 'Yi-1.5 34B Chat',
       enabled: true,
       id: 'yi-1.5-34b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
   ],
   checkModel: 'qwen2.5-7b-instruct',
