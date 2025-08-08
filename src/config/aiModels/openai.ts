@@ -40,6 +40,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -65,6 +66,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
