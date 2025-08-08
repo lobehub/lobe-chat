@@ -11,25 +11,20 @@ export const fluxSchnellParamsSchema: ModelParamsSchema = {
 
 
 export const fluxKreaParamsSchema: ModelParamsSchema = {
-  height: { default: 1024, max: 1536, min: 512, step: 1 },
-  width: { default: 1024, max: 1536, min: 512, step: 1 },
+  // Krea 官网默认分辨率为 832 x 1248，这里遵循 width x height 的顺序
+  width: { default: 832, max: 2048, min: 512, step: 1 },
+  height: { default: 1248, max: 2048, min: 512, step: 1 },
   steps: { default: 28, max: 50, min: 1, step: 1 },
-  aspectRatio: {
-    default: '1:1',
-    enum: ['16:9', '4:3', '1:1', '3:4', '9:16'],
-  },
+  cfg: { default: 7.5, max: 20, min: 0, step: 0.1 },
   prompt: { default: '' },
   seed: { default: null },
 };
 
 export const qwenImageParamsSchema: ModelParamsSchema = {
-  height: { default: 1024, max: 1536, min: 512, step: 1 },
-  width: { default: 1024, max: 1536, min: 512, step: 1 },
+  height: { default: 1328, max: 1536, min: 512, step: 1 },
+  width: { default: 1328, max: 1536, min: 512, step: 1 },
   steps: { default: 30, max: 50, min: 2, step: 1 },
-  aspectRatio: {
-    default: '1:1',
-    enum: ['16:9', '4:3', '1:1', '3:4', '9:16'],
-  },
+  cfg: { default: 2.5, max: 20, min: 0, step: 0.1 },
   prompt: { default: '' },
   seed: { default: null },
 };
