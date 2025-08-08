@@ -107,6 +107,65 @@ export interface ChatModelPricing extends BasicModelPricing {
   writeCacheInput?: number;
 }
 
+// New pricing system types
+export type PricingUnitName =
+  // Text-based pricing units
+  | 'textInput' // corresponds to ChatModelPricing.input
+  | 'textOutput' // corresponds to ChatModelPricing.output
+  | 'textInput_cacheRead' // corresponds to ChatModelPricing.cachedInput
+  | 'textInput_cacheWrite' // corresponds to ChatModelPricing.writeCacheInput
+
+  // Audio-based pricing units
+  | 'audioInput' // corresponds to ChatModelPricing.audioInput
+  | 'audioOutput' // corresponds to ChatModelPricing.audioOutput
+  | 'audioInput_cacheRead' // corresponds to ChatModelPricing.cachedAudioInput
+
+  // Image-based pricing units
+  | 'imageGeneration'; // for image generation models
+
+export type PricingUnitType =
+  | 'millionTokens' // per 1M tokens
+  | 'millionCharacters' // per 1M characters
+  | 'image' // per image
+  | 'megapixel' // per megapixel
+  | 'second'; // per second
+
+export type PricingStrategy = 'fixed' | 'tiered' | 'lookup';
+
+export interface PricingUnitBase {
+  name: PricingUnitName;
+  strategy: PricingStrategy;
+  unit: PricingUnitType;
+}
+
+export interface FixedPricingUnit extends PricingUnitBase {
+  rate: number;
+  strategy: 'fixed';
+}
+
+export interface TieredPricingUnit extends PricingUnitBase {
+  strategy: 'tiered';
+  tiers: Array<{
+    rate: number;
+    upTo: number | 'infinity';
+  }>;
+}
+
+export interface LookupPricingUnit extends PricingUnitBase {
+  lookup: {
+    prices: Record<string, number>;
+    pricingParams: string[];
+  };
+  strategy: 'lookup';
+}
+
+export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit;
+
+export interface Pricing {
+  currency?: ModelPriceCurrency;
+  units: PricingUnit[];
+}
+
 export interface AIBaseModelCard {
   /**
    * the context window (or input + output tokens limit)
@@ -167,69 +226,31 @@ export interface AIChatModelCard extends AIBaseModelCard {
   abilities?: ModelAbilities;
   config?: AiModelConfig;
   maxOutput?: number;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   settings?: AiModelSettings;
   type: 'chat';
 }
 
 export interface AIEmbeddingModelCard extends AIBaseModelCard {
   maxDimension: number;
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-  };
+  pricing?: Pricing;
   type: 'embedding';
 }
 
 export interface AIImageModelCard extends AIBaseModelCard {
   parameters?: ModelParamsSchema;
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-  } & Record<string, number>;
+  pricing?: Pricing;
   resolutions?: string[];
   type: 'image';
 }
 
 export interface AITTSModelCard extends AIBaseModelCard {
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    output?: number;
-  };
+  pricing?: Pricing;
   type: 'tts';
 }
 
 export interface AISTTModelCard extends AIBaseModelCard {
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    output?: number;
-  };
+  pricing?: Pricing;
   type: 'stt';
 }
 
@@ -257,7 +278,7 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
    */
   deploymentName?: string;
   maxOutput?: number;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   type: 'realtime';
 }
 
@@ -269,7 +290,7 @@ export interface AiFullModelCard extends AIBaseModelCard {
   id: string;
   maxDimension?: number;
   parameters?: ModelParamsSchema;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   type: AiModelType;
 }
 
@@ -304,7 +325,7 @@ export interface AiProviderModelListItem {
   enabled: boolean;
   id: string;
   parameters?: Record<string, any>;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   releasedAt?: string;
   settings?: AiModelSettings;
   source?: AiModelSourceType;

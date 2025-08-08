@@ -9,8 +9,10 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     id: 'DeepSeek-R1',
     pricing: {
-      input: 1.35,
-      output: 5.4,
+      units: [
+        { name: 'textInput', rate: 1.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -22,8 +24,10 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3',
     id: 'DeepSeek-V3',
     pricing: {
-      input: 1.14,
-      output: 4.56,
+      units: [
+        { name: 'textInput', rate: 1.14, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.56, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -40,9 +44,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'o3',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 2.5,
-      input: 10,
-      output: 40,
+      units: [
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-17',
     type: 'chat',
@@ -60,9 +66,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'o4-mini',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.275,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-17',
     type: 'chat',
@@ -79,9 +87,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'gpt-4.1',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     type: 'chat',
@@ -99,9 +109,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'gpt-4.1-mini',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.1,
-      input: 0.4,
-      output: 1.6,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     type: 'chat',
@@ -118,9 +130,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     type: 'chat',
@@ -135,9 +149,11 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'GPT 4.5 Preview',
     id: 'gpt-4.5-preview',
     pricing: {
-      cachedInput: 37.5,
-      input: 75,
-      output: 150,
+      units: [
+        { name: 'textInput_cacheRead', rate: 37.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 150, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-02-27',
     type: 'chat',
@@ -153,9 +169,11 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'o3-mini',
     id: 'o3-mini',
     pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-31',
     type: 'chat',
@@ -170,9 +188,11 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'o1-mini',
     id: 'o1-mini',
     pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-09-12',
     type: 'chat',
@@ -187,9 +207,11 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'o1',
     id: 'o1',
     pricing: {
-      cachedInput: 7.5,
-      input: 15,
-      output: 60,
+      units: [
+        { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-17',
     type: 'chat',
@@ -206,9 +228,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'gpt-4o',
     maxOutput: 4096,
     pricing: {
-      cachedInput: 1.25,
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-05-13',
     type: 'chat',
@@ -224,9 +248,11 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-mini',
     maxOutput: 16_384,
     pricing: {
-      cachedInput: 0.075,
-      input: 0.15,
-      output: 0.6,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
