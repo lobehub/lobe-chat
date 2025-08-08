@@ -51,7 +51,7 @@ export const getDetailsToken = (
     !!totalOutputTokens ? calcCredit(totalOutputTokens, formatPrice.output) : 0
   ) as number;
   const totalInputCredit = (
-    !!totalInputTokens ? calcCredit(totalInputTokens, formatPrice.output) : 0
+    !!totalInputTokens ? calcCredit(totalInputTokens, formatPrice.input) : 0
   ) as number;
 
   const totalCredit =
