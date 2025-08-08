@@ -13,8 +13,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360zhinao2-o1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -29,8 +31,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360gpt2-o1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -46,8 +50,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360gpt2-pro',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -65,8 +71,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360gpt-pro',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -80,8 +88,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360gpt-pro-trans',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -93,8 +103,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360gpt-turbo',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -109,8 +121,10 @@ const ai360ChatModels: AIChatModelCard[] = [
     id: '360/deepseek-r1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

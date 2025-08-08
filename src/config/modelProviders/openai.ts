@@ -14,9 +14,11 @@ const OpenAI: ModelProviderCard = {
       id: 'gpt-5-mini',
       maxOutput: 128_000,
       pricing: {
-        cachedInput: 0.03,
-        input: 0.25,
-        output: 2,
+        units: [
+          { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        ],
       },
       releasedAt: '2025-08-07',
       vision: true,
@@ -29,11 +31,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4.1-mini',
       maxOutput: 32_768,
-      pricing: {
-        cachedInput: 0.1,
-        input: 0.4,
-        output: 1.6,
-      },
       releasedAt: '2025-04-14',
       vision: true,
     },
@@ -45,10 +42,6 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       id: 'o1-mini',
       maxOutput: 65_536,
-      pricing: {
-        input: 3,
-        output: 12,
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -59,10 +52,6 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       id: 'o1-2024-12-17',
       maxOutput: 100_000,
-      pricing: {
-        input: 15,
-        output: 60,
-      },
       releasedAt: '2024-12-17',
       vision: true,
     },
@@ -74,10 +63,6 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       id: 'o1-preview',
       maxOutput: 32_768,
-      pricing: {
-        input: 15,
-        output: 60,
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -89,10 +74,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4o-mini',
       maxOutput: 16_385,
-      pricing: {
-        input: 0.15,
-        output: 0.6,
-      },
       vision: true,
     },
     {
@@ -103,10 +84,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4o-mini-search-preview',
       maxOutput: 16_384,
-      pricing: {
-        input: 0.15,
-        output: 0.6,
-      },
       releasedAt: '2024-12-01',
       vision: true,
     },
@@ -118,10 +95,6 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gpt-4o-2024-11-20',
-      pricing: {
-        input: 2.5,
-        output: 10,
-      },
       releasedAt: '2024-11-20',
       vision: true,
     },
@@ -133,10 +106,6 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gpt-4o',
-      pricing: {
-        input: 2.5,
-        output: 10,
-      },
       vision: true,
     },
     {
@@ -146,10 +115,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4o 0806',
       functionCall: true,
       id: 'gpt-4o-2024-08-06',
-      pricing: {
-        input: 2.5,
-        output: 10,
-      },
       releasedAt: '2024-08-06',
       vision: true,
     },
@@ -160,10 +125,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4o 0513',
       functionCall: true,
       id: 'gpt-4o-2024-05-13',
-      pricing: {
-        input: 5,
-        output: 15,
-      },
       releasedAt: '2024-05-13',
       vision: true,
     },
@@ -174,10 +135,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'ChatGPT-4o',
       enabled: true,
       id: 'chatgpt-4o-latest',
-      pricing: {
-        input: 5,
-        output: 15,
-      },
       vision: true,
     },
     {
@@ -187,10 +144,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo',
       functionCall: true,
       id: 'gpt-4-turbo',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
       vision: true,
     },
     {
@@ -200,10 +153,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Vision 0409',
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
       vision: true,
     },
     {
@@ -213,10 +162,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview',
       functionCall: true,
       id: 'gpt-4-turbo-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -225,10 +170,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview 0125',
       functionCall: true,
       id: 'gpt-4-0125-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -237,10 +178,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview 1106',
       functionCall: true,
       id: 'gpt-4-1106-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -249,10 +186,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4',
       functionCall: true,
       id: 'gpt-4',
-      pricing: {
-        input: 30,
-        output: 60,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -261,10 +194,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 0613',
       functionCall: true,
       id: 'gpt-4-0613',
-      pricing: {
-        input: 30,
-        output: 60,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -274,10 +203,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
-      pricing: {
-        input: 60,
-        output: 120,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -287,10 +212,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 32K 0613',
       functionCall: true,
       id: 'gpt-4-32k-0613',
-      pricing: {
-        input: 60,
-        output: 120,
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -299,10 +220,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo',
       functionCall: true,
       id: 'gpt-3.5-turbo',
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -311,10 +228,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo 0125',
       functionCall: true,
       id: 'gpt-3.5-turbo-0125',
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -323,10 +236,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo 1106',
       functionCall: true,
       id: 'gpt-3.5-turbo-1106',
-      pricing: {
-        input: 1,
-        output: 2,
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -334,10 +243,6 @@ const OpenAI: ModelProviderCard = {
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo Instruct',
       id: 'gpt-3.5-turbo-instruct',
-      pricing: {
-        input: 1.5,
-        output: 2,
-      },
     },
   ],
   checkModel: 'gpt-4.1-nano',

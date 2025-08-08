@@ -21,10 +21,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       id: 'openai/o1-mini',
       maxOutput: 65_536,
-      pricing: {
-        input: 3,
-        output: 12,
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -35,10 +31,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       id: 'openai/o1',
       maxOutput: 100_000,
-      pricing: {
-        input: 15,
-        output: 60,
-      },
       releasedAt: '2024-12-17',
       vision: true,
     },
@@ -50,10 +42,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       id: 'openai/o1-preview',
       maxOutput: 32_768,
-      pricing: {
-        input: 15,
-        output: 60,
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -65,10 +53,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'openai/gpt-4o-mini',
       maxOutput: 16_385,
-      pricing: {
-        input: 0.15,
-        output: 0.6,
-      },
       vision: true,
     },
     {
@@ -79,10 +63,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'openai/gpt-4o',
-      pricing: {
-        input: 2.5,
-        output: 10,
-      },
       vision: true,
     },
     {
@@ -94,12 +74,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'anthropic/claude-3-haiku',
       maxOutput: 4096,
-      pricing: {
-        cachedInput: 0.025,
-        input: 0.25,
-        output: 1.25,
-        writeCacheInput: 0.3125,
-      },
       releasedAt: '2024-03-07',
       vision: true,
     },
@@ -112,12 +86,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'anthropic/claude-3.5-haiku',
       maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.1,
-        input: 1,
-        output: 5,
-        writeCacheInput: 1.25,
-      },
       releasedAt: '2024-11-05',
     },
     {
@@ -129,12 +97,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'anthropic/claude-3.5-sonnet',
       maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.3,
-        input: 3,
-        output: 15,
-        writeCacheInput: 3.75,
-      },
       releasedAt: '2024-06-20',
       vision: true,
     },
@@ -147,12 +109,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'anthropic/claude-3-opus',
       maxOutput: 4096,
-      pricing: {
-        cachedInput: 1.5,
-        input: 15,
-        output: 75,
-        writeCacheInput: 18.75,
-      },
       releasedAt: '2024-02-29',
       vision: true,
     },
@@ -164,10 +120,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'google/gemini-flash-1.5',
       maxOutput: 8192,
-      pricing: {
-        input: 0.075,
-        output: 0.3,
-      },
       vision: true,
     },
     {
@@ -179,11 +131,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'google/gemini-2.0-flash-001',
       maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.025,
-        input: 0.1,
-        output: 0.4,
-      },
       releasedAt: '2025-02-05',
       vision: true,
     },
@@ -195,10 +142,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'google/gemini-pro-1.5',
       maxOutput: 8192,
-      pricing: {
-        input: 3.5,
-        output: 10.5,
-      },
       vision: true,
     },
     {
@@ -209,10 +152,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek/deepseek-chat',
-      pricing: {
-        input: 0.14,
-        output: 0.28,
-      },
       releasedAt: '2024-09-05',
     },
     {
@@ -222,10 +161,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       functionCall: false,
       id: 'deepseek/deepseek-r1',
-      pricing: {
-        input: 3,
-        output: 8,
-      },
       releasedAt: '2025-01-20',
     },
     {
@@ -244,10 +179,6 @@ const OpenRouter: ModelProviderCard = {
       displayName: 'Llama 3.2 11B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-11b-vision-instruct',
-      pricing: {
-        input: 0.162,
-        output: 0.162,
-      },
       vision: true,
     },
     {
@@ -257,10 +188,6 @@ const OpenRouter: ModelProviderCard = {
       displayName: 'Llama 3.2 90B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-90b-vision-instruct',
-      pricing: {
-        input: 0.4,
-        output: 0.4,
-      },
       vision: true,
     },
     {
@@ -271,10 +198,6 @@ const OpenRouter: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta-llama/llama-3.3-70b-instruct',
-      pricing: {
-        input: 0.12,
-        output: 0.3,
-      },
     },
     {
       contextWindowTokens: 32_768,
