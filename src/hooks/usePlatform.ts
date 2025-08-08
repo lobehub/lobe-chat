@@ -37,6 +37,6 @@ export const usePlatform = () => {
         ((platformInfo.isChromium && !platformInfo.isIOS) ||
           (platformInfo.isMacOS && platformInfo.isSonomaOrLaterSafari)),
     }),
-    [platformInfo],
+    [],
   );
 };

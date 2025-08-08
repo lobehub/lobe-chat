@@ -283,7 +283,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API 提供可根据需要自行联网的 DeepSeek 系列模型的访问，包括标准版和快速版本，支持多种参数规模的模型选择。
 - **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: 为应用开发者提供高性能、易上手、安全可靠的大模型服务，覆盖从大模型开发到大模型服务化部署的全流程。
 - **[Qiniu](https://lobechat.com/discover/provider/qiniu)**: 七牛作为老牌云服务厂商，提供高性价比稳定的实时、批量 AI 推理服务，简单易用。
-- **[302.AI](https://lobechat.com/discover/provider/ai302)**:
+- **[302.AI](https://lobechat.com/discover/provider/ai302)**: 302.AI 是一个按需付费的 AI 应用平台，提供市面上最全的 AI API 和 AI 在线应用
 
 </details>
 

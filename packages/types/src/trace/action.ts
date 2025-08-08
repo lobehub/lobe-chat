@@ -1,4 +1,4 @@
-import { TraceEventType } from '@/const/trace';
+import { TraceEventType, TraceNameMap } from './enum';
 
 export interface TraceEventBasePayload {
   content: string;
@@ -29,3 +29,26 @@ export type TraceEventPayloads =
   | TraceEventModifyMessage
   | TraceEventDeleteAndRegenerateMessage
   | TraceEventRegenerateMessage;
+
+export interface TracePayload {
+  /**
+   * if user allow to trace
+   */
+  enabled?: boolean;
+  observationId?: string;
+  /**
+   * chat session: agentId or groupId
+   */
+  sessionId?: string;
+  tags?: string[];
+  /**
+   * chat topicId
+   */
+  topicId?: string;
+  traceId?: string;
+  traceName?: TraceNameMap;
+  /**
+   * user uuid
+   */
+  userId?: string;
+}

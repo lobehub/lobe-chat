@@ -1,3 +1,4 @@
+import { ArtifactType } from '@lobechat/types';
 import { ActionIcon, Icon, Segmented, Text } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { cx } from 'antd-style';
@@ -9,7 +10,6 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { ArtifactDisplayMode } from '@/store/chat/slices/portal/initialState';
 import { oneLineEllipsis } from '@/styles';
-import { ArtifactType } from '@/types/artifact';
 
 const Header = () => {
   const { t } = useTranslation('portal');

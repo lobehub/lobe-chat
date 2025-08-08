@@ -17,6 +17,10 @@ const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): Strea
     return { data: 'finished', id: stack.id, type: 'stop' };
   }
 
+  if (chunk.message.thinking) {
+    return { data: chunk.message.thinking, id: stack.id, type: 'reasoning' };
+  }
+
   if (chunk.message.tool_calls && chunk.message.tool_calls.length > 0) {
     return {
       data: chunk.message.tool_calls.map((value, index) => ({

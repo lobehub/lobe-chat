@@ -285,6 +285,7 @@ const nextConfig: NextConfig = {
       ...config.resolve.fallback,
       zipfile: false,
     };
+
     return config;
   },
 };

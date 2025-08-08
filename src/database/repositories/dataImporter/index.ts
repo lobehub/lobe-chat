@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm/expressions';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import * as EXPORT_TABLES from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';

@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm/expressions';
+import { and, desc, eq } from 'drizzle-orm';
 
 import { NewEvalDatasetsItem, evalDatasets } from '@/database/schemas';
 import { serverDB } from '@/database/server';

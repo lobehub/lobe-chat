@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm/expressions';
+import { eq, inArray } from 'drizzle-orm';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/core/dbForTest';

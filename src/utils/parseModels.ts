@@ -1,6 +1,5 @@
 import { produce } from 'immer';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { AiFullModelCard, AiModelType } from '@/types/aiModel';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 import { merge } from '@/utils/merge';
@@ -8,7 +7,7 @@ import { merge } from '@/utils/merge';
 /**
  * Parse model string to add or remove models.
  */
-export const parseModelString = (
+export const parseModelString = async (
   providerId: string,
   modelString: string = '',
   withDeploymentName = false,
@@ -52,7 +51,7 @@ export const parseModelString = (
     }
 
     // Use new type lookup function, prioritizing same provider first, then fallback to other providers
-    const modelType: AiModelType = getModelPropertyWithFallback<AiModelType>(
+    const modelType: AiModelType = await getModelPropertyWithFallback<AiModelType>(
       id,
       'type',
       providerId,
@@ -119,7 +118,7 @@ export const parseModelString = (
 /**
  * Extract a special method to process chatModels
  */
-export const transformToAiModelList = ({
+export const transformToAiModelList = async ({
   modelString = '',
   defaultModels,
   providerId,
@@ -129,16 +128,19 @@ export const transformToAiModelList = ({
   modelString?: string;
   providerId: string;
   withDeploymentName?: boolean;
-}): AiFullModelCard[] | undefined => {
+}): Promise<AiFullModelCard[] | undefined> => {
   if (!modelString) return undefined;
 
-  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
+  const modelConfig = await parseModelString(providerId, modelString, withDeploymentName);
   let chatModels = modelConfig.removeAll ? [] : defaultModels;
 
   // 处理移除逻辑
   if (!modelConfig.removeAll) {
     chatModels = chatModels.filter((m) => !modelConfig.removed.includes(m.id));
   }
+
+  // 异步获取配置
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
   return produce(chatModels, (draft) => {
     // 处理添加或替换逻辑
@@ -193,12 +195,12 @@ export const transformToAiModelList = ({
   });
 };
 
-export const extractEnabledModels = (
+export const extractEnabledModels = async (
   providerId: string,
   modelString: string = '',
   withDeploymentName = false,
 ) => {
-  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
+  const modelConfig = await parseModelString(providerId, modelString, withDeploymentName);
   const list = modelConfig.add.map((m) => m.id);
 
   if (list.length === 0) return;
