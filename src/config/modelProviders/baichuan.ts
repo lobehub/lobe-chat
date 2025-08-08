@@ -12,11 +12,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4',
       maxOutput: 4096,
-      pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -27,11 +22,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4-Turbo',
       maxOutput: 4096,
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 15,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -42,11 +32,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4-Air',
       maxOutput: 4096,
-      pricing: {
-        currency: 'CNY',
-        input: 0.98,
-        output: 0.98,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -56,11 +41,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan3-Turbo',
       maxOutput: 8192,
-      pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -69,11 +49,6 @@ const Baichuan: ModelProviderCard = {
       displayName: 'Baichuan 3 Turbo 128k',
       id: 'Baichuan3-Turbo-128k',
       maxOutput: 4096,
-      pricing: {
-        currency: 'CNY',
-        input: 24,
-        output: 24,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -82,11 +57,6 @@ const Baichuan: ModelProviderCard = {
       displayName: 'Baichuan 2 Turbo',
       id: 'Baichuan2-Turbo',
       maxOutput: 8192,
-      pricing: {
-        currency: 'CNY',
-        input: 8,
-        output: 8,
-      },
     },
   ],
   checkModel: 'Baichuan3-Turbo',

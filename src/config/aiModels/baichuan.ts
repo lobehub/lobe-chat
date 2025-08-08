@@ -15,8 +15,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
-      input: 100,
-      output: 100,
+      units: [
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -37,8 +39,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -59,8 +63,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
-      input: 0.98,
-      output: 0.98,
+      units: [
+        { name: 'textInput', rate: 0.98, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.98, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -80,8 +86,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       currency: 'CNY',
-      input: 12,
-      output: 12,
+      units: [
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -97,8 +105,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
-      input: 24,
-      output: 24,
+      units: [
+        { name: 'textInput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -111,8 +121,10 @@ const baichuanChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     pricing: {
       currency: 'CNY',
-      input: 8,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

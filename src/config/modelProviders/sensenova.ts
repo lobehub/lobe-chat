@@ -12,11 +12,6 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'SenseChat-5',
-      pricing: {
-        currency: 'CNY',
-        input: 40,
-        output: 100,
-      },
     },
     /*
     // Not compatible with local mode (Not support Base64 Image)
@@ -25,11 +20,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 5.5 Vision',
       enabled: true,
       id: 'SenseChat-Vision',
-      pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
-      },
       tokens: 16_384,
       vision: true,
     },
@@ -40,11 +30,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 5.0 Turbo',
       enabled: true,
       id: 'SenseChat-Turbo',
-      pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -52,11 +37,6 @@ const SenseNova: ModelProviderCard = {
         '32K上下文长度，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美',
       displayName: 'SenseChat 5.0 Cantonese',
       id: 'SenseChat-5-Cantonese',
-      pricing: {
-        currency: 'CNY',
-        input: 27,
-        output: 27,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -64,11 +44,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 128K',
       enabled: true,
       id: 'SenseChat-128K',
-      pricing: {
-        currency: 'CNY',
-        input: 60,
-        output: 60,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -76,11 +51,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 32K',
       enabled: true,
       id: 'SenseChat-32K',
-      pricing: {
-        currency: 'CNY',
-        input: 36,
-        output: 36,
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -88,33 +58,18 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 4K',
       enabled: true,
       id: 'SenseChat',
-      pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
-      },
     },
     {
       contextWindowTokens: 8192,
       description: '标准版模型，8K上下文长度，高响应速度',
       displayName: 'SenseChat Character',
       id: 'SenseChat-Character',
-      pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: '高级版模型，32K上下文长度，能力全面提升，支持中/英文对话',
       displayName: 'SenseChat Character Pro',
       id: 'SenseChat-Character-Pro',
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 15,
-      },
     },
   ],
   checkModel: 'SenseChat-Turbo',

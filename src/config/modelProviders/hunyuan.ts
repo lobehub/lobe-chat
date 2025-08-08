@@ -11,11 +11,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-lite',
       maxOutput: 6000,
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -25,11 +20,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard',
       maxOutput: 2000,
-      pricing: {
-        currency: 'CNY',
-        input: 4.5,
-        output: 5,
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -39,11 +29,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard-256K',
       maxOutput: 6000,
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 60,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -54,11 +39,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-turbo',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 50,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -69,11 +49,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-pro',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 30,
-        output: 100,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -82,11 +57,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-vision',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 18,
-        output: 18,
-      },
       vision: true,
     },
     {
@@ -96,11 +66,6 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Code',
       id: 'hunyuan-code',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -110,11 +75,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-functioncall',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -123,11 +83,6 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Role',
       id: 'hunyuan-role',
       maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
-      },
     },
   ],
   checkModel: 'hunyuan-lite',

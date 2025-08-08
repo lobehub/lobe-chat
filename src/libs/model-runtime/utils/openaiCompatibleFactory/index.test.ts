@@ -1352,9 +1352,26 @@ describe('LobeOpenAICompatibleFactory', () => {
           id: 'gpt-4o',
           maxOutput: 4096,
           pricing: {
-            cachedInput: 1.25,
-            input: 2.5,
-            output: 10,
+            units: [
+              {
+                name: 'textInput_cacheRead',
+                rate: 1.25,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                name: 'textInput',
+                rate: 2.5,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                name: 'textOutput',
+                rate: 10,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+            ],
           },
           providerId: 'azure',
           releasedAt: '2024-05-13',
@@ -1374,8 +1391,20 @@ describe('LobeOpenAICompatibleFactory', () => {
           id: 'claude-3-haiku-20240307',
           maxOutput: 4096,
           pricing: {
-            input: 0.25,
-            output: 1.25,
+            units: [
+              {
+                name: 'textInput',
+                rate: 0.25,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                name: 'textOutput',
+                rate: 1.25,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+            ],
           },
           providerId: 'anthropic',
           releasedAt: '2024-03-07',
@@ -1400,9 +1429,26 @@ describe('LobeOpenAICompatibleFactory', () => {
           id: 'gpt-4o-mini',
           maxOutput: 4096,
           pricing: {
-            cachedInput: 0.075,
-            input: 0.15,
-            output: 0.6,
+            units: [
+              {
+                name: 'textInput_cacheRead',
+                rate: 0.075,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                name: 'textInput',
+                rate: 0.15,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                name: 'textOutput',
+                rate: 0.6,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+            ],
           },
           providerId: 'azure',
           releasedAt: '2023-10-26',

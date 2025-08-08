@@ -13,8 +13,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1/community',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -27,8 +29,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-v3/community',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -44,8 +48,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -58,8 +64,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-v3',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -75,8 +83,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1-distill-llama-70b',
     pricing: {
       currency: 'CNY',
-      input: 5.8,
-      output: 5.8,
+      units: [
+        { name: 'textInput', rate: 5.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -92,8 +102,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1-distill-qwen-32b',
     pricing: {
       currency: 'CNY',
-      input: 2.18,
-      output: 2.18,
+      units: [
+        { name: 'textInput', rate: 2.18, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.18, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -109,8 +121,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1-distill-qwen-14b',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 1,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -126,8 +140,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'deepseek/deepseek-r1-distill-llama-8b',
     pricing: {
       currency: 'CNY',
-      input: 0.3,
-      output: 0.3,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -140,8 +156,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen-2.5-72b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 2.75,
-      output: 2.88,
+      units: [
+        { name: 'textInput', rate: 2.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.88, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -157,8 +175,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen-2-vl-72b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 4.5,
-      output: 4.5,
+      units: [
+        { name: 'textInput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -170,8 +190,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-3.2-3b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.216,
-      output: 0.36,
+      units: [
+        { name: 'textInput', rate: 0.216, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.36, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -184,8 +206,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen2.5-32b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
+      units: [
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -198,8 +222,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'baichuan/baichuan2-13b-chat',
     pricing: {
       currency: 'CNY',
-      input: 1.75,
-      output: 1.75,
+      units: [
+        { name: 'textInput', rate: 1.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -212,8 +238,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-3.1-70b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 2.45,
-      output: 2.82,
+      units: [
+        { name: 'textInput', rate: 2.45, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.82, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -226,8 +254,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-3.1-8b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.4,
-      output: 0.4,
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -240,8 +270,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: '01-ai/yi-1.5-34b-chat',
     pricing: {
       currency: 'CNY',
-      input: 1.1,
-      output: 1.1,
+      units: [
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -254,8 +286,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: '01-ai/yi-1.5-9b-chat',
     pricing: {
       currency: 'CNY',
-      input: 0.4,
-      output: 0.4,
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -267,8 +301,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'thudm/glm-4-9b-chat',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -281,8 +317,10 @@ const ppioChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen-2-7b-instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.32,
-      output: 0.32,
+      units: [
+        { name: 'textInput', rate: 0.32, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.32, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

@@ -11,11 +11,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-flash',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 4,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -24,11 +19,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-8k',
-      pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 20,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -37,11 +27,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-32k',
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -50,11 +35,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-128k',
-      pricing: {
-        currency: 'CNY',
-        input: 40,
-        output: 200,
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -62,11 +42,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1 256K',
       functionCall: true,
       id: 'step-1-256k',
-      pricing: {
-        currency: 'CNY',
-        input: 95,
-        output: 300,
-      },
     },
     {
       contextWindowTokens: 16_000,
@@ -75,11 +50,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-16k',
-      pricing: {
-        currency: 'CNY',
-        input: 38,
-        output: 120,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -89,11 +59,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-mini',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
-      },
     },
     {
       contextWindowTokens: 16_000,
@@ -101,11 +66,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 2 16K Exp',
       functionCall: true,
       id: 'step-2-16k-exp',
-      pricing: {
-        currency: 'CNY',
-        input: 38,
-        output: 120,
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -114,11 +74,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-8k',
-      pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 20,
-      },
       vision: true,
     },
     {
@@ -127,11 +82,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1V 32K',
       functionCall: true,
       id: 'step-1v-32k',
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
-      },
       vision: true,
     },
     {
@@ -140,11 +90,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1o Vision 32K',
       enabled: true,
       id: 'step-1o-vision-32k',
-      pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
-      },
       vision: true,
     },
     {
@@ -153,11 +98,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1.5V Mini',
       enabled: true,
       id: 'step-1.5v-mini',
-      pricing: {
-        currency: 'CNY',
-        input: 8,
-        output: 35,
-      },
       vision: true,
     },
   ],

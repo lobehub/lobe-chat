@@ -26,28 +26,11 @@ Gather the modified code and context. Please strictly follow the process below:
 
 ### Code Style
 
-read [typescript.mdc](mdc:.cursor/rules/typescript.mdc) to learn the project's code style.
-
-- Ensure JSDoc comments accurately reflect the implementation; update them when needed.
-- Look for opportunities to simplify or modernize code with the latest JavaScript/TypeScript features.
-- Prefer `async`/`await` over callbacks or chained `.then` promises.
-- Use consistent, descriptive naming—avoid obscure abbreviations.
-- Replace magic numbers or strings with well-named constants.
-- Use semantically meaningful variable, function, and class names.
-- Ignore purely formatting issues and other autofixable lint problems.
+read [typescript.mdc](mdc:.cursor/rules/typescript.mdc) for the consolidated project code style and optimization rules.
 
 ### Code Optimization
 
-- Prefer `for…of` loops to index-based `for` loops when feasible.
-- Decide whether callbacks should be **debounced** or **throttled**.
-- Use components from `@lobehub/ui`, Ant Design, or the existing design system instead of raw HTML tags (e.g., `Button` vs. `button`).
-- reuse npm packages already installed (e.g., `lodash/omit`) rather than reinventing the wheel.
-- Design for dark mode and mobile responsiveness:
-  - Use the `antd-style` token system instead of hard-coded colors.
-  - Select the proper component variants.
-- Performance considerations:
-  - Where safe, convert sequential async flows to concurrent ones with `Promise.all`, `Promise.race`, etc.
-  - Query only the required columns from a database rather than selecting entire rows.
+The optimization checklist has been consolidated into [typescript.mdc](mdc:.cursor/rules/typescript.mdc): loops, debouncing/throttling, design system components, theming tokens, concurrency with `Promise.*`, minimal DB column selection, and package reuse.
 
 ### Obvious Bugs
 

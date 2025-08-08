@@ -26,8 +26,10 @@ const taichuChatModels: AIChatModelCard[] = [
     id: 'taichu_llm',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -42,8 +44,10 @@ const taichuChatModels: AIChatModelCard[] = [
     id: 'taichu_vl',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
