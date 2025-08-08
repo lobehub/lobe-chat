@@ -206,10 +206,6 @@ export const sessionsRelations = relations(sessions, ({ many, one }) => ({
     fields: [sessions.userId],
     references: [users.id],
   }),
-  user: one(users, {
-    fields: [sessions.userId],
-    references: [users.id],
-  }),
 }));
 
 export const chunksRelations = relations(unstructuredChunks, ({ one }) => ({

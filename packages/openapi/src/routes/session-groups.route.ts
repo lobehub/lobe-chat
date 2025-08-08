@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 
 import { getScopePermissions } from '@/utils/rbac';
 
-import { SessionGroupController } from '../controllers/sessionGroup.controller';
+import { SessionGroupController } from '../controllers/session-group.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {

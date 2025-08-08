@@ -4,16 +4,17 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@hono/zod-validator": "^0.7.2"
+    "@hono/zod-validator": "^0.7.2",
+    "hono": "^4.7.11"
   },
   "devDependencies": {
+    "@lobechat/types": "workspace:*",
     "@types/debug": "^4.1.12",
     "@types/lodash": "^4.17.20",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.16.5",
     "tsx": "~4.19.4",
-    "typescript": "^5.9.2",
-    "@lobechat/types": "workspace:*"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "@types/lodash": "^4.17.20",
@@ -21,7 +22,6 @@
     "@types/node": "^22.16.5",
     "debug": "^4.4.1",
     "drizzle-orm": "^0.44.0",
-    "hono": "^4.7.11",
     "js-sha256": "^0.11.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

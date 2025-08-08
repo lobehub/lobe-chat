@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
-import { SessionGroupService } from '../services/sessionGroup.service';
+import { SessionGroupService } from '../services/session-group.service';
 import {
   CreateSessionGroupRequest,
   DeleteSessionGroupRequest,
