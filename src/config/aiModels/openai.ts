@@ -40,7 +40,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
-      extendParams: ['reasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -66,7 +66,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
-      extendParams: ['reasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -88,10 +88,14 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
     type: 'chat',
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -102,7 +106,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-5-chat-latest',
     maxOutput: 128_000,
     pricing: {
-      cachedInput: 0.13,
+      cachedInput: 0.125,
       input: 1.25,
       output: 10,
     },

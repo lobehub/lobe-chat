@@ -23,7 +23,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
-      extendParams: ['reasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -49,7 +49,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-07',
     settings: {
-      extendParams: ['reasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -63,7 +63,6 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 400_000,
     description: '最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。',
     displayName: 'GPT-5 nano',
-    enabled: true,
     id: 'gpt-5-nano',
     maxOutput: 128_000,
     pricing: {
@@ -72,10 +71,14 @@ const aihubmixModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
     type: 'chat',
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
