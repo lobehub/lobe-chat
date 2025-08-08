@@ -972,7 +972,14 @@ export const openaiSTTModels: AISTTModelCard[] = [
     displayName: 'Whisper',
     id: 'whisper-1',
     pricing: {
-      units: [{ name: 'textInput', rate: 0.006, strategy: 'fixed', unit: 'millionTokens' }],
+      units: [
+        {
+          name: 'audioInput',
+          rate: 0.0001, // $0.006 per minute => $0.0001 per second
+          strategy: 'fixed',
+          unit: 'second',
+        },
+      ],
     },
     type: 'stt',
   },
