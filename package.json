@@ -140,7 +140,7 @@
     "@google/genai": "^1.13.0",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
-    "@khmyznikov/pwa-install": "0.3.9",
+    "@khmyznikov/pwa-install": "0.5.7",
     "@langchain/community": "^0.3.50",
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
