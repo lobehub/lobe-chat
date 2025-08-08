@@ -9,23 +9,22 @@ export const fluxSchnellParamsSchema: ModelParamsSchema = {
   width: { default: 1024, max: 1536, min: 512, step: 1 },
 };
 
-
 export const fluxKreaParamsSchema: ModelParamsSchema = {
-  width: { default: 832, max: 2048, min: 512, step: 1 },
-  height: { default: 1248, max: 2048, min: 512, step: 1 },
-  steps: { default: 28, max: 50, min: 1, step: 1 },
   cfg: { default: 7.5, max: 20, min: 0, step: 0.1 },
+  height: { default: 1248, max: 2048, min: 512, step: 1 },
   prompt: { default: '' },
   seed: { default: null },
+  steps: { default: 28, max: 50, min: 1, step: 1 },
+  width: { default: 832, max: 2048, min: 512, step: 1 },
 };
 
 export const qwenImageParamsSchema: ModelParamsSchema = {
-  height: { default: 1328, max: 1536, min: 512, step: 1 },
-  width: { default: 1328, max: 1536, min: 512, step: 1 },
-  steps: { default: 30, max: 50, min: 2, step: 1 },
   cfg: { default: 2.5, max: 20, min: 0, step: 0.1 },
+  height: { default: 1328, max: 1536, min: 512, step: 1 },
   prompt: { default: '' },
   seed: { default: null },
+  steps: { default: 30, max: 50, min: 2, step: 1 },
+  width: { default: 1328, max: 1536, min: 512, step: 1 },
 };
 
 
