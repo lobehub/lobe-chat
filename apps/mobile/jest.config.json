@@ -6,8 +6,8 @@
   },
   "testMatch": ["**/__tests__/**/*.(ts|tsx|js)", "**/*.(test|spec).(ts|tsx|js)"],
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1",
     "^@/test/(.*)$": "<rootDir>/test/$1",
+    "^@/(.*)$": "<rootDir>/src/$1",
     "^react-native$": "react-native-web"
   },
   "transformIgnorePatterns": [

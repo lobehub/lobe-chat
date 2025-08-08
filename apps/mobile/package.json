@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "prebuild": "expo prebuild",
-    "test": "jest --watchAll",
+    "test": "jest --coverage",
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
     "i18n": "npm run workflow:i18n && lobe-i18n && prettier -c --write \"locales/**\" && tsx ./scripts/i18nWorkflow/generateLocaleConfig.ts",
