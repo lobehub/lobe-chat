@@ -1,8 +1,8 @@
 import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
+import { SessionGroupService } from '../services/session-group.service';
 import { SessionService } from '../services/session.service';
-import { SessionGroupService } from '../services/sessionGroup.service';
 import {
   BatchGetSessionsRequest,
   BatchUpdateSessionsRequest,

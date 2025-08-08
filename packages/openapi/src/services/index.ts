@@ -5,5 +5,7 @@ export * from './message.service';
 export * from './message-translate.service';
 export * from './model.service';
 export * from './role.service';
+export * from './session.service';
+export * from './session-group.service';
 export * from './topic.service';
 export * from './user.service';

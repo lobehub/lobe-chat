@@ -5,5 +5,7 @@ export * from './message.controller';
 export * from './message-translate.controller';
 export * from './model.controller';
 export * from './role.controller';
+export * from './session.controller';
+export * from './session-group.controller';
 export * from './topic.controller';
 export * from './user.controller';
