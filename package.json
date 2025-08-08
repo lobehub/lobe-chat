@@ -166,6 +166,7 @@
     "@trpc/next": "^11.4.4",
     "@trpc/react-query": "^11.4.4",
     "@trpc/server": "^11.4.4",
+    "@upstash/redis": "^1.35.3",
     "@vercel/analytics": "^1.5.0",
     "@vercel/edge-config": "^1.4.0",
     "@vercel/functions": "^2.2.8",
