@@ -276,7 +276,7 @@ class ChatService {
         extendParams.enabledContextCaching = false;
       }
 
-      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
+      if ((modelExtendParams!.includes('reasoningEffort') || modelExtendParams!.includes('gpt5ReasoningEffort')) && chatConfig.reasoningEffort) {
         extendParams.reasoning_effort = chatConfig.reasoningEffort;
       }
 
