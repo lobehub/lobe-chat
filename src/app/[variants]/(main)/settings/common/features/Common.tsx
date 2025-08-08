@@ -2,9 +2,9 @@
 
 import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '@lobehub/ui';
 import { Select } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Segmented, Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { Loader2Icon, Monitor, Moon, Sun } from 'lucide-react';
+import { Ban, Gauge, Loader2Icon, Monitor, Moon, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +22,7 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
 
   const showAccessCodeConfig = useServerConfigStore(serverConfigSelectors.enabledAccessCode);
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const general = useUserStore((s) => settingsSelectors.currentSettings(s).general, isEqual);
   const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
   const language = useGlobalStore(systemStatusSelectors.language);
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
@@ -83,6 +83,34 @@ const Common = memo(() => {
       },
       {
         children: (
+          <Segmented
+            options={[
+              {
+                icon: <Icon icon={Ban} size={16} />,
+                label: t('settingAppearance.animationMode.disabled'),
+                value: 'disabled',
+              },
+              {
+                icon: <Icon icon={Gauge} size={16} />,
+                label: t('settingAppearance.animationMode.agile'),
+                value: 'agile',
+              },
+              {
+                icon: <Icon icon={Waves} size={16} />,
+                label: t('settingAppearance.animationMode.elegant'),
+                value: 'elegant',
+              },
+            ]}
+          />
+        ),
+        desc: t('settingAppearance.animationMode.desc'),
+        label: t('settingAppearance.animationMode.title'),
+        minWidth: undefined,
+        name: 'animationMode',
+      },
+
+      {
+        children: (
           <InputPassword
             autoComplete={'new-password'}
             placeholder={t('settingSystem.accessCode.placeholder')}
@@ -100,12 +128,12 @@ const Common = memo(() => {
 
   return (
     <Form
-      initialValues={settings.keyVaults}
+      initialValues={general}
       items={[theme]}
       itemsType={'group'}
       onValuesChange={async (v) => {
         setLoading(true);
-        await setSettings({ keyVaults: v });
+        await setSettings({ general: v });
         setLoading(false);
       }}
       variant={'borderless'}

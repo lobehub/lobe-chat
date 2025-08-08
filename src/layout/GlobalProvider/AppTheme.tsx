@@ -102,14 +102,12 @@ const AppTheme = memo<AppThemeProps>(
     customFontURL,
     customFontFamily,
   }) => {
-    // console.debug('server:appearance', defaultAppearance);
-    // console.debug('server:primaryColor', defaultPrimaryColor);
-    // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
     const { styles, cx, theme } = useStyles();
-    const [primaryColor, neutralColor] = useUserStore((s) => [
+    const [primaryColor, neutralColor, animationMode] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
       userGeneralSettingsSelectors.neutralColor(s),
+      userGeneralSettingsSelectors.animationMode(s),
     ]);
 
     useEffect(() => {
@@ -138,6 +136,8 @@ const AppTheme = memo<AppThemeProps>(
           cssVar: true,
           token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
+            motion: animationMode !== 'disabled',
+            motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
           },
         }}
         themeMode={themeMode}

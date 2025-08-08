@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
       "fixes": ["Optimize Gemini error message display & Filter empty messages."]
     },
     "date": "2025-08-07",

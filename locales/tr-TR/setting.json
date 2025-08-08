@@ -183,9 +183,20 @@
     "title": "Asistan Bilgileri"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Çevik",
+      "desc": "Uygulamanın işlem yanıt animasyon hızını seçin",
+      "disabled": "Kapalı",
+      "elegant": "Zarif",
+      "title": "Yanıt Animasyonu"
+    },
     "neutralColor": {
       "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
       "title": "Nötr Renk"
+    },
+    "noAnimation": {
+      "desc": "Uygulamadaki tüm animasyon efektlerini devre dışı bırak",
+      "title": "Animasyonsuz Mod"
     },
     "preview": {
       "title": "Renk Paleti"

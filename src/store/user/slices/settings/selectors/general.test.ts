@@ -16,6 +16,7 @@ describe('settingsSelectors', () => {
       const result = userGeneralSettingsSelectors.config(s as UserStore);
 
       expect(result).toEqual({
+        animationMode: 'agile',
         fontSize: 12,
         highlighterTheme: 'lobe-theme',
         mermaidTheme: 'lobe-theme',

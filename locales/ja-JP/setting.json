@@ -183,9 +183,20 @@
     "title": "アシスタント情報"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "敏捷",
+      "desc": "アプリケーションの操作応答のアニメーション速度を選択します",
+      "disabled": "オフ",
+      "elegant": "エレガント",
+      "title": "応答アニメーション"
+    },
     "neutralColor": {
       "desc": "異なる色彩傾向のグレースケールカスタマイズ",
       "title": "ニュートラルカラー"
+    },
+    "noAnimation": {
+      "desc": "アプリ内のすべてのアニメーション効果を無効にします",
+      "title": "アニメーションなしモード"
     },
     "preview": {
       "title": "カラーパレット"

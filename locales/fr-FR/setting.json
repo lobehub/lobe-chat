@@ -183,9 +183,20 @@
     "title": "Informations sur l'agent"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Agile",
+      "desc": "Choisissez la vitesse d'animation des réponses des actions de l'application",
+      "disabled": "Désactivé",
+      "elegant": "Élégant",
+      "title": "Animation de réponse"
+    },
     "neutralColor": {
       "desc": "Personnalisation des nuances de gris selon les tendances de couleur",
       "title": "Couleur neutre"
+    },
+    "noAnimation": {
+      "desc": "Désactive toutes les animations dans l'application",
+      "title": "Mode sans animation"
     },
     "preview": {
       "title": "Palette de couleurs"

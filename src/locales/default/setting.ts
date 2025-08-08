@@ -186,9 +186,20 @@ export default {
   },
 
   settingAppearance: {
+    animationMode: {
+      agile: '敏捷',
+      desc: '选择应用程序的操作响应的动画速度',
+      disabled: '关闭',
+      elegant: '优雅',
+      title: '响应动画',
+    },
     neutralColor: {
       desc: '不同色彩倾向的灰阶自定义',
       title: '中性色',
+    },
+    noAnimation: {
+      desc: '禁用应用程序中的所有动画效果',
+      title: '无动画模式',
     },
     preview: {
       title: '调色盘',

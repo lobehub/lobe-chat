@@ -183,9 +183,20 @@
     "title": "Informações do assistente"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Ágil",
+      "desc": "Escolha a velocidade da animação para as respostas das ações do aplicativo",
+      "disabled": "Desativado",
+      "elegant": "Elegante",
+      "title": "Animação de Resposta"
+    },
     "neutralColor": {
       "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
       "title": "Cor Neutra"
+    },
+    "noAnimation": {
+      "desc": "Desativa todos os efeitos de animação no aplicativo",
+      "title": "Modo Sem Animação"
     },
     "preview": {
       "title": "Paleta de Cores"

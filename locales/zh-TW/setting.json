@@ -183,9 +183,20 @@
     "title": "助手資訊"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "敏捷",
+      "desc": "選擇應用程式操作回應的動畫速度",
+      "disabled": "關閉",
+      "elegant": "優雅",
+      "title": "回應動畫"
+    },
     "neutralColor": {
       "desc": "不同色彩傾向的灰階自訂",
       "title": "中性色"
+    },
+    "noAnimation": {
+      "desc": "停用應用程式中的所有動畫效果",
+      "title": "無動畫模式"
     },
     "preview": {
       "title": "調色盤"

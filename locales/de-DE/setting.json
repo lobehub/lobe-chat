@@ -183,9 +183,20 @@
     "title": "Assistenteninformationen"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Agil",
+      "desc": "Wählen Sie die Animationsgeschwindigkeit für die Reaktion der Anwendung",
+      "disabled": "Aus",
+      "elegant": "Elegant",
+      "title": "Reaktionsanimation"
+    },
     "neutralColor": {
       "desc": "Anpassung der Graustufen mit unterschiedlichen Farbneigungen",
       "title": "Neutrale Farben"
+    },
+    "noAnimation": {
+      "desc": "Deaktivieren Sie alle Animationseffekte in der Anwendung",
+      "title": "Kein Animationsmodus"
     },
     "preview": {
       "title": "Farbauswahl"

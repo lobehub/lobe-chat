@@ -183,9 +183,20 @@
     "title": "Información del asistente"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Ágil",
+      "desc": "Selecciona la velocidad de la animación para las respuestas de la aplicación",
+      "disabled": "Desactivado",
+      "elegant": "Elegante",
+      "title": "Animación de respuesta"
+    },
     "neutralColor": {
       "desc": "Personalización de escalas de grises con diferentes inclinaciones de color",
       "title": "Color Neutro"
+    },
+    "noAnimation": {
+      "desc": "Desactiva todos los efectos de animación en la aplicación",
+      "title": "Modo sin animación"
     },
     "preview": {
       "title": "Paleta de Colores"
