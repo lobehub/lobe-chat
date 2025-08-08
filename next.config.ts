@@ -287,6 +287,7 @@ const nextConfig: NextConfig = {
       stream: 'stream-browserify',
       zipfile: false,
     };
+
     return config;
   },
 };

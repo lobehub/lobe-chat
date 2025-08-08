@@ -35,6 +35,8 @@ export const responsesAPIModels = new Set([
   'codex-mini-latest',
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
+  'gpt-5',
+  'gpt-5-mini',
 ]);
 
 /**

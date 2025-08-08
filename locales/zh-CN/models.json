@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "DeepSeek-V3-Fast": {
+    "description": "模型供应商为：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS极速版，满血非量化，代码与数学能力更强，响应更快！"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 是 Cohere 推出的多语言模型，支持 23 种语言，为多元化语言应用提供便利。"
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "由微软部署提供； DeepSeek R1型号已进行小版本升级，当前版本为DeepSeek-R1-0528。在最新的更新中，DeepSeek R1通过增加计算资源和引入后训练阶段的算法优化机制，大幅提升了推理深度和推断能力。该模型在数学、编程和通用逻辑等多个基准测试中表现出色，其整体性能已接近领先模型，如O3和Gemini 2.5 Pro 。"
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B 百川智能开发的包含 130 亿参数的开源可商用的大规模语言模型，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果"
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。"
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 是 Anthropic 最新的用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。"
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。"
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。"
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B 是一款拥有 1200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。"
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B 是一款拥有 200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。"
+  },
   "openai/o1": {
     "description": "o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。"
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。"
   },
+  "qwen3-coder-flash": {
+    "description": "通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。"
+  },
   "qwen3-coder-plus": {
-    "description": "通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。"
+    "description": "通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。"
   },
   "qwq": {
     "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。"

@@ -306,6 +306,7 @@
         "latestTime": "Última atualização: {{time}}",
         "noLatestTime": "Lista ainda não obtida"
       },
+      "noModelsInCategory": "Nenhum modelo ativado nesta categoria",
       "resetAll": {
         "conform": "Você tem certeza de que deseja redefinir todas as modificações do modelo atual? Após a redefinição, a lista de modelos atuais voltará ao estado padrão",
         "success": "Redefinição bem-sucedida",
@@ -316,7 +317,15 @@
       "title": "Lista de Modelos",
       "total": "Um total de {{count}} modelos disponíveis"
     },
-    "searchNotFound": "Nenhum resultado encontrado"
+    "searchNotFound": "Nenhum resultado encontrado",
+    "tabs": {
+      "all": "Todos",
+      "chat": "Conversa",
+      "embedding": "Vetorização",
+      "image": "Imagem",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Ordenação atualizada com sucesso",

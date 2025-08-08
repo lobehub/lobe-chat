@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Model sağlayıcısı: sophnet platformu. DeepSeek V3 Fast, DeepSeek V3 0324 sürümünün yüksek TPS hızlı versiyonudur, tam performanslı ve kuantize edilmemiştir, kodlama ve matematik yetenekleri daha güçlüdür, yanıt süresi daha hızlıdır!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23, Cohere tarafından sunulan çok dilli bir modeldir, 23 dili destekler ve çok dilli uygulamalar için kolaylık sağlar."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Microsoft tarafından dağıtılmıştır; DeepSeek R1 modeli küçük bir sürüm güncellemesi almıştır, mevcut sürüm DeepSeek-R1-0528'dir. En son güncellemede, DeepSeek R1 hesaplama kaynaklarını artırarak ve eğitim sonrası algoritma optimizasyon mekanizmasını tanıtarak çıkarım derinliği ve tahmin yeteneğini önemli ölçüde geliştirmiştir. Bu model matematik, programlama ve genel mantık gibi çeşitli kıyaslama testlerinde üstün performans göstermiştir ve genel performansı O3 ve Gemini 2.5 Pro gibi önde gelen modellerle yakındır."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B, Baichuan Zhi Neng tarafından geliştirilen 130 milyar parametreye sahip açık kaynaklı ticari bir büyük dil modelidir ve yetkili Çince ve İngilizce benchmark'larda aynı boyuttaki en iyi sonuçları elde etmiştir."
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet, akıllı ve hızlı bir denge sunarak kurumsal iş yükleri için idealdir. Daha düşük bir fiyatla maksimum fayda sağlar, güvenilir ve büyük ölçekli dağıtım için uygundur."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1, Anthropic'in en karmaşık görevleri işlemek için geliştirdiği en güçlü modelidir. Performans, zeka, akıcılık ve anlama yeteneği açısından olağanüstü bir performans sergiler."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4, Anthropic'in son derece karmaşık görevleri işlemek için geliştirdiği en güçlü modeldir. Performans, zeka, akıcılık ve anlama açısından mükemmel bir şekilde öne çıkmaktadır."
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra sunduğu en son modeldir; görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde bir sıralamaya sahiptir."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B, 120 milyar parametreye sahip üst düzey bir dil modelidir, yerleşik tarayıcı arama ve kod yürütme özellikleri ile birlikte çıkarım yeteneğine sahiptir."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B, 20 milyar parametreye sahip üst düzey bir dil modelidir, yerleşik tarayıcı arama ve kod yürütme özellikleri ile birlikte çıkarım yeteneğine sahiptir."
+  },
   "openai/o1": {
     "description": "o1, OpenAI'nin yeni çıkarım modeli olup, metin ve görsel girişleri destekler ve metin çıktısı üretir; geniş kapsamlı genel bilgi gerektiren karmaşık görevler için uygundur. Model, 200K bağlam uzunluğuna ve 2023 Ekim bilgi kesim tarihine sahiptir."
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Tongyi Qianwen kod modeli açık kaynak versiyonudur. En yeni qwen3-coder-480b-a35b-instruct, Qwen3 tabanlı kod oluşturma modelidir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
   },
+  "qwen3-coder-flash": {
+    "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
+  },
   "qwen3-coder-plus": {
-    "description": "Tongyi Qianwen kod modelidir. En yeni Qwen3-Coder-Plus serisi modeller, Qwen3 tabanlı kod oluşturma modelleridir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
+    "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
   },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."

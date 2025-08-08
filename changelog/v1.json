@@ -1,6 +1,54 @@
 [
   {
     "children": {
+      "features": ["Add GPT-5 series models."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
+      "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
+      "fixes": ["Optimize Gemini error message display & Filter empty messages."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor trace type."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider setting page hydration error."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fail to fetch aihubmix model on client mode."],
+      "improvements": ["Add context menu for desktop, support different model tabs."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix remote avatar broken in desktop again."]
     },
     "date": "2025-08-06",

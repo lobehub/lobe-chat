@@ -1,9 +1,9 @@
+import { TraceEventType } from '@lobechat/types';
 import * as lobeUIModules from '@lobehub/ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { TraceEventType } from '@/const/trace';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';

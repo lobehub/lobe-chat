@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle MoE développé en interne par la société DeepSeek. Les performances de DeepSeek-V3 surpassent celles d'autres modèles open source tels que Qwen2.5-72B et Llama-3.1-405B, et se mesurent à la performance des modèles fermés de pointe au monde comme GPT-4o et Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Fournisseur du modèle : plateforme sophnet. DeepSeek V3 Fast est la version ultra-rapide à TPS élevé de DeepSeek V3 0324, entièrement non quantifiée, avec des capacités de code et mathématiques renforcées, offrant une réactivité accrue !"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre une vitesse de réponse exceptionnelle et un excellent rapport qualité-prix, offrant aux clients une flexibilité accrue pour différents scénarios. Prend en charge l'inférence et le fine-tuning avec une fenêtre contextuelle de 128k."
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 est un modèle multilingue lancé par Cohere, prenant en charge 23 langues, facilitant les applications linguistiques diversifiées."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Déployé et fourni par Microsoft ; le modèle DeepSeek R1 a bénéficié d'une mise à jour mineure, la version actuelle étant DeepSeek-R1-0528. Dans la dernière mise à jour, DeepSeek R1 a considérablement amélioré sa profondeur d'inférence et ses capacités de raisonnement grâce à l'augmentation des ressources de calcul et à l'introduction d'un mécanisme d'optimisation algorithmique en phase post-entraînement. Ce modèle excelle dans plusieurs benchmarks, notamment en mathématiques, programmation et logique générale, avec des performances globales proches des modèles de pointe tels que O3 et Gemini 2.5 Pro."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B est un modèle de langage open source et commercialisable développé par Baichuan Intelligence, contenant 13 milliards de paramètres, qui a obtenu les meilleurs résultats dans des benchmarks chinois et anglais de référence."
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un équilibre idéal entre intelligence et vitesse pour les charges de travail d'entreprise. Il fournit une utilité maximale à un coût inférieur, fiable et adapté à un déploiement à grande échelle."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il se distingue par ses performances, son intelligence, sa fluidité et sa capacité de compréhension exceptionnelles."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il excelle en performance, intelligence, fluidité et compréhension."
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini est le dernier modèle d'OpenAI lancé après GPT-4 Omni, prenant en charge les entrées d'images et de texte et produisant du texte en sortie. En tant que leur modèle compact le plus avancé, il est beaucoup moins cher que d'autres modèles de pointe récents et coûte plus de 60 % de moins que GPT-3.5 Turbo. Il maintient une intelligence de pointe tout en offrant un rapport qualité-prix significatif. GPT-4o mini a obtenu un score de 82 % au test MMLU et se classe actuellement au-dessus de GPT-4 en termes de préférences de chat."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B est un modèle linguistique de pointe doté de 120 milliards de paramètres, intégrant des fonctions de recherche via navigateur et d'exécution de code, ainsi que des capacités de raisonnement."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B est un modèle linguistique de pointe doté de 20 milliards de paramètres, intégrant des fonctions de recherche via navigateur et d'exécution de code, ainsi que des capacités de raisonnement."
+  },
   "openai/o1": {
     "description": "o1 est le nouveau modèle d'inférence d'OpenAI, prenant en charge les entrées multimodales (texte et image) et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues. Ce modèle dispose d'un contexte de 200K et d'une date de coupure des connaissances en octobre 2023."
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Version open source du modèle de code Tongyi Qianwen. Le dernier qwen3-coder-480b-a35b-instruct est un modèle de génération de code basé sur Qwen3, doté de puissantes capacités d'agent de codage, expert en appels d'outils et interactions environnementales, capable de programmation autonome avec d'excellentes compétences en code tout en conservant des capacités générales."
   },
+  "qwen3-coder-flash": {
+    "description": "Modèle de code Tongyi Qianwen. La dernière série de modèles Qwen3-Coder est basée sur Qwen3 pour la génération de code, avec une puissante capacité d'agent de codage, maîtrisant l'appel d'outils et l'interaction avec l'environnement, capable de programmation autonome, alliant excellence en codage et polyvalence."
+  },
   "qwen3-coder-plus": {
-    "description": "Modèle de code Tongyi Qianwen. La dernière série Qwen3-Coder-Plus est un modèle de génération de code basé sur Qwen3, doté de puissantes capacités d'agent de codage, expert en appels d'outils et interactions environnementales, capable de programmation autonome avec d'excellentes compétences en code tout en conservant des capacités générales."
+    "description": "Modèle de code Tongyi Qianwen. La dernière série de modèles Qwen3-Coder est basée sur Qwen3 pour la génération de code, avec une puissante capacité d'agent de codage, maîtrisant l'appel d'outils et l'interaction avec l'environnement, capable de programmation autonome, alliant excellence en codage et polyvalence."
   },
   "qwq": {
     "description": "QwQ est un modèle de recherche expérimental, axé sur l'amélioration des capacités de raisonnement de l'IA."

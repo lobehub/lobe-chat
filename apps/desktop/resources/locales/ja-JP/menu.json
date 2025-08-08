@@ -14,6 +14,7 @@
   "edit": {
     "copy": "コピー",
     "cut": "切り取り",
+    "delete": "削除",
     "paste": "貼り付け",
     "redo": "やり直し",
     "selectAll": "すべて選択",

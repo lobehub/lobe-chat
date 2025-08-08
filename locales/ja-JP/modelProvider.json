@@ -306,6 +306,7 @@
         "latestTime": "最終更新日時：{{time}}",
         "noLatestTime": "まだリストを取得していません"
       },
+      "noModelsInCategory": "このカテゴリには有効なモデルがありません",
       "resetAll": {
         "conform": "現在のモデルのすべての変更をリセットしてもよろしいですか？リセット後、現在のモデルリストはデフォルトの状態に戻ります",
         "success": "リセットに成功しました",
@@ -316,7 +317,15 @@
       "title": "モデルリスト",
       "total": "利用可能なモデルは合計 {{count}} 件です"
     },
-    "searchNotFound": "検索結果が見つかりませんでした"
+    "searchNotFound": "検索結果が見つかりませんでした",
+    "tabs": {
+      "all": "すべて",
+      "chat": "チャット",
+      "embedding": "埋め込み",
+      "image": "画像",
+      "stt": "音声認識",
+      "tts": "音声合成"
+    }
   },
   "sortModal": {
     "success": "ソートが更新されました",
