@@ -36,7 +36,7 @@ const isActiveProviderEndpointNotEmpty = (s: AIProviderStoreState) => {
 
 const isActiveProviderApiKeyNotEmpty = (s: AIProviderStoreState) => {
   const vault = activeProviderKeyVaults(s);
-  return !!vault?.apiKey || !!vault?.accessKeyId || !!vault?.secretAccessKey;
+  return !!vault?.apiKey || !!vault?.accessKeyId || !!vault?.secretAccessKey || !!vault?.bearerToken;
 };
 
 const providerConfigById =
@@ -70,7 +70,7 @@ const isProviderFetchOnClient =
 
     // 1. If no baseUrl and apikey input, force on Server.
     const isProviderEndpointNotEmpty = !!config?.keyVaults.baseURL;
-    const isProviderApiKeyNotEmpty = !!config?.keyVaults.apiKey;
+    const isProviderApiKeyNotEmpty = !!config?.keyVaults.apiKey || !!config?.keyVaults.bearerToken;
     if (!isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return false;
 
     // 2. If only contains baseUrl, force on Client

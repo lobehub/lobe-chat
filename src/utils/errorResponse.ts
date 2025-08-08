@@ -37,6 +37,10 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 470;
     }
 
+    case AgentRuntimeErrorType.ProviderNotEnabled: {
+      return 403;
+    }
+
     case AgentRuntimeErrorType.ProviderBizError: {
       return 471;
     }
