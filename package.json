@@ -137,6 +137,7 @@
     "@fal-ai/client": "^1.6.1",
     "@formkit/auto-animate": "^0.8.2",
     "@google/genai": "^1.10.0",
+    "@hono/zod-validator": "^0.7.2",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
     "@khmyznikov/pwa-install": "0.3.9",
