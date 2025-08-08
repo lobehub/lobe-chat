@@ -37,7 +37,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-07',
@@ -65,7 +65,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-07',
@@ -78,6 +78,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
       reasoning: true,
       vision: true,
     },
@@ -132,7 +133,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
     displayName: 'o4-mini',
-    enabled: true,
     id: 'o4-mini',
     maxOutput: 100_000,
     pricing: {
@@ -213,7 +213,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
-    enabled: true,
     id: 'o3',
     maxOutput: 100_000,
     pricing: {

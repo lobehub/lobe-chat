@@ -20,7 +20,7 @@ const aihubmixModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-07',
@@ -48,7 +48,7 @@ const aihubmixModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-07',
@@ -61,6 +61,7 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
       reasoning: true,
       vision: true,
     },
@@ -98,7 +99,7 @@ const aihubmixModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-07',
@@ -115,7 +116,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
     displayName: 'o4-mini',
-    enabled: true,
     id: 'o4-mini',
     maxOutput: 100_000,
     pricing: {
@@ -196,7 +196,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
-    enabled: true,
     id: 'o3',
     maxOutput: 100_000,
     pricing: {
@@ -702,7 +701,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 235B A22B Thinking 2507',
-    enabled: true,
     id: 'qwen3-235b-a22b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -724,7 +722,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。',
     displayName: 'Qwen3 235B A22B Instruct 2507',
-    enabled: true,
     id: 'qwen3-235b-a22b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -747,7 +744,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-30B-A3B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 30B A3B Thinking 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -769,7 +765,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
     displayName: 'Qwen3 30B A3B Instruct 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',

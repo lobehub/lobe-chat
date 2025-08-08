@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "추론 강도"
     },
+    "textVerbosity": {
+      "title": "출력 텍스트 상세 수준"
+    },
     "thinking": {
       "title": "심층 사고 스위치"
     },
