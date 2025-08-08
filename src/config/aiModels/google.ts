@@ -262,7 +262,8 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.039, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageGeneration', rate: 0.039, strategy: 'fixed', unit: 'image' },
       ],
     },
     releasedAt: '2025-05-07',
