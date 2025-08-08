@@ -853,7 +853,7 @@ describe('GoogleGenerativeAIStream', () => {
     expect(chunks).toEqual([
       'id: chat_1\n',
       'event: error\n',
-      `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"Content blocked by Google AI: PROHIBITED_CONTENT","provider":"google"},"type":"ProviderBizError"}\n\n`,
+      `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"您的请求可能包含违禁内容。请调整您的请求，确保内容符合使用规范。","provider":"google"},"type":"ProviderBizError"}\n\n`,
     ]);
   });
 });
