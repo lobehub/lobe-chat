@@ -21,63 +21,70 @@ import { FieldType } from './type';
 
 interface PreviewProps extends FieldType {
   message: ChatMessage;
+  previewId?: string;
   title?: string;
 }
 
-const Preview = memo<PreviewProps>(({ title, withBackground, withFooter, message }) => {
-  const [model, plugins] = useAgentStore((s) => [
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentPlugins(s),
-  ]);
+const Preview = memo<PreviewProps>(
+  ({ title, withBackground, withFooter, message, previewId = 'preview' }) => {
+    const [model, plugins] = useAgentStore((s) => [
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentPlugins(s),
+    ]);
 
-  const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentDescription(s),
-    sessionMetaSelectors.currentAgentAvatar(s),
-    sessionMetaSelectors.currentAgentBackgroundColor(s),
-  ]);
+    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
+      sessionSelectors.isInboxSession(s),
+      sessionMetaSelectors.currentAgentDescription(s),
+      sessionMetaSelectors.currentAgentAvatar(s),
+      sessionMetaSelectors.currentAgentBackgroundColor(s),
+    ]);
 
-  const { t } = useTranslation('chat');
-  const { styles } = useStyles(withBackground);
-  const { styles: containerStyles } = useContainerStyles();
+    const { t } = useTranslation('chat');
+    const { styles } = useStyles(withBackground);
+    const { styles: containerStyles } = useContainerStyles();
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
-  const displayDesc = isInbox ? t('inbox.desc') : description;
+    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayDesc = isInbox ? t('inbox.desc') : description;
 
-  return (
-    <div className={containerStyles.preview}>
-      <div className={withBackground ? styles.background : undefined} id={'preview'}>
-        <Flexbox className={styles.container} gap={16}>
-          <div className={styles.header}>
-            <Flexbox align={'flex-start'} gap={12} horizontal>
-              <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
-              <ChatHeaderTitle
-                desc={displayDesc}
-                tag={
-                  <Flexbox gap={4} horizontal>
-                    <ModelTag model={model} />
-                    {plugins?.length > 0 && <PluginTag plugins={plugins} />}
-                  </Flexbox>
-                }
-                title={displayTitle}
-              />
+    return (
+      <div className={containerStyles.preview}>
+        <div className={withBackground ? styles.background : undefined} id={previewId}>
+          <Flexbox className={styles.container} gap={16}>
+            <div className={styles.header}>
+              <Flexbox align={'flex-start'} gap={12} horizontal>
+                <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
+                <ChatHeaderTitle
+                  desc={displayDesc}
+                  tag={
+                    <Flexbox gap={4} horizontal>
+                      <ModelTag model={model} />
+                      {plugins?.length > 0 && <PluginTag plugins={plugins} />}
+                    </Flexbox>
+                  }
+                  title={displayTitle}
+                />
+              </Flexbox>
+            </div>
+            <Flexbox
+              height={'100%'}
+              style={{ paddingTop: 24, position: 'relative' }}
+              width={'100%'}
+            >
+              <ChatItem id={message.id} index={0} />
             </Flexbox>
-          </div>
-          <Flexbox height={'100%'} style={{ paddingTop: 24, position: 'relative' }} width={'100%'}>
-            <ChatItem id={message.id} index={0} />
+            {withFooter ? (
+              <Flexbox align={'center'} className={styles.footer} gap={4}>
+                <ProductLogo type={'combine'} />
+                <div className={styles.url}>{pkg.homepage}</div>
+              </Flexbox>
+            ) : (
+              <div />
+            )}
           </Flexbox>
-          {withFooter ? (
-            <Flexbox align={'center'} className={styles.footer} gap={4}>
-              <ProductLogo type={'combine'} />
-              <div className={styles.url}>{pkg.homepage}</div>
-            </Flexbox>
-          ) : (
-            <div />
-          )}
-        </Flexbox>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 export default Preview;
