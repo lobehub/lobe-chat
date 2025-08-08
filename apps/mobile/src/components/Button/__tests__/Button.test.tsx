@@ -51,8 +51,8 @@ describe('Button', () => {
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with secondary type', () => {
-    const { toJSON } = renderWithTheme(<Button type="secondary">Secondary</Button>);
+  it('renders with default type', () => {
+    const { toJSON } = renderWithTheme(<Button type="default">Default</Button>);
 
     expect(toJSON()).toBeTruthy();
   });

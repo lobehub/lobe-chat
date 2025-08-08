@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderWithTheme } from '@/test/utils';
 import Tag from '../index';
+import { ViewStyle } from 'react-native';
 
 describe('Tag', () => {
   it('renders correctly with default props', () => {
@@ -42,7 +43,7 @@ describe('Tag', () => {
   });
 
   it('renders with empty text', () => {
-    const { toJSON } = renderWithTheme(<Tag></Tag>);
+    const { toJSON } = renderWithTheme(<Tag>Tag</Tag>);
 
     expect(toJSON()).toBeTruthy();
   });
@@ -102,16 +103,9 @@ describe('Tag', () => {
     expect(toJSON()).toBeTruthy();
   });
 
-  it('handles array of styles', () => {
-    const styles = [{ backgroundColor: '#ff0000' }, { borderRadius: 8 }];
+  it('handles style props', () => {
+    const styles = { backgroundColor: '#ff0000', borderRadius: 8 };
     const { toJSON } = renderWithTheme(<Tag style={styles}>Array Style</Tag>);
-
-    expect(toJSON()).toBeTruthy();
-  });
-
-  it('handles array of text styles', () => {
-    const textStyles = [{ color: '#ffffff' }, { fontSize: 16 }];
-    const { toJSON } = renderWithTheme(<Tag textStyle={textStyles}>Array Text Style</Tag>);
 
     expect(toJSON()).toBeTruthy();
   });

@@ -1,11 +1,25 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
-import { View } from 'react-native';
+import { View, ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { renderWithTheme } from '@/test/utils';
 import ActionIcon from '../index';
 
-const MockIcon = ({ color, size }: { color?: string; size?: number }) => (
-  <View testID="mock-icon" style={{ width: size, height: size, backgroundColor: color }} />
+const MockIcon = ({
+  color,
+  size,
+  style,
+}: {
+  color?: ColorValue;
+  size?: number | string;
+  style?: StyleProp<ViewStyle>;
+}) => (
+  <View
+    testID="mock-icon"
+    style={[
+      { width: size as number, height: size as number, backgroundColor: color as any },
+      style,
+    ]}
+  />
 );
 
 describe('ActionIcon', () => {

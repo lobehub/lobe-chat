@@ -52,7 +52,7 @@ describe('FluentEmoji', () => {
     const mockGenEmojiUrl = require('../utils').genEmojiUrl;
     mockGenEmojiUrl.mockReturnValue('https://example.com/emoji.svg');
 
-    const { toJSON } = renderWithTheme(<FluentEmoji emoji="😀" type="svg" />);
+    const { toJSON } = renderWithTheme(<FluentEmoji emoji={mockGenEmojiUrl} />);
 
     expect(toJSON()).toBeTruthy();
   });
@@ -73,7 +73,7 @@ describe('FluentEmoji', () => {
     const mockGenEmojiUrl = require('../utils').genEmojiUrl;
     mockGenEmojiUrl.mockReturnValue('https://example.com/emoji.svg');
 
-    const { toJSON } = renderWithTheme(<FluentEmoji emoji="😀" type="svg" />);
+    const { toJSON } = renderWithTheme(<FluentEmoji emoji={mockGenEmojiUrl} />);
 
     expect(toJSON()).toBeTruthy();
   });

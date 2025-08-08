@@ -62,7 +62,7 @@ describe('ListItem', () => {
   });
 
   it('renders with href as Link component', () => {
-    const { toJSON } = renderWithTheme(<ListItem title="Test Item" href="/test-route" />);
+    const { toJSON } = renderWithTheme(<ListItem title="Test Item" href="/(auth)/login" />);
 
     expect(toJSON()).toBeTruthy();
   });
@@ -70,7 +70,7 @@ describe('ListItem', () => {
   it('renders with href and onPress', () => {
     const onPress = jest.fn();
     const { toJSON } = renderWithTheme(
-      <ListItem title="Test Item" href="/test-route" onPress={onPress} />,
+      <ListItem title="Test Item" href="/(auth)/login" onPress={onPress} />,
     );
 
     expect(toJSON()).toBeTruthy();
@@ -154,7 +154,7 @@ describe('ListItem', () => {
         avatar="https://example.com/avatar.png"
         description="Full description"
         extra="Extra content"
-        href="/test-route"
+        href="/(auth)/login"
         onPress={onPress}
       />,
     );

@@ -1,38 +1,103 @@
 import React from 'react';
+import { act, fireEvent } from '@testing-library/react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { renderWithTheme } from '@/test/utils';
-import Toast from '../Toast';
+import { ToastProvider, useToast } from '../ToastProvider';
 
 jest.mock('lucide-react-native', () => ({
-  CheckCircle: () => <div>✓</div>,
-  XCircle: () => <div>✗</div>,
-  Info: () => <div>i</div>,
-  RefreshCw: () => <div>⟳</div>,
-  X: () => <div>×</div>,
+  CheckCircle: () => <View testID="check-icon" />,
+  XCircle: () => <View testID="x-circle-icon" />,
+  Info: () => <View testID="info-icon" />,
+  RefreshCw: () => <View testID="refresh-icon" />,
+  X: () => <View testID="x-icon" />,
 }));
 
+// Test component to access toast methods
+const TestComponent = () => {
+  const toast = useToast();
+
+  return (
+    <View>
+      <TouchableOpacity testID="success-btn" onPress={() => toast.success('Success!')} />
+      <TouchableOpacity testID="error-btn" onPress={() => toast.error('Error!')} />
+      <TouchableOpacity testID="info-btn" onPress={() => toast.info('Info!')} />
+      <TouchableOpacity testID="loading-btn" onPress={() => toast.loading('Loading...')} />
+    </View>
+  );
+};
+
 describe('Toast', () => {
-  it('renders success toast', () => {
-    const { toJSON } = renderWithTheme(<Toast type="success" message="Success!" />);
-    expect(toJSON()).toBeTruthy();
+  const renderToastProvider = () => {
+    return renderWithTheme(
+      <ToastProvider>
+        <TestComponent />
+      </ToastProvider>,
+    );
+  };
+
+  beforeEach(() => {
+    jest.clearAllTimers();
+    jest.useFakeTimers();
   });
 
-  it('renders error toast', () => {
-    const { toJSON } = renderWithTheme(<Toast type="error" message="Error!" />);
-    expect(toJSON()).toBeTruthy();
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
-  it('renders info toast', () => {
-    const { toJSON } = renderWithTheme(<Toast type="info" message="Info!" />);
-    expect(toJSON()).toBeTruthy();
+  it('shows success toast', () => {
+    const { getByTestId, getByText } = renderToastProvider();
+
+    act(() => {
+      fireEvent.press(getByTestId('success-btn'));
+    });
+
+    expect(getByText('Success!')).toBeTruthy();
   });
 
-  it('renders loading toast', () => {
-    const { toJSON } = renderWithTheme(<Toast type="loading" message="Loading..." />);
-    expect(toJSON()).toBeTruthy();
+  it('shows error toast', () => {
+    const { getByTestId, getByText } = renderToastProvider();
+
+    act(() => {
+      fireEvent.press(getByTestId('error-btn'));
+    });
+
+    expect(getByText('Error!')).toBeTruthy();
   });
 
-  it('renders with dismiss button', () => {
-    const { toJSON } = renderWithTheme(<Toast type="success" message="Success!" dismissible />);
-    expect(toJSON()).toBeTruthy();
+  it('shows info toast', () => {
+    const { getByTestId, getByText } = renderToastProvider();
+
+    act(() => {
+      fireEvent.press(getByTestId('info-btn'));
+    });
+
+    expect(getByText('Info!')).toBeTruthy();
+  });
+
+  it('shows loading toast', () => {
+    const { getByTestId, getByText } = renderToastProvider();
+
+    act(() => {
+      fireEvent.press(getByTestId('loading-btn'));
+    });
+
+    expect(getByText('Loading...')).toBeTruthy();
+  });
+
+  it('auto-dismisses toast after duration', () => {
+    const { getByTestId, getByText, queryByText } = renderToastProvider();
+
+    act(() => {
+      fireEvent.press(getByTestId('success-btn'));
+    });
+
+    expect(getByText('Success!')).toBeTruthy();
+
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+
+    expect(queryByText('Success!')).toBeFalsy();
   });
 });

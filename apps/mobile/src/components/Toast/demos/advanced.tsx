@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { useThemeToken } from '@/theme/context';
 
-import { useToast } from '../ToastProvider';
+import { useToast } from '@/components/Toast';
 import { DemoButton } from './DemoButton';
 
 export default function AdvancedDemo() {

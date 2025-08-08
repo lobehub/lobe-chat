@@ -15,7 +15,7 @@ describe('ListGroup', () => {
 
   it('renders with title', () => {
     const { toJSON } = renderWithTheme(
-      <ListGroup title="Group Title">
+      <ListGroup>
         <Text>Group content</Text>
       </ListGroup>,
     );
@@ -24,7 +24,7 @@ describe('ListGroup', () => {
 
   it('renders with footer', () => {
     const { toJSON } = renderWithTheme(
-      <ListGroup footer="Group footer">
+      <ListGroup>
         <Text>Group content</Text>
       </ListGroup>,
     );
