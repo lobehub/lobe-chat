@@ -25,7 +25,12 @@ export interface LobeAgentChatConfig {
    */
   enableReasoningEffort?: boolean;
   reasoningBudgetToken?: number;
-  reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  gpt5ReasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
+  /**
+   * 输出文本详细程度控制
+   */
+  textVerbosity?: 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
   thinkingBudget?: number;
   /**
@@ -64,6 +69,7 @@ export const AgentChatConfigSchema = z.object({
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
+  reasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
   searchFCModel: z
     .object({
       model: z.string(),
@@ -71,4 +77,5 @@ export const AgentChatConfigSchema = z.object({
     })
     .optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
+  textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
 });

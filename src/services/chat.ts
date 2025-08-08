@@ -276,8 +276,16 @@ class ChatService {
         extendParams.enabledContextCaching = false;
       }
 
-      if ((modelExtendParams!.includes('reasoningEffort') || modelExtendParams!.includes('gpt5ReasoningEffort')) && chatConfig.reasoningEffort) {
+      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
         extendParams.reasoning_effort = chatConfig.reasoningEffort;
+      }
+
+      if (modelExtendParams!.includes('gpt5ReasoningEffort') && chatConfig.gpt5ReasoningEffort) {
+        extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
+      }
+
+      if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
+        extendParams.verbosity = chatConfig.textVerbosity;
       }
 
       if (modelExtendParams!.includes('thinking') && chatConfig.thinking) {
