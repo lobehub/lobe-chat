@@ -4,6 +4,98 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
+    displayName: 'GPT-5',
+    enabled: true,
+    id: 'gpt-5',
+    maxOutput: 128_000,
+    pricing: {
+      cachedInput: 0.13,
+      input: 1.25,
+      output: 10,
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
+    displayName: 'GPT-5 mini',
+    enabled: true,
+    id: 'gpt-5-mini',
+    maxOutput: 128_000,
+    pricing: {
+      cachedInput: 0.03,
+      input: 0.25,
+      output: 2,
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description: '最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。',
+    displayName: 'GPT-5 nano',
+    enabled: true,
+    id: 'gpt-5-nano',
+    maxOutput: 128_000,
+    pricing: {
+      cachedInput: 0.01,
+      input: 0.05,
+      output: 0.4,
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
+    displayName: 'GPT-5 Chat',
+    enabled: true,
+    id: 'gpt-5-chat-latest',
+    maxOutput: 128_000,
+    pricing: {
+      cachedInput: 0.13,
+      input: 1.25,
+      output: 10,
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -136,7 +228,6 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 1_047_576,
     description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
     displayName: 'GPT-4.1',
-    enabled: true,
     id: 'gpt-4.1',
     maxOutput: 32_768,
     pricing: {
@@ -199,7 +290,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
     displayName: 'ChatGPT-4o',
-    enabled: true,
     id: 'chatgpt-4o-latest',
     pricing: {
       input: 5,

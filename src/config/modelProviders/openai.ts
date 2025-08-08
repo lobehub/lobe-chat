@@ -5,11 +5,27 @@ const OpenAI: ModelProviderCard = {
   apiKeyUrl: 'https://platform.openai.com/api-keys?utm_source=lobehub',
   chatModels: [
     {
+      contextWindowTokens: 400_000,
+      description:
+        '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
+      displayName: 'GPT-5 mini',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-mini',
+      maxOutput: 128_000,
+      pricing: {
+        cachedInput: 0.03,
+        input: 0.25,
+        output: 2,
+      },
+      releasedAt: '2025-08-07',
+      vision: true,
+    },
+    {
       contextWindowTokens: 1_047_576,
       description:
         'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
       displayName: 'GPT-4.1 mini',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4.1-mini',
       maxOutput: 32_768,

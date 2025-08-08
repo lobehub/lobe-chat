@@ -1,4 +1,4 @@
-import { ChatErrorType , TracePayload, TraceTagMap } from '@lobechat/types';
+import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
