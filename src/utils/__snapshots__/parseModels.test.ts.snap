@@ -112,8 +112,20 @@ exports[`transformToChatModelCards > should have file with builtin models like g
     "enabled": true,
     "id": "gpt-4-0125-preview",
     "pricing": {
-      "input": 10,
-      "output": 30,
+      "units": [
+        {
+          "name": "textInput",
+          "rate": 10,
+          "strategy": "fixed",
+          "unit": "millionTokens",
+        },
+        {
+          "name": "textOutput",
+          "rate": 30,
+          "strategy": "fixed",
+          "unit": "millionTokens",
+        },
+      ],
     },
     "providerId": "openai",
     "releasedAt": "2024-01-25",
@@ -132,8 +144,20 @@ exports[`transformToChatModelCards > should have file with builtin models like g
     "enabled": true,
     "id": "gpt-4-turbo-2024-04-09",
     "pricing": {
-      "input": 10,
-      "output": 30,
+      "units": [
+        {
+          "name": "textInput",
+          "rate": 10,
+          "strategy": "fixed",
+          "unit": "millionTokens",
+        },
+        {
+          "name": "textOutput",
+          "rate": 30,
+          "strategy": "fixed",
+          "unit": "millionTokens",
+        },
+      ],
     },
     "providerId": "openai",
     "releasedAt": "2024-04-09",

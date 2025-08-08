@@ -12,8 +12,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-x1-turbo-32k',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-24',
     type: 'chat',
@@ -29,8 +31,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-x1-32k',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-15',
     type: 'chat',
@@ -46,8 +50,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-x1-32k-preview',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-16',
     type: 'chat',
@@ -65,8 +71,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.5-turbo-128k',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 3.2,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-24',
     settings: {
@@ -86,8 +94,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.5-turbo-32k',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 3.2,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-24',
     settings: {
@@ -107,8 +117,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.5-turbo-vl-32k',
     pricing: {
       currency: 'CNY',
-      input: 3,
-      output: 9,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-24',
     type: 'chat',
@@ -124,8 +136,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.5-8k-preview',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-16',
     type: 'chat',
@@ -142,8 +156,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.0-8k-latest',
     pricing: {
       currency: 'CNY',
-      input: 30,
-      output: 90,
+      units: [
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -162,8 +178,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.0-8k-preview',
     pricing: {
       currency: 'CNY',
-      input: 30,
-      output: 90,
+      units: [
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 90, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -182,8 +200,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.0-turbo-8k-latest',
     pricing: {
       currency: 'CNY',
-      input: 20,
-      output: 60,
+      units: [
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -202,8 +222,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.0-turbo-128k',
     pricing: {
       currency: 'CNY',
-      input: 20,
-      output: 60,
+      units: [
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -222,8 +244,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.0-turbo-8k-preview',
     pricing: {
       currency: 'CNY',
-      input: 20,
-      output: 60,
+      units: [
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -242,8 +266,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-3.5-8k',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -262,8 +288,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-3.5-8k-preview',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -282,8 +310,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-3.5-128k',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -298,8 +328,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-lite-8k',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -314,8 +346,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-lite-pro-128k',
     pricing: {
       currency: 'CNY',
-      input: 0.2,
-      output: 0.4,
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -326,8 +360,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-tiny-8k',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -339,8 +375,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-speed-128k',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -352,8 +390,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-speed-pro-128k',
     pricing: {
       currency: 'CNY',
-      input: 0.3,
-      output: 0.6,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -365,8 +405,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-char-8k',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -378,8 +420,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-char-fiction-8k',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -390,8 +434,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-novel-8k',
     pricing: {
       currency: 'CNY',
-      input: 40,
-      output: 120,
+      units: [
+        { name: 'textInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -403,8 +449,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-v3',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 1.6,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -419,8 +467,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -434,8 +484,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-1.5b',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -449,8 +501,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-7b',
     pricing: {
       currency: 'CNY',
-      input: 0.6,
-      output: 2.4,
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -464,8 +518,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-14b',
     pricing: {
       currency: 'CNY',
-      input: 0.6,
-      output: 2.4,
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -479,8 +535,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-32b',
     pricing: {
       currency: 'CNY',
-      input: 1.5,
-      output: 6,
+      units: [
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -494,8 +552,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-llama-8b',
     pricing: {
       currency: 'CNY',
-      input: 1.5,
-      output: 6,
+      units: [
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -509,8 +569,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-llama-70b',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -525,8 +587,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qianfan-llama-8b',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -541,8 +605,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qianfan-llama-70b',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -557,8 +623,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'qwq-32b',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -577,7 +645,20 @@ const wenxinImageModels: AIImageModelCard[] = [
       },
       size: {
         default: '1024x1024',
-        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+        enum: [
+          '768x768',
+          '1024x1024',
+          '1536x1536',
+          '2048x2048',
+          '1024x768',
+          '2048x1536',
+          '768x1024',
+          '1536x2048',
+          '1024x576',
+          '2048x1152',
+          '576x1024',
+          '1152x2048',
+        ],
       },
     },
     releasedAt: '2025-02-05',
@@ -596,15 +677,27 @@ const wenxinImageModels: AIImageModelCard[] = [
       },
       size: {
         default: '1024x1024',
-        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+        enum: [
+          '768x768',
+          '1024x1024',
+          '1536x1536',
+          '2048x2048',
+          '1024x768',
+          '2048x1536',
+          '768x1024',
+          '1536x2048',
+          '1024x576',
+          '2048x1152',
+          '576x1024',
+          '1152x2048',
+        ],
       },
     },
     releasedAt: '2025-04-17',
     type: 'image',
   },
   {
-    description:
-      '具有120亿参数的修正流变换器，能够根据文本描述生成图像。',
+    description: '具有120亿参数的修正流变换器，能够根据文本描述生成图像。',
     displayName: 'FLUX.1-schnell',
     enabled: true,
     id: 'flux.1-schnell',
@@ -615,7 +708,20 @@ const wenxinImageModels: AIImageModelCard[] = [
       seed: { default: null },
       size: {
         default: '1024x1024',
-        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+        enum: [
+          '768x768',
+          '1024x1024',
+          '1536x1536',
+          '2048x2048',
+          '1024x768',
+          '2048x1536',
+          '768x1024',
+          '1536x2048',
+          '1024x576',
+          '2048x1152',
+          '576x1024',
+          '1152x2048',
+        ],
       },
       steps: { default: 25, max: 50, min: 1 },
     },

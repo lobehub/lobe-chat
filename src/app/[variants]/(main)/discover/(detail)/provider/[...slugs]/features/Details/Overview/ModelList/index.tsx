@@ -13,6 +13,7 @@ import urlJoin from 'url-join';
 import InlineTable from '@/components/InlineTable';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
+import { getTextInputUnitRate, getTextOutputUnitRate } from '@/utils/pricing';
 
 import { useDetailContext } from '../../../DetailProvider';
 
@@ -82,11 +83,17 @@ const ModelList = memo(() => {
           {
             dataIndex: 'inputPrice',
             key: 'inputPrice',
-            render: (_, record) =>
-              record.pricing?.input
-                ? '$' + formatPriceByCurrency(record.pricing.input, record.pricing?.currency)
-                : '--',
-            sorter: (a, b) => (a.pricing?.input || 0) - (b.pricing?.input || 0),
+            render: (_, record) => {
+              const inputRate = getTextInputUnitRate(record.pricing);
+              return inputRate
+                ? '$' + formatPriceByCurrency(inputRate, record.pricing?.currency)
+                : '--';
+            },
+            sorter: (a, b) => {
+              const aRate = getTextInputUnitRate(a.pricing) || 0;
+              const bRate = getTextInputUnitRate(b.pricing) || 0;
+              return aRate - bRate;
+            },
             title: (
               <Tooltip title={t('models.providerInfo.inputTooltip')}>
                 {t('models.providerInfo.input')}
@@ -97,11 +104,17 @@ const ModelList = memo(() => {
           {
             dataIndex: 'outputPrice',
             key: 'outputPrice',
-            render: (_, record) =>
-              record.pricing?.output
-                ? '$' + formatPriceByCurrency(record.pricing.output, record.pricing?.currency)
-                : '--',
-            sorter: (a, b) => (a.pricing?.output || 0) - (b.pricing?.output || 0),
+            render: (_, record) => {
+              const outputRate = getTextOutputUnitRate(record.pricing);
+              return outputRate
+                ? '$' + formatPriceByCurrency(outputRate, record.pricing?.currency)
+                : '--';
+            },
+            sorter: (a, b) => {
+              const aRate = getTextOutputUnitRate(a.pricing) || 0;
+              const bRate = getTextOutputUnitRate(b.pricing) || 0;
+              return aRate - bRate;
+            },
             title: (
               <Tooltip title={t('models.providerInfo.outputTooltip')}>
                 {t('models.providerInfo.output')}

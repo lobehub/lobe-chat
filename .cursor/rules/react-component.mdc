@@ -3,6 +3,7 @@ description:
 globs: *.tsx
 alwaysApply: false
 ---
+
 # react component 编写指南
 
 - 如果要写复杂样式的话用 antd-style ，简单的话可以用 style 属性直接写内联样式
@@ -20,18 +21,20 @@ import { useTheme } from 'antd-style';
 
 const MyComponent = () => {
   const theme = useTheme();
-  
+
   return (
-    <div style={{ 
-      color: theme.colorPrimary,
-      backgroundColor: theme.colorBgContainer,
-      padding: theme.padding,
-      borderRadius: theme.borderRadius
-    }}>
+    <div
+      style={{
+        color: theme.colorPrimary,
+        backgroundColor: theme.colorBgContainer,
+        padding: theme.padding,
+        borderRadius: theme.borderRadius,
+      }}
+    >
       使用主题 token 的组件
     </div>
   );
-}
+};
 ```
 
 #### 使用 antd-style 的 createStyles
@@ -53,13 +56,13 @@ const useStyles = createStyles(({ css, token }) => {
     content: css`
       font-size: ${token.fontSize}px;
       line-height: ${token.lineHeight};
-    `
+    `,
   };
 });
 
 const Card: FC<CardProps> = ({ title, content }) => {
   const { styles } = useStyles();
-  
+
   return (
     <Flexbox className={styles.container}>
       <div className={styles.title}>{title}</div>
@@ -74,80 +77,96 @@ const Card: FC<CardProps> = ({ title, content }) => {
 请注意使用下面的 token 而不是 css 字面值。可以访问 https://ant.design/docs/react/customize-theme-cn 了解所有 token
 
 - 动画类
-    - token.motionDurationMid
-    - token.motionEaseInOut
+  - token.motionDurationMid
+  - token.motionEaseInOut
 - 包围盒属性
-    - token.paddingSM
-    - token.marginLG
-
+  - token.paddingSM
+  - token.marginLG
 
 ## Lobe UI 包含的组件
 
 - 不知道 @lobehub/ui 的组件怎么用，有哪些属性，就自己搜下这个项目其它地方怎么用的，不要瞎猜，大部分组件都是在 antd 的基础上扩展了属性
 - 具体用法不懂可以联网搜索，例如 ActionIcon 就爬取 https://ui.lobehub.com/components/action-icon
+- 可以阅读 node_modules/@lobehub/ui/es/index.js 了解有哪些组件，每个组件的属性是什么
 
 - General
-  ActionIcon
-  ActionIconGroup
-  Block
-  Button
-  Icon
+  - ActionIcon
+  - ActionIconGroup
+  - Block
+  - Button
+  - DownloadButton
+  - Icon
 - Data Display
-  Avatar
-  Collapse
-  FileTypeIcon
-  FluentEmoji
-  GuideCard
-  Highlighter
-  Hotkey
-  Image
-  List
-  Markdown
-  MaterialFileTypeIcon
-  Mermaid
-  Segmented
-  Snippet
-  SortableList
-  Tag
-  Tooltip
-  Video
+  - Avatar
+  - AvatarGroup
+  - GroupAvatar
+  - Collapse
+  - FileTypeIcon
+  - FluentEmoji
+  - GuideCard
+  - Highlighter
+  - Hotkey
+  - Image
+  - List
+  - Markdown
+  - SearchResultCards
+  - MaterialFileTypeIcon
+  - Mermaid
+  - Typography
+  - Text
+  - Segmented
+  - Snippet
+  - SortableList
+  - Tag
+  - Tooltip
+  - Video
 - Data Entry
-  AutoComplete
-  CodeEditor
-  ColorSwatches
-  CopyButton
-  DatePicker
-  EditableText
-  EmojiPicker
-  Form
-  FormModal
-  HotkeyInput
-  ImageSelect
-  Input
-  SearchBar
-  Select
-  SliderWithInput
-  ThemeSwitch
+  - AutoComplete
+  - CodeEditor
+  - ColorSwatches
+  - CopyButton
+  - DatePicker
+  - EditableText
+  - EmojiPicker
+  - Form
+  - FormModal
+  - HotkeyInput
+  - ImageSelect
+  - Input
+  - SearchBar
+  - Select
+  - SliderWithInput
+  - ThemeSwitch
 - Feedback
-  Alert
-  Drawer
-  Modal
+  - Alert
+  - Drawer
+  - Modal
 - Layout
-  DraggablePanel
-  Footer
-  Grid
-  Header
-  Layout
-  MaskShadow
-  ScrollShadow
+  - DraggablePanel
+  - DraggablePanelBody
+  - DraggablePanelContainer
+  - DraggablePanelFooter
+  - DraggablePanelHeader
+  - Footer
+  - Grid
+  - Header
+  - Layout
+  - LayoutFooter
+  - LayoutHeader
+  - LayoutMain
+  - LayoutSidebar
+  - LayoutSidebarInner
+  - LayoutToc
+  - MaskShadow
+  - ScrollShadow
 - Navigation
-  Burger
-  Dropdown
-  Menu
-  SideNav
-  Tabs
-  Toc
+  - Burger
+  - Dropdown
+  - Menu
+  - SideNav
+  - Tabs
+  - Toc
 - Theme
-  ConfigProvider
-  FontLoader
-  ThemeProvider
+  - ConfigProvider
+  - FontLoader
+  - ThemeProvider

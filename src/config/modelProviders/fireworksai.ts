@@ -11,10 +11,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.3 70B Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -23,10 +19,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.2 3B Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
-      pricing: {
-        input: 0.1,
-        output: 0.1,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -35,10 +27,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.2 11B Vision Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/llama-v3p2-11b-vision-instruct',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
       vision: true,
     },
     {
@@ -48,10 +36,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.2 90B Vision Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/llama-v3p2-90b-vision-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
       vision: true,
     },
     {
@@ -60,10 +44,6 @@ const FireworksAI: ModelProviderCard = {
         'Meta Llama 3.1 系列是多语言大语言模型（LLM）集合，包含 8B、70B 和 405B 三种参数规模的预训练和指令微调生成模型。Llama 3.1 指令微调文本模型（8B、70B、405B）专为多语言对话应用优化，并在常见的行业基准测试中优于许多现有的开源和闭源聊天模型。',
       displayName: 'Llama 3.1 8B Instruct',
       id: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -72,10 +52,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.1 70B Instruct',
       functionCall: true,
       id: 'accounts/fireworks/models/llama-v3p1-70b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -84,10 +60,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Llama 3.1 405B Instruct',
       functionCall: true,
       id: 'accounts/fireworks/models/llama-v3p1-405b-instruct',
-      pricing: {
-        input: 3,
-        output: 3,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -95,10 +67,6 @@ const FireworksAI: ModelProviderCard = {
         'Meta 开发并发布了 Meta Llama 3 系列大语言模型（LLM），这是一个包含 8B 和 70B 参数规模的预训练和指令微调生成文本模型的集合。Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。',
       displayName: 'Llama 3 8B Instruct',
       id: 'accounts/fireworks/models/llama-v3-8b-instruct',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -106,10 +74,6 @@ const FireworksAI: ModelProviderCard = {
         'Meta 开发并发布了 Meta Llama 3 系列大语言模型（LLM），该系列包含 8B 和 70B 参数规模的预训练和指令微调生成文本模型。Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。',
       displayName: 'Llama 3 70B Instruct',
       id: 'accounts/fireworks/models/llama-v3-70b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -117,10 +81,6 @@ const FireworksAI: ModelProviderCard = {
         'Meta Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。Llama 3 8B Instruct（HF 版本）是 Llama 3 8B Instruct 的原始 FP16 版本，其结果应与官方 Hugging Face 实现一致。',
       displayName: 'Llama 3 8B Instruct (HF version)',
       id: 'accounts/fireworks/models/llama-v3-8b-instruct-hf',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -128,10 +88,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Mistral Small 3 Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/mistral-small-24b-instruct-2501',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -139,10 +95,6 @@ const FireworksAI: ModelProviderCard = {
         'Mixtral MoE 8x7B Instruct 是 Mixtral MoE 8x7B 的指令微调版本，已启用聊天完成功能 API。',
       displayName: 'Mixtral MoE 8x7B Instruct',
       id: 'accounts/fireworks/models/mixtral-8x7b-instruct',
-      pricing: {
-        input: 0.5,
-        output: 0.5,
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -151,10 +103,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Mixtral MoE 8x22B Instruct',
       functionCall: true,
       id: 'accounts/fireworks/models/mixtral-8x22b-instruct',
-      pricing: {
-        input: 1.2,
-        output: 1.2,
-      },
     },
     {
       contextWindowTokens: 32_064,
@@ -163,10 +111,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Phi 3.5 Vision Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/phi-3-vision-128k-instruct',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
       vision: true,
     },
     {
@@ -175,10 +119,6 @@ const FireworksAI: ModelProviderCard = {
         'MythoMix 的改进版，可能是其更为完善的变体，是 MythoLogic-L2 和 Huginn 的合并，采用了高度实验性的张量类型合并技术。由于其独特的性质，该模型在讲故事和角色扮演方面表现出色。',
       displayName: 'MythoMax L2 13b',
       id: 'accounts/fireworks/models/mythomax-l2-13b',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -187,10 +127,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Deepseek V3',
       enabled: true,
       id: 'accounts/fireworks/models/deepseek-v3',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 163_840,
@@ -199,10 +135,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Deepseek R1',
       enabled: true,
       id: 'accounts/fireworks/models/deepseek-r1',
-      pricing: {
-        input: 8,
-        output: 8,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -211,10 +143,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Qwen Qwq 32b Preview',
       enabled: true,
       id: 'accounts/fireworks/models/qwen-qwq-32b-preview',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -223,10 +151,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Qwen2.5 72B Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -234,10 +158,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Qwen2 VL 72B Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/qwen2-vl-72b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
       vision: true,
     },
     {
@@ -247,10 +167,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Qwen2.5-Coder-32B-Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/qwen2p5-coder-32b-instruct',
-      pricing: {
-        input: 0.9,
-        output: 0.9,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -259,10 +175,6 @@ const FireworksAI: ModelProviderCard = {
       displayName: 'Yi-Large',
       enabled: true,
       id: 'accounts/yi-01-ai/models/yi-large',
-      pricing: {
-        input: 3,
-        output: 3,
-      },
     },
   ],
   checkModel: 'accounts/fireworks/models/llama-v3p2-3b-instruct',

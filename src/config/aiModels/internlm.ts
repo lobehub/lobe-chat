@@ -14,8 +14,10 @@ const internlmChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'internlm3-latest',
     pricing: {
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -29,8 +31,10 @@ const internlmChatModels: AIChatModelCard[] = [
     displayName: 'InternLM2.5',
     id: 'internlm2.5-latest',
     pricing: {
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -45,8 +49,10 @@ const internlmChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'internvl3-latest',
     pricing: {
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -60,8 +66,10 @@ const internlmChatModels: AIChatModelCard[] = [
     displayName: 'InternVL2.5',
     id: 'internvl2.5-latest',
     pricing: {
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

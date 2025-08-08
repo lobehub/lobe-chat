@@ -9,11 +9,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 (community)',
       enabled: true,
       id: 'deepseek/deepseek-r1/community',
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 16,
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -22,11 +17,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek V3 (community)',
       enabled: true,
       id: 'deepseek/deepseek-v3/community',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -35,11 +25,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek/deepseek-r1',
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 16,
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -48,11 +33,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek V3',
       enabled: true,
       id: 'deepseek/deepseek-v3',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -61,11 +41,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 70B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-llama-70b',
-      pricing: {
-        currency: 'CNY',
-        input: 5.8,
-        output: 5.8,
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -74,11 +49,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Qwen 32B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-qwen-32b',
-      pricing: {
-        currency: 'CNY',
-        input: 2.18,
-        output: 2.18,
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -87,11 +57,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Qwen 14B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-qwen-14b',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -100,11 +65,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Llama 8B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-llama-8b',
-      pricing: {
-        currency: 'CNY',
-        input: 0.3,
-        output: 0.3,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -113,11 +73,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2.5-72b-instruct',
       enabled: true,
       id: 'qwen/qwen-2.5-72b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 2.75,
-        output: 2.88,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -126,11 +81,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2-vl-72b-instruct',
       enabled: true,
       id: 'qwen/qwen-2-vl-72b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 4.5,
-        output: 4.5,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -138,11 +88,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.2-3b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.2-3b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0.216,
-        output: 0.36,
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -151,11 +96,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen2.5-32b-instruct',
       enabled: true,
       id: 'qwen/qwen2.5-32b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
-      },
     },
     {
       contextWindowTokens: 14_336,
@@ -164,11 +104,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'baichuan/baichuan2-13b-chat',
       enabled: true,
       id: 'baichuan/baichuan2-13b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 1.75,
-        output: 1.75,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -177,11 +112,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.1-70b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-70b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 2.45,
-        output: 2.82,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -190,11 +120,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.1-8b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-8b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0.4,
-        output: 0.4,
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -203,11 +128,6 @@ const PPIO: ModelProviderCard = {
       displayName: '01-ai/yi-1.5-34b-chat',
       enabled: true,
       id: '01-ai/yi-1.5-34b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 1.1,
-        output: 1.1,
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -216,11 +136,6 @@ const PPIO: ModelProviderCard = {
       displayName: '01-ai/yi-1.5-9b-chat',
       enabled: true,
       id: '01-ai/yi-1.5-9b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0.4,
-        output: 0.4,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -228,11 +143,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'thudm/glm-4-9b-chat',
       enabled: true,
       id: 'thudm/glm-4-9b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0.5,
-        output: 0.5,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -241,11 +151,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2-7b-instruct',
       enabled: true,
       id: 'qwen/qwen-2-7b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0.32,
-        output: 0.32,
-      },
     },
   ], // Will be updated with model list
   checkModel: 'deepseek/deepseek-r1-distill-qwen-32b',

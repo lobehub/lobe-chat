@@ -93,8 +93,8 @@ export const agentRouter = router({
           const user = await UserModel.findById(ctx.serverDB, ctx.userId);
           if (!user) return DEFAULT_AGENT_CONFIG;
 
-          await ctx.agentService.createInbox();
-          pino.info('create inbox session');
+          const res = await ctx.agentService.createInbox();
+          pino.info({ res }, 'create inbox session');
         }
       }
 

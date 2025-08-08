@@ -125,8 +125,7 @@ export class UserService {
       }
       return Buffer.from(file);
     } catch (error) {
-      // @ts-expect-error 这里很奇怪，升级了 pino 就报错，我怀疑是 pino 的问题
-      pino.error('Failed to get user avatar:', error);
+      pino.error({ error }, 'Failed to get user avatar');
     }
   };
 }

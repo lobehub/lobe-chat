@@ -43,6 +43,7 @@ import {
   ProviderQueryParams,
   ProviderSorts,
 } from '@/types/discover';
+import { getAudioInputUnitRate, getTextInputUnitRate, getTextOutputUnitRate } from '@/utils/pricing';
 
 const log = debug('lobe-server:discover');
 
@@ -1142,13 +1143,13 @@ export class DiscoverService {
           list = list.sort((a, b) => {
             if (order === 'asc') {
               return (
-                (a.pricing?.input || a.pricing?.audioInput || 0) -
-                (b.pricing?.input || b.pricing?.audioInput || 0)
+                (getTextInputUnitRate(a.pricing) || getAudioInputUnitRate(a.pricing) || 0) -
+                (getTextInputUnitRate(b.pricing) || getAudioInputUnitRate(b.pricing) || 0)
               );
             } else {
               return (
-                (b.pricing?.input || b.pricing?.audioInput || 0) -
-                (a.pricing?.input || a.pricing?.audioInput || 0)
+                (getTextInputUnitRate(b.pricing) || getAudioInputUnitRate(b.pricing) || 0) -
+                (getTextInputUnitRate(a.pricing) || getAudioInputUnitRate(a.pricing) || 0)
               );
             }
           });
@@ -1157,9 +1158,9 @@ export class DiscoverService {
         case ModelSorts.OutputPrice: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return (a.pricing?.output || 0) - (b.pricing?.output || 0);
+              return (getTextOutputUnitRate(a.pricing) || 0) - (getTextOutputUnitRate(b.pricing) || 0);
             } else {
-              return (b.pricing?.output || 0) - (a.pricing?.output || 0);
+              return (getTextOutputUnitRate(b.pricing) || 0) - (getTextOutputUnitRate(a.pricing) || 0);
             }
           });
           break;

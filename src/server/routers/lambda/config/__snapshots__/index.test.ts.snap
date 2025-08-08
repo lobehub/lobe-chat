@@ -26,10 +26,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
       "enabled": true,
       "functionCall": true,
       "id": "gpt-4-0125-preview",
-      "pricing": {
-        "input": 10,
-        "output": 30,
-      },
     },
   ],
 }
@@ -44,10 +40,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "enabled": true,
     "functionCall": true,
     "id": "gpt-3.5-turbo-1106",
-    "pricing": {
-      "input": 1,
-      "output": 2,
-    },
   },
   {
     "contextWindowTokens": 16385,
@@ -56,10 +48,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "enabled": true,
     "functionCall": true,
     "id": "gpt-3.5-turbo",
-    "pricing": {
-      "input": 0.5,
-      "output": 1.5,
-    },
   },
   {
     "contextWindowTokens": 8192,
@@ -68,10 +56,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "enabled": true,
     "functionCall": true,
     "id": "gpt-4",
-    "pricing": {
-      "input": 30,
-      "output": 60,
-    },
   },
   {
     "contextWindowTokens": 32768,
@@ -80,10 +64,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "enabled": true,
     "functionCall": true,
     "id": "gpt-4-32k",
-    "pricing": {
-      "input": 60,
-      "output": 120,
-    },
   },
   {
     "contextWindowTokens": 128000,
@@ -92,10 +72,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "enabled": true,
     "functionCall": true,
     "id": "gpt-4-1106-preview",
-    "pricing": {
-      "input": 10,
-      "output": 30,
-    },
   },
   {
     "displayName": "gpt-4-vision",
@@ -113,10 +89,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
   "enabled": true,
   "functionCall": true,
   "id": "gpt-4-1106-preview",
-  "pricing": {
-    "input": 10,
-    "output": 30,
-  },
 }
 `;
 

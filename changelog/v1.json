@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-08-08",
+    "version": "1.111.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add descriptions for the FLUX.1 Krea and Qwen Image."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.1"
+  },
+  {
     "children": {
       "features": ["Add GPT-5 series models."]
     },

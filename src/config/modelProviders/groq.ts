@@ -13,10 +13,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.3-70b-versatile',
       maxOutput: 8192,
-      pricing: {
-        input: 0.05,
-        output: 0.08,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -26,10 +22,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-11b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        input: 0.05,
-        output: 0.08,
-      },
       vision: true,
     },
     {
@@ -40,10 +32,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-90b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        input: 0.59,
-        output: 0.79,
-      },
       vision: true,
     },
     {
@@ -55,10 +43,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-8b-instant',
       maxOutput: 8192,
-      pricing: {
-        input: 0.05,
-        output: 0.08,
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -69,10 +53,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
       maxOutput: 8192,
-      pricing: {
-        input: 0.59,
-        output: 0.79,
-      },
     },
     /*
     // Offline due to overwhelming demand! Stay tuned for updates.
@@ -89,10 +69,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Llama 3 Groq 8B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
-      pricing: {
-        input: 0.19,
-        output: 0.19,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -100,10 +76,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Llama 3 Groq 70B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
-      pricing: {
-        input: 0.89,
-        output: 0.89,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -111,10 +83,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Meta Llama 3 8B',
       functionCall: true,
       id: 'llama3-8b-8192',
-      pricing: {
-        input: 0.05,
-        output: 0.08,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -122,10 +90,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Meta Llama 3 70B',
       functionCall: true,
       id: 'llama3-70b-8192',
-      pricing: {
-        input: 0.59,
-        output: 0.79,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -134,10 +98,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
-      pricing: {
-        input: 0.2,
-        output: 0.2,
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -145,10 +105,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Gemma 7B',
       functionCall: true,
       id: 'gemma-7b-it',
-      pricing: {
-        input: 0.07,
-        output: 0.07,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -156,10 +112,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Mixtral 8x7B',
       functionCall: true,
       id: 'mixtral-8x7b-32768',
-      pricing: {
-        input: 0.24,
-        output: 0.24,
-      },
     },
     {
       contextWindowTokens: 4096,

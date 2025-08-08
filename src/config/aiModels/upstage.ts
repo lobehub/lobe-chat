@@ -11,8 +11,10 @@ const upstageChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'solar-pro',
     pricing: {
-      input: 0.25,
-      output: 0.25,
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-11-26',
     type: 'chat',
@@ -28,8 +30,10 @@ const upstageChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'solar-mini',
     pricing: {
-      input: 0.15,
-      output: 0.15,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-23',
     type: 'chat',
