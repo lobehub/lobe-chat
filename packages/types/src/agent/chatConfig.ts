@@ -69,7 +69,6 @@ export const AgentChatConfigSchema = z.object({
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
-  reasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
   searchFCModel: z
     .object({
       model: z.string(),
