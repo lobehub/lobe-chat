@@ -183,9 +183,20 @@
     "title": "Informacje o asystencie"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Zwinny",
+      "desc": "Wybierz prędkość animacji reakcji aplikacji",
+      "disabled": "Wyłączone",
+      "elegant": "Elegancki",
+      "title": "Animacja reakcji"
+    },
     "neutralColor": {
       "desc": "Dostosowanie odcieni szarości w różnych kolorach",
       "title": "Kolor neutralny"
+    },
+    "noAnimation": {
+      "desc": "Wyłącz wszystkie efekty animacji w aplikacji",
+      "title": "Tryb bez animacji"
     },
     "preview": {
       "title": "Paleta kolorów"

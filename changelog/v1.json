@@ -1,6 +1,25 @@
 [
   {
     "children": {
+      "features": ["Add GPT-5 series models."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
+      "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
       "fixes": ["Optimize Gemini error message display & Filter empty messages."]
     },
     "date": "2025-08-07",

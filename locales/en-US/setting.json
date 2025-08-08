@@ -183,9 +183,20 @@
     "title": "Assistant Information"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Agile",
+      "desc": "Select the animation speed for application response actions",
+      "disabled": "Off",
+      "elegant": "Elegant",
+      "title": "Response Animation"
+    },
     "neutralColor": {
       "desc": "Custom grayscale with different color tendencies",
       "title": "Neutral Color"
+    },
+    "noAnimation": {
+      "desc": "Disable all animation effects in the application",
+      "title": "No Animation Mode"
     },
     "preview": {
       "title": "Color Palette"
