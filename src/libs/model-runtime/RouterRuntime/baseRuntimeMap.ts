@@ -4,6 +4,7 @@ import { LobeCloudflareAI } from '../cloudflare';
 import { LobeFalAI } from '../fal';
 import { LobeGoogleAI } from '../google';
 import { LobeOpenAI } from '../openai';
+import { LobeXAI } from '../xai';
 
 export const baseRuntimeMap = {
   anthropic: LobeAnthropicAI,
@@ -12,4 +13,5 @@ export const baseRuntimeMap = {
   fal: LobeFalAI,
   google: LobeGoogleAI,
   openai: LobeOpenAI,
+  xai: LobeXAI,
 };
