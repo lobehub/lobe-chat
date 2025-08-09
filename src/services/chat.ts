@@ -292,7 +292,7 @@ class ChatService {
       }
 
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
-        extendParams.urlContext = { type: chatConfig.urlContext };
+        extendParams.urlContext = chatConfig.urlContext;
       }
     }
 
