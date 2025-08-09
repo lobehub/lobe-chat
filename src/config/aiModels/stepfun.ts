@@ -20,20 +20,20 @@ const stepfunChatModels: AIChatModelCard[] = [
         {
           name: 'textInput',
           strategy: 'tiered',
-          unit: 'millionTokens',
           tiers: [
-            { upTo: 0.004, rate: 1.5 },
-            { upTo: 'infinity', rate: 4 },
+            { rate: 1.5, upTo: 0.004 },
+            { rate: 4, upTo: 'infinity' },
           ],
+          unit: 'millionTokens',
         },
         {
           name: 'textOutput',
           strategy: 'tiered',
-          unit: 'millionTokens',
           tiers: [
-            { upTo: 0.004, rate: 4 },
-            { upTo: 'infinity', rate: 8 }, // 仍与文档有出入
+            { rate: 4, upTo: 0.004 },
+            { rate: 8, upTo: 'infinity' }, // 仍与文档有出入
           ],
+          unit: 'millionTokens',
         },
       ],
     },
