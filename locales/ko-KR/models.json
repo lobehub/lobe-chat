@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev]는 비상업적 용도를 위한 오픈 소스 가중치 및 정제 모델입니다. FLUX.1 [dev]는 FLUX 전문판과 유사한 이미지 품질과 명령 준수 능력을 유지하면서도 더 높은 실행 효율성을 갖추고 있습니다. 동일 크기 표준 모델 대비 자원 활용이 더 효율적입니다."
   },
   "flux-kontext/dev": {
-    "description": "프론티어 이미지 편집 모델."
+    "description": "이미지 편집 작업에 특화된 FLUX.1 모델로, 텍스트와 이미지 입력을 지원합니다."
   },
   "flux-merged": {
     "description": "FLUX.1-merged 모델은 개발 단계에서 탐색된 \"DEV\"의 심층 특성과 \"Schnell\"이 대표하는 고속 실행 장점을 결합했습니다. 이를 통해 FLUX.1-merged는 모델 성능 한계를 높이고 적용 범위를 확장했습니다."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "120억 파라미터의 수정 흐름 변환기로, 텍스트 설명에 따라 이미지를 생성할 수 있습니다."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev]는 미적 선호를 반영한 이미지 생성 모델로, 보다 사실적이고 자연스러운 이미지를 생성하는 것을 목표로 합니다."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 스트림 변환기 모델로, 1~4단계 내에 텍스트로부터 고품질 이미지를 생성하며 개인 및 상업적 용도에 적합합니다."
+    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 이미지 생성 모델로, 빠르게 고품질 이미지를 생성하는 데 중점을 둡니다."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe는 GPT-4o를 사용하여 오디오를 텍스트로 전사하는 음성 인식 모델입니다. 원래 Whisper 모델에 비해 단어 오류율이 개선되었고, 언어 인식 및 정확도가 향상되었습니다. 보다 정확한 전사를 위해 사용하세요."
   },
+  "gpt-5": {
+    "description": "다중 분야 코딩 및 에이전트 작업에 최적화된 모델입니다. GPT-5는 정확성, 속도, 추론, 문맥 인식, 구조적 사고 및 문제 해결 능력에서 비약적인 발전을 이루었습니다."
+  },
+  "gpt-5-chat-latest": {
+    "description": "ChatGPT에 사용되는 GPT-5 모델로, 강력한 언어 이해 및 생성 능력을 결합하여 대화형 상호작용에 적합합니다."
+  },
+  "gpt-5-mini": {
+    "description": "더 빠르고 경제적인 GPT-5 버전으로, 명확하게 정의된 작업에 적합합니다. 높은 품질의 출력을 유지하면서 더 빠른 응답 속도를 제공합니다."
+  },
+  "gpt-5-nano": {
+    "description": "가장 빠르고 경제적인 GPT-5 버전으로, 빠른 응답과 비용 효율성이 중요한 애플리케이션에 매우 적합합니다."
+  },
   "gpt-image-1": {
     "description": "ChatGPT 네이티브 멀티모달 이미지 생성 모델"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 4세대 텍스트-이미지 모델 시리즈 울트라 버전"
   },
   "imagen4/preview": {
-    "description": "Google의 최고 품질 이미지 생성 모델"
+    "description": "Google에서 제공하는 고품질 이미지 생성 모델입니다."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "통의 천문 코드 모델입니다."
+  },
+  "qwen-image": {
+    "description": "Qwen 팀이 개발한 강력한 원본 이미지 생성 모델로, 인상적인 중국어 텍스트 생성 능력과 다양한 시각적 이미지 스타일을 갖추고 있습니다."
   },
   "qwen-long": {
     "description": "통의천문 초대규모 언어 모델로, 긴 텍스트 컨텍스트를 지원하며, 긴 문서 및 다수의 문서에 기반한 대화 기능을 제공합니다."
