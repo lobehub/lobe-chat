@@ -1,4 +1,4 @@
-import { ActionIcon, CopyButton, Icon, Markdown } from '@lobehub/ui';
+import { ActionIcon, CopyButton, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
@@ -17,14 +17,9 @@ const useStyles = createStyles(({ css, token }) => ({
     transition: all 0.2s ${token.motionEaseOut};
   `,
   contentScroll: css`
-    scroll-behavior: auto;
-
-    overflow-y: auto;
-    overscroll-behavior: contain;
-
-    max-height: 40vh;
-    padding-block-end: 12px;
-    padding-inline: 12px;
+    max-height: min(40vh, 320px);
+    padding-block-end: 8px;
+    padding-inline: 8px;
   `,
   expand: css`
     color: ${token.colorTextTertiary};
@@ -190,18 +185,26 @@ const Thinking = memo<ThinkingProps>((props) => {
               open: { opacity: 1, width: 'auto' },
             }}
           >
-            <div
+            <ScrollShadow
               className={styles.contentScroll}
               ref={contentRef as unknown as RefObject<HTMLDivElement>}
+              size={12}
             >
               {typeof content === 'string' ? (
-                <Markdown animated={thinkingAnimated} citations={citations} variant={'chat'}>
+                <Markdown
+                  animated={thinkingAnimated}
+                  citations={citations}
+                  style={{
+                    overflow: 'unset',
+                  }}
+                  variant={'chat'}
+                >
                   {content}
                 </Markdown>
               ) : (
                 content
               )}
-            </div>
+            </ScrollShadow>
           </motion.div>
         )}
       </AnimatePresence>
