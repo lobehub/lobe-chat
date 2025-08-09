@@ -1,3 +1,4 @@
+
 export default {
   ModelSwitch: {
     title: '模型',
@@ -51,6 +52,9 @@ export default {
       title: '深度思考开关',
     },
     title: '模型扩展功能',
+    urlContext: {
+      title: 'URL 上下文',
+    },
   },
   history: {
     title: '助手将只记住最后{{count}}条消息',

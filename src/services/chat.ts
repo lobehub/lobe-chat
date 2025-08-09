@@ -290,6 +290,10 @@ class ChatService {
       ) {
         extendParams.thinkingBudget = chatConfig.thinkingBudget;
       }
+
+      if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
+        extendParams.urlContext = { type: chatConfig.urlContext };
+      }
     }
 
     return this.getChatCompletion(

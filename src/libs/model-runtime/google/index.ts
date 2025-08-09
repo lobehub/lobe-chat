@@ -511,7 +511,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
 
     const contents = await Promise.all(pools);
-    
+
     // 筛除空消息: contents.parts must not be empty.
     return contents.filter((content: Content) => content.parts && content.parts.length > 0);
   };
@@ -524,8 +524,14 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     if (payload?.messages?.some((m) => m.tool_calls?.length)) {
       return this.buildFunctionDeclarations(tools);
     }
+    if (payload?.enabledSearch && payload?.urlContext) {
+      return [{ urlContext: {} }, { googleSearch: {} }];
+    }
     if (payload?.enabledSearch) {
       return [{ googleSearch: {} }];
+    }
+    if (payload?.urlContext) {
+      return [{ urlContext: {} }];
     }
 
     return this.buildFunctionDeclarations(tools);
@@ -563,7 +569,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       },
     };
   };
-
 }
 
 export default LobeGoogleAI;

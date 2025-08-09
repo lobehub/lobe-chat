@@ -107,6 +107,14 @@ const ControlsForm = memo(() => {
       tag: 'thinkingBudget',
     },
     {
+      children: <Switch />,
+      desc: 'desc',
+      label: t('extendParams.urlContext.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'urlContext',
+    },
+    {
       children: <ThinkingSlider />,
       label: t('extendParams.thinking.title'),
       layout: 'horizontal',
