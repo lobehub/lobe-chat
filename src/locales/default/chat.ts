@@ -1,4 +1,3 @@
-
 export default {
   ModelSwitch: {
     title: '模型',
@@ -53,7 +52,7 @@ export default {
     },
     title: '模型扩展功能',
     urlContext: {
-      title: 'URL 上下文',
+      title: 'URL 上下文提取',
     },
   },
   history: {
