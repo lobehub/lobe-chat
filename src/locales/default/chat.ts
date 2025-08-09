@@ -47,6 +47,9 @@ export default {
     reasoningEffort: {
       title: '推理强度',
     },
+    textVerbosity: {
+      title: '输出文本详细程度',
+    },
     thinking: {
       title: '深度思考开关',
     },

@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] is an open-source weight and fine-tuned model for non-commercial applications. It maintains image quality and instruction-following capabilities close to the FLUX professional version while offering higher operational efficiency. Compared to standard models of the same size, it is more resource-efficient."
   },
   "flux-kontext/dev": {
-    "description": "FLUX.1 model focused on image editing tasks, supporting both text and image inputs."
+    "description": "FLUX.1 model focused on image editing tasks, supporting text and image inputs."
   },
   "flux-merged": {
     "description": "The FLUX.1-merged model combines the deep features explored during the development phase of “DEV” with the high-speed execution advantages represented by “Schnell.” This integration not only pushes the model's performance boundaries but also broadens its application scope."
@@ -1119,10 +1119,10 @@
     "description": "A 12-billion-parameter rectified flow transformer capable of generating images based on text descriptions."
   },
   "flux/krea": {
-    "description": "Flux Krea [dev] is an image generation model with an aesthetic preference, aimed at producing more realistic and natural images."
+    "description": "Flux Krea [dev] is an image-generation model with an aesthetic sensibility, aimed at producing more realistic and natural images."
   },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] is an image generation model with 12 billion parameters, specializing in fast generation of high-quality images."
+    "description": "FLUX.1 [schnell] is an image-generation model with 12 billion parameters, optimized for fast generation of high-quality images."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offers stable and tunable performance, making it an ideal choice for complex task solutions."
@@ -1485,16 +1485,16 @@
     "description": "GPT-4o Transcribe is a speech-to-text model that uses GPT-4o to transcribe audio. Compared to the original Whisper model, it improves word error rate, language recognition, and accuracy. Use it for more precise transcriptions."
   },
   "gpt-5": {
-    "description": "The best model for cross-domain coding and agent tasks. GPT-5 achieves breakthroughs in accuracy, speed, reasoning, context recognition, structured thinking, and problem-solving."
+    "description": "The best model for cross-domain coding and agent tasks. GPT-5 represents a breakthrough in accuracy, speed, reasoning, contextual awareness, structured thinking, and problem-solving."
   },
   "gpt-5-chat-latest": {
-    "description": "The GPT-5 model used in ChatGPT. Combines powerful language understanding and generation capabilities, ideal for conversational interaction applications."
+    "description": "The GPT-5 model used in ChatGPT. It combines powerful language understanding and generation capabilities, making it well-suited for conversational applications."
   },
   "gpt-5-mini": {
-    "description": "A faster, more cost-effective version of GPT-5, suitable for well-defined tasks. Provides quicker response times while maintaining high-quality output."
+    "description": "A faster, more cost-efficient version of GPT-5 designed for well-defined tasks, delivering quicker response times while maintaining high-quality output."
   },
   "gpt-5-nano": {
-    "description": "The fastest and most cost-efficient version of GPT-5. Perfectly suited for applications requiring rapid responses and cost sensitivity."
+    "description": "The fastest and most cost-efficient version of GPT-5. Ideal for applications that require quick responses and are sensitive to cost."
   },
   "gpt-image-1": {
     "description": "ChatGPT native multimodal image generation model."
@@ -1644,7 +1644,7 @@
     "description": "Imagen 4th generation text-to-image model series Ultra version"
   },
   "imagen4/preview": {
-    "description": "A high-quality image generation model provided by Google."
+    "description": "High-quality image generation model provided by Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
@@ -2214,7 +2214,7 @@
     "description": "The Tongyi Qianwen Coder model."
   },
   "qwen-image": {
-    "description": "A powerful raw image model from the Qwen team, featuring impressive Chinese text generation capabilities and diverse visual styles."
+    "description": "A powerful image model from the Qwen team, featuring impressive Chinese text generation capabilities and a wide range of visual styles."
   },
   "qwen-long": {
     "description": "Qwen is a large-scale language model that supports long text contexts and dialogue capabilities based on long documents and multiple documents."
