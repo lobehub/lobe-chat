@@ -317,7 +317,7 @@
     "@types/unist": "^3.0.3",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
-    "@typescript/native-preview": "7.0.0-dev.20250711.1",
+    "@typescript/native-preview": "7.0.0-dev.20250809.1",
     "@vitest/coverage-v8": "^3.2.4",
     "ajv-keywords": "^5.1.0",
     "commitlint": "^19.8.1",

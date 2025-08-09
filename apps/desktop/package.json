@@ -48,7 +48,7 @@
     "@types/resolve": "^1.20.6",
     "@types/semver": "^7.7.0",
     "@types/set-cookie-parser": "^2.4.10",
-    "@typescript/native-preview": "7.0.0-dev.20250711.1",
+    "@typescript/native-preview": "7.0.0-dev.20250809.1",
     "consola": "^3.1.0",
     "cookie": "^1.0.2",
     "electron": "^37.2.0",
