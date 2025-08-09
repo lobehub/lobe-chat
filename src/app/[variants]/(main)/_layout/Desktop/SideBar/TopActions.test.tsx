@@ -38,6 +38,7 @@ vi.mock('@lobehub/ui', () => ({
   ActionIcon: vi.fn(({ title }) => <div>{title}</div>),
   combineKeys: vi.fn((keys) => keys.join('+')),
   KeyMapEnum: { Alt: 'alt', Ctrl: 'ctrl', Shift: 'shift' },
+  Hotkey: vi.fn(({ keys = [] }) => <div>{keys}</div>),
 }));
 
 vi.mock('react-i18next', () => ({

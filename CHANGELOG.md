@@ -2,6 +2,33 @@
 
 # Changelog
 
+### [Version 1.111.3](https://github.com/lobehub/lobe-chat/compare/v1.111.2...v1.111.3)
+
+<sup>Released on **2025-08-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve thinking auto scroll style, Support session switch shortcut key, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve thinking auto scroll style, closes [#8719](https://github.com/lobehub/lobe-chat/issues/8719) ([acec55f](https://github.com/lobehub/lobe-chat/commit/acec55f))
+- **misc**: Support session switch shortcut key, closes [#8626](https://github.com/lobehub/lobe-chat/issues/8626) ([efc7eaf](https://github.com/lobehub/lobe-chat/commit/efc7eaf))
+- **misc**: Update i18n, closes [#8725](https://github.com/lobehub/lobe-chat/issues/8725) ([d9642fc](https://github.com/lobehub/lobe-chat/commit/d9642fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.2](https://github.com/lobehub/lobe-chat/compare/v1.111.1...v1.111.2)
 
 <sup>Released on **2025-08-08**</sup>

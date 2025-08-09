@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { rgba } from 'polished';
-import { CSSProperties, memo, useEffect, useState } from 'react';
+import { CSSProperties, RefObject, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,11 +16,19 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextTertiary};
     transition: all 0.2s ${token.motionEaseOut};
   `,
-  expand: css`
-    color: ${token.colorTextSecondary};
-    background: ${token.colorFillTertiary};
-  `,
+  contentScroll: css`
+    scroll-behavior: auto;
 
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    max-height: 40vh;
+    padding-block-end: 12px;
+    padding-inline: 12px;
+  `,
+  expand: css`
+    color: ${token.colorTextTertiary};
+  `,
   header: css`
     padding-block: 4px;
     padding-inline: 8px 4px;
@@ -34,7 +42,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
   headerExpand: css`
     color: ${token.colorTextSecondary};
-    background: ${token.colorFillQuaternary};
   `,
   shinyText: css`
     color: ${rgba(token.colorText, 0.45)};
@@ -86,10 +93,38 @@ const Thinking = memo<ThinkingProps>((props) => {
   const { styles, cx, theme } = useStyles();
 
   const [showDetail, setShowDetail] = useState(false);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setShowDetail(!!thinking);
   }, [thinking]);
+
+  // 当内容变更且正在思考时，如果用户接近底部则自动滚动到底部
+  useEffect(() => {
+    if (!thinking || !showDetail) return;
+    const container = contentRef.current;
+    if (!container) return;
+
+    // 仅当用户接近底部时才自动滚动，避免打断用户查看上方内容
+    const distanceToBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    const isNearBottom = distanceToBottom < 60;
+
+    if (isNearBottom) {
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
+    }
+  }, [content, thinking, showDetail]);
+
+  // 展开时滚动到底部，便于查看最新内容
+  useEffect(() => {
+    if (!showDetail) return;
+    const container = contentRef.current;
+    if (!container) return;
+    requestAnimationFrame(() => {
+      container.scrollTop = container.scrollHeight;
+    });
+  }, [showDetail]);
 
   return (
     <Flexbox
@@ -145,7 +180,7 @@ const Thinking = memo<ThinkingProps>((props) => {
             animate="open"
             exit="collapsed"
             initial="collapsed"
-            style={{ overflow: 'hidden', padding: 12 }}
+            style={{ overflow: 'hidden' }}
             transition={{
               duration: 0.2,
               ease: [0.4, 0, 0.2, 1], // 使用 ease-out 缓动函数
@@ -155,13 +190,18 @@ const Thinking = memo<ThinkingProps>((props) => {
               open: { opacity: 1, width: 'auto' },
             }}
           >
-            {typeof content === 'string' ? (
-              <Markdown animated={thinkingAnimated} citations={citations} variant={'chat'}>
-                {content}
-              </Markdown>
-            ) : (
-              content
-            )}
+            <div
+              className={styles.contentScroll}
+              ref={contentRef as unknown as RefObject<HTMLDivElement>}
+            >
+              {typeof content === 'string' ? (
+                <Markdown animated={thinkingAnimated} citations={citations} variant={'chat'}>
+                  {content}
+                </Markdown>
+              ) : (
+                content
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

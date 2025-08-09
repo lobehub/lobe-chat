@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] est un modèle open source affiné destiné à un usage non commercial. Il maintient une qualité d'image et une adhérence aux instructions proches de la version professionnelle FLUX, tout en offrant une efficacité d'exécution supérieure. Par rapport aux modèles standards de même taille, il est plus efficace en termes d'utilisation des ressources."
   },
   "flux-kontext/dev": {
-    "description": "Modèle FLUX.1 dédié aux tâches d'édition d'images, prenant en charge les entrées texte et image."
+    "description": "Modèle d'édition d'image Frontier."
   },
   "flux-merged": {
     "description": "Le modèle FLUX.1-merged combine les caractéristiques approfondies explorées durant la phase de développement « DEV » et les avantages d'exécution rapide représentés par « Schnell ». Cette fusion améliore non seulement les performances du modèle mais étend également son champ d'application."
@@ -1117,9 +1117,6 @@
   },
   "flux.1-schnell": {
     "description": "Transformateur de flux rectifié de 12 milliards de paramètres capable de générer des images à partir de descriptions textuelles."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] est un modèle de génération d'images doté d'une sensibilité esthétique, conçu pour produire des images plus réalistes et naturelles."
   },
   "flux/schnell": {
     "description": "FLUX.1 [schnell] est un modèle de génération d'images de 12 milliards de paramètres, axé sur la génération rapide d'images de haute qualité."
@@ -1484,18 +1481,6 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe est un modèle de transcription audio en texte utilisant GPT-4o. Par rapport au modèle Whisper original, il améliore le taux d'erreur des mots ainsi que la reconnaissance et la précision linguistiques. Utilisez-le pour obtenir des transcriptions plus précises."
   },
-  "gpt-5": {
-    "description": "Le meilleur modèle pour le codage inter-domaines et les tâches d'agents. GPT-5 a réalisé un bond en avant en matière de précision, de vitesse, de raisonnement, de compréhension du contexte, de pensée structurée et de résolution de problèmes."
-  },
-  "gpt-5-chat-latest": {
-    "description": "Le modèle GPT-5 utilisé par ChatGPT. Il combine de puissantes capacités de compréhension et de génération du langage, et convient aux applications d'interaction conversationnelle."
-  },
-  "gpt-5-mini": {
-    "description": "Une version de GPT-5 plus rapide et plus économique, adaptée aux tâches bien définies. Elle offre une réactivité accrue tout en conservant une sortie de haute qualité."
-  },
-  "gpt-5-nano": {
-    "description": "La version de GPT-5 la plus rapide et la plus rentable. Idéale pour les applications nécessitant des réponses rapides et sensibles aux coûts."
-  },
   "gpt-image-1": {
     "description": "Modèle natif multimodal de génération d'images de ChatGPT."
   },
@@ -1644,7 +1629,7 @@
     "description": "Série de modèles de génération d'images à partir de texte Imagen 4e génération version Ultra"
   },
   "imagen4/preview": {
-    "description": "Modèle de génération d'images de haute qualité fourni par Google"
+    "description": "Modèle de génération d'images de la plus haute qualité de Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 fournit des solutions de dialogue intelligent dans divers scénarios."
@@ -2212,9 +2197,6 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Le modèle de code Tongyi Qwen."
-  },
-  "qwen-image": {
-    "description": "Un puissant modèle de génération d'images développé par l'équipe Qwen, doté d'une capacité impressionnante à générer du texte en chinois et d'une grande variété de styles visuels."
   },
   "qwen-long": {
     "description": "Qwen est un modèle de langage à grande échelle, prenant en charge un contexte de texte long, ainsi que des fonctionnalités de dialogue basées sur des documents longs et multiples."
