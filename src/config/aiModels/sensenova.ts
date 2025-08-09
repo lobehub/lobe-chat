@@ -23,9 +23,9 @@ const sensenovaChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-23',
-    settings: {
-      extendParams: ['enableReasoning'],
-    },
+    // settings: {
+    //   extendParams: ['enableReasoning'],
+    // },
     type: 'chat',
   },
   {
@@ -47,9 +47,9 @@ const sensenovaChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-23',
-    settings: {
-      extendParams: ['enableReasoning'],
-    },
+    // settings: {
+    //   extendParams: ['enableReasoning'],
+    // },
     type: 'chat',
   },
   {

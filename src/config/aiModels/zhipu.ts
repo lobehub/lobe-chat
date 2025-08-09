@@ -132,7 +132,6 @@ const zhipuChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -148,15 +147,11 @@ const zhipuChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -172,9 +167,6 @@ const zhipuChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
-    },
-    settings: {
-      searchImpl: 'params',
     },
     type: 'chat',
   },

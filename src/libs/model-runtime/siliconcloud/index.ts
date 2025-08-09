@@ -71,7 +71,7 @@ export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: SiliconCloudModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'siliconcloud');
   },
   provider: ModelProvider.SiliconCloud,
 });

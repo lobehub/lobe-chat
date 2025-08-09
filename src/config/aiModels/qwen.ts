@@ -60,7 +60,7 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen3-coder-flash',
     },
-    contextWindowTokens: 1_048_576,
+    contextWindowTokens: 1_000_000,
     description:
       '通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
     displayName: 'Qwen3 Coder Flash',
@@ -430,12 +430,70 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
+      deploymentName: 'qwen-flash',
+    },
+    contextWindowTokens: 1_000_000,
+    description: '通义千问系列速度最快、成本极低的模型，适合简单任务。',
+    displayName: 'Qwen Flash',
+    enabled: true,
+    id: 'qwen-flash',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.15, upTo: 0.128 },
+            { rate: 0.6, upTo: 0.256 },
+            { rate: 1.2, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.5, upTo: 0.128 },
+            { rate: 6, upTo: 0.256 },
+            { rate: 12, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.15 * 0.4, upTo: 0.128 },
+            { rate: 0.6 * 0.4, upTo: 0.256 },
+            { rate: 1.2 * 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-07-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    config: {
       deploymentName: 'qwen-turbo-2025-07-15',
     },
     contextWindowTokens: 1_000_000, // Non-thinking mode
-    description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
+    description:
+      '通义千问 Turbo 后续不再更新，建议替换为通义千问 Flash 。通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
-    enabled: true,
     id: 'qwen-turbo',
     maxOutput: 16_384,
     organization: 'Qwen',

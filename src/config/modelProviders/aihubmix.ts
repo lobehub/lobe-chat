@@ -9,6 +9,7 @@ const AiHubMix: ModelProviderCard = {
   modelsUrl: 'https://docs.aihubmix.com/cn/api/Model-List',
   name: 'AiHubMix',
   settings: {
+    disableBrowserRequest: true, // CORS Error
     sdkType: 'router',
     showModelFetcher: true,
   },

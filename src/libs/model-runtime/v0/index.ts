@@ -1,5 +1,5 @@
 import { ModelProvider } from '../types';
-import { processMultiProviderModelList } from '../utils/modelParse';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface V0ModelCard {
@@ -15,7 +15,7 @@ export const LobeV0AI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: V0ModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processModelList(modelList, MODEL_LIST_CONFIGS.v0, 'v0');
   },
   provider: ModelProvider.V0,
 });

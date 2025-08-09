@@ -1,17 +1,26 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
 
 export interface GithubModelCard {
-  description: string;
-  friendly_name: string;
+  capabilities: string[];
+  html_url: string;
   id: string;
+  limits: {
+    max_input_tokens: number;
+    max_output_tokens: number;
+  };
   name: string;
+  publisher: string;
+  rate_limit_tier: string;
+  registry: string;
+  summary: string;
+  supported_input_modalities: string[];
+  supported_output_modalities: string[];
   tags: string[];
-  task: string;
+  version: string;
 }
 
 /* eslint-enable typescript-sort-keys/interface */
@@ -40,47 +49,27 @@ export const LobeGithubAI = createOpenAICompatibleRuntime({
     bizError: AgentRuntimeErrorType.ProviderBizError,
     invalidAPIKey: AgentRuntimeErrorType.InvalidGithubToken,
   },
-  models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  models: async () => {
+    const response = await fetch('https://models.github.ai/catalog/models');
+    const modelList: GithubModelCard[] = await response.json();
 
-    const functionCallKeywords = ['function', 'tool'];
+    const formattedModels = modelList.map((model) => ({
+      contextWindowTokens: model.limits?.max_input_tokens + model.limits?.max_output_tokens,
+      description: model.summary,
+      displayName: model.name,
+      functionCall: model.capabilities?.includes('tool-calling') ?? undefined,
+      id: model.id,
+      maxOutput: model.limits?.max_output_tokens ?? undefined,
+      reasoning: model.tags?.includes('reasoning') ?? undefined,
+      releasedAt:
+        model.version && /^\d{4}-\d{2}-\d{2}$/.test(model.version) ? model.version : undefined,
+      vision:
+        (model.tags?.includes('multimodal') ||
+          model.supported_input_modalities?.includes('image')) ??
+        undefined,
+    }));
 
-    const visionKeywords = ['vision'];
-
-    const reasoningKeywords = ['deepseek-r1', 'o1', 'o3', 'grok-3-mini'];
-
-    const modelsPage = (await client.models.list()) as any;
-    const modelList: GithubModelCard[] = modelsPage.body;
-
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.name.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          description: model.description,
-          displayName: model.friendly_name,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            functionCallKeywords.some((keyword) =>
-              model.description.toLowerCase().includes(keyword),
-            ) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.name,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.name.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            visionKeywords.some((keyword) => model.description.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    return await processMultiProviderModelList(formattedModels, 'github');
   },
   provider: ModelProvider.Github,
 });

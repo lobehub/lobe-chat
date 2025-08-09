@@ -40,7 +40,7 @@ export const Lobe302AI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: Ai302ModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'ai302');
   },
   provider: ModelProvider.Ai302,
 });

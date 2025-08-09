@@ -36,8 +36,8 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
                 thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
             }
           : ['qwen3', 'qwen-turbo', 'qwen-plus'].some((keyword) =>
-              model.toLowerCase().includes(keyword),
-            )
+                model.toLowerCase().includes(keyword),
+              )
             ? {
                 enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
                 thinking_budget:
@@ -88,7 +88,7 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: QwenModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'qwen');
   },
   provider: ModelProvider.Qwen,
 });
