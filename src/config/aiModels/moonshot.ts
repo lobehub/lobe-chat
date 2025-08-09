@@ -33,10 +33,12 @@ const moonshotChatModels: AIChatModelCard[] = [
     displayName: 'Kimi K2 Turbo',
     id: 'kimi-k2-turbo-preview',
     pricing: {
-      cachedInput: 4,
       currency: 'CNY',
-      input: 16,
-      output: 64,
+      units: [
+        { name: 'textInput_cacheRead', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-11',
     type: 'chat',

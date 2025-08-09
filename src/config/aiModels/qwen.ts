@@ -440,10 +440,39 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
-      cachedInput: 0.06,
       currency: 'CNY',
-      input: 0.15, // tokens < 128K
-      output: 1.5,
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          unit: 'millionTokens',
+          tiers: [
+            { upTo: 0.128, rate: 0.15 },
+            { upTo: 0.256, rate: 0.6 },
+            { upTo: 'infinity', rate: 1.2 },
+          ],
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          unit: 'millionTokens',
+          tiers: [
+            { upTo: 0.128, rate: 1.5 },
+            { upTo: 0.256, rate: 6 },
+            { upTo: 'infinity', rate: 12 },
+          ],
+        },
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          unit: 'millionTokens',
+          tiers: [
+            { upTo: 0.128, rate: 0.15 * 0.4 },
+            { upTo: 0.256, rate: 0.6 * 0.4 },
+            { upTo: 'infinity', rate: 1.2 * 0.4 },
+          ],
+        },
+      ],
     },
     releasedAt: '2025-07-28',
     settings: {

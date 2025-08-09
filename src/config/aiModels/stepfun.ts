@@ -16,8 +16,26 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-3',
     pricing: {
       currency: 'CNY',
-      input: 4, // 输入 > 4k
-      output: 10,
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          unit: 'millionTokens',
+          tiers: [
+            { upTo: 0.004, rate: 1.5 },
+            { upTo: 'infinity', rate: 4 },
+          ],
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          unit: 'millionTokens',
+          tiers: [
+            { upTo: 0.004, rate: 4 },
+            { upTo: 'infinity', rate: 8 }, // 仍与文档有出入
+          ],
+        },
+      ],
     },
     type: 'chat',
   },

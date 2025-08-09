@@ -83,8 +83,10 @@ const mistralChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'magistral-medium-latest',
     pricing: {
-      input: 2,
-      output: 5,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
