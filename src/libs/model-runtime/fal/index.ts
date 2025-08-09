@@ -35,11 +35,11 @@ export class LobeFalAI implements LobeRuntimeAI {
       ['imageUrl', 'image_url'],
     ]);
 
-    const defaultInput = {
+    const defaultInput: Record<string, unknown> = {
       enable_safety_checker: false,
       num_images: 1,
     };
-    const userInput = Object.fromEntries(
+    const userInput: Record<string, unknown> = Object.fromEntries(
       (Object.entries(params) as [keyof typeof params, any][]).map(([key, value]) => [
         paramsMap.get(key) ?? key,
         value,
@@ -53,6 +53,12 @@ export class LobeFalAI implements LobeRuntimeAI {
       };
       delete userInput.width;
       delete userInput.height;
+    }
+
+    const modelsAcceleratedByDefault = new Set<string>(['flux/krea']);
+    if (modelsAcceleratedByDefault.has(model)) {
+      defaultInput['acceleration'] = 'high';
+      log('Applied default acceleration=high for model: %s', model);
     }
 
     const endpoint = `fal-ai/${model}`;

@@ -89,10 +89,6 @@ exports[`transformToChatModelCards > should have file with builtin models like g
     "files": true,
     "functionCall": true,
     "id": "gpt-4-0125-preview",
-    "pricing": {
-      "input": 10,
-      "output": 30,
-    },
   },
   {
     "contextWindowTokens": 128000,
@@ -102,10 +98,6 @@ exports[`transformToChatModelCards > should have file with builtin models like g
     "files": true,
     "functionCall": true,
     "id": "gpt-4-turbo-2024-04-09",
-    "pricing": {
-      "input": 10,
-      "output": 30,
-    },
     "vision": true,
   },
 ]
