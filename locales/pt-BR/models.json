@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] é um modelo open source refinado e com pesos voltado para aplicações não comerciais. Mantém qualidade de imagem e capacidade de seguir instruções próximas à versão profissional FLUX, com maior eficiência operacional. Em comparação com modelos padrão de tamanho similar, é mais eficiente no uso de recursos."
   },
   "flux-kontext/dev": {
-    "description": "Modelo de edição de imagem Frontier."
+    "description": "Modelo FLUX.1 focado em tarefas de edição de imagens, suportando entrada de texto e imagem."
   },
   "flux-merged": {
     "description": "O modelo FLUX.1-merged combina as características profundas exploradas na fase de desenvolvimento \"DEV\" com as vantagens de execução rápida representadas por \"Schnell\". Essa combinação não só eleva os limites de desempenho do modelo, como também amplia seu campo de aplicação."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Transformador de fluxo retificado com 12 bilhões de parâmetros, capaz de gerar imagens a partir de descrições textuais."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] é um modelo de geração de imagens com preferência estética, visando criar imagens mais realistas e naturais."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] é um modelo transformador streaming com 12 bilhões de parâmetros, capaz de gerar imagens de alta qualidade a partir de texto em 1 a 4 passos, adequado para uso pessoal e comercial."
+    "description": "FLUX.1 [schnell] é um modelo de geração de imagens com 12 bilhões de parâmetros, focado em gerar imagens de alta qualidade rapidamente."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) oferece desempenho estável e ajustável, sendo a escolha ideal para soluções de tarefas complexas."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe é um modelo de transcrição de áudio para texto que utiliza GPT-4o. Em comparação com o modelo Whisper original, melhora a taxa de erro de palavras, além do reconhecimento e precisão linguística. Use-o para obter transcrições mais precisas."
   },
+  "gpt-5": {
+    "description": "O melhor modelo para tarefas de codificação e agentes interdisciplinares. GPT-5 alcança avanços em precisão, velocidade, raciocínio, reconhecimento de contexto, pensamento estruturado e resolução de problemas."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Modelo GPT-5 usado no ChatGPT. Combina forte compreensão e geração de linguagem, ideal para aplicações de interação conversacional."
+  },
+  "gpt-5-mini": {
+    "description": "Versão mais rápida e econômica do GPT-5, adequada para tarefas bem definidas. Oferece respostas mais rápidas mantendo alta qualidade de saída."
+  },
+  "gpt-5-nano": {
+    "description": "Versão mais rápida e econômica do GPT-5. Muito adequada para cenários que exigem respostas rápidas e sensibilidade a custos."
+  },
   "gpt-image-1": {
     "description": "Modelo nativo multimodal de geração de imagens do ChatGPT"
   },
@@ -1629,7 +1644,7 @@
     "description": "Série de modelos de texto para imagem da 4ª geração Imagen, versão Ultra"
   },
   "imagen4/preview": {
-    "description": "Modelo de geração de imagens de mais alta qualidade do Google"
+    "description": "Modelo de geração de imagens de alta qualidade fornecido pelo Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferece soluções de diálogo inteligente em múltiplos cenários."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Modelo de código Qwen."
+  },
+  "qwen-image": {
+    "description": "Modelo poderoso de imagens brutas da equipe Qwen, com impressionante capacidade de geração de texto em chinês e diversos estilos visuais de imagens."
   },
   "qwen-long": {
     "description": "O Qwen é um modelo de linguagem em larga escala que suporta contextos de texto longos e funcionalidades de diálogo baseadas em documentos longos e múltiplos cenários."
