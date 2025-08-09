@@ -524,8 +524,14 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     if (payload?.messages?.some((m) => m.tool_calls?.length)) {
       return this.buildFunctionDeclarations(tools);
     }
+    if (payload?.enabledSearch && payload?.urlContext) {
+      return [{ urlContext: {} }, { googleSearch: {} }];
+    }
     if (payload?.enabledSearch) {
       return [{ googleSearch: {} }];
+    }
+    if (payload?.urlContext) {
+      return [{ urlContext: {} }];
     }
 
     return this.buildFunctionDeclarations(tools);
