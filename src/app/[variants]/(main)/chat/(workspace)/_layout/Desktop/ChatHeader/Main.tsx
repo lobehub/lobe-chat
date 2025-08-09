@@ -3,13 +3,13 @@
 import { Avatar } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
@@ -44,7 +44,7 @@ const Main = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation(['chat', 'hotkey']);
   const { styles } = useStyles();
   useInitAgentConfig();
-  const [isPinned] = useQueryState('pinned', parseAsBoolean);
+  const [isPinned] = usePinnedAgentState();
 
   const [init, isInbox, title, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
