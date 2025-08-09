@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-09",
+    "version": "1.111.4"
+  },
+  {
     "children": {
       "improvements": [
         "Improve thinking auto scroll style, Support session switch shortcut key, update i18n."

@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.111.4](https://github.com/lobehub/lobe-chat/compare/v1.111.3...v1.111.4)
+
+<sup>Released on **2025-08-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **pricing**: Adjust cachedInput values for GPT-5 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **pricing**: Adjust cachedInput values for GPT-5 models, closes [#8723](https://github.com/lobehub/lobe-chat/issues/8723) ([652bf08](https://github.com/lobehub/lobe-chat/commit/652bf08))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.3](https://github.com/lobehub/lobe-chat/compare/v1.111.2...v1.111.3)
 
 <sup>Released on **2025-08-09**</sup>
