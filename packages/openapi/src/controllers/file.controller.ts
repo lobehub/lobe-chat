@@ -18,47 +18,6 @@ import {
  */
 export class FileController extends BaseController {
   /**
-   * 单文件上传
-   * POST /files/upload
-   */
-  async uploadFile(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      // 处理 multipart/form-data，支持中文文件名
-      const formData = await c.req.parseBody();
-
-      const file = formData['file'] as File;
-
-      if (!file) {
-        return this.error(c, 'No file provided', 400);
-      }
-
-      // 获取其他参数
-      const knowledgeBaseId = formData['knowledgeBaseId'] as string | null;
-      const skipCheckFileType = formData['skipCheckFileType'] === 'true';
-      const directory = formData['directory'] as string | null;
-      const sessionId = formData['sessionId'] as string | null;
-
-      const options: Partial<FileUploadRequest> = {
-        directory: directory || undefined,
-        knowledgeBaseId: knowledgeBaseId || undefined,
-        sessionId: sessionId || undefined,
-        skipCheckFileType,
-      };
-
-      const result = await fileService.uploadFile(file, options);
-
-      return this.success(c, result, 'File uploaded successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 批量文件上传
    * POST /files/batch-upload
    */
@@ -191,29 +150,10 @@ export class FileController extends BaseController {
   }
 
   /**
-   * 获取文件永久访问URL
-   * GET /files/:id/permanent-url
-   */
-  async getPermanentFileUrl(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const { id } = this.getParams(c);
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.getPermanentFileUrl(id);
-
-      return this.success(c, result, 'Permanent file URL generated successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 公共文件上传
    * POST /files/upload-public
    */
-  async uploadPublicFile(c: Context) {
+  async uploadFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
 
@@ -240,7 +180,7 @@ export class FileController extends BaseController {
         skipCheckFileType,
       };
 
-      const result = await fileService.uploadPublicFile(file, options);
+      const result = await fileService.uploadFile(file, options);
 
       return this.success(c, result, 'Public file uploaded successfully');
     } catch (error) {
