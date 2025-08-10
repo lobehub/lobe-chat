@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] là mô hình tinh luyện mã nguồn mở dành cho ứng dụng phi thương mại. FLUX.1 [dev] duy trì chất lượng hình ảnh và khả năng tuân thủ chỉ dẫn gần tương đương phiên bản chuyên nghiệp FLUX, đồng thời có hiệu suất vận hành cao hơn. So với mô hình chuẩn cùng kích thước, nó sử dụng tài nguyên hiệu quả hơn."
   },
   "flux-kontext/dev": {
-    "description": "Mô hình chỉnh sửa hình ảnh Frontier."
+    "description": "Mô hình FLUX.1 tập trung vào nhiệm vụ chỉnh sửa hình ảnh, hỗ trợ đầu vào văn bản và hình ảnh."
   },
   "flux-merged": {
     "description": "Mô hình FLUX.1-merged kết hợp các đặc tính sâu sắc được khám phá trong giai đoạn phát triển của \"DEV\" và ưu thế thực thi nhanh của \"Schnell\". Qua đó, FLUX.1-merged không chỉ nâng cao giới hạn hiệu suất mà còn mở rộng phạm vi ứng dụng."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Bộ biến đổi luồng hiệu chỉnh với 12 tỷ tham số, có khả năng tạo hình ảnh dựa trên mô tả văn bản."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] là một mô hình tạo hình ảnh với sở thích thẩm mỹ, nhằm tạo ra hình ảnh chân thực và tự nhiên hơn."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] là mô hình bộ chuyển đổi dòng với 12 tỷ tham số, có thể tạo ra hình ảnh chất lượng cao từ văn bản trong 1 đến 4 bước, phù hợp cho mục đích cá nhân và thương mại."
+    "description": "FLUX.1 [schnell] là mô hình tạo hình ảnh với 12 tỷ tham số, tập trung vào việc tạo hình ảnh chất lượng cao nhanh chóng."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe là mô hình chuyển đổi giọng nói thành văn bản sử dụng GPT-4o để phiên âm âm thanh. So với mô hình Whisper gốc, nó cải thiện tỷ lệ lỗi từ và nâng cao khả năng nhận diện ngôn ngữ cũng như độ chính xác. Sử dụng nó để có bản phiên âm chính xác hơn."
   },
+  "gpt-5": {
+    "description": "Mô hình tốt nhất cho các nhiệm vụ mã hóa và đại diện đa lĩnh vực. GPT-5 đạt bước tiến vượt bậc về độ chính xác, tốc độ, suy luận, nhận diện ngữ cảnh, tư duy có cấu trúc và giải quyết vấn đề."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Mô hình GPT-5 được sử dụng trong ChatGPT. Kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng tương tác đối thoại."
+  },
+  "gpt-5-mini": {
+    "description": "Phiên bản GPT-5 nhanh hơn và tiết kiệm chi phí hơn, phù hợp cho các nhiệm vụ được xác định rõ ràng. Cung cấp tốc độ phản hồi nhanh hơn trong khi vẫn giữ chất lượng đầu ra cao."
+  },
+  "gpt-5-nano": {
+    "description": "Phiên bản GPT-5 nhanh nhất và tiết kiệm chi phí nhất. Rất phù hợp cho các ứng dụng cần phản hồi nhanh và nhạy cảm về chi phí."
+  },
   "gpt-image-1": {
     "description": "Mô hình tạo hình ảnh đa phương thức nguyên bản của ChatGPT"
   },
@@ -1629,7 +1644,7 @@
     "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
   },
   "imagen4/preview": {
-    "description": "Mô hình tạo hình ảnh chất lượng cao nhất của Google"
+    "description": "Mô hình tạo hình ảnh chất lượng cao do Google cung cấp."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
+  },
+  "qwen-image": {
+    "description": "Mô hình hình ảnh mạnh mẽ từ đội ngũ Qwen, có khả năng tạo văn bản tiếng Trung ấn tượng và đa dạng phong cách hình ảnh thị giác."
   },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."

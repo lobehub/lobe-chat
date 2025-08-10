@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] es un modelo refinado y de pesos abiertos para aplicaciones no comerciales. Mantiene una calidad de imagen y capacidad de seguimiento de instrucciones similar a la versión profesional de FLUX, pero con mayor eficiencia operativa. En comparación con modelos estándar de tamaño similar, es más eficiente en el uso de recursos."
   },
   "flux-kontext/dev": {
-    "description": "Modelo de edición de imágenes Frontier."
+    "description": "Modelo FLUX.1 centrado en tareas de edición de imágenes, compatible con entradas de texto e imagen."
   },
   "flux-merged": {
     "description": "El modelo FLUX.1-merged combina las características profundas exploradas durante la fase de desarrollo de “DEV” con las ventajas de ejecución rápida representadas por “Schnell”. Esta combinación no solo amplía los límites de rendimiento del modelo, sino que también amplía su rango de aplicaciones."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Transformador de flujo rectificado con 12 mil millones de parámetros, capaz de generar imágenes basadas en descripciones textuales."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] es un modelo generador de imágenes con preferencia estética, diseñado para crear imágenes más realistas y naturales."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] es un modelo transformador de flujo con 12 mil millones de parámetros, capaz de generar imágenes de alta calidad a partir de texto en 1 a 4 pasos, adecuado para uso personal y comercial."
+    "description": "FLUX.1 [schnell] es un modelo generador de imágenes con 12 mil millones de parámetros, enfocado en la generación rápida de imágenes de alta calidad."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) ofrece un rendimiento estable y ajustable, siendo una opción ideal para soluciones de tareas complejas."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe es un modelo de conversión de voz a texto que utiliza GPT-4o para transcribir audio. En comparación con el modelo Whisper original, mejora la tasa de error de palabras y aumenta la precisión y el reconocimiento del idioma. Úselo para obtener transcripciones más precisas."
   },
+  "gpt-5": {
+    "description": "El mejor modelo para tareas de codificación y agentes multidisciplinarios. GPT-5 logra avances en precisión, velocidad, razonamiento, reconocimiento contextual, pensamiento estructurado y resolución de problemas."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Modelo GPT-5 utilizado en ChatGPT. Combina una potente comprensión y generación del lenguaje, ideal para aplicaciones de interacción conversacional."
+  },
+  "gpt-5-mini": {
+    "description": "Versión más rápida y económica de GPT-5, adecuada para tareas bien definidas. Ofrece respuestas más rápidas manteniendo una salida de alta calidad."
+  },
+  "gpt-5-nano": {
+    "description": "Versión más rápida y económica de GPT-5. Perfecta para escenarios que requieren respuestas rápidas y son sensibles al costo."
+  },
   "gpt-image-1": {
     "description": "Modelo nativo multimodal de generación de imágenes de ChatGPT."
   },
@@ -1629,7 +1644,7 @@
     "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen, versión Ultra"
   },
   "imagen4/preview": {
-    "description": "El modelo de generación de imágenes de mayor calidad de Google."
+    "description": "Modelo generador de imágenes de alta calidad proporcionado por Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 ofrece soluciones de diálogo inteligente en múltiples escenarios."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "El modelo de código Tongyi Qwen."
+  },
+  "qwen-image": {
+    "description": "Potente modelo de imágenes en bruto del equipo Qwen, con impresionante capacidad para generar texto en chino y diversos estilos visuales de imágenes."
   },
   "qwen-long": {
     "description": "Qwen es un modelo de lenguaje a gran escala que admite contextos de texto largos y funciones de conversación basadas en documentos largos y múltiples."

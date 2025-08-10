@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] is een open-source gewicht en verfijnd model voor niet-commercieel gebruik. Het behoudt een beeldkwaliteit en instructienaleving vergelijkbaar met de professionele versie van FLUX, maar met een hogere operationele efficiëntie. Vergeleken met standaardmodellen van dezelfde grootte is het efficiënter in het gebruik van middelen."
   },
   "flux-kontext/dev": {
-    "description": "Frontier beeldbewerkingsmodel."
+    "description": "FLUX.1-model gericht op beeldbewerkingsopdrachten, ondersteunt tekst- en beeldinvoer."
   },
   "flux-merged": {
     "description": "Het FLUX.1-merged model combineert de diepgaande kenmerken verkend tijdens de ontwikkelingsfase van \"DEV\" met de hoge uitvoeringssnelheid van \"Schnell\". Deze combinatie verhoogt niet alleen de prestatiegrenzen van het model, maar breidt ook het toepassingsgebied uit."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Een Rectified Flow Transformer met 12 miljard parameters, in staat om beelden te genereren op basis van tekstbeschrijvingen."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] is een beeldgeneratiemodel met een esthetische voorkeur, gericht op het creëren van realistischere en natuurlijkere beelden."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] is een streaming transformer-model met 12 miljard parameters, dat binnen 1 tot 4 stappen hoogwaardige afbeeldingen uit tekst kan genereren, geschikt voor persoonlijk en commercieel gebruik."
+    "description": "FLUX.1 [schnell] is een beeldgeneratiemodel met 12 miljard parameters, gericht op het snel genereren van beelden van hoge kwaliteit."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe is een spraak-naar-tekstmodel dat GPT-4o gebruikt voor audiotranscriptie. Vergeleken met het originele Whisper-model verbetert het de woordfoutpercentage en verhoogt het de taalherkenning en nauwkeurigheid. Gebruik het voor nauwkeurigere transcripties."
   },
+  "gpt-5": {
+    "description": "Het beste model voor cross-domain codering en agenttaken. GPT-5 maakt een sprong voorwaarts in nauwkeurigheid, snelheid, redeneren, contextherkenning, gestructureerd denken en probleemoplossing."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Het GPT-5-model gebruikt in ChatGPT. Combineert krachtige taalbegrip en generatie, geschikt voor interactieve dialoogtoepassingen."
+  },
+  "gpt-5-mini": {
+    "description": "Een snellere en kostenefficiëntere versie van GPT-5, geschikt voor duidelijk gedefinieerde taken. Biedt snellere reactietijden met behoud van hoge outputkwaliteit."
+  },
+  "gpt-5-nano": {
+    "description": "De snelste en meest kostenefficiënte versie van GPT-5. Uitstekend geschikt voor toepassingen die snelle reacties en kostenbewustzijn vereisen."
+  },
   "gpt-image-1": {
     "description": "ChatGPT native multimodaal afbeeldingsgeneratiemodel"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 4e generatie tekst-naar-beeld modelserie Ultra versie"
   },
   "imagen4/preview": {
-    "description": "Google's hoogste kwaliteit afbeeldingsgeneratiemodel"
+    "description": "Hoogwaardig beeldgeneratiemodel geleverd door Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Het Tongyi Qianwen codeermodel."
+  },
+  "qwen-image": {
+    "description": "Krachtig ruwe beeldmodel van het Qwen-team, met indrukwekkende Chinese tekstgeneratie en diverse visuele stijlen."
   },
   "qwen-long": {
     "description": "Qwen is een grootschalig taalmodel dat lange tekstcontexten ondersteunt, evenals dialoogfunctionaliteit op basis van lange documenten en meerdere documenten."

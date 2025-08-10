@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] ist ein Open-Source-Gewichtungs- und Feinschlichtungsmodell für nicht-kommerzielle Anwendungen. Es bietet eine Bildqualität und Instruktionsbefolgung ähnlich der professionellen FLUX-Version, jedoch mit höherer Effizienz. Im Vergleich zu Standardmodellen gleicher Größe ist es ressourcenschonender."
   },
   "flux-kontext/dev": {
-    "description": "Frontier Bildbearbeitungsmodell."
+    "description": "FLUX.1 Modell, spezialisiert auf Bildbearbeitungsaufgaben, unterstützt Text- und Bildeingaben."
   },
   "flux-merged": {
     "description": "Das FLUX.1-merged Modell kombiniert die tiefgehenden Eigenschaften, die in der Entwicklungsphase von „DEV“ erforscht wurden, mit der hohen Ausführungsgeschwindigkeit von „Schnell“. Dadurch werden sowohl die Leistungsgrenzen des Modells erweitert als auch dessen Anwendungsbereich vergrößert."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Ein Rectified Flow Transformer mit 12 Milliarden Parametern, der Bilder basierend auf Textbeschreibungen generieren kann."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] ist ein bildgenerierendes Modell mit ästhetischer Präferenz, das darauf abzielt, realistischere und natürlichere Bilder zu erzeugen."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] ist ein Streaming-Transformator-Modell mit 12 Milliarden Parametern, das in 1 bis 4 Schritten hochwertige Bilder aus Text generiert und sich für private und kommerzielle Nutzung eignet."
+    "description": "FLUX.1 [schnell] ist ein bildgenerierendes Modell mit 12 Milliarden Parametern, das sich auf die schnelle Erstellung hochwertiger Bilder konzentriert."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) bietet stabile und anpassbare Leistung und ist die ideale Wahl für Lösungen komplexer Aufgaben."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe ist ein Sprach-zu-Text-Modell, das GPT-4o zur Transkription von Audio verwendet. Im Vergleich zum ursprünglichen Whisper-Modell verbessert es die Wortfehlerrate sowie die Spracherkennung und Genauigkeit. Verwenden Sie es für genauere Transkriptionen."
   },
+  "gpt-5": {
+    "description": "Das beste Modell für bereichsübergreifende Codierungs- und Agentenaufgaben. GPT-5 erzielt Durchbrüche in Genauigkeit, Geschwindigkeit, Schlussfolgerungen, Kontextverständnis, strukturiertem Denken und Problemlösung."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Das in ChatGPT verwendete GPT-5 Modell. Vereint starke Sprachverständnis- und Generierungsfähigkeiten, ideal für dialogorientierte Anwendungen."
+  },
+  "gpt-5-mini": {
+    "description": "Eine schnellere und kosteneffizientere Version von GPT-5, geeignet für klar definierte Aufgaben. Bietet schnellere Reaktionszeiten bei gleichbleibend hoher Ausgabequalität."
+  },
+  "gpt-5-nano": {
+    "description": "Die schnellste und kostengünstigste Version von GPT-5. Besonders geeignet für Anwendungen, die schnelle Reaktionen und Kostenbewusstsein erfordern."
+  },
   "gpt-image-1": {
     "description": "ChatGPT natives multimodales Bildgenerierungsmodell"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 4. Generation Text-zu-Bild Modellserie Ultra-Version"
   },
   "imagen4/preview": {
-    "description": "Googles hochwertigstes Bildgenerierungsmodell"
+    "description": "Hochwertiges bildgenerierendes Modell von Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 bietet intelligente Dialoglösungen in mehreren Szenarien."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Das Tongyi Qianwen Code-Modell."
+  },
+  "qwen-image": {
+    "description": "Leistungsstarkes Rohbildmodell vom Qwen-Team mit beeindruckenden Fähigkeiten zur chinesischen Textgenerierung und vielfältigen visuellen Bildstilen."
   },
   "qwen-long": {
     "description": "Qwen ist ein groß angelegtes Sprachmodell, das lange Textkontexte unterstützt und Dialogfunktionen für verschiedene Szenarien wie lange Dokumente und mehrere Dokumente bietet."
