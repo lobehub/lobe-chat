@@ -30,7 +30,7 @@ app.get('/', requireAuth, zValidator('query', FileListQuerySchema), async (c) =>
 });
 
 /**
- * 单文件上传
+ * 文件上传
  * POST /files/upload
  * Content-Type: multipart/form-data
  *
@@ -40,6 +40,10 @@ app.get('/', requireAuth, zValidator('query', FileListQuerySchema), async (c) =>
  * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
+ *
+ * 特点：
+ * - 自动设置为公共读取权限（public-read ACL）
+ * - 返回永久可访问的URL
  */
 app.post('/upload', requireAuth, async (c) => {
   const fileController = new FileController();
@@ -61,28 +65,6 @@ app.post('/upload', requireAuth, async (c) => {
 app.post('/batch-upload', requireAuth, async (c) => {
   const fileController = new FileController();
   return await fileController.batchUploadFiles(c);
-});
-
-/**
- * 公共文件上传
- * POST /files/upload-public
- * Content-Type: multipart/form-data
- *
- * Form fields:
- * - file: File (required) - 要上传的文件
- * - knowledgeBaseId: string (optional) - 知识库ID
- * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
- * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
- * - directory: string (optional) - 上传目录
- *
- * 特点：
- * - 自动设置为公共读取权限（public-read ACL）
- * - 返回永久可访问的URL
- * - 适用于头像、公共资源等需要长期访问的文件
- */
-app.post('/upload-public', requireAuth, async (c) => {
-  const fileController = new FileController();
-  return await fileController.uploadPublicFile(c);
 });
 
 /**
@@ -117,23 +99,6 @@ app.get(
     return await fileController.getFileUrl(c);
   },
 );
-
-/**
- * 获取文件永久访问URL
- * GET /files/:id/permanent-url
- *
- * Path parameters:
- * - id: string (required) - 文件ID
- *
- * 特点：
- * - 返回永久可访问的公共URL
- * - 适用于头像等需要长期访问的文件
- * - 需要文件设置了public-read ACL
- */
-app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema), async (c) => {
-  const fileController = new FileController();
-  return await fileController.getPermanentFileUrl(c);
-});
 
 /**
  * 解析文件内容

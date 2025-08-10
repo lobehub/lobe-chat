@@ -1,3 +1,4 @@
+import { FileMetadata } from '@lobechat/types';
 import { and, count, desc, eq, ilike } from 'drizzle-orm';
 import { sha256 } from 'js-sha256';
 
@@ -5,11 +6,9 @@ import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { FileItem, files, filesToSessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
-import { idGenerator } from '@/database/utils/idGenerator';
 import { S3 } from '@/server/modules/S3';
 import { DocumentService } from '@/server/services/document';
 import { FileService as CoreFileService } from '@/server/services/file';
-import { FileMetadata } from '@lobechat/types';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { nanoid } from '@/utils/uuid';
 
@@ -31,9 +30,6 @@ import {
   FileUploadResponse,
   FileUrlRequest,
   FileUrlResponse,
-  PermanentFileUrlResponse,
-  PreSignedUrlRequest,
-  PreSignedUrlResponse,
   PublicFileUploadRequest,
   PublicFileUploadResponse,
 } from '../types/file.type';
@@ -48,7 +44,6 @@ export class FileUploadService extends BaseService {
   private coreFileService: CoreFileService;
   private documentService: DocumentService;
   private s3Service: S3;
-  private s3PublicDomain: string;
 
   constructor(db: LobeChatDatabase, userId: string) {
     super(db, userId);
@@ -57,7 +52,6 @@ export class FileUploadService extends BaseService {
     this.coreFileService = new CoreFileService(db, userId!);
     this.documentService = new DocumentService(db, userId);
     this.s3Service = new S3();
-    this.s3PublicDomain = process.env.S3_PUBLIC_DOMAIN || '';
   }
 
   async uploadToServerS3(
@@ -88,177 +82,6 @@ export class FileUploadService extends BaseService {
       data: result,
       success: true,
     };
-  }
-
-  /**
-   * 单文件上传
-   */
-  async uploadFile(
-    file: File,
-    options: Partial<FileUploadRequest> = {},
-  ): Promise<FileUploadResponse> {
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
-
-      // 权限校验
-      const permissionCreate = await this.resolveQueryPermission('FILE_UPDATE', this.userId);
-
-      if (!permissionCreate.isPermitted) {
-        throw this.createAuthorizationError(permissionCreate.message || '无权上传文件');
-      }
-
-      this.log('info', 'Starting file upload', {
-        filename: file.name,
-        size: file.size,
-        type: file.type,
-      });
-
-      // 1. 验证文件
-      await this.validateFile(file, options.skipCheckFileType);
-
-      // 2. 计算文件哈希
-      const fileArrayBuffer = await file.arrayBuffer();
-      const hash = sha256(fileArrayBuffer);
-
-      // 3. 检查文件是否已存在（去重逻辑）
-      if (!options.skipDeduplication) {
-        const existingFileCheck = await this.fileModel.checkHash(hash);
-
-        if (existingFileCheck.isExist) {
-          this.log('info', 'File already exists, checking user file record', {
-            existingUrl: existingFileCheck.url,
-            filename: file.name,
-            hash,
-          });
-
-          // 检查当前用户是否已经有这个文件的记录
-          const existingUserFile = await this.findExistingUserFile(hash);
-
-          if (existingUserFile) {
-            // 用户已有此文件记录，直接返回
-            this.log('info', 'User already has this file record', {
-              fileId: existingUserFile.id,
-              filename: existingUserFile.name,
-            });
-
-            // 如果提供了 sessionId，创建文件和会话的关联关系
-            if (options.sessionId) {
-              await this.createFileSessionRelation(existingUserFile.id, options.sessionId);
-              this.log('info', 'Existing file associated with session', {
-                fileId: existingUserFile.id,
-                sessionId: options.sessionId,
-              });
-            }
-
-            return this.convertToUploadResponse(existingUserFile);
-          } else {
-            // 文件在全局表中存在，但用户没有记录，创建用户文件记录
-            this.log('info', 'File exists globally, creating user file record', {
-              filename: file.name,
-              hash,
-            });
-
-            const fileRecord = {
-              chunkTaskId: null,
-              clientId: null,
-              embeddingTaskId: null,
-              fileHash: hash,
-              fileType: file.type,
-              knowledgeBaseId: options.knowledgeBaseId,
-              metadata: existingFileCheck.metadata as FileMetadata,
-              name: file.name,
-              size: file.size,
-              url: existingFileCheck.url || '',
-            };
-
-            const createResult = await this.fileModel.create(fileRecord, false); // 不插入全局表，因为已存在
-
-            // 如果提供了 sessionId，创建文件和会话的关联关系
-            if (options.sessionId) {
-              await this.createFileSessionRelation(createResult.id, options.sessionId);
-              this.log('info', 'Deduplicated file associated with session', {
-                fileId: createResult.id,
-                sessionId: options.sessionId,
-              });
-            }
-
-            // 获取完整的文件信息
-            const savedFile = await this.fileModel.findById(createResult.id);
-
-            if (!savedFile) {
-              throw this.createBusinessError('Failed to retrieve deduplicated file');
-            }
-
-            this.log('info', 'Deduplicated file created successfully', {
-              fileId: createResult.id,
-              path: existingFileCheck.url,
-              sessionId: options.sessionId,
-              size: file.size,
-            });
-
-            return this.convertToUploadResponse(savedFile);
-          }
-        }
-      }
-
-      // 4. 文件不存在，正常上传流程
-      const uploadResult = await this.uploadToServerS3(file, {
-        directory: options.directory,
-        pathname: options.pathname,
-      });
-
-      if (!uploadResult.success) {
-        throw this.createBusinessError('File upload failed');
-      }
-
-      const metadata = uploadResult.data;
-
-      // 5. 保存文件记录到数据库
-      const fileRecord = {
-        chunkTaskId: null,
-        clientId: null,
-        embeddingTaskId: null,
-        fileHash: hash,
-        fileType: file.type,
-        knowledgeBaseId: options.knowledgeBaseId,
-        metadata: metadata,
-        name: file.name,
-        size: file.size,
-        url: metadata.path,
-      };
-
-      const createResult = await this.fileModel.create(fileRecord, true);
-
-      // 如果提供了 sessionId，创建文件和会话的关联关系
-      if (options.sessionId) {
-        await this.createFileSessionRelation(createResult.id, options.sessionId);
-        this.log('info', 'File associated with session', {
-          fileId: createResult.id,
-          sessionId: options.sessionId,
-        });
-      }
-
-      this.log('info', 'File uploaded successfully', {
-        fileId: createResult.id,
-        path: metadata.path,
-        sessionId: options.sessionId,
-        size: file.size,
-      });
-
-      // 获取完整的文件信息
-      const savedFile = await this.fileModel.findById(createResult.id);
-
-      if (!savedFile) {
-        throw this.createBusinessError('Failed to retrieve uploaded file');
-      }
-
-      return this.convertToUploadResponse(savedFile);
-    } catch (error) {
-      this.log('error', 'File upload failed', error);
-      throw error;
-    }
   }
 
   /**
@@ -300,44 +123,6 @@ export class FileUploadService extends BaseService {
     }
 
     return results;
-  }
-
-  /**
-   * 创建预签名URL
-   */
-  async createPreSignedUrl(request: PreSignedUrlRequest): Promise<PreSignedUrlResponse> {
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
-
-      const fileId = idGenerator('files');
-      const metadata = this.generateFileMetadata(
-        {
-          name: request.filename,
-          size: request.size,
-          type: request.fileType,
-        } as File,
-        request.pathname ? undefined : 'uploads',
-      );
-
-      const key = request.pathname || metadata.path;
-
-      // 创建预签名URL，有效期15分钟
-      const uploadUrl = await this.coreFileService.createPreSignedUrl(key);
-
-      this.log('info', 'Pre-signed URL created', { fileId, key });
-
-      return {
-        expiresIn: 900,
-        fileId,
-        key,
-        uploadUrl, // 15分钟
-      };
-    } catch (error) {
-      this.log('error', 'Create pre-signed URL failed', error);
-      throw error;
-    }
   }
 
   /**
@@ -528,7 +313,7 @@ export class FileUploadService extends BaseService {
   /**
    * 公共文件上传（设置为公共可读）
    */
-  async uploadPublicFile(
+  async uploadFile(
     file: File,
     options: PublicFileUploadRequest = {},
   ): Promise<PublicFileUploadResponse> {
@@ -581,8 +366,8 @@ export class FileUploadService extends BaseService {
               });
             }
 
-            // 生成公共访问URL
-            const publicUrl = this.s3Service.getPublicUrl(existingUserFile.url);
+            // 生成访问URL
+            const publicUrl = await this.coreFileService.getFullFileUrl(existingUserFile.url);
 
             return {
               fileType: existingUserFile.fileType,
@@ -626,7 +411,9 @@ export class FileUploadService extends BaseService {
             }
 
             // 生成公共访问URL
-            const publicUrl = this.s3Service.getPublicUrl(existingFileCheck.url || '');
+            const publicUrl = await this.coreFileService.getFullFileUrl(
+              existingFileCheck.url || '',
+            );
 
             this.log('info', 'Deduplicated public file created successfully', {
               fileId: createResult.id,
@@ -657,8 +444,8 @@ export class FileUploadService extends BaseService {
       const fileBuffer = Buffer.from(fileArrayBuffer);
       await this.s3Service.uploadBuffer(metadata.path, fileBuffer, file.type);
 
-      // 6. 生成公共访问URL
-      const publicUrl = this.s3Service.getPublicUrl(metadata.path);
+      // 6. 生成访问URL
+      const publicUrl = await this.coreFileService.getFullFileUrl(metadata.path);
 
       // 7. 保存文件记录到数据库
       const fileRecord = {
@@ -705,46 +492,6 @@ export class FileUploadService extends BaseService {
       };
     } catch (error) {
       this.log('error', 'Public file upload failed', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 获取文件的永久访问URL
-   */
-  async getPermanentFileUrl(fileId: string): Promise<PermanentFileUrlResponse> {
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
-
-      const file = await this.fileModel.findById(fileId);
-      if (!file) {
-        throw this.createCommonError('File not found');
-      }
-
-      // 检查权限
-      if (file.userId !== this.userId) {
-        throw this.createAuthorizationError('Access denied');
-      }
-
-      // 生成公共访问URL
-      const publicUrl = this.s3Service.getPublicUrl(file.url);
-
-      this.log('info', 'Permanent file URL generated successfully', {
-        fileId,
-        filename: file.name,
-        publicUrl,
-      });
-
-      return {
-        fileId,
-        filename: file.name,
-        url: publicUrl,
-        urlType: 'public',
-      };
-    } catch (error) {
-      this.log('error', 'Get permanent file URL failed', error);
       throw error;
     }
   }
