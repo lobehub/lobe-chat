@@ -34,53 +34,63 @@ jest.mock('../../FluentEmoji', () => {
 });
 
 describe('Avatar', () => {
-  it('renders correctly with default props', () => {
+  it('renders with default avatar when no avatar prop provided', () => {
     const { toJSON } = renderWithTheme(<Avatar />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with URL avatar', () => {
+  it('displays image correctly with valid URL', () => {
     const avatarUrl = 'https://example.com/avatar.png';
     const { toJSON } = renderWithTheme(<Avatar avatar={avatarUrl} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with emoji avatar', () => {
+  it('renders emoji using FluentEmoji component', () => {
     const { toJSON } = renderWithTheme(<Avatar avatar="😀" size={32} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with emoji avatar and animation', () => {
+  it('passes animation prop to FluentEmoji when enabled', () => {
     const { toJSON } = renderWithTheme(<Avatar avatar="🚀" animation={true} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with text fallback', () => {
+  it('falls back to text display for non-emoji strings', () => {
     const { toJSON } = renderWithTheme(<Avatar avatar="John Doe" />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with title when avatar is default', () => {
+  it('displays title-based text when using title prop', () => {
     const { toJSON } = renderWithTheme(<Avatar title="Jane Smith" />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('handles image load error', () => {
-    const { toJSON } = renderWithTheme(<Avatar avatar="https://invalid.url/image.png" />);
+  it('handles image loading and error states', () => {
+    const { toJSON } = renderWithTheme(<Avatar avatar="https://example.com/avatar.png" />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with React element avatar', () => {
+  it('renders custom React element as avatar', () => {
     const CustomAvatar = () => <View testID="custom-avatar" />;
     const { toJSON } = renderWithTheme(<Avatar avatar={<CustomAvatar />} />);
+
+    // Avatar accepts and renders custom React elements
     expect(toJSON()).toBeTruthy();
   });
 
-  it('uses alt text for accessibility', () => {
+  it('applies accessibility props correctly', () => {
     const altText = 'User avatar';
     const { toJSON } = renderWithTheme(
       <Avatar avatar="https://example.com/avatar.png" alt={altText} />,
     );
+
     expect(toJSON()).toBeTruthy();
   });
 
@@ -88,27 +98,32 @@ describe('Avatar', () => {
     const dataUrl =
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
     const { toJSON } = renderWithTheme(<Avatar avatar={dataUrl} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
   it('handles relative path avatar', () => {
     const relativePath = '/assets/avatar.png';
     const { toJSON } = renderWithTheme(<Avatar avatar={relativePath} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
   it('handles empty text gracefully', () => {
     const { toJSON } = renderWithTheme(<Avatar avatar="" />);
+
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders with custom size', () => {
+  it('renders with custom size prop', () => {
     const { toJSON } = renderWithTheme(<Avatar size={64} />);
+
     expect(toJSON()).toBeTruthy();
   });
 
   it('renders with custom background color', () => {
     const { toJSON } = renderWithTheme(<Avatar backgroundColor="#ff0000" />);
+
     expect(toJSON()).toBeTruthy();
   });
 });

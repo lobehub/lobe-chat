@@ -35,67 +35,67 @@ export default function ComponentPlaygroundIndex() {
   const handleComponentPress = (component: ComponentItem) => {
     switch (component.path) {
       case 'tooltip': {
-        router.push('/components/tooltip');
+        router.push('/playground/components/tooltip');
 
         break;
       }
       case 'toast': {
-        router.push('/components/toast');
+        router.push('/playground/components/toast');
 
         break;
       }
       case 'highlighter': {
-        router.push('/components/highlighter');
+        router.push('/playground/components/highlighter');
 
         break;
       }
       case 'markdown': {
-        router.push('/components/markdown');
+        router.push('/playground/components/markdown');
 
         break;
       }
       case 'listitem': {
-        router.push('/components/listitem');
+        router.push('/playground/components/listitem');
 
         break;
       }
       case 'avatar': {
-        router.push('/components/avatar');
+        router.push('/playground/components/avatar');
 
         break;
       }
       case 'space': {
-        router.push('/components/space');
+        router.push('/playground/components/space');
 
         break;
       }
       case 'fluentemoji': {
-        router.push('/components/fluentemoji');
+        router.push('/playground/components/fluentemoji');
 
         break;
       }
       case 'tag': {
-        router.push('/components/tag');
+        router.push('/playground/components/tag');
 
         break;
       }
       case 'capsuletabs': {
-        router.push('/components/capsuletabs');
+        router.push('/playground/components/capsuletabs');
 
         break;
       }
       case 'button': {
-        router.push('/components/button');
+        router.push('/playground/components/button');
 
         break;
       }
       case 'skeleton': {
-        router.push('/components/skeleton');
+        router.push('/playground/components/skeleton');
 
         break;
       }
       case 'instant-switch': {
-        router.push('/components/instant-switch');
+        router.push('/playground/components/instant-switch');
 
         break;
       }

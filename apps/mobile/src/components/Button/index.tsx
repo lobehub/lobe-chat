@@ -45,13 +45,20 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <TouchableOpacity
       {...rest}
+      accessibilityRole="button"
       activeOpacity={disabled || loading ? 1 : 0.7}
       disabled={disabled || loading}
       onPress={handlePress}
       style={[styles.button, style]}
+      testID="button"
     >
       {loading && (
-        <ActivityIndicator color={styles.text.color} size="small" style={styles.loading} />
+        <ActivityIndicator
+          color={styles.text.color}
+          size="small"
+          style={styles.loading}
+          testID="loading-indicator"
+        />
       )}
       <Text style={[styles.text, textStyle]}>{children}</Text>
     </TouchableOpacity>

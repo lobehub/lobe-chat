@@ -17,11 +17,9 @@
   "setupFilesAfterEnv": ["<rootDir>/test/jest.setupAfterEnv.js"],
   "collectCoverage": true,
   "collectCoverageFrom": [
-    "**/*.{ts,tsx,js,jsx}",
-    "!**/coverage/**",
-    "!**/node_modules/**",
-    "!**/babel.config.js",
-    "!**/expo-env.d.ts",
-    "!**/.expo/**"
+    "src/**/*.{ts,tsx,js,jsx}",
+    "app/**/*.{ts,tsx,js,jsx}",
+    "!app/playground/**",
+    "!**/node_modules/**"
   ]
 }

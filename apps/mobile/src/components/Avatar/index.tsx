@@ -67,6 +67,7 @@ const Avatar = memo<AvatarProps>(
               onError={() => setError(true)}
               source={{ uri: error ? DEFAULT_AVATAR : avatar }}
               style={styles.image}
+              testID="avatar-image"
             />
           ) : (
             avatar
