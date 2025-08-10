@@ -21,6 +21,10 @@
     "desc": "Entrez en mode édition en maintenant la touche Alt enfoncée et en double-cliquant sur le message",
     "title": "Éditer le message"
   },
+  "navigateToChat": {
+    "desc": "Basculer vers l'onglet de conversation et commencer une discussion libre",
+    "title": "Passer à la conversation par défaut"
+  },
   "openChatSettings": {
     "desc": "Voir et modifier les paramètres de la conversation actuelle",
     "title": "Ouvrir les paramètres de la conversation"
