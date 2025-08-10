@@ -10,5 +10,5 @@ export const getDrizzleCache = (): ReturnType<typeof upstashCache> | undefined =
 
   if (!url || !token) return undefined;
 
-  return upstashCache({ global: true, token, url });
+  return upstashCache({ token, url });
 };
