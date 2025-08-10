@@ -245,7 +245,7 @@
     "react-lazy-load": "^4.0.1",
     "react-pdf": "^9.2.1",
     "react-rnd": "^10.5.2",
-    "react-scan": "^0.3.6",
+    "react-scan": "^0.4.0",
     "react-virtuoso": "^4.13.0",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^15.0.1",
