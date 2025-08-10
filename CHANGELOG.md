@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.111.5](https://github.com/lobehub/lobe-chat/compare/v1.111.4...v1.111.5)
+
+<sup>Released on **2025-08-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add mask effect to thinking scroll, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add mask effect to thinking scroll, closes [#8729](https://github.com/lobehub/lobe-chat/issues/8729) ([4cefafd](https://github.com/lobehub/lobe-chat/commit/4cefafd))
+- **misc**: Update i18n, closes [#8734](https://github.com/lobehub/lobe-chat/issues/8734) ([327a564](https://github.com/lobehub/lobe-chat/commit/327a564))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.4](https://github.com/lobehub/lobe-chat/compare/v1.111.3...v1.111.4)
 
 <sup>Released on **2025-08-09**</sup>

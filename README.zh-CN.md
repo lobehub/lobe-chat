@@ -378,11 +378,11 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | 最近新增                                                                                                                   | 描述                                                                               |
 | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-07-21**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
-| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2025-07-18**</sup>                          | 使用 Speak，您的 AI 语言导师，学习如何用另一种语言说任何事情。<br/>`教育` `语言`   |
 | [网页](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                           | 智能网页搜索，读取和分析页面，以提供来自 Google 结果的全面答案。<br/>`网页` `搜索` |
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
+| [谷歌自定义搜索引擎](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>     | 通过他们的官方自定义搜索引擎 API 搜索谷歌。<br/>`网络` `搜索`                      |
 
-> 📊 Total plugins: [<kbd>**43**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**42**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 

@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Add mask effect to thinking scroll, update i18n."]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
     "children": {},
     "date": "2025-08-09",
     "version": "1.111.4"
