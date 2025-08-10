@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev], ticari olmayan uygulamalar için açık kaynaklı ağırlık ve rafine modeldir. FLUX.1 [dev], FLUX profesyonel sürümüne yakın görüntü kalitesi ve talimat uyumu sağlarken daha yüksek çalışma verimliliğine sahiptir. Aynı boyuttaki standart modellere kıyasla kaynak kullanımı açısından daha etkilidir."
   },
   "flux-kontext/dev": {
-    "description": "Frontier görüntü düzenleme modeli."
+    "description": "Metin ve görsel girdileri destekleyen, görüntü düzenleme görevlerine odaklanan FLUX.1 modeli."
   },
   "flux-merged": {
     "description": "FLUX.1-merged modeli, geliştirme aşamasında \"DEV\" tarafından keşfedilen derin özellikler ile \"Schnell\" in yüksek hızlı yürütme avantajlarını birleştirir. Bu sayede model performans sınırlarını artırır ve uygulama alanlarını genişletir."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "120 milyar parametreli düzeltilmiş akış dönüştürücüsüdür ve metin açıklamalarına göre görüntü oluşturabilir."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev], estetik tercihlere sahip bir görüntü oluşturma modeli olup, daha gerçekçi ve doğal görüntüler üretmeyi hedefler."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir akış dönüştürücü modelidir ve metinden 1 ila 4 adımda yüksek kaliteli görüntüler üretebilir; kişisel ve ticari kullanım için uygundur."
+    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip, hızlı ve yüksek kaliteli görüntü üretimine odaklanan bir görüntü oluşturma modeli."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe, GPT-4o kullanarak sesleri metne dönüştüren bir konuşma tanıma modelidir. Orijinal Whisper modeline kıyasla kelime hata oranını düşürür ve dil tanıma ile doğruluğu artırır. Daha doğru transkripsiyonlar için kullanın."
   },
+  "gpt-5": {
+    "description": "Çapraz alan kodlama ve temsil görevleri için en iyi model. GPT-5, doğruluk, hız, akıl yürütme, bağlam tanıma, yapısal düşünme ve problem çözmede büyük ilerleme kaydetti."
+  },
+  "gpt-5-chat-latest": {
+    "description": "ChatGPT'de kullanılan GPT-5 modeli. Güçlü dil anlama ve üretme yeteneklerini birleştirerek diyalog tabanlı etkileşim uygulamaları için uygundur."
+  },
+  "gpt-5-mini": {
+    "description": "Daha hızlı ve ekonomik GPT-5 versiyonu, belirgin tanımlı görevler için uygundur. Yüksek kaliteli çıktıyı korurken daha hızlı yanıt sağlar."
+  },
+  "gpt-5-nano": {
+    "description": "En hızlı ve en ekonomik GPT-5 versiyonu. Hızlı yanıt gerektiren ve maliyet duyarlı uygulamalar için idealdir."
+  },
   "gpt-image-1": {
     "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
   },
   "imagen4/preview": {
-    "description": "Google'ın en yüksek kaliteli görüntü oluşturma modeli"
+    "description": "Google tarafından sunulan yüksek kaliteli görüntü oluşturma modeli."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Tongyi Qianwen kodlama modeli."
+  },
+  "qwen-image": {
+    "description": "Qwen ekibinin güçlü ham görüntü modeli, etkileyici Çince metin üretme yeteneği ve çeşitli görsel stil seçenekleri sunar."
   },
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."

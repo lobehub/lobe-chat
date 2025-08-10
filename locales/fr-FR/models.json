@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] est un modèle open source affiné destiné à un usage non commercial. Il maintient une qualité d'image et une adhérence aux instructions proches de la version professionnelle FLUX, tout en offrant une efficacité d'exécution supérieure. Par rapport aux modèles standards de même taille, il est plus efficace en termes d'utilisation des ressources."
   },
   "flux-kontext/dev": {
-    "description": "Modèle d'édition d'image Frontier."
+    "description": "Modèle FLUX.1 spécialisé dans les tâches d'édition d'images, prenant en charge les entrées texte et image."
   },
   "flux-merged": {
     "description": "Le modèle FLUX.1-merged combine les caractéristiques approfondies explorées durant la phase de développement « DEV » et les avantages d'exécution rapide représentés par « Schnell ». Cette fusion améliore non seulement les performances du modèle mais étend également son champ d'application."
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Transformateur de flux rectifié de 12 milliards de paramètres capable de générer des images à partir de descriptions textuelles."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] est un modèle de génération d'images avec une préférence esthétique, visant à produire des images plus réalistes et naturelles."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] est un modèle transformeur en flux avec 12 milliards de paramètres, capable de générer des images de haute qualité à partir de texte en 1 à 4 étapes, adapté à un usage personnel et commercial."
+    "description": "FLUX.1 [schnell] est un modèle de génération d'images de 12 milliards de paramètres, axé sur la génération rapide d'images de haute qualité."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajustement) offre des performances stables et ajustables, ce qui en fait un choix idéal pour des solutions de tâches complexes."
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe est un modèle de transcription audio en texte utilisant GPT-4o. Par rapport au modèle Whisper original, il améliore le taux d'erreur des mots ainsi que la reconnaissance et la précision linguistiques. Utilisez-le pour obtenir des transcriptions plus précises."
   },
+  "gpt-5": {
+    "description": "Le meilleur modèle pour les tâches de codage inter-domaines et d'agents. GPT-5 réalise un bond en avant en précision, vitesse, raisonnement, reconnaissance contextuelle, pensée structurée et résolution de problèmes."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Modèle GPT-5 utilisé dans ChatGPT. Allie une compréhension et une génération linguistique puissantes, idéal pour les applications d'interaction conversationnelle."
+  },
+  "gpt-5-mini": {
+    "description": "Version plus rapide et économique de GPT-5, adaptée aux tâches bien définies. Offre une réponse plus rapide tout en maintenant une sortie de haute qualité."
+  },
+  "gpt-5-nano": {
+    "description": "Version la plus rapide et la plus économique de GPT-5. Parfaitement adaptée aux scénarios nécessitant une réponse rapide et sensibles aux coûts."
+  },
   "gpt-image-1": {
     "description": "Modèle natif multimodal de génération d'images de ChatGPT."
   },
@@ -1629,7 +1644,7 @@
     "description": "Série de modèles de génération d'images à partir de texte Imagen 4e génération version Ultra"
   },
   "imagen4/preview": {
-    "description": "Modèle de génération d'images de la plus haute qualité de Google."
+    "description": "Modèle de génération d'images de haute qualité fourni par Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 fournit des solutions de dialogue intelligent dans divers scénarios."
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Le modèle de code Tongyi Qwen."
+  },
+  "qwen-image": {
+    "description": "Modèle puissant de génération d'images brutes développé par l'équipe Qwen, avec une impressionnante capacité de génération de texte en chinois et une diversité de styles visuels d'images."
   },
   "qwen-long": {
     "description": "Qwen est un modèle de langage à grande échelle, prenant en charge un contexte de texte long, ainsi que des fonctionnalités de dialogue basées sur des documents longs et multiples."

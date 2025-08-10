@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] 是一款面向非商业应用的开源权重、精炼模型。FLUX.1 [dev] 在保持了与FLUX专业版相近的图像质量和指令遵循能力的同时，具备更高的运行效率。相较于同尺寸的标准模型，它在资源利用上更为高效。"
   },
   "flux-kontext/dev": {
-    "description": "Frontier image editing model."
+    "description": "专注于图像编辑任务的FLUX.1模型，支持文本和图像输入。"
   },
   "flux-merged": {
     "description": "FLUX.1-merged 模型结合了 \"DEV\" 在开发阶段探索的深度特性和 \"Schnell\" 所代表的高速执行优势。通过这一举措，FLUX.1-merged 不仅提升了模型的性能界限，还拓宽了其应用范围。"
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "具有120亿参数的修正流变换器，能够根据文本描述生成图像。"
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] 是一个有美学偏好的图像生成模型，目标是生成更加真实、自然的图像。"
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] 是一个拥有120亿参数的流式转换器模型，能够在1到4步内从文本生成高质量图像，适合个人和商业用途。"
+    "description": "FLUX.1 [schnell] 是一个具有120亿参数的图像生成模型，专注于快速生成高质量图像。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。"
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。"
   },
+  "gpt-5": {
+    "description": "跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。"
+  },
+  "gpt-5-chat-latest": {
+    "description": "ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。"
+  },
+  "gpt-5-mini": {
+    "description": "更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。"
+  },
+  "gpt-5-nano": {
+    "description": "最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。"
+  },
   "gpt-image-1": {
     "description": "ChatGPT 原生多模态图片生成模型"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 4th generation text-to-image model series Ultra version"
   },
   "imagen4/preview": {
-    "description": "Google 最高质量的图像生成模型"
+    "description": "Google 提供的高质量的图像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5-7B-Chat 是一个开源的对话模型，基于 InternLM2 架构开发。该 7B 参数规模的模型专注于对话生成任务，支持中英双语交互。模型采用了最新的训练技术，旨在提供流畅、智能的对话体验。InternLM2.5-7B-Chat 适用于各种对话应用场景，包括但不限于智能客服、个人助手等领域"
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "通义千问代码模型。"
+  },
+  "qwen-image": {
+    "description": "Qwen团队带来的强大生图模型，具有令人印象深刻的中文文字生成能力和多样图片视觉风格。"
   },
   "qwen-long": {
     "description": "通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。"

@@ -84,12 +84,16 @@ We need to configure an S3 storage service in the server-side database to store 
 
   <Image alt={'Configure allowed site domain'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/dfcc2cb3-2958-4498-a8a4-51bec584fe7d'} />
 
+  <Callout type={'info'}>
+    If you also plan to use the desktop client, add <code>http://localhost:3015</code> to <code>AllowedOrigins</code> so the desktop client (running locally) can access R2.
+  </Callout>
+
   Example configuration is as follows:
 
   ```json
   [
     {
-      "AllowedOrigins": ["https://your-project.vercel.app"],
+      "AllowedOrigins": ["https://your-project.vercel.app", "http://localhost:3015"],
       "AllowedMethods": ["GET", "PUT", "HEAD", "POST", "DELETE"],
       "AllowedHeaders": ["*"]
     }
