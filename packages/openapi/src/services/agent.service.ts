@@ -44,7 +44,7 @@ export class AgentService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_READ', this.userId);
+      const permissionResult = await this.resolveQueryPermission('AGENT_READ', 'ALL');
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权访问 Agent 列表');
@@ -53,7 +53,6 @@ export class AgentService extends BaseService {
       // 按用户ID过滤，确保数据隔离
       const agentsList = (await this.db.query.agents.findMany({
         orderBy: desc(agents.createdAt),
-        where: eq(agents.userId, this.userId!),
         with: {
           agentsToSessions: {
             with: {
