@@ -18,14 +18,14 @@ export const defaultClients: ClientMetadata[] = [
 
     post_logout_redirect_uris: [
       // 动态构建 Web 页面回调 URL
-      urlJoin(appEnv.APP_URL!, '/oauth/logout'),
+      urlJoin(appEnv.APP_URL || 'http://localhost:3000', '/oauth/logout'),
       'http://localhost:3210/oauth/logout',
     ],
 
     // 桌面端授权回调 - 改为 Web 页面路径
     redirect_uris: [
       // 动态构建 Web 页面回调 URL
-      urlJoin(appEnv.APP_URL!, '/oidc/callback/desktop'),
+      urlJoin(appEnv.APP_URL || 'http://localhost:3000', '/oidc/callback/desktop'),
       'http://localhost:3210/oidc/callback/desktop',
     ],
 
