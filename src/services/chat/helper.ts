@@ -23,6 +23,10 @@ export const isCanUseVision = (model: string, provider: string): boolean => {
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
 };
 
+export const isCanUseVideo = (model: string, provider: string): boolean => {
+  return aiModelSelectors.isModelSupportVideo(model, provider)(getAiInfraStoreState()) || false;
+};
+
 /**
  * TODO: we need to update this function to auto find deploymentName with provider setting config
  */

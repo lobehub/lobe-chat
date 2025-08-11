@@ -1,6 +1,21 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { ChatErrorType, TraceEventType } from '@lobechat/types';
+import {
+  ChatErrorType,
+  ChatImageItem,
+  ChatMessage,
+  ChatMessageError,
+  ChatMessagePluginError,
+  ChatVideoItem,
+  CreateMessageParams,
+  GroundingSearch,
+  MessageMetadata,
+  MessageToolCall,
+  ModelReasoning,
+  TraceEventPayloads,
+  TraceEventType,
+  UpdateMessageRAGParams,
+} from '@lobechat/types';
 import { copyToClipboard } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
@@ -12,19 +27,7 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatMessagePluginError,
-  CreateMessageParams,
-  MessageMetadata,
-  MessageToolCall,
-  ModelReasoning,
-} from '@/types/message';
-import { ChatImageItem } from '@/types/message/image';
-import { UpdateMessageRAGParams } from '@/types/message/rag';
-import { GroundingSearch } from '@/types/search';
-import { TraceEventPayloads } from '@/types/trace';
+import { getFileStoreState } from '@/store/file/store';
 import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -376,8 +379,30 @@ export const chatMessage: StateCreator<
     } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
+      // 为临时消息附带本地可预览的图片/视频，提升发送前后的连续性
+      const files = getFileStoreState().chatUploadFileList;
+      const imageList: ChatImageItem[] = files
+        .filter((f) => f.file?.type?.startsWith('image'))
+        .map((f) => ({
+          id: f.id,
+          url: f.base64Url || f.previewUrl || f.fileUrl || '',
+          alt: f.file?.name || f.id,
+        }));
+      const videoList: ChatVideoItem[] = files
+        .filter((f) => f.file?.type?.startsWith('video'))
+        .map((f) => ({
+          id: f.id,
+          url: f.base64Url || f.previewUrl || f.fileUrl || '',
+          alt: f.file?.name || f.id,
+        }));
+
+      const tempMessageParams =
+        imageList.length > 0 || videoList.length > 0
+          ? { ...message, imageList, videoList }
+          : message;
+
       // use optimistic update to avoid the slow waiting
-      tempId = internal_createTmpMessage(message);
+      tempId = internal_createTmpMessage(tempMessageParams);
 
       internal_toggleMessageLoading(true, tempId);
     }
