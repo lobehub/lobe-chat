@@ -1,0 +1,150 @@
+name: Build Docker Image on Pull Requests
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request_id:
+        description: 'Pull Request Number'
+        required: true
+        type: number
+#      push:
+#        description: 'Push to Docker Hub'
+#        default: false
+#        type: boolean
+      target:
+        description: 'Target commit of the PR (head or merge)'
+        default: 'head'
+        type: choice
+        options:
+          - head
+          - merge
+
+concurrency:
+  group: docker-pr-${{ inputs.pull_request_id }}-${{ inputs.target }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY_IMAGE: lobehub/lobe-chat
+  PR_TAG_PREFIX: pr-
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        variation: [client, pglite, database]
+        platform: [linux/amd64, linux/arm64]
+        include:
+          - platform: linux/amd64
+            os: ubuntu-latest
+          - platform: linux/arm64
+            os: ubuntu-24.04-arm
+          - variation: client
+            dockerfile: ./Dockerfile
+          - variation: pglite
+            dockerfile: ./Dockerfile.pglite
+          - variation: database
+            dockerfile: ./Dockerfile.database
+    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.variation }} for ${{ matrix.platform }}
+    steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          ref: "refs/pull/${{ inputs.pull_request_id }}/${{ inputs.target }}"
+          # fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Get commit SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+#      - name: Docker login
+#        if: inputs.push == 'true'
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_REGISTRY_USER }}
+#          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+#
+      - name: Prepare output type
+        id: type
+        env:
+          OUT_TAG: ${{ env.PR_TAG_PREFIX }}${{ inputs.pull_request_id }}-${{ steps.vars.outputs.sha_short }}-${{ matrix.variation }}
+        run: |
+          echo "OUT_TAG=${{ env.OUT_TAG }}" >> $GITHUB_ENV
+          OUT_FILE_NAME=${{ env.OUT_TAG }}-${{ env.PLATFORM_PAIR }}
+          echo "OUT_FILE_NAME=$OUT_FILE_NAME" >> $GITHUB_ENV
+          OUT_FILE=${{runner.temp}}/${OUT_FILE_NAME}.tar
+          echo "OUT_FILE=$OUT_FILE" >> $GITHUB_ENV
+          {
+            echo "TYPE<<EOF"
+            echo "type=docker,name=${{ env.REGISTRY_IMAGE }},dest=$OUT_FILE"
+            echo EOF
+          } >> $GITHUB_ENV
+#          if [[ "${{ inputs.push }}" == "true" ]]; then
+#            {
+#              echo "TYPE<<EOF"
+#              echo "type=image,name=${{ env.REGISTRY_IMAGE }},push=true"
+#              echo EOF
+#            } >> $GITHUB_ENV
+#          else
+#            OUT_FILE=${{ runner.temp }}/${OUT_FILE_NAME}.tar
+#            echo "OUT_FILE=$OUT_FILE" >> $GITHUB_ENV
+#            {
+#              echo "TYPE<<EOF"
+#              echo "type=docker,name=${{ env.REGISTRY_IMAGE }},dest=${{ env.OUT_FILE }}"
+#              echo EOF
+#            } >> $GITHUB_ENV
+#          fi
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=raw,value=${{ env.OUT_TAG }}
+
+      - name: Build
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          platforms: ${{ matrix.platform }}
+          context: .
+          file: ${{ matrix.dockerfile }}
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            SHA=${{ steps.vars.outputs.sha_short }}
+            VARIATION=${{ matrix.variation }}
+          outputs: ${{ env.TYPE }}
+
+      - name: Upload image
+#        if: inputs.push != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUT_FILE_NAME }}
+          path: ${{ env.OUT_FILE }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Export digest
+        run: |
+          rm -rf ${{ runner.temp }}/digests
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ matrix.variation }}-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 7
