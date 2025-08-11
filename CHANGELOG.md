@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.111.8](https://github.com/lobehub/lobe-chat/compare/v1.111.7...v1.111.8)
+
+<sup>Released on **2025-08-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support new GPT-5 Verbosity params.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support new GPT-5 Verbosity params, closes [#8715](https://github.com/lobehub/lobe-chat/issues/8715) ([0a724aa](https://github.com/lobehub/lobe-chat/commit/0a724aa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.7](https://github.com/lobehub/lobe-chat/compare/v1.111.6...v1.111.7)
+
+<sup>Released on **2025-08-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor model-runtime to a seperated package.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor model-runtime to a seperated package, closes [#8763](https://github.com/lobehub/lobe-chat/issues/8763) ([e5eb7a2](https://github.com/lobehub/lobe-chat/commit/e5eb7a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.6](https://github.com/lobehub/lobe-chat/compare/v1.111.5...v1.111.6)
 
 <sup>Released on **2025-08-11**</sup>

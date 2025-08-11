@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor model-runtime to a seperated package."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
       "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
     },
     "date": "2025-08-11",
