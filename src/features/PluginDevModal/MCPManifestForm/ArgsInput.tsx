@@ -25,16 +25,13 @@ const ArgsInput = memo<ArgsInputProps>(({ value, onChange, ...res }) => {
       {...res}
       onBlur={handleBlur}
       onChange={(e) => {
-        // 实时反馈，传递原始输入
         const inputValue = e.target.value;
         if (!inputValue.trim()) {
           onChange?.([]);
         } else {
-          // 可以选择实时解析或者传递原始字符串
           onChange?.(parseArgs(inputValue));
         }
       }}
-      placeholder="输入命令行参数，支持引号..."
       value={value ? argsToString(value) : ''}
     />
   );

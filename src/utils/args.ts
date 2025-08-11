@@ -1,4 +1,9 @@
-// 智能解析命令行参数
+/**
+ * Parse command line arguments string into array
+ * Supports quoted arguments and escaped quotes
+ * @param input - Command line arguments string
+ * @returns Array of parsed arguments
+ */
 export const parseArgs = (input: string): string[] => {
   const args: string[] = [];
   let current = '';
@@ -23,11 +28,11 @@ export const parseArgs = (input: string): string[] => {
       }
     } else {
       if (char === '\\' && i + 1 < input.length && input[i + 1] === quoteChar) {
-        // 处理转义的引号
+        // Handle escaped quotes
         current += quoteChar;
-        i++; // 跳过下一个字符（被转义的引号）
+        i++; // Skip the escaped quote character
       } else if (char === quoteChar) {
-        // 结束引号
+        // End of quoted string
         inQuotes = false;
         quoteChar = '';
       } else {
@@ -44,6 +49,12 @@ export const parseArgs = (input: string): string[] => {
   return args;
 };
 
+/**
+ * Convert arguments array back to command line string
+ * Automatically quotes arguments containing spaces or special characters
+ * @param args - Array of arguments to convert
+ * @returns Command line string with properly quoted arguments
+ */
 export const argsToString = (args: string[]): string => {
   return args
     .map((arg) => {
