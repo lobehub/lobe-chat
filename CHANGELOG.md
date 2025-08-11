@@ -2,6 +2,104 @@
 
 # Changelog
 
+## [Version&nbsp;1.106.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.2...v1.106.0)
+<sup>Released on **2025-08-11**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **pricing**: Introduce new pricing system.
+- **misc**: Move types to separate package, refactor trace type.
+
+
+#### ✨ Features
+
+- **misc**: Add GPT-5 series models, support 302ai provider, support aihubmix provider, support gpt-oss in ollama provider, support mcp plugin install from web.
+
+
+#### 🐛 Bug Fixes
+
+- **desktop**: Settings window can't exit when fullscreen.
+- **pricing**: Adjust cachedInput values for GPT-5 models.
+- **misc**: Aihubmix provider request headers, Break line for Gemini Artifacts, fix fail to fetch aihubmix model on client mode, fix ollama model output without thinking, fix remote avatar broken in desktop, fix remote avatar broken in desktop again, missing languages it-IT, pl-PL, nl-NL, Optimize Gemini error message display & Filter empty messages, provider config checker uses outdated API key, Solve the cache problem caused by the same dom id when sharing pictures, when s3 files not exist , global files should delete.
+
+
+#### 💄 Styles
+
+- **misc**: Add Claude Opus 4.1 model, add context menu for desktop, Add descriptions for the FLUX.1 Krea and Qwen Image, Add mask effect to thinking scroll, fix provider setting page hydration error, improve thinking auto scroll style, support different model tabs, Support session switch shortcut key, update i18n, update i18n, update i18n, update i18n, Update mask style, update models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **pricing**: Introduce new pricing system, closes [#8681](https://github.com/jaworldwideorg/OneJA-Bot/issues/8681) ([96b7508](https://github.com/jaworldwideorg/OneJA-Bot/commit/96b7508))
+* **misc**: Move types to separate package, closes [#8635](https://github.com/jaworldwideorg/OneJA-Bot/issues/8635) ([3cc4a54](https://github.com/jaworldwideorg/OneJA-Bot/commit/3cc4a54))
+* **misc**: Refactor trace type, closes [#8699](https://github.com/jaworldwideorg/OneJA-Bot/issues/8699) ([4e71af7](https://github.com/jaworldwideorg/OneJA-Bot/commit/4e71af7))
+
+
+
+#### What's improved
+
+* **misc**: Add GPT-5 series models, closes [#8711](https://github.com/jaworldwideorg/OneJA-Bot/issues/8711) ([600c29b](https://github.com/jaworldwideorg/OneJA-Bot/commit/600c29b))
+* **misc**: Support 302ai provider, closes [#8362](https://github.com/jaworldwideorg/OneJA-Bot/issues/8362) ([e172055](https://github.com/jaworldwideorg/OneJA-Bot/commit/e172055))
+* **misc**: Support aihubmix provider, closes [#8038](https://github.com/jaworldwideorg/OneJA-Bot/issues/8038) ([4db6485](https://github.com/jaworldwideorg/OneJA-Bot/commit/4db6485))
+* **misc**: Support gpt-oss in ollama provider, closes [#8682](https://github.com/jaworldwideorg/OneJA-Bot/issues/8682) ([6e0c386](https://github.com/jaworldwideorg/OneJA-Bot/commit/6e0c386))
+* **misc**: Support mcp plugin install from web, closes [#8680](https://github.com/jaworldwideorg/OneJA-Bot/issues/8680) ([022d858](https://github.com/jaworldwideorg/OneJA-Bot/commit/022d858))
+
+
+
+#### What's fixed
+
+* **desktop**: Settings window can't exit when fullscreen, closes [#8633](https://github.com/jaworldwideorg/OneJA-Bot/issues/8633) ([954eb2c](https://github.com/jaworldwideorg/OneJA-Bot/commit/954eb2c))
+* **pricing**: Adjust cachedInput values for GPT-5 models, closes [#8723](https://github.com/jaworldwideorg/OneJA-Bot/issues/8723) ([652bf08](https://github.com/jaworldwideorg/OneJA-Bot/commit/652bf08))
+* **misc**: Aihubmix provider request headers, closes [#8654](https://github.com/jaworldwideorg/OneJA-Bot/issues/8654) ([af07101](https://github.com/jaworldwideorg/OneJA-Bot/commit/af07101))
+* **misc**: Break line for Gemini Artifacts, closes [#8627](https://github.com/jaworldwideorg/OneJA-Bot/issues/8627) ([65609dd](https://github.com/jaworldwideorg/OneJA-Bot/commit/65609dd))
+* **misc**: Fix fail to fetch aihubmix model on client mode, closes [#8689](https://github.com/jaworldwideorg/OneJA-Bot/issues/8689) ([3dcc5da](https://github.com/jaworldwideorg/OneJA-Bot/commit/3dcc5da))
+* **misc**: Fix ollama model output without thinking, closes [#8686](https://github.com/jaworldwideorg/OneJA-Bot/issues/8686) ([d95c7f4](https://github.com/jaworldwideorg/OneJA-Bot/commit/d95c7f4))
+* **misc**: Fix remote avatar broken in desktop, closes [#8673](https://github.com/jaworldwideorg/OneJA-Bot/issues/8673) ([7eae430](https://github.com/jaworldwideorg/OneJA-Bot/commit/7eae430))
+* **misc**: Fix remote avatar broken in desktop again, closes [#8688](https://github.com/jaworldwideorg/OneJA-Bot/issues/8688) ([41b4363](https://github.com/jaworldwideorg/OneJA-Bot/commit/41b4363))
+* **misc**: Missing languages it-IT, pl-PL, nl-NL, closes [#8710](https://github.com/jaworldwideorg/OneJA-Bot/issues/8710) ([b46fa8e](https://github.com/jaworldwideorg/OneJA-Bot/commit/b46fa8e))
+* **misc**: Optimize Gemini error message display & Filter empty messages, closes [#8489](https://github.com/jaworldwideorg/OneJA-Bot/issues/8489) ([5b409cc](https://github.com/jaworldwideorg/OneJA-Bot/commit/5b409cc))
+* **misc**: Provider config checker uses outdated API key, closes [#8666](https://github.com/jaworldwideorg/OneJA-Bot/issues/8666) ([3a3e73e](https://github.com/jaworldwideorg/OneJA-Bot/commit/3a3e73e))
+* **misc**: Solve the cache problem caused by the same dom id when sharing pictures, closes [#8704](https://github.com/jaworldwideorg/OneJA-Bot/issues/8704) ([68aad95](https://github.com/jaworldwideorg/OneJA-Bot/commit/68aad95))
+* **misc**: When s3 files not exist , global files should delete ([7c1ca41](https://github.com/jaworldwideorg/OneJA-Bot/commit/7c1ca41))
+
+
+
+#### Styles
+
+* **misc**: Add Claude Opus 4.1 model, closes [#8683](https://github.com/jaworldwideorg/OneJA-Bot/issues/8683) ([ceb5289](https://github.com/jaworldwideorg/OneJA-Bot/commit/ceb5289))
+* **misc**: Add context menu for desktop, closes [#8691](https://github.com/jaworldwideorg/OneJA-Bot/issues/8691) ([0b30d05](https://github.com/jaworldwideorg/OneJA-Bot/commit/0b30d05))
+* **misc**: Add descriptions for the FLUX.1 Krea and Qwen Image, closes [#8678](https://github.com/jaworldwideorg/OneJA-Bot/issues/8678) ([769fda0](https://github.com/jaworldwideorg/OneJA-Bot/commit/769fda0))
+* **misc**: Add mask effect to thinking scroll, closes [#8729](https://github.com/jaworldwideorg/OneJA-Bot/issues/8729) ([4cefafd](https://github.com/jaworldwideorg/OneJA-Bot/commit/4cefafd))
+* **misc**: Fix provider setting page hydration error, closes [#8695](https://github.com/jaworldwideorg/OneJA-Bot/issues/8695) ([88e7d2a](https://github.com/jaworldwideorg/OneJA-Bot/commit/88e7d2a))
+* **misc**: Improve thinking auto scroll style, closes [#8719](https://github.com/jaworldwideorg/OneJA-Bot/issues/8719) ([acec55f](https://github.com/jaworldwideorg/OneJA-Bot/commit/acec55f))
+* **misc**: Support different model tabs, closes [#8693](https://github.com/jaworldwideorg/OneJA-Bot/issues/8693) ([6d531d7](https://github.com/jaworldwideorg/OneJA-Bot/commit/6d531d7))
+* **misc**: Support session switch shortcut key, closes [#8626](https://github.com/jaworldwideorg/OneJA-Bot/issues/8626) ([efc7eaf](https://github.com/jaworldwideorg/OneJA-Bot/commit/efc7eaf))
+* **misc**: Update i18n, closes [#8734](https://github.com/jaworldwideorg/OneJA-Bot/issues/8734) ([327a564](https://github.com/jaworldwideorg/OneJA-Bot/commit/327a564))
+* **misc**: Update i18n, closes [#8725](https://github.com/jaworldwideorg/OneJA-Bot/issues/8725) ([d9642fc](https://github.com/jaworldwideorg/OneJA-Bot/commit/d9642fc))
+* **misc**: Update i18n, closes [#8684](https://github.com/jaworldwideorg/OneJA-Bot/issues/8684) ([926fa9a](https://github.com/jaworldwideorg/OneJA-Bot/commit/926fa9a))
+* **misc**: Update i18n, closes [#8629](https://github.com/jaworldwideorg/OneJA-Bot/issues/8629) ([3b87fe7](https://github.com/jaworldwideorg/OneJA-Bot/commit/3b87fe7))
+* **misc**: Update mask style, closes [#8555](https://github.com/jaworldwideorg/OneJA-Bot/issues/8555) ([b4ac89d](https://github.com/jaworldwideorg/OneJA-Bot/commit/b4ac89d))
+* **misc**: Update models, closes [#8657](https://github.com/jaworldwideorg/OneJA-Bot/issues/8657) ([904ee13](https://github.com/jaworldwideorg/OneJA-Bot/commit/904ee13))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.105.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.1...v1.105.2)
 <sup>Released on **2025-07-31**</sup>
 
