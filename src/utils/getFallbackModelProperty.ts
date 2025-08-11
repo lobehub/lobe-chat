@@ -1,4 +1,3 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { AiFullModelCard } from '@/types/aiModel';
 
 /**
@@ -8,11 +7,13 @@ import { AiFullModelCard } from '@/types/aiModel';
  * @param providerId Optional provider ID for an exact match.
  * @returns The property value or a default value.
  */
-export const getModelPropertyWithFallback = <T>(
+export const getModelPropertyWithFallback = async <T>(
   modelId: string,
   propertyName: keyof AiFullModelCard,
   providerId?: string,
-): T => {
+): Promise<T> => {
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
   // Step 1: If providerId is provided, prioritize an exact match (same provider + same id)
   if (providerId) {
     const exactMatch = LOBE_DEFAULT_MODEL_LIST.find(

@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';

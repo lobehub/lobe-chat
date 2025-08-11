@@ -1,7 +1,9 @@
 import { AiFullModelCard, LobeDefaultAiModelListItem } from '@/types/aiModel';
 
 import { default as ai21 } from './ai21';
+import { default as ai302 } from './ai302';
 import { default as ai360 } from './ai360';
+import { default as aihubmix } from './aihubmix';
 import { default as anthropic } from './anthropic';
 import { default as azure } from './azure';
 import { default as azureai } from './azureai';
@@ -77,7 +79,9 @@ const buildDefaultModelList = (map: ModelsMap): LobeDefaultAiModelListItem[] => 
 
 export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   ai21,
+  ai302,
   ai360,
+  aihubmix,
   anthropic,
   azure,
   azureai,
@@ -134,7 +138,9 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
 });
 
 export { default as ai21 } from './ai21';
+export { default as ai302 } from './ai302';
 export { default as ai360 } from './ai360';
+export { default as aihubmix } from './aihubmix';
 export { default as anthropic } from './anthropic';
 export { default as azure } from './azure';
 export { default as azureai } from './azureai';

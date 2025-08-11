@@ -489,12 +489,14 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           .filter(Boolean) as ChatModelCard[];
       }
 
-      return resultModels.map((model) => {
-        return {
-          ...model,
-          type: model.type || getModelPropertyWithFallback(model.id, 'type'),
-        };
-      }) as ChatModelCard[];
+      return (await Promise.all(
+        resultModels.map(async (model) => {
+          return {
+            ...model,
+            type: model.type || (await getModelPropertyWithFallback(model.id, 'type')),
+          };
+        }),
+      )) as ChatModelCard[];
     }
 
     async embeddings(

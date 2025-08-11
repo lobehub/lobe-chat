@@ -14,6 +14,7 @@
   "edit": {
     "copy": "Kopyala",
     "cut": "Kes",
+    "delete": "Sil",
     "paste": "Yapıştır",
     "redo": "Yinele",
     "selectAll": "Tümünü Seç",

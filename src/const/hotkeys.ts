@@ -30,6 +30,12 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.NavigateToChat,
+    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Backquote]),
+    scopes: [HotkeyScopeEnum.Global],
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleZenMode,
     keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
     scopes: [HotkeyScopeEnum.Chat],

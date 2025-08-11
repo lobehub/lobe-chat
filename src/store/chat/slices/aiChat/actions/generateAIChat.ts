@@ -1,12 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isDesktop, isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';

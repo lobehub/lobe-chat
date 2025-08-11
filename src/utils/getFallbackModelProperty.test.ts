@@ -56,36 +56,36 @@ vi.mock('@/config/aiModels', () => ({
 
 describe('getModelPropertyWithFallback', () => {
   describe('when providerId is specified', () => {
-    it('should return exact match value when model exists with specified provider', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'displayName', 'openai');
+    it('should return exact match value when model exists with specified provider', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'displayName', 'openai');
       expect(result).toBe('GPT-4');
     });
 
-    it('should return exact match type when model exists with specified provider', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'type', 'openai');
+    it('should return exact match type when model exists with specified provider', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'type', 'openai');
       expect(result).toBe('chat');
     });
 
-    it('should return exact match contextWindowTokens when model exists with specified provider', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'contextWindowTokens', 'azure');
+    it('should return exact match contextWindowTokens when model exists with specified provider', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'contextWindowTokens', 'azure');
       expect(result).toBe(8192);
     });
 
-    it('should fall back to other provider when exact provider match not found', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'displayName', 'fake-provider');
+    it('should fall back to other provider when exact provider match not found', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'displayName', 'fake-provider');
       expect(result).toBe('GPT-4'); // Falls back to openai provider
     });
 
-    it('should return nested property like abilities', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'abilities', 'openai');
+    it('should return nested property like abilities', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'abilities', 'openai');
       expect(result).toEqual({
         functionCall: true,
         vision: true,
       });
     });
 
-    it('should return parameters property correctly', () => {
-      const result = getModelPropertyWithFallback('dall-e-3', 'parameters', 'openai');
+    it('should return parameters property correctly', async () => {
+      const result = await getModelPropertyWithFallback('dall-e-3', 'parameters', 'openai');
       expect(result).toEqual({
         size: '1024x1024',
         quality: 'standard',
@@ -94,99 +94,106 @@ describe('getModelPropertyWithFallback', () => {
   });
 
   describe('when providerId is not specified', () => {
-    it('should return fallback match value when model exists', () => {
-      const result = getModelPropertyWithFallback('claude-3', 'displayName');
+    it('should return fallback match value when model exists', async () => {
+      const result = await getModelPropertyWithFallback('claude-3', 'displayName');
       expect(result).toBe('Claude 3');
     });
 
-    it('should return fallback match type when model exists', () => {
-      const result = getModelPropertyWithFallback('claude-3', 'type');
+    it('should return fallback match type when model exists', async () => {
+      const result = await getModelPropertyWithFallback('claude-3', 'type');
       expect(result).toBe('chat');
     });
 
-    it('should return fallback match enabled property', () => {
-      const result = getModelPropertyWithFallback('claude-3', 'enabled');
+    it('should return fallback match enabled property', async () => {
+      const result = await getModelPropertyWithFallback('claude-3', 'enabled');
       expect(result).toBe(false);
     });
   });
 
   describe('when model is not found', () => {
-    it('should return default value "chat" for type property', () => {
-      const result = getModelPropertyWithFallback('non-existent-model', 'type');
+    it('should return default value "chat" for type property', async () => {
+      const result = await getModelPropertyWithFallback('non-existent-model', 'type');
       expect(result).toBe('chat');
     });
 
-    it('should return default value "chat" for type property even with providerId', () => {
-      const result = getModelPropertyWithFallback('non-existent-model', 'type', 'fake-provider');
+    it('should return default value "chat" for type property even with providerId', async () => {
+      const result = await getModelPropertyWithFallback(
+        'non-existent-model',
+        'type',
+        'fake-provider',
+      );
       expect(result).toBe('chat');
     });
 
-    it('should return undefined for non-type properties when model not found', () => {
-      const result = getModelPropertyWithFallback('non-existent-model', 'displayName');
+    it('should return undefined for non-type properties when model not found', async () => {
+      const result = await getModelPropertyWithFallback('non-existent-model', 'displayName');
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for contextWindowTokens when model not found', () => {
-      const result = getModelPropertyWithFallback('non-existent-model', 'contextWindowTokens');
+    it('should return undefined for contextWindowTokens when model not found', async () => {
+      const result = await getModelPropertyWithFallback(
+        'non-existent-model',
+        'contextWindowTokens',
+      );
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for enabled property when model not found', () => {
-      const result = getModelPropertyWithFallback('non-existent-model', 'enabled');
+    it('should return undefined for enabled property when model not found', async () => {
+      const result = await getModelPropertyWithFallback('non-existent-model', 'enabled');
       expect(result).toBeUndefined();
     });
   });
 
   describe('provider precedence logic', () => {
-    it('should prioritize exact provider match over general match', () => {
+    it('should prioritize exact provider match over general match', async () => {
       // gpt-4 exists in both openai and azure providers with different displayNames
-      const openaiResult = getModelPropertyWithFallback('gpt-4', 'displayName', 'openai');
-      const azureResult = getModelPropertyWithFallback('gpt-4', 'displayName', 'azure');
+      const openaiResult = await getModelPropertyWithFallback('gpt-4', 'displayName', 'openai');
+      const azureResult = await getModelPropertyWithFallback('gpt-4', 'displayName', 'azure');
 
       expect(openaiResult).toBe('GPT-4');
       expect(azureResult).toBe('GPT-4 Azure');
     });
 
-    it('should fall back to first match when specified provider not found', () => {
+    it('should fall back to first match when specified provider not found', async () => {
       // When asking for 'fake-provider', should fall back to first match (openai)
-      const result = getModelPropertyWithFallback('gpt-4', 'displayName', 'fake-provider');
+      const result = await getModelPropertyWithFallback('gpt-4', 'displayName', 'fake-provider');
       expect(result).toBe('GPT-4');
     });
   });
 
   describe('property existence handling', () => {
-    it('should handle undefined properties gracefully', () => {
+    it('should handle undefined properties gracefully', async () => {
       // claude-3 doesn't have abilities property defined
-      const result = getModelPropertyWithFallback('claude-3', 'abilities');
+      const result = await getModelPropertyWithFallback('claude-3', 'abilities');
       expect(result).toBeUndefined();
     });
 
-    it('should handle properties that exist but have falsy values', () => {
+    it('should handle properties that exist but have falsy values', async () => {
       // claude-3 has enabled: false
-      const result = getModelPropertyWithFallback('claude-3', 'enabled');
+      const result = await getModelPropertyWithFallback('claude-3', 'enabled');
       expect(result).toBe(false);
     });
 
-    it('should distinguish between undefined and null values', () => {
+    it('should distinguish between undefined and null values', async () => {
       // Testing that we check for undefined specifically, not just falsy values
-      const result = getModelPropertyWithFallback('claude-3', 'contextWindowTokens');
+      const result = await getModelPropertyWithFallback('claude-3', 'contextWindowTokens');
       expect(result).toBe(200000); // Should find the defined value
     });
   });
 
   describe('edge cases', () => {
-    it('should handle empty string modelId', () => {
-      const result = getModelPropertyWithFallback('', 'type');
+    it('should handle empty string modelId', async () => {
+      const result = await getModelPropertyWithFallback('', 'type');
       expect(result).toBe('chat'); // Should fall back to default
     });
 
-    it('should handle empty string providerId', () => {
-      const result = getModelPropertyWithFallback('gpt-4', 'type', '');
+    it('should handle empty string providerId', async () => {
+      const result = await getModelPropertyWithFallback('gpt-4', 'type', '');
       expect(result).toBe('chat'); // Should still find the model via fallback
     });
 
-    it('should handle case-sensitive modelId correctly', () => {
-      const result = getModelPropertyWithFallback('GPT-4', 'type'); // Wrong case
+    it('should handle case-sensitive modelId correctly', async () => {
+      const result = await getModelPropertyWithFallback('GPT-4', 'type'); // Wrong case
       expect(result).toBe('chat'); // Should fall back to default since no match
     });
   });

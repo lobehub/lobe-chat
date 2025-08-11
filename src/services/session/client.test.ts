@@ -1,4 +1,4 @@
-import { eq, not } from 'drizzle-orm/expressions';
+import { eq, not } from 'drizzle-orm';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';

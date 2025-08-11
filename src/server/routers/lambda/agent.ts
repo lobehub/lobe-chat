@@ -94,7 +94,7 @@ export const agentRouter = router({
           if (!user) return DEFAULT_AGENT_CONFIG;
 
           const res = await ctx.agentService.createInbox();
-          pino.info('create inbox session', res);
+          pino.info({ res }, 'create inbox session');
         }
       }
 

@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm/expressions';
+import { and, desc, eq } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import { CreateThreadParams, ThreadStatus } from '@/types/topic';

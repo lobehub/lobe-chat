@@ -30,8 +30,8 @@ export const MODEL_LIST_CONFIGS = {
   },
   openai: {
     excludeKeywords: ['audio'],
-    functionCallKeywords: ['4o', '4.1', 'o3', 'o4'],
-    reasoningKeywords: ['o1', 'o3', 'o4'],
+    functionCallKeywords: ['4o', '4.1', 'o3', 'o4', 'oss'],
+    reasoningKeywords: ['o1', 'o3', 'o4', 'oss'],
     visionKeywords: ['4o', '4.1', 'o4'],
   },
   qwen: {

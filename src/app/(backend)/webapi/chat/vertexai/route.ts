@@ -1,5 +1,5 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider, ModelRuntime } from '@/libs/model-runtime';
 import { LobeVertexAI } from '@/libs/model-runtime/vertexai';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -28,7 +28,7 @@ export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
         project: !!credentials?.project_id ? credentials?.project_id : process.env.VERTEXAI_PROJECT,
       });
 
-      return new AgentRuntime(instance);
+      return new ModelRuntime(instance);
     },
     params: Promise.resolve({ provider: ModelProvider.VertexAI }),
   }),
