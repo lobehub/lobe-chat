@@ -1,5 +1,7 @@
 import { Input, type InputProps } from '@lobehub/ui';
-import { memo } from 'react';
+import React, { memo } from 'react';
+
+import { argsToString, parseArgs } from '@/utils/args';
 
 interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {
   onChange?: (value: string[]) => void;
@@ -7,14 +9,35 @@ interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {
 }
 
 const ArgsInput = memo<ArgsInputProps>(({ value, onChange, ...res }) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.trim();
+    if (inputValue) {
+      const args = parseArgs(inputValue);
+      onChange?.(args);
+    } else {
+      onChange?.([]);
+    }
+    res.onBlur?.(e);
+  };
+
   return (
     <Input
-      onChange={(e) => {
-        onChange?.([e.target.value]);
-      }}
-      value={value?.join(' ')}
       {...res}
+      onBlur={handleBlur}
+      onChange={(e) => {
+        // 实时反馈，传递原始输入
+        const inputValue = e.target.value;
+        if (!inputValue.trim()) {
+          onChange?.([]);
+        } else {
+          // 可以选择实时解析或者传递原始字符串
+          onChange?.(parseArgs(inputValue));
+        }
+      }}
+      placeholder="输入命令行参数，支持引号..."
+      value={value ? argsToString(value) : ''}
     />
   );
 });
+
 export default ArgsInput;
