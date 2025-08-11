@@ -1658,7 +1658,7 @@
       "name": "webhook_default",
       "createdTime": "2025-08-11T17:13:56+08:00",
       "organization": "lobechat",
-      "url": "http://lobe:3210/api/webhooks/casdoor",
+      "url": "http://localhost:3210/api/webhooks/casdoor",
       "method": "POST",
       "contentType": "application/json",
       "headers": [
