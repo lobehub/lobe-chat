@@ -23,9 +23,9 @@ interface UserMessageContentPartImage {
 
 interface UserMessageContentPartFileUrl {
   file_url: {
-    displayName?: string;
     mimeType: string;
     url: string;
+    displayName?: string;
   };
   type: 'file_url';
 }
