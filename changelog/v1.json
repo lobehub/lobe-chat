@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
+    "children": {
       "improvements": ["Add mask effect to thinking scroll, update i18n."]
     },
     "date": "2025-08-10",
