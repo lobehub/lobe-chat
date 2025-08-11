@@ -579,11 +579,7 @@ class ChatService {
           const isVideo = lower.startsWith('video/');
           if (isAudio || isVideo) {
             fileUrlParts.push({
-              file_url: {
-                displayName: f.name,
-                mimeType: f.fileType,
-                url: f.url,
-              },
+              file_url: { url: f.url, mimeType: f.fileType, displayName: f.name },
               type: 'file_url',
             } as any);
           }
