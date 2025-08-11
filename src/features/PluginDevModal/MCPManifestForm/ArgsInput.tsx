@@ -1,39 +1,98 @@
-import { Input, type InputProps } from '@lobehub/ui';
-import React, { memo } from 'react';
-
-import { argsToString, parseArgs } from '@/utils/args';
+import { ActionIcon, Button, Input, type InputProps } from '@lobehub/ui';
+import { Plus, X } from 'lucide-react';
+import React, { memo, useCallback } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {
   onChange?: (value: string[]) => void;
   value?: string[];
 }
 
-const ArgsInput = memo<ArgsInputProps>(({ value, onChange, ...res }) => {
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.trim();
-    if (inputValue) {
-      const args = parseArgs(inputValue);
-      onChange?.(args);
-    } else {
-      onChange?.([]);
-    }
-    res.onBlur?.(e);
-  };
+const ArgsInput = memo<ArgsInputProps>(({ value = [], onChange, ...res }) => {
+  const handleAddArg = useCallback(() => {
+    onChange?.([...value, '']);
+  }, [value, onChange]);
+
+  const handleRemoveArg = useCallback(
+    (index: number) => {
+      const newValue = value.filter((_, i) => i !== index);
+      onChange?.(newValue);
+    },
+    [value, onChange],
+  );
+
+  const handleArgChange = useCallback(
+    (index: number, newArg: string) => {
+      const newValue = [...value];
+      newValue[index] = newArg;
+      onChange?.(newValue);
+    },
+    [value, onChange],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (index === value.length - 1) {
+          handleAddArg();
+        }
+      } else if (e.key === 'Backspace' && e.currentTarget.value === '' && value.length > 1) {
+        e.preventDefault();
+        handleRemoveArg(index);
+      }
+    },
+    [value.length, handleAddArg, handleRemoveArg],
+  );
 
   return (
-    <Input
-      {...res}
-      onBlur={handleBlur}
-      onChange={(e) => {
-        const inputValue = e.target.value;
-        if (!inputValue.trim()) {
-          onChange?.([]);
-        } else {
-          onChange?.(parseArgs(inputValue));
-        }
-      }}
-      value={value ? argsToString(value) : ''}
-    />
+    <Flexbox gap={8} style={{ width: '100%' }}>
+      {value.length === 0 ? (
+        <Flexbox align="center" gap={8} horizontal>
+          <Input
+            {...res}
+            onBlur={(e) => {
+              if (e.target.value.trim()) {
+                onChange?.([e.target.value.trim()]);
+              }
+              res.onBlur?.(e);
+            }}
+            placeholder="Enter first argument..."
+            style={{ flex: 1 }}
+          />
+          <Button icon={Plus} onClick={handleAddArg} size="small" type="primary" />
+        </Flexbox>
+      ) : (
+        <>
+          {value.map((arg, index) => (
+            <Flexbox align="center" gap={8} horizontal key={index}>
+              <Input
+                onChange={(e) => handleArgChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                placeholder={`Argument ${index + 1}`}
+                style={{ flex: 1 }}
+                value={arg}
+              />
+              <ActionIcon
+                icon={X}
+                onClick={() => handleRemoveArg(index)}
+                size="small"
+                style={{ flexShrink: 0 }}
+              />
+            </Flexbox>
+          ))}
+          <Button
+            icon={Plus}
+            onClick={handleAddArg}
+            size="small"
+            style={{ alignSelf: 'flex-start' }}
+            type="dashed"
+          >
+            Add Argument
+          </Button>
+        </>
+      )}
+    </Flexbox>
   );
 });
 
