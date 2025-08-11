@@ -1,6 +1,39 @@
 [
   {
     "children": {
+      "improvements": ["Add mask effect to thinking scroll, update i18n."]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
+    "children": {},
+    "date": "2025-08-09",
+    "version": "1.111.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve thinking auto scroll style, Support session switch shortcut key, update i18n."
+      ]
+    },
+    "date": "2025-08-09",
+    "version": "1.111.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-08",
+    "version": "1.111.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add descriptions for the FLUX.1 Krea and Qwen Image."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.1"
+  },
+  {
+    "children": {
       "features": ["Add GPT-5 series models."]
     },
     "date": "2025-08-08",

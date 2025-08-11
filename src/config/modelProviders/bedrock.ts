@@ -169,12 +169,6 @@ const Bedrock: ModelProviderCard = {
       functionCall: true,
       id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
       maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.1,
-        input: 1,
-        output: 5,
-        writeCacheInput: 1.25,
-      },
       releasedAt: '2025-02-24',
       vision: true,
     },
@@ -185,7 +179,7 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'eu.anthropic.claude-3-7-sonnet-20250219-v1:0',
-      maxOutput: 8192,
+      maxOutput: 64_000,
       pricing: {
         cachedInput: 0.1,
         input: 1,
@@ -209,7 +203,7 @@ const Bedrock: ModelProviderCard = {
         output: 5,
         writeCacheInput: 1.25,
       },
-      releasedAt: '2025-02-24',
+      releasedAt: '2025-11-05',
       vision: true,
     },
 

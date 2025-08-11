@@ -1104,7 +1104,7 @@
     "description": "FLUX.1 [dev] 是一款面向非商業應用的開源權重、精煉模型。FLUX.1 [dev] 在保持了與 FLUX 專業版相近的圖像品質和指令遵循能力的同時，具備更高的運行效率。相較於同尺寸的標準模型，它在資源利用上更為高效。"
   },
   "flux-kontext/dev": {
-    "description": "Frontier 影像編輯模型。"
+    "description": "專注於圖像編輯任務的FLUX.1模型，支援文字和圖像輸入。"
   },
   "flux-merged": {
     "description": "FLUX.1-merged 模型結合了 \"DEV\" 在開發階段探索的深度特性和 \"Schnell\" 所代表的高速執行優勢。透過這一舉措，FLUX.1-merged 不僅提升了模型的性能界限，還拓寬了其應用範圍。"
@@ -1118,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "具有120億參數的修正流變換器，能夠根據文本描述生成圖像。"
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] 是一個具有美學偏好的圖像生成模型，目標是生成更加真實、自然的圖像。"
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] 是一個擁有120億參數的流式轉換器模型，能夠在1到4步內從文字生成高品質圖像，適合個人和商業用途。"
+    "description": "FLUX.1 [schnell] 是一個擁有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
@@ -1481,6 +1484,18 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe 是一種使用 GPT-4o 轉錄音訊的語音轉文字模型。與原始 Whisper 模型相比，它降低了字詞錯誤率，並提升了語言識別和準確性。使用它來獲得更準確的轉錄。"
   },
+  "gpt-5": {
+    "description": "跨領域編碼和代理任務的最佳模型。GPT-5 在準確性、速度、推理、上下文識別、結構化思維和問題解決方面實現了飛躍。"
+  },
+  "gpt-5-chat-latest": {
+    "description": "ChatGPT 中使用的 GPT-5 模型。結合了強大的語言理解與生成能力，適合對話式互動應用。"
+  },
+  "gpt-5-mini": {
+    "description": "更快、更經濟高效的 GPT-5 版本，適用於明確定義的任務。在保持高品質輸出的同時，提供更快的回應速度。"
+  },
+  "gpt-5-nano": {
+    "description": "最快、最經濟高效的 GPT-5 版本。非常適合需要快速回應且成本敏感的應用場景。"
+  },
   "gpt-image-1": {
     "description": "ChatGPT 原生多模態圖片生成模型"
   },
@@ -1629,7 +1644,7 @@
     "description": "Imagen 第四代文字轉圖像模型系列 超級版"
   },
   "imagen4/preview": {
-    "description": "Google 最高品質的圖像生成模型"
+    "description": "Google 提供的高品質圖像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
@@ -2197,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "通義千問代碼模型。"
+  },
+  "qwen-image": {
+    "description": "Qwen團隊帶來的強大生圖模型，具有令人印象深刻的中文文字生成能力和多樣圖片視覺風格。"
   },
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"

@@ -200,8 +200,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
     maxOutput: 8192,
     pricing: {
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-02-24',
   }),
@@ -217,8 +219,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'eu.anthropic.claude-3-7-sonnet-20250219-v1:0',
     maxOutput: 8192,
     pricing: {
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-02-24',
   }),
@@ -252,8 +256,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
     maxOutput: 8192,
     pricing: {
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-10-22',
   }),
@@ -286,8 +292,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-5-sonnet-20240620-v1:0',
     maxOutput: 8192,
     pricing: {
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-06-20',
   }),
@@ -320,8 +328,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-haiku-20240307-v1:0',
     maxOutput: 4096,
     pricing: {
-      input: 0.25,
-      output: 1.25,
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-03-07',
   }),
@@ -368,8 +378,10 @@ const claudeModels: AIChatModelCard[] = [
     displayName: 'Claude 3 Sonnet (US)',
     id: 'us.anthropic.claude-3-sonnet-20240229-v1:0',
     pricing: {
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({
@@ -413,8 +425,10 @@ const claudeModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-opus-20240229-v1:0',
     maxOutput: 4096,
     pricing: {
-      input: 15,
-      output: 75,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-02-29',
   }),
@@ -430,8 +444,10 @@ const claudeModels: AIChatModelCard[] = [
     displayName: 'Claude 4 Opus (US)',
     id: 'us.anthropic.claude-opus-4-20250514-v1:0',
     pricing: {
-      input: 60,
-      output: 180,
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({
@@ -444,8 +460,10 @@ const claudeModels: AIChatModelCard[] = [
     displayName: 'Claude 4 Sonnet (US)',
     id: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
     pricing: {
-      input: 15,
-      output: 75,
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({
@@ -458,8 +476,10 @@ const claudeModels: AIChatModelCard[] = [
     displayName: 'Claude 4 Sonnet (EU)',
     id: 'eu.anthropic.claude-sonnet-4-20250514-v1:0',
     pricing: {
-      input: 15,
-      output: 75,
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({
@@ -519,8 +539,10 @@ const llamaModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 8B Instruct (US)',
     id: 'us.meta.llama3-1-8b-instruct-v1:0',
     pricing: {
-      input: 0.22,
-      output: 0.22,
+      units: [
+        { name: 'textInput', rate: 0.22, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.22, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
 
@@ -533,8 +555,10 @@ const llamaModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 70B Instruct (US)',
     id: 'us.meta.llama3-1-70b-instruct-v1:0',
     pricing: {
-      input: 0.99,
-      output: 0.99,
+      units: [
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
 
@@ -547,8 +571,10 @@ const llamaModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 405B Instruct (US)',
     id: 'us.meta.llama3-1-405b-instruct-v1:0',
     pricing: {
-      input: 5.32,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 5.32, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
 
@@ -602,8 +628,10 @@ const llamaModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 3B Instruct (US)',
     id: 'us.meta.llama3-2-3b-instruct-v1:0',
     pricing: {
-      input: 0.075,
-      output: 0.075,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({
@@ -657,8 +685,10 @@ const llamaModels: AIChatModelCard[] = [
     displayName: 'Llama 4 Maverick 17B Instruct (US)',
     id: 'us.meta.llama4-maverick-17b-instruct-v1:0',
     pricing: {
-      input: 0.5,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 2.65, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
   }),
   createModel({

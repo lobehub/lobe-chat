@@ -1,7 +1,8 @@
 import isEqual from 'fast-deep-equal';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { INBOX_SESSION_ID } from '@/const/session';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -18,12 +19,11 @@ export const useSwitchAgentHotkey = () => {
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const switchSession = useSwitchSession();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setPinned] = useQueryState('pinned', parseAsBoolean);
+  const [, { pinAgent }] = usePinnedAgentState();
 
   const switchAgent = (id: string) => {
     switchSession(id);
-    setPinned(true);
+    pinAgent();
   };
 
   const ref = useHotkeys(
@@ -49,6 +49,17 @@ export const useSwitchAgentHotkey = () => {
   };
 };
 
+// 切换到会话标签(并聚焦到随便聊聊)
+export const useNavigateToChatHotkey = () => {
+  const switchSession = useSwitchSession();
+  const [, { unpinAgent }] = usePinnedAgentState();
+
+  return useHotkeyById(HotkeyEnum.NavigateToChat, () => {
+    switchSession(INBOX_SESSION_ID);
+    unpinAgent();
+  });
+};
+
 export const useOpenHotkeyHelperHotkey = () => {
   const [open, updateSystemStatus] = useGlobalStore((s) => [
     s.status.showHotkeyHelper,
@@ -65,5 +76,6 @@ export const useOpenHotkeyHelperHotkey = () => {
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useSwitchAgentHotkey();
+  useNavigateToChatHotkey();
   useOpenHotkeyHelperHotkey();
 };

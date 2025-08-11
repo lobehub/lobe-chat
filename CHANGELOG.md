@@ -2,6 +2,134 @@
 
 # Changelog
 
+### [Version 1.111.5](https://github.com/lobehub/lobe-chat/compare/v1.111.4...v1.111.5)
+
+<sup>Released on **2025-08-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add mask effect to thinking scroll, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add mask effect to thinking scroll, closes [#8729](https://github.com/lobehub/lobe-chat/issues/8729) ([4cefafd](https://github.com/lobehub/lobe-chat/commit/4cefafd))
+- **misc**: Update i18n, closes [#8734](https://github.com/lobehub/lobe-chat/issues/8734) ([327a564](https://github.com/lobehub/lobe-chat/commit/327a564))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.4](https://github.com/lobehub/lobe-chat/compare/v1.111.3...v1.111.4)
+
+<sup>Released on **2025-08-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **pricing**: Adjust cachedInput values for GPT-5 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **pricing**: Adjust cachedInput values for GPT-5 models, closes [#8723](https://github.com/lobehub/lobe-chat/issues/8723) ([652bf08](https://github.com/lobehub/lobe-chat/commit/652bf08))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.3](https://github.com/lobehub/lobe-chat/compare/v1.111.2...v1.111.3)
+
+<sup>Released on **2025-08-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve thinking auto scroll style, Support session switch shortcut key, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve thinking auto scroll style, closes [#8719](https://github.com/lobehub/lobe-chat/issues/8719) ([acec55f](https://github.com/lobehub/lobe-chat/commit/acec55f))
+- **misc**: Support session switch shortcut key, closes [#8626](https://github.com/lobehub/lobe-chat/issues/8626) ([efc7eaf](https://github.com/lobehub/lobe-chat/commit/efc7eaf))
+- **misc**: Update i18n, closes [#8725](https://github.com/lobehub/lobe-chat/issues/8725) ([d9642fc](https://github.com/lobehub/lobe-chat/commit/d9642fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.2](https://github.com/lobehub/lobe-chat/compare/v1.111.1...v1.111.2)
+
+<sup>Released on **2025-08-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **pricing**: Introduce new pricing system.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **pricing**: Introduce new pricing system, closes [#8681](https://github.com/lobehub/lobe-chat/issues/8681) ([96b7508](https://github.com/lobehub/lobe-chat/commit/96b7508))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.1](https://github.com/lobehub/lobe-chat/compare/v1.111.0...v1.111.1)
+
+<sup>Released on **2025-08-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add descriptions for the FLUX.1 Krea and Qwen Image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add descriptions for the FLUX.1 Krea and Qwen Image, closes [#8678](https://github.com/lobehub/lobe-chat/issues/8678) ([769fda0](https://github.com/lobehub/lobe-chat/commit/769fda0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.111.0](https://github.com/lobehub/lobe-chat/compare/v1.110.7...v1.111.0)
 
 <sup>Released on **2025-08-08**</sup>
