@@ -108,12 +108,12 @@ const ControlsForm = memo(() => {
     },
     {
       children: <Switch />,
+      desc: t('extendParams.urlContext.desc'),
       label: t('extendParams.urlContext.title'),
       layout: 'horizontal',
       minWidth: undefined,
       name: 'urlContext',
       style: {
-        paddingBottom: 10,
         width: 445,
       },
       tag: 'urlContext',
