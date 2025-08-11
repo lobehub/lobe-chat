@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.111.6](https://github.com/lobehub/lobe-chat/compare/v1.111.5...v1.111.6)
+
+<sup>Released on **2025-08-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Solve the cache problem caused by the same dom id when sharing pictures.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Solve the cache problem caused by the same dom id when sharing pictures, closes [#8704](https://github.com/lobehub/lobe-chat/issues/8704) ([68aad95](https://github.com/lobehub/lobe-chat/commit/68aad95))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.5](https://github.com/lobehub/lobe-chat/compare/v1.111.4...v1.111.5)
 
 <sup>Released on **2025-08-10**</sup>
