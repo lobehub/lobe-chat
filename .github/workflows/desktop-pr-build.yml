@@ -35,7 +35,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9
+          version: 10
 
       - name: Install deps
         run: pnpm install
@@ -107,7 +107,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9
+          version: 10
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
       - name: Install deps
