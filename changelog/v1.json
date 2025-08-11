@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "improvements": [
+        "Add Claude Opus 4.1 model, add context menu for desktop, Add descriptions for the FLUX.1 Krea and Qwen Image, Add mask effect to thinking scroll, fix provider setting page hydration error, improve thinking auto scroll style, support different model tabs, Support session switch shortcut key, update i18n, update i18n, update i18n, update i18n, Update mask style, update models."
+      ],
+      "features": [
+        "Add GPT-5 series models, support 302ai provider, support aihubmix provider, support gpt-oss in ollama provider, support mcp plugin install from web."
+      ],
+      "fixes": [
+        "Aihubmix provider request headers, Break line for Gemini Artifacts, fix fail to fetch aihubmix model on client mode, fix ollama model output without thinking, fix remote avatar broken in desktop, fix remote avatar broken in desktop again, missing languages it-IT, pl-PL, nl-NL, Optimize Gemini error message display & Filter empty messages, provider config checker uses outdated API key, Solve the cache problem caused by the same dom id when sharing pictures, when s3 files not exist , global files should delete."
+      ]
+    },
+    "date": "2025-08-11",
+    "version": "1.106.0"
+  },
+  {
+    "children": {
       "fixes": [
         "Fix oidc oauth callback pages 404."
       ],
