@@ -62,7 +62,7 @@
       "isProfilePublic": true,
       "useEmailAsUsername": false,
       "enableTour": true,
-      "disableSignin": true,
+      "disableSignin": false,
       "ipRestriction": "",
       "navItems": null,
       "widgetItems": null,
