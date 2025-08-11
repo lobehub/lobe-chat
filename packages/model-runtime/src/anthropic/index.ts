@@ -204,14 +204,16 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       model,
       system: systemPrompts,
       // For Opus 4.1 models: prefer temperature over top_p if both are provided
-      temperature: isOpus41Model 
-        ? (shouldSetTemperature ? temperature / 2 : undefined)
-        : (payload.temperature !== undefined ? temperature / 2 : undefined),
+      temperature: isOpus41Model
+        ? shouldSetTemperature
+          ? temperature / 2
+          : undefined
+        : payload.temperature !== undefined
+          ? temperature / 2
+          : undefined,
       tools: postTools,
       // For Opus 4.1 models: only set top_p if temperature is not set
-      top_p: isOpus41Model 
-        ? (shouldSetTemperature ? undefined : top_p)
-        : top_p,
+      top_p: isOpus41Model ? (shouldSetTemperature ? undefined : top_p) : top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
 

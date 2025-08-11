@@ -1,3 +1,9 @@
+import {
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ModelProvider,
+  ModelRuntime,
+} from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
@@ -8,12 +14,6 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
-import {
-  AgentRuntimeError,
-  ChatCompletionErrorPayload,
-  ModelProvider,
-  ModelRuntime,
-} from '@/libs/model-runtime';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';

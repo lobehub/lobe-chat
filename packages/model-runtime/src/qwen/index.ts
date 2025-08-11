@@ -36,8 +36,8 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
                 thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
             }
           : ['qwen3', 'qwen-turbo', 'qwen-plus'].some((keyword) =>
-              model.toLowerCase().includes(keyword),
-            )
+                model.toLowerCase().includes(keyword),
+              )
             ? {
                 enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
                 thinking_budget:

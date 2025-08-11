@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { getAuth } from '@clerk/nextjs/server';
+import { LobeRuntimeAI, ModelRuntime } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { checkAuthMethod } from '@/app/(backend)/middleware/auth/utils';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { LobeRuntimeAI, ModelRuntime } from '@/libs/model-runtime';
 import { getXorPayload } from '@/utils/server/xor';
 
 import { POST } from './route';

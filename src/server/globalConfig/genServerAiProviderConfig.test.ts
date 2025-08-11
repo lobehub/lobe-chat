@@ -212,7 +212,7 @@ describe('genServerAiProvidersConfig Error Handling', () => {
     }));
 
     // Mock ModelProvider to include the missing provider
-    vi.doMock('@/libs/model-runtime', () => ({
+    vi.doMock('@lobechat/model-runtime', () => ({
       ModelProvider: {
         openai: 'openai', // This exists in enum
         anthropic: 'anthropic', // This exists in both enum and aiModels
