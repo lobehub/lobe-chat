@@ -1,20 +1,23 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 // Helper function to create model configurations with defaults
-const createModel = (
-  config: Partial<AIChatModelCard> & {
-    description: string;
-    displayName: string;
-    id: string;
-    pricing: { input: number; output: number };
-  },
-): AIChatModelCard => ({
-  abilities: { functionCall: true },
-  contextWindowTokens: 128_000,
-  enabled: true,
-  type: 'chat',
-  ...config,
-});
+const createModel = (config: any): AIChatModelCard => {
+  const pricing = config.pricing.input !== undefined ? {
+    units: [
+      { name: 'textInput' as const, rate: config.pricing.input, strategy: 'fixed' as const, unit: 'millionTokens' as const },
+      { name: 'textOutput' as const, rate: config.pricing.output, strategy: 'fixed' as const, unit: 'millionTokens' as const },
+    ],
+  } : config.pricing;
+  
+  return {
+    abilities: { functionCall: true },
+    contextWindowTokens: 128_000,
+    enabled: true,
+    type: 'chat',
+    ...config,
+    pricing,
+  };
+};
 
 // Amazon Nova Models (Cross-Region Inference Profiles)
 const novaModels: AIChatModelCard[] = [
@@ -31,8 +34,10 @@ const novaModels: AIChatModelCard[] = [
     id: 'us.amazon.nova-premier-v1:0',
     maxOutput: 5000,
     pricing: {
-      input: 8,
-      output: 32,
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-03',
   }),
