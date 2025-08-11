@@ -80,7 +80,7 @@ function AuthProvider({ children }: PropsWithChildren) {
       hasNavigated.current = true;
       // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
       setTimeout(() => {
-        router.replace('/(auth)/login');
+        router.replace('/login');
       }, 0);
     }
 
@@ -115,6 +115,8 @@ export default function RootLayout() {
             <PortalProvider>
               <ToastProvider>
                 <Stack screenOptions={{ headerShown: false }}>
+                  {/* auth page should not have animation  */}
+                  <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
                   <Slot />
                 </Stack>
               </ToastProvider>
