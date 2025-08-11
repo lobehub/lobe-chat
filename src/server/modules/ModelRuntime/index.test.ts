@@ -60,7 +60,7 @@ vi.mock('@/config/llm', () => ({
 
 /**
  * Test cases for function initModelRuntimeWithUserPayload
- * this method will use ModelRuntime from `@/libs/model-runtime`
+ * this method will use ModelRuntime from `@lobechat/model-runtime`
  * and method `getLlmOptionsFromPayload` to initialize runtime
  * with user payload. Test case below will test both the methods
  */
