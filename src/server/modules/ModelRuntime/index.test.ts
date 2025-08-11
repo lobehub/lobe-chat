@@ -1,7 +1,4 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from 'vitest';
-
-import { ClientSecretPayload } from '@/const/auth';
 import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
@@ -22,8 +19,11 @@ import {
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
-} from '@/libs/model-runtime';
-import { ModelRuntime } from '@/libs/model-runtime';
+} from '@lobechat/model-runtime';
+import { ModelRuntime } from '@lobechat/model-runtime';
+import { describe, expect, it, vi } from 'vitest';
+
+import { ClientSecretPayload } from '@/const/auth';
 import { LobeStepfunAI } from '@/libs/model-runtime/stepfun';
 
 import { initModelRuntimeWithUserPayload } from './index';
@@ -67,7 +67,10 @@ vi.mock('@/config/llm', () => ({
 describe('initModelRuntimeWithUserPayload method', () => {
   describe('should initialize with options correctly', () => {
     it('OpenAI provider: with apikey and endpoint', async () => {
-      const jwtPayload: ClientSecretPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
+      const jwtPayload: ClientSecretPayload = {
+        apiKey: 'user-openai-key',
+        baseURL: 'user-endpoint',
+      };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);

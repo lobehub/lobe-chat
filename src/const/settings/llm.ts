@@ -1,4 +1,5 @@
-import { ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider } from '@lobechat/model-runtime';
+
 import { genUserLLMConfig } from '@/utils/genUserLLMConfig';
 
 export const DEFAULT_LLM_CONFIG = genUserLLMConfig({

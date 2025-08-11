@@ -145,6 +145,7 @@
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
+    "@lobechat/model-runtime": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.0",
     "@lobehub/charts": "^2.0.0",

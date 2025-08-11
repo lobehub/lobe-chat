@@ -1,0 +1,11 @@
+{
+  "name": "@lobechat/model-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@lobechat/types": "workspace:*",
+    "debug": "^4.4.1",
+    "openai": "^4.104.0"
+  }
+}
