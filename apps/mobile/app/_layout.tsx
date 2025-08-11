@@ -117,6 +117,7 @@ export default function RootLayout() {
                 <Stack screenOptions={{ headerShown: false }}>
                   {/* auth page should not have animation  */}
                   <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                  <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
                   <Slot />
                 </Stack>
               </ToastProvider>

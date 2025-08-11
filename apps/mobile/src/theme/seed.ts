@@ -14,8 +14,8 @@ export const defaultSeedToken: SeedToken = {
 
   colorInfo: '#1677ff',
 
-  // 品牌色 - 使用透明色作为主色
-  colorPrimary: 'rgba(0, 0, 0, 0)',
+  // 品牌色 - 使用黑色作为主色
+  colorPrimary: '#000000',
 
   // 功能色
   colorSuccess: '#52c41a',
