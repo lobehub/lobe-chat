@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support new GPT-5 Verbosity params."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
       "improvements": ["Refactor model-runtime to a seperated package."]
     },
     "date": "2025-08-11",
