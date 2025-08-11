@@ -48,6 +48,14 @@ const nextConfig: NextConfig = {
             key: 'x-robots-tag',
             value: 'all',
           },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'none';",
+          },
         ],
         source: '/:path*',
       },
