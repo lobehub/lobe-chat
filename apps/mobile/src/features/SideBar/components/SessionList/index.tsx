@@ -7,16 +7,22 @@ import { useStyles } from './style';
 
 import Inbox from './Inbox';
 import SessionItem from './SessionItem';
+import { useGlobalStore } from '@/store/global';
+import { useAuth } from '@/store/user';
 
 export default function SideBar() {
   const { t } = useTranslation(['chat']);
   const [searchText, setSearchText] = useState('');
-  const { sessions, fetchSessions } = useSessionStore();
+  const { sessions } = useSessionStore();
   const { styles, token } = useStyles();
 
+  const [drawerOpen] = useGlobalStore((s) => [s.drawerOpen]);
+  const { useFetchSessions } = useSessionStore();
+  const { isAuthenticated } = useAuth();
+  const { mutate } = useFetchSessions(drawerOpen, isAuthenticated);
   useEffect(() => {
-    fetchSessions();
-  }, []);
+    if (drawerOpen) mutate();
+  }, [drawerOpen]);
 
   const filteredSessions =
     sessions?.filter(

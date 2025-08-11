@@ -13,9 +13,7 @@ export default function SideBar() {
   return (
     <View style={styles.container}>
       <Header />
-
       <SessionList />
-
       <Footer />
     </View>
   );

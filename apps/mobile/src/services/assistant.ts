@@ -1,8 +1,7 @@
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
-import { normalizeLocale } from '@/i18n/resource';
+import { Locales, normalizeLocale } from '@/i18n/resource';
 import urlJoin from 'url-join';
 import { DEFAULT_AGENT_INDEX } from '@/const/meta';
-import { Locales } from '@/types/locale';
 import { DiscoverAssistantItem } from '@/types/discover';
 import { cloneDeep, merge } from 'lodash-es';
 import { DEFAULT_DISCOVER_ASSISTANT_ITEM } from '@/const/discover';
