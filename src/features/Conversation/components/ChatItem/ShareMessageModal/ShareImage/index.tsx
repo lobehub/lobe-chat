@@ -23,84 +23,91 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withFooter: true,
 };
 
-const ShareImage = memo<{ message: ChatMessage; mobile?: boolean }>(({ message }) => {
-  const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
-  const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
-  const { t } = useTranslation(['chat', 'common']);
-  const { styles } = useStyles();
-  const { loading, onDownload, title } = useScreenshot({
-    imageType: fieldValue.imageType,
-    title: currentAgentTitle,
-  });
-  const { loading: copyLoading, onCopy } = useImgToClipboard();
-  const settings: FormItemProps[] = [
-    {
-      children: <Switch />,
-      label: t('shareModal.withBackground'),
-      layout: 'horizontal',
-      minWidth: undefined,
-      name: 'withBackground',
-      valuePropName: 'checked',
-    },
-    {
-      children: <Switch />,
-      label: t('shareModal.withFooter'),
-      layout: 'horizontal',
-      minWidth: undefined,
-      name: 'withFooter',
-      valuePropName: 'checked',
-    },
-    {
-      children: <Segmented options={imageTypeOptions} />,
-      label: t('shareModal.imageType'),
-      layout: 'horizontal',
-      minWidth: undefined,
-      name: 'imageType',
-    },
-  ];
+const ShareImage = memo<{ message: ChatMessage; mobile?: boolean; uniqueId?: string }>(
+  ({ message, uniqueId }) => {
+    const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
+    const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
+    const { t } = useTranslation(['chat', 'common']);
+    const { styles } = useStyles();
 
-  const isMobile = useIsMobile();
+    // 生成唯一的预览ID，避免DOM冲突
+    const previewId = uniqueId ? `preview-${uniqueId}` : 'preview';
 
-  const button = (
-    <>
-      <Button
-        block
-        icon={CopyIcon}
-        loading={copyLoading}
-        onClick={() => onCopy()}
-        size={isMobile ? undefined : 'large'}
-        type={'primary'}
-      >
-        {t('copy', { ns: 'common' })}
-      </Button>
-      <Button block loading={loading} onClick={onDownload} size={isMobile ? undefined : 'large'}>
-        {t('shareModal.download')}
-      </Button>
-    </>
-  );
+    const { loading, onDownload, title } = useScreenshot({
+      id: `#${previewId}`,
+      imageType: fieldValue.imageType,
+      title: currentAgentTitle,
+    });
+    const { loading: copyLoading, onCopy } = useImgToClipboard({ id: `#${previewId}` });
+    const settings: FormItemProps[] = [
+      {
+        children: <Switch />,
+        label: t('shareModal.withBackground'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: 'withBackground',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Switch />,
+        label: t('shareModal.withFooter'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: 'withFooter',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Segmented options={imageTypeOptions} />,
+        label: t('shareModal.imageType'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: 'imageType',
+      },
+    ];
 
-  return (
-    <>
-      <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-        <Preview title={title} {...fieldValue} message={message} />
-        <Flexbox className={styles.sidebar} gap={12}>
-          <Form
-            initialValues={DEFAULT_FIELD_VALUE}
-            items={settings}
-            itemsType={'flat'}
-            onValuesChange={(_, v) => setFieldValue(v)}
-            {...FORM_STYLE}
-          />
-          {!isMobile && button}
+    const isMobile = useIsMobile();
+
+    const button = (
+      <>
+        <Button
+          block
+          icon={CopyIcon}
+          loading={copyLoading}
+          onClick={() => onCopy()}
+          size={isMobile ? undefined : 'large'}
+          type={'primary'}
+        >
+          {t('copy', { ns: 'common' })}
+        </Button>
+        <Button block loading={loading} onClick={onDownload} size={isMobile ? undefined : 'large'}>
+          {t('shareModal.download')}
+        </Button>
+      </>
+    );
+
+    return (
+      <>
+        <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
+          <Preview title={title} {...fieldValue} message={message} previewId={previewId} />
+          <Flexbox className={styles.sidebar} gap={12}>
+            <Form
+              initialValues={DEFAULT_FIELD_VALUE}
+              items={settings}
+              itemsType={'flat'}
+              onValuesChange={(_, v) => setFieldValue(v)}
+              {...FORM_STYLE}
+            />
+            {!isMobile && button}
+          </Flexbox>
         </Flexbox>
-      </Flexbox>
-      {isMobile && (
-        <Flexbox className={styles.footer} gap={8} horizontal>
-          {button}
-        </Flexbox>
-      )}
-    </>
-  );
-});
+        {isMobile && (
+          <Flexbox className={styles.footer} gap={8} horizontal>
+            {button}
+          </Flexbox>
+        )}
+      </>
+    );
+  },
+);
 
 export default ShareImage;
