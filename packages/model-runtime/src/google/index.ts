@@ -433,7 +433,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         const multipartBody = new Blob([part1, part2Header, mediaBlob, part3], {
           type: `multipart/related; boundary=${boundary}`,
         });
-        const uploadRes = await fetch(uploadUrl, { method: 'POST', body: multipartBody });
+
+        // keep keys sorted in options object
+        const uploadRes = await fetch(uploadUrl, { body: multipartBody, method: 'POST' });
         if (!uploadRes.ok) {
           const text = await uploadRes.text();
           throw new Error(`Google Files upload failed: ${uploadRes.status} ${text}`);
@@ -447,7 +449,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         if (name) {
           let retry = 0;
           while ((!state || state !== 'ACTIVE') && retry < 20) {
-            await new Promise((r) => setTimeout(r, 2500));
+            await new Promise<void>((resolve) => {
+              setTimeout(resolve, 2500);
+            });
             const getRes = await fetch(`${fileGetBase}/${name}?key=${this.apiKey}`);
             if (getRes.ok) {
               const data = (await getRes.json()) as any;
