@@ -9,7 +9,7 @@ import { merge } from 'lodash-es';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { isDeprecatedEdition, isDesktop } from '@/const/version';
+import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -25,8 +25,8 @@ import {
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
-import { ChatMessage } from '@/types/message';
-import type { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
+import type { ChatStreamPayload, OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import {
@@ -41,8 +41,15 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, isCanUseFC, isEnableFetchOnClient } from './helper';
+import { findDeploymentName, isCanUseFC, isCanUseVision, isEnableFetchOnClient } from './helper';
 import { FetchOptions } from './types';
+import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
+import { genToolCallingName } from '@/utils/toolCall';
+import { isLocalUrl } from '@/utils/url';
+import { parseDataUri } from 'packages/model-runtime/src';
+import { filesPrompts, BuiltinSystemRolePrompts } from 'packages/prompts/src';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   messages: ChatMessage[];
