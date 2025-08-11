@@ -77,7 +77,7 @@ export const MODEL_LIST_CONFIGS = {
   zhipu: {
     functionCallKeywords: ['glm-4', 'glm-z1'],
     reasoningKeywords: ['glm-zero', 'glm-z1', 'glm-4.5'],
-    visionKeywords: ['glm-4v', 'glm-4.1v'],
+    visionKeywords: ['glm-4v', 'glm-4.1v', 'glm-4.5v'],
   },
 } as const;
 
