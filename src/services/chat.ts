@@ -552,12 +552,29 @@ class ChatService {
       const imageList = m.imageList || [];
       const imageContentParts = await this.processImageList({ imageList, model, provider });
 
+      // 当使用 Google Gemini 且存在可读媒体文件（audio/*, video/*）时，将其作为 file_url 注入
+      const fileUrlParts: UserMessageContentPart[] = [];
+      if (provider === 'google' && Array.isArray(m.fileList) && m.fileList.length > 0) {
+        for (const f of m.fileList) {
+          const lower = (f.fileType || '').toLowerCase();
+          const isAudio = lower.startsWith('audio/');
+          const isVideo = lower.startsWith('video/');
+          if (isAudio || isVideo) {
+            fileUrlParts.push({
+              file_url: { url: f.url, mimeType: f.fileType, displayName: f.name },
+              type: 'file_url',
+            } as any);
+          }
+        }
+      }
+
       const filesContext = isServerMode
         ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
         : '';
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageContentParts,
+        ...fileUrlParts,
       ] as UserMessageContentPart[];
     };
 
