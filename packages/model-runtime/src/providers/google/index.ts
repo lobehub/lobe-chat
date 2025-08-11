@@ -164,7 +164,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         includeThoughts:
           (!!thinkingBudget ||
             (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
-          resolvedThinkingBudget !== 0
+            resolvedThinkingBudget !== 0
             ? true
             : undefined,
         thinkingBudget: resolvedThinkingBudget,
@@ -457,33 +457,67 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
       }
 
-      case 'video_url': {
-        const { mimeType, base64, type } = parseDataUri(content.video_url.url);
+      case 'file_url': {
+        // Use Google Files API: upload then reference by fileData
+        // Accept audio/* and video/*
+        const url = content.file_url.url;
+        const mimeType = content.file_url.mimeType || 'application/octet-stream';
 
-        if (type === 'base64') {
-          if (!base64) {
-            throw new TypeError("Video URL doesn't contain base64 data");
+        // 1) Upload the file via multipart (sufficient for typical chat uploads)
+        // refs: https://ai.google.dev/api/files
+        const uploadUrl = `${this.baseURL?.replace(/\/$/, '')}/upload/v1beta/files?uploadType=multipart&key=${this.apiKey}`;
+
+        const metadata = { file: { displayName: content.file_url.displayName || 'media', mimeType } };
+
+        // fetch binary
+        const mediaRes = await fetch(url);
+        if (!mediaRes.ok) throw new Error(`Failed to fetch media: ${mediaRes.status}`);
+        const mediaBlob = await mediaRes.blob();
+
+        // Build multipart body
+        const boundary = `----lobe-google-${Math.random().toString(36).slice(2)}`;
+        const encoder = new TextEncoder();
+        const part1 = encoder.encode(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`);
+        const part2Header = encoder.encode(`--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`);
+        const part3 = encoder.encode(`\r\n--${boundary}--`);
+
+        // Combine into a Blob
+        const multipartBody = new Blob([part1, part2Header, mediaBlob, part3], {
+          type: `multipart/related; boundary=${boundary}`,
+        });
+
+        const uploadRes = await fetch(uploadUrl, { method: 'POST', body: multipartBody });
+        if (!uploadRes.ok) {
+          const text = await uploadRes.text();
+          throw new Error(`Google Files upload failed: ${uploadRes.status} ${text}`);
+        }
+        const uploaded = (await uploadRes.json()) as any;
+
+        // 2) Poll until ACTIVE (safeguard for videos)
+        const name: string | undefined = uploaded?.file?.name;
+        let state: string | undefined = uploaded?.file?.state?.name || uploaded?.file?.state;
+        const fileGetBase = `${this.baseURL?.replace(/\/$/, '')}/v1beta`;
+        if (name) {
+          let retry = 0;
+          while ((!state || state !== 'ACTIVE') && retry < 20) {
+            await new Promise((r) => setTimeout(r, 2500));
+            const getRes = await fetch(`${fileGetBase}/${name}?key=${this.apiKey}`);
+            if (getRes.ok) {
+              const data = (await getRes.json()) as any;
+              state = data?.state?.name || data?.state;
+              if (state === 'FAILED') throw new Error('Google file processing failed');
+            } else {
+              break;
+            }
+            retry++;
           }
-
-          return {
-            inlineData: { data: base64, mimeType: mimeType || 'video/mp4' },
-          };
         }
 
-        if (type === 'url') {
-          // For video URLs, we need to fetch and convert to base64
-          // Note: This might need size/duration limits for practical use
-          const response = await fetch(content.video_url.url);
-          const arrayBuffer = await response.arrayBuffer();
-          const base64 = Buffer.from(arrayBuffer).toString('base64');
-          const mimeType = response.headers.get('content-type') || 'video/mp4';
+        const fileUri: string | undefined = uploaded?.file?.uri;
+        const finalMime = uploaded?.file?.mimeType || mimeType;
+        if (!fileUri) throw new Error('No file uri from Google Files API');
 
-          return {
-            inlineData: { data: base64, mimeType },
-          };
-        }
-
-        throw new TypeError(`currently we don't support video url: ${content.video_url.url}`);
+        return { fileData: { fileUri, mimeType: finalMime } } as Part;
       }
     }
   };
