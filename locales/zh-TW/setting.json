@@ -237,6 +237,10 @@
       "title": "限制歷史訊息數",
       "unlimited": "不限歷史訊息數"
     },
+    "enableStreaming": {
+      "desc": "啟用串流輸出以即時顯示回應。停用後僅顯示完整回應。",
+      "title": "啟用串流輸出"
+    },
     "historyCount": {
       "desc": "每次請求攜帶的歷史訊息數",
       "title": "附帶歷史訊息數"
