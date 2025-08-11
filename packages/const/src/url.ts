@@ -4,7 +4,7 @@ import urlJoin from 'url-join';
 import { withBasePath } from '@/utils/basePath';
 import { isDev } from '@/utils/env';
 
-import pkg from '../../package.json';
+import pkg from '../../../package.json';
 import { INBOX_SESSION_ID } from './session';
 
 export const UTM_SOURCE = 'chat_preview';
