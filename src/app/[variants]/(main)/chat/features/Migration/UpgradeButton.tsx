@@ -2,7 +2,6 @@ import { Button } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ClientService } from '@/services/import/_deprecated';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
@@ -18,7 +17,7 @@ export interface UpgradeButtonProps {
 }
 
 const UpgradeButton = memo<UpgradeButtonProps>(
-  ({ setUpgradeStatus, upgradeStatus, state, setError, primary = true, children }) => {
+  ({ setUpgradeStatus, upgradeStatus, setError, primary = true, children }) => {
     const { t } = useTranslation('migration');
 
     const refreshSession = useSessionStore((s) => s.refreshSessions);
@@ -30,13 +29,6 @@ const UpgradeButton = memo<UpgradeButtonProps>(
     const upgrade = async () => {
       try {
         setUpgradeStatus(UpgradeStatus.UPGRADING);
-
-        const configService = new ClientService();
-        await configService.importConfigState({
-          exportType: 'sessions',
-          state: state,
-          version: 7,
-        });
 
         await refreshSession();
         await refreshMessages();

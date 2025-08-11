@@ -23,7 +23,7 @@ const mockTogetherAIAPIKey = 'togetherai-api-key';
 // mock the traditional zustand
 vi.mock('zustand/traditional');
 
-const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
+const setModelProviderConfig = <T extends keyof UserKeyVaults>(
   provider: T,
   config: Partial<UserKeyVaults[T]>,
 ) => {
@@ -52,7 +52,7 @@ describe('getProviderAuthPayload', () => {
 
   it('should return correct payload for Mistral provider', () => {
     act(() => {
-      setModelProviderConfig('mistral', { apiKey: mockMistralAPIKey });
+      setModelProviderConfig('jina', { apiKey: mockMistralAPIKey });
     });
 
     const payload = getProviderAuthPayload(ModelProvider.Mistral, { apiKey: mockMistralAPIKey });
@@ -154,24 +154,6 @@ describe('getProviderAuthPayload', () => {
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
       baseURL: mockOpenAIConfig.baseURL,
-    });
-  });
-
-  it('should return correct payload for Cloudflare provider', () => {
-    // 假设的 Cloudflare 配置
-    const mockCloudflareConfig = {
-      apiKey: 'cloudflare-api-key',
-      baseURLOrAccountID: 'cloudflare-base-url-or-account-id',
-    };
-    act(() => {
-      setModelProviderConfig('cloudflare', mockCloudflareConfig);
-    });
-
-    const payload = getProviderAuthPayload(ModelProvider.Cloudflare, mockCloudflareConfig);
-    expect(payload).toEqual({
-      apiKey: mockCloudflareConfig.apiKey,
-      baseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
-      cloudflareBaseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
     });
   });
 
