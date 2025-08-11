@@ -54,36 +54,6 @@ export class FileUploadService extends BaseService {
     this.s3Service = new S3();
   }
 
-  async uploadToServerS3(
-    file: File,
-    {
-      directory,
-      pathname,
-    }: {
-      directory?: string;
-      pathname?: string;
-    },
-  ): Promise<{ data: FileMetadata; success: boolean }> {
-    const metadata = this.generateFileMetadata(file, directory);
-    const key = pathname || metadata.path;
-
-    // 直接使用S3服务上传文件，而不是预签名URL
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
-    await this.s3Service.uploadBuffer(key, fileBuffer, file.type);
-
-    const result: FileMetadata = {
-      date: metadata.date,
-      dirname: metadata.dirname,
-      filename: metadata.filename,
-      path: key,
-    };
-
-    return {
-      data: result,
-      success: true,
-    };
-  }
-
   /**
    * 批量文件上传
    */
@@ -311,7 +281,7 @@ export class FileUploadService extends BaseService {
   }
 
   /**
-   * 公共文件上传（设置为公共可读）
+   * 文件上传
    */
   async uploadFile(
     file: File,
@@ -366,9 +336,6 @@ export class FileUploadService extends BaseService {
               });
             }
 
-            // 生成访问URL
-            const publicUrl = await this.coreFileService.getFullFileUrl(existingUserFile.url);
-
             return {
               fileType: existingUserFile.fileType,
               filename: existingUserFile.name,
@@ -377,7 +344,7 @@ export class FileUploadService extends BaseService {
               metadata: existingUserFile.metadata as FileMetadata,
               size: existingUserFile.size,
               uploadedAt: existingUserFile.createdAt.toISOString(),
-              url: publicUrl,
+              url: existingUserFile.url,
             };
           } else {
             // 文件在全局表中存在，但用户没有记录，创建用户文件记录
@@ -410,17 +377,12 @@ export class FileUploadService extends BaseService {
               });
             }
 
-            // 生成公共访问URL
-            const publicUrl = await this.coreFileService.getFullFileUrl(
-              existingFileCheck.url || '',
-            );
-
             this.log('info', 'Deduplicated public file created successfully', {
               fileId: createResult.id,
               path: existingFileCheck.url,
-              publicUrl,
               sessionId: options.sessionId,
               size: file.size,
+              url: existingFileCheck.url,
             });
 
             return {
@@ -431,7 +393,7 @@ export class FileUploadService extends BaseService {
               metadata: existingFileCheck.metadata as FileMetadata,
               size: file.size,
               uploadedAt: new Date().toISOString(),
-              url: publicUrl,
+              url: existingFileCheck.url!,
             };
           }
         }
@@ -458,7 +420,7 @@ export class FileUploadService extends BaseService {
         metadata: metadata,
         name: file.name,
         size: file.size,
-        url: metadata.path, // 存储S3键名
+        url: publicUrl,
       };
 
       const createResult = await this.fileModel.create(fileRecord, true);
@@ -488,7 +450,7 @@ export class FileUploadService extends BaseService {
         metadata,
         size: file.size,
         uploadedAt: new Date().toISOString(),
-        url: publicUrl, // 返回永久可访问的URL
+        url: publicUrl,
       };
     } catch (error) {
       this.log('error', 'Public file upload failed', error);
@@ -911,33 +873,7 @@ export class FileUploadService extends BaseService {
           // 检查是否为图片文件
           const isImage = fileDetail.fileType.startsWith('image/');
 
-          if (isImage) {
-            // 图片文件：获取base64内容
-            try {
-              const fileBuffer = await this.s3Service.getFileByteArray(fileDetail.metadata.path);
-              const base64 = Buffer.from(fileBuffer).toString('base64');
-
-              // 将base64添加到fileItem中
-              const fileItemWithBase64: FileDetailResponse = {
-                ...fileDetail,
-                base64,
-              };
-
-              files.push({
-                fileItem: fileItemWithBase64,
-              });
-            } catch (error) {
-              // 如果获取图片内容失败，仍然返回文件详情，但不包含base64
-              this.log('warn', 'Failed to get image content for file', {
-                error,
-                fileId,
-              });
-
-              files.push({
-                fileItem: fileDetail,
-              });
-            }
-          } else {
+          if (!isImage) {
             // 非图片文件：获取解析结果
             try {
               const parseResult = await this.parseFile(fileId, { skipExist: true });
@@ -957,6 +893,10 @@ export class FileUploadService extends BaseService {
                 fileItem: fileDetail,
               });
             }
+          } else {
+            files.push({
+              fileItem: fileDetail,
+            });
           }
         } catch (error) {
           this.log('error', 'Failed to get file detail', {
@@ -1008,24 +948,5 @@ export class FileUploadService extends BaseService {
       this.log('error', 'Failed to find existing user file', { error, hash });
       return null;
     }
-  }
-
-  /**
-   * 根据文件类型获取对应的分类
-   */
-  private getFileCategoryByType(fileType: string): string | undefined {
-    if (fileType.startsWith('image/')) {
-      return 'Images';
-    }
-    if (fileType.startsWith('video/')) {
-      return 'Videos';
-    }
-    if (fileType.startsWith('audio/')) {
-      return 'Audios';
-    }
-    if (fileType.startsWith('application/')) {
-      return 'Documents';
-    }
-    return undefined;
   }
 }
