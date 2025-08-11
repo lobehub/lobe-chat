@@ -6,6 +6,7 @@ import {
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'lodash-es';
+import { produce } from 'immer';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -632,7 +633,7 @@ class ChatService {
       }
     });
 
-    return this.reorderToolMessages(postMessages);
+    return postMessages;
   };
 
   /**
