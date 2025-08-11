@@ -1,6 +1,7 @@
 import { ActionIcon, Button, Input, type InputProps } from '@lobehub/ui';
 import { Plus, X } from 'lucide-react';
 import React, { memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {
@@ -9,6 +10,8 @@ interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {
 }
 
 const ArgsInput = memo<ArgsInputProps>(({ value = [], onChange, ...res }) => {
+  const { t } = useTranslation('components');
+
   const handleAddArg = useCallback(() => {
     onChange?.([...value, '']);
   }, [value, onChange]);
@@ -57,7 +60,7 @@ const ArgsInput = memo<ArgsInputProps>(({ value = [], onChange, ...res }) => {
               }
               res.onBlur?.(e);
             }}
-            placeholder="Enter first argument..."
+            placeholder={t('ArgsInput.enterFirstArgument')}
             style={{ flex: 1 }}
           />
           <Button icon={Plus} onClick={handleAddArg} size="small" type="primary" />
@@ -69,7 +72,7 @@ const ArgsInput = memo<ArgsInputProps>(({ value = [], onChange, ...res }) => {
               <Input
                 onChange={(e) => handleArgChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
-                placeholder={`Argument ${index + 1}`}
+                placeholder={t('ArgsInput.argumentPlaceholder', { index: index + 1 })}
                 style={{ flex: 1 }}
                 value={arg}
               />
@@ -88,7 +91,7 @@ const ArgsInput = memo<ArgsInputProps>(({ value = [], onChange, ...res }) => {
             style={{ alignSelf: 'flex-start' }}
             type="dashed"
           >
-            Add Argument
+            {t('ArgsInput.addArgument')}
           </Button>
         </>
       )}
