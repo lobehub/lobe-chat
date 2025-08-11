@@ -459,6 +459,69 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
         throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
       }
+
+      case 'file_url': {
+        // Use Google Files API: upload then reference by fileData
+        // Accept audio/* and video/*
+        const url = content.file_url.url;
+        const mimeType = content.file_url.mimeType || 'application/octet-stream';
+
+        // 1) Upload the file via multipart (sufficient for typical chat uploads)
+        // refs: https://ai.google.dev/api/files
+        const uploadUrl = `${this.baseURL?.replace(/\/$/, '')}/upload/v1beta/files?uploadType=multipart&key=${this.apiKey}`;
+
+        const metadata = { file: { displayName: content.file_url.displayName || 'media', mimeType } };
+
+        // fetch binary
+        const mediaRes = await fetch(url);
+        if (!mediaRes.ok) throw new Error(`Failed to fetch media: ${mediaRes.status}`);
+        const mediaBlob = await mediaRes.blob();
+
+        // Build multipart body
+        const boundary = `----lobe-google-${Math.random().toString(36).slice(2)}`;
+        const encoder = new TextEncoder();
+        const part1 = encoder.encode(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`);
+        const part2Header = encoder.encode(`--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`);
+        const part3 = encoder.encode(`\r\n--${boundary}--`);
+
+        // Combine into a Blob
+        const multipartBody = new Blob([part1, part2Header, mediaBlob, part3], {
+          type: `multipart/related; boundary=${boundary}`,
+        });
+
+        const uploadRes = await fetch(uploadUrl, { method: 'POST', body: multipartBody });
+        if (!uploadRes.ok) {
+          const text = await uploadRes.text();
+          throw new Error(`Google Files upload failed: ${uploadRes.status} ${text}`);
+        }
+        const uploaded = (await uploadRes.json()) as any;
+
+        // 2) Poll until ACTIVE (safeguard for videos)
+        const name: string | undefined = uploaded?.file?.name;
+        let state: string | undefined = uploaded?.file?.state?.name || uploaded?.file?.state;
+        const fileGetBase = `${this.baseURL?.replace(/\/$/, '')}/v1beta`;
+        if (name) {
+          let retry = 0;
+          while ((!state || state !== 'ACTIVE') && retry < 20) {
+            await new Promise((r) => setTimeout(r, 2500));
+            const getRes = await fetch(`${fileGetBase}/${name}?key=${this.apiKey}`);
+            if (getRes.ok) {
+              const data = (await getRes.json()) as any;
+              state = data?.state?.name || data?.state;
+              if (state === 'FAILED') throw new Error('Google file processing failed');
+            } else {
+              break;
+            }
+            retry++;
+          }
+        }
+
+        const fileUri: string | undefined = uploaded?.file?.uri;
+        const finalMime = uploaded?.file?.mimeType || mimeType;
+        if (!fileUri) throw new Error('No file uri from Google Files API');
+
+        return { fileData: { fileUri, mimeType: finalMime } } as Part;
+      }
     }
   };
 

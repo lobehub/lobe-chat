@@ -450,6 +450,208 @@ class ChatService {
     }
   };
 
+  private processMessages = async (
+    {
+      messages = [],
+      tools,
+      model,
+      provider,
+    }: {
+      messages: ChatMessage[];
+      model: string;
+      provider: string;
+      tools?: string[];
+    },
+    options?: FetchOptions,
+  ): Promise<OpenAIChatMessage[]> => {
+    // handle content type for vision model
+    // for the models with visual ability, add image url to content
+    // refs: https://platform.openai.com/docs/guides/vision/quick-start
+    const getUserContent = async (m: ChatMessage) => {
+      // only if message doesn't have images and files, then return the plain content
+      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
+        return m.content;
+
+      const imageList = m.imageList || [];
+      const imageContentParts = await this.processImageList({ imageList, model, provider });
+
+      // 当使用 Google Gemini 且存在可读媒体文件（audio/*, video/*）时，将其作为 file_url 注入
+      const fileUrlParts: UserMessageContentPart[] = [];
+      if (provider === 'google' && Array.isArray(m.fileList) && m.fileList.length > 0) {
+        for (const f of m.fileList) {
+          const lower = (f.fileType || '').toLowerCase();
+          const isAudio = lower.startsWith('audio/');
+          const isVideo = lower.startsWith('video/');
+          if (isAudio || isVideo) {
+            fileUrlParts.push({
+              file_url: { url: f.url, mimeType: f.fileType, displayName: f.name },
+              type: 'file_url',
+            } as any);
+          }
+        }
+      }
+
+      const filesContext = isServerMode
+        ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
+        : '';
+      return [
+        { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
+        ...imageContentParts,
+        ...fileUrlParts,
+      ] as UserMessageContentPart[];
+    };
+
+    const getAssistantContent = async (m: ChatMessage) => {
+      // signature is a signal of anthropic thinking mode
+      const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+
+      if (shouldIncludeThinking) {
+        return [
+          {
+            signature: m.reasoning!.signature,
+            thinking: m.reasoning!.content,
+            type: 'thinking',
+          },
+          { text: m.content, type: 'text' },
+        ] as UserMessageContentPart[];
+      }
+      // only if message doesn't have images and files, then return the plain content
+
+      if (m.imageList && m.imageList.length > 0) {
+        const imageContentParts = await this.processImageList({
+          imageList: m.imageList,
+          model,
+          provider,
+        });
+        return [
+          !!m.content ? { text: m.content, type: 'text' } : undefined,
+          ...imageContentParts,
+        ].filter(Boolean) as UserMessageContentPart[];
+      }
+
+      return m.content;
+    };
+
+    let postMessages = await Promise.all(
+      messages.map(async (m): Promise<OpenAIChatMessage> => {
+        const supportTools = isCanUseFC(model, provider);
+        switch (m.role) {
+          case 'user': {
+            return { content: await getUserContent(m), role: m.role };
+          }
+
+          case 'assistant': {
+            const content = await getAssistantContent(m);
+
+            if (!supportTools) {
+              return { content, role: m.role };
+            }
+
+            return {
+              content,
+              role: m.role,
+              tool_calls: m.tools?.map(
+                (tool): MessageToolCall => ({
+                  function: {
+                    arguments: tool.arguments,
+                    name: genToolCallingName(tool.identifier, tool.apiName, tool.type),
+                  },
+                  id: tool.id,
+                  type: 'function',
+                }),
+              ),
+            };
+          }
+
+          case 'tool': {
+            if (!supportTools) {
+              return { content: m.content, role: 'user' };
+            }
+
+            return {
+              content: m.content,
+              name: genToolCallingName(m.plugin!.identifier, m.plugin!.apiName, m.plugin?.type),
+              role: m.role,
+              tool_call_id: m.tool_call_id,
+            };
+          }
+
+          default: {
+            return { content: m.content, role: m.role as any };
+          }
+        }
+      }),
+    );
+
+    postMessages = produce(postMessages, (draft) => {
+      // if it's a welcome question, inject InboxGuide SystemRole
+      const inboxGuideSystemRole =
+        options?.isWelcomeQuestion &&
+        options?.trace?.sessionId === INBOX_SESSION_ID &&
+        INBOX_GUIDE_SYSTEMROLE;
+
+      // Inject Tool SystemRole
+      const hasTools = tools && tools?.length > 0;
+      const hasFC = hasTools && isCanUseFC(model, provider);
+      const toolsSystemRoles =
+        hasFC && toolSelectors.enabledSystemRoles(tools)(getToolStoreState());
+
+      const injectSystemRoles = BuiltinSystemRolePrompts({
+        historySummary: options?.historySummary,
+        plugins: toolsSystemRoles as string,
+        welcome: inboxGuideSystemRole as string,
+      });
+
+      if (!injectSystemRoles) return;
+
+      const systemMessage = draft.find((i) => i.role === 'system');
+
+      if (systemMessage) {
+        systemMessage.content = [systemMessage.content, injectSystemRoles]
+          .filter(Boolean)
+          .join('\n\n');
+      } else {
+        draft.unshift({
+          content: injectSystemRoles,
+          role: 'system',
+        });
+      }
+    });
+
+    return this.reorderToolMessages(postMessages);
+  };
+
+  /**
+   * Process imageList: convert local URLs to base64 and format as UserMessageContentPart
+   */
+  private processImageList = async ({
+    model,
+    provider,
+    imageList,
+  }: {
+    imageList: ChatImageItem[];
+    model: string;
+    provider: string;
+  }) => {
+    if (!isCanUseVision(model, provider)) {
+      return [];
+    }
+
+    return Promise.all(
+      imageList.map(async (image) => {
+        const { type } = parseDataUri(image.url);
+
+        let processedUrl = image.url;
+        if (type === 'url' && isLocalUrl(image.url)) {
+          const { base64, mimeType } = await imageUrlToBase64(image.url);
+          processedUrl = `data:${mimeType};base64,${base64}`;
+        }
+
+        return { image_url: { detail: 'auto', url: processedUrl }, type: 'image_url' } as const;
+      }),
+    );
+  };
+
   private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
     const tags = sessionMetaSelectors.currentAgentMeta(getSessionStoreState()).tags || [];
 
