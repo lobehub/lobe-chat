@@ -1,5 +1,47 @@
 [
   {
+    "children": {
+      "improvements": ["Adjust near bottom size on thinking scroll."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Gemini error display with promptFeedback."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
+      "improvements": ["Support new GPT-5 Verbosity params."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model-runtime to a seperated package."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
+      "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add mask effect to thinking scroll, update i18n."]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
     "children": {},
     "date": "2025-08-09",
     "version": "1.111.4"

@@ -56,16 +56,33 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     }));
 
     try {
-      const response = await this.client.chat.completions.create({
+      // Create parameters with proper typing for OpenAI SDK, handling reasoning_effort compatibility
+      const { reasoning_effort, ...otherParams } = params;
+
+      // Convert 'minimal' to 'low' for OpenAI SDK compatibility
+      const compatibleReasoningEffort = reasoning_effort === 'minimal' ? 'low' : reasoning_effort;
+
+      const baseParams = {
         messages: await convertOpenAIMessages(
           updatedMessages as OpenAI.ChatCompletionMessageParam[],
         ),
         model,
-        ...params,
+        ...otherParams,
         max_completion_tokens: undefined,
-        stream: enableStreaming,
-        tool_choice: params.tools ? 'auto' : undefined,
-      });
+        tool_choice: params.tools ? ('auto' as const) : undefined,
+      };
+
+      // Add reasoning_effort only if it exists and cast to proper type
+      const openaiParams = compatibleReasoningEffort
+        ? {
+            ...baseParams,
+            reasoning_effort: compatibleReasoningEffort as 'low' | 'medium' | 'high',
+          }
+        : baseParams;
+
+      const response = enableStreaming
+        ? await this.client.chat.completions.create({ ...openaiParams, stream: true })
+        : await this.client.chat.completions.create({ ...openaiParams, stream: false });
       if (enableStreaming) {
         const stream = response as Stream<OpenAI.ChatCompletionChunk>;
         const [prod, debug] = stream.tee();

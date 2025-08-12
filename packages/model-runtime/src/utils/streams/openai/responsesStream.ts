@@ -20,17 +20,19 @@ import {
 import { OpenAIStreamOptions } from './openai';
 
 const transformOpenAIStream = (
-  chunk: OpenAI.Responses.ResponseStreamEvent | {
-    annotation: {
-      end_index: number;
-      start_index: number;
-      title: string;
-      type: 'url_citation';
-      url: string;
-    };
-    item_id: string;
-    type: 'response.output_text.annotation.added';
-  },
+  chunk:
+    | OpenAI.Responses.ResponseStreamEvent
+    | {
+        annotation: {
+          end_index: number;
+          start_index: number;
+          title: string;
+          type: 'url_citation';
+          url: string;
+        };
+        item_id: string;
+        type: 'response.output_text.annotation.added';
+      },
   streamContext: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
@@ -136,7 +138,7 @@ const transformOpenAIStream = (
             data: { citations: streamContext.returnedCitationArray },
             id: chunk.item.id,
             type: 'grounding',
-          }
+          };
         }
 
         return { data: null, id: chunk.item.id, type: 'text' };

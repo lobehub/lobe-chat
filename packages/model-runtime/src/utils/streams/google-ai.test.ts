@@ -816,4 +816,44 @@ describe('GoogleGenerativeAIStream', () => {
       ].map((i) => i + '\n'),
     );
   });
+
+  it('should handle promptFeedback with blockReason (PROHIBITED_CONTENT)', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = {
+      promptFeedback: {
+        blockReason: 'PROHIBITED_CONTENT',
+      },
+      usageMetadata: {
+        promptTokenCount: 4438,
+        totalTokenCount: 4438,
+        promptTokensDetails: [{ modality: 'TEXT', tokenCount: 4438 }],
+      },
+      modelVersion: 'gemini-2.5-pro',
+      responseId: 'THOUaKaNOeiGz7IPjL_VgQc',
+    };
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(data);
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chat_1\n',
+      'event: error\n',
+      `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"您的请求可能包含违禁内容。请调整您的请求，确保内容符合使用规范。","provider":"google"},"type":"ProviderBizError"}\n\n`,
+    ]);
+  });
 });

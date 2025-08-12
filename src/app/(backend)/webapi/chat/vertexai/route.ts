@@ -1,5 +1,6 @@
+import { ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
+
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { ModelProvider, ModelRuntime } from '@/libs/model-runtime';
 import { LobeVertexAI } from '@/libs/model-runtime/vertexai';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
