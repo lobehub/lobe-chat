@@ -31,5 +31,3 @@ export const initialMessageState: ChatMessageState = {
   messagesInit: false,
   messagesMap: {},
 };
-
-export { initialMessageState as MessageState };
