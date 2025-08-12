@@ -2,6 +2,7 @@ import { ChevronDown, Palette, Sun, Moon } from 'lucide-react-native';
 import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
+import { CapsuleTabs } from '@/components/CapsuleTabs';
 import { useTheme, createStyles, defaultSeedToken, darkAlgorithm, defaultAlgorithm } from '@/theme';
 
 interface TokenInfo {
@@ -66,12 +67,6 @@ const useStyles = createStyles((token) => {
   };
 
   return {
-    activeTab: {
-      // backgroundColor set dynamically
-    },
-    activeTabText: {
-      // color set dynamically
-    },
     chevron: {
       transform: [{ rotate: '0deg' }],
     },
@@ -123,16 +118,6 @@ const useStyles = createStyles((token) => {
     shadowValueContainer: {
       alignItems: 'flex-end',
     },
-    tab: {
-      backgroundColor: 'transparent',
-      borderRadius: t.borderRadius,
-      paddingHorizontal: t.paddingMD,
-      paddingVertical: t.paddingSM,
-    },
-    tabText: {
-      fontSize: t.fontSize,
-      fontWeight: '500',
-    },
     tableSubtitle: {
       fontSize: t.fontSize,
       marginBottom: t.marginLG,
@@ -143,8 +128,6 @@ const useStyles = createStyles((token) => {
       marginBottom: t.marginXS,
     },
     tabsContainer: {
-      flexDirection: 'row',
-      gap: t.marginXS,
       paddingHorizontal: t.paddingLG,
       paddingTop: t.paddingMD,
     },
@@ -577,6 +560,15 @@ const ThemeTokensPlayground: React.FC = () => {
     }
   };
 
+  const tabItems = useMemo(
+    () => [
+      { key: 'seed', label: 'Seed' },
+      { key: 'map', label: 'Map' },
+      { key: 'alias', label: 'Alias' },
+    ],
+    [],
+  );
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.token.colorBgLayout }]}>
       <View style={styles.header}>
@@ -597,29 +589,11 @@ const ThemeTokensPlayground: React.FC = () => {
       </View>
 
       <View style={styles.tabsContainer}>
-        {(['seed', 'map', 'alias'] as const).map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-            style={[
-              styles.tab,
-              activeTab === tab && [
-                styles.activeTab,
-                { backgroundColor: theme.token.colorPrimary },
-              ],
-            ]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                { color: theme.token.colorTextSecondary },
-                activeTab === tab && [styles.activeTabText, { color: theme.token.colorWhite }],
-              ]}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <CapsuleTabs
+          items={tabItems}
+          onSelect={(key) => setActiveTab(key as 'seed' | 'map' | 'alias')}
+          selectedKey={activeTab}
+        />
       </View>
 
       <View style={[styles.searchContainer, { backgroundColor: theme.token.colorFillTertiary }]}>

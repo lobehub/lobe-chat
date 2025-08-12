@@ -32,12 +32,7 @@ const LoginPage = () => {
       <View style={styles.content}>
         {/* Logo 和标题 */}
         <View style={styles.welcome}>
-          <Image
-            source={{
-              uri: 'https://hub-apac-1.lobeobjects.space/docs/73f69adfa1b802a0e250f6ff9d62f70b.png',
-            }}
-            style={styles.logo}
-          />
+          <Image source={require('../../../assets/images/icon.png')} style={styles.logo} />
           <Text style={styles.title}>LobeChat</Text>
           <Text style={styles.subtitle}>{t('login.subtitle', { ns: 'auth' })}</Text>
         </View>

@@ -97,7 +97,7 @@ export const SettingItem = ({
           onValueChange={onSwitchChange}
           thumbColor={switchValue ? token.colorBgContainer : token.colorBgContainer}
           trackColor={{
-            false: token.colorBorder,
+            false: token.colorBgBase,
             true: token.colorPrimary,
           }}
           value={switchValue}
