@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Adjust near bottom size on thinking scroll."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
       "improvements": ["Improve Gemini error display with promptFeedback."]
     },
     "date": "2025-08-12",
