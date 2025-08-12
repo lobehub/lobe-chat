@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.111.10](https://github.com/lobehub/lobe-chat/compare/v1.111.9...v1.111.10)
+
+<sup>Released on **2025-08-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust near bottom size on thinking scroll.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust near bottom size on thinking scroll, closes [#8772](https://github.com/lobehub/lobe-chat/issues/8772) ([1fae490](https://github.com/lobehub/lobe-chat/commit/1fae490))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.9](https://github.com/lobehub/lobe-chat/compare/v1.111.8...v1.111.9)
 
 <sup>Released on **2025-08-12**</sup>
