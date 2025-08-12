@@ -123,6 +123,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     path: 'instant-switch',
     tags: ['switch', 'toggle', 'async', 'loading', 'form'],
   },
+  {
+    category: 'display',
+    description: '主题令牌展示页面，显示种子、映射和别名令牌，支持主题切换和搜索',
+    hasDemos: false,
+    hasReadme: false,
+    name: 'Theme Tokens',
+    path: 'theme-tokens',
+    tags: ['theme', 'tokens', 'design', 'colors', 'typography'],
+  },
 ];
 
 /**

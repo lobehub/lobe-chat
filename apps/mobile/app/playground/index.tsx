@@ -99,6 +99,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'theme-tokens': {
+        router.push('/playground/theme-tokens');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }
