@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "Intensité du raisonnement"
     },
+    "textVerbosity": {
+      "title": "Niveau de détail du texte de sortie"
+    },
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
     },

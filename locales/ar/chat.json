@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "شدة الاستدلال"
     },
+    "textVerbosity": {
+      "title": "مستوى تفصيل المخرجات النصية"
+    },
     "thinking": {
       "title": "مفتاح التفكير العميق"
     },
