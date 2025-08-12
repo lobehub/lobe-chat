@@ -306,30 +306,183 @@ export function getTextOutputUnitRateFromUsage(
 }
 
 /**
- * Get all pricing rates from ModelTokensUsage
- * This is a convenience function that returns all relevant rates with context
+ * Calculate cost for a tiered pricing unit based on usage amount
+ * @param unit - The tiered pricing unit
+ * @param amount - The usage amount (in the unit's base unit, e.g., tokens)
+ * @returns The calculated cost
  */
-export function getPricingRatesFromUsage(
+export function calculateTieredCost(
+  unit: Extract<PricingUnit, { strategy: 'tiered' }>,
+  amount: number,
+): number {
+  if (!unit.tiers || unit.tiers.length === 0) return 0;
+
+  let cost = 0;
+  let remaining = amount;
+  let prevUpTo = 0;
+
+  for (const tier of unit.tiers) {
+    if (remaining <= 0) break;
+
+    const upTo = tier.upTo === 'infinity' ? Infinity : tier.upTo;
+    const bracket = Math.min(remaining, upTo - prevUpTo);
+
+    if (bracket > 0) {
+      cost += bracket * tier.rate;
+      remaining -= bracket;
+    }
+
+    prevUpTo = upTo;
+  }
+
+  return cost;
+}
+
+/**
+ * Get tiered pricing units from pricing configuration
+ */
+export function getTieredPricingUnits(
+  pricing?: Pricing,
+): Array<Extract<PricingUnit, { strategy: 'tiered' }>> {
+  if (!pricing?.units) return [];
+  return pricing.units.filter(
+    (unit): unit is Extract<PricingUnit, { strategy: 'tiered' }> => unit.strategy === 'tiered',
+  );
+}
+
+/**
+ * Calculate cost for a specific unit using tiered pricing
+ * @param pricing - The pricing configuration
+ * @param unitName - The unit name to calculate cost for
+ * @param amount - The usage amount
+ * @returns The calculated cost, or undefined if unit not found or not tiered
+ */
+export function calculateTieredCostByUnitName(
+  pricing?: Pricing,
+  unitName?: PricingUnitName,
+  amount?: number,
+): number | undefined {
+  if (!pricing?.units || !unitName || amount === undefined) return undefined;
+
+  const unit = pricing.units.find(
+    (u): u is Extract<PricingUnit, { strategy: 'tiered' }> =>
+      u.strategy === 'tiered' && 'name' in u && u.name === unitName,
+  );
+
+  if (!unit) return undefined;
+
+  return calculateTieredCost(unit, amount);
+}
+
+/**
+ * Calculate text input cost using tiered pricing
+ * @param pricing - The pricing configuration
+ * @param tokenAmount - The number of tokens used
+ * @returns The calculated cost, or undefined if not tiered pricing
+ */
+export function calculateTextInputTieredCost(
+  pricing?: Pricing,
+  tokenAmount?: number,
+): number | undefined {
+  if (!tokenAmount) return undefined;
+  return calculateTieredCostByUnitName(pricing, 'textInput', tokenAmount);
+}
+
+/**
+ * Calculate text output cost using tiered pricing
+ * @param pricing - The pricing configuration
+ * @param tokenAmount - The number of tokens used
+ * @returns The calculated cost, or undefined if not tiered pricing
+ */
+export function calculateTextOutputTieredCost(
+  pricing?: Pricing,
+  tokenAmount?: number,
+): number | undefined {
+  if (!tokenAmount) return undefined;
+  return calculateTieredCostByUnitName(pricing, 'textOutput', tokenAmount);
+}
+
+/**
+ * Calculate total cost from ModelTokensUsage using tiered pricing where applicable
+ * Falls back to rate-based calculation for non-tiered units
+ */
+export function calculateTotalCostFromUsage(
   pricing?: Pricing,
   usage?: ModelTokensUsage,
 ): {
-  audioInputRate?: number;
-  audioOutputRate?: number;
-  cachedInputRate?: number;
-  context: PricingContext;
-  inputRate?: number;
-  outputRate?: number;
-  writeCacheInputRate?: number;
+  audioInputCost?: number;
+  audioOutputCost?: number;
+  cachedInputCost?: number;
+  inputCost?: number;
+  outputCost?: number;
+  totalCost: number;
+  writeCacheInputCost?: number;
 } {
+  if (!usage) {
+    return { totalCost: 0 };
+  }
+
   const context = createPricingContext(usage);
+  let totalCost = 0;
+
+  // Calculate text input cost (try tiered first, fallback to rate-based)
+  let inputCost: number | undefined;
+  if (usage.totalInputTokens) {
+    inputCost = calculateTextInputTieredCost(pricing, usage.totalInputTokens);
+    if (inputCost === undefined) {
+      const rate = getTextInputUnitRate(pricing, context);
+      inputCost = rate ? (usage.totalInputTokens * rate) / 1_000_000 : undefined;
+    }
+    if (inputCost !== undefined) totalCost += inputCost;
+  }
+
+  // Calculate text output cost (try tiered first, fallback to rate-based)
+  let outputCost: number | undefined;
+  if (usage.totalOutputTokens) {
+    outputCost = calculateTextOutputTieredCost(pricing, usage.totalOutputTokens);
+    if (outputCost === undefined) {
+      const rate = getTextOutputUnitRate(pricing, context);
+      outputCost = rate ? (usage.totalOutputTokens * rate) / 1_000_000 : undefined;
+    }
+    if (outputCost !== undefined) totalCost += outputCost;
+  }
+
+  // Calculate other costs using rate-based method
+  let audioInputCost: number | undefined;
+  if (usage.inputAudioTokens) {
+    const rate = getAudioInputUnitRate(pricing, context);
+    audioInputCost = rate ? (usage.inputAudioTokens * rate) / 1_000_000 : undefined;
+    if (audioInputCost !== undefined) totalCost += audioInputCost;
+  }
+
+  let audioOutputCost: number | undefined;
+  if (usage.outputAudioTokens) {
+    const rate = getAudioOutputUnitRate(pricing, context);
+    audioOutputCost = rate ? (usage.outputAudioTokens * rate) / 1_000_000 : undefined;
+    if (audioOutputCost !== undefined) totalCost += audioOutputCost;
+  }
+
+  let cachedInputCost: number | undefined;
+  if (usage.inputCachedTokens) {
+    const rate = getCachedTextInputUnitRate(pricing, context);
+    cachedInputCost = rate ? (usage.inputCachedTokens * rate) / 1_000_000 : undefined;
+    if (cachedInputCost !== undefined) totalCost += cachedInputCost;
+  }
+
+  let writeCacheInputCost: number | undefined;
+  if (usage.inputWriteCacheTokens) {
+    const rate = getWriteCacheInputUnitRate(pricing, context);
+    writeCacheInputCost = rate ? (usage.inputWriteCacheTokens * rate) / 1_000_000 : undefined;
+    if (writeCacheInputCost !== undefined) totalCost += writeCacheInputCost;
+  }
 
   return {
-    audioInputRate: getAudioInputUnitRate(pricing, context),
-    audioOutputRate: getAudioOutputUnitRate(pricing, context),
-    cachedInputRate: getCachedTextInputUnitRate(pricing, context),
-    context,
-    inputRate: getTextInputUnitRate(pricing, context),
-    outputRate: getTextOutputUnitRate(pricing, context),
-    writeCacheInputRate: getWriteCacheInputUnitRate(pricing, context),
+    audioInputCost,
+    audioOutputCost,
+    cachedInputCost,
+    inputCost,
+    outputCost,
+    totalCost,
+    writeCacheInputCost,
   };
 }

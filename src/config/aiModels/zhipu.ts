@@ -16,49 +16,16 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
-      // units: [
-      //   {
-      //     name: 'textInput',
-      //     strategy: 'tiered',
-      //     tiers: [
-      //       { rate: 7, upTo: 0 },
-      //       { rate: 14, upTo: 0.256 },
-      //       { rate: 1.2, upTo: 'infinity' },
-      //     ],
-      //     unit: 'millionTokens',
-      //   },
-      //   {
-      //     name: 'textOutput',
-      //     strategy: 'tiered',
-      //     tiers: [
-      //       { rate: 1.5, upTo: 0.128 },
-      //       { rate: 6, upTo: 0.256 },
-      //       { rate: 12, upTo: 'infinity' },
-      //     ],
-      //     unit: 'millionTokens',
-      //   },
-      //   {
-      //     name: 'textInput_cacheRead',
-      //     strategy: 'tiered',
-      //     tiers: [
-      //       { rate: 0.15 * 0.4, upTo: 0.128 },
-      //       { rate: 0.6 * 0.4, upTo: 0.256 },
-      //       { rate: 1.2 * 0.4, upTo: 'infinity' },
-      //     ],
-      //     unit: 'millionTokens',
-      //   },
-      // ],
-
       units: [
         {
           strategy: 'conditional',
           tiers: [
             {
-              conditions: [{ param: 'inputLength', range: [0, 1] }],
+              conditions: [{ param: 'inputLength', range: [0, 32_000] }],
               rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 6 },
             },
             {
-              conditions: [{ param: 'inputLength', range: [2, 'infinity'] }],
+              conditions: [{ param: 'inputLength', range: [32_001, 'infinity'] }],
               rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 12 },
             },
           ],
