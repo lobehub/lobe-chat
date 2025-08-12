@@ -6,6 +6,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
+import { useSessionStore } from '@/store/session';
 import { getUserStoreState } from '@/store/user';
 import { SendMessageParams } from '@/types/message';
 
@@ -30,6 +31,12 @@ export const useSendMessage = () => {
 
   const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
+    const sessionStore = useSessionStore.getState();
+    
+    // Get the current selected session (either active session or parallel session)
+    const sessionId = sessionStore.activeId;
+    
+    // Check if we can send a message in the current context
     if (chatSelectors.isAIGenerating(store)) return;
 
     // if uploading file or send button is disabled by message, then we should not send the message
@@ -45,9 +52,11 @@ export const useSendMessage = () => {
     // if there is no message and no image, then we should not send the message
     if (!store.inputMessage && fileList.length === 0) return;
 
+    // Send message to the current session
     sendMessage({
       files: fileList,
       message: store.inputMessage,
+      sessionId,
       ...params,
     });
 

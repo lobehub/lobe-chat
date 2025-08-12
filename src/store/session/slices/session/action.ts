@@ -42,6 +42,18 @@ export interface SessionAction {
    */
   switchSession: (sessionId: string) => void;
   /**
+   * Add a session to parallel chats
+   */
+  addParallelSession: (sessionId: string) => void;
+  /**
+   * Remove a session from parallel chats
+   */
+  removeParallelSession: (sessionId: string) => void;
+  /**
+   * Check if a session is in parallel chats
+   */
+  isParallelSession: (sessionId: string) => boolean;
+  /**
    * reset sessions to default
    */
   clearSessions: () => Promise<void>;
@@ -97,6 +109,39 @@ export const createSessionSlice: StateCreator<
   [],
   SessionAction
 > = (set, get) => ({
+  addParallelSession: (sessionId) => {
+    const { parallelSessionIds } = get();
+    
+    // If session is already in parallel, do nothing
+    if (parallelSessionIds.includes(sessionId)) return;
+
+    set(
+      { 
+        parallelSessionIds: [...parallelSessionIds, sessionId] 
+      }, 
+      false, 
+      n('addParallelSession', { sessionId })
+    );
+  },
+
+  removeParallelSession: (sessionId) => {
+    const { parallelSessionIds } = get();
+    
+    // Filter out the session to remove
+    set(
+      { 
+        parallelSessionIds: parallelSessionIds.filter(id => id !== sessionId) 
+      }, 
+      false, 
+      n('removeParallelSession', { sessionId })
+    );
+  },
+
+  isParallelSession: (sessionId) => {
+    const { parallelSessionIds } = get();
+    return parallelSessionIds.includes(sessionId);
+  },
+
   clearSessions: async () => {
     await sessionService.removeAllSessions();
     await get().refreshSessions();

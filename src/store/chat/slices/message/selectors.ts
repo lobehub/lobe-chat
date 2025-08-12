@@ -38,7 +38,22 @@ const getBaseChatsByKey =
     return messages.map((i) => ({ ...i, meta: getMeta(i) }));
   };
 
+/**
+ * Get chat key for a specific session ID
+ */
+const getChatKeyForSession = (sessionId: string, topicId?: string | null) => 
+  messageMapKey(sessionId, topicId);
+
 const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
+
+/**
+ * Get raw message list for a specific session ID
+ */
+const getSessionChats = (sessionId: string, topicId?: string | null) => (s: ChatStoreState): ChatMessage[] => {
+  if (!sessionId) return [];
+
+  return getBaseChatsByKey(getChatKeyForSession(sessionId, topicId))(s);
+};
 
 /**
  * Current active raw message list, include thread messages
@@ -223,6 +238,8 @@ export const chatSelectors = {
   currentToolMessages,
   currentUserFiles,
   getBaseChatsByKey,
+  getChatKeyForSession,
+  getSessionChats,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,

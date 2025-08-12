@@ -7,6 +7,8 @@ import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ParallelChat from './ParallelChat';
+
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
@@ -86,6 +88,7 @@ const Main = memo<{ className?: string }>(({ className }) => {
         <div className={styles.title}>{displayTitle}</div>
         <Tags />
       </Flexbox>
+      <ParallelChat />
     </Flexbox>
   );
 });
