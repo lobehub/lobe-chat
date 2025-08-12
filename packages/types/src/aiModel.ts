@@ -182,16 +182,16 @@ export interface ConditionalPricingTier {
   rates: Partial<Record<PricingUnitName, number>>;
 }
 
-export interface ConditionalPricingUnit extends PricingUnitBase {
-  /**
-   * The units that are priced together in this conditional pricing
-   */
-  relatedUnits: PricingUnitName[];
+export interface ConditionalPricingUnit {
   strategy: 'conditional';
   /**
    * Array of pricing tiers based on different conditions
    */
   tiers: ConditionalPricingTier[];
+  /**
+   * The unit type for pricing calculation (e.g., 'millionTokens', 'image', etc.)
+   */
+  unit: PricingUnitType;
 }
 
 export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit | ConditionalPricingUnit;

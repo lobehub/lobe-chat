@@ -22,6 +22,21 @@ const isInRange = (value: number, range: [number, number | 'infinity']): boolean
 };
 
 /**
+ * Get all related units from a conditional pricing unit by extracting keys from rates
+ */
+export const getRelatedUnitsFromConditionalUnit = (unit: ConditionalPricingUnit): PricingUnitName[] => {
+  const relatedUnits = new Set<PricingUnitName>();
+  
+  for (const tier of unit.tiers) {
+    for (const unitName of Object.keys(tier.rates)) {
+      relatedUnits.add(unitName as PricingUnitName);
+    }
+  }
+  
+  return Array.from(relatedUnits);
+};
+
+/**
  * Find the matching tier for conditional pricing based on context
  * @internal - exported for testing purposes
  */
@@ -49,11 +64,10 @@ export const findMatchingTier = (
  * - fixed → rate
  * - tiered → tiers[0].rate
  * - lookup → first price value
- * - conditional → first tier's rate for the unit, or fallback based on context
+ * - conditional → handled separately in getUnitRateByName
  */
 const getRateFromUnit = (
-  unit: PricingUnit,
-  context: PricingContext = {},
+  unit: Exclude<PricingUnit, ConditionalPricingUnit>,
 ): number | undefined => {
   switch (unit.strategy) {
     case 'fixed': {
@@ -65,10 +79,6 @@ const getRateFromUnit = (
     case 'lookup': {
       const prices = Object.values(unit.lookup?.prices || {});
       return prices[0];
-    }
-    case 'conditional': {
-      const matchingTier = findMatchingTier(unit, context);
-      return matchingTier?.rates[unit.name];
     }
     default: {
       return undefined;
@@ -86,10 +96,12 @@ export const getUnitRateByName = (
 ): number | undefined => {
   if (!pricing?.units || !unitName) return undefined;
 
-  // First, check if there's a conditional pricing unit that includes this unitName in relatedUnits
-  const conditionalUnit = pricing.units.find((unit): unit is ConditionalPricingUnit => 
-    unit.strategy === 'conditional' && unit.relatedUnits.includes(unitName)
-  );
+  // First, check if there's a conditional pricing unit that includes this unitName
+  const conditionalUnit = pricing.units.find((unit): unit is ConditionalPricingUnit => {
+    if (unit.strategy !== 'conditional') return false;
+    // Check if any tier contains this unitName in its rates
+    return unit.tiers.some(tier => tier.rates[unitName] !== undefined);
+  });
 
   if (conditionalUnit) {
     const matchingTier = findMatchingTier(conditionalUnit, context);
@@ -99,10 +111,12 @@ export const getUnitRateByName = (
     }
   }
 
-  // Fallback to direct unit lookup
-  const unit = pricing.units.find((u) => u.name === unitName);
+  // Fallback to direct unit lookup (only for non-conditional units)
+  const unit = pricing.units.find((u): u is Exclude<PricingUnit, ConditionalPricingUnit> => 
+    u.strategy !== 'conditional' && 'name' in u && u.name === unitName
+  );
   if (!unit) return undefined;
-  return getRateFromUnit(unit, context);
+  return getRateFromUnit(unit);
 };
 
 /**
@@ -202,11 +216,10 @@ export function getConditionalRates(
   for (const unit of conditionalUnits) {
     const matchingTier = findMatchingTier(unit, context);
     if (matchingTier) {
-      // Apply rates for all related units from this tier
-      for (const relatedUnit of unit.relatedUnits) {
-        const rate = matchingTier.rates[relatedUnit];
+      // Apply rates for all units defined in this tier's rates
+      for (const [unitName, rate] of Object.entries(matchingTier.rates)) {
         if (rate !== undefined) {
-          rates[relatedUnit] = rate;
+          rates[unitName as PricingUnitName] = rate;
         }
       }
     }

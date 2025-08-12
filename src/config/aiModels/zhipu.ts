@@ -17,10 +17,21 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+    {
+      strategy: 'conditional',
+      tiers: [
+        {
+          conditions: [{ param: 'inputLength', range: [0, 32_000] }],
+          rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 6 }
+        },
+        {
+          conditions: [{ param: 'inputLength', range: [32_001, 'infinity'] }],
+          rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 12 }
+        }
       ],
+      unit: 'millionTokens'
+    }
+  ]
     },
     settings: {
       extendParams: ['enableReasoning'],

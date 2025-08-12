@@ -9,6 +9,7 @@ import {
   getCachedTextInputUnitRate,
   getConditionalRates,
   getContextAwareRate,
+  getRelatedUnitsFromConditionalUnit,
   getTextInputUnitRate,
   getTextOutputUnitRate,
   getUnitRateByName,
@@ -189,10 +190,7 @@ describe('pricing utilities (new)', () => {
       currency: 'CNY',
       units: [
         {
-          name: 'textInput',
           strategy: 'conditional',
-          unit: 'millionTokens',
-          relatedUnits: ['textInput', 'textOutput'],
           tiers: [
             {
               conditions: [{ param: 'inputLength', range: [0, 32] }],
@@ -203,12 +201,10 @@ describe('pricing utilities (new)', () => {
               rates: { textInput: 4, textOutput: 12 },
             },
           ],
+          unit: 'millionTokens',
         },
         {
-          name: 'imageGeneration',
           strategy: 'conditional',
-          unit: 'image',
-          relatedUnits: ['imageGeneration'],
           tiers: [
             {
               conditions: [
@@ -222,6 +218,7 @@ describe('pricing utilities (new)', () => {
               rates: { imageGeneration: 0.08 },
             },
           ],
+          unit: 'image',
         },
       ],
     };
@@ -275,6 +272,31 @@ describe('pricing utilities (new)', () => {
       const context = { inputLength: 50 };
       expect(getContextAwareRate(conditionalPricing, 'textInput', context)).toBe(4);
       expect(getContextAwareRate(conditionalPricing, 'textOutput', context)).toBe(12);
+    });
+
+    it('getRelatedUnitsFromConditionalUnit extracts all units from rates', () => {
+      const textUnit = conditionalPricing.units.find(u => 
+        u.strategy === 'conditional' && u.tiers[0].rates.textInput !== undefined
+      );
+      expect(textUnit).toBeDefined();
+      
+      if (textUnit && textUnit.strategy === 'conditional') {
+        const relatedUnits = getRelatedUnitsFromConditionalUnit(textUnit);
+        expect(relatedUnits).toContain('textInput');
+        expect(relatedUnits).toContain('textOutput');
+        expect(relatedUnits).toHaveLength(2);
+      }
+
+      const imageUnit = conditionalPricing.units.find(u => 
+        u.strategy === 'conditional' && u.tiers[0].rates.imageGeneration !== undefined
+      );
+      expect(imageUnit).toBeDefined();
+      
+      if (imageUnit && imageUnit.strategy === 'conditional') {
+        const relatedUnits = getRelatedUnitsFromConditionalUnit(imageUnit);
+        expect(relatedUnits).toContain('imageGeneration');
+        expect(relatedUnits).toHaveLength(1);
+      }
     });
   });
 });
