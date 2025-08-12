@@ -597,6 +597,10 @@ const zhipuImageModels: AIImageModelCard[] = [
         enum: ['1024x1024', '768x1344', '864x1152', '1344x768', '1152x864', '1440x720', '720x1440'],
       },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-03-04',
     type: 'image',
   },

@@ -1,8 +1,8 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { ModelProvider } from '@/libs/model-runtime';
 import { UserStore } from '@/store/user';
 import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import type {
