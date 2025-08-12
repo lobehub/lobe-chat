@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.111.9](https://github.com/lobehub/lobe-chat/compare/v1.111.8...v1.111.9)
+
+<sup>Released on **2025-08-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve Gemini error display with promptFeedback.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve Gemini error display with promptFeedback, closes [#8707](https://github.com/lobehub/lobe-chat/issues/8707) ([51ad399](https://github.com/lobehub/lobe-chat/commit/51ad399))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.8](https://github.com/lobehub/lobe-chat/compare/v1.111.7...v1.111.8)
 
 <sup>Released on **2025-08-11**</sup>
