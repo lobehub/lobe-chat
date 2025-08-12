@@ -7,10 +7,13 @@ import {
   getAudioOutputUnitRate,
   getCachedAudioInputUnitRate,
   getCachedTextInputUnitRate,
+  getConditionalRates,
+  getContextAwareRate,
   getTextInputUnitRate,
   getTextOutputUnitRate,
   getUnitRateByName,
   getWriteCacheInputUnitRate,
+  hasConditionalPricing,
 } from './pricing';
 
 describe('pricing utilities (new)', () => {
@@ -178,6 +181,100 @@ describe('pricing utilities (new)', () => {
       expect(getCachedTextInputUnitRate(pricing)).toBe(0.0005);
       expect(getWriteCacheInputUnitRate(pricing)).toBe(0.2);
       expect(getCachedAudioInputUnitRate(pricing)).toBe(0.005);
+    });
+  });
+
+  describe('conditional pricing', () => {
+    const conditionalPricing: Pricing = {
+      currency: 'CNY',
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'conditional',
+          unit: 'millionTokens',
+          relatedUnits: ['textInput', 'textOutput'],
+          tiers: [
+            {
+              conditions: [{ param: 'inputLength', range: [0, 32] }],
+              rates: { textInput: 2, textOutput: 6 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [33, 'infinity'] }],
+              rates: { textInput: 4, textOutput: 12 },
+            },
+          ],
+        },
+        {
+          name: 'imageGeneration',
+          strategy: 'conditional',
+          unit: 'image',
+          relatedUnits: ['imageGeneration'],
+          tiers: [
+            {
+              conditions: [
+                { param: 'imageCount', range: [1, 10] },
+                { param: 'inputLength', range: [0, 100] },
+              ],
+              rates: { imageGeneration: 0.1 },
+            },
+            {
+              conditions: [{ param: 'imageCount', range: [11, 'infinity'] }],
+              rates: { imageGeneration: 0.08 },
+            },
+          ],
+        },
+      ],
+    };
+
+    it('handles conditional pricing with matching context', () => {
+      const context = { inputLength: 20 };
+      expect(getTextInputUnitRate(conditionalPricing, context)).toBe(2);
+      expect(getTextOutputUnitRate(conditionalPricing, context)).toBe(6);
+
+      const context2 = { inputLength: 50 };
+      expect(getTextInputUnitRate(conditionalPricing, context2)).toBe(4);
+      expect(getTextOutputUnitRate(conditionalPricing, context2)).toBe(12);
+    });
+
+    it('handles multiple conditions for conditional pricing', () => {
+      const context1 = { imageCount: 5, inputLength: 50 };
+      expect(getUnitRateByName(conditionalPricing, 'imageGeneration', context1)).toBe(0.1);
+
+      const context2 = { imageCount: 15, inputLength: 50 };
+      expect(getUnitRateByName(conditionalPricing, 'imageGeneration', context2)).toBe(0.08);
+    });
+
+    it('falls back to first tier when context is missing', () => {
+      expect(getTextInputUnitRate(conditionalPricing)).toBe(2);
+      expect(getTextOutputUnitRate(conditionalPricing)).toBe(6);
+    });
+
+    it('falls back to first tier when conditions do not match', () => {
+      const context = { someOtherParam: 100 };
+      expect(getTextInputUnitRate(conditionalPricing, context)).toBe(2);
+      expect(getTextOutputUnitRate(conditionalPricing, context)).toBe(6);
+    });
+
+    it('getConditionalRates returns rates for all related units', () => {
+      const context = { inputLength: 20 };
+      const rates = getConditionalRates(conditionalPricing, context);
+      expect(rates.textInput).toBe(2);
+      expect(rates.textOutput).toBe(6);
+    });
+
+    it('hasConditionalPricing correctly identifies conditional pricing', () => {
+      expect(hasConditionalPricing(conditionalPricing)).toBe(true);
+
+      const fixedPricing: Pricing = {
+        units: [{ name: 'textInput', strategy: 'fixed', unit: 'millionTokens', rate: 0.001 }],
+      };
+      expect(hasConditionalPricing(fixedPricing)).toBe(false);
+    });
+
+    it('getContextAwareRate prioritizes conditional pricing when context is available', () => {
+      const context = { inputLength: 50 };
+      expect(getContextAwareRate(conditionalPricing, 'textInput', context)).toBe(4);
+      expect(getContextAwareRate(conditionalPricing, 'textOutput', context)).toBe(12);
     });
   });
 });

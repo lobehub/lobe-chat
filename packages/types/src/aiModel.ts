@@ -130,7 +130,7 @@ export type PricingUnitType =
   | 'megapixel' // per megapixel
   | 'second'; // per second
 
-export type PricingStrategy = 'fixed' | 'tiered' | 'lookup';
+export type PricingStrategy = 'fixed' | 'tiered' | 'lookup' | 'conditional';
 
 export interface PricingUnitBase {
   name: PricingUnitName;
@@ -159,7 +159,42 @@ export interface LookupPricingUnit extends PricingUnitBase {
   strategy: 'lookup';
 }
 
-export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit;
+// New conditional pricing unit for complex scenarios like GLM-4.5V
+export interface ConditionalPricingCondition {
+  /**
+   * The condition parameter name, e.g., 'inputLength', 'imageCount', etc.
+   */
+  param: string;
+  /**
+   * The range for this condition [min, max], where max can be 'infinity'
+   */
+  range: [number, number | 'infinity'];
+}
+
+export interface ConditionalPricingTier {
+  /**
+   * The conditions that must be met for this tier
+   */
+  conditions: ConditionalPricingCondition[];
+  /**
+   * The pricing rates for different units in this tier
+   */
+  rates: Partial<Record<PricingUnitName, number>>;
+}
+
+export interface ConditionalPricingUnit extends PricingUnitBase {
+  /**
+   * The units that are priced together in this conditional pricing
+   */
+  relatedUnits: PricingUnitName[];
+  strategy: 'conditional';
+  /**
+   * Array of pricing tiers based on different conditions
+   */
+  tiers: ConditionalPricingTier[];
+}
+
+export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit | ConditionalPricingUnit;
 
 export interface Pricing {
   currency?: ModelPriceCurrency;
