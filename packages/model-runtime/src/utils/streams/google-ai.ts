@@ -1,5 +1,6 @@
 import { GenerateContentResponse } from '@google/genai';
 
+import errorLocale from '@/locales/default/error';
 import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 import { nanoid } from '@/utils/uuid';
@@ -15,10 +16,40 @@ import {
   generateToolCallId,
 } from './protocol';
 
+const getBlockReasonMessage = (blockReason: string): string => {
+  const blockReasonMessages = errorLocale.response.GoogleAIBlockReason;
+
+  return (
+    blockReasonMessages[blockReason as keyof typeof blockReasonMessages] ||
+    blockReasonMessages.default.replace('{{blockReason}}', blockReason)
+  );
+};
+
 const transformGoogleGenerativeAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
+  // Handle promptFeedback with blockReason (e.g., PROHIBITED_CONTENT)
+  if ('promptFeedback' in chunk && (chunk as any).promptFeedback?.blockReason) {
+    const blockReason = (chunk as any).promptFeedback.blockReason;
+    const humanFriendlyMessage = getBlockReasonMessage(blockReason);
+
+    return {
+      data: {
+        body: {
+          context: {
+            promptFeedback: (chunk as any).promptFeedback,
+          },
+          message: humanFriendlyMessage,
+          provider: 'google',
+        },
+        type: 'ProviderBizError',
+      },
+      id: context?.id || 'error',
+      type: 'error',
+    };
+  }
+
   // maybe need another structure to add support for multiple choices
   const candidate = chunk.candidates?.[0];
   const usage = chunk.usageMetadata;

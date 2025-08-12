@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve Gemini error display with promptFeedback."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
       "improvements": ["Support new GPT-5 Verbosity params."]
     },
     "date": "2025-08-11",
