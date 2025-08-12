@@ -160,11 +160,17 @@ export interface LookupPricingUnit extends PricingUnitBase {
 }
 
 // New conditional pricing unit for complex scenarios like GLM-4.5V
+export type ConditionalPricingConditionParam =
+  | 'inputLength'
+  | 'outputLength'
+  | 'audioLength'
+  | 'imageCount';
+
 export interface ConditionalPricingCondition {
   /**
-   * The condition parameter name, e.g., 'inputLength', 'imageCount', etc.
+   * The condition parameter name, must be one of the predefined parameter types
    */
-  param: string;
+  param: ConditionalPricingConditionParam;
   /**
    * The range for this condition [min, max], where max can be 'infinity'
    */
@@ -194,7 +200,11 @@ export interface ConditionalPricingUnit {
   unit: PricingUnitType;
 }
 
-export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit | ConditionalPricingUnit;
+export type PricingUnit =
+  | FixedPricingUnit
+  | TieredPricingUnit
+  | LookupPricingUnit
+  | ConditionalPricingUnit;
 
 export interface Pricing {
   currency?: ModelPriceCurrency;

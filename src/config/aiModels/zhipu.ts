@@ -5,6 +5,77 @@ const zhipuChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '智谱新一代基于 MOE 架构的视觉推理模型，以106B的总参数量和12B激活参数量，在各类基准测试中达到全球同级别开源多模态模型 SOTA，涵盖图像、视频、文档理解及 GUI 任务等常见任务。',
+    displayName: 'GLM-4.5V',
+    enabled: true,
+    id: 'glm-4.5v',
+    maxOutput: 32_768,
+    pricing: {
+      currency: 'CNY',
+      // units: [
+      //   {
+      //     name: 'textInput',
+      //     strategy: 'tiered',
+      //     tiers: [
+      //       { rate: 7, upTo: 0 },
+      //       { rate: 14, upTo: 0.256 },
+      //       { rate: 1.2, upTo: 'infinity' },
+      //     ],
+      //     unit: 'millionTokens',
+      //   },
+      //   {
+      //     name: 'textOutput',
+      //     strategy: 'tiered',
+      //     tiers: [
+      //       { rate: 1.5, upTo: 0.128 },
+      //       { rate: 6, upTo: 0.256 },
+      //       { rate: 12, upTo: 'infinity' },
+      //     ],
+      //     unit: 'millionTokens',
+      //   },
+      //   {
+      //     name: 'textInput_cacheRead',
+      //     strategy: 'tiered',
+      //     tiers: [
+      //       { rate: 0.15 * 0.4, upTo: 0.128 },
+      //       { rate: 0.6 * 0.4, upTo: 0.256 },
+      //       { rate: 1.2 * 0.4, upTo: 'infinity' },
+      //     ],
+      //     unit: 'millionTokens',
+      //   },
+      // ],
+
+      units: [
+        {
+          strategy: 'conditional',
+          tiers: [
+            {
+              conditions: [{ param: 'inputLength', range: [0, 1] }],
+              rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 6 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [2, 'infinity'] }],
+              rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 12 },
+            },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 128_000,
@@ -17,21 +88,31 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-    {
-      strategy: 'conditional',
-      tiers: [
         {
-          conditions: [{ param: 'inputLength', range: [0, 32_000] }],
-          rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 6 }
+          strategy: 'conditional',
+          tiers: [
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [0, 200] },
+              ],
+              rates: { textInput: 1, textInput_cacheRead: 0.2, textOutput: 4 },
+            },
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [200, 'infinity'] },
+              ],
+              rates: { textInput: 1.5, textInput_cacheRead: 0.3, textOutput: 7 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [32_001, 128_000] }],
+              rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 8 },
+            },
+          ],
+          unit: 'millionTokens',
         },
-        {
-          conditions: [{ param: 'inputLength', range: [32_001, 'infinity'] }],
-          rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 12 }
-        }
       ],
-      unit: 'millionTokens'
-    }
-  ]
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -53,9 +134,30 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          strategy: 'conditional',
+          tiers: [
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [0, 200] },
+              ],
+              rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 8 },
+            },
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [200, 'infinity'] },
+              ],
+              rates: { textInput: 6, textInput_cacheRead: 1.2, textOutput: 16 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [32_001, 128_000] }],
+              rates: { textInput: 8, textInput_cacheRead: 1.6, textOutput: 32 },
+            },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     settings: {
@@ -78,9 +180,30 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          strategy: 'conditional',
+          tiers: [
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [0, 200] },
+              ],
+              rates: { textInput: 0.4, textInput_cacheRead: 0.08, textOutput: 1 },
+            },
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [200, 'infinity'] },
+              ],
+              rates: { textInput: 0.4, textInput_cacheRead: 0.08, textOutput: 3 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [32_001, 128_000] }],
+              rates: { textInput: 0.6, textInput_cacheRead: 0.12, textOutput: 4 },
+            },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     settings: {
@@ -103,35 +226,30 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    settings: {
-      extendParams: ['enableReasoning'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description: 'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
-    displayName: 'GLM-4.5-Flash',
-    enabled: true,
-    id: 'glm-4.5-flash',
-    maxOutput: 32_768,
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput_cacheRead', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          strategy: 'conditional',
+          tiers: [
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [0, 200] },
+              ],
+              rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 6 },
+            },
+            {
+              conditions: [
+                { param: 'inputLength', range: [0, 32_000] },
+                { param: 'outputLength', range: [200, 'infinity'] },
+              ],
+              rates: { textInput: 2, textInput_cacheRead: 0.4, textOutput: 8 },
+            },
+            {
+              conditions: [{ param: 'inputLength', range: [32_001, 128_000] }],
+              rates: { textInput: 4, textInput_cacheRead: 0.8, textOutput: 16 },
+            },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     settings: {
@@ -174,7 +292,6 @@ const zhipuChatModels: AIChatModelCard[] = [
     description:
       'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
     displayName: 'GLM-4.1V-Thinking-Flash',
-    enabled: true,
     id: 'glm-4.1v-thinking-flash',
     maxOutput: 16_384,
     pricing: {

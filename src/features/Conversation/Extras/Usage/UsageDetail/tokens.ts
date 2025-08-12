@@ -32,8 +32,8 @@ export const getDetailsToken = (
     ? usage?.inputCacheMissTokens
     : totalInputTokens - (inputCacheTokens || 0);
 
-  // Pricing
-  const formatPrice = getPrice(modelCard?.pricing || { units: [] });
+  // Pricing - pass usage data for context-aware conditional pricing
+  const formatPrice = getPrice(modelCard?.pricing || { units: [] }, usage);
 
   const inputCacheMissCredit = (
     !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, formatPrice.input) : 0

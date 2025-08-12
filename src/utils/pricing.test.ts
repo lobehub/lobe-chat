@@ -275,11 +275,11 @@ describe('pricing utilities (new)', () => {
     });
 
     it('getRelatedUnitsFromConditionalUnit extracts all units from rates', () => {
-      const textUnit = conditionalPricing.units.find(u => 
-        u.strategy === 'conditional' && u.tiers[0].rates.textInput !== undefined
+      const textUnit = conditionalPricing.units.find(
+        (u) => u.strategy === 'conditional' && u.tiers[0].rates.textInput !== undefined,
       );
       expect(textUnit).toBeDefined();
-      
+
       if (textUnit && textUnit.strategy === 'conditional') {
         const relatedUnits = getRelatedUnitsFromConditionalUnit(textUnit);
         expect(relatedUnits).toContain('textInput');
@@ -287,16 +287,60 @@ describe('pricing utilities (new)', () => {
         expect(relatedUnits).toHaveLength(2);
       }
 
-      const imageUnit = conditionalPricing.units.find(u => 
-        u.strategy === 'conditional' && u.tiers[0].rates.imageGeneration !== undefined
+      const imageUnit = conditionalPricing.units.find(
+        (u) => u.strategy === 'conditional' && u.tiers[0].rates.imageGeneration !== undefined,
       );
       expect(imageUnit).toBeDefined();
-      
+
       if (imageUnit && imageUnit.strategy === 'conditional') {
         const relatedUnits = getRelatedUnitsFromConditionalUnit(imageUnit);
         expect(relatedUnits).toContain('imageGeneration');
         expect(relatedUnits).toHaveLength(1);
       }
+    });
+
+    it('handles outputLength parameter in conditional pricing', () => {
+      const pricingWithOutputLength: Pricing = {
+        currency: 'CNY',
+        units: [
+          {
+            strategy: 'conditional',
+            tiers: [
+              {
+                conditions: [
+                  { param: 'inputLength', range: [0, 32_000] },
+                  { param: 'outputLength', range: [0, 200] },
+                ],
+                rates: { textInput: 1, textOutput: 4 },
+              },
+              {
+                conditions: [
+                  { param: 'inputLength', range: [0, 32_000] },
+                  { param: 'outputLength', range: [200, 'infinity'] },
+                ],
+                rates: { textInput: 1.5, textOutput: 7 },
+              },
+            ],
+            unit: 'millionTokens',
+          },
+        ],
+      };
+
+      // Test short output (≤200 tokens)
+      const shortOutputContext = { inputLength: 1000, outputLength: 100 };
+      expect(getTextInputUnitRate(pricingWithOutputLength, shortOutputContext)).toBe(1);
+      expect(getTextOutputUnitRate(pricingWithOutputLength, shortOutputContext)).toBe(4);
+
+      // Test long output (>200 tokens)
+      const longOutputContext = { inputLength: 1000, outputLength: 500 };
+      expect(getTextInputUnitRate(pricingWithOutputLength, longOutputContext)).toBe(1.5);
+      expect(getTextOutputUnitRate(pricingWithOutputLength, longOutputContext)).toBe(7);
+
+      // Test context with only outputLength
+      const outputOnlyContext = { outputLength: 300 };
+      // Should fall back to first tier when not all conditions are met
+      expect(getTextInputUnitRate(pricingWithOutputLength, outputOnlyContext)).toBe(1);
+      expect(getTextOutputUnitRate(pricingWithOutputLength, outputOnlyContext)).toBe(4);
     });
   });
 });

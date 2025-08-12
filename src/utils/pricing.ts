@@ -1,4 +1,5 @@
 import { ConditionalPricingUnit, Pricing, PricingUnit, PricingUnitName } from '@/types/aiModel';
+import { ModelTokensUsage } from '@/types/message';
 
 /**
  * Context parameters for conditional pricing evaluation
@@ -8,6 +9,7 @@ export interface PricingContext {
   audioLength?: number;
   imageCount?: number;
   inputLength?: number;
+  outputLength?: number;
 }
 
 /**
@@ -22,17 +24,37 @@ const isInRange = (value: number, range: [number, number | 'infinity']): boolean
 };
 
 /**
+ * Create PricingContext from ModelTokensUsage
+ * This function converts token usage data into context for conditional pricing evaluation
+ */
+export const createPricingContext = (usage?: ModelTokensUsage): PricingContext => {
+  if (!usage) return {};
+
+  return {
+    // Use inputAudioTokens as audioLength if available
+    audioLength: usage.inputAudioTokens,
+    // Use totalInputTokens as inputLength for conditional pricing evaluation
+    inputLength: usage.totalInputTokens,
+    // Use totalOutputTokens as outputLength for conditional pricing evaluation
+    outputLength: usage.totalOutputTokens,
+    // Note: imageCount would need to be added to ModelTokensUsage if needed for image-based pricing
+  };
+};
+
+/**
  * Get all related units from a conditional pricing unit by extracting keys from rates
  */
-export const getRelatedUnitsFromConditionalUnit = (unit: ConditionalPricingUnit): PricingUnitName[] => {
+export const getRelatedUnitsFromConditionalUnit = (
+  unit: ConditionalPricingUnit,
+): PricingUnitName[] => {
   const relatedUnits = new Set<PricingUnitName>();
-  
+
   for (const tier of unit.tiers) {
     for (const unitName of Object.keys(tier.rates)) {
       relatedUnits.add(unitName as PricingUnitName);
     }
   }
-  
+
   return Array.from(relatedUnits);
 };
 
@@ -100,7 +122,7 @@ export const getUnitRateByName = (
   const conditionalUnit = pricing.units.find((unit): unit is ConditionalPricingUnit => {
     if (unit.strategy !== 'conditional') return false;
     // Check if any tier contains this unitName in its rates
-    return unit.tiers.some(tier => tier.rates[unitName] !== undefined);
+    return unit.tiers.some((tier) => tier.rates[unitName] !== undefined);
   });
 
   if (conditionalUnit) {
@@ -112,8 +134,9 @@ export const getUnitRateByName = (
   }
 
   // Fallback to direct unit lookup (only for non-conditional units)
-  const unit = pricing.units.find((u): u is Exclude<PricingUnit, ConditionalPricingUnit> => 
-    u.strategy !== 'conditional' && 'name' in u && u.name === unitName
+  const unit = pricing.units.find(
+    (u): u is Exclude<PricingUnit, ConditionalPricingUnit> =>
+      u.strategy !== 'conditional' && 'name' in u && u.name === unitName,
   );
   if (!unit) return undefined;
   return getRateFromUnit(unit);
@@ -198,8 +221,8 @@ export function getCachedAudioInputUnitRate(
  */
 export function getConditionalPricingUnits(pricing?: Pricing): ConditionalPricingUnit[] {
   if (!pricing?.units) return [];
-  return pricing.units.filter((unit): unit is ConditionalPricingUnit => 
-    unit.strategy === 'conditional'
+  return pricing.units.filter(
+    (unit): unit is ConditionalPricingUnit => unit.strategy === 'conditional',
   );
 }
 
@@ -256,4 +279,57 @@ export function getContextAwareRate(
 
   // Fallback to regular unit rate calculation
   return getUnitRateByName(pricing, unitName, context);
+}
+
+/**
+ * Get text input unit rate from ModelTokensUsage
+ * This is a convenience function that automatically creates PricingContext from usage
+ */
+export function getTextInputUnitRateFromUsage(
+  pricing?: Pricing,
+  usage?: ModelTokensUsage,
+): number | undefined {
+  const context = createPricingContext(usage);
+  return getTextInputUnitRate(pricing, context);
+}
+
+/**
+ * Get text output unit rate from ModelTokensUsage
+ * This is a convenience function that automatically creates PricingContext from usage
+ */
+export function getTextOutputUnitRateFromUsage(
+  pricing?: Pricing,
+  usage?: ModelTokensUsage,
+): number | undefined {
+  const context = createPricingContext(usage);
+  return getTextOutputUnitRate(pricing, context);
+}
+
+/**
+ * Get all pricing rates from ModelTokensUsage
+ * This is a convenience function that returns all relevant rates with context
+ */
+export function getPricingRatesFromUsage(
+  pricing?: Pricing,
+  usage?: ModelTokensUsage,
+): {
+  audioInputRate?: number;
+  audioOutputRate?: number;
+  cachedInputRate?: number;
+  context: PricingContext;
+  inputRate?: number;
+  outputRate?: number;
+  writeCacheInputRate?: number;
+} {
+  const context = createPricingContext(usage);
+
+  return {
+    audioInputRate: getAudioInputUnitRate(pricing, context),
+    audioOutputRate: getAudioOutputUnitRate(pricing, context),
+    cachedInputRate: getCachedTextInputUnitRate(pricing, context),
+    context,
+    inputRate: getTextInputUnitRate(pricing, context),
+    outputRate: getTextOutputUnitRate(pricing, context),
+    writeCacheInputRate: getWriteCacheInputUnitRate(pricing, context),
+  };
 }
