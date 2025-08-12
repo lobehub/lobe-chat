@@ -28,12 +28,6 @@ export default function SettingRoutesLayout() {
         }}
       />
       <Stack.Screen
-        name="theme/index"
-        options={{
-          headerTitle: t('theme.title', { ns: 'setting' }),
-        }}
-      />
-      <Stack.Screen
         name="locale/index"
         options={{
           headerTitle: t('locale.title', { ns: 'setting' }),
