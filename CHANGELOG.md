@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.106.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.106.0...v1.106.1)
+<sup>Released on **2025-08-12**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor model-runtime to a seperated package.
+
+
+#### 💄 Styles
+
+- **misc**: Adjust near bottom size on thinking scroll, improve Gemini error display with promptFeedback, Support new GPT-5 Verbosity params.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor model-runtime to a seperated package, closes [#8763](https://github.com/jaworldwideorg/OneJA-Bot/issues/8763) ([e5eb7a2](https://github.com/jaworldwideorg/OneJA-Bot/commit/e5eb7a2))
+
+
+
+#### Styles
+
+* **misc**: Adjust near bottom size on thinking scroll, closes [#8772](https://github.com/jaworldwideorg/OneJA-Bot/issues/8772) ([1fae490](https://github.com/jaworldwideorg/OneJA-Bot/commit/1fae490))
+* **misc**: Improve Gemini error display with promptFeedback, closes [#8707](https://github.com/jaworldwideorg/OneJA-Bot/issues/8707) ([51ad399](https://github.com/jaworldwideorg/OneJA-Bot/commit/51ad399))
+* **misc**: Support new GPT-5 Verbosity params, closes [#8715](https://github.com/jaworldwideorg/OneJA-Bot/issues/8715) ([0a724aa](https://github.com/jaworldwideorg/OneJA-Bot/commit/0a724aa))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.106.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.2...v1.106.0)
 <sup>Released on **2025-08-11**</sup>
 
