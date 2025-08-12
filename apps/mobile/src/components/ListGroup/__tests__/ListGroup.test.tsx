@@ -14,11 +14,12 @@ describe('ListGroup', () => {
   });
 
   it('renders with title', () => {
-    const { toJSON } = renderWithTheme(
-      <ListGroup>
+    const { toJSON, getByText } = renderWithTheme(
+      <ListGroup title="分组标题">
         <Text>Group content</Text>
       </ListGroup>,
     );
+    expect(getByText('分组标题')).toBeTruthy();
     expect(toJSON()).toBeTruthy();
   });
 

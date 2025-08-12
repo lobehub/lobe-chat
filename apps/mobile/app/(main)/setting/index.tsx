@@ -22,7 +22,7 @@ export default function SettingScreen() {
   return (
     <ScrollView style={styles.container}>
       {/* Theme settings inline */}
-      <ListGroup>
+      <ListGroup title={t('theme.title', { ns: 'setting' })}>
         <SettingItem
           onSwitchChange={(enabled) => setThemeMode(enabled ? 'auto' : 'light')}
           showSwitch
