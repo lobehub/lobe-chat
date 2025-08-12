@@ -1,7 +1,7 @@
+import { AgentRuntimeError } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeError } from '@/libs/model-runtime';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getXorPayload } from '@/utils/server/xor';
 

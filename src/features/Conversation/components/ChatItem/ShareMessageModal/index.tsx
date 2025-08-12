@@ -1,5 +1,5 @@
 import { Modal, Segmented, type SegmentedProps } from '@lobehub/ui';
-import { memo, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -23,6 +23,7 @@ interface ShareModalProps {
 const ShareModal = memo<ShareModalProps>(({ onCancel, open, message }) => {
   const [tab, setTab] = useState<Tab>(Tab.Screenshot);
   const { t } = useTranslation('chat');
+  const uniqueId = useId();
 
   const options: SegmentedProps['options'] = useMemo(
     () => [
@@ -58,7 +59,9 @@ const ShareModal = memo<ShareModalProps>(({ onCancel, open, message }) => {
           value={tab}
           variant={'filled'}
         />
-        {tab === Tab.Screenshot && <ShareImage message={message} mobile={isMobile} />}
+        {tab === Tab.Screenshot && (
+          <ShareImage message={message} mobile={isMobile} uniqueId={uniqueId} />
+        )}
         {tab === Tab.Text && <ShareText item={message} />}
       </Flexbox>
     </Modal>

@@ -4,6 +4,110 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
+    displayName: 'GPT-5',
+    enabled: true,
+    id: 'gpt-5',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
+    displayName: 'GPT-5 mini',
+    enabled: true,
+    id: 'gpt-5-mini',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description: '最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。',
+    displayName: 'GPT-5 nano',
+    id: 'gpt-5-nano',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.01, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
+    displayName: 'GPT-5 Chat',
+    enabled: true,
+    id: 'gpt-5-chat-latest',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -12,13 +116,14 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
     displayName: 'o4-mini',
-    enabled: true,
     id: 'o4-mini',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.275,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-17',
     settings: {
@@ -41,9 +146,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'o4-mini-deep-research',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-26',
     settings: {
@@ -66,8 +173,10 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'o3-pro',
     maxOutput: 100_000,
     pricing: {
-      input: 20,
-      output: 80,
+      units: [
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-10',
     settings: {
@@ -87,13 +196,14 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
-    enabled: true,
     id: 'o3',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-16',
     settings: {
@@ -116,9 +226,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'o3-deep-research',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 2.5,
-      input: 10,
-      output: 40,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-26',
     settings: {
@@ -136,13 +248,14 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 1_047_576,
     description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
     displayName: 'GPT-4.1',
-    enabled: true,
     id: 'gpt-4.1',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     settings: {
@@ -163,9 +276,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gpt-4.1-mini',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.1,
-      input: 0.4,
-      output: 1.6,
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     settings: {
@@ -184,9 +299,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-14',
     type: 'chat',
@@ -199,11 +316,12 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
     displayName: 'ChatGPT-4o',
-    enabled: true,
     id: 'chatgpt-4o-latest',
     pricing: {
-      input: 5,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -219,9 +337,11 @@ const aihubmixModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3',
     pricing: {
-      cachedInput: 0.75,
-      input: 3,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-03',
     settings: {
@@ -242,8 +362,10 @@ const aihubmixModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3-mini',
     pricing: {
-      input: 0.3,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-03',
     settings: {
@@ -267,10 +389,17 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'claude-opus-4-1-20250805',
     maxOutput: 32_000,
     pricing: {
-      cachedInput: 1.5,
-      input: 16.5,
-      output: 82.5,
-      writeCacheInput: 18.75,
+      units: [
+        { name: 'textInput', rate: 16.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 82.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '5m': 20.625 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
     },
     releasedAt: '2025-08-05',
     settings: {
@@ -293,10 +422,17 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'claude-opus-4-20250514',
     maxOutput: 32_000,
     pricing: {
-      cachedInput: 1.5,
-      input: 16.8,
-      output: 84,
-      writeCacheInput: 18.75,
+      units: [
+        { name: 'textInput', rate: 16.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 84, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '5m': 20.625 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
     },
     releasedAt: '2025-05-23',
     settings: {
@@ -320,10 +456,17 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'claude-sonnet-4-20250514',
     maxOutput: 64_000,
     pricing: {
-      cachedInput: 0.3,
-      input: 3.3,
-      output: 16.5,
-      writeCacheInput: 3.75,
+      units: [
+        { name: 'textInput', rate: 3.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '5m': 4.125 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
     },
     releasedAt: '2025-05-23',
     settings: {
@@ -346,10 +489,17 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'claude-3-7-sonnet-20250219',
     maxOutput: 64_000,
     pricing: {
-      cachedInput: 0.3,
-      input: 3.3,
-      output: 16.5,
-      writeCacheInput: 3.75,
+      units: [
+        { name: 'textInput', rate: 3.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '5m': 4.125 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
     },
     releasedAt: '2025-02-24',
     settings: {
@@ -370,10 +520,17 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'claude-3-5-haiku-20241022',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 0.1,
-      input: 1.1,
-      output: 5.5,
-      writeCacheInput: 1.25,
+      units: [
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '5m': 1.1 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
     },
     releasedAt: '2024-11-05',
     settings: {
@@ -393,8 +550,10 @@ const aihubmixModels: AIChatModelCard[] = [
     enabled: true,
     id: 'DeepSeek-R1',
     pricing: {
-      input: 0.546,
-      output: 2.184,
+      units: [
+        { name: 'textInput', rate: 0.546, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.184, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -409,8 +568,10 @@ const aihubmixModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 0528 (Azure)',
     id: 'azure-DeepSeek-R1-0528',
     pricing: {
-      input: 0.4,
-      output: 1.6,
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -424,8 +585,10 @@ const aihubmixModels: AIChatModelCard[] = [
     enabled: true,
     id: 'DeepSeek-V3',
     pricing: {
-      input: 0.272,
-      output: 1.088,
+      units: [
+        { name: 'textInput', rate: 0.272, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.088, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -439,8 +602,10 @@ const aihubmixModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3 (Fast)',
     id: 'DeepSeek-V3-Fast',
     pricing: {
-      input: 0.55,
-      output: 2.2,
+      units: [
+        { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -459,8 +624,10 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
-      input: 1.25, // prompts <= 200k tokens
-      output: 10, // prompts <= 200k tokens
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-17',
     settings: {
@@ -484,9 +651,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {
-      cachedInput: 0.075,
-      input: 0.3,
-      output: 2.5,
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-17',
     settings: {
@@ -509,9 +678,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-lite',
     maxOutput: 65_536,
     pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-22',
     settings: {
@@ -530,14 +701,15 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 235B A22B Thinking 2507',
-    enabled: true,
     id: 'qwen3-235b-a22b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.28,
-      output: 2.8,
+      units: [
+        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-25',
     type: 'chat',
@@ -550,14 +722,15 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。',
     displayName: 'Qwen3 235B A22B Instruct 2507',
-    enabled: true,
     id: 'qwen3-235b-a22b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.28,
-      output: 1.12,
+      units: [
+        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-22',
     type: 'chat',
@@ -571,14 +744,15 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-30B-A3B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 30B A3B Thinking 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.12,
-      output: 1.2,
+      units: [
+        { name: 'textInput', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-30',
     type: 'chat',
@@ -591,13 +765,15 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
     displayName: 'Qwen3 30B A3B Instruct 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
-      input: 0.12,
-      output: 0.48,
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.48, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-29',
     type: 'chat',

@@ -21,6 +21,10 @@
     "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
     "title": "Modifica messaggio"
   },
+  "navigateToChat": {
+    "desc": "Passa alla scheda della conversazione e inizia una chiacchierata casuale",
+    "title": "Passa alla conversazione predefinita"
+  },
   "openChatSettings": {
     "desc": "Visualizza e modifica le impostazioni della conversazione attuale",
     "title": "Apri impostazioni chat"

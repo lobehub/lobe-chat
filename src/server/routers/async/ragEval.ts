@@ -1,3 +1,4 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
@@ -12,7 +13,6 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { ModelProvider } from '@/libs/model-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';

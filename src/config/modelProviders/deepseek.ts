@@ -11,13 +11,6 @@ const DeepSeek: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-chat',
-      pricing: {
-        // 2025.2.9 之后涨价
-        cachedInput: 0.1,
-        currency: 'CNY',
-        input: 1,
-        output: 2,
-      },
       releasedAt: '2024-12-26',
     },
     {
@@ -27,12 +20,6 @@ const DeepSeek: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek-reasoner',
-      pricing: {
-        cachedInput: 1,
-        currency: 'CNY',
-        input: 4,
-        output: 16,
-      },
       releasedAt: '2025-01-20',
     },
   ],
