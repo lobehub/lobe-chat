@@ -6,11 +6,7 @@ import matter from 'gray-matter';
 import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'lodash-es';
 import urlJoin from 'url-join';
 
-import {
-  DEFAULT_DISCOVER_ASSISTANT_ITEM,
-  DEFAULT_DISCOVER_PLUGIN_ITEM,
-  DEFAULT_DISCOVER_PROVIDER_ITEM,
-} from '@/const/discover';
+import { DEFAULT_DISCOVER_PLUGIN_ITEM, DEFAULT_DISCOVER_PROVIDER_ITEM } from '@/const/discover';
 import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { normalizeLocale } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
@@ -22,7 +18,6 @@ import {
   CacheRevalidate,
   CacheTag,
   DiscoverAssistantDetail,
-  DiscoverAssistantItem,
   DiscoverMcpDetail,
   DiscoverModelDetail,
   DiscoverModelItem,
@@ -43,7 +38,11 @@ import {
   ProviderQueryParams,
   ProviderSorts,
 } from '@/types/discover';
-import { getAudioInputUnitRate, getTextInputUnitRate, getTextOutputUnitRate } from '@/utils/pricing';
+import {
+  getAudioInputUnitRate,
+  getTextInputUnitRate,
+  getTextOutputUnitRate,
+} from '@/utils/pricing';
 
 const log = debug('lobe-server:discover');
 
@@ -205,49 +204,39 @@ export class DiscoverService {
 
   // ============================== Assistant Market ==============================
 
-  private _getAssistantList = async (locale?: string): Promise<DiscoverAssistantItem[]> => {
-    log('_getAssistantList: locale=%s', locale);
-    const normalizedLocale = normalizeLocale(locale);
-    const list = await this.assistantStore.getAgentIndex(normalizedLocale);
-    if (!list || !Array.isArray(list)) {
-      log('_getAssistantList: no valid list found, returning empty array');
-      return [];
-    }
-    const result = list.map(({ meta, ...item }) => ({ ...item, ...meta }));
-    log('_getAssistantList: returning %d items', result.length);
-    return result;
-  };
-
   getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
     log('getAssistantCategories: params=%O', params);
     const { q, locale } = params;
-    let list = await this._getAssistantList(locale);
-    if (q) {
-      const originalCount = list.length;
-      list = list.filter((item) => {
-        return [item.author, item.title, item.description, item?.tags]
-          .flat()
-          .filter(Boolean)
-          .join(',')
-          .toLowerCase()
-          .includes(decodeURIComponent(q).toLowerCase());
-      });
-      log(
-        'getAssistantCategories: filtered by query "%s", %d -> %d items',
-        q,
-        originalCount,
-        list.length,
+    const normalizedLocale = normalizeLocale(locale);
+
+    try {
+      // Call the database API categories endpoint directly
+      const queryParams = new URLSearchParams();
+      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
+      if (q) queryParams.set('q', q);
+
+      const response = await fetch(
+        `${process.env.MARKET_BASE_URL}/api/v1/agents/categories?${queryParams}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        },
       );
+
+      if (!response.ok) {
+        log('getAssistantCategories: API request failed with status %d', response.status);
+        return [];
+      }
+
+      const result = await response.json();
+      log('getAssistantCategories: returning %d categories from database API', result.length);
+      return result;
+    } catch (error) {
+      log('getAssistantCategories: error fetching from database API: %O', error);
+      return [];
     }
-    const categoryCounts = countBy(list, (item) => item.category);
-    const result = Object.entries(categoryCounts)
-      .filter(([category]) => Boolean(category)) // 过滤掉空值
-      .map(([category, count]) => ({
-        category,
-        count,
-      }));
-    log('getAssistantCategories: returning %d categories', result.length);
-    return result;
   };
 
   getAssistantDetail = async (params: {
@@ -257,38 +246,106 @@ export class DiscoverService {
     log('getAssistantDetail: params=%O', params);
     const { locale, identifier } = params;
     const normalizedLocale = normalizeLocale(locale);
-    let data = await this.assistantStore.getAgent(identifier, normalizedLocale);
-    if (!data) {
-      log('getAssistantDetail: assistant not found for identifier=%s', identifier);
+
+    try {
+      // Call the database API detail endpoint
+      const queryParams = new URLSearchParams();
+      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
+
+      const response = await fetch(
+        `${process.env.MARKET_BASE_URL}/api/v1/agents/detail/${identifier}?${queryParams}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        },
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          log('getAssistantDetail: assistant not found for identifier=%s', identifier);
+          return;
+        }
+        log('getAssistantDetail: API request failed with status %d', response.status);
+        return;
+      }
+
+      const data = await response.json();
+
+      // Transform database format to DiscoverAssistantDetail format
+      const assistant = {
+        author: data.author || `User${data.ownerId}`,
+        avatar: data.avatar || '',
+
+        category: data.category || 'general',
+        // Add detail-specific fields
+        config: data.config || {},
+
+        createdAt: data.createdAt,
+        description: data.description,
+        homepage: data.homepage || `https://lobehub.com/discover/assistant/${data.identifier}`,
+
+        identifier: data.identifier,
+
+        knowledgeCount: data.config?.knowledgeBases?.lenght,
+
+        // This might need to be added to the API
+        pluginCount: data.config?.plugins?.length,
+
+        readme: data.documentationUrl || '',
+        schemaVersion: 1,
+        systemRole: data.config?.systemRole || '',
+        // Use author from API or fallback
+        tags: data.config?.tags || [],
+        title: data.name,
+        tokenUsage: data.tokenUsage || 0,
+      };
+
+      // Get related assistants
+      const list = await this.getAssistantList({
+        category: assistant.category,
+        locale,
+        page: 1,
+        pageSize: 7,
+      });
+
+      const result = {
+        ...assistant,
+        related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
+      };
+
+      log('getAssistantDetail: returning assistant with %d related items', result.related.length);
+      return result;
+    } catch (error) {
+      log('getAssistantDetail: error fetching from database API: %O', error);
       return;
     }
-    const { meta, ...item } = data;
-    const assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), { ...item, ...meta });
-    const list = await this.getAssistantList({
-      category: assistant.category,
-      locale,
-      page: 1,
-      pageSize: 7,
-    });
-    const result = {
-      ...assistant,
-      related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
-    };
-    log('getAssistantDetail: returning assistant with %d related items', result.related.length);
-    return result;
   };
 
   getAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
     log('getAssistantIdentifiers: fetching identifiers');
-    const list = await this._getAssistantList();
-    const result = list.map((item) => {
-      return {
-        identifier: item.identifier,
-        lastModified: item.createdAt,
-      };
-    });
-    log('getAssistantIdentifiers: returning %d identifiers', result.length);
-    return result;
+    try {
+      // Call the database API identifiers endpoint directly
+      const response = await fetch(`${process.env.MARKET_BASE_URL}/api/v1/agents/identifiers`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        log('getAssistantIdentifiers: API request failed with status %d', response.status);
+        return [];
+      }
+
+      const result = await response.json();
+      log('getAssistantIdentifiers: returning %d identifiers from database API', result.length);
+      return result;
+    } catch (error) {
+      log('getAssistantIdentifiers: error fetching from database API: %O', error);
+      return [];
+    }
   };
 
   getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
@@ -302,112 +359,114 @@ export class DiscoverService {
       q,
       sort = AssistantSorts.CreatedAt,
     } = params;
-    let list = await this._getAssistantList(locale);
-    const originalCount = list.length;
 
-    if (category) {
-      list = list.filter((item) => item.category === category);
-      log(
-        'getAssistantList: filtered by category "%s", %d -> %d items',
-        category,
-        originalCount,
-        list.length,
-      );
-    }
+    try {
+      const normalizedLocale = normalizeLocale(locale);
 
-    if (q) {
-      const beforeFilter = list.length;
-      list = list.filter((item) => {
-        return [item.author, item.title, item.description, item?.tags]
-          .flat()
-          .filter(Boolean)
-          .join(',')
-          .toLowerCase()
-          .includes(decodeURIComponent(q).toLowerCase());
-      });
-      log('getAssistantList: filtered by query "%s", %d -> %d items', q, beforeFilter, list.length);
-    }
+      // Build query parameters for database API
+      const queryParams = new URLSearchParams();
+      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
+      if (category) queryParams.set('category', category);
+      if (q) queryParams.set('q', q);
+      queryParams.set('page', page.toString());
+      queryParams.set('pageSize', pageSize.toString());
+      queryParams.set('order', order);
+      queryParams.set('status', 'published');
+      queryParams.set('visibility', 'public');
 
-    if (sort) {
-      log('getAssistantList: sorting by %s %s', sort, order);
+      // Map AssistantSorts to database API sort fields
+      let apiSort = 'createdAt'; // default
       switch (sort) {
         case AssistantSorts.CreatedAt: {
-          list = list.sort((a, b) => {
-            if (order === 'asc') {
-              return dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix();
-            } else {
-              return dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix();
-            }
-          });
-          break;
-        }
-        case AssistantSorts.KnowledgeCount: {
-          list = list.sort((a, b) => {
-            if (order === 'asc') {
-              return a.knowledgeCount - b.knowledgeCount;
-            } else {
-              return b.knowledgeCount - a.knowledgeCount;
-            }
-          });
-          break;
-        }
-        case AssistantSorts.PluginCount: {
-          list = list.sort((a, b) => {
-            if (order === 'asc') {
-              return a.pluginCount - b.pluginCount;
-            } else {
-              return b.pluginCount - a.pluginCount;
-            }
-          });
-          break;
-        }
-        case AssistantSorts.TokenUsage: {
-          list = list.sort((a, b) => {
-            if (order === 'asc') {
-              return a.tokenUsage - b.tokenUsage;
-            } else {
-              return b.tokenUsage - a.tokenUsage;
-            }
-          });
+          apiSort = 'createdAt';
           break;
         }
         case AssistantSorts.Identifier: {
-          list = list.sort((a, b) => {
-            if (order !== 'desc') {
-              return a.identifier.localeCompare(b.identifier);
-            } else {
-              return b.identifier.localeCompare(a.identifier);
-            }
-          });
+          apiSort = 'name'; // Use name as fallback for identifier
           break;
         }
         case AssistantSorts.Title: {
-          list = list.sort((a, b) => {
-            if (order === 'desc') {
-              return (a.title || a.identifier).localeCompare(b.title || b.identifier);
-            } else {
-              return (b.title || b.identifier).localeCompare(a.title || a.identifier);
-            }
-          });
+          apiSort = 'name';
+          break;
+        }
+        // For sorts not supported by API, we'll use default
+        case AssistantSorts.KnowledgeCount: {
+          apiSort = 'knowledgeCount';
+          break;
+        }
+        case AssistantSorts.PluginCount: {
+          apiSort = 'pluginCount';
+          break;
+        }
+        case AssistantSorts.TokenUsage: {
+          apiSort = 'tokenUsage';
           break;
         }
       }
-    }
+      queryParams.set('sort', apiSort);
 
-    const result = {
-      currentPage: page,
-      items: list.slice((page - 1) * pageSize, page * pageSize),
-      pageSize,
-      totalCount: list.length,
-      totalPages: Math.ceil(list.length / pageSize),
-    };
-    log(
-      'getAssistantList: returning page %d/%d with %d items',
-      page,
-      result.totalPages,
-      result.items.length,
-    );
-    return result;
+      const response = await fetch(`${process.env.MARKET_BASE_URL}/api/v1/agents?${queryParams}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        log('getAssistantList: API request failed with status %d', response.status);
+        return {
+          currentPage: page,
+          items: [],
+          pageSize,
+          totalCount: 0,
+          totalPages: 0,
+        };
+      }
+
+      const data = await response.json();
+
+      // Transform database format to DiscoverAssistantItem format
+      const transformedItems = (data.items || []).map((item: any) => ({
+        author: `User${item.ownerId}`, // Temporary mapping
+        avatar: item.avatar || '',
+        category: item.category || 'general',
+        createdAt: item.createdAt,
+        description: item.description,
+        homepage: `https://lobehub.com/discover/assistant/${item.identifier}`,
+        identifier: item.identifier,
+        knowledgeCount: item.knowledgeCount,
+        pluginCount: item.pluginCount,
+        schemaVersion: 1,
+        tags: [],
+        title: item.name, // This might need to be added to the API
+        tokenUsage: item.tokenUsage || 0,
+      }));
+
+      const result = {
+        currentPage: data.currentPage || page,
+        items: transformedItems,
+        pageSize: data.pageSize || pageSize,
+        totalCount: data.totalCount || 0,
+        totalPages: data.totalPages || 0,
+      };
+
+      log(
+        'getAssistantList: returning page %d/%d with %d items from database API',
+        result.currentPage,
+        result.totalPages,
+        result.items.length,
+      );
+      return result;
+    } catch (error) {
+      log('getAssistantList: error fetching from database API: %O', error);
+      return {
+        currentPage: page,
+        items: [],
+        pageSize,
+        totalCount: 0,
+        totalPages: 0,
+      };
+    }
   };
 
   // ============================== MCP Market ==============================
@@ -1158,9 +1217,13 @@ export class DiscoverService {
         case ModelSorts.OutputPrice: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return (getTextOutputUnitRate(a.pricing) || 0) - (getTextOutputUnitRate(b.pricing) || 0);
+              return (
+                (getTextOutputUnitRate(a.pricing) || 0) - (getTextOutputUnitRate(b.pricing) || 0)
+              );
             } else {
-              return (getTextOutputUnitRate(b.pricing) || 0) - (getTextOutputUnitRate(a.pricing) || 0);
+              return (
+                (getTextOutputUnitRate(b.pricing) || 0) - (getTextOutputUnitRate(a.pricing) || 0)
+              );
             }
           });
           break;
