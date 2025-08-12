@@ -107,7 +107,7 @@ export interface ChatStreamPayload {
     effort?: string;
     summary?: string;
   };
-  reasoning_effort?: 'low' | 'medium' | 'high';
+  reasoning_effort?: 'minimal' | 'low' | 'medium' | 'high';
   responseMode?: 'stream' | 'json';
   /**
    * @title 是否开启流式请求
@@ -119,6 +119,9 @@ export interface ChatStreamPayload {
    * @default 1
    */
   temperature: number;
+  text?: {
+    verbosity?: 'low' | 'medium' | 'high';
+  };
   /**
    * use for Claude and Gemini
    */
@@ -139,6 +142,7 @@ export interface ChatStreamPayload {
    * @title Gemini URL 上下文获取工具开关
    */
   urlContext?: boolean;
+  verbosity?: 'low' | 'medium' | 'high';
 }
 
 export interface ChatMethodOptions {
