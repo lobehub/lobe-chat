@@ -102,7 +102,7 @@ const Thinking = memo<ThinkingProps>((props) => {
 
     // 仅当用户接近底部时才自动滚动，避免打断用户查看上方内容
     const distanceToBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-    const isNearBottom = distanceToBottom < 60;
+    const isNearBottom = distanceToBottom < 120;
 
     if (isNearBottom) {
       requestAnimationFrame(() => {
