@@ -420,14 +420,14 @@ export class SessionService extends BaseService {
       }
 
       return await this.db.transaction(async (tx) => {
-        // 如果指定了 agentId，验证 Agent 是否存在且属于当前用户
+        // 如果指定了 agentId，验证 Agent 是否存在
         if (request.agentId) {
           const agent = await tx.query.agents.findFirst({
-            where: and(eq(agents.id, request.agentId), eq(agents.userId, this.userId!)),
+            where: and(eq(agents.id, request.agentId)),
           });
 
           if (!agent) {
-            throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在或无权限访问`);
+            throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在`);
           }
         }
 
