@@ -1,10 +1,12 @@
 import urlJoin from 'url-join';
 
-import AiHubMixModels from '@/config/aiModels/aihubmix';
-import type { ChatModelCard } from '@/types/llm';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { responsesAPIModels } from '@/const/models';
 
 import { createRouterRuntime } from '../RouterRuntime';
 import { ModelProvider } from '../types';
+import { ChatStreamPayload } from '../types/chat';
+import { detectModelProvider, processMultiProviderModelList } from '../utils/modelParse';
 
 export interface AiHubMixModelCard {
   created: number;
@@ -15,6 +17,17 @@ export interface AiHubMixModelCard {
 
 const baseURL = 'https://aihubmix.com';
 
+const handlePayload = (payload: ChatStreamPayload) => {
+  if (
+    responsesAPIModels.has(payload.model) ||
+    payload.model.includes('gpt-') ||
+    /^o\d/.test(payload.model)
+  ) {
+    return { ...payload, apiMode: 'responses' } as any;
+  }
+  return payload as any;
+};
+
 export const LobeAiHubMixAI = createRouterRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
@@ -24,68 +37,11 @@ export const LobeAiHubMixAI = createRouterRuntime({
   },
   id: ModelProvider.AiHubMix,
   models: async ({ client }) => {
-    const functionCallKeywords = [
-      'gpt-4',
-      'gpt-3.5',
-      'claude',
-      'gemini',
-      'qwen',
-      'deepseek',
-      'llama',
-    ];
-
-    const visionKeywords = [
-      'gpt-4o',
-      'gpt-4-vision',
-      'claude-3',
-      'claude-4',
-      'gemini-pro-vision',
-      'qwen-vl',
-      'llava',
-    ];
-
-    const reasoningKeywords = [
-      'o1',
-      'deepseek-r1',
-      'qwq',
-      'claude-opus-4',
-      'claude-sonnet-4',
-      'claude-3-5-sonnet',
-      'claude-3-5-haiku',
-    ];
-
     try {
       const modelsPage = (await client.models.list()) as any;
       const modelList: AiHubMixModelCard[] = modelsPage.data || [];
 
-      return modelList
-        .map((model) => {
-          const knownModel = AiHubMixModels.find(
-            (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-          );
-
-          const modelId = model.id.toLowerCase();
-
-          return {
-            contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-            displayName: knownModel?.displayName ?? model.id,
-            enabled: knownModel?.enabled || false,
-            functionCall:
-              functionCallKeywords.some((keyword) => modelId.includes(keyword)) ||
-              knownModel?.abilities?.functionCall ||
-              false,
-            id: model.id,
-            reasoning:
-              reasoningKeywords.some((keyword) => modelId.includes(keyword)) ||
-              knownModel?.abilities?.reasoning ||
-              false,
-            vision:
-              visionKeywords.some((keyword) => modelId.includes(keyword)) ||
-              knownModel?.abilities?.vision ||
-              false,
-          };
-        })
-        .filter(Boolean) as ChatModelCard[];
+      return await processMultiProviderModelList(modelList, 'aihubmix');
     } catch (error) {
       console.warn(
         'Failed to fetch AiHubMix models. Please ensure your AiHubMix API key is valid:',
@@ -97,25 +53,26 @@ export const LobeAiHubMixAI = createRouterRuntime({
   routers: [
     {
       apiType: 'anthropic',
-      models: async () => {
-        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-        return LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
-          (id) => id.startsWith('claude') || id.startsWith('kimi-k2'),
-        );
-      },
+      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
+        (id) => detectModelProvider(id) === 'anthropic',
+      ),
       options: { baseURL },
     },
     {
       apiType: 'google',
-      models: async () => {
-        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-        return LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter((id) => id.startsWith('gemini'));
-      },
+      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
+        (id) => detectModelProvider(id) === 'google',
+      ),
       options: { baseURL: urlJoin(baseURL, '/gemini') },
     },
     {
       apiType: 'openai',
-      options: { baseURL: urlJoin(baseURL, '/v1') },
+      options: {
+        baseURL: urlJoin(baseURL, '/v1'),
+        chatCompletion: {
+          handlePayload,
+        },
+      },
     },
   ],
 });

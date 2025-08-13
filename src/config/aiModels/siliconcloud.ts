@@ -6,6 +6,65 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'Step3 是由阶跃星辰（StepFun）发布的前沿多模态推理模型，它基于拥有 321B 总参数和 38B 激活参数的专家混合（MoE）架构构建。该模型采用端到端设计，旨在最小化解码成本，同时在视觉语言推理方面提供顶级性能。通过多矩阵分解注意力（MFA）和注意力-FFN 解耦（AFD）的协同设计，Step3 在旗舰级和低端加速器上都能保持卓越的效率。在预训练阶段，Step3 处理了超过 20T 的文本 token 和 4T 的图文混合 token，覆盖十多种语言。该模型在数学、代码及多模态等多个基准测试中均达到了开源模型的领先水平。',
+    displayName: 'Step 3',
+    id: 'stepfun-ai/step3',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-31',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-Coder-480B-A35B-Instruct 是由阿里巴巴发布的、迄今为止最具代理（Agentic）能力的代码模型。它是一个拥有 4800 亿总参数和 350 亿激活参数的混合专家（MoE）模型，在效率和性能之间取得了平衡。该模型原生支持 256K（约 26 万） tokens 的上下文长度，并可通过 YaRN 等外推方法扩展至 100 万 tokens，使其能够处理大规模代码库和复杂的编程任务。Qwen3-Coder 专为代理式编码工作流设计，不仅能生成代码，还能与开发工具和环境自主交互，以解决复杂的编程问题。在多个编码和代理任务的基准测试中，该模型在开源模型中取得了顶尖水平，其性能可与 Claude Sonnet 4 等领先模型相媲美。',
+    displayName: 'Qwen3 Coder 480B A35B Instruct',
+    id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-Coder-30B-A3B-Instruct 是由阿里巴巴通义千问团队开发的 Qwen3 系列中的代码模型。作为一个经过精简优化的模型，它在保持高性能和高效率的同时，专注于提升代码处理能力。该模型在代理式编程（Agentic Coding）、自动化浏览器操作和工具调用等复杂任务上，于开源模型中表现出显著的性能优势。它原生支持 256K tokens 的长上下文，并可扩展至 1M tokens，从而能够更好地进行代码库级别的理解和处理。此外，该模型为 Qwen Code、CLINE 等平台提供了强大的代理编码支持，并设计了专门的函数调用格式。',
+    displayName: 'Qwen3 Coder 30B A3B Instruct',
+    id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-31',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -224,6 +283,27 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-21',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-30B-A3B-Thinking-2507 是由阿里巴巴通义千问团队发布的 Qwen3 系列的最新思考模型。作为一个拥有 305 亿总参数和 33 亿激活参数的混合专家（MoE）模型，它专注于提升复杂任务的处理能力。该模型在逻辑推理、数学、科学、编程和需要人类专业知识的学术基准测试上表现出显著的性能提升。同时，它在指令遵循、工具使用、文本生成和与人类偏好对齐等通用能力方面也得到了显著增强。模型原生支持 256K 的长上下文理解能力，并可扩展至 100 万 tokens。此版本专为“思考模式”设计，旨在通过详尽的逐步推理来解决高度复杂的任务，其 Agent 智能体能力也表现出色。',
+    displayName: 'Qwen3 30B A3B Thinking 2507',
+    id: 'Qwen/Qwen3-30B-A3B-Thinking-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-30',
     type: 'chat',
   },
   {

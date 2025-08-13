@@ -37,7 +37,7 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: VolcengineModelCard[] = modelsPage.data;
 
-    return processModelList(modelList, MODEL_LIST_CONFIGS.volcengine);
+    return processModelList(modelList, MODEL_LIST_CONFIGS.volcengine, 'volcengine');
   },
   provider: ModelProvider.Volcengine,
 });
