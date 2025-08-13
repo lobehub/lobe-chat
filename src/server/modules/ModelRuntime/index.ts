@@ -1,5 +1,4 @@
-import { AgentRuntimeErrorType, ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
-import { AgentRuntimeError } from '@lobechat/model-runtime/error';
+import { AgentRuntimeError, AgentRuntimeErrorType, ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
 
 import { getLLMConfig } from '@/config/llm';
 import { ClientSecretPayload } from '@/const/auth';
