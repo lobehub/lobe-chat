@@ -6,6 +6,35 @@ const zhipuChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '智谱新一代基于 MOE 架构的视觉推理模型，以106B的总参数量和12B激活参数量，在各类基准测试中达到全球同级别开源多模态模型 SOTA，涵盖图像、视频、文档理解及 GUI 任务等常见任务。',
+    displayName: 'GLM-4.5V',
+    enabled: true,
+    id: 'glm-4.5v',
+    maxOutput: 32_768,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        // 输入长度 [0, 32]
+        { name: 'textInput_cacheRead', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
     },
     contextWindowTokens: 128_000,
     description:
@@ -132,7 +161,6 @@ const zhipuChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -148,15 +176,11 @@ const zhipuChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -172,9 +196,6 @@ const zhipuChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
-    },
-    settings: {
-      searchImpl: 'params',
     },
     type: 'chat',
   },

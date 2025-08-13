@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
+    },
+    "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
+    "children": {
       "improvements": ["Adjust near bottom size on thinking scroll."]
     },
     "date": "2025-08-12",
