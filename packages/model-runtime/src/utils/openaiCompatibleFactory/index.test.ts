@@ -1393,6 +1393,12 @@ describe('LobeOpenAICompatibleFactory', () => {
           pricing: {
             units: [
               {
+                name: 'textInput_cacheRead',
+                rate: 0.03,
+                strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
                 name: 'textInput',
                 rate: 0.25,
                 strategy: 'fixed',
@@ -1402,6 +1408,18 @@ describe('LobeOpenAICompatibleFactory', () => {
                 name: 'textOutput',
                 rate: 1.25,
                 strategy: 'fixed',
+                unit: 'millionTokens',
+              },
+              {
+                lookup: {
+                  prices: {
+                    '1h': 0.5,
+                    '5m': 0.3,
+                  },
+                  pricingParams: ['ttl'],
+                },
+                name: 'textInput_cacheWrite',
+                strategy: 'lookup',
                 unit: 'millionTokens',
               },
             ],
