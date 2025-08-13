@@ -37,8 +37,8 @@ export const useSendMessage = () => {
     // If a specific sessionId is provided in params, use it. Otherwise, use the active session
     const sessionId = params.sessionId || sessionStore.activeId;
     
-    // Check if we can send a message in the current context
-    if (chatSelectors.isAIGenerating(store)) return;
+    // Check if AI is generating a response specifically for this session
+    if (chatSelectors.isSessionAIGenerating(sessionId)(store)) return;
 
     // if uploading file or send button is disabled by message, then we should not send the message
     const isUploadingFiles = fileChatSelectors.isUploadingFiles(useFileStore.getState());
