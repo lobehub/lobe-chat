@@ -149,13 +149,13 @@ export class AgentService extends BaseService {
       }
 
       return await this.db.transaction(async (tx) => {
-        // 检查 Agent 是否存在且属于当前用户
+        // 检查 Agent 是否存在
         const existingAgent = await tx.query.agents.findFirst({
-          where: and(eq(agents.id, request.id), eq(agents.userId, this.userId!)),
+          where: and(eq(agents.id, request.id)),
         });
 
         if (!existingAgent) {
-          throw this.createBusinessError(`Agent ID "${request.id}" 不存在或无权限访问`);
+          throw this.createBusinessError(`Agent ID "${request.id}" 不存在`);
         }
 
         // 准备更新数据
@@ -398,13 +398,13 @@ export class AgentService extends BaseService {
       }
 
       return await this.db.transaction(async (tx) => {
-        // 验证 Agent 存在且属于当前用户
+        // 验证 Agent 存在
         const agent = await tx.query.agents.findFirst({
-          where: and(eq(agents.id, request.agentId), eq(agents.userId, this.userId!)),
+          where: and(eq(agents.id, request.agentId)),
         });
 
         if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在或无权限访问`);
+          throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在`);
         }
 
         // 创建新的 Session
@@ -469,13 +469,13 @@ export class AgentService extends BaseService {
         );
       }
 
-      // 验证 Agent 存在且属于当前用户
+      // 验证 Agent 存在
       const agent = await this.db.query.agents.findFirst({
-        where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
+        where: and(eq(agents.id, agentId)),
       });
 
       if (!agent) {
-        throw this.createNotFoundError(`Agent ID "${agentId}" 不存在或无权限访问`);
+        throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
       }
 
       // 查询关联的 Session
@@ -534,22 +534,21 @@ export class AgentService extends BaseService {
       }
 
       await this.db.transaction(async (tx) => {
-        // 验证 Agent 和 Session 都存在且属于当前用户
         const [agent, session] = await Promise.all([
           tx.query.agents.findFirst({
-            where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
+            where: and(eq(agents.id, agentId)),
           }),
           tx.query.sessions.findFirst({
-            where: and(eq(sessions.id, request.sessionId), eq(sessions.userId, this.userId!)),
+            where: and(eq(sessions.id, request.sessionId)),
           }),
         ]);
 
         if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在或无权限访问`);
+          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
         }
 
         if (!session) {
-          throw this.createNotFoundError(`Session ID "${request.sessionId}" 不存在或无权限访问`);
+          throw this.createNotFoundError(`Session ID "${request.sessionId}" 不存在`);
         }
 
         // 检查是否已经关联
@@ -657,28 +656,26 @@ export class AgentService extends BaseService {
       }
 
       await this.db.transaction(async (tx) => {
-        // 验证 Agent 存在且属于当前用户
+        // 验证 Agent 存在
         const agent = await tx.query.agents.findFirst({
-          where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
+          where: and(eq(agents.id, agentId)),
         });
 
         if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在或无权限访问`);
+          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
         }
 
-        // 验证所有 Session 都存在且属于当前用户
+        // 验证所有 Session 都存在
         const validSessions = await tx.query.sessions.findMany({
           columns: { id: true },
-          where: and(eq(sessions.userId, this.userId!), inArray(sessions.id, request.sessionIds)),
+          where: and(inArray(sessions.id, request.sessionIds)),
         });
 
         const validSessionIds = new Set(validSessions.map((s) => s.id));
         const invalidSessionIds = request.sessionIds.filter((id) => !validSessionIds.has(id));
 
         if (invalidSessionIds.length > 0) {
-          throw this.createNotFoundError(
-            `以下 Session 不存在或无权限访问: ${invalidSessionIds.join(', ')}`,
-          );
+          throw this.createNotFoundError(`以下 Session 不存在: ${invalidSessionIds.join(', ')}`);
         }
 
         // 检查已存在的关联
@@ -754,28 +751,26 @@ export class AgentService extends BaseService {
         // 验证迁移目标 Agent（如果指定）
         if (request.migrateTo) {
           const migrateTarget = await tx.query.agents.findFirst({
-            where: and(eq(agents.id, request.migrateTo), eq(agents.userId, this.userId!)),
+            where: and(eq(agents.id, request.migrateTo)),
           });
 
           if (!migrateTarget) {
-            throw this.createNotFoundError(
-              `迁移目标 Agent ID "${request.migrateTo}" 不存在或无权限访问`,
-            );
+            throw this.createNotFoundError(`迁移目标 Agent ID "${request.migrateTo}" 不存在`);
           }
         }
 
         // 批量处理每个 Agent
         for (const agentId of request.agentIds) {
           try {
-            // 检查 Agent 是否存在且属于当前用户
+            // 检查 Agent 是否存在
             const agent = await tx.query.agents.findFirst({
-              where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
+              where: and(eq(agents.id, agentId)),
             });
 
             if (!agent) {
               result.failed++;
               result.errors?.push({
-                error: `Agent ID "${agentId}" 不存在或无权限访问`,
+                error: `Agent ID "${agentId}" 不存在`,
                 id: agentId,
               });
               continue;
@@ -849,15 +844,15 @@ export class AgentService extends BaseService {
         // 批量处理每个 Agent
         for (const agentId of request.agentIds) {
           try {
-            // 检查 Agent 是否存在且属于当前用户
+            // 检查 Agent 是否存在
             const agent = await tx.query.agents.findFirst({
-              where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
+              where: and(eq(agents.id, agentId)),
             });
 
             if (!agent) {
               result.failed++;
               result.errors?.push({
-                error: `Agent ID "${agentId}" 不存在或无权限访问`,
+                error: `Agent ID "${agentId}" 不存在`,
                 id: agentId,
               });
               continue;
