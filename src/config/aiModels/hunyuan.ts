@@ -342,7 +342,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-05-20',
+    releasedAt: '2025-07-16',
     settings: {
       searchImpl: 'params',
     },
