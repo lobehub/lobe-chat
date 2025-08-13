@@ -4,7 +4,6 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      imageOutput: true,
       reasoning: true,
       search: true,
       vision: true,
