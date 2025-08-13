@@ -14,7 +14,7 @@ export type {
 export { ThemeProvider, useTheme, useThemeToken } from './context';
 
 // 导出主题生成函数
-export { generateDesignToken, generateThemeToken } from './tokens';
+export { generateDesignToken } from './tokens';
 
 // 导出算法
 export {
@@ -25,7 +25,7 @@ export {
 } from './algorithms';
 
 // 导出种子 Token
-export { defaultSeedToken } from './seed';
+export { default as seedToken } from './seed';
 
 // 导出工具函数
 export {

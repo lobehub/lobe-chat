@@ -108,7 +108,13 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
+    <ThemeProvider
+      theme={{
+        token: {
+          colorPrimary: '#00b96b',
+        },
+      }}
+    >
       <AuthProvider>
         <QueryProvider>
           <ActionSheetProvider>

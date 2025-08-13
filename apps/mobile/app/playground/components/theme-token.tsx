@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
-import { useTheme, createStyles, defaultSeedToken, darkAlgorithm, defaultAlgorithm } from '@/theme';
+import { useTheme, createStyles, seedToken, darkAlgorithm, defaultAlgorithm } from '@/theme';
 
 interface TokenInfo {
   category: 'seed' | 'map' | 'alias';
@@ -370,7 +370,7 @@ const ThemeTokensPlayground: React.FC = () => {
 
   // Generate all token types
   const seedTokens: TokenInfo[] = useMemo(() => {
-    return Object.entries(defaultSeedToken).map(([name, value]) => {
+    return Object.entries(seedToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';
       let description = 'Seed token';
 
@@ -420,9 +420,7 @@ const ThemeTokensPlayground: React.FC = () => {
   }, []);
 
   const mapTokens: TokenInfo[] = useMemo(() => {
-    const mapToken = theme.isDark
-      ? darkAlgorithm(defaultSeedToken)
-      : defaultAlgorithm(defaultSeedToken);
+    const mapToken = theme.isDark ? darkAlgorithm(seedToken) : defaultAlgorithm(seedToken);
 
     return Object.entries(mapToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';

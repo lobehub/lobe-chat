@@ -4,7 +4,7 @@ import type { SeedToken } from '@/types/theme';
  * 默认种子 Token
  * 基础设计 Token，用于派生其他 Token
  */
-export const defaultSeedToken: SeedToken = {
+const seedToken: SeedToken = {
   // 圆角
   borderRadius: 6,
 
@@ -73,3 +73,5 @@ export const defaultSeedToken: SeedToken = {
   // 开关
   wireframe: false,
 };
+
+export default seedToken;

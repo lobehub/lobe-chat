@@ -131,7 +131,6 @@ const ThemeProviderDemosSection: React.FC = () => {
             style={{
               color: token.colorText,
               fontSize: token.fontSizeSM,
-              lineHeight: token.lineHeightSM,
               marginTop: token.marginXS,
               opacity: 0.8,
             }}
@@ -160,79 +159,10 @@ const ThemeProviderDemosSection: React.FC = () => {
 // 主组件继续使用原有的结构，只在开头添加新的演示部分
 export default function ThemeProviderPlayground() {
   const token = useThemeToken();
-  const [activeMainTab, setActiveMainTab] = useState(0);
-
-  const mainTabs = [
-    { key: 'demos', label: '使用示例' },
-    { key: 'tokens', label: 'Token 浏览器' },
-  ];
 
   return (
     <SafeAreaView style={{ backgroundColor: token.colorBgLayout, flex: 1 }}>
-      <View
-        style={{
-          borderBottomColor: token.colorBorder,
-          borderBottomWidth: token.lineWidth,
-          paddingBottom: token.paddingMD,
-          paddingHorizontal: token.padding,
-          paddingTop: token.paddingSM,
-        }}
-      >
-        <Text
-          style={{
-            color: token.colorText,
-            fontSize: token.fontSizeHeading3,
-            fontWeight: token.fontWeightStrong,
-          }}
-        >
-          ThemeProvider 组件
-        </Text>
-        <Text
-          style={{
-            color: token.colorText,
-            fontSize: token.fontSizeSM,
-            marginTop: token.marginXS,
-            opacity: 0.8,
-          }}
-        >
-          支持自定义 token 和 algorithm 的主题提供者组件
-        </Text>
-      </View>
-
-      <View
-        style={{
-          paddingHorizontal: token.padding,
-          paddingVertical: token.paddingMD,
-        }}
-      >
-        <CapsuleTabs
-          items={mainTabs}
-          onSelect={(key: string) => {
-            const index = mainTabs.findIndex((tab) => tab.key === key);
-            if (index !== -1) {
-              setActiveMainTab(index);
-            }
-          }}
-          selectedKey={mainTabs[activeMainTab].key}
-        />
-      </View>
-
-      {activeMainTab === 0 ? (
-        <ThemeProviderDemosSection />
-      ) : (
-        <View style={{ flex: 1, padding: token.padding }}>
-          <Text
-            style={{
-              color: token.colorText,
-              fontSize: token.fontSizeLG,
-              marginTop: token.marginXL,
-              textAlign: 'center',
-            }}
-          >
-            Token 浏览器功能正在开发中...
-          </Text>
-        </View>
-      )}
+      <ThemeProviderDemosSection />
     </SafeAreaView>
   );
 }

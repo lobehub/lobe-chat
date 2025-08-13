@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native';
 import { useSettingStore } from '@/store/setting';
 import type { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from '@/types/theme';
 
-import { generateDesignToken, generateThemeToken } from './tokens';
+import { generateDesignToken } from './tokens';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -46,9 +46,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   const isDark = getActualThemeMode() === 'dark';
 
   // 如果提供了自定义主题配置，使用它；否则使用默认配置
-  const themeToken = customTheme
-    ? generateDesignToken(customTheme, isDark)
-    : generateThemeToken(isDark);
+  const themeToken = generateDesignToken(customTheme, isDark);
 
   const theme: Theme = {
     isDark,
