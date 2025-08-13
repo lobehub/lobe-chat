@@ -1,6 +1,5 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ChatStreamPayload, ModelProvider } from '../types';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface MoonshotModelCard {
@@ -45,43 +44,10 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_MOONSHOT_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const functionCallKeywords = ['moonshot-v1', 'kimi-latest'];
-
-    const visionKeywords = ['kimi-latest', 'kimi-thinking', 'vision'];
-
-    const reasoningKeywords = ['thinking'];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: MoonshotModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          displayName: knownModel?.displayName ?? undefined,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    return processModelList(modelList, MODEL_LIST_CONFIGS.moonshot, 'moonshot');
   },
   provider: ModelProvider.Moonshot,
 });
