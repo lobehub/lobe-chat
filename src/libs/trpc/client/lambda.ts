@@ -1,10 +1,10 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import debug from 'debug';
 import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
-import { ModelProvider } from '@/libs/model-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
 import { ErrorResponse } from './types';
