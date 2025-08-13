@@ -1,12 +1,3 @@
-import { ChatErrorType } from '@lobechat/types';
-import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { act } from '@testing-library/react';
-import { merge } from 'lodash-es';
-import OpenAI from 'openai';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { DEFAULT_USER_AVATAR } from '@/const/meta';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
@@ -26,8 +17,17 @@ import {
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
-} from '@/libs/model-runtime';
-import { ModelRuntime } from '@/libs/model-runtime';
+} from '@lobechat/model-runtime';
+import { ModelRuntime } from '@lobechat/model-runtime';
+import { ChatErrorType } from '@lobechat/types';
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { act } from '@testing-library/react';
+import { merge } from 'lodash-es';
+import OpenAI from 'openai';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { DEFAULT_USER_AVATAR } from '@/const/meta';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';

@@ -1,6 +1,7 @@
+import { ModelProvider } from '@lobechat/model-runtime';
+
 import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
-import { ModelProvider } from '@/libs/model-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';

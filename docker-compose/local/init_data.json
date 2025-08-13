@@ -1,64 +1,717 @@
 {
-  "adapters": [
+  "organizations": [
     {
-      "owner": "built-in",
-      "name": "user-adapter-built-in",
-      "createdTime": "2024-09-09T09:26:13Z",
-      "table": "casbin_user_rule",
-      "useSameDb": true,
-      "type": "",
-      "databaseType": "",
-      "host": "",
-      "port": 0,
-      "user": "",
-      "password": "",
-      "database": ""
+      "owner": "admin",
+      "name": "lobechat",
+      "createdTime": "2025-08-11T16:57:04+08:00",
+      "displayName": "LobeChat",
+      "websiteUrl": "https://lobehub.com",
+      "logo": "https://lobehub.com/icon-192x192.png",
+      "logoDark": "",
+      "favicon": "https://lobehub.com/favicon.ico",
+      "hasPrivilegeConsent": false,
+      "passwordType": "plain",
+      "passwordSalt": "",
+      "passwordOptions": [
+        "AtLeast6"
+      ],
+      "passwordObfuscatorType": "Plain",
+      "passwordObfuscatorKey": "",
+      "passwordExpireDays": 0,
+      "countryCodes": [
+        "US"
+      ],
+      "defaultAvatar": "https://lobehub.com/favicon.ico",
+      "defaultApplication": "",
+      "userTypes": null,
+      "tags": [],
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "zh",
+        "id",
+        "ja",
+        "ko",
+        "ru",
+        "vi",
+        "pt",
+        "it",
+        "ms",
+        "tr",
+        "ar",
+        "he",
+        "nl",
+        "pl",
+        "fi",
+        "sv",
+        "uk",
+        "kk",
+        "fa",
+        "cs",
+        "sk"
+      ],
+      "themeData": null,
+      "masterPassword": "",
+      "defaultPassword": "",
+      "masterVerificationCode": "",
+      "ipWhitelist": "",
+      "initScore": 0,
+      "enableSoftDeletion": false,
+      "isProfilePublic": true,
+      "useEmailAsUsername": false,
+      "enableTour": true,
+      "disableSignin": false,
+      "ipRestriction": "",
+      "navItems": null,
+      "widgetItems": null,
+      "mfaItems": null,
+      "mfaRememberInHours": 12,
+      "accountItems": [
+        {
+          "name": "Organization",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "ID",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "Name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Display name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Avatar",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "User type",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Password",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Country code",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Country/Region",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Location",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Address",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Affiliation",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Title",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "ID card type",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "ID card",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "ID card info",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Homepage",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Bio",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Tag",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Language",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Gender",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Birthday",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Education",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Score",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Karma",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Ranking",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Signup application",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "API key",
+          "visible": false,
+          "viewRule": "",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Groups",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Roles",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "Permissions",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "3rd-party logins",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Properties",
+          "visible": false,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is online",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is admin",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is forbidden",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is deleted",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Multi-factor authentication",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "WebAuthn credentials",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Managed accounts",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "MFA accounts",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        }
+      ]
     },
     {
-      "owner": "built-in",
-      "name": "api-adapter-built-in",
-      "createdTime": "2024-09-09T09:26:12Z",
-      "table": "casbin_api_rule",
-      "useSameDb": true,
-      "type": "",
-      "databaseType": "",
-      "host": "",
-      "port": 0,
-      "user": "",
-      "password": "",
-      "database": ""
+      "owner": "admin",
+      "name": "built-in",
+      "createdTime": "2025-08-11T08:43:22Z",
+      "displayName": "Built-in Organization",
+      "websiteUrl": "https://example.com",
+      "logo": "",
+      "logoDark": "",
+      "favicon": "https://cdn.casbin.org/img/casbin/favicon.ico",
+      "hasPrivilegeConsent": false,
+      "passwordType": "plain",
+      "passwordSalt": "",
+      "passwordOptions": [
+        "AtLeast6"
+      ],
+      "passwordObfuscatorType": "",
+      "passwordObfuscatorKey": "",
+      "passwordExpireDays": 0,
+      "countryCodes": [
+        "US",
+        "ES",
+        "FR",
+        "DE",
+        "GB",
+        "CN",
+        "JP",
+        "KR",
+        "VN",
+        "ID",
+        "SG",
+        "IN"
+      ],
+      "defaultAvatar": "https://cdn.casbin.org/img/casbin.svg",
+      "defaultApplication": "",
+      "userTypes": [],
+      "tags": [],
+      "languages": [
+        "en",
+        "zh",
+        "es",
+        "fr",
+        "de",
+        "id",
+        "ja",
+        "ko",
+        "ru",
+        "vi",
+        "pt"
+      ],
+      "themeData": null,
+      "masterPassword": "",
+      "defaultPassword": "",
+      "masterVerificationCode": "",
+      "ipWhitelist": "",
+      "initScore": 2000,
+      "enableSoftDeletion": false,
+      "isProfilePublic": false,
+      "useEmailAsUsername": false,
+      "enableTour": true,
+      "disableSignin": false,
+      "ipRestriction": "",
+      "navItems": null,
+      "widgetItems": null,
+      "mfaItems": null,
+      "mfaRememberInHours": 0,
+      "accountItems": [
+        {
+          "name": "Organization",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "ID",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "Name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Display name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Avatar",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "User type",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Password",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Country code",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Country/Region",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Location",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Affiliation",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Title",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Homepage",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Bio",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Tag",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Signup application",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Roles",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "Permissions",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable",
+          "regex": ""
+        },
+        {
+          "name": "Groups",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "3rd-party logins",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Properties",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is admin",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is forbidden",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Is deleted",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin",
+          "regex": ""
+        },
+        {
+          "name": "Multi-factor authentication",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "WebAuthn credentials",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "Managed accounts",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        },
+        {
+          "name": "MFA accounts",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self",
+          "regex": ""
+        }
+      ]
     }
   ],
   "applications": [
     {
       "owner": "admin",
       "name": "lobechat",
-      "createdTime": "2024-09-09T09:26:06Z",
+      "createdTime": "2025-08-11T17:06:30+08:00",
       "displayName": "LobeChat",
       "logo": "https://lobehub.com/icon-192x192.png",
       "homepageUrl": "https://lobehub.com",
-      "description": "LobeChat",
+      "description": "",
       "organization": "lobechat",
       "cert": "cert-built-in",
+      "defaultGroup": "",
       "headerHtml": "",
       "enablePassword": true,
       "enableSignUp": false,
+      "disableSignin": false,
       "enableSigninSession": false,
       "enableAutoSignin": false,
       "enableCodeSignin": false,
       "enableSamlCompress": false,
       "enableSamlC14n10": false,
       "enableSamlPostBinding": false,
+      "useEmailAsSamlNameId": false,
       "enableWebAuthn": false,
-      "enableLinkWithEmail": true,
+      "enableLinkWithEmail": false,
       "orgChoiceMode": "",
       "samlReplyUrl": "",
-      "providers": [],
+      "providers": [
+        {
+          "owner": "",
+          "name": "provider_captcha_default",
+          "canSignUp": false,
+          "canSignIn": false,
+          "canUnlink": false,
+          "countryCodes": null,
+          "prompted": false,
+          "signupGroup": "",
+          "rule": "",
+          "provider": null
+        }
+      ],
       "signinMethods": [
         {
           "name": "Password",
           "displayName": "Password",
           "rule": "All"
+        },
+        {
+          "name": "Verification code",
+          "displayName": "Verification code",
+          "rule": "All"
+        },
+        {
+          "name": "WebAuthn",
+          "displayName": "WebAuthn",
+          "rule": "None"
+        },
+        {
+          "name": "Face ID",
+          "displayName": "Face ID",
+          "rule": "None"
         }
       ],
       "signupItems": [
@@ -67,9 +720,11 @@
           "visible": false,
           "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
           "regex": "",
           "rule": "Random"
         },
@@ -78,9 +733,11 @@
           "visible": true,
           "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
           "regex": "",
           "rule": "None"
         },
@@ -89,9 +746,11 @@
           "visible": true,
           "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
           "regex": "",
           "rule": "None"
         },
@@ -100,9 +759,11 @@
           "visible": true,
           "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
           "regex": "",
           "rule": "None"
         },
@@ -111,22 +772,78 @@
           "visible": true,
           "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "Normal"
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Agreement",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
           "regex": "",
           "rule": "None"
         },
         {
           "name": "Signup button",
           "visible": true,
-          "required": false,
+          "required": true,
           "prompted": false,
+          "type": "",
           "customCss": "",
           "label": "",
           "placeholder": "",
+          "options": null,
           "regex": "",
-          "rule": ""
+          "rule": "None"
+        },
+        {
+          "name": "Providers",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": ".provider-img {\n width: 30px;\n margin: 5px;\n }\n .provider-big-img {\n margin-bottom: 10px;\n }\n ",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "small"
         }
       ],
       "signinItems": [
@@ -152,7 +869,7 @@
           "name": "Logo",
           "visible": true,
           "label": "",
-          "customCss": ".login-logo-box {} \n.panel-logo {\n    width: 80px;\n}",
+          "customCss": ".login-logo-box {}",
           "placeholder": "",
           "rule": "None",
           "isCustom": false
@@ -231,13 +948,19 @@
         }
       ],
       "grantTypes": [
-        "authorization_code"
+        "authorization_code",
+        "password",
+        "client_credentials",
+        "token",
+        "id_token",
+        "refresh_token"
       ],
       "organizationObj": null,
       "certPublicKey": "",
       "tags": [],
       "samlAttributes": null,
       "isShared": false,
+      "ipRestriction": "",
       "clientId": "a387a4892ee19b1a2249",
       "clientSecret": "dbf205949d704de81b0b5b3603174e23fbecc354",
       "redirectUris": [
@@ -246,6 +969,211 @@
         "http://example.com/api/auth/callback/casdoor",
         "https://example.com/api/auth/callback/casdoor"
       ],
+      "forcedRedirectOrigin": "",
+      "tokenFormat": "JWT",
+      "tokenSigningMethod": "",
+      "tokenFields": [],
+      "expireInHours": 168,
+      "refreshExpireInHours": 168,
+      "signupUrl": "",
+      "signinUrl": "",
+      "forgetUrl": "",
+      "affiliationUrl": "",
+      "ipWhitelist": "",
+      "termsOfUse": "",
+      "signupHtml": "",
+      "signinHtml": "",
+      "themeData": null,
+      "footerHtml": "",
+      "formCss": "\u003cstyle\u003e\n  .login-panel {\n    padding: 40px 70px 0 70px;\n    border-radius: 10px;\n    background-color: #ffffff;\n    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;\n  }\n  .panel-logo {\n    width: 64px;\n  }\n  .login-logo-box {\n    margin-top: 20px;\n  }\n\n  #parent-area\n    \u003e main\n    \u003e div\n    \u003e div.login-content\n    \u003e div.login-panel\n    \u003e div.login-form\n    \u003e div\n    \u003e div\n    \u003e button {\n    box-shadow: none !important;\n    border-radius: 10px !important;\n    transition-property: all;\n    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n    transition-duration: 150ms;\n    border: 1px solid #eee !important;\n  }\n\n  @media (max-width: 640px) {\n    .login-panel {\n      padding: 40px 0 0 0;\n      box-shadow: none;\n    }\n  }\n\u003c/style\u003e",
+      "formCssMobile": "\u003cstyle\u003e\n  .login-panel {\n    padding: 40px 70px 0 70px;\n    border-radius: 10px;\n    background-color: #ffffff;\n    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;\n  }\n  .panel-logo {\n    width: 64px;\n  }\n  .login-logo-box {\n    margin-top: 20px;\n  }\n\n  #parent-area\n    \u003e main\n    \u003e div\n    \u003e div.login-content\n    \u003e div.login-panel\n    \u003e div.login-form\n    \u003e div\n    \u003e div\n    \u003e button {\n    box-shadow: none !important;\n    border-radius: 10px !important;\n    transition-property: all;\n    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n    transition-duration: 150ms;\n    border: 1px solid #eee !important;\n  }\n\n  @media (max-width: 640px) {\n    .login-panel {\n      padding: 40px 0 0 0;\n      box-shadow: none;\n    }\n  }\n\u003c/style\u003e",
+      "formOffset": 2,
+      "formSideHtml": "",
+      "formBackgroundUrl": "",
+      "formBackgroundUrlMobile": "",
+      "failedSigninLimit": 5,
+      "failedSigninFrozenTime": 15
+    },
+    {
+      "owner": "admin",
+      "name": "app-built-in",
+      "createdTime": "2025-08-11T08:43:23Z",
+      "displayName": "Casdoor",
+      "logo": "https://cdn.casbin.org/img/casdoor-logo_1185x256.png",
+      "homepageUrl": "https://casdoor.org",
+      "description": "",
+      "organization": "built-in",
+      "cert": "cert-built-in",
+      "defaultGroup": "",
+      "headerHtml": "",
+      "enablePassword": true,
+      "enableSignUp": true,
+      "disableSignin": false,
+      "enableSigninSession": false,
+      "enableAutoSignin": false,
+      "enableCodeSignin": false,
+      "enableSamlCompress": false,
+      "enableSamlC14n10": false,
+      "enableSamlPostBinding": false,
+      "useEmailAsSamlNameId": false,
+      "enableWebAuthn": false,
+      "enableLinkWithEmail": false,
+      "orgChoiceMode": "",
+      "samlReplyUrl": "",
+      "providers": [
+        {
+          "owner": "",
+          "name": "provider_captcha_default",
+          "canSignUp": false,
+          "canSignIn": false,
+          "canUnlink": false,
+          "countryCodes": null,
+          "prompted": false,
+          "signupGroup": "",
+          "rule": "None",
+          "provider": null
+        }
+      ],
+      "signinMethods": [
+        {
+          "name": "Password",
+          "displayName": "Password",
+          "rule": "All"
+        },
+        {
+          "name": "Verification code",
+          "displayName": "Verification code",
+          "rule": "All"
+        },
+        {
+          "name": "WebAuthn",
+          "displayName": "WebAuthn",
+          "rule": "None"
+        },
+        {
+          "name": "Face ID",
+          "displayName": "Face ID",
+          "rule": "None"
+        }
+      ],
+      "signupItems": [
+        {
+          "name": "ID",
+          "visible": false,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "Random"
+        },
+        {
+          "name": "Username",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Display name",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Password",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Confirm password",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "Normal"
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        },
+        {
+          "name": "Agreement",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "type": "",
+          "customCss": "",
+          "label": "",
+          "placeholder": "",
+          "options": null,
+          "regex": "",
+          "rule": "None"
+        }
+      ],
+      "signinItems": null,
+      "grantTypes": null,
+      "organizationObj": null,
+      "certPublicKey": "",
+      "tags": [],
+      "samlAttributes": null,
+      "isShared": false,
+      "ipRestriction": "",
+      "clientId": "45f13635c08f7bdb97e4",
+      "clientSecret": "fc76d8be000bc358c83712f6598754e054969994",
+      "redirectUris": [],
+      "forcedRedirectOrigin": "",
       "tokenFormat": "JWT",
       "tokenSigningMethod": "",
       "tokenFields": [],
@@ -255,6 +1183,7 @@
       "signinUrl": "",
       "forgetUrl": "",
       "affiliationUrl": "",
+      "ipWhitelist": "",
       "termsOfUse": "",
       "signupHtml": "",
       "signinHtml": "",
@@ -265,680 +1194,179 @@
       "formOffset": 2,
       "formSideHtml": "",
       "formBackgroundUrl": "",
-      "failedSigninLimit": 5,
-      "failedSigninFrozenTime": 15
+      "formBackgroundUrlMobile": "",
+      "failedSigninLimit": 0,
+      "failedSigninFrozenTime": 0
     }
   ],
-  "certs": [
-    {
-      "owner": "admin",
-      "name": "cert-built-in",
-      "createdTime": "2024-09-09T09:26:06Z",
-      "displayName": "Built-in Cert",
-      "scope": "JWT",
-      "type": "x509",
-      "cryptoAlgorithm": "RS256",
-      "bitSize": 4096,
-      "expireInYears": 20,
-      "certificate": "-----BEGIN CERTIFICATE-----\nMIIE3TCCAsWgAwIBAgIDAeJAMA0GCSqGSIb3DQEBCwUAMCgxDjAMBgNVBAoTBWFk\nbWluMRYwFAYDVQQDEw1jZXJ0LWJ1aWx0LWluMB4XDTI0MDkwOTA5MjYxMVoXDTQ0\nMDkwOTA5MjYxMVowKDEOMAwGA1UEChMFYWRtaW4xFjAUBgNVBAMTDWNlcnQtYnVp\nbHQtaW4wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQC3EnylZ2VurCm4\ngVtZHBUw67qvuKoYuU9whqaJr2UQEboIX4ca+FtZCjDgcBoD80lwSoYrcKpTG+DI\nVEMDznUHOjKwongRWclV1jeE3jZqObtmG9872yt/WX+nxQLyDrk+nUGhci6Qrhgo\nYToN1DYaMqMV1Pi8catx8S0W3gg+ilb9mG3xdFpQo89o84mJhajTE/5/0jBuQ50D\nx8CRolpRWjZ6i9RNVfFQglei+aW0RNf1PY6RqMkxc/Hy0XwXf/bjM5Ax7Aajwteh\nx0Q1zeUaRMMhFu6REtz345oJdLJpUkpFwJN4dPQ35a0tqnjkD1MLZjvBhSgOt5IP\nAJA1HmcR83RMBS8B3iV6y/clPjr02cjyasORy+kL/aFMfZfwvuRWX1NqRE99+rUT\nlPszH2SQi7PCUItQK72nnMYWBMXgyS8/Mra48q7LDAB/ZQnWuEG1+P1SdsQUWM2U\naxkgjmfMNATVAgufrLOcOZDxAwVS7+quCF5f/QPTWaFqz5ofcpoUlf0iriv/k1mi\nl7OghX0eqyLI2cCSma+dgB1eMni91eDCLVRT25mGDYreFjkpAwpMx2uaBk5e6ffT\n2jmZ2Zp9iCrUomLXDNiwY2wZDClcDKFiHNhNPAN3IbvBC3c6qpt0dLsWvGYW2IQT\nTnI71r/YY1XN/mTa4t/zwI+/kghjMQIDAQABoxAwDjAMBgNVHRMBAf8EAjAAMA0G\nCSqGSIb3DQEBCwUAA4ICAQBJUMBYJXnNihlGA2NMFIZMlsnW+5tjUqqK/Pv+oSpt\nrqZxwDKFZL0NMxd4pVnLxIdU5HEcN2e01Xyqlaf5Tm3BZN6MaRVZAIRVfvxcNESQ\nYA0jSFjsJzZUFGIQf8P9a5u+7qqSmj4tZx4XaRjOGSOf8t2RMJDmAbUeydLiD8ny\nCcxTzetmyYky8J3NBUoYGRbwU6KKbkxHbT35QheAb3jT4CELopLZ57Aa5Fb8xTjQ\n6tNqwZ+Z3993FkTOWPYLNLM1l46oN3g9yVY4ncGjUJkxsLTpAXB4I+wdqeew9XXe\nxWNcY3cWWjA5VXgCNzntkPFM1D5IWkgP8MYVCvdv0Unfo78PahwVMoQMnDG4xLuS\n50gVKpukHLZQJNFPF0X4u/JeXauKPv/w7ssTTAK+8RIBYxBXQ72zDJNHyTqldR4e\nfPHZfcW7OTmUr5FGNZThyW7ipvZRWcLM4u4IaWF2ncllOSqAXs1gDxkk201J7Lrb\noZOjC3zgxE9HTCXpiszOAt5I38++5ufE3/hJW3ckz0jaJDeFqUphnn8eQhXPSwtC\nR8TL4ZpXSAFEpwahG+fCfZDK2KyPME33eXV3jtsYf0QHerYiMnP+tf1vAk3qtOzo\nE6Iv16fpBUvshk1Gm6E6bdhsP0hCrMwV4dm8uC3S52qcFiWZ6AC/HURaMbY+/lOs\n0A==\n-----END CERTIFICATE-----\n",
-      "privateKey": "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n"
-    }
-  ],
-  "enforcers": [
-    {
-      "owner": "built-in",
-      "name": "user-enforcer-built-in",
-      "createdTime": "2024-09-09T09:26:13Z",
-      "updatedTime": "2024-09-09 09:26:13",
-      "displayName": "User Enforcer",
-      "description": "",
-      "model": "built-in/user-model-built-in",
-      "adapter": "built-in/user-adapter-built-in",
-      "modelCfg": null
-    },
-    {
-      "owner": "built-in",
-      "name": "api-enforcer-built-in",
-      "createdTime": "2024-09-09T09:26:12Z",
-      "updatedTime": "2024-09-09 09:26:12",
-      "displayName": "API Enforcer",
-      "description": "",
-      "model": "built-in/api-model-built-in",
-      "adapter": "built-in/api-adapter-built-in",
-      "modelCfg": null
-    }
-  ],
-  "groups": [],
-  "invitations": [],
-  "ldaps": [
-    {
-      "id": "ldap-built-in",
-      "owner": "built-in",
-      "createdTime": "2024-09-09T09:26:12Z",
-      "serverName": "BuildIn LDAP Server",
-      "host": "example.com",
-      "port": 389,
-      "enableSsl": false,
-      "username": "cn=buildin,dc=example,dc=com",
-      "password": "123",
-      "baseDn": "ou=BuildIn,dc=example,dc=com",
-      "filter": "",
-      "filterFields": null,
-      "defaultGroup": "",
-      "autoSync": 0,
-      "lastSync": ""
-    }
-  ],
-  "models": [
-    {
-      "owner": "built-in",
-      "name": "user-model-built-in",
-      "createdTime": "2024-09-09T09:26:13Z",
-      "displayName": "Built-in Model",
-      "description": "",
-      "modelText": "[request_definition]\nr = sub, obj, act\n\n[policy_definition]\np = sub, obj, act\n\n[role_definition]\ng = _, _\n\n[policy_effect]\ne = some(where (p.eft == allow))\n\n[matchers]\nm = g(r.sub, p.sub) \u0026\u0026 r.obj == p.obj \u0026\u0026 r.act == p.act"
-    },
-    {
-      "owner": "built-in",
-      "name": "api-model-built-in",
-      "createdTime": "2024-09-09T09:26:12Z",
-      "displayName": "API Model",
-      "description": "",
-      "modelText": "[request_definition]\nr = subOwner, subName, method, urlPath, objOwner, objName\n\n[policy_definition]\np = subOwner, subName, method, urlPath, objOwner, objName\n\n[role_definition]\ng = _, _\n\n[policy_effect]\ne = some(where (p.eft == allow))\n\n[matchers]\nm = (r.subOwner == p.subOwner || p.subOwner == \"*\") \u0026\u0026 \\\n    (r.subName == p.subName || p.subName == \"*\" || r.subName != \"anonymous\" \u0026\u0026 p.subName == \"!anonymous\") \u0026\u0026 \\\n    (r.method == p.method || p.method == \"*\") \u0026\u0026 \\\n    (r.urlPath == p.urlPath || p.urlPath == \"*\") \u0026\u0026 \\\n    (r.objOwner == p.objOwner || p.objOwner == \"*\") \u0026\u0026 \\\n    (r.objName == p.objName || p.objName == \"*\") || \\\n    (r.subOwner == r.objOwner \u0026\u0026 r.subName == r.objName)"
-    }
-  ],
-  "organizations": [
-    {
-      "owner": "admin",
-      "name": "built-in",
-      "createdTime": "2024-09-09T09:26:04Z",
-      "displayName": "Built-in Organization",
-      "websiteUrl": "https://example.com",
-      "logo": "",
-      "logoDark": "",
-      "favicon": "https://cdn.casbin.org/img/casbin/favicon.ico",
-      "passwordType": "plain",
-      "passwordSalt": "",
-      "passwordOptions": [
-        "AtLeast6"
-      ],
-      "countryCodes": [
-        "US",
-        "ES",
-        "FR",
-        "DE",
-        "GB",
-        "CN",
-        "JP",
-        "KR",
-        "VN",
-        "ID",
-        "SG",
-        "IN"
-      ],
-      "defaultAvatar": "https://cdn.casbin.org/img/casbin.svg",
-      "defaultApplication": "",
-      "tags": [],
-      "languages": [
-        "en",
-        "zh",
-        "es",
-        "fr",
-        "de",
-        "id",
-        "ja",
-        "ko",
-        "ru",
-        "vi",
-        "pt"
-      ],
-      "themeData": null,
-      "masterPassword": "",
-      "defaultPassword": "",
-      "masterVerificationCode": "",
-      "initScore": 2000,
-      "enableSoftDeletion": false,
-      "isProfilePublic": false,
-      "useEmailAsUsername": false,
-      "enableTour": true,
-      "mfaItems": null,
-      "accountItems": [
-        {
-          "name": "Organization",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "ID",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Name",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Display name",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Avatar",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "User type",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Password",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Email",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Phone",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Country code",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Country/Region",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Location",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Affiliation",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Title",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Homepage",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Bio",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Tag",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Signup application",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Roles",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Permissions",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Groups",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "3rd-party logins",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Properties",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is admin",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is forbidden",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is deleted",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Multi-factor authentication",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "WebAuthn credentials",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Managed accounts",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "MFA accounts",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        }
-      ]
-    },
-    {
-      "owner": "admin",
-      "name": "lobechat",
-      "createdTime": "2024-09-09T09:26:04Z",
-      "displayName": "LobeChat Organization",
-      "websiteUrl": "https://lobehub.com",
-      "logo": "https://lobehub.com/icon-192x192.png",
-      "logoDark": "",
-      "favicon": "https://lobehub.com/favicon.ico",
-      "passwordType": "plain",
-      "passwordSalt": "",
-      "passwordOptions": [
-        "AtLeast6"
-      ],
-      "countryCodes": [
-        "US",
-        "ES",
-        "FR",
-        "DE",
-        "GB",
-        "CN",
-        "JP",
-        "KR",
-        "VN",
-        "ID",
-        "SG",
-        "IN"
-      ],
-      "defaultAvatar": "https://cdn.casbin.org/img/casbin.svg",
-      "defaultApplication": "",
-      "tags": [],
-      "languages": [
-        "en",
-        "zh",
-        "es",
-        "fr",
-        "de",
-        "id",
-        "ja",
-        "ko",
-        "ru",
-        "vi",
-        "pt"
-      ],
-      "themeData": null,
-      "masterPassword": "",
-      "defaultPassword": "",
-      "masterVerificationCode": "",
-      "initScore": 2000,
-      "enableSoftDeletion": false,
-      "isProfilePublic": false,
-      "useEmailAsUsername": false,
-      "enableTour": true,
-      "mfaItems": null,
-      "accountItems": [
-        {
-          "name": "Organization",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "ID",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Name",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Display name",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Avatar",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "User type",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Password",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Email",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Phone",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Country code",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Country/Region",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Location",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Affiliation",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Title",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Homepage",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Bio",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Tag",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Signup application",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Roles",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Permissions",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Immutable",
-          "regex": ""
-        },
-        {
-          "name": "Groups",
-          "visible": true,
-          "viewRule": "Public",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "3rd-party logins",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Properties",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is admin",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is forbidden",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Is deleted",
-          "visible": true,
-          "viewRule": "Admin",
-          "modifyRule": "Admin",
-          "regex": ""
-        },
-        {
-          "name": "Multi-factor authentication",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "WebAuthn credentials",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "Managed accounts",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        },
-        {
-          "name": "MFA accounts",
-          "visible": true,
-          "viewRule": "Self",
-          "modifyRule": "Self",
-          "regex": ""
-        }
-      ]
-    }
-  ],
-  "payments": [],
-  "permissions": [
-    {
-      "owner": "built-in",
-      "name": "permission-built-in",
-      "createdTime": "2024-09-09T09:26:04Z",
-      "displayName": "Built-in Permission",
-      "description": "Built-in Permission",
-      "users": [
-        "built-in/*"
-      ],
-      "groups": [],
-      "roles": [],
-      "domains": [],
-      "model": "user-model-built-in",
-      "adapter": "",
-      "resourceType": "Application",
-      "resources": [
-        "app-built-in"
-      ],
-      "actions": [
-        "Read",
-        "Write",
-        "Admin"
-      ],
-      "effect": "Allow",
-      "isEnabled": true,
-      "submitter": "admin",
-      "approver": "admin",
-      "approveTime": "2024-09-09T09:26:04Z",
-      "state": "Approved"
-    }
-  ],
-  "plans": [],
-  "pricings": [],
-  "products": [],
-  "providers": [],
-  "records": [],
-  "resources": [],
-  "roles": [],
-  "sessions": [],
-  "subscriptions": [],
-  "syncers": [],
-  "tokens": [],
-  "transactions": [],
   "users": [
+    {
+      "owner": "lobechat",
+      "name": "user",
+      "createdTime": "2025-08-11T17:18:50+08:00",
+      "updatedTime": "2025-08-11T09:19:46Z",
+      "deletedTime": "",
+      "id": "b3aa6ae0-ea16-44d5-9cad-373692995a11",
+      "externalId": "",
+      "type": "normal-user",
+      "password": "pswd123",
+      "passwordSalt": "",
+      "passwordType": "plain",
+      "displayName": "User",
+      "firstName": "",
+      "lastName": "",
+      "avatar": "https://lobehub.com/favicon.ico",
+      "avatarType": "",
+      "permanentAvatar": "",
+      "email": "pfub7l@example.com",
+      "emailVerified": false,
+      "phone": "93788949801",
+      "countryCode": "US",
+      "region": "",
+      "location": "",
+      "address": [],
+      "affiliation": "Example Inc.",
+      "title": "",
+      "idCardType": "",
+      "idCard": "",
+      "homepage": "",
+      "bio": "",
+      "tag": "staff",
+      "language": "",
+      "gender": "",
+      "birthday": "",
+      "education": "",
+      "score": 0,
+      "karma": 0,
+      "ranking": 1,
+      "balance": 0,
+      "currency": "",
+      "isDefaultAvatar": false,
+      "isOnline": false,
+      "isAdmin": false,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "",
+      "hash": "",
+      "preHash": "",
+      "accessKey": "",
+      "accessSecret": "",
+      "accessToken": "",
+      "createdIp": "",
+      "lastSigninTime": "",
+      "lastSigninIp": "",
+      "github": "",
+      "google": "",
+      "qq": "",
+      "wechat": "",
+      "facebook": "",
+      "dingtalk": "",
+      "weibo": "",
+      "gitee": "",
+      "linkedin": "",
+      "wecom": "",
+      "lark": "",
+      "gitlab": "",
+      "adfs": "",
+      "baidu": "",
+      "alipay": "",
+      "casdoor": "",
+      "infoflow": "",
+      "apple": "",
+      "azuread": "",
+      "azureadb2c": "",
+      "slack": "",
+      "steam": "",
+      "bilibili": "",
+      "okta": "",
+      "douyin": "",
+      "kwai": "",
+      "line": "",
+      "amazon": "",
+      "auth0": "",
+      "battlenet": "",
+      "bitbucket": "",
+      "box": "",
+      "cloudfoundry": "",
+      "dailymotion": "",
+      "deezer": "",
+      "digitalocean": "",
+      "discord": "",
+      "dropbox": "",
+      "eveonline": "",
+      "fitbit": "",
+      "gitea": "",
+      "heroku": "",
+      "influxcloud": "",
+      "instagram": "",
+      "intercom": "",
+      "kakao": "",
+      "lastfm": "",
+      "mailru": "",
+      "meetup": "",
+      "microsoftonline": "",
+      "naver": "",
+      "nextcloud": "",
+      "onedrive": "",
+      "oura": "",
+      "patreon": "",
+      "paypal": "",
+      "salesforce": "",
+      "shopify": "",
+      "soundcloud": "",
+      "spotify": "",
+      "strava": "",
+      "stripe": "",
+      "tiktok": "",
+      "tumblr": "",
+      "twitch": "",
+      "twitter": "",
+      "typetalk": "",
+      "uber": "",
+      "vk": "",
+      "wepay": "",
+      "xero": "",
+      "yahoo": "",
+      "yammer": "",
+      "yandex": "",
+      "zoom": "",
+      "metamask": "",
+      "web3onboard": "",
+      "custom": "",
+      "webauthnCredentials": null,
+      "preferredMfaType": "",
+      "recoveryCodes": null,
+      "totpSecret": "",
+      "mfaPhoneEnabled": false,
+      "mfaEmailEnabled": false,
+      "invitation": "",
+      "invitationCode": "",
+      "faceIds": null,
+      "ldap": "",
+      "properties": {},
+      "roles": null,
+      "permissions": null,
+      "groups": [],
+      "lastChangePasswordTime": "2025-08-11T09:19:46Z",
+      "lastSigninWrongTime": "",
+      "signinWrongTimes": 0,
+      "managedAccounts": null,
+      "mfaAccounts": null,
+      "mfaItems": null,
+      "mfaRememberDeadline": "",
+      "needUpdatePassword": false,
+      "ipWhitelist": ""
+    },
     {
       "owner": "built-in",
       "name": "admin",
-      "createdTime": "2024-09-09T09:26:05Z",
-      "updatedTime": "",
+      "createdTime": "2025-08-11T08:43:23Z",
+      "updatedTime": "2025-08-11T09:26:11Z",
       "deletedTime": "",
-      "id": "bbf2a176-203c-414c-8cdd-ec92b019e07a",
+      "id": "d9f5b23b-6a49-4879-a015-3454522422c9",
       "externalId": "",
       "type": "normal-user",
-      "password": "123",
+      "password": "pswd123",
       "passwordSalt": "",
       "passwordType": "plain",
       "displayName": "Admin",
@@ -949,7 +1377,7 @@
       "permanentAvatar": "",
       "email": "admin@example.com",
       "emailVerified": false,
-      "phone": "13245678910",
+      "phone": "12345678910",
       "countryCode": "US",
       "region": "",
       "location": "",
@@ -1009,6 +1437,7 @@
       "bilibili": "",
       "okta": "",
       "douyin": "",
+      "kwai": "",
       "line": "",
       "amazon": "",
       "auth0": "",
@@ -1075,164 +1504,241 @@
       "roles": null,
       "permissions": null,
       "groups": null,
+      "lastChangePasswordTime": "2025-08-11T09:26:11Z",
       "lastSigninWrongTime": "",
       "signinWrongTimes": 0,
       "managedAccounts": null,
       "mfaAccounts": null,
-      "needUpdatePassword": false
-    },
-    {
-      "owner": "lobechat",
-      "name": "user",
-      "createdTime": "2024-09-09T09:26:05Z",
-      "updatedTime": "",
-      "deletedTime": "",
-      "id": "b5a7c5b5-3e79-47ff-85a8-537b07fee2f9",
-      "externalId": "",
-      "type": "normal-user",
-      "password": "123",
-      "passwordSalt": "",
-      "passwordType": "plain",
-      "displayName": "User",
-      "firstName": "",
-      "lastName": "",
-      "avatar": "https://cdn.casbin.org/img/casbin.svg",
-      "avatarType": "",
-      "permanentAvatar": "",
-      "email": "user@example.com",
-      "emailVerified": false,
-      "phone": "13245678910",
-      "countryCode": "US",
-      "region": "",
-      "location": "",
-      "address": [],
-      "affiliation": "Example Inc.",
-      "title": "",
-      "idCardType": "",
-      "idCard": "",
-      "homepage": "",
-      "bio": "",
-      "tag": "staff",
-      "language": "",
-      "gender": "",
-      "birthday": "",
-      "education": "",
-      "score": 2000,
-      "karma": 0,
-      "ranking": 1,
-      "balance": 0,
-      "currency": "",
-      "isDefaultAvatar": false,
-      "isOnline": false,
-      "isAdmin": false,
-      "isForbidden": false,
-      "isDeleted": false,
-      "signupApplication": "lobechat",
-      "hash": "",
-      "preHash": "",
-      "accessKey": "",
-      "accessSecret": "",
-      "accessToken": "",
-      "createdIp": "127.0.0.1",
-      "lastSigninTime": "",
-      "lastSigninIp": "",
-      "github": "",
-      "google": "",
-      "qq": "",
-      "wechat": "",
-      "facebook": "",
-      "dingtalk": "",
-      "weibo": "",
-      "gitee": "",
-      "linkedin": "",
-      "wecom": "",
-      "lark": "",
-      "gitlab": "",
-      "adfs": "",
-      "baidu": "",
-      "alipay": "",
-      "casdoor": "",
-      "infoflow": "",
-      "apple": "",
-      "azuread": "",
-      "azureadb2c": "",
-      "slack": "",
-      "steam": "",
-      "bilibili": "",
-      "okta": "",
-      "douyin": "",
-      "line": "",
-      "amazon": "",
-      "auth0": "",
-      "battlenet": "",
-      "bitbucket": "",
-      "box": "",
-      "cloudfoundry": "",
-      "dailymotion": "",
-      "deezer": "",
-      "digitalocean": "",
-      "discord": "",
-      "dropbox": "",
-      "eveonline": "",
-      "fitbit": "",
-      "gitea": "",
-      "heroku": "",
-      "influxcloud": "",
-      "instagram": "",
-      "intercom": "",
-      "kakao": "",
-      "lastfm": "",
-      "mailru": "",
-      "meetup": "",
-      "microsoftonline": "",
-      "naver": "",
-      "nextcloud": "",
-      "onedrive": "",
-      "oura": "",
-      "patreon": "",
-      "paypal": "",
-      "salesforce": "",
-      "shopify": "",
-      "soundcloud": "",
-      "spotify": "",
-      "strava": "",
-      "stripe": "",
-      "tiktok": "",
-      "tumblr": "",
-      "twitch": "",
-      "twitter": "",
-      "typetalk": "",
-      "uber": "",
-      "vk": "",
-      "wepay": "",
-      "xero": "",
-      "yahoo": "",
-      "yammer": "",
-      "yandex": "",
-      "zoom": "",
-      "metamask": "",
-      "web3onboard": "",
-      "custom": "",
-      "webauthnCredentials": null,
-      "preferredMfaType": "",
-      "recoveryCodes": null,
-      "totpSecret": "",
-      "mfaPhoneEnabled": false,
-      "mfaEmailEnabled": false,
-      "invitation": "",
-      "invitationCode": "",
-      "faceIds": null,
-      "ldap": "",
-      "properties": {},
-      "roles": null,
-      "permissions": null,
-      "groups": null,
-      "lastSigninWrongTime": "",
-      "signinWrongTimes": 0,
-      "managedAccounts": null,
-      "mfaAccounts": null,
-      "needUpdatePassword": false
+      "mfaItems": null,
+      "mfaRememberDeadline": "",
+      "needUpdatePassword": false,
+      "ipWhitelist": ""
     }
   ],
-  "webhooks": []
+  "certs": [
+    {
+      "owner": "admin",
+      "name": "cert-built-in",
+      "createdTime": "2025-08-11T08:43:23Z",
+      "displayName": "Built-in Cert",
+      "scope": "JWT",
+      "type": "x509",
+      "cryptoAlgorithm": "RS256",
+      "bitSize": 4096,
+      "expireInYears": 20,
+      "certificate": "-----BEGIN CERTIFICATE-----\nMIIE3TCCAsWgAwIBAgIDAeJAMA0GCSqGSIb3DQEBCwUAMCgxDjAMBgNVBAoTBWFk\nbWluMRYwFAYDVQQDEw1jZXJ0LWJ1aWx0LWluMB4XDTI1MDgxMTA4NDMyNVoXDTQ1\nMDgxMTA4NDMyNVowKDEOMAwGA1UEChMFYWRtaW4xFjAUBgNVBAMTDWNlcnQtYnVp\nbHQtaW4wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDqvw3MYJxa1sKq\ndyU+GGDkIqGzcvkkLn/EsrZJrKaWaS7yPqjtx5VFIqn6VOUTvA0CNbaqWZT+qwM3\nhjmcZ+nRzHMA62ZnMZvm7GR/njWUoSaHMJf3AT66f8WJxTsuwiYF/vbG7Z7ZUyyV\nChFA+BEwjaVghL4JFe7lMqxoBhaajYVs9RZabIw5Od7Rr4WoQYh5cGUBqgW9tn4F\nMFH7poMT85LiM0hKIceQqLVWAbX0Cgr9JX2qRH5QDac+iIVnt836oRO+ojJIhK+y\nf65yyPy+TM7X6PNmU/UaRGxE6K9uqbXTJDi4zNoU1tgK2cv4eIo0epxF4QcyheZs\nlZnIckp/Z6cJLu2DEoMMSHVDu46AXYSuNRYkawKGlvNq3KkUXRl2+GEPvUQVNRSI\nHCioHDF45SXrlrcVC27ADOo8zjRzeGXSsJ+ncVlY8nuXhPL/ZTbh9ivLRqXG6ZJX\nDHXteMm8Dbept4nt+jCgTgC+0GkXqAO2+ZDfHNCu2En2BfQDWmE90G/QIC6ckLDR\nZzdp+q8CsFcEHuM6c7ur8MHn4Rcxt8aqSZJQhPd6fpFlGYdJAQH0nwJGigsOaBfV\n9MPXMkGPoczWcQCFizqs1LbSDKwUiRr8zIFhyxQ78AqGwDd01l/BcuyNu4uZXPdV\nQCbnxVhShVCqz8WD9fk2+Ro4k+6yjQIDAQABoxAwDjAMBgNVHRMBAf8EAjAAMA0G\nCSqGSIb3DQEBCwUAA4ICAQCfQjWOtGU4JSqDkUuz7JI4Y7Or2WpDZrRearXeytgP\nKtwc/TlWxcLZ46UcxzcqK5Fs09enVWv64g3abfCwpkhU91c1E3BrZBCkRcOC2Ort\nlZXPjph4H94DaKw0S4IZ6+syMXhFbFdrLlfStQRw97rmwiiz3HQQ5l5zdc4bFchW\nlVDOrV5qvXfa2SSoiICnxy9d/IS4TRHN0q+21nbwWuCFRAdOXPkvzkoVnHle92UH\nHWmK2CbUPXn17zv/ZRRGUJ+sCpZmHQ3l6PETZhZiYiuN5DL+pOkrJYpC8k37BuEZ\nG7qmMbdMQWJENRBJRUW1cS/r5A3kTLyEJciPCEI3agHtNx043Y+3JwXIyfg41Gpx\nrr6RxB7j8Az+JSJgNrU0IY9WsUb6hEbyFlwDdmCNtq+z+Yr5FLuY6y/mX0544bBg\n1GKEtO8DM7Ks6+6FdOvUDWPrBC6mTmjqN1Oq9wqrHHQ+M85eG4FHl653ctKswijA\n09GHgn6+j0gIGrVAjk0vRqBcshDQ5yKHeg7cECVStzRV4zFXceHC1ocBOgoMPFaS\nzBdCiRPQzzi06b4060lab5tKRl7eB1yAThpTNpR/CFiU3HXGVQe3b02Dytj1xfHD\nnoyTPdKxeCSMNBL1233ZR0fhc9o1Og+aBaSvHa1O//M6OUk6tQYhSOabobCdiEjH\nlg==\n-----END CERTIFICATE-----\n",
+      "privateKey": "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n"
+    }
+  ],
+  "providers": [
+    {
+      "owner": "admin",
+      "name": "provider_captcha_default",
+      "createdTime": "2025-08-11T08:43:23Z",
+      "displayName": "Captcha Default",
+      "category": "Captcha",
+      "type": "Default",
+      "subType": "",
+      "method": "",
+      "clientId": "",
+      "clientSecret": "",
+      "clientId2": "",
+      "clientSecret2": "",
+      "cert": "",
+      "customAuthUrl": "",
+      "customTokenUrl": "",
+      "customUserInfoUrl": "",
+      "customLogo": "",
+      "scopes": "",
+      "userMapping": null,
+      "httpHeaders": null,
+      "host": "",
+      "port": 0,
+      "disableSsl": false,
+      "title": "",
+      "content": "",
+      "receiver": "",
+      "regionId": "",
+      "signName": "",
+      "templateCode": "",
+      "appId": "",
+      "endpoint": "",
+      "intranetEndpoint": "",
+      "domain": "",
+      "bucket": "",
+      "pathPrefix": "",
+      "metadata": "",
+      "idP": "",
+      "issuerUrl": "",
+      "enableSignAuthnRequest": false,
+      "emailRegex": "",
+      "providerUrl": ""
+    }
+  ],
+  "ldaps": [
+    {
+      "id": "ldap-built-in",
+      "owner": "built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "serverName": "BuildIn LDAP Server",
+      "host": "example.com",
+      "port": 389,
+      "enableSsl": false,
+      "allowSelfSignedCert": false,
+      "username": "cn=buildin,dc=example,dc=com",
+      "password": "123",
+      "baseDn": "ou=BuildIn,dc=example,dc=com",
+      "filter": "",
+      "filterFields": null,
+      "defaultGroup": "",
+      "passwordType": "",
+      "autoSync": 0,
+      "lastSync": ""
+    }
+  ],
+  "models": [
+    {
+      "owner": "built-in",
+      "name": "api-model-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "displayName": "API Model",
+      "description": "",
+      "modelText": "[request_definition]\nr = subOwner, subName, method, urlPath, objOwner, objName\n\n[policy_definition]\np = subOwner, subName, method, urlPath, objOwner, objName\n\n[role_definition]\ng = _, _\n\n[policy_effect]\ne = some(where (p.eft == allow))\n\n[matchers]\nm = (r.subOwner == p.subOwner || p.subOwner == \"*\") \u0026\u0026 \\\n    (r.subName == p.subName || p.subName == \"*\" || r.subName != \"anonymous\" \u0026\u0026 p.subName == \"!anonymous\") \u0026\u0026 \\\n    (r.method == p.method || p.method == \"*\") \u0026\u0026 \\\n    (r.urlPath == p.urlPath || p.urlPath == \"*\") \u0026\u0026 \\\n    (r.objOwner == p.objOwner || p.objOwner == \"*\") \u0026\u0026 \\\n    (r.objName == p.objName || p.objName == \"*\") || \\\n    (r.subOwner == r.objOwner \u0026\u0026 r.subName == r.objName)"
+    },
+    {
+      "owner": "built-in",
+      "name": "user-model-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "displayName": "Built-in Model",
+      "description": "",
+      "modelText": "[request_definition]\nr = sub, obj, act\n\n[policy_definition]\np = sub, obj, act\n\n[role_definition]\ng = _, _\n\n[policy_effect]\ne = some(where (p.eft == allow))\n\n[matchers]\nm = g(r.sub, p.sub) \u0026\u0026 r.obj == p.obj \u0026\u0026 r.act == p.act"
+    }
+  ],
+  "permissions": [
+    {
+      "owner": "built-in",
+      "name": "permission-built-in",
+      "createdTime": "2025-08-11T08:43:22Z",
+      "displayName": "Built-in Permission",
+      "description": "Built-in Permission",
+      "users": [
+        "built-in/*"
+      ],
+      "groups": [],
+      "roles": [],
+      "domains": [],
+      "model": "user-model-built-in",
+      "adapter": "",
+      "resourceType": "Application",
+      "resources": [
+        "app-built-in"
+      ],
+      "actions": [
+        "Read",
+        "Write",
+        "Admin"
+      ],
+      "effect": "Allow",
+      "isEnabled": true,
+      "submitter": "admin",
+      "approver": "admin",
+      "approveTime": "2025-08-11T08:43:22Z",
+      "state": "Approved"
+    }
+  ],
+  "payments": [],
+  "products": [],
+  "resources": [],
+  "roles": [],
+  "syncers": [],
+  "tokens": [],
+  "webhooks": [
+    {
+      "owner": "admin",
+      "name": "webhook_default",
+      "createdTime": "2025-08-11T17:13:56+08:00",
+      "organization": "lobechat",
+      "url": "http://localhost:3210/api/webhooks/casdoor",
+      "method": "POST",
+      "contentType": "application/json",
+      "headers": [
+        {
+          "name": "casdoor-secret",
+          "value": "casdoor-secret"
+        }
+      ],
+      "events": [
+        "update-user"
+      ],
+      "tokenFields": null,
+      "objectFields": [
+        "All"
+      ],
+      "isUserExtended": false,
+      "singleOrgOnly": false,
+      "isEnabled": true
+    }
+  ],
+  "groups": [],
+  "adapters": [
+    {
+      "owner": "built-in",
+      "name": "api-adapter-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "table": "casbin_api_rule",
+      "useSameDb": true,
+      "type": "",
+      "databaseType": "",
+      "host": "",
+      "port": 0,
+      "user": "",
+      "password": "",
+      "database": ""
+    },
+    {
+      "owner": "built-in",
+      "name": "user-adapter-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "table": "casbin_user_rule",
+      "useSameDb": true,
+      "type": "",
+      "databaseType": "",
+      "host": "",
+      "port": 0,
+      "user": "",
+      "password": "",
+      "database": ""
+    }
+  ],
+  "enforcers": [
+    {
+      "owner": "built-in",
+      "name": "api-enforcer-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "updatedTime": "2025-08-11 08:43:25",
+      "displayName": "API Enforcer",
+      "description": "",
+      "model": "built-in/api-model-built-in",
+      "adapter": "built-in/api-adapter-built-in",
+      "modelCfg": null
+    },
+    {
+      "owner": "built-in",
+      "name": "user-enforcer-built-in",
+      "createdTime": "2025-08-11T08:43:25Z",
+      "updatedTime": "2025-08-11 08:43:25",
+      "displayName": "User Enforcer",
+      "description": "",
+      "model": "built-in/user-model-built-in",
+      "adapter": "built-in/user-adapter-built-in",
+      "modelCfg": null
+    }
+  ],
+  "plans": [],
+  "pricings": [],
+  "invitations": [],
+  "records": [],
+  "sessions": [],
+  "subscriptions": [],
+  "transactions": []
 }

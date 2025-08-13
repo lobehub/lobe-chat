@@ -1,3 +1,4 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { Aws } from '@lobehub/icons';
 import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -6,7 +7,6 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormAction } from '@/features/Conversation/Error/style';
-import { ModelProvider } from '@/libs/model-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
