@@ -55,7 +55,7 @@
     "electron-builder": "^26.0.12",
     "electron-is": "^3.0.0",
     "electron-log": "^5.3.3",
-    "electron-store": "^8.2.0",
+    "electron-store": "^10.0.0",
     "electron-vite": "^3.0.0",
     "execa": "^9.5.2",
     "fix-path": "^4.0.0",
