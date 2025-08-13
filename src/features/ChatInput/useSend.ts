@@ -12,7 +12,7 @@ import { SendMessageParams } from '@/types/message';
 
 export type UseSendMessageParams = Pick<
   SendMessageParams,
-  'onlyAddUserMessage' | 'isWelcomeQuestion'
+  'onlyAddUserMessage' | 'isWelcomeQuestion' | 'sessionId'
 >;
 
 export const useSendMessage = () => {
@@ -34,7 +34,8 @@ export const useSendMessage = () => {
     const sessionStore = useSessionStore.getState();
     
     // Get the current selected session (either active session or parallel session)
-    const sessionId = sessionStore.activeId;
+    // If a specific sessionId is provided in params, use it. Otherwise, use the active session
+    const sessionId = params.sessionId || sessionStore.activeId;
     
     // Check if we can send a message in the current context
     if (chatSelectors.isAIGenerating(store)) return;

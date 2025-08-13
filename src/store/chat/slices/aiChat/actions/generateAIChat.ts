@@ -27,11 +27,6 @@ import { ChatImageItem } from '@/types/message/image';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-// Extend SendMessageParams to include sessionId
-interface ExtendedSendMessageParams extends SendMessageParams {
-  sessionId?: string;
-}
-
 import { chatSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
@@ -52,7 +47,7 @@ export interface AIGenerateAction {
   /**
    * Sends a new message to the AI chat system
    */
-  sendMessage: (params: ExtendedSendMessageParams) => Promise<void>;
+  sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
    * Regenerates a specific message in the chat
    */
