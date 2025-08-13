@@ -14,6 +14,7 @@ export { default as NavigateBack } from './NavigateBack';
 export { default as Skeleton } from './Skeleton';
 export { default as Space } from './Space';
 export { default as Tag } from './Tag';
+export * from './ThemeProvider';
 export * from './Toast';
 export { default as Toast } from './Toast';
 export { default as Tooltip } from './Tooltip';

@@ -2,21 +2,25 @@ import React, { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import type { Theme, ThemeContextValue, ThemeMode } from '@/types/theme';
+import type { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from '@/types/theme';
 
-import { generateThemeToken } from './tokens';
+import { generateDesignToken, generateThemeToken } from './tokens';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
+  /**
+   * 自定义主题配置
+   * 当提供此属性时，将使用自定义配置生成主题
+   * 包含 token（种子 Token）和 algorithm（主题算法）
+   */
+  theme?: ThemeConfig;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
   const { themeMode, setThemeMode: setStoreThemeMode } = useSettingStore();
-
-  // 组件挂载时设置加载完成
 
   // 计算当前实际的主题模式
   const getActualThemeMode = (): 'light' | 'dark' => {
@@ -40,10 +44,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   // 生成主题对象
   const isDark = getActualThemeMode() === 'dark';
+
+  // 如果提供了自定义主题配置，使用它；否则使用默认配置
+  const themeToken = customTheme
+    ? generateDesignToken(customTheme, isDark)
+    : generateThemeToken(isDark);
+
   const theme: Theme = {
     isDark,
     mode: themeMode,
-    token: generateThemeToken(isDark),
+    token: themeToken,
   };
 
   const contextValue: ThemeContextValue = {

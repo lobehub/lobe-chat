@@ -125,12 +125,21 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'display',
-    description: '主题令牌展示页面，显示种子、映射和别名令牌，支持主题切换和搜索',
+    description: '主题 Token 展示页面，显示种子、映射和别名令牌，支持主题切换和搜索',
     hasDemos: false,
     hasReadme: false,
-    name: 'Theme Tokens',
-    path: 'theme-tokens',
+    name: 'Theme Token',
+    path: 'theme-token',
     tags: ['theme', 'tokens', 'design', 'colors', 'typography'],
+  },
+  {
+    category: 'display',
+    description: '主题展示页面，如何使用 ThemeProvider',
+    hasDemos: false,
+    hasReadme: false,
+    name: 'ThemeProvider',
+    path: 'theme-provider',
+    tags: ['theme', 'token'],
   },
 ];
 

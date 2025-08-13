@@ -83,7 +83,59 @@ const MyComponent = () => {
 };
 ```
 
-### 2. 主题切换
+### 2. 自定义主题配置
+
+```tsx
+import React from 'react';
+import { ThemeProvider, darkAlgorithm } from '@/theme';
+
+// 使用自定义 token
+const AppWithCustomTheme = () => (
+  <ThemeProvider
+    theme={{
+      token: {
+        // Seed Token，影响范围大
+        colorPrimary: '#00b96b',
+        borderRadius: 2,
+
+        // 派生变量，影响范围小
+        colorBgContainer: '#f6ffed',
+      },
+    }}
+  >
+    <MyApp />
+  </ThemeProvider>
+);
+
+// 使用自定义算法
+const AppWithDarkTheme = () => (
+  <ThemeProvider
+    theme={{
+      algorithm: darkAlgorithm,
+    }}
+  >
+    <MyApp />
+  </ThemeProvider>
+);
+
+// 同时使用自定义 token 和算法
+const AppWithCustomThemeAndAlgorithm = () => (
+  <ThemeProvider
+    theme={{
+      token: {
+        colorPrimary: '#00b96b',
+        borderRadius: 2,
+        colorBgContainer: '#f6ffed',
+      },
+      algorithm: darkAlgorithm,
+    }}
+  >
+    <MyApp />
+  </ThemeProvider>
+);
+```
+
+### 3. 主题切换
 
 ```tsx
 import { useTheme } from '@/theme';

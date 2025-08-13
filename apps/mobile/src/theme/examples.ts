@@ -162,3 +162,84 @@ const ThemeToggle = () => {
 };
   `,
 };
+
+// ======================================================================
+// ==                    ThemeProvider 使用示例                         ==
+// ======================================================================
+
+/**
+ * 示例 1: 使用自定义 token 配置
+ *
+ * <ThemeProvider
+ *   theme={{
+ *     token: {
+ *       // Seed Token，影响范围大
+ *       colorPrimary: '#00b96b',
+ *       borderRadius: 2,
+ *
+ *       // 派生变量，影响范围小
+ *       colorBgContainer: '#f6ffed',
+ *     }
+ *   }}
+ * >
+ *   <App />
+ * </ThemeProvider>
+ */
+
+/**
+ * 示例 2: 使用自定义算法
+ *
+ * import { darkAlgorithm } from '@/theme';
+ *
+ * <ThemeProvider
+ *   theme={{
+ *     algorithm: darkAlgorithm,
+ *   }}
+ * >
+ *   <App />
+ * </ThemeProvider>
+ */
+
+/**
+ * 示例 3: 同时使用自定义 token 和算法
+ *
+ * import { darkAlgorithm, compactAlgorithm } from '@/theme';
+ *
+ * <ThemeProvider
+ *   theme={{
+ *     token: {
+ *       colorPrimary: '#00b96b',
+ *       borderRadius: 2,
+ *       colorBgContainer: '#f6ffed',
+ *     },
+ *     algorithm: darkAlgorithm,
+ *   }}
+ * >
+ *   <App />
+ * </ThemeProvider>
+ */
+
+/**
+ * 示例 4: 使用多个算法
+ *
+ * import { darkAlgorithm, compactAlgorithm } from '@/theme';
+ *
+ * <ThemeProvider
+ *   theme={{
+ *     token: {
+ *       colorPrimary: '#ff6b35',
+ *     },
+ *     algorithm: [darkAlgorithm, compactAlgorithm],
+ *   }}
+ * >
+ *   <App />
+ * </ThemeProvider>
+ */
+
+/**
+ * 示例 5: 不传入 theme 属性（使用默认主题）
+ *
+ * <ThemeProvider>
+ *   <App />
+ * </ThemeProvider>
+ */

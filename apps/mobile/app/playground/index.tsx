@@ -99,8 +99,13 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
-      case 'theme-tokens': {
-        router.push('/playground/theme-tokens');
+      case 'theme-provider': {
+        router.push('/playground/components/theme-provider');
+
+        break;
+      }
+      case 'theme-token': {
+        router.push('/playground/components/theme-token');
 
         break;
       }
