@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { describe, expect, it } from 'vitest';
 
-import { convertUsage, convertResponseUsage } from './usageConverter';
+import { convertResponseUsage, convertUsage } from './usageConverter';
 
 describe('convertUsage', () => {
   it('should convert basic OpenAI usage data correctly', () => {

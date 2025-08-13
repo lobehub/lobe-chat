@@ -1,4 +1,5 @@
-import { ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider } from '@lobechat/model-runtime';
+
 import { createHeaderWithAuth } from '@/services/_auth';
 import { OpenAIImagePayload } from '@/types/openai/image';
 

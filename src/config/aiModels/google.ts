@@ -19,8 +19,24 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.31, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.25, upTo: 200_000 },
+            { rate: 2.5, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 10, upTo: 200_000 },
+            { rate: 15, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-06-17',
@@ -47,8 +63,24 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.31, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.25, upTo: 200_000 },
+            { rate: 2.5, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 10, upTo: 200_000 },
+            { rate: 15, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-06-05',
@@ -75,8 +107,24 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.31, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.25, upTo: 200_000 },
+            { rate: 2.5, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 10, upTo: 200_000 },
+            { rate: 15, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-05-06',
@@ -544,6 +592,9 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-06-06',
     type: 'image',
   },
@@ -554,6 +605,9 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-ultra-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-06-06',
     type: 'image',
   },

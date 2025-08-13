@@ -39,6 +39,9 @@ const falImageModels: AIImageModelCard[] = [
       seed: { default: null },
       steps: { default: 28, max: 50, min: 10 },
     },
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.025, strategy: 'fixed', unit: 'megapixel' }],
+    },
     releasedAt: '2025-06-28',
     type: 'image',
   },
@@ -57,6 +60,9 @@ const falImageModels: AIImageModelCard[] = [
       prompt: { default: '' },
       seed: { default: null },
     },
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-05-01',
     type: 'image',
   },
@@ -66,6 +72,9 @@ const falImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'flux/schnell',
     parameters: fluxSchnellParamsSchema,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.003, strategy: 'fixed', unit: 'megapixel' }],
+    },
     releasedAt: '2024-08-01',
     type: 'image',
   },
@@ -75,6 +84,9 @@ const falImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'flux/krea',
     parameters: fluxKreaParamsSchema,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.025, strategy: 'fixed', unit: 'megapixel' }],
+    },
     releasedAt: '2025-07-31',
     type: 'image',
   },
@@ -92,6 +104,9 @@ const falImageModels: AIImageModelCard[] = [
       prompt: { default: '' },
       seed: { default: null },
     },
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.05, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-05-21',
     type: 'image',
   },
@@ -102,6 +117,9 @@ const falImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'qwen-image',
     parameters: qwenImageParamsSchema,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'megapixel' }],
+    },
     releasedAt: '2025-08-04',
     type: 'image',
   },
