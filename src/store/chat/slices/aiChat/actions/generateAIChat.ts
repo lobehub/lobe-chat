@@ -1,12 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isDesktop, isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
@@ -104,6 +104,11 @@ export interface AIGenerateAction {
    * Toggles the loading state for AI message generation, managing the UI feedback
    */
   internal_toggleChatLoading: (
+    loading: boolean,
+    id?: string,
+    action?: Action,
+  ) => AbortController | undefined;
+  internal_toggleMessageInToolsCalling: (
     loading: boolean,
     id?: string,
     action?: Action,
@@ -445,6 +450,7 @@ export const generateAIChat: StateCreator<
 
       // if it's the function call message, trigger the function method
       if (isToolsCalling) {
+        get().internal_toggleMessageInToolsCalling(true, assistantId);
         await refreshMessages();
         await triggerToolCalls(assistantId, {
           threadId: params?.threadId,
@@ -467,6 +473,7 @@ export const generateAIChat: StateCreator<
 
     // 5. if it's the function call message, trigger the function method
     if (isFunctionCall) {
+      get().internal_toggleMessageInToolsCalling(true, assistantId);
       await refreshMessages();
       await triggerToolCalls(assistantId, {
         threadId: params?.threadId,
@@ -827,6 +834,9 @@ export const generateAIChat: StateCreator<
   // ----- Loading ------- //
   internal_toggleChatLoading: (loading, id, action) => {
     return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
+  },
+  internal_toggleMessageInToolsCalling: (loading, id) => {
+    return get().internal_toggleLoadingArrays('messageInToolsCallingIds', loading, id);
   },
   internal_toggleChatReasoning: (loading, id, action) => {
     return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);

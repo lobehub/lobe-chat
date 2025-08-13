@@ -1,5 +1,4 @@
-import { count, sum } from 'drizzle-orm';
-import { and, asc, desc, eq, ilike, inArray, like, notExists, or } from 'drizzle-orm/expressions';
+import { and, asc, count, desc, eq, ilike, inArray, like, notExists, or, sum } from 'drizzle-orm';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
 import { LobeChatDatabase, Transaction } from '@/database/type';

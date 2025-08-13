@@ -5,7 +5,7 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/core/dbForTest';

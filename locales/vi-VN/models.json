@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình MoE do công ty DeepSeek tự phát triển. Nhiều kết quả đánh giá của DeepSeek-V3 đã vượt qua các mô hình mã nguồn mở khác như Qwen2.5-72B và Llama-3.1-405B, và về hiệu suất không thua kém các mô hình đóng nguồn hàng đầu thế giới như GPT-4o và Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Nhà cung cấp mô hình: nền tảng sophnet. DeepSeek V3 Fast là phiên bản tốc độ cao TPS của DeepSeek V3 0324, không lượng tử hóa, có khả năng mã hóa và toán học mạnh mẽ hơn, phản hồi nhanh hơn!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite sở hữu tốc độ phản hồi tối ưu, hiệu quả chi phí tốt hơn, cung cấp lựa chọn linh hoạt hơn cho các kịch bản khác nhau của khách hàng. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 128k."
   },
@@ -326,6 +329,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 là phiên bản cập nhật của Qwen3-30B-A3B ở chế độ không suy nghĩ. Đây là một mô hình chuyên gia hỗn hợp (MoE) với tổng cộng 30,5 tỷ tham số và 3,3 tỷ tham số kích hoạt. Mô hình này đã được cải tiến quan trọng ở nhiều khía cạnh, bao gồm nâng cao đáng kể khả năng tuân thủ chỉ dẫn, suy luận logic, hiểu văn bản, toán học, khoa học, lập trình và sử dụng công cụ. Đồng thời, nó đạt được tiến bộ thực chất trong việc bao phủ kiến thức đa ngôn ngữ và có khả năng điều chỉnh tốt hơn với sở thích của người dùng trong các nhiệm vụ chủ quan và mở, từ đó tạo ra các phản hồi hữu ích hơn và văn bản chất lượng cao hơn. Ngoài ra, khả năng hiểu văn bản dài của mô hình cũng được nâng lên đến 256K. Mô hình này chỉ hỗ trợ chế độ không suy nghĩ và không tạo ra thẻ `<think></think>` trong đầu ra."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
@@ -358,6 +364,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B là mô hình MoE (mô hình chuyên gia hỗn hợp), giới thiệu “chế độ suy luận hỗn hợp”, cho phép người dùng chuyển đổi liền mạch giữa “chế độ suy nghĩ” và “chế độ không suy nghĩ”. Mô hình hỗ trợ hiểu và suy luận bằng 119 ngôn ngữ và phương ngữ, đồng thời có khả năng gọi công cụ mạnh mẽ. Trong các bài kiểm tra chuẩn về năng lực tổng hợp, mã hóa và toán học, đa ngôn ngữ, kiến thức và suy luận, mô hình có thể cạnh tranh với các mô hình lớn hàng đầu trên thị trường hiện nay như DeepSeek R1, OpenAI o1, o3-mini, Grok 3 và Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B là mô hình đặc (Dense Model), giới thiệu “chế độ suy luận hỗn hợp”, cho phép người dùng chuyển đổi liền mạch giữa “chế độ suy nghĩ” và “chế độ không suy nghĩ”. Nhờ cải tiến kiến trúc mô hình, tăng dữ liệu huấn luyện và phương pháp huấn luyện hiệu quả hơn, hiệu suất tổng thể tương đương với Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
@@ -394,6 +406,12 @@
   },
   "SenseChat-Vision": {
     "description": "Mô hình phiên bản mới nhất (V5.5), hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu sinh ra văn bản."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Thông qua việc cập nhật toàn diện dữ liệu đa phương thức, ngôn ngữ và suy luận cùng với tối ưu hóa chiến lược huấn luyện, mô hình mới đạt được sự cải thiện đáng kể trong suy luận đa phương thức và khả năng tuân theo chỉ dẫn tổng quát, hỗ trợ cửa sổ ngữ cảnh lên đến 128k và thể hiện xuất sắc trong các nhiệm vụ chuyên biệt như nhận dạng OCR và nhận diện IP du lịch văn hóa."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Thông qua việc cập nhật toàn diện dữ liệu đa phương thức, ngôn ngữ và suy luận cùng với tối ưu hóa chiến lược huấn luyện, mô hình mới đạt được sự cải thiện đáng kể trong suy luận đa phương thức và khả năng tuân theo chỉ dẫn tổng quát, hỗ trợ cửa sổ ngữ cảnh lên đến 128k và thể hiện xuất sắc trong các nhiệm vụ chuyên biệt như nhận dạng OCR và nhận diện IP du lịch văn hóa."
   },
   "SenseNova-V6-Pro": {
     "description": "Thực hiện sự thống nhất nguyên bản giữa hình ảnh, văn bản và video, vượt qua giới hạn phân tách đa phương thức truyền thống, giành được hai giải vô địch trong các đánh giá OpenCompass và SuperCLUE."
@@ -593,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Được triển khai và cung cấp bởi Microsoft; mô hình DeepSeek R1 đã được nâng cấp phiên bản nhỏ, phiên bản hiện tại là DeepSeek-R1-0528. Trong bản cập nhật mới nhất, DeepSeek R1 đã cải thiện đáng kể độ sâu suy luận và khả năng suy đoán bằng cách tăng tài nguyên tính toán và giới thiệu cơ chế tối ưu thuật toán giai đoạn hậu huấn luyện. Mô hình này thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn về toán học, lập trình và logic tổng quát, hiệu suất tổng thể đã gần đạt đến các mô hình hàng đầu như O3 và Gemini 2.5 Pro."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B là mô hình ngôn ngữ lớn mã nguồn mở có thể thương mại hóa với 130 tỷ tham số, được phát triển bởi Baichuan Intelligence, đã đạt được hiệu suất tốt nhất trong cùng kích thước trên các benchmark tiếng Trung và tiếng Anh."
   },
@@ -652,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 là mô hình mạnh mẽ nhất mới nhất của Anthropic dành cho xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự trôi chảy và khả năng hiểu biết."
@@ -1080,7 +1104,7 @@
     "description": "FLUX.1 [dev] là mô hình tinh luyện mã nguồn mở dành cho ứng dụng phi thương mại. FLUX.1 [dev] duy trì chất lượng hình ảnh và khả năng tuân thủ chỉ dẫn gần tương đương phiên bản chuyên nghiệp FLUX, đồng thời có hiệu suất vận hành cao hơn. So với mô hình chuẩn cùng kích thước, nó sử dụng tài nguyên hiệu quả hơn."
   },
   "flux-kontext/dev": {
-    "description": "Mô hình chỉnh sửa hình ảnh Frontier."
+    "description": "Mô hình FLUX.1 tập trung vào nhiệm vụ chỉnh sửa hình ảnh, hỗ trợ đầu vào văn bản và hình ảnh."
   },
   "flux-merged": {
     "description": "Mô hình FLUX.1-merged kết hợp các đặc tính sâu sắc được khám phá trong giai đoạn phát triển của \"DEV\" và ưu thế thực thi nhanh của \"Schnell\". Qua đó, FLUX.1-merged không chỉ nâng cao giới hạn hiệu suất mà còn mở rộng phạm vi ứng dụng."
@@ -1094,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Bộ biến đổi luồng hiệu chỉnh với 12 tỷ tham số, có khả năng tạo hình ảnh dựa trên mô tả văn bản."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] là một mô hình tạo hình ảnh với sở thích thẩm mỹ, nhằm tạo ra hình ảnh chân thực và tự nhiên hơn."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] là mô hình bộ chuyển đổi dòng với 12 tỷ tham số, có thể tạo ra hình ảnh chất lượng cao từ văn bản trong 1 đến 4 bước, phù hợp cho mục đích cá nhân và thương mại."
+    "description": "FLUX.1 [schnell] là mô hình tạo hình ảnh với 12 tỷ tham số, tập trung vào việc tạo hình ảnh chất lượng cao nhanh chóng."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
@@ -1457,8 +1484,26 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe là mô hình chuyển đổi giọng nói thành văn bản sử dụng GPT-4o để phiên âm âm thanh. So với mô hình Whisper gốc, nó cải thiện tỷ lệ lỗi từ và nâng cao khả năng nhận diện ngôn ngữ cũng như độ chính xác. Sử dụng nó để có bản phiên âm chính xác hơn."
   },
+  "gpt-5": {
+    "description": "Mô hình tốt nhất cho các nhiệm vụ mã hóa và đại diện đa lĩnh vực. GPT-5 đạt bước tiến vượt bậc về độ chính xác, tốc độ, suy luận, nhận diện ngữ cảnh, tư duy có cấu trúc và giải quyết vấn đề."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Mô hình GPT-5 được sử dụng trong ChatGPT. Kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng tương tác đối thoại."
+  },
+  "gpt-5-mini": {
+    "description": "Phiên bản GPT-5 nhanh hơn và tiết kiệm chi phí hơn, phù hợp cho các nhiệm vụ được xác định rõ ràng. Cung cấp tốc độ phản hồi nhanh hơn trong khi vẫn giữ chất lượng đầu ra cao."
+  },
+  "gpt-5-nano": {
+    "description": "Phiên bản GPT-5 nhanh nhất và tiết kiệm chi phí nhất. Rất phù hợp cho các ứng dụng cần phản hồi nhanh và nhạy cảm về chi phí."
+  },
   "gpt-image-1": {
     "description": "Mô hình tạo hình ảnh đa phương thức nguyên bản của ChatGPT"
+  },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B là mô hình ngôn ngữ lớn mã nguồn mở do OpenAI phát hành, sử dụng công nghệ lượng tử hóa MXFP4, phù hợp để chạy trên GPU tiêu dùng cao cấp hoặc Mac Apple Silicon. Mô hình này thể hiện xuất sắc trong việc tạo đối thoại, viết mã và các nhiệm vụ suy luận, hỗ trợ gọi hàm và sử dụng công cụ."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B là mô hình ngôn ngữ lớn mã nguồn mở do OpenAI phát hành, sử dụng công nghệ lượng tử hóa MXFP4, thuộc dòng mô hình hàng đầu. Cần môi trường đa GPU hoặc máy trạm hiệu năng cao để vận hành, có hiệu suất vượt trội trong suy luận phức tạp, tạo mã và xử lý đa ngôn ngữ, hỗ trợ gọi hàm nâng cao và tích hợp bộ công cụ."
   },
   "grok-2-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
@@ -1599,7 +1644,7 @@
     "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
   },
   "imagen4/preview": {
-    "description": "Mô hình tạo hình ảnh chất lượng cao nhất của Google"
+    "description": "Mô hình tạo hình ảnh chất lượng cao do Google cung cấp."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
@@ -2102,6 +2147,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất của OpenAI, được phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và văn bản, và đầu ra văn bản. Là mô hình nhỏ tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng đầu về sở thích trò chuyện so với GPT-4."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B là mô hình ngôn ngữ hàng đầu với 120 tỷ tham số, tích hợp chức năng tìm kiếm trình duyệt và thực thi mã, đồng thời có khả năng suy luận."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B là mô hình ngôn ngữ hàng đầu với 20 tỷ tham số, tích hợp chức năng tìm kiếm trình duyệt và thực thi mã, đồng thời có khả năng suy luận."
+  },
   "openai/o1": {
     "description": "o1 là mô hình suy luận mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản, đồng thời xuất ra văn bản, phù hợp cho các nhiệm vụ phức tạp đòi hỏi kiến thức phổ quát rộng rãi. Mô hình này có ngữ cảnh 200K và kiến thức cập nhật đến tháng 10 năm 2023."
   },
@@ -2161,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
+  },
+  "qwen-image": {
+    "description": "Mô hình hình ảnh mạnh mẽ từ đội ngũ Qwen, có khả năng tạo văn bản tiếng Trung ấn tượng và đa dạng phong cách hình ảnh thị giác."
   },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
@@ -2372,6 +2426,12 @@
   "qwen3-30b-a3b": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "So với phiên bản trước (Qwen3-30B-A3B), khả năng tổng quát của mô hình trong tiếng Trung, tiếng Anh và đa ngôn ngữ đã được cải thiện đáng kể. Mô hình được tối ưu hóa đặc biệt cho các nhiệm vụ mở và chủ quan, phù hợp hơn với sở thích người dùng và có thể cung cấp các phản hồi hữu ích hơn."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Dựa trên mô hình mã nguồn mở chế độ suy nghĩ của Qwen3, so với phiên bản trước (通义千问3-30B-A3B), khả năng logic, năng lực tổng quát, kiến thức được tăng cường và khả năng sáng tạo đều được cải thiện đáng kể, phù hợp cho các kịch bản suy luận phức tạp và khó khăn."
+  },
   "qwen3-32b": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
@@ -2384,8 +2444,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen. Mô hình qwen3-coder-480b-a35b-instruct mới nhất dựa trên Qwen3, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể lập trình tự chủ, vừa xuất sắc về mã hóa vừa có năng lực chung."
   },
+  "qwen3-coder-flash": {
+    "description": "Mô hình mã nguồn của Thông Nghĩa Thiên Vấn. Bộ mô hình Qwen3-Coder mới nhất dựa trên Qwen3 là mô hình tạo mã, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể tự lập trình, vừa xuất sắc về năng lực mã hóa vừa có khả năng tổng quát."
+  },
   "qwen3-coder-plus": {
-    "description": "Mô hình mã hóa Tongyi Qianwen. Dòng mô hình Qwen3-Coder-Plus mới nhất dựa trên Qwen3, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể lập trình tự chủ, vừa xuất sắc về mã hóa vừa có năng lực chung."
+    "description": "Mô hình mã nguồn của Thông Nghĩa Thiên Vấn. Bộ mô hình Qwen3-Coder mới nhất dựa trên Qwen3 là mô hình tạo mã, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể tự lập trình, vừa xuất sắc về năng lực mã hóa vừa có khả năng tổng quát."
   },
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."

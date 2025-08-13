@@ -12,7 +12,12 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar-deep-research',
     maxOutput: 8192,
-    pricing: { input: 2, output: 8 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-02-14',
     settings: {
       extendParams: ['reasoningEffort'],
@@ -32,7 +37,12 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar-reasoning-pro',
     maxOutput: 8192,
-    pricing: { input: 2, output: 8 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -51,7 +61,12 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar-reasoning',
     maxOutput: 8192,
-    pricing: { input: 1, output: 5 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -68,7 +83,12 @@ const perplexityChatModels: AIChatModelCard[] = [
     displayName: 'Sonar Pro',
     enabled: true,
     id: 'sonar-pro',
-    pricing: { input: 3, output: 15 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -85,7 +105,12 @@ const perplexityChatModels: AIChatModelCard[] = [
     displayName: 'Sonar',
     enabled: true,
     id: 'sonar',
-    pricing: { input: 1, output: 1 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -102,7 +127,12 @@ const perplexityChatModels: AIChatModelCard[] = [
       'R1-1776 是 DeepSeek R1 模型的一个版本，经过后训练，可提供未经审查、无偏见的事实信息。',
     displayName: 'R1 1776',
     id: 'r1-1776',
-    pricing: { input: 2, output: 8 },
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-02-18',
     type: 'chat',
   },

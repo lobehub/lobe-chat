@@ -1,9 +1,9 @@
+import { TraceNameMap, TracePayload } from '@lobechat/types';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
-import { TraceNameMap, TracePayload } from '@/const/trace';
 import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';

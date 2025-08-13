@@ -6,6 +6,7 @@ import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'r
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { isDesktop } from '@/const/version';
 import ChatItem from '@/features/ChatItem';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useAgentStore } from '@/store/agent';
@@ -220,6 +221,19 @@ const Item = memo<ChatListItemProps>(
       toggleMessageEditing(id, edit);
     }, []);
 
+    const onContextMenu = useCallback(async () => {
+      if (isDesktop && item) {
+        const { electronSystemService } = await import('@/services/electron/system');
+
+        electronSystemService.showContextMenu('chat', {
+          content: item.content,
+          hasError: !!item.error,
+          messageId: id,
+          role: item.role,
+        });
+      }
+    }, [id, item]);
+
     const belowMessage = useMemo(() => item && <BelowMessage data={item} />, [item]);
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
@@ -228,7 +242,10 @@ const Item = memo<ChatListItemProps>(
       item && (
         <InPortalThreadContext.Provider value={inPortalThread}>
           {enableHistoryDivider && <History />}
-          <Flexbox className={cx(styles.message, className, isMessageLoading && styles.loading)}>
+          <Flexbox
+            className={cx(styles.message, className, isMessageLoading && styles.loading)}
+            onContextMenu={onContextMenu}
+          >
             <ChatItem
               actions={actionBar}
               avatar={item.meta}

@@ -1,13 +1,10 @@
 // @vitest-environment node
-import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeDeepSeekAI, LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
 import { ModelProvider } from '@/libs/model-runtime';
-import { AgentRuntimeErrorType } from '@/libs/model-runtime';
 import { testProvider } from '@/libs/model-runtime/providerTestUtils';
 
-import * as debugStreamModule from '../utils/debugStream';
 import models from './fixtures/models.json';
 import { LobePPIOAI } from './index';
 
@@ -30,7 +27,7 @@ let instance: LobeOpenAICompatibleRuntime;
 beforeEach(() => {
   instance = new LobePPIOAI({ apiKey: 'test' });
 
-  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+  // Use vi.spyOn to mock the chat.completions.create method
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
     new ReadableStream() as any,
   );
@@ -44,7 +41,7 @@ afterEach(() => {
 describe('PPIO', () => {
   describe('models', () => {
     it('should get models', async () => {
-      // mock the models.list method
+      // Mock the models.list method
       (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
 
       const list = await instance.models();

@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircleFilled } from '@ant-design/icons';
+import { TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -9,7 +10,6 @@ import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { TraceNameMap } from '@/const/trace';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -46,11 +46,13 @@ export type CheckErrorRender = (props: {
 interface ConnectionCheckerProps {
   checkErrorRender?: CheckErrorRender;
   model: string;
+  onAfterCheck: () => Promise<void>;
+  onBeforeCheck: () => Promise<void>;
   provider: string;
 }
 
 const Checker = memo<ConnectionCheckerProps>(
-  ({ model, provider, checkErrorRender: CheckErrorRender }) => {
+  ({ model, provider, checkErrorRender: CheckErrorRender, onBeforeCheck, onAfterCheck }) => {
     const { t } = useTranslation('setting');
 
     const isProviderConfigUpdating = useAiInfraStore(
@@ -152,7 +154,18 @@ const Checker = memo<ConnectionCheckerProps>(
             value={checkModel}
             virtual
           />
-          <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
+          <Button
+            disabled={isProviderConfigUpdating}
+            loading={loading}
+            onClick={async () => {
+              await onBeforeCheck();
+              try {
+                await checkConnection();
+              } finally {
+                await onAfterCheck();
+              }
+            }}
+          >
             {t('llm.checker.button')}
           </Button>
         </Flexbox>

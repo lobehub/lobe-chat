@@ -14,8 +14,8 @@ export default class MenuController extends ControllerModule {
    * 显示上下文菜单
    */
   @ipcClientEvent('showContextMenu')
-  showContextMenu(type: string, data?: any) {
-    return this.app.menuManager.showContextMenu(type, data);
+  showContextMenu(params: { data?: any; type: string }) {
+    return this.app.menuManager.showContextMenu(params.type, params.data);
   }
 
   /**

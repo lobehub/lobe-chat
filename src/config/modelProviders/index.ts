@@ -1,7 +1,9 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import Ai21Provider from './ai21';
+import Ai302Provider from './ai302';
 import Ai360Provider from './ai360';
+import AiHubMixProvider from './aihubmix';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import AzureAIProvider from './azureai';
@@ -94,6 +96,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   TaichuProvider.chatModels,
   CloudflareProvider.chatModels,
   Ai360Provider.chatModels,
+  AiHubMixProvider.chatModels,
   SiliconCloudProvider.chatModels,
   GiteeAIProvider.chatModels,
   UpstageProvider.chatModels,
@@ -122,9 +125,11 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GoogleProvider,
   VertexAIProvider,
   DeepSeekProvider,
-  HuggingFaceProvider,
+  MoonshotProvider,
+  AiHubMixProvider,
   OpenRouterProvider,
   FalProvider,
+  HuggingFaceProvider,
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
@@ -153,7 +158,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   SparkProvider,
   SenseNovaProvider,
   StepfunProvider,
-  MoonshotProvider,
   BaichuanProvider,
   VolcengineProvider,
   MinimaxProvider,
@@ -166,6 +170,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Search1APIProvider,
   InfiniAIProvider,
   QiniuProvider,
+  Ai302Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -178,7 +183,9 @@ export const isProviderDisableBrowserRequest = (id: string) => {
 };
 
 export { default as Ai21ProviderCard } from './ai21';
+export { default as Ai302ProviderCard } from './ai302';
 export { default as Ai360ProviderCard } from './ai360';
+export { default as AiHubMixProviderCard } from './aihubmix';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as AzureAIProviderCard } from './azureai';

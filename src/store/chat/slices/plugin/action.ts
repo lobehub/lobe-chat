@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatErrorType } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
@@ -13,7 +14,6 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import { ChatErrorType } from '@/types/fetch';
 import {
   ChatMessage,
   ChatMessageError,
@@ -282,6 +282,8 @@ export const chatPlugin: StateCreator<
     });
 
     await Promise.all(messagePools);
+
+    await get().internal_toggleMessageInToolsCalling(false, assistantId);
 
     // only default type tool calls should trigger AI message
     if (!shouldCreateMessage) return;

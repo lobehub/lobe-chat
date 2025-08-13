@@ -8,5 +8,9 @@ export class IoCContainer {
   > = new WeakMap();
 
   static shortcuts: WeakMap<any, { methodName: string; name: string }[]> = new WeakMap();
+
+  static protocolHandlers: WeakMap<any, { action: string; methodName: string; urlType: string }[]> =
+    new WeakMap();
+
   init() {}
 }
