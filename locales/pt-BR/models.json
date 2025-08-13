@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 é um modelo MoE desenvolvido internamente pela DeepSeek. Os resultados de várias avaliações do DeepSeek-V3 superaram outros modelos de código aberto, como Qwen2.5-72B e Llama-3.1-405B, e seu desempenho é comparável aos melhores modelos fechados do mundo, como GPT-4o e Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Fornecedor do modelo: plataforma sophnet. DeepSeek V3 Fast é a versão de alta velocidade e alto TPS do DeepSeek V3 0324, totalmente não quantificada, com capacidades aprimoradas de código e matemática, respondendo de forma mais rápida!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 128k."
   },
@@ -326,6 +329,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 é uma versão atualizada do Qwen3-30B-A3B no modo não reflexivo. Este é um modelo de especialista misto (MoE) com um total de 30,5 bilhões de parâmetros e 3,3 bilhões de parâmetros ativados. O modelo apresenta melhorias significativas em vários aspectos, incluindo um aumento notável na capacidade de seguir instruções, raciocínio lógico, compreensão de texto, matemática, ciências, codificação e uso de ferramentas. Além disso, alcança avanços substanciais na cobertura de conhecimento em múltiplos idiomas e melhor alinhamento com as preferências dos usuários em tarefas subjetivas e abertas, permitindo gerar respostas mais úteis e textos de maior qualidade. A capacidade de compreensão de textos longos também foi ampliada para 256K. Este modelo suporta apenas o modo não reflexivo e não gera tags `<think></think>` em sua saída."
+  },
   "Qwen/Qwen3-32B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
   },
@@ -358,6 +364,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct é um grande modelo de linguagem projetado para geração de código, compreensão de código e cenários de desenvolvimento eficiente, com uma escala de 32 bilhões de parâmetros, atendendo a diversas necessidades de programação."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B, modelo MoE (especialista misto), introduz o “modo de raciocínio híbrido”, permitindo aos usuários alternar perfeitamente entre os modos “reflexivo” e “não reflexivo”. Suporta compreensão e raciocínio em 119 idiomas e dialetos, além de possuir forte capacidade de chamada de ferramentas. Em testes de benchmark abrangentes, incluindo habilidades gerais, código, matemática, multilinguismo, conhecimento e raciocínio, compete com os principais grandes modelos do mercado, como DeepSeek R1, OpenAI o1, o3-mini, Grok 3 e Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B, modelo denso (Dense Model), introduz o “modo de raciocínio híbrido”, permitindo aos usuários alternar perfeitamente entre os modos “reflexivo” e “não reflexivo”. Graças a melhorias na arquitetura do modelo, aumento dos dados de treinamento e métodos de treinamento mais eficazes, seu desempenho geral é comparável ao do Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Modelo da versão básica (V4), com comprimento de contexto de 4K, com capacidades gerais poderosas."
@@ -394,6 +406,12 @@
   },
   "SenseChat-Vision": {
     "description": "Modelo da versão mais recente (V5.5), suporta entrada de múltiplas imagens, otimizando completamente as capacidades básicas do modelo, com grandes melhorias em reconhecimento de atributos de objetos, relações espaciais, reconhecimento de eventos, compreensão de cenários, reconhecimento de emoções, raciocínio lógico e compreensão e geração de texto."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Com atualizações abrangentes em dados multimodais, linguísticos e de raciocínio, além da otimização das estratégias de treinamento, o novo modelo alcança melhorias significativas em raciocínio multimodal e capacidade de seguir instruções generalizadas. Suporta janelas de contexto de até 128k e apresenta desempenho excepcional em tarefas especializadas como OCR e reconhecimento de IPs culturais e turísticos."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Com atualizações abrangentes em dados multimodais, linguísticos e de raciocínio, além da otimização das estratégias de treinamento, o novo modelo alcança melhorias significativas em raciocínio multimodal e capacidade de seguir instruções generalizadas. Suporta janelas de contexto de até 128k e apresenta desempenho excepcional em tarefas especializadas como OCR e reconhecimento de IPs culturais e turísticos."
   },
   "SenseNova-V6-Pro": {
     "description": "Realizar a unificação nativa de capacidades de imagem, texto e vídeo, superando as limitações tradicionais da multimodalidade discreta, conquistando o título duplo nas avaliações OpenCompass e SuperCLUE."
@@ -593,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 é um modelo multilíngue lançado pela Cohere, suportando 23 idiomas, facilitando aplicações linguísticas diversificadas."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Implantado e fornecido pela Microsoft; o modelo DeepSeek R1 passou por uma atualização menor, a versão atual é DeepSeek-R1-0528. Na atualização mais recente, o DeepSeek R1 aumentou significativamente a profundidade de inferência e a capacidade de dedução ao adicionar recursos computacionais e introduzir mecanismos de otimização algorítmica na fase pós-treinamento. Este modelo apresenta desempenho excelente em vários benchmarks, incluindo matemática, programação e lógica geral, com desempenho geral próximo aos modelos líderes, como O3 e Gemini 2.5 Pro."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B é um modelo de linguagem de código aberto e comercializável desenvolvido pela Baichuan Intelligence, contendo 13 bilhões de parâmetros, alcançando os melhores resultados em benchmarks de chinês e inglês na mesma dimensão."
   },
@@ -652,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet oferece um equilíbrio ideal entre inteligência e velocidade para cargas de trabalho empresariais. Ele fornece máxima utilidade a um custo mais baixo, sendo confiável e adequado para implantação em larga escala."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 é o modelo mais poderoso e recente da Anthropic para lidar com tarefas altamente complexas. Ele se destaca em desempenho, inteligência, fluidez e compreensão."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 é o modelo mais poderoso da Anthropic para lidar com tarefas altamente complexas. Ele se destaca em desempenho, inteligência, fluência e compreensão."
@@ -1080,7 +1104,7 @@
     "description": "FLUX.1 [dev] é um modelo open source refinado e com pesos voltado para aplicações não comerciais. Mantém qualidade de imagem e capacidade de seguir instruções próximas à versão profissional FLUX, com maior eficiência operacional. Em comparação com modelos padrão de tamanho similar, é mais eficiente no uso de recursos."
   },
   "flux-kontext/dev": {
-    "description": "Modelo de edição de imagem Frontier."
+    "description": "Modelo FLUX.1 focado em tarefas de edição de imagens, suportando entrada de texto e imagem."
   },
   "flux-merged": {
     "description": "O modelo FLUX.1-merged combina as características profundas exploradas na fase de desenvolvimento \"DEV\" com as vantagens de execução rápida representadas por \"Schnell\". Essa combinação não só eleva os limites de desempenho do modelo, como também amplia seu campo de aplicação."
@@ -1094,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "Transformador de fluxo retificado com 12 bilhões de parâmetros, capaz de gerar imagens a partir de descrições textuais."
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] é um modelo de geração de imagens com preferência estética, visando criar imagens mais realistas e naturais."
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] é um modelo transformador streaming com 12 bilhões de parâmetros, capaz de gerar imagens de alta qualidade a partir de texto em 1 a 4 passos, adequado para uso pessoal e comercial."
+    "description": "FLUX.1 [schnell] é um modelo de geração de imagens com 12 bilhões de parâmetros, focado em gerar imagens de alta qualidade rapidamente."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) oferece desempenho estável e ajustável, sendo a escolha ideal para soluções de tarefas complexas."
@@ -1457,8 +1484,26 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe é um modelo de transcrição de áudio para texto que utiliza GPT-4o. Em comparação com o modelo Whisper original, melhora a taxa de erro de palavras, além do reconhecimento e precisão linguística. Use-o para obter transcrições mais precisas."
   },
+  "gpt-5": {
+    "description": "O melhor modelo para tarefas de codificação e agentes interdisciplinares. GPT-5 alcança avanços em precisão, velocidade, raciocínio, reconhecimento de contexto, pensamento estruturado e resolução de problemas."
+  },
+  "gpt-5-chat-latest": {
+    "description": "Modelo GPT-5 usado no ChatGPT. Combina forte compreensão e geração de linguagem, ideal para aplicações de interação conversacional."
+  },
+  "gpt-5-mini": {
+    "description": "Versão mais rápida e econômica do GPT-5, adequada para tarefas bem definidas. Oferece respostas mais rápidas mantendo alta qualidade de saída."
+  },
+  "gpt-5-nano": {
+    "description": "Versão mais rápida e econômica do GPT-5. Muito adequada para cenários que exigem respostas rápidas e sensibilidade a custos."
+  },
   "gpt-image-1": {
     "description": "Modelo nativo multimodal de geração de imagens do ChatGPT"
+  },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B é um modelo de linguagem grande de código aberto lançado pela OpenAI, que utiliza a tecnologia de quantização MXFP4, adequado para execução em GPUs de consumo avançado ou Macs com Apple Silicon. Este modelo apresenta excelente desempenho em geração de diálogos, escrita de código e tarefas de raciocínio, suportando chamadas de funções e uso de ferramentas."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B é um modelo de linguagem grande de código aberto lançado pela OpenAI, utilizando a tecnologia de quantização MXFP4, sendo um modelo de ponta. Requer múltiplas GPUs ou estações de trabalho de alto desempenho para execução, oferecendo desempenho excepcional em raciocínio complexo, geração de código e processamento multilíngue, com suporte a chamadas avançadas de funções e integração de ferramentas."
   },
   "grok-2-1212": {
     "description": "Este modelo apresenta melhorias em precisão, conformidade com instruções e capacidade multilíngue."
@@ -1599,7 +1644,7 @@
     "description": "Série de modelos de texto para imagem da 4ª geração Imagen, versão Ultra"
   },
   "imagen4/preview": {
-    "description": "Modelo de geração de imagens de mais alta qualidade do Google"
+    "description": "Modelo de geração de imagens de alta qualidade fornecido pelo Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferece soluções de diálogo inteligente em múltiplos cenários."
@@ -2102,6 +2147,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini é o mais recente modelo da OpenAI, lançado após o GPT-4 Omni, que suporta entrada de texto e imagem e saída de texto. Como seu modelo compacto mais avançado, é muito mais barato do que outros modelos de ponta recentes e custa mais de 60% menos que o GPT-3.5 Turbo. Ele mantém inteligência de ponta, ao mesmo tempo que oferece uma relação custo-benefício significativa. O GPT-4o mini obteve uma pontuação de 82% no teste MMLU e atualmente está classificado acima do GPT-4 em preferências de chat."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B é um modelo de linguagem de ponta com 120 bilhões de parâmetros, incorporando funcionalidades de busca no navegador e execução de código, além de possuir capacidades de raciocínio."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B é um modelo de linguagem de ponta com 20 bilhões de parâmetros, incorporando funcionalidades de busca no navegador e execução de código, além de possuir capacidades de raciocínio."
+  },
   "openai/o1": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, que suporta entrada de texto e imagem e gera texto, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 200K e data de corte de conhecimento em outubro de 2023."
   },
@@ -2161,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "Modelo de código Qwen."
+  },
+  "qwen-image": {
+    "description": "Modelo poderoso de imagens brutas da equipe Qwen, com impressionante capacidade de geração de texto em chinês e diversos estilos visuais de imagens."
   },
   "qwen-long": {
     "description": "O Qwen é um modelo de linguagem em larga escala que suporta contextos de texto longos e funcionalidades de diálogo baseadas em documentos longos e múltiplos cenários."
@@ -2372,6 +2426,12 @@
   "qwen3-30b-a3b": {
     "description": "Qwen3 é um novo modelo de linguagem de próxima geração com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, generalidade, agentes e multilíngue, e suporta a alternância de modos de pensamento."
   },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Em comparação com a versão anterior (Qwen3-30B-A3B), houve um aumento significativo na capacidade geral em chinês, inglês e múltiplos idiomas. Otimizado especialmente para tarefas subjetivas e abertas, alinhando-se muito melhor às preferências dos usuários e fornecendo respostas mais úteis."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Baseado no modelo open source do modo reflexivo Qwen3, esta versão apresenta melhorias substanciais em lógica, capacidade geral, conhecimento e criatividade em relação à versão anterior (Tongyi Qianwen 3-30B-A3B), sendo adequada para cenários complexos que exigem raciocínio avançado."
+  },
   "qwen3-32b": {
     "description": "Qwen3 é um novo modelo de linguagem de próxima geração com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, generalidade, agentes e multilíngue, e suporta a alternância de modos de pensamento."
   },
@@ -2384,8 +2444,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Versão open source do modelo de código Tongyi Qianwen. O mais recente qwen3-coder-480b-a35b-instruct é um modelo de geração de código baseado no Qwen3, com forte capacidade de agente de codificação, especializado em chamadas de ferramentas e interação com ambientes, capaz de programação autônoma, combinando excelência em código com capacidades gerais."
   },
+  "qwen3-coder-flash": {
+    "description": "Modelo de código Tongyi Qianwen. A mais recente série de modelos Qwen3-Coder é baseada no Qwen3 para geração de código, com forte capacidade de agente de codificação, especializada em chamadas de ferramentas e interação com o ambiente, capaz de programação autônoma, combinando excelente habilidade de codificação com capacidades gerais."
+  },
   "qwen3-coder-plus": {
-    "description": "Modelo de código Tongyi Qianwen. A série mais recente Qwen3-Coder-Plus é baseada no Qwen3, com forte capacidade de agente de codificação, especializada em chamadas de ferramentas e interação com ambientes, permitindo programação autônoma, combinando excelência em código com capacidades gerais."
+    "description": "Modelo de código Tongyi Qianwen. A mais recente série de modelos Qwen3-Coder é baseada no Qwen3 para geração de código, com forte capacidade de agente de codificação, especializada em chamadas de ferramentas e interação com o ambiente, capaz de programação autônoma, combinando excelente habilidade de codificação com capacidades gerais."
   },
   "qwq": {
     "description": "QwQ é um modelo de pesquisa experimental, focado em melhorar a capacidade de raciocínio da IA."

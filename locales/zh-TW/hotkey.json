@@ -21,6 +21,10 @@
     "desc": "通過按住 Alt 並雙擊消息進入編輯模式",
     "title": "編輯消息"
   },
+  "navigateToChat": {
+    "desc": "切換至會話標籤並進入隨便聊聊",
+    "title": "切換至預設會話"
+  },
   "openChatSettings": {
     "desc": "查看和修改當前會話的設定",
     "title": "打開會話設定"

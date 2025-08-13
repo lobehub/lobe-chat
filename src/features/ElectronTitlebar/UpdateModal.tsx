@@ -115,11 +115,23 @@ export const UpdateModal = memo(() => {
   const closeDownloadedModal = () => setDownloadedInfo(null);
   const closeLatestVersionModal = () => setLatestVersionInfo(null);
 
+  const handleCancelCheck = () => {
+    setIsChecking(false);
+    setUpdateAvailableInfo(null);
+    setDownloadedInfo(null);
+    setProgress(null);
+    setLatestVersionInfo(null);
+  };
+
   const renderCheckingModal = () => (
     <Modal
-      closable={false}
-      footer={null}
-      maskClosable={false}
+      closable
+      footer={[
+        <Button key="cancel" onClick={handleCancelCheck}>
+          {t('cancel', { ns: 'common' })}
+        </Button>,
+      ]}
+      onCancel={handleCancelCheck}
       open={isChecking}
       title={t('updater.checkingUpdate')}
     >

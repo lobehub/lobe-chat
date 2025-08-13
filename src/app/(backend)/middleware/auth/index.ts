@@ -1,4 +1,10 @@
 import { AuthObject } from '@clerk/backend';
+import {
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ModelRuntime,
+} from '@lobechat/model-runtime';
+import { ChatErrorType } from '@lobechat/types';
 import { NextRequest } from 'next/server';
 
 import {
@@ -9,15 +15,13 @@ import {
   enableClerk,
 } from '@/const/auth';
 import { ClerkAuth } from '@/libs/clerk-auth';
-import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/model-runtime';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
-import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
-type CreateRuntime = (jwtPayload: ClientSecretPayload) => AgentRuntime;
+type CreateRuntime = (jwtPayload: ClientSecretPayload) => ModelRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
 
 export type RequestHandler = (

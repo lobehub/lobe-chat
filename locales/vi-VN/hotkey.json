@@ -21,6 +21,10 @@
     "desc": "Vào chế độ chỉnh sửa bằng cách giữ phím Alt và nhấp đúp vào tin nhắn",
     "title": "Chỉnh sửa tin nhắn"
   },
+  "navigateToChat": {
+    "desc": "Chuyển sang tab trò chuyện và bắt đầu cuộc trò chuyện ngẫu nhiên",
+    "title": "Chuyển sang cuộc trò chuyện mặc định"
+  },
   "openChatSettings": {
     "desc": "Xem và chỉnh sửa cài đặt của cuộc trò chuyện hiện tại",
     "title": "Mở cài đặt cuộc trò chuyện"

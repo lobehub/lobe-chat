@@ -16,6 +16,7 @@ import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 import { BrowserManager } from './browser/BrowserManager';
 import { I18nManager } from './infrastructure/I18nManager';
 import { IoCContainer } from './infrastructure/IoCContainer';
+import { ProtocolManager } from './infrastructure/ProtocolManager';
 import { StaticFileServerManager } from './infrastructure/StaticFileServerManager';
 import { StoreManager } from './infrastructure/StoreManager';
 import { UpdaterManager } from './infrastructure/UpdaterManager';
@@ -27,6 +28,7 @@ const logger = createLogger('core:App');
 
 export type IPCEventMap = Map<string, { controller: any; methodName: string }>;
 export type ShortcutMethodMap = Map<string, () => Promise<void>>;
+export type ProtocolHandlerMap = Map<string, { controller: any; methodName: string }>;
 
 type Class<T> = new (...args: any[]) => T;
 
@@ -43,6 +45,7 @@ export class App {
   shortcutManager: ShortcutManager;
   trayManager: TrayManager;
   staticFileServerManager: StaticFileServerManager;
+  protocolManager: ProtocolManager;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
@@ -100,10 +103,14 @@ export class App {
     this.shortcutManager = new ShortcutManager(this);
     this.trayManager = new TrayManager(this);
     this.staticFileServerManager = new StaticFileServerManager(this);
+    this.protocolManager = new ProtocolManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
     this.registerNextHandler();
+
+    // initialize protocol handlers
+    this.protocolManager.initialize();
 
     // 统一处理 before-quit 事件
     app.on('before-quit', this.handleBeforeQuit);
@@ -160,6 +167,10 @@ export class App {
     });
 
     app.on('activate', this.onActivate);
+
+    // Process any pending protocol URLs after everything is ready
+    await this.protocolManager.processPendingUrls();
+
     logger.info('Application bootstrap completed');
   };
 
@@ -169,6 +180,32 @@ export class App {
 
   getController<T>(controllerClass: Class<T>): T {
     return this.controllers.get(controllerClass);
+  }
+
+  /**
+   * Handle protocol request by dispatching to registered handlers
+   * @param urlType 协议URL类型 (如: 'plugin')
+   * @param action 操作类型 (如: 'install')
+   * @param data 解析后的协议数据
+   * @returns 是否成功处理
+   */
+  async handleProtocolRequest(urlType: string, action: string, data: any): Promise<boolean> {
+    const key = `${urlType}:${action}`;
+    const handler = this.protocolHandlerMap.get(key);
+
+    if (!handler) {
+      logger.warn(`No protocol handler found for ${key}`);
+      return false;
+    }
+
+    try {
+      logger.debug(`Dispatching protocol request ${key} to controller`);
+      const result = await handler.controller[handler.methodName](data);
+      return result !== false; // 假设控制器返回 false 表示处理失败
+    } catch (error) {
+      logger.error(`Error handling protocol request ${key}:`, error);
+      return false;
+    }
   }
 
   private onActivate = () => {
@@ -233,6 +270,7 @@ export class App {
   private ipcClientEventMap: IPCEventMap = new Map();
   private ipcServerEventMap: IPCEventMap = new Map();
   shortcutMethodMap: ShortcutMethodMap = new Map();
+  protocolHandlerMap: ProtocolHandlerMap = new Map();
 
   /**
    * use in next router interceptor in prod browser render
@@ -306,6 +344,14 @@ export class App {
     IoCContainer.shortcuts.get(ControllerClass)?.forEach((shortcut) => {
       this.shortcutMethodMap.set(shortcut.name, async () => {
         controller[shortcut.methodName]();
+      });
+    });
+
+    IoCContainer.protocolHandlers.get(ControllerClass)?.forEach((handler) => {
+      const key = `${handler.urlType}:${handler.action}`;
+      this.protocolHandlerMap.set(key, {
+        controller,
+        methodName: handler.methodName,
       });
     });
   };

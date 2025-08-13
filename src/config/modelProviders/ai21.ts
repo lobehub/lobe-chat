@@ -9,10 +9,6 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-mini',
-      pricing: {
-        input: 0.2,
-        output: 0.4,
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -20,10 +16,6 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-large',
-      pricing: {
-        input: 2,
-        output: 8,
-      },
     },
   ],
   checkModel: 'jamba-mini',

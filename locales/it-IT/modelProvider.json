@@ -189,6 +189,7 @@
       "aesGcm": "La tua chiave e l'indirizzo proxy saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
       "apiKey": {
         "desc": "Inserisci la tua {{name}} API Key",
+        "descWithUrl": "Per favore inserisci la tua API Key di {{name}}, <3>clicca qui per ottenerla</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },
@@ -305,6 +306,7 @@
         "latestTime": "Ultimo aggiornamento: {{time}}",
         "noLatestTime": "Nessun elenco recuperato finora"
       },
+      "noModelsInCategory": "Nessun modello abilitato in questa categoria",
       "resetAll": {
         "conform": "Sei sicuro di voler ripristinare tutte le modifiche al modello corrente? Dopo il ripristino, l'elenco dei modelli correnti tornerà allo stato predefinito",
         "success": "Ripristino avvenuto con successo",
@@ -315,7 +317,15 @@
       "title": "Elenco dei modelli",
       "total": "Totale di {{count}} modelli disponibili"
     },
-    "searchNotFound": "Nessun risultato trovato"
+    "searchNotFound": "Nessun risultato trovato",
+    "tabs": {
+      "all": "Tutti",
+      "chat": "Chat",
+      "embedding": "Incorporamento",
+      "image": "Immagine",
+      "stt": "Riconoscimento vocale (ASR)",
+      "tts": "Sintesi vocale (TTS)"
+    }
   },
   "sortModal": {
     "success": "Ordinamento aggiornato con successo",

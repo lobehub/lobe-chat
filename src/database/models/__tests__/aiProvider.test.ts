@@ -1,9 +1,9 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm/expressions';
+import { ModelProvider } from '@lobechat/model-runtime';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
-import { ModelProvider } from '@/libs/model-runtime';
 import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';

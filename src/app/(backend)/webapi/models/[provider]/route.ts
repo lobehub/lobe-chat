@@ -1,9 +1,9 @@
+import { ChatCompletionErrorPayload, ModelProvider } from '@lobechat/model-runtime';
+import { ChatErrorType } from '@lobechat/types';
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/model-runtime';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
-import { ChatErrorType } from '@/types/fetch';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 export const runtime = 'edge';
@@ -16,7 +16,7 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
   try {
     const hasDefaultApiKey = jwtPayload.apiKey || 'dont-need-api-key-for-model-list';
 
-    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+    const agentRuntime = await initModelRuntimeWithUserPayload(provider, {
       ...jwtPayload,
       apiKey: noNeedAPIKey(provider) ? hasDefaultApiKey : jwtPayload.apiKey,
     });

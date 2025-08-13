@@ -21,6 +21,10 @@
     "desc": "Enter edit mode by holding Alt and double-clicking the message",
     "title": "Edit Message"
   },
+  "navigateToChat": {
+    "desc": "Switch to the chat tab and start a casual conversation",
+    "title": "Switch to Default Chat"
+  },
   "openChatSettings": {
     "desc": "View and modify the settings for the current conversation",
     "title": "Open Chat Settings"

@@ -1,10 +1,10 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import debug from 'debug';
 import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
-import { ModelProvider } from '@/libs/model-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
 import { ErrorResponse } from './types';
@@ -17,12 +17,14 @@ const links = [
       if (isDesktop) {
         const { desktopRemoteRPCFetch } = await import('@/utils/electron/desktopRemoteRPCFetch');
 
-        const res = await desktopRemoteRPCFetch(input as string, init);
+        // eslint-disable-next-line no-undef
+        const res = await desktopRemoteRPCFetch(input as string, init as RequestInit);
 
         if (res) return res;
       }
 
-      const response = await fetch(input, init);
+      // eslint-disable-next-line no-undef
+      const response = await fetch(input, init as RequestInit);
 
       if (response.ok) return response;
 
