@@ -20,7 +20,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
-  const { themeMode, setThemeMode: setStoreThemeMode } = useSettingStore();
+  const { themeMode, setThemeMode: setStoreThemeMode, colorPrimary, fontSize } = useSettingStore();
 
   // 计算当前实际的主题模式
   const getActualThemeMode = (): 'light' | 'dark' => {
@@ -45,8 +45,18 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   // 生成主题对象
   const isDark = getActualThemeMode() === 'dark';
 
-  // 如果提供了自定义主题配置，使用它；否则使用默认配置
-  const themeToken = generateDesignToken(customTheme, isDark);
+  // 合并自定义主题配置与设置存储中的配置
+  const mergedThemeConfig: ThemeConfig = {
+    ...customTheme,
+    token: {
+      ...customTheme?.token,
+      colorPrimary,
+      fontSize,
+    },
+  };
+
+  // 使用合并后的配置生成主题
+  const themeToken = generateDesignToken(mergedThemeConfig, isDark);
 
   const theme: Theme = {
     isDark,

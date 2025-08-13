@@ -4,6 +4,7 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } fro
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
 import { useTheme, createStyles, seedToken, darkAlgorithm, defaultAlgorithm } from '@/theme';
+import { useSettingStore } from '@/store/setting';
 
 interface TokenInfo {
   category: 'seed' | 'map' | 'alias';
@@ -84,6 +85,34 @@ const useStyles = createStyles((token) => {
       flexDirection: 'row',
       gap: t.marginSM,
     },
+    // 新增控制器样式
+    controlInput: {
+      borderRadius: t.borderRadius,
+      borderWidth: 1,
+      flex: 1,
+      fontSize: t.fontSize,
+      height: 40,
+      paddingHorizontal: t.paddingMD,
+    },
+    controlItem: {
+      marginBottom: t.marginLG,
+    },
+    controlLabel: {
+      fontSize: t.fontSizeLG,
+      fontWeight: '600',
+      marginBottom: t.marginSM,
+    },
+    controlRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: t.marginSM,
+    },
+    controlsContainer: {
+      backgroundColor: t.colorBgElevated || '#fff',
+      borderRadius: t.borderRadiusLG,
+      margin: t.marginLG,
+      padding: t.paddingLG,
+    },
     header: {
       alignItems: 'center',
       borderBottomWidth: 1,
@@ -99,6 +128,26 @@ const useStyles = createStyles((token) => {
     headerTitle: {
       fontSize: t.fontSizeLG,
       fontWeight: '600',
+    },
+    presetButton: {
+      alignItems: 'center',
+      borderRadius: t.borderRadius,
+      borderWidth: 1,
+      height: 40,
+      justifyContent: 'center',
+      paddingHorizontal: t.paddingMD,
+    },
+    presetColorPreview: {
+      borderRadius: 4,
+      height: 16,
+      marginRight: t.marginXS,
+      width: 16,
+    },
+    presetRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: t.marginSM,
+      marginTop: t.marginSM,
     },
     safeArea: {
       flex: 1,
@@ -203,6 +252,7 @@ const useStyles = createStyles((token) => {
       fontSize: t.fontSizeLG,
       fontWeight: '600',
     },
+
     typeSection: {
       marginBottom: t.marginLG,
     },
@@ -358,6 +408,152 @@ const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) =>
           )}
         </View>
       ))}
+    </View>
+  );
+};
+
+// 新增主题控制器组件
+const ThemeControls: React.FC = () => {
+  const { theme } = useTheme();
+  const { styles } = useStyles();
+  const { colorPrimary, fontSize, setColorPrimary, setFontSize } = useSettingStore();
+
+  // 预设主色
+  const colorPresets = [
+    '#000000', // 黑色
+    '#1677ff', // 蓝色
+    '#52c41a', // 绿色
+    '#faad14', // 橙色
+    '#ff4d4f', // 红色
+    '#722ed1', // 紫色
+    '#13c2c2', // 青色
+    '#eb2f96', // 粉色
+  ];
+
+  // 预设字体大小
+  const fontSizePresets = [12, 14, 16, 18, 20];
+
+  return (
+    <View style={[styles.controlsContainer, { backgroundColor: theme.token.colorBgElevated }]}>
+      {/* 主色控制 */}
+      <View style={styles.controlItem}>
+        <Text style={[styles.controlLabel, { color: theme.token.colorText }]}>
+          主色 (colorPrimary)
+        </Text>
+        <View style={styles.controlRow}>
+          <View style={[styles.presetColorPreview, { backgroundColor: colorPrimary }]} />
+          <TextInput
+            onChangeText={setColorPrimary}
+            placeholder="#000000"
+            placeholderTextColor={theme.token.colorTextPlaceholder}
+            style={[
+              styles.controlInput,
+              {
+                backgroundColor: theme.token.colorBgContainer,
+                borderColor: theme.token.colorBorder,
+                color: theme.token.colorText,
+              },
+            ]}
+            value={colorPrimary}
+          />
+        </View>
+        <View style={styles.presetRow}>
+          {colorPresets.map((color) => (
+            <TouchableOpacity
+              key={color}
+              onPress={() => setColorPrimary(color)}
+              style={[
+                styles.presetButton,
+                {
+                  backgroundColor:
+                    colorPrimary === color
+                      ? theme.token.colorPrimaryBg
+                      : theme.token.colorBgContainer,
+                  borderColor:
+                    colorPrimary === color ? theme.token.colorPrimary : theme.token.colorBorder,
+                },
+              ]}
+            >
+              <View style={[styles.presetColorPreview, { backgroundColor: color }]} />
+              <Text
+                style={[
+                  styles.controlLabel,
+                  {
+                    color:
+                      colorPrimary === color ? theme.token.colorPrimary : theme.token.colorText,
+                    fontSize: 12,
+                    fontWeight: '400',
+                    marginBottom: 0,
+                  },
+                ]}
+              >
+                {color}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* 字体大小控制 */}
+      <View style={styles.controlItem}>
+        <Text style={[styles.controlLabel, { color: theme.token.colorText }]}>
+          字体大小 (fontSize)
+        </Text>
+        <View style={styles.controlRow}>
+          <TextInput
+            keyboardType="numeric"
+            onChangeText={(text) => {
+              const size = parseInt(text, 10);
+              if (!isNaN(size) && size > 0) {
+                setFontSize(size);
+              }
+            }}
+            placeholder="14"
+            placeholderTextColor={theme.token.colorTextPlaceholder}
+            style={[
+              styles.controlInput,
+              {
+                backgroundColor: theme.token.colorBgContainer,
+                borderColor: theme.token.colorBorder,
+                color: theme.token.colorText,
+              },
+            ]}
+            value={String(fontSize)}
+          />
+          <Text style={[styles.tokenValue, { color: theme.token.colorTextSecondary }]}>px</Text>
+        </View>
+        <View style={styles.presetRow}>
+          {fontSizePresets.map((size) => (
+            <TouchableOpacity
+              key={size}
+              onPress={() => setFontSize(size)}
+              style={[
+                styles.presetButton,
+                {
+                  backgroundColor:
+                    fontSize === size ? theme.token.colorPrimaryBg : theme.token.colorBgContainer,
+                  borderColor:
+                    fontSize === size ? theme.token.colorPrimary : theme.token.colorBorder,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.controlLabel,
+                  {
+                    color: fontSize === size ? theme.token.colorPrimary : theme.token.colorText,
+                    fontSize: 12,
+                    fontWeight: '400',
+                    marginBottom: 0,
+                  },
+                ]}
+              >
+                {size}px
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
     </View>
   );
 };
@@ -572,7 +768,7 @@ const ThemeTokensPlayground: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Palette color={theme.token.colorText} size={24} />
-          <Text style={[styles.headerTitle, { color: theme.token.colorText }]}>Theme Tokens</Text>
+          <Text style={[styles.headerTitle, { color: theme.token.colorText }]}>主题令牌</Text>
         </View>
         <TouchableOpacity
           onPress={toggleTheme}
@@ -586,25 +782,28 @@ const ThemeTokensPlayground: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.tabsContainer}>
-        <CapsuleTabs
-          items={tabItems}
-          onSelect={(key) => setActiveTab(key as 'seed' | 'map' | 'alias')}
-          selectedKey={activeTab}
-        />
-      </View>
-
-      <View style={[styles.searchContainer, { backgroundColor: theme.token.colorFillTertiary }]}>
-        <TextInput
-          onChangeText={setSearchText}
-          placeholder="Search tokens..."
-          placeholderTextColor={theme.token.colorTextPlaceholder}
-          style={[styles.searchInput, { color: theme.token.colorText }]}
-          value={searchText}
-        />
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+        {/* 主题控制器 */}
+        <ThemeControls />
+
+        <View style={styles.tabsContainer}>
+          <CapsuleTabs
+            items={tabItems}
+            onSelect={(key) => setActiveTab(key as 'seed' | 'map' | 'alias')}
+            selectedKey={activeTab}
+          />
+        </View>
+
+        <View style={[styles.searchContainer, { backgroundColor: theme.token.colorFillTertiary }]}>
+          <TextInput
+            onChangeText={setSearchText}
+            placeholder="搜索令牌..."
+            placeholderTextColor={theme.token.colorTextPlaceholder}
+            style={[styles.searchInput, { color: theme.token.colorText }]}
+            value={searchText}
+          />
+        </View>
+
         <TokenTable searchText={searchText} title={getTabTitle()} tokens={getCurrentTokens()} />
       </ScrollView>
     </SafeAreaView>
