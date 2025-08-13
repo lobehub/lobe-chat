@@ -15,7 +15,7 @@ export const LobeNvidiaAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: NvidiaModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'nvidia');
   },
   provider: ModelProvider.Nvidia,
 });

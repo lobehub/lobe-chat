@@ -55,7 +55,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
     const modelList: OpenAIModelCard[] = modelsPage.data;
 
     // 自动检测模型提供商并选择相应配置
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'openai');
   },
   provider: ModelProvider.OpenAI,
   responses: {
