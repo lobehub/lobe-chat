@@ -77,7 +77,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      imageOutput: true,
       reasoning: true,
       vision: true,
     },
