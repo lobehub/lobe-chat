@@ -2,6 +2,15 @@
   {
     "children": {
       "improvements": [
+        "Update Mistral AI models & Optimize many model providers fetching."
+      ]
+    },
+    "date": "2025-08-13",
+    "version": "1.106.2"
+  },
+  {
+    "children": {
+      "improvements": [
         "Adjust near bottom size on thinking scroll, improve Gemini error display with promptFeedback, Support new GPT-5 Verbosity params."
       ]
     },
