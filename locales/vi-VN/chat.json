@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Công tắc suy nghĩ sâu"
     },
-    "title": "Chức năng mở rộng mô hình"
+    "title": "Chức năng mở rộng mô hình",
+    "urlContext": {
+      "desc": "Khi bật, hệ thống sẽ tự động phân tích URL để lấy nội dung ngữ cảnh thực tế của trang web",
+      "title": "Trích xuất ngữ cảnh URL"
+    }
   },
   "history": {
     "title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng"

@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Przełącznik głębokiego myślenia"
     },
-    "title": "Funkcje rozszerzenia modelu"
+    "title": "Funkcje rozszerzenia modelu",
+    "urlContext": {
+      "desc": "Po włączeniu adres URL będzie automatycznie analizowany w celu pobrania rzeczywistej zawartości kontekstu strony.",
+      "title": "Pobieranie kontekstu z adresu URL"
+    }
   },
   "history": {
     "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"

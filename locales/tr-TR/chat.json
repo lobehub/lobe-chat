@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
     },
-    "title": "Model Genişletme Özellikleri"
+    "title": "Model Genişletme Özellikleri",
+    "urlContext": {
+      "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlamını almak için URL'yi otomatik olarak analiz eder.",
+      "title": "URL Bağlamı Çıkarımı"
+    }
   },
   "history": {
     "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"

@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interruttore di pensiero profondo"
     },
-    "title": "Funzionalità di estensione del modello"
+    "title": "Funzionalità di estensione del modello",
+    "urlContext": {
+      "desc": "Se abilitato, analizzerà automaticamente l'URL per ottenere il contenuto contestuale effettivo della pagina web",
+      "title": "Estrazione del contesto dall'URL"
+    }
   },
   "history": {
     "title": "L'assistente ricorderà solo gli ultimi {{count}} messaggi"

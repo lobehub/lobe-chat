@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
     },
-    "title": "Fonctionnalités d'extension du modèle"
+    "title": "Fonctionnalités d'extension du modèle",
+    "urlContext": {
+      "desc": "Si activé, l'URL sera automatiquement analysée pour extraire le contenu contextuel réel de la page web.",
+      "title": "Extraction du contexte depuis l'URL"
+    }
   },
   "history": {
     "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
