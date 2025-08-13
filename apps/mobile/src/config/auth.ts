@@ -26,7 +26,6 @@ export const devAuthConfig: AuthConfig = {
     ...authConfig.additionalParameters,
     // 开发环境可以添加额外的参数
   },
-  issuer: 'http://localhost:3020',
 };
 
 /**
