@@ -102,8 +102,8 @@ vertex-ai-key.json
 .local/
 .claude/
 .mcp.json
-CLAUDE.md
-CLAUDE.*.md
+
+CLAUDE.local.md
 
 # Misc
 ./packages/lobe-ui
