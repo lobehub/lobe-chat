@@ -19,7 +19,6 @@ Desktop.ini
 
 # IDE and editors
 .idea/
-.vscode/
 *.sublime-*
 .history/
 .windsurfrules
