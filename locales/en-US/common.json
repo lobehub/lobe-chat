@@ -1,6 +1,12 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
+  "aiImage": {
+    "disabled": {
+      "description": "The AI image generation feature has been disabled by the administrator.",
+      "title": "AI Image Generation Disabled"
+    }
+  },
   "alert": {
     "cloud": {
       "action": "Free Trial",
