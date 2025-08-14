@@ -1,7 +1,20 @@
-export interface Action {
-  type?: string;
-}
-
 export const setNamespace = (namespace: string) => {
-  return (action: string): string => `${namespace}/${action}`;
+  return <P = undefined>(type: string, payload?: P) => {
+    const name = [namespace, type].filter(Boolean).join('/');
+    return (
+      payload
+        ? {
+            payload,
+            type: name,
+          }
+        : name
+    ) as P extends undefined ? string : { payload: P; type: string };
+  };
 };
+
+export type Action =
+  | string
+  | {
+      [x: string | number | symbol]: unknown;
+      type: string;
+    };
