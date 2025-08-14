@@ -38,7 +38,8 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
           # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
-          # model: "claude-opus-4-20250514"
+          model: 'claude-opus-4-1-20250805'
+          allowed_bots: 'bot'
 
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
@@ -50,8 +51,6 @@ jobs:
             - Test coverage
 
             Be constructive and helpful in your feedback.
-
-          allowed_bots: 'bot'
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
           # use_sticky_comment: true
@@ -71,7 +70,7 @@ jobs:
           #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
 
           # Optional: Add specific tools for running tests or linting
-          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
+          allowed_tools: 'Bash(bun run:*),Bash(pnpm run:*),Bash(npm run:*),Bash(npx vitest:*),Bash(rg:*),Bash(find:*),Bash(sed:*),Bash(grep:*),Bash(awk:*),Bash(wc:*),Bash(xargs:*)'
 
           # Optional: Skip review for certain conditions
           # if: |
