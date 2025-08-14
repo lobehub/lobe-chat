@@ -29,7 +29,6 @@ export async function getBytes(
   const reader = stream.getReader();
   let result: ReadableStreamDefaultReadResult<Uint8Array>;
   while (!(result = await reader.read()).done) {
-    console.log(result.value, 'updated');
     onChunk(result.value);
   }
 }
