@@ -66,6 +66,10 @@ Testing work follows the Rule-Aware Task Execution system above.
 - Never run `bun run test` etc to run tests, this will run all tests and cost about 10mins
 - If try to fix the same test twice, but still failed, stop and ask for help.
 
+### Typecheck
+
+- use `bun run type-check` to check type errors.
+
 ### Internationalization
 
 - **Keys**: Add to `src/locales/default/namespace.ts`
