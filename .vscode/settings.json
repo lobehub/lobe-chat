@@ -1,5 +1,6 @@
 {
     "npm.packageManager": "pnpm",
+    // don't show errors, but fix when save and git pre commit
     "eslint.rules.customizations": [
         { "rule": "import/order", "severity": "off" },
         { "rule": "prettier/prettier", "severity": "off" },
@@ -10,10 +11,12 @@
     "stylelint.validate": [
         "css",
         "postcss",
+        // make stylelint work with tsx antd-style css template string
         "typescriptreact"
     ],
     "search.exclude": {
         "**/node_modules": true,
+        // useless to search this big folder
         "locales": true
     },
     "vitest.maximumConfigs": 6,
@@ -80,6 +83,7 @@
         "typescript",
         "typescriptreact",
         "markdown",
+        // support mdx
         "mdx"
     ]
 }
