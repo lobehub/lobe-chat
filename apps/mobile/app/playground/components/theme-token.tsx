@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
+import ColorSwatches from '@/components/ColorSwatches';
 import {
   useTheme,
   createStyles,
@@ -134,20 +135,6 @@ const useStyles = createStyles((token) => {
     headerTitle: {
       fontSize: t.fontSizeLG,
       fontWeight: '600',
-    },
-    presetButton: {
-      alignItems: 'center',
-      borderRadius: t.borderRadius,
-      borderWidth: 1,
-      height: 40,
-      justifyContent: 'center',
-      paddingHorizontal: t.paddingMD,
-    },
-    presetColorPreview: {
-      borderRadius: 4,
-      height: 16,
-      marginRight: t.marginXS,
-      width: 16,
     },
     presetRow: {
       flexDirection: 'row',
@@ -436,15 +423,59 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
   const { styles } = useStyles();
 
   // 预设主色
-  const colorPresets = [
-    '#000000', // 黑色
-    '#1677ff', // 蓝色
-    '#52c41a', // 绿色
-    '#faad14', // 橙色
-    '#ff4d4f', // 红色
-    '#722ed1', // 紫色
-    '#13c2c2', // 青色
-    '#eb2f96', // 粉色
+  const colorSwatchesData = [
+    {
+      color: 'rgba(0, 0, 0, 0)',
+      title: 'Default',
+    },
+    {
+      color: theme.token.colorError || '#ff4d4f',
+      title: 'Red',
+    },
+    {
+      color: '#ff7a45',
+      title: 'Orange',
+    },
+    {
+      color: '#faad14',
+      title: 'Gold',
+    },
+    {
+      color: '#fadb14',
+      title: 'Yellow',
+    },
+    {
+      color: '#a0d911',
+      title: 'Lime',
+    },
+    {
+      color: theme.token.colorSuccess || '#52c41a',
+      title: 'Green',
+    },
+    {
+      color: '#13c2c2',
+      title: 'Cyan',
+    },
+    {
+      color: theme.token.colorInfo || '#1677ff',
+      title: 'Blue',
+    },
+    {
+      color: '#2f54eb',
+      title: 'Geekblue',
+    },
+    {
+      color: '#722ed1',
+      title: 'Purple',
+    },
+    {
+      color: '#eb2f96',
+      title: 'Magenta',
+    },
+    {
+      color: '#fa541c',
+      title: 'Volcano',
+    },
   ];
 
   // 预设字体大小
@@ -457,58 +488,13 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
         <Text style={[styles.controlLabel, { color: theme.token.colorText }]}>
           主色 (colorPrimary)
         </Text>
-        <View style={styles.controlRow}>
-          <View style={[styles.presetColorPreview, { backgroundColor: colorPrimary }]} />
-          <TextInput
-            onChangeText={onColorPrimaryChange}
-            placeholder="#000000"
-            placeholderTextColor={theme.token.colorTextPlaceholder}
-            style={[
-              styles.controlInput,
-              {
-                backgroundColor: theme.token.colorBgContainer,
-                borderColor: theme.token.colorBorder,
-                color: theme.token.colorText,
-              },
-            ]}
-            value={colorPrimary}
-          />
-        </View>
-        <View style={styles.presetRow}>
-          {colorPresets.map((color) => (
-            <TouchableOpacity
-              key={color}
-              onPress={() => onColorPrimaryChange(color)}
-              style={[
-                styles.presetButton,
-                {
-                  backgroundColor:
-                    colorPrimary === color
-                      ? theme.token.colorPrimaryBg
-                      : theme.token.colorBgContainer,
-                  borderColor:
-                    colorPrimary === color ? theme.token.colorPrimary : theme.token.colorBorder,
-                },
-              ]}
-            >
-              <View style={[styles.presetColorPreview, { backgroundColor: color }]} />
-              <Text
-                style={[
-                  styles.controlLabel,
-                  {
-                    color:
-                      colorPrimary === color ? theme.token.colorPrimary : theme.token.colorText,
-                    fontSize: 12,
-                    fontWeight: '400',
-                    marginBottom: 0,
-                  },
-                ]}
-              >
-                {color}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ColorSwatches
+          colors={colorSwatchesData}
+          gap={8}
+          onChange={onColorPrimaryChange}
+          size={32}
+          value={colorPrimary}
+        />
       </View>
 
       {/* 字体大小控制 */}

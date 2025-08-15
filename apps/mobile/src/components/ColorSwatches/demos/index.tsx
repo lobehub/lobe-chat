@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
 import ColorSwatches from '../index';
-import { colorScales } from '@/color';
+import { colorScales } from '@/theme/color';
 
 const ColorSwatchesDemo = () => {
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
