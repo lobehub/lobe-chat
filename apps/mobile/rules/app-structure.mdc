@@ -29,17 +29,17 @@ The app uses Expo Router with file-based routing. Each directory represents a ro
 - [app/(setting)/setting/provider.tsx](mdc:app/(setting)/setting/provider.tsx) - Settings provider
 
 ### Playground Routes
-- [app/(playground)/_layout.tsx](mdc:app/(playground)/_layout.tsx) - Playground layout
-- [app/(playground)/index.tsx](mdc:app/(playground)/index.tsx) - Component playground
-- [app/(playground)/highlighter.tsx](mdc:app/(playground)/highlighter.tsx) - Code highlighting demo
-- [app/(playground)/markdown.tsx](mdc:app/(playground)/markdown.tsx) - Markdown rendering demo
-- [app/(playground)/toast.tsx](mdc:app/(playground)/toast.tsx) - Toast notifications demo
-- [app/(playground)/tooltip.tsx](mdc:app/(playground)/tooltip.tsx) - Tooltip component demo
+- [app/playground/_layout.tsx](mdc:app/playground/_layout.tsx) - Playground layout
+- [app/playground/index.tsx](mdc:app/playground/index.tsx) - Component playground
+- [app/playground/highlighter.tsx](mdc:app/playground/highlighter.tsx) - Code highlighting demo
+- [app/playground/markdown.tsx](mdc:app/playground/markdown.tsx) - Markdown rendering demo
+- [app/playground/toast.tsx](mdc:app/playground/toast.tsx) - Toast notifications demo
+- [app/playground/tooltip.tsx](mdc:app/playground/tooltip.tsx) - Tooltip component demo
 
 ## Route Groups
 - `(chat)` - Main chat functionality
 - `(setting)` - App settings and configuration
-- `(playground)` - Component development and testing
+- `playground` - Component development and testing
 
 ## Navigation Patterns
 - Use `Redirect` component for programmatic navigation

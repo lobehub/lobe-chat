@@ -110,3 +110,12 @@ CLAUDE.*.md
 *.ppt*
 *.doc*
 *.xls*
+
+
+# for local prd docs
+docs/prd
+
+# eas
+service-account-key.json
+
+repomix-output-lobehub-lobe-ui.xml

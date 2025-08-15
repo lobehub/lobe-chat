@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
@@ -11,52 +12,45 @@ import { SettingItem } from './(components)';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
-  const { theme } = useAppTheme();
+  const { theme, setThemeMode } = useAppTheme();
   const { getLocaleDisplayName } = useLocale();
 
   const { styles } = useStyles();
 
-  const getThemeModeText = () => {
-    switch (theme.mode) {
-      case 'light': {
-        return t('theme.light', { ns: 'setting' });
-      }
-      case 'dark': {
-        return t('theme.dark', { ns: 'setting' });
-      }
-      case 'auto': {
-        return t('theme.auto', { ns: 'setting' });
-      }
-      default: {
-        return t('theme.auto', { ns: 'setting' });
-      }
-    }
-  };
+  const isFollowSystem = theme.mode === 'auto';
 
   return (
     <ScrollView style={styles.container}>
+      {/* Theme settings inline */}
       <ListGroup>
         <SettingItem
-          extra={getThemeModeText()}
-          href="/setting/theme"
-          title={t('theme.title', { ns: 'setting' })}
+          onSwitchChange={(enabled) => setThemeMode(enabled ? 'auto' : 'light')}
+          showSwitch
+          switchValue={isFollowSystem}
+          title={t('theme.auto', { ns: 'setting' })}
         />
+        {!isFollowSystem && (
+          <>
+            <SettingItem
+              isSelected={theme.mode === 'light'}
+              onPress={() => setThemeMode('light')}
+              showCheckmark
+              title={t('theme.light', { ns: 'setting' })}
+            />
+            <SettingItem
+              isSelected={theme.mode === 'dark'}
+              onPress={() => setThemeMode('dark')}
+              showCheckmark
+              title={t('theme.dark', { ns: 'setting' })}
+            />
+          </>
+        )}
         <SettingItem
           extra={getLocaleDisplayName()}
           href="/setting/locale"
           isLast
           title={t('locale.title', { ns: 'setting' })}
         />
-
-        {/* <SettingItem title="字号设置" onPress={() => {}} /> */}
-        {/* <SettingItem
-          title="自动播放语音"
-          description="开启后回答将自动语音播放"
-          showSwitch
-          switchValue={autoPlayVoice}
-          onSwitchChange={setAutoPlayVoice}
-        /> */}
-        {/* <SettingItem title="音色设置" value="机灵小兰" onPress={() => {}} isLast /> */}
       </ListGroup>
 
       <ListGroup>

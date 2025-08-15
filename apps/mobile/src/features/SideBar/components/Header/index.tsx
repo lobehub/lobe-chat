@@ -13,7 +13,7 @@ const SessionHeader: React.FC = () => {
     <View style={styles.header}>
       <Text style={styles.headerTitle}>LobeChat</Text>
       <View style={styles.extra}>
-        <Link asChild href="/(playground)">
+        <Link asChild href="/playground">
           <TouchableOpacity style={styles.settingButton}>
             <Sparkles color={token.colorText} size={ICON_SIZE} />
           </TouchableOpacity>

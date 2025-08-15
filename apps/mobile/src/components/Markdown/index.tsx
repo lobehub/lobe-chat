@@ -145,7 +145,7 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         },
         strong: {
           color: token.colorTextHeading,
-          fontWeight: `${token.fontWeightStrong}` as any,
+          fontWeight: token.fontWeightStrong,
         },
         table: {
           backgroundColor: token.colorBgContainer,
@@ -163,7 +163,7 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         },
         th: {
           color: token.colorTextHeading,
-          fontWeight: `${token.fontWeightStrong}` as any,
+          fontWeight: token.fontWeightStrong,
           minWidth: 120,
           padding: token.paddingSM,
         },

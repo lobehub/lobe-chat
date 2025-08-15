@@ -50,8 +50,8 @@
 │   ├── ThemedButton.tsx              # 主题化按钮组件
 │   └── index.ts                      # 导出文件
 ├── app/(setting)/setting/theme.tsx   # 主题设置页面
-├── app/(playground)/theme-demo.tsx   # 主题演示页面
-├── app/(playground)/theme-test.tsx   # 主题测试页面
+├── app/playground/theme-demo.tsx   # 主题演示页面
+├── app/playground/theme-test.tsx   # 主题测试页面
 └── docs/theme-system.md              # 主题系统使用文档
 
 修改文件:
@@ -191,11 +191,11 @@ function MyComponent() {
 
 ### 1. 主题测试页面
 
-访问 `app/(playground)/theme-test.tsx` 进行基本功能测试
+访问 `app/playground/theme-test.tsx` 进行基本功能测试
 
 ### 2. 主题演示页面
 
-访问 `app/(playground)/theme-demo.tsx` 查看完整的功能演示
+访问 `app/playground/theme-demo.tsx` 查看完整的功能演示
 
 ### 3. 主题设置页面
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { useThemeToken } from '@/theme/context';
+import { useThemeToken } from '@/components/ThemeProvider/context';
 
 import { Tooltip } from '..';
 

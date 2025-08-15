@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button renders complex children correctly 1`] = `
+<button
+  className="css-view-175oi2r r-transitionProperty-1i6wzkk r-userSelect-lrvibr r-cursor-1loqt21 r-touchAction-1otgn73"
+  data-testid="button"
+  dir={null}
+  onClick={[Function]}
+  onContextMenu={[Function]}
+  onKeyDown={[Function]}
+  role="button"
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "rgba(255,255,255,1.00)",
+      "borderBottomColor": "rgba(217,217,217,1.00)",
+      "borderBottomLeftRadius": "8px",
+      "borderBottomRightRadius": "8px",
+      "borderBottomWidth": "1px",
+      "borderLeftColor": "rgba(217,217,217,1.00)",
+      "borderLeftWidth": "1px",
+      "borderRightColor": "rgba(217,217,217,1.00)",
+      "borderRightWidth": "1px",
+      "borderTopColor": "rgba(217,217,217,1.00)",
+      "borderTopLeftRadius": "8px",
+      "borderTopRightRadius": "8px",
+      "borderTopWidth": "1px",
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": "32px",
+      "opacity": 1,
+      "paddingBottom": "8px",
+      "paddingLeft": "12px",
+      "paddingRight": "12px",
+      "paddingTop": "8px",
+      "transitionDuration": "0s",
+      "width": "auto",
+    }
+  }
+  type="button"
+>
+  <div
+    className="css-text-146c3p1"
+    dir="auto"
+    style={
+      {
+        "color": "rgba(0,0,0,1.00)",
+        "fontWeight": "400",
+        "textAlign": "center",
+        "textDecoration": "none",
+      }
+    }
+  >
+    <div
+      className="css-view-175oi2r r-display-xoduu5"
+      data-testid="custom-content"
+      dir={null}
+    />
+  </div>
+</button>
+`;

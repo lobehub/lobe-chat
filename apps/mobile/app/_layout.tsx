@@ -80,7 +80,7 @@ function AuthProvider({ children }: PropsWithChildren) {
       hasNavigated.current = true;
       // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
       setTimeout(() => {
-        router.replace('/(auth)/login');
+        router.replace('/login');
       }, 0);
     }
 
@@ -108,13 +108,22 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
+    <ThemeProvider
+      theme={{
+        token: {
+          colorPrimary: '#00b96b',
+        },
+      }}
+    >
       <AuthProvider>
         <QueryProvider>
           <ActionSheetProvider>
             <PortalProvider>
               <ToastProvider>
                 <Stack screenOptions={{ headerShown: false }}>
+                  {/* auth page should not have animation  */}
+                  <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                  <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
                   <Slot />
                 </Stack>
               </ToastProvider>
