@@ -1,7 +1,8 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 
 import { colorScales, ColorScales } from '@/theme/color';
+import { useThemeToken } from '@/theme';
 
 import ComponentPlayground, { type DemoItem } from '../Playground';
 
@@ -32,6 +33,105 @@ const FullDemo = () => {
   );
 };
 
+// Token 使用演示
+const TokenDemo = () => {
+  const token = useThemeToken();
+
+  return (
+    <ScrollView contentContainerStyle={{ padding: 20 }} style={{ flex: 1 }}>
+      <View style={{ gap: 16 }}>
+        <Text style={{ color: token.colorText, fontSize: 18, fontWeight: 'bold' }}>
+          颜色级别 Token 使用示例
+        </Text>
+
+        {/* Primary 颜色示例 */}
+        <View style={{ gap: 8 }}>
+          <Text style={{ color: token.colorText, fontSize: 16, fontWeight: '600' }}>
+            Primary 色系
+          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((level) => (
+              <View key={level} style={{ alignItems: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: (token as any)[`primary${level}`],
+                    borderRadius: 4,
+                    height: 32,
+                    marginBottom: 4,
+                    width: 32,
+                  }}
+                />
+                <Text style={{ color: token.colorTextSecondary, fontSize: 10 }}>
+                  primary{level}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Red 颜色示例 */}
+        <View style={{ gap: 8 }}>
+          <Text style={{ color: token.colorText, fontSize: 16, fontWeight: '600' }}>Red 色系</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((level) => (
+              <View key={level} style={{ alignItems: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: (token as any)[`red${level}`],
+                    borderRadius: 4,
+                    height: 32,
+                    marginBottom: 4,
+                    width: 32,
+                  }}
+                />
+                <Text style={{ color: token.colorTextSecondary, fontSize: 10 }}>red{level}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 透明色示例 */}
+        <View style={{ gap: 8 }}>
+          <Text style={{ color: token.colorText, fontSize: 16, fontWeight: '600' }}>
+            透明色系 (Alpha)
+          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {[1, 3, 5, 7, 9, 11].map((level) => (
+              <View key={level} style={{ alignItems: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: (token as any)[`primary${level}A`],
+                    borderColor: token.colorBorder,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    height: 32,
+                    marginBottom: 4,
+                    width: 32,
+                  }}
+                />
+                <Text style={{ color: token.colorTextSecondary, fontSize: 10 }}>
+                  primary{level}A
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 使用说明 */}
+        <View style={{ gap: 8, marginTop: 16 }}>
+          <Text style={{ color: token.colorText, fontSize: 16, fontWeight: '600' }}>使用说明</Text>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, lineHeight: 20 }}>
+            现在你可以直接使用以下颜色 token：{'\n'}• token.primary1 ~ token.primary11{'\n'}•
+            token.red1A ~ token.red11A{'\n'}• token.blue1Dark ~ token.blue11Dark{'\n'}•
+            token.green1DarkA ~ token.green11DarkA{'\n'}
+            等等，支持所有颜色类型的所有级别
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
 const COLORSCALES_README = `# ColorScales 色板组件
 
 React Native版本的色板展示组件，基于 LobeUI 的 ColorScales 组件重写。
@@ -43,13 +143,14 @@ React Native版本的色板展示组件，基于 LobeUI 的 ColorScales 组件�
 - ✅ 高亮中间色级
 - ✅ 点击复制颜色值
 - ✅ 透明色支持
-- ✅ 水平滚动支持
+- ✅ 垂直滚动支持（移动端优化）
 - ✅ TypeScript 支持
+- ✅ **新增：颜色级别 Token 自动生成**
 
 ## 基础使用
 
 \`\`\`tsx
-import { ColorScales } from '@/color';
+import { ColorScales } from '@/theme/color';
 import { colorScales } from '@/theme/color';
 
 export default () => (
@@ -60,6 +161,41 @@ export default () => (
   />
 );
 \`\`\`
+
+## 颜色级别 Token 使用
+
+现在你可以直接在组件中使用颜色级别 token：
+
+\`\`\`tsx
+import { useThemeToken } from '@/theme';
+
+const MyComponent = () => {
+  const token = useThemeToken();
+  
+  return (
+    <View style={{
+      backgroundColor: token.primary1,     // 主色级别1
+      borderColor: token.red5,            // 红色级别5
+      shadowColor: token.blue3A,          // 蓝色级别3透明
+    }}>
+      <Text style={{ color: token.gray9 }}>
+        使用颜色级别 token
+      </Text>
+    </View>
+  );
+};
+\`\`\`
+
+## 可用的 Token 格式
+
+- **基础色**: \`token.{colorName}{level}\` (例如: \`token.primary5\`)
+- **透明色**: \`token.{colorName}{level}A\` (例如: \`token.red3A\`)
+- **深色模式**: \`token.{colorName}{level}Dark\` (例如: \`token.blue7Dark\`)
+- **深色透明**: \`token.{colorName}{level}DarkA\` (例如: \`token.green9DarkA\`)
+
+其中：
+- \`colorName\`: primary, red, blue, green, cyan, geekblue, gold, gray, lime, magenta, orange, purple, volcano, yellow
+- \`level\`: 1-11
 
 ## API
 
@@ -95,7 +231,7 @@ interface ColorScaleItem {
 
 - 点击任意色块可复制对应的 token 值
 - 复制格式：\`token.colorName + index + (A?) /* #hex */\`
-- 支持水平滚动查看完整色板
+- 支持垂直滚动查看完整色板
 
 ## 可用色板
 
@@ -115,6 +251,11 @@ const demos: DemoItem[] = [
     component: <FullDemo />,
     key: 'full',
     title: '完整色板',
+  },
+  {
+    component: <TokenDemo />,
+    key: 'token',
+    title: 'Token 使用',
   },
 ];
 

@@ -250,6 +250,10 @@ export interface MapToken
 // ======================================================================
 // 别名 Token，最终给开发者使用的 Token
 export interface AliasToken extends MapToken {
+  // 颜色级别 Token，支持动态生成的颜色级别 token
+  // 例如：primary1, red2A, blue3Dark, green4DarkA 等
+  [key: string]: any;
+
   // 阴影
   boxShadow: {
     elevation: number;

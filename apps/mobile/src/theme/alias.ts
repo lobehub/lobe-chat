@@ -1,6 +1,35 @@
 import type { AliasToken, MapToken } from '@/types/theme';
 
+import { colorScales } from './color/colors';
 import { getAlphaColor } from './utils';
+
+/**
+ * 生成颜色级别 token
+ * 为每个颜色生成对应的级别 token，例如 primary1, primary2A 等
+ */
+function generateColorLevelTokens(): Record<string, string> {
+  const tokens: Record<string, string> = {};
+
+  // 遍历所有颜色类型
+  Object.entries(colorScales).forEach(([colorName, colorScale]) => {
+    // 为每个级别生成 token (跳过 0 和 12)
+    for (let i = 1; i < 12; i++) {
+      // light 模式：primary1, red2, blue3 等
+      tokens[`${colorName}${i}`] = colorScale.light[i];
+
+      // lightA 模式：primary1A, red2A, blue3A 等
+      tokens[`${colorName}${i}A`] = colorScale.lightA[i];
+
+      // dark 模式：primary1Dark, red2Dark, blue3Dark 等
+      tokens[`${colorName}${i}Dark`] = colorScale.dark[i];
+
+      // darkA 模式：primary1DarkA, red2DarkA, blue3DarkA 等
+      tokens[`${colorName}${i}DarkA`] = colorScale.darkA[i];
+    }
+  });
+
+  return tokens;
+}
 
 /**
  * 格式化 Token，从 MapToken 生成 AliasToken
@@ -29,9 +58,13 @@ export function formatToken(mapToken: MapToken): AliasToken {
         motionDurationSlow: '0s',
       };
 
+  // 生成颜色级别 token
+  const colorLevelTokens = generateColorLevelTokens();
+
   const aliasToken: AliasToken = {
     ...mapToken,
     ...motionTokens,
+    ...colorLevelTokens,
 
     // ============== 阴影 ============== //
     boxShadow: {
