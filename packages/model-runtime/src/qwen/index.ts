@@ -88,7 +88,7 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: QwenModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'qwen');
   },
   provider: ModelProvider.Qwen,
 });

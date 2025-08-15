@@ -21,7 +21,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      imageOutput: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -78,7 +77,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      imageOutput: true,
       reasoning: true,
       vision: true,
     },
@@ -354,28 +352,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'o1-preview',
-    id: 'o1-preview',
-    maxOutput: 32_768,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2024-09-12',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       search: true,
       vision: true,
@@ -441,27 +417,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-14',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。',
-    displayName: 'GPT-4.5 Preview',
-    id: 'gpt-4.5-preview', // deprecated on 2025-07-14
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 37.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 150, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-02-27',
     type: 'chat',
   },
   {

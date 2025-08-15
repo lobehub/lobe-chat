@@ -2,6 +2,123 @@
 
 # Changelog
 
+## [Version 1.112.0](https://github.com/lobehub/lobe-chat/compare/v1.111.12...v1.112.0)
+
+<sup>Released on **2025-08-15**</sup>
+
+#### ✨ Features
+
+- **feature-flags**: Add ai_image flag to control AI painting UI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **feature-flags**: Add ai_image flag to control AI painting UI, closes [#8797](https://github.com/lobehub/lobe-chat/issues/8797) ([a1c66c8](https://github.com/lobehub/lobe-chat/commit/a1c66c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.12](https://github.com/lobehub/lobe-chat/compare/v1.111.11...v1.111.12)
+
+<sup>Released on **2025-08-14**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.11](https://github.com/lobehub/lobe-chat/compare/v1.111.10...v1.111.11)
+
+<sup>Released on **2025-08-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Mistral AI models & Optimize many model providers fetching.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Mistral AI models & Optimize many model providers fetching, closes [#8644](https://github.com/lobehub/lobe-chat/issues/8644) ([1d466e5](https://github.com/lobehub/lobe-chat/commit/1d466e5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.10](https://github.com/lobehub/lobe-chat/compare/v1.111.9...v1.111.10)
+
+<sup>Released on **2025-08-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust near bottom size on thinking scroll.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust near bottom size on thinking scroll, closes [#8772](https://github.com/lobehub/lobe-chat/issues/8772) ([1fae490](https://github.com/lobehub/lobe-chat/commit/1fae490))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.111.9](https://github.com/lobehub/lobe-chat/compare/v1.111.8...v1.111.9)
+
+<sup>Released on **2025-08-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve Gemini error display with promptFeedback.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve Gemini error display with promptFeedback, closes [#8707](https://github.com/lobehub/lobe-chat/issues/8707) ([51ad399](https://github.com/lobehub/lobe-chat/commit/51ad399))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.111.8](https://github.com/lobehub/lobe-chat/compare/v1.111.7...v1.111.8)
 
 <sup>Released on **2025-08-11**</sup>
