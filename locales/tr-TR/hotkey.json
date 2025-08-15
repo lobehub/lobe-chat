@@ -21,6 +21,10 @@
     "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
     "title": "Mesajı düzenle"
   },
+  "navigateToChat": {
+    "desc": "Sohbet sekmesine geç ve rastgele sohbet et",
+    "title": "Varsayılan sohbete geç"
+  },
   "openChatSettings": {
     "desc": "Mevcut oturumun ayarlarını görüntüle ve değiştir",
     "title": "Sohbet ayarlarını aç"

@@ -49,11 +49,24 @@ const isMCPInstallInProgress = (id: string) => (s: ToolStoreState) => {
   return !!progress && !progress.needsConfig && progress.step !== 'Error';
 };
 
+// 测试连接相关选择器
+const isMCPConnectionTesting = (id: string) => (s: ToolStoreState) => s.mcpTestLoading[id] || false;
+
+const getMCPConnectionTestError = (id: string) => (s: ToolStoreState) => s.mcpTestErrors[id];
+
+const getMCPConnectionTestState = (id: string) => (s: ToolStoreState) => ({
+  error: s.mcpTestErrors[id],
+  loading: s.mcpTestLoading[id] || false,
+});
+
 export const mcpStoreSelectors = {
   activeMCPPluginIdentifier,
+  getMCPConnectionTestError,
+  getMCPConnectionTestState,
   getMCPInstallProgress,
   getMCPPluginRequiringConfig,
   getPluginById,
+  isMCPConnectionTesting,
   isMCPInstallInProgress,
   isMCPInstalling,
   isMCPPluginRequiringConfig,

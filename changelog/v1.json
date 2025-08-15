@@ -1,5 +1,210 @@
 [
   {
+    "children": {},
+    "date": "2025-08-15",
+    "version": "1.112.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-14",
+    "version": "1.111.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
+    },
+    "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust near bottom size on thinking scroll."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Gemini error display with promptFeedback."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
+      "improvements": ["Support new GPT-5 Verbosity params."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model-runtime to a seperated package."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
+      "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add mask effect to thinking scroll, update i18n."]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
+    "children": {},
+    "date": "2025-08-09",
+    "version": "1.111.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve thinking auto scroll style, Support session switch shortcut key, update i18n."
+      ]
+    },
+    "date": "2025-08-09",
+    "version": "1.111.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-08",
+    "version": "1.111.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add descriptions for the FLUX.1 Krea and Qwen Image."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.1"
+  },
+  {
+    "children": {
+      "features": ["Add GPT-5 series models."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
+      "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
+      "fixes": ["Optimize Gemini error message display & Filter empty messages."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor trace type."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider setting page hydration error."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fail to fetch aihubmix model on client mode."],
+      "improvements": ["Add context menu for desktop, support different model tabs."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop again."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.1"
+  },
+  {
+    "children": {
+      "features": ["Support mcp plugin install from web."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama model output without thinking."],
+      "improvements": ["Add Claude Opus 4.1 model, update i18n."]
+    },
+    "date": "2025-08-06",
+    "version": "1.109.1"
+  },
+  {
+    "children": {
+      "features": ["Support gpt-oss in ollama provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.109.0"
+  },
+  {
+    "children": {
+      "fixes": ["Provider config checker uses outdated API key."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop."],
+      "improvements": ["Update mask style."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.1"
+  },
+  {
+    "children": {
+      "features": ["Support 302ai provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.0"
+  },
+  {
+    "children": {
+      "fixes": ["Break line for Gemini Artifacts."]
+    },
+    "date": "2025-08-05",
+    "version": "1.107.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update models."]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.5"
+  },
+  {
+    "children": {
+      "fixes": ["When s3 files not exist , global files should delete."]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.4"
+  },
+  {
     "children": {
       "fixes": ["Aihubmix provider request headers."]
     },

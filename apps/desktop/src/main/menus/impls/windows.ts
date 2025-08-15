@@ -161,32 +161,15 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
   }
 
   private getChatContextMenuTemplate(data?: any): MenuItemConstructorOptions[] {
+    console.log(data);
     const t = this.app.i18n.ns('menu');
-    const commonT = this.app.i18n.ns('common');
 
-    const items: MenuItemConstructorOptions[] = [
-      { label: t('edit.copy'), role: 'copy' },
-      { label: t('edit.paste'), role: 'paste' },
+    return [
+      { accelerator: 'Ctrl+C', label: t('edit.copy'), role: 'copy' },
+      { accelerator: 'Ctrl+V', label: t('edit.paste'), role: 'paste' },
       { type: 'separator' },
       { label: t('edit.selectAll'), role: 'selectAll' },
     ];
-
-    if (data?.messageId) {
-      items.push(
-        { type: 'separator' },
-        {
-          click: () => {
-            console.log('尝试删除消息:', data.messageId);
-            // 调用 MessageService (假设存在)
-            // const messageService = this.app.getService(MessageService);
-            // messageService?.deleteMessage(data.messageId);
-          },
-          label: commonT('actions.delete'),
-        },
-      );
-    }
-
-    return items;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -194,14 +177,13 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
     const t = this.app.i18n.ns('menu');
 
     return [
-      { label: t('edit.cut'), role: 'cut' },
-      { label: t('edit.copy'), role: 'copy' },
-      { label: t('edit.paste'), role: 'paste' },
+      { accelerator: 'Ctrl+X', label: t('edit.cut'), role: 'cut' },
+      { accelerator: 'Ctrl+C', label: t('edit.copy'), role: 'copy' },
+      { accelerator: 'Ctrl+V', label: t('edit.paste'), role: 'paste' },
       { type: 'separator' },
-      { label: t('edit.undo'), role: 'undo' },
-      { label: t('edit.redo'), role: 'redo' },
+      { accelerator: 'Ctrl+A', label: t('edit.selectAll'), role: 'selectAll' },
       { type: 'separator' },
-      { label: t('edit.selectAll'), role: 'selectAll' },
+      { label: t('edit.delete'), role: 'delete' },
     ];
   }
 

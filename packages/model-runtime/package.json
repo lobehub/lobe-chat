@@ -1,0 +1,12 @@
+{
+  "name": "@lobechat/model-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.862.0",
+    "@lobechat/types": "workspace:*",
+    "debug": "^4.4.1",
+    "openai": "^4.104.0"
+  }
+}

@@ -1,20 +1,19 @@
-import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
-import { produce } from 'immer';
-import { merge } from 'lodash-es';
-
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { enableAuth } from '@/const/auth';
-import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
-import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { TracePayload, TraceTagMap } from '@/const/trace';
-import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import {
   AgentRuntimeError,
   ChatCompletionErrorPayload,
   ModelProvider,
   ModelRuntime,
-} from '@/libs/model-runtime';
+} from '@lobechat/model-runtime';
+import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
+import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
+import { produce } from 'immer';
+import { merge } from 'lodash-es';
+
+import { enableAuth } from '@/const/auth';
+import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
@@ -35,7 +34,6 @@ import {
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
-import { ChatErrorType } from '@/types/fetch';
 import { ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
@@ -282,6 +280,14 @@ class ChatService {
         extendParams.reasoning_effort = chatConfig.reasoningEffort;
       }
 
+      if (modelExtendParams!.includes('gpt5ReasoningEffort') && chatConfig.gpt5ReasoningEffort) {
+        extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
+      }
+
+      if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
+        extendParams.verbosity = chatConfig.textVerbosity;
+      }
+
       if (modelExtendParams!.includes('thinking') && chatConfig.thinking) {
         extendParams.thinking = { type: chatConfig.thinking };
       }
@@ -404,6 +410,7 @@ class ChatService {
       provider,
     });
 
+    const { DEFAULT_MODEL_PROVIDER_LIST } = await import('@/config/modelProviders');
     const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
 
     let sdkType = provider;

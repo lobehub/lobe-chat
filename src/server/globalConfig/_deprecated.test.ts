@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { genServerLLMConfig } from './_deprecated';
 
 // Mock ModelProvider enum
-vi.mock('@/libs/model-runtime', () => ({
+vi.mock('@lobechat/model-runtime', () => ({
   ModelProvider: {
     Azure: 'azure',
     Bedrock: 'bedrock',

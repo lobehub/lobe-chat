@@ -14,7 +14,7 @@ import { Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo, useLayoutEffect } from 'react';
+import { ReactNode, memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
@@ -173,7 +173,24 @@ const ProviderConfig = memo<ProviderConfigProps>(
       form.setFieldsValue(data);
     }, [isLoading, id, data]);
 
-    const { run: debouncedUpdate } = useDebounceFn(updateAiProviderConfig, { wait: 500 });
+    // 标记是否正在进行连接测试
+    const isCheckingConnection = useRef(false);
+
+    const handleValueChange = useCallback(
+      (...params: Parameters<typeof updateAiProviderConfig>) => {
+        // 虽然 debouncedHandleValueChange 早于 onBeforeCheck 执行，
+        // 但是由于 debouncedHandleValueChange 因为 debounce 的原因，本来就会晚 500ms 执行
+        // 所以 isCheckingConnection.current 这时候已经更新了
+        // 测试链接时已经出发一次了 updateAiProviderConfig ， 不应该重复更新
+        if (isCheckingConnection.current) return;
+
+        updateAiProviderConfig(...params);
+      },
+      [updateAiProviderConfig],
+    );
+    const { run: debouncedHandleValueChange } = useDebounceFn(handleValueChange, {
+      wait: 500,
+    });
 
     const isCustom = source === AiProviderSourceEnum.Custom;
 
@@ -318,6 +335,16 @@ const ProviderConfig = memo<ProviderConfigProps>(
               <Checker
                 checkErrorRender={checkErrorRender}
                 model={data?.checkModel || checkModel!}
+                onAfterCheck={async () => {
+                  // 重置连接测试状态，允许后续的 onValuesChange 更新
+                  isCheckingConnection.current = false;
+                }}
+                onBeforeCheck={async () => {
+                  // 设置连接测试状态，阻止 onValuesChange 的重复请求
+                  isCheckingConnection.current = true;
+                  // 主动保存表单最新值，确保 fetchAiProviderRuntimeState 获取最新数据
+                  await updateAiProviderConfig(id, form.getFieldsValue());
+                }}
                 provider={id}
               />
             ),
@@ -389,7 +416,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         form={form}
         items={[model]}
         onValuesChange={(_, values) => {
-          debouncedUpdate(id, values);
+          debouncedHandleValueChange(id, values);
         }}
         variant={'borderless'}
         {...FORM_STYLE}

@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/core/dbForTest';

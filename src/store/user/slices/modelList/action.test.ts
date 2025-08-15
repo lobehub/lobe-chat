@@ -70,8 +70,8 @@ describe('LLMSettingsSliceAction', () => {
         });
       });
 
-      act(() => {
-        result.current.refreshDefaultModelProviderList();
+      await act(async () => {
+        await result.current.refreshDefaultModelProviderList();
       });
 
       // Assert that setModelProviderConfig was not called
@@ -79,7 +79,7 @@ describe('LLMSettingsSliceAction', () => {
       expect(azure?.chatModels).toEqual([{ id: 'abc', deploymentName: 'abc' }]);
     });
 
-    it('openai', () => {
+    it('openai', async () => {
       const { result } = renderHook(() => useUserStore());
       act(() => {
         useUserStore.setState({
@@ -109,8 +109,8 @@ describe('LLMSettingsSliceAction', () => {
         });
       });
 
-      act(() => {
-        result.current.refreshDefaultModelProviderList();
+      await act(async () => {
+        await result.current.refreshDefaultModelProviderList();
       });
 
       // Assert that setModelProviderConfig was not called

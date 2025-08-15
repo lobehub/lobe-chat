@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { z } from 'zod';
 
-import { SearchMode } from '@/types/search';
+import { SearchMode } from '../search';
 
 export interface WorkingModel {
   model: string;
@@ -26,6 +26,11 @@ export interface LobeAgentChatConfig {
   enableReasoningEffort?: boolean;
   reasoningBudgetToken?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
+  gpt5ReasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
+  /**
+   * 输出文本详细程度控制
+   */
+  textVerbosity?: 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
   thinkingBudget?: number;
   /**
@@ -71,4 +76,5 @@ export const AgentChatConfigSchema = z.object({
     })
     .optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
+  textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
 });

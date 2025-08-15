@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ModelProvider } from '@lobechat/model-runtime';
+
 import { gptImage1ParamsSchema } from '@/config/aiModels/openai';
-import { ModelProvider } from '@/libs/model-runtime/types/type';
 import {
   ModelParamsSchema,
   RuntimeImageGenParams,

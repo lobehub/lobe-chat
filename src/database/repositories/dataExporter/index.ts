@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm/expressions';
+import { and, eq, inArray } from 'drizzle-orm';
 import pMap from 'p-map';
 
 import * as EXPORT_TABLES from '@/database/schemas';

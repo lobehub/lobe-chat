@@ -137,7 +137,7 @@ export const createFileUploadSlice: StateCreator<
         metadata,
         name: file.name,
         size: file.size,
-        url: metadata.path,
+        url: metadata.path || checkStatus.url,
       },
       knowledgeBaseId,
     );

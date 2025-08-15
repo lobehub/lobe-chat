@@ -1,7 +1,7 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ModelProvider } from '@/libs/model-runtime';
 import { useUserStore } from '@/store/user';
 import {
   GlobalLLMProviderKey,

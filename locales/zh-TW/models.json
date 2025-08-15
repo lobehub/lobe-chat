@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多項評測成績超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他開源模型，並在性能上和世界頂尖的閉源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "DeepSeek-V3-Fast": {
+    "description": "模型供應商為：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS極速版，滿血非量化，代碼與數學能力更強，響應更快！"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "由微軟部署提供； DeepSeek R1型號已進行小版本升級，當前版本為DeepSeek-R1-0528。在最新的更新中，DeepSeek R1透過增加計算資源和引入後訓練階段的演算法優化機制，大幅提升了推理深度和推斷能力。該模型在數學、程式設計和通用邏輯等多個基準測試中表現出色，其整體性能已接近領先模型，如O3和Gemini 2.5 Pro 。"
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面為企業工作負載提供了理想的平衡。它以更低的價格提供最大效用，可靠且適合大規模部署。"
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 是 Anthropic 最新的用於處理高度複雜任務的最強大模型。它在性能、智慧、流暢性和理解力方面表現卓越。"
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
@@ -1095,7 +1104,7 @@
     "description": "FLUX.1 [dev] 是一款面向非商業應用的開源權重、精煉模型。FLUX.1 [dev] 在保持了與 FLUX 專業版相近的圖像品質和指令遵循能力的同時，具備更高的運行效率。相較於同尺寸的標準模型，它在資源利用上更為高效。"
   },
   "flux-kontext/dev": {
-    "description": "Frontier 影像編輯模型。"
+    "description": "專注於圖像編輯任務的FLUX.1模型，支援文字和圖像輸入。"
   },
   "flux-merged": {
     "description": "FLUX.1-merged 模型結合了 \"DEV\" 在開發階段探索的深度特性和 \"Schnell\" 所代表的高速執行優勢。透過這一舉措，FLUX.1-merged 不僅提升了模型的性能界限，還拓寬了其應用範圍。"
@@ -1109,8 +1118,11 @@
   "flux.1-schnell": {
     "description": "具有120億參數的修正流變換器，能夠根據文本描述生成圖像。"
   },
+  "flux/krea": {
+    "description": "Flux Krea [dev] 是一個具有美學偏好的圖像生成模型，目標是生成更加真實、自然的圖像。"
+  },
   "flux/schnell": {
-    "description": "FLUX.1 [schnell] 是一個擁有120億參數的流式轉換器模型，能夠在1到4步內從文字生成高品質圖像，適合個人和商業用途。"
+    "description": "FLUX.1 [schnell] 是一個擁有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
@@ -1472,8 +1484,26 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe 是一種使用 GPT-4o 轉錄音訊的語音轉文字模型。與原始 Whisper 模型相比，它降低了字詞錯誤率，並提升了語言識別和準確性。使用它來獲得更準確的轉錄。"
   },
+  "gpt-5": {
+    "description": "跨領域編碼和代理任務的最佳模型。GPT-5 在準確性、速度、推理、上下文識別、結構化思維和問題解決方面實現了飛躍。"
+  },
+  "gpt-5-chat-latest": {
+    "description": "ChatGPT 中使用的 GPT-5 模型。結合了強大的語言理解與生成能力，適合對話式互動應用。"
+  },
+  "gpt-5-mini": {
+    "description": "更快、更經濟高效的 GPT-5 版本，適用於明確定義的任務。在保持高品質輸出的同時，提供更快的回應速度。"
+  },
+  "gpt-5-nano": {
+    "description": "最快、最經濟高效的 GPT-5 版本。非常適合需要快速回應且成本敏感的應用場景。"
+  },
   "gpt-image-1": {
     "description": "ChatGPT 原生多模態圖片生成模型"
+  },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B 是 OpenAI 發布的開源大型語言模型，採用 MXFP4 量化技術，適合在高端消費級 GPU 或 Apple Silicon Mac 上運行。該模型在對話生成、程式碼撰寫和推理任務方面表現出色，支援函數呼叫和工具使用。"
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B 是 OpenAI 發布的大型開源語言模型，採用 MXFP4 量化技術，為旗艦級模型。需要多 GPU 或高效能工作站環境運行，在複雜推理、程式碼生成和多語言處理方面具備卓越性能，支援高級函數呼叫和工具整合。"
   },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
@@ -1614,7 +1644,7 @@
     "description": "Imagen 第四代文字轉圖像模型系列 超級版"
   },
   "imagen4/preview": {
-    "description": "Google 最高品質的圖像生成模型"
+    "description": "Google 提供的高品質圖像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
@@ -2117,6 +2147,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B 是一款擁有 1200 億參數的頂尖語言模型，內建瀏覽器搜尋和程式碼執行功能，並具備推理能力。"
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B 是一款擁有 200 億參數的頂尖語言模型，內建瀏覽器搜尋和程式碼執行功能，並具備推理能力。"
+  },
   "openai/o1": {
     "description": "o1 是 OpenAI 新的推理模型，支援圖文輸入並輸出文本，適用於需要廣泛通用知識的複雜任務。該模型具有 200K 上下文和 2023 年 10 月的知識截止日期。"
   },
@@ -2176,6 +2212,9 @@
   },
   "qwen-coder-turbo-latest": {
     "description": "通義千問代碼模型。"
+  },
+  "qwen-image": {
+    "description": "Qwen團隊帶來的強大生圖模型，具有令人印象深刻的中文文字生成能力和多樣圖片視覺風格。"
   },
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"
@@ -2405,8 +2444,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "通義千問程式碼模型開源版。最新的 qwen3-coder-480b-a35b-instruct 是基於 Qwen3 的程式碼生成模型，具有強大的 Coding Agent 能力，擅長工具調用和環境互動，能夠實現自主程式設計、程式碼能力卓越的同時兼具通用能力。"
   },
+  "qwen3-coder-flash": {
+    "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
+  },
   "qwen3-coder-plus": {
-    "description": "通義千問程式碼模型。最新的 Qwen3-Coder-Plus 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的 Coding Agent 能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
+    "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
   },
   "qwq": {
     "description": "QwQ 是一個實驗研究模型，專注於提高 AI 推理能力。"

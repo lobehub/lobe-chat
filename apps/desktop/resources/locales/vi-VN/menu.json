@@ -14,6 +14,7 @@
   "edit": {
     "copy": "Sao chép",
     "cut": "Cắt",
+    "delete": "Xóa",
     "paste": "Dán",
     "redo": "Làm lại",
     "selectAll": "Chọn tất cả",
