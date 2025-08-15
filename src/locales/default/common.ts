@@ -1,12 +1,6 @@
 export default {
   about: '关于',
   advanceSettings: '高级设置',
-  aiImage: {
-    disabled: {
-      description: 'AI 图像生成功能已被管理员禁用',
-      title: 'AI 图像生成功能已禁用',
-    },
-  },
   alert: {
     cloud: {
       action: '立即体验',
