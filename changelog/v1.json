@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-14",
+    "version": "1.111.12"
+  },
+  {
     "children": {
       "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
     },
