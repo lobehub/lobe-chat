@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme/createStyles';
+import { createStyles } from '@/components/ThemeProvider/createStyles';
 
 export const useStyles = createStyles((token, size: number, dotColor: string) => ({
   container: {

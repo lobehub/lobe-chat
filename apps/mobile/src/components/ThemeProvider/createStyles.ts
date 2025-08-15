@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import { useThemeToken, useTheme } from './context';
 import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+
+import { useThemeToken, useTheme } from './context';
 
 // 定义样式类型
 export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };

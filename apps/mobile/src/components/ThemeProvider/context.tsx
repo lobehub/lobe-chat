@@ -2,9 +2,10 @@ import React, { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import type { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from '@/types/theme';
+import { getDesignToken } from '@/theme/getDesignToken';
 
-import { generateDesignToken } from './tokens';
+import { Theme, ThemeConfig, ThemeContextValue } from './types';
+import { ThemeMode } from '@/theme';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -56,7 +57,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   };
 
   // 使用合并后的配置生成主题
-  const themeToken = generateDesignToken(mergedThemeConfig, isDark);
+  const themeToken = getDesignToken(mergedThemeConfig);
 
   const theme: Theme = {
     isDark,

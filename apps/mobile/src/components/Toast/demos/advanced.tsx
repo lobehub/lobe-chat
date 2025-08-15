@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import { useThemeToken } from '@/theme/context';
+import { useThemeToken } from '@/components/ThemeProvider/context';
 
 import { useToast } from '@/components/Toast';
 import { DemoButton } from './DemoButton';

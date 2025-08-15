@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { useThemeToken } from '@/theme/context';
+import { useThemeToken } from '@/components/ThemeProvider/context';
 
 import { useToast } from '../ToastProvider';
 import { DemoButton } from './DemoButton';

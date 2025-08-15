@@ -20,7 +20,7 @@ const ExampleComponent = () => {
         style={{
           color: token.colorText,
           fontSize: token.fontSize,
-          fontWeight: token.fontWeight,
+          fontWeight: token.fontWeightStrong,
         }}
       >
         默认主题示例

@@ -8,7 +8,7 @@ import {
   orange,
   red,
   volcano,
-} from '@/theme/color/colors';
+} from '@/theme/color/primary';
 
 export const themeConfig: any = (isDarkMode: boolean) => {
   const type = isDarkMode ? 'dark' : 'light';

@@ -29,7 +29,7 @@ const ComponentPlayground = ({
   const { styles } = useStyles();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>

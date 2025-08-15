@@ -182,6 +182,9 @@ importers:
       openai:
         specifier: ^4.86.2
         version: 4.104.0(ws@8.18.3)(zod@3.25.76)
+      polished:
+        specifier: ^4.3.1
+        version: 4.3.1
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -5460,6 +5463,10 @@ packages:
   pngjs@3.4.0:
     resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
     engines: {node: '>=4.0.0'}
+
+  polished@4.3.1:
+    resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
+    engines: {node: '>=10'}
 
   postcss-resolve-nested-selector@0.1.6:
     resolution: {integrity: sha512-0sglIs9Wmkzbr8lQwEyIzlDOOC9bGmfVKcJTaxv3vMmd3uo4o4DerC3En0bnmgceeql9BfC8hRkp7cg0fjdVqw==}
@@ -13443,6 +13450,10 @@ snapshots:
       xmlbuilder: 15.1.1
 
   pngjs@3.4.0: {}
+
+  polished@4.3.1:
+    dependencies:
+      '@babel/runtime': 7.28.2
 
   postcss-resolve-nested-selector@0.1.6: {}
 

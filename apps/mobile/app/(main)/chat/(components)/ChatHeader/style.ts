@@ -1,5 +1,5 @@
 import { HEADER_HEIGHT } from '@/const/common';
-import { createStyles } from '@/theme/createStyles';
+import { createStyles } from '@/components/ThemeProvider/createStyles';
 
 export const useStyles = createStyles((token) => ({
   actionButton: {
