@@ -5,17 +5,13 @@ import { Flexbox } from 'react-layout-kit'
 import { ActionIcon, Modal } from '@lobehub/ui'
 import { MaximizeIcon } from 'lucide-react'
 import { ModelIcon, ProviderIcon } from '@lobehub/icons'
-
-import dayjs from 'dayjs';
-
 import { UsageLog } from '@lobechat/types/src/usage';
-import Statistic from '@/components/Statistic';
 import StatisticCard from '@/components/StatisticCard';
 import TitleWithPercentage from '@/components/StatisticCard/TitleWithPercentage';
 import { formatNumber } from '@/utils/format';
 
 import ModelTable from './ModelTable'
-import { GroupBy, UsageChartProps } from '../../Client'
+import { GroupBy, UsageChartProps } from '../../../Client'
 
 const computeList = (data: UsageLog[], groupBy: GroupBy): string[] => {
   if (!data || data.length === 0) return [];

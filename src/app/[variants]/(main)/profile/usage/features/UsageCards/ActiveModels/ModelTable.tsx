@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import InlineTable from '@/components/InlineTable';
 
-import { UsageChartProps, GroupBy } from '../../Client'
+import { UsageChartProps, GroupBy } from '../../../Client'
 import { UsageLog } from '@/types/usage';
 
 interface WeightGroup {

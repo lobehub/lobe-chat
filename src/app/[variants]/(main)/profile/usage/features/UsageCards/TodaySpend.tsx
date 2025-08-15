@@ -12,7 +12,7 @@ import TitleWithPercentage from '@/components/StatisticCard/TitleWithPercentage'
 import { UsageLog } from '@lobechat/types/src/usage';
 import { formatNumber } from '@/utils/format';
 
-import { UsageChartProps } from '../Client'
+import { UsageChartProps } from '../../Client'
 
 const computeSpend = (data: UsageLog[]): {
   today: number | string;
