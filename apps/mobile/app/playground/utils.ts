@@ -124,6 +124,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['switch', 'toggle', 'async', 'loading', 'form'],
   },
   {
+    category: 'form',
+    description: '基于 LobeUI 重写的颜色选择器组件，支持圆形/方形样式、透明色处理',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'ColorSwatches',
+    path: 'colorswatches',
+    tags: ['color', 'picker', 'swatch', 'form', 'ui'],
+  },
+  {
     category: 'display',
     description: '主题 Token 展示页面，显示种子、映射和别名令牌，支持主题切换和搜索',
     hasDemos: false,

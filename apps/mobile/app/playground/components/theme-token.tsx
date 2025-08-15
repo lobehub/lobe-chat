@@ -3,8 +3,14 @@ import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
-import { useTheme, createStyles, seedToken, darkAlgorithm, defaultAlgorithm } from '@/theme';
-import { useSettingStore } from '@/store/setting';
+import {
+  useTheme,
+  createStyles,
+  seedToken,
+  darkAlgorithm,
+  defaultAlgorithm,
+  ThemeProvider,
+} from '@/theme';
 
 interface TokenInfo {
   category: 'seed' | 'map' | 'alias';
@@ -413,10 +419,21 @@ const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) =>
 };
 
 // 新增主题控制器组件
-const ThemeControls: React.FC = () => {
+interface ThemeControlsProps {
+  colorPrimary: string;
+  fontSize: number;
+  onColorPrimaryChange: (color: string) => void;
+  onFontSizeChange: (size: number) => void;
+}
+
+const ThemeControls: React.FC<ThemeControlsProps> = ({
+  colorPrimary,
+  fontSize,
+  onColorPrimaryChange,
+  onFontSizeChange,
+}) => {
   const { theme } = useTheme();
   const { styles } = useStyles();
-  const { colorPrimary, fontSize, setColorPrimary, setFontSize } = useSettingStore();
 
   // 预设主色
   const colorPresets = [
@@ -443,7 +460,7 @@ const ThemeControls: React.FC = () => {
         <View style={styles.controlRow}>
           <View style={[styles.presetColorPreview, { backgroundColor: colorPrimary }]} />
           <TextInput
-            onChangeText={setColorPrimary}
+            onChangeText={onColorPrimaryChange}
             placeholder="#000000"
             placeholderTextColor={theme.token.colorTextPlaceholder}
             style={[
@@ -461,7 +478,7 @@ const ThemeControls: React.FC = () => {
           {colorPresets.map((color) => (
             <TouchableOpacity
               key={color}
-              onPress={() => setColorPrimary(color)}
+              onPress={() => onColorPrimaryChange(color)}
               style={[
                 styles.presetButton,
                 {
@@ -505,7 +522,7 @@ const ThemeControls: React.FC = () => {
             onChangeText={(text) => {
               const size = parseInt(text, 10);
               if (!isNaN(size) && size > 0) {
-                setFontSize(size);
+                onFontSizeChange(size);
               }
             }}
             placeholder="14"
@@ -526,7 +543,7 @@ const ThemeControls: React.FC = () => {
           {fontSizePresets.map((size) => (
             <TouchableOpacity
               key={size}
-              onPress={() => setFontSize(size)}
+              onPress={() => onFontSizeChange(size)}
               style={[
                 styles.presetButton,
                 {
@@ -558,8 +575,23 @@ const ThemeControls: React.FC = () => {
   );
 };
 
-const ThemeTokensPlayground: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+// 内部组件，使用 ThemeProvider 包装
+interface ThemeTokensContentProps {
+  localColorPrimary: string;
+  localFontSize: number;
+  onColorPrimaryChange: (color: string) => void;
+  onFontSizeChange: (size: number) => void;
+  onToggleTheme: () => void;
+}
+
+const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
+  localColorPrimary,
+  localFontSize,
+  onColorPrimaryChange,
+  onFontSizeChange,
+  onToggleTheme,
+}) => {
+  const { theme } = useTheme();
   const { styles } = useStyles();
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState<'seed' | 'map' | 'alias'>('seed');
@@ -771,7 +803,7 @@ const ThemeTokensPlayground: React.FC = () => {
           <Text style={[styles.headerTitle, { color: theme.token.colorText }]}>主题令牌</Text>
         </View>
         <TouchableOpacity
-          onPress={toggleTheme}
+          onPress={onToggleTheme}
           style={[styles.themeToggle, { backgroundColor: theme.token.colorFillSecondary }]}
         >
           {theme.isDark ? (
@@ -784,7 +816,12 @@ const ThemeTokensPlayground: React.FC = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* 主题控制器 */}
-        <ThemeControls />
+        <ThemeControls
+          colorPrimary={localColorPrimary}
+          fontSize={localFontSize}
+          onColorPrimaryChange={onColorPrimaryChange}
+          onFontSizeChange={onFontSizeChange}
+        />
 
         <View style={styles.tabsContainer}>
           <CapsuleTabs
@@ -807,6 +844,38 @@ const ThemeTokensPlayground: React.FC = () => {
         <TokenTable searchText={searchText} title={getTabTitle()} tokens={getCurrentTokens()} />
       </ScrollView>
     </SafeAreaView>
+  );
+};
+
+// 主组件，包装 ThemeProvider
+const ThemeTokensPlayground: React.FC = () => {
+  const [localColorPrimary, setLocalColorPrimary] = useState('#1677ff');
+  const [localFontSize, setLocalFontSize] = useState(14);
+  const [localThemeMode, setLocalThemeMode] = useState<'light' | 'dark'>('light');
+
+  // 本地主题配置，只影响当前组件树
+  const localThemeConfig = {
+    algorithm: localThemeMode === 'dark' ? darkAlgorithm : defaultAlgorithm,
+    token: {
+      colorPrimary: localColorPrimary,
+      fontSize: localFontSize,
+    },
+  };
+
+  const toggleLocalTheme = () => {
+    setLocalThemeMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeProvider theme={localThemeConfig}>
+      <ThemeTokensContent
+        localColorPrimary={localColorPrimary}
+        localFontSize={localFontSize}
+        onColorPrimaryChange={setLocalColorPrimary}
+        onFontSizeChange={setLocalFontSize}
+        onToggleTheme={toggleLocalTheme}
+      />
+    </ThemeProvider>
   );
 };
 

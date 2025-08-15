@@ -99,6 +99,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'colorswatches': {
+        router.push('/playground/components/colorswatches');
+
+        break;
+      }
       case 'theme-provider': {
         router.push('/playground/components/theme-provider');
 

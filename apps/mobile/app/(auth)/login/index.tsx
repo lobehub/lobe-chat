@@ -32,7 +32,8 @@ const LoginPage = () => {
       <View style={styles.content}>
         {/* Logo 和标题 */}
         <View style={styles.welcome}>
-          <Image source={require('../../../assets/images/icon.png')} style={styles.logo} />
+          <Image source={require('../../../assets/images/logo.png')} style={styles.logo} />
+
           <Text style={styles.title}>LobeChat</Text>
           <Text style={styles.subtitle}>{t('login.subtitle', { ns: 'auth' })}</Text>
         </View>
