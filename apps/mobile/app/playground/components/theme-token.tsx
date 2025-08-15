@@ -598,7 +598,14 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
 
   // Generate all token types
   const seedTokens: TokenInfo[] = useMemo(() => {
-    return Object.entries(seedToken).map(([name, value]) => {
+    // 使用当前主题配置生成动态的 seed token
+    const currentSeedToken = {
+      ...seedToken,
+      colorPrimary: localColorPrimary,
+      fontSize: localFontSize,
+    };
+
+    return Object.entries(currentSeedToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';
       let description = 'Seed token';
 
@@ -645,10 +652,18 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         value,
       };
     });
-  }, []);
+  }, [localColorPrimary, localFontSize]);
 
   const mapTokens: TokenInfo[] = useMemo(() => {
-    const mapToken = theme.isDark ? darkAlgorithm(seedToken) : defaultAlgorithm(seedToken);
+    // 使用当前主题配置生成动态的 map token
+    const currentSeedToken = {
+      ...seedToken,
+      colorPrimary: localColorPrimary,
+      fontSize: localFontSize,
+    };
+    const mapToken = theme.isDark
+      ? darkAlgorithm(currentSeedToken)
+      : defaultAlgorithm(currentSeedToken);
 
     return Object.entries(mapToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';
@@ -697,7 +712,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         value,
       };
     });
-  }, [theme.isDark]);
+  }, [theme.isDark, localColorPrimary, localFontSize]);
 
   const aliasTokens: TokenInfo[] = useMemo(() => {
     return Object.entries(theme.token).map(([name, value]) => {
