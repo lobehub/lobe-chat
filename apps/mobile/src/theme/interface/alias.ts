@@ -2,11 +2,19 @@ import { FontWeightType } from '../types';
 import type { MapToken } from './maps';
 
 type BoxShadow = {
-  elevation: number;
-  shadowColor: string;
-  shadowOffset: { height: number; width: number };
-  shadowOpacity: number;
-  shadowRadius: number;
+  borderBottomColor?: string;
+  borderBottomWidth?: number;
+  borderLeftColor?: string;
+  borderLeftWidth?: number;
+  borderRightColor?: string;
+  borderRightWidth?: number;
+  borderTopColor?: string;
+  borderTopWidth?: number;
+  elevation?: number;
+  shadowColor?: string;
+  shadowOffset?: { height: number; width: number };
+  shadowOpacity?: number;
+  shadowRadius?: number;
 };
 
 // ======================================================================

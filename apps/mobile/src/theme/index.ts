@@ -7,6 +7,3 @@ export { getDesignToken } from './getDesignToken';
 
 // 导出种子 Token
 export { default as seedToken } from './seed';
-
-// 导出样式创建函数
-export { createStyles } from '../components/ThemeProvider/createStyles';
