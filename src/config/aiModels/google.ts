@@ -626,8 +626,7 @@ const googleImageModels: AIImageModelCard[] = [
   },
   {
     description: 'Imagen 4th generation text-to-image model series',
-    displayName: 'Imagen4 Preview 06-06',
-    enabled: false,
+    displayName: 'Imagen 4 Preview 06-06',
     id: 'imagen-4.0-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
@@ -639,8 +638,7 @@ const googleImageModels: AIImageModelCard[] = [
   },
   {
     description: 'Imagen 4th generation text-to-image model series Ultra version',
-    displayName: 'Imagen4 Ultra Preview 06-06',
-    enabled: false,
+    displayName: 'Imagen 4 Ultra Preview 06-06',
     id: 'imagen-4.0-ultra-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
