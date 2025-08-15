@@ -24,6 +24,7 @@ export const FeatureFlagsSchema = z.object({
 
   plugins: z.boolean().optional(),
   dalle: z.boolean().optional(),
+  ai_image: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
   token_counter: z.boolean().optional(),
 
@@ -66,6 +67,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   plugins: true,
   dalle: true,
+  ai_image: true,
 
   check_updates: true,
   welcome_suggest: true,
@@ -106,6 +108,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     enablePlugins: config.plugins,
     showDalle: config.dalle,
+    showAiImage: config.ai_image,
     showChangelog: config.changelog,
 
     enableCheckUpdates: config.check_updates,
