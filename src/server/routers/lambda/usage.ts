@@ -13,8 +13,10 @@ const usageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 });
 
 export const usageRouter = router({
-    getSpendLogs: usageProcedure.query(async ({ ctx }) => {
-        return await ctx.usageModel.getSpendLogs();
+    getSpendLogs: usageProcedure.input(z.object({
+        mo: z.string().optional(),
+    })).query(async ({ ctx, input }) => {
+        return await ctx.usageModel.getSpendLogs(input.mo);
     }),
 
     getUsages: usageProcedure.input(z.object({

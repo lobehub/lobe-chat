@@ -25,8 +25,8 @@ const computeSpend = (data: UsageLog[]): {
   const yesterday = data.find((log) => dayjs(log.day).isYesterday())?.totalSpend ?? 0;
 
   return {
-    today: formatNumber(today),
-    yesterday: formatNumber(yesterday),
+    today: formatNumber(today / 1000_000),
+    yesterday: formatNumber(yesterday / 1000_000),
   }
 }
 
@@ -48,7 +48,7 @@ const TodaySpend = memo<UsageChartProps>(({ data, isLoading }) => {
               value={yesterday}
             />
           ),
-          precision: 0,
+          precision: 2,
           value: today,
           prefix: '$',
         }
