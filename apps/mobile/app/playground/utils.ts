@@ -134,6 +134,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'display',
+    description: '基于 LobeUI 重写的色板展示组件，支持完整的颜色级别、透明色和复制功能',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'ColorScales',
+    path: 'colorscales',
+    tags: ['color', 'scale', 'palette', 'design', 'theme'],
+  },
+  {
+    category: 'display',
     description: '主题 Token 展示页面，显示种子、映射和别名令牌，支持主题切换和搜索',
     hasDemos: false,
     hasReadme: false,

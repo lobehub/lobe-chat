@@ -104,6 +104,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'colorscales': {
+        router.push('/playground/components/colorscales');
+
+        break;
+      }
       case 'theme-provider': {
         router.push('/playground/components/theme-provider');
 
