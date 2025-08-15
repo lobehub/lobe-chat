@@ -533,46 +533,46 @@ const qwenChatModels: AIChatModelCard[] = [
       units: [
         {
           lookup: {
-            pricingParams: ["textInputRange"],
             prices: {
-              "[0, 128_000]": 0.8 * 0.4,
-              "[128_000, 256_000]": 2.4 * 0.4,
-              "[256_000, infinity]": 4.8 * 0.4,
-            }
+              '[0, 128_000]': 0.8 * 0.4,
+              '[128_000, 256_000]': 2.4 * 0.4,
+              '[256_000, infinity]': 4.8 * 0.4,
+            },
+            pricingParams: ['textInputRange'],
           },
-          name: "textInput_cacheRead",
-          strategy: "lookup",
-          unit: "millionTokens",
+          name: 'textInput_cacheRead',
+          strategy: 'lookup',
+          unit: 'millionTokens',
         },
         {
           lookup: {
-            pricingParams: ["textInputRange"],
             prices: {
-              "[0, 128_000]": 0.8,
-              "[128_000, 256_000]": 2.4,
-              "[256_000, infinity]": 4.8,
-            }
+              '[0, 128_000]': 0.8,
+              '[128_000, 256_000]': 2.4,
+              '[256_000, infinity]': 4.8,
+            },
+            pricingParams: ['textInputRange'],
           },
-          name: "textInput",
-          strategy: "lookup",
-          unit: "millionTokens",
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
         },
         {
           lookup: {
-            pricingParams: ["textInputRange", "thinkingMode"],
             prices: {
-              "[0, 128_000]_[true]": 8,
-              "[128_000, 256_000]_[true]": 24,
-              "[256_000, infinity]_[true]": 64,
+              '[0, 128_000]_[false]': 2,
+              '[0, 128_000]_[true]': 8,
+              '[128_000, 256_000]_[false]': 20,
 
-              "[0, 128_000]_[false]": 2,
-              "[128_000, 256_000]_[false]": 20,
-              "[256_000, infinity]_[false]": 48,
-            }
+              '[128_000, 256_000]_[true]': 24,
+              '[256_000, infinity]_[false]': 48,
+              '[256_000, infinity]_[true]': 64,
+            },
+            pricingParams: ['textInputRange', 'thinkingMode'],
           },
-          name: "textOutput",
-          strategy: "lookup",
-          unit: "millionTokens",
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
         },
       ],
     },
@@ -1352,14 +1352,14 @@ const qwenImageModels: AIImageModelCard[] = [
     id: 'qwen-image',
     organization: 'Qwen',
     parameters: {
-      size: {
-        default: '1328*1328',
-        enum: ['1664*928', '1472*1140', '1328*1328', '1140*1472', '928*1664'],
-      },
       prompt: {
         default: '',
       },
       seed: { default: null },
+      size: {
+        default: '1328*1328',
+        enum: ['1664*928', '1472*1140', '1328*1328', '1140*1472', '928*1664'],
+      },
     },
     pricing: {
       currency: 'CNY',
