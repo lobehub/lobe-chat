@@ -12,6 +12,7 @@ import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import DeepSeekProvider from './deepseek';
+import FeatherlessAIProvider from './featherlessai';
 import FalProvider from './fal';
 import FireworksAIProvider from './fireworksai';
 import GiteeAIProvider from './giteeai';
@@ -79,6 +80,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   XinferenceProvider.chatModels,
   OpenRouterProvider.chatModels,
   TogetherAIProvider.chatModels,
+  FeatherlessAIProvider.chatModels,
   FireworksAIProvider.chatModels,
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
@@ -137,6 +139,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
+  FeatherlessAIProvider,
   GroqProvider,
   PerplexityProvider,
   MistralProvider,
@@ -194,6 +197,7 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as DeepSeekProviderCard } from './deepseek';
+export { default as FeatherlessAIProviderCard } from './featherlessai';
 export { default as FalProviderCard } from './fal';
 export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GiteeAIProviderCard } from './giteeai';
