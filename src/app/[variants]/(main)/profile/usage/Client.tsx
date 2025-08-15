@@ -13,9 +13,8 @@ import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';
 
 import Welcome from '../stats/features/Welcome';
-import UsageCategories from './features/UsageCategories';
 import UsageTrends from './features/UsageTrends';
-import UsageCards from './UsageCards';
+import UsageCards from './features/UsageCards';
 
 export interface UsageChartProps {
   data?: UsageLog[];
@@ -96,13 +95,12 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
       <Flexbox>
         <Row gutter={[16, 16]}>
-            <Col span={16}>
+            <Col span={24}>
               {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
             </Col>
         </Row>
       </Flexbox>
       <Row>
-        <UsageCategories data={data} />
       </Row>
     </Flexbox>
   );
