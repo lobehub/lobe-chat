@@ -26,10 +26,26 @@ export class UsageModel {
     return result;
   };
 
-  getSpendLogs = async () => {
+  getSpendLogs = async (mo?: string) => {
+    // 设置 startAt 和 endAt
+    let startAt: string;
+    let endAt: string;
+    if (mo) {
+      // mo 格式: "YYYY-MM"
+      startAt = dayjs(mo, 'YYYY-MM').startOf('month').format('YYYY-MM-DD');
+      endAt = dayjs(mo, 'YYYY-MM').endOf('month').format('YYYY-MM-DD');
+    } else {
+      startAt = dayjs().startOf('month').format('YYYY-MM-DD');
+      endAt = dayjs().endOf('month').format('YYYY-MM-DD');
+    }
     return await this.db.query.spendLogs.findMany({
       orderBy: asc(spendLogs.updatedAt),
-      where: eq(spendLogs.userId, this.userId),
+      where: and(
+        genWhere([
+          eq(spendLogs.userId, this.userId),
+          genRangeWhere([startAt, endAt], spendLogs.createdAt, (date) => date.toDate())
+        ])
+      ),
     });
   };
 
@@ -45,7 +61,6 @@ export class UsageModel {
       startAt = dayjs().startOf('month').format('YYYY-MM-DD');
       endAt = dayjs().endOf('month').format('YYYY-MM-DD');
     }
-    console.log('getUsages', 'mo', mo, 'startAt', startAt, 'endAt', endAt);
     const spends = await this.db.query.spendLogs.findMany({
       orderBy: desc(spendLogs.updatedAt),
       where: and(

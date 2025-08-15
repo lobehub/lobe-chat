@@ -15,6 +15,7 @@ import { usageService } from '@/services/usage';
 import Welcome from '../stats/features/Welcome';
 import UsageTrends from './features/UsageTrends';
 import UsageCards from './features/UsageCards';
+import UsageTable from './features/UsageTable';
 
 export interface UsageChartProps {
   data?: UsageLog[];
@@ -22,6 +23,7 @@ export interface UsageChartProps {
   inShare?: boolean;
   isLoading?: boolean;
   mobile?: boolean;
+  dateStrings?: string;
 }
 
 export enum GroupBy {
@@ -37,7 +39,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [dateRange, setDateRange] = useState<dayjs.Dayjs>(dayjs(new Date()));
   const [dateStrings, setDateStrings] = useState<string>();
 
-  const { data, isLoading, mutate } = useClientDataSWR('stats-heatmaps', async () =>
+  const { data, isLoading, mutate } = useClientDataSWR('usage-stat', async () =>
     usageService.getUsages(dateStrings),
   );
 
@@ -91,16 +93,19 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         </Row>
       </Flexbox>
       <Flexbox>
-        {data && <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />}
+        <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />
       </Flexbox>
       <Flexbox>
         <Row gutter={[16, 16]}>
-            <Col span={24}>
-              {data && <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />}
-            </Col>
+          <Col span={24}>
+            <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />
+          </Col>
         </Row>
       </Flexbox>
       <Row>
+        <Col span={24}>
+          <UsageTable dateStrings={dateStrings} />
+        </Col>
       </Row>
     </Flexbox>
   );

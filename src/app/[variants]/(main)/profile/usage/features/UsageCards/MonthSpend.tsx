@@ -25,7 +25,7 @@ const computeMonth = (data: UsageLog[]): {
   const calls = data.reduce((acc, log) => acc + (log.requestLogs.length || 0), 0);
 
   return {
-    spend: formatNumber(spend),
+    spend: formatNumber(spend / 1000_000),
     calls: formatNumber(calls),
   }
 }
@@ -48,7 +48,7 @@ const MonthSpend = memo<UsageChartProps>(({ data, isLoading }) => {
               value={calls}
             />
           ),
-          precision: 0,
+          precision: 2,
           value: spend,
           prefix: '$',
         }
