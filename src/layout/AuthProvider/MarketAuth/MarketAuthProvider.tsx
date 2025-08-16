@@ -62,16 +62,20 @@ const refreshToken = async (): Promise<boolean> => {
 export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   const [session, setSession] = useState<MarketAuthSession | null>(null);
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
+  const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
 
-  // OIDC 配置
-  const oidcConfig: OIDCConfig = {
-    baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787',
-    clientId: 'lobehub-desktop-web',
-    redirectUri: `${window.location.origin}/market-auth-callback`,
-    scope: 'openid profile email',
-  };
-
-  const oidcClient = new MarketOIDC(oidcConfig);
+  // 初始化 OIDC 客户端（仅在客户端）
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const oidcConfig: OIDCConfig = {
+        baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787',
+        clientId: 'lobehub-desktop-web',
+        redirectUri: `${window.location.origin}/market-auth-callback`,
+        scope: 'openid profile email',
+      };
+      setOidcClient(new MarketOIDC(oidcConfig));
+    }
+  }, []);
 
   /**
    * 检查并恢复会话
@@ -115,6 +119,12 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
    */
   const signIn = async (): Promise<void> => {
     console.log('[MarketAuth] Starting sign in process');
+    
+    if (!oidcClient) {
+      console.error('[MarketAuth] OIDC client not initialized');
+      throw new Error('OIDC client not initialized');
+    }
+
     try {
       setStatus('loading');
 

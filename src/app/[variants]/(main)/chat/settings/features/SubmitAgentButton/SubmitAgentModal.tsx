@@ -8,6 +8,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { message } from '@/components/AntdStaticMethods';
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { marketApiService } from '@/services/marketApi';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -22,6 +25,12 @@ interface FormValues {
 const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('setting');
 
+  // Market auth
+  const { session: marketSession, isAuthenticated } = useMarketAuth();
+
+  // Session store actions
+  const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
+
   // 获取所有配置数据
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
@@ -35,80 +44,120 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases);
   const files = useAgentStore(agentSelectors.currentAgentFiles);
 
-  // 构建完整的配置数据
-  const getCompleteAgentData = (identifier: string) => {
-    return {
-      // 聊天偏好
-      chatConfig: {
-        displayMode: chatConfig?.displayMode,
-        enableHistoryCount: chatConfig?.enableHistoryCount,
-        historyCount: chatConfig?.historyCount,
-        maxTokens: agentConfig?.params?.max_tokens,
-        searchMode: chatConfig?.searchMode,
-        temperature: agentConfig?.params?.temperature,
-        topP: agentConfig?.params?.top_p,
-      },
-
-      // 基础信息
-      identifier,
-
-      // 知识库
-      knowledge: {
-        files: files?.map((file) => ({
-          enabled: file.enabled,
-          id: file.id,
-          name: file.name,
-          type: file.type,
-        })),
-        knowledgeBases: knowledgeBases?.map((kb) => ({
-          enabled: kb.enabled,
-          id: kb.id,
-          name: kb.name,
-        })),
-      },
-
-      // 其他配置
-      locale: language,
-
-      meta: {
-        avatar: meta?.avatar,
-        description: meta?.description,
-        tags: meta?.tags,
-        title: meta?.title,
-      },
-      // 模型设置
-      model: {
-        model,
-        parameters: agentConfig?.params,
-        provider,
-      },
-      // 插件设置
-      plugins: plugins?.map((plugin) => ({
-        enabled: false,
-        identifier: plugin,
-        name: plugin,
-        settings: {},
-      })),
-      // 角色设定
-      systemRole,
-      // 语音服务
-      tts: {
-        ttsService: ttsConfig?.ttsService,
-        voice: ttsConfig?.voice,
-      },
-    };
-  };
 
   const handleSubmit = async (values: FormValues) => {
-    const agentData = getCompleteAgentData(values.identifier);
-    console.log('Complete Agent Data:', JSON.stringify(agentData, null, 2));
-    console.log('Agent Data Object:', agentData);
-    console.log('Form Values:', values);
+    if (!isAuthenticated || !marketSession?.accessToken) {
+      message.error('请先登录市场账户');
+      return false;
+    }
 
-    // 这里可以添加实际的API调用
-    // await submitAgent(agentData);
+    try {
+      message.loading({ content: '正在发布助手...', key: 'submit' });
 
-    return true; // 返回 true 表示提交成功，会自动关闭 Modal
+      // Set access token for API calls
+      marketApiService.setAccessToken(marketSession.accessToken);
+
+      // Step 1: Create agent
+      console.log('Step 1: Creating agent...');
+      const agentCreateData = {
+        identifier: values.identifier,
+        name: meta?.title || '未命名助手',
+        status: 'published' as const,
+        visibility: 'public' as const,
+      };
+
+      const agentResult = await marketApiService.createAgent(agentCreateData);
+      console.log('Agent created:', agentResult);
+
+      // Step 2: Create agent version with all configuration data
+      console.log('Step 2: Creating agent version...');
+      // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+      const versionData = {
+        a2aProtocolVersion: '1.0.0',
+        avatar: meta?.avatar,
+        category: meta?.tags?.[0] || 'general',
+        changelog: '首次发布',
+        config: {
+
+          // Chat configuration
+          chatConfig: {
+            displayMode: chatConfig?.displayMode,
+            enableHistoryCount: chatConfig?.enableHistoryCount,
+            historyCount: chatConfig?.historyCount,
+            maxTokens: agentConfig?.params?.max_tokens,
+            searchMode: chatConfig?.searchMode,
+            temperature: agentConfig?.params?.temperature,
+            topP: agentConfig?.params?.top_p,
+          },
+          
+          description: meta?.description,
+
+          // Files
+          files: files?.map((file) => ({
+            enabled: file.enabled,
+            id: file.id,
+            name: file.name,
+            type: file.type,
+          })) || [],
+
+          // Knowledge bases
+          knowledgeBases: knowledgeBases?.map((kb) => ({
+            enabled: kb.enabled,
+            id: kb.id,
+            name: kb.name,
+          })) || [],
+
+          // Language
+          locale: language,
+
+          // Model configuration
+          model: {
+            model,
+            parameters: agentConfig?.params,
+            provider,
+          },
+
+          // Plugins
+          plugins: plugins?.map((plugin) => ({
+            enabled: true,
+            identifier: plugin,
+            settings: {},
+          })) || [],
+
+          // System role and description
+          systemRole: systemRole || '你是一个有用的助手。',
+          // TTS configuration
+          tts: {
+            ttsService: ttsConfig?.ttsService,
+            voice: ttsConfig?.voice,
+          },
+        },
+        defaultInputModes: ['text'],
+        defaultOutputModes: ['text'],
+        description: meta?.description || '',
+        identifier: values.identifier,
+        name: meta?.title || '未命名助手',
+        setAsCurrent: true,
+        summary: meta?.description || systemRole?.slice(0, 100),
+      };
+
+      const versionResult = await marketApiService.createAgentVersion(versionData);
+      console.log('Version created:', versionResult);
+
+      // Step 3: Update session meta with market identifier
+      updateSessionMeta({
+        marketIdentifier: values.identifier,
+      });
+
+      message.success({ content: '助手发布成功！', key: 'submit' });
+      return true; // 返回 true 表示提交成功，会自动关闭 Modal
+
+    } catch (error) {
+      console.error('Submit agent failed:', error);
+      const errorMessage = error instanceof Error ? error.message : '发布失败';
+      message.error({ content: `发布失败: ${errorMessage}`, key: 'submit' });
+      return false;
+    }
   };
 
   return (
