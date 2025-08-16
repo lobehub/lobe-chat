@@ -4,7 +4,6 @@ import urlJoin from 'url-join';
 import { withBasePath } from '@/utils/basePath';
 import { isDev } from '@/utils/env';
 
-import pkg from '../../package.json';
 import { INBOX_SESSION_ID } from './session';
 
 export const UTM_SOURCE = 'chat_preview';
@@ -15,7 +14,7 @@ export const OFFICIAL_SITE = 'https://lobehub.com';
 
 export const OG_URL = '/og/cover.png?v=1';
 
-export const GITHUB = pkg.homepage;
+export const GITHUB = 'https://github.com/lobehub/lobe-chat';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
 export const CHANGELOG = 'https://lobehub.com/changelog';
 export const DOCKER_IMAGE = 'https://hub.docker.com/r/lobehub/lobe-chat';
@@ -36,7 +35,7 @@ export const MANUAL_UPGRADE_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/ups
 export const BLOG = urlJoin(OFFICIAL_SITE, 'blog');
 
 export const ABOUT = OFFICIAL_SITE;
-export const FEEDBACK = pkg.bugs.url;
+export const FEEDBACK = 'https://github.com/lobehub/lobe-chat/issues/new/choose';
 export const PRIVACY_URL = urlJoin(OFFICIAL_SITE, '/privacy');
 export const TERMS_URL = urlJoin(OFFICIAL_SITE, '/terms');
 

@@ -1,5 +1,19 @@
 [
   {
+    "children": {
+      "improvements": ["重构 ArgsInput 组件."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Imagen 4 GA models, style improve auth sign in box loading."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.1"
+  },
+  {
     "children": {},
     "date": "2025-08-15",
     "version": "1.112.0"
