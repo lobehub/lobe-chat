@@ -198,7 +198,7 @@ export async function createBflImage(
     throw AgentRuntimeError.createImage({
       error: new Error(`Unsupported BFL model: ${model}`),
       errorType: AgentRuntimeErrorType.ModelNotFound,
-      provider: 'bfl',
+      provider: options.provider,
     });
   }
 
