@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
+      '@/const': resolve(__dirname, './packages/const/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@': resolve(__dirname, './src'),
       /* eslint-enable */

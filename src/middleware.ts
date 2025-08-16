@@ -5,6 +5,7 @@ import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
+import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
@@ -14,7 +15,6 @@ import { parseBrowserLanguage } from '@/utils/locale';
 import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
-import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
 
 // Create debug logger instances
