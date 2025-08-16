@@ -172,7 +172,6 @@ export const getLLMConfig = () => {
       ENABLED_V0: z.boolean(),
       V0_API_KEY: z.string().optional(),
 
-
       ENABLED_AI302: z.boolean(),
       AI302_API_KEY: z.string().optional(),
 

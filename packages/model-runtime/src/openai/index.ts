@@ -85,9 +85,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           tools: openaiTools as any,
           // computer-use series must set truncation as auto
           ...(model.startsWith('computer-use') && { truncation: 'auto' }),
-          text: verbosity
-            ? { verbosity }
-            : undefined,
+          text: verbosity ? { verbosity } : undefined,
         }) as any;
       }
 
