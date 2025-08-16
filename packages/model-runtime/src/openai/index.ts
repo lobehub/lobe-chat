@@ -11,6 +11,16 @@ export interface OpenAIModelCard {
 
 const prunePrefixes = ['o1', 'o3', 'o4', 'codex', 'computer-use', 'gpt-5'];
 const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
+const enableServiceTierFlex = process.env.OPENAI_SERVICE_TIER_FLEX === '1';
+const flexSupportedModels = ['gpt-5', 'o3', 'o4-mini']; // Flex 处理仅适用于这些模型
+
+const supportsFlexTier = (model: string) => {
+  // 排除 o3-mini，其不支持 Flex 处理
+  if (model.startsWith('o3-mini')) {
+    return false;
+  }
+  return flexSupportedModels.some(supportedModel => model.startsWith(supportedModel));
+};
 
 export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
@@ -32,6 +42,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           frequency_penalty: undefined,
           model,
           presence_penalty: undefined,
+          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           stream: payload.stream ?? true,
           temperature: undefined,
           top_p: undefined,
@@ -43,7 +54,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         } as any;
       }
 
-      return { ...rest, model, stream: payload.stream ?? true };
+      return { ...rest, model, ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }), stream: payload.stream ?? true };
     },
   },
   debug: {
@@ -81,6 +92,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           reasoning: payload.reasoning
             ? { ...payload.reasoning, summary: 'auto' }
             : { summary: 'auto' },
+          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           stream: payload.stream ?? true,
           tools: openaiTools as any,
           // computer-use series must set truncation as auto
@@ -91,7 +103,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         }) as any;
       }
 
-      return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;
+      return { ...rest, model, ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }), stream: payload.stream ?? true, tools: openaiTools } as any;
     },
   },
 });
