@@ -38,7 +38,22 @@ const getBaseChatsByKey =
     return messages.map((i) => ({ ...i, meta: getMeta(i) }));
   };
 
+/**
+ * Get chat key for a specific session ID
+ */
+const getChatKeyForSession = (sessionId: string, topicId?: string | null) => 
+  messageMapKey(sessionId, topicId);
+
 const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
+
+/**
+ * Get raw message list for a specific session ID
+ */
+const getSessionChats = (sessionId: string, topicId?: string | null) => (s: ChatStoreState): ChatMessage[] => {
+  if (!sessionId) return [];
+
+  return getBaseChatsByKey(getChatKeyForSession(sessionId, topicId))(s);
+};
 
 /**
  * Current active raw message list, include thread messages
@@ -188,6 +203,18 @@ const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
 const isAIGenerating = (s: ChatStoreState) =>
   s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
+/**
+ * Check if AI is generating a response for a specific session
+ */
+const isSessionAIGenerating = (sessionId: string) => (s: ChatStoreState) => {
+  // Get chat IDs for this specific session
+  const sessionChats = getSessionChats(sessionId)(s);
+  const sessionChatIds = sessionChats.map(chat => chat.id);
+  
+  // Check if any of the loading messages belong to this session
+  return s.chatLoadingIds.some((id) => sessionChatIds.includes(id));
+};
+
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -223,6 +250,8 @@ export const chatSelectors = {
   currentToolMessages,
   currentUserFiles,
   getBaseChatsByKey,
+  getChatKeyForSession,
+  getSessionChats,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
@@ -238,6 +267,7 @@ export const chatSelectors = {
   isMessageInRAGFlow,
   isMessageLoading,
   isPluginApiInvoking,
+  isSessionAIGenerating,
   isSendButtonDisabledByMessage,
   isToolCallStreaming,
   latestMessage,

@@ -25,6 +25,8 @@ export default {
   defaultAgent: '自定义助手',
   defaultList: '默认列表',
   defaultSession: '自定义助手',
+  parallelChat: '并行聊天',
+  parallelChats: '个并行聊天',
   duplicateSession: {
     loading: '复制中...',
     success: '复制成功',

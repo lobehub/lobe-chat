@@ -18,6 +18,11 @@ export interface SendMessageParams {
   isWelcomeQuestion?: boolean;
   message: string;
   onlyAddUserMessage?: boolean;
+  /**
+   * The session ID to send this message to
+   * If not provided, defaults to the active session
+   */
+  sessionId?: string;
 }
 
 export interface SendThreadMessageParams {
