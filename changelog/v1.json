@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor const folder to a new package."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.3"
+  },
+  {
+    "children": {
       "improvements": ["重构 ArgsInput 组件."]
     },
     "date": "2025-08-16",
