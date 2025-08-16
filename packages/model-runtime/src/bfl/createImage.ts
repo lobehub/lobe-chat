@@ -210,7 +210,7 @@ export async function createBflImage(
     const taskResponse = await submitTask(model as BflModelId, requestPayload, options);
 
     // 3. Poll task status until completion using asyncifyPolling
-    const result = await asyncifyPolling<BflResultResponse, CreateImageResponse>({
+    return await asyncifyPolling<BflResultResponse, CreateImageResponse>({
       checkStatus: (taskStatus: BflResultResponse): TaskResult<CreateImageResponse> => {
         log('Task %s status: %s', taskResponse.id, taskStatus.status);
 
@@ -267,8 +267,6 @@ export async function createBflImage(
       },
       pollingQuery: () => queryTaskStatus(taskResponse.polling_url, options),
     });
-
-    return result;
   } catch (error) {
     log('Error in createBflImage: %O', error);
 
