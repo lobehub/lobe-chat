@@ -17,6 +17,7 @@ import {
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
+  ChatVideoItem,
   CreateMessageParams,
   MessageItem,
   ModelRankItem,
@@ -179,7 +180,10 @@ export class MessageModel {
     }
 
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
-    const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
+    const videoList = relatedFileList.filter((i) => (i.fileType || '').startsWith('video'));
+    const fileList = relatedFileList.filter(
+      (i) => !(i.fileType || '').startsWith('image') && !(i.fileType || '').startsWith('video'),
+    );
 
     // 3. get relative file chunks
     const chunksList = await this.db
@@ -255,6 +259,10 @@ export class MessageModel {
           ragQuery: messageQuery?.rewriteQuery,
           ragQueryId: messageQuery?.id,
           ragRawQuery: messageQuery?.userQuery,
+          videoList: videoList
+            .filter((relation) => relation.messageId === item.id)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
         } as unknown as ChatMessage;
       },
     );

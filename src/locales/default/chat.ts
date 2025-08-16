@@ -273,6 +273,7 @@ export default {
       actionFiletip: '上传文件',
       actionTooltip: '上传',
       disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+      fileNotSupported: '浏览器模式下暂不支持上传文件，仅支持图片',
     },
     preview: {
       prepareTasks: '准备分块...',

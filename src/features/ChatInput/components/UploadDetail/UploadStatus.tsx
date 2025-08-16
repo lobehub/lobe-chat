@@ -38,7 +38,7 @@ const UploadStatus = memo<UploadStateProps>(({ status, size, uploadState }) => {
         <Flexbox align={'center'} gap={4} horizontal>
           <Progress percent={uploadState?.progress} size={14} type="circle" />
           <Text style={{ fontSize: 12 }} type={'secondary'}>
-            {formatSize(size * ((uploadState?.progress || 0) / 100), 0)} / {formatSize(size)}
+            {formatSize(size * ((uploadState?.progress || 0) / 100), 0)}
           </Text>
         </Flexbox>
       );

@@ -4,6 +4,7 @@ export * from './base';
 export * from './chat';
 export * from './image';
 export * from './tools';
+export * from './video';
 
 export interface SendMessageParams {
   /**

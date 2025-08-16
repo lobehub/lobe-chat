@@ -61,7 +61,8 @@ const FileUpload = memo(() => {
       label: (
         <Upload
           beforeUpload={async (file) => {
-            if (!canUploadImage && file.type.startsWith('image')) return false;
+            if (!canUploadImage && (file.type.startsWith('image') || file.type.startsWith('video')))
+              return false;
 
             await upload([file]);
 
@@ -80,7 +81,8 @@ const FileUpload = memo(() => {
       label: (
         <Upload
           beforeUpload={async (file) => {
-            if (!canUploadImage && file.type.startsWith('image')) return false;
+            if (!canUploadImage && (file.type.startsWith('image') || file.type.startsWith('video')))
+              return false;
 
             await upload([file]);
 

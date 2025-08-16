@@ -43,6 +43,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports video
+   */
+  video?: boolean;
+  /**
    *  whether model supports vision
    */
   vision?: boolean;

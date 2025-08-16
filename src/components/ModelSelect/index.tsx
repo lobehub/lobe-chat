@@ -9,6 +9,7 @@ import {
   LucideImage,
   LucidePaperclip,
   ToyBrick,
+  Video,
 } from 'lucide-react';
 import numeral from 'numeral';
 import { FC, memo } from 'react';
@@ -96,6 +97,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           >
             <Tag className={styles.tag} color={'success'} size={'small'}>
               <Icon icon={LucideEye} />
+            </Tag>
+          </Tooltip>
+        )}
+        {model.video && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.video')}
+          >
+            <Tag className={styles.tag} color={'magenta'} size={'small'}>
+              <Icon icon={Video} />
             </Tag>
           </Tooltip>
         )}
