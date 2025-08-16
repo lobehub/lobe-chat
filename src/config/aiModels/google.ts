@@ -587,8 +587,46 @@ const imagenBaseParameters: ModelParamsSchema = {
 const googleImageModels: AIImageModelCard[] = [
   {
     description: 'Imagen 4th generation text-to-image model series',
-    displayName: 'Imagen4 Preview 06-06',
+    displayName: 'Imagen 4',
     enabled: true,
+    id: 'imagen-4.0-generate-001',
+    organization: 'Deepmind',
+    parameters: imagenBaseParameters,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2024-08-14',
+    type: 'image',
+  },
+  {
+    description: 'Imagen 4th generation text-to-image model series Ultra version',
+    displayName: 'Imagen 4 Ultra',
+    enabled: true,
+    id: 'imagen-4.0-ultra-generate-001',
+    organization: 'Deepmind',
+    parameters: imagenBaseParameters,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2024-08-14',
+    type: 'image',
+  },
+  {
+    description: 'Imagen 4th generation text-to-image model series Fast version',
+    displayName: 'Imagen 4 Fast',
+    enabled: true,
+    id: 'imagen-4.0-fast-generate-001',
+    organization: 'Deepmind',
+    parameters: imagenBaseParameters,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2024-08-14',
+    type: 'image',
+  },
+  {
+    description: 'Imagen 4th generation text-to-image model series',
+    displayName: 'Imagen 4 Preview 06-06',
     id: 'imagen-4.0-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
@@ -600,8 +638,7 @@ const googleImageModels: AIImageModelCard[] = [
   },
   {
     description: 'Imagen 4th generation text-to-image model series Ultra version',
-    displayName: 'Imagen4 Ultra Preview 06-06',
-    enabled: true,
+    displayName: 'Imagen 4 Ultra Preview 06-06',
     id: 'imagen-4.0-ultra-generate-preview-06-06',
     organization: 'Deepmind',
     parameters: imagenBaseParameters,
