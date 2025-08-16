@@ -213,7 +213,8 @@ export type ExtendParamsType =
   | 'gpt5ReasoningEffort'
   | 'textVerbosity'
   | 'thinking'
-  | 'thinkingBudget';
+  | 'thinkingBudget'
+  | 'urlContext';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];

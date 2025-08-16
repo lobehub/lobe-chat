@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Deep Thinking Switch"
     },
-    "title": "Model Extension Features"
+    "title": "Model Extension Features",
+    "urlContext": {
+      "desc": "When enabled, the URL will be automatically parsed to retrieve the webpage's contextual content.",
+      "title": "URL Context Extraction"
+    }
   },
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
