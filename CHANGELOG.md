@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.112.4](https://github.com/lobehub/lobe-chat/compare/v1.112.3...v1.112.4)
+
+<sup>Released on **2025-08-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor prompts folder to the `@lobechat/prompts` pacakge.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor prompts folder to the `@lobechat/prompts` pacakge, closes [#8810](https://github.com/lobehub/lobe-chat/issues/8810) ([d82e7bb](https://github.com/lobehub/lobe-chat/commit/d82e7bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.112.3](https://github.com/lobehub/lobe-chat/compare/v1.112.2...v1.112.3)
 
 <sup>Released on **2025-08-16**</sup>

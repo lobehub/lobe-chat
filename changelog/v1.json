@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.4"
+  },
+  {
+    "children": {
       "improvements": ["Refactor const folder to a new package."]
     },
     "date": "2025-08-16",
