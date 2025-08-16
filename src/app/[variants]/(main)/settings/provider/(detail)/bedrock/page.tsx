@@ -29,6 +29,19 @@ const useBedrockCard = (): ProviderItem => {
         ) : (
           <FormPassword
             autoComplete={'new-password'}
+            placeholder={t(`${providerKey}.bearerToken.placeholder`)}
+          />
+        ),
+        desc: t(`${providerKey}.bearerToken.desc`),
+        label: t(`${providerKey}.bearerToken.title`),
+        name: [KeyVaultsConfigKey, 'bearerToken'],
+      },
+      {
+        children: isLoading ? (
+          <SkeletonInput />
+        ) : (
+          <FormPassword
+            autoComplete={'new-password'}
             placeholder={t(`${providerKey}.accessKeyId.placeholder`)}
           />
         ),
