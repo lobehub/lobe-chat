@@ -197,7 +197,7 @@ export async function createBflImage(
   if (!BFL_ENDPOINTS[model as BflModelId]) {
     throw AgentRuntimeError.createImage({
       error: new Error(`Unsupported BFL model: ${model}`),
-      errorType: AgentRuntimeErrorType.ProviderBizError,
+      errorType: AgentRuntimeErrorType.ModelNotFound,
       provider: 'bfl',
     });
   }

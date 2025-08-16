@@ -474,7 +474,7 @@ describe('createBflImage', () => {
         error: expect.objectContaining({
           message: 'Unsupported BFL model: unsupported-model',
         }),
-        errorType: 'ProviderBizError',
+        errorType: 'ModelNotFound',
         provider: 'bfl',
       });
     });
