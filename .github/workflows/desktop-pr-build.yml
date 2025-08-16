@@ -1,7 +1,7 @@
 name: Desktop PR Build
 
 on:
-  pull_request:
+  pull_request_target:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
 # 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
