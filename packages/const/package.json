@@ -2,16 +2,5 @@
   "name": "@lobechat/const",
   "version": "1.0.0",
   "private": true,
-  "exports": {
-    "./*": {
-      "types": [
-        "./src/*.ts",
-        "./src/*/index.ts"
-      ],
-      "default": [
-        "./src/*.ts",
-        "./src/*/index.ts"
-      ]
-    }
-  }
+  "main": "./src/index.ts"
 }
