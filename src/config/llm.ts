@@ -166,12 +166,14 @@ export const getLLMConfig = () => {
       ENABLED_FAL: z.boolean(),
       FAL_API_KEY: z.string().optional(),
 
+      ENABLED_BFL: z.boolean(),
+      BFL_API_KEY: z.string().optional(),
+
       ENABLED_MODELSCOPE: z.boolean(),
       MODELSCOPE_API_KEY: z.string().optional(),
 
       ENABLED_V0: z.boolean(),
       V0_API_KEY: z.string().optional(),
-
 
       ENABLED_AI302: z.boolean(),
       AI302_API_KEY: z.string().optional(),
@@ -341,6 +343,9 @@ export const getLLMConfig = () => {
 
       ENABLED_FAL: process.env.ENABLED_FAL !== '0',
       FAL_API_KEY: process.env.FAL_API_KEY,
+
+      ENABLED_BFL: !!process.env.BFL_API_KEY,
+      BFL_API_KEY: process.env.BFL_API_KEY,
 
       ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
       MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,

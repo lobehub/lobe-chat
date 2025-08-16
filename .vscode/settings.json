@@ -68,7 +68,7 @@
         "**/src/config/modelProviders/*.ts": "${filename} • provider",
         "**/src/config/aiModels/*.ts": "${filename} • model",
         "**/src/config/paramsSchemas/*/*.json": "${dirname(1)}/${filename} • params",
-        "**/src/libs/model-runtime/*/index.ts": "${dirname} • runtime",
+        "**/packages/model-runtime/src/*/index.ts": "${dirname} • runtime",
         
         "**/src/server/services/*/index.ts": "${dirname} • server/service",
         "**/src/server/routers/lambda/*.ts": "${filename} • lambda",

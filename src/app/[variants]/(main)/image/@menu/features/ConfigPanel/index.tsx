@@ -46,7 +46,7 @@ const ConfigPanel = memo(() => {
   const { showDimensionControl } = useDimensionControl();
 
   return (
-    <Flexbox gap={32} padding={12}>
+    <Flexbox gap={32} padding={12} style={{ overflow: 'auto' }}>
       <ConfigItemLayout>
         <ModelSelect />
       </ConfigItemLayout>
