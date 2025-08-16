@@ -9,6 +9,7 @@ import { isServerMode } from '@/const/version';
 import * as schema from '@/database/schemas';
 
 import { LobeChatDatabase } from '../type';
+import { getDrizzleCache } from './cache';
 
 export const getDBInstance = (): LobeChatDatabase => {
   if (!isServerMode) return {} as any;
@@ -30,7 +31,9 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
 
   if (serverDBEnv.DATABASE_DRIVER === 'node') {
     const client = new NodePool({ connectionString });
-    return nodeDrizzle(client, { schema });
+    const cache = getDrizzleCache();
+    const options = cache ? { cache, schema } : { schema };
+    return nodeDrizzle(client, options as any);
   }
 
   if (process.env.MIGRATION_DB === '1') {
@@ -39,5 +42,7 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
   }
 
   const client = new NeonPool({ connectionString });
-  return neonDrizzle(client, { schema });
+  const cache = getDrizzleCache();
+  const options = cache ? { cache, schema } : { schema };
+  return neonDrizzle(client, options as any);
 };
