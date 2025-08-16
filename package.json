@@ -150,7 +150,7 @@
     "@lobehub/charts": "^2.0.0",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
-    "@lobehub/icons": "^2.25.0",
+    "@lobehub/icons": "^2.27.1",
     "@lobehub/market-sdk": "^0.22.7",
     "@lobehub/tts": "^2.0.1",
     "@lobehub/ui": "^2.8.3",
