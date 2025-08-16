@@ -66,6 +66,13 @@ export const LobeAiHubMixAI = createRouterRuntime({
       options: { baseURL: urlJoin(baseURL, '/gemini') },
     },
     {
+      apiType: 'xai',
+      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
+        (id) => detectModelProvider(id) === 'xai',
+      ),
+      options: { baseURL: urlJoin(baseURL, '/v1') },
+    },
+    {
       apiType: 'openai',
       options: {
         baseURL: urlJoin(baseURL, '/v1'),
