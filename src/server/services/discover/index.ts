@@ -43,7 +43,11 @@ import {
   ProviderQueryParams,
   ProviderSorts,
 } from '@/types/discover';
-import { getAudioInputUnitRate, getTextInputUnitRate, getTextOutputUnitRate } from '@/utils/pricing';
+import {
+  getAudioInputUnitRate,
+  getTextInputUnitRate,
+  getTextOutputUnitRate,
+} from '@/utils/pricing';
 
 const log = debug('lobe-server:discover');
 
@@ -1158,9 +1162,13 @@ export class DiscoverService {
         case ModelSorts.OutputPrice: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return (getTextOutputUnitRate(a.pricing) || 0) - (getTextOutputUnitRate(b.pricing) || 0);
+              return (
+                (getTextOutputUnitRate(a.pricing) || 0) - (getTextOutputUnitRate(b.pricing) || 0)
+              );
             } else {
-              return (getTextOutputUnitRate(b.pricing) || 0) - (getTextOutputUnitRate(a.pricing) || 0);
+              return (
+                (getTextOutputUnitRate(b.pricing) || 0) - (getTextOutputUnitRate(a.pricing) || 0)
+              );
             }
           });
           break;
