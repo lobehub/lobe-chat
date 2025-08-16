@@ -1,6 +1,5 @@
+import { ChatMessage } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
-
-import { ChatMessage } from '@/types/message';
 
 import { chatHistoryPrompts } from './index';
 

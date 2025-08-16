@@ -1,6 +1,5 @@
-import { Tool } from '@/prompts/plugin/tools';
-
 import { pluginPrompts } from './index';
+import { Tool } from './tools';
 
 describe('pluginPrompts', () => {
   it('should generate plugin prompts with tools', () => {

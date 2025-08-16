@@ -1,4 +1,4 @@
-import { ChatFileItem } from '@/types/message';
+import { ChatFileItem } from '@lobechat/types';
 
 const filePrompt = (item: ChatFileItem, addUrl: boolean) => {
   const content = item.content || '';

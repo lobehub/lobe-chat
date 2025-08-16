@@ -1,8 +1,8 @@
-import { chunkPrompts } from '@/prompts/knowledgeBaseQA/chunk';
-import { knowledgePrompts } from '@/prompts/knowledgeBaseQA/knowledge';
-import { userQueryPrompt } from '@/prompts/knowledgeBaseQA/userQuery';
-import { ChatSemanticSearchChunk } from '@/types/chunk';
-import { KnowledgeItem } from '@/types/knowledgeBase';
+import { ChatSemanticSearchChunk, KnowledgeItem } from '@lobechat/types';
+
+import { chunkPrompts } from './chunk';
+import { knowledgePrompts } from './knowledge';
+import { userQueryPrompt } from './userQuery';
 
 export const knowledgeBaseQAPrompts = ({
   chunks,
