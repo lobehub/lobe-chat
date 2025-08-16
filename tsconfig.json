@@ -21,7 +21,6 @@
       "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
       "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
       "@/const/*": ["./packages/const/src/*"],
-      "@/prompts/*": ["./packages/prompts/src/*"],
       "@/types/*": ["./packages/types/src/*", "./src/types/*"],
       "@/*": ["./src/*"],
       "~test-utils": ["./tests/utils.tsx"]

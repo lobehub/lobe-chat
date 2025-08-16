@@ -4,6 +4,7 @@ import {
   ModelProvider,
   ModelRuntime,
 } from '@lobechat/model-runtime';
+import { BuiltinSystemRolePrompts, filesPrompts } from '@lobechat/prompts';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
@@ -15,8 +16,6 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
-import { filesPrompts } from '@/prompts/files';
-import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
