@@ -4,6 +4,7 @@ import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
+import { type TaskResult, asyncifyPolling } from '../utils/asyncifyPolling';
 import { AgentRuntimeError } from '../utils/createError';
 import { parseDataUri } from '../utils/uriParser';
 import {
@@ -203,94 +204,66 @@ export async function createBflImage(
     // 2. Submit image generation task
     const taskResponse = await submitTask(model as BflModelId, requestPayload, options);
 
-    // 3. Poll task status until completion
-    let taskStatus: BflResultResponse | null = null;
-    let retries = 0;
-    let consecutiveFailures = 0;
-    const maxConsecutiveFailures = 3;
-    const maxRetries = Infinity; // Safe due to runtime time limits
-    const initialRetryInterval = 500; // 500ms initial interval
-    const maxRetryInterval = 5000; // 5 seconds max interval
-    const backoffMultiplier = 1.5; // exponential backoff multiplier
+    // 3. Poll task status until completion using asyncifyPolling
+    const result = await asyncifyPolling<BflResultResponse, CreateImageResponse>({
+      checkStatus: (taskStatus: BflResultResponse): TaskResult<CreateImageResponse> => {
+        log('Task %s status: %s', taskResponse.id, taskStatus.status);
 
-    while (retries < maxRetries) {
-      try {
-        taskStatus = await queryTaskStatus(taskResponse.polling_url, options);
-        consecutiveFailures = 0; // Reset consecutive failures on success
-      } catch (error) {
-        consecutiveFailures++;
-        log(
-          'Failed to query task status (attempt %d/%d, consecutive failures: %d/%d): %O',
-          retries + 1,
-          maxRetries,
-          consecutiveFailures,
-          maxConsecutiveFailures,
-          error,
-        );
+        switch (taskStatus.status) {
+          case BflStatusResponse.Ready: {
+            if (!taskStatus.result?.sample) {
+              return {
+                error: new Error('Task succeeded but no image generated'),
+                status: 'failed',
+              };
+            }
 
-        // If we've failed too many times in a row, give up
-        if (consecutiveFailures >= maxConsecutiveFailures) {
-          throw new Error(
-            `Failed to query task status after ${consecutiveFailures} consecutive attempts: ${error}`,
-          );
-        }
+            const imageUrl = taskStatus.result.sample;
+            log('Image generated successfully: %s', imageUrl);
 
-        // Wait before retrying
-        const currentRetryInterval = Math.min(
-          initialRetryInterval * Math.pow(backoffMultiplier, retries),
-          maxRetryInterval,
-        );
-        await new Promise((resolve) => {
-          setTimeout(resolve, currentRetryInterval);
-        });
-        retries++;
-        continue; // Skip the rest of the loop and retry
-      }
-
-      log('Task %s status: %s (attempt %d)', taskResponse.id, taskStatus.status, retries + 1);
-
-      switch (taskStatus.status) {
-        case BflStatusResponse.Ready: {
-          if (!taskStatus.result?.sample) {
-            throw new Error('Task succeeded but no image generated');
+            return {
+              data: { imageUrl },
+              status: 'success',
+            };
           }
+          case BflStatusResponse.Error:
+          case BflStatusResponse.ContentModerated:
+          case BflStatusResponse.RequestModerated: {
+            // Extract error details if available, otherwise use status
+            let errorMessage = `Image generation failed with status: ${taskStatus.status}`;
 
-          // Return the generated image URL
-          const imageUrl = taskStatus.result.sample;
-          log('Image generated successfully: %s', imageUrl);
+            // Check for additional error details in various possible fields
+            if (taskStatus.details && typeof taskStatus.details === 'object') {
+              errorMessage += ` - Details: ${JSON.stringify(taskStatus.details)}`;
+            } else if (taskStatus.result && typeof taskStatus.result === 'object') {
+              errorMessage += ` - Result: ${JSON.stringify(taskStatus.result)}`;
+            }
 
-          return { imageUrl };
+            return {
+              error: new Error(errorMessage),
+              status: 'failed',
+            };
+          }
+          case BflStatusResponse.TaskNotFound: {
+            return {
+              error: new Error('Task not found - may have expired'),
+              status: 'failed',
+            };
+          }
+          default: {
+            // Continue polling for Pending status or other unknown statuses
+            return { status: 'pending' };
+          }
         }
-        case BflStatusResponse.Error:
-        case BflStatusResponse.ContentModerated:
-        case BflStatusResponse.RequestModerated: {
-          throw new Error(`Image generation failed with status: ${taskStatus.status}`);
-        }
-        case BflStatusResponse.TaskNotFound: {
-          throw new Error('Task not found - may have expired');
-        }
-        default: {
-          // Continue polling for Pending status or other unknown statuses
-          break;
-        }
-      }
+      },
+      logger: {
+        debug: (message: any, ...args: any[]) => log(message, ...args),
+        error: (message: any, ...args: any[]) => log(message, ...args),
+      },
+      pollingQuery: () => queryTaskStatus(taskResponse.polling_url, options),
+    });
 
-      // Calculate dynamic retry interval with exponential backoff
-      const currentRetryInterval = Math.min(
-        initialRetryInterval * Math.pow(backoffMultiplier, retries),
-        maxRetryInterval,
-      );
-
-      log('Waiting %dms before next retry', currentRetryInterval);
-
-      // Wait before retrying
-      await new Promise((resolve) => {
-        setTimeout(resolve, currentRetryInterval);
-      });
-      retries++;
-    }
-
-    throw new Error(`Image generation timeout after ${maxRetries} attempts`);
+    return result;
   } catch (error) {
     log('Error in createBflImage: %O', error);
 
