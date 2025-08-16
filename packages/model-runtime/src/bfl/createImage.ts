@@ -3,6 +3,7 @@ import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
+import { AgentRuntimeErrorType } from '../error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { type TaskResult, asyncifyPolling } from '../utils/asyncifyPolling';
 import { AgentRuntimeError } from '../utils/createError';
@@ -194,7 +195,11 @@ export async function createBflImage(
   const { model, params } = payload;
 
   if (!BFL_ENDPOINTS[model as BflModelId]) {
-    throw new Error(`Unsupported BFL model: ${model}`);
+    throw AgentRuntimeError.createImage({
+      error: new Error(`Unsupported BFL model: ${model}`),
+      errorType: AgentRuntimeErrorType.ProviderBizError,
+      provider: 'bfl',
+    });
   }
 
   try {

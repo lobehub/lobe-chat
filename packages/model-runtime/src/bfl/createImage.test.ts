@@ -470,9 +470,13 @@ describe('createBflImage', () => {
       };
 
       // Act & Assert
-      await expect(createBflImage(payload, mockOptions)).rejects.toThrow(
-        'Unsupported BFL model: unsupported-model',
-      );
+      await expect(createBflImage(payload, mockOptions)).rejects.toMatchObject({
+        error: expect.objectContaining({
+          message: 'Unsupported BFL model: unsupported-model',
+        }),
+        errorType: 'ProviderBizError',
+        provider: 'bfl',
+      });
     });
 
     it('should use custom baseURL when provided', async () => {
