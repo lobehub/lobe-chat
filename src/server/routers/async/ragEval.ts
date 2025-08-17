@@ -25,7 +25,7 @@ const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
-      chunkService: new ChunkService(ctx.userId),
+      chunkService: new ChunkService(ctx.serverDB, ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
       embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
       evalRecordModel: new EvaluationRecordModel(ctx.userId),
