@@ -10,8 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
 import { BLOG, OFFICIAL_SITE, PRIVACY_URL, TERMS_URL, mailTo } from '@/const/url';
-import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import AboutList from './features/AboutList';
 import Analytics from './features/Analytics';
@@ -30,7 +28,6 @@ const useStyles = createStyles(({ css, token }) => ({
 const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const enabledTelemetryChat = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
 
   return (
     <>
@@ -122,7 +119,7 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
           />
         </Flexbox>
       </Form.Group>
-      {enabledTelemetryChat && <Analytics />}
+      <Analytics />
     </>
   );
 });
