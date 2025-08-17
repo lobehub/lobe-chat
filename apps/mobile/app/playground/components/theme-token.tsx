@@ -2,6 +2,7 @@ import { ChevronDown, Palette, Sun, Moon } from 'lucide-react-native';
 import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
+import Button from '@/components/Button';
 import { CapsuleTabs } from '@/components/CapsuleTabs';
 import ColorSwatches from '@/components/ColorSwatches';
 import {
@@ -11,7 +12,10 @@ import {
   darkAlgorithm,
   lightAlgorithm,
   ThemeProvider,
+  useThemeToken,
 } from '@/theme';
+import { getDesignToken } from '@/theme/ThemeProvider/getDesignToken';
+import { PrimaryColors } from '@/theme/color';
 
 interface TokenInfo {
   category: 'seed' | 'map' | 'alias';
@@ -407,19 +411,19 @@ const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) =>
 
 // 新增主题控制器组件
 interface ThemeControlsProps {
-  colorPrimary: string;
   fontSize: number;
-  onColorPrimaryChange: (color: string) => void;
   onFontSizeChange: (size: number) => void;
+  onPrimaryColorChange: (color: PrimaryColors) => void;
+  primaryColor: PrimaryColors;
 }
 
 const ThemeControls: React.FC<ThemeControlsProps> = ({
-  colorPrimary,
   fontSize,
-  onColorPrimaryChange,
   onFontSizeChange,
+  onPrimaryColorChange,
+  primaryColor,
 }) => {
-  const { theme } = useTheme();
+  const token = useThemeToken();
   const { styles } = useStyles();
 
   // 预设主色
@@ -429,51 +433,51 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
       title: 'Default',
     },
     {
-      color: theme.token.colorError || '#ff4d4f',
+      color: token.red,
       title: 'Red',
     },
     {
-      color: '#ff7a45',
+      color: token.orange,
       title: 'Orange',
     },
     {
-      color: '#faad14',
+      color: token.gold,
       title: 'Gold',
     },
     {
-      color: '#fadb14',
+      color: token.yellow,
       title: 'Yellow',
     },
     {
-      color: '#a0d911',
+      color: token.lime,
       title: 'Lime',
     },
     {
-      color: theme.token.colorSuccess || '#52c41a',
+      color: token.green,
       title: 'Green',
     },
     {
-      color: '#13c2c2',
+      color: token.cyan,
       title: 'Cyan',
     },
     {
-      color: theme.token.colorInfo || '#1677ff',
+      color: token.blue,
       title: 'Blue',
     },
     {
-      color: '#2f54eb',
+      color: token.geekblue,
       title: 'Geekblue',
     },
     {
-      color: '#722ed1',
+      color: token.purple,
       title: 'Purple',
     },
     {
-      color: '#eb2f96',
+      color: token.magenta,
       title: 'Magenta',
     },
     {
-      color: '#fa541c',
+      color: token.volcano,
       title: 'Volcano',
     },
   ];
@@ -482,26 +486,22 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
   const fontSizePresets = [12, 14, 16, 18, 20];
 
   return (
-    <View style={[styles.controlsContainer, { backgroundColor: theme.token.colorBgElevated }]}>
+    <View style={[styles.controlsContainer, { backgroundColor: token.colorBgElevated }]}>
       {/* 主色控制 */}
       <View style={styles.controlItem}>
-        <Text style={[styles.controlLabel, { color: theme.token.colorText }]}>
-          主色 (colorPrimary)
-        </Text>
+        <Text style={[styles.controlLabel, { color: token.colorText }]}>主色 (colorPrimary)</Text>
         <ColorSwatches
           colors={colorSwatchesData}
           gap={8}
-          onChange={onColorPrimaryChange}
+          onChange={(color) => onPrimaryColorChange(color as PrimaryColors)}
           size={32}
-          value={colorPrimary}
+          value={primaryColor}
         />
       </View>
 
       {/* 字体大小控制 */}
       <View style={styles.controlItem}>
-        <Text style={[styles.controlLabel, { color: theme.token.colorText }]}>
-          字体大小 (fontSize)
-        </Text>
+        <Text style={[styles.controlLabel, { color: token.colorText }]}>字体大小 (fontSize)</Text>
         <View style={styles.controlRow}>
           <TextInput
             keyboardType="numeric"
@@ -512,48 +512,29 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
               }
             }}
             placeholder="14"
-            placeholderTextColor={theme.token.colorTextPlaceholder}
+            placeholderTextColor={token.colorTextPlaceholder}
             style={[
               styles.controlInput,
               {
-                backgroundColor: theme.token.colorBgContainer,
-                borderColor: theme.token.colorBorder,
-                color: theme.token.colorText,
+                backgroundColor: token.colorBgContainer,
+                borderColor: token.colorBorder,
+                color: token.colorText,
               },
             ]}
             value={String(fontSize)}
           />
-          <Text style={[styles.tokenValue, { color: theme.token.colorTextSecondary }]}>px</Text>
+          <Text style={[styles.tokenValue, { color: token.colorTextSecondary }]}>px</Text>
         </View>
         <View style={styles.presetRow}>
           {fontSizePresets.map((size) => (
-            <TouchableOpacity
+            <Button
               key={size}
               onPress={() => onFontSizeChange(size)}
-              style={[
-                styles.presetButton,
-                {
-                  backgroundColor:
-                    fontSize === size ? theme.token.colorPrimaryBg : theme.token.colorBgContainer,
-                  borderColor:
-                    fontSize === size ? theme.token.colorPrimary : theme.token.colorBorder,
-                },
-              ]}
+              size="small"
+              type={fontSize === size ? 'primary' : 'default'}
             >
-              <Text
-                style={[
-                  styles.controlLabel,
-                  {
-                    color: fontSize === size ? theme.token.colorPrimary : theme.token.colorText,
-                    fontSize: 12,
-                    fontWeight: '400',
-                    marginBottom: 0,
-                  },
-                ]}
-              >
-                {size}px
-              </Text>
-            </TouchableOpacity>
+              {size}px
+            </Button>
           ))}
         </View>
       </View>
@@ -563,18 +544,18 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
 
 // 内部组件，使用 ThemeProvider 包装
 interface ThemeTokensContentProps {
-  localColorPrimary: string;
   localFontSize: number;
-  onColorPrimaryChange: (color: string) => void;
+  localPrimaryColor: PrimaryColors;
   onFontSizeChange: (size: number) => void;
+  onPrimaryColorChange: (color: PrimaryColors) => void;
   onToggleTheme: () => void;
 }
 
 const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
-  localColorPrimary,
+  localPrimaryColor,
   localFontSize,
-  onColorPrimaryChange,
   onFontSizeChange,
+  onPrimaryColorChange,
   onToggleTheme,
 }) => {
   const { theme } = useTheme();
@@ -587,8 +568,8 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
     // 使用当前主题配置生成动态的 seed token
     const currentSeedToken = {
       ...seedToken,
-      colorPrimary: localColorPrimary,
       fontSize: localFontSize,
+      primaryColor: localPrimaryColor,
     };
 
     return Object.entries(currentSeedToken).map(([name, value]) => {
@@ -638,14 +619,14 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         value,
       };
     });
-  }, [localColorPrimary, localFontSize]);
+  }, [localPrimaryColor, localFontSize]);
 
   const mapTokens: TokenInfo[] = useMemo(() => {
     // 使用当前主题配置生成动态的 map token
     const currentSeedToken = {
       ...seedToken,
-      colorPrimary: localColorPrimary,
       fontSize: localFontSize,
+      primaryColor: localPrimaryColor,
     };
     const mapToken = theme.isDark
       ? darkAlgorithm(currentSeedToken)
@@ -698,10 +679,20 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         value,
       };
     });
-  }, [theme.isDark, localColorPrimary, localFontSize]);
+  }, [theme.isDark, localPrimaryColor, localFontSize]);
 
   const aliasTokens: TokenInfo[] = useMemo(() => {
-    return Object.entries(theme.token).map(([name, value]) => {
+    // 使用 getDesignToken 来生成完整的 alias token
+    const themeConfig = {
+      algorithm: theme.isDark ? darkAlgorithm : lightAlgorithm,
+      token: {
+        fontSize: localFontSize,
+        primaryColor: localPrimaryColor,
+      },
+    };
+    const aliasToken = getDesignToken(themeConfig);
+
+    return Object.entries(aliasToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';
       let description = 'Alias token for component usage';
 
@@ -751,7 +742,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         value,
       };
     });
-  }, [theme.token]);
+  }, [theme.isDark, localPrimaryColor, localFontSize]);
 
   const getCurrentTokens = () => {
     switch (activeTab) {
@@ -818,10 +809,10 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* 主题控制器 */}
         <ThemeControls
-          colorPrimary={localColorPrimary}
           fontSize={localFontSize}
-          onColorPrimaryChange={onColorPrimaryChange}
           onFontSizeChange={onFontSizeChange}
+          onPrimaryColorChange={onPrimaryColorChange}
+          primaryColor={localPrimaryColor}
         />
 
         <View style={styles.tabsContainer}>
@@ -850,7 +841,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
 
 // 主组件，包装 ThemeProvider
 const ThemeTokensPlayground: React.FC = () => {
-  const [localColorPrimary, setLocalColorPrimary] = useState('#1677ff');
+  const [localPrimaryColor, setLocalPrimaryColor] = useState('primary' as PrimaryColors);
   const [localFontSize, setLocalFontSize] = useState(14);
   const [localThemeMode, setLocalThemeMode] = useState<'light' | 'dark'>('light');
 
@@ -858,8 +849,8 @@ const ThemeTokensPlayground: React.FC = () => {
   const localThemeConfig = {
     algorithm: localThemeMode === 'dark' ? darkAlgorithm : lightAlgorithm,
     token: {
-      colorPrimary: localColorPrimary,
       fontSize: localFontSize,
+      primaryColor: localPrimaryColor,
     },
   };
 
@@ -870,10 +861,10 @@ const ThemeTokensPlayground: React.FC = () => {
   return (
     <ThemeProvider theme={localThemeConfig}>
       <ThemeTokensContent
-        localColorPrimary={localColorPrimary}
         localFontSize={localFontSize}
-        onColorPrimaryChange={setLocalColorPrimary}
+        localPrimaryColor={localPrimaryColor}
         onFontSizeChange={setLocalFontSize}
+        onPrimaryColorChange={setLocalPrimaryColor}
         onToggleTheme={toggleLocalTheme}
       />
     </ThemeProvider>

@@ -22,10 +22,31 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
+
+  // 检查是否已经在 ThemeProvider 内部（嵌套情况）
+  const parentContext = useContext(ThemeContext);
+  const isNested = !!parentContext;
+
+  // 如果是嵌套的 ThemeProvider 且提供了自定义主题，则优先使用自定义主题
+  // 否则从 store 获取配置或使用父级配置
   const { themeMode, setThemeMode: setStoreThemeMode, colorPrimary, fontSize } = useSettingStore();
 
   // 计算当前实际的主题模式
   const getActualThemeMode = (): 'light' | 'dark' => {
+    // 如果是嵌套的 ThemeProvider 且有自定义主题配置，优先使用父级的模式判断
+    if (isNested && customTheme) {
+      // 如果自定义主题没有指定算法，则继承父级的模式
+      if (!customTheme.algorithm) {
+        return parentContext.theme.isDark ? 'dark' : 'light';
+      }
+      // 如果自定义主题指定了算法，则根据算法判断
+      const algorithm = Array.isArray(customTheme.algorithm)
+        ? customTheme.algorithm[0]
+        : customTheme.algorithm;
+      return algorithm === darkAlgorithm ? 'dark' : 'light';
+    }
+
+    // 非嵌套情况或嵌套但没有自定义主题，使用正常逻辑
     if (themeMode === 'auto') {
       return systemColorScheme || 'light';
     }
@@ -34,11 +55,22 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
 
   // 设置主题模式
   const setThemeModeHandler = (mode: ThemeMode) => {
+    // 如果是嵌套的 ThemeProvider 且有自定义主题，不允许修改主题模式
+    if (isNested && customTheme) {
+      console.warn('Cannot change theme mode in nested ThemeProvider with custom theme');
+      return;
+    }
     setStoreThemeMode(mode);
   };
 
   // 切换主题（在 light 和 dark 之间切换）
   const toggleTheme = () => {
+    // 如果是嵌套的 ThemeProvider 且有自定义主题，不允许切换主题
+    if (isNested && customTheme) {
+      console.warn('Cannot toggle theme in nested ThemeProvider with custom theme');
+      return;
+    }
+
     const currentMode = getActualThemeMode();
     const newMode: ThemeMode = currentMode === 'light' ? 'dark' : 'light';
     setThemeModeHandler(newMode);
@@ -47,23 +79,41 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   // 生成主题对象
   const isDark = getActualThemeMode() === 'dark';
 
-  // 合并自定义主题配置与设置存储中的配置
-  const mergedThemeConfig: ThemeConfig = {
-    ...customTheme,
-    algorithm: isDark ? darkAlgorithm : lightAlgorithm,
-    token: {
-      ...customTheme?.token,
-      colorPrimary,
-      fontSize,
-    },
-  };
+  // 合并主题配置的优先级策略
+  let mergedThemeConfig: ThemeConfig;
+
+  if (isNested && customTheme) {
+    // 嵌套情况：子 ThemeProvider 的自定义配置优先
+    mergedThemeConfig = {
+      algorithm: customTheme.algorithm || (isDark ? darkAlgorithm : lightAlgorithm),
+      token: {
+        // 继承父级的 token 作为基础
+        ...parentContext.theme.token,
+        // 子 ThemeProvider 的自定义 token 覆盖
+        ...customTheme.token,
+      },
+    };
+  } else if (isNested && !customTheme) {
+    // 嵌套但没有自定义主题：直接继承父级配置
+    return <ThemeContext.Provider value={parentContext}>{children}</ThemeContext.Provider>;
+  } else {
+    // 非嵌套情况：使用正常的合并逻辑
+    mergedThemeConfig = {
+      algorithm: isDark ? darkAlgorithm : lightAlgorithm,
+      token: {
+        colorPrimary,
+        fontSize,
+        ...customTheme?.token,
+      },
+    };
+  }
 
   // 使用合并后的配置生成主题
   const themeToken = getDesignToken(mergedThemeConfig);
 
   const theme: Theme = {
     isDark,
-    mode: themeMode,
+    mode: isNested && customTheme ? (isDark ? 'dark' : 'light') : themeMode,
     token: themeToken,
   };
 

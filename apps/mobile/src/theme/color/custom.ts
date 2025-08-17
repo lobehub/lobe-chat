@@ -36,6 +36,7 @@ export const primaryColors = {
 export type PrimaryColorsObj = typeof primaryColors;
 export type PrimaryColors = keyof PrimaryColorsObj;
 export const primaryColorsSwatches = [
+  primaryColors.primary,
   primaryColors.red,
   primaryColors.orange,
   primaryColors.gold,

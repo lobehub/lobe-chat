@@ -12,7 +12,7 @@ export interface ColorSwatchesProps {
   defaultValue?: string;
   enableColorSwatches?: boolean;
   gap?: number;
-  onChange?: (color?: string) => void;
+  onChange?: (color: string) => void;
   shape?: 'circle' | 'square';
   size?: number;
   style?: ViewStyle;
