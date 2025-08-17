@@ -562,7 +562,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     }
 
     const { position, arrowPosition } = tooltipPosition;
-    const tooltipColor = color || token.colorTextBase;
+    const tooltipColor = color || token.colorText;
 
     return (
       <Portal>

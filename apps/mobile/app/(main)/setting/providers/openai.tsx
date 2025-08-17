@@ -68,7 +68,7 @@ const OpenAISettings = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: token.colorBgBase }]}>
+    <View style={[styles.container, { backgroundColor: token.colorBgContainer }]}>
       <View style={styles.content}>
         <Text style={[styles.label, { color: token.colorText }]}>
           {t('openaiSettings.apiKey', { ns: 'setting' })}

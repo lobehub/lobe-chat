@@ -5,14 +5,14 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
   },
   tab: {
-    backgroundColor: token.colorFillQuaternary,
+    backgroundColor: token.colorBgContainer,
     borderRadius: 16,
     marginRight: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   tabActive: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorBgElevated,
   },
   tabText: {
     color: token.colorTextSecondary,

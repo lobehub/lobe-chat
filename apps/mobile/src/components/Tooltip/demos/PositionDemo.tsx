@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useThemeToken } from '@/theme/ThemeProvider/context';
+import Button from '@/components/Button';
 
 import { Tooltip } from '..';
 import type { TooltipPlacement } from '..';
@@ -29,22 +30,11 @@ const styles = StyleSheet.create({
   demoSection: {
     marginBottom: 40,
   },
-  placementButton: {
-    borderRadius: 6,
-    borderWidth: 1,
-    minWidth: 80,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
   placementGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 24,
     justifyContent: 'center',
-  },
-  placementText: {
-    fontSize: 12,
-    fontWeight: '500',
   },
 });
 
@@ -62,17 +52,9 @@ const PositionDemo = () => {
               title={`${placement} 提示`}
               trigger="click"
             >
-              <TouchableOpacity
-                style={[
-                  styles.placementButton,
-                  {
-                    backgroundColor: token.colorFillSecondary,
-                    borderColor: token.colorBorder,
-                  },
-                ]}
-              >
-                <Text style={[styles.placementText, { color: token.colorText }]}>{placement}</Text>
-              </TouchableOpacity>
+              <Button size="small" type="default">
+                {placement}
+              </Button>
             </Tooltip>
           ))}
         </View>

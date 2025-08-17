@@ -55,7 +55,7 @@ export const useStyles = createStyles((token) => ({
     paddingVertical: 8,
   },
   tabActive: {
-    backgroundColor: token.colorPrimary,
+    backgroundColor: token.colorBgElevated,
   },
   tabContainer: {
     backgroundColor: token.colorFillQuaternary,
