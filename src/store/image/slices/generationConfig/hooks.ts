@@ -77,17 +77,13 @@ export function useDimensionControl() {
   const aspectRatioOptions = useMemo(() => {
     const modelOptions = paramsSchema?.aspectRatio?.enum || [];
 
-    // 合并选项，优先使用预设选项，然后添加模型特有的选项
-    const allOptions = [...PRESET_ASPECT_RATIOS];
+    // 如果 schema 里面有 aspectRatio 并且不为空，直接使用 schema 里面的选项
+    if (modelOptions.length > 0) {
+      return modelOptions;
+    }
 
-    // 添加模型选项中不在预设中的选项
-    modelOptions.forEach((option) => {
-      if (!allOptions.includes(option)) {
-        allOptions.push(option);
-      }
-    });
-
-    return allOptions;
+    // 否则使用预设选项
+    return PRESET_ASPECT_RATIOS;
   }, [paramsSchema]);
 
   // 只要不是所有维度相关的控件都不显示，那么这个容器就应该显示
