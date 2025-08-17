@@ -29,7 +29,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     // 处理颜色选择
     const handleColorSelect = (color: string | undefined) => {
       setActiveColor(color);
-      onChange?.(color);
+      onChange?.(color || '');
     };
 
     // 计算可读的对比色（用于选中图标）

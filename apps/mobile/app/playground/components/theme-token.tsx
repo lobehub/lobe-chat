@@ -12,7 +12,13 @@ import {
   ThemeProvider,
   useThemeToken,
 } from '@/theme';
-import { findCustomThemeName, PrimaryColors } from '@/theme/color';
+import {
+  findCustomThemeName,
+  PrimaryColors,
+  NeutralColors,
+  neutralColors,
+  primaryColors,
+} from '@/theme/color';
 
 interface TokenInfo {
   description: string;
@@ -266,14 +272,18 @@ const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) =>
 // 新增主题控制器组件
 interface ThemeControlsProps {
   fontSize: number;
+  neutralColor: NeutralColors;
   onFontSizeChange: (size: number) => void;
+  onNeutralColorChange: (color: NeutralColors) => void;
   onPrimaryColorChange: (color: PrimaryColors) => void;
   primaryColor: PrimaryColors;
 }
 
 const ThemeControls: React.FC<ThemeControlsProps> = ({
   fontSize,
+  neutralColor,
   onFontSizeChange,
+  onNeutralColorChange,
   onPrimaryColorChange,
   primaryColor,
 }) => {
@@ -287,52 +297,76 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
       title: 'Default',
     },
     {
-      color: token.red,
+      color: primaryColors.red,
       title: 'Red',
     },
     {
-      color: token.orange,
+      color: primaryColors.orange,
       title: 'Orange',
     },
     {
-      color: token.gold,
+      color: primaryColors.gold,
       title: 'Gold',
     },
     {
-      color: token.yellow,
+      color: primaryColors.yellow,
       title: 'Yellow',
     },
     {
-      color: token.lime,
+      color: primaryColors.lime,
       title: 'Lime',
     },
     {
-      color: token.green,
+      color: primaryColors.green,
       title: 'Green',
     },
     {
-      color: token.cyan,
+      color: primaryColors.cyan,
       title: 'Cyan',
     },
     {
-      color: token.blue,
+      color: primaryColors.blue,
       title: 'Blue',
     },
     {
-      color: token.geekblue,
+      color: primaryColors.geekblue,
       title: 'Geekblue',
     },
     {
-      color: token.purple,
+      color: primaryColors.purple,
       title: 'Purple',
     },
     {
-      color: token.magenta,
+      color: primaryColors.magenta,
       title: 'Magenta',
     },
     {
-      color: token.volcano,
+      color: primaryColors.volcano,
       title: 'Volcano',
+    },
+  ];
+
+  // 预设中性色
+  const neutralColorSwatchesData = [
+    {
+      color: neutralColors.mauve,
+      title: 'Mauve',
+    },
+    {
+      color: neutralColors.slate,
+      title: 'Slate',
+    },
+    {
+      color: neutralColors.sage,
+      title: 'Sage',
+    },
+    {
+      color: neutralColors.olive,
+      title: 'Olive',
+    },
+    {
+      color: neutralColors.sand,
+      title: 'Sand',
     },
   ];
 
@@ -347,12 +381,27 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
         <ColorSwatches
           colors={colorSwatchesData}
           gap={8}
-          onChange={(color) => {
+          onChange={(color: any) => {
             const name = findCustomThemeName('primary', color) as PrimaryColors;
             onPrimaryColorChange(name);
           }}
           size={32}
-          value={primaryColor}
+          value={primaryColor ? primaryColors[primaryColor] : undefined}
+        />
+      </View>
+
+      {/* 中性色控制 */}
+      <View style={styles.controlItem}>
+        <Text style={[styles.controlLabel, { color: token.colorText }]}>中性色 (neutralColor)</Text>
+        <ColorSwatches
+          colors={neutralColorSwatchesData}
+          gap={8}
+          onChange={(color: any) => {
+            const name = findCustomThemeName('neutral', color) as NeutralColors;
+            onNeutralColorChange(name);
+          }}
+          size={32}
+          value={neutralColor ? neutralColors[neutralColor] : undefined}
         />
       </View>
 
@@ -402,16 +451,20 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
 // 内部组件，使用 ThemeProvider 包装
 interface ThemeTokensContentProps {
   localFontSize: number;
+  localNeutralColor: NeutralColors;
   localPrimaryColor: PrimaryColors;
   onFontSizeChange: (size: number) => void;
+  onNeutralColorChange: (color: NeutralColors) => void;
   onPrimaryColorChange: (color: PrimaryColors) => void;
   onToggleTheme: () => void;
 }
 
 const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
   localPrimaryColor,
+  localNeutralColor,
   localFontSize,
   onFontSizeChange,
+  onNeutralColorChange,
   onPrimaryColorChange,
   onToggleTheme,
 }) => {
@@ -453,7 +506,9 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
         {/* 主题控制器 */}
         <ThemeControls
           fontSize={localFontSize}
+          neutralColor={localNeutralColor}
           onFontSizeChange={onFontSizeChange}
+          onNeutralColorChange={onNeutralColorChange}
           onPrimaryColorChange={onPrimaryColorChange}
           primaryColor={localPrimaryColor}
         />
@@ -477,6 +532,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
 // 主组件，包装 ThemeProvider
 const ThemeTokensPlayground: React.FC = () => {
   const [localPrimaryColor, setLocalPrimaryColor] = useState('primary' as PrimaryColors);
+  const [localNeutralColor, setLocalNeutralColor] = useState('mauve' as NeutralColors);
   const [localFontSize, setLocalFontSize] = useState(14);
   const [localThemeMode, setLocalThemeMode] = useState<'light' | 'dark'>('light');
 
@@ -485,6 +541,7 @@ const ThemeTokensPlayground: React.FC = () => {
     algorithm: localThemeMode === 'dark' ? darkAlgorithm : lightAlgorithm,
     token: {
       fontSize: localFontSize,
+      neutralColor: localNeutralColor,
       primaryColor: localPrimaryColor,
     },
   };
@@ -497,8 +554,10 @@ const ThemeTokensPlayground: React.FC = () => {
     <ThemeProvider theme={localThemeConfig}>
       <ThemeTokensContent
         localFontSize={localFontSize}
+        localNeutralColor={localNeutralColor}
         localPrimaryColor={localPrimaryColor}
         onFontSizeChange={setLocalFontSize}
+        onNeutralColorChange={setLocalNeutralColor}
         onPrimaryColorChange={setLocalPrimaryColor}
         onToggleTheme={toggleLocalTheme}
       />

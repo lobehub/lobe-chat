@@ -16,8 +16,6 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
   const primaryColor = seedToken.primaryColor;
   const neutralColor = seedToken.neutralColor;
 
-  console.log('primaryColor', primaryColor);
-
   let primaryTokens = {};
   let neutralTokens = {};
 
@@ -25,7 +23,6 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
   const primaryScale: ColorScaleItem = colorScales[primaryColor];
 
   if (primaryScale) {
-    console.log('primaryScale', primaryScale);
     primaryTokens = generateColorPalette({
       appearance: 'dark',
       scale: primaryScale,
