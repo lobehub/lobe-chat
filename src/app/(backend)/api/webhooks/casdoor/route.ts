@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
+import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 
@@ -18,7 +19,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
   const { action, object } = payload;
 
-  const nextAuthUserService = new NextAuthUserService();
+  const nextAuthUserService = new NextAuthUserService(serverDB);
   switch (action) {
     case 'update-user': {
       return nextAuthUserService.safeUpdateUser(
