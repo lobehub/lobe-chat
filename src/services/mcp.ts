@@ -103,7 +103,6 @@ class MCPService {
         errorCode,
         errorMessage,
         identifier,
-        inputParams,
         isCustomPlugin,
         metadata: {
           appVersion: CURRENT_VERSION,
@@ -112,7 +111,6 @@ class MCPService {
         },
         methodName: apiName,
         methodType: 'tool' as const,
-        outputResult: success ? result : undefined,
         requestSizeBytes,
         responseSizeBytes,
         sessionId: topicId,
