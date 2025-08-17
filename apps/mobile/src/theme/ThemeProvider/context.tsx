@@ -2,10 +2,11 @@ import React, { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import { getDesignToken } from '@/theme/getDesignToken';
+import { getDesignToken } from './getDesignToken';
 
-import { Theme, ThemeConfig, ThemeContextValue } from './types';
-import { ThemeMode } from '@/theme';
+import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
+import { darkAlgorithm } from '@/theme/algorithm/dark';
+import { lightAlgorithm } from '@/theme/algorithm/light';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -49,6 +50,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   // 合并自定义主题配置与设置存储中的配置
   const mergedThemeConfig: ThemeConfig = {
     ...customTheme,
+    algorithm: isDark ? darkAlgorithm : lightAlgorithm,
     token: {
       ...customTheme?.token,
       colorPrimary,

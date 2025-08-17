@@ -9,7 +9,7 @@ import {
   createStyles,
   seedToken,
   darkAlgorithm,
-  defaultAlgorithm,
+  lightAlgorithm,
   ThemeProvider,
 } from '@/theme';
 
@@ -649,7 +649,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
     };
     const mapToken = theme.isDark
       ? darkAlgorithm(currentSeedToken)
-      : defaultAlgorithm(currentSeedToken);
+      : lightAlgorithm(currentSeedToken);
 
     return Object.entries(mapToken).map(([name, value]) => {
       let type: TokenInfo['type'] = 'other';
@@ -856,7 +856,7 @@ const ThemeTokensPlayground: React.FC = () => {
 
   // 本地主题配置，只影响当前组件树
   const localThemeConfig = {
-    algorithm: localThemeMode === 'dark' ? darkAlgorithm : defaultAlgorithm,
+    algorithm: localThemeMode === 'dark' ? darkAlgorithm : lightAlgorithm,
     token: {
       colorPrimary: localColorPrimary,
       fontSize: localFontSize,

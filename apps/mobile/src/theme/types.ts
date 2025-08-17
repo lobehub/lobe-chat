@@ -1,4 +1,3 @@
-export type ThemeMode = 'light' | 'dark' | 'auto';
 export type ThemeAppearance = 'dark' | 'light';
 
 /**

@@ -1,7 +1,9 @@
 // ======================================================================
 // ==                           Theme                                   ==
 
-import { AliasToken, MappingAlgorithm, ThemeMode } from '@/theme';
+import { AliasToken, MappingAlgorithm } from '@/theme';
+
+export type ThemeMode = 'light' | 'dark' | 'auto';
 
 // ======================================================================
 export interface Theme {

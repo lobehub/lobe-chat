@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/ThemeProvider/createStyles';
+import { createStyles } from '@/theme';
 
 /**
  * 创建 FluentEmoji 组件样式

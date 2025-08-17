@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { ThemeProvider } from '@/components/ThemeProvider/context';
+import { ThemeProvider } from '@/theme/ThemeProvider/context';
 
 // Mock the setting store
 jest.mock('@/store/setting', () => ({

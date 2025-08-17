@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScrollView, View, Text } from 'react-native';
 
-import { colorScales, ColorScales } from '@/theme/color';
-import { useThemeToken } from '@/theme';
+import ColorScales from '@/components/ColorScales';
+import { useThemeToken, colorScales } from '@/theme';
 
 import ComponentPlayground, { type DemoItem } from '../Playground';
 

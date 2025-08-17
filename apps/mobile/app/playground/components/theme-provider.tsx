@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
-import * as ThemeProviderDemos from '@/components/ThemeProvider/demos';
+import * as ThemeProviderDemos from '@/theme/ThemeProvider/demos';
 import { useThemeToken } from '@/theme';
 
 // ThemeProvider Demos 相关接口和组件
