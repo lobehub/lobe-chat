@@ -1,18 +1,20 @@
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { NewEvalDatasetRecordsItem, evalDatasetRecords, files } from '@/database/schemas';
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 export class EvalDatasetRecordModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
+    this.db = db;
     this.userId = userId;
   }
 
   create = async (params: NewEvalDatasetRecordsItem) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(evalDatasetRecords)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -20,7 +22,7 @@ export class EvalDatasetRecordModel {
   };
 
   batchCreate = async (params: NewEvalDatasetRecordsItem[]) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(evalDatasetRecords)
       .values(params.map((item) => ({ ...item, userId: this.userId })))
       .returning();
@@ -29,13 +31,13 @@ export class EvalDatasetRecordModel {
   };
 
   delete = async (id: number) => {
-    return serverDB
+    return this.db
       .delete(evalDatasetRecords)
       .where(and(eq(evalDatasetRecords.id, id), eq(evalDatasetRecords.userId, this.userId)));
   };
 
   query = async (datasetId: number) => {
-    const list = await serverDB.query.evalDatasetRecords.findMany({
+    const list = await this.db.query.evalDatasetRecords.findMany({
       where: and(
         eq(evalDatasetRecords.datasetId, datasetId),
         eq(evalDatasetRecords.userId, this.userId),
@@ -43,7 +45,7 @@ export class EvalDatasetRecordModel {
     });
     const fileList = list.flatMap((item) => item.referenceFiles).filter(Boolean) as string[];
 
-    const fileItems = await serverDB
+    const fileItems = await this.db
       .select({ fileType: files.fileType, id: files.id, name: files.name })
       .from(files)
       .where(and(inArray(files.id, fileList), eq(files.userId, this.userId)));
@@ -59,7 +61,7 @@ export class EvalDatasetRecordModel {
   };
 
   findByDatasetId = async (datasetId: number) => {
-    return serverDB.query.evalDatasetRecords.findMany({
+    return this.db.query.evalDatasetRecords.findMany({
       where: and(
         eq(evalDatasetRecords.datasetId, datasetId),
         eq(evalDatasetRecords.userId, this.userId),
@@ -68,13 +70,13 @@ export class EvalDatasetRecordModel {
   };
 
   findById = async (id: number) => {
-    return serverDB.query.evalDatasetRecords.findFirst({
+    return this.db.query.evalDatasetRecords.findFirst({
       where: and(eq(evalDatasetRecords.id, id), eq(evalDatasetRecords.userId, this.userId)),
     });
   };
 
   update = async (id: number, value: Partial<NewEvalDatasetRecordsItem>) => {
-    return serverDB
+    return this.db
       .update(evalDatasetRecords)
       .set(value)
       .where(and(eq(evalDatasetRecords.id, id), eq(evalDatasetRecords.userId, this.userId)));
