@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.0"
+  },
+  {
     "children": {
       "fixes": ["Improve mcp tracing with user config."]
     },
