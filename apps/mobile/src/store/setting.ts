@@ -3,14 +3,14 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { ThemeMode } from '@/theme/types';
+import { PrimaryColors, ThemeMode } from '@/theme';
 
 interface SettingState {
-  // 主题自定义配置
-  colorPrimary: string;
   fontSize: number;
-  setColorPrimary: (color: string) => void;
+  // 主题自定义配置
+  primaryColor: PrimaryColors;
   setFontSize: (size: number) => void;
+  setPrimaryColor: (color: PrimaryColors) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
   themeMode: ThemeMode;
 }
@@ -18,18 +18,18 @@ interface SettingState {
 export const useSettingStore = createWithEqualityFn<SettingState>()(
   persist(
     (set) => ({
-      // 默认主色
-      colorPrimary: '#000000',
-
       // 默认字体大小
       fontSize: 14,
 
-      setColorPrimary: (colorPrimary: string) => {
-        set({ colorPrimary });
-      },
+      // 默认主色
+      primaryColor: 'primary',
 
       setFontSize: (fontSize: number) => {
         set({ fontSize });
+      },
+
+      setPrimaryColor: (primaryColor: PrimaryColors) => {
+        set({ primaryColor });
       },
 
       setThemeMode: (themeMode: ThemeMode) => {

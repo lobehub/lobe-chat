@@ -25,7 +25,7 @@ export function getDesignToken(config?: ThemeConfig): AliasToken {
         // 第一次应用时，token 是 SeedToken，之后是 MapToken
         return alg(token as SeedToken);
       }, mergedSeedToken as any)
-    : algorithm(seedToken, mergedSeedToken as any);
+    : algorithm(mergedSeedToken, mergedSeedToken as any);
 
   // 格式化为别名 Token
   return formatToken(mapToken);

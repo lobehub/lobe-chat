@@ -15,6 +15,8 @@ export const lightAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
   const primaryColor = seedToken.primaryColor;
   const neutralColor = seedToken.neutralColor;
 
+  console.log('primaryColor', primaryColor);
+
   let primaryTokens = {};
   let neutralTokens = {};
   const primaryScale: ColorScaleItem = colorScales[primaryColor];

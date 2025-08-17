@@ -29,7 +29,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
 
   // 如果是嵌套的 ThemeProvider 且提供了自定义主题，则优先使用自定义主题
   // 否则从 store 获取配置或使用父级配置
-  const { themeMode, setThemeMode: setStoreThemeMode, colorPrimary, fontSize } = useSettingStore();
+  const { themeMode, setThemeMode: setStoreThemeMode, primaryColor, fontSize } = useSettingStore();
 
   // 计算当前实际的主题模式
   const getActualThemeMode = (): 'light' | 'dark' => {
@@ -101,15 +101,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
     mergedThemeConfig = {
       algorithm: isDark ? darkAlgorithm : lightAlgorithm,
       token: {
-        colorPrimary,
         fontSize,
+        primaryColor,
         ...customTheme?.token,
       },
     };
   }
 
+  console.log('mergedThemeConfig', mergedThemeConfig);
+
   // 使用合并后的配置生成主题
   const themeToken = getDesignToken(mergedThemeConfig);
+
+  console.log('themeToken', themeToken);
 
   const theme: Theme = {
     isDark,

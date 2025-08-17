@@ -3,6 +3,8 @@
 
 import { AliasToken, MappingAlgorithm } from '@/theme';
 
+export type ThemeAppearance = 'dark' | 'light';
+
 export type ThemeMode = 'light' | 'dark' | 'auto';
 
 // ======================================================================

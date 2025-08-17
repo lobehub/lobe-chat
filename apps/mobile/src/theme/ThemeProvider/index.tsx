@@ -3,4 +3,4 @@ export { ThemeProvider, useTheme, useThemeToken } from './context';
 
 // 导出主题相关类型
 export { createStyles } from './createStyles';
-export type { Theme, ThemeConfig, ThemeContextValue } from './types';
+export type * from './types';

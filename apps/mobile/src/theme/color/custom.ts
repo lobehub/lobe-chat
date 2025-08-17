@@ -69,3 +69,9 @@ export const neutralColorsSwatches = [
 
 export type NeutralColorsObj = typeof neutralColors;
 export type NeutralColors = keyof NeutralColorsObj;
+
+export const findCustomThemeName = (type: 'primary' | 'neutral', value: string) => {
+  const res = type === 'primary' ? primaryColors : neutralColors;
+  const result = Object.entries(res).find((item) => item[1] === value);
+  return result?.[0];
+};
