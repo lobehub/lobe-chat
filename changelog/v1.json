@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Improve mcp tracing with user config."]
+    },
+    "date": "2025-08-17",
+    "version": "1.112.5"
+  },
+  {
+    "children": {
       "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
     },
     "date": "2025-08-16",
