@@ -106,6 +106,7 @@ const Mistral: ModelProviderCard = {
   modelsUrl: 'https://docs.mistral.ai/getting-started/models',
   name: 'Mistral',
   settings: {
+    disableBrowserRequest: true, // CORS Error
     proxyUrl: {
       placeholder: 'https://api.mistral.ai',
     },

@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "添加参数",
+    "argumentPlaceholder": "参数 {{index}}",
+    "enterFirstArgument": "输入第一个参数..."
+  },
   "DragUpload": {
     "dragDesc": "拖拽文件到这里，支持上传多个图片。",
     "dragFileDesc": "拖拽图片和文件到这里，支持上传多个图片和文件。",
