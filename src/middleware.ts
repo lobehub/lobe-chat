@@ -66,9 +66,15 @@ const defaultMiddleware = (request: NextRequest) => {
     return NextResponse.next();
   }
 
+  const oTheme = request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
+  let explicitlyTheme = (url.searchParams.get('thm') || undefined);
+  if(explicitlyTheme) {
+    const exTheme = ['l', 'd'].includes(explicitlyTheme || '') ? {'d': 'dark', 'l': 'light'}[explicitlyTheme || ''] : oTheme
+    request.cookies.set(LOBE_THEME_APPEARANCE, exTheme)
+    explicitlyTheme = exTheme;
+  }
   // 1. Read user preferences from cookies
-  const theme =
-    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
+  const theme = explicitlyTheme;
 
   // locale has three levels
   // 1. search params
@@ -77,6 +83,7 @@ const defaultMiddleware = (request: NextRequest) => {
 
   // highest priority is explicitly in search params, like ?hl=zh-CN
   const explicitlyLocale = (url.searchParams.get('hl') || undefined) as Locales | undefined;
+  const explicitlyMobile = (url.searchParams.get('mb') || undefined);
 
   // if it's a new user, there's no cookie, So we need to use the fallback language parsed by accept-language
   const browserLanguage = parseBrowserLanguage(request.headers);
@@ -99,12 +106,12 @@ const defaultMiddleware = (request: NextRequest) => {
     locale,
     theme,
   });
-
+  const exTheme = ['l', 'd'].includes(explicitlyTheme || '') ? {'d': 'dark', 'l': 'light'}[explicitlyTheme || ''] : theme
   // 2. Create normalized preference values
   const route = RouteVariants.serializeVariants({
-    isMobile: device.type === 'mobile',
+    isMobile: !!explicitlyMobile || device.type === 'mobile',
     locale,
-    theme,
+    theme: exTheme,
   });
 
   logDefault('Serialized route variant: %s', route);
