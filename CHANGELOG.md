@@ -2,6 +2,75 @@
 
 # Changelog
 
+## [Version&nbsp;1.113.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.112.0...v1.113.0)
+<sup>Released on **2025-08-18**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor const folder to a new package, refactor prompts folder to the `@lobechat/prompts` pacakge, 重构ArgsInput组件.
+
+
+#### ✨ Features
+
+- **provider**: Add BFL provider support for image generation.
+
+
+#### 🐛 Bug Fixes
+
+- **db**: Desktop local db can't vectorization.
+- **misc**: Improve mcp tracing with user config.
+
+
+#### 💄 Styles
+
+- **misc**: Add Imagen 4 GA models, style improve auth sign in box loading.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor const folder to a new package, closes [#8756](https://github.com/jaworldwideorg/OneJA-Bot/issues/8756) ([30a4734](https://github.com/jaworldwideorg/OneJA-Bot/commit/30a4734))
+* **misc**: Refactor prompts folder to the `@lobechat/prompts` pacakge, closes [#8810](https://github.com/jaworldwideorg/OneJA-Bot/issues/8810) ([d82e7bb](https://github.com/jaworldwideorg/OneJA-Bot/commit/d82e7bb))
+* **misc**: 重构 ArgsInput 组件, closes [#8765](https://github.com/jaworldwideorg/OneJA-Bot/issues/8765) ([0905559](https://github.com/jaworldwideorg/OneJA-Bot/commit/0905559))
+
+
+
+#### What's improved
+
+* **provider**: Add BFL provider support for image generation, closes [#8806](https://github.com/jaworldwideorg/OneJA-Bot/issues/8806) ([519e03e](https://github.com/jaworldwideorg/OneJA-Bot/commit/519e03e))
+
+
+
+#### What's fixed
+
+* **db**: Desktop local db can't vectorization, closes [#8830](https://github.com/jaworldwideorg/OneJA-Bot/issues/8830) ([a00fd9d](https://github.com/jaworldwideorg/OneJA-Bot/commit/a00fd9d))
+* **misc**: Improve mcp tracing with user config, closes [#8827](https://github.com/jaworldwideorg/OneJA-Bot/issues/8827) ([5cab2ee](https://github.com/jaworldwideorg/OneJA-Bot/commit/5cab2ee))
+
+
+
+#### Styles
+
+* **misc**: Add Imagen 4 GA models, closes [#8799](https://github.com/jaworldwideorg/OneJA-Bot/issues/8799) ([2e9ad20](https://github.com/jaworldwideorg/OneJA-Bot/commit/2e9ad20))
+* **misc**: Style improve auth sign in box loading, closes [#8805](https://github.com/jaworldwideorg/OneJA-Bot/issues/8805) ([62f5a1b](https://github.com/jaworldwideorg/OneJA-Bot/commit/62f5a1b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.112.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.111.11...v1.112.0)
 <sup>Released on **2025-08-15**</sup>
 
