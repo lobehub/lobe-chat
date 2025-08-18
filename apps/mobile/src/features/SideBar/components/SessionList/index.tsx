@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput, View, Text } from 'react-native';
 
@@ -19,10 +19,10 @@ export default function SideBar() {
   const [drawerOpen] = useGlobalStore((s) => [s.drawerOpen]);
   const { useFetchSessions } = useSessionStore();
   const { isAuthenticated } = useAuth();
-  const { mutate } = useFetchSessions(drawerOpen, isAuthenticated);
-  useEffect(() => {
-    if (drawerOpen) mutate();
-  }, [drawerOpen]);
+  useFetchSessions(drawerOpen, isAuthenticated);
+  // useEffect(() => {
+  //   if (drawerOpen) mutate();
+  // }, [drawerOpen]);
 
   const filteredSessions =
     sessions?.filter(

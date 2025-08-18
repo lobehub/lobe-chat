@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
 import { ListItem } from '@/components';
+import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
-import { useGlobalStore } from '@/store/global';
 
 interface SessionItemProps {
   id: string;
@@ -11,8 +11,10 @@ interface SessionItemProps {
 
 const SessionItem = ({ id }: SessionItemProps) => {
   const session = useSessionStore((s) => sessionSelectors.getSessionById(id)(s));
-  const switchSession = useSessionStore((s) => s.switchSession);
-  const setDrawerOpen = useGlobalStore((s) => s.setDrawerOpen);
+  const activeId = useSessionStore((s) => s.activeId);
+  const switchSession = useSwitchSession();
+
+  const isActive = activeId === id;
 
   const { title, description, avatar } = useMemo(() => {
     const meta = session.meta;
@@ -24,15 +26,15 @@ const SessionItem = ({ id }: SessionItemProps) => {
   }, [session.meta]);
 
   const handlePress = () => {
+    // 使用 useSwitchSession hook，它会自动处理路由导航和抽屉关闭
     switchSession(id);
-    setDrawerOpen(false);
   };
 
   return (
     <ListItem
+      active={isActive}
       avatar={avatar}
       description={description}
-      href={`/chat?id=${id}`}
       onPress={handlePress}
       title={title}
     />
