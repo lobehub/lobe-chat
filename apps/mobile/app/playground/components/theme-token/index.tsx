@@ -4,14 +4,10 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } fro
 
 import Button from '@/components/Button';
 import ColorSwatches from '@/components/ColorSwatches';
-import {
-  useTheme,
-  createStyles,
-  darkAlgorithm,
-  lightAlgorithm,
-  ThemeProvider,
-  useThemeToken,
-} from '@/theme';
+import TokenTable, {
+  type TokenInfo,
+} from 'app/playground/components/theme-token/(components)/TokenTable';
+import { useTheme, darkAlgorithm, lightAlgorithm, ThemeProvider, useThemeToken } from '@/theme';
 import {
   findCustomThemeName,
   PrimaryColors,
@@ -20,254 +16,7 @@ import {
   primaryColors,
 } from '@/theme/color';
 
-interface TokenInfo {
-  description: string;
-  name: string;
-  type: 'other';
-  value: any;
-}
-
-interface TokenTableProps {
-  searchText: string;
-  title: string;
-  tokens: TokenInfo[];
-}
-
-const useStyles = createStyles((token) => {
-  const t = token || {
-    borderRadius: 6,
-    borderRadiusLG: 12,
-    fontFamilyCode: 'monospace',
-    fontSize: 14,
-    fontSizeHeading3: 18,
-    fontSizeLG: 16,
-    fontSizeSM: 12,
-    marginLG: 16,
-    marginSM: 8,
-    marginXS: 4,
-    marginXXS: 2,
-    paddingLG: 16,
-    paddingMD: 12,
-    paddingSM: 8,
-  };
-
-  return {
-    colorPreview: {
-      borderRadius: t.borderRadius,
-      borderWidth: 1,
-      height: 20,
-      width: 20,
-    },
-    colorValueContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: t.marginSM,
-    },
-    // 新增控制器样式
-    controlInput: {
-      borderRadius: t.borderRadius,
-      borderWidth: 1,
-      flex: 1,
-      fontSize: t.fontSize,
-      height: 40,
-      paddingHorizontal: t.paddingMD,
-    },
-    controlItem: {
-      marginBottom: t.marginLG,
-    },
-    controlLabel: {
-      fontSize: t.fontSizeLG,
-      fontWeight: '600',
-      marginBottom: t.marginSM,
-    },
-    controlRow: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: t.marginSM,
-    },
-    controlsContainer: {
-      backgroundColor: t.colorBgElevated || '#fff',
-      borderRadius: t.borderRadiusLG,
-      margin: t.marginLG,
-      padding: t.paddingLG,
-    },
-    header: {
-      alignItems: 'center',
-      borderBottomWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: t.paddingLG,
-    },
-    headerLeft: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: t.marginSM,
-    },
-    headerTitle: {
-      fontSize: t.fontSizeLG,
-      fontWeight: '600',
-    },
-    presetRow: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: t.marginSM,
-      marginTop: t.marginSM,
-    },
-    safeArea: {
-      flex: 1,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    searchContainer: {
-      borderRadius: t.borderRadius,
-      margin: t.marginLG,
-      paddingHorizontal: t.paddingMD,
-    },
-    searchInput: {
-      fontSize: t.fontSize,
-      height: 40,
-    },
-    shadowValueContainer: {
-      alignItems: 'flex-end',
-    },
-    tableSubtitle: {
-      fontSize: t.fontSize,
-      marginBottom: t.marginLG,
-    },
-    tableTitle: {
-      fontSize: t.fontSizeHeading3,
-      fontWeight: '600',
-      marginBottom: t.marginXS,
-    },
-
-    themeToggle: {
-      alignItems: 'center',
-      borderRadius: 20,
-      height: 40,
-      justifyContent: 'center',
-      width: 40,
-    },
-    tokenDescription: {
-      fontSize: t.fontSizeSM,
-      marginTop: t.marginXXS,
-    },
-    tokenInfo: {
-      flex: 1,
-      paddingRight: t.paddingMD,
-    },
-    tokenName: {
-      fontFamily: t.fontFamilyCode,
-      fontSize: t.fontSize,
-      fontWeight: '500',
-    },
-    tokenRow: {
-      alignItems: 'flex-start',
-      borderBottomWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: t.paddingMD,
-    },
-    tokenTable: {
-      borderRadius: t.borderRadiusLG,
-      margin: t.marginLG,
-      marginTop: 0,
-      padding: t.paddingLG,
-    },
-    tokenValue: {
-      fontFamily: t.fontFamilyCode,
-      fontSize: t.fontSizeSM,
-    },
-    tokenValueContainer: {
-      flexShrink: 0,
-      maxWidth: '50%',
-    },
-    tokensContainer: {
-      paddingTop: t.paddingMD,
-    },
-  };
-});
-
-const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) => {
-  const { theme } = useTheme();
-  const { styles } = useStyles();
-
-  const filteredTokens = useMemo(() => {
-    return tokens.filter(
-      (token) =>
-        token.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        token.description.toLowerCase().includes(searchText.toLowerCase()),
-    );
-  }, [tokens, searchText]);
-
-  // 直接按名称排序，不再分组
-  const sortedTokens = useMemo(() => {
-    return filteredTokens.sort((a, b) => a.name.localeCompare(b.name));
-  }, [filteredTokens]);
-
-  const renderValue = (token: TokenInfo) => {
-    const { value, name } = token;
-
-    // 根据名称判断是否为颜色值
-    if ((name.includes('color') || name.includes('Color')) && typeof value === 'string') {
-      return (
-        <View style={styles.colorValueContainer}>
-          <View
-            style={[
-              styles.colorPreview,
-              { backgroundColor: value },
-              { borderColor: theme.token.colorBorderSecondary },
-            ]}
-          />
-          <Text style={[styles.tokenValue, { color: theme.token.colorText }]}>{value}</Text>
-        </View>
-      );
-    }
-
-    // 根据名称判断是否为阴影对象
-    if ((name.includes('shadow') || name.includes('Shadow')) && typeof value === 'object') {
-      return (
-        <View style={styles.shadowValueContainer}>
-          <Text style={[styles.tokenValue, { color: theme.token.colorText }]}>
-            {JSON.stringify(value, null, 2)}
-          </Text>
-        </View>
-      );
-    }
-
-    return (
-      <Text style={[styles.tokenValue, { color: theme.token.colorText }]}>
-        {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-      </Text>
-    );
-  };
-
-  return (
-    <View style={[styles.tokenTable, { backgroundColor: theme.token.colorBgElevated }]}>
-      <Text style={[styles.tableTitle, { color: theme.token.colorText }]}>{title}</Text>
-      <Text style={[styles.tableSubtitle, { color: theme.token.colorTextSecondary }]}>
-        {filteredTokens.length} tokens
-      </Text>
-
-      <View style={styles.tokensContainer}>
-        {sortedTokens.map((token) => (
-          <View
-            key={token.name}
-            style={[styles.tokenRow, { borderBottomColor: theme.token.colorBorderSecondary }]}
-          >
-            <View style={styles.tokenInfo}>
-              <Text style={[styles.tokenName, { color: theme.token.colorText }]}>{token.name}</Text>
-              <Text style={[styles.tokenDescription, { color: theme.token.colorTextSecondary }]}>
-                {token.description}
-              </Text>
-            </View>
-            <View style={styles.tokenValueContainer}>{renderValue(token)}</View>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-};
+import { useStyles } from './style';
 
 // 新增主题控制器组件
 interface ThemeControlsProps {
@@ -429,7 +178,7 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
             ]}
             value={String(fontSize)}
           />
-          <Text style={[styles.tokenValue, { color: token.colorTextSecondary }]}>px</Text>
+          <Text style={[{ color: token.colorTextSecondary }]}>px</Text>
         </View>
         <View style={styles.presetRow}>
           {fontSizePresets.map((size) => (
@@ -453,6 +202,7 @@ interface ThemeTokensContentProps {
   localFontSize: number;
   localNeutralColor: NeutralColors;
   localPrimaryColor: PrimaryColors;
+  localThemeMode: 'light' | 'dark';
   onFontSizeChange: (size: number) => void;
   onNeutralColorChange: (color: NeutralColors) => void;
   onPrimaryColorChange: (color: PrimaryColors) => void;
@@ -463,6 +213,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
   localPrimaryColor,
   localNeutralColor,
   localFontSize,
+  localThemeMode,
   onFontSizeChange,
   onNeutralColorChange,
   onPrimaryColorChange,
@@ -481,19 +232,16 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
       type: 'other' as const, // 简化类型，不再区分
       value,
     }));
-  }, [theme.isDark, token.primaryColor, token.fontSize]);
+  }, [localThemeMode, localPrimaryColor, localNeutralColor, localFontSize]);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: token.colorBgLayout }]}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Palette color={token.colorText} size={24} />
           <Text style={[styles.headerTitle, { color: token.colorText }]}>主题令牌</Text>
         </View>
-        <TouchableOpacity
-          onPress={onToggleTheme}
-          style={[styles.themeToggle, { backgroundColor: token.colorFillSecondary }]}
-        >
+        <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
           {theme.isDark ? (
             <Sun color={token.colorText} size={20} />
           ) : (
@@ -513,12 +261,12 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
           primaryColor={localPrimaryColor}
         />
 
-        <View style={[styles.searchContainer, { backgroundColor: token.colorFillTertiary }]}>
+        <View style={styles.searchContainer}>
           <TextInput
             onChangeText={setSearchText}
             placeholder="搜索令牌..."
             placeholderTextColor={token.colorTextPlaceholder}
-            style={[styles.searchInput, { color: token.colorText }]}
+            style={styles.searchInput}
             value={searchText}
           />
         </View>
@@ -556,6 +304,7 @@ const ThemeTokensPlayground: React.FC = () => {
         localFontSize={localFontSize}
         localNeutralColor={localNeutralColor}
         localPrimaryColor={localPrimaryColor}
+        localThemeMode={localThemeMode}
         onFontSizeChange={setLocalFontSize}
         onNeutralColorChange={setLocalNeutralColor}
         onPrimaryColorChange={setLocalPrimaryColor}

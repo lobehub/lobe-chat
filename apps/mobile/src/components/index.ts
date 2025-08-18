@@ -1,3 +1,5 @@
+export { default as TokenTable } from '../../app/playground/components/theme-token/(components)/TokenTable';
+export * from '../../app/playground/components/theme-token/(components)/TokenTable';
 export * from '../theme/ThemeProvider';
 export { default as ActionIcon } from './ActionIcon';
 export { default as Avatar } from './Avatar';
