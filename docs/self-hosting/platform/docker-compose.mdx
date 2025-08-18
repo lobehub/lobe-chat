@@ -62,6 +62,28 @@ We provide a [Docker image][docker-release-link] for deploying the LobeChat serv
         ACCESS_CODE: lobe66
   ```
 
+  #### Using Amazon Bedrock
+
+  If you want to use Amazon Bedrock models, you can configure it as follows:
+
+  ```yml
+  version: '3.8'
+
+  services:
+    lobe-chat:
+      image: lobehub/lobe-chat
+      container_name: lobe-chat
+      restart: always
+      ports:
+        - '3210:3210'
+      environment:
+        AWS_BEARER_TOKEN_BEDROCK: your_bearer_token_here
+        AWS_REGION: us-east-1
+        ACCESS_CODE: lobe66
+  ```
+
+  For more information about obtaining Bedrock API keys, see the [Bedrock Provider Guide](/docs/usage/providers/bedrock).
+
   Run the following command to start the Lobe Chat service:
 
   ```bash

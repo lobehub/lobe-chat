@@ -60,6 +60,28 @@ tags:
         ACCESS_CODE: lobe66
   ```
 
+  #### 使用 Amazon Bedrock
+
+  如果你想使用 Amazon Bedrock 模型，可以按如下方式配置：
+
+  ```yml
+  version: '3.8'
+
+  services:
+    lobe-chat:
+      image: lobehub/lobe-chat
+      container_name: lobe-chat
+      restart: always
+      ports:
+        - '3210:3210'
+      environment:
+        AWS_BEARER_TOKEN_BEDROCK: your_bearer_token_here
+        AWS_REGION: us-east-1
+        ACCESS_CODE: lobe66
+  ```
+
+  关于获取 Bedrock API 密钥的更多信息，请参阅 [Bedrock 服务商指南](/zh/docs/usage/providers/bedrock)。
+
   运行以下命令启动 Lobe Chat 服务：
 
   ```bash

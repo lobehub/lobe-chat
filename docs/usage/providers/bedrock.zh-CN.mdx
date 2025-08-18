@@ -38,12 +38,12 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
 
   ### 步骤二：获取 Amazon Bedrock API 密钥
 
-  AWS Bedrock 使用 API 密钥认证，安全且简单。
+  AWS Bedrock 使用 Bearer Token 认证，安全且简单。
 
   - 在 AWS 控制台中，导航到 Amazon Bedrock 服务
   - 在左侧菜单中选择 `API keys`
   - 点击 `Create API key`
-  - 复制并妥善保存生成的 API 密钥（bearer token）
+  - 复制并妥善保存生成的 API 密钥（Bearer Token）
 
   <Callout type={'warning'}>
     请安全地存储 API 密钥，因为它只会出现一次。如果您意外丢失它，您将需要创建一个新的 API 密钥。
@@ -53,7 +53,7 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
 
   - 访问 LobeChat 的`设置`界面
   - 在`AI 服务商`下找到`Amazon Bedrock`的设置项并打开
-  - 在 Bearer Token 字段中输入您的 API 密钥（bearer token）
+  - 在 API Key 字段中输入您的 API 密钥（Bearer Token）
   - 选择您的 AWS 区域（可选，默认为 us-east-1）
   - 为你的助手选择一个 Amazon Bedrock 的模型即可开始对话
 
@@ -64,7 +64,7 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
   对于服务器部署，您可以设置以下环境变量：
 
   ```bash
-  AWS_BEARER_TOKEN_BEDROCK=your_api_key_here
+  AWS_BEARER_TOKEN_BEDROCK=your_bearer_token_here
   AWS_REGION=us-east-1  # 可选，默认为 us-east-1
   AWS_BEDROCK_MODEL_LIST=all  # 可选，参见下方模型配置
   ```

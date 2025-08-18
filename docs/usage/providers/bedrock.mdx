@@ -40,12 +40,12 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
 
   ### Step 2: Get Amazon Bedrock API Key
 
-  AWS Bedrock uses API key authentication for secure and simple access.
+  AWS Bedrock uses Bearer Token authentication for secure and simple access.
 
   - In the AWS Console, navigate to Amazon Bedrock service
   - Go to `API keys` in the left menu
   - Click `Create API key`
-  - Copy and securely store the generated API key (bearer token)
+  - Copy and securely store the generated API key (Bearer Token)
 
   <Callout type={'warning'}>
     Please securely store the API key as it will only be shown once. If you lose it accidentally, you
@@ -56,7 +56,7 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
 
   - Access the `Settings` interface in LobeChat
   - Find the setting for `Amazon Bedrock` under `AI Service Provider` and open it
-  - Enter your API key (bearer token) in the Bearer Token field
+  - Enter your API key (Bearer Token) in the API Key field
   - Select your AWS region (optional, defaults to us-east-1)
   - Choose an Amazon Bedrock model for your assistant to start the conversation
 
@@ -67,7 +67,7 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
   For server deployments, you can set the following environment variables:
 
   ```bash
-  AWS_BEARER_TOKEN_BEDROCK=your_api_key_here
+  AWS_BEARER_TOKEN_BEDROCK=your_bearer_token_here
   AWS_REGION=us-east-1  # Optional, defaults to us-east-1
   AWS_BEDROCK_MODEL_LIST=all  # Optional, see model configuration below
   ```

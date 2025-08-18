@@ -92,6 +92,21 @@ We provide a [Docker image][docker-release-link] for you to deploy the LobeChat 
     lobehub/lobe-chat
   ```
 
+  #### Using Amazon Bedrock
+
+  If you want to use Amazon Bedrock models, you can configure it using the Bearer Token authentication:
+
+  ```fish
+  $ docker run -d -p 3210:3210 \
+    -e AWS_BEARER_TOKEN_BEDROCK=your_bearer_token_here \
+    -e AWS_REGION=us-east-1 \
+    -e ACCESS_CODE=lobe66 \
+    --name lobe-chat \
+    lobehub/lobe-chat
+  ```
+
+  For more information about obtaining Bedrock API keys, see the [Bedrock Provider Guide](/docs/usage/providers/bedrock).
+
   ### Crontab Automatic Update Script (Optional)
 
   If you want to automatically obtain the latest image, you can follow these steps.
