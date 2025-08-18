@@ -29,7 +29,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
 
   const canSend = input.trim();
 
-  const senderIconColor = token.colorBgContainer;
+  const senderIconColor = token.colorText;
 
   const SenderBtn = useMemo(
     () => () =>
