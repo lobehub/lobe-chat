@@ -136,6 +136,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BflProvider,
   NovitaProvider,
   PPIOProvider,
+  Ai302Provider,
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
@@ -172,7 +173,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Search1APIProvider,
   InfiniAIProvider,
   QiniuProvider,
-  Ai302Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
