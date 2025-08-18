@@ -274,6 +274,11 @@ export class UserService extends BaseService {
         }
       }
 
+      if (userData.roleIds && userData.roleIds.length > 0) {
+        const rbacModel = new RbacModel(this.db, userId);
+        await rbacModel.updateUserRoles(userId, userData.roleIds);
+      }
+
       // 更新用户信息
       const [updatedUser] = await this.db
         .update(users)
