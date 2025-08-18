@@ -40,10 +40,7 @@ vi.mock('@/config/llm', () => ({
 
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
-    AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
-    AWS_ACCESS_KEY_ID: 'test-aws-id',
     AWS_REGION: 'test-aws-region',
-    AWS_SESSION_TOKEN: 'test-aws-session-token',
     AWS_BEARER_TOKEN_BEDROCK: 'test-bearer-token',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',

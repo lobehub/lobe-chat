@@ -222,18 +222,18 @@ export const VALID_BEDROCK_REGIONS = new Set([
  */
 export function handleBedrockError(error: any, region: string): any {
   // Import dynamically to avoid circular dependencies
-  const createError = require('../utils/createError');
-  const errorTypes = require('../error');
-  const types = require('../types');
+  const { AgentRuntimeError } = require('../utils/createError');
+  const { AgentRuntimeErrorType } = require('../error');
+  const { ModelProvider } = require('../types');
 
-  return createError.AgentRuntimeError.chat({
+  return AgentRuntimeError.chat({
     error: {
       body: undefined,
       message: error.message,
       type: error.name,
     },
-    errorType: errorTypes.AgentRuntimeErrorType.ProviderBizError,
-    provider: types.ModelProvider.Bedrock,
+    errorType: AgentRuntimeErrorType.ProviderBizError,
+    provider: ModelProvider.Bedrock,
     region,
   });
 }
