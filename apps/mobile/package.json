@@ -38,6 +38,7 @@
     "production:local": "npm run build:android:local && npm run build:ios:local"
   },
   "dependencies": {
+    "@csark0812/zustand-expo-devtools": "^2.0.2",
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "~14.0.4",
     "@gorhom/portal": "^1.0.14",
@@ -91,6 +92,7 @@
     "lucide-react-native": "^0.514.0",
     "markdown-it-mathjax3": "^4.3.2",
     "markdown-it-textual-uml": "^0.17.1",
+    "mustache": "^4.2.0",
     "nanoid": "^5.1.5",
     "openai": "^4.86.2",
     "react": "18.3.1",
@@ -112,6 +114,7 @@
     "react-native-svg": "15.8.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
+    "redux-devtools-expo-dev-plugin": "^2.0.0",
     "shiki": "^3.1.0",
     "superjson": "^2.2.2",
     "swr": "^2.3.4",
@@ -128,6 +131,7 @@
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.14",
     "@types/lodash-es": "^4.17.12",
+    "@types/mustache": "^4.2.6",
     "@types/react": "~19.0.10",
     "consola": "^3.4.2",
     "eslint": "^8.57.1",
