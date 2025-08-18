@@ -683,9 +683,9 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-plus-2025-07-10',
+      deploymentName: 'qwen-vl-plus-2025-08-15',
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
@@ -695,9 +695,9 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.15 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.8 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
