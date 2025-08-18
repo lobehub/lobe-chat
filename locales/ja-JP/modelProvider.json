@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "AWS Access Key Id を入力してください",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "AccessKeyId / SecretAccessKey が正しく入力されているかをテストします"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "AWS リージョンを入力してください",
-      "placeholder": "AWS リージョン",
-      "title": "AWS リージョン"
-    },
-    "secretAccessKey": {
-      "desc": "AWS Secret Access Key を入力してください",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "AWS SSO/STSを使用している場合は、AWSセッショントークンを入力してください。",
-      "placeholder": "AWSセッショントークン",
-      "title": "AWSセッショントークン（オプション）"
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "カスタムサービスリージョン",
-      "customSessionToken": "カスタムセッショントークン",
-      "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
-      "imageGenerationDescription": "AWSのAccessKeyId / SecretAccessKeyを入力すると、生成を開始できます。アプリは認証情報を記録しません。",
-      "title": "使用カスタム Bedrock 認証情報"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {
