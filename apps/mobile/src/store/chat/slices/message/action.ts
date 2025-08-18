@@ -1,9 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { ChatErrorType, TraceEventType } from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
-import useSWR, { SWRResponse } from 'swr';
 
 import { messageService } from '@/services/message';
+import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
@@ -17,15 +20,14 @@ import {
 } from '@/types/message';
 import { ChatImageItem } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
-import { Action, setNamespace } from '@/utils/storeDebug';
+import { TraceEventPayloads } from '@/types/trace';
+import { Action } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
+import type { ChatStoreState } from '../../initialState';
+import { chatSelectors } from '../../selectors';
 import { toggleBooleanList } from '../../utils';
-import { MessageDispatch } from './reducer';
-import { TraceEventPayloads } from '@/types/trace';
-import { ChatStoreState } from '../../initialState';
-
-const n = setNamespace('m');
+import { MessageDispatch, messagesReducer } from './reducer';
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
@@ -132,345 +134,307 @@ export const chatMessage: StateCreator<
   [],
   ChatMessageAction
 > = (set, get) => ({
-  // ============ 核心功能实现 ============
+  deleteMessage: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
 
-  addAIMessage: async () => {
-    const { activeId, activeTopicId, internal_createMessage, updateInputMessage } = get();
-    const newMessage: CreateMessageParams = {
-      content: '',
-      role: 'assistant',
-      sessionId: activeId,
-      topicId: activeTopicId,
-    };
+    let ids = [message.id];
 
-    await internal_createMessage(newMessage);
-    updateInputMessage('');
-    return;
+    // if the message is a tool calls, then delete all the related messages
+    if (message.tools) {
+      const toolMessageIds = message.tools.flatMap((tool) => {
+        const messages = chatSelectors
+          .activeBaseChats(get())
+          .filter((m) => m.tool_call_id === tool.id);
+
+        return messages.map((m) => m.id);
+      });
+      ids = ids.concat(toolMessageIds);
+    }
+
+    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    await messageService.removeMessages(ids);
+    await get().refreshMessages();
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deleteToolMessage: async (id) => {
+    // const message = chatSelectors.getMessageById(id)(get());
+    // if (!message || message.role !== 'tool') return;
+    //
+    // const removeToolInAssistantMessage = async () => {
+    //   if (!message.parentId) return;
+    //   await get().internal_removeToolToAssistantMessage(message.parentId, message.tool_call_id);
+    // };
+    //
+    // await Promise.all([
+    //   // 1. remove tool message
+    //   get().internal_deleteMessage(id),
+    //   // 2. remove the tool item in the assistant tools
+    //   removeToolInAssistantMessage(),
+    // ]);
   },
 
   clearMessage: async () => {
-    const { activeId } = get();
-    // TODO: 实现清除消息功能
-    set(
-      {
-        messagesMap: {
-          ...get().messagesMap,
-          [activeId]: [],
-        },
-        messagesInit: false,
-      },
-      false,
-      n('clearMessage'),
-    );
-  },
+    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
-  deleteMessage: async (id: string) => {
-    const { activeId } = get();
-    const messages = get().messagesMap[activeId] || [];
-    set(
-      {
-        messagesMap: {
-          ...get().messagesMap,
-          [activeId]: messages.filter((m) => m.id !== id),
-        },
-      },
-      false,
-      n('deleteMessage'),
-    );
+    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
 
-    // 从服务端删除
-    try {
-      await messageService.removeMessage(id);
-    } catch (error) {
-      console.error('Delete message failed:', error);
+    if (activeTopicId) {
+      await topicService.removeTopic(activeTopicId);
     }
-  },
+    await refreshTopic();
+    await refreshMessages();
 
-  deleteToolMessage: async (id: string) => {
-    return get().deleteMessage(id);
+    // after remove topic , go back to default topic
+    switchTopic();
   },
-
   clearAllMessages: async () => {
-    set(
-      {
-        messagesMap: {},
-        messagesInit: false,
-      },
-      false,
-      n('clearAllMessages'),
-    );
-
-    try {
-      await messageService.removeAllMessages();
-    } catch (error) {
-      console.error('Clear all messages failed:', error);
-    }
+    const { refreshMessages } = get();
+    await messageService.removeAllMessages();
+    await refreshMessages();
   },
+  addAIMessage: async () => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
+      get();
+    if (!activeId) return;
 
-  updateInputMessage: (message: string) => {
-    set({ inputMessage: message }, false, n('updateInputMessage'));
+    await internal_createMessage({
+      content: inputMessage,
+      role: 'assistant',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
   },
-
-  modifyMessageContent: async (id: string, content: string) => {
-    // 乐观更新
-    get().internal_updateMessageContent(id, content);
-
-    try {
-      await messageService.updateMessage(id, { content });
-    } catch (error) {
-      console.error('Update message content failed:', error);
-    }
-  },
-
-  toggleMessageEditing: (id: string, editing: boolean) => {
-    set(
-      {
-        messageEditingIds: toggleBooleanList(get().messageEditingIds, id, editing),
-      },
-      false,
-      n('toggleMessageEditing'),
-    );
-  },
-
-  useFetchMessages: (enable: boolean, sessionId: string, topicId?: string) => {
-    const key = enable ? `${SWR_USE_FETCH_MESSAGES}-${sessionId}-${topicId}` : null;
-
-    return useSWR<ChatMessage[]>(
-      key,
-      async () => {
-        return messageService.getMessages(sessionId, topicId);
-      },
-      {
-        onSuccess: (data) => {
-          const { internal_dispatchMessage } = get();
-          internal_dispatchMessage({
-            messages: data,
-            sessionId,
-            topicId,
-            type: 'addMessages',
-          });
-
-          set({ messagesInit: true }, false, n('useFetchMessages(success)'));
-        },
-        revalidateOnFocus: false,
-      },
-    );
-  },
-
-  copyMessage: async (id: string, content: string) => {
-    // TODO: 实现复制消息功能
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  copyMessage: async (id, content) => {
     // await copyToClipboard(content);
-    console.log('Copy message:', id, content);
+
+    get().internal_traceMessage(id, { eventType: TraceEventType.CopyMessage });
+  },
+  toggleMessageEditing: (id, editing) => {
+    set(
+      { messageEditingIds: toggleBooleanList(get().messageEditingIds, id, editing) },
+      false,
+      'toggleMessageEditing',
+    );
   },
 
-  refreshMessages: async () => {
-    const { activeId, activeTopicId } = get();
-    set({ messagesInit: false }, false, n('refreshMessages'));
+  updateInputMessage: (message) => {
+    if (isEqual(message, get().inputMessage)) return;
 
-    try {
-      const messages = await messageService.getMessages(activeId, activeTopicId);
-      get().internal_dispatchMessage({
-        messages,
-        sessionId: activeId,
-        topicId: activeTopicId,
-        type: 'addMessages',
-      });
-      set({ messagesInit: true }, false, n('refreshMessages(success)'));
-    } catch (error) {
-      console.error('Refresh messages failed:', error);
-    }
+    set({ inputMessage: message }, false);
   },
+  modifyMessageContent: async (id, content) => {
+    // tracing the diff of update
+    // due to message content will change, so we need send trace before update,or will get wrong data
+    get().internal_traceMessage(id, {
+      eventType: TraceEventType.ModifyMessage,
+      nextContent: content,
+    });
 
-  // ============ 内部方法实现 ============
-
-  internal_dispatchMessage: (payload: MessageDispatch) => {
-    const { activeId } = get();
-    const { messages, sessionId, topicId } = payload;
-    const key = messageMapKey(sessionId || activeId, topicId);
-    const currentMessagesMap = get().messagesMap;
-    const currentMessages = currentMessagesMap[key] || [];
-
-    let newMessagesMap = currentMessagesMap;
-
-    switch (payload.type) {
-      case 'addMessage': {
-        if (payload.message) {
-          newMessagesMap = {
-            ...currentMessagesMap,
-            [key]: [...currentMessages, payload.message as ChatMessage],
+    await get().internal_updateMessageContent(id, content);
+  },
+  useFetchMessages: (enable, sessionId, activeTopicId) =>
+    useSWR<ChatMessage[]>(
+      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
+      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
+        messageService.getMessages(sessionId, topicId),
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onSuccess: (messages, key) => {
+          const nextMap = {
+            ...get().messagesMap,
+            [messageMapKey(sessionId, activeTopicId)]: messages,
           };
-        }
-        break;
-      }
-      case 'addMessages': {
-        newMessagesMap = {
-          ...currentMessagesMap,
-          [key]: messages || [],
-        };
-        break;
-      }
-      case 'updateMessage': {
-        if (payload.message) {
-          const index = currentMessages.findIndex((m) => m.id === payload.id);
-          if (index >= 0) {
-            const updatedMessages = [...currentMessages];
-            updatedMessages[index] = { ...updatedMessages[index], ...payload.message };
-            newMessagesMap = {
-              ...currentMessagesMap,
-              [key]: updatedMessages,
-            };
-          }
-        }
-        break;
-      }
-      case 'updateMessageContent': {
-        if (payload.content !== undefined) {
-          const index = currentMessages.findIndex((m) => m.id === payload.id);
-          if (index >= 0) {
-            const updatedMessages = [...currentMessages];
-            updatedMessages[index] = {
-              ...updatedMessages[index],
-              content: payload.content,
-              updatedAt: Date.now(),
-            };
-            newMessagesMap = {
-              ...currentMessagesMap,
-              [key]: updatedMessages,
-            };
-          }
-        }
-        break;
-      }
-    }
+          // no need to update map if the messages have been init and the map is the same
+          if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
 
-    if (newMessagesMap !== currentMessagesMap) {
-      set({ messagesMap: newMessagesMap }, false, n('dispatchMessage'));
-    }
+          set({ messagesInit: true, messagesMap: nextMap }, false);
+        },
+      },
+    ),
+  refreshMessages: async () => {
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
   },
 
-  internal_updateMessageContent: async (id: string, content: string) => {
-    const { activeId, activeTopicId } = get();
+  // the internal process method of the AI message
+  internal_dispatchMessage: (payload) => {
+    const { activeId } = get();
 
-    get().internal_dispatchMessage({
-      type: 'updateMessageContent',
-      id,
+    if (!activeId) return;
+
+    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
+
+    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+
+    if (isEqual(nextMap, get().messagesMap)) return;
+
+    set({ messagesMap: nextMap }, false, { type: `dispatchMessage/${payload.type}`, payload });
+  },
+
+  internal_updateMessageError: async (id, error) => {
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
+    await messageService.updateMessage(id, { error });
+    await get().refreshMessages();
+  },
+
+  internal_updateMessagePluginError: async (id, error) => {
+    await messageService.updateMessagePluginError(id, error);
+    await get().refreshMessages();
+  },
+
+  internal_updateMessageContent: async (id, content, extra) => {
+    const { internal_dispatchMessage, refreshMessages } = get();
+
+    // Due to the async update method and refresh need about 100ms
+    // we need to update the message content at the frontend to avoid the update flick
+    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
+    if (extra?.toolCalls) {
+      // internal_dispatchMessage({
+      //   id,
+      //   type: 'updateMessage',
+      //   value: { tools: internal_transformToolCalls(extra?.toolCalls) },
+      // });
+    } else {
+      internal_dispatchMessage({
+        id,
+        type: 'updateMessage',
+        value: { content },
+      });
+    }
+
+    await messageService.updateMessage(id, {
       content,
-      sessionId: activeId,
-      topicId: activeTopicId,
+      // tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+      tools: undefined, //临时方案，无工具调用
+      reasoning: extra?.reasoning,
+      search: extra?.search,
+      metadata: extra?.metadata,
+      model: extra?.model,
+      provider: extra?.provider,
+      imageList: extra?.imageList,
     });
+    await refreshMessages();
   },
 
-  internal_updateMessageError: async (id: string, error: ChatMessageError | null) => {
-    const { activeId, activeTopicId } = get();
-
-    get().internal_dispatchMessage({
-      type: 'updateMessage',
-      id,
-      message: { error },
-      sessionId: activeId,
-      topicId: activeTopicId,
-    });
-  },
-
-  internal_updateMessagePluginError: async (id: string, error: ChatMessagePluginError | null) => {
-    // Mobile端暂不支持插件功能
-    console.log('Plugin error update not supported in mobile:', id, error);
-  },
-
-  internal_createMessage: async (params: CreateMessageParams, context = {}) => {
-    const { internal_createTmpMessage, internal_toggleMessageLoading, refreshMessages } = get();
-
+  internal_createMessage: async (message, context) => {
+    const {
+      internal_createTmpMessage,
+      refreshMessages,
+      internal_toggleMessageLoading,
+      internal_dispatchMessage,
+    } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
-      // 使用乐观更新避免缓慢等待
-      tempId = internal_createTmpMessage(params);
+      // use optimistic update to avoid the slow waiting
+      tempId = internal_createTmpMessage(message);
+
       internal_toggleMessageLoading(true, tempId);
     }
 
     try {
-      const id = await messageService.createMessage(params);
+      const id = await messageService.createMessage(message);
       if (!context?.skipRefresh) {
+        internal_toggleMessageLoading(true, tempId);
         await refreshMessages();
       }
+
       internal_toggleMessageLoading(false, tempId);
       return id;
-    } catch (error) {
-      console.error('Create message failed:', error);
+    } catch (e) {
       internal_toggleMessageLoading(false, tempId);
-      throw error;
+      internal_dispatchMessage({
+        id: tempId,
+        type: 'updateMessage',
+        value: {
+          error: { type: ChatErrorType.CreateMessageError, message: (e as Error).message, body: e },
+        },
+      });
     }
   },
 
-  internal_createTmpMessage: (params: CreateMessageParams) => {
-    const tempId = nanoid();
-    const tempMessage: ChatMessage = {
-      id: tempId,
-      content: params.content,
-      role: params.role,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      meta: {},
-      parentId: params.parentId,
-    };
+  internal_fetchMessages: async () => {
+    const messages = await messageService.getMessages(get().activeId, get().activeTopicId);
+    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+    // no need to update map if the messages have been init and the map is the same
+    if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
 
-    const { activeId, activeTopicId } = get();
-    get().internal_dispatchMessage({
-      type: 'addMessage',
-      message: tempMessage,
-      sessionId: activeId,
-      topicId: activeTopicId,
-    });
+    set({ messagesInit: true, messagesMap: nextMap }, false);
+  },
+  internal_createTmpMessage: (message) => {
+    const { internal_dispatchMessage } = get();
+
+    // use optimistic update to avoid the slow waiting
+    const tempId = 'tmp_' + nanoid();
+    internal_dispatchMessage({ type: 'createMessage', id: tempId, value: message });
 
     return tempId;
   },
-
-  internal_toggleMessageLoading: (loading: boolean, id: string) => {
-    get().internal_toggleLoadingArrays('messageLoadingIds', loading, id);
-  },
-
-  internal_toggleLoadingArrays: (
-    key: keyof ChatStoreState,
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => {
-    if (!id) return undefined;
-
-    const actionName = action || n('toggleLoadingArrays');
-    set(
-      {
-        [key]: toggleBooleanList(get()[key] as string[], id, loading),
-      },
-      false,
-      actionName as any,
-    );
-    return undefined;
-  },
-
   internal_deleteMessage: async (id: string) => {
-    await get().deleteMessage(id);
-  },
-
-  internal_fetchMessages: async () => {
+    get().internal_dispatchMessage({ type: 'deleteMessage', id });
+    await messageService.removeMessage(id);
     await get().refreshMessages();
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  internal_traceMessage: async (id, payload) => {
+    // tracing the diff of update
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
 
-  internal_traceMessage: async (id: string, payload: TraceEventPayloads) => {
-    // Mobile端暂不支持追踪功能
-    console.log('Trace message not supported in mobile:', { id, payload });
+    const traceId = message?.traceId;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const observationId = message?.observationId;
+
+    if (traceId && message?.role === 'assistant') {
+      // traceService
+      //   .traceEvent({ traceId, observationId, content: message.content, ...payload })
+      //   .catch();
+    }
   },
 
-  // ============ 未实现功能（抛出错误）============
+  // ----- Loading ------- //
+  internal_toggleMessageLoading: (loading, id) => {
+    set(
+      {
+        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
+      },
+      false,
+      `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
+    );
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  internal_toggleLoadingArrays: (key, loading, id, action) => {
+    const abortControllerKey = `${key}AbortController`;
+    if (loading) {
+      // window.addEventListener('beforeunload', preventLeavingFn);
 
-  // sendMessage: async (message: string) => {
-  //   throw new Error('sendMessage should be implemented in aiChat slice');
-  // },
+      const abortController = new AbortController();
+      set(
+        {
+          [abortControllerKey]: abortController,
+          [key]: toggleBooleanList(get()[key] as string[], id!, loading),
+        },
+        false,
+      );
 
-  // translateMessage: async (id: string, targetLang?: string) => {
-  //   throw new Error('Translation feature not implemented in mobile version');
-  // },
+      return abortController;
+    } else {
+      if (!id) {
+        set({ [abortControllerKey]: undefined, [key]: [] }, false);
+      } else
+        set(
+          {
+            [abortControllerKey]: undefined,
+            [key]: toggleBooleanList(get()[key] as string[], id, loading),
+          },
+          false,
+        );
 
-  // ttsMessage: async (id: string) => {
-  //   throw new Error('TTS feature not implemented in mobile version');
-  // },
+      // window.removeEventListener('beforeunload', preventLeavingFn);
+    }
+  },
 });

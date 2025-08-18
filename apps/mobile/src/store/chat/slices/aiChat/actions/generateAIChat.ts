@@ -1,17 +1,33 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
+import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
+import Mustache from 'mustache';
 
-import { LOADING_FLAT } from '@/const/message';
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
+// import { isDesktop, isServerMode } from '@/const/version';
+// import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
+import { messageService } from '@/services/message';
+import { useAgentStore } from '@/store/agent';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
-import { agentSelectors } from '@/store/agent/selectors';
+import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
+import { getAiInfraStoreState } from '@/store/aiInfra/store';
+import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+// import { getFileStoreState } from '@/store/file/store';
+import { useSessionStore } from '@/store/session';
+// import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
+import { ChatImageItem } from '@/types/message/image';
+import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-import { toggleBooleanList } from '../../../utils';
+import { chatSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
 
@@ -19,6 +35,9 @@ interface ProcessMessageParams {
   traceId?: string;
   isWelcomeQuestion?: boolean;
   inSearchWorkflow?: boolean;
+  /**
+   * the RAG query content, should be embedding and used in the semantic search
+   */
   ragQuery?: string;
   threadId?: string;
   inPortalThread?: boolean;
@@ -108,10 +127,6 @@ export interface AIGenerateAction {
   ) => AbortController | undefined;
 
   internal_toggleSearchWorkflow: (loading: boolean, id?: string) => void;
-
-  // ========== 未实现的功能（注释状态）========== //
-  // internal_onRagQueryFinish: (messages: ChatMessage[], ragQuery: string) => Promise<void>;
-  // runPluginApi: (id: string, payload: any) => Promise<void>;
 }
 
 export const generateAIChat: StateCreator<
@@ -120,339 +135,732 @@ export const generateAIChat: StateCreator<
   [],
   AIGenerateAction
 > = (set, get) => ({
-  sendMessage: async ({ message, onlyAddUserMessage }) => {
-    const { activeId, activeTopicId } = get();
+  delAndRegenerateMessage: async (id) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    get().internal_resendMessage(id, { traceId });
+    get().deleteMessage(id);
 
-    // 1. Add user message
-    const userMessage: CreateMessageParams = {
+    // trace the delete and regenerate message
+    get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
+  },
+  regenerateMessage: async (id) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    await get().internal_resendMessage(id, { traceId });
+
+    // trace the delete and regenerate message
+    get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
+  },
+
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+    const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
+    if (!activeId) return;
+
+    const fileIdList = files?.map((f) => f.id);
+
+    const hasFile = !!fileIdList && fileIdList.length > 0;
+
+    // if message is empty or no files, then stop
+    if (!message && !hasFile) return;
+
+    set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
+
+    const newMessage: CreateMessageParams = {
       content: message,
+      // if message has attached with files, then add files to message and the agent
+      files: fileIdList,
       role: 'user',
       sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      threadId: activeThreadId,
     };
 
-    const userMessageId = await get().internal_createMessage(userMessage);
+    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
-    // 如果只添加用户消息，直接返回
-    if (onlyAddUserMessage) return;
+    let tempMessageId: string | undefined = undefined;
+    let newTopicId: string | undefined = undefined;
 
-    // 2. Add AI message placeholder
-    const assistantMessage: CreateMessageParams = {
-      content: LOADING_FLAT,
-      role: 'assistant',
-      sessionId: activeId,
-      topicId: activeTopicId,
-      parentId: userMessageId,
-    };
+    // it should be the default topic, then
+    // if autoCreateTopic is enabled, check to whether we need to create a topic
+    if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
+      // check activeTopic and then auto create topic
+      const chats = chatSelectors.activeBaseChats(get());
 
-    const assistantMessageId = await get().internal_createMessage(assistantMessage);
+      // we will add two messages (user and assistant), so the finial length should +2
+      const featureLength = chats.length + 2;
 
-    // 3. Generate AI response
-    try {
-      const messagesMap = get().messagesMap;
-      const key = activeTopicId ? `${activeId}${activeTopicId}` : activeId;
-      const messages = messagesMap[key] || [];
-      if (userMessageId && assistantMessageId) {
-        // 直接传递正式的assistantMessageId，参考web端实现
-        get().internal_toggleChatLoading(true, assistantMessageId);
-        try {
-          await get().internal_fetchAIChatMessage({
-            messages: messages.filter(
-              (m) => m.role !== 'assistant' || m.parentId !== userMessageId,
-            ),
-            messageId: assistantMessageId, // 使用正式ID
-            model: agentSelectors.currentAgentModel(getAgentStoreState()),
-            provider: agentSelectors.currentAgentModelProvider(getAgentStoreState()),
-            params: {},
-          });
-        } finally {
-          get().internal_toggleChatLoading(false, assistantMessageId);
+      // if there is no activeTopicId and the feature length is greater than the threshold
+      // then create a new topic and active it
+      if (!activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
+        // we need to create a temp message for optimistic update
+        tempMessageId = get().internal_createTmpMessage(newMessage);
+        get().internal_toggleMessageLoading(true, tempMessageId);
+
+        const topicId = await get().createTopic();
+
+        if (topicId) {
+          newTopicId = topicId;
+          newMessage.topicId = topicId;
+
+          // we need to copy the messages to the new topic or the message will disappear
+          const mapKey = chatSelectors.currentChatKey(get());
+          const newMaps = {
+            ...get().messagesMap,
+            [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
+          };
+          set({ messagesMap: newMaps }, false, n('moveMessagesToNewTopic'));
+
+          // make the topic loading
+          get().internal_updateTopicLoading(topicId, true);
         }
       }
-    } catch (error) {
-      console.error('Send message failed:', error);
-      if (assistantMessageId) {
-        await get().internal_updateMessageError(assistantMessageId, {
-          message: 'AI响应失败，请重试',
-          type: 'BadRequest',
-        });
+    }
+    //  update assistant update to make it rerank
+    useSessionStore.getState().triggerSessionUpdate(get().activeId);
+
+    const id = await get().internal_createMessage(newMessage, {
+      tempMessageId,
+      skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
+    });
+
+    if (!id) {
+      set({ isCreatingMessage: false }, false, n('creatingMessage/start'));
+      if (!!newTopicId) get().internal_updateTopicLoading(newTopicId, false);
+      return;
+    }
+
+    if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
+
+    // switch to the new topic if create the new topic
+    if (!!newTopicId) {
+      await get().switchTopic(newTopicId, true);
+      await get().internal_fetchMessages();
+
+      // delete previous messages
+      // remove the temp message map
+      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
+      set({ messagesMap: newMaps }, false, 'internal_copyMessages');
+    }
+
+    // if only add user message, then stop
+    if (onlyAddUserMessage) {
+      set({ isCreatingMessage: false }, false, 'creatingMessage/start');
+      return;
+    }
+
+    // Get the current messages to generate AI response
+    const messages = chatSelectors.activeBaseChats(get());
+    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+
+    await internal_coreProcessMessage(messages, id, {
+      isWelcomeQuestion,
+      // ragQuery: get().internal_shouldUseRAG() ? message : undefined, TODO neew align with web
+      ragQuery: undefined,
+      threadId: activeThreadId,
+    });
+
+    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
+
+    const summaryTitle = async () => {
+      // if autoCreateTopic is false, then stop
+      if (!agentConfig.enableAutoCreateTopic) return;
+
+      // check activeTopic and then auto update topic title
+      if (newTopicId) {
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, newTopicId))(get());
+        await get().summaryTopicTitle(newTopicId, chats);
+        return;
       }
-    }
-  },
 
-  regenerateMessage: async (id) => {
-    await get().internal_resendMessage(id);
-  },
+      if (!activeTopicId) return;
+      const topic = topicSelectors.getTopicById(activeTopicId)(get());
 
-  delAndRegenerateMessage: async (id) => {
-    await get().internal_resendMessage(id);
-    await get().deleteMessage(id);
-  },
+      if (topic && !topic.title) {
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
+        await get().summaryTopicTitle(topic.id, chats);
+      }
+    };
 
+    // if there is relative files, then add files to agent
+    // only available in server mode
+    const addFilesToAgent = async () => {
+      // if (userFiles.length === 0 || !isServerMode) return; TODO need align with web
+      if (userFiles.length === 0) return;
+
+      await useAgentStore.getState().addFilesToAgent(userFiles, false);
+    };
+
+    await Promise.all([summaryTitle(), addFilesToAgent()]);
+  },
   stopGenerateMessage: () => {
-    const { chatLoadingIdsAbortController } = get();
-    if (chatLoadingIdsAbortController) {
-      chatLoadingIdsAbortController.abort();
-    }
+    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
 
-    set(
-      {
-        chatLoadingIds: [],
-        chatLoadingIdsAbortController: undefined,
-      },
-      false,
-      n('stopGenerateMessage'),
-    );
+    if (!chatLoadingIdsAbortController) return;
+
+    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
+
+    internal_toggleChatLoading(false, undefined);
   },
 
-  // ============ 内部方法实现 ============
+  // the internal process method of the AI message
+  internal_coreProcessMessage: async (originalMessages, userMessageId, params) => {
+    // const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages, activeTopicId } = get(); TODO need align with web
+    const { internal_fetchAIChatMessage, refreshMessages, activeTopicId } = get();
 
-  internal_coreProcessMessage: async (messages, parentId, params = {}) => {
-    // 获取当前Agent配置
-    const agentState = getAgentStoreState();
-    const model = agentSelectors.currentAgentModel(agentState);
-    const provider = agentSelectors.currentAgentModelProvider(agentState);
+    // create a new array to avoid the original messages array change
+    const messages = [...originalMessages];
 
-    // 找到需要生成回复的消息
-    const assistantMessage = messages.find(
-      (m) => m.parentId === parentId && m.role === 'assistant',
-    );
-    if (!assistantMessage) return;
+    const agentStoreState = getAgentStoreState();
+    const { model, provider, chatConfig } = agentSelectors.currentAgentConfig(agentStoreState);
 
-    // 开始生成
-    get().internal_toggleChatLoading(true, assistantMessage.id);
+    let fileChunks: MessageSemanticSearchChunk[] | undefined;
+    let ragQueryId;
 
-    try {
-      await get().internal_fetchAIChatMessage({
-        messages: messages.filter((m) => m.id !== assistantMessage.id), // 排除占位消息
-        messageId: assistantMessage.id,
-        model,
-        provider,
-        params,
+    // go into RAG flow if there is ragQuery flag
+    /*    if (params?.ragQuery) {
+      // 1. get the relative chunks from semantic search
+      const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
+        userMessageId,
+        params?.ragQuery,
+        // should skip the last content
+        messages.map((m) => m.content).slice(0, messages.length - 1),
+      );
+
+      ragQueryId = queryId;
+
+      const lastMsg = messages.pop() as ChatMessage;
+
+      // 2. build the retrieve context messages
+      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
+        chunks,
+        userQuery: lastMsg.content,
+        rewriteQuery,
+        knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
       });
 
-      // 内容更新已在 onFinish 回调中处理，无需重复更新
-    } catch (error) {
-      console.error('Core process message failed:', error);
-      await get().internal_updateMessageError(assistantMessage.id, {
-        message: error instanceof Error ? error.message : '生成回复失败',
-        type: 'BadRequest',
+      // 3. add the retrieve context messages to the messages history
+      messages.push({
+        ...lastMsg,
+        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
       });
-    } finally {
-      get().internal_toggleChatLoading(false, assistantMessage.id);
-    }
-  },
 
-  internal_fetchAIChatMessage: async ({ messages, messageId, model, provider }) => {
-    const { internal_toggleChatLoading, internal_updateMessageContent, internal_dispatchMessage } =
-      get();
-    const abortController = internal_toggleChatLoading(true, messageId);
+      fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
+    }*/
 
-    // 更新abort controller
-    set(
-      { chatLoadingIdsAbortController: abortController },
-      false,
-      n('internal_fetchAIChatMessage(start)'),
+    // 2. Add an empty message to place the AI response
+    const assistantMessage: CreateMessageParams = {
+      role: 'assistant',
+      content: LOADING_FLAT,
+      fromModel: model,
+      fromProvider: provider,
+
+      parentId: userMessageId,
+      sessionId: get().activeId,
+      topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
+      threadId: params?.threadId,
+      fileChunks,
+      ragQueryId,
+    };
+
+    const assistantId = await get().internal_createMessage(assistantMessage);
+
+    if (!assistantId) return;
+
+    // 3. place a search with the search working model if this model is not support tool use
+    const aiInfraStoreState = getAiInfraStoreState();
+    const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(
+      model,
+      provider!,
+    )(aiInfraStoreState);
+    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(provider!)(
+      aiInfraStoreState,
     );
+    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
+      model,
+      provider!,
+    )(aiInfraStoreState);
+    const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
+    const useModelSearch =
+      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch;
+    const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
-    let fullContent = '';
+    /*    if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
+      const { model, provider } = agentChatConfigSelectors.searchFCModel(agentStoreState);
 
-    try {
-      await chatService.createAssistantMessageStream({
-        abortController,
-        params: {
-          messages,
-          model,
-          provider,
-        },
-        onMessageHandle: (chunk) => {
-          switch (chunk.type) {
-            case 'text': {
-              fullContent += chunk.text;
-              internal_dispatchMessage({
-                id: messageId,
-                type: 'updateMessage',
-                value: { content: fullContent },
-              });
-              break;
-            }
-            // Mobile端暂不处理其他类型的消息
+      let isToolsCalling = false;
+      let isError = false;
+
+      const abortController = get().internal_toggleChatLoading(
+        true,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }),
+      );
+
+      get().internal_toggleSearchWorkflow(true, assistantId);
+      await chatService.fetchPresetTaskResult({
+        params: { messages, model, provider, plugins: [WebBrowsingManifest.identifier] },
+        onFinish: async (_, { toolCalls, usage }) => {
+          if (toolCalls && toolCalls.length > 0) {
+            get().internal_toggleToolCallingStreaming(assistantId, undefined);
+            // update tools calling
+            await get().internal_updateMessageContent(assistantId, '', {
+              toolCalls,
+              metadata: usage,
+              model,
+              provider,
+            });
           }
         },
-        onFinish: async (content, { grounding, usage, speed }) => {
-          // if there is traceId, update it
-          // if (traceId) {
-          //   msgTraceId = traceId;
-          //   await messageService.updateMessage(messageId, {
-          //     traceId,
-          //     observationId: observationId ?? undefined,
-          //   });
-          // }
-
-          // 等待所有图片上传完成
-          /*          let finalImages: ChatImageItem[] = [];
-
-          if (uploadTasks.size > 0) {
-            try {
-              // 等待所有上传任务完成
-              const uploadResults = await Promise.all(uploadTasks.values());
-
-              // 使用上传后的 S3 URL 替换原始图像数据
-              finalImages = uploadResults.filter((i) => !!i.url) as ChatImageItem[];
-            } catch (error) {
-              console.error('Error waiting for image uploads:', error);
-            }
-          }*/
-
-          /*          let parsedToolCalls = toolCalls;
-          if (parsedToolCalls && parsedToolCalls.length > 0) {
-            internal_toggleToolCallingStreaming(messageId, undefined);
-            parsedToolCalls = parsedToolCalls.map((item) => ({
-              ...item,
-              function: {
-                ...item.function,
-                arguments: !!item.function.arguments ? item.function.arguments : '{}',
-              },
-            }));
-            isFunctionCall = true;
-          }*/
-
-          // update the content after fetch result
-          fullContent = content;
-          await internal_updateMessageContent(messageId, content, {
-            // toolCalls: parsedToolCalls,
-            // reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
-            search: !!grounding?.citations ? grounding : undefined,
-            // imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: speed ? { ...usage, ...speed } : usage,
-          });
+        trace: {
+          traceId: params?.traceId,
+          sessionId: get().activeId,
+          topicId: get().activeTopicId,
+          traceName: TraceNameMap.SearchIntentRecognition,
         },
-        onErrorHandle: (error) => {
-          console.error('AI message generation error:', error);
-          // get().internal_updateMessageError(messageId, {
-          //   message: error.message || '生成回复失败',
-          //   type: 'BadRequest',
-          // });
+        abortController,
+        onMessageHandle: async (chunk) => {
+          if (chunk.type === 'tool_calls') {
+            get().internal_toggleSearchWorkflow(false, assistantId);
+            get().internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
+            get().internal_dispatchMessage({
+              id: assistantId,
+              type: 'updateMessage',
+              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
+            });
+            isToolsCalling = true;
+          }
+
+          if (chunk.type === 'text') {
+            abortController!.abort('not fc');
+          }
+        },
+        onErrorHandle: async (error) => {
+          isError = true;
+          await messageService.updateMessageError(assistantId, error);
+          await refreshMessages();
         },
       });
 
-      return {
-        content: fullContent,
-        isFunctionCall: false,
-      };
-    } catch (error) {
-      console.error('Fetch AI chat message failed:', error);
-      throw error;
+      get().internal_toggleChatLoading(
+        false,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }),
+      );
+      get().internal_toggleSearchWorkflow(false, assistantId);
+
+      // if there is error, then stop
+      if (isError) return;
+
+      // if it's the function call message, trigger the function method
+      if (isToolsCalling) {
+        get().internal_toggleMessageInToolsCalling(true, assistantId);
+        await refreshMessages();
+        await triggerToolCalls(assistantId, {
+          threadId: params?.threadId,
+          inPortalThread: params?.inPortalThread,
+        });
+
+        // then story the workflow
+        return;
+      }
+    }*/
+
+    // 4. fetch the AI response
+    const { isFunctionCall, content } = await internal_fetchAIChatMessage({
+      messages,
+      messageId: assistantId,
+      params,
+      model,
+      provider: provider!,
+    });
+
+    // 5. if it's the function call message, trigger the function method
+    if (isFunctionCall) {
+      get().internal_toggleMessageInToolsCalling(true, assistantId);
+      // await refreshMessages();
+      // await triggerToolCalls(assistantId, {
+      //   threadId: params?.threadId,
+      //   inPortalThread: params?.inPortalThread,
+      // });
+    } else {
+      // 显示桌面通知（仅在桌面端且窗口隐藏时）
+      // if (isDesktop) {
+      //   try {
+      //     // 动态导入桌面通知服务，避免在非桌面端环境中导入
+      //     const { desktopNotificationService } = await import(
+      //       '@/services/electron/desktopNotification'
+      //     );
+      //
+      //     await desktopNotificationService.showNotification({
+      //       body: content,
+      //       title: t('notification.finishChatGeneration', { ns: 'electron' }),
+      //     });
+      //   } catch (error) {
+      //     // 静默处理错误，不影响正常流程
+      //     console.error('Desktop notification error:', error);
+      //   }
+      // }
     }
+
+    // 6. summary history if context messages is larger than historyCount
+    // const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
+    //
+    // if (
+    //   agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
+    //   chatConfig.enableCompressHistory &&
+    //   originalMessages.length > historyCount
+    // ) {
+    //   // after generation: [u1,a1,u2,a2,u3,a3]
+    //   // but the `originalMessages` is still: [u1,a1,u2,a2,u3]
+    //   // So if historyCount=2, we need to summary [u1,a1,u2,a2]
+    //   // because user find UI is [u1,a1,u2,a2 | u3,a3]
+    //   const historyMessages = originalMessages.slice(0, -historyCount + 1);
+    //
+    //   await get().internal_summaryHistory(historyMessages);
+    // }
+  },
+  internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
+    const {
+      internal_toggleChatLoading,
+      refreshMessages,
+      internal_updateMessageContent,
+      internal_dispatchMessage,
+      internal_toggleToolCallingStreaming,
+      internal_toggleChatReasoning,
+    } = get();
+
+    const abortController = internal_toggleChatLoading(
+      true,
+      messageId,
+      n('generateMessage(start)', { messageId, messages }),
+    );
+
+    const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+
+    // ================================== //
+    //   messages uniformly preprocess    //
+    // ================================== //
+
+    // 1. slice messages with config
+    const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
+    const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(getAgentStoreState());
+
+    let preprocessMsgs = chatHelpers.getSlicedMessages(messages, {
+      includeNewUserMessage: true,
+      enableHistoryCount,
+      historyCount,
+    });
+
+    // 2. replace inputMessage template
+    preprocessMsgs = !chatConfig.inputTemplate
+      ? preprocessMsgs
+      : preprocessMsgs.map((m) => {
+          if (m.role === 'user') {
+            try {
+              return {
+                ...m,
+                content: Mustache.render(chatConfig?.inputTemplate ?? '', { text: m.content }),
+              };
+            } catch (error) {
+              console.error(error);
+
+              return m;
+            }
+          }
+
+          return m;
+        });
+
+    // 3. add systemRole
+    if (agentConfig.systemRole) {
+      preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as ChatMessage);
+    }
+
+    // 4. handle max_tokens
+    agentConfig.params.max_tokens = chatConfig.enableMaxTokens
+      ? agentConfig.params.max_tokens
+      : undefined;
+
+    // 5. handle reasoning_effort
+    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? agentConfig.params.reasoning_effort
+      : undefined;
+
+    let isFunctionCall = false;
+    let msgTraceId: string | undefined;
+    let output = '';
+    let thinking = '';
+    let thinkingStartAt: number;
+    let duration: number;
+    // to upload image
+    const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
+
+    const historySummary = chatConfig.enableCompressHistory
+      ? topicSelectors.currentActiveTopicSummary(get())
+      : undefined;
+    await chatService.createAssistantMessageStream({
+      abortController,
+      params: {
+        messages: preprocessMsgs,
+        model,
+        provider,
+        ...agentConfig.params,
+        plugins: agentConfig.plugins,
+      },
+      historySummary: historySummary?.content,
+      trace: {
+        traceId: params?.traceId,
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+        traceName: TraceNameMap.Conversation,
+      },
+      isWelcomeQuestion: params?.isWelcomeQuestion,
+      onErrorHandle: async (error) => {
+        await messageService.updateMessageError(messageId, error);
+        await refreshMessages();
+      },
+      onFinish: async (
+        content,
+        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
+      ) => {
+        // if there is traceId, update it
+        // if (traceId) {
+        //   msgTraceId = traceId;
+        //   await messageService.updateMessage(messageId, {
+        //     traceId,
+        //     observationId: observationId ?? undefined,
+        //   });
+        // }
+
+        // 等待所有图片上传完成
+        let finalImages: ChatImageItem[] = [];
+
+        if (uploadTasks.size > 0) {
+          try {
+            // 等待所有上传任务完成
+            const uploadResults = await Promise.all(uploadTasks.values());
+
+            // 使用上传后的 S3 URL 替换原始图像数据
+            finalImages = uploadResults.filter((i) => !!i.url) as ChatImageItem[];
+          } catch (error) {
+            console.error('Error waiting for image uploads:', error);
+          }
+        }
+
+        let parsedToolCalls = toolCalls;
+        if (parsedToolCalls && parsedToolCalls.length > 0) {
+          internal_toggleToolCallingStreaming(messageId, undefined);
+          parsedToolCalls = parsedToolCalls.map((item) => ({
+            ...item,
+            function: {
+              ...item.function,
+              arguments: !!item.function.arguments ? item.function.arguments : '{}',
+            },
+          }));
+          isFunctionCall = true;
+        }
+
+        // update the content after fetch result
+        await internal_updateMessageContent(messageId, content, {
+          toolCalls: parsedToolCalls,
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
+          imageList: finalImages.length > 0 ? finalImages : undefined,
+          metadata: speed ? { ...usage, ...speed } : usage,
+        });
+      },
+      onMessageHandle: async (chunk) => {
+        switch (chunk.type) {
+          case 'grounding': {
+            // if there is no citations, then stop
+            if (
+              !chunk.grounding ||
+              !chunk.grounding.citations ||
+              chunk.grounding.citations.length <= 0
+            )
+              return;
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                search: {
+                  citations: chunk.grounding.citations,
+                  searchQueries: chunk.grounding.searchQueries,
+                },
+              },
+            });
+            break;
+          }
+
+          case 'base64_image': {
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+              },
+            });
+            // const image = chunk.image;
+            //
+            // const task = getFileStoreState()
+            //   .uploadBase64FileWithProgress(image.data)
+            //   .then((value) => ({
+            //     id: value?.id,
+            //     url: value?.url,
+            //     alt: value?.filename || value?.id,
+            //   }));
+            //
+            // uploadTasks.set(image.id, task);
+
+            break;
+          }
+
+          case 'text': {
+            output += chunk.text;
+
+            // if there is no duration, it means the end of reasoning
+            if (!duration) {
+              duration = Date.now() - thinkingStartAt;
+
+              const isInChatReasoning = chatSelectors.isMessageInChatReasoning(messageId)(get());
+              if (isInChatReasoning) {
+                internal_toggleChatReasoning(
+                  false,
+                  messageId,
+                  n('toggleChatReasoning/false') as string,
+                );
+              }
+            }
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                content: output,
+                reasoning: !!thinking ? { content: thinking, duration } : undefined,
+              },
+            });
+            break;
+          }
+
+          case 'reasoning': {
+            // if there is no thinkingStartAt, it means the start of reasoning
+            if (!thinkingStartAt) {
+              thinkingStartAt = Date.now();
+              internal_toggleChatReasoning(
+                true,
+                messageId,
+                n('toggleChatReasoning/true') as string,
+              );
+            }
+
+            thinking += chunk.text;
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: { reasoning: { content: thinking } },
+            });
+            break;
+          }
+
+          // is this message is just a tool call
+          case 'tool_calls':
+          // internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
+          // internal_dispatchMessage({
+          //   id: messageId,
+          //   type: 'updateMessage',
+          //   value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
+          // });
+          // isFunctionCall = true;
+        }
+      },
+    });
+
+    internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
+
+    return { isFunctionCall, traceId: msgTraceId, content: output };
   },
 
-  internal_resendMessage: async (id) => {
-    const { activeId, activeTopicId } = get();
-    const key = messageMapKey(activeId, activeTopicId);
-    const messages = get().messagesMap[key] || [];
+  internal_resendMessage: async (
+    messageId,
+    { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
+  ) => {
+    // 1. 构造所有相关的历史记录
+    const chats = outChats ?? chatSelectors.mainAIChats(get());
 
-    // 找到要重新发送的消息
-    const targetMessage = messages.find((m) => m.id === id);
-    if (!targetMessage) return;
+    const currentIndex = chats.findIndex((c) => c.id === messageId);
+    if (currentIndex < 0) return;
 
-    // 如果是用户消息，找到其对应的AI回复
-    let messageToRegenerate = targetMessage;
-    if (targetMessage.role === 'user') {
-      const aiReply = messages.find((m) => m.parentId === id && m.role === 'assistant');
-      if (aiReply) {
-        messageToRegenerate = aiReply;
+    const currentMessage = chats[currentIndex];
+
+    let contextMessages: ChatMessage[] = [];
+
+    switch (currentMessage.role) {
+      case 'tool':
+      case 'user': {
+        contextMessages = chats.slice(0, currentIndex + 1);
+        break;
+      }
+      case 'assistant': {
+        // 消息是 AI 发出的因此需要找到它的 user 消息
+        const userId = currentMessage.parentId;
+        const userIndex = chats.findIndex((c) => c.id === userId);
+        // 如果消息没有 parentId，那么同 user/function 模式
+        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+        break;
       }
     }
 
-    // 重置消息内容
-    await get().internal_updateMessageContent(messageToRegenerate.id, LOADING_FLAT);
+    if (contextMessages.length <= 0) return;
 
-    try {
-      await get().internal_coreProcessMessage(
-        messages,
-        targetMessage.role === 'user' ? id : targetMessage.parentId || '',
-      );
-    } catch (error) {
-      console.error('Resend message failed:', error);
-      await get().internal_updateMessageError(messageToRegenerate.id, {
-        message: '重新生成失败，请重试',
-        type: 'BadRequest',
-      });
-    }
+    const { internal_coreProcessMessage, activeThreadId } = get();
+
+    const latestMsg = contextMessages.findLast((s) => s.role === 'user');
+
+    if (!latestMsg) return;
+
+    const threadId = outThreadId ?? activeThreadId;
+
+    await internal_coreProcessMessage(contextMessages, latestMsg.id, {
+      traceId,
+      // ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
+      ragQuery: undefined,
+      threadId,
+      inPortalThread,
+    });
   },
 
-  internal_toggleChatLoading: (loading, id) => {
-    set(
-      (state) => ({
-        ...state,
-        chatLoadingIds: id
-          ? toggleBooleanList(state.chatLoadingIds, id, loading)
-          : state.chatLoadingIds,
-      }),
-      false,
-      n('toggleChatLoading'),
-    );
-
-    if (loading) {
-      const abortController = new AbortController();
-      set({ chatLoadingIdsAbortController: abortController });
-      return abortController;
-    }
-
-    return undefined;
+  // ----- Loading ------- //
+  internal_toggleChatLoading: (loading, id, action) => {
+    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
   },
-
   internal_toggleMessageInToolsCalling: (loading, id) => {
-    // Mobile端暂不支持工具调用
-    console.log('Tool calling not supported in mobile:', { loading, id });
-    return undefined;
+    return get().internal_toggleLoadingArrays('messageInToolsCallingIds', loading, id);
   },
-
+  internal_toggleChatReasoning: (loading, id, action) => {
+    return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
+  },
   internal_toggleToolCallingStreaming: (id, streaming) => {
-    // Mobile端暂不支持工具调用流
-    console.log('Tool calling streaming not supported in mobile:', { id, streaming });
-  },
-
-  internal_toggleChatReasoning: (loading, id) => {
     set(
-      (state) => ({
-        ...state,
-        reasoningLoadingIds: id
-          ? toggleBooleanList(state.reasoningLoadingIds, id, loading)
-          : state.reasoningLoadingIds,
-      }),
+      {
+        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
+          if (!!streaming) {
+            draft[id] = streaming;
+          } else {
+            delete draft[id];
+          }
+        }),
+      },
+
       false,
-      n('toggleChatReasoning'),
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
-
-    if (loading) {
-      const abortController = new AbortController();
-      return abortController;
-    }
-
-    return undefined;
   },
 
   internal_toggleSearchWorkflow: (loading, id) => {
-    set(
-      (state) => ({
-        ...state,
-        searchWorkflowLoadingIds: id
-          ? toggleBooleanList(state.searchWorkflowLoadingIds, id, loading)
-          : state.searchWorkflowLoadingIds,
-      }),
-      false,
-      n('toggleSearchWorkflow'),
-    );
+    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
   },
-
-  // ============ 未实现功能（抛出错误）============
-
-  // internal_onRagQueryFinish: async (messages, ragQuery) => {
-  //   throw new Error('RAG feature not implemented in mobile version');
-  // },
-
-  // runPluginApi: async (id, payload) => {
-  //   throw new Error('Plugin API not implemented in mobile version');
-  // },
 });

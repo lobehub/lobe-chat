@@ -26,8 +26,7 @@ export interface ChatThreadState {
 
 export const initialThreadState: ChatThreadState = {
   isCreatingThread: false,
-  isCreatingThreadMessage: false,
-  newThreadMode: ThreadType.THREAD,
+  newThreadMode: ThreadType.Continuation,
   threadInputMessage: '',
   threadLoadingIds: [],
   threadMaps: {},

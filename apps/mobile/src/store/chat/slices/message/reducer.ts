@@ -1,51 +1,219 @@
-import { ChatMessage } from '@/types/message';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
 
-// 简化的 Message Dispatch 类型
-export interface MessageDispatch {
-  content?: string;
-  id?: string;
-  message?: Partial<ChatMessage>;
-  messages?: ChatMessage[];
-  sessionId?: string;
-  topicId?: string;
-  type: 'addMessage' | 'addMessages' | 'updateMessage' | 'updateMessageContent' | 'deleteMessage';
+import {
+  ChatMessage,
+  ChatMessageExtra,
+  ChatPluginPayload,
+  ChatToolPayload,
+  CreateMessageParams,
+} from '@/types/message';
+import { merge } from '@/utils/merge';
+
+interface UpdateMessages {
+  id: string;
+  type: 'updateMessage';
+  value: Partial<ChatMessage>;
 }
 
-// 简化的 messages reducer，主要用于类型定义
-// 实际的 reducer 逻辑在 action 的 internal_dispatchMessage 中处理
-export const messagesReducer = (
-  messages: ChatMessage[],
-  action: MessageDispatch,
-): ChatMessage[] => {
-  switch (action.type) {
-    case 'addMessage': {
-      return action.message ? [...messages, action.message as ChatMessage] : messages;
-    }
+interface CreateMessage {
+  id: string;
+  type: 'createMessage';
+  value: CreateMessageParams;
+}
 
-    case 'addMessages': {
-      return action.messages || [];
-    }
+interface DeleteMessage {
+  id: string;
+  type: 'deleteMessage';
+}
 
+interface DeleteMessages {
+  ids: string[];
+  type: 'deleteMessages';
+}
+
+interface UpdatePluginState {
+  id: string;
+  key: string;
+  type: 'updatePluginState';
+  value: any;
+}
+
+interface UpdateMessagePlugin {
+  id: string;
+  type: 'updateMessagePlugin';
+  value: Partial<ChatPluginPayload>;
+}
+
+interface UpdateMessageTools {
+  id: string;
+  tool_call_id: string;
+  type: 'updateMessageTools';
+  value: Partial<ChatPluginPayload>;
+}
+
+interface AddMessageTool {
+  id: string;
+  type: 'addMessageTool';
+  value: ChatToolPayload;
+}
+interface DeleteMessageTool {
+  id: string;
+  tool_call_id: string;
+  type: 'deleteMessageTool';
+}
+
+interface UpdateMessageExtra {
+  id: string;
+  key: string;
+  type: 'updateMessageExtra';
+  value: any;
+}
+
+export type MessageDispatch =
+  | CreateMessage
+  | UpdateMessages
+  | UpdatePluginState
+  | UpdateMessageExtra
+  | DeleteMessage
+  | UpdateMessagePlugin
+  | UpdateMessageTools
+  | AddMessageTool
+  | DeleteMessageTool
+  | DeleteMessages;
+
+export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
+  switch (payload.type) {
     case 'updateMessage': {
-      return messages.map((msg) =>
-        msg.id === action.id && action.message ? { ...msg, ...action.message } : msg,
-      );
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const index = draftState.findIndex((i) => i.id === id);
+        if (index < 0) return;
+
+        draftState[index] = merge(draftState[index], { ...value, updatedAt: Date.now() });
+      });
     }
 
-    case 'updateMessageContent': {
-      return messages.map((msg) =>
-        msg.id === action.id
-          ? { ...msg, content: action.content || '', updatedAt: Date.now() }
-          : msg,
-      );
+    case 'updateMessageExtra': {
+      return produce(state, (draftState) => {
+        const { id, key, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message) return;
+
+        if (!message.extra) {
+          message.extra = { [key]: value } as ChatMessageExtra;
+        } else {
+          message.extra[key as keyof ChatMessageExtra] = value;
+        }
+
+        message.updatedAt = Date.now();
+      });
     }
 
+    case 'updatePluginState': {
+      return produce(state, (draftState) => {
+        const { id, key, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message) return;
+
+        let newState;
+        if (!message.pluginState) {
+          newState = { [key]: value } as any;
+        } else {
+          newState = merge(message.pluginState, { [key]: value });
+        }
+
+        if (isEqual(message.pluginState, newState)) return;
+
+        message.pluginState = newState;
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'updateMessagePlugin': {
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'tool') return;
+
+        message.plugin = merge(message.plugin, value);
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'addMessageTool': {
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'assistant') return;
+
+        if (!message.tools) {
+          message.tools = [value];
+        } else {
+          const index = message.tools.findIndex((tool) => tool.id === value.id);
+
+          if (index > 0) return;
+          message.tools.push(value);
+        }
+
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'deleteMessageTool': {
+      return produce(state, (draftState) => {
+        const { id, tool_call_id } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'assistant' || !message.tools) return;
+
+        message.tools = message.tools.filter((tool) => tool.id !== tool_call_id);
+
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'updateMessageTools': {
+      return produce(state, (draftState) => {
+        const { id, value, tool_call_id } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'assistant' || !message.tools) return;
+
+        const index = message.tools.findIndex((tool) => tool.id === tool_call_id);
+
+        if (index < 0) return;
+        message.tools[index] = merge(message.tools[index], value);
+
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'createMessage': {
+      return produce(state, (draftState) => {
+        const { value, id } = payload;
+
+        draftState.push({ ...value, createdAt: Date.now(), id, meta: {}, updatedAt: Date.now() });
+      });
+    }
     case 'deleteMessage': {
-      return messages.filter((msg) => msg.id !== action.id);
-    }
+      return produce(state, (draft) => {
+        const { id } = payload;
 
+        const index = draft.findIndex((m) => m.id === id);
+
+        if (index >= 0) draft.splice(index, 1);
+      });
+    }
+    case 'deleteMessages': {
+      return produce(state, (draft) => {
+        const { ids } = payload;
+
+        return draft.filter((item) => {
+          return !ids.includes(item.id);
+        });
+      });
+    }
     default: {
-      return messages;
+      throw new Error('暂未实现的 type，请检查 reducer');
     }
   }
 };
