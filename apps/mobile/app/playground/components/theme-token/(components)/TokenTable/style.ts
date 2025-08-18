@@ -13,6 +13,19 @@ export const useStyles = createStyles((token) => {
       flexDirection: 'row',
       gap: token.marginSM,
     },
+    searchContainer: {
+      backgroundColor: token.colorBgContainer,
+      borderRadius: token.borderRadius,
+      marginVertical: token.marginLG,
+      paddingHorizontal: token.paddingMD,
+    },
+    searchInput: {
+      borderRadius: token.borderRadius,
+      borderWidth: 1,
+      fontSize: token.fontSize,
+      height: 40,
+      paddingHorizontal: token.paddingMD,
+    },
     shadowValueContainer: {
       alignItems: 'flex-end',
     },

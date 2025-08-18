@@ -44,17 +44,7 @@ export const useStyles = createStyles((token) => {
     scrollView: {
       flex: 1,
     },
-    searchContainer: {
-      backgroundColor: t.colorBgContainer,
-      borderRadius: t.borderRadius,
-      margin: t.marginLG,
-      paddingHorizontal: t.paddingMD,
-    },
-    searchInput: {
-      color: t.colorText,
-      fontSize: t.fontSize,
-      height: 40,
-    },
+
     themeToggle: {
       alignItems: 'center',
       backgroundColor: t.colorFillSecondary,
@@ -63,6 +53,13 @@ export const useStyles = createStyles((token) => {
       height: 40,
       justifyContent: 'center',
       width: 40,
+    },
+    viewModeContainer: {
+      flexDirection: 'row',
+      gap: t.marginSM,
+      justifyContent: 'center',
+      marginBottom: t.marginLG,
+      marginHorizontal: t.marginLG,
     },
   };
 });

@@ -1,42 +1,41 @@
-import React, { useMemo } from 'react';
-import { View, Text } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
 
 import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
-export interface TokenInfo {
-  description: string;
-  name: string;
-  type: 'other';
-  value: any;
-}
-
 export interface TokenTableProps {
-  searchText: string;
   title: string;
-  tokens: TokenInfo[];
+  token: Record<string, any>;
 }
 
-const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) => {
+const TokenTable: React.FC<TokenTableProps> = ({ token, title }) => {
   const { theme } = useTheme();
   const { styles } = useStyles();
+  const [searchText, setSearchText] = useState('');
+
+  // 将 token 对象转换为可搜索的条目
+  const tokenEntries = useMemo(() => {
+    return Object.entries(token).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [token]);
 
   const filteredTokens = useMemo(() => {
-    return tokens.filter(
-      (token) =>
-        token.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        token.description.toLowerCase().includes(searchText.toLowerCase()),
+    return tokenEntries.filter((entry) =>
+      entry.name.toLowerCase().includes(searchText.toLowerCase()),
     );
-  }, [tokens, searchText]);
+  }, [tokenEntries, searchText]);
 
   // 直接按名称排序，不再分组
   const sortedTokens = useMemo(() => {
     return filteredTokens.sort((a, b) => a.name.localeCompare(b.name));
   }, [filteredTokens]);
 
-  const renderValue = (token: TokenInfo) => {
-    const { value, name } = token;
+  const renderValue = (entry: { name: string; value: any }) => {
+    const { value, name } = entry;
 
     // 根据名称判断是否为颜色值
     if ((name.includes('color') || name.includes('Color')) && typeof value === 'string') {
@@ -79,19 +78,37 @@ const TokenTable: React.FC<TokenTableProps> = ({ tokens, title, searchText }) =>
         {filteredTokens.length} tokens
       </Text>
 
+      {/* 搜索框 */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          onChangeText={setSearchText}
+          placeholder="搜索令牌..."
+          placeholderTextColor={theme.token.colorTextPlaceholder}
+          style={[
+            styles.searchInput,
+            {
+              backgroundColor: theme.token.colorBgContainer,
+              borderColor: theme.token.colorBorder,
+              color: theme.token.colorText,
+            },
+          ]}
+          value={searchText}
+        />
+      </View>
+
       <View style={styles.tokensContainer}>
-        {sortedTokens.map((token) => (
+        {sortedTokens.map((entry) => (
           <View
-            key={token.name}
+            key={entry.name}
             style={[styles.tokenRow, { borderBottomColor: theme.token.colorBorderSecondary }]}
           >
             <View style={styles.tokenInfo}>
-              <Text style={[styles.tokenName, { color: theme.token.colorText }]}>{token.name}</Text>
+              <Text style={[styles.tokenName, { color: theme.token.colorText }]}>{entry.name}</Text>
               <Text style={[styles.tokenDescription, { color: theme.token.colorTextSecondary }]}>
-                {token.description}
+                Design token
               </Text>
             </View>
-            <View style={styles.tokenValueContainer}>{renderValue(token)}</View>
+            <View style={styles.tokenValueContainer}>{renderValue(entry)}</View>
           </View>
         ))}
       </View>

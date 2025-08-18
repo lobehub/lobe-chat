@@ -1,11 +1,11 @@
 import { Palette, Sun, Moon } from 'lucide-react-native';
-import React, { useState, useMemo } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import Button from '@/components/Button';
 import ThemeControls from 'app/playground/components/theme-token/(components)/ThemeControls';
-import TokenTable, {
-  type TokenInfo,
-} from 'app/playground/components/theme-token/(components)/TokenTable';
+import TokenHighlight from 'app/playground/components/theme-token/(components)/TokenHighlight';
+import TokenTable from 'app/playground/components/theme-token/(components)/TokenTable';
 import { useTheme, darkAlgorithm, lightAlgorithm, ThemeProvider, useThemeToken } from '@/theme';
 import { PrimaryColors, NeutralColors } from '@/theme/color';
 
@@ -27,7 +27,6 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
   localPrimaryColor,
   localNeutralColor,
   localFontSize,
-  localThemeMode,
   onFontSizeChange,
   onNeutralColorChange,
   onPrimaryColorChange,
@@ -36,17 +35,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
   const { theme } = useTheme();
   const token = useThemeToken();
   const { styles } = useStyles();
-  const [searchText, setSearchText] = useState('');
-
-  // 将 token 对象转换为 TokenInfo 数组
-  const allTokens: TokenInfo[] = useMemo(() => {
-    return Object.entries(token).map(([name, value]) => ({
-      description: 'Design token for theme system',
-      name,
-      type: 'other' as const, // 简化类型，不再区分
-      value,
-    }));
-  }, [localThemeMode, localPrimaryColor, localNeutralColor, localFontSize]);
+  const [viewMode, setViewMode] = useState<'table' | 'highlight'>('highlight');
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -75,17 +64,30 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = ({
           primaryColor={localPrimaryColor}
         />
 
-        <View style={styles.searchContainer}>
-          <TextInput
-            onChangeText={setSearchText}
-            placeholder="搜索令牌..."
-            placeholderTextColor={token.colorTextPlaceholder}
-            style={styles.searchInput}
-            value={searchText}
-          />
+        {/* 视图模式切换 */}
+        <View style={styles.viewModeContainer}>
+          <Button
+            onPress={() => setViewMode('table')}
+            size="small"
+            type={viewMode === 'table' ? 'primary' : 'default'}
+          >
+            表格视图
+          </Button>
+          <Button
+            onPress={() => setViewMode('highlight')}
+            size="small"
+            type={viewMode === 'highlight' ? 'primary' : 'default'}
+          >
+            JSON 高亮
+          </Button>
         </View>
 
-        <TokenTable searchText={searchText} title="Design Tokens" tokens={allTokens} />
+        {/* 根据视图模式显示不同的组件 */}
+        {viewMode === 'table' ? (
+          <TokenTable title="Design Tokens" token={token} />
+        ) : (
+          <TokenHighlight title="Design Tokens JSON" token={token} />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
