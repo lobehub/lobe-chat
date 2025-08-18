@@ -36,7 +36,6 @@ export const useStyles = createStyles((token) => {
       fontSize: t.fontSizeLG,
       fontWeight: '600',
     },
-
     safeArea: {
       backgroundColor: t.colorBgLayout,
       flex: 1,
@@ -44,7 +43,6 @@ export const useStyles = createStyles((token) => {
     scrollView: {
       flex: 1,
     },
-
     themeToggle: {
       alignItems: 'center',
       backgroundColor: t.colorFillSecondary,
@@ -55,8 +53,7 @@ export const useStyles = createStyles((token) => {
       width: 40,
     },
     viewModeContainer: {
-      flexDirection: 'row',
-      gap: t.marginSM,
+      alignItems: 'center',
       justifyContent: 'center',
       marginBottom: t.marginLG,
       marginHorizontal: t.marginLG,

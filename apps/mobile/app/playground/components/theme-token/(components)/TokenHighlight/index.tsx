@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { View, Text } from 'react-native';
 
 import Highlighter from '@/components/Highlighter';
@@ -11,12 +11,28 @@ export interface TokenHighlightProps {
   token: Record<string, any>;
 }
 
-const TokenHighlight: React.FC<TokenHighlightProps> = ({ token, title }) => {
+const TokenHighlight: React.FC<TokenHighlightProps> = memo(({ token, title }) => {
   const { theme } = useTheme();
   const { styles } = useStyles();
 
-  // 直接将 token 对象转换为 JSON 字符串
+  // 直接将 token 对象转换为 JSON 字符串，使用分页加载优化性能
   const tokenJsonData = useMemo(() => {
+    const entries = Object.entries(token);
+    const totalTokens = entries.length;
+
+    // 如果 token 数量很多，分批显示
+    if (totalTokens > 100) {
+      const batchSize = 50;
+      const firstBatch = entries.slice(0, batchSize);
+      const limitedToken = Object.fromEntries(firstBatch);
+
+      return (
+        JSON.stringify(limitedToken, null, 2) +
+        `\n\n/* 显示前 ${batchSize} 个 token，共 ${totalTokens} 个 */`
+      );
+    }
+
+    // 数量适中时显示全部
     return JSON.stringify(token, null, 2);
   }, [token]);
 
@@ -40,6 +56,6 @@ const TokenHighlight: React.FC<TokenHighlightProps> = ({ token, title }) => {
       </View>
     </View>
   );
-};
+});
 
 export default TokenHighlight;
