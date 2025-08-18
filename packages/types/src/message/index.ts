@@ -1,4 +1,4 @@
-import { UploadFileItem } from '@/types/files';
+import { UploadFileItem } from '../files';
 
 export * from './base';
 export * from './chat';

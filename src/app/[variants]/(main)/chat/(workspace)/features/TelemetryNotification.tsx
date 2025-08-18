@@ -11,8 +11,6 @@ import { Flexbox } from 'react-layout-kit';
 import Notification from '@/components/Notification';
 import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL } from '@/const/url';
-import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
@@ -30,7 +28,6 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles, theme } = useStyles();
 
   const { t } = useTranslation('common');
-  const shouldCheck = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
   const isPreferenceInit = useUserStore(preferenceSelectors.isPreferenceInit);
 
   const [useCheckTrace, updatePreference] = useUserStore((s) => [
@@ -38,7 +35,7 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.updatePreference,
   ]);
 
-  const { data: showModal, mutate } = useCheckTrace(shouldCheck && isPreferenceInit);
+  const { data: showModal, mutate } = useCheckTrace(isPreferenceInit);
 
   const updateTelemetry = (telemetry: boolean) => {
     updatePreference({ telemetry });
