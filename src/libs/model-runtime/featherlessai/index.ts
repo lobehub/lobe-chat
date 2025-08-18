@@ -1,5 +1,5 @@
-import { ModelProvider } from '../types';
-import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
+import { ModelProvider } from '@/libs/model-runtime';
+import { createOpenAICompatibleRuntime } from '@/libs/model-runtime/utils/openaiCompatibleFactory';
 
 export const LobeFeatherlessAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.featherless.ai/v1',
