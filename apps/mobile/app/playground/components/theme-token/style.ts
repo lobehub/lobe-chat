@@ -19,34 +19,6 @@ export const useStyles = createStyles((token) => {
   };
 
   return {
-    // 控制器样式
-    controlInput: {
-      borderRadius: t.borderRadius,
-      borderWidth: 1,
-      flex: 1,
-      fontSize: t.fontSize,
-      height: 40,
-      paddingHorizontal: t.paddingMD,
-    },
-    controlItem: {
-      marginBottom: t.marginLG,
-    },
-    controlLabel: {
-      fontSize: t.fontSizeLG,
-      fontWeight: '600',
-      marginBottom: t.marginSM,
-    },
-    controlRow: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: t.marginSM,
-    },
-    controlsContainer: {
-      backgroundColor: t.colorBgElevated || '#fff',
-      borderRadius: t.borderRadiusLG,
-      margin: t.marginLG,
-      padding: t.paddingLG,
-    },
     // 页面布局样式
     header: {
       alignItems: 'center',
@@ -64,12 +36,7 @@ export const useStyles = createStyles((token) => {
       fontSize: t.fontSizeLG,
       fontWeight: '600',
     },
-    presetRow: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: t.marginSM,
-      marginTop: t.marginSM,
-    },
+
     safeArea: {
       backgroundColor: t.colorBgLayout,
       flex: 1,
