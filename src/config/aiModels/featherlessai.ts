@@ -11,8 +11,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -23,8 +25,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'openai/gpt-oss-120b',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -38,8 +42,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/QwQ-32B',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -50,8 +56,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen2.5-72B-Instruct',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -62,8 +70,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -74,8 +84,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen2.5-32B-Instruct',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -86,8 +98,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-ai/DeepSeek-V3-0324',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -98,8 +112,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-0528',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -110,8 +126,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistralai/Mistral-Small-3.1-24B-Instruct-2503',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -122,8 +140,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistralai/Devstral-Small-2505',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -134,8 +154,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'mistralai/Magistral-Small-2506',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -146,8 +168,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen3-32B',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -158,8 +182,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/Llama-3.3-70B-Instruct',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   },
@@ -170,8 +196,10 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
     pricing: {
-      input: 0,
-      output: 0
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat'
   }
