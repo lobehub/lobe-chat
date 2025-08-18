@@ -26,7 +26,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 
 const Page = async (props: DynamicLayoutProps) => {
   const { hideDocs, showChangelog } = serverFeatureFlags();
-  const { isMobile, locale, theme } = await RouteVariants.getVariantsFromProps(props);
+  const { isMobile, locale } = await RouteVariants.getVariantsFromProps(props);
   const { t } = await translation('metadata', locale);
   const ld = ldModule.generate({
     description: t('chat.description', { appName: BRANDING_NAME }),
@@ -38,7 +38,7 @@ const Page = async (props: DynamicLayoutProps) => {
     <>
       <StructuredData ld={ld} />
       <PageTitle />
-      <TelemetryNotification mobile={isMobile} theme={theme} />
+      <TelemetryNotification mobile={isMobile} />
       {!isDesktop && showChangelog && !hideDocs && !isMobile && (
         <Suspense>
           <Changelog />

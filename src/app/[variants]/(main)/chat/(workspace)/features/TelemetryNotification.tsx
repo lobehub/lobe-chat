@@ -29,7 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile, theme: rTheme }) => {
+const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles, theme } = useStyles();
 
   const searchParams = useSearchParams()
