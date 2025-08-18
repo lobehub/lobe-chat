@@ -1,17 +1,19 @@
 import { and, eq } from 'drizzle-orm';
 
 import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/schemas';
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 
 export class EvaluationRecordModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
+    this.db = db;
     this.userId = userId;
   }
 
   create = async (params: NewEvaluationRecordsItem) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(evaluationRecords)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -19,20 +21,20 @@ export class EvaluationRecordModel {
   };
 
   batchCreate = async (params: NewEvaluationRecordsItem[]) => {
-    return serverDB
+    return this.db
       .insert(evaluationRecords)
       .values(params.map((item) => ({ ...item, userId: this.userId })))
       .returning();
   };
 
   delete = async (id: number) => {
-    return serverDB
+    return this.db
       .delete(evaluationRecords)
       .where(and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)));
   };
 
   query = async (reportId: number) => {
-    return serverDB.query.evaluationRecords.findMany({
+    return this.db.query.evaluationRecords.findMany({
       where: and(
         eq(evaluationRecords.evaluationId, reportId),
         eq(evaluationRecords.userId, this.userId),
@@ -41,13 +43,13 @@ export class EvaluationRecordModel {
   };
 
   findById = async (id: number) => {
-    return serverDB.query.evaluationRecords.findFirst({
+    return this.db.query.evaluationRecords.findFirst({
       where: and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)),
     });
   };
 
   findByEvaluationId = async (evaluationId: number) => {
-    return serverDB.query.evaluationRecords.findMany({
+    return this.db.query.evaluationRecords.findMany({
       where: and(
         eq(evaluationRecords.evaluationId, evaluationId),
         eq(evaluationRecords.userId, this.userId),
@@ -56,7 +58,7 @@ export class EvaluationRecordModel {
   };
 
   update = async (id: number, value: Partial<NewEvaluationRecordsItem>) => {
-    return serverDB
+    return this.db
       .update(evaluationRecords)
       .set(value)
       .where(and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)));

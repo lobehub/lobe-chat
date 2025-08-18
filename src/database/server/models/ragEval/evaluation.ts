@@ -6,18 +6,20 @@ import {
   evalEvaluation,
   evaluationRecords,
 } from '@/database/schemas';
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 export class EvalEvaluationModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
+    this.db = db;
     this.userId = userId;
   }
 
   create = async (params: NewEvalEvaluationItem) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(evalEvaluation)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -25,13 +27,13 @@ export class EvalEvaluationModel {
   };
 
   delete = async (id: number) => {
-    return serverDB
+    return this.db
       .delete(evalEvaluation)
       .where(and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)));
   };
 
   queryByKnowledgeBaseId = async (knowledgeBaseId: string) => {
-    const evaluations = await serverDB
+    const evaluations = await this.db
       .select({
         createdAt: evalEvaluation.createdAt,
         dataset: {
@@ -57,7 +59,7 @@ export class EvalEvaluationModel {
     // 然后查询每个评估的记录统计
     const evaluationIds = evaluations.map((evals) => evals.id);
 
-    const recordStats = await serverDB
+    const recordStats = await this.db
       .select({
         evaluationId: evaluationRecords.evaluationId,
         success: count(evaluationRecords.status).if(
@@ -82,13 +84,13 @@ export class EvalEvaluationModel {
   };
 
   findById = async (id: number) => {
-    return serverDB.query.evalEvaluation.findFirst({
+    return this.db.query.evalEvaluation.findFirst({
       where: and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)),
     });
   };
 
   update = async (id: number, value: Partial<NewEvalEvaluationItem>) => {
-    return serverDB
+    return this.db
       .update(evalEvaluation)
       .set(value)
       .where(and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)));

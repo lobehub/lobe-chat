@@ -58,7 +58,7 @@ export const userRouter = router({
           if (enableClerk) {
             const user = await ctx.clerkAuth.getCurrentUser();
             if (user) {
-              const userService = new UserService();
+              const userService = new UserService(ctx.serverDB);
 
               await userService.createUser(user.id, {
                 created_at: user.createdAt,
