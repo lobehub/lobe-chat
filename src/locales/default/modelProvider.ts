@@ -39,42 +39,24 @@ export default {
   },
 
   bedrock: {
-    accessKeyId: {
-      desc: '填入 AWS Access Key Id',
-      placeholder: 'AWS Access Key Id',
-      title: 'AWS Access Key Id',
-    },
-    bearerToken: {
-      desc: '填入 AWS Bedrock API Key (Bearer Token)，推荐使用此方式',
-      placeholder: 'AWS Bedrock API Key',
-      title: 'AWS Bedrock API Key (推荐)',
-    },
     checker: {
-      desc: '测试 Bearer Token 或 AccessKeyId / SecretAccessKey 是否填写正确',
+      desc: '测试 Bearer Token 是否填写正确',
     },
     region: {
       desc: '填入 AWS Region',
       placeholder: 'AWS Region',
       title: 'AWS Region',
     },
-    secretAccessKey: {
-      desc: '填入 AWS Secret Access Key',
-      placeholder: 'AWS Secret Access Key',
-      title: 'AWS Secret Access Key',
-    },
-    sessionToken: {
-      desc: '如果你正在使用 AWS SSO/STS，请输入你的 AWS Session Token',
-      placeholder: 'AWS Session Token',
-      title: 'AWS Session Token (可选)',
-    },
     title: 'Bedrock',
+    token: {
+      desc: '填入 AWS Bedrock API Key (Bearer Token)',
+      placeholder: 'AWS Bedrock API Key',
+      title: 'AWS Bedrock API Key',
+    },
     unlock: {
       customRegion: '自定义服务区域',
-      customSessionToken: '自定义 Session Token',
-      description:
-        '输入你的 AWS Bearer Token 或 AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
-      imageGenerationDescription:
-        '输入你的 AWS Bearer Token 或 AccessKeyId / SecretAccessKey 即可开始生成。应用不会记录你的鉴权配置',
+      description: '输入你的 AWS Bearer Token 即可开始会话。应用不会记录你的鉴权配置',
+      imageGenerationDescription: '输入你的 AWS Bearer Token 即可开始生成。应用不会记录你的鉴权配置',
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },
