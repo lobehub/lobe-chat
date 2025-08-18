@@ -63,6 +63,7 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   const [session, setSession] = useState<MarketAuthSession | null>(null);
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
   const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
+  const [shouldReauthorize, setShouldReauthorize] = useState(false);
 
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
@@ -98,9 +99,12 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
             setStatus('authenticated');
             return;
           } else {
-            console.log('[MarketAuth] Stored session has expired');
+            console.log('[MarketAuth] Stored session has expired, will trigger re-authorization');
             sessionStorage.removeItem('market_auth_session');
             removeTokenFromCookie();
+            // 标记需要重新授权，等待 oidcClient 准备好
+            setShouldReauthorize(true);
+            return;
           }
         } catch (error) {
           console.error('[MarketAuth] Failed to parse stored session:', error);
@@ -179,6 +183,55 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   useEffect(() => {
     restoreSession();
   }, []);
+
+  /**
+   * 当需要重新授权且 OIDC 客户端准备好时，自动触发重新授权
+   */
+  useEffect(() => {
+    const handleAutoReauthorization = async () => {
+      if (shouldReauthorize && oidcClient) {
+        console.log('[MarketAuth] Auto-triggering re-authorization due to token expiry');
+        setShouldReauthorize(false); // 重置标识，避免重复触发
+        
+        try {
+          setStatus('loading');
+
+          // 启动 OIDC 授权流程并获取授权码
+          const authResult = await oidcClient.startAuthorization();
+          console.log('[MarketAuth] Auto re-authorization successful, exchanging code for token');
+
+          // 用授权码换取访问令牌
+          const tokenResponse = await oidcClient.exchangeCodeForToken(
+            authResult.code,
+            authResult.state,
+          );
+
+          // 创建会话对象
+          const newSession: MarketAuthSession = {
+            accessToken: tokenResponse.access_token,
+            expiresAt: Date.now() + tokenResponse.expires_in * 1000,
+            expiresIn: tokenResponse.expires_in,
+            scope: tokenResponse.scope,
+            tokenType: tokenResponse.token_type as 'Bearer',
+          };
+
+          // 存储 token 到 cookie 和 sessionStorage
+          setTokenToCookie(tokenResponse.access_token, tokenResponse.expires_in);
+          sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
+
+          setSession(newSession);
+          setStatus('authenticated');
+
+          console.log('[MarketAuth] Auto re-authorization completed successfully');
+        } catch (error) {
+          console.error('[MarketAuth] Auto re-authorization failed:', error);
+          setStatus('unauthenticated');
+        }
+      }
+    };
+
+    handleAutoReauthorization();
+  }, [shouldReauthorize, oidcClient]);
 
   const contextValue: MarketAuthContextType = {
     isAuthenticated: status === 'authenticated',
