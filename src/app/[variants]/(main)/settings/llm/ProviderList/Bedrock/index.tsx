@@ -21,11 +21,11 @@ export const useBedrockProvider = (): ProviderItem => {
         children: (
           <InputPassword
             autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.bearerToken.placeholder`)}
+            placeholder={t(`${providerKey}.token.placeholder`)}
           />
         ),
-        desc: t(`${providerKey}.bearerToken.desc`),
-        label: t(`${providerKey}.bearerToken.title`),
+        desc: t(`${providerKey}.token.desc`),
+        label: t(`${providerKey}.token.title`),
         name: [KeyVaultsConfigKey, providerKey, 'bearerToken'],
       },
       {

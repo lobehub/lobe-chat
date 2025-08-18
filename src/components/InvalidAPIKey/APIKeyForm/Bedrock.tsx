@@ -32,7 +32,7 @@ const BedrockForm = memo<{ description: string }>(({ description }) => {
         onChange={(e) => {
           setConfig(ModelProvider.Bedrock, { bearerToken: e.target.value });
         }}
-        placeholder={t('bedrock.bearerToken.placeholder')}
+        placeholder={t('bedrock.token.placeholder')}
         value={bearerToken}
         variant={'filled'}
       />
