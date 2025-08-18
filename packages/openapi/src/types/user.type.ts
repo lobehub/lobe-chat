@@ -37,6 +37,7 @@ export interface UpdateUserRequest {
   lastName?: string;
   phone?: string;
   preference?: any;
+  roleIds?: number[];
   username?: string;
 }
 
@@ -73,6 +74,7 @@ export const UpdateUserRequestSchema = z.object({
   lastName: z.string().nullish(),
   phone: z.string().nullish(),
   preference: z.any().nullish(),
+  roleIds: z.array(z.number().int().positive('角色ID必须是正整数')).nullish(),
   username: z.string().min(1, '用户名不能为空').nullish(),
 });
 
