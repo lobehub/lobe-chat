@@ -1,6 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
-import { Slot, Stack, useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
 
@@ -134,23 +134,19 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 
 export default function RootLayout() {
   return (
-    <ThemeProvider
-      theme={{
-        token: {
-          colorPrimary: '#00b96b',
-        },
-      }}
-    >
+    <ThemeProvider>
       <AuthProvider>
         <QueryProvider>
           <ActionSheetProvider>
             <PortalProvider>
               <ToastProvider>
                 <Stack screenOptions={{ headerShown: false }}>
+                  {/* 指定首页, 防止 expo 路由错乱 */}
+                  <Stack.Screen name="index" options={{ animation: 'none' }} />
+                  {/* main page should not have animation */}
+                  <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
                   {/* auth page should not have animation  */}
                   <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
-                  <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-                  <Slot />
                 </Stack>
               </ToastProvider>
             </PortalProvider>
