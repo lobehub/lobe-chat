@@ -87,15 +87,27 @@ const providerKeyVaults = (provider: string | undefined) => (s: AIProviderStoreS
   return s.aiProviderRuntimeConfig?.[provider]?.keyVaults;
 };
 
-// 简化实现：RN 端暂时不支持内置搜索
-const returnFalse = () => false;
-const isProviderHasBuiltinSearch = () => returnFalse;
+const isProviderHasBuiltinSearch = (provider: string) => (s: AIProviderStoreState) => {
+  const config = providerConfigById(provider)(s);
 
-// 简化实现：RN 端暂时不支持内置搜索配置
-const isProviderHasBuiltinSearchConfig = () => returnFalse;
+  return !!config?.settings.searchMode;
+};
 
-// 简化实现：RN 端暂时不支持响应 API
-const isProviderEnableResponseApi = () => returnFalse;
+const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
+};
+
+const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  const enableResponseApi = providerCfg?.config?.enableResponseApi;
+
+  if (typeof enableResponseApi === 'boolean') return enableResponseApi;
+
+  return false;
+};
 
 export const aiProviderSelectors = {
   activeProviderConfig,

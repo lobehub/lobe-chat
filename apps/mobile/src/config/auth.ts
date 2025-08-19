@@ -1,5 +1,5 @@
 import { OFFICIAL_URL } from '@/const/url';
-import { AuthConfig } from '@/types/user';
+import { AuthConfig } from '@/_types/user';
 import { isDev } from '@/utils/env';
 
 /**
