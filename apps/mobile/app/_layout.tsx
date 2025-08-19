@@ -1,6 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
-import { Slot, Stack, useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
 
@@ -20,9 +20,9 @@ import '../polyfills';
 SplashScreen.preventAutoHideAsync();
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const { isAuthenticated, isInitialized } = useAuth();
+  const { isAuthenticated, isInitialized, error } = useAuth();
   const router = useRouter();
-  const hasNavigated = useRef(false);
+  const hasRedirectedRef = useRef(false);
   const [isInitializing, setIsInitializing] = useState(false);
 
   // 初始化认证状态和令牌刷新管理器
@@ -61,35 +61,61 @@ function AuthProvider({ children }: PropsWithChildren) {
     };
   }, [isInitialized, isInitializing]);
 
-  // 重定向到登录页面 - 只在初始化完成后进行
+  // 只在真正需要重新认证时才重定向
   useEffect(() => {
-    // 只有在初始化完成后才进行认证检查
-    if (!isInitialized || isInitializing) {
+    if (!isInitialized || isInitializing || hasRedirectedRef.current) {
       return;
     }
 
-    authLogger.info('RootLayout auth state changed', {
-      hasNavigated: hasNavigated.current,
-      isAuthenticated,
-      isInitialized,
-    });
+    const shouldRedirectToLogin = async (): Promise<boolean> => {
+      // 如果已认证，不需要重定向
+      if (isAuthenticated) {
+        return false;
+      }
 
-    // 初始化完成且未认证时重定向到登录页面
-    if (!isAuthenticated && !hasNavigated.current) {
-      authLogger.info('User not authenticated after initialization, redirecting to login');
-      hasNavigated.current = true;
-      // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
-      setTimeout(() => {
-        router.replace('/(auth)/login');
-      }, 0);
-    }
+      // 检查是否是因为 refresh token 过期导致的未认证
+      if (error?.includes('refresh_token') || error?.includes('Refresh token expired')) {
+        authLogger.info('Refresh token expired, need to redirect to login');
+        return true;
+      }
 
-    // 如果用户已认证，重置导航标志
-    if (isAuthenticated) {
-      authLogger.info('User authenticated, resetting navigation flag');
-      hasNavigated.current = false;
+      // 如果没有任何错误且未认证，检查是否有有效token
+      if (!error) {
+        const { TokenStorage } = await import('@/services/_auth/tokenStorage');
+        const hasToken = await TokenStorage.hasValidToken();
+        if (!hasToken) {
+          authLogger.info('No valid token found, need to redirect to login');
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    const handleAuthCheck = async () => {
+      try {
+        const needsLogin = await shouldRedirectToLogin();
+        if (needsLogin) {
+          authLogger.info('Auth state requires login, redirecting');
+          hasRedirectedRef.current = true;
+          // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
+          setTimeout(() => {
+            router.replace('/login');
+          }, 0);
+        }
+      } catch (checkError) {
+        authLogger.error('Error checking auth state:', checkError);
+      }
+    };
+
+    handleAuthCheck();
+
+    // 重置重定向标志当用户重新认证时
+    if (isAuthenticated && hasRedirectedRef.current) {
+      authLogger.info('User authenticated, resetting redirect flag');
+      hasRedirectedRef.current = false;
     }
-  }, [isInitialized, isInitializing, isAuthenticated, router]);
+  }, [isInitialized, isInitializing, isAuthenticated, error, router]);
 
   return children;
 }
@@ -115,7 +141,12 @@ export default function RootLayout() {
             <PortalProvider>
               <ToastProvider>
                 <Stack screenOptions={{ headerShown: false }}>
-                  <Slot />
+                  {/* 指定首页, 防止 expo 路由错乱 */}
+                  <Stack.Screen name="index" options={{ animation: 'none' }} />
+                  {/* main page should not have animation */}
+                  <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                  {/* auth page should not have animation  */}
+                  <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
                 </Stack>
               </ToastProvider>
             </PortalProvider>

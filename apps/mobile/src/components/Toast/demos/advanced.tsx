@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import { useThemeToken } from '@/theme/context';
+import { useThemeToken } from '@/theme';
 
-import { useToast } from '../ToastProvider';
+import { useToast } from '@/components/Toast';
 import { DemoButton } from './DemoButton';
 
 export default function AdvancedDemo() {
