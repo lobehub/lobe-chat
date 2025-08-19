@@ -70,7 +70,7 @@ export const providerRuntimeMap = {
   bfl: LobeBflAI,
   cloudflare: LobeCloudflareAI,
   cohere: LobeCohereAI,
-  deepseek: LobeDeepSeekAI, 
+  deepseek: LobeDeepSeekAI,
   fal: LobeFalAI,
   featherlessai: LobeFeatherlessAI,
   fireworksai: LobeFireworksAI,
