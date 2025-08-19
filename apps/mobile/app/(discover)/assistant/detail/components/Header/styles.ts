@@ -4,35 +4,35 @@ export const useStyles = createStyles((token) => ({
   authorContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
+    gap: token.marginXS,
+    marginTop: token.marginXXS,
   },
 
   authorName: {
     color: token.colorTextTertiary,
-    fontSize: 14,
+    fontSize: token.fontSizeSM,
   },
 
   date: {
     color: token.colorTextQuaternary,
-    fontSize: 14,
+    fontSize: token.fontSizeSM,
   },
   // Header related styles
   headerContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 16,
-    paddingHorizontal: 4,
+    marginBottom: token.margin,
+    paddingHorizontal: token.marginXXS,
   },
   headerContent: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 16,
+    marginLeft: token.margin,
   },
   name: {
     color: token.colorText,
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: token.fontSizeXL,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.marginXXS,
   },
 }));
