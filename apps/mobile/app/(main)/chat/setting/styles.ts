@@ -33,7 +33,7 @@ export const useStyles = createStyles((token, backgroundColor?: string) => ({
   description: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeLG,
-    lineHeight: token.lineHeightLG * token.fontSizeLG,
+    lineHeight: token.lineHeightLG,
     marginBottom: token.marginSM,
     paddingHorizontal: token.paddingLG,
     textAlign: 'center',
