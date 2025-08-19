@@ -33,7 +33,7 @@ const groqChatModels: AIChatModelCard[] = [
       'OpenAI GPT-OSS 120B 是一款拥有 1200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
     displayName: 'GPT OSS 120B',
     id: 'openai/gpt-oss-120b',
-    maxOutput: 32_768,
+    maxOutput: 65_536,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -53,7 +53,7 @@ const groqChatModels: AIChatModelCard[] = [
       'OpenAI GPT-OSS 20B 是一款拥有 200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
     displayName: 'GPT OSS 20B',
     id: 'openai/gpt-oss-20b',
-    maxOutput: 32_768,
+    maxOutput: 65_536,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
