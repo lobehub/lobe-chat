@@ -4,58 +4,58 @@ export const useStyles = createStyles((token) => ({
   // 操作按钮相关样式
   actionButtonsContainer: {
     flexDirection: 'row',
-    marginBottom: 24,
+    marginBottom: token.marginLG,
     width: '100%',
   },
 
   addButton: {
     alignItems: 'center',
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginRight: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginRight: token.marginXS,
+    paddingHorizontal: token.margin,
+    paddingVertical: token.paddingSM,
   },
 
   addButtonText: {
     color: token.colorText,
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
   },
 
   authorAvatar: {
     alignItems: 'center',
-    borderRadius: 12,
-    height: 24,
+    borderRadius: token.borderRadiusSM,
+    height: token.controlHeightSM,
     justifyContent: 'center',
-    marginRight: 6,
-    width: 24,
+    marginRight: token.marginXS / 2,
+    width: token.controlHeightSM,
   },
 
   avatarTitleContainer: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: token.margin,
   },
 
   // 头部相关样式
   backButton: {
-    padding: 8,
+    padding: token.marginXS,
   },
 
   // 容器相关样式
   container: {
     flex: 1,
-    padding: 20,
+    padding: token.padding,
   },
 
   description: {
     color: token.colorText,
-    fontSize: 16,
-    lineHeight: 22,
-    marginBottom: 16,
+    fontSize: token.fontSize,
+    lineHeight: token.lineHeight,
+    marginBottom: token.margin,
   },
 
   errorContainer: {
@@ -70,7 +70,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   iconText: {
-    fontSize: 16,
+    fontSize: token.fontSize,
   },
 
   loadingContainer: {
@@ -83,7 +83,7 @@ export const useStyles = createStyles((token) => ({
   // 文字相关样式
   loadingText: {
     color: token.colorTextSecondary,
-    marginTop: 16,
+    marginTop: token.margin,
   },
 
   safeAreaContainer: {
@@ -96,7 +96,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   settingsIcon: {
-    fontSize: 18,
+    fontSize: token.fontSizeLG,
   },
 
   settingsTitleContainer: {
@@ -105,23 +105,23 @@ export const useStyles = createStyles((token) => ({
     borderTopLeftRadius: token.borderRadiusLG,
     borderTopRightRadius: token.borderRadiusLG,
     flexDirection: 'row',
-    padding: 16,
+    padding: token.margin,
   },
 
   shareButton: {
     alignItems: 'center',
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
-    height: 44,
+    borderRadius: token.borderRadiusLG,
+    height: token.controlHeight,
     justifyContent: 'center',
-    width: 44,
+    width: token.controlHeight,
   },
 
   // 系统角色相关样式
   systemRoleContainer: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
-    marginBottom: 24,
+    borderRadius: token.borderRadiusLG,
+    marginBottom: token.marginLG,
     width: '100%',
   },
 
@@ -129,22 +129,22 @@ export const useStyles = createStyles((token) => ({
     // paddingVertical: 12,
     color: token.colorText,
 
-    fontSize: 14,
-    lineHeight: 22,
-    paddingHorizontal: 16,
+    fontSize: token.fontSizeSM,
+    lineHeight: token.lineHeight,
+    paddingHorizontal: token.margin,
   },
 
   systemRoleTitle: {
     color: token.colorText,
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 8,
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
+    marginLeft: token.marginXS,
   },
   // 标签相关样式
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 24,
-    marginLeft: -4,
+    marginBottom: token.marginLG,
+    marginLeft: -token.marginXXS,
   },
 }));

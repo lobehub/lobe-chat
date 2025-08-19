@@ -29,6 +29,6 @@ export const useStyles = createStyles((token) => ({
   tooltipText: {
     color: token.colorBgContainer,
     fontSize: token.fontSizeSM,
-    lineHeight: token.fontSizeSM * token.lineHeightSM,
+    lineHeight: token.lineHeightSM,
   },
 }));

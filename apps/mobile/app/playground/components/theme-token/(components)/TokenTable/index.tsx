@@ -71,7 +71,7 @@ const TokenTable: React.FC<TokenTableProps> = memo(({ token, title }) => {
       </View>
 
       <View style={styles.tokensContainer}>
-        {tokenEntries.map((entry) => (
+        {filteredTokens.map((entry) => (
           <View key={entry.name} style={styles.tokenRow}>
             <View style={styles.tokenInfo}>
               <Text style={styles.tokenName}>{entry.name}</Text>

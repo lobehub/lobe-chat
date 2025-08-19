@@ -74,7 +74,7 @@ const createUser = (data: Partial<User>): User => {
     description: {
       color: token.colorTextSecondary,
       fontSize: token.fontSize,
-      lineHeight: token.lineHeight * token.fontSize,
+      lineHeight: token.lineHeight,
       marginBottom: token.marginXXL,
     },
     exampleContainer: {
@@ -97,7 +97,7 @@ const createUser = (data: Partial<User>): User => {
     infoText: {
       color: token.colorTextSecondary,
       fontSize: token.fontSizeSM,
-      lineHeight: token.lineHeightSM * token.fontSizeSM,
+      lineHeight: token.lineHeightSM,
     },
     infoTitle: {
       color: token.colorText,

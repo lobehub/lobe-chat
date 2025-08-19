@@ -52,7 +52,7 @@ export const useStyles = createStyles((token) => ({
   componentDescription: {
     color: token.colorTextSecondary,
     fontSize: token.fontSize,
-    lineHeight: token.lineHeight * token.fontSize,
+    lineHeight: token.lineHeight,
     marginBottom: token.marginSM,
   },
   componentList: {
@@ -137,6 +137,6 @@ export const useStyles = createStyles((token) => ({
   title: {
     fontSize: token.fontSizeHeading2,
     fontWeight: 'bold',
-    lineHeight: token.lineHeightHeading2 * token.fontSizeHeading2,
+    lineHeight: token.lineHeightHeading2,
   },
 }));
