@@ -53,6 +53,31 @@ vi.mock('@/config/llm', () => ({
     QINIU_API_KEY: 'test-qiniu-key',
     QWEN_API_KEY: 'test-qwen-key',
     STEPFUN_API_KEY: 'test-stepfun-key',
+    
+    // Enable all providers for testing
+    ENABLED_OPENAI: true,
+    ENABLED_AZURE: true,
+    ENABLED_BEDROCK: true,
+    ENABLED_OLLAMA: true,
+    ENABLED_GOOGLE: true,
+    ENABLED_ANTHROPIC: true,
+    ENABLED_ZHIPU: true,
+    ENABLED_MOONSHOT: true,
+    ENABLED_QWEN: true,
+    ENABLED_PERPLEXITY: true,
+    ENABLED_DEEPSEEK: true,
+    ENABLED_MINIMAX: true,
+    ENABLED_MISTRAL: true,
+    ENABLED_OPENROUTER: true,
+    ENABLED_TOGETHERAI: true,
+    ENABLED_STEPFUN: true,
+  })),
+}));
+
+// Mock provider configurations
+vi.mock('@/config/modelProviders', () => ({
+  getProviderConfig: vi.fn((provider: string) => ({
+    enabled: true,
   })),
 }));
 

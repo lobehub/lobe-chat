@@ -41,6 +41,17 @@ describe('LobeBedrockAI', () => {
 
   describe('chat', () => {
     it('should call invokeBearerTokenModel for all models', async () => {
+      // Mock fetch to avoid actual API calls
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('data: {"delta":{"text":"Hello"}}\n\n'));
+            controller.close();
+          },
+        }),
+      });
+
       // @ts-ignore
       const spy = vi.spyOn(instance, 'invokeBearerTokenModel');
 
