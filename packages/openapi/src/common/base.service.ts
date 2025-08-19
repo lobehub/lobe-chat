@@ -252,7 +252,7 @@ export abstract class BaseService implements IBaseService {
     // 场景 1: 查询/操作特定用户的数据
     if (targetUserId && !queryAll) {
       // 如果是查询/操作当前用户的数据，直接允许
-      if (targetUserId === this.userId && hasOwnerAccess) {
+      if (targetUserId === this.userId && (hasOwnerAccess || hasGlobalAccess)) {
         this.log(
           'info',
           `权限通过：当前user拥有${resourceType}的owner级别${actionType}权限`,
