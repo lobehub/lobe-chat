@@ -143,6 +143,7 @@ class DiscoverService {
     errorCode,
     ...params
   }: InstallReportRequest) => {
+    // if user don't allow tracing, just not report installation
     const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!allow) return;
@@ -167,6 +168,7 @@ class DiscoverService {
    * 上报插件调用结果
    */
   reportPluginCall = async (reportData: CallReportRequest) => {
+    // if user don't allow tracing , just not report calling
     const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!allow) return;
