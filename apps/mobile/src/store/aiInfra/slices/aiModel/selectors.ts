@@ -75,16 +75,13 @@ const isModelHasContextWindowToken =
   };
 
 const modelExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const model = getEnabledModelById(id, provider)(s);
-  // 简化实现：RN 端暂时不支持扩展参数
-  return undefined;
+  return model?.settings?.extendParams;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,unicorn/consistent-function-scoping
 const isModelHasExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
-  // 简化实现：RN 端暂时不支持扩展参数
-  return false;
+  const controls = modelExtendParams(id, provider)(s);
+  return !!controls && controls.length > 0;
 };
 
 // Simplified search implementations for RN
