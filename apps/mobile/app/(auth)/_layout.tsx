@@ -14,13 +14,6 @@ const AuthLayout = () => {
           title: t('login.title'),
         }}
       />
-      <Stack.Screen
-        name="callback"
-        options={{
-          headerShown: false,
-          title: t('callback.title'),
-        }}
-      />
     </Stack>
   );
 };

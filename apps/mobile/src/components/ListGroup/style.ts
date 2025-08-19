@@ -7,4 +7,11 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.marginLG,
     overflow: 'hidden',
   },
+  title: {
+    color: token.colorTextLabel,
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: token.marginXS,
+    paddingHorizontal: 16,
+  },
 }));

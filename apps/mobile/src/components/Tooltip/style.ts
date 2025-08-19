@@ -27,7 +27,7 @@ export const useStyles = createStyles((token) => ({
     paddingVertical: token.paddingXS,
   },
   tooltipText: {
-    color: token.colorBgBase,
+    color: token.colorBgContainer,
     fontSize: token.fontSizeSM,
     lineHeight: token.fontSizeSM * token.lineHeightSM,
   },
