@@ -35,11 +35,11 @@ const ragEvalProcedure = authedProcedure
 
     return opts.next({
       ctx: {
-        datasetModel: new EvalDatasetModel(ctx.userId),
+        datasetModel: new EvalDatasetModel(ctx.serverDB, ctx.userId),
         fileModel: new FileModel(ctx.serverDB, ctx.userId),
-        datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
-        evaluationModel: new EvalEvaluationModel(ctx.userId),
-        evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
+        datasetRecordModel: new EvalDatasetRecordModel(ctx.serverDB, ctx.userId),
+        evaluationModel: new EvalEvaluationModel(ctx.serverDB, ctx.userId),
+        evaluationRecordModel: new EvaluationRecordModel(ctx.serverDB, ctx.userId),
         fileService: new FileService(ctx.serverDB, ctx.userId),
       },
     });
