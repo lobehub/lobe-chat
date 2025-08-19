@@ -1,62 +1,105 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-import { useChatStore } from '@/store/chat/index';
+import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
+import { chatSelectors } from '@/store/chat/selectors';
 
 export function useChat() {
   const { activeId } = useSessionStore();
-  const { getMessages, isLoading, sendMessage, stopGenerating, clearMessages, regenerateMessage } =
-    useChatStore();
-  const [input, setInput] = useState('');
 
-  const messages = getMessages(activeId);
+  // Chat Store actions
+  const sendMessage = useChatStore((s) => s.sendMessage);
+  const regenerateMessage = useChatStore((s) => s.regenerateMessage);
+  const clearMessage = useChatStore((s) => s.clearMessage);
+  const stopGenerateMessage = useChatStore((s) => s.stopGenerateMessage);
+  const updateInputMessage = useChatStore((s) => s.updateInputMessage);
 
-  const handleInputChange = useCallback((text: string) => {
-    setInput(text);
-  }, []);
+  // Chat Store state
+  const input = useChatStore((s) => s.inputMessage);
+  const messages = useChatStore((s) => chatSelectors.mainDisplayChats(s));
+  const isSendButtonDisabled = useChatStore((s) => chatSelectors.isSendButtonDisabledByMessage(s));
+
+  const handleInputChange = useCallback(
+    (text: string) => {
+      updateInputMessage(text);
+    },
+    [updateInputMessage],
+  );
 
   const handleSubmit = useCallback(
     async (e?: any) => {
       e?.preventDefault();
 
-      if (!input.trim() || isLoading) return;
+      if (!input.trim() || isSendButtonDisabled) return;
 
       const content = input.trim();
-      setInput('');
 
-      console.log('content', content);
+      // 清空输入
+      updateInputMessage('');
+
+      console.log('Sending message:', content);
 
       try {
-        await sendMessage(activeId, content);
+        await sendMessage({
+          files: [],
+          message: content, // TODO: 支持文件上传
+          onlyAddUserMessage: false,
+        });
       } catch (error: any) {
-        console.log('error', error);
-        // 错误处理已在 store 中完成
-        setInput(content); // 发送失败时恢复输入
+        console.error('Send message error:', error);
+        // 发送失败时恢复输入
+        updateInputMessage(content);
+        throw error;
       }
     },
-    [activeId, input, isLoading, sendMessage],
+    [input, isSendButtonDisabled, sendMessage, updateInputMessage],
   );
 
   const handleRegenerate = useCallback(
     async (messageId: string) => {
       try {
-        await regenerateMessage(activeId, messageId);
+        await regenerateMessage(messageId);
       } catch (error: any) {
-        console.log('regenerate error', error);
+        console.error('Regenerate message error:', error);
         throw error;
       }
     },
-    [activeId, regenerateMessage],
+    [regenerateMessage],
   );
 
+  const handleClearMessages = useCallback(async () => {
+    try {
+      await clearMessage();
+    } catch (error: any) {
+      console.error('Clear messages error:', error);
+      throw error;
+    }
+  }, [clearMessage]);
+
+  const handleStopGenerating = useCallback(() => {
+    stopGenerateMessage();
+  }, [stopGenerateMessage]);
+
   return {
-    clearMessages,
+    // Session info
+    activeId,
+
+    // Actions
+    clearMessages: handleClearMessages,
+
     handleInputChange,
+
     handleRegenerate,
+
     handleSubmit,
+
+    // State
     input,
-    isLoading,
+
+    isLoading: isSendButtonDisabled,
+
     messages,
-    stopGenerating,
+
+    stopGenerating: handleStopGenerating,
   };
 }
