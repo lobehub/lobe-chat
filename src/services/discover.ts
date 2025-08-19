@@ -143,6 +143,9 @@ class DiscoverService {
     errorCode,
     ...params
   }: InstallReportRequest) => {
+    const allow = useUserStore(preferenceSelectors.userAllowTrace);
+
+    if (!allow) return;
     await this.injectMPToken();
 
     const reportData = {
