@@ -3,7 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { jwtDecode } from 'jwt-decode';
 import { TokenStorage } from './tokenStorage';
 import { PKCEUtils } from './pkce';
-import type { AuthConfig, AuthService, Token, User, PKCE } from '@/types/user';
+import type { AuthConfig, AuthService, Token, User, PKCE } from '@/_types/user';
 import { authLogger } from '@/utils/logger';
 import { AUTH_ENDPOINTS } from '@/config/auth';
 

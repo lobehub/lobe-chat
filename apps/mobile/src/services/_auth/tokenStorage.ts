@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
-import type { Token } from '@/types/user';
 import { authLogger } from '@/utils/logger';
+import { Token } from '@/_types/user';
 
 // 存储键名
 const STORAGE_KEYS = {

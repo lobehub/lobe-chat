@@ -3,6 +3,10 @@ export default {
   copyFailed: '复制失败',
   deleteMessageConfirm: '确定要删除这条消息吗？',
   history: '对话历史',
+  inbox: {
+    desc: '在这里，您可以查看和管理您的消息和通知。',
+    title: '收件箱',
+  },
   messageCopied: '消息已复制',
   newChat: '新对话',
   placeholder: '输入您的消息...',
