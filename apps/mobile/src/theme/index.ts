@@ -8,7 +8,7 @@ export type {
   ThemeConfig,
   ThemeContextValue,
   ThemeMode,
-} from '@/types/theme';
+} from '@/_types/theme';
 
 // 导出主题上下文和 Hooks
 export { ThemeProvider, useTheme, useThemeToken } from './context';
