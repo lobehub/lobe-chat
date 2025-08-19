@@ -6,6 +6,7 @@ import { useStyles } from './style';
 import { Avatar } from '..';
 
 interface ListItemProps {
+  active?: boolean;
   avatar?: string | React.ReactNode;
   description?: string;
   extra?: React.ReactNode;
@@ -17,8 +18,8 @@ interface ListItemProps {
   title: string;
 }
 
-const ListItem = ({ title, avatar, description, extra, onPress, href }: ListItemProps) => {
-  const { styles } = useStyles(!!description);
+const ListItem = ({ title, avatar, description, extra, onPress, href, active }: ListItemProps) => {
+  const { styles } = useStyles(!!description, active);
 
   const content = (
     <View style={styles.sessionItem}>
