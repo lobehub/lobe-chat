@@ -1,5 +1,14 @@
 [
   {
+    "children": {
+      "fixes": [
+        "Support Grok thinking models in AiHubMix, The 'stream_options' parameter is only allowed when 'stream' is enabled."
+      ]
+    },
+    "date": "2025-08-19",
+    "version": "1.113.3"
+  },
+  {
     "children": {},
     "date": "2025-08-18",
     "version": "1.113.2"
