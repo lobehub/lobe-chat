@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { ThemeProvider } from '@/theme/context';
+import { ThemeProvider } from '@/theme';
 
 // Mock the setting store
 jest.mock('@/store/setting', () => ({
@@ -96,7 +96,7 @@ export const renderWithTheme = (ui: React.ReactElement, options = {}) => {
   return render(ui, { wrapper: TestWrapper, ...options });
 };
 
-// Create a rerender function that also uses the theme wrapper
+// Create a rerender function that also uses the theme wrapper (deprecated, use rerender from renderWithTheme)
 export const rerenderWithTheme = (ui: React.ReactElement, options = {}) => {
   return render(ui, { wrapper: TestWrapper, ...options });
 };

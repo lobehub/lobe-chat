@@ -1,6 +1,5 @@
-import type { AliasToken, MapToken } from '@/types/theme';
-
-import { getAlphaColor } from './utils';
+import type { AliasToken, MapToken } from './interface';
+import { getAlphaColor } from './colorUtils';
 
 /**
  * 格式化 Token，从 MapToken 生成 AliasToken
@@ -42,12 +41,89 @@ export function formatToken(mapToken: MapToken): AliasToken {
       shadowRadius: 16,
     },
 
+    // 卡片阴影 - 多层效果简化为单层
+    boxShadowCard: {
+      elevation: 4,
+      shadowColor: 'rgba(0, 0, 0, 0.12)',
+      shadowOffset: { height: 3, width: 0 },
+      shadowOpacity: 1,
+      shadowRadius: 6,
+    },
+
+    // 下方抽屉阴影
+    boxShadowDrawerDown: {
+      elevation: 8,
+      shadowColor: 'rgba(0, 0, 0, 0.08)',
+      shadowOffset: { height: -6, width: 0 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+
+    // 左侧抽屉阴影
+    boxShadowDrawerLeft: {
+      elevation: 8,
+      shadowColor: 'rgba(0, 0, 0, 0.08)',
+      shadowOffset: { height: 0, width: 6 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+
+    // 右侧抽屉阴影
+    boxShadowDrawerRight: {
+      elevation: 8,
+      shadowColor: 'rgba(0, 0, 0, 0.08)',
+      shadowOffset: { height: 0, width: -6 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+
+    // 上方抽屉阴影
+    boxShadowDrawerUp: {
+      elevation: 8,
+      shadowColor: 'rgba(0, 0, 0, 0.08)',
+      shadowOffset: { height: 6, width: 0 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+
+    // 轻量级 Popover 箭头阴影
+    boxShadowPopoverArrow: {
+      elevation: 2,
+      shadowColor: 'rgba(0, 0, 0, 0.05)',
+      shadowOffset: { height: 2, width: 2 },
+      shadowOpacity: 1,
+      shadowRadius: 2.5,
+    },
+
     boxShadowSecondary: {
       elevation: 8,
       shadowColor: 'rgba(0, 0, 0, 0.08)',
       shadowOffset: { height: 6, width: 0 },
       shadowOpacity: 1,
       shadowRadius: 16,
+    },
+
+    boxShadowTabsOverflowBottom: {
+      borderBottomColor: 'rgba(0, 0, 0, 0.05)',
+      borderBottomWidth: 1,
+    },
+
+    // Tab 溢出阴影 - RN 中用边框或渐变替代 inset shadow
+    // 注意：RN 不支持 inset shadow，这些需要用其他方案实现
+    boxShadowTabsOverflowLeft: {
+      borderLeftColor: 'rgba(0, 0, 0, 0.05)',
+      // 建议用 LinearGradient 或 borderLeftWidth + borderLeftColor 实现
+      borderLeftWidth: 1,
+    },
+
+    boxShadowTabsOverflowRight: {
+      borderRightColor: 'rgba(0, 0, 0, 0.05)',
+      borderRightWidth: 1,
+    },
+
+    boxShadowTabsOverflowTop: {
+      borderTopColor: 'rgba(0, 0, 0, 0.05)',
+      borderTopWidth: 1,
     },
 
     boxShadowTertiary: {
@@ -120,16 +196,20 @@ export function formatToken(mapToken: MapToken): AliasToken {
     controlPaddingHorizontal: 12,
 
     controlPaddingHorizontalSM: 8,
-
+    controlTmpOutline: mapToken.colorFillQuaternary,
     // ============== 字体 ============== //
     fontSizeIcon: mapToken.fontSizeSM,
-
-    fontWeight: '400',
 
     fontWeightStrong: '600',
 
     // ============== 线条 ============== //
     lineWidthFocus: mapToken.lineWidth * 3,
+
+    linkDecoration: 'none',
+
+    linkFocusDecoration: 'none',
+
+    linkHoverDecoration: 'none',
 
     margin: mapToken.size,
 
@@ -148,9 +228,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
     // ============== 外边距 ============== //
     marginXXS: mapToken.sizeXXS,
 
-    opacityDisabled: 0.25,
-
-    // ============== 透明度 ============== //
     opacityLoading: 0.65,
 
     padding: mapToken.size,
@@ -173,9 +250,7 @@ export function formatToken(mapToken: MapToken): AliasToken {
     paddingMD: mapToken.sizeMD,
 
     paddingSM: mapToken.sizeSM,
-
     paddingXL: mapToken.sizeXL,
-
     paddingXS: mapToken.sizeXS,
 
     // ============== 内边距 ============== //

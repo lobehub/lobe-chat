@@ -1,12 +1,13 @@
 import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 
 import { ICON_SIZE_SMALL } from '@/const/common';
 import { useThemeToken } from '@/theme';
 
 interface SettingItemProps {
+  customContent?: ReactNode;
   description?: string;
   extra?: string;
   href?: Href;
@@ -34,6 +35,7 @@ export const SettingItem = ({
   showNewBadge,
   isSelected = false,
   showCheckmark = false,
+  customContent,
 }: SettingItemProps) => {
   const token = useThemeToken();
 
@@ -97,7 +99,7 @@ export const SettingItem = ({
           onValueChange={onSwitchChange}
           thumbColor={switchValue ? token.colorBgContainer : token.colorBgContainer}
           trackColor={{
-            false: token.colorBorder,
+            false: token.colorBgContainer,
             true: token.colorPrimary,
           }}
           value={switchValue}
@@ -128,6 +130,17 @@ export const SettingItem = ({
         </View>
         <View style={styles.settingItemRight}>{renderRightContent()}</View>
       </View>
+      {customContent && (
+        <View
+          style={{
+            backgroundColor: token.colorBgContainer,
+            paddingBottom: 16,
+            paddingHorizontal: 16,
+          }}
+        >
+          {customContent}
+        </View>
+      )}
       {!isLast && <View style={styles.separator} />}
     </View>
   );

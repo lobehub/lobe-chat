@@ -38,6 +38,7 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       '**/apps/desktop/**',
+      '**/apps/mobile/**',
       'src/database/server/**/**',
       'src/database/repositories/dataImporter/deprecated/**/**',
     ],

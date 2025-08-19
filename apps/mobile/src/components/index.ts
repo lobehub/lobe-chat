@@ -1,7 +1,11 @@
+export { default as TokenTable } from '../../app/playground/components/theme-token/(components)/TokenTable';
+export * from '../../app/playground/components/theme-token/(components)/TokenTable';
+export * from '../theme/ThemeProvider';
 export { default as ActionIcon } from './ActionIcon';
 export { default as Avatar } from './Avatar';
 export { default as Button } from './Button';
 export { default as CapsuleTabs } from './CapsuleTabs';
+export { default as ColorSwatches } from './ColorSwatches';
 export { default as FluentEmoji } from './FluentEmoji';
 export { default as GitHubAvatar } from './GithubAvatar';
 export { default as Highlighter } from './Highlighter';

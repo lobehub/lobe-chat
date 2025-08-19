@@ -149,7 +149,7 @@ import { useStore } from '@/store/store';
 5. **Translation issues**: Run `pnpm run i18n` to regenerate translations
 
 ### Debug Tools
-- [app/(playground)/](mdc:app/(playground)/) - Component testing playground
+- [app/playground/](mdc:app/playground/) - Component testing playground
 - React Native Debugger for debugging
 - Expo DevTools for development
 

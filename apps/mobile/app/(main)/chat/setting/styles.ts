@@ -65,7 +65,7 @@ export const useStyles = createStyles((token, backgroundColor?: string) => ({
     color: token.colorPrimary,
     flex: 1,
     fontSize: token.fontSize,
-    fontWeight: `${token.fontWeight}` as any,
+    fontWeight: token.fontWeightStrong,
     textAlign: 'left',
   },
   historyTime: {
@@ -78,7 +78,7 @@ export const useStyles = createStyles((token, backgroundColor?: string) => ({
   historyTitle: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeLG,
-    fontWeight: `${token.fontWeight}` as any,
+    fontWeight: token.fontWeightStrong,
     marginBottom: token.marginXS,
     marginLeft: token.marginXXS,
   },

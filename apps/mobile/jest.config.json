@@ -6,8 +6,8 @@
   },
   "testMatch": ["**/__tests__/**/*.(ts|tsx|js)", "**/*.(test|spec).(ts|tsx|js)"],
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1",
     "^@/test/(.*)$": "<rootDir>/test/$1",
+    "^@/(.*)$": "<rootDir>/src/$1",
     "^react-native$": "react-native-web"
   },
   "transformIgnorePatterns": [
@@ -17,11 +17,9 @@
   "setupFilesAfterEnv": ["<rootDir>/test/jest.setupAfterEnv.js"],
   "collectCoverage": true,
   "collectCoverageFrom": [
-    "**/*.{ts,tsx,js,jsx}",
-    "!**/coverage/**",
-    "!**/node_modules/**",
-    "!**/babel.config.js",
-    "!**/expo-env.d.ts",
-    "!**/.expo/**"
+    "src/**/*.{ts,tsx,js,jsx}",
+    "app/**/*.{ts,tsx,js,jsx}",
+    "!app/playground/**",
+    "!**/node_modules/**"
   ]
 }

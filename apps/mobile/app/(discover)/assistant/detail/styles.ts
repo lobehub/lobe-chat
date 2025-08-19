@@ -60,7 +60,7 @@ export const useStyles = createStyles((token) => ({
 
   errorContainer: {
     alignItems: 'center',
-    backgroundColor: token.colorBgBase,
+    backgroundColor: token.colorBgContainer,
     flex: 1,
     justifyContent: 'center',
   },
@@ -75,7 +75,7 @@ export const useStyles = createStyles((token) => ({
 
   loadingContainer: {
     alignItems: 'center',
-    backgroundColor: token.colorBgBase,
+    backgroundColor: token.colorBgContainer,
     flex: 1,
     justifyContent: 'center',
   },

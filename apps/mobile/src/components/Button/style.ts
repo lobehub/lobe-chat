@@ -17,8 +17,8 @@ export const useStyles = createStyles(
       switch (type) {
         case 'primary': {
           return {
-            backgroundColor: disabled ? token.colorPrimaryBg : token.colorTextBase,
-            borderColor: disabled ? token.colorPrimaryBorder : token.colorTextBase,
+            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
+            borderColor: disabled ? token.colorPrimaryBorder : token.colorBgElevated,
             textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
           };
         }
