@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-  pull_request_target:
+  pull_request:
     types: [synchronize, labeled, unlabeled]
 
 concurrency:
