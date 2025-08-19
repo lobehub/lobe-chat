@@ -143,7 +143,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const { cx, styles, theme } = useStyles();
 
     const [
-      useFetchAiProviderItem,
+      data,
       updateAiProviderConfig,
       enabled,
       isLoading,
@@ -153,7 +153,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       isProviderEndpointNotEmpty,
       isProviderApiKeyNotEmpty,
     ] = useAiInfraStore((s) => [
-      s.useFetchAiProviderItem,
+      aiProviderSelectors.activeProviderConfig(s),
       s.updateAiProviderConfig,
       aiProviderSelectors.isProviderEnabled(id)(s),
       aiProviderSelectors.isAiProviderConfigLoading(id)(s),
@@ -163,8 +163,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
       aiProviderSelectors.isActiveProviderEndpointNotEmpty(s),
       aiProviderSelectors.isActiveProviderApiKeyNotEmpty(s),
     ]);
-
-    const { data } = useFetchAiProviderItem(id);
 
     useLayoutEffect(() => {
       if (isLoading) return;
