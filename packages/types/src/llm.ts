@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 
+import { ModelParamsSchema } from '@/libs/standard-parameters';
 import { AiModelType, Pricing } from '@/types/aiModel';
 import { AiProviderSettings } from '@/types/aiProvider';
 
@@ -41,6 +42,8 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
+  parameters?: ModelParamsSchema;
+
   pricing?: Pricing;
 
   /**
