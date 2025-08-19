@@ -118,3 +118,12 @@ CLAUDE.local.md
 prd
 GEMINI.md
 e2e/reports
+
+
+# for local prd docs
+docs/prd
+
+# eas
+service-account-key.json
+
+repomix-output-lobehub-lobe-ui.xml
