@@ -9,6 +9,7 @@ import AzureProvider from './azure';
 import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
+import BflProvider from './bfl';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import DeepSeekProvider from './deepseek';
@@ -132,8 +133,10 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   HuggingFaceProvider,
   CloudflareProvider,
   GithubProvider,
+  BflProvider,
   NovitaProvider,
   PPIOProvider,
+  Ai302Provider,
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
@@ -170,7 +173,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Search1APIProvider,
   InfiniAIProvider,
   QiniuProvider,
-  Ai302Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -191,6 +193,7 @@ export { default as AzureProviderCard } from './azure';
 export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
+export { default as BflProviderCard } from './bfl';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as DeepSeekProviderCard } from './deepseek';

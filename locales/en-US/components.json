@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Add Argument",
+    "argumentPlaceholder": "Argument {{index}}",
+    "enterFirstArgument": "Enter first argument..."
+  },
   "DragUpload": {
     "dragDesc": "Drag and drop files here to upload multiple images.",
     "dragFileDesc": "Drag and drop images and files here to upload multiple images and files.",
