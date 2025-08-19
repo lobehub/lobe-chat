@@ -6,11 +6,11 @@ import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useThemeToken } from '@/theme';
-import { EnabledProviderWithModels } from '@/types/aiModel';
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';
 import { useStyles } from './styles';
 import { useRouter } from 'expo-router';
+import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 // 生成菜单键，与Web端保持一致
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;

@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
-import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
+import { AlignJustify, MoreHorizontal, MessagesSquare } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { ICON_SIZE } from '@/const/common';
-import { DEFAULT_INBOX_TITLE } from '@/const/meta';
+import { DEFAULT_AUTHOR, DEFAULT_INBOX_TITLE } from '@/const/meta';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 import { useThemeToken } from '@/theme';
@@ -18,8 +19,8 @@ interface ChatHeaderProps {
 export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
-  const author = useSessionStore(sessionMetaSelectors.currentAgentAuthor);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
+  const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
   const token = useThemeToken();
   const { styles } = useStyles();
 
@@ -38,12 +39,15 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
           <View style={styles.headerText}>
             <Text style={styles.headerTitle}>{displayTitle}</Text>
             <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerSubtitle}>
-              {author}
+              {DEFAULT_AUTHOR}
             </Text>
           </View>
         </View>
       </View>
       <View style={styles.headerActions}>
+        <TouchableOpacity onPress={toggleTopicDrawer} style={styles.actionButton}>
+          <MessagesSquare color={token.colorText} size={ICON_SIZE} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => router.push('/chat/setting')} style={styles.actionButton}>
           <MoreHorizontal color={token.colorText} size={ICON_SIZE} />
         </TouchableOpacity>

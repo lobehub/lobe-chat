@@ -8,10 +8,12 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useChat } from '@/hooks/useChat';
-import ChatBubble from '../ChatBubble';
+import { useFetchMessages } from '@/hooks/useFetchMessages';
 import ScrollToBottom from '../ScrollToBottom';
 import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
+import { LOADING_FLAT } from '@/const/message';
+import ChatBubble from '../ChatBubble';
 
 interface ChatListProps {
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -19,23 +21,35 @@ interface ChatListProps {
   style?: ViewStyle;
 }
 
+const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLength: number }>(
+  ({ item, index, totalLength }) => {
+    const isLastMessage = index === totalLength - 1;
+    const isAssistant = item.role === 'assistant';
+    const isLoadingContent = item.content === LOADING_FLAT;
+
+    const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent;
+
+    return <ChatBubble isLoading={shouldShowLoading} message={item} />;
+  },
+);
+
+ChatMessageItem.displayName = 'ChatMessageItem';
+
 export default function ChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
   const internalRef = useRef<FlatList<ChatMessage>>(null);
-  const { messages, isLoading } = useChat();
+
+  // 触发消息加载
+  useFetchMessages();
+
+  const { messages } = useChat();
   const { styles } = useStyles();
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
-      <ChatBubble
-        isLoading={
-          index === messages.length - 1 && isLoading && item.role === 'assistant' && !item.content
-        }
-        key={item.id}
-        message={item}
-      />
+      <ChatMessageItem index={index} item={item} key={item.id} totalLength={messages.length} />
     ),
-    [isLoading, messages.length],
+    [messages.length],
   );
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);

@@ -3,7 +3,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { ThemeMode } from '@/types/theme';
+import { ThemeMode } from '@/_types/theme';
 
 interface SettingState {
   setThemeMode: (themeMode: ThemeMode) => void;

@@ -17,13 +17,17 @@ import {
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
-import { ModelAbilities } from '@/types/aiModel';
+import { LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
 
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
   fetchAiProviderList = 'FETCH_AI_PROVIDER',
   fetchAiProviderRuntimeState = 'FETCH_AI_PROVIDER_RUNTIME_STATE',
 }
+
+type AiProviderRuntimeStateWithBuiltinModels = AiProviderRuntimeState & {
+  builtinAiModelList: LobeDefaultAiModelListItem[];
+};
 
 export interface AiProviderAction {
   createNewAiProvider: (params: CreateAiProviderParams) => Promise<void>;
@@ -43,7 +47,7 @@ export interface AiProviderAction {
   useFetchAiProviderList: (params?: { suspense?: boolean }) => SWRResponse<AiProviderListItem[]>;
   useFetchAiProviderRuntimeState: (
     isLoginOnInit: boolean | undefined,
-  ) => SWRResponse<AiProviderRuntimeState | undefined>;
+  ) => SWRResponse<AiProviderRuntimeStateWithBuiltinModels | undefined>;
 }
 
 export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProviderAction> = (
@@ -147,10 +151,16 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     ),
 
   useFetchAiProviderRuntimeState: (isLogin) =>
-    useSWR<AiProviderRuntimeState | undefined>(
+    useSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
       [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin],
       async ([, isLogin]) => {
-        if (isLogin) return aiProviderService.getAiProviderRuntimeState();
+        if (isLogin) {
+          const runtimeState = await aiProviderService.getAiProviderRuntimeState();
+          return {
+            ...runtimeState,
+            builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
+          };
+        }
 
         // 未登录状态：返回默认的模型和提供商配置
         const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
@@ -160,6 +170,7 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
         const allModels = LOBE_DEFAULT_MODEL_LIST;
 
         return {
+          builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
           enabledAiModels: allModels
             .filter((m) => m.enabled)
             .map((model) => ({
@@ -173,6 +184,8 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
               type: model.type,
             })),
           enabledAiProviders: enabledAiProviders,
+          enabledChatAiProviders: [],
+          enabledImageAiProviders: [],
           runtimeConfig: {},
         };
       },
