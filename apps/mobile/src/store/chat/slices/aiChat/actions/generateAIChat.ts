@@ -299,7 +299,7 @@ export const generateAIChat: StateCreator<
 
     chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
 
-    internal_toggleChatLoading(false, undefined);
+    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
 
   // the internal process method of the AI message

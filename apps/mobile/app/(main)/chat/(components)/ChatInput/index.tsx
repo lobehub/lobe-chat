@@ -22,12 +22,10 @@ interface ChatInputProps {
 
 const ChatInput = memo(({ style }: ChatInputProps) => {
   const { t } = useTranslation(['chat']);
-  const { input, handleInputChange, handleSubmit, isLoading, stopGenerating } = useChat();
+  const { input, handleInputChange, handleSubmit, isLoading, canSend, stopGenerating } = useChat();
   const insets = useSafeAreaInsets();
   const token = useThemeToken();
   const { styles } = useStyles();
-
-  const canSend = input.trim();
 
   const senderIconColor = token.colorText;
 
