@@ -143,7 +143,7 @@ class DiscoverService {
     errorCode,
     ...params
   }: InstallReportRequest) => {
-    const allow = useUserStore(preferenceSelectors.userAllowTrace);
+    const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!allow) return;
     await this.injectMPToken();
@@ -167,7 +167,7 @@ class DiscoverService {
    * 上报插件调用结果
    */
   reportPluginCall = async (reportData: CallReportRequest) => {
-    const allow = useUserStore(preferenceSelectors.userAllowTrace);
+    const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!allow) return;
 
