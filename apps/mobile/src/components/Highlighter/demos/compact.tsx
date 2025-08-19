@@ -75,7 +75,7 @@ export const CompactHighlighterDemo: React.FC = () => {
     description: {
       color: token.colorTextSecondary,
       fontSize: token.fontSize,
-      lineHeight: token.lineHeight * token.fontSize,
+      lineHeight: token.lineHeight,
       marginBottom: token.marginXXL,
     },
     itemContainer: {
@@ -115,7 +115,7 @@ export const CompactHighlighterDemo: React.FC = () => {
     usageText: {
       color: token.colorSuccessText,
       fontSize: token.fontSizeSM,
-      lineHeight: token.lineHeightSM * token.fontSizeSM,
+      lineHeight: token.lineHeightSM,
     },
     usageTitle: {
       color: token.colorSuccess,
