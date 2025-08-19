@@ -49,6 +49,22 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "functionCall": false,
     "id": "dall-e-2",
     "maxOutput": undefined,
+    "parameters": {
+      "imageUrl": {
+        "default": null,
+      },
+      "prompt": {
+        "default": "",
+      },
+      "size": {
+        "default": "1024x1024",
+        "enum": [
+          "256x256",
+          "512x512",
+          "1024x1024",
+        ],
+      },
+    },
     "reasoning": false,
     "releasedAt": "2023-11-01",
     "type": "image",
@@ -231,6 +247,19 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "functionCall": false,
     "id": "dall-e-3",
     "maxOutput": undefined,
+    "parameters": {
+      "prompt": {
+        "default": "",
+      },
+      "size": {
+        "default": "1024x1024",
+        "enum": [
+          "1024x1024",
+          "1792x1024",
+          "1024x1792",
+        ],
+      },
+    },
     "reasoning": false,
     "releasedAt": "2023-10-31",
     "type": "image",
