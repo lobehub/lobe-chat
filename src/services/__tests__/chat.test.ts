@@ -2148,34 +2148,25 @@ describe('ModelRuntimeOnClient', () => {
       });
 
       it('Bedrock provider: with bearer token and region', async () => {
-        merge(initialSettingsState, {
-          defaultSettings: {},
-          settings: {
-            keyVaults: {
-              bedrock: {
-                bearerToken: 'user-bearer-token',
-                region: 'user-bedrock-region',
-              },
-            },
-          },
-        } as UserSettingsState) as unknown as UserStore;
+        // Mock the keyVaultsConfigSelectors to return Bedrock credentials
+        const { keyVaultsConfigSelectors } = await import('@/store/user/selectors');
+        vi.spyOn(keyVaultsConfigSelectors, 'getVaultByProvider').mockReturnValue(() => ({
+          bearerToken: 'user-bearer-token',
+          region: 'user-bedrock-region',
+        }));
+
         const runtime = await initializeWithClientStore(ModelProvider.Bedrock, {});
         expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
       });
 
       it('Bedrock provider: missing bearer token should throw error', async () => {
-        merge(initialSettingsState, {
-          defaultSettings: {},
-          settings: {
-            keyVaults: {
-              bedrock: {
-                // bearerToken is intentionally omitted
-                region: 'us-west-2',
-              },
-            },
-          },
-        } as UserSettingsState) as unknown as UserStore;
+        // Mock the keyVaultsConfigSelectors to return Bedrock credentials without bearerToken
+        const { keyVaultsConfigSelectors } = await import('@/store/user/selectors');
+        vi.spyOn(keyVaultsConfigSelectors, 'getVaultByProvider').mockReturnValue(() => ({
+          // bearerToken is intentionally omitted
+          region: 'us-west-2',
+        }));
 
         await expect(initializeWithClientStore(ModelProvider.Bedrock, {})).rejects.toThrow();
       });

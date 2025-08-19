@@ -27,7 +27,7 @@ jobs:
           node-version: 22
 
       - name: Install bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: ${{ secrets.BUN_VERSION }}
 
@@ -56,6 +56,13 @@ jobs:
 
       - name: Test App Coverage
         run: bun run test-app:coverage
+        env:
+          # 增加测试超时时间以处理PGlite初始化
+          VITEST_TEST_TIMEOUT: 60000
+          VITEST_HOOK_TIMEOUT: 60000
+          # 使用单进程避免数据库冲突
+          VITEST_POOL_OPTIONS_FORKS_SINGLE_FORK: true
+        continue-on-error: false
 
       - name: Upload App Coverage to Codecov
         uses: codecov/codecov-action@v4

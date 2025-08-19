@@ -1,5 +1,5 @@
 import { eq, not } from 'drizzle-orm';
-import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB, initializeDB } from '@/database/client/db';
@@ -17,7 +17,7 @@ import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/sessio
 
 import { ClientService } from './client';
 
-const userId = 'message-db';
+const userId = 'session-test-user';
 const sessionService = new ClientService(userId);
 
 const mockSessionId = 'mock-session-id';
@@ -27,26 +27,36 @@ const mockAgentId = 'agent-id';
 beforeEach(async () => {
   await initializeDB();
 
-  // 在每个测试用例之前，清空表
-  await clientDB.transaction(async (trx) => {
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
-    await trx.insert(sessions).values([{ id: mockSessionId, userId }]);
-    await trx.insert(agents).values([{ id: mockAgentId, userId }]);
-    await trx
-      .insert(agentsToSessions)
-      .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
-    await trx.insert(sessionGroups).values([
-      { id: 'group-1', name: 'group-A', sort: 2, userId },
-      { id: 'group-2', name: 'group-B', sort: 1, userId },
-      { id: 'group-4', name: 'group-C', sort: 1, userId: '456' },
-    ]);
-  });
-});
+  // Clean up any existing data first
+  await clientDB.delete(agentsToSessions);
+  await clientDB.delete(sessions);
+  await clientDB.delete(agents);
+  await clientDB.delete(sessionGroups);
+  await clientDB.delete(users);
+
+  // Insert test data
+  const otherUserId = 'other-user-456';
+  await clientDB.insert(users).values([{ id: userId }, { id: otherUserId }]);
+  await clientDB.insert(sessions).values([{ id: mockSessionId, userId }]);
+  await clientDB.insert(agents).values([{ id: mockAgentId, userId }]);
+  await clientDB
+    .insert(agentsToSessions)
+    .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
+  await clientDB.insert(sessionGroups).values([
+    { id: 'group-1', name: 'group-A', sort: 2, userId },
+    { id: 'group-2', name: 'group-B', sort: 1, userId },
+    { id: 'group-4', name: 'group-C', sort: 1, userId: otherUserId },
+  ]);
+}, 30000);
 
 afterEach(async () => {
-  // 在每个测试用例之后，清空表
+  // Clean up test data
+  await clientDB.delete(agentsToSessions);
+  await clientDB.delete(sessions);
+  await clientDB.delete(agents);
+  await clientDB.delete(sessionGroups);
   await clientDB.delete(users);
-});
+}, 30000);
 
 describe('SessionService', () => {
   const mockSession = {

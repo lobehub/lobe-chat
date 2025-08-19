@@ -12,9 +12,10 @@ vi.mock('@/config/llm', () => ({
 vi.mock('@/config/modelProviders/bedrock', () => ({
   default: {
     chatModels: [
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0', enabled: true },
+      { id: 'us.deepseek.r1-v1:0', enabled: true },
+      { id: 'us.amazon.nova-premier-v1:0', enabled: true },
+      { id: 'us.amazon.nova-lite-v1:0', enabled: true },
       { id: 'disabled-model', enabled: false },
     ],
   },
@@ -31,22 +32,24 @@ describe('LobeBedrockAI models() method', () => {
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' },
+      { id: 'us.deepseek.r1-v1:0' },
+      { id: 'us.amazon.nova-premier-v1:0' },
+      { id: 'us.amazon.nova-lite-v1:0' },
     ]);
   });
 
   it('should handle "all" with exclusions', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: 'all,-us.anthropic.claude-3-haiku-20240307-v1:0',
+      AWS_BEDROCK_MODEL_LIST: 'all,-us.deepseek.r1-v1:0',
     } as any);
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' },
+      { id: 'us.amazon.nova-premier-v1:0' },
+      { id: 'us.amazon.nova-lite-v1:0' },
     ]);
   });
 
@@ -54,13 +57,13 @@ describe('LobeBedrockAI models() method', () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
       AWS_BEDROCK_MODEL_LIST:
-        '+us.anthropic.claude-3-sonnet-20240229-v1:0,+us.meta.llama3-1-70b-instruct-v1:0',
+        '+us.anthropic.claude-opus-4-1-20250805-v1:0,+us.amazon.nova-premier-v1:0',
     } as any);
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' },
+      { id: 'us.amazon.nova-premier-v1:0' },
     ]);
   });
 
@@ -68,11 +71,11 @@ describe('LobeBedrockAI models() method', () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
       AWS_BEDROCK_MODEL_LIST:
-        'us.anthropic.claude-3-sonnet-20240229-v1:0,us.anthropic.claude-3-haiku-20240307-v1:0,-us.anthropic.claude-3-haiku-20240307-v1:0',
+        'us.anthropic.claude-opus-4-1-20250805-v1:0,us.deepseek.r1-v1:0,-us.deepseek.r1-v1:0',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true }]);
+    expect(models).toEqual([{ id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' }]);
   });
 
   it('should handle empty model list', async () => {
@@ -83,9 +86,10 @@ describe('LobeBedrockAI models() method', () => {
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0', enabled: true },
+      { id: 'us.deepseek.r1-v1:0', enabled: true },
+      { id: 'us.amazon.nova-premier-v1:0', enabled: true },
+      { id: 'us.amazon.nova-lite-v1:0', enabled: true },
     ]);
   });
 
@@ -93,23 +97,23 @@ describe('LobeBedrockAI models() method', () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
       AWS_BEDROCK_MODEL_LIST:
-        ' us.anthropic.claude-3-sonnet-20240229-v1:0 , , +us.meta.llama3-1-70b-instruct-v1:0 , ',
+        ' us.anthropic.claude-opus-4-1-20250805-v1:0 , , +us.amazon.nova-premier-v1:0 , ',
     } as any);
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
-      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' },
+      { id: 'us.amazon.nova-premier-v1:0' },
     ]);
   });
 
   it('should handle non-existent model names gracefully', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: 'us.anthropic.claude-3-sonnet-20240229-v1:0,non-existent-model',
+      AWS_BEDROCK_MODEL_LIST: 'us.anthropic.claude-opus-4-1-20250805-v1:0,non-existent-model',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true }]);
+    expect(models).toEqual([{ id: 'us.anthropic.claude-opus-4-1-20250805-v1:0' }]);
   });
 });

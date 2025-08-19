@@ -42,11 +42,17 @@ export default defineConfig({
       'src/database/repositories/dataImporter/deprecated/**/**',
     ],
     globals: true,
+    hookTimeout: process.env.VITEST_HOOK_TIMEOUT
+      ? parseInt(process.env.VITEST_HOOK_TIMEOUT)
+      : 30_000,
     server: {
       deps: {
         inline: ['vitest-canvas-mock'],
       },
     },
     setupFiles: join(__dirname, './tests/setup.ts'),
+    testTimeout: process.env.VITEST_TEST_TIMEOUT
+      ? parseInt(process.env.VITEST_TEST_TIMEOUT)
+      : 30_000,
   },
 });

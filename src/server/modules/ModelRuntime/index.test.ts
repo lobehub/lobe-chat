@@ -34,13 +34,11 @@ vi.mock('@/config/llm', () => ({
     // 确保为每个provider提供必要的配置信息
     OPENAI_API_KEY: 'test-openai-key',
     GOOGLE_API_KEY: 'test-google-key',
-
     AZURE_API_KEY: 'test-azure-key',
     AZURE_ENDPOINT: 'endpoint',
-
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
-    AWS_REGION: 'test-aws-region',
+    AWS_REGION: 'us-east-1',
     AWS_BEARER_TOKEN_BEDROCK: 'test-bearer-token',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
@@ -53,11 +51,11 @@ vi.mock('@/config/llm', () => ({
     QINIU_API_KEY: 'test-qiniu-key',
     QWEN_API_KEY: 'test-qwen-key',
     STEPFUN_API_KEY: 'test-stepfun-key',
-    
+
     // Enable all providers for testing
     ENABLED_OPENAI: true,
-    ENABLED_AZURE: true,
-    ENABLED_BEDROCK: true,
+    ENABLED_AZURE_OPENAI: true,
+    ENABLED_AWS_BEDROCK: true,
     ENABLED_OLLAMA: true,
     ENABLED_GOOGLE: true,
     ENABLED_ANTHROPIC: true,
@@ -75,10 +73,19 @@ vi.mock('@/config/llm', () => ({
 }));
 
 // Mock provider configurations
-vi.mock('@/config/modelProviders', () => ({
-  getProviderConfig: vi.fn((provider: string) => ({
-    enabled: true,
-  })),
+vi.mock('@/config/modelProviders', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/config/modelProviders')>();
+  return {
+    ...actual,
+    getProviderConfig: vi.fn((provider: string) => ({
+      enabled: true,
+    })),
+  };
+});
+
+// Mock the provider check function to always return true
+vi.mock('@/server/modules/ModelRuntime/utils', () => ({
+  checkProviderIsEnabled: vi.fn(() => true),
 }));
 
 /**
@@ -140,10 +147,10 @@ describe('initModelRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
-    it('Bedrock AI provider: with bearer token', async () => {
+    it('Bedrock AI provider: with bearer token and region', async () => {
       const jwtPayload: ClientSecretPayload = {
         apiKey: 'user-bearer-token',
-        awsRegion: 'user-aws-region',
+        awsRegion: 'us-east-1',
       };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);
