@@ -1,5 +1,6 @@
 export function getLineHeight(fontSize: number) {
-  return (fontSize + 8) / fontSize;
+  // RN 直接写像素值更常见，倍数需要修改为字符串，不方便计算
+  return fontSize + 8;
 }
 
 // https://zhuanlan.zhihu.com/p/32746810
