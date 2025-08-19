@@ -1,1 +1,0 @@
-export const DESKTOP_USER_ID = 'DEFAULT_DESKTOP_USER';

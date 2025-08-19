@@ -2,8 +2,14 @@
   "ai21": {
     "description": "AI21 Labs xây dựng các mô hình cơ bản và hệ thống trí tuệ nhân tạo cho doanh nghiệp, tăng tốc ứng dụng trí tuệ nhân tạo sinh sinh trong sản xuất."
   },
+  "ai302": {
+    "description": "302.AI là một nền tảng ứng dụng AI theo yêu cầu, cung cấp API AI và các ứng dụng AI trực tuyến đầy đủ nhất trên thị trường"
+  },
   "ai360": {
     "description": "360 AI là nền tảng mô hình và dịch vụ AI do công ty 360 phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên tiên tiến, bao gồm 360GPT2 Pro, 360GPT Pro, 360GPT Turbo và 360GPT Turbo Responsibility 8K. Những mô hình này kết hợp giữa tham số quy mô lớn và khả năng đa phương thức, được ứng dụng rộng rãi trong tạo văn bản, hiểu ngữ nghĩa, hệ thống đối thoại và tạo mã. Thông qua chiến lược giá linh hoạt, 360 AI đáp ứng nhu cầu đa dạng của người dùng, hỗ trợ nhà phát triển tích hợp, thúc đẩy sự đổi mới và phát triển ứng dụng thông minh."
+  },
+  "aihubmix": {
+    "description": "AiHubMix cung cấp truy cập đến nhiều mô hình AI thông qua một giao diện API thống nhất."
   },
   "anthropic": {
     "description": "Anthropic là một công ty tập trung vào nghiên cứu và phát triển trí tuệ nhân tạo, cung cấp một loạt các mô hình ngôn ngữ tiên tiến như Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus và Claude 3 Haiku. Những mô hình này đạt được sự cân bằng lý tưởng giữa trí thông minh, tốc độ và chi phí, phù hợp cho nhiều ứng dụng từ khối lượng công việc doanh nghiệp đến phản hồi nhanh. Claude 3.5 Sonnet, là mô hình mới nhất của họ, thể hiện xuất sắc trong nhiều đánh giá, đồng thời duy trì tỷ lệ hiệu suất cao."
@@ -28,6 +34,9 @@
   },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
+  },
+  "fal": {
+    "description": "Nền tảng truyền thông tạo sinh dành cho nhà phát triển"
   },
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
@@ -133,6 +142,9 @@
   },
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
+  },
+  "v0": {
+    "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
   },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."

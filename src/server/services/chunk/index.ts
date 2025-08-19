@@ -1,9 +1,9 @@
-import { JWTPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@/const/auth';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { FileModel } from '@/database/models/file';
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { ChunkContentParams, ContentChunk } from '@/server/modules/ContentChunk';
-import { createAsyncServerClient } from '@/server/routers/async';
+import { createAsyncCaller } from '@/server/routers/async';
 import {
   AsyncTaskError,
   AsyncTaskErrorType,
@@ -17,7 +17,7 @@ export class ChunkService {
   private fileModel: FileModel;
   private asyncTaskModel: AsyncTaskModel;
 
-  constructor(userId: string) {
+  constructor(serverDB: LobeChatDatabase, userId: string) {
     this.userId = userId;
 
     this.chunkClient = new ContentChunk();
@@ -30,7 +30,7 @@ export class ChunkService {
     return this.chunkClient.chunkContent(params);
   }
 
-  async asyncEmbeddingFileChunks(fileId: string, payload: JWTPayload) {
+  async asyncEmbeddingFileChunks(fileId: string, payload: ClientSecretPayload) {
     const result = await this.fileModel.findById(fileId);
 
     if (!result) return;
@@ -43,11 +43,11 @@ export class ChunkService {
 
     await this.fileModel.update(fileId, { embeddingTaskId: asyncTaskId });
 
-    const asyncCaller = await createAsyncServerClient(this.userId, payload);
+    const asyncCaller = await createAsyncCaller({ jwtPayload: payload, userId: this.userId });
 
     // trigger embedding task asynchronously
     try {
-      await asyncCaller.file.embeddingChunks.mutate({ fileId, taskId: asyncTaskId });
+      await asyncCaller.file.embeddingChunks({ fileId, taskId: asyncTaskId });
     } catch (e) {
       console.error('[embeddingFileChunks] error:', e);
 
@@ -66,7 +66,7 @@ export class ChunkService {
   /**
    * parse file to chunks with async task
    */
-  async asyncParseFileToChunks(fileId: string, payload: JWTPayload, skipExist?: boolean) {
+  async asyncParseFileToChunks(fileId: string, payload: ClientSecretPayload, skipExist?: boolean) {
     const result = await this.fileModel.findById(fileId);
 
     if (!result) return;
@@ -82,22 +82,20 @@ export class ChunkService {
 
     await this.fileModel.update(fileId, { chunkTaskId: asyncTaskId });
 
-    const asyncCaller = await createAsyncServerClient(this.userId, payload);
+    const asyncCaller = await createAsyncCaller({ jwtPayload: payload, userId: this.userId });
 
     // trigger parse file task asynchronously
-    asyncCaller.file.parseFileToChunks
-      .mutate({ fileId: fileId, taskId: asyncTaskId })
-      .catch(async (e) => {
-        console.error('[ParseFileToChunks] error:', e);
+    asyncCaller.file.parseFileToChunks({ fileId: fileId, taskId: asyncTaskId }).catch(async (e) => {
+      console.error('[ParseFileToChunks] error:', e);
 
-        await this.asyncTaskModel.update(asyncTaskId, {
-          error: new AsyncTaskError(
-            AsyncTaskErrorType.TaskTriggerError,
-            'trigger chunk embedding async task error. Please make sure the APP_URL is available from your server. You can check the proxy config or WAF blocking',
-          ),
-          status: AsyncTaskStatus.Error,
-        });
+      await this.asyncTaskModel.update(asyncTaskId, {
+        error: new AsyncTaskError(
+          AsyncTaskErrorType.TaskTriggerError,
+          'trigger chunk embedding async task error. Please make sure the APP_URL is available from your server. You can check the proxy config or WAF blocking',
+        ),
+        status: AsyncTaskStatus.Error,
       });
+    });
 
     return asyncTaskId;
   }

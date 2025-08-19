@@ -1,6 +1,6 @@
+import { ErrorResponse, ErrorType } from '@lobechat/types';
 import { t } from 'i18next';
 
-import { ErrorResponse, ErrorType } from '@/types/fetch';
 import { ChatMessageError } from '@/types/message';
 
 export const getMessageError = async (response: Response) => {

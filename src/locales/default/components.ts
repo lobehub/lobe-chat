@@ -1,4 +1,9 @@
 export default {
+  ArgsInput: {
+    addArgument: '添加参数',
+    argumentPlaceholder: '参数 {{index}}',
+    enterFirstArgument: '输入第一个参数...',
+  },
   DragUpload: {
     dragDesc: '拖拽文件到这里，支持上传多个图片。',
     dragFileDesc: '拖拽图片和文件到这里，支持上传多个图片和文件。',
@@ -70,6 +75,23 @@ export default {
   GoBack: {
     back: '返回',
   },
+  ImageUpload: {
+    actions: {
+      changeImage: '点击更换图片',
+      dropMultipleFiles: '不支持多上传多个文件，只会使用第一个文件',
+    },
+    placeholder: {
+      primary: '添加图片',
+      secondary: '点击或拖拽上传',
+    },
+  },
+  KeyValueEditor: {
+    addButton: '新增一行',
+    deleteTooltip: '删除',
+    duplicateKeyError: '键名必须唯一',
+    keyPlaceholder: '键',
+    valuePlaceholder: '值',
+  },
   MaxTokenSlider: {
     unlimited: '无限制',
   },
@@ -92,6 +114,25 @@ export default {
     goToSettings: '前往设置',
     provider: '服务商',
     title: '模型',
+  },
+  MultiImagesUpload: {
+    actions: {
+      uploadMore: '点击或拖拽上传更多',
+    },
+    modal: {
+      complete: '完成',
+      newFileIndicator: '新增',
+      selectImageToPreview: '请选择要预览的图片',
+      title: '管理图片 ({{count}})',
+      upload: '上传图片',
+    },
+    placeholder: {
+      primary: '点击或拖拽上传图片',
+      secondary: '支持多张图片选择',
+    },
+    progress: {
+      uploadingWithCount: '{{completed}}/{{total}} 已上传',
+    },
   },
   OllamaSetupGuide: {
     action: {

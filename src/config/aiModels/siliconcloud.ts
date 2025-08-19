@@ -1,7 +1,251 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 // https://siliconflow.cn/zh-cn/models
 const siliconcloudChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'Step3 是由阶跃星辰（StepFun）发布的前沿多模态推理模型，它基于拥有 321B 总参数和 38B 激活参数的专家混合（MoE）架构构建。该模型采用端到端设计，旨在最小化解码成本，同时在视觉语言推理方面提供顶级性能。通过多矩阵分解注意力（MFA）和注意力-FFN 解耦（AFD）的协同设计，Step3 在旗舰级和低端加速器上都能保持卓越的效率。在预训练阶段，Step3 处理了超过 20T 的文本 token 和 4T 的图文混合 token，覆盖十多种语言。该模型在数学、代码及多模态等多个基准测试中均达到了开源模型的领先水平。',
+    displayName: 'Step 3',
+    id: 'stepfun-ai/step3',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-31',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-Coder-480B-A35B-Instruct 是由阿里巴巴发布的、迄今为止最具代理（Agentic）能力的代码模型。它是一个拥有 4800 亿总参数和 350 亿激活参数的混合专家（MoE）模型，在效率和性能之间取得了平衡。该模型原生支持 256K（约 26 万） tokens 的上下文长度，并可通过 YaRN 等外推方法扩展至 100 万 tokens，使其能够处理大规模代码库和复杂的编程任务。Qwen3-Coder 专为代理式编码工作流设计，不仅能生成代码，还能与开发工具和环境自主交互，以解决复杂的编程问题。在多个编码和代理任务的基准测试中，该模型在开源模型中取得了顶尖水平，其性能可与 Claude Sonnet 4 等领先模型相媲美。',
+    displayName: 'Qwen3 Coder 480B A35B Instruct',
+    id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-Coder-30B-A3B-Instruct 是由阿里巴巴通义千问团队开发的 Qwen3 系列中的代码模型。作为一个经过精简优化的模型，它在保持高性能和高效率的同时，专注于提升代码处理能力。该模型在代理式编程（Agentic Coding）、自动化浏览器操作和工具调用等复杂任务上，于开源模型中表现出显著的性能优势。它原生支持 256K tokens 的长上下文，并可扩展至 1M tokens，从而能够更好地进行代码库级别的理解和处理。此外，该模型为 Qwen Code、CLINE 等平台提供了强大的代理编码支持，并设计了专门的函数调用格式。',
+    displayName: 'Qwen3 Coder 30B A3B Instruct',
+    id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-31',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.5V 是由智谱 AI（Zhipu AI）发布的最新一代视觉语言模型（VLM）该模型基于拥有 106B 总参数和 12B 激活参数的旗舰文本模型 GLM-4.5-Air 构建，采用了混合专家（MoE）架构，旨在以更低的推理成本实现卓越性能 GLM-4.5V 在技术上延续了 GLM-4.1V-Thinking 的路线，并引入了三维旋转位置编码（3D-RoPE）等创新，显著增强了对三维空间关系的感知与推理能力。通过在预训练、监督微调和强化学习阶段的优化，该模型具备了处理图像、视频、长文档等多种视觉内容的能力，在 41 个公开的多模态基准测试中达到了同级别开源模型的顶尖水平此外，模型还新增了“思考模式”开关，允许用户在快速响应和深度推理之间灵活选择，以平衡效率与效果。',
+    displayName: 'GLM-4.5V',
+    id: 'zai-org/GLM-4.5V',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4.5 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。',
+    displayName: 'GLM-4.5',
+    id: 'zai-org/GLM-4.5',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4.5-Air 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。',
+    displayName: 'GLM-4.5-Air',
+    id: 'zai-org/GLM-4.5-Air',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Pangu-Pro-MoE 72B-A16B 是一款 720 亿参数、激活 160 亿参的稀疏大语言模型，它基于分组混合专家（MoGE）架构，它在专家选择阶段对专家进行分组，并约束 token 在每个组内激活等量专家，从而实现专家负载均衡，显著提升模型在昇腾平台的部署效率。',
+    displayName: 'Pangu Pro MoE 72B A16B',
+    id: 'ascend-tribe/pangu-pro-moe',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-17',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'ERNIE-4.5-300B-A47B 是由百度公司开发的一款基于混合专家（MoE）架构的大语言模型。该模型总参数量为 3000 亿，但在推理时每个 token 仅激活 470 亿参数，从而在保证强大性能的同时兼顾了计算效率。作为 ERNIE 4.5 系列的核心模型之一，在文本理解、生成、推理和编程等任务上展现出卓越的能力。该模型采用了一种创新的多模态异构 MoE 预训练方法，通过文本与视觉模态的联合训练，有效提升了模型的综合能力，尤其在指令遵循和世界知识记忆方面效果突出。',
+    displayName: 'ERNIE 4.5 300B A47B',
+    id: 'baidu/ERNIE-4.5-300B-A47B',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-30',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2 Instruct',
+    id: 'moonshotai/Kimi-K2-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-11',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2 Instruct (Pro)',
+    id: 'Pro/moonshotai/Kimi-K2-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi-Dev-72B 是一款开源代码大模型，经过大规模强化学习优化，能输出稳健、可直接投产的补丁。该模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了开源模型在缺陷修复、代码评审等自动化软件工程任务上的纪录。',
+    displayName: 'Kimi Dev 72B',
+    id: 'moonshotai/Kimi-Dev-72B',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Hunyuan-A13B-Instruct 参数量800 亿，激活 130 亿参数即可对标更大模型，支持“快思考/慢思考”混合推理；长文理解稳定；经 BFCL-v3 与 τ-Bench 验证，Agent 能力领先；结合 GQA 与多量化格式，实现高效推理。',
+    displayName: 'Hunyuan A13B Instruct',
+    id: 'tencent/Hunyuan-A13B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'MiniMax-M1 是开源权重的大规模混合注意力推理模型，拥有 4560 亿参数，每个 Token 可激活约 459 亿参数。模型原生支持 100 万 Token 的超长上下文，并通过闪电注意力机制，在 10 万 Token 的生成任务中相比 DeepSeek R1 节省 75% 的浮点运算量。同时，MiniMax-M1 采用 MoE（混合专家）架构，结合 CISPO 算法与混合注意力设计的高效强化学习训练，在长输入推理与真实软件工程场景中实现了业界领先的性能。',
+    displayName: 'MiniMax M1 80K',
+    id: 'MiniMaxAI/MiniMax-M1-80k',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-16',
+    type: 'chat',
+  },
   {
     abilities: {
       reasoning: true,
@@ -13,10 +257,94 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Tongyi-Zhiwen/QwenLong-L1-32B',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-05-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-235B-A22B-Thinking-2507 是由阿里巴巴通义千问团队开发的 Qwen3 系列大型语言模型中的一员，专注于高难度的复杂推理任务。该模型基于混合专家（MoE）架构，总参数量达 2350 亿，而在处理每个 token 时仅激活约 220 亿参数，从而在保持强大性能的同时提高了计算效率。作为一个专门的“思考”模型，它在逻辑推理、数学、科学、编程和学术基准测试等需要人类专业知识的任务上表现显著提升，达到了开源思考模型中的顶尖水平。此外，模型还增强了通用能力，如指令遵循、工具使用和文本生成，并原生支持 256K 的长上下文理解能力，非常适合用于需要深度推理和处理长文档的场景。',
+    displayName: 'Qwen3 235B A22B Thinking 2507',
+    id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-25',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-235B-A22B-Instruct-2507 是由阿里云通义千问团队开发的 Qwen3 系列中的一款旗舰级混合专家（MoE）大语言模型。该模型拥有 2350 亿总参数，每次推理激活 220 亿参数。它是作为 Qwen3-235B-A22B 非思考模式的更新版本发布的，专注于在指令遵循、逻辑推理、文本理解、数学、科学、编程及工具使用等通用能力上实现显著提升。此外，模型增强了对多语言长尾知识的覆盖，并能更好地对齐用户在主观和开放性任务上的偏好，以生成更有帮助和更高质量的文本。',
+    displayName: 'Qwen3 235B A22B Instruct 2507',
+    id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-21',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-30B-A3B-Thinking-2507 是由阿里巴巴通义千问团队发布的 Qwen3 系列的最新思考模型。作为一个拥有 305 亿总参数和 33 亿激活参数的混合专家（MoE）模型，它专注于提升复杂任务的处理能力。该模型在逻辑推理、数学、科学、编程和需要人类专业知识的学术基准测试上表现出显著的性能提升。同时，它在指令遵循、工具使用、文本生成和与人类偏好对齐等通用能力方面也得到了显著增强。模型原生支持 256K 的长上下文理解能力，并可扩展至 100 万 tokens。此版本专为“思考模式”设计，旨在通过详尽的逐步推理来解决高度复杂的任务，其 Agent 智能体能力也表现出色。',
+    displayName: 'Qwen3 30B A3B Thinking 2507',
+    id: 'Qwen/Qwen3-30B-A3B-Thinking-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-30',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-30B-A3B-Instruct-2507 是 Qwen3-30B-A3B 非思考模式的更新版本。这是一个拥有 305 亿总参数和 33 亿激活参数的混合专家（MoE）模型。该模型在多个方面进行了关键增强，包括显著提升了指令遵循、逻辑推理、文本理解、数学、科学、编码和工具使用等通用能力。同时，它在多语言的长尾知识覆盖范围上取得了实质性进展，并能更好地与用户在主观和开放式任务中的偏好对齐，从而能够生成更有帮助的回复和更高质量的文本。此外，该模型的长文本理解能力也增强到了 256K。此模型仅支持非思考模式，其输出中不会生成 `<think></think>` 标签。',
+    displayName: 'Qwen3 30B A3B Instruct 2507',
+    id: 'Qwen/Qwen3-30B-A3B-Instruct-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-29',
     type: 'chat',
   },
   {
@@ -32,8 +360,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -54,8 +384,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -76,8 +408,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.7,
-      output: 2.8,
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -98,8 +432,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -115,19 +451,62 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 8B',
+    displayName: 'Qwen3 8B (Free)',
     enabled: true,
     id: 'Qwen/Qwen3-8B',
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-28',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
+    displayName: 'GLM-4.1V 9B Thinking (Free)',
+    enabled: true,
+    id: 'THUDM/GLM-4.1V-9B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
+    displayName: 'GLM-4.1V 9B Thinking (Pro)',
+    id: 'Pro/THUDM/GLM-4.1V-9B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-02',
     type: 'chat',
   },
   {
@@ -141,9 +520,12 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-Z1-Rumination-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -158,9 +540,12 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-Z1-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -171,13 +556,16 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'GLM-Z1-9B-0414 是 GLM 系列的小型模型，仅有 90 亿参数，但保持了开源传统的同时展现出惊人的能力。尽管规模较小，该模型在数学推理和通用任务上仍表现出色，其总体性能在同等规模的开源模型中已处于领先水平。',
-    displayName: 'GLM-Z1 9B 0414',
+    displayName: 'GLM-Z1 9B 0414 (Free)',
     id: 'THUDM/GLM-Z1-9B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -191,9 +579,12 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-4-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 1.89,
-      output: 1.89,
+      units: [
+        { name: 'textInput', rate: 1.89, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.89, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -203,14 +594,54 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description:
       'GLM-4-9B-0414 是 GLM 系列的小型模型，拥有 90 亿参数。该模型继承了 GLM-4-32B 系列的技术特点，但提供了更轻量级的部署选择。尽管规模较小，GLM-4-9B-0414 仍在代码生成、网页设计、SVG 图形生成和基于搜索的写作等任务上展现出色能力。',
-    displayName: 'GLM-4 9B 0414',
-    enabled: true,
+    displayName: 'GLM-4 9B 0414 (Free)',
     id: 'THUDM/GLM-4-9B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
+    displayName: 'GLM-4 9B Chat (Free)',
+    id: 'THUDM/glm-4-9b-chat',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-06-04',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
+    displayName: 'GLM-4 9B Chat (Pro)',
+    id: 'Pro/THUDM/glm-4-9b-chat',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-06-04',
     type: 'chat',
   },
   {
@@ -220,13 +651,15 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'DeepSeek-R1-0528-Qwen3-8B 是通过从 DeepSeek-R1-0528 模型蒸馏思维链到 Qwen3 8B Base 获得的模型。该模型在开源模型中达到了最先进（SOTA）的性能，在 AIME 2024 测试中超越了 Qwen3 8B 10%，并达到了 Qwen3-235B-thinking 的性能水平。该模型在数学推理、编程和通用逻辑等多个基准测试中表现出色，其架构与 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分词器配置。',
-    displayName: 'DeepSeek R1 0528 Qwen3 8B',
+    displayName: 'DeepSeek R1 0528 Qwen3 8B (Free)',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -242,8 +675,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-R1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -258,8 +693,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-V3',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -275,25 +712,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/deepseek-ai/DeepSeek-R1',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 98_304,
-    description:
-      'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
-    displayName: 'DeepSeek R1 0120 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-R1-0120',
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -308,24 +730,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/deepseek-ai/DeepSeek-V3',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 65_536,
-    description:
-      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
-    displayName: 'DeepSeek V3 1226 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-V3-1226',
-    pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -341,8 +749,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
     pricing: {
       currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
+      units: [
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -358,8 +768,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
     pricing: {
       currency: 'CNY',
-      input: 0.7,
-      output: 0.7,
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -375,8 +787,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -392,8 +806,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -408,8 +824,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-V2.5',
     pricing: {
       currency: 'CNY',
-      input: 1.33,
-      output: 1.33,
+      units: [
+        { name: 'textInput', rate: 1.33, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.33, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -424,8 +842,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/deepseek-vl2',
     pricing: {
       currency: 'CNY',
-      input: 0.99,
-      output: 0.99,
+      units: [
+        { name: 'textInput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -441,8 +861,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/QVQ-72B-Preview',
     pricing: {
       currency: 'CNY',
-      input: 9.9,
-      output: 9.9,
+      units: [
+        { name: 'textInput', rate: 9.9, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9.9, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -458,24 +880,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/QwQ-32B',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 4,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'QwQ-32B-Preview 是 Qwen 最新的实验性研究模型，专注于提升AI推理能力。通过探索语言混合、递归推理等复杂机制，主要优势包括强大的推理分析能力、数学和编程能力。与此同时，也存在语言切换问题、推理循环、安全性考虑、其他能力方面的差异。',
-    displayName: 'QwQ 32B Preview',
-    id: 'Qwen/QwQ-32B-Preview',
-    pricing: {
-      currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -490,8 +898,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -506,8 +916,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/Qwen/Qwen2.5-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -522,8 +934,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-14B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.7,
-      output: 0.7,
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -538,8 +952,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-32B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
+      units: [
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -554,8 +970,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-72B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
+      units: [
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -570,8 +988,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-72B-Instruct-128K',
     pricing: {
       currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
+      units: [
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -583,8 +1003,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -596,8 +1018,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/Qwen/Qwen2.5-Coder-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -609,8 +1033,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
+      units: [
+        { name: 'textInput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.26, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -622,8 +1048,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -635,8 +1063,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/Qwen/Qwen2-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -651,8 +1081,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2-VL-72B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
+      units: [
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -667,8 +1099,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Pro/Qwen/Qwen2.5-VL-7B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -683,8 +1117,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-VL-32B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 1.89,
-      output: 1.89,
+      units: [
+        { name: 'textInput', rate: 1.89, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.89, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -699,8 +1135,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'Qwen/Qwen2.5-VL-72B-Instruct',
     pricing: {
       currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
+      units: [
+        { name: 'textInput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.13, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -715,45 +1153,37 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'internlm/internlm2_5-7b-chat',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
-    displayName: 'GLM-4 9B Chat (Free)',
-    id: 'THUDM/glm-4-9b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
-    displayName: 'GLM-4 9B Chat (Pro)',
-    id: 'Pro/THUDM/glm-4-9b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0.6,
-      output: 0.6,
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
 ];
 
-export const allModels = [...siliconcloudChatModels];
+const siliconcloudImageModels: AIImageModelCard[] = [
+  {
+    description:
+      'Kolors 是由快手 Kolors 团队开发的基于潜在扩散的大规模文本到图像生成模型。该模型通过数十亿文本-图像对的训练，在视觉质量、复杂语义准确性以及中英文字符渲染方面展现出显著优势。它不仅支持中英文输入，在理解和生成中文特定内容方面也表现出色',
+    displayName: 'Kolors',
+    enabled: true,
+    id: 'Kwai-Kolors/Kolors',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '960x1280', '768x1024', '720x1440', '720x1280'],
+      },
+    },
+    releasedAt: '2024-07-06',
+    type: 'image',
+  },
+];
+
+export const allModels = [...siliconcloudChatModels, ...siliconcloudImageModels];
 
 export default allModels;

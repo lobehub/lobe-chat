@@ -1,5 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 
+import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { appEnv } from '@/envs/app';
 import DevPanel from '@/features/DevPanel';
@@ -12,7 +13,6 @@ import AppTheme from './AppTheme';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
-import ReactScan from './ReactScan';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -23,6 +23,7 @@ interface GlobalLayoutProps {
   locale: string;
   neutralColor?: string;
   primaryColor?: string;
+  variants?: string;
 }
 
 const GlobalLayout = async ({
@@ -32,6 +33,7 @@ const GlobalLayout = async ({
   locale: userLocale,
   appearance,
   isMobile,
+  variants,
 }: GlobalLayoutProps) => {
   const antdLocale = await getAntdLocale(userLocale);
 
@@ -40,30 +42,32 @@ const GlobalLayout = async ({
   const serverConfig = await getServerGlobalConfig();
   return (
     <StyleRegistry>
-      <AppTheme
-        customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
-        customFontURL={appEnv.CUSTOM_FONT_URL}
-        defaultAppearance={appearance}
-        defaultNeutralColor={neutralColor as any}
-        defaultPrimaryColor={primaryColor as any}
-        globalCDN={appEnv.CDN_USE_GLOBAL}
-      >
-        <Locale antdLocale={antdLocale} defaultLang={userLocale}>
+      <Locale antdLocale={antdLocale} defaultLang={userLocale}>
+        <AppTheme
+          customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
+          customFontURL={appEnv.CUSTOM_FONT_URL}
+          defaultAppearance={appearance}
+          defaultNeutralColor={neutralColor as any}
+          defaultPrimaryColor={primaryColor as any}
+          globalCDN={appEnv.CDN_USE_GLOBAL}
+        >
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
+            segmentVariants={variants}
             serverConfig={serverConfig}
           >
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+            </QueryProvider>
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
-              <ReactScan />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
           </ServerConfigStoreProvider>
-        </Locale>
-      </AppTheme>
+        </AppTheme>
+      </Locale>
       <AntdV5MonkeyPatch />
     </StyleRegistry>
   );

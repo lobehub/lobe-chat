@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflict met bestaande sneltoetsen",
+    "errors": {
+      "CONFLICT": "Sneltoetsconflict: deze sneltoets wordt al door een andere functie gebruikt",
+      "INVALID_FORMAT": "Ongeldig sneltoetsformaat: gebruik het juiste formaat (bijv. CommandOrControl+E)",
+      "INVALID_ID": "Ongeldige sneltoets-ID",
+      "NO_MODIFIER": "Sneltoets moet een modificatortoets bevatten (Ctrl, Alt, Shift, enz.)",
+      "SYSTEM_OCCUPIED": "Sneltoets wordt al door het systeem of een andere applicatie gebruikt",
+      "UNKNOWN": "Bijwerken mislukt: onbekende fout"
+    },
     "group": {
       "conversation": "Gesprek",
+      "desktop": "Desktop",
       "essential": "Essentieel"
     },
     "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
     "record": "Druk op een toets om de sneltoets op te nemen",
     "reset": "Reset naar standaard sneltoetsen",
-    "title": "Sneltoetsen"
+    "title": "Sneltoetsen",
+    "updateError": "Sneltoets bijwerken mislukt: netwerk- of systeemfout",
+    "updateSuccess": "Sneltoets succesvol bijgewerkt"
   },
   "llm": {
     "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
@@ -129,6 +140,7 @@
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
   },
   "plugin": {
+    "addMCPPlugin": "MCP-plug-in toevoegen",
     "addTooltip": "Voeg aangepaste plug-in toe",
     "clearDeprecated": "Verwijder verouderde plug-ins",
     "empty": "Geen geïnstalleerde plug-ins, ga naar de <1>plug-in store</1> om te verkennen",
@@ -171,9 +183,20 @@
     "title": "Assistentinformatie"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Behendig",
+      "desc": "Kies de animatiesnelheid voor de reactietijd van de applicatie",
+      "disabled": "Uitgeschakeld",
+      "elegant": "Elegant",
+      "title": "Reactie-animatie"
+    },
     "neutralColor": {
       "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
       "title": "Neutrale kleur"
+    },
+    "noAnimation": {
+      "desc": "Schakel alle animatie-effecten in de applicatie uit",
+      "title": "Animatie uit modus"
     },
     "preview": {
       "title": "Kleurpalet"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
-      "placeholder": "Voorbewerkingssjabloon {{input_template}} wordt vervangen door realtime invoer",
+      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
     "submit": "Chatvoorkeuren bijwerken",
@@ -483,6 +506,11 @@
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
     },
+    "generationTopic": {
+      "label": "AI-schilderij onderwerp naamgevingsmodel",
+      "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
+      "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+    },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
       "label": "Gespreksgeschiedenismodel",
@@ -519,6 +547,7 @@
     "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
+    "proxy": "Netwerkproxy",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",

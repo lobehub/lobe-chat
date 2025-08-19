@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflicts with existing hotkeys",
+    "errors": {
+      "CONFLICT": "Hotkey conflict: This hotkey is already assigned to another function",
+      "INVALID_FORMAT": "Invalid hotkey format: Please use the correct format (e.g., CommandOrControl+E)",
+      "INVALID_ID": "Invalid hotkey ID",
+      "NO_MODIFIER": "Hotkey must include a modifier key (Ctrl, Alt, Shift, etc.)",
+      "SYSTEM_OCCUPIED": "Hotkey is occupied by the system or another application",
+      "UNKNOWN": "Update failed: Unknown error"
+    },
     "group": {
       "conversation": "Conversation",
+      "desktop": "Desktop",
       "essential": "Essential"
     },
     "invalidCombination": "The hotkey must include at least one modifier key (Ctrl, Alt, Shift) and one regular key",
     "record": "Press a key to record the hotkey",
     "reset": "Reset to default hotkeys",
-    "title": "Hotkeys"
+    "title": "Hotkeys",
+    "updateError": "Failed to update hotkey: Network or system error",
+    "updateSuccess": "Hotkey updated successfully"
   },
   "llm": {
     "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
@@ -129,6 +140,7 @@
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
+    "addMCPPlugin": "Add MCP Plugin",
     "addTooltip": "Custom Plugin",
     "clearDeprecated": "Remove Deprecated Plugins",
     "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
@@ -171,9 +183,20 @@
     "title": "Assistant Information"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Agile",
+      "desc": "Select the animation speed for application response actions",
+      "disabled": "Off",
+      "elegant": "Elegant",
+      "title": "Response Animation"
+    },
     "neutralColor": {
       "desc": "Custom grayscale with different color tendencies",
       "title": "Neutral Color"
+    },
+    "noAnimation": {
+      "desc": "Disable all animation effects in the application",
+      "title": "No Animation Mode"
     },
     "preview": {
       "title": "Color Palette"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "The user's latest message will be filled into this template",
-      "placeholder": "Preprocessing template {{input_template}} will be replaced with real-time input information",
+      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "submit": "Update Chat Preferences",
@@ -483,6 +506,11 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "generationTopic": {
+      "label": "AI Art Topic Naming Model",
+      "modelDesc": "Model designated for automatic naming of AI art topics",
+      "title": "AI Art Automatic Topic Naming"
+    },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
       "label": "Conversation History Model",
@@ -519,6 +547,7 @@
     "hotkey": "Hotkeys",
     "llm": "Language Model",
     "provider": "AI Service Provider",
+    "proxy": "Network Proxy",
     "storage": "Data Storage",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",

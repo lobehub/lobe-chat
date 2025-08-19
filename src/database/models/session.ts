@@ -1,6 +1,19 @@
-import { Column, count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, gt, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
-import { DeepPartial } from 'utility-types';
+import {
+  Column,
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  inArray,
+  isNull,
+  like,
+  not,
+  or,
+  sql,
+} from 'drizzle-orm';
+import type { PartialDeep } from 'type-fest';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -235,7 +248,7 @@ export class SessionModel {
     });
   };
 
-  createInbox = async (defaultAgentConfig: DeepPartial<LobeAgentConfig>) => {
+  createInbox = async (defaultAgentConfig: PartialDeep<LobeAgentConfig>) => {
     const item = await this.db.query.sessions.findFirst({
       where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
     });
@@ -393,7 +406,7 @@ export class SessionModel {
       .returning();
   };
 
-  updateConfig = async (sessionId: string, data: DeepPartial<AgentItem> | undefined | null) => {
+  updateConfig = async (sessionId: string, data: PartialDeep<AgentItem> | undefined | null) => {
     if (!data || Object.keys(data).length === 0) return;
 
     const session = await this.findByIdOrSlug(sessionId);

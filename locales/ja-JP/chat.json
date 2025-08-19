@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "推論の強度"
     },
+    "textVerbosity": {
+      "title": "出力テキストの詳細レベル"
+    },
+    "thinking": {
+      "title": "深い思考のスイッチ"
+    },
     "title": "モデル拡張機能"
   },
   "history": {

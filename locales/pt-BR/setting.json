@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflito com teclas de atalho existentes",
+    "errors": {
+      "CONFLICT": "Conflito de atalho: este atalho já está em uso por outra função",
+      "INVALID_FORMAT": "Formato de atalho inválido: por favor, use o formato correto (ex: CommandOrControl+E)",
+      "INVALID_ID": "ID de atalho inválido",
+      "NO_MODIFIER": "O atalho deve incluir uma tecla modificadora (Ctrl, Alt, Shift, etc.)",
+      "SYSTEM_OCCUPIED": "Atalho já está ocupado pelo sistema ou por outro aplicativo",
+      "UNKNOWN": "Falha na atualização: erro desconhecido"
+    },
     "group": {
       "conversation": "Conversa",
+      "desktop": "Área de trabalho",
       "essential": "Essencial"
     },
     "invalidCombination": "A combinação de teclas de atalho deve incluir pelo menos uma tecla modificadora (Ctrl, Alt, Shift) e uma tecla comum",
     "record": "Pressione a tecla para gravar o atalho",
     "reset": "Redefinir para os atalhos padrão",
-    "title": "Atalhos"
+    "title": "Atalhos",
+    "updateError": "Falha na atualização do atalho: erro de rede ou sistema",
+    "updateSuccess": "Atalho atualizado com sucesso"
   },
   "llm": {
     "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
@@ -129,6 +140,7 @@
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente"
   },
   "plugin": {
+    "addMCPPlugin": "Adicionar plugin MCP",
     "addTooltip": "Adicionar plug-in personalizado",
     "clearDeprecated": "Remover plug-ins inválidos",
     "empty": "Nenhum plug-in instalado no momento, visite a <1>loja de plug-ins</1> para explorar",
@@ -171,9 +183,20 @@
     "title": "Informações do assistente"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Ágil",
+      "desc": "Escolha a velocidade da animação para as respostas das ações do aplicativo",
+      "disabled": "Desativado",
+      "elegant": "Elegante",
+      "title": "Animação de Resposta"
+    },
     "neutralColor": {
       "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
       "title": "Cor Neutra"
+    },
+    "noAnimation": {
+      "desc": "Desativa todos os efeitos de animação no aplicativo",
+      "title": "Modo Sem Animação"
     },
     "preview": {
       "title": "Paleta de Cores"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "A última mensagem do usuário será preenchida neste modelo",
-      "placeholder": "O modelo de pré-processamento {{input_template}} será substituído pela entrada em tempo real",
+      "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
     "submit": "Atualizar preferências de chat",
@@ -483,6 +506,11 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "generationTopic": {
+      "label": "Modelo de Nomeação de Tópicos para Pintura AI",
+      "modelDesc": "Modelo designado para nomeação automática de tópicos em pintura AI",
+      "title": "Nomeação Automática de Tópicos para Pintura AI"
+    },
     "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
       "label": "Modelo de Histórico de Conversa",
@@ -519,6 +547,7 @@
     "hotkey": "Atalhos",
     "llm": "Modelo de Linguagem",
     "provider": "Fornecedor de IA",
+    "proxy": "Proxy de Rede",
     "storage": "Armazenamento de Dados",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",

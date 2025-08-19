@@ -35,7 +35,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9
+          version: 10
 
       - name: Install deps
         run: pnpm install
@@ -107,7 +107,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9
+          version: 10
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
       - name: Install deps
@@ -155,9 +155,9 @@ jobs:
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
-          # 将 TEMP 和 TMP 目录设置到 D 盘
-          TEMP: D:\temp
-          TMP: D:\temp
+          # 将 TEMP 和 TMP 目录设置到 C 盘
+          TEMP: C:\temp
+          TMP: C:\temp
 
       # Linux 平台构建处理
       - name: Build artifact on Linux

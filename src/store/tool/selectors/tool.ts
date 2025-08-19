@@ -1,6 +1,6 @@
+import { pluginPrompts } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { pluginPrompts } from '@/prompts/plugin';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
@@ -75,8 +75,20 @@ const metaList =
 
 const getMetaById =
   (id: string, showDalle: boolean = true) =>
-  (s: ToolStoreState): MetaData | undefined =>
-    metaList(showDalle)(s).find((m) => m.identifier === id)?.meta;
+  (s: ToolStoreState): MetaData | undefined => {
+    const item = metaList(showDalle)(s).find((m) => m.identifier === id);
+
+    if (!item) return;
+
+    if (item.meta) return item.meta;
+
+    return {
+      avatar: item?.avatar,
+      backgroundColor: item?.backgroundColor,
+      description: item?.description,
+      title: item?.title,
+    };
+  };
 
 const getManifestById =
   (id: string) =>

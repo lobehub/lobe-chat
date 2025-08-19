@@ -163,8 +163,23 @@ export const getLLMConfig = () => {
       ENABLED_INFINIAI: z.boolean(),
       INFINIAI_API_KEY: z.string().optional(),
 
+      ENABLED_FAL: z.boolean(),
+      FAL_API_KEY: z.string().optional(),
+
+      ENABLED_BFL: z.boolean(),
+      BFL_API_KEY: z.string().optional(),
+
       ENABLED_MODELSCOPE: z.boolean(),
       MODELSCOPE_API_KEY: z.string().optional(),
+
+      ENABLED_V0: z.boolean(),
+      V0_API_KEY: z.string().optional(),
+
+      ENABLED_AI302: z.boolean(),
+      AI302_API_KEY: z.string().optional(),
+
+      ENABLED_AIHUBMIX: z.boolean(),
+      AIHUBMIX_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -326,8 +341,23 @@ export const getLLMConfig = () => {
       ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
       INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
 
+      ENABLED_FAL: process.env.ENABLED_FAL !== '0',
+      FAL_API_KEY: process.env.FAL_API_KEY,
+
+      ENABLED_BFL: !!process.env.BFL_API_KEY,
+      BFL_API_KEY: process.env.BFL_API_KEY,
+
       ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
       MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,
+
+      ENABLED_V0: !!process.env.V0_API_KEY,
+      V0_API_KEY: process.env.V0_API_KEY,
+
+      ENABLED_AI302: !!process.env.AI302_API_KEY,
+      AI302_API_KEY: process.env.AI302_API_KEY,
+
+      ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
+      AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
     },
   });
 };

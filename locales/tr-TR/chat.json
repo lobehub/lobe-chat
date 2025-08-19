@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "Akıl Yürütme Gücü"
     },
+    "textVerbosity": {
+      "title": "Çıktı metninin ayrıntı düzeyi"
+    },
+    "thinking": {
+      "title": "Derin Düşünme Anahtarı"
+    },
     "title": "Model Genişletme Özellikleri"
   },
   "history": {

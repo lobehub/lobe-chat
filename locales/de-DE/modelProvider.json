@@ -66,6 +66,7 @@
       "customRegion": "Benutzerdefinierter Regionsservice",
       "customSessionToken": "Benutzerdefiniertes Sitzungstoken",
       "description": "Geben Sie Ihren AWS AccessKeyId / SecretAccessKey ein, um das Gespräch zu beginnen. Die App speichert Ihre Authentifizierungsinformationen nicht.",
+      "imageGenerationDescription": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um mit der Generierung zu beginnen. Die Anwendung speichert Ihre Authentifizierungsdaten nicht.",
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Verschlüsselungsalgorithmus verschlüsselt",
       "apiKey": {
         "desc": "Bitte geben Sie Ihren {{name}} API-Schlüssel ein",
+        "descWithUrl": "Bitte gib deinen {{name}} API-Schlüssel ein, <3>hier klicken zum Abrufen</3>",
         "placeholder": "{{name}} API-Schlüssel",
         "title": "API-Schlüssel"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Letzte Aktualisierung: {{time}}",
         "noLatestTime": "Liste wurde noch nicht abgerufen"
       },
+      "noModelsInCategory": "In dieser Kategorie sind keine aktivierten Modelle vorhanden",
       "resetAll": {
         "conform": "Möchten Sie alle Änderungen am aktuellen Modell wirklich zurücksetzen? Nach dem Zurücksetzen wird die aktuelle Modellliste auf den Standardzustand zurückgesetzt.",
         "success": "Zurücksetzen erfolgreich",
@@ -314,7 +317,15 @@
       "title": "Modellliste",
       "total": "Insgesamt {{count}} verfügbare Modelle"
     },
-    "searchNotFound": "Keine Suchergebnisse gefunden"
+    "searchNotFound": "Keine Suchergebnisse gefunden",
+    "tabs": {
+      "all": "Alle",
+      "chat": "Chat",
+      "embedding": "Einbettung",
+      "image": "Bild",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sortierung erfolgreich aktualisiert",

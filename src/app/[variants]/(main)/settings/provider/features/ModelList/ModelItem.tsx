@@ -1,6 +1,6 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon, Tag, copyToClipboard } from '@lobehub/ui';
-import { App, Switch, Typography } from 'antd';
+import { ActionIcon, Tag, Text, copyToClipboard } from '@lobehub/ui';
+import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
 import { memo, use, useState } from 'react';
@@ -10,8 +10,13 @@ import { Flexbox } from 'react-layout-kit';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { AiModelSourceEnum, AiProviderModelListItem, ChatModelPricing } from '@/types/aiModel';
+import { AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
 import { formatPriceByCurrency } from '@/utils/format';
+import {
+  getAudioInputUnitRate,
+  getTextInputUnitRate,
+  getTextOutputUnitRate,
+} from '@/utils/pricing';
 
 import ModelConfigModal from './ModelConfigModal';
 import { ProviderSettingsContext } from './ProviderSettingsContext';
@@ -54,7 +59,6 @@ interface ModelItemProps extends AiProviderModelListItem {
   enabled: boolean;
   id: string;
   isAzure?: boolean;
-  pricing?: ChatModelPricing;
   releasedAt?: string;
   removed?: boolean;
 }
@@ -94,38 +98,43 @@ const ModelItem = memo<ModelItemProps>(
 
       switch (type) {
         case 'chat': {
+          const inputRate = getTextInputUnitRate(pricing);
+          const outputRate = getTextOutputUnitRate(pricing);
           return [
-            typeof pricing.input === 'number' &&
+            typeof inputRate === 'number' &&
               t('providerModels.item.pricing.inputTokens', {
-                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+                amount: formatPriceByCurrency(inputRate, pricing?.currency),
               }),
-            typeof pricing.output === 'number' &&
+            typeof outputRate === 'number' &&
               t('providerModels.item.pricing.outputTokens', {
-                amount: formatPriceByCurrency(pricing.output, pricing?.currency),
+                amount: formatPriceByCurrency(outputRate, pricing?.currency),
               }),
           ].filter(Boolean) as string[];
         }
         case 'embedding': {
+          const inputRate = getTextInputUnitRate(pricing);
           return [
-            typeof pricing.input === 'number' &&
+            typeof inputRate === 'number' &&
               t('providerModels.item.pricing.inputTokens', {
-                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+                amount: formatPriceByCurrency(inputRate, pricing?.currency),
               }),
           ].filter(Boolean) as string[];
         }
         case 'tts': {
+          const inputRate = getAudioInputUnitRate(pricing);
           return [
-            typeof pricing.input === 'number' &&
+            typeof inputRate === 'number' &&
               t('providerModels.item.pricing.inputCharts', {
-                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+                amount: formatPriceByCurrency(inputRate, pricing?.currency),
               }),
           ].filter(Boolean) as string[];
         }
         case 'stt': {
+          const inputRate = getAudioInputUnitRate(pricing);
           return [
-            typeof pricing.input === 'number' &&
+            typeof inputRate === 'number' &&
               t('providerModels.item.pricing.inputMinutes', {
-                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+                amount: formatPriceByCurrency(inputRate, pricing?.currency),
               }),
           ].filter(Boolean) as string[];
         }
@@ -297,11 +306,9 @@ const ModelItem = memo<ModelItemProps>(
             </Flexbox>
             <Flexbox align={'baseline'} gap={8} horizontal>
               {content.length > 0 && (
-                <Typography.Text
-                  style={{ color: theme.colorTextSecondary, fontSize: 12, marginBottom: 0 }}
-                >
+                <Text style={{ color: theme.colorTextSecondary, fontSize: 12, marginBottom: 0 }}>
                   {content.join(' · ')}
-                </Typography.Text>
+                </Text>
               )}
             </Flexbox>
           </Flexbox>

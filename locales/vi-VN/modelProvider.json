@@ -66,6 +66,7 @@
       "customRegion": "Vùng Dịch vụ Tùy chỉnh",
       "customSessionToken": "Mã thông báo phiên tùy chỉnh",
       "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
+      "imageGenerationDescription": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu tạo. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Khóa của bạn và địa chỉ proxy sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
       "apiKey": {
         "desc": "Vui lòng nhập {{name}} API Key của bạn",
+        "descWithUrl": "Vui lòng nhập {{name}} API Key của bạn, <3>nhấn vào đây để lấy</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
         "noLatestTime": "Chưa lấy danh sách"
       },
+      "noModelsInCategory": "Không có mô hình nào được kích hoạt trong danh mục này",
       "resetAll": {
         "conform": "Xác nhận việc đặt lại tất cả các thay đổi của mô hình hiện tại? Sau khi đặt lại, danh sách mô hình hiện tại sẽ trở về trạng thái mặc định",
         "success": "Đặt lại thành công",
@@ -314,7 +317,15 @@
       "title": "Danh sách mô hình",
       "total": "Có tổng cộng {{count}} mô hình khả dụng"
     },
-    "searchNotFound": "Không tìm thấy kết quả tìm kiếm"
+    "searchNotFound": "Không tìm thấy kết quả tìm kiếm",
+    "tabs": {
+      "all": "Tất cả",
+      "chat": "Đối thoại",
+      "embedding": "Nhúng",
+      "image": "Hình ảnh",
+      "stt": "Nhận dạng giọng nói",
+      "tts": "Chuyển văn bản thành giọng nói"
+    }
   },
   "sortModal": {
     "success": "Cập nhật sắp xếp thành công",

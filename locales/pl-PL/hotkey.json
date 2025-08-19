@@ -7,9 +7,23 @@
     "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
     "title": "Wyczyść wiadomości rozmowy"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Otwórz stronę ustawień aplikacji",
+      "title": "Ustawienia aplikacji"
+    },
+    "showApp": {
+      "desc": "Globalny skrót klawiszowy do wyświetlania lub ukrywania głównego okna",
+      "title": "Pokaż/Ukryj główne okno"
+    }
+  },
   "editMessage": {
     "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
     "title": "Edytuj wiadomość"
+  },
+  "navigateToChat": {
+    "desc": "Przełącz na kartę rozmowy i rozpocznij swobodną rozmowę",
+    "title": "Przełącz na domyślną rozmowę"
   },
   "openChatSettings": {
     "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
@@ -18,10 +32,6 @@
   "openHotkeyHelper": {
     "desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
     "title": "Otwórz pomoc dotyczącą skrótów klawiszowych"
-  },
-  "openSettings": {
-    "desc": "Otwórz stronę ustawień aplikacji",
-    "title": "Ustawienia aplikacji"
   },
   "regenerateMessage": {
     "desc": "Ponownie wygeneruj ostatnią wiadomość",

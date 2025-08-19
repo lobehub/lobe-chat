@@ -31,7 +31,7 @@ export class ClientService implements IFileService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async checkFileHash(_hash: string) {
-    return { isExist: false, metadata: {} };
+    return { isExist: false, metadata: {}, url: '' };
   }
 
   async getFile(id: string): Promise<FileItem> {

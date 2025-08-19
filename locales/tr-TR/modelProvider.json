@@ -66,6 +66,7 @@
       "customRegion": "Özel Bölge",
       "customSessionToken": "Özel Oturum Tokeni",
       "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek üretime başlayabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Anahtarınız ve proxy adresi gibi bilgiler <1>AES-GCM</1> şifreleme algoritması ile şifrelenecektir",
       "apiKey": {
         "desc": "{{name}} API Anahtarınızı girin",
+        "descWithUrl": "Lütfen {{name}} API Anahtarınızı girin, <3>buraya tıklayarak alın</3>",
         "placeholder": "{{name}} API Anahtarı",
         "title": "API Anahtarı"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Son güncelleme zamanı: {{time}}",
         "noLatestTime": "Henüz liste alınmadı"
       },
+      "noModelsInCategory": "Bu kategoride etkinleştirilmiş model yok",
       "resetAll": {
         "conform": "Mevcut modelin tüm değişikliklerini sıfırlamak istediğinize emin misiniz? Sıfırladıktan sonra mevcut model listesi varsayılan duruma dönecektir.",
         "success": "Sıfırlama başarılı",
@@ -314,7 +317,15 @@
       "title": "Model Listesi",
       "total": "Toplam {{count}} adet model mevcut"
     },
-    "searchNotFound": "Arama sonuçları bulunamadı"
+    "searchNotFound": "Arama sonuçları bulunamadı",
+    "tabs": {
+      "all": "Tümü",
+      "chat": "Sohbet",
+      "embedding": "Vektörleştirme",
+      "image": "Resim",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sıralama güncellemesi başarılı",

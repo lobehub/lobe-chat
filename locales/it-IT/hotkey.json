@@ -7,9 +7,23 @@
     "desc": "Cancella i messaggi e i file caricati della conversazione attuale",
     "title": "Cancella messaggi della conversazione"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Apri la pagina delle impostazioni dell'app",
+      "title": "Impostazioni dell'app"
+    },
+    "showApp": {
+      "desc": "Mostra o nascondi la finestra principale con una scorciatoia globale",
+      "title": "Mostra/Nascondi finestra principale"
+    }
+  },
   "editMessage": {
     "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
     "title": "Modifica messaggio"
+  },
+  "navigateToChat": {
+    "desc": "Passa alla scheda della conversazione e inizia una chiacchierata casuale",
+    "title": "Passa alla conversazione predefinita"
   },
   "openChatSettings": {
     "desc": "Visualizza e modifica le impostazioni della conversazione attuale",
@@ -18,10 +32,6 @@
   "openHotkeyHelper": {
     "desc": "Visualizza le istruzioni per l'uso di tutte le scorciatoie da tastiera",
     "title": "Apri aiuto scorciatoie"
-  },
-  "openSettings": {
-    "desc": "Apri la pagina delle impostazioni dell'app",
-    "title": "Impostazioni dell'app"
   },
   "regenerateMessage": {
     "desc": "Rigenera l'ultimo messaggio",

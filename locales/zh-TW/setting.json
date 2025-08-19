@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "與現有快捷鍵衝突",
+    "errors": {
+      "CONFLICT": "快速鍵衝突：該快速鍵已被其他功能佔用",
+      "INVALID_FORMAT": "快速鍵格式無效：請使用正確的格式（如 CommandOrControl+E）",
+      "INVALID_ID": "無效的快速鍵ID",
+      "NO_MODIFIER": "快速鍵必須包含修飾鍵（Ctrl、Alt、Shift等）",
+      "SYSTEM_OCCUPIED": "快速鍵已被系統或其他應用程式佔用",
+      "UNKNOWN": "更新失敗：未知錯誤"
+    },
     "group": {
       "conversation": "對話",
+      "desktop": "桌面端",
       "essential": "基本"
     },
     "invalidCombination": "快捷鍵需要至少包含一個修飾鍵 (Ctrl, Alt, Shift) 和一個常規鍵",
     "record": "按下按鍵以錄製快捷鍵",
     "reset": "重置為預設快捷鍵",
-    "title": "快速鍵"
+    "title": "快速鍵",
+    "updateError": "快速鍵更新失敗：網路或系統錯誤",
+    "updateSuccess": "快速鍵更新成功"
   },
   "llm": {
     "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
@@ -129,6 +140,7 @@
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
   "plugin": {
+    "addMCPPlugin": "新增 MCP 外掛",
     "addTooltip": "新增自訂外掛程式",
     "clearDeprecated": "清除已棄用的外掛",
     "empty": "目前沒有安裝任何外掛，歡迎前往 <1>外掛商店</1> 探索",
@@ -171,9 +183,20 @@
     "title": "助手資訊"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "敏捷",
+      "desc": "選擇應用程式操作回應的動畫速度",
+      "disabled": "關閉",
+      "elegant": "優雅",
+      "title": "回應動畫"
+    },
     "neutralColor": {
       "desc": "不同色彩傾向的灰階自訂",
       "title": "中性色"
+    },
+    "noAnimation": {
+      "desc": "停用應用程式中的所有動畫效果",
+      "title": "無動畫模式"
     },
     "preview": {
       "title": "調色盤"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "使用者最新的一條訊息會填充到此模板",
-      "placeholder": "預處理模板 {{input_template}} 將替換為實時輸入資訊",
+      "placeholder": "預處理模板 {{text}} 將替換為實時輸入資訊",
       "title": "使用者輸入預處理"
     },
     "submit": "更新聊天偏好",
@@ -483,6 +506,11 @@
       "placeholder": "請輸入自訂提示詞",
       "title": "自訂提示詞"
     },
+    "generationTopic": {
+      "label": "AI 繪畫話題命名模型",
+      "modelDesc": "指定用於 AI 繪畫自動命名話題的模型",
+      "title": "AI 繪畫自動命名話題"
+    },
     "helpInfo": "當創建新助手時，將以預設助手設定作為預設值。",
     "historyCompress": {
       "label": "會話歷史模型",
@@ -519,6 +547,7 @@
     "hotkey": "快速鍵",
     "llm": "語言模型",
     "provider": "AI 服務商",
+    "proxy": "網路代理",
     "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",

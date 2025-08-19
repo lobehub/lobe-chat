@@ -27,7 +27,8 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
   const activeKey = useActiveSettingsKey();
   const theme = useTheme();
   const pathname = usePathname();
-  const isSkip = SKIP_PATHS.some((path) => pathname.startsWith(path));
+
+  const isSkip = SKIP_PATHS.some((path) => pathname.includes(path));
   const isProvider = pathname.includes('/settings/provider/');
   const providerName = useProviderName(activeKey);
 
@@ -36,8 +37,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       height={'100%'}
       horizontal={md}
       ref={ref}
-      style={{ background: theme.colorBgContainer, position: 'relative' }}
-      width={'100%'}
+      style={{ background: theme.colorBgContainer, flex: '1', position: 'relative' }}
     >
       {md ? (
         <SideBar>{category}</SideBar>

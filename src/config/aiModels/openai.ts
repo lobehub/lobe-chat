@@ -1,17 +1,184 @@
+import { ModelParamsSchema } from '@/libs/standard-parameters';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
+  AIImageModelCard,
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-  AIText2ImageModelCard,
 } from '@/types/aiModel';
+
+export const gptImage1ParamsSchema: ModelParamsSchema = {
+  imageUrls: { default: [] },
+  prompt: { default: '' },
+  size: {
+    default: 'auto',
+    enum: ['auto', '1024x1024', '1536x1024', '1024x1536'],
+  },
+};
 
 export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
+    displayName: 'GPT-5',
+    enabled: true,
+    id: 'gpt-5',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
+    displayName: 'GPT-5 mini',
+    enabled: true,
+    id: 'gpt-5-mini',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description: '最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。',
+    displayName: 'GPT-5 nano',
+    id: 'gpt-5-nano',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.005, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
+    displayName: 'GPT-5 Chat',
+    enabled: true,
+    id: 'gpt-5-chat-latest',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    displayName: 'o4-mini',
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o4-mini Deep Research',
+    id: 'o4-mini-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -21,12 +188,15 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'o3-pro',
     maxOutput: 100_000,
     pricing: {
-      input: 20,
-      output: 80,
+      units: [
+        { name: 'textInput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-10',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -34,23 +204,26 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
     description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
-    enabled: true,
     id: 'o3',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-04-16',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -58,89 +231,27 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
     description:
-      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
-    displayName: 'o4-mini',
-    enabled: true,
-    id: 'o4-mini',
+      'o3-deep-research 是我们最先进的深度研究模型，专为处理复杂的多步骤研究任务而设计。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o3 Deep Research',
+    id: 'o3-deep-research',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.275,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
-    releasedAt: '2025-04-17',
+    releasedAt: '2025-06-26',
     settings: {
       extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
-    displayName: 'GPT-4.1',
-    enabled: true,
-    id: 'gpt-4.1',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
-    },
-    releasedAt: '2025-04-14',
-    settings: {
       searchImpl: 'params',
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
-    displayName: 'GPT-4.1 mini',
-    enabled: true,
-    id: 'gpt-4.1-mini',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.1,
-      input: 0.4,
-      output: 1.6,
-    },
-    releasedAt: '2025-04-14',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
-    displayName: 'GPT-4.1 nano',
-    id: 'gpt-4.1-nano',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
-    },
-    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -155,9 +266,11 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'o3-mini',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-31',
     settings: {
@@ -178,8 +291,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'o1-pro',
     maxOutput: 100_000,
     pricing: {
-      input: 150,
-      output: 600,
+      units: [
+        { name: 'textInput', rate: 150, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 600, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-19',
     settings: {
@@ -195,12 +310,14 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
     displayName: 'o1-mini',
-    id: 'o1-mini',
+    id: 'o1-mini', // deprecated on 2025-10-27
     maxOutput: 65_536,
     pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-09-12',
     settings: {
@@ -221,9 +338,11 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'o1',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 7.5,
-      input: 15,
-      output: 60,
+      units: [
+        { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-17',
     settings: {
@@ -233,21 +352,50 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      search: true,
+      vision: true,
     },
-    contextWindowTokens: 128_000,
-    description:
-      'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'o1-preview',
-    id: 'o1-preview',
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    id: 'gpt-4.1',
     maxOutput: 32_768,
     pricing: {
-      input: 15,
-      output: 60,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
-    releasedAt: '2024-09-12',
+    releasedAt: '2025-04-14',
     settings: {
-      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    id: 'gpt-4.1-mini',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -256,18 +404,19 @@ export const openaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
-    description:
-      'GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。',
-    displayName: 'GPT-4.5 Preview',
-    id: 'gpt-4.5-preview', // deprecated on 2025-07-14
-    maxOutput: 16_384,
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
+    displayName: 'GPT-4.1 nano',
+    id: 'gpt-4.1-nano',
+    maxOutput: 32_768,
     pricing: {
-      cachedInput: 37.5,
-      input: 75,
-      output: 150,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
-    releasedAt: '2025-02-27',
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -283,9 +432,11 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-mini',
     maxOutput: 16_384,
     pricing: {
-      cachedInput: 0.075,
-      input: 0.15,
-      output: 0.6,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-07-18',
     settings: {
@@ -304,8 +455,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-mini-search-preview',
     maxOutput: 16_384,
     pricing: {
-      input: 0.15,
-      output: 0.6,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-11',
     settings: {
@@ -324,8 +477,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-mini-audio-preview',
     maxOutput: 16_384,
     pricing: {
-      input: 0.15,
-      output: 0.6,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-17',
     /*
@@ -347,9 +502,11 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o',
     id: 'gpt-4o',
     pricing: {
-      cachedInput: 1.25,
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-05-13',
     settings: {
@@ -368,8 +525,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-search-preview',
     maxOutput: 16_384,
     pricing: {
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-11',
     settings: {
@@ -389,9 +548,11 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o 1120',
     id: 'gpt-4o-2024-11-20',
     pricing: {
-      cachedInput: 1.25,
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-11-20',
     settings: {
@@ -411,8 +572,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o 0513',
     id: 'gpt-4o-2024-05-13',
     pricing: {
-      input: 5,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-05-13',
     settings: {
@@ -431,10 +594,12 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'gpt-4o-audio-preview',
     maxOutput: 16_384,
     pricing: {
-      input: 2.5,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
-    releasedAt: '2024-10-01',
+    releasedAt: '2024-12-17',
     /*
     settings: {
       searchImpl: 'params',
@@ -450,11 +615,12 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
     displayName: 'ChatGPT-4o',
-    enabled: true,
     id: 'chatgpt-4o-latest',
     pricing: {
-      input: 5,
-      output: 15,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-08-14',
     type: 'chat',
@@ -470,8 +636,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo',
     id: 'gpt-4-turbo',
     pricing: {
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -486,8 +654,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo Vision 0409',
     id: 'gpt-4-turbo-2024-04-09',
     pricing: {
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-04-09',
     type: 'chat',
@@ -502,8 +672,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo Preview',
     id: 'gpt-4-turbo-preview',
     pricing: {
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -517,8 +689,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo Preview 0125',
     id: 'gpt-4-0125-preview',
     pricing: {
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-01-25',
     type: 'chat',
@@ -533,8 +707,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo Preview 1106',
     id: 'gpt-4-1106-preview',
     pricing: {
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2023-11-06',
     type: 'chat',
@@ -549,8 +725,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4',
     id: 'gpt-4',
     pricing: {
-      input: 30,
-      output: 60,
+      units: [
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -564,27 +742,12 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 0613',
     id: 'gpt-4-0613',
     pricing: {
-      input: 30,
-      output: 60,
+      units: [
+        { name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2023-06-13',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-
-    description:
-      'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-    displayName: 'GPT-4 32K',
-    id: 'gpt-4-32k', // deprecated on 2025-06-06
-    legacy: true,
-    pricing: {
-      input: 60,
-      output: 120,
-    },
     type: 'chat',
   },
   {
@@ -597,8 +760,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo',
     id: 'gpt-3.5-turbo',
     pricing: {
-      input: 0.5,
-      output: 1.5,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -612,8 +777,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo 0125',
     id: 'gpt-3.5-turbo-0125',
     pricing: {
-      input: 0.5,
-      output: 1.5,
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-01-25',
     type: 'chat',
@@ -628,8 +795,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo 1106',
     id: 'gpt-3.5-turbo-1106',
     pricing: {
-      input: 1,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2023-11-06',
     type: 'chat',
@@ -640,8 +809,10 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo Instruct',
     id: 'gpt-3.5-turbo-instruct',
     pricing: {
-      input: 1.5,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -652,13 +823,17 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
+    description:
+      'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
     displayName: 'Codex mini',
     id: 'codex-mini-latest',
     maxOutput: 100_000,
     pricing: {
-      input: 1.5,
-      output: 6,
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.375, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-06-01',
     settings: {
@@ -673,13 +848,16 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 8192,
-    description: 'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
+    description:
+      'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
     displayName: 'Computer Use Preview',
     id: 'computer-use-preview',
     maxOutput: 1024,
     pricing: {
-      input: 3,
-      output: 12,
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-03-11',
     settings: {
@@ -698,7 +876,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
     maxDimension: 3072,
     pricing: {
       currency: 'USD',
-      input: 0.13,
+      units: [{ name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' }],
     },
     releasedAt: '2024-01-25',
     type: 'embedding',
@@ -711,7 +889,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
     maxDimension: 1536,
     pricing: {
       currency: 'USD',
-      input: 0.02,
+      units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' }],
     },
     releasedAt: '2024-01-25',
     type: 'embedding',
@@ -725,7 +903,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1',
     id: 'tts-1',
     pricing: {
-      input: 15,
+      units: [{ name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionCharacters' }],
     },
     type: 'tts',
   },
@@ -734,7 +912,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'TTS-1 HD',
     id: 'tts-1-hd',
     pricing: {
-      input: 30,
+      units: [{ name: 'textInput', rate: 30, strategy: 'fixed', unit: 'millionCharacters' }],
     },
     type: 'tts',
   },
@@ -744,7 +922,10 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'GPT-4o Mini TTS',
     id: 'gpt-4o-mini-tts',
     pricing: {
-      input: 10,
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'tts',
   },
@@ -753,26 +934,97 @@ export const openaiTTSModels: AITTSModelCard[] = [
 // 语音识别模型
 export const openaiSTTModels: AISTTModelCard[] = [
   {
-    description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别',
+    description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。',
     displayName: 'Whisper',
     id: 'whisper-1',
     pricing: {
-      input: 0.006, // per minute
+      units: [
+        {
+          name: 'audioInput',
+          rate: 0.0001, // $0.006 per minute => $0.0001 per second
+          strategy: 'fixed',
+          unit: 'second',
+        },
+      ],
+    },
+    type: 'stt',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description:
+      'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    displayName: 'GPT-4o Transcribe',
+    id: 'gpt-4o-transcribe',
+    maxOutput: 2000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'stt',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description:
+      'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    displayName: 'GPT-4o Mini Transcribe',
+    id: 'gpt-4o-mini-transcribe',
+    maxOutput: 2000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'stt',
   },
 ];
 
 // 图像生成模型
-export const openaiImageModels: AIText2ImageModelCard[] = [
+export const openaiImageModels: AIImageModelCard[] = [
+  // https://platform.openai.com/docs/models/gpt-image-1
+  {
+    description: 'ChatGPT 原生多模态图片生成模型',
+    displayName: 'GPT Image 1',
+    enabled: true,
+    id: 'gpt-image-1',
+    parameters: gptImage1ParamsSchema,
+    type: 'image',
+  },
   {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
     displayName: 'DALL·E 3',
     id: 'dall-e-3',
+    parameters: {
+      prompt: { default: '' },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '1792x1024', '1024x1792'],
+      },
+    },
     pricing: {
-      hd: 0.08,
-      standard: 0.04,
+      units: [
+        {
+          lookup: {
+            prices: {
+              hd_1024x1024: 0.08,
+              hd_1024x1792: 0.12,
+              hd_1792x1024: 0.12,
+              standard_1024x1024: 0.04,
+              standard_1024x1792: 0.08,
+              standard_1792x1024: 0.08,
+            },
+            pricingParams: ['quality', 'size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
     },
     resolutions: ['1024x1024', '1024x1792', '1792x1024'],
     type: 'image',
@@ -781,8 +1033,30 @@ export const openaiImageModels: AIText2ImageModelCard[] = [
     description: '第二代 DALL·E 模型，支持更真实、准确的图像生成，分辨率是第一代的4倍',
     displayName: 'DALL·E 2',
     id: 'dall-e-2',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: { default: '' },
+      size: {
+        default: '1024x1024',
+        enum: ['256x256', '512x512', '1024x1024'],
+      },
+    },
     pricing: {
-      input: 0.02, // $0.020 per image (1024×1024)
+      units: [
+        {
+          lookup: {
+            prices: {
+              '1024x1024': 0.02,
+              '256x256': 0.016,
+              '512x512': 0.018,
+            },
+            pricingParams: ['size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
     type: 'image',
@@ -792,54 +1066,60 @@ export const openaiImageModels: AIText2ImageModelCard[] = [
 // GPT-4o 和 GPT-4o-mini 实时模型
 export const openaiRealtimeModels: AIRealtimeModelCard[] = [
   {
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 16_000,
     description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime',
+    displayName: 'GPT-4o Realtime 241217',
     id: 'gpt-4o-realtime-preview',
     maxOutput: 4096,
     pricing: {
-      audioInput: 100,
-      audioOutput: 200,
-      cachedAudioInput: 20,
-      cachedInput: 2.5,
-      input: 5,
-      output: 20,
-    },
-    releasedAt: '2024-10-01',
-    type: 'realtime',
-  },
-  {
-    contextWindowTokens: 128_000,
-    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime 10-01',
-    id: 'gpt-4o-realtime-preview-2024-10-01',
-    maxOutput: 4096,
-    pricing: {
-      audioInput: 100,
-      audioOutput: 200,
-      cachedAudioInput: 20,
-      cachedInput: 2.5,
-      input: 5,
-      output: 20,
-    },
-    releasedAt: '2024-10-01',
-    type: 'realtime',
-  },
-  {
-    contextWindowTokens: 128_000,
-    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime 12-17',
-    id: 'gpt-4o-realtime-preview-2024-12-17',
-    maxOutput: 4096,
-    pricing: {
-      audioInput: 40,
-      audioOutput: 80,
-      cachedAudioInput: 2.5,
-      cachedInput: 2.5,
-      input: 5,
-      output: 20,
+      units: [
+        { name: 'audioInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-17',
+    type: 'realtime',
+  },
+  {
+    contextWindowTokens: 32_000,
+    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
+    displayName: 'GPT-4o Realtime 250603',
+    id: 'gpt-4o-realtime-preview-2025-06-03',
+    maxOutput: 4096,
+    pricing: {
+      units: [
+        { name: 'audioInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-03',
+    type: 'realtime',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
+    displayName: 'GPT-4o Realtime 241001',
+    id: 'gpt-4o-realtime-preview-2024-10-01', // deprecated on 2025-09-10
+    maxOutput: 4096,
+    pricing: {
+      units: [
+        { name: 'audioInput', rate: 100, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-10-01',
     type: 'realtime',
   },
   {
@@ -849,12 +1129,14 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     id: 'gpt-4o-mini-realtime-preview',
     maxOutput: 4096,
     pricing: {
-      audioInput: 10,
-      audioOutput: 20,
-      cachedAudioInput: 0.3,
-      cachedInput: 0.3,
-      input: 0.6,
-      output: 2.4,
+      units: [
+        { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2024-12-17',
     type: 'realtime',

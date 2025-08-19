@@ -12,6 +12,15 @@ export default {
     tool_call: '工具调用请求',
   },
   detailModal: {
+    customPlugin: {
+      description: '请前往编辑页面查看详情',
+      editBtn: '立即编辑',
+      title: '这是一个自定义插件',
+    },
+    emptyState: {
+      description: '请先安装此插件，以查看插件能力和配置选项',
+      title: '安装后查看插件详情',
+    },
     info: {
       description: 'API 描述',
       name: 'API 名称',
@@ -48,11 +57,27 @@ export default {
       },
     },
     mcp: {
+      advanced: {
+        title: '高级设置',
+      },
       args: {
         desc: '传递给执行命令的参数列表，一般在这里输入 MCP 服务器名称，或启动脚本路径',
         label: '命令参数',
         placeholder: '例如：mcp-hello-world',
         required: '请输入启动参数',
+      },
+      auth: {
+        bear: 'API Key',
+        desc: '选择 MCP 服务器的认证方式',
+        label: '认证类型',
+        none: '无需认证',
+        placeholder: '请选择认证类型',
+        token: {
+          desc: '输入你的 API Key 或 Bearer Token',
+          label: 'API Key',
+          placeholder: 'sk-xxxxx',
+          required: '请输入认证令牌',
+        },
       },
       avatar: {
         label: '插件图标',
@@ -80,6 +105,11 @@ export default {
         keyRequired: '字段键不能为空',
         label: 'MCP Server 环境变量',
         stringifyError: '无法序列化参数，请检查参数格式',
+      },
+      headers: {
+        add: '新增一行',
+        desc: '输入请求头',
+        label: 'HTTP Headers',
       },
       identifier: {
         desc: '为你的 MCP 插件指定一个名称，需要使用英文字符',
@@ -231,7 +261,113 @@ export default {
     },
     title: '本地文件',
   },
+  mcpInstall: {
+    CHECKING_INSTALLATION: '检查安装环境...',
+    COMPLETED: '安装完成',
+    CONFIGURATION_REQUIRED: '请完成相关配置后继续安装',
+    ERROR: '安装错误',
+    FETCHING_MANIFEST: '获取插件描述文件...',
+    GETTING_SERVER_MANIFEST: '初始化 MCP 服务器...',
+    INSTALLING_PLUGIN: '正在安装插件...',
+    configurationDescription: '该 MCP 插件需要配置参数才能正常使用，请填写必要的配置信息',
+    configurationRequired: '配置插件参数',
+    continueInstall: '继续安装',
+    dependenciesDescription:
+      '此插件需要安装以下系统依赖才能正常工作，请按照指引安装缺失的依赖项，然后点击重新检查继续安装。',
+    dependenciesRequired: '请安装插件的系统依赖',
+    dependencyStatus: {
+      installed: '已安装',
+      notInstalled: '未安装',
+      requiredVersion: '需要版本: {{version}}',
+    },
+    errorDetails: {
+      args: '参数',
+      command: '命令',
+      connectionParams: '连接参数',
+      env: '环境变量',
+      errorOutput: '错误日志',
+      exitCode: '退出码',
+      hideDetails: '收起详情',
+      originalError: '原始错误',
+      showDetails: '查看详情',
+    },
+    errorTypes: {
+      AUTHORIZATION_ERROR: '授权验证错误',
+      CONNECTION_FAILED: '连接失败',
+      INITIALIZATION_TIMEOUT: '初始化超时',
+      PROCESS_SPAWN_ERROR: '进程启动失败',
+      UNKNOWN_ERROR: '未知错误',
+      VALIDATION_ERROR: '参数验证失败',
+    },
+    installError: 'MCP 插件安装失败，失败原因： {{detail}}',
+    installMethods: {
+      manual: '手动安装:',
+      recommended: '推荐安装方式:',
+    },
+    recheckDependencies: '重新检查',
+    skipDependencies: '跳过检查',
+  },
   pluginList: '插件列表',
+  protocolInstall: {
+    actions: {
+      install: '安装',
+      installAnyway: '仍要安装',
+      installed: '已安装',
+    },
+    config: {
+      args: '参数',
+      command: '命令',
+      env: '环境变量',
+      headers: '请求头',
+      title: '配置信息',
+      type: {
+        http: '类型: HTTP',
+        label: '类型',
+        stdio: '类型: Stdio',
+      },
+      url: '服务地址',
+    },
+    custom: {
+      badge: '自定义插件',
+      security: {
+        description: '此插件未经过官方验证，安装可能存在安全风险！请确保您信任插件来源。',
+        title: '⚠️ 安全风险提示',
+      },
+      title: '安装自定义插件',
+    },
+    marketplace: {
+      title: '安装第三方插件',
+      trustedBy: '由 {{name}} 提供',
+      unverified: {
+        title: '未经验证的第三方插件',
+        warning: '此插件来自未验证的第三方市场，安装前请确认您信任该来源。',
+      },
+      verified: '已验证',
+    },
+    messages: {
+      connectionTestFailed: '连接测试失败',
+      installError: '插件安装失败，请重试',
+      installSuccess: '插件 {{name}} 安装成功！',
+      manifestError: '获取插件详情失败，请检查网络连接后重试',
+      manifestNotFound: '未能获取插件描述文件',
+    },
+    meta: {
+      author: '作者',
+      homepage: '主页',
+      identifier: '标识符',
+      source: '来源',
+      version: '版本',
+    },
+    official: {
+      badge: 'LobeHub 官方插件',
+      description: '此插件由 LobeHub 官方开发和维护，经过严格的安全审核，可放心使用。',
+      loadingMessage: '正在获取插件详情...',
+      loadingTitle: '加载中',
+      title: '安装官方插件',
+    },
+    title: '安装 MCP 插件',
+    warning: '⚠️ 请确认您信任此插件的来源，恶意插件可能会危害您的系统安全。',
+  },
   search: {
     apiName: {
       crawlMultiPages: '读取多个页面内容',
@@ -267,16 +403,48 @@ export default {
   },
   setting: '插件设置',
   settings: {
+    capabilities: {
+      prompts: '提示词',
+      resources: '资源',
+      title: '插件能力',
+      tools: '工具',
+    },
+    configuration: {
+      title: '插件配置',
+    },
+    connection: {
+      args: '启动参数',
+      command: '启动命令',
+      title: '连接信息',
+      type: '连接类型',
+      url: '服务地址',
+    },
+    edit: '编辑',
+    envConfigDescription: '这些配置将作为环境变量在 MCP 服务器启动时传递给进程',
+    httpTypeNotice: 'HTTP 类型的 MCP 插件暂无需要配置的环境变量',
     indexUrl: {
       title: '市场索引',
       tooltip: '暂不支持在线编辑，请通过部署时环境变量进行设置',
     },
+    messages: {
+      connectionUpdateFailed: '连接信息更新失败',
+      connectionUpdateSuccess: '连接信息更新成功',
+      envUpdateFailed: '环境变量保存失败',
+      envUpdateSuccess: '环境变量保存成功',
+    },
     modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
+    rules: {
+      argsRequired: '请输入启动参数',
+      commandRequired: '请输入启动命令',
+      urlRequired: '请输入服务地址',
+    },
+    saveSettings: '保存设置',
     title: '设置插件市场',
   },
   showInPortal: '请在工作区中查看详情',
   store: {
     actions: {
+      cancel: '取消安装',
       confirmUninstall: '即将卸载该插件，卸载后将清除该插件配置，请确认你的操作',
       detail: '详情',
       install: '安装',
@@ -287,13 +455,15 @@ export default {
     communityPlugin: '三方社区',
     customPlugin: '自定义',
     empty: '暂无已安装插件',
+    emptySelectHint: '选择插件以预览详细信息',
     installAllPlugins: '安装全部',
     networkError: '获取插件商店失败，请检测网络连接后重试',
     placeholder: '搜索插件名称介绍或关键词...',
     releasedAt: '发布于 {{createdAt}}',
     tabs: {
-      all: '全部',
       installed: '已安装',
+      mcp: 'MCP 插件',
+      old: 'LobeChat 插件',
     },
     title: '插件商店',
   },

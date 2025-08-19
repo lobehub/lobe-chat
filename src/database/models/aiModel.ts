@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, inArray } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -67,6 +67,7 @@ export class AiModelModel {
         displayName: aiModels.displayName,
         enabled: aiModels.enabled,
         id: aiModels.id,
+        parameters: aiModels.parameters,
         pricing: aiModels.pricing,
         releasedAt: aiModels.releasedAt,
         source: aiModels.source,
@@ -93,6 +94,7 @@ export class AiModelModel {
         displayName: aiModels.displayName,
         enabled: aiModels.enabled,
         id: aiModels.id,
+        parameters: aiModels.parameters,
         providerId: aiModels.providerId,
         sort: aiModels.sort,
         source: aiModels.source,

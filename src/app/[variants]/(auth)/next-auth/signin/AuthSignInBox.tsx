@@ -1,21 +1,19 @@
 'use client';
 
-import { Button } from '@lobehub/ui';
+import { Button, Text } from '@lobehub/ui';
 import { LobeChat } from '@lobehub/ui/brand';
-import { Col, Flex, Row, Skeleton, Typography } from 'antd';
+import { Col, Flex, Row, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -72,18 +70,21 @@ export default memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('clerk');
   const router = useRouter();
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
 
   const oAuthSSOProviders = useUserStore((s) => s.oAuthSSOProviders);
 
   const searchParams = useSearchParams();
 
-  // Redirect back to the page url
-  const callbackUrl = searchParams.get('callbackUrl') ?? '';
+  // Redirect back to the page url, fallback to '/' if failed
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/';
 
   const handleSignIn = async (provider: string) => {
+    setLoadingProvider(provider);
     try {
       await signIn(provider, { redirectTo: callbackUrl });
     } catch (error) {
+      setLoadingProvider(null);
       // Signin can fail for a number of reasons, such as the user
       // not existing, or the user not having the correct role.
       // In some cases, you may want to redirect to a custom error
@@ -111,13 +112,15 @@ export default memo(() => {
         <Flex gap="large" vertical>
           {/* Header */}
           <div className={styles.text}>
-            <Title className={styles.title} level={4}>
+            <Text as={'h4'} className={styles.title}>
               <div>
                 <LobeChat size={48} />
               </div>
               {t('signIn.start.title', { applicationName: 'LobeChat' })}
-            </Title>
-            <Paragraph className={styles.description}>{t('signIn.start.subtitle')}</Paragraph>
+            </Text>
+            <Text as={'p'} className={styles.description}>
+              {t('signIn.start.subtitle')}
+            </Text>
           </div>
           {/* Content */}
           <Flex gap="small" vertical>
@@ -127,6 +130,7 @@ export default memo(() => {
                   className={styles.button}
                   icon={AuthIcons(provider, 16)}
                   key={provider}
+                  loading={loadingProvider === provider}
                   onClick={() => handleSignIn(provider)}
                 >
                   {provider}

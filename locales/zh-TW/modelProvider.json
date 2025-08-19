@@ -66,6 +66,7 @@
       "customRegion": "自定義服務區域",
       "customSessionToken": "自訂 Session Token",
       "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用程式不會記錄你的驗證配置",
+      "imageGenerationDescription": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始生成。應用不會記錄你的鑑權配置",
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "您的秘鑰與代理地址等將使用 <1>AES-GCM</1> 加密算法進行加密",
       "apiKey": {
         "desc": "請填寫你的 {{name}} API Key",
+        "descWithUrl": "請填寫你的 {{name}} API Key，<3>點此獲取</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },
@@ -304,6 +306,7 @@
         "latestTime": "上次更新時間：{{time}}",
         "noLatestTime": "尚未取得列表"
       },
+      "noModelsInCategory": "該分類下暫無啟用的模型",
       "resetAll": {
         "conform": "確認重置當前模型的所有修改？重置後當前模型列表將會回到預設狀態",
         "success": "重置成功",
@@ -314,7 +317,15 @@
       "title": "模型列表",
       "total": "共 {{count}} 個模型可用"
     },
-    "searchNotFound": "未找到搜尋結果"
+    "searchNotFound": "未找到搜尋結果",
+    "tabs": {
+      "all": "全部",
+      "chat": "對話",
+      "embedding": "向量化",
+      "image": "圖片",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "排序更新成功",

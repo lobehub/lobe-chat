@@ -2,8 +2,14 @@
   "ai21": {
     "description": "AI21 Labs 為企業構建基礎模型和人工智慧系統，加速生成性人工智慧在生產中的應用。"
   },
+  "ai302": {
+    "description": "302.AI 是一個按需付費的 AI 應用平台，提供市面上最全的 AI API 和 AI 在線應用"
+  },
   "ai360": {
     "description": "360 AI 是 360 公司推出的 AI 模型和服務平台，提供多種先進的自然語言處理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。這些模型結合了大規模參數和多模態能力，廣泛應用於文本生成、語義理解、對話系統與代碼生成等領域。通過靈活的定價策略，360 AI 滿足多樣化用戶需求，支持開發者集成，推動智能化應用的革新和發展。"
+  },
+  "aihubmix": {
+    "description": "AiHubMix 透過統一的 API 介面提供對多種 AI 模型的存取。"
   },
   "anthropic": {
     "description": "Anthropic 是一家專注於人工智慧研究和開發的公司，提供了一系列先進的語言模型，如 Claude 3.5 Sonnet、Claude 3 Sonnet、Claude 3 Opus 和 Claude 3 Haiku。這些模型在智能、速度和成本之間取得了理想的平衡，適用於從企業級工作負載到快速響應的各種應用場景。Claude 3.5 Sonnet 作為其最新模型，在多項評估中表現優異，同時保持了較高的性價比。"
@@ -28,6 +34,9 @@
   },
   "deepseek": {
     "description": "DeepSeek 是一家專注於人工智慧技術研究和應用的公司，其最新模型 DeepSeek-V2.5 融合了通用對話和代碼處理能力，並在人類偏好對齊、寫作任務和指令跟隨等方面實現了顯著提升。"
+  },
+  "fal": {
+    "description": "面向開發者的生成式媒體平台"
   },
   "fireworksai": {
     "description": "Fireworks AI 是一家領先的高級語言模型服務商，專注於功能調用和多模態處理。其最新模型 Firefunction V2 基於 Llama-3，優化用於函數調用、對話及指令跟隨。視覺語言模型 FireLLaVA-13B 支持圖像和文本混合輸入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多語言指令跟隨與生成支持。"
@@ -133,6 +142,9 @@
   },
   "upstage": {
     "description": "Upstage 專注於為各種商業需求開發 AI 模型，包括 Solar LLM 和文檔 AI，旨在實現工作的人工通用智能（AGI）。通過 Chat API 創建簡單的對話代理，並支持功能調用、翻譯、嵌入以及特定領域應用。"
+  },
+  "v0": {
+    "description": "v0 是一個配對程式設計助手，你只需用自然語言描述想法，它就能為你的專案生成程式碼和使用者介面（UI）"
   },
   "vertexai": {
     "description": "Google 的 Gemini 系列是其最先進、通用的 AI 模型，由 Google DeepMind 打造，專為多模態設計，支持文本、程式碼、圖像、音訊和視頻的無縫理解與處理。適用於從數據中心到行動裝置的多種環境，極大提升了 AI 模型的效率與應用廣泛性。"

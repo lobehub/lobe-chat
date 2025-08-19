@@ -5,9 +5,9 @@ import type { App } from '@/core/App';
 import ShortcutController from '../ShortcutCtr';
 
 // 模拟 App 及其依赖项
-const mockGetShortcutsConfig = vi.fn().mockReturnValue({ 
+const mockGetShortcutsConfig = vi.fn().mockReturnValue({
   toggleMainWindow: 'CommandOrControl+Shift+L',
-  openSettings: 'CommandOrControl+,'
+  openSettings: 'CommandOrControl+,',
 });
 const mockUpdateShortcutConfig = vi.fn().mockImplementation((id, accelerator) => {
   // 简单模拟更新成功
@@ -32,11 +32,11 @@ describe('ShortcutController', () => {
   describe('getShortcutsConfig', () => {
     it('should return shortcuts config from shortcutManager', () => {
       const result = shortcutController.getShortcutsConfig();
-      
+
       expect(mockGetShortcutsConfig).toHaveBeenCalled();
       expect(result).toEqual({
         toggleMainWindow: 'CommandOrControl+Shift+L',
-        openSettings: 'CommandOrControl+,'
+        openSettings: 'CommandOrControl+,',
       });
     });
   });
@@ -45,9 +45,9 @@ describe('ShortcutController', () => {
     it('should call shortcutManager.updateShortcutConfig with correct parameters', () => {
       const id = 'toggleMainWindow';
       const accelerator = 'CommandOrControl+Alt+L';
-      
-      const result = shortcutController.updateShortcutConfig(id, accelerator);
-      
+
+      const result = shortcutController.updateShortcutConfig({ id, accelerator });
+
       expect(mockUpdateShortcutConfig).toHaveBeenCalledWith(id, accelerator);
       expect(result).toBe(true);
     });
@@ -55,10 +55,13 @@ describe('ShortcutController', () => {
     it('should return the result from shortcutManager.updateShortcutConfig', () => {
       // 模拟更新失败的情况
       mockUpdateShortcutConfig.mockReturnValueOnce(false);
-      
-      const result = shortcutController.updateShortcutConfig('invalidKey', 'invalid+combo');
-      
+
+      const result = shortcutController.updateShortcutConfig({
+        id: 'invalidKey',
+        accelerator: 'invalid+combo',
+      });
+
       expect(result).toBe(false);
     });
   });
-}); 
+});

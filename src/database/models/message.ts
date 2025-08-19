@@ -1,7 +1,6 @@
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
-import { count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, gt, inArray, isNotNull, isNull, like } from 'drizzle-orm/expressions';
+import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -86,6 +85,7 @@ export class MessageModel {
         createdAt: messages.createdAt,
         updatedAt: messages.updatedAt,
 
+        topicId: messages.topicId,
         parentId: messages.parentId,
         threadId: messages.threadId,
 

@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "Argumentationsstärke"
     },
+    "textVerbosity": {
+      "title": "Detaillierungsgrad des Ausgabetextes"
+    },
+    "thinking": {
+      "title": "Tiefdenk-Schalter"
+    },
     "title": "Modell Erweiterungsfunktionen"
   },
   "history": {

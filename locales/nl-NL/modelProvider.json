@@ -66,6 +66,7 @@
       "customRegion": "Aangepaste regio",
       "customSessionToken": "Aangepaste sessietoken",
       "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
+      "imageGenerationDescription": "Voer je AWS AccessKeyId / SecretAccessKey in om te beginnen met genereren. De applicatie slaat je authenticatiegegevens niet op",
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
       "apiKey": {
         "desc": "Vul je {{name}} API-sleutel in",
+        "descWithUrl": "Vul je {{name}} API-sleutel in, <3>klik hier om deze te verkrijgen</3>",
         "placeholder": "{{name}} API-sleutel",
         "title": "API-sleutel"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Laatste update tijd: {{time}}",
         "noLatestTime": "Lijst nog niet opgehaald"
       },
+      "noModelsInCategory": "Er zijn geen ingeschakelde modellen in deze categorie",
       "resetAll": {
         "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
         "success": "Resetten geslaagd",
@@ -314,7 +317,15 @@
       "title": "Modellenlijst",
       "total": "In totaal {{count}} modellen beschikbaar"
     },
-    "searchNotFound": "Geen zoekresultaten gevonden"
+    "searchNotFound": "Geen zoekresultaten gevonden",
+    "tabs": {
+      "all": "Alles",
+      "chat": "Chat",
+      "embedding": "Inbedding",
+      "image": "Afbeelding",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sortering succesvol bijgewerkt",

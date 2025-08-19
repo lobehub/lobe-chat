@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "推理強度"
     },
+    "textVerbosity": {
+      "title": "輸出文本詳細程度"
+    },
+    "thinking": {
+      "title": "深度思考開關"
+    },
     "title": "模型擴展功能"
   },
   "history": {

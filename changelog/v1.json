@@ -1,5 +1,960 @@
 [
   {
+    "children": {},
+    "date": "2025-08-18",
+    "version": "1.113.2"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.0"
+  },
+  {
+    "children": {
+      "fixes": ["Improve mcp tracing with user config."]
+    },
+    "date": "2025-08-17",
+    "version": "1.112.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor const folder to a new package."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.3"
+  },
+  {
+    "children": {
+      "improvements": ["重构 ArgsInput 组件."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Imagen 4 GA models, style improve auth sign in box loading."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-15",
+    "version": "1.112.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-14",
+    "version": "1.111.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
+    },
+    "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust near bottom size on thinking scroll."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Gemini error display with promptFeedback."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
+      "improvements": ["Support new GPT-5 Verbosity params."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model-runtime to a seperated package."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
+      "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add mask effect to thinking scroll, update i18n."]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
+    "children": {},
+    "date": "2025-08-09",
+    "version": "1.111.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve thinking auto scroll style, Support session switch shortcut key, update i18n."
+      ]
+    },
+    "date": "2025-08-09",
+    "version": "1.111.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-08",
+    "version": "1.111.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add descriptions for the FLUX.1 Krea and Qwen Image."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.1"
+  },
+  {
+    "children": {
+      "features": ["Add GPT-5 series models."]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
+      "fixes": ["Missing languages it-IT, pl-PL, nl-NL."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
+      "fixes": ["Optimize Gemini error message display & Filter empty messages."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor trace type."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider setting page hydration error."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fail to fetch aihubmix model on client mode."],
+      "improvements": ["Add context menu for desktop, support different model tabs."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop again."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.1"
+  },
+  {
+    "children": {
+      "features": ["Support mcp plugin install from web."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama model output without thinking."],
+      "improvements": ["Add Claude Opus 4.1 model, update i18n."]
+    },
+    "date": "2025-08-06",
+    "version": "1.109.1"
+  },
+  {
+    "children": {
+      "features": ["Support gpt-oss in ollama provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.109.0"
+  },
+  {
+    "children": {
+      "fixes": ["Provider config checker uses outdated API key."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop."],
+      "improvements": ["Update mask style."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.1"
+  },
+  {
+    "children": {
+      "features": ["Support 302ai provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.0"
+  },
+  {
+    "children": {
+      "fixes": ["Break line for Gemini Artifacts."]
+    },
+    "date": "2025-08-05",
+    "version": "1.107.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update models."]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.5"
+  },
+  {
+    "children": {
+      "fixes": ["When s3 files not exist , global files should delete."]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.4"
+  },
+  {
+    "children": {
+      "fixes": ["Aihubmix provider request headers."]
+    },
+    "date": "2025-08-03",
+    "version": "1.107.3"
+  },
+  {
+    "children": {
+      "improvements": ["Move types to separate package."]
+    },
+    "date": "2025-08-02",
+    "version": "1.107.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.1"
+  },
+  {
+    "children": {
+      "features": ["Support aihubmix provider."]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support SenseNova V6.5 models."]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update Aliyun Bailian models."]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc oauth callback pages 404."]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve mcp plugin calling and display."]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix mcp calling missing array content."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.4"
+  },
+  {
+    "children": {
+      "fixes": ["Moonshot assistant messages must not be empty."],
+      "improvements": ["Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop auth redirect url error."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.2"
+  },
+  {
+    "children": {
+      "improvements": ["Support Minimax T2I models."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.1"
+  },
+  {
+    "children": {
+      "features": ["Add support for Okta Authentication."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.0"
+  },
+  {
+    "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.6"
+  },
+  {
+    "children": {
+      "fixes": ["Reorder AppTheme and Locale to fix modal i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.5"
+  },
+  {
+    "children": {
+      "fixes": ["Revert jose to ^5 to fix auth issue on desktop."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix subscription plan tag display."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add more OpenAI SDK Text2Image providers, update i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.2"
+  },
+  {
+    "children": {
+      "improvements": ["Support more Text2Image from Qwen."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.1"
+  },
+  {
+    "children": {
+      "features": ["Implement API Key management functionality."]
+    },
+    "date": "2025-07-28",
+    "version": "1.105.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix setting window layout when in desktop was disappear."]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix setting window layout size, update i18n."]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 2.5 Flash-Lite GA model."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix update hotkey invalid when input mod in desktop."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider."
+      ]
+    },
+    "date": "2025-07-25",
+    "version": "1.104.1"
+  },
+  {
+    "children": {
+      "features": ["Support custom hotkey on desktop."]
+    },
+    "date": "2025-07-24",
+    "version": "1.104.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix chat stream in desktop and update shortcut."],
+      "improvements": [
+        "Add cached token count to usage of GoogleAI and VertexAI, fix desktop titlebar style in window, fix sub topic width in md responsive."
+      ]
+    },
+    "date": "2025-07-24",
+    "version": "1.103.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-23",
+    "version": "1.103.1"
+  },
+  {
+    "children": {
+      "features": ["Add Qwen image generation capabilities."]
+    },
+    "date": "2025-07-22",
+    "version": "1.103.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update tray icon."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.4"
+  },
+  {
+    "children": {
+      "fixes": ["Remove debug logging from ModelRuntime and async caller."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add notification for desktop."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.2"
+  },
+  {
+    "children": {
+      "improvements": ["Modal list header sticky style."]
+    },
+    "date": "2025-07-21",
+    "version": "1.102.1"
+  },
+  {
+    "children": {
+      "features": ["Add image generation capabilities using Google AI Imagen API."]
+    },
+    "date": "2025-07-21",
+    "version": "1.102.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix lobehub provider /chat in desktop."]
+    },
+    "date": "2025-07-21",
+    "version": "1.101.2"
+  },
+  {
+    "children": {
+      "fixes": ["Try fix authorization code exchange & pin next-auto to beta.29."]
+    },
+    "date": "2025-07-19",
+    "version": "1.101.1"
+  },
+  {
+    "children": {
+      "features": ["Add zhipu cogview4."],
+      "fixes": ["Some ai image bugs."]
+    },
+    "date": "2025-07-19",
+    "version": "1.101.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix webapi proxy with clerk."]
+    },
+    "date": "2025-07-18",
+    "version": "1.100.2"
+  },
+  {
+    "children": {
+      "fixes": ["Use server env config image models."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.1"
+  },
+  {
+    "children": {
+      "features": ["Refactor desktop oauth and use JWTs token to support remote chat."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.0"
+  },
+  {
+    "children": {
+      "fixes": ["Desktop local db can't upload image."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix page error when url is not defined in web search plugin."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix apikey issue on server log."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.4"
+  },
+  {
+    "children": {
+      "fixes": ["Chat model list should not show image model."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.3"
+  },
+  {
+    "children": {
+      "fixes": ["Some ai image generation feedback issues."]
+    },
+    "date": "2025-07-15",
+    "version": "1.99.2"
+  },
+  {
+    "children": {},
+    "date": "2025-07-15",
+    "version": "1.99.1"
+  },
+  {
+    "children": {
+      "features": ["support AI Image."]
+    },
+    "date": "2025-07-14",
+    "version": "1.99.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-14",
+    "version": "1.98.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix discover translation."]
+    },
+    "date": "2025-07-14",
+    "version": "1.98.1"
+  },
+  {
+    "children": {
+      "features": ["Add network proxy for desktop."]
+    },
+    "date": "2025-07-13",
+    "version": "1.98.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support Hunyuan A13B thinking model."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.16"
+  },
+  {
+    "children": {
+      "fixes": ["Add vision support to Grok 4."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.15"
+  },
+  {
+    "children": {
+      "fixes": ["Revert \"💄 style: Open new topic by tap Just Chat again\"."],
+      "improvements": ["Add Kimi K2 model."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.14"
+  },
+  {
+    "children": {
+      "improvements": ["Support new Doubao thinking models, update i18n."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.13"
+  },
+  {
+    "children": {
+      "fixes": ["Grok-4 reasoning model universal matching."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.12"
+  },
+  {
+    "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.11"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.10"
+  },
+  {
+    "children": {
+      "improvements": ["Integrate Amazon Cognito for user authentication."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.9"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add google search grounding for Vertex AI."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.7"
+  },
+  {
+    "children": {
+      "improvements": ["Replace utility-types with type-fest."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix: solve the loading was strange spin when switch show."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add grok-4-0709 model from xAI, fix theme issue in desktop."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.4"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.3"
+  },
+  {
+    "children": {
+      "improvements": ["Implement data analytics event tracking framework."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix locale hydration error in SSR."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.1"
+  },
+  {
+    "children": {
+      "features": ["Add MCP marketplace and mcp plugin one-click installation in desktop."]
+    },
+    "date": "2025-07-08",
+    "version": "1.97.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add MCP_TOOL_TIMEOUT env and improve debug usage guide."]
+    },
+    "date": "2025-07-08",
+    "version": "1.96.20"
+  },
+  {
+    "children": {
+      "fixes": ["Pin officeparser@5.1.1 to fix server error."]
+    },
+    "date": "2025-07-07",
+    "version": "1.96.19"
+  },
+  {
+    "children": {
+      "fixes": ["Change the wrong github checkmodel name."],
+      "improvements": ["Files hello pages should scroll."]
+    },
+    "date": "2025-07-06",
+    "version": "1.96.18"
+  },
+  {
+    "children": {},
+    "date": "2025-07-03",
+    "version": "1.96.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-03",
+    "version": "1.96.16"
+  },
+  {
+    "children": {
+      "fixes": ["Wrong Gemini 2.5 Pro thinkbudget."]
+    },
+    "date": "2025-07-02",
+    "version": "1.96.15"
+  },
+  {
+    "children": {
+      "improvements": ["Migrate to @google/genai SDK for Google Gemini API and Vertex AI."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.14"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.13"
+  },
+  {
+    "children": {
+      "fixes": ["Pin antd@5.26.2 to fix build error."],
+      "improvements": ["Add DeepResearch models from OpenAI."]
+    },
+    "date": "2025-06-30",
+    "version": "1.96.12"
+  },
+  {
+    "children": {},
+    "date": "2025-06-28",
+    "version": "1.96.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop chunk issue."]
+    },
+    "date": "2025-06-28",
+    "version": "1.96.10"
+  },
+  {
+    "children": {
+      "fixes": ["Google Gemini tools declarations."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.9"
+  },
+  {
+    "children": {
+      "improvements": ["Optimized Gemini thinkingBudget configuration."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add blockAds & stealth params for Browserless."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.6"
+  },
+  {
+    "children": {
+      "fixes": ["Remove unsupported parameters of Hunyuan."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.5"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix MiniMax-M1 reasoning tag missing."]
+    },
+    "date": "2025-06-21",
+    "version": "1.96.1"
+  },
+  {
+    "children": {
+      "features": ["Add v0 (Vercel) provider support."],
+      "fixes": ["Fix inputTemplate behavior."]
+    },
+    "date": "2025-06-20",
+    "version": "1.96.0"
+  },
+  {
+    "children": {
+      "features": ["Add Brave & Google PSE & Kagi as build-in Search Provider."]
+    },
+    "date": "2025-06-20",
+    "version": "1.95.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-20",
+    "version": "1.94.17"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly pass reasoning.summary."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update model card for Gemini 2.5 Pro via OpenRouter."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.14"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model."
+      ]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add MiniMax-M1 model."]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.12"
+  },
+  {
+    "children": {
+      "fixes": ["Enhance the multi-display window opening experience."]
+    },
+    "date": "2025-06-17",
+    "version": "1.94.11"
+  },
+  {
+    "children": {
+      "fixes": ["Improve chat selectors and enhance topic handling logic."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add kimi-thinking-preview model from Moonshot."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.9"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly handle reasoning_effort."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.8"
+  },
+  {
     "children": {
       "improvements": ["Add Doubao Seed 1.6 model."]
     },

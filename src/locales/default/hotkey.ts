@@ -1,6 +1,8 @@
 import { HotkeyI18nTranslations } from '@/types/hotkey';
 
-const hotkey: HotkeyI18nTranslations = {
+const hotkey: HotkeyI18nTranslations & {
+  desktop: Record<string, { desc?: string; title: string }>;
+} = {
   addUserMessage: {
     desc: '将当前输入内容添加为用户消息，但不触发生成',
     title: '添加一条用户消息',
@@ -9,9 +11,23 @@ const hotkey: HotkeyI18nTranslations = {
     desc: '清空当前会话的消息和上传的文件',
     title: '清空会话消息',
   },
+  desktop: {
+    openSettings: {
+      desc: '打开应用设置页面',
+      title: '应用设置',
+    },
+    showApp: {
+      desc: '全局快捷键显示或隐藏主窗口',
+      title: '显示/隐藏主窗口',
+    },
+  },
   editMessage: {
     desc: '通过按住 Alt 并双击消息进入编辑模式',
     title: '编辑消息',
+  },
+  navigateToChat: {
+    desc: '切换至会话标签并进入随便聊聊',
+    title: '切换至默认会话',
   },
   openChatSettings: {
     desc: '查看和修改当前会话的设置',
@@ -20,10 +36,6 @@ const hotkey: HotkeyI18nTranslations = {
   openHotkeyHelper: {
     desc: '查看所有快捷键的使用说明',
     title: '打开快捷键帮助',
-  },
-  openSettings: {
-    desc: '打开应用设置页面',
-    title: '应用设置',
   },
   regenerateMessage: {
     desc: '重新生成最后一条消息',

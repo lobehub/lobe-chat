@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "Redeneringsinspanning"
     },
+    "textVerbosity": {
+      "title": "Gedetailleerdheid van de uitvoer"
+    },
+    "thinking": {
+      "title": "Diepdenkschakelaar"
+    },
     "title": "Modeluitbreidingsfunctie"
   },
   "history": {

@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Regresar"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Haz clic para cambiar la imagen",
+      "dropMultipleFiles": "No se admite la carga múltiple de archivos, solo se utilizará el primer archivo"
+    },
+    "placeholder": {
+      "primary": "Agregar imagen",
+      "secondary": "Haga clic o arrastre para subir"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Agregar una fila",
+    "deleteTooltip": "Eliminar",
+    "duplicateKeyError": "El nombre de la clave debe ser único",
+    "keyPlaceholder": "Clave",
+    "valuePlaceholder": "Valor"
+  },
   "MaxTokenSlider": {
     "unlimited": "Sin límite"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "Ir a la configuración",
     "provider": "Proveedor",
     "title": "Modelo"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Haz clic o arrastra para subir más"
+    },
+    "modal": {
+      "complete": "Completar",
+      "newFileIndicator": "Nuevo",
+      "selectImageToPreview": "Por favor, selecciona una imagen para previsualizar",
+      "title": "Gestionar imágenes ({{count}})",
+      "upload": "Subir imágenes"
+    },
+    "placeholder": {
+      "primary": "Haz clic o arrastra para subir imágenes",
+      "secondary": "Se admite la selección de múltiples imágenes"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} subidas"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

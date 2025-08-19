@@ -5,13 +5,22 @@
     "function_call": "Gọi hàm",
     "off": "Tắt gỡ lỗi",
     "on": "Xem thông tin gọi plugin",
-    "payload": "Dữ liệu cắm",
+    "payload": "Tải trọng plugin",
     "pluginState": "Trạng thái plugin",
     "response": "Kết quả trả về",
     "title": "Chi tiết plugin",
-    "tool_call": "Yêu cầu công cụ"
+    "tool_call": "Yêu cầu gọi công cụ"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Vui lòng truy cập trang chỉnh sửa để xem chi tiết",
+      "editBtn": "Chỉnh sửa ngay",
+      "title": "Đây là một plugin tùy chỉnh"
+    },
+    "emptyState": {
+      "description": "Vui lòng cài đặt plugin này trước để xem khả năng và tùy chọn cấu hình",
+      "title": "Xem chi tiết plugin sau khi cài đặt"
+    },
     "info": {
       "description": "Mô tả API",
       "name": "Tên API"
@@ -24,10 +33,10 @@
     "title": "Chi tiết plugin"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "Bạn sắp xóa plugin cục bộ này, sau khi xóa sẽ không thể khôi phục, bạn có muốn xóa plugin này không?",
+    "confirmDeleteDevPlugin": "Bạn sắp xóa plugin cục bộ này, sau khi xóa sẽ không thể khôi phục, bạn có chắc muốn xóa plugin này không?",
     "customParams": {
       "useProxy": {
-        "label": "Cài đặt thông qua proxy (nếu gặp lỗi truy cập qua các miền, hãy thử bật tùy chọn này và cài đặt lại)"
+        "label": "Cài đặt qua proxy (nếu gặp lỗi truy cập chéo, hãy thử bật tùy chọn này rồi cài lại)"
       }
     },
     "deleteSuccess": "Xóa plugin thành công",
@@ -37,110 +46,131 @@
         "label": "Định danh"
       },
       "mode": {
-        "mcp": "MCP Plugin",
-        "mcpExp": "Thí nghiệm",
+        "mcp": "Plugin MCP",
+        "mcpExp": "Thử nghiệm",
         "url": "Liên kết trực tuyến"
       },
       "name": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
-        "placeholder": "Tìm kiếm công cụ tìm kiếm"
+        "placeholder": "Công cụ tìm kiếm"
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Cài đặt nâng cao"
+      },
       "args": {
-        "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
+        "desc": "Danh sách tham số truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn script khởi động",
         "label": "Tham số lệnh",
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
       },
+      "auth": {
+        "bear": "API Key",
+        "desc": "Chọn phương thức xác thực máy chủ MCP",
+        "label": "Loại xác thực",
+        "none": "Không cần xác thực",
+        "placeholder": "Vui lòng chọn loại xác thực",
+        "token": {
+          "desc": "Nhập API Key hoặc Bearer Token của bạn",
+          "label": "API Key",
+          "placeholder": "sk-xxxxx",
+          "required": "Vui lòng nhập token xác thực"
+        }
+      },
       "avatar": {
-        "label": "Biểu tượng tiện ích"
+        "label": "Biểu tượng plugin"
       },
       "command": {
-        "desc": "Tập tin thực thi hoặc kịch bản dùng để khởi động Máy chủ MCP STDIO",
+        "desc": "Tệp thực thi hoặc script dùng để khởi động MCP STDIO Server",
         "label": "Lệnh",
-        "placeholder": "Ví dụ: npx / uv / docker v.v.",
+        "placeholder": "Ví dụ: npx / uv / docker, v.v.",
         "required": "Vui lòng nhập lệnh khởi động"
       },
       "desc": {
-        "desc": "Mô tả về tiện ích",
-        "label": "Mô tả tiện ích",
-        "placeholder": "Bổ sung thông tin về cách sử dụng và các tình huống của tiện ích này"
+        "desc": "Thêm mô tả cho plugin",
+        "label": "Mô tả plugin",
+        "placeholder": "Bổ sung hướng dẫn sử dụng và kịch bản"
       },
       "endpoint": {
-        "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
-        "label": "URL Điểm cuối MCP"
+        "desc": "Nhập địa chỉ MCP Streamable HTTP Server của bạn",
+        "label": "URL MCP Endpoint"
       },
       "env": {
-        "add": "Thêm một dòng",
-        "desc": "Nhập các biến môi trường cần thiết cho máy chủ MCP của bạn",
-        "duplicateKeyError": "Khóa trường phải là duy nhất",
-        "formValidationFailed": "Xác thực biểu mẫu không thành công, vui lòng kiểm tra định dạng tham số",
+        "add": "Thêm dòng mới",
+        "desc": "Nhập biến môi trường cần thiết cho MCP Server",
+        "duplicateKeyError": "Khóa trường phải duy nhất",
+        "formValidationFailed": "Xác thực biểu mẫu thất bại, vui lòng kiểm tra định dạng tham số",
         "keyRequired": "Khóa trường không được để trống",
-        "label": "Biến môi trường máy chủ MCP",
-        "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
+        "label": "Biến môi trường MCP Server",
+        "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng"
+      },
+      "headers": {
+        "add": "Thêm dòng mới",
+        "desc": "Nhập header yêu cầu",
+        "label": "HTTP Headers"
       },
       "identifier": {
-        "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
-        "invalid": "Chỉ có thể nhập ký tự tiếng Anh, số, và hai ký hiệu - và _",
+        "desc": "Đặt tên cho plugin MCP của bạn, phải dùng ký tự tiếng Anh",
+        "invalid": "Định danh chỉ được chứa chữ cái, số, dấu gạch ngang và gạch dưới",
         "label": "Tên plugin MCP",
         "placeholder": "Ví dụ: my-mcp-plugin",
         "required": "Vui lòng nhập định danh dịch vụ MCP"
       },
       "previewManifest": "Xem trước tệp mô tả plugin",
-      "quickImport": "Nhập khẩu nhanh cấu hình JSON",
+      "quickImport": "Nhập nhanh cấu hình JSON",
       "quickImportError": {
-        "empty": "Nội dung nhập vào không được để trống",
+        "empty": "Nội dung nhập không được để trống",
         "invalidJson": "Định dạng JSON không hợp lệ",
-        "invalidStructure": "Định dạng JSON không hợp lệ"
+        "invalidStructure": "Cấu trúc JSON không hợp lệ"
       },
       "stdioNotSupported": "Môi trường hiện tại không hỗ trợ plugin MCP loại stdio",
       "testConnection": "Kiểm tra kết nối",
-      "testConnectionTip": "Chỉ sau khi kiểm tra kết nối thành công, plugin MCP mới có thể được sử dụng bình thường",
+      "testConnectionTip": "Plugin MCP chỉ có thể sử dụng bình thường khi kiểm tra kết nối thành công",
       "type": {
         "desc": "Chọn phương thức giao tiếp của plugin MCP, phiên bản web chỉ hỗ trợ Streamable HTTP",
-        "httpFeature1": "Tương thích với phiên bản web và desktop",
-        "httpFeature2": "Kết nối với máy chủ MCP từ xa, không cần cài đặt cấu hình thêm",
-        "httpShortDesc": "Giao thức truyền thông dựa trên HTTP theo dòng",
+        "httpFeature1": "Tương thích web và desktop",
+        "httpFeature2": "Kết nối máy chủ MCP từ xa, không cần cài đặt thêm",
+        "httpShortDesc": "Giao thức HTTP dạng luồng",
         "label": "Loại plugin MCP",
-        "stdioFeature1": "Độ trễ truyền thông thấp hơn, phù hợp cho thực thi cục bộ",
-        "stdioFeature2": "Cần cài đặt và chạy máy chủ MCP cục bộ",
-        "stdioNotAvailable": "Chế độ STDIO chỉ khả dụng trên phiên bản desktop",
-        "stdioShortDesc": "Giao thức truyền thông dựa trên đầu vào và đầu ra tiêu chuẩn",
+        "stdioFeature1": "Độ trễ giao tiếp thấp hơn, phù hợp chạy cục bộ",
+        "stdioFeature2": "Cần cài đặt MCP server chạy cục bộ",
+        "stdioNotAvailable": "Chế độ STDIO chỉ có trên bản desktop",
+        "stdioShortDesc": "Giao thức dựa trên nhập xuất chuẩn",
         "title": "Loại plugin MCP"
       },
       "url": {
-        "desc": "Nhập địa chỉ HTTP Streamable của máy chủ MCP của bạn, không hỗ trợ chế độ SSE",
-        "invalid": "Vui lòng nhập địa chỉ URL hợp lệ",
-        "label": "URL Điểm cuối HTTP",
+        "desc": "Nhập địa chỉ MCP Server Streamable HTTP, không hỗ trợ chế độ SSE",
+        "invalid": "Vui lòng nhập URL hợp lệ",
+        "label": "URL Streamable HTTP Endpoint",
         "required": "Vui lòng nhập URL dịch vụ MCP"
       }
     },
     "meta": {
       "author": {
-        "desc": "Tác giả của plugin",
+        "desc": "Tác giả plugin",
         "label": "Tác giả"
       },
       "avatar": {
-        "desc": "Biểu tượng của plugin, có thể sử dụng Emoji hoặc URL",
+        "desc": "Biểu tượng plugin, có thể dùng Emoji hoặc URL",
         "label": "Biểu tượng"
       },
       "description": {
         "desc": "Mô tả plugin",
         "label": "Mô tả",
-        "placeholder": "Tìm kiếm công cụ tìm kiếm để lấy thông tin"
+        "placeholder": "Tìm kiếm thông tin qua công cụ tìm kiếm"
       },
       "formFieldRequired": "Trường này là bắt buộc",
       "homepage": {
-        "desc": "Trang chủ của plugin",
+        "desc": "Trang chủ plugin",
         "label": "Trang chủ"
       },
       "identifier": {
-        "desc": "Định danh duy nhất của plugin, sẽ tự động nhận dạng từ manifest",
-        "errorDuplicate": "Định danh trùng với plugin đã có, vui lòng sửa đổi định danh",
+        "desc": "Định danh duy nhất của plugin, tự động nhận diện từ manifest",
+        "errorDuplicate": "Định danh trùng với plugin đã có, vui lòng đổi tên",
         "label": "Định danh",
-        "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
+        "pattenErrorMessage": "Chỉ được nhập ký tự tiếng Anh, số, dấu - và _"
       },
       "lobe": "Plugin {{appName}}",
       "manifest": {
@@ -153,11 +183,11 @@
       "title": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
-        "placeholder": "Tìm kiếm công cụ tìm kiếm"
+        "placeholder": "Công cụ tìm kiếm"
       }
     },
-    "metaConfig": "Cấu hình thông tin plugin",
-    "modalDesc": "Sau khi thêm plugin tùy chỉnh, có thể sử dụng để xác minh phát triển plugin, cũng có thể sử dụng trực tiếp trong cuộc trò chuyện. Vui lòng tham khảo<1>tài liệu phát triển↗</>",
+    "metaConfig": "Cấu hình thông tin meta plugin",
+    "modalDesc": "Sau khi thêm plugin tùy chỉnh, có thể dùng để kiểm tra phát triển hoặc sử dụng trực tiếp trong hội thoại. Vui lòng tham khảo <1>tài liệu phát triển↗</> để biết thêm chi tiết.",
     "openai": {
       "importUrl": "Nhập từ liên kết URL",
       "schema": "Schema"
@@ -165,44 +195,44 @@
     "preview": {
       "api": {
         "noParams": "Công cụ này không có tham số",
-        "noResults": "Không tìm thấy API nào phù hợp với điều kiện tìm kiếm",
+        "noResults": "Không tìm thấy API phù hợp với điều kiện tìm kiếm",
         "params": "Tham số:",
         "searchPlaceholder": "Tìm kiếm công cụ..."
       },
-      "card": "Xem trước hiệu ứng plugin",
+      "card": "Xem trước hiệu ứng hiển thị plugin",
       "desc": "Xem trước mô tả plugin",
       "empty": {
-        "desc": "Sau khi hoàn thành cấu hình, bạn sẽ có thể xem trước khả năng của các công cụ hỗ trợ plugin tại đây",
+        "desc": "Sau khi cấu hình xong, bạn có thể xem trước khả năng công cụ hỗ trợ tại đây",
         "title": "Bắt đầu xem trước sau khi cấu hình plugin"
       },
       "title": "Xem trước tên plugin"
     },
     "save": "Cài đặt plugin",
-    "saveSuccess": "Lưu cài đặt plugin thành công",
+    "saveSuccess": "Lưu cấu hình plugin thành công",
     "tabs": {
       "manifest": "Danh sách mô tả chức năng (Manifest)",
-      "meta": "Thông tin plugin"
+      "meta": "Thông tin meta plugin"
     },
     "title": {
       "create": "Thêm plugin tùy chỉnh",
       "edit": "Chỉnh sửa plugin tùy chỉnh"
     },
     "type": {
-      "lobe": "Plugin LobeChat",
+      "lobe": "Plugin {{appName}}",
       "openai": "Plugin OpenAI"
     },
     "update": "Cập nhật",
-    "updateSuccess": "Cập nhật cài đặt plugin thành công"
+    "updateSuccess": "Cập nhật cấu hình plugin thành công"
   },
   "error": {
-    "fetchError": "Lỗi khi yêu cầu liên kết manifest, vui lòng đảm bảo tính hợp lệ của liên kết và kiểm tra xem liên kết có cho phép truy cập qua tên miền khác không",
+    "fetchError": "Yêu cầu lấy liên kết manifest thất bại, vui lòng đảm bảo liên kết hợp lệ và cho phép truy cập chéo",
     "installError": "Cài đặt plugin {{name}} thất bại",
-    "manifestInvalid": "Manifest không tuân theo quy tắc, kết quả kiểm tra: \n\n {{error}}",
-    "noManifest": "Tệp mô tả không tồn tại",
-    "openAPIInvalid": "OpenAPI phân tích thất bại, lỗi: \n\n {{error}}",
+    "manifestInvalid": "Manifest không hợp lệ, kết quả kiểm tra: \n\n {{error}}",
+    "noManifest": "Không tìm thấy tệp mô tả",
+    "openAPIInvalid": "Phân tích OpenAPI thất bại, lỗi: \n\n {{error}}",
     "reinstallError": "Làm mới plugin {{name}} thất bại",
     "testConnectionFailed": "Lấy Manifest thất bại: {{error}}",
-    "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
+    "urlError": "Liên kết này không trả về nội dung định dạng JSON, vui lòng đảm bảo liên kết hợp lệ"
   },
   "inspector": {
     "args": "Xem danh sách tham số",
@@ -210,7 +240,7 @@
   },
   "list": {
     "item": {
-      "deprecated.title": "Đã loại bỏ",
+      "deprecated.title": "Đã xóa",
       "local.config": "Cấu hình",
       "local.title": "Tùy chỉnh"
     }
@@ -226,19 +256,124 @@
       "readLocalFile": "Đọc nội dung tệp",
       "renameLocalFile": "Đổi tên",
       "searchLocalFiles": "Tìm kiếm tệp",
-      "writeLocalFile": "Ghi vào tệp"
+      "writeLocalFile": "Ghi tệp"
     },
     "title": "Tệp cục bộ"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Đang kiểm tra môi trường cài đặt...",
+    "COMPLETED": "Hoàn thành cài đặt",
+    "CONFIGURATION_REQUIRED": "Vui lòng hoàn thành cấu hình trước khi tiếp tục cài đặt",
+    "ERROR": "Lỗi cài đặt",
+    "FETCHING_MANIFEST": "Đang lấy tệp mô tả plugin...",
+    "GETTING_SERVER_MANIFEST": "Khởi tạo máy chủ MCP...",
+    "INSTALLING_PLUGIN": "Đang cài đặt plugin...",
+    "configurationDescription": "Plugin MCP này cần cấu hình tham số để hoạt động bình thường, vui lòng điền thông tin cần thiết",
+    "configurationRequired": "Cấu hình tham số plugin",
+    "continueInstall": "Tiếp tục cài đặt",
+    "dependenciesDescription": "Plugin này cần cài đặt các phụ thuộc hệ thống sau để hoạt động, vui lòng làm theo hướng dẫn để cài đặt các phụ thuộc còn thiếu, sau đó nhấn kiểm tra lại để tiếp tục cài đặt.",
+    "dependenciesRequired": "Vui lòng cài đặt các phụ thuộc hệ thống của plugin",
+    "dependencyStatus": {
+      "installed": "Đã cài đặt",
+      "notInstalled": "Chưa cài đặt",
+      "requiredVersion": "Yêu cầu phiên bản: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Tham số",
+      "command": "Lệnh",
+      "connectionParams": "Tham số kết nối",
+      "env": "Biến môi trường",
+      "errorOutput": "Nhật ký lỗi",
+      "exitCode": "Mã thoát",
+      "hideDetails": "Thu gọn chi tiết",
+      "originalError": "Lỗi gốc",
+      "showDetails": "Xem chi tiết"
+    },
+    "errorTypes": {
+      "AUTHORIZATION_ERROR": "Lỗi xác thực",
+      "CONNECTION_FAILED": "Kết nối thất bại",
+      "INITIALIZATION_TIMEOUT": "Khởi tạo quá thời gian",
+      "PROCESS_SPAWN_ERROR": "Khởi động tiến trình thất bại",
+      "UNKNOWN_ERROR": "Lỗi không xác định",
+      "VALIDATION_ERROR": "Xác thực tham số thất bại"
+    },
+    "installError": "Cài đặt plugin MCP thất bại, lý do: {{detail}}",
+    "installMethods": {
+      "manual": "Cài đặt thủ công:",
+      "recommended": "Phương pháp cài đặt được khuyến nghị:"
+    },
+    "recheckDependencies": "Kiểm tra lại",
+    "skipDependencies": "Bỏ qua kiểm tra"
+  },
   "pluginList": "Danh sách plugin",
+  "protocolInstall": {
+    "actions": {
+      "install": "Cài đặt",
+      "installAnyway": "Vẫn cài đặt",
+      "installed": "Đã cài đặt"
+    },
+    "config": {
+      "args": "Tham số",
+      "command": "Lệnh",
+      "env": "Biến môi trường",
+      "headers": "Header yêu cầu",
+      "title": "Thông tin cấu hình",
+      "type": {
+        "http": "Loại: HTTP",
+        "label": "Loại",
+        "stdio": "Loại: Stdio"
+      },
+      "url": "Địa chỉ dịch vụ"
+    },
+    "custom": {
+      "badge": "Plugin tùy chỉnh",
+      "security": {
+        "description": "Plugin này chưa được xác thực chính thức, việc cài đặt có thể tiềm ẩn rủi ro bảo mật! Vui lòng đảm bảo bạn tin tưởng nguồn plugin.",
+        "title": "⚠️ Cảnh báo rủi ro bảo mật"
+      },
+      "title": "Cài đặt plugin tùy chỉnh"
+    },
+    "marketplace": {
+      "title": "Cài đặt plugin bên thứ ba",
+      "trustedBy": "Cung cấp bởi {{name}}",
+      "unverified": {
+        "title": "Plugin bên thứ ba chưa xác thực",
+        "warning": "Plugin này đến từ thị trường bên thứ ba chưa được xác thực, vui lòng xác nhận bạn tin tưởng nguồn trước khi cài đặt."
+      },
+      "verified": "Đã xác thực"
+    },
+    "messages": {
+      "connectionTestFailed": "Kiểm tra kết nối thất bại",
+      "installError": "Cài đặt plugin thất bại, vui lòng thử lại",
+      "installSuccess": "Cài đặt plugin {{name}} thành công!",
+      "manifestError": "Lấy chi tiết plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại",
+      "manifestNotFound": "Không tìm thấy tệp mô tả plugin"
+    },
+    "meta": {
+      "author": "Tác giả",
+      "homepage": "Trang chủ",
+      "identifier": "Định danh",
+      "source": "Nguồn",
+      "version": "Phiên bản"
+    },
+    "official": {
+      "badge": "Plugin chính thức của LobeHub",
+      "description": "Plugin này được phát triển và duy trì bởi LobeHub chính thức, đã qua kiểm tra bảo mật nghiêm ngặt, bạn có thể yên tâm sử dụng.",
+      "loadingMessage": "Đang lấy chi tiết plugin...",
+      "loadingTitle": "Đang tải",
+      "title": "Cài đặt plugin chính thức"
+    },
+    "title": "Cài đặt plugin MCP",
+    "warning": "⚠️ Vui lòng xác nhận bạn tin tưởng nguồn plugin này, plugin độc hại có thể gây nguy hiểm cho hệ thống của bạn."
+  },
   "search": {
     "apiName": {
-      "crawlMultiPages": "Đọc nội dung của nhiều trang",
+      "crawlMultiPages": "Đọc nội dung nhiều trang",
       "crawlSinglePage": "Đọc nội dung trang",
       "search": "Tìm kiếm trang"
     },
     "config": {
-      "addKey": "Thêm khóa",
+      "addKey": "Thêm khóa bí mật",
       "close": "Xóa",
       "confirm": "Đã hoàn thành cấu hình và thử lại"
     },
@@ -247,7 +382,7 @@
       "detail": {
         "preview": "Xem trước",
         "raw": "Văn bản gốc",
-        "tooLong": "Nội dung văn bản quá dài, chỉ giữ lại {{characters}} ký tự đầu tiên trong ngữ cảnh cuộc trò chuyện, phần vượt quá sẽ không được tính vào ngữ cảnh cuộc trò chuyện"
+        "tooLong": "Nội dung văn bản quá dài, ngữ cảnh hội thoại chỉ giữ lại {{characters}} ký tự đầu, phần vượt quá không được tính vào ngữ cảnh."
       },
       "meta": {
         "crawler": "Chế độ thu thập",
@@ -255,44 +390,78 @@
       }
     },
     "searchxng": {
-      "baseURL": "Nhập vào",
-      "description": "Nhập URL của SearchXNG để bắt đầu tìm kiếm trực tuyến",
-      "keyPlaceholder": "Nhập khóa",
+      "baseURL": "Vui lòng nhập",
+      "description": "Nhập địa chỉ SearchXNG để bắt đầu tìm kiếm trực tuyến",
+      "keyPlaceholder": "Vui lòng nhập khóa bí mật",
       "title": "Cấu hình công cụ tìm kiếm SearchXNG",
-      "unconfiguredDesc": "Vui lòng liên hệ với quản trị viên để hoàn thành cấu hình công cụ tìm kiếm SearchXNG, để bắt đầu tìm kiếm trực tuyến",
+      "unconfiguredDesc": "Vui lòng liên hệ quản trị viên để hoàn thành cấu hình SearchXNG, sau đó có thể bắt đầu tìm kiếm trực tuyến",
       "unconfiguredTitle": "Chưa cấu hình công cụ tìm kiếm SearchXNG"
     },
     "title": "Tìm kiếm trực tuyến"
   },
   "setting": "Cài đặt plugin",
   "settings": {
+    "capabilities": {
+      "prompts": "Lời nhắc",
+      "resources": "Tài nguyên",
+      "title": "Khả năng plugin",
+      "tools": "Công cụ"
+    },
+    "configuration": {
+      "title": "Cấu hình plugin"
+    },
+    "connection": {
+      "args": "Tham số khởi động",
+      "command": "Lệnh khởi động",
+      "title": "Thông tin kết nối",
+      "type": "Loại kết nối",
+      "url": "Địa chỉ dịch vụ"
+    },
+    "edit": "Chỉnh sửa",
+    "envConfigDescription": "Các cấu hình này sẽ được truyền dưới dạng biến môi trường khi MCP server khởi động",
+    "httpTypeNotice": "Plugin MCP loại HTTP hiện chưa cần cấu hình biến môi trường",
     "indexUrl": {
       "title": "Chỉ mục thị trường",
-      "tooltip": "Hiện không hỗ trợ chỉnh sửa trực tuyến, vui lòng thiết lập thông qua biến môi trường khi triển khai"
+      "tooltip": "Hiện chưa hỗ trợ chỉnh sửa trực tuyến, vui lòng cấu hình qua biến môi trường khi triển khai"
+    },
+    "messages": {
+      "connectionUpdateFailed": "Cập nhật thông tin kết nối thất bại",
+      "connectionUpdateSuccess": "Cập nhật thông tin kết nối thành công",
+      "envUpdateFailed": "Lưu biến môi trường thất bại",
+      "envUpdateSuccess": "Lưu biến môi trường thành công"
     },
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "rules": {
+      "argsRequired": "Vui lòng nhập tham số khởi động",
+      "commandRequired": "Vui lòng nhập lệnh khởi động",
+      "urlRequired": "Vui lòng nhập địa chỉ dịch vụ"
+    },
+    "saveSettings": "Lưu cài đặt",
     "title": "Cài đặt thị trường plugin"
   },
-  "showInPortal": "Vui lòng xem chi tiết trong khu vực làm việc",
+  "showInPortal": "Vui lòng xem chi tiết trong không gian làm việc",
   "store": {
     "actions": {
-      "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",
+      "cancel": "Hủy cài đặt",
+      "confirmUninstall": "Bạn sắp gỡ cài đặt plugin này, thao tác sẽ xóa cấu hình plugin, vui lòng xác nhận",
       "detail": "Chi tiết",
       "install": "Cài đặt",
       "manifest": "Chỉnh sửa tệp cài đặt",
       "settings": "Cài đặt",
-      "uninstall": "Gỡ bỏ"
+      "uninstall": "Gỡ cài đặt"
     },
     "communityPlugin": "Cộng đồng bên thứ ba",
     "customPlugin": "Tùy chỉnh",
-    "empty": "Hiện chưa có plugin được cài đặt",
+    "empty": "Chưa có plugin đã cài đặt",
+    "emptySelectHint": "Chọn plugin để xem chi tiết",
     "installAllPlugins": "Cài đặt tất cả",
     "networkError": "Lấy cửa hàng plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại",
-    "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",
-    "releasedAt": "Đã phát hành vào {{createdAt}}",
+    "placeholder": "Tìm kiếm tên, mô tả hoặc từ khóa plugin...",
+    "releasedAt": "Phát hành vào {{createdAt}}",
     "tabs": {
-      "all": "Tất cả",
-      "installed": "Đã cài đặt"
+      "installed": "Đã cài đặt",
+      "mcp": "Plugin MCP",
+      "old": "Plugin LobeChat"
     },
     "title": "Cửa hàng plugin"
   },

@@ -2,8 +2,14 @@
   "ai21": {
     "description": "AI21 Labs construit des modèles de base et des systèmes d'intelligence artificielle pour les entreprises, accélérant l'application de l'intelligence artificielle générative en production."
   },
+  "ai302": {
+    "description": "302.AI est une plateforme d'applications d'IA à la demande, offrant l'API d'IA la plus complète du marché ainsi que des applications d'IA en ligne."
+  },
   "ai360": {
     "description": "360 AI est une plateforme de modèles et de services IA lancée par la société 360, offrant divers modèles avancés de traitement du langage naturel, y compris 360GPT2 Pro, 360GPT Pro, 360GPT Turbo et 360GPT Turbo Responsibility 8K. Ces modèles combinent de grands paramètres et des capacités multimodales, largement utilisés dans la génération de texte, la compréhension sémantique, les systèmes de dialogue et la génération de code. Grâce à une stratégie de tarification flexible, 360 AI répond à des besoins variés des utilisateurs, soutenant l'intégration des développeurs et favorisant l'innovation et le développement des applications intelligentes."
+  },
+  "aihubmix": {
+    "description": "AiHubMix offre un accès à divers modèles d'IA via une interface API unifiée."
   },
   "anthropic": {
     "description": "Anthropic est une entreprise axée sur la recherche et le développement en intelligence artificielle, offrant une gamme de modèles linguistiques avancés, tels que Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus et Claude 3 Haiku. Ces modèles atteignent un équilibre idéal entre intelligence, rapidité et coût, adaptés à divers scénarios d'application, allant des charges de travail d'entreprise aux réponses rapides. Claude 3.5 Sonnet, en tant que dernier modèle, a excellé dans plusieurs évaluations tout en maintenant un bon rapport qualité-prix."
@@ -28,6 +34,9 @@
   },
   "deepseek": {
     "description": "DeepSeek est une entreprise spécialisée dans la recherche et l'application des technologies d'intelligence artificielle, dont le dernier modèle, DeepSeek-V2.5, combine des capacités de dialogue général et de traitement de code, réalisant des améliorations significatives dans l'alignement des préférences humaines, les tâches d'écriture et le suivi des instructions."
+  },
+  "fal": {
+    "description": "Plateforme média générative destinée aux développeurs"
   },
   "fireworksai": {
     "description": "Fireworks AI est un fournisseur de services de modèles linguistiques avancés, axé sur les appels de fonction et le traitement multimodal. Son dernier modèle, Firefunction V2, basé sur Llama-3, est optimisé pour les appels de fonction, les dialogues et le suivi des instructions. Le modèle de langage visuel FireLLaVA-13B prend en charge les entrées mixtes d'images et de texte. D'autres modèles notables incluent la série Llama et la série Mixtral, offrant un support efficace pour le suivi et la génération d'instructions multilingues."
@@ -133,6 +142,9 @@
   },
   "upstage": {
     "description": "Upstage se concentre sur le développement de modèles IA pour divers besoins commerciaux, y compris Solar LLM et Document AI, visant à réaliser une intelligence générale artificielle (AGI) pour le travail. Créez des agents de dialogue simples via l'API Chat, et prenez en charge les appels de fonction, la traduction, l'intégration et les applications spécifiques à un domaine."
+  },
+  "v0": {
+    "description": "v0 est un assistant de programmation en binôme. Il vous suffit de décrire vos idées en langage naturel, et il génère le code et l'interface utilisateur (UI) pour votre projet."
   },
   "vertexai": {
     "description": "La série Gemini de Google est son modèle d'IA le plus avancé et polyvalent, développé par Google DeepMind, conçu pour être multimodal, prenant en charge la compréhension et le traitement sans couture de texte, de code, d'images, d'audio et de vidéo. Adapté à divers environnements, des centres de données aux appareils mobiles, il améliore considérablement l'efficacité et l'applicabilité des modèles d'IA."

@@ -24,7 +24,7 @@ describe('NextAuthUserService', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    service = new NextAuthUserService();
+    service = new NextAuthUserService(serverDB);
   });
 
   describe('safeUpdateUser', () => {

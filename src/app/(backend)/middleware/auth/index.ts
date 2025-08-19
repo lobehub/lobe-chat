@@ -1,23 +1,34 @@
 import { AuthObject } from '@clerk/backend';
+import {
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ModelRuntime,
+} from '@lobechat/model-runtime';
+import { ChatErrorType } from '@lobechat/types';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
+import {
+  ClientSecretPayload,
+  LOBE_CHAT_AUTH_HEADER,
+  LOBE_CHAT_OIDC_AUTH_HEADER,
+  OAUTH_AUTHORIZED,
+  enableClerk,
+} from '@/const/auth';
 import { ClerkAuth } from '@/libs/clerk-auth';
-import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/model-runtime';
-import { ChatErrorType } from '@/types/fetch';
+import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getJWTPayload } from '@/utils/server/jwt';
+import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
-type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
+type CreateRuntime = (jwtPayload: ClientSecretPayload) => ModelRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
 
 export type RequestHandler = (
   req: Request,
   options: RequestOptions & {
     createRuntime?: CreateRuntime;
-    jwtPayload: JWTPayload;
+    jwtPayload: ClientSecretPayload;
   },
 ) => Promise<Response>;
 
@@ -29,7 +40,7 @@ export const checkAuth =
       return handler(req, { ...options, jwtPayload: { userId: 'DEV_USER' } });
     }
 
-    let jwtPayload: JWTPayload;
+    let jwtPayload: ClientSecretPayload;
 
     try {
       // get Authorization from header
@@ -48,14 +59,28 @@ export const checkAuth =
         clerkAuth = data.clerkAuth;
       }
 
-      jwtPayload = await getJWTPayload(authorization);
+      jwtPayload = getXorPayload(authorization);
 
-      checkAuthMethod({
-        accessCode: jwtPayload.accessCode,
-        apiKey: jwtPayload.apiKey,
-        clerkAuth,
-        nextAuthAuthorized: oauthAuthorized,
-      });
+      const oidcAuthorization = req.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
+      let isUseOidcAuth = false;
+      if (!!oidcAuthorization) {
+        const oidc = await validateOIDCJWT(oidcAuthorization);
+
+        isUseOidcAuth = true;
+
+        jwtPayload = {
+          ...jwtPayload,
+          userId: oidc.userId,
+        };
+      }
+
+      if (!isUseOidcAuth)
+        checkAuthMethod({
+          accessCode: jwtPayload.accessCode,
+          apiKey: jwtPayload.apiKey,
+          clerkAuth,
+          nextAuthAuthorized: oauthAuthorized,
+        });
     } catch (e) {
       const params = await options.params;
 

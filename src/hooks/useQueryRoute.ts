@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import qs, { type ParsedQuery } from 'query-string';
 import { useMemo } from 'react';
 
@@ -18,7 +18,10 @@ interface GenHrefOptions extends QueryRouteOptions {
 }
 
 const genHref = ({ hash, replace, url, prevQuery = {}, query = {} }: GenHrefOptions): string => {
-  let href = qs.stringifyUrl({ query: replace ? query : { ...prevQuery, ...query }, url });
+  let href = qs.stringifyUrl(
+    { query: replace ? query : { ...prevQuery, ...query }, url },
+    { skipNull: true },
+  );
 
   if (!isOnServerSide && hash) {
     href = [href, hash || location?.hash?.slice(1)].filter(Boolean).join('#');
@@ -34,7 +37,6 @@ export const useQueryRoute = () => {
     () => ({
       push: (url: string, options: QueryRouteOptions = {}) => {
         const prevQuery = qs.parse(window.location.search);
-
         return router.push(genHref({ prevQuery, url, ...options }));
       },
       replace: (url: string, options: QueryRouteOptions = {}) => {

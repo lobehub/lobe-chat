@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '@/database/models/__tests__/_util';

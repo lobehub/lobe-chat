@@ -1,4 +1,4 @@
-import { and, eq, inArray, lt } from 'drizzle-orm/expressions';
+import { and, eq, inArray, lt } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -82,7 +82,7 @@ export class AsyncTaskModel {
         .set({
           error: new AsyncTaskError(
             AsyncTaskErrorType.Timeout,
-            'chunking task is timeout, please try again',
+            'task is timeout, please try again',
           ),
           status: AsyncTaskStatus.Error,
         })

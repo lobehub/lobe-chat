@@ -2,8 +2,14 @@
   "ai21": {
     "description": "AI21 Labs entwickelt Basis-Modelle und KI-Systeme für Unternehmen und beschleunigt die Anwendung generativer KI in der Produktion."
   },
+  "ai302": {
+    "description": "302.AI ist eine On-Demand-KI-Anwendungsplattform, die die umfassendsten KI-APIs und KI-Online-Anwendungen auf dem Markt bietet"
+  },
   "ai360": {
     "description": "360 AI ist die von der 360 Company eingeführte Plattform für KI-Modelle und -Dienste, die eine Vielzahl fortschrittlicher Modelle zur Verarbeitung natürlicher Sprache anbietet, darunter 360GPT2 Pro, 360GPT Pro, 360GPT Turbo und 360GPT Turbo Responsibility 8K. Diese Modelle kombinieren große Parameter mit multimodalen Fähigkeiten und finden breite Anwendung in den Bereichen Textgenerierung, semantisches Verständnis, Dialogsysteme und Codegenerierung. Durch flexible Preisstrategien erfüllt 360 AI die vielfältigen Bedürfnisse der Nutzer, unterstützt Entwickler bei der Integration und fördert die Innovation und Entwicklung intelligenter Anwendungen."
+  },
+  "aihubmix": {
+    "description": "AiHubMix bietet über eine einheitliche API-Schnittstelle Zugriff auf verschiedene KI-Modelle."
   },
   "anthropic": {
     "description": "Anthropic ist ein Unternehmen, das sich auf Forschung und Entwicklung im Bereich der künstlichen Intelligenz spezialisiert hat und eine Reihe fortschrittlicher Sprachmodelle anbietet, darunter Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus und Claude 3 Haiku. Diese Modelle erreichen ein ideales Gleichgewicht zwischen Intelligenz, Geschwindigkeit und Kosten und sind für eine Vielzahl von Anwendungsszenarien geeignet, von unternehmensweiten Arbeitslasten bis hin zu schnellen Reaktionen. Claude 3.5 Sonnet, als neuestes Modell, hat in mehreren Bewertungen hervorragend abgeschnitten und bietet gleichzeitig ein hohes Preis-Leistungs-Verhältnis."
@@ -28,6 +34,9 @@
   },
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
+  },
+  "fal": {
+    "description": "Generative Medienplattform für Entwickler"
   },
   "fireworksai": {
     "description": "Fireworks AI ist ein führender Anbieter von fortschrittlichen Sprachmodellen, der sich auf Funktionsaufrufe und multimodale Verarbeitung spezialisiert hat. Ihr neuestes Modell, Firefunction V2, basiert auf Llama-3 und ist für Funktionsaufrufe, Dialoge und Befehlsbefolgung optimiert. Das visuelle Sprachmodell FireLLaVA-13B unterstützt gemischte Eingaben von Bildern und Text. Weitere bemerkenswerte Modelle sind die Llama-Serie und die Mixtral-Serie, die effiziente mehrsprachige Befehlsbefolgung und Generierungsunterstützung bieten."
@@ -133,6 +142,9 @@
   },
   "upstage": {
     "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, einschließlich Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) zu erreichen. Es ermöglicht die Erstellung einfacher Dialogagenten über die Chat-API und unterstützt Funktionsaufrufe, Übersetzungen, Einbettungen und spezifische Anwendungsbereiche."
+  },
+  "v0": {
+    "description": "v0 ist ein Pair-Programming-Assistent, bei dem Sie Ihre Ideen einfach in natürlicher Sprache beschreiben können, und er generiert Code und Benutzeroberflächen (UI) für Ihr Projekt."
   },
   "vertexai": {
     "description": "Die Gemini-Serie von Google ist das fortschrittlichste, universelle KI-Modell, das von Google DeepMind entwickelt wurde. Es ist speziell für multimodale Anwendungen konzipiert und unterstützt das nahtlose Verständnis und die Verarbeitung von Text, Code, Bildern, Audio und Video. Es eignet sich für eine Vielzahl von Umgebungen, von Rechenzentren bis hin zu mobilen Geräten, und verbessert erheblich die Effizienz und Anwendbarkeit von KI-Modellen."

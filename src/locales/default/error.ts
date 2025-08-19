@@ -120,6 +120,18 @@ export default {
     PermissionDenied: '很抱歉，你没有权限访问该服务，请检查你的密钥是否有访问权限',
     InvalidProviderAPIKey: '{{provider}} API Key 不正确或为空，请检查 {{provider}} API Key 后重试',
     ProviderBizError: '请求 {{provider}} 服务出错，请根据以下信息排查或重试',
+
+    GoogleAIBlockReason: {
+      BLOCKLIST: '您的内容包含被禁止的词汇。请检查并修改您的输入内容后重试。',
+      IMAGE_SAFETY: '生成的图像内容因安全原因被阻止。请尝试修改您的图像生成请求。',
+      LANGUAGE: '您使用的语言暂不被支持。请尝试使用英语或其他支持的语言重新提问。',
+      OTHER: '内容因未知原因被阻止。请尝试重新表述您的请求。',
+      PROHIBITED_CONTENT: '您的请求可能包含违禁内容。请调整您的请求，确保内容符合使用规范。',
+      RECITATION: '您的内容因可能涉及版权问题而被阻止。请尝试使用原创内容或重新表述您的请求。',
+      SAFETY: '您的内容因安全策略而被阻止。请尝试调整您的请求内容，避免包含可能的有害或不当内容。',
+      SPII: '您的内容可能包含敏感个人身份信息。为保护隐私，请移除相关敏感信息后重试。',
+      default: '内容被阻止：{{blockReason}}。请调整您的请求内容后重试。',
+    },
     /**
      * @deprecated
      */
@@ -151,6 +163,7 @@ export default {
   stt: {
     responseError: '服务请求失败，请检查配置或重试',
   },
+  testConnectionFailed: '测试连接失败：{{error}}',
   tts: {
     responseError: '服务请求失败，请检查配置或重试',
   },
@@ -158,6 +171,7 @@ export default {
     addProxyUrl: '添加 OpenAI 代理地址（可选）',
     apiKey: {
       description: '输入你的 {{name}} API Key 即可开始会话',
+      imageGenerationDescription: '输入你的 {{name}} API Key 即可开始生成',
       title: '使用自定义 {{name}} API Key',
     },
     closeMessage: '关闭提示',

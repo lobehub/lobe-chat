@@ -1,3 +1,4 @@
+import { isString } from 'lodash-es';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
@@ -21,7 +22,7 @@ export const AUTHOR_LIST = {
     avatar: 'https://avatars.githubusercontent.com/u/17870709?v=4',
     desc: 'Founder, Design Engineer',
     name: 'CanisMinor',
-    url: 'https://github.com/arvinxx',
+    url: 'https://github.com/canisminor1990',
   },
   lobehub: {
     avatar: 'https://avatars.githubusercontent.com/u/131470832?v=4',
@@ -58,7 +59,7 @@ export class Ld {
     url: string;
     webpage?: {
       enable?: boolean;
-      search?: string;
+      search?: boolean | string;
     };
   }) {
     return {
@@ -141,7 +142,7 @@ export class Ld {
     description: string;
     image?: string;
     locale?: Locales;
-    search?: string;
+    search?: boolean | string;
     title: string;
     url: string;
   }) {
@@ -181,7 +182,7 @@ export class Ld {
         'query-input': 'required name=search_term_string',
         'target': qs.stringifyUrl({
           query: { q: '{search_term_string}' },
-          url: getCanonicalUrl(search),
+          url: isString(search) ? getCanonicalUrl(search) : fixedUrl,
         }),
       };
 

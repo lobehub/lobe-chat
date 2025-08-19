@@ -7,9 +7,23 @@
     "desc": "Clear the messages and uploaded files from the current conversation",
     "title": "Clear Conversation Messages"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Open the application settings page",
+      "title": "Application Settings"
+    },
+    "showApp": {
+      "desc": "Toggle the main window visibility with a global shortcut",
+      "title": "Show/Hide Main Window"
+    }
+  },
   "editMessage": {
     "desc": "Enter edit mode by holding Alt and double-clicking the message",
     "title": "Edit Message"
+  },
+  "navigateToChat": {
+    "desc": "Switch to the chat tab and start a casual conversation",
+    "title": "Switch to Default Chat"
   },
   "openChatSettings": {
     "desc": "View and modify the settings for the current conversation",
@@ -18,10 +32,6 @@
   "openHotkeyHelper": {
     "desc": "View instructions for all keyboard shortcuts",
     "title": "Open Hotkey Help"
-  },
-  "openSettings": {
-    "desc": "Open the application settings page",
-    "title": "Application Settings"
   },
   "regenerateMessage": {
     "desc": "Regenerate the last message",

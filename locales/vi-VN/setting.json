@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Xung đột với phím tắt hiện có",
+    "errors": {
+      "CONFLICT": "Phím tắt bị trùng: Phím tắt này đã được chức năng khác sử dụng",
+      "INVALID_FORMAT": "Định dạng phím tắt không hợp lệ: Vui lòng sử dụng định dạng đúng (ví dụ CommandOrControl+E)",
+      "INVALID_ID": "ID phím tắt không hợp lệ",
+      "NO_MODIFIER": "Phím tắt phải bao gồm phím điều khiển (Ctrl, Alt, Shift, v.v.)",
+      "SYSTEM_OCCUPIED": "Phím tắt đã bị hệ thống hoặc ứng dụng khác chiếm dụng",
+      "UNKNOWN": "Cập nhật thất bại: Lỗi không xác định"
+    },
     "group": {
       "conversation": "Cuộc trò chuyện",
+      "desktop": "Phiên bản máy tính để bàn",
       "essential": "Cơ bản"
     },
     "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
     "record": "Nhấn phím để ghi lại phím tắt",
     "reset": "Đặt lại thành phím tắt mặc định",
-    "title": "Phím tắt"
+    "title": "Phím tắt",
+    "updateError": "Cập nhật phím tắt thất bại: Lỗi mạng hoặc hệ thống",
+    "updateSuccess": "Cập nhật phím tắt thành công"
   },
   "llm": {
     "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
@@ -129,6 +140,7 @@
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
+    "addMCPPlugin": "Thêm plugin MCP",
     "addTooltip": "Thêm tiện ích",
     "clearDeprecated": "Xóa tiện ích không còn hỗ trợ",
     "empty": "Hiện chưa có tiện ích nào được cài đặt, hãy truy cập <1>cửa hàng tiện ích</1> để khám phá",
@@ -171,9 +183,20 @@
     "title": "Thông tin trợ lý"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Nhanh nhẹn",
+      "desc": "Chọn tốc độ hoạt ảnh phản hồi của ứng dụng",
+      "disabled": "Tắt",
+      "elegant": "Thanh lịch",
+      "title": "Hoạt ảnh phản hồi"
+    },
     "neutralColor": {
       "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
       "title": "Màu trung tính"
+    },
+    "noAnimation": {
+      "desc": "Vô hiệu hóa tất cả hiệu ứng hoạt ảnh trong ứng dụng",
+      "title": "Chế độ không hoạt ảnh"
     },
     "preview": {
       "title": "Bảng màu"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
-      "placeholder": "Mẫu xử lý trước {{input_template}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
     "submit": "Cập nhật sở thích trò chuyện",
@@ -483,6 +506,11 @@
       "placeholder": "Nhập từ gợi ý tùy chỉnh",
       "title": "Từ gợi ý tùy chỉnh"
     },
+    "generationTopic": {
+      "label": "Mô hình đặt tên chủ đề vẽ AI",
+      "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề cho vẽ AI",
+      "title": "Tự động đặt tên chủ đề vẽ AI"
+    },
     "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {
       "label": "Mô hình lịch sử cuộc trò chuyện",
@@ -519,6 +547,7 @@
     "hotkey": "Phím tắt",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
+    "proxy": "Mạng proxy",
     "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",

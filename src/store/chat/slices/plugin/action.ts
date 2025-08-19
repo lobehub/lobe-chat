@@ -1,8 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatErrorType } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -14,17 +14,18 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import { ChatErrorType } from '@/types/fetch';
 import {
   ChatMessage,
   ChatMessageError,
   ChatToolPayload,
   CreateMessageParams,
   MessageToolCall,
+  ToolsCallingContext,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
+import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 import { chatSelectors } from '../message/selectors';
 import { threadSelectors } from '../thread/selectors';
@@ -79,6 +80,7 @@ export interface ChatPluginAction {
   ) => AbortController | undefined;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
   internal_updatePluginError: (id: string, error: ChatMessageError) => Promise<void>;
+  internal_constructToolsCallingContext: (id: string) => ToolsCallingContext | undefined;
 }
 
 export const chatPlugin: StateCreator<
@@ -281,6 +283,8 @@ export const chatPlugin: StateCreator<
 
     await Promise.all(messagePools);
 
+    await get().internal_toggleMessageInToolsCalling(false, assistantId);
+
     // only default type tool calls should trigger AI message
     if (!shouldCreateMessage) return;
 
@@ -453,8 +457,12 @@ export const chatPlugin: StateCreator<
     }
   },
   invokeMCPTypePlugin: async (id, payload) => {
-    const { internal_updateMessageContent, refreshMessages, internal_togglePluginApiCalling } =
-      get();
+    const {
+      internal_updateMessageContent,
+      refreshMessages,
+      internal_togglePluginApiCalling,
+      internal_constructToolsCallingContext,
+    } = get();
     let data: string = '';
 
     try {
@@ -464,9 +472,12 @@ export const chatPlugin: StateCreator<
         n('fetchPlugin/start') as string,
       );
 
+      const context = internal_constructToolsCallingContext(id);
       const result = await mcpService.invokeMcpToolCall(payload, {
         signal: abortController?.signal,
+        topicId: context?.topicId,
       });
+
       if (!!result) data = result;
     } catch (error) {
       console.log(error);
@@ -514,7 +525,7 @@ export const chatPlugin: StateCreator<
           const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
           const manifest = pluginSelectors.getToolManifestById(identifier)(useToolStore.getState());
 
-          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+          const api = manifest?.api.find((api) => genToolCallShortMD5Hash(api.name) === md5);
           if (api) {
             payload.apiName = api.name;
           }
@@ -530,5 +541,14 @@ export const chatPlugin: StateCreator<
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { error });
     await refreshMessages();
+  },
+
+  internal_constructToolsCallingContext: (id: string) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    return {
+      topicId: message.topicId,
+    };
   },
 });

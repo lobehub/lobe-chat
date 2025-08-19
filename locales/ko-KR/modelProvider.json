@@ -66,6 +66,7 @@
       "customRegion": "사용자 정의 서비스 지역",
       "customSessionToken": "사용자 정의 세션 토큰",
       "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey를 입력하면 생성이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "귀하의 비밀 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
       "apiKey": {
         "desc": "{{name}} API 키를 입력하세요",
+        "descWithUrl": "{{name}} API 키를 입력하세요. <3>여기를 클릭하여 받기</3>",
         "placeholder": "{{name}} API 키",
         "title": "API 키"
       },
@@ -304,6 +306,7 @@
         "latestTime": "마지막 업데이트 시간: {{time}}",
         "noLatestTime": "아직 목록을 가져오지 않았습니다."
       },
+      "noModelsInCategory": "이 카테고리에는 활성화된 모델이 없습니다",
       "resetAll": {
         "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 현재 모델 목록은 기본 상태로 돌아갑니다.",
         "success": "초기화 성공",
@@ -314,7 +317,15 @@
       "title": "모델 목록",
       "total": "사용 가능한 모델 총 {{count}} 개"
     },
-    "searchNotFound": "검색 결과를 찾을 수 없습니다"
+    "searchNotFound": "검색 결과를 찾을 수 없습니다",
+    "tabs": {
+      "all": "전체",
+      "chat": "대화",
+      "embedding": "임베딩",
+      "image": "이미지",
+      "stt": "음성 인식",
+      "tts": "음성 합성"
+    }
   },
   "sortModal": {
     "success": "정렬 업데이트 성공",

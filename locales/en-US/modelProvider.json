@@ -66,6 +66,7 @@
       "customRegion": "Custom Service Region",
       "customSessionToken": "Custom Session Token",
       "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS AccessKeyId / SecretAccessKey to start generating. The application will not store your authentication credentials.",
       "title": "Use Custom Bedrock Authentication Information"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Your key and proxy URL will be encrypted using <1>AES-GCM</1> encryption algorithm",
       "apiKey": {
         "desc": "Please enter your {{name}} API Key",
+        "descWithUrl": "Please enter your {{name}} API Key. <3>Click here to get it</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Last updated: {{time}}",
         "noLatestTime": "Model list not yet fetched"
       },
+      "noModelsInCategory": "No enabled models in this category",
       "resetAll": {
         "conform": "Are you sure you want to reset all modifications to the current model? After resetting, the current model list will return to its default state.",
         "success": "Reset successful",
@@ -314,7 +317,15 @@
       "title": "Model List",
       "total": "{{count}} models available"
     },
-    "searchNotFound": "No search results found"
+    "searchNotFound": "No search results found",
+    "tabs": {
+      "all": "All",
+      "chat": "Chat",
+      "embedding": "Embedding",
+      "image": "Image",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Sort update successful",

@@ -1,120 +1,150 @@
 {
-  "confirm": "確認",
+  "confirm": "確定",
   "debug": {
-    "arguments": "引数",
+    "arguments": "呼び出しパラメータ",
     "function_call": "関数呼び出し",
     "off": "デバッグをオフにする",
-    "on": "プラグイン呼び出し情報を表示する",
-    "payload": "ペイロード",
-    "pluginState": "プラグインの状態",
-    "response": "レスポンス",
-    "title": "プラグインの詳細",
-    "tool_call": "ツール呼び出し"
+    "on": "プラグイン呼び出し情報を表示",
+    "payload": "プラグインペイロード",
+    "pluginState": "プラグイン状態",
+    "response": "返却結果",
+    "title": "プラグイン詳細",
+    "tool_call": "ツール呼び出しリクエスト"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "詳細は編集ページでご確認ください",
+      "editBtn": "今すぐ編集",
+      "title": "これはカスタムプラグインです"
+    },
+    "emptyState": {
+      "description": "プラグインの機能と設定オプションを確認するには、まずこのプラグインをインストールしてください",
+      "title": "インストール後にプラグイン詳細を表示"
+    },
     "info": {
-      "description": "API 説明",
-      "name": "API 名"
+      "description": "APIの説明",
+      "name": "API名"
     },
     "tabs": {
       "info": "プラグイン機能",
       "manifest": "インストールファイル",
       "settings": "設定"
     },
-    "title": "プラグインの詳細"
+    "title": "プラグイン詳細"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "このローカルプラグインを削除しますか？削除後は元に戻せません。",
+    "confirmDeleteDevPlugin": "このローカルプラグインを削除すると復元できません。本当に削除しますか？",
     "customParams": {
       "useProxy": {
-        "label": "プロキシを使用する（クロスドメインエラーが発生した場合、このオプションを有効にして再インストールしてください）"
+        "label": "プロキシ経由でインストール（クロスオリジンエラーが発生した場合はこのオプションを有効にして再インストールをお試しください）"
       }
     },
     "deleteSuccess": "プラグインが正常に削除されました",
     "manifest": {
       "identifier": {
-        "desc": "プラグインの一意の識別子",
+        "desc": "プラグインの一意識別子",
         "label": "識別子"
       },
       "mode": {
-        "mcp": "MCP プラグイン",
+        "mcp": "MCPプラグイン",
         "mcpExp": "実験的",
         "url": "オンラインリンク"
       },
       "name": {
-        "desc": "プラグインのタイトル",
+        "desc": "プラグインタイトル",
         "label": "タイトル",
         "placeholder": "検索エンジン"
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "詳細設定"
+      },
       "args": {
-        "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
+        "desc": "コマンド実行に渡すパラメータリスト。通常はここにMCPサーバー名や起動スクリプトのパスを入力します",
         "label": "コマンドパラメータ",
-        "placeholder": "例：--port 8080 --debug",
+        "placeholder": "例：mcp-hello-world",
         "required": "起動パラメータを入力してください"
+      },
+      "auth": {
+        "bear": "APIキー",
+        "desc": "MCPサーバーの認証方式を選択してください",
+        "label": "認証タイプ",
+        "none": "認証不要",
+        "placeholder": "認証タイプを選択してください",
+        "token": {
+          "desc": "APIキーまたはBearerトークンを入力してください",
+          "label": "APIキー",
+          "placeholder": "sk-xxxxx",
+          "required": "認証トークンを入力してください"
+        }
       },
       "avatar": {
         "label": "プラグインアイコン"
       },
       "command": {
-        "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
+        "desc": "MCP STDIOサーバーを起動する実行可能ファイルまたはスクリプト",
         "label": "コマンド",
-        "placeholder": "例：python main.py または /path/to/executable",
+        "placeholder": "例：npx / uv / docker など",
         "required": "起動コマンドを入力してください"
       },
       "desc": {
-        "desc": "プラグインの説明を追加",
-        "label": "プラグインの説明",
-        "placeholder": "このプラグインの使用方法やシーンなどの情報を補足してください"
+        "desc": "プラグインの説明を追加してください",
+        "label": "プラグイン説明",
+        "placeholder": "このプラグインの使用方法や利用シーンなどを補足してください"
       },
       "endpoint": {
-        "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
-        "label": "MCP エンドポイント URL"
+        "desc": "MCP Streamable HTTPサーバーのアドレスを入力してください",
+        "label": "MCPエンドポイントURL"
       },
       "env": {
         "add": "行を追加",
         "desc": "MCPサーバーに必要な環境変数を入力してください",
         "duplicateKeyError": "フィールドキーは一意でなければなりません",
-        "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください",
+        "formValidationFailed": "フォーム検証に失敗しました。パラメータ形式を確認してください",
         "keyRequired": "フィールドキーは空にできません",
         "label": "MCPサーバー環境変数",
-        "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
+        "stringifyError": "パラメータをシリアライズできません。形式を確認してください"
+      },
+      "headers": {
+        "add": "行を追加",
+        "desc": "リクエストヘッダーを入力してください",
+        "label": "HTTPヘッダー"
       },
       "identifier": {
-        "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
-        "invalid": "英字、数字、- および _ のみを入力できます",
-        "label": "MCP プラグイン名",
+        "desc": "MCPプラグインの名前を英字で指定してください",
+        "invalid": "識別子は英数字、ハイフン、アンダースコアのみ使用可能です",
+        "label": "MCPプラグイン名",
         "placeholder": "例：my-mcp-plugin",
-        "required": "MCP サービス識別子を入力してください"
+        "required": "MCPサービス識別子を入力してください"
       },
-      "previewManifest": "プラグインの説明ファイルをプレビュー",
-      "quickImport": "JSON 設定を迅速にインポート",
+      "previewManifest": "プラグイン記述ファイルをプレビュー",
+      "quickImport": "JSON設定をクイックインポート",
       "quickImportError": {
         "empty": "入力内容は空にできません",
-        "invalidJson": "無効な JSON 形式です",
-        "invalidStructure": "JSON 形式が無効です"
+        "invalidJson": "無効なJSON形式です",
+        "invalidStructure": "JSON形式が無効です"
       },
-      "stdioNotSupported": "現在の環境では stdio タイプの MCP プラグインはサポートされていません",
-      "testConnection": "接続をテスト",
-      "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
+      "stdioNotSupported": "現在の環境はstdioタイプのMCPプラグインをサポートしていません",
+      "testConnection": "接続テスト",
+      "testConnectionTip": "接続テストが成功して初めてMCPプラグインを正常に使用できます",
       "type": {
-        "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
-        "httpFeature1": "ウェブ版とデスクトップ版の互換性",
-        "httpFeature2": "追加のインストールや設定なしでリモートMCPサーバーに接続",
-        "httpShortDesc": "ストリーミングHTTPに基づく通信プロトコル",
-        "label": "MCP プラグインタイプ",
-        "stdioFeature1": "通信遅延が少なく、ローカル実行に適している",
-        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要がある",
-        "stdioNotAvailable": "STDIOモードはデスクトップ版でのみ利用可能",
-        "stdioShortDesc": "標準入力出力に基づく通信プロトコル",
+        "desc": "MCPプラグインの通信方式を選択してください。ウェブ版はStreamable HTTPのみ対応",
+        "httpFeature1": "ウェブ版とデスクトップ版の両方に対応",
+        "httpFeature2": "リモートMCPサーバーに接続、追加インストール不要",
+        "httpShortDesc": "ストリームHTTPベースの通信プロトコル",
+        "label": "MCPプラグインタイプ",
+        "stdioFeature1": "通信遅延が低く、ローカル実行に適しています",
+        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要があります",
+        "stdioNotAvailable": "STDIOモードはデスクトップ版のみ利用可能",
+        "stdioShortDesc": "標準入出力ベースの通信プロトコル",
         "title": "MCPプラグインタイプ"
       },
       "url": {
-        "desc": "あなたのMCPサーバーのストリーミングHTTPアドレスを入力してください。SSEモードはサポートされていません。",
-        "invalid": "有効な URL アドレスを入力してください",
-        "label": "HTTP エンドポイント URL",
-        "required": "MCP サービスの URL を入力してください"
+        "desc": "MCPサーバーのStreamable HTTPアドレスを入力してください。SSEモードはサポートしていません",
+        "invalid": "有効なURLを入力してください",
+        "label": "Streamable HTTPエンドポイントURL",
+        "required": "MCPサービスURLを入力してください"
       }
     },
     "meta": {
@@ -123,13 +153,13 @@
         "label": "作者"
       },
       "avatar": {
-        "desc": "プラグインのアイコン、絵文字やURLを使用できます",
+        "desc": "プラグインのアイコン。絵文字またはURLを使用可能",
         "label": "アイコン"
       },
       "description": {
-        "desc": "プラグインの説明",
+        "desc": "プラグイン説明",
         "label": "説明",
-        "placeholder": "検索エンジンで情報を取得します"
+        "placeholder": "検索エンジンで情報を取得"
       },
       "formFieldRequired": "このフィールドは必須です",
       "homepage": {
@@ -137,27 +167,27 @@
         "label": "ホームページ"
       },
       "identifier": {
-        "desc": "プラグインの一意の識別子、マニフェストから自動的に識別されます",
+        "desc": "プラグインの一意識別子。manifestから自動認識されます",
         "errorDuplicate": "識別子が既存のプラグインと重複しています。識別子を変更してください",
         "label": "識別子",
-        "pattenErrorMessage": "英数字、-、_ のみ入力できます"
+        "pattenErrorMessage": "英数字、ハイフン、アンダースコアのみ入力可能です"
       },
       "lobe": "{{appName}} プラグイン",
       "manifest": {
-        "desc": "{{appName}}はこのリンクを通じてプラグインをインストールします",
+        "desc": "{{appName}}はこのリンクからプラグインをインストールします",
         "label": "プラグイン記述ファイル (Manifest) URL",
-        "preview": "マニフェストのプレビュー",
+        "preview": "Manifestをプレビュー",
         "refresh": "更新"
       },
-      "openai": "OpenAI プラグイン",
+      "openai": "OpenAIプラグイン",
       "title": {
-        "desc": "プラグインのタイトル",
+        "desc": "プラグインタイトル",
         "label": "タイトル",
         "placeholder": "検索エンジン"
       }
     },
-    "metaConfig": "プラグインのメタ情報の設定",
-    "modalDesc": "カスタムプラグインを追加すると、プラグインの開発検証に使用したり、セッション中に直接使用したりできます。プラグインの開発については、<1>開発ドキュメント↗</>を参照してください",
+    "metaConfig": "プラグインメタ情報設定",
+    "modalDesc": "カスタムプラグインを追加すると、プラグイン開発の検証や会話内での直接利用が可能です。プラグイン開発は<1>開発ドキュメント↗</>を参照してください。",
     "openai": {
       "importUrl": "URLリンクからインポート",
       "schema": "スキーマ"
@@ -165,48 +195,48 @@
     "preview": {
       "api": {
         "noParams": "このツールにはパラメータがありません",
-        "noResults": "検索条件に一致する API が見つかりませんでした",
+        "noResults": "検索条件に合うAPIが見つかりません",
         "params": "パラメータ:",
         "searchPlaceholder": "ツールを検索..."
       },
-      "card": "プラグインのプレビュー表示",
-      "desc": "プラグインの説明のプレビュー",
+      "card": "プラグイン表示プレビュー",
+      "desc": "プラグイン説明プレビュー",
       "empty": {
-        "desc": "設定が完了すると、ここでプラグインがサポートするツールの機能をプレビューできます",
-        "title": "プラグインを設定した後にプレビューを開始"
+        "desc": "設定完了後、ここでプラグインがサポートするツール機能をプレビューできます",
+        "title": "プラグイン設定後にプレビュー開始"
       },
-      "title": "プラグイン名のプレビュー"
+      "title": "プラグイン名プレビュー"
     },
-    "save": "プラグインを保存",
-    "saveSuccess": "プラグインの設定が正常に保存されました",
+    "save": "プラグインをインストール",
+    "saveSuccess": "プラグイン設定が正常に保存されました",
     "tabs": {
-      "manifest": "機能のマニフェスト",
-      "meta": "プラグインのメタ情報"
+      "manifest": "機能記述リスト (Manifest)",
+      "meta": "プラグインメタ情報"
     },
     "title": {
       "create": "カスタムプラグインを追加",
       "edit": "カスタムプラグインを編集"
     },
     "type": {
-      "lobe": "LobeChatプラグイン",
+      "lobe": "{{appName}} プラグイン",
       "openai": "OpenAIプラグイン"
     },
     "update": "更新",
-    "updateSuccess": "プラグインの設定が正常に更新されました"
+    "updateSuccess": "プラグイン設定が正常に更新されました"
   },
   "error": {
-    "fetchError": "このmanifestリンクのリクエストに失敗しました。リンクが有効であることを確認し、リンクがクロスドメインアクセスを許可しているかを確認してください",
+    "fetchError": "manifestリンクの取得に失敗しました。リンクの有効性とクロスオリジンアクセス許可を確認してください",
     "installError": "プラグイン {{name}} のインストールに失敗しました",
-    "manifestInvalid": "manifestが仕様に準拠していません。検証結果: \n\n {{error}}",
-    "noManifest": "マニフェストが存在しません",
-    "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー: \n\n {{error}}",
-    "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
-    "testConnectionFailed": "マニフェストの取得に失敗しました: {{error}}",
-    "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
+    "manifestInvalid": "manifestが規格に準拠していません。検証結果:\n\n {{error}}",
+    "noManifest": "記述ファイルが存在しません",
+    "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー:\n\n {{error}}",
+    "reinstallError": "プラグイン {{name}} の更新に失敗しました",
+    "testConnectionFailed": "Manifestの取得に失敗しました: {{error}}",
+    "urlError": "リンクがJSON形式の内容を返しません。リンクが有効であることを確認してください"
   },
   "inspector": {
-    "args": "パラメーターリストを表示",
-    "pluginRender": "プラグインインターフェースを表示"
+    "args": "パラメータリストを表示",
+    "pluginRender": "プラグイン画面を表示"
   },
   "list": {
     "item": {
@@ -216,86 +246,225 @@
     }
   },
   "loading": {
-    "content": "プラグインを呼び出しています...",
-    "plugin": "プラグインの実行中..."
+    "content": "プラグインを呼び出し中...",
+    "plugin": "プラグイン実行中..."
   },
   "localSystem": {
     "apiName": {
-      "listLocalFiles": "ファイルリストを表示",
+      "listLocalFiles": "ファイル一覧を表示",
       "moveLocalFiles": "ファイルを移動",
-      "readLocalFile": "ファイル内容を読み取る",
-      "renameLocalFile": "名前を変更",
+      "readLocalFile": "ファイル内容を読み込み",
+      "renameLocalFile": "ファイル名を変更",
       "searchLocalFiles": "ファイルを検索",
-      "writeLocalFile": "ファイルに書き込む"
+      "writeLocalFile": "ファイルに書き込み"
     },
     "title": "ローカルファイル"
   },
-  "pluginList": "プラグインリスト",
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "インストール環境を確認中...",
+    "COMPLETED": "インストール完了",
+    "CONFIGURATION_REQUIRED": "関連設定を完了してからインストールを続行してください",
+    "ERROR": "インストールエラー",
+    "FETCHING_MANIFEST": "プラグイン記述ファイルを取得中...",
+    "GETTING_SERVER_MANIFEST": "MCPサーバーを初期化中...",
+    "INSTALLING_PLUGIN": "プラグインをインストール中...",
+    "configurationDescription": "このMCPプラグインは正常に動作するために設定パラメータが必要です。必要な設定情報を入力してください",
+    "configurationRequired": "プラグインパラメータの設定",
+    "continueInstall": "インストールを続行",
+    "dependenciesDescription": "このプラグインは正常に動作するために以下のシステム依存関係のインストールが必要です。指示に従って不足している依存関係をインストールし、再チェックをクリックしてインストールを続行してください。",
+    "dependenciesRequired": "プラグインのシステム依存関係をインストールしてください",
+    "dependencyStatus": {
+      "installed": "インストール済み",
+      "notInstalled": "未インストール",
+      "requiredVersion": "必要バージョン: {{version}}"
+    },
+    "errorDetails": {
+      "args": "パラメータ",
+      "command": "コマンド",
+      "connectionParams": "接続パラメータ",
+      "env": "環境変数",
+      "errorOutput": "エラーログ",
+      "exitCode": "終了コード",
+      "hideDetails": "詳細を閉じる",
+      "originalError": "元のエラー",
+      "showDetails": "詳細を表示"
+    },
+    "errorTypes": {
+      "AUTHORIZATION_ERROR": "認証エラー",
+      "CONNECTION_FAILED": "接続失敗",
+      "INITIALIZATION_TIMEOUT": "初期化タイムアウト",
+      "PROCESS_SPAWN_ERROR": "プロセス起動失敗",
+      "UNKNOWN_ERROR": "不明なエラー",
+      "VALIDATION_ERROR": "パラメータ検証失敗"
+    },
+    "installError": "MCPプラグインのインストールに失敗しました。原因：{{detail}}",
+    "installMethods": {
+      "manual": "手動インストール:",
+      "recommended": "推奨インストール方法:"
+    },
+    "recheckDependencies": "依存関係を再チェック",
+    "skipDependencies": "チェックをスキップ"
+  },
+  "pluginList": "プラグイン一覧",
+  "protocolInstall": {
+    "actions": {
+      "install": "インストール",
+      "installAnyway": "それでもインストール",
+      "installed": "インストール済み"
+    },
+    "config": {
+      "args": "パラメータ",
+      "command": "コマンド",
+      "env": "環境変数",
+      "headers": "リクエストヘッダー",
+      "title": "設定情報",
+      "type": {
+        "http": "タイプ: HTTP",
+        "label": "タイプ",
+        "stdio": "タイプ: Stdio"
+      },
+      "url": "サービスアドレス"
+    },
+    "custom": {
+      "badge": "カスタムプラグイン",
+      "security": {
+        "description": "このプラグインは公式の検証を受けていません。インストールにはセキュリティリスクがある可能性があります。プラグインの出所を信頼していることを確認してください。",
+        "title": "⚠️ セキュリティリスク警告"
+      },
+      "title": "カスタムプラグインをインストール"
+    },
+    "marketplace": {
+      "title": "サードパーティプラグインをインストール",
+      "trustedBy": "{{name}} 提供",
+      "unverified": {
+        "title": "未検証のサードパーティプラグイン",
+        "warning": "このプラグインは未検証のサードパーティマーケットからのものです。インストール前に出所を信頼していることを確認してください。"
+      },
+      "verified": "検証済み"
+    },
+    "messages": {
+      "connectionTestFailed": "接続テストに失敗しました",
+      "installError": "プラグインのインストールに失敗しました。再試行してください",
+      "installSuccess": "プラグイン {{name}} が正常にインストールされました！",
+      "manifestError": "プラグイン詳細の取得に失敗しました。ネットワーク接続を確認して再試行してください",
+      "manifestNotFound": "プラグイン記述ファイルを取得できませんでした"
+    },
+    "meta": {
+      "author": "作者",
+      "homepage": "ホームページ",
+      "identifier": "識別子",
+      "source": "出所",
+      "version": "バージョン"
+    },
+    "official": {
+      "badge": "LobeHub公式プラグイン",
+      "description": "このプラグインはLobeHub公式によって開発・管理されており、厳格なセキュリティ審査を経ていますので安心してご利用いただけます。",
+      "loadingMessage": "プラグイン詳細を取得中...",
+      "loadingTitle": "読み込み中",
+      "title": "公式プラグインをインストール"
+    },
+    "title": "MCPプラグインをインストール",
+    "warning": "⚠️ このプラグインの出所を信頼していることを確認してください。悪意のあるプラグインはシステムの安全を脅かす可能性があります。"
+  },
   "search": {
     "apiName": {
-      "crawlMultiPages": "複数のページの内容を読み取る",
-      "crawlSinglePage": "ページ内容を読み取る",
+      "crawlMultiPages": "複数ページの内容を読み込み",
+      "crawlSinglePage": "ページ内容を読み込み",
       "search": "ページを検索"
     },
     "config": {
       "addKey": "キーを追加",
       "close": "削除",
-      "confirm": "設定が完了し、再試行しました"
+      "confirm": "設定完了し再試行"
     },
     "crawPages": {
-      "crawling": "リンクを識別中",
+      "crawling": "リンク認識中",
       "detail": {
         "preview": "プレビュー",
-        "raw": "原文",
-        "tooLong": "テキストが長すぎます。会話のコンテキストには最初の {{characters}} 文字のみが保持され、それを超える部分は会話のコンテキストには含まれません"
+        "raw": "生テキスト",
+        "tooLong": "テキスト内容が長すぎます。会話コンテキストには先頭 {{characters}} 文字のみ保持し、それ以降は会話コンテキストに含まれません。"
       },
       "meta": {
-        "crawler": "クローリングモード",
+        "crawler": "クロールモード",
         "words": "文字数"
       }
     },
     "searchxng": {
       "baseURL": "入力してください",
-      "description": "SearchXNG の URL を入力すると、ネット検索を開始できます",
+      "description": "SearchXNGのURLを入力するとネット検索を開始できます",
       "keyPlaceholder": "キーを入力してください",
-      "title": "SearchXNG 検索エンジンの設定",
-      "unconfiguredDesc": "ネット検索を開始するには、管理者に連絡して SearchXNG 検索エンジンの設定を完了してください",
-      "unconfiguredTitle": "SearchXNG 検索エンジンはまだ設定されていません"
+      "title": "SearchXNG検索エンジンの設定",
+      "unconfiguredDesc": "管理者に連絡してSearchXNG検索エンジンの設定を完了し、ネット検索を開始してください",
+      "unconfiguredTitle": "SearchXNG検索エンジン未設定"
     },
     "title": "ネット検索"
   },
-  "setting": "プラグインの設定",
+  "setting": "プラグイン設定",
   "settings": {
+    "capabilities": {
+      "prompts": "プロンプト",
+      "resources": "リソース",
+      "title": "プラグイン機能",
+      "tools": "ツール"
+    },
+    "configuration": {
+      "title": "プラグイン設定"
+    },
+    "connection": {
+      "args": "起動パラメータ",
+      "command": "起動コマンド",
+      "title": "接続情報",
+      "type": "接続タイプ",
+      "url": "サービスアドレス"
+    },
+    "edit": "編集",
+    "envConfigDescription": "これらの設定はMCPサーバー起動時に環境変数としてプロセスに渡されます",
+    "httpTypeNotice": "HTTPタイプのMCPプラグインは現在設定すべき環境変数はありません",
     "indexUrl": {
       "title": "マーケットインデックス",
-      "tooltip": "オンライン編集は現在サポートされていません。デプロイ時の環境変数を使用して設定してください"
+      "tooltip": "オンライン編集は未対応です。デプロイ時の環境変数で設定してください"
     },
-    "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムのプラグインマーケットを使用できます",
-    "title": "プラグインマーケットの設定"
+    "messages": {
+      "connectionUpdateFailed": "接続情報の更新に失敗しました",
+      "connectionUpdateSuccess": "接続情報が正常に更新されました",
+      "envUpdateFailed": "環境変数の保存に失敗しました",
+      "envUpdateSuccess": "環境変数が正常に保存されました"
+    },
+    "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムプラグインマーケットを利用できます",
+    "rules": {
+      "argsRequired": "起動パラメータを入力してください",
+      "commandRequired": "起動コマンドを入力してください",
+      "urlRequired": "サービスアドレスを入力してください"
+    },
+    "saveSettings": "設定を保存",
+    "title": "プラグインマーケット設定"
   },
-  "showInPortal": "詳細はワークスペースで表示してください",
+  "showInPortal": "ワークスペースで詳細を確認してください",
   "store": {
     "actions": {
-      "confirmUninstall": "このプラグインをアンインストールします。アンインストール後、プラグインの設定がクリアされます。操作を確認してください。",
+      "cancel": "インストールをキャンセル",
+      "confirmUninstall": "このプラグインをアンインストールすると設定も削除されます。操作を確認してください",
       "detail": "詳細",
       "install": "インストール",
       "manifest": "インストールファイルを編集",
       "settings": "設定",
       "uninstall": "アンインストール"
     },
-    "communityPlugin": "コミュニティプラグイン",
-    "customPlugin": "カスタムプラグイン",
-    "empty": "インストールされたプラグインはありません",
-    "installAllPlugins": "すべてのプラグインをインストール",
-    "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
-    "placeholder": "プラグイン名、説明、またはキーワードで検索...",
-    "releasedAt": "{{createdAt}} にリリース",
+    "communityPlugin": "サードパーティコミュニティ",
+    "customPlugin": "カスタム",
+    "empty": "インストール済みプラグインはありません",
+    "emptySelectHint": "プラグインを選択して詳細をプレビュー",
+    "installAllPlugins": "すべてインストール",
+    "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認して再試行してください",
+    "placeholder": "プラグイン名、説明、キーワードで検索...",
+    "releasedAt": "{{createdAt}} に公開",
     "tabs": {
-      "all": "すべて",
-      "installed": "インストール済み"
+      "installed": "インストール済み",
+      "mcp": "MCPプラグイン",
+      "old": "LobeChatプラグイン"
     },
     "title": "プラグインストア"
   },
-  "unknownError": "未知のエラー",
-  "unknownPlugin": "未知のプラグイン"
+  "unknownError": "不明なエラー",
+  "unknownPlugin": "不明なプラグイン"
 }

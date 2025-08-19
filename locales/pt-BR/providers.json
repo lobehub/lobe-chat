@@ -2,8 +2,14 @@
   "ai21": {
     "description": "AI21 Labs constrói modelos fundamentais e sistemas de inteligência artificial para empresas, acelerando a aplicação da inteligência artificial generativa na produção."
   },
+  "ai302": {
+    "description": "302.AI é uma plataforma de aplicativos de IA sob demanda, que oferece a API de IA mais completa do mercado e aplicações de IA online"
+  },
   "ai360": {
     "description": "360 AI é a plataforma de modelos e serviços de IA lançada pela empresa 360, oferecendo uma variedade de modelos avançados de processamento de linguagem natural, incluindo 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Esses modelos combinam grandes parâmetros e capacidades multimodais, sendo amplamente aplicados em geração de texto, compreensão semântica, sistemas de diálogo e geração de código. Com uma estratégia de preços flexível, a 360 AI atende a diversas necessidades dos usuários, apoiando a integração de desenvolvedores e promovendo a inovação e o desenvolvimento de aplicações inteligentes."
+  },
+  "aihubmix": {
+    "description": "AiHubMix oferece acesso a diversos modelos de IA por meio de uma API unificada."
   },
   "anthropic": {
     "description": "A Anthropic é uma empresa focada em pesquisa e desenvolvimento de inteligência artificial, oferecendo uma gama de modelos de linguagem avançados, como Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus e Claude 3 Haiku. Esses modelos alcançam um equilíbrio ideal entre inteligência, velocidade e custo, adequando-se a uma variedade de cenários de aplicação, desde cargas de trabalho empresariais até respostas rápidas. O Claude 3.5 Sonnet, como seu modelo mais recente, se destacou em várias avaliações, mantendo uma alta relação custo-benefício."
@@ -28,6 +34,9 @@
   },
   "deepseek": {
     "description": "A DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V2.5, combina capacidades de diálogo geral e processamento de código, alcançando melhorias significativas em alinhamento com preferências humanas, tarefas de escrita e seguimento de instruções."
+  },
+  "fal": {
+    "description": "Plataforma de mídia generativa voltada para desenvolvedores"
   },
   "fireworksai": {
     "description": "Fireworks AI é um fornecedor líder de serviços de modelos de linguagem avançados, focando em chamadas de função e processamento multimodal. Seu modelo mais recente, Firefunction V2, baseado em Llama-3, é otimizado para chamadas de função, diálogos e seguimento de instruções. O modelo de linguagem visual FireLLaVA-13B suporta entradas mistas de imagem e texto. Outros modelos notáveis incluem a série Llama e a série Mixtral, oferecendo suporte eficiente para seguimento e geração de instruções multilíngues."
@@ -133,6 +142,9 @@
   },
   "upstage": {
     "description": "Upstage se concentra no desenvolvimento de modelos de IA para diversas necessidades comerciais, incluindo Solar LLM e Document AI, visando alcançar uma inteligência geral artificial (AGI) que funcione. Crie agentes de diálogo simples por meio da API de Chat e suporte chamadas de função, tradução, incorporação e aplicações em domínios específicos."
+  },
+  "v0": {
+    "description": "v0 é um assistente de programação em par; basta descrever suas ideias em linguagem natural, e ele gerará código e interface de usuário (UI) para o seu projeto"
   },
   "vertexai": {
     "description": "A série Gemini do Google é seu modelo de IA mais avançado e versátil, desenvolvido pelo Google DeepMind, projetado para ser multimodal, suportando compreensão e processamento sem costura de texto, código, imagens, áudio e vídeo. Adequado para uma variedade de ambientes, desde data centers até dispositivos móveis, aumentando significativamente a eficiência e a aplicabilidade dos modelos de IA."

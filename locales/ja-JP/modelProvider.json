@@ -66,6 +66,7 @@
       "customRegion": "カスタムサービスリージョン",
       "customSessionToken": "カスタムセッショントークン",
       "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
+      "imageGenerationDescription": "AWSのAccessKeyId / SecretAccessKeyを入力すると、生成を開始できます。アプリは認証情報を記録しません。",
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "あなたのキーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
       "apiKey": {
         "desc": "あなたの {{name}} API キーを入力してください",
+        "descWithUrl": "あなたの {{name}} APIキーを入力してください。<3>こちらから取得できます</3>",
         "placeholder": "{{name}} API キー",
         "title": "API キー"
       },
@@ -304,6 +306,7 @@
         "latestTime": "最終更新日時：{{time}}",
         "noLatestTime": "まだリストを取得していません"
       },
+      "noModelsInCategory": "このカテゴリには有効なモデルがありません",
       "resetAll": {
         "conform": "現在のモデルのすべての変更をリセットしてもよろしいですか？リセット後、現在のモデルリストはデフォルトの状態に戻ります",
         "success": "リセットに成功しました",
@@ -314,7 +317,15 @@
       "title": "モデルリスト",
       "total": "利用可能なモデルは合計 {{count}} 件です"
     },
-    "searchNotFound": "検索結果が見つかりませんでした"
+    "searchNotFound": "検索結果が見つかりませんでした",
+    "tabs": {
+      "all": "すべて",
+      "chat": "チャット",
+      "embedding": "埋め込み",
+      "image": "画像",
+      "stt": "音声認識",
+      "tts": "音声合成"
+    }
   },
   "sortModal": {
     "success": "ソートが更新されました",

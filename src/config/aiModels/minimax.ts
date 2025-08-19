@@ -1,6 +1,31 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const minimaxChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 1_000_192,
+    description: '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
+    displayName: 'MiniMax-M1',
+    enabled: true,
+    id: 'MiniMax-M1',
+    maxOutput: 40_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-06-16',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
   {
     abilities: {
       functionCall: true,
@@ -13,11 +38,13 @@ const minimaxChatModels: AIChatModelCard[] = [
     displayName: 'MiniMax-Text-01',
     enabled: true,
     id: 'MiniMax-Text-01',
-    maxOutput: 1_000_192,
+    maxOutput: 40_000,
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-15',
     settings: {
@@ -25,47 +52,47 @@ const minimaxChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
+];
+
+const minimaxImageModels: AIImageModelCard[] = [
   {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 245_760,
-    description: '适用于广泛的自然语言处理任务，包括文本生成、对话系统等。',
-    displayName: 'abab6.5s',
+    description: '全新图像生成模型，画面表现细腻，支持文生图、图生图',
+    displayName: 'Image 01',
     enabled: true,
-    id: 'abab6.5s-chat',
-    maxOutput: 245_760,
-    pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 1,
+    id: 'image-01',
+    parameters: {
+      aspectRatio: {
+        default: '1:1',
+        enum: ['1:1', '16:9', '4:3', '3:2', '2:3', '3:4', '9:16', '21:9'],
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
     },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
+    releasedAt: '2025-02-28',
+    type: 'image',
   },
   {
-    abilities: {
-      reasoning: true,
+    description: '图像生成模型，画面表现细腻，支持文生图并进行画风设置',
+    displayName: 'Image 01 Live',
+    enabled: true,
+    id: 'image-01-live',
+    parameters: {
+      aspectRatio: {
+        default: '1:1',
+        enum: ['1:1', '16:9', '4:3', '3:2', '2:3', '3:4', '9:16', '21:9'],
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
     },
-    contextWindowTokens: 64_000,
-    description:
-      'DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek R1',
-    id: 'DeepSeek-R1',
-    maxOutput: 64_000,
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
-    type: 'chat',
+    releasedAt: '2025-02-28',
+    type: 'image',
   },
 ];
 
-export const allModels = [...minimaxChatModels];
+export const allModels = [...minimaxChatModels, ...minimaxImageModels];
 
 export default allModels;

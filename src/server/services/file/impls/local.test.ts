@@ -17,6 +17,7 @@ vi.mock('@/server/modules/ElectronIPCClient', () => ({
   electronIpcClient: {
     getFilePathById: vi.fn(),
     deleteFiles: vi.fn(),
+    createFile: vi.fn(),
   },
 }));
 
@@ -40,58 +41,7 @@ describe('DesktopLocalFileImpl', () => {
   });
 
   describe('getLocalFileUrl', () => {
-    it.skip('应该正确获取本地文件URL并转换为data URL', async () => {
-      // 准备: readFileSync在第一次被调用时返回文件内容
-      vi.mocked(readFileSync).mockReturnValueOnce(testFileBuffer);
-
-      // 使用私有方法进行测试，通过原型访问
-      const result = await (service as any).getLocalFileUrl(testFileKey);
-
-      // 验证
-      expect(electronIpcClient.getFilePathById).toHaveBeenCalledWith(testFileKey);
-      expect(existsSync).toHaveBeenCalledWith(testFilePath);
-      expect(readFileSync).toHaveBeenCalledWith(testFilePath);
-
-      // 验证返回的data URL格式正确
-      expect(result).toContain('data:text/plain;base64,');
-      expect(result).toContain(testFileBuffer.toString('base64'));
-    });
-
-    it('当文件不存在时应返回原始键', async () => {
-      // 准备: 文件不存在
-      vi.mocked(existsSync).mockReturnValueOnce(false);
-
-      // 使用私有方法进行测试
-      const result = await (service as any).getLocalFileUrl(testFileKey);
-
-      // 验证
-      expect(result).toBe(testFileKey);
-    });
-
-    it('当发生错误时应返回空字符串', async () => {
-      // 准备: 模拟错误
-      vi.mocked(electronIpcClient.getFilePathById).mockRejectedValueOnce(new Error('测试错误'));
-
-      // 使用私有方法进行测试
-      const result = await (service as any).getLocalFileUrl(testFileKey);
-
-      // 验证
-      expect(result).toBe('');
-    });
-  });
-
-  describe('getMimeTypeFromPath', () => {
-    it('应该返回正确的MIME类型', () => {
-      // 使用私有方法进行测试
-      const jpgResult = (service as any).getMimeTypeFromPath('test.jpg');
-      const pngResult = (service as any).getMimeTypeFromPath('test.png');
-      const unknownResult = (service as any).getMimeTypeFromPath('test.unknown');
-
-      // 验证
-      expect(jpgResult).toBe('image/jpeg');
-      expect(pngResult).toBe('image/png');
-      expect(unknownResult).toBe('application/octet-stream');
-    });
+    it.skip('应该返回 localhost 的 http url', async () => {});
   });
 
   describe('createPreSignedUrl', () => {
@@ -293,6 +243,157 @@ describe('DesktopLocalFileImpl', () => {
 
       await service.uploadContent('path/to/file', 'content');
 
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'uploadContent not implemented for Desktop local file service',
+        'path/to/file',
+        'content',
+      );
+    });
+  });
+
+  describe('getKeyFromFullUrl', () => {
+    it('应该从HTTP URL中正确提取desktop://路径', () => {
+      // 准备
+      const url = 'http://localhost:3000/desktop-file/documents/test.txt';
+
+      // 执行
+      const result = service.getKeyFromFullUrl(url);
+
+      // 验证
+      expect(result).toBe('desktop://documents/test.txt');
+    });
+
+    it('应该处理复杂的文件路径', () => {
+      // 准备
+      const url = 'http://localhost:3000/desktop-file/folder/subfolder/image.png';
+
+      // 执行
+      const result = service.getKeyFromFullUrl(url);
+
+      // 验证
+      expect(result).toBe('desktop://folder/subfolder/image.png');
+    });
+
+    it('应该处理根目录下的文件', () => {
+      // 准备
+      const url = 'http://localhost:3000/desktop-file/test.pdf';
+
+      // 执行
+      const result = service.getKeyFromFullUrl(url);
+
+      // 验证
+      expect(result).toBe('desktop://test.pdf');
+    });
+
+    it('当URL格式不正确时应返回空字符串', () => {
+      // 准备
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const invalidUrl = 'not-a-valid-url';
+
+      // 执行
+      const result = service.getKeyFromFullUrl(invalidUrl);
+
+      // 验证
+      expect(result).toBe('');
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('uploadMedia', () => {
+    it('应该成功上传媒体文件', async () => {
+      // 准备
+      const testKey = 'desktop://images/test.jpg';
+      const testBuffer = Buffer.from('fake image data');
+      const mockResult = {
+        success: true,
+        metadata: {
+          path: testKey,
+          filename: 'test.jpg',
+          dirname: 'desktop://images',
+          date: new Date().toISOString(),
+        },
+      };
+
+      vi.mocked(electronIpcClient.createFile).mockResolvedValueOnce(mockResult);
+
+      // 执行
+      const result = await service.uploadMedia(testKey, testBuffer);
+
+      // 验证
+      expect(electronIpcClient.createFile).toHaveBeenCalledWith({
+        content: testBuffer.toString('base64'),
+        filename: 'test.jpg',
+        hash: expect.any(String), // SHA256 hash
+        path: testKey,
+        type: 'image/jpeg',
+      });
+      expect(result).toEqual({ key: testKey });
+    });
+
+    it('应该正确处理PNG文件', async () => {
+      // 准备
+      const testKey = 'desktop://images/test.png';
+      const testBuffer = Buffer.from('fake png data');
+      const mockResult = {
+        success: true,
+        metadata: {
+          path: testKey,
+          filename: 'test.png',
+          dirname: 'desktop://images',
+          date: new Date().toISOString(),
+        },
+      };
+
+      vi.mocked(electronIpcClient.createFile).mockResolvedValueOnce(mockResult);
+
+      // 执行
+      const result = await service.uploadMedia(testKey, testBuffer);
+
+      // 验证
+      expect(electronIpcClient.createFile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filename: 'test.png',
+          type: 'image/png',
+        }),
+      );
+      expect(result).toEqual({ key: testKey });
+    });
+
+    it('当上传失败时应抛出错误', async () => {
+      // 准备
+      const testKey = 'desktop://images/test.jpg';
+      const testBuffer = Buffer.from('fake image data');
+      const mockResult = {
+        success: false,
+        metadata: {
+          path: testKey,
+          filename: 'test.jpg',
+          dirname: 'desktop://images',
+          date: new Date().toISOString(),
+        },
+        error: 'Upload failed',
+      };
+
+      vi.mocked(electronIpcClient.createFile).mockResolvedValueOnce(mockResult);
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // 执行和验证
+      await expect(service.uploadMedia(testKey, testBuffer)).rejects.toThrow(
+        'Failed to upload file via Electron IPC',
+      );
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    it('当IPC调用失败时应抛出错误', async () => {
+      // 准备
+      const testKey = 'desktop://images/test.jpg';
+      const testBuffer = Buffer.from('fake image data');
+
+      vi.mocked(electronIpcClient.createFile).mockRejectedValueOnce(new Error('IPC error'));
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // 执行和验证
+      await expect(service.uploadMedia(testKey, testBuffer)).rejects.toThrow('IPC error');
       expect(consoleSpy).toHaveBeenCalled();
     });
   });

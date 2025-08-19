@@ -1,5 +1,5 @@
 ---
-description:
+description: 当要做 electron 相关工作时
 globs:
 alwaysApply: false
 ---

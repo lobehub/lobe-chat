@@ -11,6 +11,16 @@ console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 const isNightly = channel === 'nightly';
 const isBeta = packageJSON.name.includes('beta');
 
+// 根据版本类型确定协议 scheme
+const getProtocolScheme = () => {
+  if (isNightly) return 'lobehub-nightly';
+  if (isBeta) return 'lobehub-beta';
+
+  return 'lobehub';
+};
+
+const protocolScheme = getProtocolScheme();
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
@@ -25,6 +35,11 @@ const config = {
     artifactName: '${productName}-${version}.${ext}',
   },
   asar: true,
+  asarUnpack: [
+    // https://github.com/electron-userland/electron-builder/issues/9001#issuecomment-2778802044
+    '**/node_modules/sharp/**/*',
+    '**/node_modules/@img/**/*',
+  ],
   detectUpdateChannel: true,
   directories: {
     buildResources: 'build',
@@ -55,6 +70,12 @@ const config = {
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
+      CFBundleURLTypes: [
+        {
+          CFBundleURLName: 'LobeHub Protocol',
+          CFBundleURLSchemes: [protocolScheme],
+        },
+      ],
       NSCameraUsageDescription: "Application requests access to the device's camera.",
       NSDocumentsFolderUsageDescription:
         "Application requests access to the user's Documents folder.",
@@ -86,6 +107,12 @@ const config = {
     uninstallDisplayName: '${productName}',
     uninstallerSidebar: './build/nsis-sidebar.bmp',
   },
+  protocols: [
+    {
+      name: 'LobeHub Protocol',
+      schemes: [protocolScheme],
+    },
+  ],
   publish: [
     {
       owner: 'lobehub',

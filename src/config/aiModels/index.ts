@@ -1,15 +1,19 @@
 import { AiFullModelCard, LobeDefaultAiModelListItem } from '@/types/aiModel';
 
 import { default as ai21 } from './ai21';
+import { default as ai302 } from './ai302';
 import { default as ai360 } from './ai360';
+import { default as aihubmix } from './aihubmix';
 import { default as anthropic } from './anthropic';
 import { default as azure } from './azure';
 import { default as azureai } from './azureai';
 import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
+import { default as bfl } from './bfl';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as deepseek } from './deepseek';
+import { default as fal } from './fal';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
 import { default as github } from './github';
@@ -45,6 +49,7 @@ import { default as taichu } from './taichu';
 import { default as tencentcloud } from './tencentcloud';
 import { default as togetherai } from './togetherai';
 import { default as upstage } from './upstage';
+import { default as v0 } from './v0';
 import { default as vertexai } from './vertexai';
 import { default as vllm } from './vllm';
 import { default as volcengine } from './volcengine';
@@ -75,15 +80,19 @@ const buildDefaultModelList = (map: ModelsMap): LobeDefaultAiModelListItem[] => 
 
 export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   ai21,
+  ai302,
   ai360,
+  aihubmix,
   anthropic,
   azure,
   azureai,
   baichuan,
   bedrock,
+  bfl,
   cloudflare,
   cohere,
   deepseek,
+  fal,
   fireworksai,
   giteeai,
   github,
@@ -119,6 +128,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   tencentcloud,
   togetherai,
   upstage,
+  v0,
   vertexai,
   vllm,
   volcengine,
@@ -130,15 +140,19 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
 });
 
 export { default as ai21 } from './ai21';
+export { default as ai302 } from './ai302';
 export { default as ai360 } from './ai360';
+export { default as aihubmix } from './aihubmix';
 export { default as anthropic } from './anthropic';
 export { default as azure } from './azure';
 export { default as azureai } from './azureai';
 export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
+export { default as bfl } from './bfl';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as deepseek } from './deepseek';
+export { default as fal } from './fal';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
 export { default as github } from './github';
@@ -151,6 +165,7 @@ export { default as infiniai } from './infiniai';
 export { default as internlm } from './internlm';
 export { default as jina } from './jina';
 export { default as lmstudio } from './lmstudio';
+export { default as lobehub } from './lobehub';
 export { default as minimax } from './minimax';
 export { default as mistral } from './mistral';
 export { default as modelscope } from './modelscope';
@@ -174,6 +189,7 @@ export { default as taichu } from './taichu';
 export { default as tencentcloud } from './tencentcloud';
 export { default as togetherai } from './togetherai';
 export { default as upstage } from './upstage';
+export { default as v0 } from './v0';
 export { default as vertexai } from './vertexai';
 export { default as vllm } from './vllm';
 export { default as volcengine } from './volcengine';

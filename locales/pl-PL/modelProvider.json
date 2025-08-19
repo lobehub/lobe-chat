@@ -66,6 +66,7 @@
       "customRegion": "Niestandardowy region usługi",
       "customSessionToken": "Niestandardowy token sesji",
       "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania",
+      "imageGenerationDescription": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć generowanie. Aplikacja nie będzie zapisywać Twoich danych uwierzytelniających",
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
@@ -188,6 +189,7 @@
       "aesGcm": "Twój klucz oraz adres proxy będą szyfrowane za pomocą <1>AES-GCM</1>",
       "apiKey": {
         "desc": "Proszę wpisać swój {{name}} klucz API",
+        "descWithUrl": "Proszę wprowadzić swój klucz API {{name}}, <3>kliknij tutaj, aby go uzyskać</3>",
         "placeholder": "{{name}} klucz API",
         "title": "Klucz API"
       },
@@ -304,6 +306,7 @@
         "latestTime": "Ostatnia aktualizacja: {{time}}",
         "noLatestTime": "Lista nie została jeszcze pobrana"
       },
+      "noModelsInCategory": "Brak włączonych modeli w tej kategorii",
       "resetAll": {
         "conform": "Czy na pewno chcesz zresetować wszystkie zmiany w bieżącym modelu? Po zresetowaniu lista modeli wróci do stanu domyślnego",
         "success": "Resetowanie zakończone sukcesem",
@@ -314,7 +317,15 @@
       "title": "Lista modeli",
       "total": "Łącznie dostępnych modeli: {{count}}"
     },
-    "searchNotFound": "Nie znaleziono wyników wyszukiwania"
+    "searchNotFound": "Nie znaleziono wyników wyszukiwania",
+    "tabs": {
+      "all": "Wszystkie",
+      "chat": "Czat",
+      "embedding": "Wektoryzacja",
+      "image": "Obraz",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "Aktualizacja sortowania zakończona sukcesem",

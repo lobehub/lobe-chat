@@ -5,7 +5,47 @@ const moonshotChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      search: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2',
+    enabled: true,
+    id: 'kimi-k2-0711-preview',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2 Turbo',
+    id: 'kimi-k2-turbo-preview',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -15,21 +55,40 @@ const moonshotChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'kimi-latest',
     pricing: {
-      cachedInput: 1,
       currency: 'CNY',
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-02-17',
-    settings: {
-      searchImpl: 'params',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
     },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情',
+    displayName: 'Kimi Thinking Preview',
+    enabled: true,
+    id: 'kimi-thinking-preview',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-05-06',
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
     },
     contextWindowTokens: 131_072,
     description: 'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
@@ -37,18 +96,16 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-auto',
     pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 30,
-    },
-    settings: {
-      searchImpl: 'params',
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -57,18 +114,16 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 10,
-    },
-    settings: {
-      searchImpl: 'params',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -77,18 +132,16 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 20,
-    },
-    settings: {
-      searchImpl: 'params',
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -97,18 +150,16 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k',
     pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 30,
-    },
-    settings: {
-      searchImpl: 'params',
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 8192,
@@ -118,19 +169,17 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 10,
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-14',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 32_768,
@@ -140,19 +189,17 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 20,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-14',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -162,13 +209,12 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 30,
+      units: [
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-14',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
 ];

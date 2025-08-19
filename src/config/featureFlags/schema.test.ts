@@ -12,6 +12,7 @@ describe('FeatureFlagsSchema', () => {
       create_session: true,
       edit_agent: false,
       dalle: true,
+      ai_image: true,
     });
 
     expect(result.success).toBe(true);
@@ -36,6 +37,7 @@ describe('mapFeatureFlagsEnvToState', () => {
       create_session: true,
       edit_agent: false,
       dalle: true,
+      ai_image: true,
       check_updates: true,
       welcome_suggest: true,
     };
@@ -48,6 +50,7 @@ describe('mapFeatureFlagsEnvToState', () => {
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: false,
       showDalle: true,
+      showAiImage: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
     };

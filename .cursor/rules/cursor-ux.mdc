@@ -1,0 +1,32 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Guide to Optimize Output(Response) Rendering
+
+## File Path and Code Symbol Rendering
+
+- When rendering file paths, use backtick wrapping instead of markdown links so they can be parsed as clickable links in Cursor IDE.
+  - Good: `src/components/Button.tsx`
+  - Bad: [src/components/Button.tsx](src/components/Button.tsx)
+
+- Don't use line and column number in file path, this will make file path not clickable in Cursor IDE.
+  - Good: `src/components/Button.tsx` `10:20` (add a space between the file path and the line and column number)
+  - Bad: `src/components/Button.tsx:10:20`
+
+- When rendering functions, variables, or other code symbols, use backtick wrapping so they can be parsed as navigable links in Cursor IDE
+  - Good: The `useState` hook in `MyComponent`
+  - Bad: The useState hook in MyComponent
+
+## Markdown Render
+
+- don't use br tag to wrap in table cell
+
+## Terminal Command Output
+
+- If terminal commands don't produce output, it's likely due to paging issues. Try piping the command to `cat` to ensure full output is displayed.
+  - Good: `git show commit_hash -- file.txt | cat`
+  - Good: `git log --oneline | cat`
+  - Reason: Some git commands use pagers by default, which may prevent output from being captured properly

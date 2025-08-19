@@ -1,25 +1,30 @@
+import { ModelProvider } from '@lobechat/model-runtime';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
+import debug from 'debug';
 import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
-import { ModelProvider } from '@/libs/model-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
 import { ErrorResponse } from './types';
+
+const log = debug('lobe-image:lambda-client');
 
 const links = [
   httpBatchLink({
     fetch: async (input, init) => {
       if (isDesktop) {
-        const { desktopRemoteRPCFetch } = await import('./helpers/desktopRemoteRPCFetch');
+        const { desktopRemoteRPCFetch } = await import('@/utils/electron/desktopRemoteRPCFetch');
 
-        const res = await desktopRemoteRPCFetch(input as string, init);
+        // eslint-disable-next-line no-undef
+        const res = await desktopRemoteRPCFetch(input as string, init as RequestInit);
 
         if (res) return res;
       }
 
-      const response = await fetch(input, init);
+      // eslint-disable-next-line no-undef
+      const response = await fetch(input, init as RequestInit);
 
       if (response.ok) return response;
 
@@ -49,8 +54,22 @@ const links = [
       // dynamic import to avoid circular dependency
       const { createHeaderWithAuth } = await import('@/services/_auth');
 
-      // TODO: we need to support provider select
-      return createHeaderWithAuth({ provider: ModelProvider.OpenAI });
+      let provider: ModelProvider = ModelProvider.OpenAI;
+      // for image page, we need to get the provider from the store
+      log('Getting provider from store for image page: %s', location.pathname);
+      if (location.pathname === '/image') {
+        const { getImageStoreState } = await import('@/store/image');
+        const { imageGenerationConfigSelectors } = await import(
+          '@/store/image/slices/generationConfig/selectors'
+        );
+        provider = imageGenerationConfigSelectors.provider(getImageStoreState()) as ModelProvider;
+        log('Getting provider from store for image page: %s', provider);
+      }
+
+      // TODO: we need to support provider select for chat page
+      const headers = await createHeaderWithAuth({ provider });
+      log('Headers: %O', headers);
+      return headers;
     },
     maxURLLength: 2083,
     transformer: superjson,

@@ -1,4 +1,4 @@
-import type { BrowserWindowOpts } from './core/Browser';
+import type { BrowserWindowOpts } from './core/browser/Browser';
 
 export const BrowsersIdentifiers = {
   chat: 'chat',
@@ -26,6 +26,7 @@ export const appBrowsers = {
     identifier: 'devtools',
     maximizable: false,
     minWidth: 400,
+    parentIdentifier: 'chat',
     path: '/desktop/devtools',
     titleBarStyle: 'hiddenInset',
     vibrancy: 'under-window',
@@ -37,6 +38,7 @@ export const appBrowsers = {
     identifier: 'settings',
     keepAlive: true,
     minWidth: 600,
+    parentIdentifier: 'chat',
     path: '/settings',
     titleBarStyle: 'hidden',
     vibrancy: 'under-window',

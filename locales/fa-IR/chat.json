@@ -46,6 +46,12 @@
     "reasoningEffort": {
       "title": "شدت استدلال"
     },
+    "textVerbosity": {
+      "title": "سطح جزئیات متن خروجی"
+    },
+    "thinking": {
+      "title": "کلید تفکر عمیق"
+    },
     "title": "ویژگی‌های گسترش مدل"
   },
   "history": {

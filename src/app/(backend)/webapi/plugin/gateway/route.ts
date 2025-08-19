@@ -1,14 +1,14 @@
+import { AgentRuntimeError } from '@lobechat/model-runtime';
+import { ChatErrorType, ErrorType, TraceNameMap } from '@lobechat/types';
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableNextAuth } from '@/const/auth';
-import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
+import { LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { getAppConfig } from '@/envs/app';
-import { AgentRuntimeError } from '@/libs/model-runtime';
 import { TraceClient } from '@/libs/traces';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getJWTPayload } from '@/utils/server/jwt';
+import { getXorPayload } from '@/utils/server/xor';
 import { getTracePayload } from '@/utils/trace';
 
 import { parserPluginSettings } from './settings';
@@ -44,7 +44,7 @@ export const POST = async (req: Request) => {
   if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
   const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
-  const payload = await getJWTPayload(authorization);
+  const payload = getXorPayload(authorization);
 
   const result = checkAuth(payload.accessCode!, oauthAuthorized);
 

@@ -5,6 +5,7 @@ import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
+import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
@@ -14,13 +15,12 @@ import { parseBrowserLanguage } from '@/utils/locale';
 import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
-import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
 
 // Create debug logger instances
-const logDefault = debug('lobe-middleware:default');
-const logNextAuth = debug('lobe-middleware:next-auth');
-const logClerk = debug('lobe-middleware:clerk');
+const logDefault = debug('middleware:default');
+const logNextAuth = debug('middleware:next-auth');
+const logClerk = debug('middleware:clerk');
 
 // OIDC session pre-sync constant
 const OIDC_SESSION_HEADER = 'x-oidc-session-sync';
@@ -37,6 +37,7 @@ export const config = {
     '/chat(.*)',
     '/changelog(.*)',
     '/settings(.*)',
+    '/image',
     '/files',
     '/files(.*)',
     '/repos(.*)',
@@ -69,10 +70,20 @@ const defaultMiddleware = (request: NextRequest) => {
   const theme =
     request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
 
-  // if it's a new user, there's no cookie
-  // So we need to use the fallback language parsed by accept-language
+  // locale has three levels
+  // 1. search params
+  // 2. cookie
+  // 3. browser
+
+  // highest priority is explicitly in search params, like ?hl=zh-CN
+  const explicitlyLocale = (url.searchParams.get('hl') || undefined) as Locales | undefined;
+
+  // if it's a new user, there's no cookie, So we need to use the fallback language parsed by accept-language
   const browserLanguage = parseBrowserLanguage(request.headers);
-  const locale = (request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales;
+
+  const locale =
+    explicitlyLocale ||
+    ((request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales);
 
   const ua = request.headers.get('user-agent');
 
@@ -135,13 +146,19 @@ const defaultMiddleware = (request: NextRequest) => {
 };
 
 const isPublicRoute = createRouteMatcher([
+  // backend api
   '/api/auth(.*)',
+  '/api/webhooks(.*)',
+  '/webapi(.*)',
   '/trpc(.*)',
   // next auth
   '/next-auth/(.*)',
   // clerk
   '/login',
   '/signup',
+  // oauth
+  '/oidc/handoff',
+  '/oidc/token',
 ]);
 
 const isProtectedRoute = createRouteMatcher([
@@ -153,7 +170,7 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 // Initialize an Edge compatible NextAuth middleware
-const nextAuthMiddleware = NextAuthEdge.auth((req) => {
+const nextAuthMiddleware = NextAuthEdge.auth(async (req) => {
   logNextAuth('NextAuth middleware processing request: %s %s', req.method, req.url);
 
   const response = defaultMiddleware(req);

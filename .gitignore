@@ -1,73 +1,111 @@
 # Gitignore for LobeHub
 ################################################################
 
-# general
+# System files
 .DS_Store
-.idea
-.vscode
-.history
-.temp
-.env.local
-venv
-temp
-tmp
-.windsurfrules
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# dependencies
-node_modules
+# Linux/Ubuntu system files
+*~
+*.swp
+*.swo
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+.gvfs-fuse-daemon-*
+
+# IDE and editors
+.idea/
+*.sublime-*
+.history/
+.windsurfrules
+*.code-workspace
+
+# Temporary files
+.temp/
+temp/
+tmp/
+*.tmp
+*.temp
 *.log
+*.cache
+.cache/
+
+# Environment files
+.env
+.env.local
+.env*.local
+venv/
+.venv/
+
+# Dependencies
+node_modules/
 *.lock
 package-lock.json
+bun.lockb
+.pnpm-store/
 
-# ci
-coverage
-.coverage
+# Build outputs
+dist/
+es/
+lib/
+.next/
+logs/
+test-output/
+*.tsbuildinfo
+next-env.d.ts
+
+# Framework specific
+# Umi
+.umi/
+.umi-production/
+.umi-test/
+.dumi/tmp*/
+
+# Vercel
+.vercel/
+
+# Testing and CI
+coverage/
+.coverage/
+.nyc_output/
 .eslintcache
 .stylelintcache
 
-# production
-dist
-es
-lib
-logs
-test-output
-
-# umi
-.umi
-.umi-production
-.umi-test
-.dumi/tmp*
-
-# husky
-.husky/prepare-commit-msg
-
-# misc
-# add other ignore file below
-
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-.next
-.env
-public/*.js
-public/sitemap.xml
-public/sitemap-index.xml
-bun.lockb
-sitemap*.xml
-robots.txt
-
+# Service Worker
 # Serwist
 public/sw*
 public/swe-worker*
 
+# Generated files
+public/*.js
+public/sitemap.xml
+public/sitemap-index.xml
+sitemap*.xml
+robots.txt
+
+# Git hooks
+.husky/prepare-commit-msg
+
+# Documents and media
 *.patch
 *.pdf
+
+# Cloud service keys
 vertex-ai-key.json
-.pnpm-store
+
+# AI coding tools
+.local/
+.claude/
+.mcp.json
+
+CLAUDE.local.md
+
+# Misc
 ./packages/lobe-ui
+*.ppt*
+*.doc*
+*.xls*

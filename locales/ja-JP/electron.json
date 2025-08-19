@@ -1,4 +1,46 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI メッセージの生成が完了しました"
+  },
+  "proxy": {
+    "auth": "認証が必要",
+    "authDesc": "プロキシサーバーがユーザー名とパスワードを必要とする場合",
+    "authSettings": "認証設定",
+    "basicSettings": "プロキシ設定",
+    "basicSettingsDesc": "プロキシサーバーの接続パラメータを設定します",
+    "bypass": "プロキシを使用しないアドレス",
+    "connectionTest": "接続テスト",
+    "enable": "プロキシを有効にする",
+    "enableDesc": "有効にすると、プロキシサーバーを通じてネットワークにアクセスします",
+    "password": "パスワード",
+    "password_placeholder": "パスワードを入力してください",
+    "port": "ポート",
+    "resetButton": "リセット",
+    "saveButton": "保存",
+    "saveFailed": "保存に失敗しました：{{error}}",
+    "saveSuccess": "プロキシ設定が正常に保存されました",
+    "server": "サーバーアドレス",
+    "testButton": "接続テスト",
+    "testDescription": "現在のプロキシ設定を使用して接続をテストし、設定が正常に機能しているか確認します",
+    "testFailed": "接続に失敗しました",
+    "testSuccessWithTime": "接続テストに成功しました。所要時間 {{time}} ms",
+    "testUrl": "テストURL",
+    "testUrlPlaceholder": "テストするURLを入力してください",
+    "testing": "接続をテスト中...",
+    "type": "プロキシタイプ",
+    "unsavedChanges": "保存されていない変更があります",
+    "username": "ユーザー名",
+    "username_placeholder": "ユーザー名を入力してください",
+    "validation": {
+      "passwordRequired": "認証を有効にする場合、パスワードは必須です",
+      "portInvalid": "ポートは1から65535の間の数字でなければなりません",
+      "portRequired": "プロキシを有効にする場合、ポートは必須です",
+      "serverInvalid": "有効なサーバーアドレス（IPまたはドメイン名）を入力してください",
+      "serverRequired": "プロキシを有効にする場合、サーバーアドレスは必須です",
+      "typeRequired": "プロキシを有効にする場合、プロキシタイプは必須です",
+      "usernameRequired": "認証を有効にする場合、ユーザー名は必須です"
+    }
+  },
   "remoteServer": {
     "authError": "認証エラー: {{error}}",
     "authPending": "ブラウザで認証を完了してください",
@@ -62,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "キャンセル",
     "description": "ブラウザが認証ページを開きました。ブラウザで認証を完了してください",
+    "error": "認証に失敗しました: {{error}}",
+    "errorTitle": "認証接続に失敗しました",
     "helpText": "ブラウザが自動的に開かない場合は、キャンセルをクリックして再試行してください",
+    "retry": "再試行",
     "title": "認証接続を待機中"
   }
 }

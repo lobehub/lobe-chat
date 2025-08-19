@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
@@ -123,7 +123,8 @@ describe('AsyncTaskModel', () => {
 
   describe('checkTimeoutTasks', () => {
     it('should mark tasks as error if they timeout', async () => {
-      vi.useFakeTimers();
+      // Create a task with old timestamp (beyond timeout)
+      const timeoutDate = new Date(Date.now() - ASYNC_TASK_TIMEOUT - 1000);
 
       const { id } = await serverDB
         .insert(asyncTasks)
@@ -131,7 +132,7 @@ describe('AsyncTaskModel', () => {
           type: AsyncTaskType.Chunking,
           status: AsyncTaskStatus.Processing,
           userId,
-          createdAt: new Date(Date.now() - ASYNC_TASK_TIMEOUT - 1000), // Make sure it's older than the timeout
+          createdAt: timeoutDate,
         })
         .returning()
         .then((res) => res[0]);
@@ -143,18 +144,19 @@ describe('AsyncTaskModel', () => {
       });
       expect(updatedTask?.status).toBe(AsyncTaskStatus.Error);
       expect(updatedTask?.error).toBeDefined();
-
-      vi.useRealTimers();
     });
 
     it('should not mark tasks as error if they are not timed out', async () => {
+      // Create a task with recent timestamp (within timeout)
+      const recentDate = new Date();
+
       const { id } = await serverDB
         .insert(asyncTasks)
         .values({
           type: AsyncTaskType.Chunking,
           status: AsyncTaskStatus.Processing,
           userId,
-          createdAt: new Date(), // Current time, should not timeout
+          createdAt: recentDate,
         })
         .returning()
         .then((res) => res[0]);

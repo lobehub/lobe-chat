@@ -1,4 +1,5 @@
 import { Button, Form, Input, TextArea } from '@lobehub/ui';
+import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,14 +14,17 @@ const CreateForm = memo<CreateFormProps>(({ onClose }) => {
   const { t } = useTranslation('knowledgeBase');
   const [loading, setLoading] = useState(false);
   const createNewKnowledgeBase = useKnowledgeBaseStore((s) => s.createNewKnowledgeBase);
+  const router = useRouter();
 
   const onFinish = async (values: CreateKnowledgeBaseParams) => {
     setLoading(true);
 
     try {
-      await createNewKnowledgeBase(values);
+      const id = await createNewKnowledgeBase(values);
       setLoading(false);
       onClose?.();
+
+      router.push(`/repos/${id}`);
     } catch (e) {
       console.error(e);
       setLoading(false);

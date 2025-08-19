@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "与现有快捷键冲突",
+    "errors": {
+      "CONFLICT": "快捷键冲突：该快捷键已被其他功能占用",
+      "INVALID_FORMAT": "快捷键格式无效：请使用正确的格式（如 CommandOrControl+E）",
+      "INVALID_ID": "无效的快捷键ID",
+      "NO_MODIFIER": "快捷键必须包含修饰键（Ctrl、Alt、Shift等）",
+      "SYSTEM_OCCUPIED": "快捷键已被系统或其他应用程序占用",
+      "UNKNOWN": "更新失败：未知错误"
+    },
     "group": {
       "conversation": "会话",
+      "desktop": "桌面端",
       "essential": "基础"
     },
     "invalidCombination": "快捷键需要至少包含一个修饰键 (Ctrl, Alt, Shift) 和一个常规键",
     "record": "按下按键以录制快捷键",
     "reset": "重置为默认快捷键",
-    "title": "快捷键"
+    "title": "快捷键",
+    "updateError": "快捷键更新失败：网络或系统错误",
+    "updateSuccess": "快捷键更新成功"
   },
   "llm": {
     "aesGcm": "您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
@@ -129,6 +140,7 @@
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
   "plugin": {
+    "addMCPPlugin": "添加 MCP 插件",
     "addTooltip": "自定义插件",
     "clearDeprecated": "移除无效插件",
     "empty": "暂无已安装插件，欢迎前往 <1>插件商店</1> 探索",
@@ -171,9 +183,20 @@
     "title": "助手信息"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "敏捷",
+      "desc": "选择应用程序的操作响应的动画速度",
+      "disabled": "关闭",
+      "elegant": "优雅",
+      "title": "响应动画"
+    },
     "neutralColor": {
       "desc": "不同色彩倾向的灰阶自定义",
       "title": "中性色"
+    },
+    "noAnimation": {
+      "desc": "禁用应用程序中的所有动画效果",
+      "title": "无动画模式"
     },
     "preview": {
       "title": "调色盘"
@@ -220,7 +243,7 @@
     },
     "inputTemplate": {
       "desc": "用户最新的一条消息会填充到此模板",
-      "placeholder": "预处理模版 {{input_template}} 将替换为实时输入信息",
+      "placeholder": "预处理模版 {{text}} 将替换为实时输入信息",
       "title": "用户输入预处理"
     },
     "submit": "更新聊天偏好",
@@ -483,6 +506,11 @@
       "placeholder": "请输入自定义提示词",
       "title": "自定义提示词"
     },
+    "generationTopic": {
+      "label": "AI 绘画话题命名模型",
+      "modelDesc": "指定用于 AI 绘画自动命名话题的模型",
+      "title": "AI 绘画自动命名话题"
+    },
     "helpInfo": "当创建新助手时，将以默认助手设置作为预设值。",
     "historyCompress": {
       "label": "会话历史模型",
@@ -519,6 +547,7 @@
     "hotkey": "快捷键",
     "llm": "语言模型",
     "provider": "AI 服务商",
+    "proxy": "网络代理",
     "storage": "数据存储",
     "sync": "云端同步",
     "system-agent": "系统助手",

@@ -1,3 +1,5 @@
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
+import { ChatErrorType, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
@@ -6,13 +8,11 @@ import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
+import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
-import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
 import { ErrorActionContainer } from './style';
 
@@ -113,13 +113,13 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       {
-        return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+        return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
       }
     }
   }
 
   if (error.type.toString().includes('Invalid')) {
-    return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+    return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
   return <ErrorJsonViewer error={data.error} id={data.id} />;

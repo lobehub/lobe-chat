@@ -113,6 +113,18 @@
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
     "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Ihr Inhalt enthält verbotene Begriffe. Bitte überprüfen und ändern Sie Ihre Eingabe, bevor Sie es erneut versuchen.",
+      "IMAGE_SAFETY": "Der generierte Bildinhalt wurde aus Sicherheitsgründen blockiert. Bitte versuchen Sie, Ihre Bildgenerierungsanfrage zu ändern.",
+      "LANGUAGE": "Die von Ihnen verwendete Sprache wird nicht unterstützt. Bitte versuchen Sie es mit Englisch oder anderen unterstützten Sprachen.",
+      "OTHER": "Inhalt wurde aus unbekannten Gründen blockiert. Bitte versuchen Sie, Ihre Anfrage umzuformulieren oder wenden Sie sich an den technischen Support.",
+      "PROHIBITED_CONTENT": "Ihr Inhalt könnte verbotene Inhaltstypen enthalten. Bitte passen Sie Ihre Anfrage an, um sicherzustellen, dass sie den Nutzungsrichtlinien entspricht.",
+      "RECITATION": "Ihr Inhalt wurde aufgrund möglicher Urheberrechtsprobleme blockiert. Bitte versuchen Sie, originalen Inhalt zu verwenden oder Ihre Anfrage umzuformulieren.",
+      "SAFETY": "Ihr Inhalt wurde aufgrund von Sicherheitsrichtlinien blockiert. Bitte versuchen Sie, Ihre Anfrage anzupassen, um potenziell schädliche oder unangemessene Inhalte zu vermeiden.",
+      "SPII": "Ihr Inhalt könnte sensible persönlich identifizierbare Informationen enthalten. Zum Schutz der Privatsphäre entfernen Sie bitte relevante sensible Informationen, bevor Sie es erneut versuchen.",
+      "default": "Inhalt wurde blockiert: {{blockReason}}. Bitte passen Sie Ihren Anfrageinhalt an und versuchen Sie es erneut."
+    },
     "QuotaLimitReached": "Es tut uns leid, die aktuelle Token-Nutzung oder die Anzahl der Anfragen hat das Kontingent (Quota) für diesen Schlüssel erreicht. Bitte erhöhen Sie das Kontingent für diesen Schlüssel oder versuchen Sie es später erneut.",
     "StreamChunkError": "Fehler beim Parsen des Nachrichtenchunks der Streaming-Anfrage. Bitte überprüfen Sie, ob die aktuelle API-Schnittstelle den Standards entspricht, oder wenden Sie sich an Ihren API-Anbieter.",
     "SubscriptionKeyMismatch": "Es tut uns leid, aufgrund eines vorübergehenden Systemfehlers ist das aktuelle Abonnement vorübergehend ungültig. Bitte klicken Sie auf die Schaltfläche unten, um das Abonnement wiederherzustellen, oder kontaktieren Sie uns per E-Mail für Unterstützung.",
@@ -123,6 +135,7 @@
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },
+  "testConnectionFailed": "Verbindungstest fehlgeschlagen: {{error}}",
   "tts": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },
@@ -130,6 +143,7 @@
     "addProxyUrl": "Fügen Sie die OpenAI-Proxy-URL hinzu (optional)",
     "apiKey": {
       "description": "Geben Sie Ihren {{name}} API-Schlüssel ein, um die Sitzung zu starten.",
+      "imageGenerationDescription": "Geben Sie Ihren {{name}} API-Schlüssel ein, um mit der Generierung zu beginnen",
       "title": "Verwenden Sie Ihren benutzerdefinierten {{name}} API-Schlüssel"
     },
     "closeMessage": "Hinweis schließen",

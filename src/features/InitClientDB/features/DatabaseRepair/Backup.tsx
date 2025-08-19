@@ -1,13 +1,11 @@
-import { Alert, Button } from '@lobehub/ui';
-import { App, Card, Typography } from 'antd';
+import { Alert, Button, Text } from '@lobehub/ui';
+import { App, Card } from 'antd';
 import { createStyles } from 'antd-style';
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { resetClientDatabase } from '@/database/client/db';
-
-const { Text, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -27,7 +25,7 @@ const Backup = () => {
         extra={<Text type="secondary">{t('clientDB.solve.backup.desc')}</Text>}
         title={t('clientDB.solve.backup.title')}
       >
-        <Paragraph>{t('clientDB.solve.backup.exportDesc')}</Paragraph>
+        <Text as={'p'}>{t('clientDB.solve.backup.exportDesc')}</Text>
         <Button block type={'primary'}>
           {t('clientDB.solve.backup.export')}
         </Button>
