@@ -1,10 +1,21 @@
-import type { SeedToken } from '@/types/theme';
+import { primaryColors } from './color';
+import type { SeedToken, PresetColorType } from './interface';
+
+// 字体定义
+const FONT_EN = `"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
+const FONT_CN = `"PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif`;
+const FONT_EMOJI = `"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"`;
+const FONT_CODE = `"SF Mono", "Menlo", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace`;
+
+export const defaultPresetColors: PresetColorType = primaryColors;
 
 /**
  * 默认种子 Token
  * 基础设计 Token，用于派生其他 Token
  */
-export const defaultSeedToken: SeedToken = {
+const seedToken: SeedToken = {
+  ...defaultPresetColors,
+
   // 圆角
   borderRadius: 6,
 
@@ -14,8 +25,10 @@ export const defaultSeedToken: SeedToken = {
 
   colorInfo: '#1677ff',
 
-  // 品牌色 - 使用透明色作为主色
-  colorPrimary: 'rgba(0, 0, 0, 0)',
+  colorLink: '',
+
+  // 品牌色 - 默认使用黑色作为主色
+  colorPrimary: primaryColors.primary,
 
   // 功能色
   colorSuccess: '#52c41a',
@@ -28,11 +41,8 @@ export const defaultSeedToken: SeedToken = {
   controlHeight: 32,
 
   // 字体
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-
-  fontFamilyCode: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace',
-
+  fontFamily: [FONT_EN, FONT_CN, FONT_EMOJI].join(','),
+  fontFamilyCode: [FONT_CODE, FONT_CN, FONT_EMOJI].join(','),
   fontSize: 14,
 
   lineType: 'solid',
@@ -63,13 +73,26 @@ export const defaultSeedToken: SeedToken = {
   // 动画
   motionUnit: 0.1,
 
+  neutralColor: 'mauve',
+
   // 透明度
   opacityImage: 1,
+
+  primaryColor: 'primary',
+
+  sizePopupArrow: 12,
 
   sizeStep: 4,
 
   // 尺寸
   sizeUnit: 4,
+
   // 开关
   wireframe: false,
+
+  // zIndex
+  zIndexBase: 0,
+  zIndexPopupBase: 1000,
 };
+
+export default seedToken;

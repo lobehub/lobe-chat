@@ -173,7 +173,7 @@ const protectedFunction = withAuth(async (param: string) => {
 项目包含了一个测试页面用于验证认证流程：
 
 ```
-/app/(playground)/auth-test.tsx
+/app/playground/auth-test.tsx
 ```
 
 该页面提供了以下功能：
