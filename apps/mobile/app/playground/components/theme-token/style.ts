@@ -47,7 +47,6 @@ export const useStyles = createStyles((token) => {
       alignItems: 'center',
       backgroundColor: t.colorFillSecondary,
       borderRadius: 20,
-      cursor: 'pointer',
       height: 40,
       justifyContent: 'center',
       width: 40,

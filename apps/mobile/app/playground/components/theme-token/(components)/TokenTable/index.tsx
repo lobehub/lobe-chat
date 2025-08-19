@@ -31,31 +31,17 @@ const TokenTable: React.FC<TokenTableProps> = memo(({ token, title }) => {
     );
   }, [tokenEntries, searchText]);
 
-  // 直接按名称排序
-  const sortedTokens = useMemo(() => {
-    return filteredTokens.sort((a, b) => a.name.localeCompare(b.name));
-  }, [filteredTokens]);
-
   const renderValue = useCallback(
     (entry: { name: string; value: any }) => {
-      const { value, name } = entry;
+      const { value } = entry;
 
       // 根据名称判断是否为颜色值
-      if ((name.includes('color') || name.includes('Color')) && typeof value === 'string') {
+      if (typeof value === 'string' && (value.startsWith('#') || value.startsWith('rgb'))) {
         return (
           <View style={styles.colorValueContainer}>
             <View style={[styles.colorPreview, { backgroundColor: value }]} />
             <Text style={styles.tokenValue}>{value}</Text>
           </View>
-        );
-      }
-
-      // 根据名称判断是否为阴影对象
-      if ((name.includes('shadow') || name.includes('Shadow')) && typeof value === 'object') {
-        return (
-          <Text style={styles.tokenValue}>
-            {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-          </Text>
         );
       }
 
@@ -85,11 +71,10 @@ const TokenTable: React.FC<TokenTableProps> = memo(({ token, title }) => {
       </View>
 
       <View style={styles.tokensContainer}>
-        {sortedTokens.map((entry) => (
+        {tokenEntries.map((entry) => (
           <View key={entry.name} style={styles.tokenRow}>
             <View style={styles.tokenInfo}>
               <Text style={styles.tokenName}>{entry.name}</Text>
-              <Text style={styles.tokenDescription}>Design token</Text>
             </View>
             <View style={styles.tokenValueContainer}>{renderValue(entry)}</View>
           </View>
