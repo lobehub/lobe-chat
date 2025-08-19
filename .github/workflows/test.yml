@@ -11,8 +11,10 @@ jobs:
         image: paradedb/paradedb:latest
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
         options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
 
 
         ports:
