@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version&nbsp;1.113.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.113.0...v1.113.1)
+<sup>Released on **2025-08-19**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **mcp**: Use customParams for environment settings fallback.
+- **misc**: Support Grok thinking models in AiHubMix, The 'stream_options' parameter is only allowed when 'stream' is enabled.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **mcp**: Use customParams for environment settings fallback, closes [#8814](https://github.com/jaworldwideorg/OneJA-Bot/issues/8814) ([ab043d4](https://github.com/jaworldwideorg/OneJA-Bot/commit/ab043d4))
+* **misc**: Support Grok thinking models in AiHubMix, closes [#8713](https://github.com/jaworldwideorg/OneJA-Bot/issues/8713) ([ffa9b1b](https://github.com/jaworldwideorg/OneJA-Bot/commit/ffa9b1b))
+* **misc**: The 'stream_options' parameter is only allowed when 'stream' is enabled, closes [#8778](https://github.com/jaworldwideorg/OneJA-Bot/issues/8778) ([fcc32d5](https://github.com/jaworldwideorg/OneJA-Bot/commit/fcc32d5))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.113.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.112.0...v1.113.0)
 <sup>Released on **2025-08-18**</sup>
 
