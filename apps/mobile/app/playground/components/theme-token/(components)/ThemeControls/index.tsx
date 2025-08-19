@@ -3,14 +3,14 @@ import { Text, View, TextInput } from 'react-native';
 
 import Button from '@/components/Button';
 import ColorSwatches from '@/components/ColorSwatches';
-import { useThemeToken } from '@/theme';
 import {
   findCustomThemeName,
   PrimaryColors,
   NeutralColors,
   neutralColors,
   primaryColors,
-} from '@/theme/color';
+  useThemeToken,
+} from '@/theme';
 
 import { useStyles } from './style';
 

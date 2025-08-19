@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { useThemeToken } from '@/theme/ThemeProvider/context';
+import { useThemeToken } from '@/theme';
 
 interface DemoButtonProps {
   description?: string;

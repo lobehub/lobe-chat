@@ -6,8 +6,15 @@ import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import ThemeControls from 'app/playground/components/theme-token/(components)/ThemeControls';
 import TokenHighlight from 'app/playground/components/theme-token/(components)/TokenHighlight';
 import TokenTable from 'app/playground/components/theme-token/(components)/TokenTable';
-import { useTheme, darkAlgorithm, lightAlgorithm, ThemeProvider, useThemeToken } from '@/theme';
-import { PrimaryColors, NeutralColors } from '@/theme/color';
+import {
+  useTheme,
+  darkAlgorithm,
+  lightAlgorithm,
+  ThemeProvider,
+  useThemeToken,
+  PrimaryColors,
+  NeutralColors,
+} from '@/theme';
 
 import { useStyles } from './style';
 

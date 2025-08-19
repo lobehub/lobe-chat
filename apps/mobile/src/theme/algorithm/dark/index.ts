@@ -1,12 +1,12 @@
-import { MappingAlgorithm } from '@/theme/interface';
-import { colorScales, neutralColorScales, ColorScaleItem } from '@/theme/color';
+import { colorScales, neutralColorScales, ColorScaleItem } from '../../color';
+import darkBaseToken from './color';
+import type { MappingAlgorithm } from '../../interface';
 
 import {
   generateColorNeutralPalette,
   generateColorPalette,
   generateCustomColorPalettes,
 } from '../shared/generateColorPalette';
-import darkBaseToken from './color';
 import genCommonMapToken from '../shared/genCommonMapToken';
 import genControlHeight from '../shared/genControlHeight';
 import genSizeMapToken from '../shared/genSizeMapToken';

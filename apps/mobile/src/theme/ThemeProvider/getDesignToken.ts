@@ -1,9 +1,9 @@
-import type { AliasToken, SeedToken } from '@/theme/interface';
+import type { AliasToken, SeedToken } from '../interface';
 import type { ThemeConfig } from './types';
 
-import { lightAlgorithm } from '@/theme/algorithm/light';
-import { formatToken } from '@/theme/alias';
-import seedToken from '@/theme/seed';
+import { lightAlgorithm } from '../algorithm/light';
+import { formatToken } from '../alias';
+import seedToken from '../seed';
 
 /**
  * 生成设计 Token

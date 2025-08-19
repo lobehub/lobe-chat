@@ -1,9 +1,8 @@
 import { camelCase, capitalize } from 'lodash-es';
 import { mix } from 'polished';
-import type { AliasToken } from '@/theme/interface';
-import type { ThemeAppearance } from '@/theme/types';
-import type { ColorScaleItem } from '@/theme/color/types';
-import { colorScales } from '@/theme/color';
+import type { AliasToken } from '../../interface';
+import type { ThemeAppearance } from '../../ThemeProvider/types';
+import { ColorScaleItem, colorScales } from '../../color';
 
 /**
  * 生成颜色调色板

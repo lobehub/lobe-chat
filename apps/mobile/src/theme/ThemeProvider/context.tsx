@@ -5,8 +5,8 @@ import { useSettingStore } from '@/store/setting';
 import { getDesignToken } from './getDesignToken';
 
 import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
-import { darkAlgorithm } from '@/theme/algorithm/dark';
-import { lightAlgorithm } from '@/theme/algorithm/light';
+import { darkAlgorithm } from '../algorithm/dark';
+import { lightAlgorithm } from '../algorithm/light';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 

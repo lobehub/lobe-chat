@@ -1,4 +1,4 @@
-import type { AliasToken, MapToken } from '@/theme/interface';
+import type { AliasToken, MapToken } from './interface';
 import { getAlphaColor } from './colorUtils';
 
 /**

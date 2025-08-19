@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme/ThemeProvider/context';
+import { useThemeToken } from '@/theme';
 import Button from '@/components/Button';
 
 import { Tooltip } from '..';

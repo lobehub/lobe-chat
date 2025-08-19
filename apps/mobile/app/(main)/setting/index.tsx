@@ -5,16 +5,16 @@ import { ScrollView } from 'react-native';
 import { ListGroup, ColorSwatches } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { version } from '../../../package.json';
-import { useTheme as useAppTheme } from '@/theme';
-import { useStyles } from './styles';
-import { useSettingStore } from '@/store/setting';
 import {
+  useTheme as useAppTheme,
   findCustomThemeName,
   PrimaryColors,
   NeutralColors,
   primaryColors,
   neutralColors,
-} from '@/theme/color';
+} from '@/theme';
+import { useStyles } from './styles';
+import { useSettingStore } from '@/store/setting';
 
 import { SettingItem } from './(components)';
 
