@@ -25,35 +25,45 @@
   },
   {
     "children": {
-      "fixes": ["Improve mcp tracing with user config."]
+      "fixes": [
+        "Improve mcp tracing with user config."
+      ]
     },
     "date": "2025-08-17",
     "version": "1.112.5"
   },
   {
     "children": {
-      "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
+      "improvements": [
+        "Refactor prompts folder to the @lobechat/prompts pacakge."
+      ]
     },
     "date": "2025-08-16",
     "version": "1.112.4"
   },
   {
     "children": {
-      "improvements": ["Refactor const folder to a new package."]
+      "improvements": [
+        "Refactor const folder to a new package."
+      ]
     },
     "date": "2025-08-16",
     "version": "1.112.3"
   },
   {
     "children": {
-      "improvements": ["重构 ArgsInput 组件."]
+      "improvements": [
+        "重构 ArgsInput 组件."
+      ]
     },
     "date": "2025-08-16",
     "version": "1.112.2"
   },
   {
     "children": {
-      "improvements": ["Add Imagen 4 GA models, style improve auth sign in box loading."]
+      "improvements": [
+        "Add Imagen 4 GA models, style improve auth sign in box loading."
+      ]
     },
     "date": "2025-08-16",
     "version": "1.112.1"
