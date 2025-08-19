@@ -33,7 +33,7 @@ export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: t('page.notFoundTitle', { ns: 'error' }) }} />
-      <View style={[styles.container, { backgroundColor: token.colorBgBase }]}>
+      <View style={[styles.container, { backgroundColor: token.colorBgContainer }]}>
         <Text style={[styles.title, { color: token.colorText }]}>
           {t('page.notFoundMessage', { ns: 'error' })}
         </Text>

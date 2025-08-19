@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme/createStyles';
+import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
