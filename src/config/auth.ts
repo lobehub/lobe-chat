@@ -138,6 +138,13 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  // AWS ENVs Migration
+  if (process.env.AWS_ACCESS_KEY_ID) {
+    console.warn(removeTipsTemplate('AWS_ACCESS_KEY_ID', 'AWS_BEARER_TOKEN_BEDROCK'));
+  }
+  if (process.env.AWS_SECRET_ACCESS_KEY) {
+    console.warn(removeTipsTemplate('AWS_SECRET_ACCESS_KEY', 'AWS_BEARER_TOKEN_BEDROCK'));
+  }
   // End
 
   return createEnv({
