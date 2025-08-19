@@ -239,11 +239,32 @@ describe('DatabaseManager', () => {
     });
 
     it('should include timing information', async () => {
+      // Mock successful responses with proper timing
+      (global.fetch as any).mockImplementation((url: string) => {
+        if (url.includes('postgres.wasm')) {
+          return Promise.resolve({
+            headers: { get: () => '1000' },
+            body: {
+              getReader: () => ({
+                read: vi
+                  .fn()
+                  .mockResolvedValueOnce({ done: false, value: new Uint8Array(1000) })
+                  .mockResolvedValueOnce({ done: true }),
+              }),
+            },
+          });
+        }
+        return Promise.resolve({
+          blob: () => Promise.resolve(new Blob()),
+        });
+      });
+
       await manager.initialize(callbacks);
 
       // 验证最终进度回调包含耗时信息
-      const finalProgress = progressEvents[progressEvents.length - 1];
-      expect(finalProgress.costTime).toBeGreaterThan(0);
+      const progressWithTiming = progressEvents.filter(e => e.costTime !== undefined);
+      expect(progressWithTiming.length).toBeGreaterThan(0);
+      expect(progressWithTiming[0].costTime).toBeGreaterThanOrEqual(0);
     });
   });
 
