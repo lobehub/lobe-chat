@@ -8,24 +8,6 @@ export const useStyles = createStyles((token, backgroundColor?: string) => ({
     marginTop: token.marginXS,
     padding: token.paddingXXS,
   },
-  avatarEmoji: {
-    fontSize: token.fontSizeHeading1 * 2.5,
-    textAlign: 'center',
-  },
-  avatarImg: {
-    borderRadius: 36,
-    height: 72,
-    width: 72,
-  },
-  avatarWrapper: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: 36,
-    height: 72,
-    justifyContent: 'center',
-    overflow: 'hidden',
-    width: 72,
-  },
   container: {
     backgroundColor: token.colorBgLayout,
     flex: 1,

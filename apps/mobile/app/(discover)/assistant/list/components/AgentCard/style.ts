@@ -16,7 +16,7 @@ export const useStyles = createStyles((token) => ({
   card: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorderSecondary,
-    borderRadius: token.borderRadius,
+    borderRadius: token.borderRadiusLG,
     borderWidth: token.lineWidth,
     overflow: 'hidden',
   },
@@ -41,21 +41,21 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: token.paddingSM,
   },
   name: {
     color: token.colorText,
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: token.fontSizeXL,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.marginXS,
   },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginLeft: -4,
+    marginLeft: -token.marginXXS,
   },
   titleContainer: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: token.paddingSM,
   },
 }));
