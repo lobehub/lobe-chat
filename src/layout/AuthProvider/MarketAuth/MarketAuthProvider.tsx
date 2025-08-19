@@ -68,8 +68,12 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      console.log(
+        'process.env.NEXT_PUBLIC_MARKET_BASE_URL',
+        process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+      );
       const oidcConfig: OIDCConfig = {
-        baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787',
+        baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787',
         clientId: 'lobehub-desktop-web',
         redirectUri: `${window.location.origin}/market-auth-callback`,
         scope: 'openid profile email',
@@ -123,7 +127,7 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
    */
   const signIn = async (): Promise<void> => {
     console.log('[MarketAuth] Starting sign in process');
-    
+
     if (!oidcClient) {
       console.error('[MarketAuth] OIDC client not initialized');
       throw new Error('OIDC client not initialized');
@@ -192,7 +196,7 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
       if (shouldReauthorize && oidcClient) {
         console.log('[MarketAuth] Auto-triggering re-authorization due to token expiry');
         setShouldReauthorize(false); // 重置标识，避免重复触发
-        
+
         try {
           setStatus('loading');
 

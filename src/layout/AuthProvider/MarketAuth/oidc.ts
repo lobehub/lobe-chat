@@ -78,7 +78,7 @@ export class MarketOIDC {
     console.log('[MarketOIDC] Building authorization URL');
     const pkceParams = await this.generatePKCEParams();
 
-    const authUrl = new URL(`${this.config.baseUrl}/market-oidc/auth`);
+    const authUrl = new URL(`${this.config.baseUrl.replace(/\/$/, '')}/market-oidc/auth`);
     authUrl.searchParams.set('client_id', this.config.clientId);
     authUrl.searchParams.set('redirect_uri', this.config.redirectUri);
     authUrl.searchParams.set('response_type', 'code');
@@ -111,7 +111,7 @@ export class MarketOIDC {
       throw new Error('Code verifier not found');
     }
 
-    const tokenUrl = `${this.config.baseUrl}/market-oidc/token`;
+    const tokenUrl = `${this.config.baseUrl.replace(/\/$/, '')}/market-oidc/token`;
     const body = new URLSearchParams({
       client_id: this.config.clientId,
       code,
