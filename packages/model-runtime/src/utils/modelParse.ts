@@ -85,7 +85,7 @@ export const MODEL_LIST_CONFIGS = {
 export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
-  google: ['gemini'],
+  google: ['gemini', 'imagen'],
   llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
@@ -251,7 +251,7 @@ const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any,
-): ChatModelCard => {
+): ChatModelCard | undefined => {
   const {
     functionCallKeywords = [],
     visionKeywords = [],
@@ -260,6 +260,20 @@ const processModelCard = (
   } = config;
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
+  const modelType =
+    model.type ||
+    knownModel?.type ||
+    (isKeywordListMatch(
+      model.id.toLowerCase(),
+      IMAGE_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+    )
+      ? 'image'
+      : 'chat');
+
+  // image model can't find parameters
+  if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {
+    return undefined;
+  }
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
@@ -281,15 +295,11 @@ const processModelCard = (
       knownModel?.abilities?.reasoning ??
       (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
     releasedAt: processReleasedAt(model, knownModel),
-    type:
-      model.type ||
-      knownModel?.type ||
-      (isKeywordListMatch(
-        model.id.toLowerCase(),
-        IMAGE_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
-        ? 'image'
-        : 'chat'),
+    type: modelType,
+    // current, only image model use the parameters field
+    ...(modelType === 'image' && {
+      parameters: model.parameters ?? knownModel?.parameters,
+    }),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??
@@ -329,7 +339,7 @@ export const processModelList = async (
 
       return processModelCard(model, config, knownModel);
     }),
-  ).then((results) => results.filter(Boolean));
+  ).then((results) => results.filter((result) => !!result));
 };
 
 /**
@@ -381,11 +391,15 @@ export const processMultiProviderModelList = async (
       const processedModel = processModelCard(model, config, knownModel);
 
       // 如果找到了本地配置中的模型，使用其 enabled 状态
-      if (providerLocalModelConfig && typeof providerLocalModelConfig.enabled === 'boolean') {
+      if (
+        processedModel &&
+        providerLocalModelConfig &&
+        typeof providerLocalModelConfig.enabled === 'boolean'
+      ) {
         processedModel.enabled = providerLocalModelConfig.enabled;
       }
 
       return processedModel;
     }),
-  ).then((results) => results.filter(Boolean));
+  ).then((results) => results.filter((result) => !!result));
 };

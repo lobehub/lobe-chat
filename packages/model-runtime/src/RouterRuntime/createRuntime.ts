@@ -195,6 +195,11 @@ export const createRouterRuntime = ({
       }
     }
 
+    async createImage(payload: CreateImagePayload) {
+      const runtime = await this.getRuntimeByModel(payload.model);
+      return runtime.createImage!(payload);
+    }
+
     async textToImage(payload: TextToImagePayload) {
       const runtime = await this.getRuntimeByModel(payload.model);
 
@@ -203,12 +208,12 @@ export const createRouterRuntime = ({
 
     async models() {
       if (models && typeof models === 'function') {
-          // 如果是函数式配置，使用最后一个 runtime 的 client 调用函数
-          const lastRuntime = this._runtimes.at(-1)?.runtime;
-          if (lastRuntime && 'client' in lastRuntime) {
-            return await models({ client: (lastRuntime as any).client });
-          }
+        // 如果是函数式配置，使用最后一个 runtime 的 client 调用函数
+        const lastRuntime = this._runtimes.at(-1)?.runtime;
+        if (lastRuntime && 'client' in lastRuntime) {
+          return await models({ client: (lastRuntime as any).client });
         }
+      }
       return this._runtimes.at(-1)?.runtime.models?.();
     }
 

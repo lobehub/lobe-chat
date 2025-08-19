@@ -48,7 +48,10 @@ describe('getModelListByType', () => {
       abilities: {} as ModelAbilities,
       displayName: 'DALL-E 3',
       enabled: true,
-      parameters: { size: '1024x1024', quality: 'standard' },
+      parameters: { 
+        prompt: { default: '' },
+        size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] }
+      },
     },
     {
       id: 'midjourney',
@@ -89,7 +92,10 @@ describe('getModelListByType', () => {
         contextWindowTokens: undefined,
         displayName: 'DALL-E 3',
         id: 'dall-e-3',
-        parameters: { size: '1024x1024', quality: 'standard' },
+        parameters: { 
+          prompt: { default: '' },
+          size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] }
+        },
       });
     });
 
