@@ -1,5 +1,5 @@
 import * as Crypto from 'expo-crypto';
-import { PKCE } from '@/types/user';
+import { PKCE } from '@/_types/user';
 import { authLogger } from '@/utils/logger';
 import { AUTH_ENDPOINTS } from '@/config/auth';
 
