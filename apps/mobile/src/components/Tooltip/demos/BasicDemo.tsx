@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { useThemeToken } from '@/theme/context';
+import { useThemeToken } from '@/theme';
+import Button from '@/components/Button';
 
 import { Tooltip } from '..';
 
@@ -9,19 +10,6 @@ const BasicDemo = () => {
   const token = useThemeToken();
 
   const styles = StyleSheet.create({
-    button: {
-      alignItems: 'center',
-      backgroundColor: token.colorPrimary,
-      borderRadius: 8,
-      justifyContent: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 12,
-    },
-    buttonText: {
-      color: token.colorText,
-      fontSize: 14,
-      fontWeight: '500',
-    },
     demoContainer: {
       backgroundColor: token.colorBgLayout,
       flex: 1,
@@ -36,9 +24,7 @@ const BasicDemo = () => {
     <View style={styles.demoContainer}>
       <View style={styles.demoSection}>
         <Tooltip title="这是一个长按提示">
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>长按我</Text>
-          </TouchableOpacity>
+          <Button type="primary">长按我</Button>
         </Tooltip>
       </View>
     </View>
