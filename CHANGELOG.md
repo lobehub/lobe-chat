@@ -2,6 +2,37 @@
 
 # Changelog
 
+## [Version&nbsp;1.114.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.113.1...v1.114.0)
+<sup>Released on **2025-08-19**</sup>
+
+
+#### ✨ Features
+
+- **models**: Add Qwen Image Edit model.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **models**: Add Qwen Image Edit model, closes [#8851](https://github.com/jaworldwideorg/OneJA-Bot/issues/8851) ([4d7a060](https://github.com/jaworldwideorg/OneJA-Bot/commit/4d7a060))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.113.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.113.0...v1.113.1)
 <sup>Released on **2025-08-19**</sup>
 
