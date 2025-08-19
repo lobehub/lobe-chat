@@ -173,20 +173,6 @@ export const marketRouter = router({
       }
     }),
 
-  getMcpIdentifiers: marketProcedure.query(async ({ ctx }) => {
-    log('getMcpIdentifiers called');
-
-    try {
-      return await ctx.discoverService.getMcpIdentifiers();
-    } catch (error) {
-      log('Error fetching mcp identifiers: %O', error);
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to fetch mcp identifiers',
-      });
-    }
-  }),
-
   getMcpList: marketProcedure
     .input(
       z

@@ -5,7 +5,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { TokenStorage } from '@/services/_auth/tokenStorage';
 import { OAuthService } from '@/services/_auth/authService';
 import { getAuthConfig } from '@/config/auth';
-import type { AuthState, User, Token } from '@/types/user';
+import type { AuthState, User, Token } from '@/_types/user';
 import { authLogger } from '@/utils/logger';
 
 interface UserStore extends AuthState {

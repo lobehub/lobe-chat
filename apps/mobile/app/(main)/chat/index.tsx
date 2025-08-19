@@ -5,6 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useGlobalStore } from '@/store/global';
 import { ChatMessage } from '@/types/message';
+import Hydration from '@/features/Hydration';
+import TopicDrawer from '@/features/TopicDrawer';
 import ChatHeader from './(components)/ChatHeader';
 import ChatInput from './(components)/ChatInput';
 import ChatList from './(components)/ChatList';
@@ -38,6 +40,10 @@ export default function ChatWithDrawer() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
+      {/* Hydration组件：处理URL和Store的双向同步 */}
+      <Hydration />
+
+      {/* 左侧Session抽屉 */}
       <Drawer
         drawerPosition="left"
         drawerStyle={styles.drawerStyle}
@@ -51,7 +57,10 @@ export default function ChatWithDrawer() {
         swipeEdgeWidth={50}
         swipeEnabled={true}
       >
-        <ChatContent />
+        {/* 右侧Topic抽屉 */}
+        <TopicDrawer>
+          <ChatContent />
+        </TopicDrawer>
       </Drawer>
     </View>
   );
