@@ -12,7 +12,7 @@ export const useStyles = createStyles((token) => ({
     fontFamily: token.fontFamily,
     fontSize: token.fontSize,
     fontWeight: '500',
-    lineHeight: token.lineHeight * token.fontSize,
+    lineHeight: token.lineHeight,
   },
   toast: {
     alignItems: 'center',
