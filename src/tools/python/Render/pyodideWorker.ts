@@ -1,5 +1,7 @@
 import { PyodideAPI, type loadPyodide } from 'pyodide';
 
+import { pythonEnv } from '@/config/python';
+
 declare global {
   // eslint-disable-next-line no-var
   var images: Uint8Array[];
@@ -44,7 +46,8 @@ def patch_matplotlib():
 patch_matplotlib()`;
 
 async function initializePyodide(): Promise<PyodideAPI> {
-  const indexURL = 'https://cdn.jsdelivr.net/pyodide/v0.28.2/full';
+  const indexURL =
+    pythonEnv.NEXT_PUBLIC_PYODIDE_INDEX_URL || 'https://cdn.jsdelivr.net/pyodide/v0.28.2/full';
   globalThis.importScripts(`${indexURL}/pyodide.js`);
   return await ((globalThis as any).loadPyodide as typeof loadPyodide)({
     indexURL,
@@ -61,7 +64,11 @@ export async function executePythonCode(
     // 加载代码中需要的包
     await pyodide.loadPackage('micropip');
     const micropip = pyodide.pyimport('micropip');
-    await micropip.install(packages);
+    await micropip.install(packages, {
+      index_urls: [
+        pythonEnv.NEXT_PUBLIC_PYODIDE_PIP_INDEX_URL || 'https://pypi.org/pypi/{package_name}/json',
+      ],
+    });
 
     if (packages.includes('matplotlib')) {
       await pyodide.runPythonAsync(PATCH_MATPLOTLIB);

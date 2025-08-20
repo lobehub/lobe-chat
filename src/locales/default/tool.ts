@@ -22,14 +22,12 @@ export default {
     readFilesError: '读取文件失败，请检查文件路径是否正确',
   },
   python: {
-    downloadFile: '下载文件',
     error: '执行错误',
     executing: '执行中...',
     files: '文件：',
     output: '输出：',
     rerun: '重新执行',
     returnValue: '返回值：',
-    uploading: '上传中...',
   },
   search: {
     createNewSearch: '创建新的搜索记录',
