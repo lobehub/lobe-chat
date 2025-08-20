@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 
+import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 import Skeleton from '../index';
 
@@ -24,35 +25,27 @@ const AnimatedDemo: React.FC = () => {
       </Text>
 
       <View style={{ flexDirection: 'row', gap: 12, marginBottom: 20 }}>
-        <TouchableOpacity
+        <Button
           onPress={toggleAnimation}
           style={{
-            alignItems: 'center',
             backgroundColor: animationEnabled ? token.colorPrimary : token.colorTextTertiary,
-            borderRadius: 8,
             flex: 1,
-            padding: 10,
           }}
+          type="primary"
         >
-          <Text style={{ color: token.colorText, fontWeight: 'bold' }}>
-            {animationEnabled ? 'Disable Animation' : 'Enable Animation'}
-          </Text>
-        </TouchableOpacity>
+          {animationEnabled ? 'Disable Animation' : 'Enable Animation'}
+        </Button>
 
-        <TouchableOpacity
+        <Button
           onPress={toggleCustomColors}
           style={{
-            alignItems: 'center',
             backgroundColor: customColors ? token.colorSuccess : token.colorTextTertiary,
-            borderRadius: 8,
             flex: 1,
-            padding: 10,
           }}
+          type="primary"
         >
-          <Text style={{ color: token.colorText, fontWeight: 'bold' }}>
-            {customColors ? 'Default Colors' : 'Custom Colors'}
-          </Text>
-        </TouchableOpacity>
+          {customColors ? 'Default Colors' : 'Custom Colors'}
+        </Button>
       </View>
 
       <View style={{ marginBottom: 20 }}>

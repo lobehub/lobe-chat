@@ -6,6 +6,7 @@ import {
   TouchableOpacityProps,
   TextStyle,
   ViewStyle,
+  StyleProp,
 } from 'react-native';
 
 import { useStyles, ButtonType, ButtonSize } from './style';
@@ -18,8 +19,8 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   loading?: boolean;
   onPress?: () => void;
   size?: ButtonSize;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   type?: ButtonType;
 }
 

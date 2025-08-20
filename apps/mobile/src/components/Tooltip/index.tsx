@@ -6,6 +6,7 @@ import {
   GestureResponderEvent,
   LayoutChangeEvent,
   LayoutRectangle,
+  StyleProp,
   Text,
   TextStyle,
   TouchableOpacity,
@@ -42,11 +43,11 @@ export interface TooltipProps {
   /** 显示隐藏的回调 */
   onVisibleChange?: (visible: boolean) => void;
   /** 自定义样式 */
-  overlayStyle?: ViewStyle;
+  overlayStyle?: StyleProp<ViewStyle>;
   /** 气泡框位置 */
   placement?: TooltipPlacement;
   /** 文字样式 */
-  textStyle?: TextStyle;
+  textStyle?: StyleProp<TextStyle>;
   /** 提示文字或内容 */
   title: string | ReactNode;
   /** 触发行为 */
