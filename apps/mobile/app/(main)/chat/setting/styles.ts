@@ -1,12 +1,9 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token, backgroundColor?: string) => ({
+export const useStyles = createStyles((token) => ({
   avatarContainer: {
-    backgroundColor: backgroundColor || token.colorBgElevated,
-    borderRadius: token.borderRadiusLG * 2.75,
     marginBottom: token.marginSM,
-    marginTop: token.marginXS,
-    padding: token.paddingXXS,
+    marginTop: token.marginLG,
   },
   container: {
     backgroundColor: token.colorBgLayout,

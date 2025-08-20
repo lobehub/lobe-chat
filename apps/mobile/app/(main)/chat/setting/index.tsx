@@ -11,10 +11,9 @@ import { AVATAR_SIZE_LARGE } from '@/const/common';
 export default function AgentDetail() {
   const { t } = useTranslation();
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
-  const backgroundColor = useSessionStore(sessionMetaSelectors.currentAgentBackgroundColor);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
-  const { styles } = useStyles(backgroundColor);
+  const { styles } = useStyles();
 
   // Mock 对话历史数据
   const history = [
