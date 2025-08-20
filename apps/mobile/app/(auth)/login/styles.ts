@@ -1,4 +1,5 @@
 import { createStyles } from '@/theme';
+import { LOGO_SIZE } from '@/const/common';
 
 export const useStyles = createStyles((token) => ({
   container: {
@@ -10,7 +11,7 @@ export const useStyles = createStyles((token) => ({
   },
   content: {
     alignItems: 'center',
-    maxWidth: 400,
+    maxWidth: token.screenSM,
     width: '100%',
   },
   errorContainer: {
@@ -30,38 +31,38 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.marginXL,
   },
   logo: {
-    height: 80,
+    height: LOGO_SIZE,
     marginBottom: token.marginLG,
-    width: 80,
+    width: LOGO_SIZE,
   },
   securityLink: {
     color: token.colorLink,
     fontSize: token.fontSizeSM,
-    lineHeight: 20,
+    lineHeight: token.lineHeightSM,
     textAlign: 'center',
   },
   securityNote: {
     alignItems: 'center',
     marginBottom: token.marginLG,
-    maxWidth: 400,
+    maxWidth: token.screenSM,
     width: '100%',
   },
   securityText: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeSM,
-    lineHeight: 20,
+    lineHeight: token.lineHeightSM,
     textAlign: 'center',
   },
   subtitle: {
     color: token.colorTextSecondary,
     fontSize: token.fontSize,
-    lineHeight: 24,
+    lineHeight: token.lineHeight,
     textAlign: 'center',
   },
   title: {
     color: token.colorText,
     fontSize: token.fontSizeHeading1,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
     marginBottom: token.marginSM,
   },
   welcome: {
