@@ -6,6 +6,7 @@ import {
   GestureResponderEvent,
   LayoutChangeEvent,
   LayoutRectangle,
+  StyleProp,
   Text,
   TextStyle,
   TouchableOpacity,
@@ -42,11 +43,11 @@ export interface TooltipProps {
   /** 显示隐藏的回调 */
   onVisibleChange?: (visible: boolean) => void;
   /** 自定义样式 */
-  overlayStyle?: ViewStyle;
+  overlayStyle?: StyleProp<ViewStyle>;
   /** 气泡框位置 */
   placement?: TooltipPlacement;
   /** 文字样式 */
-  textStyle?: TextStyle;
+  textStyle?: StyleProp<TextStyle>;
   /** 提示文字或内容 */
   title: string | ReactNode;
   /** 触发行为 */
@@ -80,7 +81,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   title,
   children,
   placement = 'top',
-  trigger = 'longPress',
+  trigger = 'click',
   arrow = true,
   color,
   visible: controlledVisible,
@@ -606,26 +607,23 @@ export const Tooltip: React.FC<TooltipProps> = ({
     );
   };
 
-  const childProps: any = {
-    ref: childRef,
-  };
+  const triggerProps: any = {};
 
   if (trigger === 'click') {
-    childProps.onPress = handleChildPress;
+    triggerProps.onPress = handleChildPress;
   } else if (trigger === 'longPress') {
-    childProps.onLongPress = handleChildLongPress;
+    triggerProps.onLongPress = handleChildLongPress;
   }
 
   const clonedChild = React.isValidElement(children)
-    ? React.cloneElement(children, {
-        ...childProps,
-        ref: childRef,
-      })
+    ? React.cloneElement(children as React.ReactElement<any>, triggerProps)
     : children;
 
   return (
     <View style={styles.container}>
-      {clonedChild}
+      <View collapsable={false} ref={childRef}>
+        {clonedChild}
+      </View>
       {renderTooltip()}
     </View>
   );

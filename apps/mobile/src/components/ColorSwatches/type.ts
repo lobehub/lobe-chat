@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 export interface ColorSwatchesItemType {
   color: string;
@@ -15,6 +15,6 @@ export interface ColorSwatchesProps {
   onChange?: (color?: string) => void;
   shape?: 'circle' | 'square';
   size?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   value?: string;
 }
