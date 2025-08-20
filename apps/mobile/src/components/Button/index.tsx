@@ -13,6 +13,7 @@ import { useStyles, ButtonType, ButtonSize } from './style';
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
   children?: React.ReactNode;
+  danger?: boolean;
   disabled?: boolean;
   loading?: boolean;
   onPress?: () => void;
@@ -28,13 +29,14 @@ const Button: React.FC<ButtonProps> = ({
   loading = false,
   disabled = false,
   block = false,
+  danger = false,
   children,
   onPress,
   style,
   textStyle,
   ...rest
 }) => {
-  const { styles } = useStyles({ block, disabled: disabled || loading, size, type });
+  const { styles } = useStyles({ block, danger, disabled: disabled || loading, size, type });
 
   const handlePress = () => {
     if (!disabled && !loading && onPress) {

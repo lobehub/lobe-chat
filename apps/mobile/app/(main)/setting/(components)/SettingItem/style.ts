@@ -30,7 +30,7 @@ export const useStyles = createStyles((token) => ({
   },
   settingItemArrow: {
     color: token.colorBorder,
-    fontSize: token.fontSizeIcon,
+    fontSize: token.sizeLG,
     marginLeft: token.marginSM,
   },
   settingItemDescription: {
@@ -40,7 +40,7 @@ export const useStyles = createStyles((token) => ({
   },
   settingItemExtra: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSize,
+    fontSize: token.fontSizeLG,
     marginRight: token.marginXXS,
   },
   settingItemLeft: {
@@ -54,6 +54,6 @@ export const useStyles = createStyles((token) => ({
   },
   settingItemTitle: {
     color: token.colorText,
-    fontSize: token.fontSize,
+    fontSize: token.fontSizeLG,
   },
 }));
