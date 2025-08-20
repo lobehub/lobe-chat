@@ -26,7 +26,10 @@
     "executing": "执行中...",
     "output": "输出：",
     "returnValue": "返回值：",
-    "rerun": "重新执行"
+    "rerun": "重新执行",
+    "uploading": "上传中...",
+    "images": "图片：",
+    "downloadImage": "下载图片"
   },
   "search": {
     "createNewSearch": "创建新的搜索记录",

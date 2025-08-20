@@ -1,7 +1,21 @@
 import { PyodideAPI, type loadPyodide } from 'pyodide';
 
+declare global {
+  // eslint-disable-next-line no-var
+  var images: Uint8Array[];
+}
+
+export interface PythonImageItem {
+  // 临时预览 URL (base64)
+  filename: string;
+  imageId?: string;
+  // 持久化后的文件 ID
+  previewUrl?: string; // 图片文件名
+}
+
 export interface PythonExecutionResult {
   error?: string;
+  images?: PythonImageItem[]; // 新增图片数组
   output: Output[];
   result?: string;
   success: boolean;
@@ -17,7 +31,7 @@ def patch_matplotlib():
   import matplotlib
   import matplotlib.pyplot as plt
   from pyodide.ffi import to_js
-  from js import postMessage, Object
+  from js import images
   from io import BytesIO
   from base64 import b64encode
 
@@ -28,13 +42,8 @@ def patch_matplotlib():
     plt.savefig(buf, format="png")
     buf.seek(0)
 
-    img_data = b64encode(buf.getvalue()).decode("utf-8")
+    images.append(to_js(buf.getvalue()))
     buf.close()
-
-    postMessage(to_js({
-      "type": "matplotlib-image",
-      "payload": img_data
-    }, dict_converter=Object.fromEntries))
 
     plt.clf()
 
@@ -67,6 +76,9 @@ export async function executePythonCode(code: string): Promise<PythonExecutionRe
       },
     });
 
+    // 捕获图片
+    globalThis.images = [];
+
     // 加载代码中需要的包
     const packages = await pyodide.loadPackagesFromImports(code, {
       messageCallback: (message: string) => {
@@ -82,7 +94,29 @@ export async function executePythonCode(code: string): Promise<PythonExecutionRe
     // 执行 Python 代码
     try {
       const result = await pyodide.runPythonAsync(code);
+
+      // 处理捕获的图片
+      const images: PythonImageItem[] = [];
+      if (globalThis.images && globalThis.images.length > 0) {
+        globalThis.images.forEach((imageData, index) => {
+          // 将 Uint8Array 转换为 base64
+          const uint8Array = new Uint8Array(imageData);
+          const binaryString = Array.from(uint8Array, (byte) => String.fromCharCode(byte)).join('');
+          const base64 = btoa(binaryString);
+          const dataUrl = `data:image/png;base64,${base64}`;
+
+          images.push({
+            filename: `plot_${index + 1}.png`,
+            previewUrl: dataUrl,
+          });
+        });
+
+        // 清空图片数组以备下次执行
+        globalThis.images = [];
+      }
+
       return {
+        images: images.length > 0 ? images : undefined,
         output,
         result: result !== undefined ? String(result) : undefined,
         success: true,
@@ -93,6 +127,7 @@ export async function executePythonCode(code: string): Promise<PythonExecutionRe
         value: error instanceof Error ? error.message : String(error),
       });
       return {
+        images: undefined,
         output,
         success: false,
       };

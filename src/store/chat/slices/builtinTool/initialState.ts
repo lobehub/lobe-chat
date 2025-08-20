@@ -6,6 +6,7 @@ export interface ChatToolState {
   dalleImageMap: Record<string, FileItem>;
   localFileLoading: Record<string, boolean>;
   pythonExecuting: Record<string, boolean>;
+  pythonImageMap: Record<string, FileItem>;
   searchLoading: Record<string, boolean>;
 }
 
@@ -14,5 +15,6 @@ export const initialToolState: ChatToolState = {
   dalleImageMap: {},
   localFileLoading: {},
   pythonExecuting: {},
+  pythonImageMap: {},
   searchLoading: {},
 };

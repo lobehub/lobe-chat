@@ -10,6 +10,8 @@ import { useChatStore } from '@/store/chat';
 import { BuiltinRenderProps } from '@/types/tool';
 import { PythonExecutionResult, PythonParams, PythonState } from '@/types/tool/python';
 
+import PythonImageGallery from './components/PythonImageGallery';
+
 const Python = memo<
   BuiltinRenderProps<PythonExecutionResult | PythonParams, PythonParams, PythonState>
 >(({ content, args, messageId, pluginState }) => {
@@ -110,6 +112,16 @@ const Python = memo<
               <Highlighter copyable={false} language="text" showLanguage={false}>
                 {executionResult.result}
               </Highlighter>
+            </Flexbox>
+          )}
+
+          {/* 图片显示 */}
+          {executionResult.images && executionResult.images.length > 0 && (
+            <Flexbox>
+              <Text strong style={{ marginBottom: 8 }}>
+                {t('python.images')}
+              </Text>
+              <PythonImageGallery images={executionResult.images} messageId={messageId} />
             </Flexbox>
           )}
 
