@@ -31,7 +31,7 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js", "apps/desktop"],
+  "exclude": ["node_modules", "public/sw.js", "apps/desktop", "tmp", "temp", ".temp"],
   "include": [
     "**/*.d.ts",
     "**/*.ts",
