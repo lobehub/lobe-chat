@@ -10,6 +10,7 @@ import Space from '@/components/Space';
 import Tag from '@/components/Tag';
 
 import { useStyles } from './style';
+import { AVATAR_SIZE_MEDIUM } from '@/const/common';
 
 interface AgentCardProps {
   item: DiscoverAssistantItem;
@@ -43,7 +44,7 @@ export const AgentCard = ({ item }: AgentCardProps) => {
               </Space>
             </View>
 
-            <Avatar avatar={item.meta.avatar || '🤖'} size={32} />
+            <Avatar avatar={item.meta.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />
           </View>
 
           <Text numberOfLines={2} style={styles.description}>

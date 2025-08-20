@@ -74,6 +74,9 @@ importers:
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
+      chroma-js:
+        specifier: ^3.1.2
+        version: 3.1.2
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -2473,6 +2476,9 @@ packages:
   chownr@2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
+
+  chroma-js@3.1.2:
+    resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
 
   chrome-launcher@0.15.2:
     resolution: {integrity: sha512-zdLEwNo3aUVzIhKhTtXfxhdvZhUghrnmkvcAq2NoDd+LeOHKf03H5jwZ8T/STsAlzyALkBVK552iaG1fGf1xVQ==}
@@ -9713,6 +9719,8 @@ snapshots:
       tslib: 2.8.1
 
   chownr@2.0.0: {}
+
+  chroma-js@3.1.2: {}
 
   chrome-launcher@0.15.2:
     dependencies:
