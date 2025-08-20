@@ -10,7 +10,7 @@ import { useChatStore } from '@/store/chat';
 import { BuiltinRenderProps } from '@/types/tool';
 import { PythonExecutionResult, PythonParams, PythonState } from '@/types/tool/python';
 
-import PythonImageGallery from './components/PythonImageGallery';
+import PythonFileGallery from './components/PythonFileGallery';
 
 const Python = memo<
   BuiltinRenderProps<PythonExecutionResult | PythonParams, PythonParams, PythonState>
@@ -33,7 +33,7 @@ const Python = memo<
 
     setIsLocalExecuting(true);
     try {
-      await executePythonCode(messageId, { code });
+      await executePythonCode(messageId, { code, packages: args?.packages || [] });
     } finally {
       setIsLocalExecuting(false);
     }
@@ -115,13 +115,13 @@ const Python = memo<
             </Flexbox>
           )}
 
-          {/* 图片显示 */}
-          {executionResult.images && executionResult.images.length > 0 && (
+          {/* 文件显示 */}
+          {executionResult.files && executionResult.files.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 8 }}>
-                {t('python.images')}
+                {t('python.files')}
               </Text>
-              <PythonImageGallery images={executionResult.images} messageId={messageId} />
+              <PythonFileGallery files={executionResult.files} messageId={messageId} />
             </Flexbox>
           )}
 

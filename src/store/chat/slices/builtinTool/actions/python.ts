@@ -10,7 +10,7 @@ import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
 import {
   PythonExecutionResult,
-  PythonImageItem,
+  PythonFileItem,
   PythonParams,
   PythonState,
 } from '@/types/tool/python';
@@ -18,17 +18,17 @@ import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('python');
 
-const SWR_FETCH_PYTHON_IMAGE_KEY = 'FetchPythonImageItem';
+const SWR_FETCH_PYTHON_FILE_KEY = 'FetchPythonFileItem';
 
 export interface ChatPythonAction {
   executePythonCode: (id: string, params: PythonParams) => Promise<void>;
-  processAndUploadPythonImages: (
+  processAndUploadPythonFiles: (
     id: string,
     executionResult: PythonExecutionResult,
   ) => Promise<void>;
   togglePythonExecuting: (id: string, executing: boolean) => void;
-  updatePythonImageItem: (id: string, updater: (data: PythonImageItem[]) => void) => Promise<void>;
-  useFetchPythonImageItem: (id: string) => SWRResponse;
+  updatePythonFileItem: (id: string, updater: (data: PythonFileItem[]) => void) => Promise<void>;
+  useFetchPythonFileItem: (id: string) => SWRResponse;
 }
 
 export const pythonSlice: StateCreator<
@@ -72,12 +72,13 @@ export const pythonSlice: StateCreator<
         worker.postMessage({
           code: params.code,
           id: id,
+          packages: params.packages,
         });
       });
 
-      // 处理图片上传（如果有图片）
-      if (executionResult.images && executionResult.images.length > 0) {
-        await get().processAndUploadPythonImages(id, executionResult);
+      // 处理文件上传（如果有文件）
+      if (executionResult.files && executionResult.files.length > 0) {
+        await get().processAndUploadPythonFiles(id, executionResult);
       } else {
         // 更新插件状态
         await updatePluginState(id, {
@@ -108,11 +109,11 @@ export const pythonSlice: StateCreator<
     }
   },
 
-  processAndUploadPythonImages: async (id: string, executionResult: PythonExecutionResult) => {
-    const { updatePythonImageItem, updatePluginState } = get();
+  processAndUploadPythonFiles: async (id: string, executionResult: PythonExecutionResult) => {
+    const { updatePythonFileItem, updatePluginState } = get();
 
-    if (!executionResult.images || executionResult.images.length === 0) {
-      // 如果没有图片，直接更新状态
+    if (!executionResult.files || executionResult.files.length === 0) {
+      // 如果没有文件，直接更新状态
       await updatePluginState(id, {
         executionResult,
         isExecuting: false,
@@ -121,59 +122,53 @@ export const pythonSlice: StateCreator<
       return;
     }
 
-    // 先更新状态显示预览图片
+    // 先更新状态显示预览文件
     await updatePluginState(id, {
       executionResult,
       isExecuting: false,
     } as PythonState);
     await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
 
-    // 并行上传所有图片
+    // 并行上传所有文件
     await pMap(
-      executionResult.images,
-      async (imageItem, index) => {
-        if (!imageItem.previewUrl) return;
+      executionResult.files,
+      async (fileItem, index) => {
+        if (!fileItem.data) return;
 
         try {
-          // 将 base64 转换为 File 对象
-          const base64Data = imageItem.previewUrl.split(',')[1]; // 去掉 data:image/png;base64, 前缀
-          const binaryString = atob(base64Data);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          const blob = new Blob([bytes], { type: 'image/png' });
-          const file = new File([blob], imageItem.filename, { type: 'image/png' });
+          // 创建 File 对象
+          const blob = new Blob([fileItem.data]);
+          const file = new File([blob], fileItem.filename);
 
-          // 使用 fileStore 的 uploadWithProgress 方法（和 DALL-E 一样）
+          // 使用 fileStore 的 uploadWithProgress 方法
           const uploadResult = await useFileStore.getState().uploadWithProgress({
             file,
             skipCheckFileType: true,
           });
 
           if (uploadResult?.id) {
-            // 更新图片项，设置永久 ID 并清除临时 URL
-            await updatePythonImageItem(id, (draft) => {
+            // 更新文件项，设置永久 ID 并清除临时数据
+            await updatePythonFileItem(id, (draft) => {
               if (draft[index]) {
-                draft[index].imageId = uploadResult.id;
-                draft[index].previewUrl = undefined;
+                draft[index].fileId = uploadResult.id;
+                draft[index].data = undefined;
               }
             });
           }
         } catch (error) {
-          console.error('Failed to upload Python image:', error);
-          // 上传失败，保留 previewUrl 用于显示
+          console.error('Failed to upload Python file:', error);
+          // 上传失败，保留原始数据用于显示和下载
         }
       },
       { concurrency: 3 }, // 限制并发上传数量
     );
 
-    // 最终清理：确保所有 previewUrl 都被清除
-    await updatePythonImageItem(id, (draft) => {
+    // 最终清理：确保所有临时数据都被清除
+    await updatePythonFileItem(id, (draft) => {
       draft.forEach((item) => {
-        if (item.previewUrl && item.imageId) {
-          // 如果已经有 imageId，确保清除 previewUrl
-          item.previewUrl = undefined;
+        if (item.fileId) {
+          // 如果已经有 fileId，确保清除临时数据
+          item.data = undefined;
         }
       });
     });
@@ -187,41 +182,41 @@ export const pythonSlice: StateCreator<
     );
   },
 
-  updatePythonImageItem: async (id: string, updater: (data: PythonImageItem[]) => void) => {
+  updatePythonFileItem: async (id: string, updater: (data: PythonFileItem[]) => void) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
     try {
       const executionResult: PythonExecutionResult = JSON.parse(message.content);
-      if (!executionResult.images) return;
+      if (!executionResult.files) return;
 
       const nextExecutionResult = produce(executionResult, (draft) => {
-        updater(draft.images!);
+        updater(draft.files!);
       });
 
       await get().internal_updateMessageContent(id, JSON.stringify(nextExecutionResult));
     } catch (error) {
-      console.error('Failed to update Python image item:', error);
+      console.error('Failed to update Python file item:', error);
     }
   },
 
-  useFetchPythonImageItem: (id) =>
-    useClientDataSWR(id ? [SWR_FETCH_PYTHON_IMAGE_KEY, id] : null, async () => {
+  useFetchPythonFileItem: (id) =>
+    useClientDataSWR(id ? [SWR_FETCH_PYTHON_FILE_KEY, id] : null, async () => {
       if (!id) return null;
 
       const item = await fileService.getFile(id);
 
       set(
         produce((draft) => {
-          if (!draft.pythonImageMap) {
-            draft.pythonImageMap = {};
+          if (!draft.pythonFileMap) {
+            draft.pythonFileMap = {};
           }
-          if (draft.pythonImageMap[id]) return;
+          if (draft.pythonFileMap[id]) return;
 
-          draft.pythonImageMap[id] = item;
+          draft.pythonFileMap[id] = item;
         }),
         false,
-        n('useFetchPythonImageItem'),
+        n('useFetchPythonFileItem'),
       );
 
       return item;
