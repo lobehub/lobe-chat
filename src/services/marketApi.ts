@@ -1,3 +1,4 @@
+import urlJoin from 'url-join';
 
 // Market API service for agent submission
 export class MarketApiService {
@@ -13,8 +14,8 @@ export class MarketApiService {
   }
 
   private async makeRequest(endpoint: string, options: any = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
-    
+    const url = urlJoin(this.baseUrl, endpoint);
+
     const headers = {
       'Content-Type': 'application/json',
       ...(this.accessToken && { Authorization: `Bearer ${this.accessToken}` }),
