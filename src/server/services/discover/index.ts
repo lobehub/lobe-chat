@@ -54,9 +54,12 @@ export class DiscoverService {
   constructor({ accessToken }: { accessToken?: string } = {}) {
     this.market = new MarketSDK({
       accessToken,
-      baseURL: process.env.MARKET_BASE_URL,
+      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
     });
-    log('DiscoverService initialized with market baseURL: %s', process.env.MARKET_BASE_URL);
+    log(
+      'DiscoverService initialized with market baseURL: %s',
+      process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+    );
   }
 
   async registerClient({ userAgent }: { userAgent?: string }) {
@@ -96,7 +99,7 @@ export class DiscoverService {
   async fetchM2MToken(params: { clientId: string; clientSecret: string }) {
     // 使用传入的客户端凭证创建新的 MarketSDK 实例
     const tokenMarket = new MarketSDK({
-      baseURL: process.env.MARKET_BASE_URL,
+      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
       clientId: params.clientId,
       clientSecret: params.clientSecret,
     });
@@ -216,7 +219,7 @@ export class DiscoverService {
       if (q) queryParams.set('q', q);
 
       const response = await fetch(
-        `${process.env.MARKET_BASE_URL}/api/v1/agents/categories?${queryParams}`,
+        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/categories?${queryParams}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -253,7 +256,7 @@ export class DiscoverService {
       if (normalizedLocale) queryParams.set('locale', normalizedLocale);
 
       const response = await fetch(
-        `${process.env.MARKET_BASE_URL}/api/v1/agents/detail/${identifier}?${queryParams}`,
+        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/detail/${identifier}?${queryParams}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -327,12 +330,15 @@ export class DiscoverService {
     log('getAssistantIdentifiers: fetching identifiers');
     try {
       // Call the database API identifiers endpoint directly
-      const response = await fetch(`${process.env.MARKET_BASE_URL}/api/v1/agents/identifiers`, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/identifiers`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
         },
-        method: 'GET',
-      });
+      );
 
       if (!response.ok) {
         log('getAssistantIdentifiers: API request failed with status %d', response.status);
@@ -405,12 +411,15 @@ export class DiscoverService {
       }
       queryParams.set('sort', apiSort);
 
-      const response = await fetch(`${process.env.MARKET_BASE_URL}/api/v1/agents?${queryParams}`, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents?${queryParams}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
         },
-        method: 'GET',
-      });
+      );
 
       if (!response.ok) {
         log('getAssistantList: API request failed with status %d', response.status);

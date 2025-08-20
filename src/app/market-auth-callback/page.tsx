@@ -1,6 +1,10 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
+import { Card, Result } from 'antd';
+import { CheckCircle, Clock, ShieldX } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Center } from 'react-layout-kit';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
 
@@ -90,120 +94,97 @@ const MarketAuthCallbackPage = () => {
   const getStatusIcon = () => {
     switch (status) {
       case 'success': {
-        return '✅';
+        return <Icon icon={CheckCircle} />;
       }
       case 'error': {
-        return '❌';
+        return <Icon icon={ShieldX} />;
       }
       default: {
-        return '⏳';
+        return <Icon icon={Clock} />;
       }
     }
   };
 
-  const getStatusColor = () => {
+  const getResultStatus = () => {
     switch (status) {
       case 'success': {
-        return '#52c41a';
+        return 'success';
       }
       case 'error': {
-        return '#ff4d4f';
+        return 'error';
       }
       default: {
-        return '#1677ff';
+        return 'info';
       }
     }
+  };
+
+  const getTitle = () => {
+    switch (status) {
+      case 'loading': {
+        return 'LobeHub Market 授权';
+      }
+      case 'success': {
+        return '授权成功';
+      }
+      case 'error': {
+        return '授权失败';
+      }
+    }
+  };
+
+  const getSubTitle = () => {
+    if (status === 'success') {
+      return `${message} 窗口将在 ${countdown} 秒后自动关闭`;
+    }
+    return message;
+  };
+
+  const getExtra = () => {
+    if (status === 'error') {
+      return (
+        <button
+          onClick={() => window.close()}
+          style={{
+            backgroundColor: '#ff4d4f',
+            border: 'none',
+            borderRadius: '6px',
+            color: 'white',
+            cursor: 'pointer',
+            fontSize: '14px',
+            padding: '8px 16px',
+          }}
+          type="button"
+        >
+          关闭窗口
+        </button>
+      );
+    }
+    return undefined;
   };
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        display: 'flex',
-        fontFamily: 'Arial, sans-serif',
-        height: '100vh',
-        justifyContent: 'center',
-      }}
-    >
-      <div
+    <Center height="100vh">
+      <Card
         style={{
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-          maxWidth: '400px',
-          padding: '32px',
-          textAlign: 'center',
-          width: '90%',
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          minHeight: 280,
+          minWidth: 500,
+          width: '100%',
         }}
       >
-        <div
-          style={{
-            fontSize: '48px',
-            marginBottom: '16px',
-          }}
-        >
-          {getStatusIcon()}
-        </div>
-
-        <h2
-          style={{
-            color: getStatusColor(),
-            fontSize: '24px',
-            fontWeight: '600',
-            margin: '0 0 16px 0',
-          }}
-        >
-          {status === 'loading' && 'LobeHub Market 授权'}
-          {status === 'success' && '授权成功'}
-          {status === 'error' && '授权失败'}
-        </h2>
-
-        <p
-          style={{
-            color: '#666',
-            fontSize: '16px',
-            lineHeight: '1.5',
-            margin: '0 0 20px 0',
-          }}
-        >
-          {message}
-        </p>
-
-        {status === 'success' && (
-          <div
-            style={{
-              backgroundColor: '#f6ffed',
-              border: '1px solid #b7eb8f',
-              borderRadius: '6px',
-              color: '#389e0d',
-              fontSize: '14px',
-              padding: '12px',
-            }}
-          >
-            窗口将在 <strong>{countdown}</strong> 秒后自动关闭
-          </div>
-        )}
-
-        {status === 'error' && (
-          <button
-            onClick={() => window.close()}
-            style={{
-              backgroundColor: '#ff4d4f',
-              border: 'none',
-              borderRadius: '6px',
-              color: 'white',
-              cursor: 'pointer',
-              fontSize: '14px',
-              padding: '8px 16px',
-            }}
-            type="button"
-          >
-            关闭窗口
-          </button>
-        )}
-      </div>
-    </div>
+        <Result
+          extra={getExtra()}
+          icon={getStatusIcon()}
+          status={getResultStatus()}
+          style={{ padding: 0 }}
+          subTitle={getSubTitle()}
+          title={getTitle()}
+        />
+      </Card>
+    </Center>
   );
 };
 

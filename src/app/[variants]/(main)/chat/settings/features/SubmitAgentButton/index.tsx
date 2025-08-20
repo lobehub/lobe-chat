@@ -56,8 +56,8 @@ const SubmitAgentButton = memo<{ modal?: boolean }>(({ modal }) => {
     } else {
       return {
         icon: LogIn,
-        text: '登录 LobeHub-Market 发布到助手市场',
-        title: '登录 LobeHub-Market 发布到助手市场',
+        text: '分享助手到市场(未登录)',
+        title: '分享助手到市场(未登录)',
       };
     }
   };

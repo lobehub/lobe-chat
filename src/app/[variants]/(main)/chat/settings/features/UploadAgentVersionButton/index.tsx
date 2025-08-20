@@ -54,8 +54,8 @@ const UploadAgentVersionButton = memo<{ modal?: boolean }>(({ modal }) => {
     } else {
       return {
         icon: LogIn,
-        text: '登录 LobeHub-Market 发布新版本',
-        title: '登录 LobeHub-Market 发布新版本',
+        text: '发布新版本(未登录)',
+        title: '发布新版本到助手市场',
       };
     }
   };
@@ -87,10 +87,10 @@ const UploadAgentVersionButton = memo<{ modal?: boolean }>(({ modal }) => {
 
       {/* 只有在已授权时才显示发布新版本弹窗 */}
       {isAuthenticated && (
-        <UploadAgentVersionModal 
-          onCancel={() => setIsModalOpen(false)} 
+        <UploadAgentVersionModal
+          onCancel={() => setIsModalOpen(false)}
           onSuccess={() => setIsModalOpen(false)}
-          open={isModalOpen} 
+          open={isModalOpen}
         />
       )}
     </>

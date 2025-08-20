@@ -20,7 +20,7 @@ vi.mock('@/locales/resources', () => ({
 }));
 
 // Set environment variable for tests
-process.env.MARKET_BASE_URL = 'http://localhost:8787/api';
+process.env.NEXT_PUBLIC_MARKET_BASE_URL = 'http://localhost:8787/api';
 
 // Mock constants with inline data
 vi.mock('@/config/aiModels', () => ({
