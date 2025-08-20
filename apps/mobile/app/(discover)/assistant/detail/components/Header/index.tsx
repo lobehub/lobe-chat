@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { Avatar } from '@/components';
 import GitHubAvatar from '@/components/GithubAvatar';
 import { useStyles } from './styles';
+import { AVATAR_SIZE_LARGE } from '@/const/common';
 
 interface DetailHeaderProps {
   author: string;
@@ -22,7 +23,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ avatar, title, author, crea
         alt={title}
         avatar={avatar || '🤖'}
         backgroundColor={token.colorBgContainer}
-        size={64}
+        size={AVATAR_SIZE_LARGE}
       />
       <View style={styles.headerContent}>
         <Text style={styles.name}>{title || ''}</Text>

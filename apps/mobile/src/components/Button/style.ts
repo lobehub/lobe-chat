@@ -11,9 +11,43 @@ export const useStyles = createStyles(
       size,
       disabled,
       block,
-    }: { block: boolean; disabled: boolean; size: ButtonSize; type: ButtonType },
+      danger,
+    }: { block: boolean; danger: boolean; disabled: boolean; size: ButtonSize; type: ButtonType },
   ) => {
     const getTypeStyles = () => {
+      if (danger) {
+        switch (type) {
+          case 'primary': {
+            return {
+              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorError,
+              borderColor: disabled ? token.colorPrimaryBorder : token.colorError,
+              textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
+            };
+          }
+          case 'text': {
+            return {
+              backgroundColor: 'transparent',
+              borderColor: 'transparent',
+              textColor: disabled ? token.colorTextDisabled : token.colorError,
+            };
+          }
+          case 'link': {
+            return {
+              backgroundColor: 'transparent',
+              borderColor: 'transparent',
+              textColor: disabled ? token.colorTextDisabled : token.colorError,
+            };
+          }
+          default: {
+            return {
+              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+              borderColor: disabled ? token.colorBorder : token.colorError,
+              textColor: disabled ? token.colorTextDisabled : token.colorError,
+            };
+          }
+        }
+      }
+
       switch (type) {
         case 'primary': {
           return {

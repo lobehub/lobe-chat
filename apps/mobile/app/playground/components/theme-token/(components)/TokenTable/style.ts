@@ -60,7 +60,7 @@ export const useStyles = createStyles((token) => {
       color: token.colorText,
       fontFamily: token.fontFamilyCode,
       fontSize: token.fontSize,
-      fontWeight: '500',
+      fontWeight: token.fontWeightStrong,
     },
     tokenRow: {
       alignItems: 'flex-start',

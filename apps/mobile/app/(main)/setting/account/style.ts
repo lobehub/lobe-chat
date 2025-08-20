@@ -9,17 +9,9 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgLayout,
     flex: 1,
+    paddingHorizontal: token.padding,
   },
-  signOutButton: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: 10,
-    marginTop: 8,
-    padding: 16,
-  },
-  signOutButtonText: {
-    color: token.colorError,
-    fontSize: 17,
-    fontWeight: 'normal',
+  signOutSection: {
+    marginTop: token.marginXS,
   },
 }));
