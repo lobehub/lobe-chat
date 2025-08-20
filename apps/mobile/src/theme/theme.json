@@ -493,6 +493,7 @@
   "colorInfoTextHover": "#4c90ff",
   "colorInfoText": "#0072f5",
   "colorInfoTextActive": "#005ae0",
+  "colorWhite": "#fff",
   "boxShadow": {
     "elevation": 8,
     "shadowColor": "rgba(0, 0, 0, 0.08)",

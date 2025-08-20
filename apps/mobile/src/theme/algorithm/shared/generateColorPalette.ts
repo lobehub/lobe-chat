@@ -74,6 +74,7 @@ export const generateColorNeutralPalette = ({
     colorTextQuaternary: scale[appearance][8],
     colorTextSecondary: scale[appearance][11],
     colorTextTertiary: scale[appearance][9],
+    colorWhite: '#fff',
   };
 };
 

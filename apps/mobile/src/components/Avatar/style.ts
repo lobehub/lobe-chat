@@ -27,7 +27,7 @@ export const useStyles = createStyles(
     fallbackText: {
       color: token.colorText,
       fontSize: size * 0.6,
-      fontWeight: '500',
+      fontWeight: token.fontWeightStrong,
     },
     image: {
       height: '100%',
