@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -47,7 +47,7 @@ jobs:
       version: ${{ steps.set_version.outputs.version }}
       is_pr_build: ${{ steps.set_version.outputs.is_pr_build }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -82,7 +82,7 @@ jobs:
       matrix:
         os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
