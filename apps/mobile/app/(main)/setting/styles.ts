@@ -4,6 +4,6 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgLayout,
     flex: 1,
-    padding: 16,
+    padding: token.paddingContentHorizontal,
   },
 }));

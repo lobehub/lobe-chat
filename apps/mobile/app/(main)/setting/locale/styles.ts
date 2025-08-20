@@ -6,6 +6,6 @@ export const useStyles = createStyles((token) => ({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
+    padding: token.paddingContentHorizontal,
   },
 }));
