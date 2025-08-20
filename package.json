@@ -323,7 +323,7 @@
     "ajv-keywords": "^5.1.0",
     "commitlint": "^19.8.1",
     "consola": "^3.4.2",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "crypto-js": "^4.2.0",
     "dbdocs": "^0.16.0",
     "dotenv": "^16.6.1",
