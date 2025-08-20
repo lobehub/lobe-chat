@@ -21,6 +21,13 @@
     "readFiles": "读取文件",
     "readFilesError": "读取文件失败，请检查文件路径是否正确"
   },
+  "python": {
+    "error": "执行错误",
+    "executing": "执行中...",
+    "output": "输出：",
+    "returnValue": "返回值：",
+    "rerun": "重新执行"
+  },
   "search": {
     "createNewSearch": "创建新的搜索记录",
     "emptyResult": "没有搜索到结果，请修改关键词后重试",

@@ -115,9 +115,6 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.10",
@@ -376,5 +373,8 @@
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
