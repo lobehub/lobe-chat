@@ -1,23 +1,6 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => {
-  const t = token || {
-    borderRadius: 6,
-    borderRadiusLG: 12,
-    fontFamilyCode: 'monospace',
-    fontSize: 14,
-    fontSizeHeading3: 18,
-    fontSizeLG: 16,
-    fontSizeSM: 12,
-    marginLG: 16,
-    marginSM: 8,
-    marginXS: 4,
-    marginXXS: 2,
-    paddingLG: 16,
-    paddingMD: 12,
-    paddingSM: 8,
-  };
-
   return {
     // 页面布局样式
     header: {
@@ -25,19 +8,19 @@ export const useStyles = createStyles((token) => {
       borderBottomWidth: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      padding: t.paddingLG,
+      padding: token.paddingLG,
     },
     headerLeft: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: t.marginSM,
+      gap: token.marginSM,
     },
     headerTitle: {
-      fontSize: t.fontSizeLG,
+      fontSize: token.fontSizeLG,
       fontWeight: '600',
     },
     safeArea: {
-      backgroundColor: t.colorBgLayout,
+      backgroundColor: token.colorBgLayout,
       flex: 1,
     },
     scrollView: {
@@ -45,17 +28,17 @@ export const useStyles = createStyles((token) => {
     },
     themeToggle: {
       alignItems: 'center',
-      backgroundColor: t.colorFillSecondary,
+      backgroundColor: token.colorFillSecondary,
       borderRadius: 20,
-      height: 40,
+      height: token.controlHeight + 8,
       justifyContent: 'center',
-      width: 40,
+      width: token.controlHeight + 8,
     },
     viewModeContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: t.marginLG,
-      marginHorizontal: t.marginLG,
+      marginBottom: token.marginLG,
+      marginHorizontal: token.marginLG,
     },
   };
 });

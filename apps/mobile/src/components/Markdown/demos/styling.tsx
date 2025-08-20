@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import Button from '@/components/Button';
 import MarkdownRender from '../index';
 
 const sampleMarkdown = `# 样式配置示例
@@ -182,13 +183,15 @@ export default function StylingDemo() {
           <Text style={styles.panelTitle}>样式预设</Text>
           <View style={styles.presetRow}>
             {presets.map((preset) => (
-              <TouchableOpacity
+              <Button
                 key={preset.name}
                 onPress={() => applyPreset(preset)}
+                size="small"
                 style={styles.presetButton}
+                type="default"
               >
-                <Text style={styles.presetButtonText}>{preset.name}</Text>
-              </TouchableOpacity>
+                {preset.name}
+              </Button>
             ))}
           </View>
 
@@ -205,73 +208,89 @@ export default function StylingDemo() {
           {/* 字体大小调节 */}
           <View style={styles.adjustRow}>
             <Text style={styles.adjustLabel}>字体大小:</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setFontSize(Math.max(12, fontSize - 2))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>-</Text>
-            </TouchableOpacity>
+              -
+            </Button>
             <Text style={styles.adjustValue}>{fontSize}</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setFontSize(Math.min(24, fontSize + 2))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>+</Text>
-            </TouchableOpacity>
+              +
+            </Button>
           </View>
 
           {/* 标题倍数调节 */}
           <View style={styles.adjustRow}>
             <Text style={styles.adjustLabel}>标题倍数:</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setHeaderMultiple(Math.max(0.5, headerMultiple - 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>-</Text>
-            </TouchableOpacity>
+              -
+            </Button>
             <Text style={styles.adjustValue}>{headerMultiple.toFixed(1)}</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setHeaderMultiple(Math.min(2, headerMultiple + 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>+</Text>
-            </TouchableOpacity>
+              +
+            </Button>
           </View>
 
           {/* 边距倍数调节 */}
           <View style={styles.adjustRow}>
             <Text style={styles.adjustLabel}>边距倍数:</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setMarginMultiple(Math.max(0.5, marginMultiple - 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>-</Text>
-            </TouchableOpacity>
+              -
+            </Button>
             <Text style={styles.adjustValue}>{marginMultiple.toFixed(1)}</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setMarginMultiple(Math.min(3, marginMultiple + 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>+</Text>
-            </TouchableOpacity>
+              +
+            </Button>
           </View>
 
           {/* 行高调节 */}
           <View style={styles.adjustRow}>
             <Text style={styles.adjustLabel}>行高:</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setLineHeight(Math.max(1, lineHeight - 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>-</Text>
-            </TouchableOpacity>
+              -
+            </Button>
             <Text style={styles.adjustValue}>{lineHeight.toFixed(1)}</Text>
-            <TouchableOpacity
+            <Button
               onPress={() => setLineHeight(Math.min(3, lineHeight + 0.1))}
+              size="small"
               style={styles.adjustButton}
+              type="default"
             >
-              <Text style={styles.adjustButtonText}>+</Text>
-            </TouchableOpacity>
+              +
+            </Button>
           </View>
         </View>
 

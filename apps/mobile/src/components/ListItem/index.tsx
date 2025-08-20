@@ -22,7 +22,7 @@ const ListItem = ({ title, avatar, description, extra, onPress, href, active }: 
   const { styles } = useStyles(!!description, active);
 
   const content = (
-    <View style={styles.sessionItem}>
+    <View style={styles.listItem}>
       {avatar && <Avatar avatar={avatar} size={48} />}
       <View style={styles.info}>
         <Text numberOfLines={1} style={styles.title}>

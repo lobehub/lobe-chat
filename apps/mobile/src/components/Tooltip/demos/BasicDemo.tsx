@@ -23,8 +23,8 @@ const BasicDemo = () => {
   return (
     <View style={styles.demoContainer}>
       <View style={styles.demoSection}>
-        <Tooltip title="这是一个长按提示">
-          <Button type="primary">长按我</Button>
+        <Tooltip title="这是一个长按提示" trigger="longPress">
+          <Button>长按我</Button>
         </Tooltip>
       </View>
     </View>

@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+import Button from '@/components/Button';
 import ListItem from '../index';
 
 interface CustomListItemProps {
@@ -336,19 +337,23 @@ export default function AdvancedDemo() {
 
   const renderVolumeControl = () => (
     <View style={styles.volumeContainer}>
-      <TouchableOpacity
+      <Button
         onPress={() => setVolume(Math.max(0, volume - 0.1))}
+        size="small"
         style={styles.volumeButton}
+        type="default"
       >
         <Minus color="#007AFF" size={16} />
-      </TouchableOpacity>
+      </Button>
       <Text style={styles.volumeText}>{Math.round(volume * 100)}%</Text>
-      <TouchableOpacity
+      <Button
         onPress={() => setVolume(Math.min(1, volume + 0.1))}
+        size="small"
         style={styles.volumeButton}
+        type="default"
       >
         <Plus color="#007AFF" size={16} />
-      </TouchableOpacity>
+      </Button>
     </View>
   );
 
@@ -365,28 +370,22 @@ export default function AdvancedDemo() {
 
         <View style={styles.styleSelector}>
           {(['default', 'compact', 'expanded', 'card'] as const).map((style) => (
-            <TouchableOpacity
+            <Button
               key={style}
               onPress={() => setSelectedStyle(style)}
+              size="small"
               style={[
                 styles.styleButton,
                 selectedStyle === style && styles.selectedStyleButton,
                 !darkMode && styles.lightStyleButton,
               ]}
+              type={selectedStyle === style ? 'primary' : 'default'}
             >
-              <Text
-                style={[
-                  styles.styleButtonText,
-                  selectedStyle === style && styles.selectedStyleButtonText,
-                  !darkMode && styles.lightText,
-                ]}
-              >
-                {style === 'default' && '默认'}
-                {style === 'compact' && '紧凑'}
-                {style === 'expanded' && '展开'}
-                {style === 'card' && '卡片'}
-              </Text>
-            </TouchableOpacity>
+              {style === 'default' && '默认'}
+              {style === 'compact' && '紧凑'}
+              {style === 'expanded' && '展开'}
+              {style === 'card' && '卡片'}
+            </Button>
           ))}
         </View>
 
