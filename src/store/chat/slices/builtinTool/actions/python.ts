@@ -21,10 +21,10 @@ const n = setNamespace('python');
 const SWR_FETCH_PYTHON_FILE_KEY = 'FetchPythonFileItem';
 
 export interface ChatPythonAction {
-  executePythonCode: (id: string, params: PythonParams) => Promise<boolean>;
+  interpreter: (id: string, params: PythonParams) => Promise<boolean>;
   processAndUploadPythonFiles: (id: string, executionResult: PythonFileItem[]) => Promise<void>;
   updatePythonFileItem: (id: string, updater: (data: PythonFileItem[]) => void) => Promise<void>;
-  useFetchPythonFileItem: (id: string) => SWRResponse;
+  useFetchPythonFileItem: (id?: string) => SWRResponse;
 }
 
 export const pythonSlice: StateCreator<
@@ -33,7 +33,7 @@ export const pythonSlice: StateCreator<
   [],
   ChatPythonAction
 > = (set, get) => ({
-  executePythonCode: async (id: string, params: PythonParams) => {
+  interpreter: async (id: string, params: PythonParams) => {
     const { updatePluginState } = get();
 
     // 开始执行状态

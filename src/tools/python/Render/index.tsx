@@ -1,7 +1,7 @@
 import { Alert, Button, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { PlayIcon } from 'lucide-react';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -18,7 +18,7 @@ const Python = memo<
   const { t } = useTranslation('tool');
 
   const theme = useTheme();
-  const [executePythonCode] = useChatStore((s) => [s.executePythonCode]);
+  const [interpreter] = useChatStore((s) => [s.interpreter]);
 
   // 判断内容类型：如果有 success 字段说明是执行结果，否则是参数
   const isExecutionResult = content && typeof content === 'object' && 'success' in content;
@@ -29,16 +29,8 @@ const Python = memo<
 
   const handleExecute = useCallback(async () => {
     if (!code || isExecuting) return;
-
-    await executePythonCode(messageId, { code, packages: args?.packages || [] });
-  }, [code, isExecuting, messageId, executePythonCode, args?.packages]);
-
-  // 自动执行代码（只在没有执行结果时）
-  useEffect(() => {
-    if (!isExecutionResult && code && !isExecuting) {
-      handleExecute();
-    }
-  }, [isExecutionResult, code, isExecuting, handleExecute]);
+    await interpreter(messageId, { code, packages: args?.packages || [] });
+  }, [code, isExecuting, messageId, interpreter, args?.packages]);
 
   return (
     <Flexbox gap={12}>
