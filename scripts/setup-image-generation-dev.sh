@@ -39,8 +39,12 @@ docker run --rm \
   --entrypoint bash \
   quay.io/minio/mc:RELEASE.2025-04-18T16-45-00Z \
   -c "
-    mc config host add minio http://minio:9000 minioadmin minioadmin &&
-    mc mb minio/lobe-chat 2>/dev/null || true &&
+    mc config host add minio http://minio:9000 minioadmin minioadmin
+    mb_output=\$(mc mb minio/lobe-chat 2>&1)
+    mb_exit=\$?
+    if [ \$mb_exit -ne 0 ]; then
+      echo \"\$mb_output\" | grep -q 'Bucket already exists' || { echo \"Failed to create bucket: \$mb_output\"; exit \$mb_exit; }
+    fi
     mc anonymous set public minio/lobe-chat
   "
 
