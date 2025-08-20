@@ -1,9 +1,4 @@
-declare global {
-  function loadPyodide(config: any): Promise<any>;
-  function importScripts(url: string): void;
-}
-
-type PyodideInterface = any;
+import { PyodideAPI, type loadPyodide } from 'pyodide';
 
 export interface PythonExecutionResult {
   error?: string;
@@ -45,22 +40,13 @@ def patch_matplotlib():
 
   plt.show = show
 
-
 patch_matplotlib()`;
 
-let pyodideLoaded = false;
-
-async function loadPyodideScript(): Promise<void> {
-  if (pyodideLoaded) return;
-  const script = 'https://cdn.jsdelivr.net/pyodide/v0.28.1/full/pyodide.js';
-  (globalThis as any).importScripts(script);
-  pyodideLoaded = true;
-}
-
-async function initializePyodide(): Promise<PyodideInterface> {
-  await loadPyodideScript();
-  return (globalThis as any).loadPyodide({
-    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.28.1/full/',
+async function initializePyodide(): Promise<PyodideAPI> {
+  const indexURL = 'https://cdn.jsdelivr.net/pyodide/v0.28.2/full';
+  globalThis.importScripts(`${indexURL}/pyodide.js`);
+  return await ((globalThis as any).loadPyodide as typeof loadPyodide)({
+    indexURL,
   });
 }
 
@@ -87,7 +73,7 @@ export async function executePythonCode(code: string): Promise<PythonExecutionRe
         console.log('Package loading:', message);
       },
     });
-    packages.forEach(async (pkg: any) => {
+    packages.forEach(async (pkg) => {
       if (pkg.name === 'matplotlib') {
         await pyodide.runPythonAsync(PATCH_MATPLOTLIB);
       }

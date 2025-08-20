@@ -1,5 +1,4 @@
-import { Button, Highlighter, Text } from '@lobehub/ui';
-import { Alert } from 'antd';
+import { Alert, Button, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { PlayIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
