@@ -38,11 +38,13 @@ const seedToken: SeedToken = {
 
   colorWarning: '#faad14',
 
-  controlHeight: 32,
+  colorWhite: '#fff',
 
+  controlHeight: 32,
   // 字体
   fontFamily: [FONT_EN, FONT_CN, FONT_EMOJI].join(','),
   fontFamilyCode: [FONT_CODE, FONT_CN, FONT_EMOJI].join(','),
+
   fontSize: 14,
 
   lineType: 'solid',
@@ -89,9 +91,9 @@ const seedToken: SeedToken = {
 
   // 开关
   wireframe: false,
-
   // zIndex
   zIndexBase: 0,
+
   zIndexPopupBase: 1000,
 };
 
