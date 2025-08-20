@@ -1,5 +1,3 @@
-import urlJoin from 'url-join';
-
 // Market API service for agent submission
 export class MarketApiService {
   private baseUrl: string;
@@ -7,6 +5,12 @@ export class MarketApiService {
 
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787';
+    // Ensure baseUrl always has a value and doesn't end with trailing slash
+    if (!this.baseUrl) {
+      this.baseUrl = 'http://localhost:8787';
+    }
+    // Remove trailing slash to avoid double slashes
+    this.baseUrl = this.baseUrl.replace(/\/$/, '');
   }
 
   setAccessToken(token: string) {
@@ -14,7 +18,10 @@ export class MarketApiService {
   }
 
   private async makeRequest(endpoint: string, options: any = {}) {
-    const url = urlJoin(this.baseUrl, endpoint);
+    // Manual URL joining to avoid double slashes
+    const cleanBase = this.baseUrl.replace(/\/$/, '');
+    const cleanEndpoint = endpoint.replace(/^\//, '');
+    const url = `${cleanBase}/${cleanEndpoint}`;
 
     const headers = {
       'Content-Type': 'application/json',
