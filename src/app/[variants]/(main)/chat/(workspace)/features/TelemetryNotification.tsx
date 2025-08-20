@@ -4,7 +4,7 @@ import { Avatar, Button, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideArrowUpRightFromSquare, TelescopeIcon } from 'lucide-react';
 import Link from 'next/link';
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -15,6 +15,9 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
+import { useGlobalStore } from "@/store/global";
+import { systemStatusSelectors } from "@/store/global/selectors";
+import { useSearchParams } from "next/navigation";
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -29,9 +32,12 @@ const useStyles = createStyles(({ css, token }) => ({
 const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles, theme } = useStyles();
 
+  const searchParams = useSearchParams()
   const { t } = useTranslation('common');
   const shouldCheck = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
   const isPreferenceInit = useUserStore(preferenceSelectors.isPreferenceInit);
+  const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
+  const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
 
   const [useCheckTrace, updatePreference] = useUserStore((s) => [
     s.useCheckTrace,
@@ -39,6 +45,17 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
   ]);
 
   const { data: showModal, mutate } = useCheckTrace(shouldCheck && isPreferenceInit);
+  React.useEffect(
+    () => {
+      const thm = searchParams.get('thm');
+      if (themeMode !== 'light' && thm === 'l') {
+        switchThemeMode('light');
+      } else if (themeMode === 'light' && thm === 'd') {
+        switchThemeMode( 'dark');
+      }
+    },
+    [switchThemeMode]
+  )
 
   const updateTelemetry = (telemetry: boolean) => {
     updatePreference({ telemetry });
