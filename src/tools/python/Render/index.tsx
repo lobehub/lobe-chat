@@ -1,7 +1,7 @@
 import { Alert, Button, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { PlayIcon } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -19,25 +19,19 @@ const Python = memo<
 
   const theme = useTheme();
   const [executePythonCode] = useChatStore((s) => [s.executePythonCode]);
-  const [isLocalExecuting, setIsLocalExecuting] = useState(false);
 
   // 判断内容类型：如果有 success 字段说明是执行结果，否则是参数
   const isExecutionResult = content && typeof content === 'object' && 'success' in content;
   const executionResult = isExecutionResult ? (content as PythonExecutionResult) : undefined;
   const code = isExecutionResult ? args?.code : (content as PythonParams)?.code || '';
 
-  const isExecuting = pluginState?.isExecuting || isLocalExecuting;
+  const isExecuting = pluginState?.isExecuting || false;
 
   const handleExecute = useCallback(async () => {
     if (!code || isExecuting) return;
 
-    setIsLocalExecuting(true);
-    try {
-      await executePythonCode(messageId, { code, packages: args?.packages || [] });
-    } finally {
-      setIsLocalExecuting(false);
-    }
-  }, [code, isExecuting, messageId, executePythonCode]);
+    await executePythonCode(messageId, { code, packages: args?.packages || [] });
+  }, [code, isExecuting, messageId, executePythonCode, args?.packages]);
 
   // 自动执行代码（只在没有执行结果时）
   useEffect(() => {

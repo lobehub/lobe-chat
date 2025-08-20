@@ -21,12 +21,8 @@ const n = setNamespace('python');
 const SWR_FETCH_PYTHON_FILE_KEY = 'FetchPythonFileItem';
 
 export interface ChatPythonAction {
-  executePythonCode: (id: string, params: PythonParams) => Promise<void>;
-  processAndUploadPythonFiles: (
-    id: string,
-    executionResult: PythonExecutionResult,
-  ) => Promise<void>;
-  togglePythonExecuting: (id: string, executing: boolean) => void;
+  executePythonCode: (id: string, params: PythonParams) => Promise<boolean>;
+  processAndUploadPythonFiles: (id: string, executionResult: PythonFileItem[]) => Promise<void>;
   updatePythonFileItem: (id: string, updater: (data: PythonFileItem[]) => void) => Promise<void>;
   useFetchPythonFileItem: (id: string) => SWRResponse;
 }
@@ -38,10 +34,10 @@ export const pythonSlice: StateCreator<
   ChatPythonAction
 > = (set, get) => ({
   executePythonCode: async (id: string, params: PythonParams) => {
-    const { togglePythonExecuting, updatePluginState } = get();
+    const { updatePluginState } = get();
 
     // 开始执行状态
-    togglePythonExecuting(id, true);
+    await updatePluginState(id, { isExecuting: true } as PythonState);
 
     try {
       // 创建 WebWorker 来执行 Python 代码
@@ -76,18 +72,17 @@ export const pythonSlice: StateCreator<
         });
       });
 
-      // 处理文件上传（如果有文件）
-      if (executionResult.files && executionResult.files.length > 0) {
-        await get().processAndUploadPythonFiles(id, executionResult);
-      } else {
-        // 更新插件状态
-        await updatePluginState(id, {
-          executionResult,
-          isExecuting: false,
-        } as PythonState);
+      // 更新插件状态
+      await updatePluginState(id, {
+        executionResult,
+        isExecuting: false,
+      } as PythonState);
+      // 更新消息内容为执行结果
+      await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
 
-        // 更新消息内容为执行结果
-        await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
+      // 最后处理文件上传
+      if (executionResult.files?.length) {
+        await get().processAndUploadPythonFiles(id, executionResult.files);
       }
     } catch (error) {
       const errorResult: PythonExecutionResult = {
@@ -104,34 +99,17 @@ export const pythonSlice: StateCreator<
       } as PythonState);
 
       await get().internal_updateMessageContent(id, JSON.stringify(errorResult));
-    } finally {
-      togglePythonExecuting(id, false);
     }
+
+    return true;
   },
 
-  processAndUploadPythonFiles: async (id: string, executionResult: PythonExecutionResult) => {
-    const { updatePythonFileItem, updatePluginState } = get();
-
-    if (!executionResult.files || executionResult.files.length === 0) {
-      // 如果没有文件，直接更新状态
-      await updatePluginState(id, {
-        executionResult,
-        isExecuting: false,
-      } as PythonState);
-      await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
-      return;
-    }
-
-    // 先更新状态显示预览文件
-    await updatePluginState(id, {
-      executionResult,
-      isExecuting: false,
-    } as PythonState);
-    await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
+  processAndUploadPythonFiles: async (id: string, files: PythonFileItem[]) => {
+    const { updatePythonFileItem } = get();
 
     // 并行上传所有文件
     await pMap(
-      executionResult.files,
+      files,
       async (fileItem, index) => {
         if (!fileItem.data) return;
 
@@ -161,24 +139,6 @@ export const pythonSlice: StateCreator<
         }
       },
       { concurrency: 3 }, // 限制并发上传数量
-    );
-
-    // 最终清理：确保所有临时数据都被清除
-    await updatePythonFileItem(id, (draft) => {
-      draft.forEach((item) => {
-        if (item.fileId) {
-          // 如果已经有 fileId，确保清除临时数据
-          item.data = undefined;
-        }
-      });
-    });
-  },
-
-  togglePythonExecuting: (id: string, executing: boolean) => {
-    set(
-      { pythonExecuting: { ...get().pythonExecuting, [id]: executing } },
-      false,
-      n('togglePythonExecuting'),
     );
   },
 
