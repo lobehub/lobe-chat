@@ -1,5 +1,6 @@
 import type { AliasToken, MapToken } from './interface';
 import { getAlphaColor } from './colorUtils';
+import { mix } from 'polished';
 
 /**
  * 格式化 Token，从 MapToken 生成 AliasToken
@@ -136,6 +137,8 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     colorBgContainerDisabled: mapToken.colorFillTertiary,
 
+    colorBgContainerSecondary: mix(0.5, mapToken.colorBgLayout, mapToken.colorBgContainer),
+
     colorBgTextActive: mapToken.colorFill,
 
     colorBgTextHover: mapToken.colorFillSecondary,
@@ -157,7 +160,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     // ============== 图标颜色 ============== //
     colorIcon: mapToken.colorTextTertiary,
-
     colorIconHover: mapToken.colorText,
 
     colorSplit: getAlphaColor(mapToken.colorBorderSecondary, 0.06),
@@ -268,6 +270,7 @@ export function formatToken(mapToken: MapToken): AliasToken {
     screenXLMin: screenBreakpoints.screenXL,
     screenXSMax: screenBreakpoints.screenSM - 1,
     screenXSMin: screenBreakpoints.screenXS,
+
     screenXXLMin: screenBreakpoints.screenXXL,
   };
 

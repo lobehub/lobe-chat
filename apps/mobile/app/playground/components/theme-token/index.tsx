@@ -4,7 +4,7 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-na
 
 import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import ThemeControls from 'app/playground/components/theme-token/(components)/ThemeControls';
-import TokenHighlight from 'app/playground/components/theme-token/(components)/TokenHighlight';
+import TokenHighlight from 'app/playground/components/theme-token/(components)/TokenJson';
 import TokenTable from 'app/playground/components/theme-token/(components)/TokenTable';
 import {
   useTheme,

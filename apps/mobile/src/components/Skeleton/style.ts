@@ -12,22 +12,22 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'column',
   },
   paragraphLine: {
-    height: 14,
-    marginBottom: 6,
+    height: token.fontSize,
+    marginBottom: token.marginXXS,
   },
   skeletonItem: {
     backgroundColor: token.colorFillContent,
-    borderRadius: 4,
+    borderRadius: token.borderRadiusXS,
   },
   textContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: token.marginSM,
   },
   textContainerNoAvatar: {
     marginLeft: 0,
   },
   titleLine: {
-    height: 16,
-    marginBottom: 8,
+    height: token.fontSizeLG,
+    marginBottom: token.marginXS,
   },
 }));

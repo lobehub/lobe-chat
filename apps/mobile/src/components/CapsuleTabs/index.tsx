@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, ViewStyle, StyleProp } from 'react-native';
 import { useStyles } from './style';
 
 export interface CapsuleTabItem {
@@ -12,6 +12,7 @@ export interface CapsuleTabsProps {
   onSelect: (key: string) => void;
   selectedKey: string;
   showsHorizontalScrollIndicator?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
@@ -19,6 +20,7 @@ export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
   selectedKey,
   onSelect,
   showsHorizontalScrollIndicator = false,
+  style,
 }) => {
   const { styles } = useStyles();
 
@@ -26,7 +28,7 @@ export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
-      style={styles.container}
+      style={[styles.container, style]}
     >
       {items.map((item) => (
         <TouchableOpacity

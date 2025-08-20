@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Stack } from 'expo-router';
 import { ListGroup } from '@/components';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
+import Button from '@/components/Button';
 import { SettingItem } from '../(components)/SettingItem';
 import { useStyles } from './style';
 
@@ -63,25 +64,17 @@ export default function AccountScreen() {
               />
               <SettingItem
                 extra={user.email}
-                title={t('account.profile.email', { ns: 'setting' })}
-              />
-              <SettingItem
-                extra={
-                  user.emailVerified
-                    ? t('account.profile.verified', { ns: 'setting' })
-                    : t('account.profile.unverified', { ns: 'setting' })
-                }
                 isLast
-                title={t('account.profile.status', { ns: 'setting' })}
+                title={t('account.profile.email', { ns: 'setting' })}
               />
             </ListGroup>
 
             {/* Logout Section */}
-            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-              <Text style={styles.signOutButtonText}>
+            <View style={styles.signOutSection}>
+              <Button block danger onPress={handleSignOut} size="large" type="primary">
                 {t('account.signOut.label', { ns: 'setting' })}
-              </Text>
-            </TouchableOpacity>
+              </Button>
+            </View>
           </>
         )}
       </ScrollView>

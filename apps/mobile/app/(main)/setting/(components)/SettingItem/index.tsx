@@ -4,7 +4,8 @@ import React, { ReactNode } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 
 import { ICON_SIZE_SMALL } from '@/const/common';
-import { useThemeToken } from '@/theme';
+
+import { useStyles } from './style';
 
 interface SettingItemProps {
   customContent?: ReactNode;
@@ -37,60 +38,7 @@ export const SettingItem = ({
   showCheckmark = false,
   customContent,
 }: SettingItemProps) => {
-  const token = useThemeToken();
-
-  const styles = {
-    badge: {
-      backgroundColor: token.colorError,
-      borderRadius: 4,
-      height: 8,
-      marginRight: 8,
-      width: 8,
-    },
-    checkmark: {},
-    separator: {
-      backgroundColor: token.colorBorderSecondary,
-      height: 1,
-      marginHorizontal: 16,
-    },
-    settingItem: {
-      alignItems: 'center' as const,
-      backgroundColor: token.colorBgContainer,
-      flexDirection: 'row' as const,
-      justifyContent: 'space-between' as const,
-      minHeight: 56,
-      paddingHorizontal: 16,
-      paddingVertical: 14,
-    },
-    settingItemArrow: {
-      color: token.colorBorder,
-      fontSize: 22,
-      marginLeft: token.marginSM,
-    },
-    settingItemDescription: {
-      color: token.colorTextDescription,
-      fontSize: 12,
-      marginTop: token.marginXS,
-    },
-    settingItemExtra: {
-      color: token.colorTextSecondary,
-      fontSize: 17,
-      marginRight: 4,
-    },
-    settingItemLeft: {
-      flexDirection: 'column' as const,
-      flexShrink: 1,
-      justifyContent: 'center' as const,
-    },
-    settingItemRight: {
-      alignItems: 'center' as const,
-      flexDirection: 'row' as const,
-    },
-    settingItemTitle: {
-      color: token.colorText,
-      fontSize: 17,
-    },
-  };
+  const { styles, token } = useStyles();
 
   const renderRightContent = () => {
     if (showSwitch) {
@@ -130,17 +78,7 @@ export const SettingItem = ({
         </View>
         <View style={styles.settingItemRight}>{renderRightContent()}</View>
       </View>
-      {customContent && (
-        <View
-          style={{
-            backgroundColor: token.colorBgContainer,
-            paddingBottom: 16,
-            paddingHorizontal: 16,
-          }}
-        >
-          {customContent}
-        </View>
-      )}
+      {customContent && <View style={styles.customContent}>{customContent}</View>}
       {!isLast && <View style={styles.separator} />}
     </View>
   );

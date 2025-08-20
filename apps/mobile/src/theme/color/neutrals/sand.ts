@@ -2,6 +2,7 @@ import { ColorScaleItem } from '../types';
 
 const sand: ColorScaleItem = {
   dark: [
+    '#000000',
     '#1c1c18',
     '#262521',
     '#30302b',
@@ -13,10 +14,10 @@ const sand: ColorScaleItem = {
     '#73726a',
     '#7f7e76',
     '#bcbab2',
-    '#fcf9f3',
     '#ffffff',
   ],
   darkA: [
+    'rgba(255, 255, 255, 0.02)',
     'rgba(255, 255, 218, 0.11)',
     'rgba(253, 247, 220, 0.15)',
     'rgba(253, 253, 226, 0.19)',
@@ -29,9 +30,9 @@ const sand: ColorScaleItem = {
     'rgba(254, 252, 236, 0.5)',
     'rgba(254, 251, 241, 0.74)',
     'rgba(255, 252, 245, 0.99)',
-    '#ffffff',
   ],
   light: [
+    '#ffffff',
     '#fcf9f3',
     '#edebe4',
     '#dfddd5',
@@ -43,10 +44,10 @@ const sand: ColorScaleItem = {
     '#8c8b83',
     '#7f7e76',
     '#4b4a44',
-    '#1c1c18',
     '#111',
   ],
   lightA: [
+    'rgba(0, 0, 0, 0.015)',
     'rgba(195, 135, 15, 0.05)',
     'rgba(91, 73, 10, 0.11)',
     'rgba(67, 55, 8, 0.17)',
@@ -59,7 +60,6 @@ const sand: ColorScaleItem = {
     'rgba(18, 16, 1, 0.54)',
     'rgba(12, 10, 2, 0.74)',
     'rgba(6, 6, 1, 0.91)',
-    '#111',
   ],
 };
 

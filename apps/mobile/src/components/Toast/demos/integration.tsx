@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 
 import { useToast } from '../ToastProvider';
-import { DemoButton } from './DemoButton';
 
 export default function IntegrationDemo() {
   const toast = useToast();
@@ -267,67 +267,63 @@ export default function IntegrationDemo() {
             />
           </View>
 
-          <DemoButton
-            description="提交表单并显示相应的反馈"
+          <Button
             onPress={handleFormSubmit}
-            title="创建账户"
-            variant="success"
-          />
+            style={{ backgroundColor: token.colorSuccess }}
+            type="primary"
+          >
+            创建账户
+          </Button>
         </View>
 
         <Text style={[styles.sectionTitle, { color: token.colorText }]}>电商场景</Text>
         <View style={styles.section}>
-          <DemoButton
-            description="商品加入购物车的操作反馈"
+          <Button
             onPress={() => handleAddToCart('iPhone 15 Pro')}
-            title="添加到购物车"
-            variant="warning"
-          />
+            style={{ backgroundColor: token.colorWarning }}
+            type="primary"
+          >
+            添加到购物车
+          </Button>
 
-          <DemoButton
-            description="商品移除购物车的操作反馈"
-            onPress={() => handleRemoveFromCart('iPhone 15 Pro')}
-            title="从购物车移除"
-            variant="secondary"
-          />
+          <Button onPress={() => handleRemoveFromCart('iPhone 15 Pro')} type="default">
+            从购物车移除
+          </Button>
 
-          <DemoButton
-            description="商品收藏状态的切换反馈"
+          <Button
             onPress={() => handleToggleFavorite('MacBook Pro', true)}
-            title="添加到收藏"
-            variant="error"
-          />
+            style={{ backgroundColor: token.colorError }}
+            type="primary"
+          >
+            添加到收藏
+          </Button>
         </View>
 
         <Text style={[styles.sectionTitle, { color: token.colorText }]}>系统操作</Text>
         <View style={styles.section}>
-          <DemoButton
-            description="用户设置保存的操作反馈"
-            onPress={handleSaveSettings}
-            title="保存设置"
-            variant="primary"
-          />
+          <Button onPress={handleSaveSettings} type="primary">
+            保存设置
+          </Button>
 
-          <DemoButton
-            description="多步骤同步流程的进度提示"
-            onPress={handleDataSync}
-            title="数据同步"
-            variant="primary"
-          />
+          <Button onPress={handleDataSync} type="primary">
+            数据同步
+          </Button>
 
-          <DemoButton
-            description="模拟网络连接状态的变化提示"
+          <Button
             onPress={simulateNetworkChange}
-            title="网络状态变化"
-            variant="warning"
-          />
+            style={{ backgroundColor: token.colorWarning }}
+            type="primary"
+          >
+            网络状态变化
+          </Button>
 
-          <DemoButton
-            description="与Alert结合的删除确认流程"
+          <Button
             onPress={handleDeleteWithConfirm}
-            title="确认删除"
-            variant="error"
-          />
+            style={{ backgroundColor: token.colorError }}
+            type="primary"
+          >
+            确认删除
+          </Button>
         </View>
 
         <View style={[styles.integrationTips, { backgroundColor: token.colorBgElevated }]}>

@@ -14,8 +14,8 @@ export const useStyles = createStyles((token) => ({
   actionLabel: {
     color: token.colorBgContainer,
     fontSize: token.fontSizeSM,
-    fontWeight: '400',
-    marginTop: 4,
+    fontWeight: token.fontWeightStrong,
+    marginTop: token.marginXXS,
     textAlign: 'center',
   },
   actionLabelSuccess: {
