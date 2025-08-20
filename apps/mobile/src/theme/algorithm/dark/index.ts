@@ -30,11 +30,15 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
     });
   }
 
+  console.log(primaryTokens, 'primaryTokens');
+
   // generate neutral color Token with colorBgBase
   const neutralScale = neutralColorScales[neutralColor];
   if (neutralScale) {
     neutralTokens = generateColorNeutralPalette({ appearance: 'dark', scale: neutralScale });
   }
+
+  console.log(neutralTokens, 'neutralTokens');
 
   const colorPalettes = generateCustomColorPalettes({ appearance: 'dark' });
 
