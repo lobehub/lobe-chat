@@ -82,6 +82,21 @@ export interface SeedToken extends PresetColorType {
   colorWarning: string;
 
   /**
+   * @nameZH 纯白色
+   * @desc 不随主题变化的纯白色
+   * @descEN Pure white color don't changed by theme
+   * @default #FFFFFF
+   */
+  colorWhite: string;
+
+  /**
+   * @nameZH 纯黑色
+   * @desc 不随主题变化的纯黑色
+   * @default #0000
+   */
+  // colorBlack: string;
+
+  /**
    * @nameZH 基础高度
    * @nameEN Base Control Height
    * @desc Ant Design 中按钮和输入框等基础控件的高度

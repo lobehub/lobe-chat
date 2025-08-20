@@ -655,19 +655,11 @@ export interface ColorMapToken
    * @descEN The background color of the mask, used to cover the content below the mask, Modal, Drawer and other components use this token
    */
   colorBgMask: string;
-
   /**
-   * @nameZH 纯白色
-   * @desc 不随主题变化的纯白色
-   * @descEN Pure white color don't changed by theme
-   * @default #FFFFFF
+   * @nameZH 固定文本高亮颜色
+   * @nameEN Fixed text highlight color
+   * @desc 控制带背景色的文本，例如 Primary Button 组件中的文本高亮颜色。
+   * @descEN Control the highlight color of text with background color, such as the text in Primary Button components.
    */
-  colorWhite: string;
-
-  /**
-   * @nameZH 纯黑色
-   * @desc 不随主题变化的纯黑色
-   * @default #0000
-   */
-  // colorBlack: string;
+  colorTextLightSolid: string;
 }
