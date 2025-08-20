@@ -35,11 +35,6 @@ export const useStyles = createStyles(
         flexWrap: 'wrap' as const,
         gap: gap,
       },
-      transparentSwatch: {
-        backgroundColor: token.colorFillTertiary,
-        // 为透明色添加一个斜线图案来表示透明
-        borderStyle: 'dashed' as const,
-      },
     };
   },
 );
