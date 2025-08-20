@@ -64,6 +64,7 @@
     "ahooks": "^3.9.0",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
+    "chroma-js": "^3.1.2",
     "dayjs": "^1.11.13",
     "expo": "^52.0.0",
     "expo-auth-session": "~6.0.3",

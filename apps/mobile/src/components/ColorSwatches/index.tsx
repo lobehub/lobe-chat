@@ -1,13 +1,15 @@
 import React, { memo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Check } from 'lucide-react-native';
+import chroma from 'chroma-js';
 
+import ConicGradientPattern from './ConicGradientPatern';
 import { useStyles } from './style';
 import type { ColorSwatchesProps } from './type';
 
 // 检查是否为透明色
 const isTransparent = (color: string) => {
-  return color === 'transparent' || color.includes('rgba(0, 0, 0, 0)');
+  return color === 'transparent' || chroma(color).alpha() === 0;
 };
 
 const ColorSwatches = memo<ColorSwatchesProps>(
@@ -63,13 +65,22 @@ const ColorSwatches = memo<ColorSwatchesProps>(
               onPress={() => handleColorSelect(colorItem.color)}
               style={[
                 styles.colorSwatch,
-                isColorTransparent && styles.transparentSwatch,
                 isActive && styles.activeSwatch,
                 {
                   backgroundColor: isColorTransparent ? 'transparent' : color,
+                  overflow: 'hidden',
                 },
               ]}
             >
+              {isColorTransparent && (
+                <View style={{ bottom: 0, left: 0, position: 'absolute', right: 0, top: 0 }}>
+                  <ConicGradientPattern
+                    fillColor={token.colorFillSecondary}
+                    height={size}
+                    width={size}
+                  />
+                </View>
+              )}
               {isActive && (
                 <Check
                   color={getContrastColor(color)}
