@@ -81,7 +81,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   title,
   children,
   placement = 'top',
-  trigger = 'longPress',
+  trigger = 'click',
   arrow = true,
   color,
   visible: controlledVisible,
@@ -607,26 +607,23 @@ export const Tooltip: React.FC<TooltipProps> = ({
     );
   };
 
-  const childProps: any = {
-    ref: childRef,
-  };
+  const triggerProps: any = {};
 
   if (trigger === 'click') {
-    childProps.onPress = handleChildPress;
+    triggerProps.onPress = handleChildPress;
   } else if (trigger === 'longPress') {
-    childProps.onLongPress = handleChildLongPress;
+    triggerProps.onLongPress = handleChildLongPress;
   }
 
   const clonedChild = React.isValidElement(children)
-    ? React.cloneElement(children, {
-        ...childProps,
-        ref: childRef,
-      })
+    ? React.cloneElement(children as React.ReactElement<any>, triggerProps)
     : children;
 
   return (
     <View style={styles.container}>
-      {clonedChild}
+      <View collapsable={false} ref={childRef}>
+        {clonedChild}
+      </View>
       {renderTooltip()}
     </View>
   );
