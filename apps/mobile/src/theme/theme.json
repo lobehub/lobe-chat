@@ -426,7 +426,6 @@
   "colorPrimaryText": "#222222",
   "colorPrimaryTextActive": "#111111",
   "colorBgContainer": "#fcf8fb",
-  "colorBgContainerSecondary": "#f4f1f4",
   "colorBgElevated": "#fcf8fb",
   "colorBgLayout": "#edeaed",
   "colorBgMask": "rgba(5, 1, 14, 0.46)",

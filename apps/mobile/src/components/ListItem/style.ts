@@ -27,12 +27,11 @@ export const useStyles = createStyles(
       flex: 1,
       justifyContent: hasDescription ? 'flex-start' : 'center',
     },
-    sessionItem: {
+    listItem: {
       alignItems: 'center',
-      backgroundColor: active ? token.colorPrimaryBg : token.colorBgContainer,
-      borderColor: active ? token.colorPrimary : 'transparent',
+      backgroundColor: active ? token.colorFillSecondary : 'transparent',
       borderRadius: token.borderRadius,
-      borderWidth: active ? 1 : 0,
+      color: active ? token.colorText : token.colorTextTertiary,
       flexDirection: 'row',
       gap: token.marginSM,
       marginBottom: token.marginXS,

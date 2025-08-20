@@ -70,8 +70,6 @@ const lightBaseToken: Partial<AliasToken> = {
     shadowRadius: 1,
   },
 
-  // TODO: colorBgContainerSecondary 的计算逻辑
-  colorBgContainerSecondary: '#f5f5f5',
   // 链接颜色
   colorLink: infoToken.colorInfoText,
   colorLinkActive: infoToken.colorInfoTextActive,
