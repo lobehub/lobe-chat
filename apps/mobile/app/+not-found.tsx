@@ -1,46 +1,45 @@
 import { Link, Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
-import { useThemeToken } from '@/theme';
+import { createStyles } from '@/theme';
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((token) => ({
   container: {
     alignItems: 'center',
+    backgroundColor: token.colorBgContainer,
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: token.paddingLG,
   },
   link: {
-    marginTop: 15,
-    paddingVertical: 15,
+    marginTop: token.marginLG,
+    paddingVertical: token.paddingLG,
   },
   linkText: {
-    fontSize: 16,
+    color: token.colorPrimary,
+    fontSize: token.fontSizeLG,
     textDecorationLine: 'underline',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    color: token.colorText,
+    fontSize: token.fontSizeHeading3,
+    fontWeight: token.fontWeightStrong,
   },
-});
+}));
 
 export default function NotFoundScreen() {
-  const token = useThemeToken();
+  const { styles } = useStyles();
   const { t } = useTranslation(['error', 'common']);
 
   return (
     <>
       <Stack.Screen options={{ title: t('page.notFoundTitle', { ns: 'error' }) }} />
-      <View style={[styles.container, { backgroundColor: token.colorBgContainer }]}>
-        <Text style={[styles.title, { color: token.colorText }]}>
-          {t('page.notFoundMessage', { ns: 'error' })}
-        </Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>{t('page.notFoundMessage', { ns: 'error' })}</Text>
         <Link href="/" style={styles.link}>
-          <Text style={[styles.linkText, { color: token.colorPrimary }]}>
-            {t('navigation.goToHomeScreen', { ns: 'common' })}
-          </Text>
+          <Text style={styles.linkText}>{t('navigation.goToHomeScreen', { ns: 'common' })}</Text>
         </Link>
       </View>
     </>

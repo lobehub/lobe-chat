@@ -136,7 +136,7 @@ export const useStyles = createStyles((token) => ({
   },
   title: {
     fontSize: token.fontSizeHeading2,
-    fontWeight: 'bold',
+    fontWeight: token.fontWeightStrong,
     lineHeight: token.lineHeightHeading2,
   },
 }));
