@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 
 import { useToast } from '../ToastProvider';
-import { DemoButton } from './DemoButton';
 
 export default function BasicDemo() {
   const token = useThemeToken();
@@ -59,48 +59,38 @@ export default function BasicDemo() {
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: token.colorText }]}>基础类型</Text>
         <View style={styles.buttonGroup}>
-          <DemoButton
-            description="显示成功类型的 Toast"
+          <Button
             onPress={showSuccess}
-            title="成功提示"
-            variant="success"
-          />
-          <DemoButton
-            description="显示错误类型的 Toast"
-            onPress={showError}
-            title="错误提示"
-            variant="error"
-          />
-          <DemoButton
-            description="显示警告类型的 Toast"
+            style={{ backgroundColor: token.colorSuccess }}
+            type="primary"
+          >
+            成功提示
+          </Button>
+          <Button onPress={showError} style={{ backgroundColor: token.colorError }} type="primary">
+            错误提示
+          </Button>
+          <Button
             onPress={showWarning}
-            title="警告提示"
-            variant="warning"
-          />
-          <DemoButton
-            description="显示信息类型的 Toast"
-            onPress={showInfo}
-            title="信息提示"
-            variant="primary"
-          />
-          <DemoButton
-            description="显示加载状态的 Toast"
-            onPress={showLoading}
-            title="加载提示"
-            variant="secondary"
-          />
+            style={{ backgroundColor: token.colorWarning }}
+            type="primary"
+          >
+            警告提示
+          </Button>
+          <Button onPress={showInfo} type="primary">
+            信息提示
+          </Button>
+          <Button onPress={showLoading} type="default">
+            加载提示
+          </Button>
         </View>
       </View>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: token.colorText }]}>内容测试</Text>
         <View style={styles.buttonGroup}>
-          <DemoButton
-            description="测试长文本的显示效果"
-            onPress={showLongContent}
-            title="长内容测试"
-            variant="primary"
-          />
+          <Button onPress={showLongContent} type="primary">
+            长内容测试
+          </Button>
         </View>
       </View>
     </ScrollView>

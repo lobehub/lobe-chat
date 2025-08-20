@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, ViewStyle } from 'react-native';
+import { View, Animated, ViewStyle, StyleProp, DimensionValue } from 'react-native';
 
 import { useStyles } from './style';
 
@@ -13,11 +13,11 @@ export interface SkeletonProps {
   /** Show loading state */
   loading?: boolean;
   /** Show skeleton paragraph */
-  paragraph?: boolean | { rows?: number; width?: number | string | (number | string)[] };
+  paragraph?: boolean | { rows?: number; width?: DimensionValue | DimensionValue[] };
   /** Custom style for skeleton container */
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   /** Show skeleton title */
-  title?: boolean | { width?: number | string };
+  title?: boolean | { width?: DimensionValue };
 }
 
 const Skeleton: React.FC<SkeletonProps> = ({
@@ -97,7 +97,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
         style={[
           styles.skeletonItem,
           styles.titleLine,
-          { width: titleWidth },
+          { width: titleWidth as any },
           animated && {
             opacity: shimmerAnim.interpolate({
               inputRange: [0, 1],
@@ -134,7 +134,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
           style={[
             styles.skeletonItem,
             styles.paragraphLine,
-            { width: lineWidth },
+            { width: lineWidth as any },
             // Remove margin bottom from last line
             i === rows - 1 && { marginBottom: 0 },
             animated && {
@@ -242,7 +242,7 @@ interface SkeletonTitleProps {
   backgroundColor?: string;
   highlightColor?: string;
   style?: ViewStyle;
-  width?: number | string;
+  width?: DimensionValue;
 }
 
 const SkeletonTitle: React.FC<SkeletonTitleProps> = ({
@@ -299,7 +299,7 @@ interface SkeletonParagraphProps {
   highlightColor?: string;
   rows?: number;
   style?: ViewStyle;
-  width?: number | string | (number | string)[];
+  width?: DimensionValue | DimensionValue[];
 }
 
 const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({
@@ -334,12 +334,12 @@ const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({
 
   const lines = [];
   for (let i = 0; i < rows; i++) {
-    let lineWidth = '100%';
+    let lineWidth: DimensionValue = '100%';
 
     if (Array.isArray(width)) {
-      lineWidth = (width[i] as string) || '100%';
+      lineWidth = width[i] || '100%';
     } else if (width) {
-      lineWidth = width as string;
+      lineWidth = width;
     } else if (i === rows - 1) {
       lineWidth = '60%'; // Last line is shorter by default
     }
