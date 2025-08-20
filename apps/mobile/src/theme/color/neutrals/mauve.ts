@@ -2,6 +2,7 @@ import { ColorScaleItem } from '../types';
 
 const mauve: ColorScaleItem = {
   dark: [
+    '#000000',
     '#1c1b1e',
     '#252528',
     '#2f2f32',
@@ -13,10 +14,10 @@ const mauve: ColorScaleItem = {
     '#737177',
     '#7f7d83',
     '#bbb9bd',
-    '#fcf8fb',
     '#ffffff',
   ],
   darkA: [
+    'rgba(255, 255, 255, 0.02)',
     'rgba(233, 225, 250, 0.12)',
     'rgba(231, 231, 250, 0.16)',
     'rgba(235, 235, 250, 0.2)',
@@ -28,10 +29,10 @@ const mauve: ColorScaleItem = {
     'rgba(245, 240, 253, 0.47)',
     'rgba(244, 240, 252, 0.52)',
     'rgba(253, 250, 255, 0.74)',
-    'rgba(255, 251, 254, 0.99)',
     '#ffffff',
   ],
   light: [
+    '#ffffff',
     '#fcf8fb',
     '#edeaed',
     '#dfdcdf',
@@ -43,10 +44,10 @@ const mauve: ColorScaleItem = {
     '#8c8a90',
     '#7f7d83',
     '#4a494d',
-    '#1c1b1e',
     '#111',
   ],
   lightA: [
+    'rgba(0, 0, 0, 0.015)',
     'rgba(155, 22, 122, 0.03)',
     'rgba(55, 22, 55, 0.09)',
     'rgba(26, 5, 26, 0.14)',
@@ -59,7 +60,6 @@ const mauve: ColorScaleItem = {
     'rgba(4, 0, 12, 0.51)',
     'rgba(4, 2, 8, 0.72)',
     'rgba(3, 2, 5, 0.9)',
-    '#111',
   ],
 };
 

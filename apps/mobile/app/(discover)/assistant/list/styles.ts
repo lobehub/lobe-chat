@@ -8,7 +8,7 @@ export const useStyles = createStyles((token) => ({
   },
   emptyContainer: {
     alignItems: 'center',
-    padding: 20,
+    padding: token.padding,
   },
   emptyText: {
     color: token.colorTextSecondary,
@@ -23,18 +23,18 @@ export const useStyles = createStyles((token) => ({
     color: token.colorError,
   },
   filterContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 8,
-    paddingTop: 16,
+    paddingBottom: token.paddingXS,
+    paddingTop: token.padding,
   },
   listContainer: {
-    padding: 16,
+    padding: token.padding,
   },
   loadingContainer: {
     alignItems: 'center',
@@ -44,7 +44,7 @@ export const useStyles = createStyles((token) => ({
   },
   loadingText: {
     color: token.colorTextSecondary,
-    marginTop: 16,
+    marginTop: token.margin,
   },
   safeAreaContainer: {
     backgroundColor: token.colorBgLayout,
@@ -53,31 +53,31 @@ export const useStyles = createStyles((token) => ({
   searchContainer: {
     alignItems: 'center',
     backgroundColor: token.colorFillTertiary,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     flexDirection: 'row',
-    marginBottom: 12,
-    paddingHorizontal: 12,
+    marginBottom: token.paddingSM,
+    paddingHorizontal: token.paddingSM,
   },
   searchIcon: {
     alignItems: 'center',
-    borderRadius: 20,
-    height: 40,
+    borderRadius: token.borderRadius,
+    height: token.controlHeight,
     justifyContent: 'center',
-    width: 40,
+    width: token.controlHeight,
   },
   searchInput: {
     color: token.colorText,
     flex: 1,
-    fontSize: 16,
-    paddingVertical: 8,
+    fontSize: token.fontSize,
+    paddingVertical: token.marginXS,
   },
   subtitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    fontSize: token.fontSizeXL,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.margin,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: token.fontSizeHeading1,
+    fontWeight: token.fontWeightStrong,
   },
 }));

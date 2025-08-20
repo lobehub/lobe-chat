@@ -2,6 +2,7 @@ import { ColorScaleItem } from '../types';
 
 const slate: ColorScaleItem = {
   dark: [
+    '#000000',
     '#1b1c1d',
     '#242527',
     '#2e2f32',
@@ -13,10 +14,10 @@ const slate: ColorScaleItem = {
     '#707276',
     '#7b7e82',
     '#b8babc',
-    '#f9f9fa',
     '#ffffff',
   ],
   darkA: [
+    'rgba(255, 255, 255, 0.02)',
     'rgba(225, 233, 242, 0.12)',
     'rgba(225, 231, 244, 0.16)',
     'rgba(230, 235, 250, 0.2)',
@@ -28,10 +29,10 @@ const slate: ColorScaleItem = {
     'rgba(238, 243, 251, 0.47)',
     'rgba(241, 247, 255, 0.51)',
     'rgba(249, 251, 254, 0.74)',
-    'rgba(254, 254, 255, 0.98)',
     '#ffffff',
   ],
   light: [
+    '#ffffff',
     '#f9f9fa',
     '#ebebec',
     '#dcddde',
@@ -43,10 +44,10 @@ const slate: ColorScaleItem = {
     '#898b8e',
     '#7b7e82',
     '#484a4d',
-    '#1b1c1d',
     '#111',
   ],
   lightA: [
+    'rgba(0, 0, 0, 0.015)',
     'rgba(55, 55, 88, 0.03)',
     'rgba(5, 5, 17, 0.08)',
     'rgba(5, 12, 19, 0.14)',
@@ -59,7 +60,6 @@ const slate: ColorScaleItem = {
     'rgba(1, 7, 15, 0.52)',
     'rgba(1, 4, 8, 0.72)',
     'rgba(2, 3, 4, 0.9)',
-    '#111',
   ],
 };
 

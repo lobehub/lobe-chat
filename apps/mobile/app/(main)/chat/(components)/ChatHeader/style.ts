@@ -7,20 +7,6 @@ export const useStyles = createStyles((token) => ({
     borderRadius: token.borderRadiusXS,
     padding: token.paddingXXS,
   },
-  avatar: {
-    borderRadius: token.borderRadiusSM,
-    height: 32,
-    width: 32,
-  },
-  avatarEmoji: {
-    alignItems: 'center' as const,
-    height: 32,
-    justifyContent: 'center' as const,
-    width: 32,
-  },
-  emojiText: {
-    fontSize: 32,
-  },
   header: {
     alignItems: 'center',
     backgroundColor: token.colorBgLayout,
@@ -30,18 +16,18 @@ export const useStyles = createStyles((token) => ({
     paddingHorizontal: token.paddingSM,
   },
   headerActions: {
-    alignItems: 'center' as const,
-    flexDirection: 'row' as const,
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: token.marginXS,
   },
   headerContent: {
-    alignItems: 'center' as const,
+    alignItems: 'center',
     flex: 1,
     paddingHorizontal: token.paddingXS,
   },
   headerInfo: {
-    alignItems: 'center' as const,
-    flexDirection: 'row' as const,
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: token.marginXS,
     maxWidth: '100%',
   },
@@ -50,16 +36,16 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeSM,
     marginTop: 2,
     maxWidth: '100%',
-    textAlign: 'left' as const,
+    textAlign: 'left',
   },
   headerText: {
-    alignItems: 'flex-start' as const,
+    alignItems: 'flex-start',
     flex: 1,
   },
   headerTitle: {
     color: token.colorText,
     fontSize: token.fontSizeLG,
-    fontWeight: '600' as const,
-    textAlign: 'left' as const,
+    fontWeight: token.fontWeightStrong,
+    textAlign: 'left',
   },
 }));

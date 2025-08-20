@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
+import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 
 import { useToast } from '@/components/Toast';
-import { DemoButton } from './DemoButton';
 
 export default function AdvancedDemo() {
   const toast = useToast();
@@ -182,40 +182,37 @@ export default function AdvancedDemo() {
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>高级场景</Text>
         <View style={styles.section}>
-          <DemoButton
-            description="完整的异步操作流程演示"
+          <Button
             onPress={simulateApiCall}
-            title="模拟API调用"
-            variant="success"
-          />
+            style={{ backgroundColor: token.colorSuccess }}
+            type="primary"
+          >
+            模拟API调用
+          </Button>
 
-          <DemoButton
-            description="多步骤操作的进度提示"
-            onPress={simulateFileUpload}
-            title="文件上传流程"
-            variant="primary"
-          />
+          <Button onPress={simulateFileUpload} type="primary">
+            文件上传流程
+          </Button>
 
-          <DemoButton
-            description="连续的状态更新提示"
-            onPress={showProgressiveFeedback}
-            title="渐进式反馈"
-            variant="primary"
-          />
+          <Button onPress={showProgressiveFeedback} type="primary">
+            渐进式反馈
+          </Button>
 
-          <DemoButton
-            description="显示具体的错误描述"
+          <Button
             onPress={showErrorWithDetails}
-            title="详细错误信息"
-            variant="error"
-          />
+            style={{ backgroundColor: token.colorError }}
+            type="primary"
+          >
+            详细错误信息
+          </Button>
 
-          <DemoButton
-            description="包含时间信息的提示"
+          <Button
             onPress={showTimestampedMessages}
-            title="时间戳消息"
-            variant="warning"
-          />
+            style={{ backgroundColor: token.colorWarning }}
+            type="primary"
+          >
+            时间戳消息
+          </Button>
         </View>
 
         <Text style={styles.sectionTitle}>配置选项</Text>
@@ -248,12 +245,9 @@ export default function AdvancedDemo() {
             />
           </View>
 
-          <DemoButton
-            description="使用当前配置显示Toast"
-            onPress={showConditionalToasts}
-            title="测试当前配置"
-            variant="secondary"
-          />
+          <Button onPress={showConditionalToasts} type="default">
+            测试当前配置
+          </Button>
         </View>
 
         <View style={styles.tips}>
