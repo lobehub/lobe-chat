@@ -9,9 +9,9 @@ export const useStyles = createStyles((token) => ({
   },
   title: {
     color: token.colorTextLabel,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
     marginBottom: token.marginXS,
-    paddingHorizontal: 16,
+    paddingHorizontal: token.padding,
   },
 }));
