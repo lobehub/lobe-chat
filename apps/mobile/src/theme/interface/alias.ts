@@ -224,13 +224,6 @@ export interface AliasToken extends MapToken {
    */
   colorTextLabel: string;
 
-  /**
-   * @nameZH 固定文本高亮颜色
-   * @nameEN Fixed text highlight color
-   * @desc 控制带背景色的文本，例如 Primary Button 组件中的文本高亮颜色。
-   * @descEN Control the highlight color of text with background color, such as the text in Primary Button components.
-   */
-  colorTextLightSolid: string;
   // Text
   /**
    * @nameZH 占位文本颜色

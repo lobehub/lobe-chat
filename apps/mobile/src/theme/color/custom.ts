@@ -10,6 +10,7 @@ import {
   purple,
   red,
   volcano,
+  primary,
   yellow,
   gray,
 } from './primary';
@@ -25,6 +26,7 @@ export const primaryColors = {
   lime: lime.dark[9],
   magenta: magenta.dark[9],
   orange: orange.dark[9],
+  primary: primary.dark[9],
   purple: purple.dark[9],
   red: red.dark[9],
   volcano: volcano.dark[9],
@@ -34,6 +36,7 @@ export const primaryColors = {
 export type PrimaryColorsObj = typeof primaryColors;
 export type PrimaryColors = keyof PrimaryColorsObj;
 export const primaryColorsSwatches = [
+  primaryColors.primary,
   primaryColors.red,
   primaryColors.orange,
   primaryColors.gold,

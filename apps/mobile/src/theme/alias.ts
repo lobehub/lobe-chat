@@ -172,8 +172,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     colorTextLabel: mapToken.colorTextSecondary,
 
-    colorTextLightSolid: mapToken.colorWhite,
-
     // ============== 文本颜色 ============== //
     colorTextPlaceholder: mapToken.colorTextQuaternary,
 
