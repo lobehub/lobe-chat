@@ -1,51 +1,40 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => {
-  const t = token || {
-    borderRadius: 6,
-    borderRadiusLG: 12,
-    fontSize: 14,
-    fontSizeLG: 16,
-    marginLG: 16,
-    marginSM: 8,
-    paddingLG: 16,
-    paddingMD: 12,
-  };
-
   return {
     // 控制器样式
     controlInput: {
-      borderRadius: t.borderRadius,
+      borderRadius: token.borderRadius,
       borderWidth: 1,
       flex: 1,
-      fontSize: t.fontSize,
+      fontSize: token.fontSize,
       height: 40,
-      paddingHorizontal: t.paddingMD,
+      paddingHorizontal: token.paddingMD,
     },
     controlItem: {
-      marginBottom: t.marginLG,
+      marginBottom: token.marginLG,
     },
     controlLabel: {
-      fontSize: t.fontSizeLG,
-      fontWeight: '600',
-      marginBottom: t.marginSM,
+      fontSize: token.fontSizeLG,
+      fontWeight: token.fontWeightStrong,
+      marginBottom: token.marginSM,
     },
     controlRow: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: t.marginSM,
+      gap: token.marginSM,
     },
     controlsContainer: {
-      backgroundColor: t.colorBgElevated || '#fff',
-      borderRadius: t.borderRadiusLG,
-      margin: t.marginLG,
-      padding: t.paddingLG,
+      backgroundColor: token.colorBgElevated,
+      borderRadius: token.borderRadiusLG,
+      margin: token.marginLG,
+      padding: token.paddingLG,
     },
     presetRow: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: t.marginSM,
-      marginTop: t.marginSM,
+      gap: token.marginSM,
+      marginTop: token.marginSM,
     },
   };
 });

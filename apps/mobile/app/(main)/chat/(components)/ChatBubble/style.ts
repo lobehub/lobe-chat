@@ -13,11 +13,6 @@ export const useStyles = createStyles((token) => ({
   aiMessageText: {
     color: token.colorText,
   },
-  avatar: {
-    borderRadius: 16,
-    height: 32,
-    width: 32,
-  },
   bubble: {
     borderRadius: token.borderRadius,
     paddingHorizontal: token.paddingSM,
@@ -38,11 +33,11 @@ export const useStyles = createStyles((token) => ({
     color: token.colorText,
     fontFamily: 'monospace',
     fontSize: token.fontSize,
-    lineHeight: 20,
+    lineHeight: token.lineHeightSM,
   },
   messageText: {
     fontSize: token.fontSizeLG,
-    lineHeight: 22,
+    lineHeight: token.lineHeight,
   },
   userBubble: {
     backgroundColor: token.colorBgContainer,

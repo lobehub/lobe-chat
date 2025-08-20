@@ -6,20 +6,20 @@ export const useStyles = createStyles((token) => ({
   },
   tab: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 16,
-    marginRight: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    borderRadius: token.borderRadiusLG,
+    marginRight: token.marginXS,
+    paddingHorizontal: token.paddingLG,
+    paddingVertical: token.paddingXS,
   },
   tabActive: {
-    backgroundColor: token.colorBgElevated,
+    backgroundColor: token.colorPrimary,
   },
   tabText: {
-    color: token.colorTextSecondary,
-    fontSize: 14,
+    color: token.colorText,
+    fontSize: token.fontSize,
     textTransform: 'capitalize',
   },
   tabTextActive: {
-    color: token.colorText,
+    color: token.colorTextLightSolid,
   },
 }));
