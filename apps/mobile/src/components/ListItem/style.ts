@@ -3,17 +3,17 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles(
   (token, hasDescription: boolean = false, active: boolean = false) => ({
     avatar: {
-      borderRadius: 20,
-      height: 40,
+      borderRadius: token.borderRadiusLG + token.borderRadiusXS,
+      height: token.controlHeightLG,
       marginRight: token.marginSM,
-      width: 40,
+      width: token.controlHeightLG,
     },
     description: {
       color: token.colorTextSecondary,
       fontSize: token.fontSize,
     },
     emoji: {
-      fontSize: 40,
+      fontSize: token.controlHeightLG,
     },
     emojiContainer: {
       alignItems: 'center',
@@ -27,12 +27,11 @@ export const useStyles = createStyles(
       flex: 1,
       justifyContent: hasDescription ? 'flex-start' : 'center',
     },
-    sessionItem: {
+    listItem: {
       alignItems: 'center',
-      backgroundColor: active ? token.colorPrimaryBg : token.colorBgContainer,
-      borderColor: active ? token.colorPrimary : 'transparent',
+      backgroundColor: active ? token.colorFillSecondary : 'transparent',
       borderRadius: token.borderRadius,
-      borderWidth: active ? 1 : 0,
+      color: active ? token.colorText : token.colorTextTertiary,
       flexDirection: 'row',
       gap: token.marginSM,
       marginBottom: token.marginXS,
@@ -41,7 +40,7 @@ export const useStyles = createStyles(
     title: {
       color: token.colorText,
       fontSize: token.fontSizeLG,
-      fontWeight: '600',
+      fontWeight: token.fontWeightStrong,
       marginBottom: hasDescription ? token.marginXS : 0,
     },
   }),

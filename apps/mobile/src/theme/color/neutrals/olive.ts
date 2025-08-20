@@ -2,6 +2,7 @@ import { ColorScaleItem } from '../types';
 
 const olive: ColorScaleItem = {
   dark: [
+    '#000000',
     '#1a1c1b',
     '#232624',
     '#2d302e',
@@ -13,10 +14,10 @@ const olive: ColorScaleItem = {
     '#70736e',
     '#7c7f79',
     '#b9bab5',
-    '#faf9f4',
     '#ffffff',
   ],
   darkA: [
+    'rgba(255, 255, 255, 0.02)',
     'rgba(236, 255, 245, 0.11)',
     'rgba(233, 253, 240, 0.15)',
     'rgba(237, 253, 242, 0.19)',
@@ -28,10 +29,10 @@ const olive: ColorScaleItem = {
     'rgba(243, 250, 239, 0.46)',
     'rgba(248, 254, 242, 0.5)',
     'rgba(253, 255, 248, 0.73)',
-    'rgba(255, 254, 249, 0.98)',
     '#ffffff',
   ],
   light: [
+    '#ffffff',
     '#faf9f4',
     '#ecebe6',
     '#ddddd7',
@@ -43,10 +44,10 @@ const olive: ColorScaleItem = {
     '#898c86',
     '#7c7f79',
     '#484b48',
-    '#1a1c1b',
     '#111',
   ],
   lightA: [
+    'rgba(0, 0, 0, 0.015)',
     'rgba(155, 135, 35, 0.05)',
     'rgba(65, 55, 5, 0.1)',
     'rgba(43, 43, 5, 0.16)',
@@ -59,7 +60,6 @@ const olive: ColorScaleItem = {
     'rgba(8, 13, 2, 0.53)',
     'rgba(1, 5, 1, 0.72)',
     'rgba(1, 3, 2, 0.9)',
-    '#111',
   ],
 };
 

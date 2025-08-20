@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 
+import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 import Skeleton from '../index';
 
@@ -16,20 +17,15 @@ const ComplexDemo: React.FC = () => {
     <View style={{ padding: 20 }}>
       <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>Complex Skeleton</Text>
 
-      <TouchableOpacity
+      <Button
         onPress={toggleLoading}
         style={{
-          alignItems: 'center',
-          backgroundColor: token.colorPrimary,
-          borderRadius: 8,
           marginBottom: 20,
-          padding: 12,
         }}
+        type="primary"
       >
-        <Text style={{ color: token.colorText, fontWeight: 'bold' }}>
-          {loading ? 'Show Content' : 'Show Loading'}
-        </Text>
-      </TouchableOpacity>
+        {loading ? 'Show Content' : 'Show Loading'}
+      </Button>
 
       <View style={{ marginBottom: 20 }}>
         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>User Profile Card</Text>

@@ -1,20 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
-import { ListItem } from '@/components';
+import { Avatar, ListItem } from '@/components';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
-import { isEmoji } from '@/utils/common';
 import { useStyles } from './styles';
+import { AVATAR_SIZE_LARGE } from '@/const/common';
 
 export default function AgentDetail() {
   const { t } = useTranslation();
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
-  const backgroundColor = useSessionStore(sessionMetaSelectors.currentAgentBackgroundColor);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
-  const { styles } = useStyles(backgroundColor);
+  const { styles } = useStyles();
 
   // Mock 对话历史数据
   const history = [
@@ -30,14 +29,7 @@ export default function AgentDetail() {
   return (
     <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={[styles.container]}>
       <View style={styles.avatarContainer}>
-        <View style={styles.avatarWrapper}>
-          {avatar &&
-            (isEmoji(avatar) ? (
-              <Text style={styles.avatarEmoji}>{avatar}</Text>
-            ) : (
-              <Image source={{ uri: avatar }} style={styles.avatarImg} />
-            ))}
-        </View>
+        <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
       </View>
       <Text style={styles.title}>{title}</Text>
       {description ? <Text style={styles.description}>{description}</Text> : null}

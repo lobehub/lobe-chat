@@ -1,4 +1,4 @@
-import { Image, View, Text, ViewStyle } from 'react-native';
+import { Image, View, Text, ViewStyle, StyleProp } from 'react-native';
 import { memo, ReactNode, useState, isValidElement } from 'react';
 import { DEFAULT_AVATAR } from '@/const/meta';
 import FluentEmoji from '../FluentEmoji';
@@ -30,7 +30,7 @@ export interface AvatarProps {
   /**
    * 自定义样式
    */
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   /**
    * @description The title text to display if avatar is not provided
    */

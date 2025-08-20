@@ -23,11 +23,11 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
-    lineHeight: token.lineHeight * token.fontSize,
+    lineHeight: token.lineHeight,
   },
   codeLineCompact: {
     fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM * token.fontSizeSM,
+    lineHeight: token.lineHeightSM,
   },
   codeScrollContainer: {
     flexDirection: 'column',
@@ -36,11 +36,11 @@ export const useStyles = createStyles((token) => ({
   codeText: {
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
-    lineHeight: token.lineHeight * token.fontSize,
+    lineHeight: token.lineHeight,
   },
   codeTextCompact: {
     fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM * token.fontSizeSM,
+    lineHeight: token.lineHeightSM,
   },
   container: {
     backgroundColor: token.colorBgElevated,
@@ -111,7 +111,7 @@ export const useStyles = createStyles((token) => ({
   headerTitle: {
     color: token.colorText,
     fontSize: token.fontSizeSM,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
     textAlign: 'center',
   },
   languageTag: {
@@ -119,7 +119,7 @@ export const useStyles = createStyles((token) => ({
     borderRadius: token.borderRadiusXS,
     color: token.colorText,
     fontSize: token.fontSizeSM,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
     paddingHorizontal: token.paddingXS,
     paddingVertical: 2,
     position: 'absolute',
@@ -146,12 +146,12 @@ export const useStyles = createStyles((token) => ({
   statusValue: {
     color: token.colorText,
     fontSize: token.fontSize,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
   },
   title: {
     color: token.colorTextHeading,
     fontSize: token.fontSizeHeading1,
-    fontWeight: 'bold',
+    fontWeight: token.fontWeightStrong,
     marginBottom: token.marginLG,
   },
 }));

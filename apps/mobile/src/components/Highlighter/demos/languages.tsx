@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import Button from '@/components/Button';
 import Highlighter from '../index';
 
 /**
@@ -474,23 +475,18 @@ export default {
       {/* 分类选择 */}
       <View style={styles.categoryContainer}>
         {categories.map((category) => (
-          <TouchableOpacity
+          <Button
             key={category}
             onPress={() => setSelectedCategory(category)}
+            size="small"
             style={[
               styles.categoryButton,
               selectedCategory === category && styles.activeCategoryButton,
             ]}
+            type={selectedCategory === category ? 'primary' : 'default'}
           >
-            <Text
-              style={[
-                styles.categoryButtonText,
-                selectedCategory === category && styles.activeCategoryButtonText,
-              ]}
-            >
-              {languageCategories[category].title}
-            </Text>
-          </TouchableOpacity>
+            {languageCategories[category].title}
+          </Button>
         ))}
       </View>
 

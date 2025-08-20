@@ -1,30 +1,9 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token, backgroundColor?: string) => ({
+export const useStyles = createStyles((token) => ({
   avatarContainer: {
-    backgroundColor: backgroundColor || token.colorBgElevated,
-    borderRadius: token.borderRadiusLG * 2.75,
     marginBottom: token.marginSM,
-    marginTop: token.marginXS,
-    padding: token.paddingXXS,
-  },
-  avatarEmoji: {
-    fontSize: token.fontSizeHeading1 * 2.5,
-    textAlign: 'center',
-  },
-  avatarImg: {
-    borderRadius: 36,
-    height: 72,
-    width: 72,
-  },
-  avatarWrapper: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: 36,
-    height: 72,
-    justifyContent: 'center',
-    overflow: 'hidden',
-    width: 72,
+    marginTop: token.marginLG,
   },
   container: {
     backgroundColor: token.colorBgLayout,
@@ -33,7 +12,7 @@ export const useStyles = createStyles((token, backgroundColor?: string) => ({
   description: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeLG,
-    lineHeight: token.lineHeightLG * token.fontSizeLG,
+    lineHeight: token.lineHeightLG,
     marginBottom: token.marginSM,
     paddingHorizontal: token.paddingLG,
     textAlign: 'center',

@@ -15,7 +15,9 @@ export const FullFeaturedHighlighterDemo: React.FC = () => {
   const examples = [
     {
       code: `import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+
+import Button from '@/components/Button';
 
 interface CounterProps {
   initialValue?: number;
@@ -40,15 +42,15 @@ const Counter: React.FC<CounterProps> = ({
     <View style={styles.container}>
       <Text style={styles.countText}>{count}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={decrement}>
-          <Text style={styles.buttonText}>-</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={increment}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
+        <Button onPress={decrement} size="small" style={styles.button} type="default">
+          -
+        </Button>
+        <Button onPress={reset} size="small" style={styles.button} type="default">
+          Reset
+        </Button>
+        <Button onPress={increment} size="small" style={styles.button} type="default">
+          +
+        </Button>
       </View>
     </View>
   );
@@ -108,7 +110,7 @@ src/
     description: {
       color: token.colorTextSecondary,
       fontSize: token.fontSize,
-      lineHeight: token.lineHeight * token.fontSize,
+      lineHeight: token.lineHeight,
       marginBottom: token.marginXXL,
     },
     exampleContainer: {
@@ -137,7 +139,7 @@ src/
     featuresText: {
       color: token.colorInfoText,
       fontSize: token.fontSizeSM,
-      lineHeight: token.lineHeightSM * token.fontSizeSM,
+      lineHeight: token.lineHeightSM,
     },
     featuresTitle: {
       color: token.colorInfo,

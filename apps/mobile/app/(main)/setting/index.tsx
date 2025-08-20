@@ -33,7 +33,7 @@ export default function SettingScreen() {
   // 主色配置数据
   const primaryColorSwatchesData = [
     {
-      color: primaryColors.primary,
+      color: 'rgba(0, 0, 0, 0)',
       title: 'Default',
     },
     {
@@ -89,6 +89,10 @@ export default function SettingScreen() {
   // 中性色配置数据
   const neutralColorSwatchesData = [
     {
+      color: 'rgba(0, 0, 0, 0)',
+      title: 'Default',
+    },
+    {
       color: neutralColors.mauve,
       title: 'Mauve',
     },
@@ -143,9 +147,7 @@ export default function SettingScreen() {
               gap={8}
               onChange={(color: any) => {
                 const name = findCustomThemeName('primary', color) as PrimaryColors;
-                if (name) {
-                  setPrimaryColor(name);
-                }
+                setPrimaryColor(name || '');
               }}
               size={32}
               value={primaryColor ? primaryColors[primaryColor] : undefined}
@@ -160,9 +162,7 @@ export default function SettingScreen() {
               gap={8}
               onChange={(color: any) => {
                 const name = findCustomThemeName('neutral', color) as NeutralColors;
-                if (name) {
-                  setNeutralColor(name);
-                }
+                setNeutralColor(name || '');
               }}
               size={32}
               value={neutralColor ? neutralColors[neutralColor] : undefined}
