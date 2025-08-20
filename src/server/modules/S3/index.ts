@@ -121,32 +121,6 @@ export class S3 {
     });
   }
 
-  /**
-   * 生成公共访问URL（适用于设置了public-read ACL的文件）
-   * @param key S3对象键
-   * @returns 公共访问URL
-   */
-  public getPublicUrl(key: string): string {
-    // 如果配置了公共域名，使用公共域名
-    if (fileEnv.S3_PUBLIC_DOMAIN) {
-      return `${fileEnv.S3_PUBLIC_DOMAIN}/${key}`;
-    }
-
-    // 否则构建标准的S3公共URL
-    if (fileEnv.S3_ENDPOINT) {
-      // 自定义端点（如MinIO等）
-      if (fileEnv.S3_ENABLE_PATH_STYLE) {
-        return `${fileEnv.S3_ENDPOINT}/${this.bucket}/${key}`;
-      } else {
-        return `${fileEnv.S3_ENDPOINT.replace('://', `://${this.bucket}.`)}/${key}`;
-      }
-    }
-
-    // AWS S3标准URL
-    const region = fileEnv.S3_REGION || DEFAULT_S3_REGION;
-    return `https://${this.bucket}.s3.${region}.amazonaws.com/${key}`;
-  }
-
   // 添加一个新方法用于上传二进制内容
   public async uploadBuffer(path: string, buffer: Buffer, contentType?: string) {
     const command = new PutObjectCommand({
