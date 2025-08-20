@@ -236,7 +236,6 @@ const clerkAuthMiddleware = clerkMiddleware(
     const response = defaultMiddleware(req);
 
     const data = await auth();
-
     logClerk('Clerk auth status: %O', {
       isSignedIn: !!data.userId,
       userId: data.userId,

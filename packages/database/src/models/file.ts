@@ -32,28 +32,19 @@ export class FileModel {
   ) => {
     const executeInTransaction = async (tx: Transaction) => {
       if (insertToGlobalFiles) {
-        // 使用原有的 fileHash
-        const hashToUse = params.fileHash!;
-
-        await tx
-          .insert(globalFiles)
-          .values({
-            creator: this.userId,
-            fileType: params.fileType,
-            hashId: hashToUse,
-            metadata: params.metadata,
-            size: params.size,
-            url: params.url,
-          })
-          .onConflictDoNothing({ target: globalFiles.hashId });
+        await tx.insert(globalFiles).values({
+          creator: this.userId,
+          fileType: params.fileType,
+          hashId: params.fileHash!,
+          metadata: params.metadata,
+          size: params.size,
+          url: params.url,
+        });
       }
-
-      // 使用原有的 fileHash
-      const fileHash = params.fileHash;
 
       const result = await tx
         .insert(files)
-        .values({ ...params, fileHash: fileHash, userId: this.userId })
+        .values({ ...params, userId: this.userId })
         .returning();
 
       const item = result[0];
