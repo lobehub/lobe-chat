@@ -1,16 +1,7 @@
 import { OpenAIChatMessage } from '@lobechat/types';
-import { Mock, describe, expect, it, vi } from 'vitest';
-
-import { chatHelpers } from '@/store/chat/helpers';
+import { describe, expect, it, vi } from 'vitest';
 
 import { chainSummaryTitle } from '../summaryTitle';
-
-// Mock the chatHelpers.getMessagesTokenCount function
-vi.mock('@/store/chat/helpers', () => ({
-  chatHelpers: {
-    getMessagesTokenCount: vi.fn(),
-  },
-}));
 
 describe('chainSummaryTitle', () => {
   it('should use the default model if the token count is below the GPT-3.5 limit', async () => {
@@ -21,7 +12,6 @@ describe('chainSummaryTitle', () => {
     ];
     const currentLanguage = 'en-US';
     const tokenCount = 10000; // Arbitrary token count below the GPT-3.5 limit
-    (chatHelpers.getMessagesTokenCount as Mock).mockResolvedValue(tokenCount);
 
     // Act
     const result = await chainSummaryTitle(messages, currentLanguage);
