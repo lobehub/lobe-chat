@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
@@ -151,9 +151,16 @@ describe('DataExporterRepos', () => {
     });
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     // 创建内存数据库
     await initializeDB();
+});
+
+beforeEach(async () => {
+
+    // 清理数据库
+    await db.delete(users);
+    await db.delete(globalFiles);
 
     // 插入测试数据
     await setupTestData();

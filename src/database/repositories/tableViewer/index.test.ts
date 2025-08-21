@@ -13,9 +13,16 @@ const mockDB = {
   execute: mockExecute,
 };
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
+
+beforeEach(async () => {
   vi.clearAllMocks();
+});
+
+afterEach(async () => {
+  vi.restoreAllMocks();
 });
 
 describe('TableViewerRepo', () => {

@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
@@ -38,17 +38,26 @@ const mockMessage = {
 
 const mockMessages = [mockMessage];
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
 
+beforeEach(async () => {
   // 在每个测试用例之前，清空表
-  await clientDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+  await clientDB.delete(users);
+  await clientDB.delete(sessions);
+  await clientDB.delete(topics);
+  await clientDB.delete(files);
+  await clientDB.delete(messages);
+  await clientDB.delete(messagePlugins);
+  await clientDB.delete(messageTTS);
+  await clientDB.delete(messageTranslates);
 
-    await trx.insert(sessions).values([{ id: sessionId, userId }]);
-    await trx.insert(topics).values([{ id: topicId, sessionId, userId }]);
-    await trx.insert(files).values({
+  await clientDB.transaction(async (tx) => {
+    await tx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await tx.insert(sessions).values([{ id: sessionId, userId }]);
+    await tx.insert(topics).values([{ id: topicId, sessionId, userId }]);
+    await tx.insert(files).values({
       id: 'f1',
       userId: userId,
       url: 'abc',
@@ -62,6 +71,13 @@ beforeEach(async () => {
 afterEach(async () => {
   // 在每个测试用例之后，清空表
   await clientDB.delete(users);
+  await clientDB.delete(sessions);
+  await clientDB.delete(topics);
+  await clientDB.delete(files);
+  await clientDB.delete(messages);
+  await clientDB.delete(messagePlugins);
+  await clientDB.delete(messageTTS);
+  await clientDB.delete(messageTranslates);
 });
 
 const messageService = new ClientService(userId);
@@ -312,7 +328,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"key":"stateValue"}' });
     });
@@ -329,7 +345,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"abc":"stateValue"}' });
     });

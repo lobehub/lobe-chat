@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { files, globalFiles, users } from '@/database/schemas';
@@ -19,24 +19,28 @@ const mockFile = {
   url: '',
 };
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
 
+beforeEach(async () => {
   // Clean up existing data
+  await clientDB.delete(users);
   await clientDB.delete(files);
   await clientDB.delete(globalFiles);
-  await clientDB.delete(users);
 
   // Create test data
-  await clientDB.insert(users).values({ id: userId });
-}, 30000);
+  await clientDB.transaction(async (tx) => {
+    await tx.insert(users).values({ id: userId });
+  });
+});
 
 afterEach(async () => {
   // Clean up test data
+  await clientDB.delete(users);
   await clientDB.delete(files);
   await clientDB.delete(globalFiles);
-  await clientDB.delete(users);
-}, 30000);
+});
 
 describe('FileService', () => {
   describe('createFile', () => {

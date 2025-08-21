@@ -19,8 +19,11 @@ const mockTopic = {
 
 const topicService = new ClientService(userId);
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
+
+beforeEach(async () => {
 
   await clientDB.delete(users);
 

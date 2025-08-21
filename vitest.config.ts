@@ -54,5 +54,12 @@ export default defineConfig({
     testTimeout: process.env.VITEST_TEST_TIMEOUT
       ? parseInt(process.env.VITEST_TEST_TIMEOUT)
       : 30_000,
+    poolOptions: {
+      forks: {
+        singleFork: process.env.VITEST_POOL_OPTIONS_FORKS_SINGLE_FORK === 'true',
+        isolate: true,
+      },
+    },
+    maxConcurrency: 2,
   },
 });

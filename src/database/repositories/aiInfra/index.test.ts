@@ -20,11 +20,18 @@ const mockProviderConfigs = {
 
 let repo: AiInfraRepos;
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
+
+beforeEach(async () => {
   vi.clearAllMocks();
 
   repo = new AiInfraRepos(clientDB as any, userId, mockProviderConfigs);
+});
+
+afterEach(async () => {
+  vi.restoreAllMocks();
 });
 
 describe('AiInfraRepos', () => {

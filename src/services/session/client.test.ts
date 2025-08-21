@@ -24,39 +24,36 @@ const mockSessionId = 'mock-session-id';
 const mockAgentId = 'agent-id';
 
 // Mock data
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
+
+beforeEach(async () => {
 
   // Clean up any existing data first
-  await clientDB.delete(agentsToSessions);
-  await clientDB.delete(sessions);
-  await clientDB.delete(agents);
-  await clientDB.delete(sessionGroups);
   await clientDB.delete(users);
 
   // Insert test data
-  const otherUserId = 'other-user-456';
-  await clientDB.insert(users).values([{ id: userId }, { id: otherUserId }]);
-  await clientDB.insert(sessions).values([{ id: mockSessionId, userId }]);
-  await clientDB.insert(agents).values([{ id: mockAgentId, userId }]);
-  await clientDB
-    .insert(agentsToSessions)
-    .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
-  await clientDB.insert(sessionGroups).values([
-    { id: 'group-1', name: 'group-A', sort: 2, userId },
-    { id: 'group-2', name: 'group-B', sort: 1, userId },
-    { id: 'group-4', name: 'group-C', sort: 1, userId: otherUserId },
-  ]);
-}, 30000);
+  await clientDB.transaction(async (tx) => {
+    const otherUserId = 'other-user-456';
+    await tx.insert(users).values([{ id: userId }, { id: otherUserId }]);
+    await tx.insert(sessions).values([{ id: mockSessionId, userId }]);
+    await tx.insert(agents).values([{ id: mockAgentId, userId }]);
+    await tx
+      .insert(agentsToSessions)
+      .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
+    await tx.insert(sessionGroups).values([
+      { id: 'group-1', name: 'group-A', sort: 2, userId },
+      { id: 'group-2', name: 'group-B', sort: 1, userId },
+      { id: 'group-4', name: 'group-C', sort: 1, userId: otherUserId },
+    ]);
+  });
+});
 
 afterEach(async () => {
   // Clean up test data
-  await clientDB.delete(agentsToSessions);
-  await clientDB.delete(sessions);
-  await clientDB.delete(agents);
-  await clientDB.delete(sessionGroups);
   await clientDB.delete(users);
-}, 30000);
+});
 
 describe('SessionService', () => {
   const mockSession = {
@@ -106,7 +103,7 @@ describe('SessionService', () => {
 
       // Assert
       const result = await clientDB.query.sessions.findMany({
-        where: eq(sessionGroups.userId, userId),
+        where: eq(sessions.userId, userId),
       });
 
       expect(result.length).toBe(0);

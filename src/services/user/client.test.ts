@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { userSettings, users } from '@/database/schemas';
@@ -20,10 +20,12 @@ const mockPreference = {
 } as UserPreference;
 const clientService = new ClientService(mockUser.uuid);
 
+beforeAll(async () => {
+  await initializeDB();
+});
+
 beforeEach(async () => {
   vi.clearAllMocks();
-
-  await initializeDB();
 
   // Clean up existing data
   await clientDB.delete(userSettings);

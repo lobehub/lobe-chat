@@ -20,12 +20,15 @@ import { ClientService } from './client';
 const userId = 'test-user-id';
 const service = new ClientService(userId);
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+});
 
+beforeEach(async () => {
+
+  // 清理并创建测试数据
   await clientDB.delete(users);
 
-  // 创建测试数据
   await clientDB.transaction(async (tx) => {
     await tx.insert(users).values({ id: userId });
   });

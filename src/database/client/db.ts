@@ -16,7 +16,9 @@ import migrations from './migrations.json';
 
 const pgliteSchemaHashCache = 'LOBE_CHAT_PGLITE_SCHEMA_HASH';
 
-const DB_NAME = 'lobechat';
+const DB_NAME = process.env.NODE_ENV === 'test' 
+  ? `lobechat-test-${process.pid}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}` 
+  : 'lobechat';
 type DrizzleInstance = PgliteDatabase<typeof schema>;
 
 interface onErrorState {
@@ -161,7 +163,8 @@ export class DatabaseManager {
     if (this.isLocalDBSchemaSynced && skipMultiRun) return this.db;
 
     let hash: string | undefined;
-    if (typeof localStorage !== 'undefined') {
+    // Skip cache check in test environment for faster execution
+    if (typeof localStorage !== 'undefined' && process.env.NODE_ENV !== 'test') {
       const cacheHash = localStorage.getItem(pgliteSchemaHashCache);
       hash = Md5.hashStr(JSON.stringify(migrations));
       // if hash is the same, no need to migrate
@@ -233,7 +236,7 @@ export class DatabaseManager {
 
         // make db as web worker if worker is available
         // https://github.com/lobehub/lobe-chat/issues/5785
-        if (typeof Worker !== 'undefined' && typeof navigator.locks !== 'undefined') {
+        if (typeof Worker !== 'undefined' && typeof navigator.locks !== 'undefined' && process.env.NODE_ENV !== 'test') {
           db = await initPgliteWorker({
             dbName: DB_NAME,
             fsBundle: fsBundle as Blob,
@@ -242,9 +245,10 @@ export class DatabaseManager {
           });
         } else {
           // in edge runtime or test runtime, we don't have worker
+          // always use MemoryFS in test environment for better performance and isolation
           db = new PGlite({
             extensions: { vector },
-            fs: typeof window === 'undefined' ? new MemoryFS(DB_NAME) : new IdbFs(DB_NAME),
+            fs: new MemoryFS(DB_NAME),
             relaxedDurability: true,
             wasmModule,
           });
