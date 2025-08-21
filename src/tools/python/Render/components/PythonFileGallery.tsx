@@ -33,13 +33,12 @@ const PythonFileGallery = memo<PythonFileGalleryProps>(({ files, messageId }) =>
           {imageFiles.length === 1 ? (
             // 单张图片时占据更大空间
             <Flexbox style={{ maxWidth: 400 }}>
-              <PythonFileItemComponent {...imageFiles[0]} messageId={messageId} />
+              <PythonFileItemComponent isImage {...imageFiles[0]} messageId={messageId} />
             </Flexbox>
           ) : (
-            // 多张图片使用网格布局
             <GalleyGrid
               items={imageFiles.map((file) => ({ ...file, messageId }))}
-              renderItem={PythonFileItemComponent}
+              renderItem={(props) => <PythonFileItemComponent isImage {...props} />}
             />
           )}
         </PreviewGroup>

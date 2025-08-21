@@ -66,6 +66,7 @@ interface FileDisplayProps {
 }
 
 interface PythonFileItemProps extends PythonFileItem {
+  isImage?: boolean;
   messageId: string;
 }
 
@@ -105,16 +106,11 @@ const FileDisplay = memo<FileDisplayProps>(({ filename, onDownload }) => {
   );
 });
 
-const PythonFileItemComponent = memo<PythonFileItemProps>(({ fileId, filename, data }) => {
+const PythonFileItemComponent = memo<PythonFileItemProps>(({ fileId, filename, data, isImage }) => {
   const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchPythonFileItem]);
 
-  // 始终调用 Hook，当 fileId 为空时，SWR 将不会发起请求
   const { data: fileData } = useFetchPythonFileItem(fileId);
 
-  // 判断是否为图片
-  const isImage = /\.(png|jpg|jpeg|gif|bmp|webp|svg)$/i.test(filename);
-
-  // 处理文件下载
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
