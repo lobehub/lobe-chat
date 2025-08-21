@@ -14,7 +14,7 @@ jobs:
           - package: prompts
             has-test-script: false
           - package: model-runtime
-            has-test-script: false
+            has-test-script: true
           - package: web-crawler
             has-test-script: false
 
