@@ -75,7 +75,7 @@ jobs:
           files: ./coverage/app/lcov.info
           flags: app
 
-  test-server:
+  test-databsae:
     name: Test Database
 
     runs-on: ubuntu-latest
@@ -109,8 +109,10 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Test Server Coverage
-        run: bun run test-server:coverage
+      - uses: pnpm/action-setup@v4
+
+      - name: Test Coverage
+        run: pnpm --filter @lobechat/database test:coverage
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
@@ -124,4 +126,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/server/lcov.info
-          flags: server
+          flags: database
