@@ -1,9 +1,8 @@
+import { chainLangDetect , chainTranslate } from '@lobechat/prompts';
 import { TraceNameMap, TracePayload } from '@lobechat/types';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainLangDetect } from '@/chains/langDetect';
-import { chainTranslate } from '@/chains/translate';
 import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';

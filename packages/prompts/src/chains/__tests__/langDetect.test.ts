@@ -1,6 +1,5 @@
+import { ChatStreamPayload } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
-
-import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { chainLangDetect } from '../langDetect';
 

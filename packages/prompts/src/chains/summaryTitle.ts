@@ -1,9 +1,9 @@
-import { globalHelpers } from '@/store/global/helpers';
 import { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 
-export const chainSummaryTitle = (messages: OpenAIChatMessage[]): Partial<ChatStreamPayload> => {
-  const lang = globalHelpers.getCurrentLanguage();
-
+export const chainSummaryTitle = (
+  messages: OpenAIChatMessage[],
+  locale: string,
+): Partial<ChatStreamPayload> => {
   return {
     messages: [
       {
@@ -13,7 +13,7 @@ export const chainSummaryTitle = (messages: OpenAIChatMessage[]): Partial<ChatSt
       {
         content: `${messages.map((message) => `${message.role}: ${message.content}`).join('\n')}
 
-请总结上述对话为10个字以内的标题，不需要包含标点符号，输出语言语种为：${lang}`,
+请总结上述对话为10个字以内的标题，不需要包含标点符号，输出语言语种为：${locale}`,
         role: 'user',
       },
     ],

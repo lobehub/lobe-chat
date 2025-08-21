@@ -4,6 +4,7 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*"
   }
 }
