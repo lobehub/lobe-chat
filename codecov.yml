@@ -2,23 +2,23 @@ component_management:
   individual_components:
     # App architecture layers
     - component_id: app_store
-      name: "Store Layer"
+      name: "Store"
       paths:
         - src/store/**
     - component_id: app_services
-      name: "Services Layer"
+      name: "Services"
       paths:
         - src/services/**
     - component_id: app_server
-      name: "Server Layer"
+      name: "Server"
       paths:
         - src/server/**
     - component_id: app_libs
-      name: "Libraries Layer"
+      name: "Libraries"
       paths:
         - src/libs/**
     - component_id: app_utils
-      name: "Utils Layer"
+      name: "Utils"
       paths:
         - src/utils/**
 
