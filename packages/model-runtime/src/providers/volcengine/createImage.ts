@@ -1,11 +1,11 @@
-import createDebug from 'debug';
+import debug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
 
 import { CreateImageOptions } from '../../core/openaiCompatibleFactory';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 
-const log = createDebug('lobe-image:volcengine');
+const log = debug('lobe-image:volcengine');
 
 /**
  * Volcengine image generation implementation
@@ -53,12 +53,14 @@ export async function createVolcengineImage(
   } else {
     delete userInput.image;
   }
+
+  // 将通用的 cfg 参数映射到 Volcengine 的 guidance_scale
   if (userInput.cfg !== undefined && userInput.guidance_scale === undefined) {
     userInput.guidance_scale = userInput.cfg;
     delete userInput.cfg;
   }
 
-  // 设置模型专有的默认参数
+  // 设置模型专有的默认参数（按照用户要求的默认值）
   const defaultParams = {
     guidance_scale: 10,
     response_format: 'url',
@@ -66,7 +68,12 @@ export async function createVolcengineImage(
     watermark: false,
   };
 
-  // If width/height provided and size not set, construct size string
+  // 对于 doubao-seededit 模型，确保有图片输入
+  if (model.includes('seededit') && !userInput.image) {
+    throw new Error('SeedEdit model requires an input image. Please upload an image first.');
+  }
+
+  // 如果 width/height 存在而 size 未设置，则将其映射为 Ark 的 size 字段
   if (
     userInput.width &&
     userInput.height &&
