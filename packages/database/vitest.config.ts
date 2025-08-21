@@ -1,15 +1,16 @@
+import { resolve } from 'node:path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // alias: {
-    //   /* eslint-disable sort-keys-fix/sort-keys-fix */
-    //   '@/const': resolve(__dirname, './packages/const/src'),
-    //   '@/database': resolve(__dirname, './packages/database/src'),
-    //   '@/types': resolve(__dirname, './packages/types/src'),
-    //   '@': resolve(__dirname, './src'),
-    //   /* eslint-enable */
-    // },
+    alias: {
+      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      '@/const': resolve(__dirname, '../const/src'),
+      '@/database': resolve(__dirname, '../database/src'),
+      '@/types': resolve(__dirname, '../types/src'),
+      '@': resolve(__dirname, '../../src'),
+      /* eslint-enable */
+    },
     coverage: {
       all: false,
       exclude: [
