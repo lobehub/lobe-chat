@@ -6,6 +6,7 @@ export default defineConfig({
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/const': resolve(__dirname, './packages/const/src'),
+      '@/database': resolve(__dirname, './packages/database/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@': resolve(__dirname, './src'),
       /* eslint-enable */
@@ -15,9 +16,9 @@ export default defineConfig({
       exclude: [
         // https://github.com/lobehub/lobe-chat/pull/7265
         ...coverageConfigDefaults.exclude,
-        'src/database/server/core/dbForTest.ts',
+        'packages/database/src/server/core/dbForTest.ts',
       ],
-      include: ['src/database/models/**/*.ts', 'src/database/server/**/*.ts'],
+      include: ['packages/database/src/models/**/*.ts', 'packages/database/src/server/**/*.ts'],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
       reportsDirectory: './coverage/server',
@@ -26,7 +27,10 @@ export default defineConfig({
       TEST_SERVER_DB: '1',
     },
     environment: 'node',
-    include: ['src/database/models/**/**/*.test.ts', 'src/database/server/**/**/*.test.ts'],
+    include: [
+      'packages/database/src/models/**/**/*.test.ts',
+      'packages/database/src/server/**/**/*.test.ts',
+    ],
     poolOptions: {
       forks: {
         singleFork: true,
