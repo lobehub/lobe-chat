@@ -10,6 +10,7 @@ import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
+import type { ImageStore } from '@/store/image/store';
 
 import CfgSliderInput from './components/CfgSliderInput';
 import DimensionControlGroup from './components/DimensionControlGroup';
@@ -49,7 +50,7 @@ const ConfigPanel = memo(() => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
-  const isInit = useImageStore((s) => s.isInit);
+  const isInit = useImageStore((s: ImageStore) => s.isInit);
   const currentModel = useImageStore(imageGenerationConfigSelectors.model);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
