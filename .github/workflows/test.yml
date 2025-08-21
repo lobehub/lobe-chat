@@ -2,6 +2,9 @@ name: Test CI
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   # Package tests - using each package's own test script
   test-packages:
@@ -10,7 +13,7 @@ jobs:
       matrix:
         package: [file-loaders, prompts, model-runtime, web-crawler]
 
-    name: Test ${{ matrix.package }} package
+    name: Test Package ${{ matrix.package }}
 
     steps:
       - uses: actions/checkout@v5
