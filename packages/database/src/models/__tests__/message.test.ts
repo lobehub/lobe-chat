@@ -2,10 +2,10 @@ import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDB } from '../models/__tests__/_util';
-import { LobeChatDatabase } from '../../type';import { MessageItem } from '@/types/message';
+import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
+import { getTestDB } from '../../models/__tests__/_util';
 import {
   chunks,
   embeddings,
@@ -22,6 +22,7 @@ import {
   topics,
   users,
 } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { MessageModel } from '../message';
 import { codeEmbedding } from './fixtures/embedding';
 

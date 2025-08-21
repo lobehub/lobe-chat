@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
+      '@/database': resolve(__dirname, './packages/database/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@/const': resolve(__dirname, './packages/const/src'),
       '@': resolve(__dirname, './src'),

@@ -6,6 +6,7 @@
   "types": "src/index.ts",
   "dependencies": {
     "@electric-sql/pglite": "^0.2.17",
+    "@lobechat/types": "workspace:*",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.44.4",
     "nanoid": "^5.1.5",

@@ -3,10 +3,10 @@ import { ModelProvider } from '@lobechat/model-runtime';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '../../type';
 import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { AiProviderModel } from '../aiProvider';
 import { getTestDB } from './_util';
 

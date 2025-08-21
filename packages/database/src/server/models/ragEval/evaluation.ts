@@ -1,3 +1,4 @@
+import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@lobechat/types';
 import { SQL, and, count, desc, eq, inArray } from 'drizzle-orm';
 
 import {
@@ -7,7 +8,6 @@ import {
   evaluationRecords,
 } from '../../../schemas';
 import { LobeChatDatabase } from '../../../type';
-import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 export class EvalEvaluationModel {
   private userId: string;

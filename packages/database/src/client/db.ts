@@ -2,7 +2,6 @@ import { sql } from 'drizzle-orm';
 import { PgliteDatabase, drizzle } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
-import { DrizzleMigrationModel } from '@/database/models/drizzleMigration';
 import {
   ClientDBLoadingProgress,
   DatabaseLoadingState,
@@ -11,6 +10,7 @@ import {
 } from '@/types/clientDB';
 import { sleep } from '@/utils/sleep';
 
+import { DrizzleMigrationModel } from '../models/drizzleMigration';
 import * as schema from '../schemas';
 import migrations from './migrations.json';
 

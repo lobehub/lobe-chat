@@ -15,7 +15,7 @@ const migrationsFolder = join(__dirname, '../../src/database/migrations');
 const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 
 const runMigrations = async () => {
-  const { serverDB } = await import('../../src/database/server');
+  const { serverDB } = await import('../../packages/database/src/server');
 
   if (process.env.DATABASE_DRIVER === 'node') {
     await nodeMigrate(serverDB, { migrationsFolder });

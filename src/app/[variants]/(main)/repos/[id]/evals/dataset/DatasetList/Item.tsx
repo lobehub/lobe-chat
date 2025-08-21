@@ -1,9 +1,8 @@
+import { RAGEvalDataSetItem } from '@lobechat/types';
 import { createStyles } from 'antd-style';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { RAGEvalDataSetItem } from '@/types/eval';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`

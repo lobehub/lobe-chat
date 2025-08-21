@@ -1,9 +1,9 @@
+import { CreateNewEvalDatasets } from '@lobechat/types';
 import { Button, Form, Input } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { CreateNewEvalDatasets } from '@/types/eval';
 
 interface CreateFormProps {
   knowledgeBaseId: string;

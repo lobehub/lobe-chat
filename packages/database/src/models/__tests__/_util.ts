@@ -1,11 +1,11 @@
-import { clientDB, initializeDB } from '../client/db';
-import { LobeChatDatabase } from '../type';
+import { clientDB, initializeDB } from '../../client/db';
+import { LobeChatDatabase } from '../../type';
 
 const isServerDBMode = process.env.TEST_SERVER_DB === '1';
 
 export const getTestDB = async () => {
   if (isServerDBMode) {
-    const { getTestDBInstance } = await import('../core/dbForTest');
+    const { getTestDBInstance } = await import('../../core/dbForTest');
     return await getTestDBInstance();
   }
 

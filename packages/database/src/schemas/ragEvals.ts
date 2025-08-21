@@ -1,8 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { EvalEvaluationStatus } from '@lobechat/types';
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
 import { DEFAULT_MODEL } from '@/const/settings';
-import { EvalEvaluationStatus } from '@/types/eval';
 
 import { timestamps } from './_helpers';
 import { knowledgeBases } from './file';
