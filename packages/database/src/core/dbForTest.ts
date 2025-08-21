@@ -11,7 +11,7 @@ import { serverDBEnv } from '@/config/db';
 
 import * as schema from '../schemas';
 
-const migrationsFolder = join(__dirname, '../migrations');
+const migrationsFolder = join(__dirname, '../../migrations');
 
 export const getTestDBInstance = async () => {
   let connectionString = serverDBEnv.DATABASE_TEST_URL;
