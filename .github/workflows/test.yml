@@ -48,11 +48,6 @@ jobs:
         if: matrix.has-test-script == false
         run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*'
 
-      # Special coverage handling for prompts package
-      - name: Test prompts with coverage
-        if: matrix.package == 'prompts'
-        run: npx vitest run --config vitest.config.ts 'packages/prompts/**/*.test.*' --coverage
-
       - name: Upload prompts coverage to Codecov
         if: matrix.package == 'prompts'
         uses: codecov/codecov-action@v4

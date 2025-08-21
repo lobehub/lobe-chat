@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*"
