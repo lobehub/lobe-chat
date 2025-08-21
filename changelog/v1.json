@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Can't load custom provider config."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.2"
+  },
+  {
+    "children": {
       "improvements": ["Move chain into @lobechat/prompts."]
     },
     "date": "2025-08-21",
