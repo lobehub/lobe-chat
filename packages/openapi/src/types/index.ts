@@ -48,6 +48,7 @@ export interface TTarget {
   targetRoleId?: string;
   targetSessionId?: string;
   targetTopicId?: string;
+  targetUserId?: string;
 }
 
 export interface TBatchTarget {
@@ -58,4 +59,5 @@ export interface TBatchTarget {
   targetRoleId?: string[];
   targetSessionId?: string[];
   targetTopicId?: string[];
+  targetUserIds?: string[];
 }

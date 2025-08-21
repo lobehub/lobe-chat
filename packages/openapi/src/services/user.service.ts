@@ -34,7 +34,9 @@ export class UserService extends BaseService {
   private async getUserMessageCount(userId: string): Promise<number> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', userId);
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限获取用户消息数量');
@@ -240,7 +242,9 @@ export class UserService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', userId);
+      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限更新该用户');
@@ -329,7 +333,9 @@ export class UserService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_DELETE', userId);
+      const permissionResult = await this.resolveQueryPermission('USER_DELETE', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限删除该用户');
@@ -369,7 +375,9 @@ export class UserService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', userId);
+      const permissionResult = await this.resolveQueryPermission('USER_READ', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看该用户信息');
@@ -522,7 +530,9 @@ export class UserService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', userId);
+      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限更新用户角色');
@@ -688,7 +698,9 @@ export class UserService extends BaseService {
       }
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', userId);
+      const permissionResult = await this.resolveQueryPermission('USER_READ', {
+        targetUserId: userId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户角色');

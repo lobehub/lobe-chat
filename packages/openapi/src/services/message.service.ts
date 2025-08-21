@@ -64,7 +64,7 @@ export class MessageService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', targetUserId);
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', { targetUserId });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此用户的消息');

@@ -1,10 +1,11 @@
 import { eq, inArray } from 'drizzle-orm';
 import { isEmpty } from 'lodash';
 
-import { ALL, PERMISSION_ACTIONS } from '@/const/rbac';
+import { PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { getScopePermissions } from '@/utils/rbac';
 
 import { getActionType, getResourceType } from '../helpers/permission';
 import { IBaseService, TBatchTarget, TTarget } from '../types';
@@ -141,10 +142,7 @@ export abstract class BaseService implements IBaseService {
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
     return await this.rbacModel.hasAnyPermission(
-      [
-        PERMISSION_ACTIONS[permissionKey] + ':all',
-        PERMISSION_ACTIONS[permissionKey] + ':workspace',
-      ],
+      getScopePermissions(permissionKey, ['ALL', 'WORKSPACE']),
       this.userId,
     );
   }
@@ -158,19 +156,25 @@ export abstract class BaseService implements IBaseService {
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
     return await this.rbacModel.hasAnyPermission(
-      [PERMISSION_ACTIONS[permissionKey] + ':owner'],
+      getScopePermissions(permissionKey, ['OWNER']),
       this.userId,
     );
   }
 
-  protected async getTargetUserId(target?: string | TTarget): Promise<string> {
-    if (isEmpty(target)) {
-      return '';
+  /**
+   * 获取资源所属用户 ID
+   * @param target 目标资源的条件信息，如果没有传入，则默认查询范围为当前用户，如果传入 ALL，则返回默认全量查询
+   * @returns 资源所属用户 ID
+   */
+  protected async getResourceBelongTo(target?: TTarget | 'ALL'): Promise<string | undefined> {
+    // 查询全量数据，则直接返回undefined
+    if (target === 'ALL') {
+      return;
     }
 
-    // 如果是字符串，直接返回（假设是 userId）
-    if (typeof target === 'string') {
-      return target;
+    // 如果目标条件为空，默认查询范围为当前用户
+    if (!target || isEmpty(target)) {
+      return this.userId;
     }
 
     try {
@@ -180,7 +184,7 @@ export abstract class BaseService implements IBaseService {
           const targetSession = await this.db.query.sessions.findFirst({
             where: eq(sessions.id, target.targetSessionId),
           });
-          return targetSession?.userId || '';
+          return targetSession?.userId;
         }
 
         // 查询 agents 表
@@ -188,7 +192,7 @@ export abstract class BaseService implements IBaseService {
           const targetAgent = await this.db.query.agents.findFirst({
             where: eq(agents.id, target.targetAgentId),
           });
-          return targetAgent?.userId || '';
+          return targetAgent?.userId;
         }
 
         // 查询 topics 表
@@ -196,16 +200,21 @@ export abstract class BaseService implements IBaseService {
           const targetTopic = await this.db.query.topics.findFirst({
             where: eq(topics.id, target.targetTopicId),
           });
-          return targetTopic?.userId || '';
+          return targetTopic?.userId;
+        }
+
+        // 直接传递 targetUserId 的情况
+        case !!target?.targetUserId: {
+          return target.targetUserId;
         }
 
         default: {
-          return '';
+          return;
         }
       }
     } catch (error) {
       this.log('error', '获取目标用户ID失败', { error, target });
-      return '';
+      return;
     }
   }
 
@@ -226,111 +235,82 @@ export abstract class BaseService implements IBaseService {
    */
   protected async resolveQueryPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
-    targetInfoId?: string | TTarget | 'ALL',
+    resourceInfo?: TTarget | 'ALL',
   ): Promise<{
     condition?: { userId?: string };
     isPermitted: boolean;
     message?: string;
   }> {
-    // 检查是否有全局访问权限
+    // 检查是否有对应动作的 all/workspace 权限
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
-    const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
-    const targetUserId = await this.getTargetUserId(targetInfoId);
-    const queryAll = hasGlobalAccess && targetInfoId === ALL;
-    const resourceType = getResourceType(permissionKey);
-    const actionType = getActionType(permissionKey);
-    this.log('info', '权限检查', { hasGlobalAccess, targetUserId });
 
-    // 记录权限检查的上下文信息
+    // 获取目标资源所属用户 ID
+    const resourceBelongTo = await this.getResourceBelongTo(resourceInfo);
+
+    // 记录用户希望访问的资源与当前用户信息
     const logContext = {
-      hasGlobalAccess,
-      permissionKey,
-      targetUserId,
+      resourceInfo,
       userId: this.userId,
     };
 
-    // 场景 1: 查询/操作特定用户的数据
-    if (targetUserId && !queryAll) {
-      // 如果是查询/操作当前用户的数据，直接允许
-      if (targetUserId === this.userId && (hasOwnerAccess || hasGlobalAccess)) {
-        this.log(
-          'info',
-          `权限通过：当前user拥有${resourceType}的owner级别${actionType}权限`,
-          logContext,
-        );
-        return {
-          condition: { userId: targetUserId },
-          isPermitted: true,
-        };
-      }
+    this.log('info', '权限检查', logContext);
 
-      // 如果要查询/操作其他用户的数据，需要检查全局权限
-      if (!hasGlobalAccess) {
-        this.log(
-          'warn',
-          `权限拒绝：当前user没有${resourceType}的all/workspace级别${actionType}权限`,
-          logContext,
-        );
-        return {
-          isPermitted: false,
-          message: `no permission,current user has no ${resourceType} ${actionType} all/workspace permission`,
-        };
-      }
-
-      this.log(
-        'info',
-        `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
-        logContext,
-      );
+    /**
+     * 当用户拥有 all/workspace 权限时，直接通过校验
+     */
+    if (hasGlobalAccess) {
+      this.log('info', `权限通过：当前user拥有 ${permissionKey} 的最高权限`, logContext);
       return {
-        condition: { userId: targetUserId },
+        condition: resourceBelongTo ? { userId: resourceBelongTo } : undefined,
         isPermitted: true,
       };
     }
 
-    // 场景 2: 查询/操作所有数据
-    if (queryAll) {
-      if (hasGlobalAccess) {
-        this.log(
-          'info',
-          `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
-          logContext,
-        );
-        return { isPermitted: true };
-      } else {
-        this.log(
-          'info',
-          `权限拒绝：当前user没有${resourceType}的all/workspace级别${actionType}权限`,
-          logContext,
-        );
-        return {
-          isPermitted: false,
-          message: `no permission,current user has no ${resourceType} ${actionType} all/workspace permission`,
-        };
-      }
-    }
-
-    // 场景 3: 默认只能查询/操作当前用户的数据
-    if (!hasOwnerAccess) {
+    /**
+     * 当用户没有 all/workspace 权限时，以下场景不允许操作：
+     * 1. 查询的是全量数据
+     * 2. 查询的是指定用户的数据，但目标资源不属于当前用户
+     */
+    if (!resourceBelongTo || resourceBelongTo !== this.userId) {
       this.log(
-        'info',
-        `权限拒绝：当前user没有${resourceType}的owner级别${actionType}权限`,
+        'warn',
+        '权限拒绝：当前user没有all/workspace权限，或目标资源不属于当前用户',
         logContext,
       );
       return {
         isPermitted: false,
-        message: `no permission,current user has no ${resourceType} ${actionType} owner permission`,
+        message: `no permission,current user has no all/workspace permission,and resource not belong to current user`,
       };
     }
 
-    this.log(
-      'info',
-      `权限通过：当前user拥有${resourceType}的owner级别${actionType}权限`,
-      logContext,
-    );
+    /**
+     * 当查询的目标资源属于当前用户时，只要有任意权限就允许操作
+     * 由于 all/workspace 权限已经在前面校验过，所以这里只需要检查 owner 权限
+     */
+    if (resourceBelongTo === this.userId) {
+      // 检查是否有对应动作的 owner 权限
+      const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
+
+      if (hasOwnerAccess) {
+        this.log('info', '权限通过：当前user拥有owner权限', logContext);
+        return {
+          condition: { userId: resourceBelongTo },
+          isPermitted: true,
+        };
+      }
+
+      this.log('warn', '权限拒绝：目标资源属于当前用户，但用户没有对应操作的owner权限', logContext);
+      return {
+        isPermitted: false,
+        message: `no permission,resource belong to current user,but current user has no any ${permissionKey} permission`,
+      };
+    }
+
+    // 如果走到这里，走兜底逻辑
+    this.log('info', `兜底: no permission`, logContext);
     return {
-      condition: { userId: this.userId },
-      isPermitted: true,
+      isPermitted: false,
+      message: `permission validation error for: ${permissionKey}`,
     };
   }
 
@@ -352,10 +332,14 @@ export abstract class BaseService implements IBaseService {
     isPermitted: boolean;
     message?: string;
   }> {
+    // 先检查是否有全局权限，如果有则直接通过
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
-    const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
-    const resourceType = getResourceType(permissionKey);
-    const actionType = getActionType(permissionKey);
+
+    // 如果有全局权限，直接允许批量操作
+    if (hasGlobalAccess) {
+      this.log('info', `权限通过：批量操作，当前user拥有 ${permissionKey} all/workspace权限`);
+      return { isPermitted: true };
+    }
 
     // 获取所有资源的用户 ID
     let userIds: string[] = [];
@@ -383,6 +367,10 @@ export abstract class BaseService implements IBaseService {
           userIds = topicList.map((t) => t.userId);
           break;
         }
+        case !!targetInfoIds.targetUserIds?.length: {
+          userIds = targetInfoIds.targetUserIds;
+          break;
+        }
         default: {
           return {
             isPermitted: false,
@@ -398,54 +386,51 @@ export abstract class BaseService implements IBaseService {
       };
     }
 
-    // 记录权限检查的上下文信息
-    const logContext = {
-      hasGlobalAccess,
-      hasOwnerAccess,
-      permissionKey,
-      targetInfoIds,
-      userIds,
-    };
-
     // 如果找不到任何资源
     if (userIds.length === 0) {
-      this.log('warn', '未找到任何目标资源', logContext);
+      this.log('warn', '未找到任何目标资源', { permissionKey, targetInfoIds });
       return {
         isPermitted: false,
         message: '未找到任何目标资源',
       };
     }
 
-    // 如果有全局权限，允许操作所有指定的资源
-    if (hasGlobalAccess) {
-      this.log(
-        'info',
-        `权限通过：批量操作，当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
-        logContext,
-      );
-      return { isPermitted: true };
-    }
-
-    // 如果所有资源都属于当前用户，且有 owner 权限
+    // 检查是否所有资源都属于当前用户
     const allBelongToCurrentUser = userIds.every((id) => id === this.userId);
-    if (allBelongToCurrentUser && hasOwnerAccess) {
-      this.log(
-        'info',
-        `权限通过：批量操作，所有资源属于当前用户，且拥有${resourceType}的owner级别${actionType}权限`,
-        logContext,
-      );
-      return { isPermitted: true };
+    if (allBelongToCurrentUser) {
+      // 检查用户是否有 owner 权限
+      const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
+
+      if (hasOwnerAccess) {
+        this.log(
+          'info',
+          `权限通过：批量操作，所有资源属于当前用户，且拥有 ${permissionKey} owner 权限`,
+        );
+        return { isPermitted: true };
+      }
+
+      // 如果所有资源都属于当前用户，但用户没有 owner 权限，则不允许操作
+      this.log('warn', '权限拒绝：批量操作需要 ${permissionKey} all/workspace/owner 权限', {
+        permissionKey,
+        targetInfoIds,
+        userIds,
+      });
+      return {
+        isPermitted: false,
+        message: `no permission for batch operation, current user has no ${permissionKey} all/workspace/owner permission`,
+      };
     }
 
-    // 其他情况不允许批量操作
-    this.log(
-      'warn',
-      `权限拒绝：批量操作需要${resourceType}的all/workspace级别${actionType}权限`,
-      logContext,
-    );
+    // 操作的资源中有不属于当前用户的资源，直接拒绝
+    this.log('warn', `权限拒绝：批量操作需要 ${permissionKey} all/workspace/owner 权限`, {
+      permissionKey,
+      targetInfoIds,
+      userIds,
+    });
+
     return {
       isPermitted: false,
-      message: `no permission for batch operation, current user has no ${resourceType} ${actionType} all/workspace permission`,
+      message: `no permission for batch operation, current user has no ${permissionKey} all/workspace/owner permission`,
     };
   }
 

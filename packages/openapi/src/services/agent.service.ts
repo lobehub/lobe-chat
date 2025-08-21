@@ -10,7 +10,6 @@ import { ServiceResult } from '../types';
 import {
   AgentDeleteRequest,
   AgentDetailResponse,
-  AgentListItem,
   AgentListResponse,
   AgentSessionBatchLinkRequest,
   AgentSessionLinkRequest,
@@ -36,39 +35,14 @@ export class AgentService extends BaseService {
    * @returns 用户的 Agent 列表
    */
   async getAllAgents(): ServiceResult<AgentListResponse> {
-    this.log('info', '获取用户的 Agent 列表', { userId: this.userId });
+    this.log('info', '获取系统中全部的 Agent 列表');
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_READ', 'ALL');
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问 Agent 列表');
-      }
-
-      // 按用户ID过滤，确保数据隔离
-      const agentsList = (await this.db.query.agents.findMany({
+      const agentsList = await this.db.query.agents.findMany({
         orderBy: desc(agents.createdAt),
-        with: {
-          agentsToSessions: {
-            with: {
-              session: {
-                columns: {
-                  id: true,
-                  title: true,
-                  updatedAt: true,
-                },
-              },
-            },
-          },
-        },
-      })) as AgentListItem[];
+      });
 
-      this.log('info', `查询到用户 ${this.userId} 的 ${agentsList.length} 个 Agent`);
+      this.log('info', `查询到系统中 ${agentsList.length} 个 Agent`);
 
       return agentsList;
     } catch (error) {
@@ -85,17 +59,6 @@ export class AgentService extends BaseService {
     this.log('info', '创建智能体', { title: request.title });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_CREATE', this.userId);
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权创建 Agent');
-      }
-
       return await this.db.transaction(async (tx) => {
         // 准备创建数据
         const newAgentData: NewAgent = {
@@ -112,13 +75,13 @@ export class AgentService extends BaseService {
           systemRole: request.systemRole || null,
           title: request.title,
           updatedAt: new Date(),
-          userId: this.userId!,
+          userId: this.userId,
         };
 
         // 插入数据库
         const [createdAgent] = await tx.insert(agents).values(newAgentData).returning();
-
         this.log('info', 'Agent 创建成功', { id: createdAgent.id, slug: createdAgent.slug });
+
         return createdAgent;
       });
     } catch (error) {
