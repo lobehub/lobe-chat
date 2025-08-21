@@ -2,23 +2,46 @@
  * Image file validation utility functions
  */
 
+/**
+ * Format file size to human readable format
+ * @param bytes - File size in bytes
+ * @returns Formatted string like "1.5 MB"
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B';
+
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+};
+
 export interface ValidationResult {
+  // Additional details for error messages
+  actualSize?: number;
   error?: string;
+  fileName?: string;
+  maxSize?: number;
   valid: boolean;
 }
 
 /**
  * Validate single image file size
  * @param file - File to validate
- * @param maxSize - Maximum file size in bytes, skip validation if not provided
+ * @param maxSize - Maximum file size in bytes, defaults to 10MB if not provided
  * @returns Validation result
  */
 export const validateImageFileSize = (file: File, maxSize?: number): ValidationResult => {
-  if (!maxSize) return { valid: true };
+  const defaultMaxSize = 10 * 1024 * 1024; // 10MB default limit
+  const actualMaxSize = maxSize ?? defaultMaxSize;
 
-  if (file.size > maxSize) {
+  if (file.size > actualMaxSize) {
     return {
+      actualSize: file.size,
       error: 'fileSizeExceeded',
+      fileName: file.name,
+      maxSize: actualMaxSize,
       valid: false,
     };
   }
@@ -60,11 +83,14 @@ export const validateImageFiles = (
   },
 ): {
   errors: string[];
+  // Additional details for error messages
+  failedFiles?: ValidationResult[];
   fileResults: ValidationResult[];
   valid: boolean;
 } => {
   const errors: string[] = [];
   const fileResults: ValidationResult[] = [];
+  const failedFiles: ValidationResult[] = [];
 
   // Validate file count
   const countResult = validateImageCount(files.length, constraints.maxAddedFiles);
@@ -79,12 +105,15 @@ export const validateImageFiles = (
 
     if (!fileSizeResult.valid && fileSizeResult.error) {
       errors.push(fileSizeResult.error);
+      failedFiles.push(fileSizeResult);
     }
   });
 
   return {
-    errors: Array.from(new Set(errors)), // Remove duplicates
-    fileResults,
+    errors: Array.from(new Set(errors)), 
+    failedFiles,
+    // Remove duplicates
+fileResults,
     valid: errors.length === 0,
   };
 };
