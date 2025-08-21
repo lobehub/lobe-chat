@@ -17,7 +17,7 @@ jobs:
             has-test-script: false
           - package: web-crawler
             has-test-script: false
-    
+
     name: Test ${{ matrix.package }} package
 
     steps:
@@ -27,6 +27,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
@@ -40,17 +44,17 @@ jobs:
       - name: Test ${{ matrix.package }} package (with script)
         if: matrix.has-test-script == true
         run: pnpm --filter @lobechat/${{ matrix.package }} test
-        
+
       # For packages without test script, use direct vitest
       - name: Test ${{ matrix.package }} package (direct)
         if: matrix.has-test-script == false
         run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*'
-        
+
       # Special coverage handling for prompts package
       - name: Test prompts with coverage
         if: matrix.package == 'prompts'
         run: npx vitest run --config vitest.config.ts 'packages/prompts/**/*.test.*' --coverage
-        
+
       - name: Upload prompts coverage to Codecov
         if: matrix.package == 'prompts'
         uses: codecov/codecov-action@v4
