@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
+      '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
       '@/database': resolve(__dirname, './packages/database/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@/const': resolve(__dirname, './packages/const/src'),
@@ -41,8 +42,6 @@ export default defineConfig({
       '**/build/**',
       '**/apps/desktop/**',
       '**/packages/**',
-      'src/database/server/**/**',
-      'src/database/repositories/dataImporter/deprecated/**/**',
     ],
     globals: true,
     server: {
