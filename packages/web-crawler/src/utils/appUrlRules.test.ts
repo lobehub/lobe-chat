@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { applyUrlRules } from './appUrlRules';
 
 describe('applyUrlRules', () => {
