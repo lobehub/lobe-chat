@@ -1,24 +1,7 @@
-import { Mock, describe, expect, it, vi } from 'vitest';
-
-import { chatHelpers } from '@/store/chat/helpers';
-import { globalHelpers } from '@/store/global/helpers';
-import { OpenAIChatMessage } from '@/types/openai/chat';
+import { OpenAIChatMessage } from '@lobechat/types';
+import { describe, expect, it, vi } from 'vitest';
 
 import { chainSummaryTitle } from '../summaryTitle';
-
-// Mock the getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
-  globalHelpers: {
-    getCurrentLanguage: vi.fn(),
-  },
-}));
-
-// Mock the chatHelpers.getMessagesTokenCount function
-vi.mock('@/store/chat/helpers', () => ({
-  chatHelpers: {
-    getMessagesTokenCount: vi.fn(),
-  },
-}));
 
 describe('chainSummaryTitle', () => {
   it('should use the default model if the token count is below the GPT-3.5 limit', async () => {
@@ -29,11 +12,9 @@ describe('chainSummaryTitle', () => {
     ];
     const currentLanguage = 'en-US';
     const tokenCount = 10000; // Arbitrary token count below the GPT-3.5 limit
-    (globalHelpers.getCurrentLanguage as Mock).mockReturnValue(currentLanguage);
-    (chatHelpers.getMessagesTokenCount as Mock).mockResolvedValue(tokenCount);
 
     // Act
-    const result = await chainSummaryTitle(messages);
+    const result = await chainSummaryTitle(messages, currentLanguage);
 
     // Assert
     expect(result).toEqual({

@@ -1,13 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
+import { chainSummaryTitle } from '@lobechat/prompts';
 import { TraceNameMap } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { message } from '@/components/AntdStaticMethods';
 import { LOADING_FLAT } from '@/const/message';
 import { useClientDataSWR } from '@/libs/swr';
@@ -16,6 +16,7 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { CreateTopicParams } from '@/services/topic/type';
 import type { ChatStore } from '@/store/chat';
+import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
@@ -167,7 +168,7 @@ export const chatTopic: StateCreator<
 
         internal_updateTopicTitleInSummary(topicId, output);
       },
-      params: merge(topicConfig, chainSummaryTitle(messages)),
+      params: merge(topicConfig, chainSummaryTitle(messages, globalHelpers.getCurrentLanguage())),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },

@@ -1,8 +1,8 @@
+import { chainLangDetect } from '@lobechat/prompts';
+import { chainTranslate } from '@lobechat/prompts';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { chainLangDetect } from '@/chains/langDetect';
-import { chainTranslate } from '@/chains/translate';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
