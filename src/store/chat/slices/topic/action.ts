@@ -16,6 +16,7 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { CreateTopicParams } from '@/services/topic/type';
 import type { ChatStore } from '@/store/chat';
+import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
@@ -167,7 +168,7 @@ export const chatTopic: StateCreator<
 
         internal_updateTopicTitleInSummary(topicId, output);
       },
-      params: merge(topicConfig, chainSummaryTitle(messages)),
+      params: merge(topicConfig, chainSummaryTitle(messages, globalHelpers.getCurrentLanguage())),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },

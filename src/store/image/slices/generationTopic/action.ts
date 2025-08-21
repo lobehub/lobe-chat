@@ -8,6 +8,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { UpdateTopicValue } from '@/server/routers/lambda/generationTopic';
 import { chatService } from '@/services/chat';
 import { generationTopicService } from '@/services/generationTopic';
+import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ImageGenerationTopic } from '@/types/generation';
@@ -115,7 +116,10 @@ export const createGenerationTopicSlice: StateCreator<
     );
     // Auto generate topic title from prompt by AI
     await chatService.fetchPresetTaskResult({
-      params: merge(generationTopicAgentConfig, chainSummaryGenerationTitle(prompts, 'image')),
+      params: merge(
+        generationTopicAgentConfig,
+        chainSummaryGenerationTitle(prompts, 'image', globalHelpers.getCurrentLanguage()),
+      ),
       onError: async () => {
         const fallbackTitle = generateFallbackTitle();
         internal_updateGenerationTopicTitleInSummary(topicId, fallbackTitle);

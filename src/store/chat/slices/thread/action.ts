@@ -12,6 +12,7 @@ import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
 import { threadSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
+import { globalHelpers } from '@/store/global/helpers';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
@@ -280,7 +281,7 @@ export const chatThreadMessage: StateCreator<
 
         internal_updateThreadTitleInSummary(threadId, output);
       },
-      params: merge(threadConfig, chainSummaryTitle(messages)),
+      params: merge(threadConfig, chainSummaryTitle(messages, globalHelpers.getCurrentLanguage())),
     });
   },
 
