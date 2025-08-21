@@ -519,21 +519,61 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-07-14',
+      deploymentName: 'qwen-plus-2025-07-28',
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
     id: 'qwen-plus',
-    maxOutput: 16_384,
+    maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.32, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]': 0.8 * 0.4,
+              '[128_000, 256_000]': 2.4 * 0.4,
+              '[256_000, infinity]': 4.8 * 0.4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput_cacheRead',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]': 0.8,
+              '[128_000, 256_000]': 2.4,
+              '[256_000, infinity]': 4.8,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]_[false]': 2,
+              '[0, 128_000]_[true]': 8,
+              '[128_000, 256_000]_[false]': 20,
+
+              '[128_000, 256_000]_[true]': 24,
+              '[256_000, infinity]_[false]': 48,
+              '[256_000, infinity]_[true]': 64,
+            },
+            pricingParams: ['textInputRange', 'thinkingMode'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-07-14',
@@ -643,7 +683,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-plus-2025-01-25',
+      deploymentName: 'qwen-vl-plus-2025-08-15',
     },
     contextWindowTokens: 131_072,
     description:
@@ -655,9 +695,9 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.8 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -667,7 +707,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-max-2025-04-08',
+      deploymentName: 'qwen-vl-max-2025-08-13',
     },
     contextWindowTokens: 131_072,
     description:
@@ -679,9 +719,9 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.6 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1304,6 +1344,30 @@ const qwenChatModels: AIChatModelCard[] = [
 ];
 
 const qwenImageModels: AIImageModelCard[] = [
+  {
+    description:
+      'Qwen-Image 是一款通用图像生成模型，支持多种艺术风格，尤其擅长复杂文本渲染，特别是中英文文本渲染。模型支持多行布局、段落级文本生成以及细粒度细节刻画，可实现复杂的图文混合布局设计。',
+    displayName: 'Qwen Image',
+    enabled: true,
+    id: 'qwen-image',
+    organization: 'Qwen',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1328*1328',
+        enum: ['1664*928', '1472*1140', '1328*1328', '1140*1472', '928*1664'],
+      },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.25, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-08-13',
+    type: 'image',
+  },
   {
     description:
       '万相2.2极速版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成速度快，性价比高。',
