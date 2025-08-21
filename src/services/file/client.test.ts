@@ -8,7 +8,7 @@ import { UploadFileParams } from '@/types/files';
 
 import { ClientService } from './client';
 
-const userId = 'file-test-user';
+const userId = 'file-user';
 
 const fileService = new ClientService(userId);
 
@@ -24,22 +24,12 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // Clean up existing data
   await clientDB.delete(users);
-  await clientDB.delete(files);
   await clientDB.delete(globalFiles);
-
-  // Create test data
+  // 创建测试数据
   await clientDB.transaction(async (tx) => {
     await tx.insert(users).values({ id: userId });
   });
-});
-
-afterEach(async () => {
-  // Clean up test data
-  await clientDB.delete(users);
-  await clientDB.delete(files);
-  await clientDB.delete(globalFiles);
 });
 
 describe('FileService', () => {

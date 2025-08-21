@@ -22,17 +22,10 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // 在每个测试用例之前，重置表数据
-  await clientDB.delete(users);
-  await clientDB.delete(userInstalledPlugins);
-
-  await clientDB.transaction(async (tx) => {
-    await tx.insert(users).values([{ id: userId }, { id: '456' }]);
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
   });
-});
-
-afterEach(async () => {
-  await clientDB.delete(users);
-  await clientDB.delete(userInstalledPlugins);
 });
 
 describe('PluginService', () => {

@@ -44,20 +44,13 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // 在每个测试用例之前，清空表
-  await clientDB.delete(users);
-  await clientDB.delete(sessions);
-  await clientDB.delete(topics);
-  await clientDB.delete(files);
-  await clientDB.delete(messages);
-  await clientDB.delete(messagePlugins);
-  await clientDB.delete(messageTTS);
-  await clientDB.delete(messageTranslates);
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
 
-  await clientDB.transaction(async (tx) => {
-    await tx.insert(users).values([{ id: userId }, { id: '456' }]);
-    await tx.insert(sessions).values([{ id: sessionId, userId }]);
-    await tx.insert(topics).values([{ id: topicId, sessionId, userId }]);
-    await tx.insert(files).values({
+    await trx.insert(sessions).values([{ id: sessionId, userId }]);
+    await trx.insert(topics).values([{ id: topicId, sessionId, userId }]);
+    await trx.insert(files).values({
       id: 'f1',
       userId: userId,
       url: 'abc',
@@ -66,18 +59,6 @@ beforeEach(async () => {
       size: 1000,
     });
   });
-});
-
-afterEach(async () => {
-  // 在每个测试用例之后，清空表
-  await clientDB.delete(users);
-  await clientDB.delete(sessions);
-  await clientDB.delete(topics);
-  await clientDB.delete(files);
-  await clientDB.delete(messages);
-  await clientDB.delete(messagePlugins);
-  await clientDB.delete(messageTTS);
-  await clientDB.delete(messageTranslates);
 });
 
 const messageService = new ClientService(userId);

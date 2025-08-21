@@ -245,10 +245,11 @@ export class DatabaseManager {
           });
         } else {
           // in edge runtime or test runtime, we don't have worker
-          // always use MemoryFS in test environment for better performance and isolation
           db = new PGlite({
             extensions: { vector },
-            fs: new MemoryFS(DB_NAME),
+            fs: process.env.NODE_ENV === 'test' 
+              ? new MemoryFS(DB_NAME) 
+              : typeof window === 'undefined' ? new MemoryFS(DB_NAME) : new IdbFs(DB_NAME),
             relaxedDurability: true,
             wasmModule,
           });

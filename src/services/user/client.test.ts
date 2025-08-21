@@ -12,7 +12,7 @@ import { ClientService } from './client';
 const mockUser = {
   avatar: 'avatar.png',
   settings: { themeMode: 'light' } as unknown as UserSettings,
-  uuid: 'user-test-id',
+  uuid: 'user-id',
 };
 
 const mockPreference = {
@@ -27,21 +27,13 @@ beforeAll(async () => {
 beforeEach(async () => {
   vi.clearAllMocks();
 
-  // Clean up existing data
-  await clientDB.delete(userSettings);
   await clientDB.delete(users);
 
   await clientDB.insert(users).values({ id: mockUser.uuid, avatar: 'avatar.png' });
   await clientDB
     .insert(userSettings)
     .values({ id: mockUser.uuid, general: { themeMode: 'light' } });
-}, 30000);
-
-afterEach(async () => {
-  // Clean up test data
-  await clientDB.delete(userSettings);
-  await clientDB.delete(users);
-}, 30000);
+});
 
 describe('ClientService', () => {
   it('should get user state correctly', async () => {

@@ -17,7 +17,7 @@ import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/sessio
 
 import { ClientService } from './client';
 
-const userId = 'session-test-user';
+const userId = 'session-user';
 const sessionService = new ClientService(userId);
 
 const mockSessionId = 'mock-session-id';
@@ -29,30 +29,21 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-
-  // Clean up any existing data first
-  await clientDB.delete(users);
-
-  // Insert test data
-  await clientDB.transaction(async (tx) => {
-    const otherUserId = 'other-user-456';
-    await tx.insert(users).values([{ id: userId }, { id: otherUserId }]);
-    await tx.insert(sessions).values([{ id: mockSessionId, userId }]);
-    await tx.insert(agents).values([{ id: mockAgentId, userId }]);
-    await tx
+  // 在每个测试用例之前，清空表
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.insert(sessions).values([{ id: mockSessionId, userId }]);
+    await trx.insert(agents).values([{ id: mockAgentId, userId }]);
+    await trx
       .insert(agentsToSessions)
       .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
-    await tx.insert(sessionGroups).values([
+    await trx.insert(sessionGroups).values([
       { id: 'group-1', name: 'group-A', sort: 2, userId },
       { id: 'group-2', name: 'group-B', sort: 1, userId },
-      { id: 'group-4', name: 'group-C', sort: 1, userId: otherUserId },
+      { id: 'group-4', name: 'group-C', sort: 1, userId: '456' },
     ]);
   });
-});
-
-afterEach(async () => {
-  // Clean up test data
-  await clientDB.delete(users);
 });
 
 describe('SessionService', () => {

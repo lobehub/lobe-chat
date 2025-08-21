@@ -25,8 +25,6 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-
-  // 清理并创建测试数据
   await clientDB.delete(users);
 
   await clientDB.transaction(async (tx) => {
