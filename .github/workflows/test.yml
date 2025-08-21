@@ -3,14 +3,20 @@ name: Test CI
 on: [push, pull_request]
 
 jobs:
-  # Package tests with custom config
-  test-packages-with-config:
+  # Package tests - using each package's own test script
+  test-packages:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - package: file-loaders
-            config: packages/file-loaders/vitest.config.ts
+            has-test-script: true
+          - package: prompts
+            has-test-script: false
+          - package: model-runtime
+            has-test-script: false
+          - package: web-crawler
+            has-test-script: false
     
     name: Test ${{ matrix.package }} package
 
@@ -30,48 +36,28 @@ jobs:
       - name: Install deps
         run: bun i
 
-      - name: Test ${{ matrix.package }} package
-        run: npx vitest run --config ${{ matrix.config }} 'packages/${{ matrix.package }}/**/*.test.*'
-
-  # Package tests using default config
-  test-packages-default:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: [prompts, model-runtime, web-crawler]
-    
-    name: Test ${{ matrix.package }} package
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: ${{ secrets.BUN_VERSION }}
-
-      - name: Install deps
-        run: bun i
-
-      - name: Test ${{ matrix.package }} package
+      # For packages with test script
+      - name: Test ${{ matrix.package }} package (with script)
+        if: matrix.has-test-script == true
+        run: pnpm --filter @lobechat/${{ matrix.package }} test
+        
+      # For packages without test script, use direct vitest
+      - name: Test ${{ matrix.package }} package (direct)
+        if: matrix.has-test-script == false
         run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*'
         
-      - name: Test ${{ matrix.package }} with coverage
+      # Special coverage handling for prompts package
+      - name: Test prompts with coverage
         if: matrix.package == 'prompts'
-        run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*' --coverage
+        run: npx vitest run --config vitest.config.ts 'packages/prompts/**/*.test.*' --coverage
         
-      - name: Upload ${{ matrix.package }} coverage to Codecov
+      - name: Upload prompts coverage to Codecov
         if: matrix.package == 'prompts'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
-          flags: ${{ matrix.package }}-package
+          flags: prompts-package
 
   # App and server tests
   test-app:
