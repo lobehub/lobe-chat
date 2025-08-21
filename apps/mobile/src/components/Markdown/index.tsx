@@ -32,14 +32,13 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
     () =>
       StyleSheet.create({
         blockquote: {
-          backgroundColor: token.colorBgLayout,
-          borderLeftColor: token.colorPrimary,
+          backgroundColor: token.colorFillQuaternary,
+          borderLeftColor: token.colorPrimaryBorder,
           borderLeftWidth: 4,
           borderRadius: token.borderRadiusSM,
           color: token.colorTextSecondary,
           marginVertical: fontSize * marginMultiple,
-          paddingLeft: 16,
-          paddingRight: token.paddingSM,
+          paddingHorizontal: token.paddingSM,
           paddingVertical: token.paddingXS,
         },
         body: {
@@ -49,30 +48,30 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
           width: '100%',
         },
         bullet_list: {
-          marginVertical: fontSize * marginMultiple * 0.33,
+          marginVertical: token.marginXS,
         },
         code_block: {
           backgroundColor: token.colorBgContainer,
-          borderColor: token.colorBorder,
+          borderColor: token.colorBorderSecondary,
           borderRadius: token.borderRadius,
           borderWidth: 1,
           fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
           fontSize: fontSize * 0.875,
-          marginVertical: fontSize * marginMultiple,
+          marginVertical: token.marginMD,
           overflow: 'hidden',
           padding: 0,
         },
         code_inline: {
-          backgroundColor: token.colorBgElevated,
-          borderColor: token.colorBorder,
+          backgroundColor: token.colorFillSecondary,
+          borderColor: token.colorBorderSecondary,
           borderRadius: token.borderRadiusSM,
           borderWidth: 1,
-          color: token.colorTextDescription,
+          color: token.colorTextTertiary,
           fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
           fontSize: fontSize * 0.875,
-          marginHorizontal: 4,
-          paddingHorizontal: 6,
-          paddingVertical: 2,
+          marginHorizontal: token.marginXXS,
+          paddingHorizontal: token.paddingXS,
+          paddingVertical: token.paddingXXS,
         },
         heading1: {
           color: token.colorTextHeading,
@@ -116,32 +115,32 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         },
         hr: {
           borderBottomWidth: 1,
-          borderColor: token.colorBorder,
+          borderColor: token.colorBorderSecondary,
           borderStyle: 'dashed',
-          marginVertical: fontSize * marginMultiple * 1.5,
+          marginVertical: token.marginLG,
         },
         image: {
-          borderColor: token.colorBorder,
+          borderColor: token.colorBorderSecondary,
           borderRadius: token.borderRadius,
           borderWidth: 1,
-          marginVertical: fontSize * marginMultiple,
-          width: width - token.padding * 2,
+          marginVertical: token.marginMD,
+          width: width - token.paddingContentHorizontal * 2,
         },
         link: {
-          color: token.colorPrimary,
+          color: token.colorLink,
           textDecorationLine: 'none',
         },
         list_item: {
-          marginVertical: fontSize * marginMultiple * 0.33,
+          marginVertical: token.marginXS,
         },
         ordered_list: {
-          marginVertical: fontSize * marginMultiple * 0.33,
+          marginVertical: token.marginXS,
         },
         paragraph: {
           color: token.colorText,
           letterSpacing: 0.2,
           lineHeight: lineHeight * fontSize,
-          marginVertical: fontSize * marginMultiple,
+          marginVertical: token.marginMD,
         },
         strong: {
           color: token.colorTextHeading,
@@ -149,10 +148,10 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
         },
         table: {
           backgroundColor: token.colorBgContainer,
-          borderColor: token.colorBorder,
+          borderColor: token.colorBorderSecondary,
           borderRadius: token.borderRadius,
           borderWidth: 1,
-          marginVertical: fontSize * marginMultiple,
+          marginVertical: token.marginMD,
           overflow: 'hidden',
           unicodeBidi: 'isolate',
         },
@@ -168,11 +167,11 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
           padding: token.paddingSM,
         },
         thead: {
-          backgroundColor: token.colorBgLayout,
+          backgroundColor: token.colorFillQuaternary,
         },
         tr: {
           borderBottomWidth: 1,
-          borderColor: token.colorBorder,
+          borderColor: token.colorBorderSecondary,
         },
       }),
     [fontSize, marginMultiple, lineHeight, token, width],
@@ -187,7 +186,7 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
     Image.getSize(
       uri,
       (w, h) => {
-        const scaledHeight = (h / w) * (width - token.padding * 2);
+        const scaledHeight = (h / w) * (width - token.paddingContentHorizontal * 2);
         setImageHeights((prev) => ({ ...prev, [uri]: scaledHeight }));
         callback(scaledHeight);
       },
@@ -279,10 +278,10 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
                 style={{
                   alignItems: 'center',
                   backgroundColor: token.colorBgContainer,
-                  borderColor: token.colorBorder,
+                  borderColor: token.colorBorderSecondary,
                   borderRadius: token.borderRadius,
                   borderWidth: 1,
-                  marginVertical: fontSize * marginMultiple,
+                  marginVertical: token.marginMD,
                   padding: token.paddingSM,
                 }}
               >

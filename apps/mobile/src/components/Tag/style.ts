@@ -2,15 +2,17 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   tag: {
-    backgroundColor: token.colorFillQuaternary,
-    borderRadius: token.borderRadiusXS,
+    backgroundColor: token.colorFillTertiary,
+    borderColor: token.colorBorderSecondary,
+    borderRadius: token.borderRadiusSM,
+    borderWidth: 1,
     marginBottom: token.marginXXS,
     marginLeft: token.marginXXS,
     paddingHorizontal: token.paddingXS,
     paddingVertical: token.paddingXXS,
   },
   tagText: {
-    color: token.colorTextSecondary,
+    color: token.colorText,
     fontSize: token.fontSizeSM,
   },
 }));
