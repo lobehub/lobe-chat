@@ -10,13 +10,13 @@ export const useStyles = createStyles((token) => ({
     width: token.controlHeight,
   },
   badge: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorBgContainerSecondary,
     borderRadius: token.borderRadiusSM,
     paddingHorizontal: token.paddingXS,
     paddingVertical: token.paddingXXS,
   },
   badgeText: {
-    color: token.colorTextSecondary,
+    color: token.colorText,
     fontSize: token.fontSizeIcon,
     fontWeight: token.fontWeightStrong,
   },
@@ -118,20 +118,10 @@ export const useStyles = createStyles((token) => ({
   subtitle: {
     fontSize: token.fontSize,
   },
-  tag: {
-    backgroundColor: token.colorFillSecondary,
-    borderRadius: token.borderRadiusSM,
-    paddingHorizontal: token.paddingXS,
-    paddingVertical: token.paddingXXS,
-  },
-  tagText: {
-    color: token.colorTextSecondary,
-    fontSize: token.fontSizeIcon,
-  },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // gap: token.marginXS,
+    gap: token.marginXXS,
     marginBottom: token.marginXS,
   },
   title: {
