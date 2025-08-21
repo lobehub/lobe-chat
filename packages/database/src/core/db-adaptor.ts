@@ -1,4 +1,6 @@
-import { LobeChatDatabase, isDesktop } from '../type';
+import { isDesktop } from '@lobechat/const';
+
+import { LobeChatDatabase } from '../type';
 import { getPgliteInstance } from './electron';
 import { getDBInstance } from './web-server';
 
