@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TimeoutError } from '../errorType';
 import { DEFAULT_TIMEOUT, withTimeout } from '../withTimeout';
