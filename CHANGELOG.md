@@ -2,6 +2,48 @@
 
 # Changelog
 
+## [Version&nbsp;1.116.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.115.0...v1.116.0)
+<sup>Released on **2025-08-21**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add support for Azure image models and implement `createImage` API method.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Can't load custom provider config.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add support for Azure image models and implement `createImage` API method ([c3ae413](https://github.com/jaworldwideorg/OneJA-Bot/commit/c3ae413))
+
+
+
+#### What's fixed
+
+* **misc**: Can't load custom provider config, closes [#8880](https://github.com/jaworldwideorg/OneJA-Bot/issues/8880) ([9ec3315](https://github.com/jaworldwideorg/OneJA-Bot/commit/9ec3315))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.115.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.114.0...v1.115.0)
 <sup>Released on **2025-08-21**</sup>
 
