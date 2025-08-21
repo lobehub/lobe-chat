@@ -1,6 +1,5 @@
+import { ChatFileItem, ChatImageItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
-
-import { ChatFileItem, ChatImageItem } from '@/types/message';
 
 import { filesPrompts } from './index';
 

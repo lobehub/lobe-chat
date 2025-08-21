@@ -1,6 +1,6 @@
+import { chainRewriteQuery } from '@lobechat/prompts';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainRewriteQuery } from '@/chains/rewriteQuery';
 import { chatService } from '@/services/chat';
 import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';

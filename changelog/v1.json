@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Move chain into @lobechat/prompts."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.1"
+  },
+  {
     "children": {},
     "date": "2025-08-19",
     "version": "1.114.0"

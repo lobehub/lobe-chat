@@ -4,13 +4,6 @@ import { globalHelpers } from '@/store/global/helpers';
 
 import { chainSummaryDescription } from '../summaryDescription';
 
-// Mock the globalHelpers.getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
-  globalHelpers: {
-    getCurrentLanguage: vi.fn(() => 'en-US'),
-  },
-}));
-
 describe('chainSummaryDescription', () => {
   it('should return a payload with the correct structure and content based on the input', () => {
     const inputContent = '你是一个专业的JavaScript开发者';
@@ -64,17 +57,14 @@ nav: API
       temperature: 0,
     };
 
-    const result = chainSummaryDescription(inputContent);
+    const result = chainSummaryDescription(inputContent, 'en-US');
 
     expect(result).toEqual(expectedOutput);
   });
 
   it('should handle different languages', () => {
-    // Override the getCurrentLanguage mock to return a different language
-    (globalHelpers.getCurrentLanguage as Mock).mockReturnValueOnce('zh-CN');
-
     const inputContent = '你是一个专业的JavaScript开发者';
-    const result = chainSummaryDescription(inputContent);
+    const result = chainSummaryDescription(inputContent, 'zh-CN');
 
     // Verify that the language in the output matches the mocked language
     expect(result.messages![0].content).toContain('翻译为目标语言:zh-CN');

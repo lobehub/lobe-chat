@@ -1,7 +1,6 @@
-import { globalHelpers } from '@/store/global/helpers';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@lobechat/types';
 
-export const chainSummaryTags = (content: string): Partial<ChatStreamPayload> => ({
+export const chainSummaryTags = (content: string, locale: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content:
@@ -23,6 +22,6 @@ export const chainSummaryTags = (content: string): Partial<ChatStreamPayload> =>
       role: 'user',
     },
     { content: 'entrepreneurship,planning,consulting', role: 'assistant' },
-    { content: `输入: {${content}} [${globalHelpers.getCurrentLanguage()}]`, role: 'user' },
+    { content: `输入: {${content}} [${locale}]`, role: 'user' },
   ],
 });
