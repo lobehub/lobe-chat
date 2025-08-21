@@ -1,12 +1,26 @@
 [
   {
+    "children": {
+      "features": [
+        "Add support for Azure image models and implement createImage API method."
+      ],
+      "fixes": [
+        "Can't load custom provider config."
+      ]
+    },
+    "date": "2025-08-21",
+    "version": "1.116.0"
+  },
+  {
     "children": {},
     "date": "2025-08-21",
     "version": "1.114.3"
   },
   {
     "children": {
-      "fixes": ["Can't load custom provider config."]
+      "fixes": [
+        "Can't load custom provider config."
+      ]
     },
     "date": "2025-08-21",
     "version": "1.114.2"
