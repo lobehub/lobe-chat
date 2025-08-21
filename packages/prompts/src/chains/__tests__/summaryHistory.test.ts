@@ -1,9 +1,5 @@
+import { ChatMessage } from '@lobechat/types';
 import { Mock, describe, expect, it, vi } from 'vitest';
-
-import { chatHelpers } from '@/store/chat/helpers';
-import { globalHelpers } from '@/store/global/helpers';
-import { ChatMessage } from '@/types/message';
-import { OpenAIChatMessage } from '@/types/openai/chat';
 
 import { chainSummaryHistory } from '../summaryHistory';
 
