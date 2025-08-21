@@ -37,7 +37,14 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <ProviderCombine provider={provider.id} size={24} />
+          <ProviderCombine
+            color={token.colorText}
+            iconProps={{
+              color: token.colorText,
+            }}
+            provider={provider.id}
+            size={24}
+          />
           <Text style={styles.subtitle}>
             {provider.source === 'builtin' ? 'Built-in Provider' : 'Custom Provider'}
           </Text>

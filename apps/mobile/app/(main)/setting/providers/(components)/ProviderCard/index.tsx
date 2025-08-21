@@ -6,9 +6,9 @@ import { AiProviderListItem } from '@/types/aiProvider';
 import { useThemeToken } from '@/theme';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { InstantSwitch } from '@/components';
-import { ProviderCombine } from '@lobehub/icons-rn';
 
 import { useStyles } from './style';
+import { ProviderCombine } from '@lobehub/icons-rn';
 
 interface ProviderCardProps {
   provider: AiProviderListItem;
@@ -45,7 +45,15 @@ const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
         {/* 顶部：Logo + 名称（可点击跳转） */}
         <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
           <View style={styles.header}>
-            <ProviderCombine provider={id} size={24} />
+            <ProviderCombine
+              color={token.colorText}
+              iconProps={{
+                color: token.colorText,
+              }}
+              provider={id}
+              size={24}
+              type={'color'}
+            />
             <InstantSwitch
               enabled={enabled}
               onChange={handleSwitchChange}
