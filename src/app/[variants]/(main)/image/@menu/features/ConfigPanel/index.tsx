@@ -24,7 +24,7 @@ interface ConfigItemLayoutProps {
   label?: string;
 }
 
-const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
+const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }: ConfigItemLayoutProps) => {
   return (
     <Flexbox gap={8}>
       {label && <Text weight={500}>{label}</Text>}
