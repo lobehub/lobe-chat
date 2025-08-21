@@ -14,7 +14,7 @@ component_management:
       paths:
         - src/server/**
     - component_id: app_libs
-      name: "Libraries"
+      name: "Libs"
       paths:
         - src/libs/**
     - component_id: app_utils
