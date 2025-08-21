@@ -13,7 +13,7 @@ jobs:
       matrix:
         package: [file-loaders, prompts, model-runtime, web-crawler]
 
-    name: Test Package ${{ matrix.package }}
+    name: Test package ${{ matrix.package }}
 
     steps:
       - uses: actions/checkout@v5
@@ -76,7 +76,7 @@ jobs:
           flags: app
 
   test-server:
-    name: Test Server
+    name: Test Database
 
     runs-on: ubuntu-latest
 
