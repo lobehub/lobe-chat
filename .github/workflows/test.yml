@@ -16,7 +16,7 @@ jobs:
           - package: model-runtime
             has-test-script: true
           - package: web-crawler
-            has-test-script: false
+            has-test-script: true
 
     name: Test ${{ matrix.package }} package
 
