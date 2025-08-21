@@ -527,6 +527,48 @@ fi
 # ==========================
 # === Development Mode  ====
 # ==========================
+sync_dev_s3_env_from_minio() {
+    local SCRIPT_DIR
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local PROJECT_ROOT
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    local DEST_ENV="$PROJECT_ROOT/.env"
+
+    if [ ! -f "$DEST_ENV" ]; then
+        return 0
+    fi
+
+    local MINIO_BUCKET MINIO_USER MINIO_PASS
+    MINIO_BUCKET=$(grep -E '^MINIO_LOBE_BUCKET=' "$DEST_ENV" | head -n1 | cut -d'=' -f2)
+    MINIO_USER=$(grep -E '^MINIO_ROOT_USER=' "$DEST_ENV" | head -n1 | cut -d'=' -f2)
+    MINIO_PASS=$(grep -E '^MINIO_ROOT_PASSWORD=' "$DEST_ENV" | head -n1 | cut -d'=' -f2)
+
+    # Defaults when missing
+    if [ -z "$MINIO_BUCKET" ]; then MINIO_BUCKET="lobe"; fi
+    if [ -z "$MINIO_USER" ]; then MINIO_USER="admin"; fi
+
+    if grep -q '^S3_BUCKET=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" "s#^S3_BUCKET=.*#S3_BUCKET=${MINIO_BUCKET}#" "$DEST_ENV"
+    else
+        echo "S3_BUCKET=${MINIO_BUCKET}" >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_ACCESS_KEY=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" "s#^S3_ACCESS_KEY=.*#S3_ACCESS_KEY=${MINIO_USER}#" "$DEST_ENV"
+    else
+        echo "S3_ACCESS_KEY=${MINIO_USER}" >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_ACCESS_KEY_ID=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" "s#^S3_ACCESS_KEY_ID=.*#S3_ACCESS_KEY_ID=${MINIO_USER}#" "$DEST_ENV"
+    else
+        echo "S3_ACCESS_KEY_ID=${MINIO_USER}" >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_SECRET_ACCESS_KEY=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${MINIO_PASS}#" "$DEST_ENV"
+    else
+        echo "S3_SECRET_ACCESS_KEY=${MINIO_PASS}" >> "$DEST_ENV"
+    fi
+}
+
 section_setup_development_env() {
     # Determine directories
     local SCRIPT_DIR
@@ -543,21 +585,27 @@ section_setup_development_env() {
         return 1
     fi
 
+    local DO_COPY="y"
     if [ -f "$DEST_ENV" ]; then
         echo "A .env already exists at project root ($DEST_ENV). Overwrite?"
         ask "(y/n)" "n"
-        if [[ "$ask_result" != "y" ]]; then
+        DO_COPY="$ask_result"
+        if [[ "$DO_COPY" != "y" ]]; then
             echo "Keeping existing .env at project root."
-            return 0
         fi
     fi
 
-    cp "$DEV_ENV_EXAMPLE" "$DEST_ENV"
-    if [ $? -ne 0 ]; then
-        echo "ERROR: Failed to copy development .env to project root."
-        return 1
+    if [[ "$DO_COPY" == "y" ]]; then
+        cp "$DEV_ENV_EXAMPLE" "$DEST_ENV"
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Failed to copy development .env to project root."
+            return 1
+        fi
+        echo "✔️  .env copied to project root: $DEST_ENV"
     fi
-    echo "✔️  .env copied to project root: $DEST_ENV"
+
+    # Sync S3 variables to concrete values from current MinIO settings
+    sync_dev_s3_env_from_minio
 }
 
 section_check_dev_data_dirs() {
@@ -715,6 +763,9 @@ section_regenerate_secrets_dev() {
     else
         echo "DATABASE_URL=${DATABASE_URL}" >> "$DEST_ENV"
     fi
+
+    # Sync S3 variables to reflect updated MinIO creds
+    sync_dev_s3_env_from_minio
 }
 
 section_init_database_dev() {
