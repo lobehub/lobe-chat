@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const azureChatModels: AIChatModelCard[] = [
   {
@@ -282,6 +282,26 @@ const azureChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...azureChatModels];
+const azureImageModels: AIImageModelCard[] = [
+  {
+    description: 'FLUX.1 Kontext [pro]',
+    displayName: 'FLUX.1 Kontext [pro]',
+    enabled: true,
+    id: 'FLUX.1-Kontext-pro',
+    parameters: {
+      aspectRatio: {
+        default: '1:1',
+        enum: ['21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'],
+      },
+      imageUrl: { default: null },
+      prompt: { default: '' },
+      seed: { default: null },
+    },
+    releasedAt: '2025-05-01',
+    type: 'image',
+  }
+];
+
+export const allModels = [...azureChatModels, ...azureImageModels];
 
 export default allModels;

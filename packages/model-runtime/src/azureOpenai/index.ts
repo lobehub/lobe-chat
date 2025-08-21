@@ -13,12 +13,14 @@ import {
   EmbeddingsPayload,
   ModelProvider,
 } from '../types';
+import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
-import { convertOpenAIMessages } from '../utils/openaiHelpers';
+import { convertImageUrlToFile, convertOpenAIMessages } from '../utils/openaiHelpers';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream } from '../utils/streams';
+import debug from 'debug';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: AzureOpenAI;
@@ -113,6 +115,78 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       return res.data.map((item) => item.embedding);
     } catch (error) {
       return this.handleError(error, payload.model);
+    }
+  }
+
+  // Create image using Azure OpenAI Images API (gpt-image-1 or DALL·E deployments)
+  async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
+    const log = debug('lobe-image:azure');
+    const { model, params } = payload;
+    log('Creating image with model: %s and params: %O', model, params);
+
+    try {
+      // Clone params and remap imageUrls/imageUrl -> image
+      const userInput: Record<string, any> = { ...params };
+
+      // Convert imageUrls to 'image' for edit API
+      if (Array.isArray(userInput.imageUrls) && userInput.imageUrls.length > 0) {
+        const imageFiles = await Promise.all(
+          userInput.imageUrls.map((url: string) => convertImageUrlToFile(url)),
+        );
+        userInput.image = imageFiles.length === 1 ? imageFiles[0] : imageFiles;
+      }
+
+      // Backward compatibility: single imageUrl -> image
+      if (userInput.imageUrl && !userInput.image) {
+        userInput.image = await convertImageUrlToFile(userInput.imageUrl);
+      }
+
+      // Remove non-API parameters to avoid unknown_parameter errors
+      delete userInput.imageUrls;
+      delete userInput.imageUrl;
+
+      const isImageEdit = Boolean(userInput.image);
+
+      // Azure/OpenAI Images: remove unsupported/auto values where appropriate
+      if (userInput.size === 'auto') delete userInput.size;
+
+      // Build options: do not force response_format for gpt-image-1
+      const options: any = {
+        model,
+        n: 1,
+        ...(isImageEdit ? { input_fidelity: 'high' } : {}),
+        ...userInput,
+      };
+
+      // For generate, ensure no 'image' field is sent
+      if (!isImageEdit) delete options.image;
+
+      // Call Azure Images API
+      const img = isImageEdit
+        ? await this.client.images.edit(options)
+        : await this.client.images.generate(options);
+
+      // Validate response
+      if (!img || !img.data || !Array.isArray(img.data) || img.data.length === 0) {
+        throw new Error('Invalid image response: missing or empty data array');
+      }
+
+      const imageData: any = img.data[0];
+      if (!imageData) throw new Error('Invalid image response: first data item is null or undefined');
+
+      // Prefer base64 if provided, otherwise URL
+      if (imageData.b64_json) {
+        const mimeType = 'image/png';
+        return { imageUrl: `data:${mimeType};base64,${imageData.b64_json}` };
+      }
+
+      if (imageData.url) {
+        return { imageUrl: imageData.url };
+      }
+
+      throw new Error('Invalid image response: missing both b64_json and url fields');
+    } catch (e) {
+      return this.handleError(e, model);
     }
   }
 
