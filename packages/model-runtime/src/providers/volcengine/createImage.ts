@@ -16,7 +16,6 @@ export async function createVolcengineImage(
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
-
   log('Creating image with Volcengine API - model: %s, params: %O', model, params);
 
   // Create OpenAI client with Volcengine configuration
@@ -52,9 +51,39 @@ export async function createVolcengineImage(
     delete userInput.image;
   }
 
+  // Map generic cfg -> guidance_scale when not provided
+  if (userInput.cfg !== undefined && userInput.guidance_scale === undefined) {
+    userInput.guidance_scale = userInput.cfg;
+    delete userInput.cfg;
+  }
+
+  // If width/height provided and size not set, construct size string
+  if (
+    userInput.width &&
+    userInput.height &&
+    !userInput.size &&
+    Number.isFinite(userInput.width) &&
+    Number.isFinite(userInput.height)
+  ) {
+    userInput.size = `${userInput.width}x${userInput.height}`;
+    delete userInput.width;
+    delete userInput.height;
+  }
+
+  // SeedEdit 模型必须提供 image 输入，同时强制 size=adaptive
+  if (model.includes('seededit')) {
+    const hasImage = !!userInput.image &&
+      (Array.isArray(userInput.image) ? userInput.image.length > 0 : true);
+    if (!hasImage) {
+      throw new Error('SeedEdit model requires an input image. Please upload an image first.');
+    }
+    userInput.size = 'adaptive';
+  }
+
   // Build request options
   const requestOptions = {
     model,
+    response_format: 'url',
     watermark: false, // Default to no watermark
     ...userInput,
   };
