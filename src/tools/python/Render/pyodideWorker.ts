@@ -91,9 +91,19 @@ export async function executePythonCode(
       },
     });
 
-    // 捕获图片
+    pyodide.FS.mkdirTree('/fonts');
     pyodide.FS.mkdirTree('/mnt/data');
     pyodide.FS.chdir('/mnt/data');
+
+    // 为了避免麻烦，这里不做条件判断，始终下载中文字体
+    const fontFiles = {
+      'STSong.ttf':
+        'https://testingcf.jsdelivr.net/gh/Haixing-Hu/latex-chinese-fonts@latest/chinese/宋体/STSong.ttf',
+    };
+    for (const [filename, url] of Object.entries(fontFiles)) {
+      const buffer = await fetch(url, { cache: 'force-cache' }).then((res) => res.arrayBuffer());
+      pyodide.FS.writeFile(`/fonts/${filename}`, new Uint8Array(buffer));
+    }
 
     // 执行 Python 代码
     try {

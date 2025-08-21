@@ -104,7 +104,7 @@ export const pythonSlice: StateCreator<
       if (!fileItem.data) return;
 
       try {
-        const blob = new Blob([fileItem.data]);
+        const blob = new Blob([new Uint8Array(fileItem.data)]);
         const file = new File([blob], fileItem.filename);
 
         const uploadResult = await useFileStore.getState().uploadWithProgress({

@@ -76,7 +76,7 @@ const ImageDisplay = memo<ImageDisplayProps>(({ filename, data, fileData }) => {
 
   let imageUrl = fileData?.url;
   if (!imageUrl && data) {
-    const blob = new Blob([data]);
+    const blob = new Blob([new Uint8Array(data)]);
     imageUrl = URL.createObjectURL(blob);
   }
 
@@ -126,7 +126,7 @@ const PythonFileItemComponent = memo<PythonFileItemProps>(({ fileId, filename, d
       }
     } else if (data) {
       // 如果有原始数据，创建 blob URL 下载
-      const blob = new Blob([data]);
+      const blob = new Blob([new Uint8Array(data)]);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
