@@ -43,8 +43,41 @@ jobs:
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
           flags: packages/${{ matrix.package }}
 
-  # App and server tests
-  test-app:
+  # App tests
+  test-website:
+    name: Test Website
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test App Coverage
+        run: bun run test-app:coverage
+
+      - name: Upload App Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/app/lcov.info
+          flags: app
+
+  test-server:
+    name: Test Server
+
     runs-on: ubuntu-latest
 
     services:
@@ -92,13 +125,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/server/lcov.info
           flags: server
-
-      - name: Test App Coverage
-        run: bun run test-app:coverage
-
-      - name: Upload App Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/app/lcov.info
-          flags: app
