@@ -10,19 +10,22 @@ interface HeaderProps {
   leftActions: ActionKeys[];
   rightActions: ActionKeys[];
   setExpand: (expand: boolean) => void;
+  showExpandButton?: boolean;
 }
 
-const Header = memo<HeaderProps>(({ expand, setExpand, leftActions, rightActions }) => (
+const Header = memo<HeaderProps>(({ expand, setExpand, leftActions, rightActions, showExpandButton = true }) => (
   <ActionBar
     leftActions={leftActions}
     rightActions={rightActions}
     rightAreaEndRender={
-      <ActionIcon
-        icon={expand ? Minimize2 : Maximize2}
-        onClick={() => {
-          setExpand(!expand);
-        }}
-      />
+      showExpandButton ? (
+        <ActionIcon
+          icon={expand ? Minimize2 : Maximize2}
+          onClick={() => {
+            setExpand(!expand);
+          }}
+        />
+      ) : undefined
     }
   />
 ));

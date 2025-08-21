@@ -17,6 +17,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 
 import Files from './Files';
 import InputArea from './InputArea';
+import MentionedUsers from './MentionedUsers';
 import SendButton from './Send';
 
 const defaultLeftActions: ActionKeys[] = [
@@ -28,11 +29,17 @@ const defaultLeftActions: ActionKeys[] = [
   'tools',
   'params',
   'mainToken',
+  'mention',
 ];
 
 const defaultRightActions: ActionKeys[] = ['clear'];
 
-const MobileChatInput = memo(() => {
+interface MobileProps {
+  targetMemberId?: string;
+}
+
+// eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+const MobileChatInput = memo<MobileProps>(({ targetMemberId }) => {
   const theme = useTheme();
   const ref = useRef<TextAreaRef>(null);
   const [expand, setExpand] = useState<boolean>(false);
@@ -75,6 +82,7 @@ const MobileChatInput = memo(() => {
         ) : (
           <>
             <Files />
+            <MentionedUsers />
             <ActionBar
               leftActions={defaultLeftActions}
               padding={'0 8px'}

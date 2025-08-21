@@ -25,6 +25,12 @@ export enum ChatSettingsTabs {
   TTS = 'tts',
 }
 
+export enum GroupSettingsTabs {
+  Chat = 'chat',
+  Members = 'members',
+  Settings = 'settings',
+}
+
 export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',

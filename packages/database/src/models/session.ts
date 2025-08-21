@@ -27,7 +27,12 @@ import {
 } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
 import { LobeAgentConfig } from '@/types/agent';
-import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
+import {
+  ChatSessionList,
+  LobeAgentSession,
+  LobeGroupSession,
+  SessionRankItem,
+} from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -212,6 +217,23 @@ export class SessionModel {
         });
 
         if (existResult) return existResult;
+      }
+
+      if (type === 'group') {
+        const result = await trx
+          .insert(sessions)
+          .values({
+            ...session,
+            createdAt: new Date(),
+            id,
+            slug,
+            type,
+            updatedAt: new Date(),
+            userId: this.userId,
+          })
+          .returning();
+
+        return result[0];
       }
 
       const newAgents = await trx
@@ -436,12 +458,36 @@ export class SessionModel {
     description,
     avatar,
     groupId,
+    type,
     ...res
-  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }): LobeAgentSession => {
+  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }):
+    | LobeAgentSession
+    | LobeGroupSession => {
+    const meta = {
+      avatar: avatar ?? undefined,
+      backgroundColor: backgroundColor ?? undefined,
+      description: description ?? undefined,
+      tags: undefined,
+      title: title ?? undefined,
+    };
+
+    if (type === 'group') {
+      // For group sessions, return without agent-specific fields
+      return {
+        ...res,
+        group: groupId,
+        members: ['user', 'assistant-ai', 'expert-ai'], // Default test members
+        meta,
+        type: 'group',
+      } as LobeGroupSession;
+    }
+
+    // For agent sessions, include agent-specific fields
     // TODO: 未来这里需要更好的实现方案，目前只取第一个
     const agent = agentsToSessions?.[0]?.agent;
     return {
       ...res,
+      config: agent ? (agent as any) : { model: '', plugins: [] }, // Ensure config exists for agent sessions
       group: groupId,
       meta: {
         avatar: agent?.avatar ?? avatar ?? undefined,
@@ -450,8 +496,9 @@ export class SessionModel {
         tags: agent?.tags ?? undefined,
         title: agent?.title ?? title ?? undefined,
       },
-      model: agent?.model,
-    } as any;
+      model: agent?.model || '',
+      type: 'agent',
+    } as LobeAgentSession;
   };
 
   findSessionsByKeywords = async (params: {

@@ -25,6 +25,12 @@ const getMeta = (message: ChatMessage) => {
     }
 
     default: {
+      // For group chat, get meta from agent session
+      if (message.groupId && message.agentId) {
+        return sessionMetaSelectors.getAgentMetaByAgentId(message.agentId)(useSessionStore.getState());
+      }
+
+      // Otherwise, use the current session's agent meta for single agent chat
       return sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
     }
   }
@@ -32,11 +38,11 @@ const getMeta = (message: ChatMessage) => {
 
 const getBaseChatsByKey =
   (key: string) =>
-  (s: ChatStoreState): ChatMessage[] => {
-    const messages = s.messagesMap[key] || [];
+    (s: ChatStoreState): ChatMessage[] => {
+      const messages = s.messagesMap[key] || [];
 
-    return messages.map((i) => ({ ...i, meta: getMeta(i) }));
-  };
+      return messages.map((i) => ({ ...i, meta: getMeta(i) }));
+    };
 
 const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
 
@@ -214,6 +220,38 @@ const inboxActiveTopicMessages = (state: ChatStoreState) => {
   return state.messagesMap[messageMapKey(INBOX_SESSION_ID, activeTopicId)] || [];
 };
 
+/**
+ * Gets messages between the current user and a specific agent (thread messages)
+ * This is like a DM (Direct Message) view between user and agent
+ */
+const getThreadMessages = (agentId: string) => (s: ChatStoreState): ChatMessage[] => {
+  if (!agentId) return [];
+
+  const allMessages = activeBaseChats(s);
+
+  // Filter messages to only include:
+  // 1. User messages sent TO the specific agent (role: 'user' && targetId matches agentId)
+  // 2. Assistant messages FROM the specific agent sent TO user (role: 'assistant' && agentId matches && targetId is 'user')
+  return allMessages.filter((message) => {
+    if (message.role === 'user' && message.targetId === agentId) {
+      return true; // Include user messages sent to the specific agent
+    }
+
+    if (message.role === 'assistant' && message.agentId === agentId && message.targetId === 'user') {
+      return true; // Include messages from the specific agent sent to user
+    }
+
+    return false; // Exclude all other messages
+  });
+};
+
+/**
+ * Gets thread message IDs for a specific agent
+ */
+const getThreadMessageIDs = (agentId: string) => (s: ChatStoreState): string[] => {
+  return getThreadMessages(agentId)(s).map(message => message.id);
+};
+
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
@@ -225,6 +263,8 @@ export const chatSelectors = {
   getBaseChatsByKey,
   getMessageById,
   getMessageByToolCallId,
+  getThreadMessageIDs,
+  getThreadMessages,
   getTraceIdByMessageId,
   inboxActiveTopicMessages,
   isAIGenerating,

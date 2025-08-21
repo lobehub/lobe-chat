@@ -15,6 +15,7 @@ const Page = () => {
       <SystemAgentForm systemAgentKey="translation" />
       <SystemAgentForm systemAgentKey="historyCompress" />
       <SystemAgentForm systemAgentKey="agentMeta" />
+      <SystemAgentForm systemAgentKey="groupChatSupervisor" />
       {isServerMode && enableKnowledgeBase && (
         <SystemAgentForm
           allowCustomPrompt

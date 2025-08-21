@@ -44,7 +44,7 @@ describe('TopicModel', () => {
       });
 
       // 调用 query 方法
-      const result = await topicModel.query({ sessionId });
+      const result = await topicModel.query({ containerId: sessionId });
 
       // 断言结果
       expect(result).toHaveLength(4);
@@ -87,7 +87,7 @@ describe('TopicModel', () => {
       });
 
       // 应该只返回属于 session1 的 topic
-      const result = await topicModel.query({ sessionId: 'session1' });
+      const result = await topicModel.query({ containerId: 'session1' });
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
     });

@@ -18,7 +18,7 @@ export class ServerService implements ITopicService {
   getTopics: ITopicService['getTopics'] = (params) =>
     lambdaClient.topic.getTopics.query({
       ...params,
-      sessionId: this.toDbSessionId(params.sessionId),
+      containerId: this.toDbSessionId(params.containerId),
     }) as any;
 
   getAllTopics: ITopicService['getAllTopics'] = () =>
