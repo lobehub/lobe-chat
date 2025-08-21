@@ -10,9 +10,9 @@ import {
 } from '@/types/clientDB';
 import { sleep } from '@/utils/sleep';
 
+import migrations from '../core/migrations.json';
 import { DrizzleMigrationModel } from '../models/drizzleMigration';
 import * as schema from '../schemas';
-import migrations from './migrations.json';
 
 const pgliteSchemaHashCache = 'LOBE_CHAT_PGLITE_SCHEMA_HASH';
 

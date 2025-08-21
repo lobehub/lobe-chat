@@ -6,6 +6,7 @@
   "types": "src/index.ts",
   "scripts": {
     "test": "vitest",
+    "test-server:coverage": "vitest run --config vitest.config.server.ts --coverage",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
