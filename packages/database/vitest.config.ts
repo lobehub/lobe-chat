@@ -16,12 +16,11 @@ export default defineConfig({
       exclude: [
         // https://github.com/lobehub/lobe-chat/pull/7265
         ...coverageConfigDefaults.exclude,
-        'packages/database/src/server/core/dbForTest.ts',
+        'src/server/core/dbForTest.ts',
       ],
-      include: ['packages/database/src/models/**/*.ts', 'packages/database/src/server/**/*.ts'],
+      include: ['src/models/**/*.ts', 'src/server/**/*.ts'],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
-      reportsDirectory: './coverage/server',
     },
     env: {
       TEST_SERVER_DB: '1',

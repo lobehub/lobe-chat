@@ -125,5 +125,5 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/server/lcov.info
+          files: ./packages/database/coverage/lcov.info
           flags: database
