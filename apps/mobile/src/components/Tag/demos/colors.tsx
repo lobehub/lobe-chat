@@ -27,12 +27,6 @@ const ColorsDemo = () => {
         <Tag color="magenta">Magenta</Tag>
         <Tag color="gray">Gray</Tag>
 
-        {/* Custom colors */}
-        <Tag color="#87d068">Custom Green</Tag>
-        <Tag color="#108ee9">Custom Blue</Tag>
-        <Tag color="rgb(255, 0, 0)">Custom Red</Tag>
-        <Tag color="rgba(135, 208, 104, 0.8)">Custom RGBA</Tag>
-
         {/* Default (no color) */}
         <Tag>Default</Tag>
       </View>

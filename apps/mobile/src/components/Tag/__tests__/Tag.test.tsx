@@ -139,4 +139,83 @@ describe('Tag', () => {
 
     expect(toJSON()).toBeTruthy();
   });
+
+  // Color prop tests
+  it('renders with red color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="red">Red Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with blue color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="blue">Blue Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with green color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="green">Green Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with orange color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="orange">Orange Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with purple color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="purple">Purple Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with magenta color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="magenta">Magenta Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with volcano color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="volcano">Volcano Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with geekblue color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="geekblue">Geekblue Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with cyan color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="cyan">Cyan Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with lime color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="lime">Lime Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with gold color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="gold">Gold Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with yellow color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="yellow">Yellow Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders with gray color', () => {
+    const { toJSON } = renderWithTheme(<Tag color="gray">Gray Tag</Tag>);
+
+    expect(toJSON()).toBeTruthy();
+  });
 });
