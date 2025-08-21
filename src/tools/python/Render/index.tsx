@@ -11,7 +11,7 @@ import { PythonExecutionResult, PythonParams, PythonState } from '@/types/tool/p
 import PythonFileGallery from './components/PythonFileGallery';
 
 const Python = memo<BuiltinRenderProps<PythonExecutionResult, PythonParams, PythonState>>(
-  ({ content, args, messageId, pluginState }) => {
+  ({ content, args, pluginState }) => {
     const { t } = useTranslation('tool');
     const theme = useTheme();
 
@@ -92,7 +92,7 @@ const Python = memo<BuiltinRenderProps<PythonExecutionResult, PythonParams, Pyth
                 <Text strong style={{ marginBottom: 8 }}>
                   {t('python.files')}
                 </Text>
-                <PythonFileGallery files={content.files} messageId={messageId} />
+                <PythonFileGallery files={content.files} />
               </Flexbox>
             )}
           </Flexbox>

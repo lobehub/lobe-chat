@@ -9,10 +9,10 @@ interface Output {
 }
 
 export interface PythonFileItem {
-  data?: Uint8Array;
+  data?: Blob;
   fileId?: string;
   filename: string;
-  previewUrl?: string; // 临时预览 URL，用于上传前展示
+  previewUrl?: string;
 }
 
 export interface PythonExecutionResult {

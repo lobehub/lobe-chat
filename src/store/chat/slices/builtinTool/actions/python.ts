@@ -72,6 +72,11 @@ export const pythonSlice: StateCreator<
         isExecuting: false,
       });
 
+      executionResult.files?.forEach((file) => {
+        const url = URL.createObjectURL(file.data!);
+        file.previewUrl = url;
+      });
+
       // 先显示结果，后上传文件，避免用户等待时间过长
       await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
 
@@ -104,8 +109,7 @@ export const pythonSlice: StateCreator<
       if (!fileItem.data) return;
 
       try {
-        const blob = new Blob([new Uint8Array(fileItem.data)]);
-        const file = new File([blob], fileItem.filename);
+        const file = new File([fileItem.data], fileItem.filename);
 
         const uploadResult = await useFileStore.getState().uploadWithProgress({
           file,
@@ -117,6 +121,7 @@ export const pythonSlice: StateCreator<
             if (draft[index]) {
               draft[index].fileId = uploadResult.id;
               draft[index].data = undefined;
+              draft[index].previewUrl = undefined;
             }
           });
         }

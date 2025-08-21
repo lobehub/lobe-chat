@@ -52,13 +52,6 @@ const useFileStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-// 图片显示组件的属性接口
-interface ImageDisplayProps {
-  data?: Uint8Array;
-  fileData?: { url: string };
-  filename: string;
-}
-
 // 文件显示组件的属性接口
 interface FileDisplayProps {
   filename: string;
@@ -67,18 +60,18 @@ interface FileDisplayProps {
 
 interface PythonFileItemProps extends PythonFileItem {
   isImage?: boolean;
-  messageId: string;
 }
 
 // 图片显示子组件
-const ImageDisplay = memo<ImageDisplayProps>(({ filename, data, fileData }) => {
+const ImageDisplay = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
+  const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchPythonFileItem]);
+  const { data: fileData } = useFetchPythonFileItem(fileId);
   const { styles } = useImageStyles();
 
-  let imageUrl = fileData?.url;
-  if (!imageUrl && data) {
-    const blob = new Blob([new Uint8Array(data)]);
-    imageUrl = URL.createObjectURL(blob);
-  }
+  console.log('fileData', fileData);
+  console.log('previewUrl', previewUrl);
+
+  let imageUrl = fileData?.url ?? previewUrl;
 
   if (imageUrl) {
     return (
@@ -106,41 +99,36 @@ const FileDisplay = memo<FileDisplayProps>(({ filename, onDownload }) => {
   );
 });
 
-const PythonFileItemComponent = memo<PythonFileItemProps>(({ fileId, filename, data, isImage }) => {
-  const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchPythonFileItem]);
+const PythonFileItemComponent = memo<PythonFileItemProps>(
+  ({ fileId, filename, previewUrl, isImage }) => {
+    const handleDownload = async (e: React.MouseEvent) => {
+      e.stopPropagation();
 
-  const { data: fileData } = useFetchPythonFileItem(fileId);
-
-  const handleDownload = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (fileId) {
-      try {
-        const { url, name } = await fileService.getFile(fileId);
+      if (fileId) {
+        try {
+          const { url, name } = await fileService.getFile(fileId);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = name || filename;
+          link.click();
+        } catch (error) {
+          console.error('Failed to download file:', error);
+        }
+      } else if (previewUrl) {
+        // 如果有原始数据，创建 blob URL 下载
         const link = document.createElement('a');
-        link.href = url;
-        link.download = name || filename;
+        link.href = previewUrl;
+        link.download = filename;
         link.click();
-      } catch (error) {
-        console.error('Failed to download file:', error);
       }
-    } else if (data) {
-      // 如果有原始数据，创建 blob URL 下载
-      const blob = new Blob([new Uint8Array(data)]);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(url);
+    };
+
+    if (isImage) {
+      return <ImageDisplay fileId={fileId} filename={filename} previewUrl={previewUrl} />;
     }
-  };
 
-  if (isImage) {
-    return <ImageDisplay data={data} fileData={fileData} filename={filename} />;
-  }
-
-  return <FileDisplay filename={filename} onDownload={handleDownload} />;
-});
+    return <FileDisplay filename={filename} onDownload={handleDownload} />;
+  },
+);
 
 export default PythonFileItemComponent;

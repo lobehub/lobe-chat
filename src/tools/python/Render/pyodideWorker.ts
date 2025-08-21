@@ -7,7 +7,7 @@ declare global {
   var images: Uint8Array[];
 }
 
-export interface PythonExecutionResult {
+interface PythonExecutionResult {
   error?: string;
   files?: PythonFileItem[];
   output?: Output[];
@@ -15,9 +15,8 @@ export interface PythonExecutionResult {
   success: boolean;
 }
 
-export interface PythonFileItem {
-  data?: Uint8Array;
-  fileId?: string;
+interface PythonFileItem {
+  data: Blob;
   filename: string;
 }
 
@@ -117,9 +116,9 @@ export async function executePythonCode(
         // pyodide.FS 的类型定义不完整
         const fs = pyodide.FS as any;
         const buffer = fs.readFile(`/mnt/data/${file}`, { encoding: 'binary' });
-
+        const blob = new Blob([buffer]);
         files.push({
-          data: buffer,
+          data: blob,
           filename: file,
         });
       });

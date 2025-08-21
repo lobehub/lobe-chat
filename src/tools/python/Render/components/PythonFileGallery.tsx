@@ -9,21 +9,23 @@ import PythonFileItemComponent from './PythonFileItem';
 
 interface PythonFileGalleryProps {
   files: PythonFileItem[];
-  messageId: string;
 }
 
-const PythonFileGallery = memo<PythonFileGalleryProps>(({ files, messageId }) => {
+const PythonFileGallery = memo<PythonFileGalleryProps>(({ files }) => {
   if (!files || files.length === 0) {
     return null;
   }
 
   // 分离图片和其他文件
-  const imageFiles = files.filter((file) =>
-    /\.(png|jpg|jpeg|gif|bmp|webp|svg)$/i.test(file.filename),
-  );
-  const otherFiles = files.filter(
-    (file) => !/\.(png|jpg|jpeg|gif|bmp|webp|svg)$/i.test(file.filename),
-  );
+  const imageFiles = [];
+  const otherFiles = [];
+  for (const file of files) {
+    if (/\.(png|jpg|jpeg|gif|bmp|webp|svg)$/i.test(file.filename)) {
+      imageFiles.push(file);
+    } else {
+      otherFiles.push(file);
+    }
+  }
 
   return (
     <Flexbox gap={16}>
@@ -33,11 +35,11 @@ const PythonFileGallery = memo<PythonFileGalleryProps>(({ files, messageId }) =>
           {imageFiles.length === 1 ? (
             // 单张图片时占据更大空间
             <Flexbox style={{ maxWidth: 400 }}>
-              <PythonFileItemComponent isImage {...imageFiles[0]} messageId={messageId} />
+              <PythonFileItemComponent isImage {...imageFiles[0]} />
             </Flexbox>
           ) : (
             <GalleyGrid
-              items={imageFiles.map((file) => ({ ...file, messageId }))}
+              items={imageFiles.map((file) => ({ ...file }))}
               renderItem={(props) => <PythonFileItemComponent isImage {...props} />}
             />
           )}
@@ -48,11 +50,7 @@ const PythonFileGallery = memo<PythonFileGalleryProps>(({ files, messageId }) =>
       {otherFiles.length > 0 && (
         <Flexbox gap={8} horizontal wrap="wrap">
           {otherFiles.map((file, index) => (
-            <PythonFileItemComponent
-              key={`${file.filename}-${index}`}
-              {...file}
-              messageId={messageId}
-            />
+            <PythonFileItemComponent key={`${file.filename}-${index}`} {...file} />
           ))}
         </Flexbox>
       )}
