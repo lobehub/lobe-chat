@@ -4,7 +4,8 @@
   "private": true,
   "main": "./src/index.ts",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "@lobechat/const": "workspace:*",

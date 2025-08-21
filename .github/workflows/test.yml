@@ -8,15 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - package: file-loaders
-            has-test-script: true
-#          - package: prompts
-#            has-test-script: true
-          - package: model-runtime
-            has-test-script: true
-          - package: web-crawler
-            has-test-script: true
+        package: [file-loaders, prompts, model-runtime, web-crawler]
 
     name: Test ${{ matrix.package }} package
 
@@ -38,23 +30,15 @@ jobs:
       - name: Install deps
         run: bun i
 
-      # For packages with test script
-      - name: Test ${{ matrix.package }} package (with script)
-        if: matrix.has-test-script == true
-        run: pnpm --filter @lobechat/${{ matrix.package }} test
+      - name: Test ${{ matrix.package }} package with coverage
+        run: pnpm --filter @lobechat/${{ matrix.package }} test:coverage
 
-      # For packages without test script, use direct vitest
-      - name: Test ${{ matrix.package }} package (direct)
-        if: matrix.has-test-script == false
-        run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*'
-
-      - name: Upload prompts coverage to Codecov
-        if: matrix.package == 'prompts'
+      - name: Upload ${{ matrix.package }} coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          flags: prompts-package
+          files: ./packages/${{ matrix.package }}/coverage/lcov.info
+          flags: packages/${{ matrix.package }}
 
   # App and server tests
   test-app:
