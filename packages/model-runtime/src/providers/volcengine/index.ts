@@ -5,9 +5,6 @@ import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactor
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 import volcengineAllModels from 'model-bank/volcengine';
 
-import { ModelProvider } from '../types';
-import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
-import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { createVolcengineImage } from './createImage';
 
 const THINKING_MODELS = [
