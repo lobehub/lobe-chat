@@ -210,6 +210,13 @@
       "when": 1753201379817,
       "tag": "0029_add_apikey_manage",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1755757070745,
+      "tag": "0030_petite_spot",
+      "breakpoints": true
     }
   ],
   "version": "6"

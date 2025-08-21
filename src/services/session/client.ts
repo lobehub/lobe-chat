@@ -113,7 +113,21 @@ export class ClientService extends BaseClientService implements ISessionService 
     // inbox 不允许修改 meta
     if (activeId === INBOX_SESSION_ID) return;
 
-    return this.sessionModel.update(activeId, meta);
+    // meta 数据存储在 agents 表中，需要更新对应的 agent
+    const session = await this.sessionModel.findByIdOrSlug(activeId);
+    if (!session?.agent) return;
+
+    // 提取需要存储到 agent 表的字段
+    const agentMeta = {
+      avatar: meta.avatar,
+      backgroundColor: meta.backgroundColor,
+      description: meta.description,
+      marketIdentifier: meta.marketIdentifier,
+      tags: meta.tags,
+      title: meta.title,
+    };
+
+    return this.sessionModel.updateConfig(activeId, agentMeta);
   };
 
   updateSessionChatConfig: ISessionService['updateSessionChatConfig'] = async (
