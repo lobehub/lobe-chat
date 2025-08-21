@@ -558,6 +558,28 @@ section_setup_development_env() {
         return 1
     fi
     echo "✔️  .env copied to project root: $DEST_ENV"
+
+    # Ensure S3 variables reference MinIO settings for development
+    if grep -q '^S3_BUCKET=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" 's#^S3_BUCKET=.*#S3_BUCKET=${MINIO_LOBE_BUCKET}#' "$DEST_ENV"
+    else
+        echo 'S3_BUCKET=${MINIO_LOBE_BUCKET}' >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_ACCESS_KEY=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" 's#^S3_ACCESS_KEY=.*#S3_ACCESS_KEY=${MINIO_ROOT_USER}#' "$DEST_ENV"
+    else
+        echo 'S3_ACCESS_KEY=${MINIO_ROOT_USER}' >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_ACCESS_KEY_ID=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" 's#^S3_ACCESS_KEY_ID=.*#S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}#' "$DEST_ENV"
+    else
+        echo 'S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}' >> "$DEST_ENV"
+    fi
+    if grep -q '^S3_SECRET_ACCESS_KEY=' "$DEST_ENV"; then
+        sed "${SED_INPLACE_ARGS[@]}" 's#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}#' "$DEST_ENV"
+    else
+        echo 'S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}' >> "$DEST_ENV"
+    fi
 }
 
 section_check_dev_data_dirs() {
