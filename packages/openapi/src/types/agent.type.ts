@@ -1,7 +1,7 @@
+import { LobeAgentChatConfig } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AgentItem } from '@/database/schemas';
-import { LobeAgentChatConfig } from '@lobechat/types';
 
 /**
  * 模型参数接口
@@ -118,22 +118,9 @@ export interface BatchOperationResult {
 }
 
 /**
- * Agent 列表项类型，包含关联的会话信息
- */
-export interface AgentListItem extends AgentItem {
-  agentsToSessions?: Array<{
-    session: {
-      id: string;
-      title: string | null;
-      updatedAt: Date;
-    };
-  }>;
-}
-
-/**
  * Agent 列表响应类型
  */
-export type AgentListResponse = AgentListItem[];
+export type AgentListResponse = AgentItem[];
 
 /**
  * Agent 详情响应类型，包含完整的配置信息

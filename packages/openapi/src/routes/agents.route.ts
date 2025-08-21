@@ -1,8 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { RBAC_PERMISSIONS } from '@/const/rbac';
-import { getScopePermissions } from '@/utils/rbac';
+import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 
 import { AgentController } from '../controllers/agent.controller';
 import { requireAuth } from '../middleware/auth';
@@ -27,7 +26,7 @@ AgentRoutes.get(
   requireAuth,
   requireAnyPermission(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE']),
-    '您没有权限查看 Agent 列表',
+    'You do not have permission to view the Agent list',
   ),
   async (c) => {
     const controller = new AgentController();
@@ -43,7 +42,10 @@ AgentRoutes.get(
 AgentRoutes.post(
   '/',
   requireAuth,
-  requireAnyPermission([RBAC_PERMISSIONS.AGENT_CREATE_ALL], '您没有权限创建 Agent'),
+  requireAnyPermission(
+    getAllScopePermissions('AGENT_CREATE'),
+    'You do not have permission to create Agent',
+  ),
   zValidator('json', CreateAgentRequestSchema),
   async (c) => {
     const controller = new AgentController();
@@ -59,7 +61,10 @@ AgentRoutes.post(
 AgentRoutes.put(
   '/:id',
   requireAuth,
-  requireAnyPermission([RBAC_PERMISSIONS.AGENT_UPDATE_ALL], '您没有权限更新 Agent'),
+  requireAnyPermission(
+    getAllScopePermissions('AGENT_UPDATE'),
+    'You do not have permission to update Agent',
+  ),
   zValidator('param', AgentIdParamSchema),
   zValidator('json', UpdateAgentRequestSchema),
   async (c) => {
@@ -76,7 +81,10 @@ AgentRoutes.put(
 AgentRoutes.delete(
   '/:id',
   requireAuth,
-  requireAnyPermission([RBAC_PERMISSIONS.AGENT_DELETE_ALL], '您没有权限删除 Agent'),
+  requireAnyPermission(
+    getAllScopePermissions('AGENT_DELETE'),
+    'You do not have permission to delete Agent',
+  ),
   zValidator('param', AgentIdParamSchema),
   async (c) => {
     const controller = new AgentController();
@@ -93,8 +101,8 @@ AgentRoutes.get(
   '/:id',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看 Agent 详情',
+    getAllScopePermissions('AGENT_READ'),
+    'You do not have permission to view the Agent details',
   ),
   zValidator('param', AgentIdParamSchema),
   async (c) => {
@@ -112,8 +120,12 @@ AgentRoutes.get(
   '/session/:sessionId',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看此会话的 Agent 详情',
+    getAllScopePermissions('AGENT_READ'),
+    'You do not have permission to view the Agent details',
+  ),
+  requireAnyPermission(
+    getAllScopePermissions('SESSION_READ'),
+    'You do not have permission to view the Agent details',
   ),
   zValidator('param', SessionIdParamSchema),
   async (c) => {
