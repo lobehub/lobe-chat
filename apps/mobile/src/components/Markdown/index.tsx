@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Image, Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
-import { Markdown } from 'react-native-remark';
+import { Markdown } from './Remark';
 
 import Highlighter from '@/components/Highlighter';
 import { useThemeToken } from '@/theme';

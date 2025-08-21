@@ -1,14 +1,9 @@
 import React from 'react';
 
-import { AdvancedDemo, BasicDemo, MathDemo, StylingDemo } from '@/components/Markdown/demos';
+import { BasicDemo } from '@/components/Markdown/demos';
 import ComponentPlayground, { DemoItem } from '../Playground';
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <AdvancedDemo />, key: 'advanced', title: '高级特性' },
-  { component: <MathDemo />, key: 'math', title: '数学公式' },
-  { component: <StylingDemo />, key: 'styling', title: '样式配置' },
-];
+const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 
 const readmeContent = `# Markdown组件
 
