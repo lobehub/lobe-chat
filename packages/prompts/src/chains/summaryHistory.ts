@@ -1,7 +1,7 @@
-import { chatHistoryPrompts } from '@lobechat/prompts';
-import { ChatMessage } from '@lobechat/types';
-
+import { ChatMessage } from '@/types/index';
 import { ChatStreamPayload } from '@/types/openai/chat';
+
+import { chatHistoryPrompts } from '../index';
 
 export const chainSummaryHistory = (messages: ChatMessage[]): Partial<ChatStreamPayload> => ({
   messages: [

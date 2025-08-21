@@ -1,3 +1,4 @@
+export * from './chains';
 export * from './chatMessages';
 export * from './files';
 export * from './knowledgeBaseQA';
