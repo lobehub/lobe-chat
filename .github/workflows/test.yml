@@ -12,7 +12,7 @@ jobs:
           - package: file-loaders
             has-test-script: true
           - package: prompts
-            has-test-script: false
+            has-test-script: true
           - package: model-runtime
             has-test-script: true
           - package: web-crawler
