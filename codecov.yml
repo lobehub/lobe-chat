@@ -1,11 +1,39 @@
+component_management:
+  individual_components:
+    # App architecture layers
+    - component_id: app_store
+      name: "Store Layer"
+      paths:
+        - src/store/**
+    - component_id: app_services
+      name: "Services Layer"
+      paths:
+        - src/services/**
+    - component_id: app_server
+      name: "Server Layer"
+      paths:
+        - src/server/**
+    - component_id: app_libs
+      name: "Libraries Layer"
+      paths:
+        - src/libs/**
+    - component_id: app_utils
+      name: "Utils Layer"
+      paths:
+        - src/utils/**
+
 coverage:
   status:
     project:
       default: off
-      server:
+      database:
         flags:
-          - server
+          - database
       app:
         flags:
           - app
     patch: off
+
+
+comment:
+  layout: "header, diff, flags, components"  # show component info in the PR comment

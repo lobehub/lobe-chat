@@ -121,7 +121,7 @@ jobs:
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
-      - name: Upload Server coverage to Codecov
+      - name: Upload Database coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
