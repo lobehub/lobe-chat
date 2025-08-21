@@ -1,7 +1,21 @@
 [
   {
     "children": {
-      "improvements": ["Move chain into @lobechat/prompts."]
+      "improvements": [
+        "Move chain into @lobechat/prompts."
+      ],
+      "features": [
+        "Add development Docker Compose setup with PostgreSQL, MinIO, and SearxNG services."
+      ]
+    },
+    "date": "2025-08-21",
+    "version": "1.115.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Move chain into @lobechat/prompts."
+      ]
     },
     "date": "2025-08-21",
     "version": "1.114.1"
