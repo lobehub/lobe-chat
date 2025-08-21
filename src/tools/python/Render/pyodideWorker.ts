@@ -56,21 +56,25 @@ async function initializePyodide(): Promise<PyodideAPI> {
 
 export async function executePythonCode(
   code: string,
-  packages: string[],
+  packages?: string[],
 ): Promise<PythonExecutionResult> {
   try {
     const pyodide = await initializePyodide();
 
     // 加载代码中需要的包
-    await pyodide.loadPackage('micropip');
-    const micropip = pyodide.pyimport('micropip');
-    await micropip.install(packages, {
-      index_urls: [
-        pythonEnv.NEXT_PUBLIC_PYODIDE_PIP_INDEX_URL || 'https://pypi.org/pypi/{package_name}/json',
-      ],
-    });
+    const loadedPackages = [];
+    if (packages?.length) {
+      await pyodide.loadPackage('micropip');
+      const micropip = pyodide.pyimport('micropip');
+      micropip.set_index_urls([pythonEnv.NEXT_PUBLIC_PYODIDE_PIP_INDEX_URL || 'PYPI', 'PYPI']);
+      await micropip.install(packages);
+      loadedPackages.push(...packages);
+    } else {
+      const p = await pyodide.loadPackagesFromImports(code);
+      loadedPackages.push(...p.map((p) => p.name));
+    }
 
-    if (packages.includes('matplotlib')) {
+    if (loadedPackages.includes('matplotlib')) {
       await pyodide.runPythonAsync(PATCH_MATPLOTLIB);
     }
 

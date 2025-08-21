@@ -64,11 +64,13 @@ export const pythonSlice: StateCreator<
           reject(error);
         });
 
+        const packages = params.packages?.filter((pkg) => pkg.trim() !== '') || [];
+
         // 发送代码给 Worker 执行
         worker.postMessage({
           code: params.code,
           id: id,
-          packages: params.packages,
+          packages,
         });
       });
 
