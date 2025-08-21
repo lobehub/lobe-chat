@@ -358,7 +358,7 @@ export const processMultiProviderModelList = async (
   let providerLocalConfig: any[] | null = null;
   if (providerid) {
     try {
-      const moduleImport = await import(`@/config/aiModels/${providerid}`);
+      const moduleImport = await import(`@/config/aiModels/${providerid}.ts`);
       providerLocalConfig = moduleImport.default;
     } catch {
       // 如果配置文件不存在或导入失败，保持为 null
