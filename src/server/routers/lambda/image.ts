@@ -133,6 +133,9 @@ export const imageRouter = router({
     // 防御性检测：确保没有完整URL进入数据库
     validateNoUrlsInConfig(configForDatabase, 'configForDatabase');
 
+    // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
+    const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
+
     // 步骤 1: 在事务中原子性地创建所有数据库记录
     const { batch: createdBatch, generationsWithTasks } = await serverDB.transaction(async (tx) => {
       log('Starting database transaction for image generation');
@@ -152,18 +155,21 @@ export const imageRouter = router({
       const [batch] = await tx.insert(generationBatches).values(newBatch).returning();
       log('Generation batch created successfully: %s', batch.id);
 
-      // 2. 创建 4 个 generation（一期固定生成 4 张）
+      // 2. 创建指定数量的 generation
       const seeds =
         'seed' in params
-          ? generateUniqueSeeds(imageNum)
-          : Array.from({ length: imageNum }, () => null);
-      const newGenerations: NewGeneration[] = Array.from({ length: imageNum }, (_, index) => {
-        return {
-          generationBatchId: batch.id,
-          seed: seeds[index],
-          userId,
-        };
-      });
+          ? generateUniqueSeeds(effectiveImageNum)
+          : Array.from({ length: effectiveImageNum }, () => null);
+      const newGenerations: NewGeneration[] = Array.from(
+        { length: effectiveImageNum },
+        (_, index) => {
+          return {
+            generationBatchId: batch.id,
+            seed: seeds[index],
+            userId,
+          };
+        },
+      );
 
       log('Creating %d generations for batch: %s', newGenerations.length, batch.id);
       const createdGenerations = await tx.insert(generations).values(newGenerations).returning();
