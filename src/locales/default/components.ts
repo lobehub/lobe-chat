@@ -133,6 +133,10 @@ export default {
     progress: {
       uploadingWithCount: '{{completed}}/{{total}} 已上传',
     },
+    validation: {
+      fileSizeExceeded: 'File size exceeded limit',
+      imageCountExceeded: 'Image count exceeded limit',
+    },
   },
   OllamaSetupGuide: {
     action: {

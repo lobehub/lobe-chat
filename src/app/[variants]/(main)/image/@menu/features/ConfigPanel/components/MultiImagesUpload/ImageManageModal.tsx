@@ -7,30 +7,33 @@ import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useUploadFilesValidation } from '../../hooks/useUploadFilesValidation';
+
 // ======== Types ======== //
 
 /**
- * 统一的图片项数据结构
- * - url: 现有图片的远程URL
- * - file: 新选择的文件，需要上传
- * - previewUrl: 本地文件的预览URL（blob URL）
- * 有url的是现有图片，有file的是待上传文件
+ * Unified image item data structure
+ * - url: Remote URL of existing image
+ * - file: Newly selected file that needs to be uploaded
+ * - previewUrl: Preview URL for local file (blob URL)
+ * Items with url are existing images, items with file are files to be uploaded
  */
 export interface ImageItem {
-  // 现有图片的URL
+  // URL of existing image
   file?: File;
   id: string;
-  // 新选择的文件
+  // Newly selected file
   previewUrl?: string;
-  url?: string; // 本地文件的预览URL，仅在file存在时使用
+  url?: string; // Preview URL for local file, only used when file exists
 }
 
 interface ImageManageModalProps {
   images: string[];
-  // 现有图片URL数组
+  maxCount?: number;
+  // Array of existing image URLs
   onClose: () => void;
   onComplete: (imageItems: ImageItem[]) => void;
-  open: boolean; // 统一的完成回调
+  open: boolean; // Unified completion callback
 }
 
 // ======== Utils ======== //
@@ -194,19 +197,20 @@ const useStyles = createStyles(({ css, token }) => ({
 // ======== Main Component ======== //
 
 const ImageManageModal: FC<ImageManageModalProps> = memo(
-  ({ open, images, onClose, onComplete }) => {
+  ({ open, images, maxCount, onClose, onComplete }) => {
     const { styles } = useStyles();
     const { t } = useTranslation('components');
     const inputRef = useRef<HTMLInputElement>(null);
+    const { validateFiles } = useUploadFilesValidation(maxCount);
 
-    // 使用统一的数据结构管理所有图片
+    // Use unified data structure to manage all images
     const [imageItems, setImageItems] = useState<ImageItem[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-    // Modal 打开时初始化状态
+    // Initialize state when modal opens
     useEffect(() => {
       if (open) {
-        // 将现有URL转换为ImageItem格式
+        // Convert existing URLs to ImageItem format
         const initialItems: ImageItem[] = images.map((url) => ({
           id: generateId(),
           url,
@@ -253,7 +257,7 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
       const newItems = imageItems.filter((_, i) => i !== index);
       setImageItems(newItems);
 
-      // 调整选中索引
+      // Adjust selected index
       if (selectedIndex >= newItems.length) {
         setSelectedIndex(Math.max(0, newItems.length - 1));
       }
@@ -272,18 +276,23 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
       const files = event.target.files;
       if (!files || files.length === 0) return;
 
-      // 创建新的ImageItem，为每个文件生成一次性的预览URL
+      // Validate files, pass current image count
+      if (!validateFiles(Array.from(files), imageItems.length)) {
+        return;
+      }
+
+      // Create new ImageItem, generate one-time preview URL for each file
       const newItems: ImageItem[] = Array.from(files).map((file) => ({
         file,
         id: generateId(),
-        previewUrl: URL.createObjectURL(file), // 只创建一次
+        previewUrl: URL.createObjectURL(file), // Create only once
       }));
 
       setImageItems((prev) => [...prev, ...newItems]);
     };
 
     const handleComplete = () => {
-      // 直接传递当前完整状态给父组件处理
+      // Directly pass current complete state to parent component
       onComplete(imageItems);
       onClose();
     };
@@ -397,7 +406,12 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
 
         {/* Footer */}
         <div className={styles.footer}>
-          <Button icon={<Upload size={16} />} onClick={handleUpload} type="default">
+          <Button
+            disabled={maxCount ? imageItems.length >= maxCount : false}
+            icon={<Upload size={16} />}
+            onClick={handleUpload}
+            type="default"
+          >
             {t('MultiImagesUpload.modal.upload')}
           </Button>
 
