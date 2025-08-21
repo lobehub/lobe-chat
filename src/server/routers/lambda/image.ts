@@ -139,6 +139,9 @@ export const imageRouter = router({
     // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
     const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
 
+    // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
+    const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
+
     // 步骤 1: 在事务中原子性地创建所有数据库记录
     const { batch: createdBatch, generationsWithTasks } = await serverDB.transaction(async (tx) => {
       log('Starting database transaction for image generation');
