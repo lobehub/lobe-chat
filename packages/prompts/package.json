@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
   "dependencies": {
+    "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*"
   }
 }

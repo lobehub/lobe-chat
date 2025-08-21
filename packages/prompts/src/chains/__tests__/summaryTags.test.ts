@@ -1,25 +1,15 @@
 import { Mock, describe, expect, it } from 'vitest';
 
-import { globalHelpers } from '@/store/global/helpers';
-
 import { chainSummaryTags } from '../summaryTags';
-
-// Mock the getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
-  globalHelpers: {
-    getCurrentLanguage: vi.fn(),
-  },
-}));
 
 describe('chainSummaryTags', () => {
   it('should create a payload with system and user messages including the provided content and current language', () => {
     // Arrange
     const content = '这是一段测试文本';
     const currentLanguage = 'en-US';
-    (globalHelpers.getCurrentLanguage as Mock).mockReturnValue(currentLanguage);
 
     // Act
-    const result = chainSummaryTags(content);
+    const result = chainSummaryTags(content, currentLanguage);
 
     // Assert
     expect(result).toEqual({
@@ -47,8 +37,5 @@ describe('chainSummaryTags', () => {
         { content: `输入: {${content}} [${currentLanguage}]`, role: 'user' },
       ],
     });
-
-    // Verify that the getCurrentLanguage function was called
-    expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
   });
 });

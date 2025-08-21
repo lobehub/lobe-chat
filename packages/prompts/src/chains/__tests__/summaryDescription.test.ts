@@ -1,15 +1,6 @@
-import { Mock, describe, expect, it, vi } from 'vitest';
-
-import { globalHelpers } from '@/store/global/helpers';
+import { describe, expect, it } from 'vitest';
 
 import { chainSummaryDescription } from '../summaryDescription';
-
-// Mock the globalHelpers.getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
-  globalHelpers: {
-    getCurrentLanguage: vi.fn(() => 'en-US'),
-  },
-}));
 
 describe('chainSummaryDescription', () => {
   it('should return a payload with the correct structure and content based on the input', () => {
@@ -17,7 +8,7 @@ describe('chainSummaryDescription', () => {
     const expectedOutput = {
       messages: [
         {
-          content: `你是一名擅长技能总结的助理，你需要将用户的输入的内容总结为一个角色技能简介，不超过 20 个字。内容需要确保信息清晰、逻辑清晰，并有效地传达角色的技能和经验，需要并翻译为目标语言:${globalHelpers.getCurrentLanguage()}。格式要求如下：\n输入: {文本作为JSON引用字符串} [locale]\n输出: {简介}`,
+          content: `你是一名擅长技能总结的助理，你需要将用户的输入的内容总结为一个角色技能简介，不超过 20 个字。内容需要确保信息清晰、逻辑清晰，并有效地传达角色的技能和经验，需要并翻译为目标语言:en-US。格式要求如下：\n输入: {文本作为JSON引用字符串} [locale]\n输出: {简介}`,
           role: 'system',
         },
         {
@@ -64,17 +55,14 @@ nav: API
       temperature: 0,
     };
 
-    const result = chainSummaryDescription(inputContent);
+    const result = chainSummaryDescription(inputContent, 'en-US');
 
     expect(result).toEqual(expectedOutput);
   });
 
   it('should handle different languages', () => {
-    // Override the getCurrentLanguage mock to return a different language
-    (globalHelpers.getCurrentLanguage as Mock).mockReturnValueOnce('zh-CN');
-
     const inputContent = '你是一个专业的JavaScript开发者';
-    const result = chainSummaryDescription(inputContent);
+    const result = chainSummaryDescription(inputContent, 'zh-CN');
 
     // Verify that the language in the output matches the mocked language
     expect(result.messages![0].content).toContain('翻译为目标语言:zh-CN');
