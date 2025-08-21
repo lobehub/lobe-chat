@@ -3,7 +3,78 @@ name: Test CI
 on: [push, pull_request]
 
 jobs:
-  test:
+  # Package tests with custom config
+  test-packages-with-config:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - package: file-loaders
+            config: packages/file-loaders/vitest.config.ts
+    
+    name: Test ${{ matrix.package }} package
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test ${{ matrix.package }} package
+        run: npx vitest run --config ${{ matrix.config }} 'packages/${{ matrix.package }}/**/*.test.*'
+
+  # Package tests using default config
+  test-packages-default:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [prompts, model-runtime, web-crawler]
+    
+    name: Test ${{ matrix.package }} package
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test ${{ matrix.package }} package
+        run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*'
+        
+      - name: Test ${{ matrix.package }} with coverage
+        if: matrix.package == 'prompts'
+        run: npx vitest run --config vitest.config.ts 'packages/${{ matrix.package }}/**/*.test.*' --coverage
+        
+      - name: Upload ${{ matrix.package }} coverage to Codecov
+        if: matrix.package == 'prompts'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: ${{ matrix.package }}-package
+
+  # App and server tests
+  test-app:
     runs-on: ubuntu-latest
 
     services:
@@ -13,8 +84,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
-
-
         ports:
           - 5432:5432
 
