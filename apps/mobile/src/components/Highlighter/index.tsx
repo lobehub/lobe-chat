@@ -1,5 +1,9 @@
-import React from 'react';
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import { Check, Copy } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
+
+import { ICON_SIZE_TINY } from '@/const/common';
 import { useTheme } from '@/theme';
 
 import FullFeatured from './FullFeatured';
@@ -30,6 +34,10 @@ interface HighlighterProps {
   fileName?: string;
   fullFeatured?: boolean;
   lang?: string;
+  /**
+   * Callback function called when code is copied.
+   */
+  onCopy?: (code: string) => void;
   showLanguage?: boolean;
   style?: StyleProp<ViewStyle>;
   type?: 'default' | 'compact';
@@ -46,14 +54,27 @@ const Highlighter: React.FC<HighlighterProps> = ({
   type = 'compact',
   allowChangeLanguage = false,
   style,
+  onCopy,
 }) => {
   const { theme } = useTheme();
   const { styles, token } = useStyles();
+  const [copied, setCopied] = useState(false);
   const language = lang.toLowerCase();
   const matchedLanguage = supportedLanguageIds.includes(language) ? language : FALLBACK_LANG;
 
   // Always call hooks in the same order
   const { tokens, error } = useTokenize(code, matchedLanguage, theme.isDark ? 'dark' : 'light');
+
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      onCopy?.(code);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
+  };
 
   if (fullFeatured) {
     return (
@@ -64,6 +85,7 @@ const Highlighter: React.FC<HighlighterProps> = ({
         defalutExpand={defalutExpand}
         fileName={fileName}
         lang={matchedLanguage}
+        onCopy={onCopy}
         showLanguage={showLanguage}
         style={style}
         type={type}
@@ -73,6 +95,15 @@ const Highlighter: React.FC<HighlighterProps> = ({
 
   return (
     <View style={[styles.container, style]}>
+      {copyable && (
+        <Pressable onPress={handleCopy} style={styles.simpleCopyButton}>
+          {copied ? (
+            <Check color={token.colorSuccess} size={ICON_SIZE_TINY} />
+          ) : (
+            <Copy color={token.colorText} size={ICON_SIZE_TINY} />
+          )}
+        </Pressable>
+      )}
       {error ? (
         <Text style={{ color: token.colorText, margin: 8 }}>{code}</Text>
       ) : (
