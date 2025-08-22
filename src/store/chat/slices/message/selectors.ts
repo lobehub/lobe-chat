@@ -252,6 +252,9 @@ const getThreadMessageIDs = (agentId: string) => (s: ChatStoreState): string[] =
   return getThreadMessages(agentId)(s).map(message => message.id);
 };
 
+const isSupervisorLoading = (groupId: string) => (s: ChatStoreState) =>
+  s.supervisorDecisionLoading.includes(groupId);
+
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
@@ -279,6 +282,7 @@ export const chatSelectors = {
   isMessageLoading,
   isPluginApiInvoking,
   isSendButtonDisabledByMessage,
+  isSupervisorLoading,
   isToolCallStreaming,
   latestMessage,
   mainAIChats,

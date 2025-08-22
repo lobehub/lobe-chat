@@ -1,27 +1,28 @@
 'use client';
 
-import { ActionIcon, Avatar, SortableList } from '@lobehub/ui';
+import { ActionIcon, Avatar, SortableList, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageSquare, UserMinus, UserPlus } from 'lucide-react';
+import { LoaderCircle, MessageSquare, UserMinus, UserPlus } from 'lucide-react';
 import { lazy, memo, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import SidebarHeader from '@/components/SidebarHeader';
+import { DEFAULT_AVATAR } from '@/const/meta';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-
-import { MemberSelectionModal } from '@/components/MemberSelectionModal';
-import AgentSettings from '../../../features/AgentSettings';
-
-import TopicListContent from '../TopicListContent';
 import { LobeGroupSession } from '@/types/session';
+
+import AgentSettings from '../../../features/AgentSettings';
 import Header from '../Header';
-import { DEFAULT_AVATAR } from '@/const/meta';
-import { useTranslation } from 'react-i18next';
+import TopicListContent from '../TopicListContent';
 
 const GroupChatThread = lazy(() => import('./thread'));
 
@@ -89,6 +90,8 @@ const GroupChatSidebar = memo(() => {
   const activeThreadAgentId = useChatGroupStore((s) => s.activeThreadAgentId);
   const toggleThread = useChatGroupStore((s) => s.toggleThread);
 
+  const isSupervisorLoading = useChatStore(chatSelectors.isSupervisorLoading(activeGroupId || ''));
+
   const currentUser = useUserStore((s) => ({
     avatar: userProfileSelectors.userAvatar(s),
     name: userProfileSelectors.nickName(s),
@@ -120,13 +123,13 @@ const GroupChatSidebar = memo(() => {
     if (!activeGroupId) return;
 
     // Start loading state
-    setRemovingMemberIds(prev => [...prev, memberId]);
+    setRemovingMemberIds((prev) => [...prev, memberId]);
 
     try {
       await removeAgentFromGroup(activeGroupId, memberId);
     } finally {
       // Clear loading state
-      setRemovingMemberIds(prev => prev.filter(id => id !== memberId));
+      setRemovingMemberIds((prev) => prev.filter((id) => id !== memberId));
     }
   };
 
@@ -185,6 +188,33 @@ const GroupChatSidebar = memo(() => {
               />
 
               <Flexbox className={styles.content} flex={0.6} gap={0}>
+                {/* Orchestrator - Show supervisor loading state */}
+                <div className={styles.memberItem} style={{ marginBottom: 8 }}>
+                  <Flexbox align={'center'} gap={8} horizontal>
+                    <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
+                      <SortableList.DragHandle />
+                    </div>
+                    <Avatar avatar={"🎙️"} size={24} />
+                    <Flexbox flex={1}>
+                      <div
+                        style={{
+                          fontSize: '14px',
+                          fontWeight: 500,
+                        }}
+                      >
+                        Orchestrator
+                      </div>
+                    </Flexbox>
+                    {!isSupervisorLoading && (
+                      <Icon
+                        icon={LoaderCircle}
+                        size={14}
+                        spin
+                      />
+                    )}
+                  </Flexbox>
+                </div>
+
                 {/* Current User - Always shown first */}
                 <div className={styles.memberItem} style={{ marginBottom: 8 }}>
                   <Flexbox align={'center'} gap={8} horizontal>
@@ -220,10 +250,10 @@ const GroupChatSidebar = memo(() => {
                     }}
                     renderItem={(item: any) => (
                       <SortableList.Item className={styles.memberItem} id={item.id}>
-                        <Flexbox 
-                          align={'center'} 
-                          gap={8} 
-                          horizontal 
+                        <Flexbox
+                          align={'center'}
+                          gap={8}
+                          horizontal
                           justify={'space-between'}
                           onMouseEnter={() => setHoveredMemberId(item.id)}
                           onMouseLeave={() => setHoveredMemberId(null)}
@@ -237,7 +267,11 @@ const GroupChatSidebar = memo(() => {
                             style={{ cursor: 'pointer' }}
                           >
                             <SortableList.DragHandle />
-                            <Avatar avatar={item.avatar || DEFAULT_AVATAR} background={item.backgroundColor!} size={24} />
+                            <Avatar
+                              avatar={item.avatar || DEFAULT_AVATAR}
+                              background={item.backgroundColor!}
+                              size={24}
+                            />
                             <Flexbox flex={1}>
                               <div
                                 style={{
