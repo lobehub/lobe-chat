@@ -28,6 +28,9 @@ const leftActions = [
 // Group Chat Actions
 const leftActionsForGroup = ['stt', 'mention', 'fileUpload', 'knowledgeBase'] as ActionKeys[];
 
+// Group Chat Actions for Thread (without mention)
+const leftActionsForGroupThread = ['stt', 'fileUpload', 'knowledgeBase'] as ActionKeys[];
+
 const rightActions = ['clear'] as ActionKeys[];
 
 interface DesktopProps {
@@ -52,7 +55,13 @@ const Desktop = memo<DesktopProps>(({ targetMemberId }) => {
     <DesktopChatInput
       inThread={!!targetMemberId}
       inputHeight={inputHeight}
-      leftActions={isGroupSession ? leftActionsForGroup : leftActions}
+      leftActions={
+        isGroupSession
+          ? targetMemberId
+            ? leftActionsForGroupThread
+            : leftActionsForGroup
+          : leftActions
+      }
       onInputHeightChange={(height) => {
         updatePreference({ inputHeight: height });
       }}

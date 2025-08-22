@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, Icon, SortableList, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, SortableList, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LoaderCircle, MessageSquare, UserMinus, UserPlus } from 'lucide-react';
@@ -292,7 +292,7 @@ const GroupChatSidebar = memo(() => {
                                   toggleThread(item.id);
                                 }}
                                 size={'small'}
-                                title="Open Thread"
+                                title={t('dm.tooltip')}
                               />
                               <ActionIcon
                                 danger

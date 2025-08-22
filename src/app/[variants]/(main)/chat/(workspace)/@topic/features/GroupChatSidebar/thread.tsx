@@ -6,10 +6,11 @@ import { ArrowLeft } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ChatInput from '../../../@conversation/features/ChatInput';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+
+import ChatInput from '../../../@conversation/features/ChatInput';
 import ThreadChatList from './ThreadChatList';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -31,7 +32,7 @@ const GroupChatThread = memo(() => {
 
   // Get agent info for the thread
   const agents = useSessionStore(sessionSelectors.currentGroupAgents);
-  const currentAgent = agents?.find(agent => agent.id === activeThreadAgentId);
+  const currentAgent = agents?.find((agent) => agent.id === activeThreadAgentId);
   const agentTitle = currentAgent?.title || `Agent ${activeThreadAgentId}`;
   const agentAvatar = currentAgent?.avatar;
   const agentBackgroundColor = currentAgent?.backgroundColor;
@@ -45,12 +46,7 @@ const GroupChatThread = memo(() => {
   return (
     <Flexbox height={'100%'}>
       {/* Custom header with back button on top-left */}
-      <Flexbox
-        align={'center'}
-        className={styles.header}
-        gap={8}
-        horizontal
-      >
+      <Flexbox align={'center'} className={styles.header} gap={8} horizontal>
         <ActionIcon
           icon={ArrowLeft}
           onClick={handleBackToSidebar}
@@ -62,9 +58,7 @@ const GroupChatThread = memo(() => {
           background={agentBackgroundColor || undefined}
           size={24}
         />
-        <div className={styles.headerTitle}>
-          Thread with {agentTitle}
-        </div>
+        <div className={styles.headerTitle}>{agentTitle}</div>
       </Flexbox>
 
       <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
@@ -72,9 +66,7 @@ const GroupChatThread = memo(() => {
       </Flexbox>
 
       {/* DM Chat Input */}
-      {activeThreadAgentId && (
-        <ChatInput mobile={false} targetMemberId={activeThreadAgentId} />
-      )}
+      {activeThreadAgentId && <ChatInput mobile={false} targetMemberId={activeThreadAgentId} />}
     </Flexbox>
   );
 });

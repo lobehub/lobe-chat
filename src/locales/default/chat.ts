@@ -28,6 +28,10 @@ export default {
   defaultAgent: '自定义助手',
   defaultList: '默认列表',
   defaultSession: '自定义助手',
+  dm: {
+    tooltip: 'Message',
+    placeholder: 'Your private message with {agentTitle} will appear here.',
+  },
   duplicateSession: {
     loading: '复制中...',
     success: '复制成功',
@@ -70,7 +74,6 @@ export default {
 
   historyRange: '历史范围',
 
-
   historySummary: '历史消息总结',
 
   inactive: '不活跃',
@@ -79,7 +82,6 @@ export default {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
-
 
   input: {
     addAi: '添加一条 AI 消息',
@@ -91,7 +93,6 @@ export default {
     stop: '停止',
     warp: '换行',
   },
-
 
   intentUnderstanding: {
     title: '正在理解并分析您的意图...',
@@ -120,14 +121,14 @@ export default {
     viewMore: '查看更多',
   },
   memberSelection: {
-    addMember: "Add Member",
-    noAvailableAgents: "No available agents",
-    noSelectedAgents: "No selected agents",
-    searchAgents: "Search agents...",
-    setInitialMembers: "Set Initial Members"
+    addMember: 'Add Member',
+    noAvailableAgents: 'No available agents',
+    noSelectedAgents: 'No selected agents',
+    searchAgents: 'Search agents...',
+    setInitialMembers: 'Set Initial Members',
   },
 
-  members: "Members",
+  members: 'Members',
 
   messageAction: {
     delAndRegenerate: '删除并重新生成',
