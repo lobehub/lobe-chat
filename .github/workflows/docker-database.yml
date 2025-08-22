@@ -159,3 +159,24 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+
+
+      - name: Comment on PR with Docker build info
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prComment = require('${{ github.workspace }}/.github/scripts/docker-pr-comment.js');
+            const result = await prComment({
+              github,
+              context,
+              dockerMetaJson: ${{ toJSON(steps.meta.outputs.json) }},
+              image: "${{ env.REGISTRY_IMAGE }}",
+              version: "${{ steps.meta.outputs.version }}",
+              dockerhubUrl: "https://hub.docker.com/r/${{ env.REGISTRY_IMAGE }}/tags",
+              platforms: "linux/amd64, linux/arm64",
+            });
+            core.info(`Status: ${result.updated ? 'Updated' : 'Created'}, ID: ${result.id}`);
+
+
