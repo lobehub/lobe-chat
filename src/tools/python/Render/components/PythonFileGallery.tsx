@@ -5,13 +5,9 @@ import { Flexbox } from 'react-layout-kit';
 import GalleyGrid from '@/components/GalleyGrid';
 import { PythonFileItem } from '@/types/tool/python';
 
-import PythonFileItemComponent from './PythonFileItem';
+import { PythonFile, PythonImage } from './PythonFileItem';
 
-interface PythonFileGalleryProps {
-  files: PythonFileItem[];
-}
-
-const PythonFileGallery = memo<PythonFileGalleryProps>(({ files }) => {
+const PythonFileGallery = memo<{ files: PythonFileItem[] }>(({ files }) => {
   if (!files || files.length === 0) {
     return null;
   }
@@ -35,12 +31,12 @@ const PythonFileGallery = memo<PythonFileGalleryProps>(({ files }) => {
           {imageFiles.length === 1 ? (
             // 单张图片时占据更大空间
             <Flexbox style={{ maxWidth: 400 }}>
-              <PythonFileItemComponent isImage {...imageFiles[0]} />
+              <PythonImage {...imageFiles[0]} />
             </Flexbox>
           ) : (
             <GalleyGrid
               items={imageFiles.map((file) => ({ ...file }))}
-              renderItem={(props) => <PythonFileItemComponent isImage {...props} />}
+              renderItem={(props) => <PythonImage {...props} />}
             />
           )}
         </PreviewGroup>
@@ -50,7 +46,7 @@ const PythonFileGallery = memo<PythonFileGalleryProps>(({ files }) => {
       {otherFiles.length > 0 && (
         <Flexbox gap={8} horizontal wrap="wrap">
           {otherFiles.map((file, index) => (
-            <PythonFileItemComponent key={`${file.filename}-${index}`} {...file} />
+            <PythonFile key={`${file.filename}-${index}`} {...file} />
           ))}
         </Flexbox>
       )}

@@ -115,6 +115,9 @@
       "eslint --fix"
     ]
   },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
+  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.10",
@@ -143,6 +146,7 @@
     "@lobechat/file-loaders": "workspace:*",
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/prompts": "workspace:*",
+    "@lobechat/python-interpreter": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.0",
     "@lobehub/charts": "^2.0.0",
@@ -374,8 +378,5 @@
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
     }
-  },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }

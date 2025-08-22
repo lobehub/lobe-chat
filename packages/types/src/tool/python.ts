@@ -1,30 +1,21 @@
-export interface PythonParams {
+import { PythonResult } from '@lobechat/python-interpreter';
+
+export interface PythonInterpreterParams {
   code: string;
   packages: string[];
 }
 
-interface Output {
-  type: 'stdout' | 'stderr';
-  value: string;
-}
-
 export interface PythonFileItem {
-  data?: Blob;
+  data?: File;
   fileId?: string;
   filename: string;
   previewUrl?: string;
 }
 
-export interface PythonExecutionResult {
-  error?: string;
+export interface PythonResponse extends PythonResult {
   files?: PythonFileItem[];
-  output?: Output[];
-  result?: string;
-  success: boolean;
 }
 
-export interface PythonState {
+export interface PythonInterpreterState {
   error?: any;
-  executionResult?: PythonExecutionResult;
-  isExecuting?: boolean;
 }

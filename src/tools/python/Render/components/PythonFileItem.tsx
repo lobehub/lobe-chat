@@ -52,26 +52,16 @@ const useFileStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-// 文件显示组件的属性接口
-interface FileDisplayProps {
-  filename: string;
-  onDownload: (e: React.MouseEvent) => void;
-}
-
-interface PythonFileItemProps extends PythonFileItem {
-  isImage?: boolean;
-}
-
 // 图片显示子组件
-const ImageDisplay = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
+const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
   const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchPythonFileItem]);
-  const { data: fileData } = useFetchPythonFileItem(fileId);
+  const { data } = useFetchPythonFileItem(fileId);
   const { styles } = useImageStyles();
 
-  console.log('fileData', fileData);
+  console.log('fileData', data);
   console.log('previewUrl', previewUrl);
 
-  let imageUrl = fileData?.url ?? previewUrl;
+  let imageUrl = data?.url ?? previewUrl;
 
   if (imageUrl) {
     return (
@@ -87,9 +77,20 @@ const ImageDisplay = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => 
 });
 
 // 文件显示子组件
-const FileDisplay = memo<FileDisplayProps>(({ filename, onDownload }) => {
+const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
   const { styles } = useFileStyles();
-
+  const onDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    let downloadUrl = previewUrl;
+    if (!downloadUrl) {
+      const { url } = await fileService.getFile(fileId!);
+      downloadUrl = url;
+    }
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    link.click();
+  };
   return (
     <div className={styles.container} onClick={onDownload}>
       <MaterialFileTypeIcon filename={filename} size={20} type="file" />
@@ -99,36 +100,4 @@ const FileDisplay = memo<FileDisplayProps>(({ filename, onDownload }) => {
   );
 });
 
-const PythonFileItemComponent = memo<PythonFileItemProps>(
-  ({ fileId, filename, previewUrl, isImage }) => {
-    const handleDownload = async (e: React.MouseEvent) => {
-      e.stopPropagation();
-
-      if (fileId) {
-        try {
-          const { url, name } = await fileService.getFile(fileId);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = name || filename;
-          link.click();
-        } catch (error) {
-          console.error('Failed to download file:', error);
-        }
-      } else if (previewUrl) {
-        // 如果有原始数据，创建 blob URL 下载
-        const link = document.createElement('a');
-        link.href = previewUrl;
-        link.download = filename;
-        link.click();
-      }
-    };
-
-    if (isImage) {
-      return <ImageDisplay fileId={fileId} filename={filename} previewUrl={previewUrl} />;
-    }
-
-    return <FileDisplay filename={filename} onDownload={handleDownload} />;
-  },
-);
-
-export default PythonFileItemComponent;
+export { PythonFile, PythonImage };

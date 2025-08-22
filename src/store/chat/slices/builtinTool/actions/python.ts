@@ -5,10 +5,11 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
+import { pythonService } from '@/services/python';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
-import { PythonExecutionResult, PythonFileItem, PythonParams } from '@/types/tool/python';
+import { PythonFileItem, PythonInterpreterParams, PythonResponse } from '@/types/tool/python';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('python');
@@ -16,9 +17,10 @@ const n = setNamespace('python');
 const SWR_FETCH_PYTHON_FILE_KEY = 'FetchPythonFileItem';
 
 export interface ChatPythonAction {
-  interpreter: (id: string, params: PythonParams) => Promise<boolean>;
-  processAndUploadPythonFiles: (id: string, executionResult: PythonFileItem[]) => Promise<void>;
-  updatePythonFileItem: (id: string, updater: (data: PythonFileItem[]) => void) => Promise<void>;
+  interpreter: (id: string, params: PythonInterpreterParams) => Promise<boolean | undefined>;
+  togglePythonExecuting: (id: string, loading: boolean) => void;
+  updatePythonFileItem: (id: string, updater: (data: PythonResponse) => void) => Promise<void>;
+  uploadPythonFiles: (id: string, files: PythonFileItem[]) => Promise<void>;
   useFetchPythonFileItem: (id?: string) => SWRResponse;
 }
 
@@ -28,100 +30,75 @@ export const pythonSlice: StateCreator<
   [],
   ChatPythonAction
 > = (set, get) => ({
-  interpreter: async (id: string, params: PythonParams) => {
-    const { updatePluginState } = get();
+  interpreter: async (id: string, params: PythonInterpreterParams) => {
+    const {
+      togglePythonExecuting,
+      updatePluginState,
+      internal_updateMessageContent,
+      uploadPythonFiles,
+    } = get();
 
-    await updatePluginState(id, { isExecuting: true });
+    togglePythonExecuting(id, true);
 
     try {
-      // 创建 WebWorker 执行 Python 代码，避免阻塞 UI
-      const worker = new Worker(
-        new URL('@/tools/python/Render/pyodideWorker.ts', import.meta.url),
-        { type: 'module' },
-      );
-
-      const executionResult = await new Promise<PythonExecutionResult>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          worker.terminate();
-          reject(new Error('Python execution timeout (60s)'));
-        }, 60_000);
-
-        worker.addEventListener('message', (event) => {
-          clearTimeout(timeout);
-          worker.terminate();
-          resolve(event.data.result);
-        });
-
-        worker.addEventListener('error', (error) => {
-          clearTimeout(timeout);
-          worker.terminate();
-          reject(error);
-        });
-
-        const packages = params.packages?.filter((pkg) => pkg.trim() !== '') || [];
-
-        worker.postMessage({
-          code: params.code,
-          id: id,
-          packages,
-        });
-      });
-
-      await updatePluginState(id, {
-        executionResult,
-        isExecuting: false,
-      });
-
-      executionResult.files?.forEach((file) => {
-        const url = URL.createObjectURL(file.data!);
-        file.previewUrl = url;
-      });
-
-      // 先显示结果，后上传文件，避免用户等待时间过长
-      await get().internal_updateMessageContent(id, JSON.stringify(executionResult));
-
-      if (executionResult.files?.length) {
-        await get().processAndUploadPythonFiles(id, executionResult.files);
+      const result = await pythonService.runPython(params.code, params.packages);
+      if (result.files) {
+        await internal_updateMessageContent(id, JSON.stringify(result));
+        await uploadPythonFiles(id, result.files);
+      } else {
+        await internal_updateMessageContent(id, JSON.stringify(result));
       }
     } catch (error) {
-      const errorResult: PythonExecutionResult = {
-        error: error instanceof Error ? error.message : String(error),
-        output: [],
-        success: false,
-      };
-
-      await updatePluginState(id, {
-        error: error,
-        executionResult: errorResult,
-        isExecuting: false,
-      });
-
-      await get().internal_updateMessageContent(id, JSON.stringify(errorResult));
+      updatePluginState(id, { error });
+      // 如果调用过程中出现了错误，不要触发 AI 消息
+      return;
+    } finally {
+      togglePythonExecuting(id, false);
     }
 
     return true;
   },
 
-  processAndUploadPythonFiles: async (id: string, files: PythonFileItem[]) => {
+  togglePythonExecuting: (id: string, executing: boolean) => {
+    set(
+      { pythonExecuting: { ...get().pythonExecuting, [id]: executing } },
+      false,
+      n('togglePythonExecuting'),
+    );
+  },
+
+  updatePythonFileItem: async (id: string, updater: (data: PythonResponse) => void) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const result: PythonResponse = JSON.parse(message.content);
+    if (!result.files) return;
+
+    const nextResult = produce(result, updater);
+
+    await get().internal_updateMessageContent(id, JSON.stringify(nextResult));
+  },
+
+  uploadPythonFiles: async (id: string, files: PythonFileItem[]) => {
     const { updatePythonFileItem } = get();
 
-    await pMap(files, async (fileItem, index) => {
-      if (!fileItem.data) return;
+    if (!files) return;
+
+    await pMap(files, async (file, index) => {
+      if (!file.data) return;
 
       try {
-        const file = new File([fileItem.data], fileItem.filename);
-
         const uploadResult = await useFileStore.getState().uploadWithProgress({
-          file,
+          file: file.data,
           skipCheckFileType: true,
         });
 
         if (uploadResult?.id) {
           await updatePythonFileItem(id, (draft) => {
-            if (draft[index]) {
-              draft[index].fileId = uploadResult.id;
-              draft[index].data = undefined;
-              draft[index].previewUrl = undefined;
+            if (draft.files?.[index]) {
+              draft.files[index].fileId = uploadResult.id;
+              draft.files[index].previewUrl = undefined;
+              draft.files[index].data = undefined;
             }
           });
         }
@@ -129,20 +106,6 @@ export const pythonSlice: StateCreator<
         console.error('Failed to upload Python file:', error);
       }
     });
-  },
-
-  updatePythonFileItem: async (id: string, updater: (data: PythonFileItem[]) => void) => {
-    const message = chatSelectors.getMessageById(id)(get());
-    if (!message) return;
-
-    const executionResult: PythonExecutionResult = JSON.parse(message.content);
-    if (!executionResult.files) return;
-
-    const nextExecutionResult = produce(executionResult, (draft) => {
-      updater(draft.files!);
-    });
-
-    await get().internal_updateMessageContent(id, JSON.stringify(nextExecutionResult));
   },
 
   useFetchPythonFileItem: (id) =>
