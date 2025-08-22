@@ -59,12 +59,12 @@ Guidelines:
 - Be collaborative and build upon others' responses when appropriate
 - Keep your responses concise and relevant to the ongoing discussion
 - Each message should no more than 100 words
+- Do not include the <author_name_do_not_include_in_your_response> tag content in your response
 
 ${membersTag}
 
 ${historyTag}
-
-Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`;
+`;
 
     return prompt.trim();
 };

@@ -302,6 +302,15 @@ export const generateAIGroupChat: StateCreator<
         meta: {},
       };
 
+      const userMessage: ChatMessage = {
+        id: 'group-user',
+        role: 'user',
+        content: "Now it's your turn to respond. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        meta: {},
+      };
+
       // Add author names to messages for better context
       const messagesWithAuthors = messages.map((msg) => {
         const authorInfo = agentTitleMap.find((member) => 
@@ -315,7 +324,7 @@ export const generateAIGroupChat: StateCreator<
         };
       });
 
-      const messagesForAPI = [systemMessage, ...messagesWithAuthors];
+      const messagesForAPI = [systemMessage, ...messagesWithAuthors, userMessage];
 
       if (assistantId) {
         await internal_fetchAIChatMessage({

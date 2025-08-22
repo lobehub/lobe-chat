@@ -643,16 +643,6 @@ export const generateAIChat: StateCreator<
           content,
           { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
         ) => {
-          console.log('internal_fetchAIChatMessage: onFinish', {
-            content,
-            traceId,
-            observationId,
-            toolCalls,
-            reasoning,
-            grounding,
-            usage,
-            speed,
-          });
           // if there is traceId, update it
           if (traceId) {
             msgTraceId = traceId;
