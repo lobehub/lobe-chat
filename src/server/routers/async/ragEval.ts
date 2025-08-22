@@ -17,7 +17,6 @@ import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
-import { EvalEvaluationStatus } from '@/types/eval';
 
 const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
