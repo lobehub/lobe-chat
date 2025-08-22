@@ -308,11 +308,11 @@ export default {
       placeholder: 'Enter group name',
       title: 'Group Name',
     },
+    submit: 'Update Group',
     systemPrompt: {
       placeholder: 'Enter system prompt',
       title: 'System Prompt',
     },
-    submit: 'Update Group',
     title: 'Group Information',
   },
   settingGroupChat: {
