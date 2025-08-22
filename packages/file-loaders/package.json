@@ -21,7 +21,8 @@
   "sideEffects": false,
   "main": "./src/index.ts",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "@langchain/community": "^0.3.41",

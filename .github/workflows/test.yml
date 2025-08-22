@@ -2,8 +2,82 @@ name: Test CI
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  # Package tests - using each package's own test script
+  test-packages:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [file-loaders, prompts, model-runtime, web-crawler, electron-server-ipc]
+
+    name: Test package ${{ matrix.package }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test ${{ matrix.package }} package with coverage
+        run: pnpm --filter @lobechat/${{ matrix.package }} test:coverage
+
+      - name: Upload ${{ matrix.package }} coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/${{ matrix.package }}/coverage/lcov.info
+          flags: packages/${{ matrix.package }}
+
+  # App tests
+  test-website:
+    name: Test Website
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test App Coverage
+        run: bun run test-app:coverage
+
+      - name: Upload App Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/app/lcov.info
+          flags: app
+
+  test-server:
+    name: Test Database
+
     runs-on: ubuntu-latest
 
     services:
@@ -11,12 +85,8 @@ jobs:
         image: paradedb/paradedb:latest
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
         options: >-
-          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
-
-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
         ports:
           - 5432:5432
 
@@ -29,7 +99,7 @@ jobs:
           node-version: 22
 
       - name: Install bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@v1
         with:
           bun-version: ${{ secrets.BUN_VERSION }}
 
@@ -55,20 +125,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/server/lcov.info
           flags: server
-
-      - name: Test App Coverage
-        run: bun run test-app:coverage
-        env:
-          # 增加测试超时时间以处理PGlite初始化
-          VITEST_TEST_TIMEOUT: 60000
-          VITEST_HOOK_TIMEOUT: 60000
-          # 使用单进程避免数据库冲突
-          VITEST_POOL_OPTIONS_FORKS_SINGLE_FORK: true
-        continue-on-error: false
-
-      - name: Upload App Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/app/lcov.info
-          flags: app
