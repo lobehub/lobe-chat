@@ -35,6 +35,11 @@
       "title": "Reset All Settings"
     }
   },
+  "groupTab": {
+    "chat": "Group Chat",
+    "members": "Members",
+    "meta": "Group Info"
+  },
   "header": {
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
@@ -290,6 +295,64 @@
     },
     "title": "General Settings"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Enter group description",
+      "title": "Group Description"
+    },
+    "name": {
+      "placeholder": "Enter group name",
+      "title": "Group Name"
+    },
+    "submit": "Update Group",
+    "systemPrompt": {
+      "placeholder": "Enter system prompt",
+      "title": "System Prompt"
+    },
+    "title": "Group Information"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Choose how many messages members can send in a row. Set to 0 to disable.",
+      "title": "Maximum Consecutive Messages"
+    },
+    "model": {
+      "desc": "Select the model to use for group conversations.",
+      "title": "Orchestrator Model"
+    },
+    "responseOrder": {
+      "desc": "Agents will respond in the order they are configured within the group.",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequential"
+      },
+      "placeholder": "Select response order",
+      "title": "Response Order"
+    },
+    "responseSpeed": {
+      "desc": "Choose how quickly agents respond in group conversations.",
+      "options": {
+        "fast": "Fast",
+        "medium": "Medium",
+        "slow": "Slow"
+      },
+      "placeholder": "Select response speed",
+      "title": "Response Speed"
+    },
+    "revealDM": {
+      "desc": "Make direct messages sent to other members visible to you.",
+      "title": "Reveal DMs"
+    },
+    "submit": "Update Settings",
+    "title": "Chat Settings"
+  },
+  "settingGroupMembers": {
+    "edit": "Edit Member",
+    "empty": "No agents in this group yet. Click the + button to add members.",
+    "owner": "You (Owner)",
+    "remove": "Remove Member",
+    "you": "You"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
@@ -510,6 +573,11 @@
       "label": "AI Art Topic Naming Model",
       "modelDesc": "Model designated for automatic naming of AI art topics",
       "title": "AI Art Automatic Topic Naming"
+    },
+    "groupChatSupervisor": {
+      "label": "Group Chat Supervision Model",
+      "modelDesc": "Model for supervising and managing group chat conversations.",
+      "title": "Group Chat Supervision"
     },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {

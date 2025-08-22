@@ -1433,9 +1433,7 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini offre un equilibrio tra intelligenza, velocità e costo, rendendolo un modello attraente per molti casi d'uso."
   },
-  "gpt-4.5-preview": {
-    "description": "Anteprima di ricerca di GPT-4.5, il nostro modello GPT più grande e potente fino ad oggi. Possiede una vasta conoscenza del mondo e comprende meglio le intenzioni degli utenti, eccellendo in compiti creativi e nella pianificazione autonoma. GPT-4.5 accetta input testuali e visivi e genera output testuali (inclusi output strutturati). Supporta funzionalità chiave per gli sviluppatori, come chiamate di funzione, API in batch e output in streaming. GPT-4.5 si distingue particolarmente in compiti che richiedono pensiero creativo, aperto e dialogo (come scrittura, apprendimento o esplorazione di nuove idee). La data di scadenza delle conoscenze è ottobre 2023."
-  },
+  "gpt-4.5-preview": {},
   "gpt-4o": {
     "description": "ChatGPT-4o è un modello dinamico, aggiornato in tempo reale per mantenere la versione più recente. Combina una potente comprensione e generazione del linguaggio, adatta a scenari di applicazione su larga scala, inclusi servizi clienti, educazione e supporto tecnico."
   },
@@ -2093,9 +2091,7 @@
   "o1-mini": {
     "description": "o1-mini è un modello di inferenza rapido ed economico progettato per applicazioni di programmazione, matematica e scienza. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
   },
-  "o1-preview": {
-    "description": "o1 è il nuovo modello di inferenza di OpenAI, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
-  },
+  "o1-preview": {},
   "o1-pro": {
     "description": "La serie di modelli o1 è stata addestrata con apprendimento rinforzato, in grado di riflettere prima di rispondere ed eseguire compiti di ragionamento complessi. Il modello o1-pro utilizza più risorse computazionali per un pensiero più approfondito, offrendo risposte di qualità superiore in modo continuo."
   },
@@ -2213,9 +2209,7 @@
   "qwen-coder-turbo-latest": {
     "description": "Modello di codice Tongyi Qwen."
   },
-  "qwen-image": {
-    "description": "Potente modello di immagini grezze del team Qwen, con impressionante capacità di generazione di testo in cinese e stili visivi di immagini diversificati."
-  },
+  "qwen-image": {},
   "qwen-long": {
     "description": "Qwen è un modello di linguaggio su larga scala che supporta contesti di testo lunghi e funzionalità di dialogo basate su documenti lunghi e multipli."
   },
@@ -2240,9 +2234,7 @@
   "qwen-plus": {
     "description": "Qwen Plus è una versione potenziata del modello linguistico di grandi dimensioni, che supporta input in diverse lingue, tra cui cinese e inglese."
   },
-  "qwen-turbo": {
-    "description": "Qwen è un modello linguistico di grandi dimensioni che supporta input in diverse lingue, tra cui cinese e inglese."
-  },
+  "qwen-turbo": {},
   "qwen-vl-chat-v1": {
     "description": "Qwen VL supporta modalità di interazione flessibili, inclusi modelli di domande e risposte multipli e creativi."
   },

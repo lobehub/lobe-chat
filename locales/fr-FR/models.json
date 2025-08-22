@@ -1433,9 +1433,7 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini offre un équilibre entre intelligence, rapidité et coût, ce qui en fait un modèle attrayant pour de nombreux cas d'utilisation."
   },
-  "gpt-4.5-preview": {
-    "description": "La version de recherche préliminaire de GPT-4.5, qui est notre modèle GPT le plus grand et le plus puissant à ce jour. Il possède une vaste connaissance du monde et comprend mieux les intentions des utilisateurs, ce qui le rend exceptionnel dans les tâches créatives et la planification autonome. GPT-4.5 accepte les entrées textuelles et visuelles et génère des sorties textuelles (y compris des sorties structurées). Il prend en charge des fonctionnalités clés pour les développeurs, telles que les appels de fonctions, l'API par lots et les sorties en continu. GPT-4.5 excelle particulièrement dans les tâches nécessitant créativité, pensée ouverte et dialogue (comme l'écriture, l'apprentissage ou l'exploration de nouvelles idées). La date limite des connaissances est fixée à octobre 2023."
-  },
+  "gpt-4.5-preview": {},
   "gpt-4o": {
     "description": "ChatGPT-4o est un modèle dynamique, mis à jour en temps réel pour rester à jour avec la dernière version. Il combine une compréhension et une génération de langage puissantes, adapté à des scénarios d'application à grande échelle, y compris le service client, l'éducation et le support technique."
   },
@@ -2093,9 +2091,7 @@
   "o1-mini": {
     "description": "o1-mini est un modèle de raisonnement rapide et économique conçu pour les applications de programmation, de mathématiques et de sciences. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."
   },
-  "o1-preview": {
-    "description": "o1 est le nouveau modèle de raisonnement d'OpenAI, adapté aux tâches complexes nécessitant une vaste connaissance générale. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."
-  },
+  "o1-preview": {},
   "o1-pro": {
     "description": "La série de modèles o1 est entraînée par apprentissage par renforcement, capable de réfléchir avant de répondre et d'exécuter des tâches de raisonnement complexes. Le modèle o1-pro utilise plus de ressources de calcul pour une réflexion plus approfondie, fournissant ainsi des réponses de qualité supérieure de manière continue."
   },
@@ -2213,9 +2209,7 @@
   "qwen-coder-turbo-latest": {
     "description": "Le modèle de code Tongyi Qwen."
   },
-  "qwen-image": {
-    "description": "Modèle puissant de génération d'images brutes développé par l'équipe Qwen, avec une impressionnante capacité de génération de texte en chinois et une diversité de styles visuels d'images."
-  },
+  "qwen-image": {},
   "qwen-long": {
     "description": "Qwen est un modèle de langage à grande échelle, prenant en charge un contexte de texte long, ainsi que des fonctionnalités de dialogue basées sur des documents longs et multiples."
   },
@@ -2240,9 +2234,7 @@
   "qwen-plus": {
     "description": "Version améliorée du modèle de langage à grande échelle Qwen, prenant en charge des entrées dans différentes langues telles que le chinois et l'anglais."
   },
-  "qwen-turbo": {
-    "description": "Le modèle de langage à grande échelle Qwen, prenant en charge des entrées dans différentes langues telles que le chinois et l'anglais."
-  },
+  "qwen-turbo": {},
   "qwen-vl-chat-v1": {
     "description": "Qwen VL prend en charge des modes d'interaction flexibles, y compris la capacité de poser des questions à plusieurs images, des dialogues multi-tours, et plus encore."
   },

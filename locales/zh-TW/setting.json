@@ -35,6 +35,11 @@
       "title": "重置所有設定"
     }
   },
+  "groupTab": {
+    "chat": "群組聊天",
+    "members": "成員",
+    "meta": "群組資訊"
+  },
   "header": {
     "desc": "偏好與模型設定",
     "global": "全域設定",
@@ -290,6 +295,64 @@
     },
     "title": "通用設定"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "請輸入群組描述",
+      "title": "群組描述"
+    },
+    "name": {
+      "placeholder": "請輸入群組名稱",
+      "title": "群組名稱"
+    },
+    "submit": "更新群組",
+    "systemPrompt": {
+      "placeholder": "請輸入系統提示",
+      "title": "系統提示"
+    },
+    "title": "群組資訊"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "選擇成員可連續回覆的訊息數。設為 0 即停用。",
+      "title": "連續回覆上限"
+    },
+    "model": {
+      "desc": "選擇用於群組對話的模型",
+      "title": "編排模型"
+    },
+    "responseOrder": {
+      "desc": "代理人將依群組中設定的順序回應",
+      "options": {
+        "natural": "自然",
+        "sequential": "依序"
+      },
+      "placeholder": "選擇回應順序",
+      "title": "回應順序"
+    },
+    "responseSpeed": {
+      "desc": "選擇代理人在群組對話中的回應速度",
+      "options": {
+        "fast": "快速",
+        "medium": "中等",
+        "slow": "慢速"
+      },
+      "placeholder": "選擇回應速度",
+      "title": "回應速度"
+    },
+    "revealDM": {
+      "desc": "使發給其他成員的私訊內容對您可見。",
+      "title": "顯示私訊"
+    },
+    "submit": "更新設定",
+    "title": "聊天設定"
+  },
+  "settingGroupMembers": {
+    "edit": "編輯成員",
+    "empty": "此群組尚未有任何成員。點選「+」按鈕以新增成員。",
+    "owner": "您（擁有者）",
+    "remove": "移除成員",
+    "you": "您"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "啟用單次回覆限制"
@@ -510,6 +573,11 @@
       "label": "AI 繪畫話題命名模型",
       "modelDesc": "指定用於 AI 繪畫自動命名話題的模型",
       "title": "AI 繪畫自動命名話題"
+    },
+    "groupChatSupervisor": {
+      "label": "群組聊天監督模型",
+      "modelDesc": "指定用於監督與管理群組聊天對話的模型",
+      "title": "群組聊天監督管理"
     },
     "helpInfo": "當創建新助手時，將以預設助手設定作為預設值。",
     "historyCompress": {

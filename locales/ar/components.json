@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "إضافة وسيط",
+    "argumentPlaceholder": "الوسيط {{index}}",
+    "enterFirstArgument": "أدخل الوسيط الأول..."
+  },
   "DragUpload": {
     "dragDesc": "اسحب الملفات هنا، يدعم تحميل عدة صور.",
     "dragFileDesc": "اسحب الصور والملفات هنا، يدعم تحميل عدة صور وملفات.",

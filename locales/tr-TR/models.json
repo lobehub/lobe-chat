@@ -1433,9 +1433,7 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini, zeka, hız ve maliyet arasında bir denge sunarak birçok kullanım durumu için çekici bir model haline getirir."
   },
-  "gpt-4.5-preview": {
-    "description": "GPT-4.5'in araştırma önizleme sürümü, şimdiye kadar geliştirdiğimiz en büyük ve en güçlü GPT modelidir. Geniş bir dünya bilgisine sahip olup, kullanıcı niyetlerini daha iyi anlayarak yaratıcı görevler ve bağımsız planlama konularında mükemmel bir performans sergilemektedir. GPT-4.5, metin ve görsel girdi alabilir ve metin çıktısı (yapılandırılmış çıktı dahil) üretebilir. Fonksiyon çağrıları, toplu API ve akış çıktısı gibi önemli geliştirici özelliklerini destekler. Yaratıcılık, açık düşünme ve diyalog gerektiren görevlerde (örneğin yazma, öğrenme veya yeni fikirler keşfetme) GPT-4.5 özellikle başarılıdır. Bilgi kesim tarihi Ekim 2023'tür."
-  },
+  "gpt-4.5-preview": {},
   "gpt-4o": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
   },
@@ -2093,9 +2091,7 @@
   "o1-mini": {
     "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
-  "o1-preview": {
-    "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
-  },
+  "o1-preview": {},
   "o1-pro": {
     "description": "o1 serisi modeller, yanıtlamadan önce düşünme yapabilen ve karmaşık akıl yürütme görevlerini yerine getirebilen pekiştirmeli öğrenme ile eğitilmiştir. o1-pro modeli, daha derin düşünme için daha fazla hesaplama kaynağı kullanır ve böylece sürekli olarak daha kaliteli yanıtlar sunar."
   },
@@ -2213,9 +2209,7 @@
   "qwen-coder-turbo-latest": {
     "description": "Tongyi Qianwen kodlama modeli."
   },
-  "qwen-image": {
-    "description": "Qwen ekibinin güçlü ham görüntü modeli, etkileyici Çince metin üretme yeteneği ve çeşitli görsel stil seçenekleri sunar."
-  },
+  "qwen-image": {},
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
@@ -2240,9 +2234,7 @@
   "qwen-plus": {
     "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen geliştirilmiş büyük ölçekli bir dil modelidir."
   },
-  "qwen-turbo": {
-    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen büyük ölçekli bir dil modelidir."
-  },
+  "qwen-turbo": {},
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
   },

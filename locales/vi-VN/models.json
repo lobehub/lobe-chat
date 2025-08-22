@@ -1433,9 +1433,7 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini cung cấp sự cân bằng giữa trí tuệ, tốc độ và chi phí, khiến nó trở thành mô hình hấp dẫn cho nhiều trường hợp sử dụng."
   },
-  "gpt-4.5-preview": {
-    "description": "Bản nghiên cứu preview của GPT-4.5, đây là mô hình GPT lớn nhất và mạnh mẽ nhất mà chúng tôi từng phát triển. Nó sở hữu kiến thức rộng lớn về thế giới và có khả năng hiểu ý định của người dùng tốt hơn, giúp nó thể hiện xuất sắc trong các nhiệm vụ sáng tạo và lập kế hoạch tự động. GPT-4.5 có thể chấp nhận đầu vào văn bản và hình ảnh, và tạo ra đầu ra văn bản (bao gồm cả đầu ra có cấu trúc). Hỗ trợ các tính năng quan trọng cho nhà phát triển như gọi hàm, API theo lô và đầu ra theo luồng. Trong các nhiệm vụ cần sự sáng tạo, tư duy mở và đối thoại (như viết lách, học tập hoặc khám phá ý tưởng mới), GPT-4.5 thể hiện đặc biệt xuất sắc. Thời điểm cắt đứt kiến thức là tháng 10 năm 2023."
-  },
+  "gpt-4.5-preview": {},
   "gpt-4o": {
     "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
@@ -2093,9 +2091,7 @@
   "o1-mini": {
     "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
-  "o1-preview": {
-    "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
-  },
+  "o1-preview": {},
   "o1-pro": {
     "description": "Dòng mô hình o1 được huấn luyện qua học tăng cường, có khả năng suy nghĩ trước khi trả lời và thực hiện các nhiệm vụ suy luận phức tạp. Mô hình o1-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn, từ đó liên tục cung cấp câu trả lời chất lượng cao hơn."
   },
@@ -2213,9 +2209,7 @@
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
   },
-  "qwen-image": {
-    "description": "Mô hình hình ảnh mạnh mẽ từ đội ngũ Qwen, có khả năng tạo văn bản tiếng Trung ấn tượng và đa dạng phong cách hình ảnh thị giác."
-  },
+  "qwen-image": {},
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
   },
@@ -2240,9 +2234,7 @@
   "qwen-plus": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
-  "qwen-turbo": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
-  },
+  "qwen-turbo": {},
   "qwen-vl-chat-v1": {
     "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
   },

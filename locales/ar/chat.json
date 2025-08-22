@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
+  "active": "نشط",
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
@@ -13,12 +14,14 @@
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
   },
+  "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
+  "confirmRemoveGroupItemAlert": "سيتم حذف هذه المجموعة قريبًا. بعد الحذف، سيُنتقل المساعدون في هذه المجموعة إلى القائمة الافتراضية. يرجى تأكيد إجراء الحذف.",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionSuccess": "تم حذف المساعد بنجاح",
   "defaultAgent": "المساعد الافتراضي",
@@ -54,11 +57,18 @@
     },
     "title": "وظائف توسيع النموذج"
   },
+  "group": {
+    "desc": "التعاون مع عدة مساعدين للذكاء الاصطناعي في مساحة محادثة مشتركة.",
+    "memberTooltip": "هناك {{count}} عضوًا في المجموعة",
+    "title": "مجموعة"
+  },
+  "groupDescription": "وصف المجموعة",
   "history": {
     "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
   },
   "historyRange": "نطاق التاريخ",
   "historySummary": "ملخص الرسائل التاريخية",
+  "inactive": "غير نشط",
   "inbox": {
     "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
     "title": "دردشة عشوائية"
@@ -76,6 +86,7 @@
   "intentUnderstanding": {
     "title": "جارٍ فهم وتحليل نواياك..."
   },
+  "inviteMembers": "دعوة الأعضاء",
   "knowledgeBase": {
     "all": "جميع المحتويات",
     "allFiles": "جميع الملفات",
@@ -94,12 +105,24 @@
     "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
     "viewMore": "عرض المزيد"
   },
+  "memberSelection": {
+    "addMember": "إضافة عضو",
+    "noAvailableAgents": "لا يوجد أي وكلاء متاحين",
+    "noSelectedAgents": "لم يتم اختيار أي وكلاء",
+    "searchAgents": "ابحث عن وكلاء...",
+    "setInitialMembers": "تعيين الأعضاء المبدئيين"
+  },
+  "members": "الأعضاء",
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
   "messages": {
+    "dm": {
+      "sentTo": "إرسال إلى",
+      "title": "الرسائل الخاصة"
+    },
     "modelCard": {
       "credit": "نقاط",
       "creditPricing": "التسعير",
@@ -143,6 +166,13 @@
     }
   },
   "newAgent": "مساعد جديد",
+  "newGroupChat": "إنشاء دردشة جماعية جديدة",
+  "noAgentsYet": "لا يوجد أي مساعد في هذه المجموعة بعد. انقر على زر + لدعوة مساعد.",
+  "noAvailableAgents": "لا يوجد مساعدون متاحون للدعوة",
+  "noMatchingAgents": "لا يوجد مساعد متطابق",
+  "noMembersYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة المساعدين.",
+  "noSelectedAgents": "لم يتم اختيار أي مساعد بعد",
+  "owner": "مالك المجموعة",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "rag": {
@@ -183,6 +213,8 @@
     "title": "بحث عبر الإنترنت"
   },
   "searchAgentPlaceholder": "مساعد البحث...",
+  "searchAgents": "مساعد البحث...",
+  "selectedAgents": "المساعدون المختارون",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
     "config": "إدارة المجموعات",
@@ -256,6 +288,7 @@
     "action": "قراءة صوتية",
     "clear": "مسح الصوت"
   },
+  "untitledAgent": "مساعد بدون اسم",
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "action": {
@@ -278,5 +311,6 @@
       }
     }
   },
+  "you": "أنت",
   "zenMode": "وضع التركيز"
 }
