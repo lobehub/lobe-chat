@@ -273,19 +273,19 @@ export const generateAIGroupChat: StateCreator<
       const baseSystemRole = agentData.systemRole || '';
       const members: GroupMemberInfo[] = agentTitleMap as GroupMemberInfo[];
       const groupChatSystemPrompt = buildGroupChatSystemPrompt({
-        agentId,
-        baseSystemRole,
         groupMembers: members,
+        baseSystemRole,
+        agentId,
         messages,
       });
 
       // Create agent message using real agent config
       const agentMessage: CreateMessageParams = {
         role: 'assistant',
-        content: LOADING_FLAT,
         fromModel: agentModel,
-        fromProvider: agentProvider,
         groupId,
+        content: LOADING_FLAT,
+        fromProvider: agentProvider,
         agentId,
         topicId: activeTopicId,
         targetId: targetId, // Use targetId when provided for DM messages
@@ -305,7 +305,8 @@ export const generateAIGroupChat: StateCreator<
       const userMessage: ChatMessage = {
         id: 'group-user',
         role: 'user',
-        content: "Now it's your turn to respond. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.",
+        content:
+          "Now it's your turn to respond. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.",
         createdAt: Date.now(),
         updatedAt: Date.now(),
         meta: {},
@@ -313,11 +314,11 @@ export const generateAIGroupChat: StateCreator<
 
       // Add author names to messages for better context
       const messagesWithAuthors = messages.map((msg) => {
-        const authorInfo = agentTitleMap.find((member) => 
-          msg.role === 'user' ? member.id === 'user' : member.id === msg.agentId
+        const authorInfo = agentTitleMap.find((member) =>
+          msg.role === 'user' ? member.id === 'user' : member.id === msg.agentId,
         );
         const authorName = authorInfo?.title || (msg.role === 'user' ? realUserName : 'Unknown');
-        
+
         return {
           ...msg,
           content: `<author_name_do_not_include_in_your_response>${authorName}</author_name_do_not_include_in_your_response>${msg.content}`,

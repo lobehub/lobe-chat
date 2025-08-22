@@ -85,5 +85,10 @@
         "markdown",
         // support mdx
         "mdx"
-    ]
+    ],
+    "editor.codeActionsOnSave": {
+        "source.addMissingImports": "explicit",
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "explicit",
+    },
 }
