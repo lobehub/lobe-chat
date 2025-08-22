@@ -7,7 +7,7 @@ import { createBflImage } from './createImage';
 import { BflStatusResponse } from './types';
 
 // Mock external dependencies
-vi.mock('@/utils/imageToBase64', () => ({
+vi.mock('@lobechat/utils', () => ({
   imageUrlToBase64: vi.fn(),
 }));
 
@@ -188,7 +188,7 @@ describe('createBflImage', () => {
     it('should convert single imageUrl to image_prompt base64', async () => {
       // Arrange
       const { parseDataUri } = await import('../utils/uriParser');
-      const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+      const { imageUrlToBase64 } = await import('@lobechat/utils');
       const { asyncifyPolling } = await import('../utils/asyncifyPolling');
 
       const mockParseDataUri = vi.mocked(parseDataUri);
@@ -291,7 +291,7 @@ describe('createBflImage', () => {
     it('should convert multiple imageUrls for Kontext models', async () => {
       // Arrange
       const { parseDataUri } = await import('../utils/uriParser');
-      const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+      const { imageUrlToBase64 } = await import('@lobechat/utils');
       const { asyncifyPolling } = await import('../utils/asyncifyPolling');
 
       const mockParseDataUri = vi.mocked(parseDataUri);
@@ -351,7 +351,7 @@ describe('createBflImage', () => {
     it('should limit imageUrls to maximum 4 images', async () => {
       // Arrange
       const { parseDataUri } = await import('../utils/uriParser');
-      const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+      const { imageUrlToBase64 } = await import('@lobechat/utils');
       const { asyncifyPolling } = await import('../utils/asyncifyPolling');
 
       const mockParseDataUri = vi.mocked(parseDataUri);
