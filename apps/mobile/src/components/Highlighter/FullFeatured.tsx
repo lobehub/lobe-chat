@@ -37,6 +37,10 @@ interface FullFeaturedProps {
    */
   lang: string;
   /**
+   * Callback function called when code is copied.
+   */
+  onCopy?: (code: string) => void;
+  /**
    * Whether to show the language name in the header.
    */
   showLanguage?: boolean;
@@ -60,6 +64,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
   type = 'compact',
   allowChangeLanguage = false,
   style,
+  onCopy,
 }) => {
   const { styles, token } = useStyles();
   const { theme } = useTheme();
@@ -74,6 +79,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
       await Clipboard.setStringAsync(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      onCopy?.(code);
     } catch (error) {
       console.error('Failed to copy:', error);
     }

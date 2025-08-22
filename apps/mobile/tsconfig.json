@@ -12,5 +12,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "global.d.ts"],
-  "exclude": ["node_modules", "babel.config.ts", "metro.config.ts", "app.config.ts", "scripts/**"]
+  "exclude": ["node_modules", "scripts/**"]
 }
