@@ -22,6 +22,7 @@ import { convertImageUrlToFile, convertOpenAIMessages } from '../utils/openaiHel
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream } from '../utils/streams';
 
+const azureImageLogger = debug('lobe-image:azure');
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: AzureOpenAI;
 
@@ -120,9 +121,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   // Create image using Azure OpenAI Images API (gpt-image-1 or DALL·E deployments)
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
-    const log = debug('lobe-image:azure');
     const { model, params } = payload;
-    log('Creating image with model: %s and params: %O', model, params);
+    azureImageLogger('Creating image with model: %s and params: %O', model, params);
 
     try {
       // Clone params and remap imageUrls/imageUrl -> image
@@ -147,6 +147,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
       const isImageEdit = Boolean(userInput.image);
 
+      azureImageLogger('Is Image Edit: ' + isImageEdit);
       // Azure/OpenAI Images: remove unsupported/auto values where appropriate
       if (userInput.size === 'auto') delete userInput.size;
 
@@ -166,12 +167,40 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         ? await this.client.images.edit(options)
         : await this.client.images.generate(options);
 
+      // Normalize possible string JSON response -- Sometimes Azure Image API returns a text/plain Content-Type
+      let result: any = img as any;
+      if (typeof result === 'string') {
+        try {
+          result = JSON.parse(result);
+        } catch {
+          azureImageLogger('Failed to parse string response from images API');
+          throw new Error('Invalid image response: expected JSON string but parsing failed');
+        }
+      } else if (result && typeof result === 'object') {
+        // Handle common Azure REST shapes
+        if (typeof (result as any).bodyAsText === 'string') {
+          try {
+            result = JSON.parse((result as any).bodyAsText);
+          } catch {
+            azureImageLogger('Failed to parse bodyAsText from images API response');
+            throw new Error('Invalid image response: bodyAsText not valid JSON');
+          }
+        } else if (typeof (result as any).body === 'string') {
+          try {
+            result = JSON.parse((result as any).body);
+          } catch {
+            azureImageLogger('Failed to parse body from images API response');
+            throw new Error('Invalid image response: body not valid JSON');
+          }
+        }
+      }
+
       // Validate response
-      if (!img || !img.data || !Array.isArray(img.data) || img.data.length === 0) {
+      if (!result || !result.data || !Array.isArray(result.data) || result.data.length === 0) {
         throw new Error('Invalid image response: missing or empty data array');
       }
 
-      const imageData: any = img.data[0];
+      const imageData: any = result.data[0];
       if (!imageData)
         throw new Error('Invalid image response: first data item is null or undefined');
 
