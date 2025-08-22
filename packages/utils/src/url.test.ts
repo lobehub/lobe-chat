@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { pathString } from './url';
 import { inferContentTypeFromImageUrl, inferFileExtensionFromImageUrl, isLocalUrl } from './url';
