@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, Dropdown } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { MessageSquarePlus } from 'lucide-react';
+import { Bot, SquarePlus, UsersRound } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -38,7 +38,7 @@ const Header = memo(() => {
   const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
   const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
-  
+
   // We need pass inital member list so we cannot use mutate
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
 
@@ -51,9 +51,12 @@ const Header = memo(() => {
     setIsGroupModalOpen(false);
     setIsCreatingGroup(true);
     try {
-      await createGroup({
-        title: 'New Group Chat'
-      }, selectedAgents);
+      await createGroup(
+        {
+          title: 'New Group Chat',
+        },
+        selectedAgents,
+      );
     } catch (error) {
       console.error('Failed to create group:', error);
     } finally {
@@ -87,6 +90,7 @@ const Header = memo(() => {
               menu={{
                 items: [
                   {
+                    icon: <Icon icon={Bot} />,
                     key: 'newAgent',
                     label: t('newAgent'),
                     onClick: () => {
@@ -94,6 +98,7 @@ const Header = memo(() => {
                     },
                   },
                   {
+                    icon: <Icon icon={UsersRound} />,
                     key: 'newGroup',
                     label: t('newGroupChat'),
                     onClick: () => {
@@ -102,10 +107,10 @@ const Header = memo(() => {
                   },
                 ],
               }}
-              trigger={['click']}
+              trigger={['hover']}
             >
               <ActionIcon
-                icon={MessageSquarePlus}
+                icon={SquarePlus}
                 loading={isValidatingAgent || isCreatingGroup}
                 size={DESKTOP_HEADER_ICON_SIZE}
                 style={{ flex: 'none' }}
