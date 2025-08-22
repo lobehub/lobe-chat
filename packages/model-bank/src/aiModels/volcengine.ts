@@ -27,7 +27,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['thinking'],
+      extendParams: ['enableReasoning'],
     },
     type: 'chat',
   },
