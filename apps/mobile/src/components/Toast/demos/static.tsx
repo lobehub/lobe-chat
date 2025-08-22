@@ -19,7 +19,7 @@ const showInfo = () => {
 };
 
 const showLoading = () => {
-  Toast.loading({ duration: 3000, message: '加载中...' });
+  Toast.loading('加载中...', 3000);
 };
 
 export default function StaticDemo() {

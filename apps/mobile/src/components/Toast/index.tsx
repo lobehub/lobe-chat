@@ -10,28 +10,20 @@ const setGlobalToastContext = (context: ReturnType<typeof useToast>) => {
   globalToastContext = context;
 };
 
-interface StaticToastConfig {
-  duration?: number;
-  message: string;
-}
-
 // Static methods interface
 interface ToastStatic {
-  error: (config: StaticToastConfig | string) => void;
-  info: (config: StaticToastConfig | string) => void;
-  loading: (config: StaticToastConfig | string) => void;
-  success: (config: StaticToastConfig | string) => void;
+  error: (message: string, duration?: number) => void;
+  info: (message: string, duration?: number) => void;
+  loading: (message: string, duration?: number) => void;
+  success: (message: string, duration?: number) => void;
 }
 
 const createStaticMethod = (type: 'success' | 'error' | 'info' | 'loading') => {
-  return (config: StaticToastConfig | string) => {
+  return (message: string, duration?: number) => {
     if (!globalToastContext) {
       console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
       return;
     }
-
-    const message = typeof config === 'string' ? config : config.message;
-    const duration = typeof config === 'object' ? config.duration : undefined;
 
     globalToastContext[type](message, duration);
   };
