@@ -6,6 +6,7 @@ export default defineConfig({
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/const': resolve(__dirname, '../const/src'),
+      '@/utils': resolve(__dirname, './packages/utils/src'),
       '@/database': resolve(__dirname, '../database/src'),
       '@/types': resolve(__dirname, '../types/src'),
       '@': resolve(__dirname, '../../src'),
