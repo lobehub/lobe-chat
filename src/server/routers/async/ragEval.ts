@@ -1,5 +1,6 @@
 import { ModelProvider } from '@lobechat/model-runtime';
 import { chainAnswerWithContext } from '@lobechat/prompts';
+import { EvalEvaluationStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
@@ -17,7 +18,6 @@ import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
-import { EvalEvaluationStatus } from '@/types/eval';
 
 const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;

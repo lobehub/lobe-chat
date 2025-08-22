@@ -1,8 +1,7 @@
+import { ChatModelCard } from '@lobechat/types';
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
-import { ModelRequestOptions, OpenAIChatMessage } from '@/libs/model-runtime';
-import { ChatModelCard } from '@/types/llm';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -13,6 +12,8 @@ import {
   Embeddings,
   EmbeddingsPayload,
   ModelProvider,
+  ModelRequestOptions,
+  OpenAIChatMessage,
   PullModelParams,
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';

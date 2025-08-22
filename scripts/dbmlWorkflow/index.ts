@@ -1,7 +1,7 @@
 import { pgGenerate } from 'drizzle-dbml-generator';
 import { join } from 'node:path';
 
-import * as schema from '../../src/database/schemas';
+import * as schema from '../../packages/database/src/schemas';
 
 const out = join(__dirname, '../../docs/development/database-schema.dbml');
 const relational = true;

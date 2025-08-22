@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [file-loaders, prompts, model-runtime, web-crawler, electron-server-ipc]
+        package: [file-loaders, prompts, model-runtime, web-crawler, electron-server-ipc, utils]
 
     name: Test package ${{ matrix.package }}
 
@@ -75,7 +75,7 @@ jobs:
           files: ./coverage/app/lcov.info
           flags: app
 
-  test-server:
+  test-databsae:
     name: Test Database
 
     runs-on: ubuntu-latest
@@ -109,8 +109,10 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Test Server Coverage
-        run: bun run test-server:coverage
+      - uses: pnpm/action-setup@v4
+
+      - name: Test Coverage
+        run: pnpm --filter @lobechat/database test:coverage
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
@@ -119,9 +121,9 @@ jobs:
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
-      - name: Upload Server coverage to Codecov
+      - name: Upload Database coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/server/lcov.info
-          flags: server
+          files: ./packages/database/coverage/lcov.info
+          flags: database

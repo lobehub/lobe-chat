@@ -9,8 +9,6 @@ import { DEFAULT_SYSTEM_AGENT_CONFIG } from './systemAgent';
 import { DEFAULT_TOOL_CONFIG } from './tool';
 import { DEFAULT_TTS_CONFIG } from './tts';
 
-export const COOKIE_CACHE_DAYS = 30;
-
 export * from './agent';
 export * from './hotkey';
 export * from './llm';
