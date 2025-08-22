@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, SortableList, Icon } from '@lobehub/ui';
+import { ActionIcon, Avatar, Icon, SortableList, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LoaderCircle, MessageSquare, UserMinus, UserPlus } from 'lucide-react';
@@ -194,7 +194,7 @@ const GroupChatSidebar = memo(() => {
                     <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
                       <SortableList.DragHandle />
                     </div>
-                    <Avatar avatar={"🎙️"} size={24} />
+                    <Avatar avatar={'🎙️'} size={24} />
                     <Flexbox flex={1}>
                       <div
                         style={{
@@ -205,12 +205,12 @@ const GroupChatSidebar = memo(() => {
                         Orchestrator
                       </div>
                     </Flexbox>
-                    {!isSupervisorLoading && (
-                      <Icon
-                        icon={LoaderCircle}
-                        size={14}
-                        spin
-                      />
+                    {isSupervisorLoading && (
+                      <Flexbox gap={4} horizontal>
+                        <Tooltip title="Orchestrator is thinking...">
+                          <ActionIcon icon={LoaderCircle} size={14} spin />
+                        </Tooltip>
+                      </Flexbox>
                     )}
                   </Flexbox>
                 </div>
