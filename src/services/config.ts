@@ -94,7 +94,7 @@ class ConfigService {
     data: any,
     mode: 'pglite' | 'postgres',
   ): Promise<ImportPgDataStructure> => {
-    const { default: json } = await import('@/database/client/migrations.json');
+    const { default: json } = await import('@/database/core/migrations.json');
     const latestHash = json.at(-1)?.hash;
     if (!latestHash) {
       throw new Error('Not find database sql hash');
