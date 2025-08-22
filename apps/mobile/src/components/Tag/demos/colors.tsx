@@ -1,11 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useThemeToken } from '@/theme';
 import Tag from '../index';
 
 const ColorsDemo = () => {
-  const token = useThemeToken();
-
   return (
     <View style={{ padding: 16 }}>
       <View
@@ -15,27 +12,23 @@ const ColorsDemo = () => {
           gap: 8,
         }}
       >
-        <Tag
-          style={{ backgroundColor: token.colorSuccessBg }}
-          textStyle={{ color: token.colorSuccess }}
-        >
-          Success
-        </Tag>
-        <Tag
-          style={{ backgroundColor: token.colorWarningBg }}
-          textStyle={{ color: token.colorWarning }}
-        >
-          Warning
-        </Tag>
-        <Tag
-          style={{ backgroundColor: token.colorErrorBg }}
-          textStyle={{ color: token.colorError }}
-        >
-          Error
-        </Tag>
-        <Tag style={{ backgroundColor: token.colorInfoBg }} textStyle={{ color: token.colorInfo }}>
-          Info
-        </Tag>
+        {/* Preset colors */}
+        <Tag color="red">Red</Tag>
+        <Tag color="volcano">Volcano</Tag>
+        <Tag color="orange">Orange</Tag>
+        <Tag color="gold">Gold</Tag>
+        <Tag color="yellow">Yellow</Tag>
+        <Tag color="lime">Lime</Tag>
+        <Tag color="green">Green</Tag>
+        <Tag color="cyan">Cyan</Tag>
+        <Tag color="blue">Blue</Tag>
+        <Tag color="geekblue">Geekblue</Tag>
+        <Tag color="purple">Purple</Tag>
+        <Tag color="magenta">Magenta</Tag>
+        <Tag color="gray">Gray</Tag>
+
+        {/* Default (no color) */}
+        <Tag>Default</Tag>
       </View>
     </View>
   );
