@@ -292,8 +292,8 @@ const azureImageModels: AIImageModelCard[] = [
       imageUrl: { default: null },
       prompt: { default: '' },
       size: {
-        default: '1024x1024',
-        enum: ['1024x1024', '1792x1024', '1024x1792'],
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1792x1024', '1024x1792'],
       },
     },
     releasedAt: '2025-06-23',
@@ -303,7 +303,7 @@ const azureImageModels: AIImageModelCard[] = [
     description: 'FLUX.1.1 Pro',
     displayName: 'FLUX.1.1 Pro',
     enabled: true,
-    id: 'FLUX.1.1-pro',
+    id: 'FLUX-1.1-pro',
     parameters: {
       imageUrl: { default: null },
       prompt: { default: '' },
@@ -319,8 +319,8 @@ const azureImageModels: AIImageModelCard[] = [
       imageUrl: { default: null },
       prompt: { default: '' },
       size: {
-        default: '1024x1024',
-        enum: ['1024x1024', '1792x1024', '1024x1792'],
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1792x1024', '1024x1792'],
       },
     },
     resolutions: ['1024x1024', '1024x1792', '1792x1024'],
@@ -334,8 +334,8 @@ const azureImageModels: AIImageModelCard[] = [
       imageUrl: { default: null },
       prompt: { default: '' },
       size: {
-        default: '1024x1024',
-        enum: ['1024x1024', '1536x1024', '1024x1536'],
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1536x1024', '1024x1536'],
       },
     },
     type: 'image',
