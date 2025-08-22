@@ -22,7 +22,6 @@ Toast 组件依赖以下包：
 ```bash
 # 必需依赖
 npm install react-native-safe-area-context
-npx expo install @expo/vector-icons
 
 # 如果使用bare React Native项目
 npm install react-native-vector-icons

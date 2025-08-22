@@ -291,7 +291,6 @@ import Highlighter from '@/components/Highlighter';
 
 - `@shikijs/core` - 语法高亮引擎
 - `expo-clipboard` - 剪贴板功能
-- `@expo/vector-icons` - 图标支持
 - `react-native` - 基础框架
 
 ## 更新日志
