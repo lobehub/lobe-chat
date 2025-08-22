@@ -1,0 +1,190 @@
+---
+title: Image Generation Development Setup
+description: Configure local environment for developing text-to-image and image-to-image features
+---
+
+# Image Generation Development Setup
+
+This guide helps developers set up the local environment for developing image generation features (text-to-image, image-to-image) with file storage capabilities.
+
+## Prerequisites
+
+- Docker installed and running
+- Node.js and pnpm installed
+- PostgreSQL client tools (optional, for debugging)
+
+<Callout type="warning">
+  **Security Notice**: This setup is designed for local development only. It uses default credentials and open permissions that are NOT suitable for production environments.
+</Callout>
+
+## Quick Setup
+
+Run the provided script to automatically set up all required services:
+
+```bash
+# Set up PostgreSQL and MinIO for image storage
+./scripts/setup-image-generation-dev.sh
+
+# Start the development server
+pnpm dev:desktop
+```
+
+This script will:
+
+1. Start PostgreSQL (no authentication for local development)
+2. Run database migrations to initialize schema
+3. Start MinIO (S3-compatible storage)
+4. Create and configure the storage bucket
+5. Add necessary S3 environment variables to `.env.desktop`
+
+## Architecture Overview
+
+The image generation feature requires:
+
+- **PostgreSQL**: Stores metadata about generated images
+- **MinIO/S3**: Stores the actual image files
+- **Server Mode**: Required for file handling (`NEXT_PUBLIC_SERVICE_MODE=server`)
+
+## Environment Configuration
+
+The following environment variables are automatically configured by the setup script:
+
+```bash
+# S3 Storage Configuration (MinIO for local development)
+S3_ACCESS_KEY_ID=minioadmin
+S3_SECRET_ACCESS_KEY=minioadmin
+S3_ENDPOINT=http://localhost:9000
+S3_BUCKET=lobe-chat
+S3_REGION=us-east-1
+S3_PUBLIC_DOMAIN=http://localhost:9000/lobe-chat
+S3_ENABLE_PATH_STYLE=1  # Required for MinIO
+```
+
+## Development Workflow
+
+### 1. Image Generation API
+
+When developing image generation features, generated images will be:
+
+1. Created by the AI model
+2. Uploaded to S3/MinIO via presigned URLs
+3. Metadata stored in PostgreSQL
+4. Served via the public S3 URL
+
+### 2. File Storage Structure
+
+```
+lobe-chat/           # S3 Bucket
+├── generated/       # Generated images
+│   └── {userId}/
+│       └── {sessionId}/
+│           └── {imageId}.png
+└── uploads/         # User uploads for image-to-image
+    └── {userId}/
+        └── {fileId}.{ext}
+```
+
+### 3. Testing Your Implementation
+
+After setting up the environment, you can test:
+
+```typescript
+// Example: Upload generated image
+const uploadUrl = await trpc.upload.createPresignedUrl.mutate({
+  filename: 'generated-image.png',
+  contentType: 'image/png',
+});
+
+// Upload to S3
+await fetch(uploadUrl, {
+  method: 'PUT',
+  body: imageBlob,
+  headers: { 'Content-Type': 'image/png' },
+});
+```
+
+## Manual Setup
+
+If you prefer to set up services manually:
+
+### PostgreSQL
+
+```bash
+docker run -d --name lobe-postgres \
+  -p 5432:5432 \
+  -e POSTGRES_HOST_AUTH_METHOD=trust \
+  -e POSTGRES_DB=postgres \
+  postgres:15
+```
+
+### MinIO
+
+```bash
+# Start MinIO
+docker run -d --name lobe-minio \
+  -p 9000:9000 -p 9001:9001 \
+  -e MINIO_ROOT_USER=minioadmin \
+  -e MINIO_ROOT_PASSWORD=minioadmin \
+  quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z \
+  server /data --console-address ":9001"
+
+# Create bucket
+docker run --rm \
+  --link lobe-minio:minio \
+  --entrypoint bash \
+  quay.io/minio/mc:RELEASE.2025-04-18T16-45-00Z \
+  -c "
+    mc config host add minio http://minio:9000 minioadmin minioadmin &&
+    mc mb minio/lobe-chat &&
+    mc anonymous set public minio/lobe-chat
+  "
+```
+
+## Service URLs
+
+- **PostgreSQL**: `postgres://postgres@localhost:5432/postgres`
+- **MinIO API**: `http://localhost:9000`
+- **MinIO Console**: `http://localhost:9001` (minioadmin/minioadmin)
+- **Application**: `http://localhost:3015`
+
+## Troubleshooting
+
+### Port Conflicts
+
+If ports are already in use:
+
+```bash
+# Check what's using the ports
+lsof -i :5432  # PostgreSQL
+lsof -i :9000  # MinIO API
+lsof -i :9001  # MinIO Console
+```
+
+### Reset Environment
+
+To completely reset your development environment:
+
+```bash
+# Stop and remove containers
+docker stop lobe-postgres lobe-minio
+docker rm lobe-postgres lobe-minio
+
+# Re-run setup
+./scripts/setup-image-generation-dev.sh
+```
+
+### Database Migrations
+
+The setup script runs migrations automatically. If you need to run them manually:
+
+```bash
+pnpm db:migrate
+```
+
+Note: In development mode with `pnpm dev:desktop`, migrations also run automatically on startup.
+
+## Related Documentation
+
+- [Server Database Setup](/docs/self-hosting/server-database)
+- [S3 Storage Configuration](/docs/self-hosting/advanced/s3)
+- [Environment Variables](/docs/self-hosting/environment-variables)

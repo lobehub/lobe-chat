@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 

@@ -22,6 +22,7 @@ export default defineConfig({
         // https://github.com/lobehub/lobe-chat/pull/7265
         ...coverageConfigDefaults.exclude,
         '__mocks__/**',
+        '**/packages/**',
         // just ignore the migration code
         // we will use pglite in the future
         // so the coverage of this file is not important
@@ -38,6 +39,7 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       '**/apps/desktop/**',
+      '**/packages/**',
       'src/database/server/**/**',
       'src/database/repositories/dataImporter/deprecated/**/**',
     ],

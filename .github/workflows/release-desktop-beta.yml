@@ -165,6 +165,10 @@ jobs:
             apps/desktop/release/*.zip*
             apps/desktop/release/*.exe*
             apps/desktop/release/*.AppImage
+            apps/desktop/release/*.deb*
+            apps/desktop/release/*.snap*
+            apps/desktop/release/*.rpm*
+            apps/desktop/release/*.tar.gz*
           retention-days: 5
 
   # 正式版发布 job
@@ -201,5 +205,9 @@ jobs:
             release/*.zip*
             release/*.exe*
             release/*.AppImage
+            release/*.deb*
+            release/*.snap*
+            release/*.rpm*
+            release/*.tar.gz*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

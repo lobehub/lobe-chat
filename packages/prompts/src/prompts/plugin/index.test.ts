@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { pluginPrompts } from './index';
 import { Tool } from './tools';
 
