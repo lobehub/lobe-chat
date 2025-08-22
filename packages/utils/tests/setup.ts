@@ -1,5 +1,3 @@
-/* eslint-disable import/newline-after-import,import/first */
-
 // only inject in the dom environment
 if (
   // not node runtime

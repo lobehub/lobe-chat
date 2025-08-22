@@ -12,7 +12,6 @@
     "@lobechat/types": "workspace:*"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.4",
     "vitest-canvas-mock": "^0.3.3"
   }
 }
