@@ -1,7 +1,8 @@
 import { ChatModelCard } from '@lobechat/types';
-import { createErrorResponse } from '@lobechat/utils';
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
+
+import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
