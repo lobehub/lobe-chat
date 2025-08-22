@@ -1,3 +1,4 @@
+import { StoreApiWithSelector } from '@lobechat/types';
 import { StoreApi } from 'zustand';
 import { createContext } from 'zustand-utils';
 import { shallow } from 'zustand/shallow';
@@ -8,7 +9,6 @@ import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/config/featureFlags';
 import { createDevtools } from '@/store/middleware/createDevtools';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { merge } from '@/utils/merge';
-import { StoreApiWithSelector } from '@/utils/zustand';
 
 import { ServerConfigAction, createServerConfigSlice } from './action';
 

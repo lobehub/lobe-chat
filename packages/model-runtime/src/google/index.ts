@@ -9,9 +9,7 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
-
-import { imageUrlToBase64 } from '@/utils/imageToBase64';
-import { safeParseJSON } from '@/utils/safeParseJSON';
+import { imageUrlToBase64, safeParseJSON } from '@lobechat/utils';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';

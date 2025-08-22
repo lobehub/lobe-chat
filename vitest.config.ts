@@ -10,6 +10,12 @@ export default defineConfig({
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
+      '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
+      '@/database': resolve(__dirname, './packages/database/src'),
+      '@/utils/client/switchLang': resolve(__dirname, './src/utils/client/switchLang'),
+      // TODO: after refactor the errorResponse, we can remove it
+      '@/utils/errorResponse': resolve(__dirname, './src/utils/errorResponse'),
+      '@/utils': resolve(__dirname, './packages/utils/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@/const': resolve(__dirname, './packages/const/src'),
       '@': resolve(__dirname, './src'),
@@ -22,6 +28,7 @@ export default defineConfig({
         // https://github.com/lobehub/lobe-chat/pull/7265
         ...coverageConfigDefaults.exclude,
         '__mocks__/**',
+        '**/packages/**',
         // just ignore the migration code
         // we will use pglite in the future
         // so the coverage of this file is not important
@@ -38,8 +45,7 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       '**/apps/desktop/**',
-      'src/database/server/**/**',
-      'src/database/repositories/dataImporter/deprecated/**/**',
+      '**/packages/**',
     ],
     globals: true,
     server: {

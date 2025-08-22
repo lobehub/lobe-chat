@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@lobechat/types';
 import { ActionIcon, Button, ButtonProps, Icon } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
@@ -12,7 +13,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ragEvalService } from '@/services/ragEval';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 import CreateEvaluationButton from '../CreateEvaluation';
 

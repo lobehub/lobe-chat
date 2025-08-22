@@ -1,6 +1,6 @@
 import { ModelProvider } from '@lobechat/model-runtime';
 
-import { genUserLLMConfig } from '@/utils/genUserLLMConfig';
+import { genUserLLMConfig } from './genUserLLMConfig';
 
 export const DEFAULT_LLM_CONFIG = genUserLLMConfig({
   lmstudio: {

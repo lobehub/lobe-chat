@@ -1,5 +1,38 @@
 [
   {
+    "children": {
+      "improvements": ["Update mistral model vision ability."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.5"
+  },
+  {
+    "children": {
+      "improvements": ["Move database to packages."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.4"
+  },
+  {
+    "children": {},
+    "date": "2025-08-21",
+    "version": "1.114.3"
+  },
+  {
+    "children": {
+      "fixes": ["Can't load custom provider config."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.2"
+  },
+  {
+    "children": {
+      "improvements": ["Move chain into @lobechat/prompts."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.1"
+  },
+  {
     "children": {},
     "date": "2025-08-19",
     "version": "1.114.0"
