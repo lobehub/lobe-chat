@@ -1,11 +1,11 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { clientDB, initializeDB } from '@/database/client/db';
+import { getTestDB } from '@/database/models/__tests__/_util';
 
 import { TableViewerRepo } from './index';
 
 const userId = 'user-table-viewer';
-const repo = new TableViewerRepo(clientDB as any, userId);
+let repo: TableViewerRepo;
 
 // Mock database execution
 const mockExecute = vi.fn();
@@ -13,11 +13,9 @@ const mockDB = {
   execute: mockExecute,
 };
 
-beforeAll(async () => {
-  await initializeDB();
-}, 30000); // Increase timeout for database initialization
-
 beforeEach(async () => {
+  const db = await getTestDB();
+  repo = new TableViewerRepo(db as any, userId);
   vi.clearAllMocks();
 });
 
@@ -30,7 +28,7 @@ describe('TableViewerRepo', () => {
     it('should return all tables with counts', async () => {
       const result = await repo.getAllTables();
 
-      expect(result.length).toEqual(59);
+      expect(result.length).toEqual(63);
       expect(result[0]).toEqual({ name: 'agents', count: 0, type: 'BASE TABLE' });
     });
 

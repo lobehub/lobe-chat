@@ -151,16 +151,9 @@ describe('DataExporterRepos', () => {
     });
   };
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     // 创建内存数据库
     await initializeDB();
-  }, 30000); // Increase timeout for database initialization
-
-beforeEach(async () => {
-
-    // 清理数据库
-    await db.delete(users);
-    await db.delete(globalFiles);
 
     // 插入测试数据
     await setupTestData();

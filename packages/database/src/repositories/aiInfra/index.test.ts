@@ -21,18 +21,9 @@ const mockProviderConfigs = {
 
 let repo: AiInfraRepos;
 
-beforeAll(async () => {
-  await initializeDB();
-}, 30000); // Increase timeout for database initialization
-
 beforeEach(async () => {
+  await initializeDB();
   vi.clearAllMocks();
-  
-  // Clean and setup test data
-  await clientDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values({ id: userId });
-  });
 
   repo = new AiInfraRepos(clientDB as any, userId, mockProviderConfigs);
 });
