@@ -214,15 +214,8 @@
     {
       "idx": 30,
       "version": "7",
-      "when": 1754984271690,
-      "tag": "0030_nappy_shadow_king",
-      "breakpoints": true
-    },
-    {
-      "idx": 31,
-      "version": "7",
-      "when": 1755483930233,
-      "tag": "0031_brown_vampiro",
+      "when": 1755845061329,
+      "tag": "0030_add_group_chat",
       "breakpoints": true
     }
   ],
