@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Move database to packages."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.4"
+  },
+  {
     "children": {},
     "date": "2025-08-21",
     "version": "1.114.3"
