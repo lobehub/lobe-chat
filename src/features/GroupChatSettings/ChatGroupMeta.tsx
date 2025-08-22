@@ -42,17 +42,7 @@ const ChatGroupMeta = memo(() => {
         label: t('settingGroup.description.title'),
         name: 'description',
       },
-      {
-        children: (
-          <TextArea
-            autoSize={{ maxRows: 8, minRows: 3 }}
-            placeholder={t('settingGroup.systemPrompt.placeholder')}
-            rows={4}
-          />
-        ),
-        label: t('settingGroup.systemPrompt.title'),
-        name: 'systemPrompt',
-      },
+
     ],
     title: t('settingGroup.title'),
   };

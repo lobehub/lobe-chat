@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, SliderWithInput } from '@lobehub/ui';
-import { Select, Switch } from 'antd';
+import { Input, Select, Switch } from 'antd';
 import { isEqual } from 'lodash';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 
 import ModelSelect from '../ModelSelect';
 import { selectors, useStore } from './store';
+
+const { TextArea } = Input;
 
 /**
  * Chat Settings for Group Chat
@@ -33,6 +35,18 @@ const ChatGroupSettings = memo(() => {
         desc: t('settingGroupChat.model.desc'),
         label: t('settingGroupChat.model.title'),
         name: '_modelConfig',
+      },
+      {
+        children: (
+          <TextArea
+            autoSize={{ maxRows: 8, minRows: 3 }}
+            placeholder={t('settingGroupChat.systemPrompt.placeholder')}
+            rows={4}
+          />
+        ),
+        desc: t('settingGroupChat.systemPrompt.desc'),
+        label: t('settingGroupChat.systemPrompt.title'),
+        name: 'systemPrompt',
       },
       {
         children: (

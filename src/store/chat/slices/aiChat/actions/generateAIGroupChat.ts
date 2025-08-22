@@ -184,6 +184,7 @@ export const generateAIGroupChat: StateCreator<
         model: groupConfig.orchestratorModel || 'gemini-2.5-flash',
         provider: groupConfig.orchestratorProvider || 'google',
         userName: realUserName,
+        systemPrompt: groupConfig.systemPrompt,
       };
 
       const decisions: SupervisorDecisionList = await supervisor.makeDecision(context);

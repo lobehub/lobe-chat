@@ -10,6 +10,7 @@ export interface LobeChatGroupChatConfig {
     responseOrder: 'sequential' | 'natural';
     responseSpeed: 'slow' | 'medium' | 'fast';
     revealDM: boolean;
+    systemPrompt?: string;
 }
 
 // Database config type (flat structure)
