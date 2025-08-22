@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.114.5](https://github.com/lobehub/lobe-chat/compare/v1.114.4...v1.114.5)
+
+<sup>Released on **2025-08-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update mistral model vision ability.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update mistral model vision ability, closes [#8885](https://github.com/lobehub/lobe-chat/issues/8885) ([915c0ff](https://github.com/lobehub/lobe-chat/commit/915c0ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.114.4](https://github.com/lobehub/lobe-chat/compare/v1.114.3...v1.114.4)
 
 <sup>Released on **2025-08-22**</sup>

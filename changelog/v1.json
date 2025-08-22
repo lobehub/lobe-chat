@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update mistral model vision ability."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.5"
+  },
+  {
+    "children": {
       "improvements": ["Move database to packages."]
     },
     "date": "2025-08-22",
