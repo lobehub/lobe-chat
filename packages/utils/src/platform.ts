@@ -1,6 +1,6 @@
 import UAParser from 'ua-parser-js';
 
-import { isOnServerSide } from '@/utils/env';
+import { isOnServerSide } from './env';
 
 export const getParser = () => {
   if (isOnServerSide) return new UAParser('Node');

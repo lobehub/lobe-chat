@@ -1,7 +1,7 @@
+import { nanoid } from '@lobechat/utils';
 import { ChatResponse } from 'ollama/browser';
 
 import { ChatStreamCallbacks } from '@/libs/model-runtime';
-import { nanoid } from '@/utils/uuid';
 
 import {
   StreamContext,

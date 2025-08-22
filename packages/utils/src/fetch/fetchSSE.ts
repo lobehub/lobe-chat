@@ -15,8 +15,8 @@ import {
 } from '@/types/message';
 import { ChatImageChunk } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
-import { nanoid } from '@/utils/uuid';
 
+import { nanoid } from '../uuid';
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
 

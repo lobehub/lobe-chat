@@ -1,8 +1,9 @@
 import { produce } from 'immer';
 
 import { AiFullModelCard, AiModelType } from '@/types/aiModel';
-import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
-import { merge } from '@/utils/merge';
+
+import { getModelPropertyWithFallback } from './getFallbackModelProperty';
+import { merge } from './merge';
 
 /**
  * Parse model string to add or remove models.

@@ -1,7 +1,7 @@
 import { geolocation } from '@vercel/functions';
 import { getCountry } from 'countries-and-timezones';
 import { NextRequest } from 'next/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { parseDefaultThemeFromCountry } from '../geo';
 

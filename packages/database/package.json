@@ -12,6 +12,7 @@
     "@electric-sql/pglite": "^0.2.17",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
+    "@lobechat/utils": "workspace:*",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.44.4",
     "nanoid": "^5.1.5",
