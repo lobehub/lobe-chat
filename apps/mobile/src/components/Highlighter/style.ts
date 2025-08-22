@@ -127,6 +127,15 @@ export const useStyles = createStyles((token) => ({
     top: token.paddingXS,
     zIndex: 1,
   },
+  simpleCopyButton: {
+    backgroundColor: token.colorBgContainer,
+    borderRadius: token.borderRadiusXS,
+    padding: token.paddingXXS,
+    position: 'absolute',
+    right: token.paddingSM,
+    top: token.paddingSM,
+    zIndex: 10,
+  },
   statusContainer: {
     alignItems: 'center',
     alignSelf: 'flex-start',

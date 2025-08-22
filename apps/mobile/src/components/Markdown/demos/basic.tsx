@@ -4,29 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useThemeToken } from '@/theme';
 
 import MarkdownRender from '../index';
-
-const basicMarkdown = `# Heading 1
-## Heading 2
-### Heading 3
-
-This is a paragraph with **bold** and *italic* text.
-
-- Item 1
-- Item 2
-  - Nested item
-- Item 3
-
-1. First item
-2. Second item
-3. Third item
-
-> This is a blockquote
-> with multiple lines
-
-[Link to GitHub](https://github.com)
-
-![React Logo](https://reactjs.org/logo-og.png)
-`;
+import { content } from './data';
 
 const BasicDemo = () => {
   const token = useThemeToken();
@@ -53,7 +31,7 @@ const BasicDemo = () => {
     <View style={styles.container}>
       <Text style={styles.title}>基础 Markdown 渲染</Text>
       <View style={styles.content}>
-        <MarkdownRender content={basicMarkdown} />
+        <MarkdownRender content={content} />
       </View>
     </View>
   );

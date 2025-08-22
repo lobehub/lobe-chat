@@ -115,8 +115,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
     };
   }
 
-  console.log(mergedThemeConfig, 'mergedThemeConfig');
-
   // 使用合并后的配置生成主题
   const themeToken = getDesignToken(mergedThemeConfig);
 

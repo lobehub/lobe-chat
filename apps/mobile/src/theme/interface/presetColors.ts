@@ -16,7 +16,10 @@ const PresetColors = [
 
 const PresetSystemColors = ['Error', 'Warning', 'Success', 'Info'] as const;
 
+const PresetStatusColors = ['success', 'processing', 'error', 'default', 'warning'] as const;
+
 export type PresetColorKey = (typeof PresetColors)[number];
+export type PresetStatusColorKey = (typeof PresetStatusColors)[number];
 
 export type PresetSystemColorKey = (typeof PresetSystemColors)[number];
 

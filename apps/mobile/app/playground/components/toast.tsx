@@ -1,11 +1,18 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { AdvancedDemo, BasicDemo, IntegrationDemo, TypesDemo } from '@/components/Toast/demos';
+import {
+  AdvancedDemo,
+  BasicDemo,
+  IntegrationDemo,
+  StaticDemo,
+  TypesDemo,
+} from '@/components/Toast/demos';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <TypesDemo />, key: 'types', title: '类型演示' },
+  { component: <StaticDemo />, key: 'static', title: '静态方法' },
   { component: <AdvancedDemo />, key: 'advanced', title: '高级功能' },
   { component: <IntegrationDemo />, key: 'integration', title: '集成示例' },
 ];

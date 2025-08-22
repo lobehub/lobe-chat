@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
-import ScrollToBottom from '../ScrollToBottom';
+// import ScrollToBottom from '../ScrollToBottom';
 import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
@@ -35,7 +35,11 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
 
 ChatMessageItem.displayName = 'ChatMessageItem';
 
-export default function ChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
+export default function ChatList({
+  style,
+  //  onScroll,
+  scrollViewRef,
+}: ChatListProps) {
   const internalRef = useRef<FlatList<ChatMessage>>(null);
 
   // 触发消息加载
@@ -43,7 +47,7 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
 
   const { messages } = useChat();
   const { styles } = useStyles();
-  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  // const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
@@ -54,20 +58,20 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
 
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-      const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
-      setShowScrollToBottom(!isAtBottom);
-      onScroll?.(event);
-    },
-    [onScroll],
-  );
+  // const handleScroll = useCallback(
+  //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  //     const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
+  //     setShowScrollToBottom(!isAtBottom);
+  //     onScroll?.(event);
+  //   },
+  //   [onScroll],
+  // );
 
-  const handleScrollToBottom = useCallback(() => {
-    const ref = scrollViewRef?.current || internalRef.current;
-    ref?.scrollToEnd({ animated: true });
-  }, [scrollViewRef]);
+  // const handleScrollToBottom = useCallback(() => {
+  //   const ref = scrollViewRef?.current || internalRef.current;
+  //   ref?.scrollToEnd({ animated: true });
+  // }, [scrollViewRef]);
 
   const handleContentSizeChange = useCallback(() => {
     const ref = scrollViewRef?.current || internalRef.current;
@@ -85,7 +89,7 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
         maxToRenderPerBatch={10}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleContentSizeChange}
-        onScroll={handleScroll}
+        // onScroll={handleScroll}
         ref={scrollViewRef || internalRef}
         removeClippedSubviews={true}
         renderItem={renderItem}
@@ -93,7 +97,7 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
         style={styles.chatContainer}
         windowSize={10}
       />
-      <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} />
+      {/* <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} /> */}
     </View>
   );
 }
