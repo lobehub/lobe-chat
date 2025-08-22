@@ -1,6 +1,7 @@
 'use client';
 
 import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { EvalDatasetRecordRefFile } from '@lobechat/types';
 import { ActionIcon, Button, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
@@ -12,7 +13,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import { ragEvalService } from '@/services/ragEval';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 const createRequest = (activeDatasetId: number) => async () => {
   const records = await ragEvalService.getDatasetRecords(activeDatasetId);
