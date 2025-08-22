@@ -12,6 +12,7 @@ export default defineConfig({
       '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
       '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
       '@/database': resolve(__dirname, './packages/database/src'),
+      '@/utils/client': resolve(__dirname, './src/utils/client'),
       '@/utils/errorResponse': resolve(__dirname, './src/utils/errorResponse'),
       '@/utils': resolve(__dirname, './packages/utils/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
