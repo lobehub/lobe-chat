@@ -58,9 +58,6 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
   const { data } = useFetchPythonFileItem(fileId);
   const { styles } = useImageStyles();
 
-  console.log('fileData', data);
-  console.log('previewUrl', previewUrl);
-
   let imageUrl = data?.url ?? previewUrl;
 
   if (imageUrl) {

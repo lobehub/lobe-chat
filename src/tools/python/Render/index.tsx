@@ -97,7 +97,7 @@ const Python = memo<
           )}
 
           {/* 文件显示 */}
-          {content.files?.length && (
+          {content?.files && content.files.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 8 }}>
                 {t('python.files')}
