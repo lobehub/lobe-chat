@@ -405,14 +405,14 @@ describe('LobeAzureOpenAI', () => {
 
       await expect(
         instance.createImage({ model: 'gpt-image-1', params: { prompt: 'moon' } }),
-      ).rejects.toEqual({
+      ).rejects.toMatchObject({
         endpoint: 'https://***.openai.azure.com/',
         errorType: 'AgentRuntimeError',
         provider: 'azure',
         error: {
           name: 'Error',
           cause: undefined,
-          message: 'Invalid image response: missing or empty data array',
+          message: expect.stringContaining('Invalid image response: missing or empty data array'),
         },
       });
     });

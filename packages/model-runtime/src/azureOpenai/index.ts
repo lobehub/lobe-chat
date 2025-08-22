@@ -173,7 +173,10 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         try {
           result = JSON.parse(result);
         } catch {
-          azureImageLogger('Failed to parse string response from images API');
+          const truncated = result.length > 500 ? result.slice(0, 500) + '...[truncated]' : result;
+          azureImageLogger(
+            `Failed to parse string response from images API. Raw response: ${truncated}`,
+          );
           throw new Error('Invalid image response: expected JSON string but parsing failed');
         }
       } else if (result && typeof result === 'object') {
@@ -182,7 +185,12 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
           try {
             result = JSON.parse((result as any).bodyAsText);
           } catch {
-            azureImageLogger('Failed to parse bodyAsText from images API response');
+            const rawText = (result as any).bodyAsText;
+            const truncated =
+              rawText.length > 500 ? rawText.slice(0, 500) + '...[truncated]' : rawText;
+            azureImageLogger(
+              `Failed to parse bodyAsText from images API. Raw response: ${truncated}`,
+            );
             throw new Error('Invalid image response: bodyAsText not valid JSON');
           }
         } else if (typeof (result as any).body === 'string') {
@@ -197,7 +205,9 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
       // Validate response
       if (!result || !result.data || !Array.isArray(result.data) || result.data.length === 0) {
-        throw new Error('Invalid image response: missing or empty data array');
+        throw new Error(
+          `Invalid image response: missing or empty data array. Response: ${JSON.stringify(result)}`,
+        );
       }
 
       const imageData: any = result.data[0];
