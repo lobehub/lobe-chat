@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { VARIABLE_GENERATORS, parsePlaceholderVariablesMessages } from './parserPlaceholder';
+import { parsePlaceholderVariablesMessages } from './parserPlaceholder';
 
 // Mock dependencies
-vi.mock('@/utils/uuid', () => ({
+vi.mock('../uuid', () => ({
   uuid: () => 'mocked-uuid-12345',
 }));
 

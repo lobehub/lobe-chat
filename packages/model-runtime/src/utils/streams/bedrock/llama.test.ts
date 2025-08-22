@@ -1,8 +1,7 @@
 import { InvokeModelWithResponseStreamResponse } from '@aws-sdk/client-bedrock-runtime';
+import * as uuidModule from '@lobechat/utils';
 import { Readable } from 'stream';
 import { describe, expect, it, vi } from 'vitest';
-
-import * as uuidModule from '@/utils/uuid';
 
 import { AWSBedrockLlamaStream } from './llama';
 

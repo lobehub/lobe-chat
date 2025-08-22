@@ -1,6 +1,4 @@
-import { expect } from 'vitest';
-
-import { AIChatModelCard } from '@/types/aiModel';
+import { describe, expect, it } from 'vitest';
 
 import { mergeArrayById } from './merge';
 

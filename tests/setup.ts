@@ -17,17 +17,6 @@ vi.mock('@lobehub/analytics/react', () => ({
   }),
 }));
 
-// only inject in the dom environment
-if (
-  // not node runtime
-  typeof window !== 'undefined' &&
-  // not edge runtime
-  typeof (globalThis as any).EdgeRuntime !== 'string'
-) {
-  // test with canvas
-  await import('vitest-canvas-mock');
-}
-
 // node runtime
 if (typeof window === 'undefined') {
   // test with polyfill crypto

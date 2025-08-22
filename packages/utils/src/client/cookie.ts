@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { COOKIE_CACHE_DAYS } from '@/const/settings';
+export const COOKIE_CACHE_DAYS = 30;
 
 export const setCookie = (
   key: string,

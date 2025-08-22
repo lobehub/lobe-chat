@@ -1,9 +1,7 @@
 import dayjs from 'dayjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { COOKIE_CACHE_DAYS } from '@/const/settings';
-
-import { setCookie } from './cookie';
+import { COOKIE_CACHE_DAYS, setCookie } from './cookie';
 
 describe('setCookie', () => {
   // Mock document.cookie since we're in a test environment

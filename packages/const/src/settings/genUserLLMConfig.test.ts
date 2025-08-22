@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@/types/index';
 
 import { genUserLLMConfig } from './genUserLLMConfig';
 
