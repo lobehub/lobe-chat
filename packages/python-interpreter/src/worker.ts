@@ -34,12 +34,14 @@ let pyodide: PyodideAPI | undefined;
 class PythonWorker {
   pyodideIndexUrl: string;
   pypiIndexUrl: string;
+  uploadedFiles: File[];
 
   constructor(options: PythonOptions) {
     this.pypiIndexUrl = options.pypiIndexUrl || 'PYPI';
     this.pyodideIndexUrl =
       options.pyodideIndexUrl || 'https://cdn.jsdelivr.net/pyodide/v0.28.2/full';
     globalThis.importScripts(urlJoin(this.pyodideIndexUrl, 'pyodide.js'));
+    this.uploadedFiles = [];
   }
 
   get pyodide() {
@@ -63,27 +65,32 @@ class PythonWorker {
   /**
    * 上传文件到解释器环境中
    * @param files 文件列表
-   * @param path 保存目录，默认为 `/mnt/data/`
    */
-  async uploadFiles(files: File[], path?: string) {
-    const filePath = path || `/mnt/data/`;
+  async uploadFiles(files: File[]) {
     for (const file of files) {
+      console.log('input file', file.name);
       const content = new Uint8Array(await file.arrayBuffer());
-      this.pyodide.FS.writeFile(`${filePath}/${file.name}`, content);
+      this.pyodide.FS.writeFile(`/mnt/data/${file.name}`, content);
+      this.uploadedFiles.push(file);
     }
   }
 
   /**
-   * 从解释器环境中下载文件
+   * 从解释器环境中下载变动的文件
    * @param files 文件列表
    */
-  downloadFiles(files: string[]) {
+  async downloadFiles() {
     const result: File[] = [];
-    for (const file of files) {
+    for (const entry of this.pyodide.FS.readdir('/mnt/data')) {
+      if (entry === '.' || entry === '..') continue;
+      const filePath = `/mnt/data/${entry}`;
       // pyodide 的 FS 类型定义有问题，只能采用 any
-      const content = (this.pyodide.FS as any).readFile(file, { encoding: 'binary' });
+      const content = (this.pyodide.FS as any).readFile(filePath, { encoding: 'binary' });
       const blob = new Blob([content]);
-      result.push(new File([blob], file));
+      const file = new File([blob], entry);
+      if (await this.isNewFile(file)) {
+        result.push(file);
+      }
     }
     return result;
   }
@@ -97,16 +104,6 @@ class PythonWorker {
     const micropip = this.pyodide.pyimport('micropip');
     micropip.set_index_urls([this.pypiIndexUrl, 'PYPI']);
     await micropip.install(packages);
-  }
-
-  /**
-   * 读取目录中的文件列表
-   * @param path 目录路径
-   */
-  readDir(path: string) {
-    return this.pyodide.FS.readdir(path)
-      .filter((file) => file !== '.' && file !== '..')
-      .map((file) => `${path}/${file}`);
   }
 
   /**
@@ -169,6 +166,26 @@ class PythonWorker {
       const buffer = await fetch(url, { cache: 'force-cache' }).then((res) => res.arrayBuffer());
       this.pyodide.FS.writeFile(`/fonts/${filename}`, new Uint8Array(buffer));
     }
+  }
+
+  private async isNewFile(file: File) {
+    const isSameFile = async (a: File, b: File) => {
+      if (a.name !== b.name) return false;
+      if (a.size !== b.size) return false;
+
+      const aBuffer = await a.arrayBuffer();
+      const bBuffer = await b.arrayBuffer();
+      const aArray = new Uint8Array(aBuffer);
+      const bArray = new Uint8Array(bBuffer);
+      const length = aArray.length;
+      for (let i = 0; i < length; i++) {
+        if (aArray[i] !== bArray[i]) return false;
+      }
+
+      return true;
+    };
+    const t = await Promise.all(this.uploadedFiles.map((f) => isSameFile(f, file)));
+    return t.every((f) => !f);
   }
 }
 

@@ -9,6 +9,7 @@ import { pythonService } from '@/services/python';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
+import { PythonToolIdentifier } from '@/tools/python';
 import { PythonFileItem, PythonInterpreterParams, PythonResponse } from '@/types/tool/python';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -40,8 +41,52 @@ export const pythonSlice: StateCreator<
 
     togglePythonExecuting(id, true);
 
+    const toFile = async ({ url, fileId }: { fileId?: string, url?: string; }) => {
+      if (url) {
+        return await fetch(url).then((res) => res.blob());
+      }
+      if (fileId) {
+        const item = await fileService.getFile(fileId);
+        return await toFile({ url: item.url });
+      }
+      return null;
+    };
+
+    // TODO: 应该只下载 AI 用到的文件
+    const files: File[] = [];
+    for (const message of chatSelectors.mainDisplayChats(get())) {
+      for (const file of message.fileList ?? []) {
+        const fileItem = await toFile({ fileId: file.id, url: file.url });
+        if (fileItem) {
+          files.push(new File([fileItem], file.name));
+        }
+      }
+      for (const image of message.imageList ?? []) {
+        const fileItem = await toFile({ fileId: image.id });
+        if (fileItem) {
+          files.push(new File([fileItem], image.alt));
+        }
+      }
+      for (const tool of message.tools ?? []) {
+        if (tool.identifier === PythonToolIdentifier) {
+          const message = chatSelectors.getMessageByToolCallId(tool.id)(get());
+          if (message?.content) {
+            const content = JSON.parse(message.content) as PythonResponse;
+            if (content.files) {
+              for (const file of content.files) {
+                const fileItem = await toFile({ fileId: file.fileId });
+                if (fileItem) {
+                  files.push(new File([fileItem], file.filename));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     try {
-      const result = await pythonService.runPython(params.code, params.packages);
+      const result = await pythonService.runPython(params.code, params.packages, files);
       if (result.files) {
         await internal_updateMessageContent(id, JSON.stringify(result));
         await uploadPythonFiles(id, result.files);
