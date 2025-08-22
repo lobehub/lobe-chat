@@ -4,7 +4,7 @@ import { App } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
-import React, { type FC, memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
@@ -12,8 +12,8 @@ import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
 
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { useUploadFilesValidation } from '../hooks/useUploadFilesValidation';
 import { useConfigPanelStyles } from '../style';
-import { validateImageFileSize } from '../utils/imageValidation';
 
 // ======== Business Types ======== //
 
@@ -423,6 +423,7 @@ const ImageUpload: FC<ImageUploadProps> = memo(
     const [uploadState, setUploadState] = useState<UploadState | null>(null);
     const { t } = useTranslation('components');
     const { message } = App.useApp();
+    const { validateFiles } = useUploadFilesValidation(undefined, maxFileSize);
 
     // Cleanup blob URLs to prevent memory leaks
     useEffect(() => {
@@ -433,21 +434,6 @@ const ImageUpload: FC<ImageUploadProps> = memo(
       };
     }, [uploadState?.previewUrl]);
 
-    // Validate file size - reusable callback
-    const validateFile = useCallback(
-      (file: File): boolean => {
-        if (maxFileSize) {
-          const validation = validateImageFileSize(file, maxFileSize);
-          if (!validation.valid) {
-            message.error(t('MultiImagesUpload.validation.fileSizeExceeded'));
-            return false;
-          }
-        }
-        return true;
-      },
-      [maxFileSize, message, t],
-    );
-
     const handleFileSelect = () => {
       inputRef.current?.click();
     };
@@ -456,8 +442,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(
       const file = event.target.files?.[0];
       if (!file) return;
 
-      // Validate file size
-      if (!validateFile(file)) return;
+      // Validate file using unified validation hook
+      if (!validateFiles([file])) return;
 
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
@@ -537,8 +523,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(
       // Take the first image file
       const file = files[0];
 
-      // Validate file size
-      if (!validateFile(file)) return;
+      // Validate file using unified validation hook
+      if (!validateFiles([file])) return;
 
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);

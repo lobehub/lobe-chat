@@ -56,7 +56,6 @@ export const validateImageFileSize = (file: File, maxSize?: number): ValidationR
  * @returns Validation result
  */
 export const validateImageCount = (count: number, maxCount?: number): ValidationResult => {
-  console.log('count', count, 'maxCount', maxCount);
   if (!maxCount) return { valid: true };
 
   if (count > maxCount) {
@@ -110,10 +109,9 @@ export const validateImageFiles = (
   });
 
   return {
-    errors: Array.from(new Set(errors)), 
+    errors: Array.from(new Set(errors)), // Remove duplicates
     failedFiles,
-    // Remove duplicates
-fileResults,
+    fileResults,
     valid: errors.length === 0,
   };
 };
