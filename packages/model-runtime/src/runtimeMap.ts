@@ -59,6 +59,7 @@ import { LobeXAI } from './providers/xai';
 import { LobeXinferenceAI } from './providers/xinference';
 import { LobeZeroOneAI } from './providers/zeroone';
 import { LobeZhipuAI } from './providers/zhipu';
+import { LobeVercelAIGatewayAI } from './vercelaigateway';
 
 export const providerRuntimeMap = {
   ai21: LobeAi21AI,
@@ -115,6 +116,7 @@ export const providerRuntimeMap = {
   togetherai: LobeTogetherAI,
   upstage: LobeUpstageAI,
   v0: LobeV0AI,
+  vercelaigateway: LobeVercelAIGatewayAI,
   vllm: LobeVLLMAI,
   volcengine: LobeVolcengineAI,
   wenxin: LobeWenxinAI,
