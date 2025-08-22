@@ -289,17 +289,57 @@ const azureImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'FLUX.1-Kontext-pro',
     parameters: {
-      aspectRatio: {
-        default: '1:1',
-        enum: ['21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'],
-      },
       imageUrl: { default: null },
       prompt: { default: '' },
-      seed: { default: null },
+      size: {
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1792x1024', '1024x1792'],
+      },
     },
-    releasedAt: '2025-05-01',
+    releasedAt: '2025-06-23',
     type: 'image',
-  }
+  },
+  {
+    description: 'FLUX.1.1 Pro',
+    displayName: 'FLUX.1.1 Pro',
+    enabled: true,
+    id: 'FLUX-1.1-pro',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: { default: '' },
+    },
+    releasedAt: '2025-06-23',
+    type: 'image',
+  },
+  {
+    description: 'DALL·E 3',
+    displayName: 'DALL·E 3',
+    id: 'dall-e-3',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: { default: '' },
+      size: {
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1792x1024', '1024x1792'],
+      },
+    },
+    resolutions: ['1024x1024', '1024x1792', '1792x1024'],
+    type: 'image',
+  },
+  {
+    description: 'ChatGPT Image 1',
+    displayName: 'GPT Image 1',
+    id: 'gpt-image-1',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: { default: '' },
+      size: {
+        default: 'auto',
+        enum: ['auto', '1024x1024', '1536x1024', '1024x1536'],
+      },
+    },
+    type: 'image',
+  },
 ];
 
 export const allModels = [...azureChatModels, ...azureImageModels];
