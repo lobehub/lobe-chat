@@ -675,4 +675,27 @@ The above example disables all models first, then enables `flux/schnell` and `fl
 
 The above example disables all models first, then enables `flux-pro-1.1` and `flux-kontext-pro` (displayed as `FLUX.1 Kontext [pro]`).
 
+## Vercel AI Gateway
+
+### `ENABLED_VERCELAIGATEWAY`
+
+- Type: Optional
+- Description: Enables Vercel AI Gateway as a model provider by default. Set to `0` to disable the Vercel AI Gateway service.
+- Default: `1`
+- Example: `0`
+
+### `VERCELAIGATEWAY_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Vercel AI Gateway service.
+- Default: -
+- Example: `vck_xxxxxx...xxxxxx`
+
+### `VERCELAIGATEWAY_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the Vercel AI Gateway model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+vercel-model-1,+vercel-model-2=vercel-special`
+
 [model-list]: /docs/self-hosting/advanced/model-list
