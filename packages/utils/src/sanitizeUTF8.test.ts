@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { sanitizeUTF8 } from './sanitizeUTF8';
 
 describe('UTF-8 Sanitization', () => {

@@ -1,3 +1,4 @@
+import { getModelPropertyWithFallback } from '@lobechat/utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import createDebug from 'debug';
@@ -7,7 +8,6 @@ import { Stream } from 'openai/streaming';
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import type { ChatModelCard } from '@/types/llm';
-import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';

@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -11,5 +11,6 @@ export default defineConfig({
       /* eslint-enable */
     },
     environment: 'happy-dom',
+    setupFiles: join(__dirname, './tests/setup.ts'),
   },
 });

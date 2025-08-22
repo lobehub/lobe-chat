@@ -1,6 +1,6 @@
+import { nanoid, safeParseJSON } from '@lobechat/utils';
+
 import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
-import { safeParseJSON } from '@/utils/safeParseJSON';
-import { nanoid } from '@/utils/uuid';
 
 import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
