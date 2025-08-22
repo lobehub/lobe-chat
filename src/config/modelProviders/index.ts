@@ -54,6 +54,7 @@ import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
 import V0Provider from './v0';
+import VercelAIGatewayProvider from './vercelaigateway';
 import VertexAIProvider from './vertexai';
 import VLLMProvider from './vllm';
 import VolcengineProvider from './volcengine';
@@ -116,6 +117,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   Search1APIProvider.chatModels,
   InfiniAIProvider.chatModels,
   QiniuProvider.chatModels,
+  VercelAIGatewayProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -181,6 +183,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   QiniuProvider,
   NebiusProvider,
   CometAPIProvider,
+  VercelAIGatewayProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -247,6 +250,7 @@ export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
 export { default as V0ProviderCard } from './v0';
+export { default as VercelAIGatewayProviderCard } from './vercelaigateway';
 export { default as VertexAIProviderCard } from './vertexai';
 export { default as VLLMProviderCard } from './vllm';
 export { default as VolcengineProviderCard } from './volcengine';
