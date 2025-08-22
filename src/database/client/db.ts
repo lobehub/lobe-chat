@@ -16,9 +16,7 @@ import migrations from './migrations.json';
 
 const pgliteSchemaHashCache = 'LOBE_CHAT_PGLITE_SCHEMA_HASH';
 
-const DB_NAME = process.env.NODE_ENV === 'test' 
-  ? `lobechat-test-${process.pid}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}` 
-  : 'lobechat';
+const DB_NAME = 'lobechat';
 type DrizzleInstance = PgliteDatabase<typeof schema>;
 
 interface onErrorState {
@@ -247,9 +245,7 @@ export class DatabaseManager {
           // in edge runtime or test runtime, we don't have worker
           db = new PGlite({
             extensions: { vector },
-            fs: process.env.NODE_ENV === 'test' 
-              ? new MemoryFS(DB_NAME) 
-              : typeof window === 'undefined' ? new MemoryFS(DB_NAME) : new IdbFs(DB_NAME),
+            fs: typeof window === 'undefined' ? new MemoryFS(DB_NAME) : new IdbFs(DB_NAME),
             relaxedDurability: true,
             wasmModule,
           });

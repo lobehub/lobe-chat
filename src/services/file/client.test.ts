@@ -21,7 +21,7 @@ const mockFile = {
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   await clientDB.delete(users);

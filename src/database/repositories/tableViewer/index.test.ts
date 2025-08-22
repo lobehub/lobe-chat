@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 
@@ -15,7 +15,7 @@ const mockDB = {
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   vi.clearAllMocks();

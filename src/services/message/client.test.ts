@@ -40,7 +40,7 @@ const mockMessages = [mockMessage];
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   // 在每个测试用例之前，清空表

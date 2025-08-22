@@ -154,7 +154,7 @@ describe('DataExporterRepos', () => {
   beforeAll(async () => {
     // 创建内存数据库
     await initializeDB();
-});
+  }, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
 

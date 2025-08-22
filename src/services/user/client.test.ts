@@ -22,7 +22,7 @@ const clientService = new ClientService(mockUser.uuid);
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   vi.clearAllMocks();

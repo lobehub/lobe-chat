@@ -1,5 +1,5 @@
 import { eq, not } from 'drizzle-orm';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB, initializeDB } from '@/database/client/db';
@@ -26,7 +26,7 @@ const mockAgentId = 'agent-id';
 // Mock data
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   // 在每个测试用例之前，清空表

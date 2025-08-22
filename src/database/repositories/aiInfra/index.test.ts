@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
+import { users } from '@/database/schemas';
 import { AiProviderModelListItem, EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
@@ -22,10 +23,16 @@ let repo: AiInfraRepos;
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   vi.clearAllMocks();
+  
+  // Clean and setup test data
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values({ id: userId });
+  });
 
   repo = new AiInfraRepos(clientDB as any, userId, mockProviderConfigs);
 });

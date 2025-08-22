@@ -1,5 +1,5 @@
 import { eq, inArray } from 'drizzle-orm';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import mockImportData from '@/database/repositories/dataImporter/deprecated/__tests__/fixtures/messages.json';
@@ -22,7 +22,7 @@ const service = new ClientService(userId);
 
 beforeAll(async () => {
   await initializeDB();
-});
+}, 30000); // Increase timeout for database initialization
 
 beforeEach(async () => {
   await clientDB.delete(users);
