@@ -44,7 +44,6 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases);
   const files = useAgentStore(agentSelectors.currentAgentFiles);
 
-
   const handleSubmit = async (values: FormValues) => {
     if (!isAuthenticated || !marketSession?.accessToken) {
       message.error('请先登录市场账户');
@@ -57,17 +56,28 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
       // Set access token for API calls
       marketApiService.setAccessToken(marketSession.accessToken);
 
-      // Step 1: Create agent
-      console.log('Step 1: Creating agent...');
-      const agentCreateData = {
-        identifier: values.identifier,
-        name: meta?.title || '未命名助手',
-        status: 'published' as const,
-        visibility: 'public' as const,
-      };
+      // Check if agent already exists
+      let agentResult;
+      try {
+        console.log('Checking if agent exists...');
+        agentResult = await marketApiService.getAgentDetail(values.identifier);
+        console.log('Agent already exists:', agentResult);
 
-      const agentResult = await marketApiService.createAgent(agentCreateData);
-      console.log('Agent created:', agentResult);
+        // 如果 agent 已存在，我们需要检查是否是当前用户的
+        // 这里可以根据需要添加额外的验证逻辑
+      } catch {
+        // Agent doesn't exist, create it
+        console.log('Agent does not exist, creating new agent...');
+        const agentCreateData = {
+          identifier: values.identifier,
+          name: meta?.title || '未命名助手',
+          status: 'published' as const,
+          visibility: 'public' as const,
+        };
+
+        agentResult = await marketApiService.createAgent(agentCreateData);
+        console.log('Agent created:', agentResult);
+      }
 
       // Step 2: Create agent version with all configuration data
       console.log('Step 2: Creating agent version...');
@@ -78,7 +88,6 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
         category: meta?.tags?.[0] || 'general',
         changelog: '首次发布',
         config: {
-
           // Chat configuration
           chatConfig: {
             displayMode: chatConfig?.displayMode,
@@ -89,23 +98,25 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
             temperature: agentConfig?.params?.temperature,
             topP: agentConfig?.params?.top_p,
           },
-          
+
           description: meta?.description,
 
           // Files
-          files: files?.map((file) => ({
-            enabled: file.enabled,
-            id: file.id,
-            name: file.name,
-            type: file.type,
-          })) || [],
+          files:
+            files?.map((file) => ({
+              enabled: file.enabled,
+              id: file.id,
+              name: file.name,
+              type: file.type,
+            })) || [],
 
           // Knowledge bases
-          knowledgeBases: knowledgeBases?.map((kb) => ({
-            enabled: kb.enabled,
-            id: kb.id,
-            name: kb.name,
-          })) || [],
+          knowledgeBases:
+            knowledgeBases?.map((kb) => ({
+              enabled: kb.enabled,
+              id: kb.id,
+              name: kb.name,
+            })) || [],
 
           // Language
           locale: language,
@@ -118,11 +129,12 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
           },
 
           // Plugins
-          plugins: plugins?.map((plugin) => ({
-            enabled: true,
-            identifier: plugin,
-            settings: {},
-          })) || [],
+          plugins:
+            plugins?.map((plugin) => ({
+              enabled: true,
+              identifier: plugin,
+              settings: {},
+            })) || [],
 
           // System role and description
           systemRole: systemRole || '你是一个有用的助手。',
@@ -141,8 +153,33 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
         summary: meta?.description || systemRole?.slice(0, 100),
       };
 
-      const versionResult = await marketApiService.createAgentVersion(versionData);
-      console.log('Version created:', versionResult);
+      let versionResult;
+      try {
+        versionResult = await marketApiService.createAgentVersion(versionData);
+        console.log('Version created:', versionResult);
+      } catch (versionError) {
+        console.error('Version creation failed:', versionError);
+
+        // 检查是否是主键重复错误
+        if (
+          versionError instanceof Error &&
+          versionError.message.includes('duplicate key value violates unique constraint')
+        ) {
+          // 如果是重复的版本，提供更友好的错误提示
+          message.error({
+            content: '该助手标识符已存在版本，请尝试使用不同的标识符或联系管理员',
+            key: 'submit',
+          });
+        } else {
+          // 其他版本创建错误
+          const errorMessage = versionError instanceof Error ? versionError.message : '未知错误';
+          message.error({
+            content: `版本创建失败: ${errorMessage}`,
+            key: 'submit',
+          });
+        }
+        return false;
+      }
 
       // Step 3: Update session meta with market identifier
       updateSessionMeta({
@@ -151,7 +188,6 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
 
       message.success({ content: '助手发布成功！', key: 'submit' });
       return true; // 返回 true 表示提交成功，会自动关闭 Modal
-
     } catch (error) {
       console.error('Submit agent failed:', error);
       const errorMessage = error instanceof Error ? error.message : '发布失败';

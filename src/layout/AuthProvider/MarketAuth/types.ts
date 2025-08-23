@@ -1,9 +1,31 @@
+export interface MarketUserInfo {
+  accountId: number;
+  clientId: string;
+  grantId: string;
+  scopes: string[];
+  sub: string;
+  tokenData: {
+    accountId: string;
+    clientId: string;
+    exp: number;
+    expiresWithSession: boolean;
+    grantId: string;
+    gty: string;
+    iat: number;
+    jti: string;
+    kind: string;
+    scope: string;
+    sessionUid: string;
+  };
+}
+
 export interface MarketAuthSession {
   accessToken: string;
   expiresAt: number;
   expiresIn: number;
   scope: string;
   tokenType: 'Bearer';
+  userInfo?: MarketUserInfo;
 }
 
 export interface MarketAuthState {
@@ -14,6 +36,7 @@ export interface MarketAuthState {
 }
 
 export interface MarketAuthContextType extends MarketAuthState {
+  getCurrentUserInfo: () => MarketUserInfo | null;
   refreshToken: () => Promise<boolean>;
   signIn: () => Promise<void>;
   signOut: () => void;

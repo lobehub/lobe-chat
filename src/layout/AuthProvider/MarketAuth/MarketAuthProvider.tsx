@@ -3,7 +3,7 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { MarketOIDC } from './oidc';
-import { MarketAuthContextType, MarketAuthSession, OIDCConfig } from './types';
+import { MarketAuthContextType, MarketAuthSession, MarketUserInfo, OIDCConfig } from './types';
 
 const MarketAuthContext = createContext<MarketAuthContextType | null>(null);
 
@@ -46,6 +46,44 @@ const removeTokenFromCookie = () => {
   console.log('[MarketAuth] Removing token from cookie');
   // eslint-disable-next-line unicorn/no-document-cookie
   document.cookie = 'market-bearertoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+};
+
+/**
+ * 获取用户信息
+ */
+const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
+    const cleanBaseUrl = baseUrl.replace(/\/$/, '');
+    const userInfoUrl = `${cleanBaseUrl}/market-oidc/userinfo`;
+
+    console.log('[MarketAuth] Fetching user info from:', userInfoUrl);
+
+    const response = await fetch(userInfoUrl, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      console.error(
+        '[MarketAuth] Failed to fetch user info:',
+        response.status,
+        response.statusText,
+      );
+      return null;
+    }
+
+    const userInfo = (await response.json()) as MarketUserInfo;
+    console.log('[MarketAuth] User info fetched successfully:', userInfo);
+
+    return userInfo;
+  } catch (error) {
+    console.error('[MarketAuth] Error fetching user info:', error);
+    return null;
+  }
 };
 
 /**
@@ -99,6 +137,19 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
           // 检查 token 是否过期
           if (parsedSession.expiresAt > Date.now()) {
             console.log('[MarketAuth] Session restored from storage');
+
+            // 如果 session 中没有 userInfo，尝试从单独的存储中获取
+            if (!parsedSession.userInfo) {
+              const userInfoData = sessionStorage.getItem('market_user_info');
+              if (userInfoData) {
+                try {
+                  parsedSession.userInfo = JSON.parse(userInfoData);
+                } catch (error) {
+                  console.error('[MarketAuth] Failed to parse stored user info:', error);
+                }
+              }
+            }
+
             setSession(parsedSession);
             setStatus('authenticated');
             return;
@@ -146,6 +197,9 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
         authResult.state,
       );
 
+      // 获取用户信息
+      const userInfo = await fetchUserInfo(tokenResponse.access_token);
+
       // 创建会话对象
       const newSession: MarketAuthSession = {
         accessToken: tokenResponse.access_token,
@@ -153,11 +207,17 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
         expiresIn: tokenResponse.expires_in,
         scope: tokenResponse.scope,
         tokenType: tokenResponse.token_type as 'Bearer',
+        userInfo: userInfo || undefined,
       };
 
       // 存储 token 到 cookie 和 sessionStorage
       setTokenToCookie(tokenResponse.access_token, tokenResponse.expires_in);
       sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
+
+      // 单独存储用户信息到 sessionStorage 供其他地方使用
+      if (userInfo) {
+        sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
+      }
 
       setSession(newSession);
       setStatus('authenticated');
@@ -179,6 +239,28 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
     setStatus('unauthenticated');
     removeTokenFromCookie();
     sessionStorage.removeItem('market_auth_session');
+    sessionStorage.removeItem('market_user_info');
+  };
+
+  /**
+   * 获取当前用户信息
+   */
+  const getCurrentUserInfo = (): MarketUserInfo | null => {
+    if (session?.userInfo) {
+      return session.userInfo;
+    }
+
+    // 如果 session 中没有，尝试从 sessionStorage 中获取
+    try {
+      const userInfoData = sessionStorage.getItem('market_user_info');
+      if (userInfoData) {
+        return JSON.parse(userInfoData) as MarketUserInfo;
+      }
+    } catch (error) {
+      console.error('[MarketAuth] Failed to get user info from storage:', error);
+    }
+
+    return null;
   };
 
   /**
@@ -210,6 +292,9 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
             authResult.state,
           );
 
+          // 获取用户信息
+          const userInfo = await fetchUserInfo(tokenResponse.access_token);
+
           // 创建会话对象
           const newSession: MarketAuthSession = {
             accessToken: tokenResponse.access_token,
@@ -217,11 +302,17 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
             expiresIn: tokenResponse.expires_in,
             scope: tokenResponse.scope,
             tokenType: tokenResponse.token_type as 'Bearer',
+            userInfo: userInfo || undefined,
           };
 
           // 存储 token 到 cookie 和 sessionStorage
           setTokenToCookie(tokenResponse.access_token, tokenResponse.expires_in);
           sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
+
+          // 单独存储用户信息到 sessionStorage 供其他地方使用
+          if (userInfo) {
+            sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
+          }
 
           setSession(newSession);
           setStatus('authenticated');
@@ -238,6 +329,7 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   }, [shouldReauthorize, oidcClient]);
 
   const contextValue: MarketAuthContextType = {
+    getCurrentUserInfo,
     isAuthenticated: status === 'authenticated',
     isLoading: status === 'loading',
     refreshToken,

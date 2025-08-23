@@ -62,6 +62,16 @@ export class MarketApiService {
     return this.makeRequest(`/api/v1/agents/detail/${identifier}`);
   }
 
+  // Check if agent exists (returns true if exists, false if not)
+  async checkAgentExists(identifier: string): Promise<boolean> {
+    try {
+      await this.getAgentDetail(identifier);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   // Create agent version
   async createAgentVersion(versionData: {
     a2aProtocolVersion?: string;
