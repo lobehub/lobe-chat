@@ -1,71 +1,114 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  BadgeDollarSign,
+  Briefcase,
+  Coffee,
+  Drama,
+  Gamepad,
+  GraduationCap,
+  Image,
+  Languages,
+  Laugh,
+  Layers,
+  LayoutPanelTop,
+  Microscope,
+  Pencil,
+  Printer,
+  TerminalSquare,
+} from 'lucide-react-native';
 import { AssistantCategory } from '@/types/discover';
+
+const CATEGORY_CONFIG = [
+  {
+    icon: LayoutPanelTop,
+    key: AssistantCategory.All,
+    translationKey: 'category.assistant.all',
+  },
+  {
+    icon: Microscope,
+    key: AssistantCategory.Academic,
+    translationKey: 'category.assistant.academic',
+  },
+  {
+    icon: Briefcase,
+    key: AssistantCategory.Career,
+    translationKey: 'category.assistant.career',
+  },
+  {
+    icon: Pencil,
+    key: AssistantCategory.CopyWriting,
+    translationKey: 'category.assistant.copywriting',
+  },
+  {
+    icon: Image,
+    key: AssistantCategory.Design,
+    translationKey: 'category.assistant.design',
+  },
+  {
+    icon: GraduationCap,
+    key: AssistantCategory.Education,
+    translationKey: 'category.assistant.education',
+  },
+  {
+    icon: Laugh,
+    key: AssistantCategory.Emotions,
+    translationKey: 'category.assistant.emotions',
+  },
+  {
+    icon: Drama,
+    key: AssistantCategory.Entertainment,
+    translationKey: 'category.assistant.entertainment',
+  },
+  {
+    icon: Gamepad,
+    key: AssistantCategory.Games,
+    translationKey: 'category.assistant.games',
+  },
+  {
+    icon: Layers,
+    key: AssistantCategory.General,
+    translationKey: 'category.assistant.general',
+  },
+  {
+    icon: Coffee,
+    key: AssistantCategory.Life,
+    translationKey: 'category.assistant.life',
+  },
+  {
+    icon: BadgeDollarSign,
+    key: AssistantCategory.Marketing,
+    translationKey: 'category.assistant.marketing',
+  },
+  {
+    icon: Printer,
+    key: AssistantCategory.Office,
+    translationKey: 'category.assistant.office',
+  },
+  {
+    icon: TerminalSquare,
+    key: AssistantCategory.Programming,
+    translationKey: 'category.assistant.programming',
+  },
+  {
+    icon: Languages,
+    key: AssistantCategory.Translation,
+    translationKey: 'category.assistant.translation',
+  },
+] as const;
 
 const useCategory = () => {
   const { t } = useTranslation('discover');
 
-  return [
-    {
-      key: AssistantCategory.All,
-      label: t('category.assistant.all'),
-    },
-    {
-      key: AssistantCategory.Academic,
-      label: t('category.assistant.academic'),
-    },
-    {
-      key: AssistantCategory.Career,
-      label: t('category.assistant.career'),
-    },
-    {
-      key: AssistantCategory.CopyWriting,
-      label: t('category.assistant.copywriting'),
-    },
-    {
-      key: AssistantCategory.Design,
-      label: t('category.assistant.design'),
-    },
-    {
-      key: AssistantCategory.Education,
-      label: t('category.assistant.education'),
-    },
-    {
-      key: AssistantCategory.Emotions,
-      label: t('category.assistant.emotions'),
-    },
-    {
-      key: AssistantCategory.Entertainment,
-      label: t('category.assistant.entertainment'),
-    },
-    {
-      key: AssistantCategory.Games,
-      label: t('category.assistant.games'),
-    },
-    {
-      key: AssistantCategory.General,
-      label: t('category.assistant.general'),
-    },
-    {
-      key: AssistantCategory.Life,
-      label: t('category.assistant.life'),
-    },
-    {
-      key: AssistantCategory.Marketing,
-      label: t('category.assistant.marketing'),
-    },
-    {
-      key: AssistantCategory.Office,
-      label: t('category.assistant.office'),
-    },
-    {
-      key: AssistantCategory.Programming,
-      label: t('category.assistant.programming'),
-    },
-    {
-      key: AssistantCategory.Translation,
-      label: t('category.assistant.translation'),
-    },
-  ];
+  return useMemo(
+    () =>
+      CATEGORY_CONFIG.map((category) => ({
+        icon: category.icon,
+        key: category.key,
+        label: t(category.translationKey),
+      })),
+    [t],
+  );
 };
 
 export default useCategory;
