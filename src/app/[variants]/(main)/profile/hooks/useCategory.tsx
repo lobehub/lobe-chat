@@ -27,15 +27,15 @@ export const useCategory = () => {
       ),
     },
     enableAuth &&
-    isLoginWithClerk && {
-      icon: <Icon icon={ShieldCheck} />,
-      key: ProfileTabs.Security,
-      label: (
-        <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
-          {t('tab.security')}
-        </Link>
-      ),
-    },
+      isLoginWithClerk && {
+        icon: <Icon icon={ShieldCheck} />,
+        key: ProfileTabs.Security,
+        label: (
+          <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
+            {t('tab.security')}
+          </Link>
+        ),
+      },
     !isDeprecatedEdition && {
       icon: <Icon icon={ChartColumnBigIcon} />,
       key: ProfileTabs.Stats,
