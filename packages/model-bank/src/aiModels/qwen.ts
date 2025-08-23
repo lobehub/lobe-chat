@@ -5,13 +5,31 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
+    displayName: 'DeepSeek-V3.1',
+    id: 'deepseek-ai/DeepSeek-V3.1',
+    maxOutput: 65_536,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       search: true,
     },
     contextWindowTokens: 131_072,
     description:
       '总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。',
     displayName: 'Kimi K2 Instruct',
-    enabled: true,
     id: 'Moonshot-Kimi-K2-Instruct',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -155,7 +173,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-30B-A3B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 30B A3B Thinking 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -180,7 +197,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
     displayName: 'Qwen3 30B A3B Instruct 2507',
-    enabled: true,
     id: 'qwen3-30b-a3b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
