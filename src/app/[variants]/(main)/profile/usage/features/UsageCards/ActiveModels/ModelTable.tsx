@@ -11,6 +11,7 @@ import InlineTable from '@/components/InlineTable';
 
 import { UsageChartProps, GroupBy } from '../../../Client'
 import { UsageLog } from '@/types/usage';
+import { formatPrice } from '@/utils/format';
 
 interface WeightGroup {
     id: string;
@@ -127,6 +128,9 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
                                         key: 'spend',
                                         title: 'Spend',
                                         dataIndex: 'spend',
+                                        render: (value) => {
+                                            return `$${formatPrice(value / 1000_000)}`;
+                                        }
                                     }
                                 ]}
                                 dataSource={item.childrens}
