@@ -16,8 +16,8 @@ const groupByType = (
     if (!data || data.length === 0) return { categories: [], data: [] };
     let formattedData: BarChartProps['data'] = [];
     let cate: Map<string, number> = data.reduce((acc, log) => {
-        if (log.requestLogs) {
-            for (const item of log.requestLogs) {
+        if (log.records) {
+            for (const item of log.records) {
                 if (groupBy === GroupBy.Model && item.model) {
                     acc.set(item.model, 0);
                 } else if (groupBy === GroupBy.Provider && item.provider) {
@@ -34,7 +34,7 @@ const groupByType = (
             total: type === 'spend' ? log.totalSpend : log.totalTokens,
         };
         let todayCate = new Map<string, number>(cate);
-        for (const item of log.requestLogs) {
+        for (const item of log.records) {
             const value = type === 'spend' ? (item.spend || 0) : (item.totalTokens || 0);
             const key = groupBy === GroupBy.Model ? item.model : item.provider;
             todayCate.set(

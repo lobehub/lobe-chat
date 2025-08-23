@@ -44,7 +44,7 @@ export const createUsageTracker = (
                 after(async () => {
                     try {
                         log('Tracking usage:', data);
-                        await fetcher('createSpendLog', {
+                        await fetcher('createUsageRecord', {
                             userId: metadata.userId,
                             model,
                             provider: metadata.provider,

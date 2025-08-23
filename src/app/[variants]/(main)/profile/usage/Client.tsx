@@ -40,7 +40,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [dateStrings, setDateStrings] = useState<string>();
 
   const { data, isLoading, mutate } = useClientDataSWR('usage-stat', async () =>
-    usageService.getUsages(dateStrings),
+    usageService.findAndGroupByDay(dateStrings),
   );
 
   useEffect(() => {

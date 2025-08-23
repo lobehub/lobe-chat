@@ -4,11 +4,11 @@ import { and, asc, desc, eq } from 'drizzle-orm';
 
 import { formatDate } from '@/utils/format';
 
-import { NewSpendLog, SpendLogItem, spendLogs } from '../schemas/usage';
+import { UsageRecordItem, usageRecords, NewUsageRecord } from '../schemas/usage';
 import { LobeChatDatabase } from '../type';
 import { genRangeWhere, genWhere } from '../utils/genWhere';
 
-export class UsageModel {
+export class UsageRecordModel {
   private userId: string;
   private db: LobeChatDatabase;
   constructor(db: LobeChatDatabase, userId: string) {
@@ -16,17 +16,17 @@ export class UsageModel {
     this.db = db;
   }
 
-  createSpendLog = async (params: NewSpendLog) => {
+  create = async (params: NewUsageRecord) => {
     // Should find org_id, team_id from userId first ...
     const [result] = await this.db
-      .insert(spendLogs)
+      .insert(usageRecords)
       .values({ ...params, userId: this.userId })
       .onConflictDoNothing()
       .returning();
     return result;
   };
 
-  getSpendLogs = async (mo?: string) => {
+  findByMonth = async (mo?: string) => {
     // 设置 startAt 和 endAt
     let startAt: string;
     let endAt: string;
@@ -38,18 +38,18 @@ export class UsageModel {
       startAt = dayjs().startOf('month').format('YYYY-MM-DD');
       endAt = dayjs().endOf('month').format('YYYY-MM-DD');
     }
-    return await this.db.query.spendLogs.findMany({
-      orderBy: asc(spendLogs.updatedAt),
+    return await this.db.query.usageRecords.findMany({
+      orderBy: asc(usageRecords.updatedAt),
       where: and(
         genWhere([
-          eq(spendLogs.userId, this.userId),
-          genRangeWhere([startAt, endAt], spendLogs.createdAt, (date) => date.toDate())
+          eq(usageRecords.userId, this.userId),
+          genRangeWhere([startAt, endAt], usageRecords.createdAt, (date) => date.toDate())
         ])
       ),
     });
   };
 
-  getUsages = async (mo?: string) => {
+  findAndGroupByDay = async (mo?: string) => {
     // 设置 startAt 和 endAt
     let startAt: string;
     let endAt: string;
@@ -61,17 +61,17 @@ export class UsageModel {
       startAt = dayjs().startOf('month').format('YYYY-MM-DD');
       endAt = dayjs().endOf('month').format('YYYY-MM-DD');
     }
-    const spends = await this.db.query.spendLogs.findMany({
-      orderBy: desc(spendLogs.updatedAt),
+    const spends = await this.db.query.usageRecords.findMany({
+      orderBy: desc(usageRecords.updatedAt),
       where: and(
         genWhere([
-          eq(spendLogs.userId, this.userId),
-          genRangeWhere([startAt, endAt], spendLogs.createdAt, (date) => date.toDate()),
+          eq(usageRecords.userId, this.userId),
+          genRangeWhere([startAt, endAt], usageRecords.createdAt, (date) => date.toDate()),
         ]),
       ),
     });
     // Clustering by time
-    let usages = new Map<string, { date: Date; logs: SpendLogItem[] }>();
+    let usages = new Map<string, { date: Date; logs: UsageRecordItem[] }>();
     spends.forEach((spend) => {
       if (!usages.has(formatDate(spend.createdAt))) {
         usages.set(formatDate(spend.createdAt), { date: spend.createdAt, logs: [spend] });
@@ -98,7 +98,7 @@ export class UsageModel {
       usageLogs.push({
         date: spends.date.getTime(),
         day: date,
-        requestLogs: spends.logs,
+        records: spends.logs,
         totalRequests,
         totalSpend,
         totalTokens, // Store the formatted date as a string
@@ -118,7 +118,7 @@ export class UsageModel {
         paddedUsageLogs.push({
           date: date.toDate().getTime(),
           day: date.format('YYYY-MM-DD'),
-          requestLogs: [],
+          records: [],
           totalRequests: 0,
           totalSpend: 0,
           totalTokens: 0,

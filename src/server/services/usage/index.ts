@@ -1,7 +1,7 @@
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { AiModelModel } from '@/database/models/aiModel';
-import { UsageModel } from '@/database/models/usage';
-import { NewSpendLog } from '@/database/schemas';
+import { UsageRecordModel } from '@/database/models/usage';
+import { NewUsageRecord } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { getDetailsToken } from '@/features/Conversation/Extras/Usage/UsageDetail/tokens';
 import { AiProviderModelListItem, LobeDefaultAiModelListItem } from '@/types/aiModel';
@@ -9,19 +9,19 @@ import debug from 'debug';
 
 const log = debug('lobe-usage:service');
 
-export class UsageService {
+export class UsageRecordService {
     private db: LobeChatDatabase;
     constructor(db: LobeChatDatabase) {
         this.db = db;
     }
 
-    createSpendLog = async (data: any) => {
-        log('Creating spend log with usage:', data);
+    create = async (data: any) => {
+        log('Creating usage record with data:', data);
         if (!data?.userId) {
-            log('User ID is required to create a spend log');
-            throw new Error('User ID is required to create a spend log');
+            log('User ID is required to create a usage record');
+            throw new Error('User ID is required to create a usage record');
         }
-        const usageModel = new UsageModel(this.db, data.userId);
+        const usageModel = new UsageRecordModel(this.db, data.userId);
         const aiModelModel = new AiModelModel(this.db, data.userId);
         const modelList = await aiModelModel.getModelListByProviderId(data.provider)
         log(`Found ${modelList.length} models for provider ${data.provider}`)
@@ -47,7 +47,7 @@ export class UsageService {
             }
         }
 
-        const params: NewSpendLog = {
+        const params: NewUsageRecord = {
             model: data.model,
             provider: data.provider,
             spend: spend, // Default to 0 if spend is not provided
@@ -64,6 +64,6 @@ export class UsageService {
             metadata: data?.usage && data?.speed ? { ...data?.usage, ...data?.speed } : {},
             userId: data.userId,
         }
-        return await usageModel.createSpendLog(params)
+        return await usageModel.create(params)
     }
 }
