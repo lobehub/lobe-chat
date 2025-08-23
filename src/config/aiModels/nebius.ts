@@ -1,598 +1,84 @@
-import { AIChatModelCard, AIImageModelCard, AIEmbeddingModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '@/types/aiModel';
 
 // https://studio.nebius.com/
 
-const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
+const nebiusChatModels: AIChatModelCard[] = [
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_072,
-    displayName: 'Meta-Llama-3.1-8B-Instruct (fast)',
-    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct-fast',
+    displayName: 'Kimi-K2-Instruct',
+    id: 'moonshotai/Kimi-K2-Instruct',
+    organization: 'moonshotai',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Meta-Llama-3.1-8B-Instruct',
-    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
-      ],
+    abilities: {
+      functionCall: true,
     },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Meta-Llama-3.1-70B-Instruct',
-    id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+    id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+    organization: 'Qwen',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Meta-Llama-3.1-405B-Instruct',
-    id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3.0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Meta-Llama-Guard-3-8B',
-    id: 'meta-llama/Llama-Guard-3-8B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Llama-3_1-Nemotron-Ultra-253B-v1',
-    id: 'nvidia/Llama-3_1-Nemotron-Ultra-253B-v1',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 128_000,
-    displayName: 'Mistral-Nemo-Instruct-2407',
-    id: 'mistralai/Mistral-Nemo-Instruct-2407',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
-      ],
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 8192,
-    displayName: 'Gemma-2-2b-it',
-    id: 'google/gemma-2-2b-it',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 8192,
-    displayName: 'Gemma-2-9b-it (fast)',
-    id: 'google/gemma-2-9b-it-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 32_768,
-    displayName: 'Qwen2.5-Coder-7B (fast)',
-    id: 'Qwen/Qwen2.5-Coder-7B-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 32_768,
-    displayName: 'Qwen2.5-Coder-7B',
-    id: 'Qwen/Qwen2.5-Coder-7B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.01, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
     contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-Coder-32B-Instruct (fast)',
-    id: 'Qwen/Qwen2.5-Coder-32B-Instruct-fast',
+    displayName: 'gpt-oss-120b',
+    enabled: true,
+    id: 'openai/gpt-oss-120b',
+    organization: 'openai',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-Coder-32B-Instruct',
-    id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.18, strategy: 'fixed', unit: 'millionTokens' },
-      ],
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
     contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-32B-Instruct (fast)',
-    id: 'Qwen/Qwen2.5-32B-Instruct-fast',
+    displayName: 'gpt-oss-20b',
+    id: 'openai/gpt-oss-20b',
+    organization: 'openai',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-32B-Instruct',
-    id: 'Qwen/Qwen2.5-32B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-72B-Instruct (fast)',
-    id: 'Qwen/Qwen2.5-72B-Instruct-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-      ],
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen2.5-72B-Instruct',
-    id: 'Qwen/Qwen2.5-72B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: true },
-    contextWindowTokens: 32_768,
-    displayName: 'Qwen2-VL-72B-Instruct',
-    id: 'Qwen/Qwen2-VL-72B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 8192,
-    displayName: 'Llama3-OpenBioLLM-70B',
-    id: 'aaditya/Llama3-OpenBioLLM-70B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Llama-3.3-70B-Instruct',
-    id: 'meta-llama/Llama-3.3-70B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Llama-3.3-70B-Instruct (fast)',
-    id: 'meta-llama/Llama-3.3-70B-Instruct-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 16_384,
-    displayName: 'phi-4',
-    id: 'microsoft/phi-4',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 163_840,
-    displayName: 'DeepSeek-V3',
-    id: 'deepseek-ai/DeepSeek-V3',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 163_840,
-    displayName: 'DeepSeek-R1',
-    id: 'deepseek-ai/DeepSeek-R1',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 163_840,
-    displayName: 'DeepSeek-R1-0528',
-    id: 'deepseek-ai/DeepSeek-R1-0528',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Hermes-3-Llama-3.1-405B',
-    id: 'NousResearch/Hermes-3-Llama-405B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3.0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'DeepSeek-R1-Distill-Llama-70B',
-    id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 163_840,
-    displayName: 'DeepSeek-R1 (fast)',
-    id: 'deepseek-ai/DeepSeek-R1-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 2.0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 6.0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'QwQ-32B (fast)',
-    id: 'Qwen/QwQ-32B-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'QwQ-32B',
-    id: 'Qwen/QwQ-32B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-235B-A22B',
-    id: 'Qwen/Qwen3-235B-A22B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 262_144,
-    displayName: 'Qwen3-235B-A22B-Instruct-2507',
-    id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-30B-A3B',
-    id: 'Qwen/Qwen3-30B-A3B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-30B-A3B (fast)',
-    id: 'Qwen/Qwen3-30B-A3B-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-32B',
-    id: 'Qwen/Qwen3-32B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-32B (fast)',
-    id: 'Qwen/Qwen3-32B-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-14B',
-    id: 'Qwen/Qwen3-14B',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 40_960,
-    displayName: 'Qwen3-4B (fast)',
-    id: 'Qwen/Qwen3-4B-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Llama-3_3-Nemotron-Super-49B-v1',
-    id: 'nvidia/Llama-3_3-Nemotron-Super-49B-v1',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: true },
-    contextWindowTokens: 131_072,
-    displayName: 'Mistral-Small-3.1-24B-Instruct-2503',
-    id: 'mistralai/Mistral-Small-3.1-24B-Instruct-2503',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 128_000,
-    displayName: 'Devstral-Small-2505',
-    id: 'mistralai/Devstral-Small-2505',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: true },
-    contextWindowTokens: 110_000,
-    displayName: 'Gemma-3-27b-it',
-    id: 'google/gemma-3-27b-it',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: true },
-    contextWindowTokens: 110_000,
-    displayName: 'Gemma-3-27b-it (fast)',
-    id: 'google/gemma-3-27b-it-fast',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: true },
-    contextWindowTokens: 32_000,
-    displayName: 'Qwen2.5-VL-72B-Instruct',
-    id: 'Qwen/Qwen2.5-VL-72B-Instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 163_840,
-    displayName: 'DeepSeek-V3-0324',
-    id: 'deepseek-ai/DeepSeek-V3-0324',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: { functionCall: true, vision: false },
     contextWindowTokens: 131_072,
     displayName: 'GLM-4.5',
     id: 'zai-org/GLM-4.5',
+    organization: 'zai-org',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -602,10 +88,14 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 131_072,
     displayName: 'GLM-4.5-Air',
     id: 'zai-org/GLM-4.5-Air',
+    organization: 'zai-org',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -615,49 +105,215 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'gpt-oss-120b',
-    id: 'openai/gpt-oss-120b',
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek-R1-0528',
+    id: 'deepseek-ai/DeepSeek-R1-0528',
+    organization: 'deepseek',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    displayName: 'DeepSeek-R1-0528 (fast)',
+    id: 'deepseek-ai/DeepSeek-R1-0528-fast',
+    organization: 'deepseek',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3-235B-A22B-Instruct-2507',
+    id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-235B-A22B',
+    id: 'Qwen/Qwen3-235B-A22B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-30B-A3B',
+    id: 'Qwen/Qwen3-30B-A3B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-30B-A3B (fast)',
+    id: 'Qwen/Qwen3-30B-A3B-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-32B',
+    id: 'Qwen/Qwen3-32B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-32B (fast)',
+    id: 'Qwen/Qwen3-32B-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-14B',
+    id: 'Qwen/Qwen3-14B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3-4B (fast)',
+    id: 'Qwen/Qwen3-4B-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 131_072,
-    displayName: 'gpt-oss-20b',
-    id: 'openai/gpt-oss-20b',
+    displayName: 'Llama-3_1-Nemotron-Ultra-253B-v1',
+    id: 'nvidia/Llama-3_1-Nemotron-Ultra-253B-v1',
+    organization: 'nvidia',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 32_768,
-    displayName: 'DeepSeek-R1-0528 (fast)',
-    id: 'deepseek-ai/DeepSeek-R1-0528-fast',
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek-V3-0324',
+    id: 'deepseek-ai/DeepSeek-V3-0324',
+    organization: 'deepseek',
     pricing: {
       units: [
-        { name: 'textInput', rate: 2.0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 6.0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     displayName: 'DeepSeek-V3-0324 (fast)',
     id: 'deepseek-ai/DeepSeek-V3-0324-fast',
+    organization: 'deepseek',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
@@ -667,23 +323,460 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 131_072,
-    displayName: 'Kimi-K2-Instruct',
-    id: 'moonshotai/Kimi-K2-Instruct',
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek-V3',
+    id: 'deepseek-ai/DeepSeek-V3',
+    organization: 'deepseek',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek-R1',
+    id: 'deepseek-ai/DeepSeek-R1',
+    organization: 'deepseek',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek-R1 (fast)',
+    id: 'deepseek-ai/DeepSeek-R1-fast',
+    organization: 'deepseek',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Llama-3.3-70B-Instruct',
+    id: 'meta-llama/Llama-3.3-70B-Instruct',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Llama-3.3-70B-Instruct (fast)',
+    id: 'meta-llama/Llama-3.3-70B-Instruct-fast',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Meta-Llama-3.1-70B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Meta-Llama-3.1-8B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Meta-Llama-3.1-8B-Instruct (fast)',
+    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct-fast',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Meta-Llama-3.1-405B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
+    organization: 'meta',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'Mistral-Nemo-Instruct-2407',
+    id: 'mistralai/Mistral-Nemo-Instruct-2407',
+    organization: 'mistralai',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_768,
+    displayName: 'Qwen2.5-Coder-7B',
+    id: 'Qwen/Qwen2.5-Coder-7B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.01, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_768,
+    displayName: 'Qwen2.5-Coder-7B (fast)',
+    id: 'Qwen/Qwen2.5-Coder-7B-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-Coder-32B-Instruct',
+    id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.18, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-Coder-32B-Instruct (fast)',
+    id: 'Qwen/Qwen2.5-Coder-32B-Instruct-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8192,
+    displayName: 'Gemma-2-2b-it',
+    id: 'google/gemma-2-2b-it',
+    organization: 'google',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 8192,
+    displayName: 'Gemma-2-9b-it (fast)',
+    id: 'google/gemma-2-9b-it-fast',
+    organization: 'google',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-32B-Instruct',
+    id: 'Qwen/Qwen2.5-32B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-32B-Instruct (fast)',
+    id: 'Qwen/Qwen2.5-32B-Instruct-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-72B-Instruct',
+    id: 'Qwen/Qwen2.5-72B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen2.5-72B-Instruct (fast)',
+    id: 'Qwen/Qwen2.5-72B-Instruct-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 8192,
+    displayName: 'Llama3-OpenBioLLM-70B',
+    id: 'aaditya/Llama3-OpenBioLLM-70B',
+    organization: 'aaditya',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'QwQ-32B',
+    id: 'Qwen/QwQ-32B',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'QwQ-32B (fast)',
+    id: 'Qwen/QwQ-32B-fast',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 16_384,
+    displayName: 'phi-4',
+    id: 'microsoft/phi-4',
+    organization: 'microsoft',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Hermes-3-Llama-3.1-405B',
+    id: 'NousResearch/Hermes-3-Llama-405B',
+    organization: 'NousResearch',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'DeepSeek-R1-Distill-Llama-70B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+    organization: 'deepseek',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'Devstral-Small-2505',
+    id: 'mistralai/Devstral-Small-2505',
+    organization: 'mistralai',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Llama-3_3-Nemotron-Super-49B-v1',
+    id: 'nvidia/Llama-3_3-Nemotron-Super-49B-v1',
+    organization: 'nvidia',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 262_144,
     displayName: 'Qwen3-30B-A3B-Thinking-2507',
     id: 'Qwen/Qwen3-30B-A3B-Thinking-2507',
+    organization: 'Qwen',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -693,10 +786,13 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 262_144,
     displayName: 'Qwen3-30B-A3B-Instruct-2507',
     id: 'Qwen/Qwen3-30B-A3B-Instruct-2507',
+    organization: 'Qwen',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -706,10 +802,13 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 262_144,
     displayName: 'Qwen3-Coder-30B-A3B-Instruct',
     id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+    organization: 'Qwen',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -719,14 +818,102 @@ const nebiusChatModels: (AIChatModelCard | AIImageModelCard)[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, vision: false },
-    contextWindowTokens: 262_144,
-    displayName: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-    id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Meta-Llama-Guard-3-8B',
+    id: 'meta-llama/Llama-Guard-3-8B',
+    organization: 'meta',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    displayName: 'Qwen2-VL-72B-Instruct',
+    id: 'Qwen/Qwen2-VL-72B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Mistral-Small-3.1-24B-Instruct-2503',
+    id: 'mistralai/Mistral-Small-3.1-24B-Instruct-2503',
+    organization: 'mistralai',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 110_000,
+    displayName: 'Gemma-3-27b-it',
+    id: 'google/gemma-3-27b-it',
+    organization: 'google',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 110_000,
+    displayName: 'Gemma-3-27b-it (fast)',
+    id: 'google/gemma-3-27b-it-fast',
+    organization: 'google',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen2.5-VL-72B-Instruct',
+    id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

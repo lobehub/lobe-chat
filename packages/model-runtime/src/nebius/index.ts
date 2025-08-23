@@ -8,6 +8,17 @@ export interface NebiusModelCard {
 
 export const LobeNebiusAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.studio.nebius.com/v1',
+  chatCompletion: {
+    handlePayload: (payload) => {
+      const { model, ...rest } = payload;
+
+      return {
+        ...rest,
+        model,
+        stream: true,
+      } as any;
+    },
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_NEBIUS_CHAT_COMPLETION === '1',
   },
@@ -16,11 +27,11 @@ export const LobeNebiusAI = createOpenAICompatibleRuntime({
     const url = `${base.replace(/\/+$/, '')}/models?verbose=true`;
 
     const res = await fetch(url, {
-      method: 'GET',
       headers: {
-        Authorization: `Bearer ${client.apiKey}`,
         Accept: 'application/json',
+        Authorization: `Bearer ${client.apiKey}`,
       },
+      method: 'GET',
     });
 
     if (!res.ok) {
@@ -46,11 +57,11 @@ export const LobeNebiusAI = createOpenAICompatibleRuntime({
       }
 
       return {
-        id: m.id,
-        displayName: m.name ?? m.id,
-        description: m.description ?? '',
-        created: typeof m.created === 'number' ? m.created : undefined,
         contextWindowTokens: m.context_length ?? undefined,
+        created: typeof m.created === 'number' ? m.created : undefined,
+        description: m.description ?? '',
+        displayName: m.name ?? m.id,
+        id: m.id,
         type: inferredType,
       };
     });
