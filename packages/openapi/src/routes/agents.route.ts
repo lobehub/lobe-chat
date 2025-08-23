@@ -6,7 +6,6 @@ import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 import { AgentController } from '../controllers/agent.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-import { SessionIdParamSchema } from '../types';
 import {
   AgentIdParamSchema,
   CreateAgentRequestSchema,
@@ -37,7 +36,7 @@ AgentRoutes.get(
 /**
  * 创建智能体
  * POST /api/v1/agents
- * 需要 Agent 创建权限（仅管理员）
+ * 需要 Agent 创建权限
  */
 AgentRoutes.post(
   '/',
@@ -54,9 +53,28 @@ AgentRoutes.post(
 );
 
 /**
+ * 根据 ID 获取 Agent 详情
+ * GET /api/v1/agents/:id
+ * 需要 Agent 读取权限
+ */
+AgentRoutes.get(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('AGENT_READ'),
+    'You do not have permission to view the Agent details',
+  ),
+  zValidator('param', AgentIdParamSchema),
+  async (c) => {
+    const controller = new AgentController();
+    return await controller.getAgentById(c);
+  },
+);
+
+/**
  * 更新智能体
  * PUT /api/v1/agents/:id
- * 需要 Agent 更新权限（仅管理员）
+ * 需要 Agent 更新权限
  */
 AgentRoutes.put(
   '/:id',
@@ -89,48 +107,6 @@ AgentRoutes.delete(
   async (c) => {
     const controller = new AgentController();
     return await controller.deleteAgent(c);
-  },
-);
-
-/**
- * 根据 ID 获取 Agent 详情
- * GET /api/v1/agents/:id
- * 需要 Agent 读取权限
- */
-AgentRoutes.get(
-  '/:id',
-  requireAuth,
-  requireAnyPermission(
-    getAllScopePermissions('AGENT_READ'),
-    'You do not have permission to view the Agent details',
-  ),
-  zValidator('param', AgentIdParamSchema),
-  async (c) => {
-    const controller = new AgentController();
-    return await controller.getAgentById(c);
-  },
-);
-
-/**
- * 根据 Session ID 获取关联的 Agent 详情
- * GET /api/v1/agents/session/:sessionId
- * 需要会话读取权限
- */
-AgentRoutes.get(
-  '/session/:sessionId',
-  requireAuth,
-  requireAnyPermission(
-    getAllScopePermissions('AGENT_READ'),
-    'You do not have permission to view the Agent details',
-  ),
-  requireAnyPermission(
-    getAllScopePermissions('SESSION_READ'),
-    'You do not have permission to view the Agent details',
-  ),
-  zValidator('param', SessionIdParamSchema),
-  async (c) => {
-    const controller = new AgentController();
-    return await controller.getAgentBySessionId(c);
   },
 );
 
