@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SpendLogItem } from '@/database/schemas';
+import { UsageRecordItem } from '@/database/schemas';
 
 import { ChatModelPricing } from '../aiModel';
 import { MessageMetadata } from '../message';
@@ -36,7 +36,7 @@ export const RequestLogSchema = z.object({
 export type UsageLog = {
   date: number;
   day: string;
-  requestLogs: SpendLogItem[];
+  records: UsageRecordItem[];
   totalRequests: number;
   totalSpend: number;
   totalTokens: number;

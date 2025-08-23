@@ -1,12 +1,12 @@
 import { lambdaClient } from "@/libs/trpc/client";
 
 class UsageService {
-    getUsages = async (mo?: string) => {
-        return lambdaClient.usage.getUsages.query({ mo });
+    findByMonth = async (mo?: string) => {
+        return lambdaClient.usage.findByMonth.query({ mo });
     };
 
-    getRequests = async (mo?: string) => {
-        return lambdaClient.usage.getSpendLogs.query({ mo });
+    findAndGroupByDay = async (mo?: string) => {
+        return lambdaClient.usage.findAndGroupByDay.query({ mo });
     }
 }
 

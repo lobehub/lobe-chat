@@ -22,7 +22,7 @@ const computeMonth = (data: UsageLog[]): {
   if (!data || data.length === 0) return { spend: 0, calls: 0 };
 
   const spend = data.reduce((acc, log) => acc + (log.totalSpend || 0), 0);
-  const calls = data.reduce((acc, log) => acc + (log.requestLogs.length || 0), 0);
+  const calls = data.reduce((acc, log) => acc + (log.records.length || 0), 0);
 
   return {
     spend: formatNumber(spend / 1000_000),

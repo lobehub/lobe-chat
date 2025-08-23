@@ -1,6 +1,6 @@
 import { CategoryBar, useThemeColorRange } from '@lobehub/charts';
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Collapse, CopyButton, Tag } from '@lobehub/ui';
+import { Collapse, Tag } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
@@ -25,7 +25,7 @@ const formatData = (data: UsageLog[], groupBy: GroupBy): {
 }[] => {
     if (!data || data.length === 0) return []
 
-    const requestLogs = data.flatMap(log => log.requestLogs)
+    const requestLogs = data.flatMap(log => log.records)
     const groupedLogs = requestLogs.reduce((acc, log) => {
         const key = groupBy === GroupBy.Model ? log.model : log.provider;
         if (!acc.has(key)) {
@@ -33,7 +33,7 @@ const formatData = (data: UsageLog[], groupBy: GroupBy): {
         }
         acc.get(key)?.push(log);
         return acc;
-    }, new Map<string, UsageLog['requestLogs']>());
+    }, new Map<string, UsageLog['records']>());
 
     return Array.from(groupedLogs.entries()).map(([key, logs]) => {
         // 此处的 logs 为多日的 log，需要进行 sum

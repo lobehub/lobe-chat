@@ -17,8 +17,8 @@ const computeList = (data: UsageLog[], groupBy: GroupBy): string[] => {
   if (!data || data.length === 0) return [];
 
   return Array.from(data.reduce((acc, log) => {
-    if (log.requestLogs) {
-      for (const item of log.requestLogs) {
+    if (log.records) {
+      for (const item of log.records) {
         if (groupBy === GroupBy.Model && item.model.length !== 0) {
           acc.add(item.model);
         }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import debug from 'debug';
 import { serverDBEnv } from '@/config/db';
-import { UsageService } from '@/server/services/usage';
+import { UsageRecordService } from '@/server/services/usage';
 import { serverDB } from '@/database/server';
 
 const log = debug('lobe-usage:webapi:usage:route');
@@ -27,13 +27,13 @@ export async function POST(req: NextRequest) {
         const ev = await req.json();
         log('Received request event:', ev);
 
-        const usageService = new UsageService(serverDB);
+        const usageService = new UsageRecordService(serverDB);
 
         let result = {};
         // Process the request based on the action
         switch (ev.action) {
-            case 'createSpendLog':
-                result = await usageService.createSpendLog(ev.data);
+            case 'createUsageRecord':
+                result = await usageService.create(ev.data);
                 break;
             default:
                 log('Invalid action:', ev.action);

@@ -6,11 +6,11 @@ import { timestamps } from './_helpers'
 import { users } from './user'
 import { MessageMetadata } from '@/types/message';
 
-export const spendLogs = pgTable(
-    'spend_logs',
+export const usageRecords = pgTable(
+    'usage_records',
     {
         id: text('id')
-            .$defaultFn(() => idGenerator('spendLogs', 16))
+            .$defaultFn(() => idGenerator('usageRecords', 16))
             .primaryKey(),
         // Model 信息
         model: text('model').notNull(),
@@ -44,5 +44,5 @@ export const spendLogs = pgTable(
     (t) => [uniqueIndex('spend_logs_user_id_unique').on(t.userId)],
 );
 
-export type SpendLogItem = typeof spendLogs.$inferSelect;
-export type NewSpendLog = typeof spendLogs.$inferInsert;
+export type UsageRecordItem = typeof usageRecords.$inferSelect;
+export type NewUsageRecord = typeof usageRecords.$inferInsert;

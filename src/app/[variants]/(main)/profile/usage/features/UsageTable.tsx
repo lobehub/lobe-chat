@@ -16,7 +16,7 @@ const UsageTable = memo<UsageChartProps>(({ dateStrings }) => {
     const theme = useTheme();
 
     const { data, isLoading, mutate } = useClientDataSWR('usage-logs', async () =>
-        usageService.getRequests(dateStrings),
+        usageService.findByMonth(dateStrings),
     );
 
     const [currentPage, setCurrentPage] = useQueryState(
