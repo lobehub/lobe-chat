@@ -85,6 +85,8 @@ export interface FileListQuery {
   pageSize?: number;
   /** 搜索关键词 */
   search?: string;
+  /** 用户ID */
+  userId?: string;
 }
 
 /**
@@ -325,6 +327,7 @@ export const FileListQuerySchema = z.object({
     .pipe(z.number().min(1).max(100))
     .nullish(),
   search: z.string().nullish(),
+  userId: z.string().nullish(),
 });
 
 export const FileIdParamSchema = z.object({

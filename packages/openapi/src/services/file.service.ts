@@ -58,50 +58,68 @@ export class FileUploadService extends BaseService {
    * 批量文件上传
    */
   async uploadFiles(request: BatchFileUploadRequest): Promise<BatchFileUploadResponse> {
-    const results: BatchFileUploadResponse = {
-      failed: [],
-      successful: [],
-      summary: {
-        failed: 0,
-        successful: 0,
-        total: request.files.length,
-      },
-    };
-
-    for (const file of request.files) {
-      try {
-        const result = await this.uploadFile(file, {
-          directory: request.directory,
-          knowledgeBaseId: request.knowledgeBaseId,
-          sessionId: request.sessionId,
-          skipCheckFileType: request.skipCheckFileType,
-        });
-        results.successful.push(result);
-        results.summary.successful++;
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        results.failed.push({
-          error: errorMessage,
-          filename: file.name,
-        });
-        results.summary.failed++;
-        this.log('warn', 'File upload failed in batch', {
-          error: errorMessage,
-          filename: file.name,
-        });
+    try {
+      const isPermitted = await this.resolveOperationPermission('FILE_UPLOAD');
+      if (!isPermitted.isPermitted) {
+        throw this.createAuthorizationError(isPermitted.message || '无权上传文件');
       }
-    }
 
-    return results;
+      const results: BatchFileUploadResponse = {
+        failed: [],
+        successful: [],
+        summary: {
+          failed: 0,
+          successful: 0,
+          total: request.files.length,
+        },
+      };
+
+      for (const file of request.files) {
+        try {
+          const result = await this.uploadFile(file, {
+            directory: request.directory,
+            knowledgeBaseId: request.knowledgeBaseId,
+            sessionId: request.sessionId,
+            skipCheckFileType: request.skipCheckFileType,
+          });
+          results.successful.push(result);
+          results.summary.successful++;
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          results.failed.push({
+            error: errorMessage,
+            filename: file.name,
+          });
+          results.summary.failed++;
+          this.log('warn', 'File upload failed in batch', {
+            error: errorMessage,
+            filename: file.name,
+          });
+        }
+      }
+
+      return results;
+    } catch (error) {
+      this.handleServiceError(error, '批量上传文件');
+    }
   }
 
   /**
-   * 获取文件列表
+   * 获取文件列表，支持两种场景：
+   * 1. 获取系统中所有用户文件
+   * 2. 获取指定用户文件
    */
-  async getFileList(query: FileListQuery): Promise<FileListResponse> {
+  async getFileList({ userId, ...query }: FileListQuery): Promise<FileListResponse> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('FILE_READ');
+      const permissionResult = await this.resolveOperationPermission(
+        'FILE_READ',
+        userId
+          ? {
+              targetUserId: userId,
+            }
+          : undefined,
+      );
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权访问文件列表');
@@ -120,7 +138,7 @@ export class FileUploadService extends BaseService {
       const pageSize = Math.min(query.pageSize || 20, 100); // 限制最大每页数量为100
       const offset = (page - 1) * pageSize;
 
-      // 构建 WHERE 条件
+      // 构建查询条件
       const whereConditions = [];
 
       // 添加模糊查询条件
@@ -187,8 +205,7 @@ export class FileUploadService extends BaseService {
         total: totalCount,
       };
     } catch (error) {
-      this.log('error', 'Get file list failed', error);
-      throw error;
+      this.handleServiceError(error, '获取文件列表');
     }
   }
 
@@ -198,7 +215,7 @@ export class FileUploadService extends BaseService {
   async getFileDetail(fileId: string): Promise<FileDetailResponse> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('FILE_READ', {
+      const permissionResult = await this.resolveOperationPermission('FILE_READ', {
         targetFileId: fileId,
       });
 
@@ -206,14 +223,14 @@ export class FileUploadService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此文件');
       }
 
+      // 构建查询条件
+      const whereConditions = [eq(files.id, fileId)];
+      if (permissionResult.condition?.userId) {
+        whereConditions.push(eq(files.userId, permissionResult.condition.userId));
+      }
+
       const file = await this.db.query.files.findFirst({
-        where: and(
-          eq(files.id, fileId),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId
-            ? eq(files.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
+        where: and(...whereConditions),
       });
 
       if (!file) {
@@ -228,8 +245,7 @@ export class FileUploadService extends BaseService {
         supportContentParsing: !isChunkingUnsupported(file.fileType),
       };
     } catch (error) {
-      this.log('error', 'Get file detail failed', error);
-      throw error;
+      this.handleServiceError(error, '获取文件详情');
     }
   }
 
@@ -238,18 +254,18 @@ export class FileUploadService extends BaseService {
    */
   async getFileUrl(fileId: string, options: FileUrlRequest = {}): Promise<FileUrlResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('FILE_READ', {
+        targetFileId: fileId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此文件');
       }
 
       const file = await this.fileModel.findById(fileId);
       if (!file) {
         throw this.createCommonError('File not found');
-      }
-
-      // 检查权限
-      if (file.userId !== this.userId) {
-        throw this.createAuthorizationError('Access denied');
       }
 
       // 设置过期时间（默认1小时）
@@ -275,8 +291,7 @@ export class FileUploadService extends BaseService {
         url: signedUrl,
       };
     } catch (error) {
-      this.log('error', 'Get file URL failed', error);
-      throw error;
+      this.handleServiceError(error, '获取文件URL');
     }
   }
 
@@ -288,8 +303,10 @@ export class FileUploadService extends BaseService {
     options: PublicFileUploadRequest = {},
   ): Promise<PublicFileUploadResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      const isPermitted = await this.resolveOperationPermission('FILE_UPLOAD');
+
+      if (!isPermitted.isPermitted) {
+        throw this.createAuthorizationError(isPermitted.message || '无权上传文件');
       }
 
       this.log('info', 'Starting public file upload', {
@@ -402,11 +419,11 @@ export class FileUploadService extends BaseService {
       // 4. 文件不存在，正常上传流程
       const metadata = this.generateFileMetadata(file, options.directory);
 
-      // 5. 上传到S3（设置为公共可读）
+      // 5. 上传到 S3
       const fileBuffer = Buffer.from(fileArrayBuffer);
       await this.s3Service.uploadBuffer(metadata.path, fileBuffer, file.type);
 
-      // 6. 生成访问URL
+      // 6. 生成访问 URL
       const publicUrl = await this.coreFileService.getFullFileUrl(metadata.path);
 
       // 7. 保存文件记录到数据库
@@ -453,8 +470,7 @@ export class FileUploadService extends BaseService {
         url: publicUrl,
       };
     } catch (error) {
-      this.log('error', 'Public file upload failed', error);
-      throw error;
+      this.handleServiceError(error, '上传文件');
     }
   }
 
@@ -467,7 +483,7 @@ export class FileUploadService extends BaseService {
   ): Promise<FileParseResponse> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('FILE_READ', {
+      const permissionResult = await this.resolveOperationPermission('FILE_READ', {
         targetFileId: fileId,
       });
 
@@ -481,12 +497,7 @@ export class FileUploadService extends BaseService {
         throw this.createCommonError('File not found');
       }
 
-      // 2. 检查权限
-      if (file.userId !== this.userId) {
-        throw this.createAuthorizationError('Access denied');
-      }
-
-      // 3. 检查文件类型是否支持解析
+      // 2. 检查文件类型是否支持解析
       if (isChunkingUnsupported(file.fileType)) {
         throw this.createBusinessError(
           `File type '${file.fileType}' does not support content parsing`,
@@ -571,8 +582,7 @@ export class FileUploadService extends BaseService {
         };
       }
     } catch (error) {
-      this.log('error', 'Parse file request failed', error);
-      throw error;
+      this.handleServiceError(error, '解析文件');
     }
   }
 
@@ -582,7 +592,7 @@ export class FileUploadService extends BaseService {
   async deleteFile(fileId: string): Promise<FileDeleteResponse> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('FILE_DELETE', {
+      const permissionResult = await this.resolveOperationPermission('FILE_DELETE', {
         targetFileId: fileId,
       });
 
@@ -595,13 +605,8 @@ export class FileUploadService extends BaseService {
         throw this.createCommonError('File not found');
       }
 
-      // 检查权限
-      if (file.userId !== this.userId) {
-        throw this.createAuthorizationError('Access denied');
-      }
-
       // 删除S3文件
-      await this.coreFileService.deleteFile(file.url);
+      await this.coreFileService.deleteFile((file.metadata as unknown as FileMetadata)?.path);
 
       // 删除数据库记录
       await this.fileModel.delete(fileId);
@@ -613,8 +618,7 @@ export class FileUploadService extends BaseService {
         fileId,
       };
     } catch (error) {
-      this.log('error', 'Delete file failed', error);
-      throw error;
+      this.handleServiceError(error, '删除文件');
     }
   }
 
@@ -745,10 +749,6 @@ export class FileUploadService extends BaseService {
     options: Partial<FileParseRequest> = {},
   ): Promise<FileUploadAndParseResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
-
       this.log('info', 'Starting file retrieval and parsing', {
         fileId,
         skipExist: options.skipExist,
@@ -771,8 +771,7 @@ export class FileUploadService extends BaseService {
         parseResult,
       };
     } catch (error) {
-      this.log('error', 'File retrieval and parsing failed', error);
-      throw error;
+      this.handleServiceError(error, '获取文件并解析');
     }
   }
 
@@ -785,10 +784,6 @@ export class FileUploadService extends BaseService {
     parseOptions: Partial<FileParseRequest> = {},
   ): Promise<FileUploadAndParseResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
-
       this.log('info', 'Starting file upload and parsing', {
         filename: file.name,
         size: file.size,
@@ -816,8 +811,7 @@ export class FileUploadService extends BaseService {
         parseResult,
       };
     } catch (error) {
-      this.log('error', 'File upload and parsing failed', error);
-      throw error;
+      this.handleServiceError(error, '上传并解析文件');
     }
   }
 
@@ -841,13 +835,7 @@ export class FileUploadService extends BaseService {
         userId: this.userId,
       });
     } catch (error) {
-      this.log('error', 'Failed to create file-session relation', {
-        error,
-        fileId,
-        sessionId,
-        userId: this.userId,
-      });
-      throw this.createBusinessError('Failed to associate file with session');
+      this.handleServiceError(error, '创建文件和会话的关联关系');
     }
   }
 
@@ -929,8 +917,7 @@ export class FileUploadService extends BaseService {
 
       return result;
     } catch (error) {
-      this.log('error', 'Batch file retrieval failed', error);
-      throw error;
+      this.handleServiceError(error, '批量获取文件详情和内容');
     }
   }
 
@@ -945,8 +932,7 @@ export class FileUploadService extends BaseService {
 
       return existingFile || null;
     } catch (error) {
-      this.log('error', 'Failed to find existing user file', { error, hash });
-      return null;
+      this.handleServiceError(error, '查找用户是否已有指定哈希的文件记录');
     }
   }
 }

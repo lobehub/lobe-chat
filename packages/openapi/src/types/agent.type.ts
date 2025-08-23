@@ -39,7 +39,7 @@ export interface UpdateAgentRequest extends CreateAgentRequest {
  */
 export interface AgentDeleteRequest {
   agentId: string;
-  migrateTo?: string;
+  migrateSessionTo?: string;
 }
 
 /**
@@ -87,7 +87,7 @@ export interface AgentSessionRelation {
  */
 export interface BatchDeleteAgentsRequest {
   agentIds: string[];
-  migrateTo?: string;
+  migrateSessionTo?: string;
 }
 
 /**
@@ -188,7 +188,7 @@ export const UpdateAgentRequestSchema = CreateAgentRequestSchema.extend({
 
 export const AgentDeleteRequestSchema = z.object({
   agentId: z.string().min(1, 'Agent ID 不能为空'),
-  migrateTo: z.string().nullish(),
+  migrateSessionTo: z.string().nullish(),
 });
 
 export const AgentIdParamSchema = z.object({

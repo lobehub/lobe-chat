@@ -45,6 +45,7 @@ export interface TTarget {
   targetFileId?: string;
   targetMessageId?: string;
   targetModelId?: string;
+  targetProviderId?: string;
   targetRoleId?: string;
   targetSessionId?: string;
   targetTopicId?: string;
@@ -56,6 +57,7 @@ export interface TBatchTarget {
   targetFileId?: string[];
   targetMessageId?: string[];
   targetModelId?: string[];
+  targetProviderId?: string[];
   targetRoleId?: string[];
   targetSessionId?: string[];
   targetTopicId?: string[];

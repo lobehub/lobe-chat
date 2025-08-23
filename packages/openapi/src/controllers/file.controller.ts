@@ -82,21 +82,12 @@ export class FileController extends BaseController {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
 
-      const query = this.getQuery(c);
-
-      // 解析查询参数
-      const fileListQuery: FileListQuery = {
-        fileType: query.fileType as string,
-        knowledgeBaseId: query.knowledgeBaseId as string,
-        page: query.page,
-        pageSize: query.pageSize,
-        search: query.search as string,
-      };
+      const query = this.getQuery(c) as FileListQuery;
 
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      const result = await fileService.getFileList(fileListQuery);
+      const result = await fileService.getFileList(query);
 
       return this.success(c, result, 'Files retrieved successfully');
     } catch (error) {

@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 
 import { PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
-import { agents, sessions, topics } from '@/database/schemas';
+import { agents, aiProviders, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { getScopePermissions } from '@/utils/rbac';
 
@@ -203,6 +203,14 @@ export abstract class BaseService implements IBaseService {
           return targetTopic?.userId;
         }
 
+        // 查询 providers 表
+        case !!target?.targetProviderId: {
+          const targetProvider = await this.db.query.aiProviders.findFirst({
+            where: eq(aiProviders.id, target.targetProviderId),
+          });
+          return targetProvider?.userId;
+        }
+
         // 直接传递 targetUserId 的情况
         case !!target?.targetUserId: {
           return target.targetUserId;
@@ -233,7 +241,7 @@ export abstract class BaseService implements IBaseService {
    *          - condition: 目标信息，包含 userId 过滤条件
    *          - message: 权限被拒绝时的错误信息
    */
-  protected async resolveQueryPermission(
+  protected async resolveOperationPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
     resourceInfo?: TTarget | 'ALL',
   ): Promise<{
@@ -367,6 +375,13 @@ export abstract class BaseService implements IBaseService {
           userIds = topicList.map((t) => t.userId);
           break;
         }
+        case !!targetInfoIds.targetProviderId?.length: {
+          const providerList = await this.db.query.aiProviders.findMany({
+            where: inArray(aiProviders.id, targetInfoIds.targetProviderId),
+          });
+          userIds = providerList.map((p) => p.userId);
+          break;
+        }
         case !!targetInfoIds.targetUserIds?.length: {
           userIds = targetInfoIds.targetUserIds;
           break;
@@ -465,7 +480,7 @@ export abstract class BaseService implements IBaseService {
 
     const permissionResults = await Promise.all(
       requiredPermissions.map(async (permission) => {
-        const result = await this.resolveQueryPermission(permission);
+        const result = await this.resolveOperationPermission(permission);
         return {
           isPermitted: result.isPermitted,
           permission,
