@@ -104,6 +104,19 @@ table ai_providers {
   }
 }
 
+table api_keys {
+  id integer [pk, not null]
+  name varchar(256) [not null]
+  key varchar(256) [not null, unique]
+  enabled boolean [default: true]
+  expires_at "timestamp with time zone"
+  last_used_at "timestamp with time zone"
+  user_id text [not null]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
 table async_tasks {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   type text
@@ -702,6 +715,7 @@ table rbac_roles {
   description text
   is_system boolean [not null, default: false]
   is_active boolean [not null, default: true]
+  metadata jsonb [default: `{}`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

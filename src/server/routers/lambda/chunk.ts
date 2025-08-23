@@ -26,7 +26,7 @@ const chunkProcedure = authedProcedure
       ctx: {
         asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
         chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
-        chunkService: new ChunkService(ctx.userId),
+        chunkService: new ChunkService(ctx.serverDB, ctx.userId),
         embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
         fileModel: new FileModel(ctx.serverDB, ctx.userId),
         messageModel: new MessageModel(ctx.serverDB, ctx.userId),

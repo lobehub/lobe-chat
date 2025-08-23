@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -56,7 +56,7 @@ jobs:
       # 输出版本信息，供后续 job 使用
       version: ${{ steps.set_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -95,7 +95,7 @@ jobs:
       matrix:
         os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -183,6 +183,10 @@ jobs:
             apps/desktop/release/*.zip*
             apps/desktop/release/*.exe*
             apps/desktop/release/*.AppImage
+            apps/desktop/release/*.deb*
+            apps/desktop/release/*.snap*
+            apps/desktop/release/*.rpm*
+            apps/desktop/release/*.tar.gz*
           retention-days: 5
 
   publish-pr:
@@ -196,7 +200,7 @@ jobs:
     outputs:
       artifact_path: ${{ steps.set_path.outputs.path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -245,6 +249,10 @@ jobs:
             release/*.zip*
             release/*.exe*
             release/*.AppImage
+            release/*.deb*
+            release/*.snap*
+            release/*.rpm*
+            release/*.tar.gz*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

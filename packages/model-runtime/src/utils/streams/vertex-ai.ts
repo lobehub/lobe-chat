@@ -1,8 +1,8 @@
 import { GenerateContentResponse } from '@google/genai';
+import { nanoid } from '@lobechat/utils';
 
 import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
-import { nanoid } from '@/utils/uuid';
 
 import { type GoogleAIStreamOptions } from './google-ai';
 import {

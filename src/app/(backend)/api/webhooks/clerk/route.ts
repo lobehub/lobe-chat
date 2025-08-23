@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
 import { isServerMode } from '@/const/version';
+import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { UserService } from '@/server/services/user';
 
@@ -25,7 +26,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
   pino.trace(`clerk webhook payload: ${{ data, type }}`);
 
-  const userService = new UserService();
+  const userService = new UserService(serverDB);
   switch (type) {
     case 'user.created': {
       pino.info('creating user due to clerk webhook');

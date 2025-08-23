@@ -1,4 +1,9 @@
 export default {
+  ArgsInput: {
+    addArgument: '添加参数',
+    argumentPlaceholder: '参数 {{index}}',
+    enterFirstArgument: '输入第一个参数...',
+  },
   DragUpload: {
     dragDesc: '拖拽文件到这里，支持上传多个图片。',
     dragFileDesc: '拖拽图片和文件到这里，支持上传多个图片和文件。',
@@ -127,6 +132,14 @@ export default {
     },
     progress: {
       uploadingWithCount: '{{completed}}/{{total}} 已上传',
+    },
+    validation: {
+      fileSizeExceeded: 'File size exceeded limit',
+      fileSizeExceededDetail:
+        '{{fileName}} ({{actualSize}}) exceeds the maximum size limit of {{maxSize}}',
+      fileSizeExceededMultiple:
+        '{{count}} files exceed the maximum size limit of {{maxSize}}: {{fileList}}',
+      imageCountExceeded: 'Image count exceeded limit',
     },
   },
   OllamaSetupGuide: {

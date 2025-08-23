@@ -1,9 +1,10 @@
 import { ModelProvider } from '@lobechat/model-runtime';
+import { chainAnswerWithContext } from '@lobechat/prompts';
+import { EvalEvaluationStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/models/chunk';
 import { EmbeddingModel } from '@/database/models/embedding';
@@ -17,7 +18,6 @@ import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
-import { EvalEvaluationStatus } from '@/types/eval';
 
 const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
@@ -25,11 +25,11 @@ const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
-      chunkService: new ChunkService(ctx.userId),
-      datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
+      chunkService: new ChunkService(ctx.serverDB, ctx.userId),
+      datasetRecordModel: new EvalDatasetRecordModel(ctx.serverDB, ctx.userId),
       embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
-      evalRecordModel: new EvaluationRecordModel(ctx.userId),
-      evaluationModel: new EvalEvaluationModel(ctx.userId),
+      evalRecordModel: new EvaluationRecordModel(ctx.serverDB, ctx.userId),
+      evaluationModel: new EvalEvaluationModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
     },
   });
