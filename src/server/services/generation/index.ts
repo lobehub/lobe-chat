@@ -4,7 +4,7 @@ import mime from 'mime';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
-import { IMAGE_GENERATION_CONFIG } from '@/const/imageGeneration';
+import { IMAGE_GENERATION_CONFIG } from '@/const/image';
 import { LobeChatDatabase } from '@/database/type';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { FileService } from '@/server/services/file';
