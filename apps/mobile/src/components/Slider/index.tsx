@@ -98,14 +98,21 @@ const Slider = memo<SliderProps>(
           0,
           Math.min(sliderWidth.value, startX.value + event.translationX),
         );
-        translateX.value = newPosition;
 
+        // 计算应该对齐到的步长值
         const newValue = getValueFromPosition(newPosition, sliderWidth.value);
+        // 根据步长值重新计算精确的位置
+        const snappedPosition = getThumbPosition(newValue, sliderWidth.value);
+
+        translateX.value = snappedPosition;
         runOnJS(handleValueChange)(newValue);
       })
       .onEnd(() => {
         isDragging.value = false;
         const newValue = getValueFromPosition(translateX.value, sliderWidth.value);
+        // 确保最终位置精确对齐到步长
+        const finalPosition = getThumbPosition(newValue, sliderWidth.value);
+        translateX.value = finalPosition;
         runOnJS(handleValueChangeComplete)(newValue);
       });
 
