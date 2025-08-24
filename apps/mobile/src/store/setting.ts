@@ -30,6 +30,7 @@ export const useSettingStore = createWithEqualityFn<SettingState>()(
       primaryColor: 'primary',
 
       setFontSize: (fontSize: number) => {
+        console.log('setFontSize', fontSize);
         set({ fontSize });
       },
 

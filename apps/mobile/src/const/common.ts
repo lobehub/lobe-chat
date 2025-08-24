@@ -10,3 +10,7 @@ export const AVATAR_SIZE_MEDIUM = 48;
 export const AVATAR_SIZE_LARGE = 64;
 
 export const HEADER_HEIGHT = 44;
+
+export const FONT_SIZE_SMALL = 12;
+export const FONT_SIZE_STANDARD = 14;
+export const FONT_SIZE_LARGE = 18;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 
 import { ListGroup, ColorSwatches } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
@@ -15,8 +15,10 @@ import {
 } from '@/theme';
 import { useStyles } from './styles';
 import { useSettingStore } from '@/store/setting';
+import Slider from '@/components/Slider';
 
 import { SettingItem } from './(components)';
+import { FONT_SIZE_STANDARD, FONT_SIZE_LARGE, FONT_SIZE_SMALL } from '@/const/common';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
@@ -24,7 +26,8 @@ export default function SettingScreen() {
   const { getLocaleDisplayName } = useLocale();
 
   // 颜色配置状态
-  const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor } = useSettingStore();
+  const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor, fontSize, setFontSize } =
+    useSettingStore();
 
   const { styles } = useStyles();
 
@@ -140,6 +143,7 @@ export default function SettingScreen() {
             />
           </>
         )}
+
         <SettingItem
           customContent={
             <ColorSwatches
@@ -168,8 +172,26 @@ export default function SettingScreen() {
               value={neutralColor ? neutralColors[neutralColor] : undefined}
             />
           }
-          isLast
           title={t('theme.neutralColor.title', { ns: 'setting' })}
+        />
+        <SettingItem
+          customContent={
+            <Slider
+              marks={{
+                [FONT_SIZE_SMALL]: { label: <Text style={styles.fontSizeSmall}>A</Text> },
+                [FONT_SIZE_STANDARD]: '标准',
+                // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+                [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
+              }}
+              max={FONT_SIZE_LARGE}
+              min={FONT_SIZE_SMALL}
+              onChangeComplete={setFontSize}
+              step={1}
+              value={fontSize}
+            />
+          }
+          isLast
+          title={'字体大小'}
         />
       </ListGroup>
 
