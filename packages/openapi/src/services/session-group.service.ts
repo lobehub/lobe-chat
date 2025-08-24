@@ -1,4 +1,7 @@
+import { and, asc, desc, eq } from 'drizzle-orm';
+
 import { SessionGroupModel } from '@/database/models/sessionGroup';
+import { sessionGroups } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
@@ -7,7 +10,6 @@ import {
   CreateSessionGroupRequest,
   DeleteSessionGroupRequest,
   SessionGroupListResponse,
-  UpdateSessionGroupOrderRequest,
   UpdateSessionGroupRequest,
 } from '../types/session.type';
 
@@ -30,13 +32,29 @@ export class SessionGroupService extends BaseService {
     this.log('info', '获取会话组列表');
 
     try {
-      const sessionGroups = await this.sessionGroupModel.query();
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_READ');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问会话组列表');
+      }
 
-      this.log('info', `查询到 ${sessionGroups.length} 个会话组`);
-      return sessionGroups;
+      // 构建查询条件
+      const conditions = [];
+
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(sessionGroups.userId, permissionResult.condition.userId));
+      }
+
+      const sessionGroupList = await this.db.query.sessionGroups.findMany({
+        orderBy: [asc(sessionGroups.sort), desc(sessionGroups.createdAt)],
+        where: and(...conditions),
+      });
+
+      this.log('info', `查询到 ${sessionGroupList.length} 个会话组`);
+
+      return sessionGroupList;
     } catch (error) {
-      this.log('error', '获取会话组列表失败', { error });
-      throw this.createBusinessError('获取会话组列表失败');
+      this.handleServiceError(error, '获取会话组列表');
     }
   }
 
@@ -46,10 +64,25 @@ export class SessionGroupService extends BaseService {
    * @returns 会话组详情
    */
   async getSessionGroupById(groupId: string): ServiceResult<SessionGroupListResponse[0] | null> {
-    this.log('info', '根据 ID 获取会话组详情', { groupId });
-
     try {
-      const sessionGroup = await this.sessionGroupModel.findById(groupId);
+      this.log('info', '根据 ID 获取会话组详情', { groupId });
+
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_READ');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话组');
+      }
+
+      // 构建查询条件
+      const conditions = [eq(sessionGroups.id, groupId)];
+
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(sessionGroups.userId, permissionResult.condition.userId));
+      }
+
+      const sessionGroup = await this.db.query.sessionGroups.findFirst({
+        where: and(...conditions),
+      });
 
       if (!sessionGroup) {
         this.log('warn', '会话组不存在', { groupId });
@@ -58,8 +91,7 @@ export class SessionGroupService extends BaseService {
 
       return sessionGroup;
     } catch (error) {
-      this.log('error', '获取会话组详情失败', { error });
-      throw this.createBusinessError('获取会话组详情失败');
+      this.handleServiceError(error, '获取会话组详情');
     }
   }
 
@@ -72,10 +104,20 @@ export class SessionGroupService extends BaseService {
     this.log('info', '创建会话组', { name: request.name, sort: request.sort });
 
     try {
-      const result = await this.sessionGroupModel.create({
-        name: request.name,
-        sort: request.sort,
-      });
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_CREATE');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权创建会话组');
+      }
+
+      const [result] = await this.db
+        .insert(sessionGroups)
+        .values({
+          name: request.name,
+          sort: request.sort,
+          userId: this.userId,
+        })
+        .returning();
 
       if (!result) {
         throw this.createBusinessError('会话组创建失败');
@@ -84,8 +126,7 @@ export class SessionGroupService extends BaseService {
       this.log('info', '会话组创建成功', { id: result.id, name: request.name });
       return result.id;
     } catch (error) {
-      this.log('error', '创建会话组失败', { error });
-      throw this.createBusinessError('创建会话组失败');
+      this.handleServiceError(error, '创建会话组');
     }
   }
 
@@ -98,6 +139,12 @@ export class SessionGroupService extends BaseService {
     this.log('info', '更新会话组', { id: request.id, name: request.name });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_UPDATE');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权更新会话组');
+      }
+
       const { id, ...updateData } = request;
 
       // 检查会话组是否存在
@@ -106,15 +153,14 @@ export class SessionGroupService extends BaseService {
         throw this.createBusinessError(`会话组 ID "${id}" 不存在`);
       }
 
-      await this.sessionGroupModel.update(id, updateData);
+      await this.db
+        .update(sessionGroups)
+        .set({ ...updateData, updatedAt: new Date() })
+        .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
 
       this.log('info', '会话组更新成功', { id });
     } catch (error) {
-      this.log('error', '更新会话组失败', { error });
-      if (error instanceof Error && error.message.includes('不存在')) {
-        throw error;
-      }
-      throw this.createBusinessError('更新会话组失败');
+      this.handleServiceError(error, '更新会话组');
     }
   }
 
@@ -127,57 +173,30 @@ export class SessionGroupService extends BaseService {
     this.log('info', '删除会话组', { id: request.id });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_DELETE');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权删除会话组');
+      }
+
       // 检查会话组是否存在
       const existingGroup = await this.sessionGroupModel.findById(request.id);
       if (!existingGroup) {
         throw this.createBusinessError(`会话组 ID "${request.id}" 不存在`);
       }
 
+      // 构建查询条件
+      const conditions = [eq(sessionGroups.id, request.id)];
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(sessionGroups.userId, permissionResult.condition.userId));
+      }
+
       // 删除会话组，组内会话的 groupId 会通过数据库外键约束自动设为 null
-      await this.sessionGroupModel.delete(request.id);
+      await this.db.delete(sessionGroups).where(and(...conditions));
 
       this.log('info', '会话组删除成功', { id: request.id });
     } catch (error) {
-      this.log('error', '删除会话组失败', { error });
-      if (error instanceof Error && error.message.includes('不存在')) {
-        throw error;
-      }
-      throw this.createBusinessError('删除会话组失败');
-    }
-  }
-
-  /**
-   * 更新会话组排序
-   * @param request 排序更新请求参数
-   * @returns 更新结果
-   */
-  async updateSessionGroupOrder(request: UpdateSessionGroupOrderRequest): ServiceResult<void> {
-    this.log('info', '更新会话组排序', { count: request.sortMap.length });
-
-    try {
-      await this.sessionGroupModel.updateOrder(request.sortMap);
-
-      this.log('info', '会话组排序更新成功', { count: request.sortMap.length });
-    } catch (error) {
-      this.log('error', '更新会话组排序失败', { error });
-      throw this.createBusinessError('更新会话组排序失败');
-    }
-  }
-
-  /**
-   * 删除所有会话组
-   * @returns 删除结果
-   */
-  async deleteAllSessionGroups(): ServiceResult<void> {
-    this.log('info', '删除所有会话组');
-
-    try {
-      await this.sessionGroupModel.deleteAll();
-
-      this.log('info', '所有会话组删除成功');
-    } catch (error) {
-      this.log('error', '删除所有会话组失败', { error });
-      throw this.createBusinessError('删除所有会话组失败');
+      this.handleServiceError(error, '删除会话组');
     }
   }
 }

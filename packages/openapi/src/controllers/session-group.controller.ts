@@ -5,7 +5,6 @@ import { SessionGroupService } from '../services/session-group.service';
 import {
   CreateSessionGroupRequest,
   DeleteSessionGroupRequest,
-  UpdateSessionGroupOrderRequest,
   UpdateSessionGroupRequest,
 } from '../types/session.type';
 
@@ -141,48 +140,6 @@ export class SessionGroupController extends BaseController {
       await sessionGroupService.deleteSessionGroup(request);
 
       return this.success(c, null, '会话组删除成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 更新会话组排序
-   * PUT /api/v1/sessions/groups/order
-   * @param c Hono Context
-   * @returns 更新结果响应
-   */
-  async updateSessionGroupOrder(c: Context): Promise<Response> {
-    try {
-      const body = await this.getBody<UpdateSessionGroupOrderRequest>(c);
-
-      if (!body.sortMap || !Array.isArray(body.sortMap)) {
-        return this.error(c, '排序映射数据是必需的', 400);
-      }
-
-      const db = await this.getDatabase();
-      const sessionGroupService = new SessionGroupService(db, this.getUserId(c));
-      await sessionGroupService.updateSessionGroupOrder(body);
-
-      return this.success(c, null, '会话组排序更新成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 删除所有会话组
-   * DELETE /api/v1/sessions/groups/all
-   * @param c Hono Context
-   * @returns 删除结果响应
-   */
-  async deleteAllSessionGroups(c: Context): Promise<Response> {
-    try {
-      const db = await this.getDatabase();
-      const sessionGroupService = new SessionGroupService(db, this.getUserId(c));
-      await sessionGroupService.deleteAllSessionGroups();
-
-      return this.success(c, null, '所有会话组删除成功');
     } catch (error) {
       return this.handleError(c, error);
     }

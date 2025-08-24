@@ -319,15 +319,6 @@ export const UpdateSessionGroupRequestSchema = z.object({
   sort: z.number().nullish(),
 });
 
-export const UpdateSessionGroupOrderRequestSchema = z.object({
-  sortMap: z.array(
-    z.object({
-      id: z.string(),
-      sort: z.number(),
-    }),
-  ),
-});
-
 export const SessionIdParamSchema = z.object({
   id: z.string().min(1, '会话 ID 不能为空'),
 });
