@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, ViewStyle, LayoutRectangle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -12,9 +12,6 @@ import Animated, {
 import { useStyles } from './style';
 
 export interface SliderProps {
-  accessibilityHint?: string;
-  // Accessibility
-  accessibilityLabel?: string;
   defaultValue?: number;
   disabled?: boolean;
   max?: number;
@@ -23,8 +20,6 @@ export interface SliderProps {
   onChangeComplete?: (value: number) => void;
   step?: number;
   style?: ViewStyle;
-  thumbStyle?: ViewStyle;
-  trackStyle?: ViewStyle;
   value?: number;
 }
 
@@ -37,12 +32,8 @@ const Slider = memo<SliderProps>(
     onChangeComplete,
     step = 1,
     style,
-    trackStyle,
-    thumbStyle,
     value,
     defaultValue = min,
-    accessibilityLabel,
-    accessibilityHint,
   }) => {
     const { styles } = useStyles({ disabled });
 
@@ -139,29 +130,12 @@ const Slider = memo<SliderProps>(
       [currentValue, getThumbPosition, sliderWidth, translateX],
     );
 
-    const trackStyles = useMemo(() => [styles.track, trackStyle], [styles.track, trackStyle]);
-    const thumbStyles = useMemo(() => [styles.thumb, thumbStyle], [styles.thumb, thumbStyle]);
-
     return (
-      <View
-        accessibilityHint={
-          accessibilityHint ||
-          `Adjustable slider from ${min} to ${max}, current value is ${currentValue}`
-        }
-        accessibilityLabel={accessibilityLabel || `Slider, value ${currentValue}`}
-        accessibilityRole="adjustable"
-        accessibilityValue={{
-          max,
-          min,
-          now: currentValue,
-        }}
-        accessible
-        style={[styles.container, style]}
-      >
-        <View onLayout={onLayout} style={trackStyles}>
+      <View style={[styles.container, style]}>
+        <View onLayout={onLayout} style={styles.track}>
           <Animated.View style={[styles.activeTrack, activeTrackAnimatedStyle]} />
           <GestureDetector gesture={panGesture}>
-            <Animated.View accessible={false} style={[thumbStyles, thumbAnimatedStyle]} />
+            <Animated.View style={[styles.thumb, thumbAnimatedStyle]} />
           </GestureDetector>
         </View>
       </View>

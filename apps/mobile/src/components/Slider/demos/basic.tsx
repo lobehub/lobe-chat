@@ -64,8 +64,6 @@ const BasicSliderDemo: React.FC = () => {
         <Text style={styles.title}>带回调事件</Text>
         <View style={styles.sliderWrapper}>
           <Slider
-            accessibilityHint="滑动调整字体大小"
-            accessibilityLabel="字体大小"
             defaultValue={60}
             max={100}
             min={0}

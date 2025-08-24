@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, RangeDemo, CustomDemo, ControlledDemo } from '@/components/Slider/demos';
+import { BasicDemo, RangeDemo, ControlledDemo } from '@/components/Slider/demos';
 
 const SLIDER_README = `# Slider 滑动输入条组件
 
@@ -134,7 +134,6 @@ import Slider from '@/components/Slider';
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <RangeDemo />, key: 'range', title: '不同范围' },
-  { component: <CustomDemo />, key: 'custom', title: '自定义样式' },
   { component: <ControlledDemo />, key: 'controlled', title: '受控模式' },
 ];
 
