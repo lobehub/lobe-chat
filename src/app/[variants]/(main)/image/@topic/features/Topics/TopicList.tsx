@@ -47,8 +47,21 @@ const TopicsList = memo(() => {
         showMoreInfo={showMoreInfo}
       />
       <Flexbox align="center" gap={12} ref={parent} width={'100%'}>
-        {generationTopics.map((topic) => (
-          <TopicItem key={topic.id} showMoreInfo={showMoreInfo} topic={topic} />
+        {generationTopics.map((topic, index) => (
+          <TopicItem
+            key={topic.id}
+            showMoreInfo={showMoreInfo}
+            style={{
+              padding:
+                // fix the avatar border is clipped by overflow hidden
+                generationTopics.length === 1
+                  ? '4px 0'
+                  : index === generationTopics.length - 1
+                    ? '0 0 4px'
+                    : '0',
+            }}
+            topic={topic}
+          />
         ))}
       </Flexbox>
     </Flexbox>
