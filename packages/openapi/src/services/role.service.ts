@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import {
   PermissionItem,
@@ -11,7 +11,7 @@ import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
-import { UpdateRoleRequest } from '../types/role.type';
+import { RolesListQuery, UpdateRoleRequest } from '../types/role.type';
 
 export class RoleService extends BaseService {
   constructor(db: LobeChatDatabase, userId: string | null) {
@@ -22,21 +22,50 @@ export class RoleService extends BaseService {
    * Get all roles in the system
    * @returns Promise<RoleItem[]> - Array of all roles
    */
-  async getAllRoles(): Promise<RoleItem[]> {
-    return await this.db.query.roles.findMany({
-      orderBy: [roles.isSystem, roles.createdAt],
-    });
+  async getRoles(queryParams: RolesListQuery): ServiceResult<RoleItem[]> {
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_READ');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权访问角色列表');
+    }
+
+    const conditions = [];
+    if (queryParams.active) {
+      conditions.push(eq(roles.isActive, queryParams.active));
+    }
+    if (queryParams.system) {
+      conditions.push(eq(roles.isSystem, queryParams.system));
+    }
+
+    try {
+      return await this.db.query.roles.findMany({
+        orderBy: [roles.isSystem, roles.createdAt],
+        where: and(...conditions),
+      });
+    } catch (error) {
+      this.handleServiceError(error, '获取角色列表');
+    }
   }
 
   /**
    * Get all active roles in the system
    * @returns Promise<RoleItem[]> - Array of active roles
    */
-  async getActiveRoles(): Promise<RoleItem[]> {
-    return await this.db.query.roles.findMany({
-      orderBy: [roles.isSystem, roles.createdAt],
-      where: eq(roles.isActive, true),
-    });
+  async getActiveRoles(): ServiceResult<RoleItem[]> {
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_READ');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权访问活跃角色列表');
+    }
+
+    try {
+      return await this.db.query.roles.findMany({
+        orderBy: [roles.isSystem, roles.createdAt],
+        where: eq(roles.isActive, true),
+      });
+    } catch (error) {
+      this.handleServiceError(error, '获取活跃角色列表');
+    }
   }
 
   /**
@@ -44,10 +73,21 @@ export class RoleService extends BaseService {
    * @param id - Role ID
    * @returns Promise<RoleItem | undefined> - Role item or undefined if not found
    */
-  async getRoleById(id: number): Promise<RoleItem | undefined> {
-    return await this.db.query.roles.findFirst({
-      where: eq(roles.id, id),
-    });
+  async getRoleById(id: number): ServiceResult<RoleItem | null> {
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_READ');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权访问此角色');
+    }
+
+    try {
+      const role = await this.db.query.roles.findFirst({
+        where: eq(roles.id, id),
+      });
+      return role || null;
+    } catch (error) {
+      this.handleServiceError(error, '获取角色详情');
+    }
   }
 
   /**
@@ -55,10 +95,21 @@ export class RoleService extends BaseService {
    * @param name - Role name
    * @returns Promise<RoleItem | undefined> - Role item or undefined if not found
    */
-  async getRoleByName(name: string): Promise<RoleItem | undefined> {
-    return await this.db.query.roles.findFirst({
-      where: eq(roles.name, name),
-    });
+  async getRoleByName(name: string): ServiceResult<RoleItem | null> {
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_READ');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权访问此角色');
+    }
+
+    try {
+      const role = await this.db.query.roles.findFirst({
+        where: eq(roles.name, name),
+      });
+      return role || null;
+    } catch (error) {
+      this.handleServiceError(error, '获取角色详情');
+    }
   }
 
   /**
@@ -66,19 +117,29 @@ export class RoleService extends BaseService {
    * @param id - Role ID
    * @returns Promise<PermissionItem[]> - Array of permissions
    */
-  async getRolePermissions(id: number): Promise<Partial<PermissionItem>[]> {
-    return await this.db
-      .select({
-        category: permissions.category,
-        code: permissions.code,
-        description: permissions.description,
-        id: permissions.id,
-        isActive: permissions.isActive,
-        name: permissions.name,
-      })
-      .from(permissions)
-      .innerJoin(rolePermissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(eq(rolePermissions.roleId, id));
+  async getRolePermissions(id: number): ServiceResult<Partial<PermissionItem>[]> {
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_PERMISSION_READ');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权访问角色权限');
+    }
+
+    try {
+      return await this.db
+        .select({
+          category: permissions.category,
+          code: permissions.code,
+          description: permissions.description,
+          id: permissions.id,
+          isActive: permissions.isActive,
+          name: permissions.name,
+        })
+        .from(permissions)
+        .innerJoin(rolePermissions, eq(rolePermissions.permissionId, permissions.id))
+        .where(eq(rolePermissions.roleId, id));
+    } catch (error) {
+      this.handleServiceError(error, '获取角色权限');
+    }
   }
 
   /**
@@ -89,6 +150,12 @@ export class RoleService extends BaseService {
    */
   async updateRole(id: number, updateData: UpdateRoleRequest): ServiceResult<RoleItem> {
     this.log('info', '更新角色信息', { roleId: id, updateData });
+
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_UPDATE');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权更新角色');
+    }
 
     try {
       return await this.db.transaction(async (tx) => {

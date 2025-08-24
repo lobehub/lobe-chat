@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { RoleService } from '../services/role.service';
-import { UpdateRoleRequest } from '../types/role.type';
+import { RolesListQuery, UpdateRoleRequest } from '../types/role.type';
 
 /**
  * Role controller class
@@ -14,32 +14,16 @@ export class RoleController extends BaseController {
    * @param c Hono Context
    * @returns Role list response
    */
-  async getAllRoles(c: Context): Promise<Response> {
+  async getRoles(c: Context): Promise<Response> {
     try {
       // Get database connection and create service instance
+      const queryParams = this.getParams<RolesListQuery>(c);
+
       const db = await this.getDatabase();
       const roleService = new RoleService(db, this.getUserId(c));
-      const roles = await roleService.getAllRoles();
+      const roles = await roleService.getRoles(queryParams);
 
       return this.success(c, roles, 'Get roles list successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * Get all active roles in the system
-   * @param c Hono Context
-   * @returns Active role list response
-   */
-  async getActiveRoles(c: Context): Promise<Response> {
-    try {
-      // Get database connection and create service instance
-      const db = await this.getDatabase();
-      const roleService = new RoleService(db, this.getUserId(c));
-      const roles = await roleService.getActiveRoles();
-
-      return this.success(c, roles, 'Get active roles list successfully');
     } catch (error) {
       return this.handleError(c, error);
     }
