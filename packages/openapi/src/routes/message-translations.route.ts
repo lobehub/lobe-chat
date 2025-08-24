@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { getScopePermissions } from '@/utils/rbac';
+import { getAllScopePermissions } from '@/utils/rbac';
 
 import { MessageTranslateController } from '../controllers';
 import { requireAuth } from '../middleware';
@@ -10,17 +10,41 @@ import {
   MessageTranslateInfoUpdateSchema,
   MessageTranslateQueryRequestSchema,
   MessageTranslateTriggerRequestSchema,
-} from '../types/message-translate.type';
+} from '../types/message-translations.type';
 
 // Message Translate 相关路由
 const MessageTranslatesRoutes = new Hono();
+
+// POST /api/v1/message-translates - 翻译指定消息
+MessageTranslatesRoutes.post(
+  '/:messageId',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_READ'),
+    'You do not have permission to read translated message',
+  ),
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_CREATE'),
+    'You do not have permission to translate message',
+  ),
+  zValidator('param', MessageTranslateQueryRequestSchema),
+  zValidator('json', MessageTranslateTriggerRequestSchema),
+  (c) => {
+    const controller = new MessageTranslateController();
+    return controller.handleTranslateMessage(c);
+  },
+);
 
 // GET /api/v1/message-translates - 获取指定消息的翻译信息
 MessageTranslatesRoutes.get(
   '/:messageId',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    getAllScopePermissions('MESSAGE_READ'),
+    'You do not have permission to read message translations',
+  ),
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_TRANSLATE_READ'),
     'You do not have permission to read message translations',
   ),
   zValidator('param', MessageTranslateQueryRequestSchema),
@@ -30,28 +54,17 @@ MessageTranslatesRoutes.get(
   },
 );
 
-// POST /api/v1/message-translates - 翻译指定消息
-MessageTranslatesRoutes.post(
-  '/',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('MESSAGE_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to translate messages',
-  ),
-  zValidator('json', MessageTranslateTriggerRequestSchema),
-  (c) => {
-    const controller = new MessageTranslateController();
-    return controller.handleTranslateMessage(c);
-  },
-);
-
 // PUT /api/v1/message-translates/:messageId - 更新消息翻译信息
 MessageTranslatesRoutes.put(
   '/:messageId',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    getAllScopePermissions('MESSAGE_UPDATE'),
     'You do not have permission to update translation configuration',
+  ),
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_TRANSLATE_UPDATE'),
+    'You do not have permission to update message translations',
   ),
   zValidator('param', MessageTranslateQueryRequestSchema),
   zValidator('json', MessageTranslateInfoUpdateSchema),

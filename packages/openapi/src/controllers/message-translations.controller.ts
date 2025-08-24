@@ -1,11 +1,12 @@
 import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
-import { MessageTranslateService } from '../services/message-translate.service';
+import { MessageTranslateService } from '../services/message-translations.service';
 import {
+  MessageTranslateBody,
   MessageTranslateInfoUpdate,
-  MessageTranslateTriggerRequest,
-} from '../types/message-translate.type';
+  MessageTranslateParams,
+} from '../types/message-translations.type';
 
 export class MessageTranslateController extends BaseController {
   /**
@@ -36,11 +37,15 @@ export class MessageTranslateController extends BaseController {
   async handleTranslateMessage(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const translateData = (await this.getBody<MessageTranslateTriggerRequest>(c))!;
+      const { messageId } = this.getParams<MessageTranslateParams>(c);
+      const translatePayload = (await this.getBody<MessageTranslateBody>(c))!;
 
       const db = await this.getDatabase();
       const translateService = new MessageTranslateService(db, userId);
-      const result = await translateService.translateMessage(translateData);
+      const result = await translateService.translateMessage({
+        messageId,
+        ...translatePayload,
+      });
 
       return this.success(c, result, '翻译消息成功');
     } catch (error) {

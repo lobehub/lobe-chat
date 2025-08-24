@@ -1,3 +1,5 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix  */
+
 /**
  * RBAC Permission Actions Definition
  * Defines all executable permission action types in the system
@@ -120,6 +122,13 @@ export const PERMISSION_ACTIONS = {
   MESSAGE_REGENERATE: 'message:regenerate',
 
   MESSAGE_UPDATE: 'message:update',
+
+  // ==================== Message Translate Management ====================
+  MESSAGE_TRANSLATE_CREATE: 'message_translate:create',
+
+  MESSAGE_TRANSLATE_READ: 'message_translate:read',
+
+  MESSAGE_TRANSLATE_UPDATE: 'message_translate:update',
 
   // ==================== Plugin Management ====================
   PLUGIN_CONFIGURE: 'plugin:configure',

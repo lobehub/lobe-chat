@@ -10,7 +10,7 @@ import {
   MessageTranslateInfoUpdate,
   MessageTranslateResponse,
   MessageTranslateTriggerRequest,
-} from '../types/message-translate.type';
+} from '../types/message-translations.type';
 import { ChatService } from './chat.service';
 
 export class MessageTranslateService extends BaseService {
@@ -24,14 +24,26 @@ export class MessageTranslateService extends BaseService {
    * @returns 翻译信息
    */
   async getTranslateByMessageId(messageId: string): ServiceResult<MessageTranslateResponse | null> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
+    // 权限检查 - 读取目标信息
+    const messageReadPermission = await this.resolveOperationPermission('MESSAGE_READ', {
+      targetMessageId: messageId,
+    });
+
+    if (!messageReadPermission.isPermitted) {
+      throw this.createAuthorizationError(messageReadPermission.message || '无权访问此消息的翻译');
     }
 
-    // 权限检查
-    const permissionResult = await this.resolveChatPermissions();
-    if (!permissionResult.isPermitted) {
-      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    // 权限检查 - 读取翻译信息
+    const translateReadPermission = await this.resolveOperationPermission(
+      'MESSAGE_TRANSLATE_READ',
+      {
+        targetMessageId: messageId,
+      },
+    );
+    if (!translateReadPermission.isPermitted) {
+      throw this.createAuthorizationError(
+        translateReadPermission.message || '无权访问此消息的翻译',
+      );
     }
 
     this.log('info', '根据消息ID获取翻译信息', { messageId, userId: this.userId });
@@ -46,33 +58,19 @@ export class MessageTranslateService extends BaseService {
         return null;
       }
 
-      const translate = result;
-
-      // 检查是否属于当前用户
-      if (translate.userId !== this.userId) {
-        throw this.createAuthorizationError('无权限访问此翻译');
-      }
-
       const response: MessageTranslateResponse = {
-        clientId: translate.clientId,
-        content: translate.content,
-        from: translate.from,
-        id: translate.id,
-        to: translate.to,
-        userId: translate.userId,
+        clientId: result.clientId,
+        content: result.content,
+        from: result.from,
+        id: result.id,
+        to: result.to,
+        userId: result.userId,
       };
 
       this.log('info', '获取翻译信息完成', { messageId });
       return response;
     } catch (error) {
-      if (error instanceof Error && error.name === 'AuthorizationError') {
-        throw error;
-      }
-      this.log('error', '获取翻译信息失败', {
-        error: error instanceof Error ? error.message : String(error),
-        messageId,
-      });
-      throw this.createCommonError('查询翻译信息失败');
+      this.handleServiceError(error, '根据消息ID获取翻译信息');
     }
   }
 
@@ -84,14 +82,21 @@ export class MessageTranslateService extends BaseService {
   async translateMessage(
     translateData: MessageTranslateTriggerRequest,
   ): ServiceResult<Partial<MessageTranslateItem>> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
+    // 权限检查 - 读取目标信息
+    const messageReadPermission = await this.resolveOperationPermission('MESSAGE_READ', {
+      targetMessageId: translateData.messageId,
+    });
+
+    if (!messageReadPermission.isPermitted) {
+      throw this.createAuthorizationError(messageReadPermission.message || '没有权限读取该消息');
     }
 
-    // 权限检查
-    const permissionResult = await this.resolveChatPermissions();
-    if (!permissionResult.isPermitted) {
-      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    // 权限检查 - 创建翻译
+    const messageCreatePermission = await this.resolveOperationPermission('MESSAGE_CREATE', {
+      targetMessageId: translateData.messageId,
+    });
+    if (!messageCreatePermission.isPermitted) {
+      throw this.createAuthorizationError(messageCreatePermission.message || '没有权限创建翻译');
     }
 
     this.log('info', '开始翻译消息', {
@@ -127,30 +132,7 @@ export class MessageTranslateService extends BaseService {
         translatedContent,
       });
     } catch (error) {
-      // 改进错误日志记录，提供更详细的错误信息
-      let errorDetails: any;
-
-      if (error instanceof Error) {
-        errorDetails = {
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
-        };
-      } else if (typeof error === 'object' && error !== null) {
-        try {
-          errorDetails = structuredClone(error);
-        } catch {
-          errorDetails = { rawError: String(error) };
-        }
-      } else {
-        errorDetails = { rawError: String(error) };
-      }
-
-      this.log('error', '翻译消息失败', {
-        error: errorDetails,
-        messageId: translateData.messageId,
-      });
-      throw this.createCommonError('翻译消息失败');
+      this.handleServiceError(error, '翻译消息');
     }
   }
 
@@ -162,14 +144,22 @@ export class MessageTranslateService extends BaseService {
   async updateTranslateInfo(
     data: MessageTranslateInfoUpdate,
   ): ServiceResult<Partial<MessageTranslateItem>> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
+    // 权限检查 - 读取目标信息
+    const messageReadPermission = await this.resolveOperationPermission('MESSAGE_READ', {
+      targetMessageId: data.messageId,
+    });
+    if (!messageReadPermission.isPermitted) {
+      throw this.createAuthorizationError(messageReadPermission.message || '无权更新此消息的翻译');
     }
 
-    // 权限检查
-    const permissionResult = await this.resolveChatPermissions();
-    if (!permissionResult.isPermitted) {
-      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    // 权限检查 - 更新翻译
+    const messageUpdatePermission = await this.resolveOperationPermission('MESSAGE_UPDATE', {
+      targetMessageId: data.messageId,
+    });
+    if (!messageUpdatePermission.isPermitted) {
+      throw this.createAuthorizationError(
+        messageUpdatePermission.message || '无权更新此消息的翻译',
+      );
     }
 
     try {
@@ -208,11 +198,7 @@ export class MessageTranslateService extends BaseService {
         userId: this.userId,
       };
     } catch (error) {
-      this.log('error', '更新翻译信息失败', {
-        error,
-        messageId: data.messageId,
-      });
-      throw this.createCommonError('更新翻译信息失败');
+      this.handleServiceError(error, '更新翻译信息');
     }
   }
 
@@ -239,33 +225,7 @@ export class MessageTranslateService extends BaseService {
         sessionId: result.sessionId,
       };
     } catch (error) {
-      this.log('error', '获取消息内容和 sessionId 失败', {
-        error: error instanceof Error ? error.message : String(error),
-        messageId,
-      });
-      return null;
-    }
-  }
-
-  /**
-   * 获取原始消息内容
-   * @param messageId 消息ID
-   * @returns 消息内容
-   */
-  private async getOriginalMessageContent(messageId: string): Promise<string | null> {
-    try {
-      const result = await this.db.query.messages.findFirst({
-        columns: { content: true },
-        where: eq(messages.id, messageId),
-      });
-
-      return result?.content || null;
-    } catch (error) {
-      this.log('error', '获取原始消息内容失败', {
-        error: error instanceof Error ? error.message : String(error),
-        messageId,
-      });
-      return null;
+      this.handleServiceError(error, '获取消息内容和 sessionId');
     }
   }
 }
