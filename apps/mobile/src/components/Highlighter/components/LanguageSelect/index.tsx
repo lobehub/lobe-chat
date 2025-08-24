@@ -1,57 +1,22 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChevronDown } from 'lucide-react-native';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 
-import supportedLanguageIds, { getLanguageDisplayName } from './hooks/supportedLanguages';
+import supportedLanguageIds, { getLanguageDisplayName } from '../../hooks/supportedLanguages';
+import { useStyles } from './style';
 
 interface LanguageSelectProps {
   onSelect: (lang: string) => void;
   value: string;
 }
 
-const createStyles = (token: any) =>
-  StyleSheet.create({
-    actionSheetContainer: {
-      backgroundColor: token.colorBgElevated,
-    },
-    actionSheetText: {
-      color: token.colorText,
-      fontSize: token.fontSize,
-    },
-    actionSheetTitle: {
-      color: token.colorTextHeading,
-      fontSize: token.fontSizeLG,
-      fontWeight: 'bold',
-    },
-    container: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      height: 32,
-      justifyContent: 'center',
-      width: '100%',
-    },
-    selectButton: {
-      alignItems: 'center',
-      backgroundColor: 'transparent',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      minWidth: 70,
-      paddingHorizontal: 0,
-      paddingVertical: token.paddingXXS,
-    },
-    selectText: {
-      color: token.colorText,
-      fontSize: token.fontSizeSM,
-      fontWeight: '600',
-    },
-  });
-
 export const LanguageSelect: React.FC<LanguageSelectProps> = ({ value, onSelect }) => {
   const token = useThemeToken();
   const { showActionSheetWithOptions } = useActionSheet();
+  const { styles } = useStyles();
 
   // 创建语言选项列表，只包含支持的语言
   const languages = supportedLanguageIds.map((langId) => ({
@@ -72,8 +37,6 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({ value, onSelect 
     // 找到当前选中语言的索引
     // const currentLanguageIndex = languages.findIndex((item) => item.value === value);
 
-    const styles = createStyles(token);
-
     showActionSheetWithOptions(
       {
         cancelButtonIndex,
@@ -92,8 +55,6 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({ value, onSelect 
       },
     );
   };
-
-  const styles = createStyles(token);
 
   return (
     <View style={styles.container}>

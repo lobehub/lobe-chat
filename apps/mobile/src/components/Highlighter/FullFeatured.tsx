@@ -6,7 +6,7 @@ import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 import { ICON_SIZE_TINY } from '@/const/common';
 import { useTheme } from '@/theme';
 
-import { LanguageSelect } from './LanguageSelect';
+import { LanguageSelect } from './components/LanguageSelect';
 import { TokenDisplay } from './TokenDisplay';
 import { useTokenize } from './hooks/useTokenize';
 import { useStyles } from './style';
