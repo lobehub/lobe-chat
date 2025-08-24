@@ -99,7 +99,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
         targetAgentId: request.id,
       });
 
@@ -163,7 +163,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_DELETE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_DELETE', {
         targetAgentId: request.agentId,
       });
 
@@ -218,7 +218,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_READ', {
         targetAgentId: agentId,
       });
 
@@ -251,7 +251,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_READ', {
         targetSessionId: sessionId,
       });
 
@@ -339,7 +339,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
         targetAgentId: request.agentId,
       });
 
@@ -407,7 +407,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_READ', {
         targetAgentId: agentId,
       });
 
@@ -471,7 +471,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
         targetAgentId: agentId,
       });
 
@@ -532,7 +532,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
         targetAgentId: agentId,
       });
 
@@ -592,7 +592,7 @@ export class AgentService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
         targetAgentId: agentId,
       });
 
