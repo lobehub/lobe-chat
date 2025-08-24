@@ -10,8 +10,37 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
     top: 0,
   },
   container: {
+    minHeight: 48, // Ensure enough space for labels
     paddingHorizontal: token.paddingXS,
     paddingVertical: token.paddingSM,
+  },
+
+  markDot: {
+    backgroundColor: disabled ? token.colorBorder : token.colorBorderSecondary,
+    borderRadius: 3,
+    height: 6,
+    marginTop: -1,
+    width: 6,
+  },
+
+  // marks styles
+  markItem: {
+    alignItems: 'center',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    transform: [{ translateX: -3 }],
+  },
+
+  markLabel: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: token.marginXS,
+    minHeight: 16,
+  },
+  markLabelText: {
+    color: token.colorText,
+    fontSize: token.fontSizeSM,
   },
   thumb: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, RangeDemo, ControlledDemo } from '@/components/Slider/demos';
+import { BasicDemo, RangeDemo, ControlledDemo, MarksDemo } from '@/components/Slider/demos';
 
 const SLIDER_README = `# Slider 滑动输入条组件
 
@@ -11,6 +11,8 @@ React Native 版本的滑动输入条组件，支持自定义范围、步长和�
 
 - ✅ 流畅的拖拽手势交互
 - ✅ 自定义最小值、最大值和步长
+- ✅ 刻度标记支持（marks）
+- ✅ 仅刻度模式（step=null）
 - ✅ 受控和非受控模式
 - ✅ 完整的无障碍支持
 - ✅ 自定义样式（轨道和滑块）
@@ -66,6 +68,34 @@ import Slider from '@/components/Slider';
   trackStyle={{ backgroundColor: '#ff6b35' }}
   thumbStyle={{ backgroundColor: '#4ecdc4' }}
 />
+
+// 刻度标记
+<Slider
+  value={value}
+  onChange={setValue}
+  min={0}
+  max={100}
+  marks={{
+    0: '0%',
+    25: '25%', 
+    50: '50%',
+    75: '75%',
+    100: '100%'
+  }}
+/>
+
+// 仅刻度模式（只能选择标记的值）
+<Slider
+  value={level}
+  onChange={setLevel}
+  step={null}
+  marks={{
+    0: '低',
+    1: '中',
+    2: '高',
+    3: '极高'
+  }}
+/>
 \`\`\`
 
 ## API
@@ -78,8 +108,9 @@ import Slider from '@/components/Slider';
 | defaultValue | \`number\` | \`min\` | 默认值（非受控模式） |
 | min | \`number\` | \`0\` | 最小值 |
 | max | \`number\` | \`100\` | 最大值 |
-| step | \`number\` | \`1\` | 步长 |
+| step | \`number \\| null\` | \`1\` | 步长，设为 null 时使用仅刻度模式 |
 | disabled | \`boolean\` | \`false\` | 是否禁用 |
+| marks | \`Record<number, ReactNode \\| {label: ReactNode, style?: ViewStyle}>\` | - | 刻度标记 |
 | onChange | \`(value: number) => void\` | - | 值改变时的回调 |
 | onChangeComplete | \`(value: number) => void\` | - | 拖拽结束时的回调 |
 | style | \`ViewStyle\` | - | 容器样式 |
@@ -135,6 +166,7 @@ const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <RangeDemo />, key: 'range', title: '不同范围' },
   { component: <ControlledDemo />, key: 'controlled', title: '受控模式' },
+  { component: <MarksDemo />, key: 'marks', title: '刻度标记' },
 ];
 
 export default function SliderPlaygroundPage() {
