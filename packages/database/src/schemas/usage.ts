@@ -1,6 +1,4 @@
-import { text, integer, uniqueIndex, pgTable, doublePrecision, jsonb, timestamp, real } from 'drizzle-orm/pg-core'
-
-import { idGenerator } from '../utils/idGenerator'
+import { text, integer, uniqueIndex, pgTable, doublePrecision, jsonb, timestamp, real, varchar } from 'drizzle-orm/pg-core'
 
 import { timestamps } from './_helpers'
 import { users } from './user'
@@ -9,19 +7,16 @@ import { MessageMetadata } from '@/types/message';
 export const usageRecords = pgTable(
     'usage_records',
     {
-        id: text('id')
-            .$defaultFn(() => idGenerator('usageRecords', 16))
-            .primaryKey(),
+        id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         // Model 信息
         model: text('model').notNull(),
         provider: text('provider').notNull(),
         // Pricing 信息
         spend: doublePrecision('spend').notNull().default(0.0),
         // 调用信息，谁用哪个API调用了
-            // API 调用信息
-        callType: text('call_type', { enum: ['chat', 'history_summary'] }).notNull(),
-        ipAddress: text('ip_address'),
-            // User Identify
+        // API 调用信息
+        callType: varchar('call_type', { length: 256 }).notNull(),
+        // User Identify
         userId: text('user_id')
             .references(() => users.id, { onDelete: 'cascade' })
             .notNull(),
@@ -37,7 +32,7 @@ export const usageRecords = pgTable(
         totalInputTokens: integer('total_input_tokens'),
         totalOutputTokens: integer('total_output_tokens'),
         totalTokens: integer('total_tokens'),
-        
+
         metadata: jsonb('metadata').$type<MessageMetadata | undefined>(),
         ...timestamps,
     },

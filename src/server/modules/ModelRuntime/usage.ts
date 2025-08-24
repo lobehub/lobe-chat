@@ -13,7 +13,6 @@ export const createUsageTracker = (
     metadata: {
         userId: string,
         provider: string,
-        ip?: string,
     }
 ) => {
     const { messages, model, tools, ...parameters } = payload;
@@ -48,7 +47,6 @@ export const createUsageTracker = (
                             userId: metadata.userId,
                             model,
                             provider: metadata.provider,
-                            ipAddress: metadata?.ip,
                             tools,
                             usage: data?.usage,
                             speed: data?.speed,
