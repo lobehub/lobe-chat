@@ -9,7 +9,7 @@ import Animated, {
   Extrapolation,
 } from 'react-native-reanimated';
 
-import { useStyles } from './style';
+import { DOT_SIZE, useStyles } from './style';
 
 export interface SliderProps {
   defaultValue?: number;
@@ -186,7 +186,6 @@ const Slider = memo<SliderProps>(
       if (!marks || layoutWidth <= 0) return null;
       if (markValues.length === 0) return null;
 
-      const dotSize = 6;
       return markValues.map((mv) => {
         const percentage = (mv - min) / (max - min);
         const left = percentage * layoutWidth;
@@ -196,7 +195,7 @@ const Slider = memo<SliderProps>(
         const customStyle = isObj ? (meta as any).style : undefined;
 
         // 固定 dot 在刻度点位置（不受 label 宽度影响）
-        const dotTransform = [{ translateX: -dotSize / 2 }];
+        const dotTransform = [{ translateX: -DOT_SIZE / 2 }];
 
         // label 绝对定位与 dot 水平居中，根据测量宽度计算
         const measuredWidth = labelWidths[mv] ?? 0;

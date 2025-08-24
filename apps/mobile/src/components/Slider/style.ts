@@ -1,8 +1,13 @@
 import { createStyles } from '@/theme';
 
+export const TRACK_HEIGHT = 4;
+export const BORDER_WIDTH = 2;
+
+export const DOT_SIZE = 8 + 2 * BORDER_WIDTH;
+
 export const useStyles = createStyles((token, { disabled }: { disabled: boolean }) => ({
   activeTrack: {
-    backgroundColor: disabled ? token.colorPrimaryBorder : token.colorPrimary,
+    backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimaryBorder,
     borderRadius: token.borderRadiusSM,
     height: '100%',
     left: 0,
@@ -10,17 +15,19 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
     top: 0,
   },
   container: {
-    minHeight: 48, // Ensure enough space for labels
+    minHeight: token.sizeXXL, // Ensure enough space for labels
     paddingHorizontal: token.paddingXS,
     paddingVertical: token.paddingSM,
   },
 
   markDot: {
-    backgroundColor: disabled ? token.colorBorder : token.colorBorderSecondary,
-    borderRadius: 3,
-    height: 6,
-    marginTop: -1,
-    width: 6,
+    backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,
+    borderColor: disabled ? token.colorBorder : token.colorBorderSecondary,
+    borderRadius: DOT_SIZE / 2,
+    borderWidth: BORDER_WIDTH,
+    height: DOT_SIZE,
+    marginTop: (TRACK_HEIGHT - DOT_SIZE) / 2,
+    width: DOT_SIZE,
   },
 
   // marks styles
@@ -34,8 +41,8 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
   markLabel: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: token.marginXS,
-    minHeight: 16,
+    marginTop: token.margin,
+    minHeight: token.fontSizeLG,
   },
   markLabelText: {
     color: token.colorText,
@@ -44,23 +51,20 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
   thumb: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,
     borderColor: disabled ? token.colorBorder : token.colorPrimary,
-    borderRadius: 10,
-    borderWidth: 2,
-    height: 20,
-    marginLeft: -10,
-    marginTop: -8,
+    borderRadius: token.controlHeightLG / 4,
+    borderWidth: BORDER_WIDTH,
+    height: token.controlHeightLG / 2,
+    marginLeft: -token.controlHeightLG / 4,
+    marginTop: -token.controlHeightLG / 4 + BORDER_WIDTH,
     position: 'absolute',
-    shadowColor: token.colorTextSecondary,
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    ...token.boxShadowSecondary,
     top: 0,
-    width: 20,
+    width: token.controlHeightLG / 2,
   },
   track: {
-    backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+    backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorFillTertiary,
     borderRadius: token.borderRadiusSM,
-    height: 4,
+    height: TRACK_HEIGHT,
     position: 'relative',
     width: '100%',
   },
