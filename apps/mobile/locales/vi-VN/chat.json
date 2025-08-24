@@ -3,6 +3,10 @@
   "copyFailed": "Sao chép thất bại",
   "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
   "history": "Lịch sử trò chuyện",
+  "inbox": {
+    "desc": "Tại đây, bạn có thể xem và quản lý tin nhắn cùng thông báo của mình.",
+    "title": "Hộp thư đến"
+  },
   "messageCopied": "Đã sao chép tin nhắn",
   "newChat": "Cuộc trò chuyện mới",
   "placeholder": "Nhập tin nhắn của bạn...",

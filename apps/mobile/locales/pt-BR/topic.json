@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Tópico Padrão",
+  "empty": "Nenhum tópico disponível",
+  "guide": {
+    "desc": "Clique no botão à esquerda para salvar a conversa atual como um tópico histórico e iniciar uma nova conversa",
+    "title": "Lista de Tópicos"
+  },
+  "loading": "Carregando...",
+  "newTopic": "Novo Tópico",
+  "searchPlaceholder": "Pesquisar tópicos...",
+  "temp": "Temporário",
+  "title": "Tópico"
+}

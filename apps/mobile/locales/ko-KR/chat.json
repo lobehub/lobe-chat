@@ -3,6 +3,10 @@
   "copyFailed": "복사 실패",
   "deleteMessageConfirm": "이 메시지를 삭제하시겠습니까?",
   "history": "대화 기록",
+  "inbox": {
+    "desc": "여기에서 메시지와 알림을 확인하고 관리할 수 있습니다.",
+    "title": "받은 편지함"
+  },
   "messageCopied": "메시지가 복사되었습니다",
   "newChat": "새 대화",
   "placeholder": "메시지를 입력하세요...",

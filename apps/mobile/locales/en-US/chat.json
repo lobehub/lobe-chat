@@ -3,6 +3,10 @@
   "copyFailed": "Copy Failed",
   "deleteMessageConfirm": "Are you sure you want to delete this message?",
   "history": "Chat History",
+  "inbox": {
+    "desc": "Here, you can view and manage your messages and notifications.",
+    "title": "Inbox"
+  },
   "messageCopied": "Message Copied",
   "newChat": "New Chat",
   "placeholder": "Type your message...",

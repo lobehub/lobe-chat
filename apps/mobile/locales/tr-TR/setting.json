@@ -44,7 +44,19 @@
   "theme": {
     "auto": "Sistemi Takip Et",
     "dark": "Karanlık Mod",
+    "fontSize": {
+      "standard": "Standart",
+      "title": "Yazı Tipi Boyutu"
+    },
     "light": "Açık Mod",
+    "neutralColor": {
+      "description": "Uygulamanın nötr tonunu seçin",
+      "title": "Nötr Renk Ayarları"
+    },
+    "primaryColor": {
+      "description": "Uygulamanın ana rengini seçin",
+      "title": "Ana Renk Ayarları"
+    },
     "sectionDescription": "Tercih ettiğiniz tema stilini seçin, seçiminizi değiştirmek için tıklayın",
     "sectionTitle": "Tema",
     "title": "Tema Ayarları"

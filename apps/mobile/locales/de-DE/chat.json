@@ -3,6 +3,10 @@
   "copyFailed": "Kopieren fehlgeschlagen",
   "deleteMessageConfirm": "Möchten Sie diese Nachricht wirklich löschen?",
   "history": "Chatverlauf",
+  "inbox": {
+    "desc": "Hier können Sie Ihre Nachrichten und Benachrichtigungen einsehen und verwalten.",
+    "title": "Posteingang"
+  },
   "messageCopied": "Nachricht kopiert",
   "newChat": "Neuer Chat",
   "placeholder": "Geben Sie Ihre Nachricht ein...",

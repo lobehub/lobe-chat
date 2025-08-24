@@ -3,6 +3,10 @@
   "copyFailed": "Copia non riuscita",
   "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
   "history": "Cronologia conversazioni",
+  "inbox": {
+    "desc": "Qui puoi visualizzare e gestire i tuoi messaggi e notifiche.",
+    "title": "Posta in arrivo"
+  },
   "messageCopied": "Messaggio copiato",
   "newChat": "Nuova conversazione",
   "placeholder": "Inserisci il tuo messaggio...",

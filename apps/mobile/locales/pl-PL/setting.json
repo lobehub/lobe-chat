@@ -44,7 +44,19 @@
   "theme": {
     "auto": "Automatycznie",
     "dark": "Tryb ciemny",
+    "fontSize": {
+      "standard": "Standardowy",
+      "title": "Rozmiar czcionki"
+    },
     "light": "Tryb jasny",
+    "neutralColor": {
+      "description": "Wybierz neutralny odcień aplikacji",
+      "title": "Konfiguracja kolorów neutralnych"
+    },
+    "primaryColor": {
+      "description": "Wybierz główny kolor aplikacji",
+      "title": "Konfiguracja koloru głównego"
+    },
     "sectionDescription": "Wybierz preferowany styl motywu i kliknij, aby zmienić swój wybór",
     "sectionTitle": "Motyw",
     "title": "Ustawienia motywu"

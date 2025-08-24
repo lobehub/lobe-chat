@@ -3,6 +3,10 @@
   "copyFailed": "Échec de la copie",
   "deleteMessageConfirm": "Voulez-vous vraiment supprimer ce message ?",
   "history": "Historique des conversations",
+  "inbox": {
+    "desc": "Ici, vous pouvez consulter et gérer vos messages et notifications.",
+    "title": "Boîte de réception"
+  },
   "messageCopied": "Message copié",
   "newChat": "Nouvelle conversation",
   "placeholder": "Entrez votre message...",

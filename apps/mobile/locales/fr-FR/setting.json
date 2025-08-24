@@ -44,7 +44,19 @@
   "theme": {
     "auto": "Suivre le système",
     "dark": "Mode sombre",
+    "fontSize": {
+      "standard": "Standard",
+      "title": "Taille de la police"
+    },
     "light": "Mode clair",
+    "neutralColor": {
+      "description": "Choisissez la teinte neutre de l'application",
+      "title": "Configuration des couleurs neutres"
+    },
+    "primaryColor": {
+      "description": "Choisissez la couleur principale de l'application",
+      "title": "Configuration de la couleur principale"
+    },
     "sectionDescription": "Choisissez le style de thème que vous préférez, cliquez pour changer votre sélection",
     "sectionTitle": "Thème",
     "title": "Paramètres du thème"

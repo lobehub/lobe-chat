@@ -7,7 +7,6 @@ import { isDev } from '@/utils/env';
 
 import { loadAllResources, getSupportedLocales } from './generatedConfig';
 import { getDetectedLocale } from './resource';
-import defaultResources from './default';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 
@@ -52,10 +51,7 @@ const languageDetector = {
 // 初始化 i18n
 const initI18n = async () => {
   try {
-    // 在开发环境下，直接使用 src/i18n/default 的 token 作为所有语言的资源，便于本地开发与对齐
-    const resources = isDev
-      ? Object.fromEntries(getSupportedLocales().map((locale) => [locale, defaultResources]))
-      : await loadAllResources();
+    const resources = await loadAllResources();
 
     await i18n
       .use(languageDetector)

@@ -3,6 +3,10 @@
   "copyFailed": "コピーに失敗しました",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
+  "inbox": {
+    "desc": "ここでは、メッセージと通知を確認および管理できます。",
+    "title": "受信トレイ"
+  },
   "messageCopied": "メッセージがコピーされました",
   "newChat": "新しいチャット",
   "placeholder": "メッセージを入力してください...",

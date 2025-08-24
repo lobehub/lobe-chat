@@ -3,6 +3,10 @@
   "copyFailed": "Kopiëren mislukt",
   "deleteMessageConfirm": "Weet u zeker dat u dit bericht wilt verwijderen?",
   "history": "Gespreksgeschiedenis",
+  "inbox": {
+    "desc": "Hier kunt u uw berichten en meldingen bekijken en beheren.",
+    "title": "Postvak IN"
+  },
   "messageCopied": "Bericht gekopieerd",
   "newChat": "Nieuw gesprek",
   "placeholder": "Typ uw bericht...",

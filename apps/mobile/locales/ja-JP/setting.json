@@ -44,7 +44,19 @@
   "theme": {
     "auto": "システムに従う",
     "dark": "ダークモード",
+    "fontSize": {
+      "standard": "標準",
+      "title": "フォントサイズ"
+    },
     "light": "ライトモード",
+    "neutralColor": {
+      "description": "アプリのニュートラルカラーを選択してください",
+      "title": "ニュートラルカラー設定"
+    },
+    "primaryColor": {
+      "description": "アプリのプライマリカラーを選択してください",
+      "title": "プライマリカラー設定"
+    },
     "sectionDescription": "お好みのテーマスタイルを選択し、クリックして切り替えてください",
     "sectionTitle": "テーマ",
     "title": "テーマ設定"

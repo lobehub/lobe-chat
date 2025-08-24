@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Standaardonderwerp",
+  "empty": "Geen onderwerpen",
+  "guide": {
+    "desc": "Klik op de knop links om het huidige gesprek op te slaan als een historisch onderwerp en een nieuw gesprek te starten",
+    "title": "Onderwerplijst"
+  },
+  "loading": "Bezig met laden...",
+  "newTopic": "Nieuw onderwerp",
+  "searchPlaceholder": "Zoek onderwerpen...",
+  "temp": "Tijdelijk",
+  "title": "Onderwerp"
+}

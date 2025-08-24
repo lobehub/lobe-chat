@@ -44,6 +44,10 @@
   "theme": {
     "auto": "跟随系统",
     "dark": "深色模式",
+    "fontSize": {
+      "standard": "标准",
+      "title": "字体大小"
+    },
     "light": "浅色模式",
     "neutralColor": {
       "description": "选择应用的中性色调",

@@ -3,6 +3,10 @@
   "copyFailed": "複製失敗",
   "deleteMessageConfirm": "確定要刪除這則訊息嗎？",
   "history": "對話歷史",
+  "inbox": {
+    "desc": "在這裡，您可以查看和管理您的訊息和通知。",
+    "title": "收件匣"
+  },
   "messageCopied": "訊息已複製",
   "newChat": "新對話",
   "placeholder": "輸入您的訊息...",

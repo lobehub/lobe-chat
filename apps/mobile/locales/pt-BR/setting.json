@@ -44,7 +44,19 @@
   "theme": {
     "auto": "Automático",
     "dark": "Modo Escuro",
+    "fontSize": {
+      "standard": "Padrão",
+      "title": "Tamanho da Fonte"
+    },
     "light": "Modo Claro",
+    "neutralColor": {
+      "description": "Escolha o tom neutro para o aplicativo",
+      "title": "Configuração de Cor Neutra"
+    },
+    "primaryColor": {
+      "description": "Escolha a cor principal para o aplicativo",
+      "title": "Configuração de Cor Primária"
+    },
     "sectionDescription": "Escolha o estilo de tema que você prefere e clique para alternar sua seleção",
     "sectionTitle": "Tema",
     "title": "Configurações de Tema"

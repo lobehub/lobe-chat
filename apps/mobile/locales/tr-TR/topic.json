@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Varsayılan Konu",
+  "empty": "Henüz konu yok",
+  "guide": {
+    "desc": "Sol taraftaki gönder düğmesine tıklayarak mevcut sohbeti geçmiş konu olarak kaydedebilir ve yeni bir sohbet başlatabilirsiniz",
+    "title": "Konu Listesi"
+  },
+  "loading": "Yükleniyor...",
+  "newTopic": "Yeni Konu Oluştur",
+  "searchPlaceholder": "Konu ara...",
+  "temp": "Geçici",
+  "title": "Konu"
+}

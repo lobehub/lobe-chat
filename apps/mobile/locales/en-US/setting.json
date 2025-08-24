@@ -44,6 +44,10 @@
   "theme": {
     "auto": "Follow System",
     "dark": "Dark Mode",
+    "fontSize": {
+      "standard": "Standard",
+      "title": "Font Size"
+    },
     "light": "Light Mode",
     "neutralColor": {
       "description": "Choose the neutral color tone for the app",

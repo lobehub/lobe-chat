@@ -3,6 +3,10 @@
   "copyFailed": "Kopiowanie nie powiodło się",
   "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
   "history": "Historia rozmów",
+  "inbox": {
+    "desc": "Tutaj możesz przeglądać i zarządzać swoimi wiadomościami oraz powiadomieniami.",
+    "title": "Skrzynka odbiorcza"
+  },
   "messageCopied": "Wiadomość skopiowana",
   "newChat": "Nowa rozmowa",
   "placeholder": "Wpisz swoją wiadomość...",
