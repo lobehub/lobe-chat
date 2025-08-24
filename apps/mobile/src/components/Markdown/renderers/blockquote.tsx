@@ -3,17 +3,14 @@ import { Fragment, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { useMarkdownContext } from '../context';
-import { mergeStyles } from '../themes/themes';
 import { RendererArgs } from './renderers';
 
 export const BlockquoteRenderer = ({ node }: RendererArgs<Blockquote>): ReactNode => {
   const { renderers, styles } = useMarkdownContext();
   const { BlockContentRenderer, DefinitionContentRenderer } = renderers;
 
-  const style = mergeStyles(styles.container, styles.blockquote);
-
   return (
-    <View style={style}>
+    <View style={[styles.container, styles.blockquote]}>
       {node.children.map((child, idx) => (
         <Fragment key={idx}>
           <BlockContentRenderer index={idx} node={child as BlockContent} parent={node} />

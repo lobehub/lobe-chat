@@ -1,17 +1,16 @@
 import { Definition, Root } from 'mdast';
 import { useMemo, useState } from 'react';
-import { LayoutChangeEvent, View, useColorScheme } from 'react-native';
+import { LayoutChangeEvent, View } from 'react-native';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 
-import { MarkdownContextProvider } from './context';
+import { MarkdownContextProvider, RemarkStyles } from './context';
 import { defaultRenderers } from './renderers';
 import { Renderers } from './renderers/renderers';
 import { RootRenderer } from './renderers/root';
-import { Theme, defaultTheme } from './themes';
-import { Styles, mergeStyles } from './themes/themes';
+import { RemarkStyleOptions, useHeading, useRemarkStyles } from './style';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 
@@ -25,31 +24,31 @@ function extractDefinitions(tree: Root): Record<string, Definition> {
 
 export type MarkdownProps = {
   customRenderers?: Partial<Renderers>;
-  customStyles?: Partial<Styles>;
+  customStyles?: Partial<RemarkStyles>;
+  fontSize?: number;
+  headerMultiple?: number;
+  lineHeight?: number;
+  marginMultiple?: number;
   markdown: string;
-  onCodeCopy?: (code: string) => void;
-  onLinkPress?: (url: string) => void;
-  theme?: Theme;
 };
 
 export const Markdown = ({
   markdown,
-  theme,
   customRenderers,
   customStyles,
-  onCodeCopy,
-  onLinkPress,
+  fontSize = 16,
+  headerMultiple = 1,
+  lineHeight = 1.8,
+  marginMultiple = 2,
 }: MarkdownProps) => {
   const tree = useMemo(() => parser.parse(markdown), [markdown]);
 
-  const activeTheme = theme ?? defaultTheme;
   const renderers = useMemo(
     () => ({
       ...defaultRenderers,
-      ...activeTheme.renderers,
       ...customRenderers,
     }),
-    [activeTheme.renderers, customRenderers],
+    [customRenderers],
   );
   const definitions = useMemo(() => extractDefinitions(tree), [tree]);
 
@@ -62,18 +61,24 @@ export const Markdown = ({
     setContentSize({ height, width });
   };
 
-  const colorScheme = useColorScheme();
-  const mode = colorScheme === 'dark' ? 'dark' : 'light';
+  const options: RemarkStyleOptions = { fontSize, headerMultiple, lineHeight, marginMultiple };
+  const { styles } = useRemarkStyles(options);
+  const heading = useHeading(options);
 
-  const mergedStyles = mergeStyles(activeTheme.global, activeTheme[mode], customStyles);
+  const mergedStyles = useMemo(
+    () => ({
+      ...styles,
+      heading,
+      ...customStyles,
+    }),
+    [styles, heading, customStyles],
+  );
 
   return (
     <View onLayout={onLayout} style={{ flex: 1 }}>
       <MarkdownContextProvider
         contentSize={contentSize}
         definitions={definitions}
-        onCodeCopy={onCodeCopy}
-        onLinkPress={onLinkPress}
         renderers={renderers}
         styles={mergedStyles}
         tree={tree}

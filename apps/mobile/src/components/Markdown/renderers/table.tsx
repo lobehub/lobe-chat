@@ -11,7 +11,6 @@ import {
 import { LayoutChangeEvent, ScrollView, Text, View } from 'react-native';
 
 import { useMarkdownContext } from '../context';
-import { mergeStyles } from '../themes/themes';
 import { RendererArgs } from './renderers';
 
 type TableContextType = {
@@ -108,8 +107,8 @@ export const TableRowRenderer = ({ node, index }: RendererArgs<TableRow>): React
     <View
       style={{
         borderBottomWidth: index === 0 ? 3 : 1,
-        borderColor: styles.borderColor,
-        flexDirection: 'row',
+
+        ...styles.tr,
       }}
     >
       {node.children.map((child, idx) => (
@@ -130,14 +129,12 @@ export const TableCellRenderer = ({
   const { PhrasingContentRenderer } = renderers;
 
   const width = columnWidths[columnIndex];
-  const style = mergeStyles(styles.tableCell, {
-    fontWeight: rowIndex === 0 ? 'bold' : 'normal',
-  });
-  const measuredStyle = mergeStyles(style, {
-    maxWidth: undefined,
-    minWidth: undefined,
-    width: undefined,
-  });
+  const baseStyle = [styles.tableCell, { fontWeight: rowIndex === 0 ? 'bold' : 'normal' }];
+  const measuredStyle = [
+    styles.tableCell,
+    { maxWidth: undefined, minWidth: undefined, width: undefined },
+    { opacity: 0, position: 'absolute', zIndex: -1000 },
+  ];
 
   const padding = 8;
   const onTextLayout = useCallback(
@@ -163,20 +160,9 @@ export const TableCellRenderer = ({
           width: width,
         }}
       >
-        <Text style={style}>{content}</Text>
+        <Text style={baseStyle as any}>{content}</Text>
       </View>
-      <Text
-        numberOfLines={1}
-        onLayout={onTextLayout}
-        style={[
-          measuredStyle,
-          {
-            opacity: 0,
-            position: 'absolute',
-            zIndex: -1000,
-          },
-        ]}
-      >
+      <Text numberOfLines={1} onLayout={onTextLayout} style={measuredStyle as any}>
         {content}
       </Text>
     </View>

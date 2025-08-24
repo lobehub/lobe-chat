@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 
-import MarkdownRender from '../index';
+import { Markdown } from '@/components';
 import { content } from './data';
 
 const BasicDemo = () => {
@@ -31,7 +31,7 @@ const BasicDemo = () => {
     <View style={styles.container}>
       <Text style={styles.title}>基础 Markdown 渲染</Text>
       <View style={styles.content}>
-        <MarkdownRender content={content} />
+        <Markdown markdown={content} />
       </View>
     </View>
   );

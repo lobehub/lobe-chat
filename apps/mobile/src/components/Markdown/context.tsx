@@ -1,22 +1,42 @@
 import { Definition, Root } from 'mdast';
 import React, { createContext, useContext } from 'react';
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 import { Renderers } from './renderers/renderers';
-import { Styles } from './themes/themes';
+
+export type RemarkStyles = {
+  blockquote?: ViewStyle;
+  break?: TextStyle;
+  container?: ViewStyle;
+  delete?: TextStyle;
+  emphasis?: TextStyle;
+  footnoteReference?: TextStyle;
+  heading?: (level: number) => TextStyle;
+  image?: ImageStyle;
+  inlineCode?: TextStyle;
+  link?: TextStyle;
+  linkReference?: TextStyle;
+  list?: ViewStyle;
+  listItem?: ViewStyle;
+  paragraph?: TextStyle;
+  strong?: TextStyle;
+  tableCell?: TextStyle;
+  text?: TextStyle;
+  thematicBreak?: ViewStyle;
+  tr?: ViewStyle;
+};
 
 export type MarkdownContextType = {
   contentSize: { height: number; width: number };
   definitions: Record<string, Definition>;
-  onCodeCopy?: (code: string) => void;
-  onLinkPress?: (url: string) => void;
   renderers: Renderers;
-  styles: Partial<Styles>;
+  styles: Partial<RemarkStyles>;
   tree: Root;
 };
 
 export const MarkdownContext = createContext<MarkdownContextType | undefined>(undefined);
 
-export const useMarkdownContext = () => {
+export const useMarkdownContext = (): MarkdownContextType => {
   const context = useContext(MarkdownContext);
   if (!context) {
     throw new Error('useMarkdownContext must be used within a MarkdownContextProvider');
@@ -28,35 +48,21 @@ export type MarkdownContextProviderProps = {
   children: React.ReactNode;
   contentSize: { height: number; width: number };
   definitions: Record<string, Definition>;
-  onCodeCopy?: (code: string) => void;
-  onLinkPress?: (url: string) => void;
   renderers: Renderers;
-  styles: Partial<Styles>;
+  styles: Partial<RemarkStyles>;
   tree: Root;
 };
 
 export const MarkdownContextProvider = ({
-  tree,
-  renderers,
-  definitions,
-  contentSize,
-  styles,
-  onCodeCopy,
-  onLinkPress,
   children,
+  contentSize,
+  definitions,
+  renderers,
+  styles,
+  tree,
 }: MarkdownContextProviderProps) => {
   return (
-    <MarkdownContext.Provider
-      value={{
-        contentSize,
-        definitions,
-        onCodeCopy,
-        onLinkPress,
-        renderers,
-        styles,
-        tree,
-      }}
-    >
+    <MarkdownContext.Provider value={{ contentSize, definitions, renderers, styles, tree }}>
       {children}
     </MarkdownContext.Provider>
   );
