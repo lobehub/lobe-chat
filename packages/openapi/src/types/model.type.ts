@@ -1,132 +1,96 @@
-import { AiFullModelCard, AiModelSourceType } from '@lobechat/types';
+import { AiModelSourceType } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AiModelSelectItem } from '@/database/schemas';
 
-// Request schemas
-export const GetModelConfigRequestSchema = z.object({
-  model: z.string().min(1, '模型名称不能为空'),
-  provider: z.string().min(1, '提供商不能为空'),
-});
+// 根据 provider 和 model 获取模型配置
+export interface GetModelConfigRequest {
+  model: string;
+  provider: string;
+}
 
-export type GetModelConfigRequest = z.infer<typeof GetModelConfigRequestSchema>;
+// 根据 sessionId 获取模型配置
+export interface GetModelConfigBySessionRequest {
+  sessionId: string;
+}
 
-export const GetModelConfigBySessionRequestSchema = z.object({
-  sessionId: z.string().min(1, '会话ID不能为空'),
-});
-
-export type GetModelConfigBySessionRequest = z.infer<typeof GetModelConfigBySessionRequestSchema>;
-
-export const GetModelsRequestSchema = z.object({
+// 模型列表查询参数 Schema
+export const ModelsListQuerySchema = z.object({
+  // 过滤参数
   enabled: z
     .string()
-    .transform((val) => val === 'true')
-    .pipe(z.boolean())
-    .nullish(),
-  groupedByProvider: z
+    .nullish()
+    .transform((val) => val === 'true'),
+
+  limit: z
     .string()
     .nullish()
-    .default('true')
-    .transform((val) => val === 'true'),
+    .transform((val) => (val ? parseInt(val, 10) : undefined)),
+
+  order: z.enum(['asc', 'desc']).nullish().default('asc'),
+
+  // 分页参数 (标准化：pageSize -> limit)
   page: z
     .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1))
-    .nullish(),
-  pageSize: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(200))
-    .nullish(),
+    .nullish()
+    .transform((val) => (val ? parseInt(val, 10) : undefined)),
+
   provider: z.string().nullish(),
+
+  // 替代 groupedByProvider，更灵活
+  // 排序参数
+  sort: z.enum(['createdAt', 'updatedAt', 'sort']).nullish().default('sort'),
+
   type: z
     .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
     .nullish(),
 });
 
-export interface GetModelsRequest {
+// 模型配置查询参数 Schema (合并两个配置接口)
+export const ModelConfigsQuerySchema = z
+  .object({
+    model: z.string().nullish(),
+
+    // 按 provider/model 查询
+    provider: z.string().nullish(),
+
+    // 按 sessionId 查询
+    sessionId: z.string().nullish(),
+  })
+  .refine(
+    (data) => {
+      // 确保至少提供一种查询方式
+      return (data.provider && data.model) || data.sessionId;
+    },
+    {
+      message: '必须提供 (provider 和 model) 或 sessionId 参数',
+    },
+  );
+
+// TypeScript 接口
+export interface ModelsListQuery {
   enabled?: boolean;
-  groupedByProvider?: boolean;
+  limit?: number;
+  order?: 'asc' | 'desc';
   page?: number;
-  pageSize?: number;
   provider?: string;
+  sort?: 'createdAt' | 'updatedAt' | 'sort';
   type?: 'chat' | 'embedding' | 'tts' | 'stt' | 'image' | 'text2video' | 'text2music' | 'realtime';
 }
 
-// Response types
-export interface ModelAbilities {
-  files?: boolean;
-  functionCall?: boolean;
-  imageOutput?: boolean;
-  reasoning?: boolean;
-  search?: boolean;
-  vision?: boolean;
-}
-
-export interface ModelConfig {
-  deploymentName?: string;
-  enabledSearch?: boolean;
-}
-
-export interface ModelSettings {
-  extendParams?: string[];
-  searchImpl?: string;
-  searchProvider?: string;
-}
-
-export interface ModelItem {
-  abilities?: ModelAbilities;
-  config?: ModelConfig;
-  contextWindowTokens?: number;
-  createdAt: string;
-  displayName?: string;
-  enabled: boolean;
-  id: string;
-  settings?: ModelSettings;
-  sort?: number;
-  source: 'builtin' | 'custom' | 'remote';
-  type: string;
-  updatedAt: string;
-}
-
-export interface ProviderWithModels {
-  modelCount: number;
-  models: AiModelSelectItem[];
-  providerEnabled: boolean;
-  providerId: string;
-  providerName?: string;
-  providerSort?: number;
+export interface ModelConfigsQuery {
+  model?: string;
+  provider?: string;
+  sessionId?: string;
 }
 
 export interface GetModelsResponse {
-  models?: ModelItem[];
-  providers?: ProviderWithModels[]; // 扁平化的模型列表
+  models?: AiModelSelectItem[];
   totalModels: number;
-  totalProviders: number;
 }
 
 // Model config response types
-export interface ModelConfigResponse extends AiFullModelCard {
+export interface ModelConfigResponse extends AiModelSelectItem {
   providerId: string;
-  source: AiModelSourceType;
-}
-
-export interface DatabaseModelItem {
-  abilities?: any;
-  config?: any;
-  contextWindowTokens?: number;
-  createdAt?: Date;
-  description?: string;
-  displayName?: string;
-  enabled?: boolean;
-  id: string;
-  organization?: string;
-  parameters?: any;
-  pricing?: any;
-  providerId: string;
-  releasedAt?: string;
-  sort?: number;
-  source?: AiModelSourceType;
-  type: string;
-  updatedAt?: Date;
+  source: AiModelSourceType | null;
 }
