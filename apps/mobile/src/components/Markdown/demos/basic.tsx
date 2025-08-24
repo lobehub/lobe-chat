@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 
@@ -29,7 +29,6 @@ const BasicDemo = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>基础 Markdown 渲染</Text>
       <View style={styles.content}>
         <Markdown>{content}</Markdown>
       </View>

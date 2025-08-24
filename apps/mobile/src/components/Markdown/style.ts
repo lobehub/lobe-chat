@@ -32,15 +32,9 @@ export const useRemarkStyles = createStyles((token, options: RemarkStyleOptions)
   },
   inlineCode: {
     backgroundColor: token.colorFillSecondary,
-    borderColor: token.colorFillQuaternary,
-    borderRadius: token.borderRadius,
-    borderWidth: 1,
     color: token.colorText,
     fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
     fontSize: options.fontSize * 0.875,
-    marginHorizontal: token.marginXXS,
-    paddingHorizontal: token.paddingXXS,
-    paddingVertical: token.paddingXXS,
   },
   link: {
     color: token.colorLink,
