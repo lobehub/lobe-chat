@@ -58,7 +58,6 @@ export const LobeNebiusAI = createOpenAICompatibleRuntime({
 
       return {
         contextWindowTokens: m.context_length ?? undefined,
-        created: typeof m.created === 'number' ? m.created : undefined,
         description: m.description ?? '',
         displayName: m.name ?? m.id,
         id: m.id,
