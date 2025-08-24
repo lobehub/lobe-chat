@@ -1,5 +1,3 @@
-import { ipAddress } from '@vercel/functions'
-
 import {
   AGENT_RUNTIME_ERROR_SET,
   ChatMethodOptions,
@@ -43,7 +41,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     }
     if (jwtPayload?.userId) {
       traceOptions.push(
-        createUsageTracker(data, { ip: ipAddress(req), provider, userId: jwtPayload.userId }),
+        createUsageTracker(data, { provider, userId: jwtPayload.userId }),
       );
     }
 

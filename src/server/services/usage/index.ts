@@ -52,7 +52,6 @@ export class UsageRecordService {
             provider: data.provider,
             spend: spend, // Default to 0 if spend is not provided
             callType: 'chat', // Assuming this is a chat log, adjust as necessary
-            ipAddress: data?.ipAddress || '', // Default to empty string if not provided
             ttft: data?.speed?.ttft || 0, // Total time from first token to last token
             tps: data?.speed?.tps || 0, // Total processing speed
             inputStartAt: data?.speed?.inputStartAt ? new Date(data?.speed?.inputStartAt) : undefined,
