@@ -22,12 +22,16 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
 
   markDot: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,
-    borderColor: disabled ? token.colorBorder : token.colorBorderSecondary,
+    borderColor: disabled ? token.colorTextDisabled : token.colorBorderSecondary,
     borderRadius: DOT_SIZE / 2,
     borderWidth: BORDER_WIDTH,
     height: DOT_SIZE,
     marginTop: (TRACK_HEIGHT - DOT_SIZE) / 2,
     width: DOT_SIZE,
+  },
+
+  markDotActive: {
+    borderColor: disabled ? token.colorBorder : token.colorPrimaryBorder,
   },
 
   // marks styles
@@ -50,7 +54,7 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
   },
   thumb: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,
-    borderColor: disabled ? token.colorBorder : token.colorPrimary,
+    borderColor: disabled ? token.colorTextDisabled : token.colorPrimaryBorder,
     borderRadius: token.controlHeightLG / 4,
     borderWidth: BORDER_WIDTH,
     height: token.controlHeightLG / 2,
@@ -61,6 +65,11 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
     top: 0,
     width: token.controlHeightLG / 2,
   },
+
+  thumbActive: {
+    borderColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
+  },
+
   track: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorFillTertiary,
     borderRadius: token.borderRadiusSM,

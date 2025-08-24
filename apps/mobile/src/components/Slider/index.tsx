@@ -50,9 +50,12 @@ const Slider = memo<SliderProps>(
     const sliderWidth = useSharedValue(0);
     const translateX = useSharedValue(0);
     const isDragging = useSharedValue(false);
+    const lastEmittedActiveValue = useSharedValue<number>(currentValue);
+    const [isThumbActive, setIsThumbActive] = useState(false);
 
     const [layoutWidth, setLayoutWidth] = useState(0);
     const [labelWidths, setLabelWidths] = useState<Record<number, number>>({});
+    const [activeValueJS, setActiveValueJS] = useState<number>(currentValue);
 
     const markValues = useMemo(() => {
       if (!marks) return [] as number[];
@@ -114,6 +117,14 @@ const Slider = memo<SliderProps>(
       }
     }, [currentValue, getThumbPosition, sliderWidth.value, translateX]);
 
+    React.useEffect(() => {
+      setActiveValueJS(currentValue);
+    }, [currentValue]);
+
+    React.useEffect(() => {
+      lastEmittedActiveValue.value = currentValue;
+    }, [currentValue]);
+
     const handleValueChange = useCallback(
       (newValue: number) => {
         onChange?.(newValue);
@@ -135,6 +146,7 @@ const Slider = memo<SliderProps>(
       .onStart(() => {
         isDragging.value = true;
         startX.value = translateX.value;
+        runOnJS(setIsThumbActive)(true);
       })
       .onUpdate((event) => {
         const newPosition = Math.max(
@@ -149,6 +161,10 @@ const Slider = memo<SliderProps>(
 
         translateX.value = snappedPosition;
         runOnJS(handleValueChange)(newValue);
+        if (lastEmittedActiveValue.value !== newValue) {
+          lastEmittedActiveValue.value = newValue;
+          runOnJS(setActiveValueJS)(newValue);
+        }
       })
       .onEnd(() => {
         isDragging.value = false;
@@ -157,6 +173,11 @@ const Slider = memo<SliderProps>(
         const finalPosition = getThumbPosition(newValue, sliderWidth.value);
         translateX.value = finalPosition;
         runOnJS(handleValueChangeComplete)(newValue);
+        if (lastEmittedActiveValue.value !== newValue) {
+          lastEmittedActiveValue.value = newValue;
+          runOnJS(setActiveValueJS)(newValue);
+        }
+        runOnJS(setIsThumbActive)(false);
       });
 
     const thumbAnimatedStyle = useAnimatedStyle(() => {
@@ -182,7 +203,7 @@ const Slider = memo<SliderProps>(
       [currentValue, getThumbPosition, sliderWidth, translateX],
     );
 
-    const renderMarks = () => {
+    const marksNodes = useMemo(() => {
       if (!marks || layoutWidth <= 0) return null;
       if (markValues.length === 0) return null;
 
@@ -208,10 +229,16 @@ const Slider = memo<SliderProps>(
             label
           );
 
+        const isActive = mv <= activeValueJS;
+
         return (
           <View key={String(mv)} pointerEvents="none" style={[styles.markItem, { left }]}>
             <View
-              style={[styles.markDot, { left: 0, position: 'absolute', transform: dotTransform }]}
+              style={[
+                styles.markDot,
+                isActive && styles.markDotActive,
+                { left: 0, position: 'absolute', transform: dotTransform },
+              ]}
             />
             {label ? (
               <View
@@ -231,15 +258,17 @@ const Slider = memo<SliderProps>(
           </View>
         );
       });
-    };
+    }, [marks, layoutWidth, markValues, labelWidths, activeValueJS, min, max, styles]);
 
     return (
       <View style={[styles.container, style]}>
         <View onLayout={onLayout} style={styles.track}>
           <Animated.View style={[styles.activeTrack, activeTrackAnimatedStyle]} />
-          {renderMarks()}
+          {marksNodes}
           <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.thumb, thumbAnimatedStyle]} />
+            <Animated.View
+              style={[styles.thumb, isThumbActive && styles.thumbActive, thumbAnimatedStyle]}
+            />
           </GestureDetector>
         </View>
       </View>
