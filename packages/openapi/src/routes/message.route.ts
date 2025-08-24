@@ -1,81 +1,48 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { RBAC_PERMISSIONS } from '@/const/rbac';
-import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
+import { getAllScopePermissions } from '@/utils/rbac';
 
 import { MessageController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
-  CountByTopicsRequestSchema,
-  CountByUserRequestSchema,
   MessageIdParamSchema,
+  MessagesCountQuerySchema,
   MessagesCreateRequestSchema,
-  MessagesQueryByTopicRequestSchema,
-  SearchMessagesByKeywordRequestSchema,
+  MessagesListQuerySchema,
 } from '../types/message.type';
 
-// Topic 相关路由
+// Messages 相关路由
 const MessageRoutes = new Hono();
 
-// POST /api/v1/message/count/by-topics - 根据话题ID数组统计消息数量 (需要消息读取权限)
-MessageRoutes.post(
-  '/count/by-topics',
+// GET /api/v1/messages/count - 统计消息数量 (支持各种过滤条件)
+MessageRoutes.get(
+  '/count',
   requireAuth,
   requireAnyPermission(
     getAllScopePermissions('MESSAGE_READ'),
     'You do not have permission to read message statistics',
   ),
-  zValidator('json', CountByTopicsRequestSchema),
+  zValidator('query', MessagesCountQuerySchema),
   (c) => {
     const controller = new MessageController();
-    return controller.handleCountMessagesByTopics(c);
+    return controller.handleCountMessages(c);
   },
 );
 
-// POST /api/v1/message/count/by-user - 根据用户ID统计消息数量 (仅管理员权限)
-MessageRoutes.post(
-  '/count/by-user',
-  requireAuth,
-  requireAnyPermission(
-    [RBAC_PERMISSIONS.MESSAGE_READ_ALL],
-    'You do not have permission to read user message statistics',
-  ),
-  zValidator('json', CountByUserRequestSchema),
-  (c) => {
-    const controller = new MessageController();
-    return controller.handleCountMessagesByUser(c);
-  },
-);
-
-// GET /api/v1/messages/queryByTopic - 根据话题ID获取消息列表 (需要消息读取权限)
+// GET /api/v1/messages - 获取消息列表 (支持各种过滤和搜索)
 MessageRoutes.get(
-  '/queryByTopic/:topicId',
+  '/',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    getAllScopePermissions('MESSAGE_READ'),
     'You do not have permission to read messages',
   ),
-  zValidator('param', MessagesQueryByTopicRequestSchema),
+  zValidator('query', MessagesListQuerySchema),
   (c) => {
     const controller = new MessageController();
-    return controller.handleGetMessagesByTopic(c);
-  },
-);
-
-// GET /api/v1/messages/search - 根据关键词搜索消息及对应话题 (需要消息读取权限)
-MessageRoutes.get(
-  '/search',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to search messages',
-  ),
-  zValidator('query', SearchMessagesByKeywordRequestSchema),
-  (c) => {
-    const controller = new MessageController();
-    return controller.handleSearchMessagesByKeyword(c);
+    return controller.handleGetMessages(c);
   },
 );
 
@@ -84,7 +51,7 @@ MessageRoutes.get(
   '/:id',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    getAllScopePermissions('MESSAGE_READ'),
     'You do not have permission to read message details',
   ),
   zValidator('param', MessageIdParamSchema),
@@ -99,27 +66,30 @@ MessageRoutes.post(
   '/',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    getAllScopePermissions('MESSAGE_CREATE'),
     'You do not have permission to create messages',
   ),
   zValidator('json', MessagesCreateRequestSchema),
   (c) => {
     const controller = new MessageController();
+
     return controller.handleCreateMessage(c);
   },
 );
 
-// POST /api/v1/messages/reply - 创建用户消息并生成AI回复 (需要消息写入权限)
+// POST /api/v1/messages/repies - 创建 AI 回复消息 (需要消息写入权限)
 MessageRoutes.post(
-  '/reply',
+  '/repies',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to create messages with AI reply',
+    getAllScopePermissions('MESSAGE_CREATE'),
+    'You do not have permission to create messages',
   ),
   zValidator('json', MessagesCreateRequestSchema),
   (c) => {
     const controller = new MessageController();
+
+    // 检查是否是回复类型的消息创建
     return controller.handleCreateMessageWithAIReply(c);
   },
 );

@@ -354,30 +354,30 @@ export abstract class BaseService implements IBaseService {
     try {
       // 根据 targetInfoIds 中的属性自动判断资源类型
       switch (true) {
-        case !!targetInfoIds.targetSessionId?.length: {
+        case !!targetInfoIds.targetSessionIds?.length: {
           const sessionList = await this.db.query.sessions.findMany({
-            where: inArray(sessions.id, targetInfoIds.targetSessionId),
+            where: inArray(sessions.id, targetInfoIds.targetSessionIds),
           });
           userIds = sessionList.map((s) => s.userId);
           break;
         }
-        case !!targetInfoIds.targetAgentId?.length: {
+        case !!targetInfoIds.targetAgentIds?.length: {
           const agentList = await this.db.query.agents.findMany({
-            where: inArray(agents.id, targetInfoIds.targetAgentId),
+            where: inArray(agents.id, targetInfoIds.targetAgentIds),
           });
           userIds = agentList.map((a) => a.userId);
           break;
         }
-        case !!targetInfoIds.targetTopicId?.length: {
+        case !!targetInfoIds.targetTopicIds?.length: {
           const topicList = await this.db.query.topics.findMany({
-            where: inArray(topics.id, targetInfoIds.targetTopicId),
+            where: inArray(topics.id, targetInfoIds.targetTopicIds),
           });
           userIds = topicList.map((t) => t.userId);
           break;
         }
-        case !!targetInfoIds.targetProviderId?.length: {
+        case !!targetInfoIds.targetProviderIds?.length: {
           const providerList = await this.db.query.aiProviders.findMany({
-            where: inArray(aiProviders.id, targetInfoIds.targetProviderId),
+            where: inArray(aiProviders.id, targetInfoIds.targetProviderIds),
           });
           userIds = providerList.map((p) => p.userId);
           break;

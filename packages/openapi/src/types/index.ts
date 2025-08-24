@@ -53,13 +53,13 @@ export interface TTarget {
 }
 
 export interface TBatchTarget {
-  targetAgentId?: string[];
-  targetFileId?: string[];
-  targetMessageId?: string[];
-  targetModelId?: string[];
-  targetProviderId?: string[];
-  targetRoleId?: string[];
-  targetSessionId?: string[];
-  targetTopicId?: string[];
+  targetAgentIds?: string[];
+  targetFileIds?: string[];
+  targetMessageIds?: string[];
+  targetModelIds?: string[];
+  targetProviderIds?: string[];
+  targetRoleIds?: string[];
+  targetSessionIds?: string[];
+  targetTopicIds?: string[];
   targetUserIds?: string[];
 }
