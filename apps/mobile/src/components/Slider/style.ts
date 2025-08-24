@@ -29,7 +29,6 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
     height: '100%',
     position: 'absolute',
     top: 0,
-    transform: [{ translateX: -3 }],
   },
 
   markLabel: {

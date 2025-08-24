@@ -52,6 +52,7 @@ const Slider = memo<SliderProps>(
     const isDragging = useSharedValue(false);
 
     const [layoutWidth, setLayoutWidth] = useState(0);
+    const [labelWidths, setLabelWidths] = useState<Record<number, number>>({});
 
     const markValues = useMemo(() => {
       if (!marks) return [] as number[];
@@ -185,6 +186,7 @@ const Slider = memo<SliderProps>(
       if (!marks || layoutWidth <= 0) return null;
       if (markValues.length === 0) return null;
 
+      const dotSize = 6;
       return markValues.map((mv) => {
         const percentage = (mv - min) / (max - min);
         const left = percentage * layoutWidth;
@@ -192,6 +194,13 @@ const Slider = memo<SliderProps>(
         const isObj = !!meta && typeof meta === 'object' && 'label' in (meta as any);
         const label = isObj ? (meta as any).label : meta;
         const customStyle = isObj ? (meta as any).style : undefined;
+
+        // 固定 dot 在刻度点位置（不受 label 宽度影响）
+        const dotTransform = [{ translateX: -dotSize / 2 }];
+
+        // label 绝对定位与 dot 水平居中，根据测量宽度计算
+        const measuredWidth = labelWidths[mv] ?? 0;
+        const labelTransform = [{ translateX: -measuredWidth / 2 }];
 
         const labelContent =
           typeof label === 'string' || typeof label === 'number' ? (
@@ -202,8 +211,24 @@ const Slider = memo<SliderProps>(
 
         return (
           <View key={String(mv)} pointerEvents="none" style={[styles.markItem, { left }]}>
-            <View style={styles.markDot} />
-            {label ? <View style={[styles.markLabel, customStyle]}>{labelContent}</View> : null}
+            <View
+              style={[styles.markDot, { left: 0, position: 'absolute', transform: dotTransform }]}
+            />
+            {label ? (
+              <View
+                onLayout={(e) => {
+                  const w = e.nativeEvent.layout.width;
+                  if (labelWidths[mv] !== w) setLabelWidths((prev) => ({ ...prev, [mv]: w }));
+                }}
+                style={[
+                  styles.markLabel,
+                  customStyle,
+                  { left: 0, position: 'absolute', transform: labelTransform },
+                ]}
+              >
+                {labelContent}
+              </View>
+            ) : null}
           </View>
         );
       });
