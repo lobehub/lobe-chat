@@ -25,7 +25,7 @@ module.exports = defineConfig({
   ],
   temperature: 0,
   saveImmediately: true,
-  modelName: 'gpt-4.1-mini',
+  modelName: 'gpt-5-mini',
   experimental: {
     jsonMode: true,
   },

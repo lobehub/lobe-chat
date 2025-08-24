@@ -60,7 +60,7 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen3-coder-flash',
     },
-    contextWindowTokens: 1_048_576,
+    contextWindowTokens: 1_000_000,
     description:
       '通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
     displayName: 'Qwen3 Coder Flash',
@@ -430,12 +430,70 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
+      deploymentName: 'qwen-flash',
+    },
+    contextWindowTokens: 1_000_000,
+    description: '通义千问系列速度最快、成本极低的模型，适合简单任务。',
+    displayName: 'Qwen Flash',
+    enabled: true,
+    id: 'qwen-flash',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.15, upTo: 0.128 },
+            { rate: 0.6, upTo: 0.256 },
+            { rate: 1.2, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.5, upTo: 0.128 },
+            { rate: 6, upTo: 0.256 },
+            { rate: 12, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.15 * 0.4, upTo: 0.128 },
+            { rate: 0.6 * 0.4, upTo: 0.256 },
+            { rate: 1.2 * 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-07-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    config: {
       deploymentName: 'qwen-turbo-2025-07-15',
     },
     contextWindowTokens: 1_000_000, // Non-thinking mode
-    description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
+    description:
+      '通义千问 Turbo 后续不再更新，建议替换为通义千问 Flash 。通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
-    enabled: true,
     id: 'qwen-turbo',
     maxOutput: 16_384,
     organization: 'Qwen',
@@ -461,21 +519,61 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-07-14',
+      deploymentName: 'qwen-plus-2025-07-28',
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
     id: 'qwen-plus',
-    maxOutput: 16_384,
+    maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.32, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]': 0.8 * 0.4,
+              '[128_000, 256_000]': 2.4 * 0.4,
+              '[256_000, infinity]': 4.8 * 0.4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput_cacheRead',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]': 0.8,
+              '[128_000, 256_000]': 2.4,
+              '[256_000, infinity]': 4.8,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 128_000]_[false]': 2,
+              '[0, 128_000]_[true]': 8,
+              '[128_000, 256_000]_[false]': 20,
+
+              '[128_000, 256_000]_[true]': 24,
+              '[256_000, infinity]_[false]': 48,
+              '[256_000, infinity]_[true]': 64,
+            },
+            pricingParams: ['textInputRange', 'thinkingMode'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-07-14',
@@ -585,7 +683,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-plus-2025-01-25',
+      deploymentName: 'qwen-vl-plus-2025-08-15',
     },
     contextWindowTokens: 131_072,
     description:
@@ -597,9 +695,9 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.8 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -609,7 +707,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-max-2025-04-08',
+      deploymentName: 'qwen-vl-max-2025-08-13',
     },
     contextWindowTokens: 131_072,
     description:
@@ -621,9 +719,9 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.6 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1248,6 +1346,30 @@ const qwenChatModels: AIChatModelCard[] = [
 const qwenImageModels: AIImageModelCard[] = [
   {
     description:
+      'Qwen-Image 是一款通用图像生成模型，支持多种艺术风格，尤其擅长复杂文本渲染，特别是中英文文本渲染。模型支持多行布局、段落级文本生成以及细粒度细节刻画，可实现复杂的图文混合布局设计。',
+    displayName: 'Qwen Image',
+    enabled: true,
+    id: 'qwen-image',
+    organization: 'Qwen',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1328*1328',
+        enum: ['1664*928', '1472*1140', '1328*1328', '1140*1472', '928*1664'],
+      },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.25, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-08-13',
+    type: 'image',
+  },
+  {
+    description:
       '万相2.2极速版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成速度快，性价比高。',
     displayName: 'Wanxiang2.2 T2I Flash',
     enabled: true,
@@ -1260,6 +1382,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.14, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-07-28',
     type: 'image',
@@ -1279,6 +1405,10 @@ const qwenImageModels: AIImageModelCard[] = [
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.2, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-07-28',
     type: 'image',
   },
@@ -1294,6 +1424,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.14, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-01-08',
     type: 'image',
@@ -1311,6 +1445,10 @@ const qwenImageModels: AIImageModelCard[] = [
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.2, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-01-08',
     type: 'image',
   },
@@ -1327,6 +1465,10 @@ const qwenImageModels: AIImageModelCard[] = [
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2025-01-17',
     type: 'image',
   },
@@ -1342,6 +1484,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2024-05-22',
     type: 'image',
@@ -1364,6 +1510,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       steps: { default: 4, max: 12, min: 1 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-08-07',
     type: 'image',
   },
@@ -1384,6 +1534,10 @@ const qwenImageModels: AIImageModelCard[] = [
         enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
       },
       steps: { default: 50, max: 50, min: 1 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2024-08-07',
     type: 'image',
@@ -1406,6 +1560,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       steps: { default: 30, max: 30, min: 1 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-08-22',
     type: 'image',
   },
@@ -1422,6 +1580,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       steps: { default: 40, max: 500, min: 1 },
       width: { default: 1024, max: 1024, min: 512, step: 128 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2024-10-25',
     type: 'image',
@@ -1440,6 +1602,10 @@ const qwenImageModels: AIImageModelCard[] = [
       steps: { default: 40, max: 500, min: 1 },
       width: { default: 1024, max: 1024, min: 512, step: 128 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-10-25',
     type: 'image',
   },
@@ -1457,6 +1623,10 @@ const qwenImageModels: AIImageModelCard[] = [
       steps: { default: 50, max: 500, min: 1 },
       width: { default: 1024, max: 1024, min: 512, step: 128 },
     },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
+    },
     releasedAt: '2024-04-09',
     type: 'image',
   },
@@ -1473,6 +1643,10 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       steps: { default: 50, max: 500, min: 1 },
       width: { default: 512, max: 1024, min: 512, step: 128 },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2024-04-09',
     type: 'image',

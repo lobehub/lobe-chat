@@ -1,7 +1,7 @@
 import { UserJSON } from '@clerk/backend';
 
 import { UserModel } from '@/database/models/user';
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
@@ -9,9 +9,15 @@ import { S3 } from '@/server/modules/S3';
 import { AgentService } from '@/server/services/agent';
 
 export class UserService {
+  private db: LobeChatDatabase;
+
+  constructor(db: LobeChatDatabase) {
+    this.db = db;
+  }
+
   createUser = async (id: string, params: UserJSON) => {
     // Check if user already exists
-    const res = await UserModel.findById(serverDB, id);
+    const res = await UserModel.findById(this.db, id);
 
     // If user already exists, skip creating a new user
     if (res)
@@ -33,7 +39,7 @@ export class UserService {
     /* ↑ cloud slot ↑ */
 
     // 2. create user in database
-    await UserModel.createUser(serverDB, {
+    await UserModel.createUser(this.db, {
       avatar: params.image_url,
       clerkCreatedAt: new Date(params.created_at),
       email: email?.email_address,
@@ -45,7 +51,7 @@ export class UserService {
     });
 
     // 3. Create an inbox session for the user
-    const agentService = new AgentService(serverDB, id);
+    const agentService = new AgentService(this.db, id);
     await agentService.createInbox();
 
     /* ↓ cloud slot ↓ */
@@ -73,14 +79,14 @@ export class UserService {
   };
 
   deleteUser = async (id: string) => {
-    await UserModel.deleteUser(serverDB, id);
+    await UserModel.deleteUser(this.db, id);
   };
 
   updateUser = async (id: string, params: UserJSON) => {
-    const userModel = new UserModel(serverDB, id);
+    const userModel = new UserModel(this.db, id);
 
     // Check if user already exists
-    const res = await UserModel.findById(serverDB, id);
+    const res = await UserModel.findById(this.db, id);
 
     // If user not exists, skip update the user
     if (!res)
@@ -111,7 +117,7 @@ export class UserService {
   };
 
   getUserApiKeys = async (id: string) => {
-    return UserModel.getUserApiKeys(serverDB, id, KeyVaultsGateKeeper.getUserKeyVaults);
+    return UserModel.getUserApiKeys(this.db, id, KeyVaultsGateKeeper.getUserKeyVaults);
   };
 
   getUserAvatar = async (id: string, image: string) => {

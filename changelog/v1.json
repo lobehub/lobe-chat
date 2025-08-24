@@ -1,5 +1,159 @@
 [
   {
+    "children": {},
+    "date": "2025-08-22",
+    "version": "1.114.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update mistral model vision ability."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.5"
+  },
+  {
+    "children": {
+      "improvements": ["Move database to packages."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.4"
+  },
+  {
+    "children": {},
+    "date": "2025-08-21",
+    "version": "1.114.3"
+  },
+  {
+    "children": {
+      "fixes": ["Can't load custom provider config."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.2"
+  },
+  {
+    "children": {
+      "improvements": ["Move chain into @lobechat/prompts."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-19",
+    "version": "1.114.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Support Grok thinking models in AiHubMix, The 'stream_options' parameter is only allowed when 'stream' is enabled."
+      ]
+    },
+    "date": "2025-08-19",
+    "version": "1.113.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-18",
+    "version": "1.113.2"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.0"
+  },
+  {
+    "children": {
+      "fixes": ["Improve mcp tracing with user config."]
+    },
+    "date": "2025-08-17",
+    "version": "1.112.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor const folder to a new package."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.3"
+  },
+  {
+    "children": {
+      "improvements": ["重构 ArgsInput 组件."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Imagen 4 GA models, style improve auth sign in box loading."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-15",
+    "version": "1.112.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-14",
+    "version": "1.111.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
+    },
+    "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust near bottom size on thinking scroll."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Gemini error display with promptFeedback."]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
+      "improvements": ["Support new GPT-5 Verbosity params."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model-runtime to a seperated package."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
+      "fixes": ["Solve the cache problem caused by the same dom id when sharing pictures."]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
     "children": {
       "improvements": ["Add mask effect to thinking scroll, update i18n."]
     },
