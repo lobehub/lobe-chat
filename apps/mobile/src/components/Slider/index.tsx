@@ -180,6 +180,9 @@ const Slider = memo<SliderProps>(
         runOnJS(setIsThumbActive)(false);
       });
 
+    // Tap 手势用于拦截点击，防止事件透传到父级可点击容器
+    const tapGesture = Gesture.Tap().enabled(true);
+
     const thumbAnimatedStyle = useAnimatedStyle(() => {
       return {
         transform: [{ translateX: translateX.value }],
@@ -262,15 +265,17 @@ const Slider = memo<SliderProps>(
 
     return (
       <View style={[styles.container, style]}>
-        <View onLayout={onLayout} style={styles.track}>
-          <Animated.View style={[styles.activeTrack, activeTrackAnimatedStyle]} />
-          {marksNodes}
-          <GestureDetector gesture={panGesture}>
-            <Animated.View
-              style={[styles.thumb, isThumbActive && styles.thumbActive, thumbAnimatedStyle]}
-            />
-          </GestureDetector>
-        </View>
+        <GestureDetector gesture={tapGesture}>
+          <View onLayout={onLayout} style={styles.track}>
+            <Animated.View style={[styles.activeTrack, activeTrackAnimatedStyle]} />
+            {marksNodes}
+            <GestureDetector gesture={panGesture}>
+              <Animated.View
+                style={[styles.thumb, isThumbActive && styles.thumbActive, thumbAnimatedStyle]}
+              />
+            </GestureDetector>
+          </View>
+        </GestureDetector>
       </View>
     );
   },
