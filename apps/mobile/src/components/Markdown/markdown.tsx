@@ -23,17 +23,17 @@ function extractDefinitions(tree: Root): Record<string, Definition> {
 }
 
 export type MarkdownProps = {
+  children: string;
   customRenderers?: Partial<Renderers>;
   customStyles?: Partial<RemarkStyles>;
   fontSize?: number;
   headerMultiple?: number;
   lineHeight?: number;
   marginMultiple?: number;
-  markdown: string;
 };
 
 export const Markdown = ({
-  markdown,
+  children,
   customRenderers,
   customStyles,
   fontSize = 16,
@@ -41,7 +41,7 @@ export const Markdown = ({
   lineHeight = 1.8,
   marginMultiple = 2,
 }: MarkdownProps) => {
-  const tree = useMemo(() => parser.parse(markdown), [markdown]);
+  const tree = useMemo(() => parser.parse(children), [children]);
 
   const renderers = useMemo(
     () => ({

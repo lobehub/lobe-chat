@@ -51,30 +51,32 @@ const Slider = memo<SliderProps>(
     const translateX = useSharedValue(0);
     const isDragging = useSharedValue(false);
 
-    // Calculate thumb position based on current value
+    // Calculate thumb position based on current value (worklet function)
     const getThumbPosition = useCallback(
-      (val: number) => {
+      (val: number, width: number) => {
+        'worklet';
         const percentage = (val - min) / (max - min);
-        return interpolate(percentage, [0, 1], [0, sliderWidth.value], Extrapolation.CLAMP);
+        return interpolate(percentage, [0, 1], [0, width], Extrapolation.CLAMP);
       },
-      [min, max, sliderWidth],
+      [min, max],
     );
 
-    // Convert position to value
+    // Convert position to value (worklet function)
     const getValueFromPosition = useCallback(
-      (position: number) => {
-        const percentage = position / sliderWidth.value;
+      (position: number, width: number) => {
+        'worklet';
+        const percentage = position / width;
         const rawValue = min + percentage * (max - min);
         const steppedValue = Math.round(rawValue / step) * step;
         return Math.max(min, Math.min(max, steppedValue));
       },
-      [min, max, step, sliderWidth],
+      [min, max, step],
     );
 
     // Initialize thumb position
     React.useEffect(() => {
       if (sliderWidth.value > 0) {
-        translateX.value = getThumbPosition(currentValue);
+        translateX.value = getThumbPosition(currentValue, sliderWidth.value);
       }
     }, [currentValue, getThumbPosition, sliderWidth.value, translateX]);
 
@@ -107,12 +109,12 @@ const Slider = memo<SliderProps>(
         );
         translateX.value = newPosition;
 
-        const newValue = getValueFromPosition(newPosition);
+        const newValue = getValueFromPosition(newPosition, sliderWidth.value);
         runOnJS(handleValueChange)(newValue);
       })
       .onEnd(() => {
         isDragging.value = false;
-        const newValue = getValueFromPosition(translateX.value);
+        const newValue = getValueFromPosition(translateX.value, sliderWidth.value);
         runOnJS(handleValueChangeComplete)(newValue);
       });
 
@@ -132,7 +134,7 @@ const Slider = memo<SliderProps>(
       (event: { nativeEvent: { layout: LayoutRectangle } }) => {
         const { width } = event.nativeEvent.layout;
         sliderWidth.value = width;
-        translateX.value = getThumbPosition(currentValue);
+        translateX.value = getThumbPosition(currentValue, width);
       },
       [currentValue, getThumbPosition, sliderWidth, translateX],
     );

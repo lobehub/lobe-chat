@@ -31,7 +31,7 @@ const BasicDemo = () => {
     <View style={styles.container}>
       <Text style={styles.title}>基础 Markdown 渲染</Text>
       <View style={styles.content}>
-        <Markdown markdown={content} />
+        <Markdown>{content}</Markdown>
       </View>
     </View>
   );
