@@ -2,77 +2,62 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageService } from '../services/message.service';
-import { MessagesCreateRequest, SearchMessagesByKeywordRequest } from '../types/message.type';
+import {
+  MessagesCountQuery,
+  MessagesCreateRequest,
+  MessagesListQuery,
+} from '../types/message.type';
 
 export class MessageController extends BaseController {
   /**
-   * 根据话题ID数组统计消息数量
-   * POST /api/v1/message/count/by-topics
-   * Body: { topicIds: string[] }
+   * 统一的消息数量统计接口 (RESTful API 优化后)
+   * GET /api/v1/messages/count
+   * Query: { topicIds?: string, userId?: string }
    */
-  async handleCountMessagesByTopics(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件确保用户已登录
-      const { topicIds } = (await this.getBody<{ topicIds: string[] }>(c))!; // zValidator 确保参数有效
-
-      const db = await this.getDatabase();
-      const messageService = new MessageService(db, userId);
-      const result = await messageService.countMessagesByTopicIds(topicIds);
-
-      return this.success(
-        c,
-        {
-          count: result.count,
-          topicIds,
-        },
-        '查询话题消息数量成功',
-      );
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 根据用户ID统计消息数量
-   * POST /api/v1/message/count/by-user
-   * Body: { userId: string }
-   */
-  async handleCountMessagesByUser(c: Context) {
-    try {
-      const { userId } = (await this.getBody<{ userId: string }>(c))!; // zValidator 确保参数有效
-
-      const db = await this.getDatabase();
-      const messageService = new MessageService(db, userId); // 这里使用目标用户ID作为查询条件
-      const result = await messageService.countMessagesByUserId(userId);
-
-      return this.success(
-        c,
-        {
-          count: result.count,
-          userId,
-        },
-        '查询用户消息数量成功',
-      );
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 根据话题ID获取消息列表
-   * GET /api/v1/messages/queryByTopic
-   * Query: { topicId: string }
-   */
-  async handleGetMessagesByTopic(c: Context) {
+  async handleCountMessages(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const { topicId } = this.getParams<{ topicId: string }>(c);
+      const rawQuery = this.getQuery(c);
+
+      // 处理 topicIds 参数 (comma-separated string -> array)
+      const processedQuery: MessagesCountQuery = {
+        ...rawQuery,
+        topicIds: rawQuery.topicIds ? (rawQuery.topicIds as string).split(',') : undefined,
+      };
 
       const db = await this.getDatabase();
       const messageService = new MessageService(db, userId);
-      const messages = await messageService.getMessagesByTopicId(topicId);
+      const result = await messageService.countMessages(processedQuery);
 
-      return this.success(c, messages, '获取话题消息列表成功');
+      return this.success(c, result, '查询消息数量成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 统一的消息列表查询接口 (RESTful API 优化后)
+   * GET /api/v1/messages
+   * Query: { page?, limit?, topicId?, sessionId?, userId?, role?, query?, sort?, order? }
+   */
+  async handleGetMessages(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const rawQuery = this.getQuery(c);
+
+      // 处理数字类型的查询参数 (查询参数都是字符串，需要转换)
+      const processedQuery: MessagesListQuery = {
+        ...rawQuery,
+        limit: rawQuery.limit ? parseInt(rawQuery.limit as string, 10) : undefined,
+        offset: rawQuery.offset ? parseInt(rawQuery.offset as string, 10) : undefined,
+        page: rawQuery.page ? parseInt(rawQuery.page as string, 10) : undefined,
+      };
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const result = await messageService.getMessages(processedQuery);
+
+      return this.success(c, result, '获取消息列表成功');
     } catch (error) {
       return this.handleError(c, error);
     }
@@ -140,36 +125,5 @@ export class MessageController extends BaseController {
     } catch (error) {
       return this.handleError(c, error);
     }
-  }
-
-  /**
-   * 根据关键词搜索消息及对应话题
-   * GET /api/v1/messages/search
-   * Query: { keyword: string, limit?: number, offset?: number }
-   */
-  async handleSearchMessagesByKeyword(c: Context) {
-    try {
-      const userId = this.getUserId(c)!;
-      const query = this.getQuery(c);
-
-      const searchRequest: SearchMessagesByKeywordRequest = {
-        ...query,
-        limit: query.limit ? parseInt(query.limit as string) : 20,
-        offset: query.offset ? parseInt(query.offset as string) : 0,
-      };
-
-      const db = await this.getDatabase();
-      const messageService = new MessageService(db, userId);
-      const results = await messageService.searchMessagesByKeyword(searchRequest);
-
-      return this.success(c, results, '搜索消息成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  // 保留原有的示例方法
-  handleGetExample(c: Context) {
-    return this.success(c, { message: 'Message API is working' }, '示例接口调用成功');
   }
 }

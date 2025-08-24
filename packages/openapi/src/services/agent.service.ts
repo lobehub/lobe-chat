@@ -673,7 +673,7 @@ export class AgentService extends BaseService {
     try {
       // 权限校验
       const permissionResult = await this.resolveBatchQueryPermission('AGENT_DELETE', {
-        targetAgentId: request.agentIds,
+        targetAgentIds: request.agentIds,
       });
 
       if (!permissionResult.isPermitted) {
@@ -762,7 +762,7 @@ export class AgentService extends BaseService {
     try {
       // 权限校验
       const permissionResult = await this.resolveBatchQueryPermission('AGENT_UPDATE', {
-        targetAgentId: request.agentIds,
+        targetAgentIds: request.agentIds,
       });
 
       if (!permissionResult.isPermitted) {

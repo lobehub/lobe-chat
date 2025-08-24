@@ -1,6 +1,6 @@
 import { and, count, desc, eq, ilike, inArray, isNull } from 'drizzle-orm';
 
-import { messages, messagesFiles, topics } from '@/database/schemas';
+import { messages, messagesFiles } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -9,7 +9,9 @@ import { transformMessageToResponse } from '../helpers/message';
 import { ServiceResult } from '../types';
 import {
   MessageResponse,
+  MessagesCountQuery,
   MessagesCreateRequest,
+  MessagesListQuery,
   SearchMessagesByKeywordRequest,
 } from '../types/message.type';
 import { ChatService } from './chat.service';
@@ -31,30 +33,6 @@ export class MessageService extends BaseService {
   }
 
   /**
-   * 根据话题ID数组统计消息总数
-   * @param topicIds 话题ID数组
-   * @returns 消息数量统计结果
-   */
-  async countMessagesByTopicIds(topicIds: string[]): ServiceResult<MessageCountResult> {
-    this.log('info', '根据话题ID数组统计消息数量', { topicIds, userId: this.userId });
-
-    try {
-      const result = await this.db
-        .select({ count: count() })
-        .from(messages)
-        .where(and(eq(messages.userId, this.userId!), inArray(messages.topicId, topicIds)));
-
-      const messageCount = result[0]?.count || 0;
-      this.log('info', '话题消息统计完成', { count: messageCount });
-
-      return { count: messageCount };
-    } catch (error) {
-      this.log('error', '话题消息统计失败', { error });
-      throw this.createCommonError('查询话题消息数量失败');
-    }
-  }
-
-  /**
    * 根据用户ID统计消息总数
    * @param targetUserId 目标用户ID
    * @returns 消息数量统计结果
@@ -64,7 +42,9 @@ export class MessageService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', { targetUserId });
+      const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
+        targetUserId,
+      });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此用户的消息');
@@ -80,37 +60,126 @@ export class MessageService extends BaseService {
 
       return { count: messageCount };
     } catch (error) {
-      this.log('error', '用户消息统计失败', { error });
-      throw this.createCommonError('查询用户消息数量失败');
+      this.handleServiceError(error, '根据用户ID统计消息数量');
     }
   }
 
   /**
-   * 根据话题ID获取消息列表
-   * @param topicId 话题ID
-   * @returns 消息列表
+   * 根据话题ID数组统计消息总数
+   * @param topicIds 话题ID数组
+   * @returns 消息数量统计结果
    */
-  async getMessagesByTopicId(topicId: string): ServiceResult<MessageResponse[]> {
-    this.log('info', '根据话题ID获取消息列表', { topicId, userId: this.userId });
+  async countMessagesByTopicIds(topicIds: string[]): ServiceResult<MessageCountResult> {
+    this.log('info', '根据话题ID数组统计消息数量', { topicIds, userId: this.userId });
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
-        targetTopicId: topicId,
+      const permissionResult = await this.resolveBatchQueryPermission('MESSAGE_READ', {
+        targetTopicIds: topicIds,
       });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此话题的消息');
       }
 
-      const messageList = await this.db.query.messages.findMany({
+      const result = await this.db
+        .select({ count: count() })
+        .from(messages)
+        .where(inArray(messages.topicId, topicIds));
+
+      const messageCount = result[0]?.count || 0;
+      this.log('info', '话题消息统计完成', { count: messageCount });
+
+      return { count: messageCount };
+    } catch (error) {
+      this.handleServiceError(error, '根据话题ID数组统计消息数量');
+    }
+  }
+
+  /**
+   * 统一的消息数量统计方法
+   * @param query 查询参数
+   * @returns 消息数量统计结果
+   */
+  async countMessages(query: MessagesCountQuery): ServiceResult<MessageCountResult> {
+    this.log('info', '统计消息数量', { query, userId: this.userId });
+
+    try {
+      // 按用户ID统计 (需要特殊权限检查)
+      if (query.userId) {
+        return await this.countMessagesByUserId(query.userId);
+      }
+
+      // 按话题ID数组统计
+      if (query.topicIds && query.topicIds.length > 0) {
+        return await this.countMessagesByTopicIds(query.topicIds);
+      }
+
+      // 统计当前用户的所有消息
+      const result = await this.db
+        .select({ count: count() })
+        .from(messages)
+        .where(eq(messages.userId, this.userId!));
+
+      const messageCount = result[0]?.count || 0;
+      this.log('info', '当前用户消息统计完成', { count: messageCount });
+
+      return { count: messageCount };
+    } catch (error) {
+      this.handleServiceError(error, '统计消息数量');
+    }
+  }
+
+  /**
+   * 根据关键词模糊搜索消息及对应话题
+   * @param searchRequest 搜索请求参数
+   * @returns 包含消息和话题信息的结果列表
+   */
+  async searchMessagesByKeyword(
+    searchRequest: SearchMessagesByKeywordRequest,
+  ): ServiceResult<MessageResponse[]> {
+    this.log('info', '根据关键词搜索消息', {
+      ...searchRequest,
+      userId: this.userId,
+    });
+
+    try {
+      // 权限校验，判断session的归属以及用户有没有消息的读取权限
+      const permissionResult = await this.resolveOperationPermission(
+        'MESSAGE_READ',
+        searchRequest.sessionId ? { targetSessionId: searchRequest.sessionId } : undefined,
+      );
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权搜索消息');
+      }
+
+      const { keyword, limit = 20, offset = 0, sessionId } = searchRequest;
+
+      // 构建查询条件
+      const conditions = [eq(messages.userId, this.userId!)];
+      if (sessionId) {
+        conditions.push(eq(messages.sessionId, sessionId));
+      }
+
+      const contentMatchedMessages = await this.db
+        .select({ id: messages.id })
+        .from(messages)
+        .where(and(ilike(messages.content, `%${keyword}%`), ...conditions));
+
+      if (contentMatchedMessages.length === 0) {
+        this.log('info', '关键词搜索消息完成', { keyword, resultCount: 0 });
+        return [];
+      }
+
+      // 使用 with 关联查询获取完整的消息信息
+      const result = await this.db.query.messages.findMany({
+        limit: limit,
+        offset: offset,
         orderBy: desc(messages.createdAt),
-        where: and(
-          eq(messages.topicId, topicId),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId
-            ? eq(messages.userId, permissionResult.condition.userId)
-            : undefined,
+        where: inArray(
+          messages.id,
+          contentMatchedMessages.map((msg) => msg.id),
         ),
         with: {
           messagesFiles: {
@@ -118,22 +187,143 @@ export class MessageService extends BaseService {
               file: true,
             },
           },
-          session: true,
-          topic: true,
           translation: true,
-          user: true,
         },
       });
 
-      // 将 messagesFiles 转换为 files 字段
+      this.log('info', '关键词搜索消息完成', {
+        keyword,
+        resultCount: result.length,
+      });
+
+      return result.map(transformMessageToResponse);
+    } catch (error) {
+      this.handleServiceError(error, '关键词搜索消息');
+    }
+  }
+
+  /**
+   * 统一的消息列表查询方法
+   * @param query 查询参数
+   * @returns 消息列表
+   */
+  async getMessages(query: MessagesListQuery): ServiceResult<MessageResponse[]> {
+    this.log('info', '获取消息列表', { query, userId: this.userId });
+
+    try {
+      // 如果有搜索关键词，调用搜索方法
+      if (query.query) {
+        const searchRequest: SearchMessagesByKeywordRequest = {
+          keyword: query.query,
+          limit: query.limit,
+          offset: query.offset || (query.page ? (query.page - 1) * (query.limit || 20) : 0),
+          sessionId: query.sessionId,
+        };
+
+        return await this.searchMessagesByKeyword(searchRequest);
+      }
+
+      // 构建查询条件
+      const conditions = [];
+      // 最终查询条件中的 userId 列表，因为涉及到多种查询条件，如果用户拥有最高权限时，userId 可能是多个
+      let queryUserId: Set<string> = new Set();
+
+      // 校验 session 的归属以及用户有没有消息的读取权限
+      if (query.sessionId) {
+        const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
+          targetSessionId: query.sessionId,
+        });
+
+        if (!permissionResult.isPermitted) {
+          throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
+        }
+
+        if (permissionResult.condition?.userId) {
+          queryUserId.add(permissionResult.condition.userId);
+        }
+
+        conditions.push(eq(messages.sessionId, query.sessionId));
+      }
+
+      // 校验 user 的归属以及用户有没有消息的读取权限
+      if (query.userId) {
+        const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
+          targetUserId: query.userId,
+        });
+
+        if (!permissionResult.isPermitted) {
+          throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
+        }
+
+        if (permissionResult.condition?.userId) {
+          queryUserId.add(permissionResult.condition.userId);
+        }
+
+        conditions.push(eq(messages.userId, query.userId));
+      }
+
+      // 校验 topic 的归属以及用户有没有消息的读取权限
+      if (query.topicId) {
+        const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
+          targetTopicId: query.topicId,
+        });
+
+        if (!permissionResult.isPermitted) {
+          throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
+        }
+
+        if (permissionResult.condition?.userId) {
+          queryUserId.add(permissionResult.condition.userId);
+        }
+
+        conditions.push(eq(messages.topicId, query.topicId));
+      }
+
+      if (query.role) {
+        conditions.push(eq(messages.role, query.role));
+      }
+
+      if (query.query) {
+        conditions.push(ilike(messages.content, `%${query.query}%`));
+      }
+
+      if (queryUserId.size > 0) {
+        conditions.push(inArray(messages.userId, Array.from(queryUserId)));
+      }
+
+      // 计算偏移量
+      const offset = query.offset || (query.page ? (query.page - 1) * (query.limit || 20) : 0);
+
+      // 执行查询
+      const messageList = await this.db.query.messages.findMany({
+        limit: query.limit,
+        offset: offset,
+        orderBy:
+          query.order === 'asc'
+            ? query.sort === 'updatedAt'
+              ? messages.updatedAt
+              : messages.createdAt
+            : query.sort === 'updatedAt'
+              ? desc(messages.updatedAt)
+              : desc(messages.createdAt),
+        where: and(...conditions),
+        with: {
+          messagesFiles: {
+            with: {
+              file: true,
+            },
+          },
+          translation: true,
+        },
+      });
+
       const messageListWithFiles = messageList.map(transformMessageToResponse);
 
-      this.log('info', '获取话题消息列表完成', { count: messageListWithFiles.length });
+      this.log('info', '获取消息列表完成', { count: messageListWithFiles.length });
 
       return messageListWithFiles;
     } catch (error) {
-      this.log('error', '获取话题消息列表失败', { error });
-      throw this.createCommonError('查询话题消息列表失败');
+      this.handleServiceError(error, '获取消息列表');
     }
   }
 
@@ -147,7 +337,7 @@ export class MessageService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+      const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
         targetMessageId: messageId,
       });
 
@@ -155,24 +345,21 @@ export class MessageService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此消息');
       }
 
+      // 构建查询条件
+      const conditions = [eq(messages.id, messageId)];
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(messages.userId, permissionResult.condition.userId));
+      }
+
       const message = await this.db.query.messages.findFirst({
-        where: and(
-          eq(messages.id, messageId),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId
-            ? eq(messages.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
+        where: and(...conditions),
         with: {
           messagesFiles: {
             with: {
               file: true,
             },
           },
-          session: true,
-          topic: true,
           translation: true,
-          user: true,
         },
       });
 
@@ -184,8 +371,7 @@ export class MessageService extends BaseService {
       this.log('info', '获取消息详情完成', { messageId });
       return transformMessageToResponse(message);
     } catch (error) {
-      this.log('error', '获取消息详情失败', { error });
-      throw this.createCommonError('查询消息详情失败');
+      this.handleServiceError(error, '获取消息详情');
     }
   }
 
@@ -204,17 +390,12 @@ export class MessageService extends BaseService {
 
     try {
       // 权限校验
-      const permissionSession = await this.resolveQueryPermission('MESSAGE_CREATE', {
+      const permissionSession = await this.resolveOperationPermission('MESSAGE_CREATE', {
         targetSessionId: messageData.sessionId!,
       });
-      const permissionTopic = await this.resolveQueryPermission('MESSAGE_CREATE', {
-        targetTopicId: messageData.topicId!,
-      });
 
-      if (!permissionSession.isPermitted || !permissionTopic.isPermitted) {
-        throw this.createAuthorizationError(
-          permissionSession.message || permissionTopic.message || '无权创建消息',
-        );
+      if (!permissionSession.isPermitted) {
+        throw this.createAuthorizationError(permissionSession.message || '无权创建消息');
       }
 
       const [newMessage] = await this.db
@@ -253,23 +434,14 @@ export class MessageService extends BaseService {
 
       // 重新查询包含 session 和 user 信息的完整消息
       const completeMessage = await this.db.query.messages.findFirst({
-        where: and(
-          eq(messages.id, newMessage.id),
-          // 添加权限相关的查询条件
-          permissionSession.condition?.userId &&
-            permissionSession.condition?.userId === permissionTopic.condition?.userId
-            ? eq(messages.userId, permissionSession.condition.userId)
-            : undefined,
-        ),
+        where: eq(messages.id, newMessage.id),
         with: {
           messagesFiles: {
             with: {
               file: true,
             },
           },
-          session: true,
-          topic: true,
-          user: true,
+          translation: true,
         },
       });
 
@@ -281,8 +453,7 @@ export class MessageService extends BaseService {
 
       return transformMessageToResponse(completeMessage);
     } catch (error) {
-      this.log('error', '创建消息失败', { error });
-      throw this.createCommonError('创建消息失败');
+      this.handleServiceError(error, '创建消息');
     }
   }
 
@@ -304,6 +475,14 @@ export class MessageService extends BaseService {
     });
 
     try {
+      // 权限校验
+      const permissionSession = await this.resolveOperationPermission('MESSAGE_CREATE', {
+        targetSessionId: messageData.sessionId!,
+      });
+      if (!permissionSession.isPermitted) {
+        throw this.createAuthorizationError(permissionSession.message || '无权创建消息');
+      }
+
       // 1. 创建用户消息
       const userMessage = await this.createMessage(messageData);
 
@@ -376,37 +555,7 @@ export class MessageService extends BaseService {
         userMessageId: userMessage.id,
       };
     } catch (error) {
-      // 改进错误日志记录，提供更详细的错误信息
-      let errorDetails: any;
-
-      if (error instanceof Error) {
-        errorDetails = {
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
-        };
-      } else if (typeof error === 'object' && error !== null) {
-        try {
-          errorDetails = structuredClone(error);
-        } catch {
-          errorDetails = { rawError: String(error) };
-        }
-      } else {
-        errorDetails = { rawError: String(error) };
-      }
-
-      this.log('error', '创建消息和AI回复失败', {
-        error: errorDetails,
-        messageData: {
-          contentLength: messageData.content?.length,
-          model: messageData.model,
-          provider: messageData.provider,
-          role: messageData.role,
-          sessionId: messageData.sessionId,
-          topicId: messageData.topicId,
-        },
-      });
-      throw this.createCommonError('创建消息和AI回复失败');
+      this.handleServiceError(error, '创建消息并生成AI回复');
     }
   }
 
@@ -452,113 +601,6 @@ export class MessageService extends BaseService {
         topicId,
       });
       return [];
-    }
-  }
-
-  /**
-   * 根据关键词模糊搜索消息及对应话题
-   * @param searchRequest 搜索请求参数
-   * @returns 包含消息和话题信息的结果列表
-   */
-  async searchMessagesByKeyword(
-    searchRequest: SearchMessagesByKeywordRequest,
-  ): ServiceResult<MessageResponse[]> {
-    this.log('info', '根据关键词搜索消息', {
-      ...searchRequest,
-      userId: this.userId,
-    });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
-        targetSessionId: searchRequest.sessionId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权搜索消息');
-      }
-
-      const { keyword, limit = 20, offset = 0, sessionId } = searchRequest;
-
-      // 步骤1: 查询内容匹配关键词的消息ID
-      const contentMatchedMessages = await this.db
-        .select({ id: messages.id })
-        .from(messages)
-        .where(
-          and(
-            eq(messages.sessionId, sessionId),
-            ilike(messages.content, `%${keyword}%`),
-            // 添加权限相关的查询条件
-            permissionResult.condition?.userId
-              ? eq(messages.userId, permissionResult.condition.userId)
-              : undefined,
-          ),
-        );
-
-      // 步骤2: 查询标题匹配关键词的话题，并获取这些话题下的消息ID
-      const titleMatchedTopics = await this.db
-        .select({ id: topics.id })
-        .from(topics)
-        .where(
-          and(eq(topics.sessionId, searchRequest.sessionId), ilike(topics.title, `%${keyword}%`)),
-        );
-
-      let topicMatchedMessages: { id: string }[] = [];
-      if (titleMatchedTopics.length > 0) {
-        const topicIds = titleMatchedTopics.map((topic) => topic.id);
-        topicMatchedMessages = await this.db
-          .select({ id: messages.id })
-          .from(messages)
-          .where(and(inArray(messages.topicId, topicIds)));
-      }
-
-      // 步骤3: 合并并去重消息ID列表
-      const allMessageIds = [
-        ...new Set([
-          ...contentMatchedMessages.map((msg) => msg.id),
-          ...topicMatchedMessages.map((msg) => msg.id),
-        ]),
-      ];
-
-      if (allMessageIds.length === 0) {
-        this.log('info', '关键词搜索消息完成', { keyword, resultCount: 0 });
-        return [];
-      }
-
-      // 步骤4: 使用 with 关联查询获取完整的消息信息
-      const result = await this.db.query.messages.findMany({
-        limit: limit,
-        offset: offset,
-        orderBy: desc(messages.createdAt),
-        where: and(
-          eq(messages.userId, this.userId!),
-          inArray(messages.id, allMessageIds),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId
-            ? eq(messages.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
-        with: {
-          messagesFiles: {
-            with: {
-              file: true,
-            },
-          },
-          session: true,
-          topic: true,
-          user: true,
-        },
-      });
-
-      this.log('info', '关键词搜索消息完成', {
-        keyword,
-        resultCount: result.length,
-      });
-
-      return result.map(transformMessageToResponse);
-    } catch (error) {
-      this.log('error', '关键词搜索消息失败', { error, keyword: searchRequest.keyword });
-      throw this.createCommonError('搜索消息失败');
     }
   }
 }

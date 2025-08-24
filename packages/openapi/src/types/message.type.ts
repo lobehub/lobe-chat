@@ -3,8 +3,6 @@
 import { MessageItem } from '@lobechat/types';
 import { z } from 'zod';
 
-import { SessionItem, TopicItem, UserItem } from '@/database/schemas';
-
 // Request schemas
 export const MessagesQueryByTopicRequestSchema = z.object({
   topicId: z.string().min(1, '话题ID不能为空'),
@@ -92,11 +90,7 @@ export interface MessagesCreateRequest {
 }
 
 // 消息查询时的返回类型，包含关联的 session 和 user 信息
-export interface MessageResponse extends MessageItem {
-  session: SessionItem | null;
-  user: UserItem;
-  topic: TopicItem | null;
-}
+export type MessageResponse = MessageItem;
 
 // Additional schemas for message routes
 export const CountByTopicsRequestSchema = z.object({
@@ -167,5 +161,55 @@ export interface SearchMessagesByKeywordRequest {
   keyword: string;
   limit?: number;
   offset?: number;
-  sessionId: string;
+  sessionId?: string;
+}
+
+// RESTful API 优化后的新 Schema
+
+// 消息数量统计查询参数 Schema
+export const MessagesCountQuerySchema = z.object({
+  // 按话题ID数组统计 (comma-separated string, e.g., "topic1,topic2,topic3")
+  topicIds: z.string().nullish(),
+  // 按用户ID统计 (仅管理员)
+  userId: z.string().nullish(),
+});
+
+// 消息列表查询参数 Schema
+export const MessagesListQuerySchema = z.object({
+  // 分页参数
+  page: z.number().min(1).nullish().default(1),
+  limit: z.number().min(1).max(100).nullish().default(20),
+  offset: z.number().min(0).nullish(),
+
+  // 过滤参数
+  topicId: z.string().nullish(),
+  sessionId: z.string().nullish(),
+  userId: z.string().nullish(),
+  role: z.enum(['user', 'system', 'assistant', 'tool']).nullish(),
+
+  // 搜索参数
+  query: z.string().nullish(), // 关键词搜索 (替代原来的 search 接口)
+
+  // 排序参数
+  sort: z.enum(['createdAt', 'updatedAt']).nullish().default('createdAt'),
+  order: z.enum(['asc', 'desc']).nullish().default('desc'),
+});
+
+// TypeScript 接口
+export interface MessagesCountQuery {
+  topicIds?: string[];
+  userId?: string;
+}
+
+export interface MessagesListQuery {
+  page?: number;
+  limit?: number;
+  offset?: number;
+  topicId?: string;
+  sessionId?: string;
+  userId?: string;
+  role?: 'user' | 'system' | 'assistant' | 'tool';
+  query?: string;
+  sort?: 'createdAt' | 'updatedAt';
+  order?: 'asc' | 'desc';
 }
