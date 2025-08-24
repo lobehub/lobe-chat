@@ -1,8 +1,7 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { Image, Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import React, { useMemo } from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Markdown } from './Remark';
 
-import Highlighter from '@/components/Highlighter';
 import { useThemeToken } from '@/theme';
 
 interface MarkdownRenderProps {
@@ -20,9 +19,7 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
   marginMultiple = 2,
   lineHeight = 1.8,
 }) => {
-  const { width } = useWindowDimensions();
   const token = useThemeToken();
-  const [imageHeights, setImageHeights] = useState<Record<string, number>>({});
 
   const styles = useMemo(
     () =>
@@ -107,7 +104,6 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
           borderRadius: token.borderRadius,
           borderWidth: 1,
           marginVertical: token.marginMD,
-          width: width - token.paddingContentHorizontal * 2,
         },
 
         inlineCode: {
@@ -183,75 +179,12 @@ const MarkdownRender: React.FC<MarkdownRenderProps> = ({
           borderColor: token.colorBorderSecondary,
         },
       }),
-    [fontSize, marginMultiple, lineHeight, token, width],
-  );
-
-  const calculateImageHeight = (uri: string, callback: (height: number) => void) => {
-    if (imageHeights[uri]) {
-      callback(imageHeights[uri]);
-      return;
-    }
-
-    Image.getSize(
-      uri,
-      (w, h) => {
-        const scaledHeight = (h / w) * (width - token.paddingContentHorizontal * 2);
-        setImageHeights((prev) => ({ ...prev, [uri]: scaledHeight }));
-        callback(scaledHeight);
-      },
-      () => {
-        // Error fallback
-        callback(200);
-      },
-    );
-  };
-
-  const RenderImage: React.FC<{ key: string; src: string }> = ({ src, key }) => {
-    const [height, setHeight] = useState(200);
-
-    useEffect(() => {
-      calculateImageHeight(src, setHeight);
-    }, [src]);
-
-    return (
-      <Image
-        key={key}
-        resizeMode="contain"
-        source={{ uri: src }}
-        style={[styles.image, { height }]}
-      />
-    );
-  };
-
-  // Custom renderers for react-native-remark
-  const customRenderers = useMemo(
-    () => ({
-      CodeBlockRenderer: ({ node }: any) => {
-        const language = node.lang || '';
-        const code = node.value || '';
-
-        return (
-          <Highlighter
-            allowChangeLanguage
-            code={code.trim()}
-            fullFeatured
-            lang={language}
-            style={{ marginVertical: 8 }}
-            type="compact"
-          />
-        );
-      },
-      ImageRenderer: ({ node }: any) => {
-        const src = node.url || '';
-        return <RenderImage key={src} src={src} />;
-      },
-    }),
-    [],
+    [fontSize, marginMultiple, lineHeight, token],
   );
 
   return (
     <View style={{ flex: 1 }}>
-      <Markdown customRenderers={customRenderers} customStyles={styles} markdown={content} />
+      <Markdown customStyles={styles} markdown={content} />
     </View>
   );
 };
