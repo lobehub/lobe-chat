@@ -179,7 +179,13 @@ export default function SettingScreen() {
             <Slider
               marks={{
                 [FONT_SIZE_SMALL]: { label: <Text style={styles.fontSizeSmall}>A</Text> },
-                [FONT_SIZE_STANDARD]: '标准',
+                [FONT_SIZE_STANDARD]: {
+                  label: (
+                    <Text style={styles.fontSizeStandard}>
+                      {t('theme.fontSize.standard', { ns: 'setting' })}
+                    </Text>
+                  ),
+                },
                 // eslint-disable-next-line sort-keys-fix/sort-keys-fix
                 [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
               }}
@@ -191,7 +197,7 @@ export default function SettingScreen() {
             />
           }
           isLast
-          title={'字体大小'}
+          title={t('theme.fontSize.title', { ns: 'setting' })}
         />
       </ListGroup>
 
