@@ -289,7 +289,7 @@ const processModelCard = (
         false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
-    // pricing: knownModel?.pricing ?? undefined,
+    pricing: model?.pricing ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??

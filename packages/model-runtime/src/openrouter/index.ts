@@ -73,22 +73,20 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
     // 先处理抓取的模型信息，转换为标准格式
     const formattedModels = modelList.map((model) => {
       const extraInfo = modelsExtraInfo.find(
-        (m) => m.slug.toLowerCase() === model.id.toLowerCase(),
+        (m) => (m.slug ?? '').toLowerCase() === (model.slug ?? '').toLowerCase(),
       );
 
       return {
         contextWindowTokens: model.context_length,
         description: model.description,
-        displayName: model.name,
+        displayName: model.short_name ?? model.name ?? model.slug,
         functionCall:
-          model.description.includes('function calling') ||
-          model.description.includes('tools') ||
           extraInfo?.endpoint?.supports_tool_parameters ||
           false,
-        id: model.id,
+        id: model.slug,
         maxOutput:
-          typeof model.top_provider.max_completion_tokens === 'number'
-            ? model.top_provider.max_completion_tokens
+          typeof model.endpoint.max_completion_tokens === 'number'
+            ? model.endpoint.max_completion_tokens
             : undefined,
         pricing: {
           input: formatPrice(model.pricing.prompt),
@@ -96,7 +94,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
         },
         reasoning: extraInfo?.endpoint?.supports_reasoning || false,
         releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
-        vision: model.architecture.modality.includes('image') || false,
+        vision: Array.isArray(model.input_modalities) && model.input_modalities.includes('image') || false,
       };
     });
 

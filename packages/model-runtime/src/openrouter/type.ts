@@ -5,27 +5,23 @@ interface ModelPricing {
   request: string;
 }
 
-interface ModelArchitecture {
-  instruct_type: string | null;
-  modality: string;
-  tokenizer: string;
-}
-
-interface ModelTopProvider {
-  is_moderated: boolean;
+interface ModelEndpoint {
   max_completion_tokens: number | null;
+  supported_parameters: string[];
 }
 
 export interface OpenRouterModelCard {
-  architecture: ModelArchitecture;
   context_length: number;
   created: number;
-  description: string;
-  id: string;
-  name: string;
-  per_request_limits: any | null;
+  description?: string;
+  endpoint: ModelEndpoint;
+  input_modalities?: string[];
+  name?: string;
+  output_modalities?: string[];
+  per_request_limits?: any | null;
   pricing: ModelPricing;
-  top_provider: ModelTopProvider;
+  short_name?: string;
+  slug: string;
 }
 
 interface OpenRouterModelEndpoint {
