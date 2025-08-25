@@ -10,8 +10,8 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description: 'DeepSeek-V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
-    displayName: 'DeepSeek-V3.1',
-    id: 'deepseek-ai/DeepSeek-V3.1',
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek-v3.1',
     maxOutput: 65_536,
     pricing: {
       currency: 'CNY',
