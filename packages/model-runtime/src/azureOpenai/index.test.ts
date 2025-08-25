@@ -340,6 +340,153 @@ describe('LobeAzureOpenAI', () => {
     });
   });
 
+  describe('createImage', () => {
+    beforeEach(() => {
+      // ensure images namespace exists and is spy-able
+      expect(instance['client'].images).toBeTruthy();
+    });
+
+    it('should generate image and return url from object response', async () => {
+      const url = 'https://example.com/image.png';
+      const generateSpy = vi
+        .spyOn(instance['client'].images, 'generate')
+        .mockResolvedValue({ data: [{ url }] } as any);
+
+      const res = await instance.createImage({
+        model: 'gpt-image-1',
+        params: { prompt: 'a cat' },
+      });
+
+      expect(generateSpy).toHaveBeenCalledTimes(1);
+      const args = vi.mocked(generateSpy).mock.calls[0][0] as any;
+      expect(args).not.toHaveProperty('image');
+      expect(res).toEqual({ imageUrl: url });
+    });
+
+    it('should parse string JSON response from images.generate', async () => {
+      const url = 'https://example.com/str.png';
+      const payload = JSON.stringify({ data: [{ url }] });
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(payload as any);
+
+      const res = await instance.createImage({ model: 'gpt-image-1', params: { prompt: 'dog' } });
+      expect(res).toEqual({ imageUrl: url });
+    });
+
+    it('should parse bodyAsText JSON response', async () => {
+      const url = 'https://example.com/bodyAsText.png';
+      const bodyAsText = JSON.stringify({ data: [{ url }] });
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({ bodyAsText } as any);
+
+      const res = await instance.createImage({ model: 'gpt-image-1', params: { prompt: 'bird' } });
+      expect(res).toEqual({ imageUrl: url });
+    });
+
+    it('should parse body JSON response', async () => {
+      const url = 'https://example.com/body.png';
+      const body = JSON.stringify({ data: [{ url }] });
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({ body } as any);
+
+      const res = await instance.createImage({ model: 'gpt-image-1', params: { prompt: 'fish' } });
+      expect(res).toEqual({ imageUrl: url });
+    });
+
+    it('should prefer b64_json and return data URL', async () => {
+      const b64 = 'AAA';
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+        data: [{ b64_json: b64 }],
+      } as any);
+
+      const res = await instance.createImage({ model: 'gpt-image-1', params: { prompt: 'sun' } });
+      expect(res.imageUrl).toBe(`data:image/png;base64,${b64}`);
+    });
+
+    it('should throw wrapped error for empty data array', async () => {
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({ data: [] } as any);
+
+      await expect(
+        instance.createImage({ model: 'gpt-image-1', params: { prompt: 'moon' } }),
+      ).rejects.toMatchObject({
+        endpoint: 'https://***.openai.azure.com/',
+        errorType: 'AgentRuntimeError',
+        provider: 'azure',
+        error: {
+          name: 'Error',
+          cause: undefined,
+          message: expect.stringContaining('Invalid image response: missing or empty data array'),
+        },
+      });
+    });
+
+    it('should throw wrapped error when missing both b64_json and url', async () => {
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+        data: [{}],
+      } as any);
+
+      await expect(
+        instance.createImage({ model: 'gpt-image-1', params: { prompt: 'stars' } }),
+      ).rejects.toEqual({
+        endpoint: 'https://***.openai.azure.com/',
+        errorType: 'AgentRuntimeError',
+        provider: 'azure',
+        error: {
+          name: 'Error',
+          cause: undefined,
+          message: 'Invalid image response: missing both b64_json and url fields',
+        },
+      });
+    });
+
+    it('should call images.edit when imageUrl provided and strip size:auto', async () => {
+      const url = 'https://example.com/edited.png';
+      const editSpy = vi
+        .spyOn(instance['client'].images, 'edit')
+        .mockResolvedValue({ data: [{ url }] } as any);
+
+      const helpers = await import('../utils/openaiHelpers');
+      vi.spyOn(helpers, 'convertImageUrlToFile').mockResolvedValue({} as any);
+
+      const res = await instance.createImage({
+        model: 'gpt-image-1',
+        params: { prompt: 'edit', imageUrl: 'https://example.com/in.png', size: 'auto' as any },
+      });
+
+      expect(editSpy).toHaveBeenCalledTimes(1);
+      const arg = vi.mocked(editSpy).mock.calls[0][0] as any;
+      expect(arg).not.toHaveProperty('size');
+      expect(res).toEqual({ imageUrl: url });
+    });
+
+    it('should convert multiple imageUrls and pass images array to edit', async () => {
+      const url = 'https://example.com/edited2.png';
+      const editSpy = vi
+        .spyOn(instance['client'].images, 'edit')
+        .mockResolvedValue({ data: [{ url }] } as any);
+
+      const helpers = await import('../utils/openaiHelpers');
+      const spy = vi.spyOn(helpers, 'convertImageUrlToFile').mockResolvedValue({} as any);
+
+      await instance.createImage({
+        model: 'gpt-image-1',
+        params: { prompt: 'edit', imageUrls: ['u1', 'u2'] },
+      });
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      const arg = vi.mocked(editSpy).mock.calls[0][0] as any;
+      expect(arg).toHaveProperty('image');
+    });
+
+    it('should not include image in generate options', async () => {
+      const generateSpy = vi
+        .spyOn(instance['client'].images, 'generate')
+        .mockResolvedValue({ data: [{ url: 'https://x/y.png' }] } as any);
+
+      await instance.createImage({ model: 'gpt-image-1', params: { prompt: 'no image' } });
+
+      const arg = vi.mocked(generateSpy).mock.calls[0][0] as any;
+      expect(arg).not.toHaveProperty('image');
+    });
+  });
+
   describe('private method', () => {
     describe('tocamelCase', () => {
       it('should convert string to camel case', () => {
