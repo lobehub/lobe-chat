@@ -16,8 +16,37 @@ export const LobeNovitaAI = createOpenAICompatibleRuntime({
   models: async ({ client }) => {
     const modelsPage = (await client.models.list()) as any;
     const modelList: NovitaModelCard[] = modelsPage.data;
+    const formatPrice = (price?: number) => {
+      if (price === undefined || price === null) return undefined;
+      // Convert Novita price to desired unit: e.g. 5700 -> 0.57
+      if (typeof price !== 'number') return undefined;
+      if (price === -1) return undefined;
+      return Number((price / 10000).toPrecision(5));
+    };
 
-    return await processMultiProviderModelList(modelList, 'novita');
+    const formattedModels = modelList.map((m) => {
+      const mm = m as any;
+      const features: string[] = Array.isArray(mm.features) ? mm.features : [];
+
+      return {
+        id: mm.id,
+        created: mm.created,
+        contextWindowTokens: mm.context_size ?? mm.max_output_tokens ?? undefined,
+        description: mm.description ?? '',
+        displayName: mm.display_name ?? mm.title ?? mm.id,
+        functionCall: features.includes('function-calling') || false,
+        maxOutput: typeof mm.max_output_tokens === 'number' ? mm.max_output_tokens : undefined,
+        pricing: {
+          input: formatPrice(mm.input_token_price_per_m),
+          output: formatPrice(mm.output_token_price_per_m),
+        },
+        reasoning: features.includes('reasoning') || false,
+        type: mm.model_type ?? undefined,
+        vision: features.includes('vision') || false,
+      } as any;
+    });
+
+    return await processMultiProviderModelList(formattedModels, 'novita');
   },
   provider: ModelProvider.Novita,
 });
