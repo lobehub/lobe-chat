@@ -27,6 +27,10 @@
   "defaultAgent": "المساعد الافتراضي",
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
+  "dm": {
+    "placeholder": "ستظهر رسالتك الخاصة مع {agentTitle} هنا.",
+    "tooltip": "رسالة"
+  },
   "duplicateSession": {
     "loading": "جاري النسخ...",
     "success": "تم النسخ بنجاح",

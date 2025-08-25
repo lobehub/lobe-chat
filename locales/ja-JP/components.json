@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "引数を追加",
+    "argumentPlaceholder": "引数 {{index}}",
+    "enterFirstArgument": "最初の引数を入力してください..."
+  },
   "DragUpload": {
     "dragDesc": "ここにファイルをドラッグ＆ドロップしてください。複数の画像のアップロードがサポートされています。",
     "dragFileDesc": "ここに画像やファイルをドラッグ＆ドロップしてください。複数の画像やファイルのアップロードがサポートされています。",

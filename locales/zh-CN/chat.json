@@ -27,6 +27,10 @@
   "defaultAgent": "自定义助手",
   "defaultList": "默认列表",
   "defaultSession": "自定义助手",
+  "dm": {
+    "tooltip": "Message",
+    "placeholder": "Your private message with {agentTitle} will appear here."
+  },
   "duplicateSession": {
     "loading": "复制中...",
     "success": "复制成功",

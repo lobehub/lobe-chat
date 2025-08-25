@@ -344,6 +344,11 @@
       "title": "Reveal DMs"
     },
     "submit": "Update Settings",
+    "systemPrompt": {
+      "desc": "Custom system prompt for the group conversation orchestrator. This overrides the default orchestrator behavior.",
+      "placeholder": "Enter custom orchestrator system prompt...",
+      "title": "Orchestrator System Prompt"
+    },
     "title": "Chat Settings"
   },
   "settingGroupMembers": {

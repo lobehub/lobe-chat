@@ -344,6 +344,11 @@
       "title": "顯示私訊"
     },
     "submit": "更新設定",
+    "systemPrompt": {
+      "desc": "群組對話協調器的自訂系統提示，會覆蓋預設的協調器行為。",
+      "placeholder": "請輸入自訂的協調器系統提示...",
+      "title": "協調器系統提示"
+    },
     "title": "聊天設定"
   },
   "settingGroupMembers": {

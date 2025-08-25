@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "モデル"
   },
+  "active": "アクティブ",
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
@@ -13,17 +14,23 @@
     "thought": "思考過程",
     "unknownTitle": "未命名の作品"
   },
+  "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
   "chatList": {
     "longMessageDetail": "詳細を見る"
   },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
+  "confirmRemoveGroupItemAlert": "このグループを削除すると、グループ内のアシスタントはデフォルトの一覧に移動します。操作を続行してもよろしいですか？",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
+  "dm": {
+    "placeholder": "{agentTitle}とのプライベートメッセージはここに表示されます。",
+    "tooltip": "メッセージ"
+  },
   "duplicateSession": {
     "loading": "複製中...",
     "success": "複製に成功しました",
@@ -54,11 +61,18 @@
     },
     "title": "モデル拡張機能"
   },
+  "group": {
+    "desc": "複数のAIアシスタントと共有の会話スペースで協力します。",
+    "memberTooltip": "グループ内に{{count}}人のメンバーがいます",
+    "title": "グループ"
+  },
+  "groupDescription": "グループの説明",
   "history": {
     "title": "アシスタントは最後の{{count}}件のメッセージのみを記憶します"
   },
   "historyRange": "履歴範囲",
   "historySummary": "履歴メッセージの要約",
+  "inactive": "非アクティブ",
   "inbox": {
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
@@ -76,6 +90,7 @@
   "intentUnderstanding": {
     "title": "あなたの意図を理解し、分析しています..."
   },
+  "inviteMembers": "メンバーを招待",
   "knowledgeBase": {
     "all": "すべてのコンテンツ",
     "allFiles": "すべてのファイル",
@@ -94,12 +109,24 @@
     "uploadGuide": "アップロードしたファイルは「知識ベース」で確認できますよ",
     "viewMore": "さらに表示"
   },
+  "memberSelection": {
+    "addMember": "メンバーを追加",
+    "noAvailableAgents": "利用可能なエージェントがいません",
+    "noSelectedAgents": "選択されたエージェントがいません",
+    "searchAgents": "エージェントを検索...",
+    "setInitialMembers": "初期メンバーを設定"
+  },
+  "members": "メンバー",
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"
   },
   "messages": {
+    "dm": {
+      "sentTo": "宛先",
+      "title": "ダイレクトメッセージ"
+    },
     "modelCard": {
       "credit": "クレジット",
       "creditPricing": "価格設定",
@@ -143,6 +170,13 @@
     }
   },
   "newAgent": "新しいエージェント",
+  "newGroupChat": "新しいグループチャットを作成",
+  "noAgentsYet": "このグループにはまだアシスタントがいません。「+」ボタンをクリックしてアシスタントを招待してください。",
+  "noAvailableAgents": "招待できるアシスタントがいません",
+  "noMatchingAgents": "一致するアシスタントが見つかりません",
+  "noMembersYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
+  "noSelectedAgents": "まだアシスタントが選択されていません",
+  "owner": "グループ管理者",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
   "rag": {
@@ -183,6 +217,8 @@
     "title": "ネット接続検索"
   },
   "searchAgentPlaceholder": "検索アシスタント...",
+  "searchAgents": "検索アシスタント...",
+  "selectedAgents": "選択済みのアシスタント",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionGroup": {
     "config": "グループ設定",
@@ -256,6 +292,7 @@
     "action": "音声読み上げ",
     "clear": "音声を削除"
   },
+  "untitledAgent": "名前未設定のアシスタント",
   "updateAgent": "エージェント情報を更新",
   "upload": {
     "action": {
@@ -278,5 +315,6 @@
       }
     }
   },
+  "you": "あなた",
   "zenMode": "集中モード"
 }

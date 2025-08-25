@@ -35,6 +35,11 @@
       "title": "모든 설정 재설정"
     }
   },
+  "groupTab": {
+    "chat": "그룹 채팅",
+    "members": "구성원",
+    "meta": "그룹 채팅 정보"
+  },
   "header": {
     "desc": "설정 및 모델 설정.",
     "global": "전역 설정",
@@ -290,6 +295,69 @@
     },
     "title": "일반 설정"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "그룹 설명을 입력하세요",
+      "title": "그룹 설명"
+    },
+    "name": {
+      "placeholder": "그룹 이름을 입력하세요",
+      "title": "그룹 이름"
+    },
+    "submit": "그룹 업데이트",
+    "systemPrompt": {
+      "placeholder": "시스템 프롬프트를 입력하세요",
+      "title": "시스템 프롬프트"
+    },
+    "title": "그룹 정보"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "회원이 연속으로 응답할 수 있는 메시지 수를 선택하세요. 0으로 설정하면 비활성화됩니다.",
+      "title": "연속 응답 메시지 수"
+    },
+    "model": {
+      "desc": "그룹 대화에 사용할 모델을 선택하세요",
+      "title": "오케스트레이터 모델"
+    },
+    "responseOrder": {
+      "desc": "에이전트는 그룹에 설정된 순서대로 응답합니다.",
+      "options": {
+        "natural": "자연스러운",
+        "sequential": "순차적"
+      },
+      "placeholder": "응답 순서 선택",
+      "title": "응답 순서"
+    },
+    "responseSpeed": {
+      "desc": "그룹 대화에서 에이전트의 응답 속도를 선택하세요.",
+      "options": {
+        "fast": "빠름",
+        "medium": "보통",
+        "slow": "느림"
+      },
+      "placeholder": "응답 속도 선택",
+      "title": "응답 속도"
+    },
+    "revealDM": {
+      "desc": "다른 구성원에게 전송된 DM 내용을 당신에게도 표시합니다.",
+      "title": "DM 내용 공개"
+    },
+    "submit": "설정 업데이트",
+    "systemPrompt": {
+      "desc": "그룹 대화 오케스트레이터용 사용자 지정 시스템 프롬프트입니다. 기본 오케스트레이터 동작을 재정의합니다.",
+      "placeholder": "사용자 지정 오케스트레이터 시스템 프롬프트를 입력하세요...",
+      "title": "오케스트레이터 시스템 프롬프트"
+    },
+    "title": "채팅 설정"
+  },
+  "settingGroupMembers": {
+    "edit": "구성원 편집",
+    "empty": "이 그룹에는 아직 에이전트가 없습니다. + 버튼을 클릭하여 구성원을 추가하세요.",
+    "owner": "나 (소유자)",
+    "remove": "구성원 제거",
+    "you": "나"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "단일 응답 제한 활성화"
@@ -510,6 +578,11 @@
       "label": "AI 그림 주제 명명 모델",
       "modelDesc": "AI 그림 자동 주제 명명에 사용되는 모델 지정",
       "title": "AI 그림 자동 주제 명명"
+    },
+    "groupChatSupervisor": {
+      "label": "그룹 채팅 감독 모델",
+      "modelDesc": "그룹 채팅 대화를 감독하고 관리하기 위해 지정된 모델",
+      "title": "그룹 채팅 감독 및 관리"
     },
     "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {

@@ -27,6 +27,10 @@
   "defaultAgent": "Агент по подразбиране",
   "defaultList": "Списък по подразбиране",
   "defaultSession": "Агент по подразбиране",
+  "dm": {
+    "placeholder": "Вашето лично съобщение с {agentTitle} ще се появи тук.",
+    "tooltip": "Съобщение"
+  },
   "duplicateSession": {
     "loading": "Копиране...",
     "success": "Копирането е успешно",
