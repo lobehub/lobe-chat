@@ -23,11 +23,10 @@ const formatTime = (date: Date, locale: string) => {
 
 interface TopicItemProps {
   showMoreInfo?: boolean;
-  style?: React.CSSProperties;
   topic: ImageGenerationTopic;
 }
 
-const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo, style }) => {
+const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo }) => {
   const theme = useTheme();
   const { t } = useTranslation('image');
   const { modal } = App.useApp();
@@ -112,7 +111,6 @@ const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo, style }) => {
         onClick={handleClick}
         style={{
           cursor: 'pointer',
-          ...style,
         }}
         width={'100%'}
       >
