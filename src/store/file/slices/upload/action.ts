@@ -7,70 +7,9 @@ import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
 import { FileMetadata, UploadFileItem } from '@/types/files';
+import { getImageDimensions } from '@/utils/client/imageDimensions';
 
 import { FileStore } from '../../store';
-
-/**
- * Helper function to extract image dimensions from a File object
- * @param file The image file to process
- * @returns Promise resolving to dimensions or undefined if not an image or error occurs
- */
-const getImageDimensions = async (
-  file: File,
-): Promise<{ height: number; width: number } | undefined> => {
-  // Only process image files
-  if (!file.type.startsWith('image/')) return undefined;
-
-  return new Promise((resolve) => {
-    const img = new Image();
-
-    const handleLoad = () => {
-      resolve({
-        height: img.naturalHeight,
-        width: img.naturalWidth,
-      });
-      URL.revokeObjectURL(img.src);
-    };
-
-    const handleError = () => {
-      URL.revokeObjectURL(img.src);
-      resolve(undefined);
-    };
-
-    img.addEventListener('load', handleLoad);
-    img.addEventListener('error', handleError);
-    img.src = URL.createObjectURL(file);
-  });
-};
-
-/**
- * Helper function to extract image dimensions from base64 data
- * @param base64Data The base64 data URI (e.g., "data:image/png;base64,...")
- * @returns Promise resolving to dimensions or undefined if not an image or error occurs
- */
-const getImageDimensionsFromBase64 = async (
-  base64Data: string,
-): Promise<{ height: number; width: number } | undefined> => {
-  // Check if it's a data URI with image mime type
-  if (!base64Data.startsWith('data:image/')) return undefined;
-
-  return new Promise((resolve) => {
-    const img = new Image();
-
-    const handleLoad = () => {
-      resolve({
-        height: img.naturalHeight,
-        width: img.naturalWidth,
-      });
-    };
-
-    const handleError = () => resolve(undefined);
-
-    img.addEventListener('load', handleLoad);
-    img.addEventListener('error', handleError);
-    img.src = base64Data;
-  });
-};
 
 type OnStatusUpdate = (
   data:
@@ -128,7 +67,7 @@ export const createFileUploadSlice: StateCreator<
 > = () => ({
   uploadBase64FileWithProgress: async (base64) => {
     // Extract image dimensions from base64 data
-    const dimensions = await getImageDimensionsFromBase64(base64);
+    const dimensions = await getImageDimensions(base64);
 
     const { metadata, fileType, size, hash } = await uploadService.uploadBase64ToS3(base64);
 

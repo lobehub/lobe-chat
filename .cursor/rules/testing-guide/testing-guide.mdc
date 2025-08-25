@@ -264,20 +264,90 @@ describe('parseContentType', () => {
 #### 真实标识符的价值
 
 ```typescript
-//  使用真实的提供商标识符
-it('should parse OpenAI model list correctly', () => {
-  const result = parseModelString('openai', '+gpt-4,+gpt-3.5-turbo');
-  expect(result.add).toHaveLength(2);
-  expect(result.add[0].id).toBe('gpt-4');
-});
+// ✅ 使用真实标识符
+const result = parseModelString('openai', '+gpt-4,+gpt-3.5-turbo');
 
-//  使用占位符标识符（价值较低）
-it('should parse model list correctly', () => {
-  const result = parseModelString('test-provider', '+model1,+model2');
-  expect(result.add).toHaveLength(2);
-  // 这种测试对理解真实场景帮助不大
+// ❌ 使用占位符（价值较低）
+const result = parseModelString('test-provider', '+model1,+model2');
+```
+
+### 现代化Mock技巧：环境设置与Mock方法
+
+**环境设置 + Mock方法结合使用**
+
+客户端代码测试时，推荐使用环境注释配合现代化Mock方法：
+
+```typescript
+/**
+ * @vitest-environment happy-dom  // 提供浏览器API
+ */
+import { beforeEach, vi } from 'vitest';
+
+beforeEach(() => {
+  // 现代方法1：使用vi.stubGlobal替代global.xxx = ...
+  const mockImage = vi.fn().mockImplementation(() => ({
+    addEventListener: vi.fn(),
+    naturalHeight: 600,
+    naturalWidth: 800,
+  }));
+  vi.stubGlobal('Image', mockImage);
+  
+  // 现代方法2：使用vi.spyOn保留原功能，只mock特定方法
+  vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
 });
 ```
+
+**环境选择优先级**
+
+1. **@vitest-environment happy-dom** (推荐) - 轻量、快速，项目已安装
+2. **@vitest-environment jsdom** - 功能完整，但需要额外安装jsdom包
+3. **不设置环境** - Node.js环境，需要手动mock所有浏览器API
+
+**Mock方法对比**
+
+```typescript
+// ❌ 旧方法：直接操作global对象（类型问题）
+global.Image = mockImage;
+global.URL = { ...global.URL, createObjectURL: mockFn };
+
+// ✅ 现代方法：类型安全的vi API
+vi.stubGlobal('Image', mockImage);        // 完全替换全局对象
+vi.spyOn(URL, 'createObjectURL');         // 部分mock，保留其他功能
+```
+
+### 测试覆盖率原则：代码分支优于用例数量
+
+**核心原则**: 优先覆盖所有代码分支，而非编写大量重复用例
+
+```typescript
+// ❌ 过度测试：29个测试用例都验证相同分支
+describe('getImageDimensions', () => {
+  it('should reject .txt files');
+  it('should reject .pdf files'); 
+  // ... 25个类似测试，都走相同的验证分支
+});
+
+// ✅ 精简测试：4个核心用例覆盖所有分支
+describe('getImageDimensions', () => {
+  it('should return dimensions for valid File object');     // 成功路径 - File
+  it('should return dimensions for valid data URI');        // 成功路径 - String
+  it('should return undefined for invalid inputs');         // 输入验证分支
+  it('should return undefined when image fails to load');   // 错误处理分支
+});
+```
+
+**分支覆盖策略**
+
+1. **成功路径** - 每种输入类型1个测试即可
+2. **边界条件** - 合并类似场景到单个测试
+3. **错误处理** - 测试代表性错误即可
+4. **业务逻辑** - 覆盖所有if/else分支
+
+**合理测试数量**
+- 简单工具函数：2-5个测试
+- 复杂业务逻辑：5-10个测试
+- 核心安全功能：适当增加，但避免重复路径
 
 ### 错误处理测试：测试"行为"而非"文本"
 
@@ -286,50 +356,15 @@ it('should parse model list correctly', () => {
 #### 推荐的错误测试方式
 
 ```typescript
-//  测试是否抛出错误
-it('should throw error when invalid input provided', () => {
-  expect(() => processInput(null)).toThrow();
-});
+// ✅ 测试错误类型和属性
+expect(() => validateUser({})).toThrow(ValidationError);
+expect(() => processPayment({})).toThrow(expect.objectContaining({
+  code: 'INVALID_PAYMENT_DATA',
+  statusCode: 400,
+}));
 
-//  测试错误类型（最推荐）
-it('should throw ValidationError for invalid data', () => {
-  expect(() => validateUser({})).toThrow(ValidationError);
-});
-
-//  测试错误属性而非消息文本
-it('should throw error with correct error code', () => {
-  expect(() => processPayment({})).toThrow(
-    expect.objectContaining({
-      code: 'INVALID_PAYMENT_DATA',
-      statusCode: 400,
-    }),
-  );
-});
-```
-
-#### 应避免的做法
-
-```typescript
-//  过度依赖具体错误信息文本
-it('should throw specific error message', () => {
-  expect(() => processUser({})).toThrow('用户数据不能为空，请检查输入参数');
-  // 这种测试很脆弱，错误文案稍有修改就会失败
-});
-```
-
-#### 例外情况：何时可以测试错误信息
-
-```typescript
-//  测试标准 API 错误（这是契约的一部分）
-it('should return proper HTTP error for API', () => {
-  expect(response.statusCode).toBe(400);
-  expect(response.error).toBe('Bad Request');
-});
-
-//  测试错误信息的关键部分（使用正则）
-it('should include field name in validation error', () => {
-  expect(() => validateField('email', '')).toThrow(/email/i);
-});
+// ❌ 避免测试具体错误文本
+expect(() => processUser({})).toThrow('用户数据不能为空，请检查输入参数');
 ```
 
 ### 疑难解答：警惕模块污染
@@ -343,48 +378,19 @@ it('should include field name in validation error', () => {
 #### 典型场景：动态 Mock 同一模块
 
 ```typescript
-//  容易出现模块污染的写法
-describe('ConfigService', () => {
-  it('should work in development mode', async () => {
-    vi.doMock('./config', () => ({ isDev: true }));
-    const { getSettings } = await import('./configService'); // 第一次加载
-    expect(getSettings().debugMode).toBe(true);
-  });
-
-  it('should work in production mode', async () => {
-    vi.doMock('./config', () => ({ isDev: false }));
-    const { getSettings } = await import('./configService'); // 可能使用缓存的旧版本！
-    expect(getSettings().debugMode).toBe(false); //  可能失败
-  });
+// ❌ 问题：动态Mock同一模块
+it('dev mode', async () => {
+  vi.doMock('./config', () => ({ isDev: true }));
+  const { getSettings } = await import('./service'); // 可能使用缓存
 });
 
-//  使用 resetModules 解决模块污染
-describe('ConfigService', () => {
-  beforeEach(() => {
-    vi.resetModules(); // 清除模块缓存，确保每个测试都是干净的环境
-  });
-
-  it('should work in development mode', async () => {
-    vi.doMock('./config', () => ({ isDev: true }));
-    const { getSettings } = await import('./configService');
-    expect(getSettings().debugMode).toBe(true);
-  });
-
-  it('should work in production mode', async () => {
-    vi.doMock('./config', () => ({ isDev: false }));
-    const { getSettings } = await import('./configService');
-    expect(getSettings().debugMode).toBe(false); //  测试通过
-  });
+// ✅ 解决：清除模块缓存
+beforeEach(() => {
+  vi.resetModules(); // 确保每个测试都是干净环境
 });
 ```
 
-#### 排查和解决步骤
-
-1. **识别问题**: 测试失败时，首先问自己："是否有多个测试在 Mock 同一个模块？"
-2. **添加隔离**: 在 `beforeEach` 中添加 `vi.resetModules()`
-3. **验证修复**: 重新运行测试，确认问题解决
-
-**记住**: `vi.resetModules()` 是解决测试"灵异"失败的终极武器，当常规调试方法都无效时，它往往能一针见血地解决问题。
+**记住**: `vi.resetModules()` 是解决测试"灵异"失败的终极武器。
 
 ## 测试文件组织
 
@@ -435,23 +441,9 @@ expect(result!.status).toBe('success');
 const mockStream = new ReadableStream() as any;
 mockStream.toReadableStream = () => mockStream;
 
-//  使用中括号访问私有属性和方法（推荐）
-class MyClass {
-  private _cache = new Map();
-  private getFromCache(key: string) {
-    /* ... */
-  }
-}
-
-const instance = new MyClass();
-
-// 推荐：使用中括号访问私有成员
-await instance['getFromCache']('test-key');
-expect(instance['_cache'].size).toBe(1);
-
-// 避免：使用 as any 访问私有成员
-await (instance as any).getFromCache('test-key'); //  不推荐
-expect((instance as any)._cache.size).toBe(1); //  不推荐
+//  访问私有成员
+await instance['getFromCache']('key'); // 推荐中括号
+await (instance as any).getFromCache('key'); // 避免as any
 ```
 
 #### 适用场景
@@ -468,6 +460,7 @@ expect((instance as any)._cache.size).toBe(1); //  不推荐
 - **私有成员访问优先级**: 中括号访问 > `as any` 转换，保持更好的类型安全性
 - **文档说明**: 对于使用 `any` 的复杂场景，添加注释说明原因
 - **测试覆盖**: 确保即使使用了 `any`，测试仍能有效验证功能正确性
+
 
 ### 检查最近修改记录
 
