@@ -19,6 +19,7 @@ export const AiProviderSDKEnum = {
   AzureAI: 'azureai',
   Bedrock: 'bedrock',
   Cloudflare: 'cloudflare',
+  ComfyUI: 'comfyui',
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',
@@ -101,7 +102,7 @@ const AiProviderSettingsSchema = z.object({
     })
     .or(ResponseAnimationType)
     .optional(),
-  sdkType: z.enum(['anthropic', 'openai', 'ollama']).optional(),
+  sdkType: z.enum(['anthropic', 'comfyui', 'ollama', 'openai']).optional(),
   searchMode: z.enum(['params', 'internal']).optional(),
   showAddNewModel: z.boolean().optional(),
   showApiKey: z.boolean().optional(),
@@ -219,7 +220,15 @@ export const UpdateAiProviderConfigSchema = z.object({
     })
     .optional(),
   fetchOnClient: z.boolean().nullable().optional(),
-  keyVaults: z.record(z.string(), z.string().optional()).optional(),
+  keyVaults: z
+    .record(
+      z.string(),
+      z.union([
+        z.string().optional(),
+        z.record(z.string(), z.string()).optional(), // 支持嵌套对象，如 customHeaders
+      ]),
+    )
+    .optional(),
 });
 
 export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfigSchema>;

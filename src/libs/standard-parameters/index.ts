@@ -55,6 +55,14 @@ export const ModelParamsMetaSchema = z.object({
     })
     .optional(),
 
+  negativePrompt: z
+    .object({
+      default: z.string().optional().default(''),
+      description: z.string().optional(),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
   /**
    * Prompt 是唯一一个每个模型都有的参数
    */
@@ -63,6 +71,24 @@ export const ModelParamsMetaSchema = z.object({
     description: z.string().optional(),
     type: z.literal('string').optional(),
   }),
+
+  samplerName: z
+    .object({
+      default: z.string().optional().default('euler'),
+      description: z.string().optional(),
+      enum: z.array(z.string()),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
+  scheduler: z
+    .object({
+      default: z.string().optional().default('simple'),
+      description: z.string().optional(),
+      enum: z.array(z.string()),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
 
   seed: z
     .object({
@@ -91,6 +117,26 @@ export const ModelParamsMetaSchema = z.object({
       min: z.number(),
       step: z.number().optional().default(1),
       type: z.literal('number').optional(),
+    })
+    .optional(),
+
+  strength: z
+    .object({
+      default: z.number().optional().default(0.8),
+      description: z.string().optional(),
+      max: z.number().optional().default(1),
+      min: z.number().optional().default(0),
+      step: z.number().optional().default(0.1),
+      type: z.literal('number').optional(),
+    })
+    .optional(),
+
+  weightDtype: z
+    .object({
+      default: z.string().optional().default('default'),
+      description: z.string().optional(),
+      enum: z.array(z.string()),
+      type: z.literal('string').optional(),
     })
     .optional(),
 

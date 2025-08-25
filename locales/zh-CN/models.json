@@ -740,6 +740,18 @@
   "cohere/Cohere-command-r-plus": {
     "description": "Command R+是一个最先进的RAG优化模型，旨在应对企业级工作负载。"
   },
+  "comfyui/flux-dev": {
+    "description": "FLUX.1 Dev - 高质量文生图模型，支持 guidance scale 调节，10-50步生成，非商业许可，适合高质量创作和艺术作品生成"
+  },
+  "comfyui/flux-kontext-dev": {
+    "description": "FLUX.1 Kontext-dev - 图像编辑模型，支持基于文本指令修改现有图像，支持局部修改和风格迁移，非商业许可"
+  },
+  "comfyui/flux-krea-dev": {
+    "description": "FLUX.1 Krea-dev - 增强安全的文生图模型，与 Krea 合作开发，内置安全过滤，避免生成不当内容，非商业许可"
+  },
+  "comfyui/flux-schnell": {
+    "description": "FLUX.1 Schnell - 超快速文生图模型，1-4步即可生成高质量图像，Apache 2.0开源许可，适合实时应用和快速原型制作"
+  },
   "command": {
     "description": "一个遵循指令的对话模型，在语言任务中表现出高质量、更可靠，并且相比我们的基础生成模型具有更长的上下文长度。"
   },

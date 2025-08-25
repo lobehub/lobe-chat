@@ -4,6 +4,8 @@ export { LobeAzureOpenAI } from './azureOpenai';
 export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';
 export { LobeBflAI } from './bfl';
+export { LobeComfyUI } from './comfyui';
+export * from './comfyui';
 export { LobeDeepSeekAI } from './deepseek';
 export * from './error';
 export { LobeGoogleAI } from './google';
@@ -20,9 +22,19 @@ export { LobePerplexityAI } from './perplexity';
 export { LobeQwenAI } from './qwen';
 export { LobeTogetherAI } from './togetherai';
 export * from './types';
+export type { ComfyUIError, ParsedError } from './utils/comfyuiErrorParser';
+export { cleanComfyUIErrorMessage, parseComfyUIErrorMessage } from './utils/comfyuiErrorParser';
 export { AgentRuntimeError } from './utils/createError';
 export { createOpenAICompatibleRuntime } from './utils/openaiCompatibleFactory';
 export { pruneReasoningPayload } from './utils/openaiHelpers';
 export { LobeVolcengineAI } from './volcengine';
 export { LobeZeroOneAI } from './zeroone';
 export { LobeZhipuAI } from './zhipu';
+export type {
+  BasicCredentials,
+  BearerTokenCredentials,
+  CallWrapper,
+  ComfyApi,
+  CustomCredentials,
+  PromptBuilder,
+} from '@saintno/comfyui-sdk';

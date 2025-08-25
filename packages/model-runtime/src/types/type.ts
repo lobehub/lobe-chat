@@ -39,6 +39,7 @@ export enum ModelProvider {
   Bedrock = 'bedrock',
   Cloudflare = 'cloudflare',
   Cohere = 'cohere',
+  ComfyUI = 'comfyui',
   DeepSeek = 'deepseek',
   Fal = 'fal',
   FireworksAI = 'fireworksai',

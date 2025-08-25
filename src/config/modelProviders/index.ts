@@ -12,6 +12,7 @@ import BedrockProvider from './bedrock';
 import BflProvider from './bfl';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
+import ComfyUIProvider from './comfyui';
 import DeepSeekProvider from './deepseek';
 import FalProvider from './fal';
 import FireworksAIProvider from './fireworksai';
@@ -120,6 +121,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AzureAIProvider,
   OllamaProvider,
   VLLMProvider,
+  ComfyUIProvider,
   XinferenceProvider,
   AnthropicProvider,
   BedrockProvider,
@@ -196,6 +198,7 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as BflProviderCard } from './bfl';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
+export { default as ComfyUIProviderCard } from './comfyui';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FalProviderCard } from './fal';
 export { default as FireworksAIProviderCard } from './fireworksai';
