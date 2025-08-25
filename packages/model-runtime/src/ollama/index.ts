@@ -137,8 +137,8 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           enabled: knownModel?.enabled || false,
           functionCall: knownModel?.abilities?.functionCall || false,
           id: model.name,
-          reasoning: knownModel?.abilities?.functionCall || false,
-          vision: knownModel?.abilities?.functionCall || false,
+          reasoning: knownModel?.abilities?.reasoning || false,
+          vision: knownModel?.abilities?.vision || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
