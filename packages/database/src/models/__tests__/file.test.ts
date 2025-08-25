@@ -346,6 +346,8 @@ describe('FileModel', () => {
         size: 100,
         fileType: 'text/plain',
       });
+      // Add small delay to ensure different timestamps
+      await new Promise(resolve => setTimeout(resolve, 10));
       await fileModel.create({
         name: 'test-file-2.txt',
         url: 'https://example.com/test-file-2.txt',

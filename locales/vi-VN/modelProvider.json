@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Nhập AWS Access Key Id",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Kiểm tra AccessKeyId / SecretAccessKey có được nhập chính xác không"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Nhập AWS Region",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Nhập AWS Secret Access Key",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Nếu bạn đang sử dụng AWS SSO/STS, hãy nhập AWS Session Token của bạn",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (tùy chọn)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Vùng Dịch vụ Tùy chỉnh",
-      "customSessionToken": "Mã thông báo phiên tùy chỉnh",
-      "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
-      "imageGenerationDescription": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu tạo. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
-      "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

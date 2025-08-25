@@ -195,6 +195,22 @@ describe('getAuthConfig', () => {
         expect.stringMatching(/ZITADEL_ISSUER.*AUTH_ZITADEL_ISSUER/),
       );
     });
+    it('should warn about AWS deprecated environment variables', () => {
+      // Set deprecated environment variables
+      process.env.AWS_ACCESS_KEY_ID = 'AKIAIOSFODNN7EXAMPLE';
+      process.env.AWS_SECRET_ACCESS_KEY = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY';
+      
+      // Call the function
+      getAuthConfig();
+
+      // Check that the spyConsoleWarn function was called for each deprecated environment variable
+      expect(spyConsoleWarn).toHaveBeenCalledWith(
+        expect.stringMatching(/AWS_ACCESS_KEY_ID.*AWS_BEARER_TOKEN_BEDROCK/),
+      );
+      expect(spyConsoleWarn).toHaveBeenCalledWith(
+        expect.stringMatching(/AWS_SECRET_ACCESS_KEY.*AWS_BEARER_TOKEN_BEDROCK/),
+      );
+    });
   });
   // Remove end
 });

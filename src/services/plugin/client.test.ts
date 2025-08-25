@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { userInstalledPlugins, users } from '@/database/schemas';
@@ -16,9 +16,11 @@ const userId = 'message-db';
 const pluginService = new ClientService(userId);
 
 // Mock data
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+}, 30000); // Increase timeout for database initialization
 
+beforeEach(async () => {
   // 在每个测试用例之前，重置表数据
   await clientDB.transaction(async (trx) => {
     await trx.delete(users);

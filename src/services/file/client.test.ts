@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { files, globalFiles, users } from '@/database/schemas';
@@ -19,9 +19,11 @@ const mockFile = {
   url: '',
 };
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+}, 30000); // Increase timeout for database initialization
 
+beforeEach(async () => {
   await clientDB.delete(users);
   await clientDB.delete(globalFiles);
   // 创建测试数据

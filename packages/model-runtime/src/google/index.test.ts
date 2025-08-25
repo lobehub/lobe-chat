@@ -259,6 +259,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType, error: { message }, provider });
         }
@@ -278,6 +280,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({ errorType: 'LocationNotSupportError', error: { message }, provider });
         }
@@ -297,6 +301,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({
             errorType: bizErrorType,
@@ -329,6 +335,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({
             errorType: bizErrorType,
@@ -356,6 +364,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({
             error: { message: 'Error message' },
@@ -392,6 +402,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({
             error: {
@@ -418,6 +430,8 @@ describe('LobeGoogleAI', () => {
             model: 'text-davinci-003',
             temperature: 0,
           });
+          // Should not reach here
+          expect(true).toBe(false);
         } catch (e) {
           expect(e).toEqual({
             errorType: bizErrorType,

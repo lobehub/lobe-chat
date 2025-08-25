@@ -1,35 +1,18 @@
 // @vitest-environment node
-import { InvokeModelWithResponseStreamCommand } from '@aws-sdk/client-bedrock-runtime';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeErrorType, ModelProvider } from '@/libs/model-runtime';
-
-import * as debugStreamModule from '../utils/debugStream';
 import { LobeBedrockAI } from './index';
-
-const provider = 'bedrock';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
-
-vi.mock('@aws-sdk/client-bedrock-runtime', async (importOriginal) => {
-  const module = await importOriginal();
-  return {
-    ...(module as any),
-    InvokeModelWithResponseStreamCommand: vi.fn(),
-  };
-});
 
 let instance: LobeBedrockAI;
 
 beforeEach(() => {
   instance = new LobeBedrockAI({
     region: 'us-west-2',
-    accessKeyId: 'test-access-key-id',
-    accessKeySecret: 'test-access-key-secret',
+    token: 'test-bearer-token',
   });
-
-  vi.spyOn(instance['client'], 'send').mockReturnValue(new ReadableStream() as any);
 });
 
 afterEach(() => {
@@ -38,35 +21,39 @@ afterEach(() => {
 
 describe('LobeBedrockAI', () => {
   describe('init', () => {
-    it('should correctly initialize with AWS credentials', async () => {
+    it('should correctly initialize with bearer token', async () => {
       const instance = new LobeBedrockAI({
         region: 'us-west-2',
-        accessKeyId: 'test-access-key-id',
-        accessKeySecret: 'test-access-key-secret',
+        token: 'test-bearer-token',
       });
       expect(instance).toBeInstanceOf(LobeBedrockAI);
+      expect(instance.region).toBe('us-west-2');
+    });
+
+    it('should throw error when no token provided', async () => {
+      expect(() => {
+        new LobeBedrockAI({
+          region: 'us-west-2',
+        });
+      }).toThrow();
     });
   });
 
   describe('chat', () => {
-    it('should call invokeLlamaModel when model starts with "meta"', async () => {
-      // @ts-ignore
-      const spy = vi.spyOn(instance, 'invokeLlamaModel');
-
-      // Act
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'meta.llama:1',
-        temperature: 0,
+    it('should call invokeBearerTokenModel for all models', async () => {
+      // Mock fetch to avoid actual API calls
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('data: {"delta":{"text":"Hello"}}\n\n'));
+            controller.close();
+          },
+        }),
       });
 
-      // Assert
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call invokeClaudeModel when model does not start with "meta"', async () => {
       // @ts-ignore
-      const spy = vi.spyOn(instance, 'invokeClaudeModel');
+      const spy = vi.spyOn(instance, 'invokeBearerTokenModel');
 
       // Act
       await instance.chat({
@@ -79,302 +66,40 @@ describe('LobeBedrockAI', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    describe('Claude model', () => {
-      it('should return a Response on successful API call', async () => {
-        const result = await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'anthropic.claude-v2:1',
-          temperature: 0,
-        });
-
-        // Assert
-        expect(result).toBeInstanceOf(Response);
-      });
-
-      it('should handle text messages correctly', async () => {
-        // Arrange
-        const mockStream = new ReadableStream({
+    it('should return a Response on successful API call', async () => {
+      // Mock fetch for bearer token authentication
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        body: new ReadableStream({
           start(controller) {
-            controller.enqueue('Hello, world!');
+            controller.enqueue(new TextEncoder().encode('data: {"delta":{"text":"Hello"}}\n\n'));
             controller.close();
           },
-        });
-        const mockResponse = Promise.resolve(mockStream);
-        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
-
-        // Act
-        const result = await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'anthropic.claude-v2:1',
-          temperature: 0,
-          top_p: 1,
-        });
-
-        // Assert
-        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
-          accept: 'application/json',
-          body: JSON.stringify({
-            anthropic_version: 'bedrock-2023-05-31',
-            max_tokens: 4096,
-            messages: [{ content: 'Hello', role: 'user' }],
-            temperature: 0,
-            top_p: 1,
-          }),
-          contentType: 'application/json',
-          modelId: 'anthropic.claude-v2:1',
-        });
-        expect(result).toBeInstanceOf(Response);
+        }),
       });
 
-      it('should handle system prompt correctly', async () => {
-        // Arrange
-        const mockStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Hello, world!');
-            controller.close();
-          },
-        });
-        const mockResponse = Promise.resolve(mockStream);
-        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
-
-        // Act
-        const result = await instance.chat({
-          messages: [
-            { content: 'You are an awesome greeter', role: 'system' },
-            { content: 'Hello', role: 'user' },
-          ],
-          model: 'anthropic.claude-v2:1',
-          temperature: 0,
-          top_p: 1,
-        });
-
-        // Assert
-        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
-          accept: 'application/json',
-          body: JSON.stringify({
-            anthropic_version: 'bedrock-2023-05-31',
-            max_tokens: 4096,
-            messages: [{ content: 'Hello', role: 'user' }],
-            system: 'You are an awesome greeter',
-            temperature: 0,
-            top_p: 1,
-          }),
-          contentType: 'application/json',
-          modelId: 'anthropic.claude-v2:1',
-        });
-        expect(result).toBeInstanceOf(Response);
+      const result = await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'anthropic.claude-v2:1',
+        temperature: 0,
       });
 
-      it('should call Anthropic model with supported opions', async () => {
-        // Arrange
-        const mockStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Hello, world!');
-            controller.close();
-          },
-        });
-        const mockResponse = Promise.resolve(mockStream);
-        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
-
-        // Act
-        const result = await instance.chat({
-          max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'anthropic.claude-v2:1',
-          temperature: 0.5,
-          top_p: 1,
-        });
-
-        // Assert
-        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
-          accept: 'application/json',
-          body: JSON.stringify({
-            anthropic_version: 'bedrock-2023-05-31',
-            max_tokens: 2048,
-            messages: [{ content: 'Hello', role: 'user' }],
-            temperature: 0.25,
-            top_p: 1,
-          }),
-          contentType: 'application/json',
-          modelId: 'anthropic.claude-v2:1',
-        });
-        expect(result).toBeInstanceOf(Response);
-      });
-
-      it('should call Anthropic model without unsupported opions', async () => {
-        // Arrange
-        const mockStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Hello, world!');
-            controller.close();
-          },
-        });
-        const mockResponse = Promise.resolve(mockStream);
-        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
-
-        // Act
-        const result = await instance.chat({
-          frequency_penalty: 0.5, // Unsupported option
-          max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'anthropic.claude-v2:1',
-          presence_penalty: 0.5,
-          temperature: 0.5,
-          top_p: 1,
-        });
-
-        // Assert
-        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
-          accept: 'application/json',
-          body: JSON.stringify({
-            anthropic_version: 'bedrock-2023-05-31',
-            max_tokens: 2048,
-            messages: [{ content: 'Hello', role: 'user' }],
-            temperature: 0.25,
-            top_p: 1,
-          }),
-          contentType: 'application/json',
-          modelId: 'anthropic.claude-v2:1',
-        });
-        expect(result).toBeInstanceOf(Response);
-      });
-
-      it('should call debugStream when DEBUG_BEDROCK_CHAT_COMPLETION is set to "1"', async () => {
-        // Arrange
-        process.env.DEBUG_BEDROCK_CHAT_COMPLETION = '1';
-        const spy = vi.spyOn(debugStreamModule, 'debugStream');
-
-        // Act
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'anthropic.claude-v2:1',
-          temperature: 0,
-        });
-
-        // Assert
-        expect(spy).toHaveBeenCalled();
-
-        // Clean up
-        delete process.env.DEBUG_BEDROCK_CHAT_COMPLETION;
-      });
-
-      it('should handle errors and throw AgentRuntimeError', async () => {
-        // Arrange
-        const errorMessage = 'An error occurred';
-        const errorMetadata = { statusCode: 500 };
-        const mockError = new Error(errorMessage);
-        (mockError as any).$metadata = errorMetadata;
-        (instance['client'].send as Mock).mockRejectedValue(mockError);
-
-        // Act & Assert
-        await expect(
-          instance.chat({
-            max_tokens: 100,
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'anthropic.claude-v2:1',
-            temperature: 0,
-          }),
-        ).rejects.toThrow(
-          expect.objectContaining({
-            error: {
-              body: errorMetadata,
-              message: errorMessage,
-              type: 'Error',
-            },
-            errorType: AgentRuntimeErrorType.ProviderBizError,
-            provider: ModelProvider.Bedrock,
-            region: 'us-west-2',
-          }),
-        );
-      });
-    });
-
-    describe('Llama Model', () => {
-      it('should call Llama model with valid payload', async () => {
-        // Arrange
-        const mockStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Hello, world!');
-            controller.close();
-          },
-        });
-        const mockResponse = Promise.resolve(mockStream);
-        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
-
-        // Act
-        const result = await instance.chat({
-          temperature: 0,
-          max_tokens: 100,
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'meta.llama:1',
-        });
-
-        // Assert
-        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
-          accept: 'application/json',
-          body: JSON.stringify({
-            max_gen_len: 100,
-            prompt: '<s>[INST] Hello [/INST]',
-          }),
-          contentType: 'application/json',
-          modelId: 'meta.llama:1',
-        });
-        expect(result).toBeInstanceOf(Response);
-      });
-
-      it('should handle errors and throw AgentRuntimeError', async () => {
-        // Arrange
-        const errorMessage = 'An error occurred';
-        const errorMetadata = { statusCode: 500 };
-        const mockError = new Error(errorMessage);
-        (mockError as any).$metadata = errorMetadata;
-        (instance['client'].send as Mock).mockRejectedValue(mockError);
-
-        // Act & Assert
-        await expect(
-          instance.chat({
-            max_tokens: 100,
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'meta.llama:1',
-            temperature: 0,
-          }),
-        ).rejects.toThrow(
-          expect.objectContaining({
-            error: {
-              body: errorMetadata,
-              message: errorMessage,
-              region: 'us-west-2',
-              type: 'Error',
-            },
-            errorType: AgentRuntimeErrorType.ProviderBizError,
-            provider: ModelProvider.Bedrock,
-            region: 'us-west-2',
-          }),
-        );
-      });
-
-      it('should call debugStream when DEBUG_BEDROCK_CHAT_COMPLETION is set to "1"', async () => {
-        // Arrange
-        process.env.DEBUG_BEDROCK_CHAT_COMPLETION = '1';
-        const spy = vi.spyOn(debugStreamModule, 'debugStream');
-
-        // Act
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'meta.llama:1',
-          temperature: 0,
-        });
-
-        // Assert
-        expect(spy).toHaveBeenCalled();
-
-        // Clean up
-        delete process.env.DEBUG_BEDROCK_CHAT_COMPLETION;
-      });
+      // Assert
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should call options.callback when provided', async () => {
-      // Arrange
+      // Mock fetch for bearer token authentication
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('data: {"delta":{"text":"Hello"}}\n\n'));
+            controller.close();
+          },
+        }),
+      });
+
       const onStart = vi.fn();
 
       // Act

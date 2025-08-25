@@ -31,10 +31,7 @@ export interface ClientSecretPayload {
 
   azureApiVersion?: string;
 
-  awsAccessKeyId?: string;
   awsRegion?: string;
-  awsSecretAccessKey?: string;
-  awsSessionToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
 

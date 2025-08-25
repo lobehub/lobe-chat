@@ -29,6 +29,18 @@ export class TableViewerRepo {
         table_type as type
       FROM information_schema.tables
       WHERE table_schema = ${schema}
+        -- 过滤掉PostGIS和其他数据库扩展的系统表
+        AND table_name NOT IN (
+          'geography_columns',
+          'geometry_columns', 
+          'spatial_ref_sys',
+          'raster_columns',
+          'raster_overviews'
+        )
+        -- 过滤掉其他常见的系统表前缀
+        AND table_name NOT LIKE 'pg_%'
+        AND table_name NOT LIKE 'sql_%'
+        AND table_name NOT LIKE 'information_schema%'
       ORDER BY table_name;
     `;
 

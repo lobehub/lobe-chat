@@ -8,12 +8,19 @@ import { MigrationV3ToV4 } from './FromV3ToV4';
 import { MigrationV4ToV5 } from './FromV4ToV5';
 import { MigrationV5ToV6 } from './FromV5ToV6';
 import { MigrationV6ToV7 } from './FromV6ToV7';
+import { MigrationV7ToV8 } from './FromV7ToV8';
 
 // Current latest version
-export const CURRENT_CONFIG_VERSION = 7;
+export const CURRENT_CONFIG_VERSION = 8;
 
 // Version migrations module
 const ConfigMigrations = [
+  /**
+   * 2025.08.20
+   *
+   * Bedrock AKSK to API key migration
+   */
+  MigrationV7ToV8,
   /**
    * 2024.05.27
    *

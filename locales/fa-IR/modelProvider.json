@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "AWS Access Key Id را وارد کنید",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "بررسی کنید که آیا AccessKeyId / SecretAccessKey به درستی وارد شده است"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "AWS Region را وارد کنید",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "AWS Secret Access Key را وارد کنید",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "اگر از AWS SSO/STS استفاده می‌کنید، لطفاً AWS Session Token خود را وارد کنید",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (اختیاری)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "منطقه خدمات سفارشی",
-      "customSessionToken": "توکن نشست سفارشی",
-      "description": "برای شروع جلسه، AWS AccessKeyId / SecretAccessKey خود را وارد کنید. برنامه تنظیمات احراز هویت شما را ذخیره نخواهد کرد",
-      "imageGenerationDescription": "برای شروع تولید، AWS AccessKeyId / SecretAccessKey خود را وارد کنید. برنامه پیکربندی احراز هویت شما را ذخیره نمی‌کند.",
-      "title": "استفاده از اطلاعات احراز هویت سفارشی Bedrock"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

@@ -21,44 +21,24 @@ export const useBedrockProvider = (): ProviderItem => {
         children: (
           <InputPassword
             autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.accessKeyId.placeholder`)}
+            placeholder={t(`${providerKey}.token.placeholder`)}
           />
         ),
-        desc: t(`${providerKey}.accessKeyId.desc`),
-        label: t(`${providerKey}.accessKeyId.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'accessKeyId'],
-      },
-      {
-        children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.secretAccessKey.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.secretAccessKey.desc`),
-        label: t(`${providerKey}.secretAccessKey.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'secretAccessKey'],
-      },
-      {
-        children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.sessionToken.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.sessionToken.desc`),
-        label: t(`${providerKey}.sessionToken.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'sessionToken'],
+        desc: t(`${providerKey}.token.desc`),
+        label: t(`${providerKey}.token.title`),
+        name: [KeyVaultsConfigKey, providerKey, 'bearerToken'],
       },
       {
         children: (
           <Select
             allowClear
-            options={['us-east-1', 'us-west-2', 'ap-southeast-1', 'eu-central-1'].map((i) => ({
-              label: i,
-              value: i,
-            }))}
-            placeholder={'us-east-1'}
+            options={[
+              { label: 'us-east-1', value: 'us-east-1' },
+              { label: 'us-west-2', value: 'us-west-2' },
+              { label: 'ap-southeast-1', value: 'ap-southeast-1' },
+              { label: 'eu-central-1', value: 'eu-central-1' },
+            ]}
+            placeholder="us-east-1"
           />
         ),
         desc: t(`${providerKey}.region.desc`),

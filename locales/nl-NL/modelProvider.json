@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Voer AWS Access Key Id in",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Voer AWS Region in",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Voer AWS Secret Access Key in",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Als je AWS SSO/STS gebruikt, voer dan je AWS Sessie Token in",
-      "placeholder": "AWS Sessie Token",
-      "title": "AWS Sessie Token (optioneel)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Aangepaste regio",
-      "customSessionToken": "Aangepaste sessietoken",
-      "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
-      "imageGenerationDescription": "Voer je AWS AccessKeyId / SecretAccessKey in om te beginnen met genereren. De applicatie slaat je authenticatiegegevens niet op",
-      "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

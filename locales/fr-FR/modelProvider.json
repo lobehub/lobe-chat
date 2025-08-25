@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Saisissez l'ID de clé d'accès AWS",
-      "placeholder": "ID de clé d'accès AWS",
-      "title": "ID de clé d'accès AWS"
-    },
     "checker": {
-      "desc": "Vérifiez si l'AccessKeyId / SecretAccessKey est correctement saisi"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Saisissez la région AWS",
-      "placeholder": "Région AWS",
-      "title": "Région AWS"
-    },
-    "secretAccessKey": {
-      "desc": "Saisissez la clé d'accès secrète AWS",
-      "placeholder": "Clé d'accès secrète AWS",
-      "title": "Clé d'accès secrète AWS"
-    },
-    "sessionToken": {
-      "desc": "Si vous utilisez AWS SSO/STS, veuillez entrer votre jeton de session AWS",
-      "placeholder": "Jeton de session AWS",
-      "title": "Jeton de session AWS (facultatif)"
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Région de service personnalisée",
-      "customSessionToken": "Jeton de session personnalisé",
-      "description": "Entrez votre ID de clé d'accès AWS / SecretAccessKey pour commencer la session. L'application ne stockera pas votre configuration d'authentification.",
-      "imageGenerationDescription": "Saisissez votre AWS AccessKeyId / SecretAccessKey pour commencer la génération. L'application ne conservera pas vos informations d'authentification.",
-      "title": "Utiliser des informations d'authentification Bedrock personnalisées"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

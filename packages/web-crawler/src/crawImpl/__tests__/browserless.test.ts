@@ -115,20 +115,25 @@ describe('browserless', () => {
   });
 
   it('should use correct URL when BROWSERLESS_URL is provided', async () => {
-    const customUrl = 'https://custom.browserless.io';
+    // 由于BASE_URL在模块加载时确定，我们需要重新导入模块
     const originalEnv = { ...process.env };
     process.env.BROWSERLESS_TOKEN = 'test-token';
-    process.env.BROWSERLESS_URL = customUrl;
-    global.fetch = vi.fn().mockImplementation((url) => {
-      expect(url).toContain(customUrl);
-      return Promise.resolve({
-        text: () => Promise.resolve('<html><title>Test</title></html>'),
-      });
+    process.env.BROWSERLESS_URL = 'https://custom.browserless.io';
+
+    // 重新导入模块以获取新的环境变量
+    vi.resetModules();
+    const { browserless: newBrowserless } = await import('../browserless');
+
+    const fetchMock = vi.fn().mockResolvedValue({
+      text: () => Promise.resolve('<html><title>Test</title></html>'),
     });
+    global.fetch = fetchMock;
 
-    await browserless('https://example.com', { filterOptions: {} });
+    await newBrowserless('https://example.com', { filterOptions: {} });
 
-    expect(global.fetch).toHaveBeenCalled();
+    // 检查调用的URL是否包含自定义的browserless URL
+    const calledUrl = fetchMock.mock.calls[0][0];
+    expect(calledUrl).toContain('https://custom.browserless.io');
 
     process.env = originalEnv;
   });

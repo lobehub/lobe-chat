@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Inserisci l'ID chiave di accesso AWS",
-      "placeholder": "ID chiave di accesso AWS",
-      "title": "ID chiave di accesso AWS"
-    },
     "checker": {
-      "desc": "Verifica se AccessKeyId / SecretAccessKey sono stati inseriti correttamente"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Inserisci la regione AWS",
-      "placeholder": "Regione AWS",
-      "title": "Regione AWS"
-    },
-    "secretAccessKey": {
-      "desc": "Inserisci la chiave di accesso segreta AWS",
-      "placeholder": "Chiave di accesso segreta AWS",
-      "title": "Chiave di accesso segreta AWS"
-    },
-    "sessionToken": {
-      "desc": "Se stai utilizzando AWS SSO/STS, inserisci il tuo AWS Session Token",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (opzionale)"
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Regione del servizio personalizzata",
-      "customSessionToken": "Token di sessione personalizzato",
-      "description": "Inserisci la tua chiave di accesso AWS AccessKeyId / SecretAccessKey per avviare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
-      "imageGenerationDescription": "Inserisci il tuo AWS AccessKeyId / SecretAccessKey per iniziare a generare. L'applicazione non registrerà le tue credenziali di autenticazione",
-      "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

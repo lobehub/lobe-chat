@@ -34,16 +34,12 @@ vi.mock('@/config/llm', () => ({
     // 确保为每个provider提供必要的配置信息
     OPENAI_API_KEY: 'test-openai-key',
     GOOGLE_API_KEY: 'test-google-key',
-
     AZURE_API_KEY: 'test-azure-key',
     AZURE_ENDPOINT: 'endpoint',
-
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
-    AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
-    AWS_ACCESS_KEY_ID: 'test-aws-id',
-    AWS_REGION: 'test-aws-region',
-    AWS_SESSION_TOKEN: 'test-aws-session-token',
+    AWS_REGION: 'us-east-1',
+    AWS_BEARER_TOKEN_BEDROCK: 'test-bearer-token',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
     DEEPSEEK_API_KEY: 'test-deepseek-key',
@@ -55,7 +51,41 @@ vi.mock('@/config/llm', () => ({
     QINIU_API_KEY: 'test-qiniu-key',
     QWEN_API_KEY: 'test-qwen-key',
     STEPFUN_API_KEY: 'test-stepfun-key',
+
+    // Enable all providers for testing
+    ENABLED_OPENAI: true,
+    ENABLED_AZURE_OPENAI: true,
+    ENABLED_AWS_BEDROCK: true,
+    ENABLED_OLLAMA: true,
+    ENABLED_GOOGLE: true,
+    ENABLED_ANTHROPIC: true,
+    ENABLED_ZHIPU: true,
+    ENABLED_MOONSHOT: true,
+    ENABLED_QWEN: true,
+    ENABLED_PERPLEXITY: true,
+    ENABLED_DEEPSEEK: true,
+    ENABLED_MINIMAX: true,
+    ENABLED_MISTRAL: true,
+    ENABLED_OPENROUTER: true,
+    ENABLED_TOGETHERAI: true,
+    ENABLED_STEPFUN: true,
   })),
+}));
+
+// Mock provider configurations
+vi.mock('@/config/modelProviders', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/config/modelProviders')>();
+  return {
+    ...actual,
+    getProviderConfig: vi.fn((provider: string) => ({
+      enabled: true,
+    })),
+  };
+});
+
+// Mock the provider check function to always return true
+vi.mock('@/server/modules/ModelRuntime/utils', () => ({
+  checkProviderIsEnabled: vi.fn(() => true),
 }));
 
 /**
@@ -117,12 +147,10 @@ describe('initModelRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
-    it('Bedrock AI provider: with apikey, awsAccessKeyId, awsSecretAccessKey, awsRegion', async () => {
+    it('Bedrock AI provider: with bearer token and region', async () => {
       const jwtPayload: ClientSecretPayload = {
-        apiKey: 'user-bedrock-key',
-        awsAccessKeyId: 'user-aws-id',
-        awsSecretAccessKey: 'user-aws-secret',
-        awsRegion: 'user-aws-region',
+        apiKey: 'user-bearer-token',
+        awsRegion: 'us-east-1',
       };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);

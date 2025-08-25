@@ -63,9 +63,8 @@ export const getLLMConfig = () => {
 
       ENABLED_AWS_BEDROCK: z.boolean(),
       AWS_REGION: z.string().optional(),
-      AWS_ACCESS_KEY_ID: z.string().optional(),
-      AWS_SECRET_ACCESS_KEY: z.string().optional(),
-      AWS_SESSION_TOKEN: z.string().optional(),
+      AWS_BEARER_TOKEN_BEDROCK: z.string().optional(),
+      AWS_BEDROCK_MODEL_LIST: z.string().optional(),
 
       ENABLED_WENXIN: z.boolean(),
       WENXIN_API_KEY: z.string().optional(),
@@ -241,11 +240,12 @@ export const getLLMConfig = () => {
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
 
-      ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1',
+      // AWS Bedrock is enabled explicitly via ENABLED_AWS_BEDROCK=1 or implicitly when AWS_BEARER_TOKEN_BEDROCK is set
+      ENABLED_AWS_BEDROCK:
+        process.env.ENABLED_AWS_BEDROCK === '1' || !!process.env.AWS_BEARER_TOKEN_BEDROCK,
       AWS_REGION: process.env.AWS_REGION,
-      AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-      AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-      AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
+      AWS_BEARER_TOKEN_BEDROCK: process.env.AWS_BEARER_TOKEN_BEDROCK,
+      AWS_BEDROCK_MODEL_LIST: process.env.AWS_BEDROCK_MODEL_LIST,
 
       ENABLED_WENXIN: !!process.env.WENXIN_API_KEY,
       WENXIN_API_KEY: process.env.WENXIN_API_KEY,

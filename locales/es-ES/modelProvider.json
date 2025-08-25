@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Introduce tu AWS Access Key Id",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Prueba si el AccessKeyId / SecretAccessKey se ha introducido correctamente"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Introduce tu región de AWS",
-      "placeholder": "Región de AWS",
-      "title": "Región de AWS"
-    },
-    "secretAccessKey": {
-      "desc": "Introduce tu AWS Secret Access Key",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Si estás utilizando AWS SSO/STS, introduce tu Token de Sesión de AWS",
-      "placeholder": "Token de Sesión de AWS",
-      "title": "Token de Sesión de AWS (opcional)"
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Región de servicio personalizada",
-      "customSessionToken": "Token de sesión personalizado",
-      "description": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar la sesión. La aplicación no guardará tu configuración de autenticación.",
-      "imageGenerationDescription": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar a generar. La aplicación no registrará tu configuración de autenticación",
-      "title": "Usar información de autenticación de Bedrock personalizada"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Wprowadź AWS Access Key Id",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Test czy AWS AccessKeyId / SecretAccessKey są poprawnie wypełnione"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Wprowadź AWS Region",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Wprowadź AWS Secret Access Key",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Jeśli korzystasz z AWS SSO/STS, wprowadź swój token sesji AWS",
-      "placeholder": "Token sesji AWS",
-      "title": "Token sesji AWS (opcjonalnie)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Niestandardowy region usługi",
-      "customSessionToken": "Niestandardowy token sesji",
-      "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania",
-      "imageGenerationDescription": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć generowanie. Aplikacja nie będzie zapisywać Twoich danych uwierzytelniających",
-      "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

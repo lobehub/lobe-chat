@@ -93,6 +93,21 @@ tags:
     lobehub/lobe-chat
   ```
 
+  #### 使用 Amazon Bedrock
+
+  如果你想使用 Amazon Bedrock 模型，可以使用 Bearer Token 认证方式进行配置：
+
+  ```fish
+  $ docker run -d -p 3210:3210 \
+    -e AWS_BEARER_TOKEN_BEDROCK=your_bearer_token_here \
+    -e AWS_REGION=us-east-1 \
+    -e ACCESS_CODE=lobe66 \
+    --name lobe-chat \
+    lobehub/lobe-chat
+  ```
+
+  关于获取 Bedrock API 密钥的更多信息，请参阅 [Bedrock 服务商指南](/zh/docs/usage/providers/bedrock)。
+
   ### Crontab 自动更新脚本（可选）
 
   如果你想自动获得最新的镜像，你可以如下操作。

@@ -23,14 +23,14 @@ export interface AsyncifyPollingOptions<T, R> {
   checkStatus: (result: T) => TaskResult<R>;
 
   // Retry configuration
-  initialInterval?: number; 
+  initialInterval?: number;
   // Optional logger
   logger?: {
     debug?: (...args: any[]) => void;
     error?: (...args: any[]) => void;
-  }; 
+  };
   // Default 1.5
-  maxConsecutiveFailures?: number; 
+  maxConsecutiveFailures?: number;
   // Default 500ms
   maxInterval?: number; // Default 3
   maxRetries?: number; // Default Infinity

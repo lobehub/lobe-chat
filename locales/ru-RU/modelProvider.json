@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Введите ваш AWS Access Key ID",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key ID"
-    },
     "checker": {
-      "desc": "Проверить правильность заполнения AccessKeyId/SecretAccessKey"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Введите ваш AWS Region",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Введите ваш AWS Secret Access Key",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Если вы используете AWS SSO/STS, введите ваш AWS Session Token",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (необязательно)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Пользовательский регион обслуживания",
-      "customSessionToken": "Пользовательский токен сессии",
-      "description": "Введите свой ключ доступа AWS AccessKeyId / SecretAccessKey, чтобы начать сеанс. Приложение не будет сохранять вашу конфигурацию аутентификации",
-      "imageGenerationDescription": "Введите ваш AWS AccessKeyId / SecretAccessKey, чтобы начать генерацию. Приложение не будет сохранять ваши данные аутентификации",
-      "title": "Использовать пользовательскую информацию аутентификации Bedrock"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

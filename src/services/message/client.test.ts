@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
@@ -38,9 +38,11 @@ const mockMessage = {
 
 const mockMessages = [mockMessage];
 
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+}, 30000); // Increase timeout for database initialization
 
+beforeEach(async () => {
   // 在每个测试用例之前，清空表
   await clientDB.transaction(async (trx) => {
     await trx.delete(users);
@@ -57,11 +59,6 @@ beforeEach(async () => {
       size: 1000,
     });
   });
-});
-
-afterEach(async () => {
-  // 在每个测试用例之后，清空表
-  await clientDB.delete(users);
 });
 
 const messageService = new ClientService(userId);
@@ -312,7 +309,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"key":"stateValue"}' });
     });
@@ -329,7 +326,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"abc":"stateValue"}' });
     });

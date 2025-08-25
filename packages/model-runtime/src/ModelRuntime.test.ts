@@ -33,9 +33,8 @@ const specialProviders = [
   {
     id: ModelProvider.Bedrock,
     payload: {
-      accessKeyId: 'user-aws-id',
-      accessKeySecret: 'user-aws-secret',
-      region: 'user-aws-region',
+      token: 'user-bearer-token',
+      region: 'us-east-1',
     },
   },
   {

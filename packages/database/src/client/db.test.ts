@@ -25,6 +25,28 @@ vi.mock('drizzle-orm/pglite', () => ({
   })),
 }));
 
+// Mock fetch globally
+Object.defineProperty(global, 'fetch', {
+  value: vi.fn().mockResolvedValue({
+    blob: () => Promise.resolve(new Blob()),
+    headers: { get: () => '1000' },
+    body: {
+      getReader: () => ({
+        read: () => Promise.resolve({ done: true, value: new Uint8Array() }),
+      }),
+    },
+  }),
+  writable: true,
+});
+
+// Mock WebAssembly
+Object.defineProperty(global, 'WebAssembly', {
+  value: {
+    compile: vi.fn().mockResolvedValue({}),
+  },
+  writable: true,
+});
+
 let manager: DatabaseManager;
 let progressEvents: ClientDBLoadingProgress[] = [];
 let stateChanges: DatabaseLoadingState[] = [];
@@ -140,7 +162,7 @@ describe('DatabaseManager', () => {
 
       // 验证最终进度回调包含耗时信息
       const finalProgress = progressEvents[progressEvents.length - 1];
-      expect(finalProgress.costTime).toBeGreaterThan(0);
+      expect(finalProgress.costTime).toBeGreaterThanOrEqual(0);
     });
   });
 

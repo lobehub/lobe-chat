@@ -157,12 +157,12 @@ describe('keyVaultsConfigSelectors', () => {
     });
 
     describe('AWSBedrockKeyVault', () => {
-      it('should return true if provider accessKeyId is not empty for AWSBedrockKeyVault', () => {
+      it('should return true if provider bearerToken is not empty for AWSBedrockKeyVault', () => {
         const s = merge(initialSettingsState, {
           settings: {
             keyVaults: {
               bedrock: {
-                accessKeyId: 'accessKeyId',
+                bearerToken: 'bearer-token',
               } as AWSBedrockKeyVault,
             },
           },
@@ -170,26 +170,12 @@ describe('keyVaultsConfigSelectors', () => {
         expect(keyVaultsConfigSelectors.isProviderApiKeyNotEmpty('bedrock')(s)).toBe(true);
       });
 
-      it('should return true if provider secretAccessKey is not empty for AWSBedrockKeyVault', () => {
+      it('should return false if provider bearerToken is empty for AWSBedrockKeyVault', () => {
         const s = merge(initialSettingsState, {
           settings: {
             keyVaults: {
               bedrock: {
-                secretAccessKey: 'secretAccessKey',
-              } as AWSBedrockKeyVault,
-            },
-          },
-        }) as unknown as UserStore;
-        expect(keyVaultsConfigSelectors.isProviderApiKeyNotEmpty('bedrock')(s)).toBe(true);
-      });
-
-      it('should return false if provider accessKeyId and secretAccessKey are both empty for AWSBedrockKeyVault', () => {
-        const s = merge(initialSettingsState, {
-          settings: {
-            keyVaults: {
-              bedrock: {
-                accessKeyId: undefined,
-                secretAccessKey: undefined,
+                bearerToken: undefined,
               } as AWSBedrockKeyVault,
             },
           },

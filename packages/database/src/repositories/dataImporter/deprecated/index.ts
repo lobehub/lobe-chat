@@ -23,7 +23,7 @@ export class DeprecatedDataImporterRepos {
   /**
    * The version of the importer that this module supports
    */
-  supportVersion = 7;
+  supportVersion = 8;
 
   constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;

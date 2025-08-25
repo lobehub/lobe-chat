@@ -29,38 +29,12 @@ const useBedrockCard = (): ProviderItem => {
         ) : (
           <FormPassword
             autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.accessKeyId.placeholder`)}
+            placeholder={t(`${providerKey}.token.placeholder`)}
           />
         ),
-        desc: t(`${providerKey}.accessKeyId.desc`),
-        label: t(`${providerKey}.accessKeyId.title`),
-        name: [KeyVaultsConfigKey, 'accessKeyId'],
-      },
-      {
-        children: isLoading ? (
-          <SkeletonInput />
-        ) : (
-          <FormPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.secretAccessKey.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.secretAccessKey.desc`),
-        label: t(`${providerKey}.secretAccessKey.title`),
-        name: [KeyVaultsConfigKey, 'secretAccessKey'],
-      },
-      {
-        children: isLoading ? (
-          <SkeletonInput />
-        ) : (
-          <FormPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.sessionToken.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.sessionToken.desc`),
-        label: t(`${providerKey}.sessionToken.title`),
-        name: [KeyVaultsConfigKey, 'sessionToken'],
+        desc: t(`${providerKey}.token.desc`),
+        label: t(`${providerKey}.token.title`),
+        name: [KeyVaultsConfigKey, 'bearerToken'],
       },
       {
         children: isLoading ? (

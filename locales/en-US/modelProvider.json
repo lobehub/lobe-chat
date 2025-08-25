@@ -38,35 +38,24 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Enter AWS Access Key Id",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Test if AccessKeyId / SecretAccessKey are filled in correctly"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
       "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Enter AWS Secret Access Key",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "If you are using AWS SSO/STS, please enter your AWS Session Token",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (optional)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
       "customRegion": "Custom Service Region",
-      "customSessionToken": "Custom Session Token",
-      "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration",
-      "imageGenerationDescription": "Enter your AWS AccessKeyId / SecretAccessKey to start generating. The application will not store your authentication credentials.",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
       "title": "Use Custom Bedrock Authentication Information"
     }
   },
