@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import { RoleItem, UserItem, UserRoleItem } from '@/database/schemas';
 
+// ==================== User Base Types ====================
+
 /**
  * 扩展的用户信息类型，包含角色信息
  */
@@ -9,6 +11,8 @@ export type UserWithRoles = UserItem & {
   messageCount?: number;
   roles?: RoleItem[];
 };
+
+// ==================== User CRUD Types ====================
 
 /**
  * 创建用户请求参数
@@ -24,6 +28,17 @@ export interface CreateUserRequest {
   roleIds?: number[];
   username?: string;
 }
+
+export const CreateUserRequestSchema = z.object({
+  avatar: z.string().nullish(),
+  email: z.string().email('邮箱格式不正确').nullish(),
+  firstName: z.string().nullish(),
+  fullName: z.string().nullish(),
+  id: z.string().nullish(),
+  lastName: z.string().nullish(),
+  phone: z.string().nullish(),
+  username: z.string().min(1, '用户名不能为空').nullish(),
+});
 
 /**
  * 更新用户请求参数
@@ -41,30 +56,6 @@ export interface UpdateUserRequest {
   username?: string;
 }
 
-/**
- * 用户ID参数验证
- */
-export const UserIdParamSchema = z.object({
-  id: z.string().min(1, '用户ID不能为空'),
-});
-
-/**
- * 创建用户请求验证Schema
- */
-export const CreateUserRequestSchema = z.object({
-  avatar: z.string().nullish(),
-  email: z.string().email('邮箱格式不正确').nullish(),
-  firstName: z.string().nullish(),
-  fullName: z.string().nullish(),
-  id: z.string().nullish(),
-  lastName: z.string().nullish(),
-  phone: z.string().nullish(),
-  username: z.string().min(1, '用户名不能为空').nullish(),
-});
-
-/**
- * 更新用户请求验证Schema
- */
 export const UpdateUserRequestSchema = z.object({
   avatar: z.string().nullish(),
   email: z.string().email('邮箱格式不正确').nullish(),
@@ -78,9 +69,14 @@ export const UpdateUserRequestSchema = z.object({
   username: z.string().min(1, '用户名不能为空').nullish(),
 });
 
-/**
- * 用户列表请求验证Schema
- */
+// ==================== User Search Types ====================
+
+export interface UserListRequest {
+  keyword?: string;
+  page: number;
+  pageSize: number;
+}
+
 export const UserSearchRequestSchema = z.object({
   keyword: z
     .string()
@@ -110,16 +106,12 @@ export const UserSearchRequestSchema = z.object({
     }),
 });
 
-export interface UserListRequest {
-  keyword?: string;
-  page: number;
-  pageSize: number;
-}
-
 export interface UserListResponse {
   totalCount: number;
   users: UserWithRoles[];
 }
+
+// ==================== User Role Management Types ====================
 
 /**
  * 单个添加角色的请求
@@ -129,6 +121,11 @@ export interface AddRoleRequest {
   roleId: number;
 }
 
+export const AddRoleRequestSchema = z.object({
+  expiresAt: z.string().datetime('过期时间必须是有效的ISO 8601格式').nullish(),
+  roleId: z.number().int().positive('角色ID必须是正整数'),
+});
+
 /**
  * 更新用户角色的请求参数
  */
@@ -137,43 +134,6 @@ export interface UpdateUserRolesRequest {
   removeRoles?: number[]; // 要移除的角色ID
 }
 
-/**
- * 用户角色详情，包含角色信息和关联信息
- */
-export interface UserRoleDetail extends UserRoleItem {
-  role: RoleItem;
-}
-
-/**
- * 用户角色操作响应
- */
-export interface UserRolesResponse {
-  roles: RoleItem[];
-  user: UserItem;
-}
-
-/**
- * 用户角色操作结果
- */
-export interface UserRoleOperationResult {
-  added: number;
-  errors?: string[];
-  removed: number;
-}
-
-// ================= Zod Validation Schemas =================
-
-/**
- * 添加角色请求验证Schema
- */
-export const AddRoleRequestSchema = z.object({
-  expiresAt: z.string().datetime('过期时间必须是有效的ISO 8601格式').nullish(),
-  roleId: z.number().int().positive('角色ID必须是正整数'),
-});
-
-/**
- * 更新用户角色请求验证Schema
- */
 export const UpdateUserRolesRequestSchema = z
   .object({
     addRoles: z.array(AddRoleRequestSchema).nullish(),
@@ -206,3 +166,33 @@ export const UpdateUserRolesRequestSchema = z
       message: '不能同时添加和移除同一个角色',
     },
   );
+
+/**
+ * 用户角色详情，包含角色信息和关联信息
+ */
+export interface UserRoleDetail extends UserRoleItem {
+  role: RoleItem;
+}
+
+/**
+ * 用户角色操作响应
+ */
+export interface UserRolesResponse {
+  roles: RoleItem[];
+  user: UserItem;
+}
+
+/**
+ * 用户角色操作结果
+ */
+export interface UserRoleOperationResult {
+  added: number;
+  errors?: string[];
+  removed: number;
+}
+
+// ==================== Common Schemas ====================
+
+export const UserIdParamSchema = z.object({
+  id: z.string().min(1, '用户ID不能为空'),
+});

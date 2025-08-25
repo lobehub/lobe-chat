@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+// ==================== Role Query Types ====================
+
+/**
+ * Role query parameters
+ */
+export type RolesListQuery = {
+  active?: boolean;
+  limit?: number;
+  offset?: number;
+  system?: boolean;
+};
+
 export const RolesListQuerySchema = z.object({
   active: z
     .string()
@@ -13,15 +25,7 @@ export const RolesListQuerySchema = z.object({
     .nullish(),
 });
 
-/**
- * Role query parameters
- */
-export type RolesListQuery = {
-  active?: boolean;
-  limit?: number;
-  offset?: number;
-  system?: boolean;
-};
+// ==================== Role CRUD Types ====================
 
 /**
  * Role creation request body
@@ -34,16 +38,6 @@ export type CreateRoleRequest = {
   name: string;
 };
 
-/**
- * Role update request body
- */
-export type UpdateRoleRequest = Partial<CreateRoleRequest>;
-
-// Zod Schemas for validation
-export const RoleIdParamSchema = z.object({
-  id: z.coerce.number().int().positive('角色 ID 不正确'),
-});
-
 export const CreateRoleRequestSchema = z.object({
   description: z.string().nullish(),
   displayName: z.string().min(1, '显示名称不能为空'),
@@ -52,4 +46,15 @@ export const CreateRoleRequestSchema = z.object({
   name: z.string().min(1, '角色名称不能为空'),
 });
 
+/**
+ * Role update request body
+ */
+export type UpdateRoleRequest = Partial<CreateRoleRequest>;
+
 export const UpdateRoleRequestSchema = CreateRoleRequestSchema.partial();
+
+// ==================== Common Schemas ====================
+
+export const RoleIdParamSchema = z.object({
+  id: z.coerce.number().int().positive('角色 ID 不正确'),
+});

@@ -1,5 +1,7 @@
-import { LobeAgentChatConfig , OpenAIChatMessage } from '@lobechat/types';
+import { LobeAgentChatConfig, OpenAIChatMessage } from '@lobechat/types';
 import { z } from 'zod';
+
+// ==================== Chat Service Types ====================
 
 /**
  * 聊天服务参数
@@ -17,63 +19,6 @@ export interface ChatServiceParams {
   top_p?: number;
 }
 
-/**
- * 翻译服务参数
- */
-export interface TranslateServiceParams {
-  fromLanguage?: string;
-  model?: string;
-  provider?: string;
-  sessionId?: string | null;
-  text: string;
-  toLanguage: string;
-}
-
-/**
- * 消息生成参数
- */
-export interface MessageGenerationParams {
-  agentId?: string;
-  chatConfig?: Partial<LobeAgentChatConfig>;
-  conversationHistory: Array<{
-    content: string;
-    role: 'user' | 'assistant' | 'system';
-  }>;
-  model?: string;
-  provider?: string;
-  sessionId: string | null;
-  userMessage: string;
-}
-
-/**
- * 聊天响应
- */
-export interface ChatServiceResponse {
-  content: string;
-  model?: string;
-  provider?: string;
-  usage?: {
-    completion_tokens?: number;
-    prompt_tokens?: number;
-    total_tokens?: number;
-  };
-}
-
-/**
- * 支持的AI提供商
- */
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'groq' | 'vertexai';
-
-/**
- * Chat Service配置
- */
-export interface ChatServiceConfig {
-  defaultModel?: string;
-  defaultProvider?: AIProvider;
-  timeout?: number;
-}
-
-// Zod Schemas for validation
 export const ChatServiceParamsSchema = z.object({
   max_tokens: z.number().min(1).nullish(),
   messages: z
@@ -92,6 +37,34 @@ export const ChatServiceParamsSchema = z.object({
   temperature: z.number().min(0).max(2).nullish(),
 });
 
+/**
+ * 聊天响应
+ */
+export interface ChatServiceResponse {
+  content: string;
+  model?: string;
+  provider?: string;
+  usage?: {
+    completion_tokens?: number;
+    prompt_tokens?: number;
+    total_tokens?: number;
+  };
+}
+
+// ==================== Translation Service Types ====================
+
+/**
+ * 翻译服务参数
+ */
+export interface TranslateServiceParams {
+  fromLanguage?: string;
+  model?: string;
+  provider?: string;
+  sessionId?: string | null;
+  text: string;
+  toLanguage: string;
+}
+
 export const TranslateServiceParamsSchema = z.object({
   fromLanguage: z.string().nullish(),
   model: z.string().nullish(),
@@ -99,6 +72,24 @@ export const TranslateServiceParamsSchema = z.object({
   text: z.string().min(1, '待翻译文本不能为空'),
   toLanguage: z.string().min(1, '目标语言不能为空'),
 });
+
+// ==================== Message Generation Types ====================
+
+/**
+ * 消息生成参数
+ */
+export interface MessageGenerationParams {
+  agentId?: string;
+  chatConfig?: Partial<LobeAgentChatConfig>;
+  conversationHistory: Array<{
+    content: string;
+    role: 'user' | 'assistant' | 'system';
+  }>;
+  model?: string;
+  provider?: string;
+  sessionId: string | null;
+  userMessage: string;
+}
 
 export const MessageGenerationParamsSchema = z.object({
   agentId: z.string().nullish(),
@@ -133,3 +124,19 @@ export const MessageGenerationParamsSchema = z.object({
   sessionId: z.string().nullable(),
   userMessage: z.string().nullish(),
 });
+
+// ==================== Configuration Types ====================
+
+/**
+ * 支持的AI提供商
+ */
+export type AIProvider = 'openai' | 'anthropic' | 'google' | 'groq' | 'vertexai';
+
+/**
+ * Chat Service配置
+ */
+export interface ChatServiceConfig {
+  defaultModel?: string;
+  defaultProvider?: AIProvider;
+  timeout?: number;
+}
