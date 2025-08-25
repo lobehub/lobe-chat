@@ -17,8 +17,8 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['claude'],
   },
   deepseek: {
-    functionCallKeywords: ['v3', 'r1'],
-    reasoningKeywords: ['r1'],
+    functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
+    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1'],
   },
   google: {
     functionCallKeywords: ['gemini'],

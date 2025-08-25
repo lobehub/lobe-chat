@@ -535,11 +535,29 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
+    displayName: 'DeepSeek V3.1',
+    enabled: true,
+    id: 'DeepSeek-V3.1',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     description:
       '已升级至最新版本250528；字节火山云开源部署的满血 R1，总参数量 671B，输入最高 64k。目前最稳定，推荐用这个。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'DeepSeek-R1',
     pricing: {
       units: [
@@ -571,10 +589,9 @@ const aihubmixModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 131_072,
     description: '字节火山云开源部署目前最稳定，推荐用这个。已经自动升级为最新发布的版本 250324 。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'DeepSeek-V3',
     pricing: {
       units: [
