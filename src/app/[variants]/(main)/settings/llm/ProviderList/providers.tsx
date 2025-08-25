@@ -20,6 +20,7 @@ import {
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
+  NebiusProviderCard,
   NovitaProviderCard,
   NvidiaProviderCard,
   OpenRouterProviderCard,
@@ -114,6 +115,7 @@ export const useProviderList = (): ProviderItem[] => {
       PPIOProviderCard,
       InfiniAIProviderCard,
       Ai302ProviderCard,
+      NebiusProviderCard,
     ],
     [
       AzureProvider,
