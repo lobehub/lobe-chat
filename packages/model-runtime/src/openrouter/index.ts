@@ -71,26 +71,29 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
 
     // 处理前端获取的模型信息，转换为标准格式
     const formattedModels = modelList.map((model) => {
+      const displayName = model.slug?.toLowerCase().includes('deepseek')
+        ? (model.name ?? model.slug)
+        : (model.short_name ?? model.name ?? model.slug);
 
       return {
         contextWindowTokens: model.context_length,
         description: model.description,
-        displayName: model.short_name ?? model.name ?? model.slug,
-        functionCall:
-          model.endpoint?.supports_tool_parameters ||
-          false,
+        displayName,
+        functionCall: model.endpoint?.supports_tool_parameters || false,
         id: model.slug,
         maxOutput:
-          typeof model.endpoint.max_completion_tokens === 'number'
+          typeof model.endpoint?.max_completion_tokens === 'number'
             ? model.endpoint.max_completion_tokens
             : undefined,
         pricing: {
-          input: formatPrice(model.pricing.prompt),
-          output: formatPrice(model.pricing.completion),
+          input: formatPrice(model.endpoint?.pricing.prompt),
+          output: formatPrice(model.endpoint?.pricing.completion),
         },
         reasoning: model.endpoint?.supports_reasoning || false,
-        releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
-        vision: Array.isArray(model.input_modalities) && model.input_modalities.includes('image') || false,
+        releasedAt: new Date(model.created_at).toISOString().split('T')[0],
+        vision:
+          (Array.isArray(model.input_modalities) && model.input_modalities.includes('image')) ||
+          false,
       };
     });
 

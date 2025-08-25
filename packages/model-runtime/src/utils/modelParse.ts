@@ -275,6 +275,34 @@ const processModelCard = (
     return undefined;
   }
 
+  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
+    if (!pricing || typeof pricing !== 'object') return undefined;
+    if (Array.isArray(pricing.units)) {
+      return { units: pricing.units };
+    }
+    const { input, output } = pricing;
+    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
+
+    const units = [];
+    if (typeof input === 'number') {
+      units.push({
+        name: 'textInput' as const,
+        rate: input,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof output === 'number') {
+      units.push({
+        name: 'textOutput' as const,
+        rate: output,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    return { units };
+  };
+
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
     description: model.description ?? knownModel?.description ?? '',
@@ -289,7 +317,7 @@ const processModelCard = (
         false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
-    pricing: model?.pricing ?? undefined,
+    pricing: formatPricing(model?.pricing) ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??

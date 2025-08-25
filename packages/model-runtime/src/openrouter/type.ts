@@ -7,20 +7,20 @@ interface ModelPricing {
 
 export interface OpenRouterModelCard {
   context_length: number;
-  created: number;
+  created_at: number;
   description?: string;
   endpoint: OpenRouterModelEndpoint;
   input_modalities?: string[];
   name?: string;
   output_modalities?: string[];
   per_request_limits?: any | null;
-  pricing: ModelPricing;
   short_name?: string;
   slug: string;
 }
 
 interface OpenRouterModelEndpoint {
   max_completion_tokens: number | null;
+  pricing: ModelPricing;
   supported_parameters: string[];
   supports_reasoning?: boolean;
   supports_tool_parameters?: boolean;
