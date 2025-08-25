@@ -1,7 +1,7 @@
 import { LobeAgentConfig, MetaData } from '@lobechat/types';
 import { z } from 'zod';
 
-import { AgentItem, SessionGroupItem, SessionItem, UserItem } from '@/database/schemas';
+import { AgentItem, SessionItem, UserItem } from '@/database/schemas';
 
 /**
  * 创建会话请求参数
@@ -16,7 +16,7 @@ export interface CreateSessionRequest {
   meta?: MetaData;
   pinned?: boolean;
   title?: string;
-  type?: 'agent' | 'group';
+  type?: 'agent' | 'group'; // 克隆源会话ID
 }
 
 /**
@@ -32,15 +32,6 @@ export interface UpdateSessionRequest {
   pinned?: boolean;
   title?: string;
   userId?: string;
-}
-
-/**
- * 更新会话配置请求参数
- */
-export interface UpdateSessionConfigRequest {
-  config?: LobeAgentConfig;
-  id: string;
-  meta?: MetaData;
 }
 
 /**
@@ -61,68 +52,25 @@ export interface SearchSessionsRequest {
 }
 
 /**
- * 获取会话列表请求参数
+ * 获取会话列表请求参数 (统一查询接口)
  */
 export interface GetSessionsRequest {
   agentId?: string;
+  ids?: string[];
   keyword?: string;
   page?: number;
   pageSize?: number;
-  targetUserId?: string;
-}
-
-/**
- * 创建会话组请求参数
- */
-export interface CreateSessionGroupRequest {
-  name: string;
-  sort?: number;
-}
-
-/**
- * 更新会话组请求参数
- */
-export interface UpdateSessionGroupRequest {
-  id: string;
-  name?: string;
-  sort?: number;
-}
-
-/**
- * 删除会话组请求参数
- */
-export interface DeleteSessionGroupRequest {
-  id: string;
-}
-
-/**
- * 更新会话组排序请求参数
- */
-export interface UpdateSessionGroupOrderRequest {
-  sortMap: { id: string; sort: number }[];
-}
-
-/**
- * 更新会话分组请求参数
- */
-export interface UpdateSessionGroupAssignmentRequest {
-  groupId: string | null; // null 表示移除分组
+  query?: string;
+  sessionIds?: string[];
+  userId?: string;
 }
 
 /**
  * 会话列表项类型
  */
 export interface SessionListItem extends SessionItem {
-  agentsToSessions?: Array<{ agent: AgentItem }>;
-  messageCount?: number;
-}
-
-/**
- * 会话列表响应类型
- */
-export interface SessionListResponse {
-  sessions: SessionListItem[];
-  total: number;
+  agent: AgentItem;
+  user: UserItem;
 }
 
 /**
@@ -149,27 +97,6 @@ export interface SessionDetailResponse extends SessionItem {
 }
 
 /**
- * 会话组列表响应类型
- */
-export type SessionGroupListResponse = SessionGroupItem[];
-
-/**
- * 分组会话列表响应类型
- */
-export interface GroupedSessionsResponse {
-  sessionGroups: SessionGroupItem[];
-  sessions: SessionListItem[];
-}
-
-/**
- * 按Agent分组的会话响应类型
- */
-export type SessionsByAgentResponse = {
-  agent: AgentItem | null;
-  sessions: SessionListItem[];
-};
-
-/**
  * 按Agent分组的会话数量响应类型
  */
 export interface SessionCountByAgentResponse {
@@ -178,28 +105,19 @@ export interface SessionCountByAgentResponse {
 }
 
 /**
- * 会话排行响应类型
+ * 分组查询请求参数
  */
-export interface SessionRankResponse {
-  avatar: string | null;
-  backgroundColor: string | null;
-  count: number;
-  id: string;
-  title: string | null;
+export interface SessionsGroupsRequest {
+  groupBy: 'agent';
 }
 
 /**
- * 统计响应类型
+ * 分组查询响应类型
  */
-export interface CountResponse {
-  count: number;
-}
-
-/**
- * 批量查询会话请求参数
- */
-export interface BatchGetSessionsRequest {
-  sessionIds: string[];
+export interface SessionsGroupsResponse {
+  agent: AgentItem;
+  sessions: SessionListItem[];
+  total: number;
 }
 
 /**
@@ -219,25 +137,20 @@ export interface BatchUpdateSessionsRequest {
 }
 
 /**
- * 批量查询会话响应类型
+ * 批量更新请求参数格式
  */
-export interface BatchGetSessionsResponse {
-  found: SessionListItem[];
-  notFound: string[];
-  totalFound: number;
-  totalRequested: number;
-}
+export type NewBatchUpdateSessionsRequest = Array<{
+  data: Omit<UpdateSessionRequest, 'id'>;
+  id: string;
+}>;
 
 /**
- * 会话批量操作结果类型
+ * 批量查询会话响应类型
  */
-export interface SessionBatchOperationResult {
-  added: number;
-  failed: number;
-  removed: number;
-  success: boolean;
-  updated: number;
-}
+export type BatchGetSessionsResponse = {
+  sessions: SessionListItem[];
+  total: number;
+};
 
 // Zod Schemas for validation
 export const CreateSessionRequestSchema = z.object({
@@ -264,31 +177,12 @@ export const UpdateSessionRequestSchema = z.object({
   userId: z.string().nullish(),
 });
 
-export const UpdateSessionConfigRequestSchema = z.object({
-  config: z.object({}).passthrough().nullish(),
-  meta: z.object({}).passthrough().nullish(),
-});
-
-export const CloneSessionRequestSchema = z.object({
-  newTitle: z.string().min(1, '新标题不能为空'),
-});
-
-export const SearchSessionsRequestSchema = z.object({
-  keyword: z.string().min(1, '搜索关键词不能为空'),
-  page: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1))
-    .nullish(),
-  pageSize: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
-});
-
 export const GetSessionsRequestSchema = z.object({
   agentId: z.string().nullish(),
+  ids: z
+    .string()
+    .nullish()
+    .transform((val) => (val ? val.split(',') : [])),
   keyword: z.string().nullish(),
   page: z
     .string()
@@ -300,57 +194,31 @@ export const GetSessionsRequestSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
     .nullish(),
-  targetUserId: z.string().nullish(),
-});
-
-export const CountSessionsRequestSchema = z.object({
-  endDate: z.string().nullish(),
-  range: z.array(z.string()).length(2).nullish(),
-  startDate: z.string().nullish(),
-});
-
-export const CreateSessionGroupRequestSchema = z.object({
-  name: z.string().min(1, '会话组名称不能为空'),
-  sort: z.number().nullish(),
-});
-
-export const UpdateSessionGroupRequestSchema = z.object({
-  name: z.string().min(1, '会话组名称不能为空').nullish(),
-  sort: z.number().nullish(),
+  query: z.string().nullish(),
+  userId: z.string().nullish(),
 });
 
 export const SessionIdParamSchema = z.object({
   id: z.string().min(1, '会话 ID 不能为空'),
 });
 
-export const SessionGroupIdParamSchema = z.object({
-  id: z.string().min(1, '会话组 ID 不能为空'),
-});
+// 新的RESTful批量更新Schema
+export const NewBatchUpdateSessionsRequestSchema = z
+  .array(
+    z.object({
+      data: UpdateSessionRequestSchema,
+      id: z.string().min(1, '会话 ID 不能为空'),
+    }),
+  )
+  .min(1, '至少需要提供一个要更新的会话');
 
-export const UpdateSessionGroupAssignmentRequestSchema = z.object({
-  groupId: z.string().nullable(), // 允许 null 来移除分组
-});
-
-export const BatchGetSessionsRequestSchema = z.object({
-  sessionIds: z
-    .array(z.string().min(1, '会话 ID 不能为空'))
-    .min(1, '至少需要提供一个会话 ID')
-    .max(100, '单次最多查询 100 个会话'),
-});
-
-export const BatchUpdateSessionsRequestSchema = z.object({
-  sessions: z
-    .array(
-      z.object({
-        avatar: z.string().nullish(),
-        backgroundColor: z.string().nullish(),
-        description: z.string().nullish(),
-        groupId: z.string().nullish(),
-        id: z.string().min(1, '会话 ID 不能为空'),
-        pinned: z.boolean().nullish(),
-        title: z.string().nullish(),
-        userId: z.string().nullish(),
-      }),
-    )
-    .min(1, '至少需要提供一个要更新的会话'),
+// 分组查询Schema
+export const SessionsGroupsRequestSchema = z.object({
+  groupBy: z.literal('agent'),
+  keyword: z.string().nullish(),
+  limit: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .nullish(),
 });

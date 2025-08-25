@@ -1,27 +1,21 @@
-import { ChatSessionList, LobeAgentConfig } from '@lobechat/types';
-import { SQL, and, desc, eq, ilike, inArray, like, not, or, sql } from 'drizzle-orm';
-import { groupBy } from 'lodash';
+import { and, count, desc, eq, ilike, inArray } from 'drizzle-orm';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
-import { SessionItem, agents, agentsToSessions, messages, sessions } from '@/database/schemas';
-import { UserItem } from '@/database/schemas/user';
+import { agents, agentsToSessions, messages, sessions } from '@/database/schemas';
+import { users } from '@/database/schemas/user';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
-  BatchGetSessionsRequest,
   BatchGetSessionsResponse,
   BatchUpdateSessionsRequest,
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
-  SearchSessionsRequest,
-  SessionCountByAgentResponse,
   SessionDetailResponse,
-  SessionListItem,
-  SessionsByAgentResponse,
+  SessionsGroupsRequest,
+  SessionsGroupsResponse,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -37,257 +31,87 @@ export class SessionService extends BaseService {
   }
 
   /**
-   * 获取会话列表
-   * @param request 分页参数
-   * @returns 会话列表和总数
+   * 批量查询指定的会话
+   * @param request 批量查询请求参数
+   * @returns 批量查询结果
    */
-  async getSessions(request: GetSessionsRequest = {}): ServiceResult<{
-    sessions: SessionListItem[];
-    total: number;
-  }> {
-    this.log('info', '获取会话列表', { request });
+  async getSessions(request: GetSessionsRequest): ServiceResult<BatchGetSessionsResponse> {
+    const { sessionIds, query, userId, pageSize, page, agentId } = request;
+
+    this.log('info', '获取会话列表', request);
 
     try {
-      const { page = 1, pageSize = 20, agentId, keyword = '', targetUserId } = request;
-
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ', { targetUserId });
+      // 权限检查
+      const permissionResult = await this.resolveBatchQueryPermission('SESSION_READ', {
+        targetSessionIds: sessionIds,
+      });
 
       if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '没有权限访问会话列表');
+        throw this.createAuthorizationError(permissionResult.message || '无权限批量查询会话');
       }
 
       // 构建查询条件
-      let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
+      const conditions = [];
 
-      // 添加权限相关的查询条件
-      if (permissionResult?.condition?.userId) {
-        whereConditions.push(eq(sessions.userId, permissionResult.condition.userId));
+      if (permissionResult.condition?.userIds) {
+        conditions.push(inArray(sessions.userId, permissionResult.condition.userIds));
       }
 
-      // 如果指定了 agentId，需要通过 agentsToSessions 表进行过滤
-      if (agentId && agentId !== 'ALL') {
-        this.log('info', '根据 Agent ID 过滤会话', { agentId });
-
-        // 首先查询具有指定 agent 的 session ID
-        const agentSessions = await this.db.query.agentsToSessions.findMany({
-          columns: { sessionId: true },
-          where: eq(agentsToSessions.agentId, agentId),
-        });
-
-        const sessionIds = agentSessions.map((item) => item.sessionId);
-
-        if (sessionIds.length === 0) {
-          this.log('info', '未找到关联该 Agent 的会话');
-          return { sessions: [], total: 0 };
-        }
-
-        // 添加 session ID 过滤条件
-        whereConditions.push(inArray(sessions.id, sessionIds));
+      if (query) {
+        conditions.push(ilike(sessions.title, `%${query}%`));
       }
 
-      // 如果有关键词，添加标题和描述的模糊搜索条件
-      if (keyword) {
-        this.log('info', '根据关键词过滤会话', { keyword });
-        whereConditions.push(
-          or(
-            like(sessions.title, `%${keyword}%`),
-            like(sessions.description, `%${keyword}%`),
-          ) as SQL<unknown>,
-        );
+      if (userId) {
+        conditions.push(eq(sessions.userId, userId));
       }
 
-      // 获取总数
-      const totalResult = await this.db
-        .select({ count: sql<number>`count(*)` })
+      if (sessionIds) {
+        // 去重处理
+        const uniqueSessionIds = Array.from(new Set(sessionIds));
+
+        conditions.push(inArray(sessions.id, uniqueSessionIds));
+      }
+
+      if (agentId) {
+        conditions.push(eq(agentsToSessions.agentId, agentId));
+      }
+
+      // 统一查询路径与并发计数/列表
+      const size = pageSize ?? 10;
+      const offsetValue = page ? (page - 1) * size : 0;
+      const whereExpr = conditions.length ? and(...conditions) : undefined;
+
+      const listQuery = this.db
+        .select({ agent: agents, session: sessions, user: users })
         .from(sessions)
-        .where(and(...whereConditions));
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .innerJoin(users, eq(sessions.userId, users.id))
+        .where(whereExpr)
+        .limit(size)
+        .offset(offsetValue)
+        .orderBy(desc(sessions.updatedAt));
 
-      const total = Number(totalResult[0]?.count || 0);
+      const countQuery = this.db
+        .select({ count: count() })
+        .from(sessions)
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .innerJoin(users, eq(sessions.userId, users.id))
+        .where(whereExpr);
 
-      // 获取分页数据
-      const sessionsList = await this.db.query.sessions.findMany({
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
-        orderBy: [desc(sessions.updatedAt)],
-        where: and(...whereConditions),
-        with: {
-          agentsToSessions: { with: { agent: true } },
-          group: true,
-          user: true,
-        },
-      });
+      const [result, [countResult]] = await Promise.all([listQuery, countQuery]);
 
-      // 获取每个会话的消息数量
-      const sessionIds = sessionsList.map((session) => session.id);
-      let messageCountsResult: Array<{ count: number; sessionId: string | null }> = [];
-
-      if (sessionIds.length > 0) {
-        messageCountsResult = await this.db
-          .select({
-            count: sql<number>`count(*)`,
-            sessionId: messages.sessionId,
-          })
-          .from(messages)
-          .where(inArray(messages.sessionId, sessionIds))
-          .groupBy(messages.sessionId);
-      }
-
-      // 创建消息数量映射
-      const messageCountMap = new Map<string, number>();
-      messageCountsResult.forEach((row) => {
-        if (row.sessionId) {
-          messageCountMap.set(row.sessionId, Number(row.count));
-        }
-      });
-
-      // 添加消息数量到会话列表
-      const sessionsWithMessageCount: SessionListItem[] = sessionsList.map(
-        (session) =>
-          ({
-            ...session,
-            messageCount: messageCountMap.get(session.id) || 0,
-          }) as unknown as SessionListItem,
-      );
-
-      this.log('info', `查询到 ${sessionsList.length} 个会话，总数: ${total}`, { agentId });
-
-      return { sessions: sessionsWithMessageCount, total };
+      return {
+        sessions: result.map((item) => ({
+          ...item.session,
+          agent: item.agent,
+          user: item.user,
+        })),
+        total: countResult.count,
+      };
     } catch (error) {
-      this.handleServiceError(error, '获取会话列表');
-    }
-  }
-
-  /**
-   * 获取分组的会话列表
-   * @returns 分组会话列表
-   */
-  async getGroupedSessions(): ServiceResult<ChatSessionList> {
-    this.log('info', '获取分组的会话列表');
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ');
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问会话列表');
-      }
-
-      // 传递权限条件到 queryWithGroups 方法
-      const result = await this.sessionModel.queryWithGroups();
-
-      this.log('info', '成功获取分组会话列表', {
-        sessionGroups: result.sessionGroups.length,
-        sessions: result.sessions.length,
-      });
-
-      return result;
-    } catch (error) {
-      this.log('error', '获取分组会话列表失败', { error });
-      throw this.createBusinessError('获取分组会话列表失败');
-    }
-  }
-
-  /**
-   * 获取按Agent分组的会话列表
-   * @returns 按Agent分组的会话列表
-   */
-  async getSessionsGroupedByAgent(): ServiceResult<SessionsByAgentResponse> {
-    this.log('info', '获取按Agent分组的会话列表');
-
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
-      // 查询当前用户的所有会话，包含关联的agent信息
-      const sessionsList = await this.db.query.sessions.findMany({
-        orderBy: [desc(sessions.updatedAt)],
-        where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
-        with: {
-          agentsToSessions: {
-            with: {
-              agent: true,
-            },
-          },
-        },
-      });
-
-      // 按agent进行分组
-      const groupByAgent = groupBy(sessionsList, (session) => session.agentsToSessions?.[0]?.id);
-
-      // @ts-ignore
-      const groupedSessions: SessionsByAgentResponse = Object.values(groupByAgent).map(
-        (sessions) => {
-          const agent = sessions[0].agentsToSessions?.[0]?.agent ?? null;
-
-          return { agent, sessions };
-        },
-      );
-
-      this.log('info', '成功获取按Agent分组的会话列表', {
-        groupCount: Object.keys(groupedSessions).length,
-        totalSessions: sessionsList.length,
-      });
-
-      return groupedSessions;
-    } catch (error) {
-      this.log('error', '获取按Agent分组的会话列表失败', { error });
-      throw this.createBusinessError('获取按Agent分组的会话列表失败');
-    }
-  }
-
-  /**
-   * 获取按Agent分组的会话数量
-   * @returns 按Agent分组的会话数量
-   */
-  async getSessionCountGroupedByAgent(): ServiceResult<SessionCountByAgentResponse[]> {
-    this.log('info', '获取按Agent分组的会话数量');
-
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
-      // 查询当前用户的所有会话，包含关联的agent信息
-      const sessionsList = await this.db.query.sessions.findMany({
-        where: and(not(eq(sessions.slug, INBOX_SESSION_ID))),
-        with: {
-          agentsToSessions: {
-            with: {
-              agent: true,
-            },
-          },
-        },
-      });
-
-      // 按agent进行分组
-      const groupByAgent = groupBy(sessionsList, (session) => {
-        return session.agentsToSessions?.[0]?.agent?.id || 'no_agent';
-      });
-
-      // 转换为数量统计
-      const countByAgent: SessionCountByAgentResponse[] = Object.entries(groupByAgent).map(
-        ([agentId, sessionsList]) => {
-          const agent =
-            agentId === 'no_agent' ? null : (sessionsList[0]?.agentsToSessions?.[0]?.agent ?? null);
-
-          return {
-            agent,
-            count: sessionsList.length,
-          };
-        },
-      );
-
-      this.log('info', '成功获取按Agent分组的会话数量', {
-        agentCount: countByAgent.length,
-        totalSessions: sessionsList.length,
-      });
-
-      return countByAgent;
-    } catch (error) {
-      this.log('error', '获取按Agent分组的会话数量失败', { error });
-      throw this.createBusinessError('获取按Agent分组的会话数量失败');
+      return this.handleServiceError(error, '批量查询会话');
     }
   }
 
@@ -301,7 +125,7 @@ export class SessionService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ', {
+      const permissionResult = await this.resolveOperationPermission('SESSION_READ', {
         targetSessionId: sessionId,
       });
 
@@ -309,96 +133,35 @@ export class SessionService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '无权访问此会话');
       }
 
-      // 查询会话信息，包含关联的 agent 和 user 信息
-      const sessionWithAgent = await this.db.query.sessions.findFirst({
-        where: and(
-          eq(sessions.id, sessionId),
-          // 添加权限相关的查询条件
-          permissionResult.condition?.userId
-            ? eq(sessions.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
-        with: {
-          agentsToSessions: {
-            with: {
-              agent: {
-                columns: {
-                  avatar: true,
-                  backgroundColor: true,
-                  chatConfig: true,
-                  description: true,
-                  id: true,
-                  model: true,
-                  provider: true,
-                  systemRole: true,
-                  title: true,
-                },
-              },
-            },
-          },
-          user: true,
-        },
-      });
+      // 构建查询条件
+      const conditions = [eq(sessions.id, sessionId)];
 
-      if (!sessionWithAgent) {
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(sessions.userId, permissionResult.condition.userId));
+      }
+
+      // 查询会话信息，包含关联的 agent 和 user 信息
+      const sessionWithAgent = await this.db
+        .select({ agent: agents, session: sessions, user: users })
+        .from(sessions)
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .innerJoin(users, eq(sessions.userId, users.id))
+        .where(and(...conditions));
+
+      if (!sessionWithAgent.length) {
         this.log('warn', '会话不存在', { sessionId });
         throw this.createNotFoundError('会话不存在');
       }
 
-      // 构造返回数据
-      const result: SessionDetailResponse = {
-        ...sessionWithAgent,
-        agent: sessionWithAgent.agentsToSessions?.[0]?.agent || null,
-        user: sessionWithAgent.user as UserItem,
+      return {
+        ...sessionWithAgent[0].session,
+        agent: sessionWithAgent[0].agent,
+        user: sessionWithAgent[0].user,
       };
-
-      // 移除 agentsToSessions 字段，因为我们已经提取了 agent 信息
-      delete (result as any).agentsToSessions;
-
-      return result;
     } catch (error) {
       this.log('error', '获取会话详情失败', { error });
       throw this.createBusinessError('获取会话详情失败');
-    }
-  }
-
-  /**
-   * 获取会话配置
-   * @param sessionId 会话 ID
-   * @returns 会话配置
-   */
-  async getSessionConfig(sessionId: string): ServiceResult<LobeAgentConfig | null> {
-    this.log('info', '获取会话配置', { sessionId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ', {
-        targetSessionId: sessionId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话配置');
-      }
-
-      const session = await this.sessionModel.findByIdOrSlug(sessionId);
-
-      if (!session) {
-        this.log('warn', '会话不存在', { sessionId });
-        return null;
-      }
-
-      // 验证用户权限
-      if (
-        permissionResult.condition?.userId &&
-        session.userId !== permissionResult.condition.userId
-      ) {
-        throw this.createAuthorizationError('无权访问此会话配置');
-      }
-
-      return session.agent as LobeAgentConfig;
-    } catch (error) {
-      this.log('error', '获取会话配置失败', { error });
-      throw this.createBusinessError('获取会话配置失败');
     }
   }
 
@@ -415,8 +178,10 @@ export class SessionService extends BaseService {
     });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('SESSION_CREATE');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权创建会话');
       }
 
       return await this.db.transaction(async (tx) => {
@@ -486,10 +251,10 @@ export class SessionService extends BaseService {
     this.log('info', '更新会话', { id: request.id });
 
     try {
-      const { id, agentId, ...updateData } = request;
+      const { id, agentId, groupId, ...updateData } = request;
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('SESSION_UPDATE', {
         targetSessionId: id,
       });
 
@@ -501,7 +266,7 @@ export class SessionService extends BaseService {
         // 更新会话基本信息
         await this.sessionModel.update(id, {
           ...updateData,
-          groupId: updateData.groupId === 'default' ? null : updateData.groupId,
+          groupId: groupId === 'default' ? null : groupId,
         });
 
         // 如果提供了 agentId，更新会话与 Agent 的关联
@@ -515,15 +280,13 @@ export class SessionService extends BaseService {
             throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
           }
 
-          // 先删除现有的关联
-          await tx.delete(agentsToSessions).where(eq(agentsToSessions.sessionId, id));
-
-          // 创建新的关联
-          await tx.insert(agentsToSessions).values({
-            agentId,
-            sessionId: id,
-            userId: this.userId!,
-          });
+          await tx
+            .insert(agentsToSessions)
+            .values({ agentId, sessionId: id, userId: this.userId! })
+            .onConflictDoUpdate({
+              set: { agentId, userId: this.userId! },
+              target: agentsToSessions.sessionId,
+            });
         }
       });
 
@@ -543,7 +306,7 @@ export class SessionService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_DELETE', {
+      const permissionResult = await this.resolveOperationPermission('SESSION_DELETE', {
         targetSessionId: sessionId,
       });
 
@@ -553,23 +316,17 @@ export class SessionService extends BaseService {
 
       await this.db.transaction(async (trx) => {
         // 1. 删除会话与 agent 的关联
-        const deletedLinks = await trx
-          .delete(agentsToSessions)
-          .where(eq(agentsToSessions.sessionId, sessionId));
+        this.log('info', '删除会话与 agent 的关联');
 
-        this.log('info', '删除会话与 agent 的关联', { deletedLinks });
+        await trx.delete(agentsToSessions).where(and(eq(agentsToSessions.sessionId, sessionId)));
 
         // 2. 删除会话相关的消息
-        const deletedMessages = await trx.delete(messages).where(eq(messages.sessionId, sessionId));
-
-        this.log('info', '删除会话相关的消息', { deletedMessages });
+        this.log('info', '删除会话相关的消息');
+        await trx.delete(messages).where(eq(messages.sessionId, sessionId));
 
         // 3. 删除会话本身
-        const deletedSession = await trx.delete(sessions).where(eq(sessions.id, sessionId));
-
-        if (deletedSession.rowCount === 0) {
-          throw this.createNotFoundError('会话不存在或已被删除');
-        }
+        this.log('info', '删除会话本身');
+        await trx.delete(sessions).where(eq(sessions.id, sessionId));
 
         this.log('info', '删除会话成功', {
           sessionId,
@@ -590,10 +347,10 @@ export class SessionService extends BaseService {
 
     try {
       // 权限校验
-      const permissionRead = await this.resolveQueryPermission('SESSION_READ', {
+      const permissionRead = await this.resolveOperationPermission('SESSION_READ', {
         targetSessionId: request.id,
       });
-      const permissionCreate = await this.resolveQueryPermission('SESSION_CREATE', {
+      const permissionCreate = await this.resolveOperationPermission('SESSION_CREATE', {
         targetSessionId: request.id,
       });
 
@@ -617,98 +374,81 @@ export class SessionService extends BaseService {
   }
 
   /**
-   * 搜索会话
-   * @param request 搜索请求参数
-   * @returns 搜索结果
+   * 获取按Agent分组的会话列表
+   * @param request 分组查询请求参数
+   * @returns 按Agent分组的会话列表
    */
-  async searchSessions(request: SearchSessionsRequest): ServiceResult<SessionItem[]> {
-    const { keyword } = request;
-
-    this.log('info', '搜索会话', { keyword });
+  async getSessionsGroupsByAgent(
+    request: SessionsGroupsRequest,
+  ): ServiceResult<SessionsGroupsResponse[]> {
+    this.log('info', '获取按Agent分组的会话列表', { request });
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ', 'ALL');
-
+      const permissionResult = await this.resolveOperationPermission('SESSION_READ');
       if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权搜索会话');
+        throw this.createAuthorizationError(permissionResult.message || '无权访问会话列表');
       }
 
       // 构建查询条件
-      let whereConditions = [or(ilike(sessions.title, `%${keyword}%`))];
+      const conditions = [];
 
-      // 添加权限相关的查询条件
-      if (permissionResult?.condition?.userId) {
-        whereConditions.push(eq(sessions.userId, permissionResult.condition.userId));
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(sessions.userId, permissionResult.condition.userId));
       }
 
-      // 直接从 sessions 表里查询
-      const sessionsList = await this.db.query.sessions.findMany({
-        where: and(...whereConditions),
-      });
+      const whereExpr = conditions.length ? and(...conditions) : undefined;
 
-      this.log('info', `搜索到 ${sessionsList.length} 个会话`, { keyword: request.keyword });
+      // 查询所有会话，按Agent分组
+      const result = await this.db
+        .select({
+          agent: agents,
+          session: sessions,
+          user: users,
+        })
+        .from(sessions)
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .innerJoin(users, eq(sessions.userId, users.id))
+        .where(whereExpr)
+        .orderBy(desc(sessions.updatedAt));
 
-      return sessionsList;
-    } catch (error) {
-      this.log('error', '搜索会话失败', { error });
-      throw this.createBusinessError('搜索会话失败');
-    }
-  }
+      // 按agent进行分组
+      const groupedByAgent = new Map<string, SessionsGroupsResponse>();
 
-  /**
-   * 批量查询指定的会话
-   * @param request 批量查询请求参数
-   * @returns 批量查询结果
-   */
-  async batchGetSessions(
-    request: BatchGetSessionsRequest,
-  ): ServiceResult<BatchGetSessionsResponse> {
-    const { sessionIds } = request;
+      for (const item of result) {
+        const agentId = item.agent.id;
 
-    this.log('info', '批量查询会话', { count: sessionIds.length, sessionIds });
+        if (!groupedByAgent.has(agentId)) {
+          groupedByAgent.set(agentId, {
+            agent: item.agent,
+            sessions: [],
+            total: 0,
+          });
+        }
 
-    try {
-      // 去重处理
-      const uniqueSessionIds = Array.from(new Set(sessionIds));
+        const group = groupedByAgent.get(agentId)!;
 
-      // 权限检查
-      const permissionResult = await this.resolveBatchQueryPermission('SESSION_READ', {
-        targetSessionId: uniqueSessionIds,
-      });
+        group.sessions.push({
+          ...item.session,
+          agent: item.agent,
+          user: item.user,
+        });
 
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权限批量查询会话');
+        group.total += 1;
       }
 
-      // 查询指定的会话列表
-      const foundSessions = await this.db.query.sessions.findMany({
-        orderBy: [desc(sessions.updatedAt)],
-        where: inArray(sessions.id, uniqueSessionIds),
+      const groupedSessions = Array.from(groupedByAgent.values());
+
+      this.log('info', '成功获取按Agent分组的会话列表', {
+        groupCount: groupedSessions.length,
+        totalSessions: result.length,
       });
 
-      // 找出存在的会话 ID
-      const foundSessionIds = new Set(foundSessions.map((session) => session.id));
-
-      // 找出不存在的会话 ID
-      const notFoundSessionIds = uniqueSessionIds.filter((id) => !foundSessionIds.has(id));
-
-      const result: BatchGetSessionsResponse = {
-        found: foundSessions,
-        notFound: notFoundSessionIds,
-        totalFound: foundSessions.length,
-        totalRequested: uniqueSessionIds.length,
-      };
-
-      this.log('info', '批量查询会话完成', {
-        notFoundCount: result.notFound.length,
-        totalFound: result.totalFound,
-        totalRequested: result.totalRequested,
-      });
-
-      return result;
+      return groupedSessions;
     } catch (error) {
-      return this.handleServiceError(error, '批量查询会话');
+      this.log('error', '获取按Agent分组的会话列表失败', { error });
+      throw this.createBusinessError('获取按Agent分组的会话列表失败');
     }
   }
 
@@ -725,16 +465,12 @@ export class SessionService extends BaseService {
   }> {
     const { sessions: sessionsToUpdate } = request;
 
-    this.log('info', '批量更新会话', { count: sessionsToUpdate.length });
+    this.log('info', '批量更新会话', { sessions: sessionsToUpdate });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
       // 权限检查
       const permissionResult = await this.resolveBatchQueryPermission('SESSION_UPDATE', {
-        targetSessionId: sessionsToUpdate.map((s) => s.id),
+        targetSessionIds: sessionsToUpdate.map((s) => s.id),
       });
 
       if (!permissionResult.isPermitted) {
@@ -761,19 +497,14 @@ export class SessionService extends BaseService {
             }
 
             // 执行更新
-            const { id, ...updateData } = sessionData;
+            const { id, groupId, ...updateData } = sessionData;
 
-            // 过滤掉未定义的字段
-            const filteredUpdateData = Object.fromEntries(
-              Object.entries(updateData).filter(([, value]) => value !== undefined),
-            );
-
-            if (Object.keys(filteredUpdateData).length > 0) {
+            if (Object.keys(updateData).length > 0) {
               await tx
                 .update(sessions)
                 .set({
-                  ...filteredUpdateData,
-                  groupId: updateData.groupId === 'default' ? null : updateData.groupId,
+                  ...updateData,
+                  groupId: groupId === 'default' ? null : groupId,
                   updatedAt: new Date(),
                 })
                 .where(eq(sessions.id, id));
@@ -783,7 +514,7 @@ export class SessionService extends BaseService {
             } else {
               // 没有任何字段需要更新
               errors.push({ error: '没有提供要更新的字段', id: sessionData.id });
-              failed++;
+              updated++;
             }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '未知错误';

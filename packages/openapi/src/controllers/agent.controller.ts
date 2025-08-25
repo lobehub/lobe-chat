@@ -121,30 +121,6 @@ export class AgentController extends BaseController {
   }
 
   /**
-   * 根据 Session ID 获取关联的 Agent 详情
-   * GET /api/v1/agents/session/:sessionId
-   * @param c Hono Context
-   * @returns Agent 详情响应
-   */
-  async getAgentBySessionId(c: Context): Promise<Response> {
-    try {
-      const { sessionId } = this.getParams<{ sessionId: string }>(c);
-
-      const db = await this.getDatabase();
-      const agentService = new AgentService(db, this.getUserId(c));
-      const agent = await agentService.getAgentBySessionId(sessionId);
-
-      if (!agent) {
-        return this.error(c, 'Session 不存在或无关联的 Agent', 404);
-      }
-
-      return this.success(c, agent, '获取 Agent 详情成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 为 Agent 创建新的 Session
    * POST /api/v1/agents/:id/sessions
    * @param c Hono Context

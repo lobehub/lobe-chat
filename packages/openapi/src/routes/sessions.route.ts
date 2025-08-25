@@ -3,19 +3,15 @@ import { Hono } from 'hono';
 
 import { getAllScopePermissions } from '@/utils/rbac';
 
-import { AgentController } from '../controllers';
 import { SessionController } from '../controllers/session.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
-  BatchGetSessionsRequestSchema,
-  BatchUpdateSessionsRequestSchema,
-  CloneSessionRequestSchema,
   CreateSessionRequestSchema,
   GetSessionsRequestSchema,
-  SearchSessionsRequestSchema,
+  NewBatchUpdateSessionsRequestSchema,
   SessionIdParamSchema,
-  UpdateSessionGroupAssignmentRequestSchema,
+  SessionsGroupsRequestSchema,
   UpdateSessionRequestSchema,
 } from '../types/session.type';
 
@@ -41,55 +37,6 @@ SessionRoutes.get(
 );
 
 /**
- * 获取分组的会话列表
- * GET /api/v1/sessions/grouped
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/grouped',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('SESSION_READ'), '您没有权限查看分组会话列表'),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.getGroupedSessions(c);
-  },
-);
-
-/**
- * 获取按Agent分组的会话数量
- * GET /api/v1/sessions/grouped-by-agent
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/grouped-by-agent',
-  requireAuth,
-  requireAnyPermission(
-    getAllScopePermissions('SESSION_READ'),
-    '您没有权限查看按Agent分组的会话数量',
-  ),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.getSessionsGroupedByAgent(c);
-  },
-);
-
-/**
- * 搜索会话
- * GET /api/v1/sessions/search
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/search',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('SESSION_READ'), '您没有权限搜索会话'),
-  zValidator('query', SearchSessionsRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.searchSessions(c);
-  },
-);
-
-/**
  * 创建会话
  * POST /api/v1/sessions
  * 需要会话创建权限
@@ -102,6 +49,22 @@ SessionRoutes.post(
   async (c) => {
     const controller = new SessionController();
     return await controller.createSession(c);
+  },
+);
+
+/**
+ * 获取分组会话列表 (按Agent分组)
+ * GET /api/v1/sessions/groups?groupBy=agent
+ * 需要会话读取权限
+ */
+SessionRoutes.get(
+  '/groups',
+  requireAuth,
+  requireAnyPermission(getAllScopePermissions('SESSION_READ'), '您没有权限查看分组会话'),
+  zValidator('query', SessionsGroupsRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.getSessionsGroups(c);
   },
 );
 
@@ -122,31 +85,15 @@ SessionRoutes.get(
 );
 
 /**
- * 批量查询指定的会话
- * POST /api/v1/sessions/batch
- * 需要会话读取权限
- */
-SessionRoutes.post(
-  '/batch',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('SESSION_READ'), '您没有权限批量查询会话'),
-  zValidator('json', BatchGetSessionsRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.batchGetSessions(c);
-  },
-);
-
-/**
- * 批量更新会话
- * PUT /api/v1/sessions/batch-update
+ * 批量更新会话 (RESTful)
+ * PATCH /api/v1/sessions
  * 需要会话更新权限
  */
-SessionRoutes.put(
-  '/batch-update',
+SessionRoutes.patch(
+  '/',
   requireAuth,
   requireAnyPermission(getAllScopePermissions('SESSION_UPDATE'), '您没有权限批量更新会话'),
-  zValidator('json', BatchUpdateSessionsRequestSchema),
+  zValidator('json', NewBatchUpdateSessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.batchUpdateSessions(c);
@@ -154,11 +101,11 @@ SessionRoutes.put(
 );
 
 /**
- * 更新会话
- * PUT /api/v1/sessions/:id
+ * 更新会话 (RESTful)
+ * PATCH /api/v1/sessions/:id
  * 需要会话更新权限
  */
-SessionRoutes.put(
+SessionRoutes.patch(
   '/:id',
   requireAuth,
   requireAnyPermission(getAllScopePermissions('SESSION_UPDATE'), '您没有权限更新会话'),
@@ -183,63 +130,6 @@ SessionRoutes.delete(
   async (c) => {
     const controller = new SessionController();
     return await controller.deleteSession(c);
-  },
-);
-
-/**
- * 克隆会话
- * POST /api/v1/sessions/:id/clone
- * 需要会话创建权限
- */
-SessionRoutes.post(
-  '/:id/clone',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('SESSION_CREATE'), '您没有权限克隆会话'),
-  zValidator('param', SessionIdParamSchema),
-  zValidator('json', CloneSessionRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.cloneSession(c);
-  },
-);
-
-/**
- * 更新会话分组关联
- * PUT /api/v1/sessions/:id/group
- * 需要会话更新权限
- */
-SessionRoutes.put(
-  '/:id/group',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('SESSION_UPDATE'), '您没有权限更新会话分组'),
-  zValidator('param', SessionIdParamSchema),
-  zValidator('json', UpdateSessionGroupAssignmentRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.updateSessionGroupAssignment(c);
-  },
-);
-
-/**
- * 根据 Session ID 获取关联的 Agent 详情
- * GET /api/v1/sessions/:sessionId/agent
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/:sessionId/agent',
-  requireAuth,
-  requireAnyPermission(
-    getAllScopePermissions('AGENT_READ'),
-    'You do not have permission to view the Agent details',
-  ),
-  requireAnyPermission(
-    getAllScopePermissions('SESSION_READ'),
-    'You do not have permission to view the Agent details',
-  ),
-  zValidator('param', SessionIdParamSchema),
-  async (c) => {
-    const controller = new AgentController();
-    return await controller.getAgentBySessionId(c);
   },
 );
 
