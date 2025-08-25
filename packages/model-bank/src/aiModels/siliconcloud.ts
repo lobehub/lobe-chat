@@ -6,6 +6,45 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。',
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek-ai/DeepSeek-V3.1',
+    enabled: true,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。',
+    displayName: 'DeepSeek V3.1 (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.1',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -452,7 +491,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 8B (Free)',
-    enabled: true,
     id: 'Qwen/Qwen3-8B',
     organization: 'Qwen',
     pricing: {
