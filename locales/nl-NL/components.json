@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Argument toevoegen",
+    "argumentPlaceholder": "Argument {{index}}",
+    "enterFirstArgument": "Voer het eerste argument in..."
+  },
   "DragUpload": {
     "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden.",
     "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om meerdere afbeeldingen en bestanden te uploaden.",

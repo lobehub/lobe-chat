@@ -332,11 +332,20 @@
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
     "description": "Qwen3-30B-A3B-Instruct-2507, Qwen3-30B-A3B'nin düşünme modu olmayan güncellenmiş bir versiyonudur. Bu, toplam 30,5 milyar parametre ve 3,3 milyar aktif parametreye sahip bir Hibrit Uzman (MoE) modelidir. Model, talimat takibi, mantıksal akıl yürütme, metin anlama, matematik, bilim, kodlama ve araç kullanımı gibi genel yeteneklerde önemli geliştirmeler içermektedir. Ayrıca, çok dilli uzun kuyruk bilgi kapsamı açısından kayda değer ilerlemeler kaydetmiş ve kullanıcıların öznel ve açık uçlu görevlerdeki tercihlerine daha iyi uyum sağlayarak daha faydalı yanıtlar ve daha yüksek kaliteli metinler üretebilmektedir. Buna ek olarak, modelin uzun metin anlama kapasitesi 256K'ya kadar artırılmıştır. Bu model yalnızca düşünme modu dışındadır ve çıktılarında `<think></think>` etiketleri oluşturmaz."
   },
+  "Qwen/Qwen3-30B-A3B-Thinking-2507": {
+    "description": "Qwen3-30B-A3B-Thinking-2507, Alibaba'nın Tongyi Qianwen ekibi tarafından yayımlanan Qwen3 serisinin en yeni düşünme modelidir. 30,5 milyar toplam parametre ve 3,3 milyar aktif parametreye sahip bir hibrit uzman (MoE) modeli olarak, karmaşık görevleri ele alma yeteneğini geliştirmeye odaklanır. Model, mantıksal çıkarım, matematik, bilim, programlama ve insan uzmanlığı gerektiren akademik kıyaslama testlerinde belirgin performans artışları gösterir. Ayrıca komutlara uyum, araç kullanımı, metin üretimi ve insan tercihleri ile hizalanma gibi genel yeteneklerinde de önemli iyileşmeler kaydetmiştir. Model, yerel olarak 256K uzun bağlam anlama desteğine sahiptir ve 1 milyona kadar tokene genişletilebilir. Bu sürüm, \"düşünme modu\" için özel olarak tasarlanmıştır; ayrıntılı adım adım akıl yürütme yoluyla son derece karmaşık görevleri çözmeyi amaçlar ve Agent tabanlı akıllı ajan yetenekleri de öne çıkar."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
   },
   "Qwen/Qwen3-8B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+    "description": "Qwen3-Coder-30B-A3B-Instruct, Alibaba'nın Tongyi Qianwen (通义千问) ekibi tarafından geliştirilen Qwen3 serisine ait bir kod modelidir. Hafifletilmiş ve optimize edilmiş bir model olarak, yüksek performans ve verimliliği korurken kod işleme yeteneklerini geliştirmeye odaklanır. Bu model, ajanlı programlama (Agentic Coding), otomatik tarayıcı işlemleri ve araç çağrıları gibi karmaşık görevlerde açık kaynak modeller arasında belirgin bir performans avantajı gösterir. Yerel olarak 256K token uzunluğunda bağlamı destekler ve 1M tokene kadar ölçeklendirilebilir; bu sayede kod tabanı düzeyinde daha iyi anlama ve işleme sağlar. Ayrıca model, Qwen Code ve CLINE gibi platformlara güçlü ajan kodlama desteği sunar ve özel bir fonksiyon çağrısı formatı tasarlamıştır."
+  },
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct, Alibaba tarafından yayımlanan ve bugüne kadarki en gelişmiş ajan (agentic) yeteneklerine sahip kod modelidir. 480 milyar toplam parametre ve 35 milyar aktif parametreye sahip bir Mixture-of-Experts (MoE) modelidir ve verimlilik ile performans arasında bir denge sunar. Model yerel olarak 256K (yaklaşık 260 bin) token bağlam uzunluğunu destekler ve YaRN gibi dışa uzatma yöntemleriyle 1 milyona kadar tokena genişletilerek büyük ölçekli kod tabanları ve karmaşık programlama görevleriyle başa çıkmasını sağlar. Qwen3-Coder, ajan tabanlı kodlama iş akışları için tasarlanmıştır; yalnızca kod üretmekle kalmaz, aynı zamanda geliştirme araçları ve ortamlarla özerk şekilde etkileşime girerek karmaşık programlama problemlerini çözer. Bir dizi kodlama ve ajan görevinde yapılan kıyaslama testlerinde, model açık kaynaklı modeller arasında üst düzey performans göstermiş olup performansı Claude Sonnet 4 gibi önde gelen modellerle kıyaslanabilir."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2, Qwen modelinin en yeni serisidir ve 128k bağlamı destekler. Mevcut en iyi açık kaynak modellerle karşılaştırıldığında, Qwen2-72B doğal dil anlama, bilgi, kod, matematik ve çok dilli yetenekler açısından mevcut lider modelleri önemli ölçüde aşmaktadır."
@@ -1103,11 +1112,26 @@
   "flux-dev": {
     "description": "FLUX.1 [dev], ticari olmayan uygulamalar için açık kaynaklı ağırlık ve rafine modeldir. FLUX.1 [dev], FLUX profesyonel sürümüne yakın görüntü kalitesi ve talimat uyumu sağlarken daha yüksek çalışma verimliliğine sahiptir. Aynı boyuttaki standart modellere kıyasla kaynak kullanımı açısından daha etkilidir."
   },
+  "flux-kontext-max": {
+    "description": "En gelişmiş bağlamsal görüntü oluşturma ve düzenleme — metin ve görüntüyü birleştirerek hassas ve tutarlı sonuçlar sağlar."
+  },
+  "flux-kontext-pro": {
+    "description": "En gelişmiş bağlamsal görüntü oluşturma ve düzenleme — metin ve görüntüleri birleştirerek kesin ve tutarlı sonuçlar sunar."
+  },
   "flux-kontext/dev": {
     "description": "Metin ve görsel girdileri destekleyen, görüntü düzenleme görevlerine odaklanan FLUX.1 modeli."
   },
   "flux-merged": {
     "description": "FLUX.1-merged modeli, geliştirme aşamasında \"DEV\" tarafından keşfedilen derin özellikler ile \"Schnell\" in yüksek hızlı yürütme avantajlarını birleştirir. Bu sayede model performans sınırlarını artırır ve uygulama alanlarını genişletir."
+  },
+  "flux-pro": {
+    "description": "Üst düzey ticari yapay zeka görüntü oluşturma modeli — benzersiz görüntü kalitesi ve çok çeşitli çıktı seçenekleri."
+  },
+  "flux-pro-1.1": {
+    "description": "Geliştirilmiş profesyonel düzeyde bir yapay zeka (AI) görüntü oluşturma modeli — üstün görüntü kalitesi ve istemlere yüksek doğrulukla uyum sağlama yeteneği sunar."
+  },
+  "flux-pro-1.1-ultra": {
+    "description": "Ultra yüksek çözünürlüklü yapay zeka ile görüntü oluşturma — 4 megapiksel çıktı desteğiyle 10 saniye içinde ultra net görüntüler üretir."
   },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro], metin ve referans görüntüleri girdi olarak işleyebilir, hedefe yönelik yerel düzenlemeler ve karmaşık genel sahne dönüşümlerini sorunsuz bir şekilde gerçekleştirebilir."
@@ -1295,6 +1319,9 @@
   "glm-4.5-x": {
     "description": "GLM-4.5'in ultra hızlı versiyonu olup güçlü performansla birlikte saniyede 100 token üretim hızına ulaşır."
   },
+  "glm-4.5v": {
+    "description": "Zhipu'nun yeni nesil, MOE mimarisine dayanan görsel akıl yürütme modeli; 106B toplam parametre ve 12B aktif parametreyle çeşitli kıyaslama testlerinde aynı düzeydeki açık kaynaklı çok modlu modeller arasında dünya çapında SOTA'ya ulaşmış olup görüntü, video, belge anlama ve GUI görevleri gibi yaygın görevleri kapsar."
+  },
   "glm-4v": {
     "description": "GLM-4V, güçlü görüntü anlama ve akıl yürütme yetenekleri sunar, çeşitli görsel görevleri destekler."
   },
@@ -1433,7 +1460,9 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini, zeka, hız ve maliyet arasında bir denge sunarak birçok kullanım durumu için çekici bir model haline getirir."
   },
-  "gpt-4.5-preview": {},
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5-preview, geniş dünya bilgisine ve kullanıcı niyetlerini daha iyi anlama yeteneğine sahip en yeni genel amaçlı modeldir; yaratıcı görevlerde ve ajan planlamasında uzmandır. Bu modelin bilgi kesiti Ekim 2023'tür."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
   },
@@ -1635,8 +1664,17 @@
   "image-01-live": {
     "description": "Görüntü oluşturma modeli, ince detaylı görseller sunar; metinden görüntü oluşturmayı ve stil ayarlarını destekler."
   },
+  "imagen-4.0-fast-generate-001": {
+    "description": "Imagen 4. nesil metinden görüntüye model serisi Hızlı sürüm"
+  },
+  "imagen-4.0-generate-001": {
+    "description": "Imagen 4. nesil metinden görsele model serisi"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Imagen 4. nesil metinden görüntüye model serisi"
+  },
+  "imagen-4.0-ultra-generate-001": {
+    "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra sürümü"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
@@ -1676,6 +1714,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2, son derece güçlü kodlama ve Agent yeteneklerine sahip MoE mimarili temel bir modeldir. Toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik, Agent gibi ana kategorilerde yapılan kıyaslama testlerinde K2 modeli, diğer önde gelen açık kaynak modelleri geride bırakmıştır."
+  },
+  "kimi-k2-turbo-preview": {
+    "description": "kimi-k2, kodlama ve ajan yetenekleri açısından son derece güçlü MoE mimarisine sahip bir temel modeldir; toplam parametre sayısı 1T, aktif parametreleri 32B'dir. Genel bilgi akıl yürütme, programlama, matematik ve ajan gibi ana kategorilerde yapılan kıyaslama performans testlerinde K2 modeli, diğer önde gelen açık kaynak modellerin performansını geride bırakıyor."
   },
   "kimi-latest": {
     "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
@@ -1760,6 +1801,9 @@
   },
   "llava:34b": {
     "description": "LLaVA, görsel kodlayıcı ve Vicuna'yı birleştiren çok modlu bir modeldir, güçlü görsel ve dil anlama yetenekleri sunar."
+  },
+  "magistral-medium-latest": {
+    "description": "Magistral Medium 1.1, Mistral AI tarafından Temmuz 2025'te yayımlanan ileri düzey bir çıkarım modelidir."
   },
   "mathstral": {
     "description": "MathΣtral, bilimsel araştırma ve matematik akıl yürütme için tasarlanmış, etkili hesaplama yetenekleri ve sonuç açıklamaları sunar."
@@ -2091,7 +2135,9 @@
   "o1-mini": {
     "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
-  "o1-preview": {},
+  "o1-preview": {
+    "description": "Gelişmiş akıl yürütme ve matematik ile bilimsel görevler de dahil olmak üzere karmaşık sorunların çözümüne odaklanır. Derin bağlam anlayışı ve otonom iş akışları gerektiren uygulamalar için çok uygundur."
+  },
   "o1-pro": {
     "description": "o1 serisi modeller, yanıtlamadan önce düşünme yapabilen ve karmaşık akıl yürütme görevlerini yerine getirebilen pekiştirmeli öğrenme ile eğitilmiştir. o1-pro modeli, daha derin düşünme için daha fazla hesaplama kaynağı kullanır ve böylece sürekli olarak daha kaliteli yanıtlar sunar."
   },
@@ -2209,7 +2255,15 @@
   "qwen-coder-turbo-latest": {
     "description": "Tongyi Qianwen kodlama modeli."
   },
-  "qwen-image": {},
+  "qwen-flash": {
+    "description": "Tongyi Qianwen serisindeki en hızlı ve maliyeti çok düşük model, basit görevler için uygundur."
+  },
+  "qwen-image": {
+    "description": "Qwen-Image, çeşitli sanat stillerini destekleyen genel amaçlı bir görsel oluşturma modelidir; özellikle karmaşık metin görselleştirmesinde—özellikle Çince ve İngilizce metinlerin görselleştirilmesinde—uzmandır. Model çok satırlı düzenleri, paragraf düzeyinde metin üretimini ve ince ayrıntıların titizlikle işlenmesini destekler; karmaşık metin–görsel karışık düzen tasarımlarının oluşturulmasını sağlar."
+  },
+  "qwen-image-edit": {
+    "description": "Qwen ekibi tarafından yayınlanan profesyonel görüntü düzenleme modeli; anlamsal düzenleme ve görünüm düzenlemeyi destekler, Çince ve İngilizce metinleri hassas şekilde düzenleyebilir ve stil dönüşümleri, nesne döndürme gibi yüksek kaliteli görüntü düzenlemeleri gerçekleştirebilir."
+  },
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
@@ -2234,7 +2288,9 @@
   "qwen-plus": {
     "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen geliştirilmiş büyük ölçekli bir dil modelidir."
   },
-  "qwen-turbo": {},
+  "qwen-turbo": {
+    "description": "通义千问 Turbo artık güncellenmeyecek; 通义千问 Flash ile değiştirilmesi önerilir. 通义千问, Çince, İngilizce ve diğer dillerdeki girdileri destekleyen devasa ölçekli bir dil modelidir."
+  },
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
   },
@@ -2550,8 +2606,14 @@
   "step-2x-large": {
     "description": "Jieyue Xingchen'in yeni nesil görüntü oluşturma modelidir. Model, kullanıcı tarafından sağlanan metin açıklamalarına göre yüksek kaliteli görüntüler oluşturur. Yeni model, daha gerçekçi doku ve hem Çince hem İngilizce metin oluşturma yeteneklerinde gelişmiş performans sunar."
   },
+  "step-3": {
+    "description": "Bu model güçlü görsel algılama ve karmaşık akıl yürütme yeteneklerine sahiptir. Disiplinler arası karmaşık bilgi anlayışını, matematiksel ve görsel bilgilerin çapraz analizini ve günlük hayattaki çeşitli görsel analiz problemlerini doğru şekilde tamamlayabilir."
+  },
   "step-r1-v-mini": {
     "description": "Bu model, güçlü görüntü anlama yeteneğine sahip bir çıkarım büyük modelidir, görüntü ve metin bilgilerini işleyebilir, derin düşünme sonrası metin oluşturma çıktısı verebilir. Bu model, görsel çıkarım alanında öne çıkarken, birinci sınıf matematik, kod ve metin çıkarım yeteneklerine de sahiptir. Bağlam uzunluğu 100k'dır."
+  },
+  "stepfun-ai/step3": {
+    "description": "Step3, StepFun tarafından yayımlanan öncü bir çok modlu akıl yürütme modelidir ve 321B toplam parametre ile 38B aktivasyon parametresine sahip uzman karışımı (MoE) mimarisi üzerine inşa edilmiştir. Model uçtan uca bir tasarıma sahiptir; dekodlama maliyetini en aza indirgemeyi hedeflerken görsel-dil çıkarımında üst düzey performans sunar. Çoklu matris ayrıştırma dikkat (MFA) ve dikkat‑FFN dekuplajı (AFD) gibi işbirlikçi tasarımlar sayesinde Step3, hem amiral gemisi sınıfı hem de düşük uç hızlandırıcılarda yüksek verimliliğini korur. Ön eğitim aşamasında Step3, 20T'den fazla metin tokenı ve 4T görsel‑metin karışık token işleyerek ondan fazla dili kapsadı. Model matematik, kod ve çok modlu başta olmak üzere birçok kıyaslamada açık kaynak modeller arasında lider performans seviyelerine ulaştı."
   },
   "taichu_llm": {
     "description": "Zidong Taichu dil büyük modeli, güçlü dil anlama yeteneği ile metin oluşturma, bilgi sorgulama, kod programlama, matematik hesaplama, mantıksal akıl yürütme, duygu analizi, metin özeti gibi yeteneklere sahiptir. Yenilikçi bir şekilde büyük veri ön eğitimi ile çok kaynaklı zengin bilgiyi birleştirir, algoritma teknolojisini sürekli olarak geliştirir ve büyük metin verilerinden kelime, yapı, dil bilgisi, anlam gibi yeni bilgileri sürekli olarak edinir, modelin performansını sürekli olarak evrimleştirir. Kullanıcılara daha kolay bilgi ve hizmetler sunar ve daha akıllı bir deneyim sağlar."
@@ -2699,5 +2761,8 @@
   },
   "zai-org/GLM-4.5-Air": {
     "description": "GLM-4.5-Air, akıllı ajan uygulamaları için tasarlanmış temel modeldir ve Mixture-of-Experts (MoE) mimarisi kullanır. Araç çağrısı, web tarama, yazılım mühendisliği ve ön uç programlama alanlarında derin optimizasyonlar içerir. Claude Code, Roo Code gibi kod ajanlarına sorunsuz entegrasyon destekler. GLM-4.5, karmaşık çıkarım ve günlük kullanım gibi çeşitli senaryolara uyum sağlayan hibrit çıkarım moduna sahiptir."
+  },
+  "zai-org/GLM-4.5V": {
+    "description": "GLM-4.5V, Zhipu AI tarafından yayımlanan en yeni nesil görsel-dil modeli (VLM)dir. Model, 106 milyar toplam parametre ve 12 milyar aktivasyon parametresine sahip amiral gemisi metin modeli GLM-4.5-Air üzerine inşa edilmiştir ve daha düşük çıkarım maliyetiyle üstün performans hedefleyen bir uzman karışımı (Mixture of Experts, MoE) mimarisini kullanır. GLM-4.5V teknik olarak GLM-4.1V-Thinking hattını sürdürür ve üç boyutlu döndürmeli konum kodlaması (3D-RoPE) gibi yenilikler getirerek üç boyutlu mekânsal ilişkilerin algılanması ve çıkarımı yeteneğini önemli ölçüde güçlendirir. Ön eğitim, denetimli ince ayar ve pekiştirmeli öğrenme aşamalarında yapılan optimizasyonlar sayesinde model; görüntüler, videolar, uzun belgeler gibi çeşitli görsel içerikleri işleyebilir ve 41 açık çok modlu benchmark testinde aynı sınıftaki açık kaynaklı modeller arasında en üst düzey performansı sergilemiştir. Ayrıca modele bir düşünme modu anahtarı eklenmiş olup kullanıcıların hızlı yanıt ile derin çıkarım arasında esnekçe seçim yaparak verimlilik ile sonuç kalitesi arasında denge kurmasına imkân tanır."
   }
 }

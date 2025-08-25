@@ -85,6 +85,17 @@
     "CreateMessageError": "Désolé, le message n'a pas pu être envoyé correctement. Veuillez copier le contenu et le renvoyer. Ce message ne sera pas conservé après le rafraîchissement de la page.",
     "ExceededContextWindow": "Le contenu de la demande actuelle dépasse la longueur que le modèle peut traiter. Veuillez réduire la quantité de contenu et réessayer.",
     "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Votre contenu contient des mots interdits. Veuillez vérifier et modifier votre saisie, puis réessayer.",
+      "IMAGE_SAFETY": "La génération de l'image a été bloquée pour des raisons de sécurité. Veuillez essayer de modifier votre demande de génération d'image.",
+      "LANGUAGE": "La langue que vous utilisez n'est pas prise en charge pour le moment. Veuillez essayer en anglais ou dans une autre langue prise en charge.",
+      "OTHER": "Le contenu a été bloqué pour une raison inconnue. Veuillez reformuler votre demande.",
+      "PROHIBITED_CONTENT": "Votre demande pourrait contenir du contenu interdit. Veuillez la modifier pour vous assurer qu'elle respecte les règles d'utilisation.",
+      "RECITATION": "Votre contenu a été bloqué en raison d'éventuels problèmes de droits d'auteur. Veuillez utiliser du contenu original ou reformuler votre demande.",
+      "SAFETY": "Votre contenu a été bloqué par la politique de sécurité. Veuillez ajuster votre demande pour éviter tout contenu potentiellement nuisible ou inapproprié.",
+      "SPII": "Votre contenu pourrait contenir des informations personnelles sensibles. Pour protéger la vie privée, veuillez supprimer ces informations sensibles, puis réessayer.",
+      "default": "Contenu bloqué : {{blockReason}}。请调整您的请求内容后重试。"
+    },
     "InsufficientQuota": "Désolé, le quota de cette clé a atteint sa limite. Veuillez vérifier si le solde de votre compte est suffisant ou augmenter le quota de la clé avant de réessayer.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",

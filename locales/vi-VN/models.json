@@ -332,11 +332,20 @@
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
     "description": "Qwen3-30B-A3B-Instruct-2507 là phiên bản cập nhật của Qwen3-30B-A3B ở chế độ không suy nghĩ. Đây là một mô hình chuyên gia hỗn hợp (MoE) với tổng cộng 30,5 tỷ tham số và 3,3 tỷ tham số kích hoạt. Mô hình này đã được cải tiến quan trọng ở nhiều khía cạnh, bao gồm nâng cao đáng kể khả năng tuân thủ chỉ dẫn, suy luận logic, hiểu văn bản, toán học, khoa học, lập trình và sử dụng công cụ. Đồng thời, nó đạt được tiến bộ thực chất trong việc bao phủ kiến thức đa ngôn ngữ và có khả năng điều chỉnh tốt hơn với sở thích của người dùng trong các nhiệm vụ chủ quan và mở, từ đó tạo ra các phản hồi hữu ích hơn và văn bản chất lượng cao hơn. Ngoài ra, khả năng hiểu văn bản dài của mô hình cũng được nâng lên đến 256K. Mô hình này chỉ hỗ trợ chế độ không suy nghĩ và không tạo ra thẻ `<think></think>` trong đầu ra."
   },
+  "Qwen/Qwen3-30B-A3B-Thinking-2507": {
+    "description": "Qwen3-30B-A3B-Thinking-2507 là mô hình “suy nghĩ” mới nhất trong dòng Qwen3 do nhóm Tongyi Qianwen của Alibaba phát hành. Là một mô hình chuyên gia hỗn hợp (MoE) với tổng cộng 30.5 tỷ tham số và 3.3 tỷ tham số kích hoạt, nó tập trung vào nâng cao khả năng xử lý các nhiệm vụ phức tạp. Mô hình này thể hiện sự cải thiện đáng kể trên các bài kiểm chuẩn học thuật về suy luận logic, toán học, khoa học, lập trình và các lĩnh vực đòi hỏi chuyên môn con người. Đồng thời, khả năng tuân thủ hướng dẫn, sử dụng công cụ, tạo văn bản và điều chỉnh theo sở thích người dùng cũng được tăng cường rõ rệt. Mô hình hỗ trợ nguyên gốc khả năng hiểu ngữ cảnh dài 256K và có thể mở rộng lên tới 1 triệu token. Phiên bản này được thiết kế cho “chế độ suy nghĩ”, nhằm giải quyết các nhiệm vụ rất phức tạp thông qua lập luận từng bước chi tiết, và năng lực tác nhân (Agent) của nó cũng rất xuất sắc."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
   "Qwen/Qwen3-8B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+    "description": "Qwen3-Coder-30B-A3B-Instruct là mô hình code trong dòng Qwen3 do nhóm Tongyi Qianwen của Alibaba phát triển. Là một mô hình được tinh gọn và tối ưu hóa, nó tập trung nâng cao khả năng xử lý mã trong khi vẫn duy trì hiệu năng và hiệu suất cao. Mô hình này thể hiện lợi thế nổi bật so với các mô hình mã nguồn mở trong các nhiệm vụ phức tạp như lập trình theo đại lý (Agentic Coding), tự động thao tác trình duyệt và gọi công cụ. Nó hỗ trợ ngữ cảnh dài lên tới 256K token một cách nguyên bản và có thể mở rộng đến 1M token, giúp hiểu và xử lý ở cấp độ kho mã tốt hơn. Ngoài ra, mô hình còn cung cấp hỗ trợ mạnh mẽ cho mã hóa đại lý trên các nền tảng như Qwen Code, CLINE, và được thiết kế với định dạng gọi hàm chuyên dụng."
+  },
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct được phát hành bởi Alibaba, và cho đến nay là mô hình mã có năng lực agentic mạnh nhất. Đây là một mô hình Mixture-of-Experts (MoE) với tổng cộng 480 tỷ tham số và 35 tỷ tham số kích hoạt, đạt được sự cân bằng giữa hiệu quả và hiệu năng. Mô hình hỗ trợ trực tiếp độ dài ngữ cảnh 256K (khoảng 260.000) token và có thể mở rộng tới 1 triệu token thông qua các phương pháp ngoại suy như YaRN, cho phép xử lý kho mã lớn và các nhiệm vụ lập trình phức tạp. Qwen3-Coder được thiết kế cho quy trình làm việc mã hóa theo kiểu tác nhân (agentic): không chỉ sinh mã mà còn có thể tương tác tự chủ với công cụ và môi trường phát triển để giải quyết các vấn đề lập trình phức tạp. Trên nhiều bài benchmark về mã hóa và các nhiệm vụ tác nhân, mô hình đạt vị trí hàng đầu trong các mô hình mã nguồn mở, với hiệu năng có thể sánh ngang các mô hình dẫn đầu như Claude Sonnet 4."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, hỗ trợ ngữ cảnh 128k, so với các mô hình mã nguồn mở tốt nhất hiện tại, Qwen2-72B vượt trội hơn hẳn trong nhiều khả năng như hiểu ngôn ngữ tự nhiên, kiến thức, mã, toán học và đa ngôn ngữ."
@@ -1103,11 +1112,26 @@
   "flux-dev": {
     "description": "FLUX.1 [dev] là mô hình tinh luyện mã nguồn mở dành cho ứng dụng phi thương mại. FLUX.1 [dev] duy trì chất lượng hình ảnh và khả năng tuân thủ chỉ dẫn gần tương đương phiên bản chuyên nghiệp FLUX, đồng thời có hiệu suất vận hành cao hơn. So với mô hình chuẩn cùng kích thước, nó sử dụng tài nguyên hiệu quả hơn."
   },
+  "flux-kontext-max": {
+    "description": "Công nghệ tạo và chỉnh sửa hình ảnh theo ngữ cảnh tiên tiến nhất — kết hợp văn bản và hình ảnh để mang lại kết quả chính xác, mạch lạc."
+  },
+  "flux-kontext-pro": {
+    "description": "Tạo và chỉnh sửa hình ảnh theo ngữ cảnh tiên tiến nhất — kết hợp văn bản và hình ảnh để đạt được kết quả chính xác, mạch lạc."
+  },
   "flux-kontext/dev": {
     "description": "Mô hình FLUX.1 tập trung vào nhiệm vụ chỉnh sửa hình ảnh, hỗ trợ đầu vào văn bản và hình ảnh."
   },
   "flux-merged": {
     "description": "Mô hình FLUX.1-merged kết hợp các đặc tính sâu sắc được khám phá trong giai đoạn phát triển của \"DEV\" và ưu thế thực thi nhanh của \"Schnell\". Qua đó, FLUX.1-merged không chỉ nâng cao giới hạn hiệu suất mà còn mở rộng phạm vi ứng dụng."
+  },
+  "flux-pro": {
+    "description": "Mô hình tạo ảnh AI thương mại hàng đầu — chất lượng hình ảnh vô song và độ đa dạng cao của các kết quả đầu ra."
+  },
+  "flux-pro-1.1": {
+    "description": "Mô hình tạo ảnh AI chuyên nghiệp phiên bản nâng cấp — cung cấp chất lượng hình ảnh xuất sắc và khả năng tuân thủ chính xác các gợi ý."
+  },
+  "flux-pro-1.1-ultra": {
+    "description": "Tạo ảnh AI độ phân giải siêu cao — hỗ trợ xuất hình 4 megapixel, tạo ảnh siêu sắc nét trong vòng 10 giây."
   },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] có khả năng xử lý văn bản và hình ảnh tham khảo làm đầu vào, thực hiện chỉnh sửa cục bộ có mục tiêu và biến đổi cảnh tổng thể phức tạp một cách liền mạch."
@@ -1295,6 +1319,9 @@
   "glm-4.5-x": {
     "description": "Phiên bản tốc độ cao của GLM-4.5, vừa mạnh mẽ về hiệu suất, vừa đạt tốc độ tạo 100 token/giây."
   },
+  "glm-4.5v": {
+    "description": "Zhipu thế hệ mới dựa trên kiến trúc MOE, là một mô hình suy luận thị giác với tổng số tham số 106B và 12B tham số kích hoạt, đã đạt SOTA trên nhiều bài kiểm tra chuẩn so với các mô hình đa phương thức mã nguồn mở cùng cấp trên toàn cầu, bao gồm các nhiệm vụ phổ biến như hiểu ảnh, video, tài liệu và giao diện người dùng (GUI)."
+  },
   "glm-4v": {
     "description": "GLM-4V cung cấp khả năng hiểu và suy luận hình ảnh mạnh mẽ, hỗ trợ nhiều nhiệm vụ hình ảnh."
   },
@@ -1433,7 +1460,9 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini cung cấp sự cân bằng giữa trí tuệ, tốc độ và chi phí, khiến nó trở thành mô hình hấp dẫn cho nhiều trường hợp sử dụng."
   },
-  "gpt-4.5-preview": {},
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5-preview là mô hình tổng quát mới nhất, sở hữu kiến thức thế giới sâu rộng và khả năng hiểu ý định người dùng tốt hơn, mạnh trong các nhiệm vụ sáng tạo và lập kế hoạch. Mô hình này có kiến thức cập nhật đến tháng 10 năm 2023."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
@@ -1635,8 +1664,17 @@
   "image-01-live": {
     "description": "Mô hình tạo hình ảnh với chất lượng tinh tế, hỗ trợ tạo hình ảnh từ văn bản và thiết lập phong cách hình ảnh."
   },
+  "imagen-4.0-fast-generate-001": {
+    "description": "Imagen thế hệ thứ 4 — phiên bản nhanh của dòng mô hình chuyển văn bản thành hình ảnh"
+  },
+  "imagen-4.0-generate-001": {
+    "description": "Dòng mô hình Imagen thế hệ thứ 4 tạo hình ảnh từ văn bản"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+  },
+  "imagen-4.0-ultra-generate-001": {
+    "description": "Imagen thế hệ thứ 4 — phiên bản Ultra của dòng mô hình chuyển văn bản thành hình ảnh"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
@@ -1676,6 +1714,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 là mô hình cơ sở kiến trúc MoE với khả năng mã hóa và Agent cực mạnh, tổng số tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra hiệu năng chuẩn về suy luận kiến thức chung, lập trình, toán học, Agent và các lĩnh vực chính khác, mô hình K2 vượt trội hơn các mô hình mã nguồn mở phổ biến khác."
+  },
+  "kimi-k2-turbo-preview": {
+    "description": "kimi-k2 là một mô hình nền tảng theo kiến trúc MoE với khả năng xử lý mã và Agent vượt trội, tổng số tham số 1T, số tham số kích hoạt 32B. Trong các bài kiểm tra chuẩn về hiệu năng ở các hạng mục chính như suy luận kiến thức chung, lập trình, toán học và Agent, mô hình K2 cho hiệu năng vượt trội so với các mô hình mã nguồn mở phổ biến khác."
   },
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
@@ -1760,6 +1801,9 @@
   },
   "llava:34b": {
     "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
+  },
+  "magistral-medium-latest": {
+    "description": "Magistral Medium 1.1 là một mô hình suy luận tiên tiến do Mistral AI phát hành vào tháng 7 năm 2025."
   },
   "mathstral": {
     "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
@@ -2091,7 +2135,9 @@
   "o1-mini": {
     "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
-  "o1-preview": {},
+  "o1-preview": {
+    "description": "Tập trung vào suy luận nâng cao và giải quyết các vấn đề phức tạp, bao gồm các nhiệm vụ toán học và khoa học. Rất phù hợp cho các ứng dụng cần hiểu biết ngữ cảnh sâu và quy trình làm việc tự chủ."
+  },
   "o1-pro": {
     "description": "Dòng mô hình o1 được huấn luyện qua học tăng cường, có khả năng suy nghĩ trước khi trả lời và thực hiện các nhiệm vụ suy luận phức tạp. Mô hình o1-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn, từ đó liên tục cung cấp câu trả lời chất lượng cao hơn."
   },
@@ -2209,7 +2255,15 @@
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
   },
-  "qwen-image": {},
+  "qwen-flash": {
+    "description": "Dòng Tongyi Qianwen (Qwen-Flash) có tốc độ nhanh nhất và chi phí rất thấp, phù hợp cho các tác vụ đơn giản."
+  },
+  "qwen-image": {
+    "description": "Qwen-Image là một mô hình tạo ảnh đa năng, hỗ trợ nhiều phong cách nghệ thuật, đặc biệt giỏi trong việc kết xuất văn bản phức tạp, nhất là văn bản tiếng Trung và tiếng Anh. Mô hình hỗ trợ bố cục nhiều dòng, sinh văn bản ở cấp đoạn và khắc họa chi tiết ở mức độ tinh vi, cho phép thực hiện các thiết kế bố cục kết hợp phức tạp giữa hình ảnh và văn bản."
+  },
+  "qwen-image-edit": {
+    "description": "Mô hình chỉnh sửa ảnh chuyên nghiệp do nhóm Qwen phát hành, hỗ trợ chỉnh sửa ngữ nghĩa và chỉnh sửa bề ngoài, có thể chỉnh sửa chính xác văn bản tiếng Trung và tiếng Anh, thực hiện chuyển đổi phong cách, xoay đối tượng và các thao tác chỉnh sửa ảnh chất lượng cao khác."
+  },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
   },
@@ -2234,7 +2288,9 @@
   "qwen-plus": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
-  "qwen-turbo": {},
+  "qwen-turbo": {
+    "description": "通义千问 Turbo 将不再更新，建议替换为通义千问 Flash。通义千问为超大规模语言模型，支持中文、英文等多种语言的输入。"
+  },
   "qwen-vl-chat-v1": {
     "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
   },
@@ -2550,8 +2606,14 @@
   "step-2x-large": {
     "description": "Mô hình tạo hình ảnh thế hệ mới của Step Star, tập trung vào tác vụ tạo hình ảnh, có thể tạo ra hình ảnh chất lượng cao dựa trên mô tả văn bản do người dùng cung cấp. Mô hình mới tạo ra hình ảnh có cảm giác thực hơn, khả năng tạo chữ tiếng Trung và tiếng Anh mạnh hơn."
   },
+  "step-3": {
+    "description": "Mô hình này sở hữu khả năng nhận thức thị giác mạnh mẽ và năng lực suy luận phức tạp. Có thể hoàn thành một cách chính xác việc hiểu các kiến thức phức tạp liên ngành, phân tích chéo giữa dữ liệu toán học và thông tin thị giác, cũng như xử lý các bài toán phân tích thị giác trong đời sống hàng ngày."
+  },
   "step-r1-v-mini": {
     "description": "Mô hình này là một mô hình suy luận lớn với khả năng hiểu hình ảnh mạnh mẽ, có thể xử lý thông tin hình ảnh và văn bản, và xuất ra nội dung văn bản sau khi suy nghĩ sâu. Mô hình này thể hiện xuất sắc trong lĩnh vực suy luận hình ảnh, đồng thời có khả năng toán học, mã và suy luận văn bản hàng đầu. Độ dài ngữ cảnh là 100k."
+  },
+  "stepfun-ai/step3": {
+    "description": "Step3 là mô hình suy luận đa phương thức tiên tiến do StepFun (阶跃星辰) phát hành, được xây dựng trên kiến trúc Mixture of Experts (MoE) với tổng 321 tỷ tham số và 38 tỷ tham số kích hoạt. Mô hình có thiết kế end-to-end nhằm tối thiểu hóa chi phí giải mã, đồng thời cung cấp hiệu suất hàng đầu trong suy luận thị giác-ngôn ngữ. Nhờ sự phối hợp giữa cơ chế chú ý phân rã ma trận đa (MFA) và tách rời chú ý-FFN (AFD), Step3 duy trì hiệu quả xuất sắc trên cả các bộ gia tốc cao cấp lẫn các thiết bị tăng tốc cấp thấp. Trong giai đoạn tiền huấn luyện, Step3 đã xử lý hơn 20T token văn bản và 4T token hỗn hợp văn bản-hình ảnh, phủ hơn mười ngôn ngữ. Mô hình đạt mức dẫn đầu trong các benchmark về toán học, lập trình và đa phương thức so với các mô hình mã nguồn mở."
   },
   "taichu_llm": {
     "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."
@@ -2699,5 +2761,8 @@
   },
   "zai-org/GLM-4.5-Air": {
     "description": "GLM-4.5-Air là mô hình nền tảng dành cho ứng dụng tác nhân thông minh, sử dụng kiến trúc chuyên gia hỗn hợp (Mixture-of-Experts). Được tối ưu sâu trong các lĩnh vực gọi công cụ, duyệt web, kỹ thuật phần mềm và lập trình front-end, hỗ trợ tích hợp liền mạch vào các tác nhân mã như Claude Code, Roo Code. GLM-4.5 sử dụng chế độ suy luận hỗn hợp, thích ứng với nhiều kịch bản ứng dụng như suy luận phức tạp và sử dụng hàng ngày."
+  },
+  "zai-org/GLM-4.5V": {
+    "description": "GLM-4.5V là thế hệ mô hình ngôn ngữ thị giác (VLM) mới nhất do Zhipu AI (智谱 AI) phát hành. Mô hình này được xây dựng trên nền tảng mô hình văn bản hàng đầu GLM-4.5-Air với tổng số 106 tỷ tham số và 12 tỷ tham số kích hoạt, sử dụng kiến trúc chuyên gia hỗn hợp (MoE), nhằm đạt hiệu năng xuất sắc với chi phí suy luận thấp hơn. Về mặt kỹ thuật, GLM-4.5V tiếp nối hướng phát triển của GLM-4.1V-Thinking và giới thiệu các cải tiến như mã hóa vị trí xoay 3 chiều (3D-RoPE), đáng kể nâng cao khả năng nhận thức và suy luận về mối quan hệ không gian 3D. Thông qua tối ưu hóa ở các giai đoạn tiền huấn luyện, tinh chỉnh giám sát và học tăng cường, mô hình có khả năng xử lý nhiều dạng nội dung thị giác như hình ảnh, video và tài liệu dài, và đã đạt vị trí hàng đầu trong số các mô hình mã nguồn mở cùng cấp trên 41 bộ chuẩn đa phương thức công khai. Ngoài ra, mô hình còn bổ sung công tắc 'chế độ tư duy', cho phép người dùng linh hoạt lựa chọn giữa phản hồi nhanh và suy luận sâu để cân bằng hiệu quả và chất lượng."
   }
 }

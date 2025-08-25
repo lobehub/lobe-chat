@@ -28,8 +28,8 @@
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
   "dm": {
-    "placeholder": "ستظهر رسالتك الخاصة مع {agentTitle} هنا.",
-    "tooltip": "رسالة"
+    "placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
+    "tooltip": "أرسل رسالة خاصة"
   },
   "duplicateSession": {
     "loading": "جاري النسخ...",

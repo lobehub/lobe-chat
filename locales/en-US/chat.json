@@ -28,8 +28,8 @@
   "defaultList": "Default List",
   "defaultSession": "Default Assistant",
   "dm": {
-    "placeholder": "Your private message with {agentTitle} will appear here.",
-    "tooltip": "Message"
+    "placeholder": "Your private messages with {{agentTitle}} will appear here.",
+    "tooltip": "Send a private message"
   },
   "duplicateSession": {
     "loading": "Copying...",

@@ -28,8 +28,8 @@
   "defaultList": "預設清單",
   "defaultSession": "自定義助手",
   "dm": {
-    "placeholder": "您與 {agentTitle} 的私人訊息將顯示在此處。",
-    "tooltip": "訊息"
+    "placeholder": "你與 {{agentTitle}} 的私訊會顯示在這裡。",
+    "tooltip": "發私訊"
   },
   "duplicateSession": {
     "loading": "複製中...",

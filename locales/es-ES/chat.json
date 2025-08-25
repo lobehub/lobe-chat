@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Cambiar modelo"
   },
+  "active": "Activo",
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
   "agentDefaultMessageWithoutEdit": "¡Hola, soy **{{name}}**! Comencemos nuestra conversación.",
@@ -13,17 +14,23 @@
     "thought": "Proceso de pensamiento",
     "unknownTitle": "Obra sin título"
   },
+  "availableAgents": "Agentes disponibles",
   "backToBottom": "Volver al fondo",
   "chatList": {
     "longMessageDetail": "Ver detalles"
   },
   "clearCurrentMessages": "Borrar mensajes actuales",
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
+  "confirmRemoveGroupItemAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionSuccess": "Asistente eliminado con éxito",
   "defaultAgent": "Asistente predeterminado",
   "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
+  "dm": {
+    "placeholder": "Tus mensajes privados con {{agentTitle}} se mostrarán aquí.",
+    "tooltip": "Enviar mensaje privado"
+  },
   "duplicateSession": {
     "loading": "Cargando duplicado...",
     "success": "Duplicado exitoso",
@@ -54,11 +61,18 @@
     },
     "title": "Funcionalidad de extensión del modelo"
   },
+  "group": {
+    "desc": "Colabora con varios asistentes de IA en un espacio de conversación compartido.",
+    "memberTooltip": "El grupo tiene {{count}} miembros",
+    "title": "Grupo"
+  },
+  "groupDescription": "Descripción del grupo",
   "history": {
     "title": "El asistente solo recordará los últimos {{count}} mensajes"
   },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
+  "inactive": "inactivo",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
@@ -76,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
   },
+  "inviteMembers": "Invitar a miembros",
   "knowledgeBase": {
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
@@ -94,12 +109,24 @@
     "uploadGuide": "Los archivos subidos se pueden ver en la 'Base de conocimiento'.",
     "viewMore": "Ver más"
   },
+  "memberSelection": {
+    "addMember": "Añadir miembro",
+    "noAvailableAgents": "No hay agentes disponibles",
+    "noSelectedAgents": "No hay agentes seleccionados",
+    "searchAgents": "Buscar agentes...",
+    "setInitialMembers": "Establecer miembros iniciales"
+  },
+  "members": "Miembros",
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Enviar a",
+      "title": "Mensaje privado"
+    },
     "modelCard": {
       "credit": "Créditos",
       "creditPricing": "Precios",
@@ -143,6 +170,13 @@
     }
   },
   "newAgent": "Nuevo asistente",
+  "newGroupChat": "Crear nuevo chat de grupo",
+  "noAgentsYet": "Este grupo aún no tiene asistentes. Haz clic en el botón + para invitar asistentes.",
+  "noAvailableAgents": "No hay asistentes disponibles para invitar",
+  "noMatchingAgents": "No se encontraron asistentes coincidentes",
+  "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
+  "noSelectedAgents": "No se ha seleccionado ningún asistente",
+  "owner": "Propietario del grupo",
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
@@ -183,6 +217,8 @@
     "title": "Búsqueda en línea"
   },
   "searchAgentPlaceholder": "Asistente de búsqueda...",
+  "searchAgents": "Asistente de búsqueda...",
+  "selectedAgents": "Agentes seleccionados",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionGroup": {
     "config": "Gestión de grupos",
@@ -256,6 +292,7 @@
     "action": "Lectura de voz",
     "clear": "Borrar voz"
   },
+  "untitledAgent": "Asistente sin título",
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "action": {
@@ -278,5 +315,6 @@
       }
     }
   },
+  "you": "tú",
   "zenMode": "Modo de concentración"
 }

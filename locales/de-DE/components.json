@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Parameter hinzufügen",
+    "argumentPlaceholder": "Parameter {{index}}",
+    "enterFirstArgument": "Geben Sie den ersten Parameter ein..."
+  },
   "DragUpload": {
     "dragDesc": "Ziehen Sie Dateien hierher, um mehrere Bilder hochzuladen.",
     "dragFileDesc": "Ziehen Sie Bilder und Dateien hierher, um mehrere Bilder und Dateien hochzuladen.",

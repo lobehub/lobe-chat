@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Model Değiştir"
   },
+  "active": "Aktif",
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle konuşmaya başlayabilir veya [Asistan Ayarları]({{url}}) sayfasına giderek bilgilerimi güncelleyebilirsin.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Konuşmaya başlayalım!",
@@ -13,17 +14,23 @@
     "thought": "Düşünce Süreci",
     "unknownTitle": "İsimsiz Eser"
   },
+  "availableAgents": "Kullanılabilir asistanlar",
   "backToBottom": "En alta git",
   "chatList": {
     "longMessageDetail": "Detayları görüntüle"
   },
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
+  "confirmRemoveGroupItemAlert": "Bu grubu silmek üzeresiniz; silindikten sonra bu gruba ait asistanlar varsayılan listeye taşınacaktır. Lütfen işlemi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionSuccess": "Oturum başarıyla kaldırıldı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
+  "dm": {
+    "placeholder": "{{agentTitle}} ile olan özel mesajlarınız burada gösterilecek.",
+    "tooltip": "Özel mesaj gönder"
+  },
   "duplicateSession": {
     "loading": "Kopyalanıyor...",
     "success": "Kopyalama başarılı",
@@ -54,11 +61,18 @@
     },
     "title": "Model Genişletme Özellikleri"
   },
+  "group": {
+    "desc": "Birden fazla yapay zeka asistanıyla paylaşılan bir sohbet alanında işbirliği yapın.",
+    "memberTooltip": "Bu grupta {{count}} üye var",
+    "title": "Grup"
+  },
+  "groupDescription": "Grup açıklaması",
   "history": {
     "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
   },
   "historyRange": "Geçmiş Aralığı",
   "historySummary": "Tarihsel haber özeti",
+  "inactive": "Etkin değil",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
@@ -76,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Niyetinizi anlama ve analiz etme aşamasındayız..."
   },
+  "inviteMembers": "Üyeleri davet et",
   "knowledgeBase": {
     "all": "Tüm İçerik",
     "allFiles": "Tüm Dosyalar",
@@ -94,12 +109,24 @@
     "uploadGuide": "Yüklenen dosyaları 'Bilgi Tabanı' içinde görebilirsiniz.",
     "viewMore": "Daha Fazla Gör"
   },
+  "memberSelection": {
+    "addMember": "Üye Ekle",
+    "noAvailableAgents": "Kullanılabilir temsilci yok",
+    "noSelectedAgents": "Seçili temsilci yok",
+    "searchAgents": "Temsilcileri ara...",
+    "setInitialMembers": "Başlangıç Üyelerini Ayarla"
+  },
+  "members": "Üyeler",
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Alıcı",
+      "title": "Özel Mesaj"
+    },
     "modelCard": {
       "credit": "Kredi",
       "creditPricing": "Fiyatlandırma",
@@ -143,6 +170,13 @@
     }
   },
   "newAgent": "Yeni Asistan",
+  "newGroupChat": "Yeni grup sohbeti oluştur",
+  "noAgentsYet": "Bu grupta henüz asistan yok. Asistan davet etmek için + simgesine tıklayın.",
+  "noAvailableAgents": "Davet edilebilecek asistan yok.",
+  "noMatchingAgents": "Eşleşen asistan yok",
+  "noMembersYet": "Bu grupta henüz üye yok. Asistanı davet etmek için + düğmesine tıklayın.",
+  "noSelectedAgents": "Henüz bir asistan seçilmedi",
+  "owner": "Grup sahibi",
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
@@ -183,6 +217,8 @@
     "title": "Ağ Araması"
   },
   "searchAgentPlaceholder": "Arama Asistanı...",
+  "searchAgents": "Arama asistanı...",
+  "selectedAgents": "Seçili Asistanlar",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionGroup": {
     "config": "Grup Yönetimi",
@@ -256,6 +292,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
+  "untitledAgent": "Adsız Asistan",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
     "action": {
@@ -278,5 +315,6 @@
       }
     }
   },
+  "you": "sen",
   "zenMode": "Odak Modu"
 }

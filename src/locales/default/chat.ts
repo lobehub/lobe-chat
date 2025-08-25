@@ -29,7 +29,7 @@ export default {
   defaultList: '默认列表',
   defaultSession: '自定义助手',
   dm: {
-    placeholder: '你与 {agentTitle} 的私信将显示在这里。',
+    placeholder: '你与 {{agentTitle}} 的私信将显示在这里。',
     tooltip: '发私信',
   },
   duplicateSession: {

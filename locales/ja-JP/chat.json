@@ -28,8 +28,8 @@
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "dm": {
-    "placeholder": "{agentTitle}とのプライベートメッセージはここに表示されます。",
-    "tooltip": "メッセージ"
+    "placeholder": "あなたと{{agentTitle}}のダイレクトメッセージはここに表示されます。",
+    "tooltip": "メッセージを送る"
   },
   "duplicateSession": {
     "loading": "複製中...",

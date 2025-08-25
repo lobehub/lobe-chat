@@ -85,6 +85,17 @@
     "CreateMessageError": "Przykro nam, wiadomość nie została wysłana poprawnie. Proszę skopiować treść i spróbować ponownie, po odświeżeniu strony ta wiadomość nie zostanie zachowana.",
     "ExceededContextWindow": "Aktualna zawartość żądania przekracza długość, którą model może przetworzyć. Proszę zmniejszyć ilość treści i spróbować ponownie.",
     "FreePlanLimit": "Jesteś obecnie użytkownikiem darmowej wersji, nie możesz korzystać z tej funkcji. Proszę uaktualnić do planu płatnego, aby kontynuować korzystanie.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Twoja zawartość zawiera słowa zakazane. Sprawdź i zmodyfikuj swoje wejście, a następnie spróbuj ponownie.",
+      "IMAGE_SAFETY": "Wygenerowana zawartość obrazu została zablokowana ze względów bezpieczeństwa. Spróbuj zmodyfikować żądanie generowania obrazu.",
+      "LANGUAGE": "Używany język nie jest obecnie obsługiwany. Spróbuj ponownie, używając angielskiego lub innego obsługiwanego języka.",
+      "OTHER": "Zawartość została zablokowana z nieznanego powodu. Spróbuj przeformułować swoje zapytanie.",
+      "PROHIBITED_CONTENT": "Twoje żądanie może zawierać treści zabronione. Dostosuj proszę zapytanie, aby było zgodne z zasadami użytkowania.",
+      "RECITATION": "Twoja zawartość mogła zostać zablokowana z powodu możliwych problemów z prawami autorskimi. Spróbuj użyć oryginalnej treści lub przeformułować zapytanie.",
+      "SAFETY": "Twoja zawartość została zablokowana z powodu polityki bezpieczeństwa. Spróbuj dostosować zapytanie, unikając potencjalnie szkodliwych lub niewłaściwych treści.",
+      "SPII": "Twoja zawartość może zawierać wrażliwe dane osobowe. Aby chronić prywatność, usuń odpowiednie dane wrażliwe i spróbuj ponownie.",
+      "default": "Zawartość zablokowana: {{blockReason}}. Dostosuj treść zapytania i spróbuj ponownie."
+    },
     "InsufficientQuota": "Przykro nam, limit dla tego klucza został osiągnięty. Proszę sprawdzić saldo konta lub zwiększyć limit klucza i spróbować ponownie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",

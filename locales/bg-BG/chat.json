@@ -28,8 +28,8 @@
   "defaultList": "Списък по подразбиране",
   "defaultSession": "Агент по подразбиране",
   "dm": {
-    "placeholder": "Вашето лично съобщение с {agentTitle} ще се появи тук.",
-    "tooltip": "Съобщение"
+    "placeholder": "Вашите лични съобщения с {{agentTitle}} ще се показват тук.",
+    "tooltip": "Изпрати лично съобщение"
   },
   "duplicateSession": {
     "loading": "Копиране...",

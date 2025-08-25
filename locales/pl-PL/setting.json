@@ -35,6 +35,11 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "groupTab": {
+    "chat": "Czat grupowy",
+    "members": "Członkowie",
+    "meta": "Informacje o czacie grupowym"
+  },
   "header": {
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
@@ -290,6 +295,69 @@
     },
     "title": "Ustawienia ogólne"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Wprowadź opis grupy",
+      "title": "Opis grupy"
+    },
+    "name": {
+      "placeholder": "Wprowadź nazwę grupy",
+      "title": "Nazwa grupy"
+    },
+    "submit": "Zaktualizuj grupę",
+    "systemPrompt": {
+      "placeholder": "Wprowadź polecenie systemowe",
+      "title": "Polecenie systemowe"
+    },
+    "title": "Informacje o grupie"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Wybierz, ile odpowiedzi z rzędu mogą wysyłać członkowie. Ustaw 0, aby wyłączyć.",
+      "title": "Maks. wiadomości z rzędu"
+    },
+    "model": {
+      "desc": "Wybierz model używany w konwersacjach grupowych",
+      "title": "Model orkiestratora"
+    },
+    "responseOrder": {
+      "desc": "Agenci będą odpowiadać w kolejności, w jakiej są ustawieni w grupie",
+      "options": {
+        "natural": "Naturalna",
+        "sequential": "Sekwencyjna"
+      },
+      "placeholder": "Wybierz kolejność odpowiedzi",
+      "title": "Kolejność odpowiedzi"
+    },
+    "responseSpeed": {
+      "desc": "Wybierz sposób odpowiadania agentów w konwersacjach grupowych",
+      "options": {
+        "fast": "Szybko",
+        "medium": "Średnio",
+        "slow": "Wolno"
+      },
+      "placeholder": "Wybierz prędkość odpowiedzi",
+      "title": "Szybkość odpowiedzi"
+    },
+    "revealDM": {
+      "desc": "Spraw, aby treść prywatnych wiadomości wysyłanych do innych członków była dla Ciebie widoczna.",
+      "title": "Pokaż prywatne wiadomości"
+    },
+    "submit": "Aktualizuj ustawienia",
+    "systemPrompt": {
+      "desc": "Niestandardowy komunikat systemowy dla orkiestratora rozmów grupowych. Zastępuje domyślne zachowanie orkiestratora.",
+      "placeholder": "Wprowadź niestandardowy komunikat systemowy orkiestratora...",
+      "title": "Komunikat systemowy orkiestratora"
+    },
+    "title": "Ustawienia czatu"
+  },
+  "settingGroupMembers": {
+    "edit": "Edytuj członka",
+    "empty": "W tej grupie nie ma jeszcze agentów. Kliknij przycisk +, aby dodać członków.",
+    "owner": "Ty (właściciel)",
+    "remove": "Usuń członka",
+    "you": "Ty"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
@@ -510,6 +578,11 @@
       "label": "Model nazewnictwa tematów do AI w malarstwie",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
       "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+    },
+    "groupChatSupervisor": {
+      "label": "Model nadzoru czatu grupowego",
+      "modelDesc": "Model przeznaczony do nadzorowania i zarządzania rozmowami w czatach grupowych",
+      "title": "Nadzór i zarządzanie czatem grupowym"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {

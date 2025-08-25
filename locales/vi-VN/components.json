@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Thêm tham số",
+    "argumentPlaceholder": "Tham số {{index}}",
+    "enterFirstArgument": "Nhập tham số đầu tiên..."
+  },
   "DragUpload": {
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh.",
     "dragFileDesc": "Kéo và thả hình ảnh và tệp vào đây, hỗ trợ tải lên nhiều hình ảnh và tệp.",
