@@ -3,23 +3,20 @@ import { useThemeToken } from '@/theme';
 import { useCallback } from 'react';
 import { ICON_SIZE } from '@/const/common';
 import IconBtn from '../IconBtn';
-import { useChat } from '@/hooks/useChat';
-import { useSessionStore } from '@/store/session';
+import { useSwitchTopic } from '@/hooks/useSwitchSession';
 
 const NewChatBtn = () => {
   const token = useThemeToken();
-  const { activeId } = useSessionStore();
+  const switchTopic = useSwitchTopic();
 
-  const { clearMessages } = useChat();
-
-  const handleClearMessages = useCallback(() => {
-    clearMessages(activeId);
-  }, [activeId, clearMessages]);
+  const handleNewChatTopic = useCallback(() => {
+    switchTopic();
+  }, [switchTopic]);
 
   return (
     <IconBtn
       icon={<MessageSquarePlus color={token.colorText} size={ICON_SIZE} />}
-      onPress={handleClearMessages}
+      onPress={handleNewChatTopic}
     />
   );
 };
