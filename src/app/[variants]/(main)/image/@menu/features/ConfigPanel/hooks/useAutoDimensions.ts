@@ -1,14 +1,14 @@
 import { DEFAULT_DIMENSION_CONSTRAINTS } from '@lobechat/const';
 
+import { constrainDimensions } from '@/app/[variants]/(main)/image/@menu/features/ConfigPanel/utils/dimensionConstraints';
 import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
-import { constrainDimensions } from '@/utils/dimensionConstraints';
 
 /**
  * Extract URL and dimensions from callback data (supports both old and new API)
  */
 const extractUrlAndDimensions = (
-  data?: string | { dimensions?: { height: number, width: number; }, url: string; },
+  data?: string | { dimensions?: { height: number; width: number }; url: string },
 ) => {
   const url = typeof data === 'string' ? data : data?.url;
   const dimensions = typeof data === 'object' ? data?.dimensions : undefined;
@@ -29,7 +29,7 @@ export const useAutoDimensions = () => {
   /**
    * Auto-set dimensions with model constraints if parameters are supported
    */
-  const autoSetDimensions = (dimensions: { height: number, width: number; }) => {
+  const autoSetDimensions = (dimensions: { height: number; width: number }) => {
     if (!isSupportWidth || !isSupportHeight) return;
 
     const constraints = {

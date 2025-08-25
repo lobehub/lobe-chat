@@ -1,6 +1,6 @@
 interface DimensionConstraints {
-  height: { max: number, min: number; };
-  width: { max: number, min: number; };
+  height: { max: number; min: number };
+  width: { max: number; min: number };
 }
 
 /**
@@ -14,7 +14,7 @@ export const constrainDimensions = (
   originalWidth: number,
   originalHeight: number,
   constraints: DimensionConstraints,
-): { height: number, width: number; } => {
+): { height: number; width: number } => {
   let width = originalWidth;
   let height = originalHeight;
 
