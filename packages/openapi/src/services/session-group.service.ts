@@ -11,7 +11,7 @@ import {
   DeleteSessionGroupRequest,
   SessionGroupListResponse,
   UpdateSessionGroupRequest,
-} from '../types/session.type';
+} from '../types/session-group.type';
 
 /**
  * SessionGroup 服务实现类

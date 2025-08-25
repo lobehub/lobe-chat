@@ -6,7 +6,7 @@ import {
   CreateSessionGroupRequest,
   DeleteSessionGroupRequest,
   UpdateSessionGroupRequest,
-} from '../types/session.type';
+} from '../types/session-group.type';
 
 /**
  * SessionGroup 控制器类
