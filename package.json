@@ -327,7 +327,7 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "dbdocs": "^0.16.0",
-    "dotenv": "^16.6.1",
+    "dotenv": "^17.0.0",
     "dpdm-fast": "1.0.7",
     "drizzle-dbml-generator": "^0.10.0",
     "drizzle-kit": "^0.31.4",
