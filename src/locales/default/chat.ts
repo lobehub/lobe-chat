@@ -29,8 +29,8 @@ export default {
   defaultList: '默认列表',
   defaultSession: '自定义助手',
   dm: {
-    tooltip: 'Message',
-    placeholder: 'Your private message with {agentTitle} will appear here.',
+    placeholder: '你与 {agentTitle} 的私信将显示在这里。',
+    tooltip: '发私信',
   },
   duplicateSession: {
     loading: '复制中...',
