@@ -6,6 +6,18 @@
   },
   {
     "children": {
+      "improvements": [
+        "Update mistral model vision ability."
+      ],
+      "features": [
+        "Add Azure image generation models to configuration, Add support for Azure OpenAI image generation and editing, Enhance error logging for Azure Image API response handling, Improve Azure image generation response handling and logging, Update Azure model configs with 'auto' size default and fix deployment IDs."
+      ]
+    },
+    "date": "2025-08-22",
+    "version": "1.117.0"
+  },
+  {
+    "children": {
       "features": [
         "Add support for Azure image models and implement createImage API method."
       ],

@@ -2,6 +2,63 @@
 
 # Changelog
 
+## [Version&nbsp;1.117.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.116.0...v1.117.0)
+<sup>Released on **2025-08-22**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Move database to packages.
+
+
+#### ✨ Features
+
+- **misc**: Add Azure image generation models to configuration, Add support for Azure OpenAI image generation and editing, Enhance error logging for Azure Image API response handling, Improve Azure image generation response handling and logging, Update Azure model configs with 'auto' size default and fix deployment IDs.
+
+
+#### 💄 Styles
+
+- **misc**: Update mistral model vision ability.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Move database to packages, closes [#8874](https://github.com/jaworldwideorg/OneJA-Bot/issues/8874) ([af1f715](https://github.com/jaworldwideorg/OneJA-Bot/commit/af1f715))
+
+
+
+#### What's improved
+
+* **misc**: Add Azure image generation models to configuration ([c0ba087](https://github.com/jaworldwideorg/OneJA-Bot/commit/c0ba087))
+* **misc**: Add support for Azure OpenAI image generation and editing ([65547bb](https://github.com/jaworldwideorg/OneJA-Bot/commit/65547bb))
+* **misc**: Enhance error logging for Azure Image API response handling ([2c17743](https://github.com/jaworldwideorg/OneJA-Bot/commit/2c17743))
+* **misc**: Improve Azure image generation response handling and logging ([8b384ed](https://github.com/jaworldwideorg/OneJA-Bot/commit/8b384ed))
+* **misc**: Update Azure model configs with 'auto' size default and fix deployment IDs ([700b027](https://github.com/jaworldwideorg/OneJA-Bot/commit/700b027))
+
+
+
+#### Styles
+
+* **misc**: Update mistral model vision ability, closes [#8885](https://github.com/jaworldwideorg/OneJA-Bot/issues/8885) ([915c0ff](https://github.com/jaworldwideorg/OneJA-Bot/commit/915c0ff))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.116.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.115.0...v1.116.0)
 <sup>Released on **2025-08-21**</sup>
 
