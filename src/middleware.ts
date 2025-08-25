@@ -15,6 +15,7 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
+import { parseDefaultThemeFromCountry } from "@/utils/server/geo";
 
 // Create debug logger instances
 const logDefault = debug('middleware:default');
