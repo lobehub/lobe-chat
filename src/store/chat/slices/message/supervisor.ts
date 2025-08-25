@@ -1,6 +1,7 @@
 import { groupSupervisorPrompts } from '@lobechat/prompts';
 
 import { ChatGroupAgentItem } from '@/database/schemas/chatGroup';
+import { groupChatPrompts } from '@/prompts/groupChat';
 import { chatService } from '@/services/chat';
 import { ChatMessage } from '@/types/message';
 
@@ -17,8 +18,9 @@ export interface SupervisorContext {
   messages: ChatMessage[];
   model: string;
   provider: string;
-  userName?: string; // Real user name for group member list
-  systemPrompt?: string; // Custom system prompt from group config
+  // Real user name for group member list
+  systemPrompt?: string; 
+  userName?: string; // Custom system prompt from group config
 }
 
 /**
@@ -37,39 +39,17 @@ export class GroupChatSupervisor {
     }
 
     try {
-      // Prepare agent descriptions for the supervisor (including user)
-      const memberDescriptions = this.buildMemberDescriptions(availableAgents, userName);
-
       // Create supervisor prompt with conversation context
       const conversationHistory = groupSupervisorPrompts(messages);
 
-      const supervisorPrompt = `
-      You are a conversation orchestrator for a group chat with multiple AI agents. Your role is to decide which agents should respond next based on the conversation context.
-
-Rules:
-- Return an array of objects where each object has an "id" field for the agent who should respond
-- If a response should be a direct message (DM) to a specific member, include a "target" field with the target member ID or "user"
-- If no "target" field is provided, the response will be a group message visible to everyone
-- If the conversation seems complete, return empty array []
-- Your goal is to make the conversation as natural as possible. For example, if user DM to an agent, the agent is likely to respond to the user privately too
-- Return ONLY a JSON array of objects, nothing else
-
-Examples: 
-- Group responses: [{"id": "agt_01"}]
-- DM responses: [{"id": "agt_01", "target": "agt_02"}, {"id": "agt_04", "target": "user"}]
-- Mixed responses: [{"id": "agt_01"}, {"id": "agt_02", "target": "user"}]
-- Stop conversation: []
-
-<group_role>
-${systemPrompt}
-</group_role>
-
-${memberDescriptions}
-
-<conversation_history>
-${conversationHistory}
-</conversation_history>
-`;
+      const supervisorPrompt = groupChatPrompts.buildSupervisorPrompt({
+        availableAgents: availableAgents
+          .filter((agent) => agent.id)
+          .map((agent) => ({ id: agent.id!, title: agent.title })),
+        conversationHistory,
+        systemPrompt,
+        userName,
+      });
 
       const response = await this.callLLMForDecision(supervisorPrompt, context);
 
@@ -82,34 +62,6 @@ ${conversationHistory}
       // Fallback: return empty result to stop conversation when error occurs
       return [];
     }
-  }
-
-  /**
-   * Build member description text for supervisor using XML format
-   */
-  private buildMemberDescriptions(agents: ChatGroupAgentItem[], userName?: string): string {
-    // Include user as first member
-    const members = [
-      {
-        id: 'user',
-        name: userName || 'User',
-        role: 'Human participant',
-      },
-      // Then include all agents
-      ...agents.map((agent) => ({
-        id: agent.id,
-        name: agent.title || agent.id,
-        role: 'AI Agent',
-      })),
-    ];
-
-    const memberList = members
-      .map((member) => `  <member id="${member.id}" name="${member.name}" />`)
-      .join('\n');
-
-    return `<group_members>
-${memberList}
-</group_members>`;
   }
 
   /**
