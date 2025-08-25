@@ -10,7 +10,7 @@ import {
   CreateSessionGroupRequestSchema,
   SessionGroupIdParamSchema,
   UpdateSessionGroupRequestSchema,
-} from '../types/session.type';
+} from '../types/session-group.type';
 
 // SessionGroup 相关路由
 const SessionGroupRoutes = new Hono();

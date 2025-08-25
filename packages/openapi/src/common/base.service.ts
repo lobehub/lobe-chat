@@ -337,6 +337,7 @@ export abstract class BaseService implements IBaseService {
     permissionKey: keyof typeof PERMISSION_ACTIONS,
     targetInfoIds: TBatchTarget,
   ): Promise<{
+    condition?: { userIds?: string[] };
     isPermitted: boolean;
     message?: string;
   }> {
@@ -405,6 +406,7 @@ export abstract class BaseService implements IBaseService {
     if (userIds.length === 0) {
       this.log('warn', '未找到任何目标资源', { permissionKey, targetInfoIds });
       return {
+        condition: { userIds },
         isPermitted: false,
         message: '未找到任何目标资源',
       };
@@ -421,7 +423,7 @@ export abstract class BaseService implements IBaseService {
           'info',
           `权限通过：批量操作，所有资源属于当前用户，且拥有 ${permissionKey} owner 权限`,
         );
-        return { isPermitted: true };
+        return { condition: { userIds }, isPermitted: true };
       }
 
       // 如果所有资源都属于当前用户，但用户没有 owner 权限，则不允许操作
