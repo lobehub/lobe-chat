@@ -151,9 +151,13 @@ export const generateAIChat: StateCreator<
     get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
   },
 
-  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion, sessionId }) => {
     const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
-    if (!activeId) return;
+    
+    // Use provided sessionId if available, otherwise use activeId
+    const targetSessionId = sessionId || activeId;
+    
+    if (!targetSessionId) return;
 
     const fileIdList = files?.map((f) => f.id);
 
@@ -169,7 +173,7 @@ export const generateAIChat: StateCreator<
       // if message has attached with files, then add files to message and the agent
       files: fileIdList,
       role: 'user',
-      sessionId: activeId,
+      sessionId: targetSessionId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
@@ -216,7 +220,7 @@ export const generateAIChat: StateCreator<
       }
     }
     //  update assistant update to make it rerank
-    useSessionStore.getState().triggerSessionUpdate(get().activeId);
+    useSessionStore.getState().triggerSessionUpdate(targetSessionId);
 
     const id = await get().internal_createMessage(newMessage, {
       tempMessageId,
@@ -238,7 +242,7 @@ export const generateAIChat: StateCreator<
 
       // delete previous messages
       // remove the temp message map
-      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
+      const newMaps = { ...get().messagesMap, [messageMapKey(targetSessionId, null)]: [] };
       set({ messagesMap: newMaps }, false, 'internal_copyMessages');
     }
 
