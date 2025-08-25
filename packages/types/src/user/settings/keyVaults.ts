@@ -41,6 +41,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   ai302?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
   aihubmix?: OpenAICompatibleKeyVault;
+  akashchat?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
   azureai?: AzureOpenAIKeyVault;
