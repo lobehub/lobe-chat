@@ -38,7 +38,7 @@ export class UserService extends BaseService {
       .from(users)
       .innerJoin(userRoles, eq(users.id, userRoles.userId))
       .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .leftJoin(messages, eq(users.id, messages.userId))
+      .innerJoin(messages, eq(users.id, messages.userId))
       .where(eq(users.id, userId));
 
     if (!results.length) {
@@ -137,7 +137,7 @@ export class UserService extends BaseService {
         .from(users)
         .innerJoin(userRoles, eq(users.id, userRoles.userId))
         .innerJoin(roles, eq(userRoles.roleId, roles.id))
-        .leftJoin(messages, eq(users.id, messages.userId))
+        .innerJoin(messages, eq(users.id, messages.userId))
         .where(and(...conditions))
         .limit(pageSize)
         .offset(offset);

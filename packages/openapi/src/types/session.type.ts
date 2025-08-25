@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { AgentItem, SessionItem, UserItem } from '@/database/schemas';
 
+// ==================== Session CRUD Types ====================
+
 /**
  * 创建会话请求参数
  */
@@ -19,6 +21,19 @@ export interface CreateSessionRequest {
   type?: 'agent' | 'group'; // 克隆源会话ID
 }
 
+export const CreateSessionRequestSchema = z.object({
+  agentId: z.string().nullish(),
+  avatar: z.string().nullish(),
+  backgroundColor: z.string().nullish(),
+  config: z.object({}).passthrough().nullish(),
+  description: z.string().nullish(),
+  groupId: z.string().nullish(),
+  meta: z.object({}).passthrough().nullish(),
+  pinned: z.boolean().nullish(),
+  title: z.string().nullish(),
+  type: z.enum(['agent', 'group']).nullish(),
+});
+
 /**
  * 更新会话请求参数
  */
@@ -34,6 +49,17 @@ export interface UpdateSessionRequest {
   userId?: string;
 }
 
+export const UpdateSessionRequestSchema = z.object({
+  agentId: z.string().nullish(),
+  avatar: z.string().nullish(),
+  backgroundColor: z.string().nullish(),
+  description: z.string().nullish(),
+  groupId: z.string().nullish(),
+  pinned: z.boolean().nullish(),
+  title: z.string().nullish(),
+  userId: z.string().nullish(),
+});
+
 /**
  * 克隆会话请求参数
  */
@@ -41,6 +67,8 @@ export interface CloneSessionRequest {
   id: string;
   newTitle: string;
 }
+
+// ==================== Session Query Types ====================
 
 /**
  * 搜索会话请求参数
@@ -64,6 +92,92 @@ export interface GetSessionsRequest {
   sessionIds?: string[];
   userId?: string;
 }
+
+export const GetSessionsRequestSchema = z.object({
+  agentId: z.string().nullish(),
+  ids: z
+    .string()
+    .nullish()
+    .transform((val) => (val ? val.split(',') : [])),
+  keyword: z.string().nullish(),
+  page: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .nullish(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .nullish(),
+  query: z.string().nullish(),
+  userId: z.string().nullish(),
+});
+
+// ==================== Session Groups Types ====================
+
+/**
+ * 分组查询请求参数
+ */
+export interface SessionsGroupsRequest {
+  groupBy: 'agent';
+}
+
+export const SessionsGroupsRequestSchema = z.object({
+  groupBy: z.literal('agent'),
+  keyword: z.string().nullish(),
+  limit: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .nullish(),
+});
+
+/**
+ * 分组查询响应类型
+ */
+export interface SessionsGroupsResponse {
+  agent: AgentItem;
+  sessions: SessionListItem[];
+  total: number;
+}
+
+// ==================== Session Batch Operations ====================
+
+/**
+ * 批量更新会话请求参数
+ */
+export interface BatchUpdateSessionsRequest {
+  sessions: Array<{
+    avatar?: string;
+    backgroundColor?: string;
+    description?: string;
+    groupId?: string;
+    id: string;
+    pinned?: boolean;
+    title?: string;
+    userId?: string;
+  }>;
+}
+
+/**
+ * 批量更新请求参数格式
+ */
+export type NewBatchUpdateSessionsRequest = Array<{
+  data: Omit<UpdateSessionRequest, 'id'>;
+  id: string;
+}>;
+
+export const NewBatchUpdateSessionsRequestSchema = z
+  .array(
+    z.object({
+      data: UpdateSessionRequestSchema,
+      id: z.string().min(1, '会话 ID 不能为空'),
+    }),
+  )
+  .min(1, '至少需要提供一个要更新的会话');
+
+// ==================== Session Response Types ====================
 
 /**
  * 会话列表项类型
@@ -105,46 +219,6 @@ export interface SessionCountByAgentResponse {
 }
 
 /**
- * 分组查询请求参数
- */
-export interface SessionsGroupsRequest {
-  groupBy: 'agent';
-}
-
-/**
- * 分组查询响应类型
- */
-export interface SessionsGroupsResponse {
-  agent: AgentItem;
-  sessions: SessionListItem[];
-  total: number;
-}
-
-/**
- * 批量更新会话请求参数
- */
-export interface BatchUpdateSessionsRequest {
-  sessions: Array<{
-    avatar?: string;
-    backgroundColor?: string;
-    description?: string;
-    groupId?: string;
-    id: string;
-    pinned?: boolean;
-    title?: string;
-    userId?: string;
-  }>;
-}
-
-/**
- * 批量更新请求参数格式
- */
-export type NewBatchUpdateSessionsRequest = Array<{
-  data: Omit<UpdateSessionRequest, 'id'>;
-  id: string;
-}>;
-
-/**
  * 批量查询会话响应类型
  */
 export type BatchGetSessionsResponse = {
@@ -152,73 +226,8 @@ export type BatchGetSessionsResponse = {
   total: number;
 };
 
-// Zod Schemas for validation
-export const CreateSessionRequestSchema = z.object({
-  agentId: z.string().nullish(),
-  avatar: z.string().nullish(),
-  backgroundColor: z.string().nullish(),
-  config: z.object({}).passthrough().nullish(),
-  description: z.string().nullish(),
-  groupId: z.string().nullish(),
-  meta: z.object({}).passthrough().nullish(),
-  pinned: z.boolean().nullish(),
-  title: z.string().nullish(),
-  type: z.enum(['agent', 'group']).nullish(),
-});
-
-export const UpdateSessionRequestSchema = z.object({
-  agentId: z.string().nullish(),
-  avatar: z.string().nullish(),
-  backgroundColor: z.string().nullish(),
-  description: z.string().nullish(),
-  groupId: z.string().nullish(),
-  pinned: z.boolean().nullish(),
-  title: z.string().nullish(),
-  userId: z.string().nullish(),
-});
-
-export const GetSessionsRequestSchema = z.object({
-  agentId: z.string().nullish(),
-  ids: z
-    .string()
-    .nullish()
-    .transform((val) => (val ? val.split(',') : [])),
-  keyword: z.string().nullish(),
-  page: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1))
-    .nullish(),
-  pageSize: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
-  query: z.string().nullish(),
-  userId: z.string().nullish(),
-});
+// ==================== Common Schemas ====================
 
 export const SessionIdParamSchema = z.object({
   id: z.string().min(1, '会话 ID 不能为空'),
-});
-
-// 新的RESTful批量更新Schema
-export const NewBatchUpdateSessionsRequestSchema = z
-  .array(
-    z.object({
-      data: UpdateSessionRequestSchema,
-      id: z.string().min(1, '会话 ID 不能为空'),
-    }),
-  )
-  .min(1, '至少需要提供一个要更新的会话');
-
-// 分组查询Schema
-export const SessionsGroupsRequestSchema = z.object({
-  groupBy: z.literal('agent'),
-  keyword: z.string().nullish(),
-  limit: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
 });

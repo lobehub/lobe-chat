@@ -3,15 +3,7 @@ import { z } from 'zod';
 
 import { AgentItem } from '@/database/schemas';
 
-/**
- * 模型参数接口
- */
-export interface ModelParams {
-  frequency_penalty: number;
-  presence_penalty: number;
-  temperature: number;
-  top_p: number;
-}
+// ==================== Agent CRUD Types ====================
 
 /**
  * 创建 Agent 请求参数
@@ -27,12 +19,45 @@ export interface CreateAgentRequest {
   title: string;
 }
 
+export const CreateAgentRequestSchema = z.object({
+  avatar: z.string().nullish(),
+  chatConfig: z
+    .object({
+      autoCreateTopicThreshold: z.number(),
+      disableContextCaching: z.boolean().nullish(),
+      displayMode: z.enum(['chat', 'docs']).nullish(),
+      enableAutoCreateTopic: z.boolean().nullish(),
+      enableCompressHistory: z.boolean().nullish(),
+      enableHistoryCount: z.boolean().nullish(),
+      enableMaxTokens: z.boolean().nullish(),
+      enableReasoning: z.boolean().nullish(),
+      enableReasoningEffort: z.boolean().nullish(),
+      historyCount: z.number().nullish(),
+      reasoningBudgetToken: z.number().nullish(),
+      reasoningEffort: z.enum(['low', 'medium', 'high']).nullish(),
+      searchFCModel: z.string().nullish(),
+      searchMode: z.enum(['disabled', 'enabled']).nullish(),
+      useModelBuiltinSearch: z.boolean().nullish(),
+    })
+    .nullish(),
+  description: z.string().nullish(),
+  model: z.string().nullish(),
+  params: z.record(z.unknown()).nullish(),
+  provider: z.string().nullish(),
+  systemRole: z.string().nullish(),
+  title: z.string().min(1, '标题不能为空'),
+});
+
 /**
  * 更新 Agent 请求参数
  */
 export interface UpdateAgentRequest extends CreateAgentRequest {
   id: string;
 }
+
+export const UpdateAgentRequestSchema = CreateAgentRequestSchema.extend({
+  id: z.string().min(1, 'Agent ID 不能为空'),
+});
 
 /**
  * 删除 Agent 请求参数
@@ -41,6 +66,50 @@ export interface AgentDeleteRequest {
   agentId: string;
   migrateSessionTo?: string;
 }
+
+export const AgentDeleteRequestSchema = z.object({
+  agentId: z.string().min(1, 'Agent ID 不能为空'),
+  migrateSessionTo: z.string().nullish(),
+});
+
+// ==================== Agent Batch Operations ====================
+
+/**
+ * 批量删除 Agent 请求参数
+ */
+export interface BatchDeleteAgentsRequest {
+  agentIds: string[];
+  migrateSessionTo?: string;
+}
+
+/**
+ * 批量更新 Agent 请求参数
+ */
+export interface BatchUpdateAgentsRequest {
+  agentIds: string[];
+  updateData: {
+    avatar?: string;
+    description?: string;
+    model?: string;
+    provider?: string;
+    systemRole?: string;
+  };
+}
+
+/**
+ * 批量操作结果类型
+ */
+export interface BatchOperationResult {
+  errors?: Array<{
+    error: string;
+    id: string;
+  }>;
+  failed: number;
+  success: number;
+  total: number;
+}
+
+// ==================== Agent Session Relations ====================
 
 /**
  * Agent-Session 关联操作请求参数
@@ -82,40 +151,7 @@ export interface AgentSessionRelation {
   sessionId: string;
 }
 
-/**
- * 批量删除 Agent 请求参数
- */
-export interface BatchDeleteAgentsRequest {
-  agentIds: string[];
-  migrateSessionTo?: string;
-}
-
-/**
- * 批量更新 Agent 请求参数
- */
-export interface BatchUpdateAgentsRequest {
-  agentIds: string[];
-  updateData: {
-    avatar?: string;
-    description?: string;
-    model?: string;
-    provider?: string;
-    systemRole?: string;
-  };
-}
-
-/**
- * 批量操作结果类型
- */
-export interface BatchOperationResult {
-  errors?: Array<{
-    error: string;
-    id: string;
-  }>;
-  failed: number;
-  success: number;
-  total: number;
-}
+// ==================== Agent Response Types ====================
 
 /**
  * Agent 列表响应类型
@@ -152,44 +188,7 @@ export interface AgentDetailResponse extends AgentItem {
   }>;
 }
 
-// Zod Schemas for validation
-export const CreateAgentRequestSchema = z.object({
-  avatar: z.string().nullish(),
-  chatConfig: z
-    .object({
-      autoCreateTopicThreshold: z.number(),
-      disableContextCaching: z.boolean().nullish(),
-      displayMode: z.enum(['chat', 'docs']).nullish(),
-      enableAutoCreateTopic: z.boolean().nullish(),
-      enableCompressHistory: z.boolean().nullish(),
-      enableHistoryCount: z.boolean().nullish(),
-      enableMaxTokens: z.boolean().nullish(),
-      enableReasoning: z.boolean().nullish(),
-      enableReasoningEffort: z.boolean().nullish(),
-      historyCount: z.number().nullish(),
-      reasoningBudgetToken: z.number().nullish(),
-      reasoningEffort: z.enum(['low', 'medium', 'high']).nullish(),
-      searchFCModel: z.string().nullish(),
-      searchMode: z.enum(['disabled', 'enabled']).nullish(),
-      useModelBuiltinSearch: z.boolean().nullish(),
-    })
-    .nullish(),
-  description: z.string().nullish(),
-  model: z.string().nullish(),
-  params: z.record(z.unknown()).nullish(),
-  provider: z.string().nullish(),
-  systemRole: z.string().nullish(),
-  title: z.string().min(1, '标题不能为空'),
-});
-
-export const UpdateAgentRequestSchema = CreateAgentRequestSchema.extend({
-  id: z.string().min(1, 'Agent ID 不能为空'),
-});
-
-export const AgentDeleteRequestSchema = z.object({
-  agentId: z.string().min(1, 'Agent ID 不能为空'),
-  migrateSessionTo: z.string().nullish(),
-});
+// ==================== Common Schemas ====================
 
 export const AgentIdParamSchema = z.object({
   id: z.string().min(1, 'Agent ID 不能为空'),
