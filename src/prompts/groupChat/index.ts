@@ -55,7 +55,7 @@ Guidelines:
 - Stay in character as ${agentId} (${agentTitle})
 - Be concise and natural, behave like a real person
 - Engage naturally in the conversation flow
-- Your message is automatically sent privately or publicly to the group, so you don't need to mention it, just respond as you would in a real conversation
+- Your message is automatically sent privately or publicly to the group, so you don't need to mention it, just respond as you would in a real conversation. The supervisor will decide whether to send it privately or publicly, so you just need to say the actuall content, even it's a DM to a specific member. Do not pretend you've sent it.
 - Be collaborative and build upon others' responses when appropriate
 - Keep your responses concise and relevant to the ongoing discussion
 - Each message should no more than 100 words

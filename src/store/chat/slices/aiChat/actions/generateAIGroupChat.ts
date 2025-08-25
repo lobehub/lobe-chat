@@ -308,7 +308,7 @@ export const generateAIGroupChat: StateCreator<
         id: 'group-user',
         role: 'user',
         content:
-          "Now it's your turn to respond. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.",
+          `Now it's your turn to respond. Based on supervisor decision, your message will be sent to ${targetId ? targetId : 'the group publicly'}. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         meta: {},
