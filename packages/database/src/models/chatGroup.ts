@@ -131,13 +131,13 @@ export class ChatGroupModel {
   async addAgentToGroup(
     groupId: string,
     agentId: string,
-    options?: { order?: string; role?: string },
+    options?: { order?: number; role?: string },
   ): Promise<ChatGroupAgentItem> {
     const params: NewChatGroupAgent = {
       agentId,
       chatGroupId: groupId,
       enabled: true,
-      order: options?.order || '0',
+      order: options?.order || 0,
       role: options?.role || 'participant',
       userId: this.userId,
     };

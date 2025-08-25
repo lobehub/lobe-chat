@@ -179,7 +179,7 @@ export const chatGroupAction: StateCreator<
 
       await Promise.all(
         orderedAgentIds.map((agentId, index) =>
-          chatGroupService.updateAgentInGroup(groupId, agentId, { order: index.toString() }),
+          chatGroupService.updateAgentInGroup(groupId, agentId, { order: index }),
         ),
       );
 

@@ -660,18 +660,50 @@ describe('ChatGroupModel', () => {
         ]);
 
         await trx.insert(chatGroupsAgents).values([
-          { chatGroupId: 'ordered-group', agentId: 'agent-1', userId, order: '2' },
-          { chatGroupId: 'ordered-group', agentId: 'agent-2', userId, order: '1' },
-          { chatGroupId: 'ordered-group', agentId: 'agent-3', userId, order: '3' },
+          { chatGroupId: 'ordered-group', agentId: 'agent-1', userId, order: 2 },
+          { chatGroupId: 'ordered-group', agentId: 'agent-2', userId, order: 1 },
+          { chatGroupId: 'ordered-group', agentId: 'agent-3', userId, order: 3 },
         ]);
       });
 
       const result = await chatGroupModel.getGroupAgents('ordered-group');
 
       expect(result).toHaveLength(3);
-      expect(result[0].agentId).toBe('agent-2'); // order: '1'
-      expect(result[1].agentId).toBe('agent-1'); // order: '2'
-      expect(result[2].agentId).toBe('agent-3'); // order: '3'
+      expect(result[0].agentId).toBe('agent-2'); // order: 1
+      expect(result[1].agentId).toBe('agent-1'); // order: 2
+      expect(result[2].agentId).toBe('agent-3'); // order: 3
+    });
+
+    it('should handle numeric ordering correctly (avoiding lexicographic sorting)', async () => {
+      // This test ensures that order 10 comes after order 2 (not before like with text sorting)
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({
+          id: 'numeric-order-group',
+          userId,
+          title: 'Numeric Order Group',
+        });
+
+        await trx.insert(agentsTable).values([
+          { id: 'agent-order-1', userId, title: 'Agent Order 1' },
+          { id: 'agent-order-2', userId, title: 'Agent Order 2' },
+          { id: 'agent-order-10', userId, title: 'Agent Order 10' },
+        ]);
+
+        await trx.insert(chatGroupsAgents).values([
+          { chatGroupId: 'numeric-order-group', agentId: 'agent-order-10', userId, order: 10 },
+          { chatGroupId: 'numeric-order-group', agentId: 'agent-order-2', userId, order: 2 },
+          { chatGroupId: 'numeric-order-group', agentId: 'agent-order-1', userId, order: 1 },
+        ]);
+      });
+
+      const result = await chatGroupModel.getGroupAgents('numeric-order-group');
+
+      expect(result).toHaveLength(3);
+      // With integer ordering: 1, 2, 10 (correct)
+      // With text ordering it would be: 1, 10, 2 (incorrect lexicographic)
+      expect(result[0].agentId).toBe('agent-order-1'); // order: 1
+      expect(result[1].agentId).toBe('agent-order-2'); // order: 2
+      expect(result[2].agentId).toBe('agent-order-10'); // order: 10
     });
   });
 

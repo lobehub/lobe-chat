@@ -1,0 +1,1 @@
+ALTER TABLE "chat_groups_agents" ALTER COLUMN "order" SET DATA TYPE integer;

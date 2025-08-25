@@ -152,7 +152,7 @@ table chat_groups_agents {
   agent_id text [not null]
   user_id text [not null]
   enabled boolean [default: true]
-  order text [default: '0']
+  order integer [default: 0]
   role text [default: 'participant']
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]

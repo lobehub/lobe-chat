@@ -73,7 +73,7 @@ export const groupRouter = router({
         groupId: z.string(),
         updates: z.object({
           enabled: z.boolean().optional(),
-          order: z.string().optional(),
+          order: z.number().optional(),
           role: z.string().optional(),
         }),
       }),

@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
   boolean,
+  integer,
   jsonb,
   pgTable,
   primaryKey,
@@ -89,7 +90,7 @@ export const chatGroupsAgents = pgTable(
     /**
      * Display or speaking order of the agent in the group
      */
-    order: text('order').default('0'),
+    order: integer('order').default(0),
 
     /**
      * Role of the agent in the group (e.g., 'moderator', 'participant')
