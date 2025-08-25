@@ -206,7 +206,7 @@
     "langfuse": "^3.38.4",
     "langfuse-core": "^3.38.4",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.541.0",
     "mammoth": "^1.10.0",
     "markdown-to-txt": "^2.0.1",
     "mdast-util-to-markdown": "^2.1.2",
