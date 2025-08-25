@@ -69,7 +69,7 @@ export const pythonSlice: StateCreator<
 
     try {
       const result = await pythonService.runPython(params.code, params.packages, files);
-      if (result.files) {
+      if (result?.files) {
         await internal_updateMessageContent(id, JSON.stringify(result));
         await uploadPythonFiles(id, result.files);
       } else {
