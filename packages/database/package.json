@@ -5,8 +5,10 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "npm run test:client-db && npm run test:server-db",
+    "test:client-db": "vitest run",
+    "test:coverage": "TEST_SERVER_DB=1 vitest --coverage",
+    "test:server-db": "TEST_SERVER_DB=1 vitest run"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.17",

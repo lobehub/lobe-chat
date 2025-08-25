@@ -87,6 +87,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
+
         ports:
           - 5432:5432
 
@@ -110,6 +111,9 @@ jobs:
         run: bun run lint
 
       - uses: pnpm/action-setup@v4
+
+      - name: Test Client DB
+        run: pnpm --filter @lobechat/database test:client-db
 
       - name: Test Coverage
         run: pnpm --filter @lobechat/database test:coverage

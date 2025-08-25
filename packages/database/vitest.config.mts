@@ -24,9 +24,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
     },
-    env: {
-      TEST_SERVER_DB: '1',
-    },
     environment: 'node',
     poolOptions: {
       forks: {

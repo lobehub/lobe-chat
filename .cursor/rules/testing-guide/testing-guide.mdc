@@ -9,7 +9,7 @@ alwaysApply: false
 
 LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 
-### 客户端测试环境 (DOM Environment)
+### 客户端数据库测试环境 (DOM Environment)
 
 - **配置文件**: [vitest.config.ts](mdc:vitest.config.ts)
 - **环境**: Happy DOM (浏览器环境模拟)
@@ -17,14 +17,16 @@ LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 - **用途**: 测试前端组件、客户端逻辑、React 组件等
 - **设置文件**: [tests/setup.ts](mdc:tests/setup.ts)
 
-### 服务端测试环境 (Node Environment)
+### 服务端数据库测试环境 (Node Environment)
 
-- **配置文件**: [vitest.config.server.ts](mdc:vitest.config.server.ts)
+目前只有 `packages/database` 下的测试可以通过配置 `TEST_SERVER_DB=1` 环境变量来使用服务端数据库测试
+
+- **配置文件**: [packages/database/vitest.config.mts](mdc:packages/database/vitest.config.mts) 并且设置环境变量 `TEST_SERVER_DB=1`
 - **环境**: Node.js
 - **数据库**: 真实的 PostgreSQL 数据库
 - **并发限制**: 单线程运行 (`singleFork: true`)
 - **用途**: 测试数据库模型、服务端逻辑、API 端点等
-- **设置文件**: [tests/setup-db.ts](mdc:tests/setup-db.ts)
+- **设置文件**: [packages/database/tests/setup-db.ts](mdc:packages/database/tests/setup-db.ts)
 
 ## 🚀 测试运行命令
 
@@ -34,20 +36,20 @@ LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 
 ```bash
 # 运行所有客户端/服务端测试
-bunx vitest run --config vitest.config.ts        # 客户端测试
-bunx vitest run --config vitest.config.server.ts # 服务端测试
+bunx vitest run --silent='passed-only'                                          # 客户端测试
+cd packages/database && TEST_SERVER_DB=1 bunx vitest run --silent='passed-only' # 服务端测试
 
 # 运行特定测试文件 (支持模糊匹配)
-bunx vitest run --config vitest.config.ts user.test.ts
+bunx vitest run --silent='passed-only' user.test.ts
 
 # 运行特定测试用例名称 (使用 -t 参数)
-bunx vitest run --config vitest.config.ts -t "test case name"
+bunx vitest run --silent='passed-only' -t "test case name"
 
 # 组合使用文件和测试名称过滤
-bunx vitest run --config vitest.config.ts filename.test.ts -t "specific test"
+bunx vitest run --silent='passed-only' filename.test.ts -t "specific test"
 
 # 生成覆盖率报告 (使用 --coverage 参数)
-bunx vitest run --config vitest.config.ts --coverage
+bunx vitest run --silent='passed-only' --coverage
 ```
 
 ### ❌ 避免的命令格式
@@ -388,8 +390,7 @@ describe('ConfigService', () => {
 
 ### 文件命名约定
 
-- **客户端测试**: `*.test.ts`, `*.test.tsx` (任意位置)
-- **服务端测试**: `src/database/models/**/*.test.ts`, `src/database/server/**/*.test.ts` (限定路径)
+`*.test.ts`, `*.test.tsx` (任意位置)
 
 ### 测试文件组织风格
 
@@ -405,6 +406,9 @@ src/components/Button/
 ├── index.tsx           # 源文件
 └── index.test.tsx      # 测试文件
 ```
+
+- 也有少数情况会统一放到 `__tests__` 文件夹， 例如 `packages/database/src/models/__tests__`
+- 测试使用的辅助文件放到 fixtures 文件夹
 
 ## 🛠️ 测试调试技巧
 
@@ -506,7 +510,7 @@ git show HEAD -- path/to/component.ts | cat # 查看最新提交的修改
 
 ## 🎯 核心要点
 
-- **命令格式**: 使用 `bunx vitest run --config [config-file]` 并指定文件过滤
+- **命令格式**: 使用 `bunx vitest run --silent='passed-only'` 并指定文件过滤
 - **修复原则**: 失败1-2次后寻求帮助，测试命名关注行为而非实现细节
 - **调试流程**: 复现 → 分析 → 假设 → 修复 → 验证 → 总结
 - **文件组织**: 优先在现有 `describe` 块中添加测试，避免创建冗余顶级块

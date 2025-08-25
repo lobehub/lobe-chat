@@ -59,7 +59,7 @@ see @.cursor/rules/typescript.mdc
 Testing work follows the Rule-Aware Task Execution system above.
 
 - **Required Rule**: `testing-guide/testing-guide.mdc`
-- **Command**: `bunx vitest run --config vitest.config.ts '[file-path-pattern]'`, wrapped in single quotes to avoid shell expansion
+- **Command**: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`, wrapped in single quotes to avoid shell expansion
 
 **Important**:
 

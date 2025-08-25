@@ -34,14 +34,5 @@
     ]
   },
   "exclude": ["node_modules", "public/sw.js", "apps/desktop", "tmp", "temp", ".temp"],
-  "include": [
-    "**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next-env.d.ts",
-    "src",
-    "tests",
-    "vitest.config.ts"
-  ]
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
 }
