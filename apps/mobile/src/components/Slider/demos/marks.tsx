@@ -131,15 +131,16 @@ const MarksSliderDemo: React.FC = () => {
             defaultValue={50}
             marks={{
               0: '0%',
-              100: '100%',
               25: '25%',
               50: '50%',
               75: '75%',
+              // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+              100: '100%',
             }}
             max={100}
             min={0}
             onChange={(val) => console.log('Value:', val)}
-            step={10}
+            step={25}
           />
         </View>
       </View>

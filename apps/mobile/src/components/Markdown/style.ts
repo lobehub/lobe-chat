@@ -14,13 +14,11 @@ export type RemarkStyleOptions = {
 
 export const useRemarkStyles = createStyles((token, options: RemarkStyleOptions) => ({
   blockquote: {
-    backgroundColor: token.colorFillQuaternary,
-    borderLeftColor: token.colorPrimaryBorder,
+    borderLeftColor: token.colorBorder,
     borderLeftWidth: 4,
-    borderRadius: token.borderRadiusSM,
-    marginVertical: options.fontSize * options.marginMultiple,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
+    color: token.colorTextSecondary,
+    marginVertical: options.fontSize * options.marginMultiple * 0.5,
+    paddingHorizontal: options.fontSize,
   },
   break: {},
   container: { flex: 1 },
@@ -54,7 +52,8 @@ export const useRemarkStyles = createStyles((token, options: RemarkStyleOptions)
     color: token.colorText,
     letterSpacing: 0.2,
     lineHeight: options.lineHeight * options.fontSize,
-    marginVertical: token.marginMD,
+    marginBlock: token.marginXXS,
+    marginBlockEnd: options.marginMultiple * 0.5 * options.fontSize,
   },
   strong: {
     color: token.colorTextHeading,
