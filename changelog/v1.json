@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-22",
+    "version": "1.114.6"
+  },
+  {
     "children": {
       "features": [
         "Add support for Azure image models and implement createImage API method."
