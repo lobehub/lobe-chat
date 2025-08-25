@@ -7,8 +7,8 @@
   "scripts": {
     "test": "npm run test:client-db && npm run test:server-db",
     "test:client-db": "vitest run",
-    "test:coverage": "TEST_SERVER_DB=1 vitest --coverage",
-    "test:server-db": "TEST_SERVER_DB=1 vitest run"
+    "test:coverage": "vitest --coverage --config vitest.config.server.mts",
+    "test:server-db": "vitest run --config vitest.config.server.mts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.17",

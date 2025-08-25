@@ -1,11 +1,7 @@
 import { resolve } from 'node:path';
-import { defineConfig } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  optimizeDeps: {
-    exclude: ['crypto', 'util', 'tty'],
-    include: ['@lobehub/tts'],
-  },
   test: {
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
@@ -17,15 +13,24 @@ export default defineConfig({
       '@': resolve(__dirname, '../../src'),
       /* eslint-enable */
     },
-    environment: 'happy-dom',
-    exclude: [
-      'node_modules/**/**',
-      'src/server/**/**',
-      'src/repositories/dataImporter/deprecated/**/**',
-    ],
-    server: {
-      deps: {
-        inline: ['vitest-canvas-mock'],
+    coverage: {
+      all: false,
+      exclude: [
+        // https://github.com/lobehub/lobe-chat/pull/7265
+        ...coverageConfigDefaults.exclude,
+        'src/server/core/dbForTest.ts',
+      ],
+      include: ['src/models/**/*.ts', 'src/server/**/*.ts'],
+      provider: 'v8',
+      reporter: ['text', 'json', 'lcov', 'text-summary'],
+    },
+    env: {
+      TEST_SERVER_DB: '1',
+    },
+    environment: 'node',
+    poolOptions: {
+      forks: {
+        singleFork: true,
       },
     },
     setupFiles: './tests/setup-db.ts',
