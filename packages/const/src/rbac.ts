@@ -169,11 +169,11 @@ export const PERMISSION_ACTIONS = {
 
   RBAC_SYSTEM_INIT: 'rbac:system_init',
 
-  RBAC_USER_PERMISSION_VIEW: 'rbac:user_permission_view',
+  RBAC_USER_PERMISSION_READ: 'rbac:user_permission_read',
 
-  RBAC_USER_ROLE_ASSIGN: 'rbac:user_role_assign',
+  RBAC_USER_ROLE_READ: 'rbac:user_role_read',
 
-  RBAC_USER_ROLE_REVOKE: 'rbac:user_role_revoke',
+  RBAC_USER_ROLE_UPDATE: 'rbac:user_role_update',
 
   // ==================== Session Management ====================
   SESSION_CREATE: 'session:create',

@@ -1,10 +1,10 @@
-import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm';
+import { and, count, eq, ilike, inArray, ne, or, sql } from 'drizzle-orm';
+import { groupBy } from 'lodash';
 
 import { RbacModel } from '@/database/models/rbac';
-import { NewUser, RoleItem, SessionItem, messages, users } from '@/database/schemas';
-import { roles, userRoles } from '@/database/schemas/rbac';
+import { messages, roles, userRoles, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
-import { uuid } from '@/utils/uuid';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
@@ -12,7 +12,8 @@ import {
   CreateUserRequest,
   UpdateUserRequest,
   UpdateUserRolesRequest,
-  UserRoleDetail,
+  UserListRequest,
+  UserListResponse,
   UserRoleOperationResult,
   UserRolesResponse,
   UserWithRoles,
@@ -27,6 +28,31 @@ export class UserService extends BaseService {
   }
 
   /**
+   * 获取用户信息和角色信息
+   * @param userId 用户ID
+   * @returns 用户信息和角色信息
+   */
+  private async getUserWithRoles(userId: string): Promise<UserWithRoles> {
+    const results = await this.db
+      .select({ messageCount: count(messages.id), roles: roles, user: users })
+      .from(users)
+      .innerJoin(userRoles, eq(users.id, userRoles.userId))
+      .innerJoin(roles, eq(userRoles.roleId, roles.id))
+      .leftJoin(messages, eq(users.id, messages.userId))
+      .where(eq(users.id, userId));
+
+    if (!results.length) {
+      throw this.createNotFoundError('用户不存在');
+    }
+
+    return {
+      ...results[0].user,
+      messageCount: results[0].messageCount,
+      roles: results.map((r) => r.roles),
+    };
+  }
+
+  /**
    * 获取用户的消息数量
    * @param userId 用户ID
    * @returns 消息数量
@@ -34,7 +60,7 @@ export class UserService extends BaseService {
   private async getUserMessageCount(userId: string): Promise<number> {
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+      const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
         targetUserId: userId,
       });
 
@@ -42,10 +68,18 @@ export class UserService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '没有权限获取用户消息数量');
       }
 
+      // 应用权限条件 - 如果有用户限制，检查是否允许访问目标用户的消息
+      const finalUserId = permissionResult.condition?.userId || userId;
+
+      // 如果权限系统限制只能访问特定用户，但请求的是其他用户，返回0
+      if (permissionResult.condition?.userId && permissionResult.condition.userId !== userId) {
+        return 0;
+      }
+
       const result = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(messages)
-        .where(eq(messages.userId, userId));
+        .where(eq(messages.userId, finalUserId));
 
       return Number(result[0]?.count || 0);
     } catch (error) {
@@ -59,102 +93,74 @@ export class UserService extends BaseService {
 
   /**
    * 获取当前登录用户信息
-   * @returns 用户信息（包含角色信息和消息数量）
+   * @returns 用户信息
    */
   async getCurrentUser(): ServiceResult<UserWithRoles> {
     this.log('info', '获取当前登录用户信息及角色信息');
 
     // 查询用户基本信息
-    const user = await this.db.query.users.findFirst({
-      where: eq(users.id, this.userId!),
-    });
-
-    if (!user) {
-      throw this.createBusinessError('用户不存在');
-    }
-
-    // 获取用户角色信息
-    let roles: RoleItem[] = [];
-    try {
-      const rbacModel = new RbacModel(this.db, this.userId!);
-      roles = await rbacModel.getUserRoles();
-    } catch (error) {
-      // 角色查询失败不阻断用户信息返回，使用空数组
-      this.log('warn', '获取用户角色信息失败', {
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-
-    // 获取用户消息数量
-    const messageCount = await this.getUserMessageCount(this.userId!);
-
-    return {
-      ...user,
-      messageCount,
-      roles,
-    };
+    return this.getUserWithRoles(this.userId!);
   }
 
   /**
-   * 获取系统中所有用户列表
+   * 获取系统中所有用户列表(分页)
    * @returns 用户列表（包含角色信息和消息数量）
    */
-  async getAllUsers(): ServiceResult<UserWithRoles[]> {
+  async getUsers(request: UserListRequest): ServiceResult<UserListResponse> {
     this.log('info', '获取系统中所有用户列表');
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', 'ALL');
+      const permissionResult = await this.resolveOperationPermission('USER_READ', 'ALL');
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户列表');
       }
 
-      // 使用关系查询一次性获取用户和sessions信息
-      const allUsers = await this.db.query.users.findMany({
-        orderBy: (users, { desc }) => [desc(users.createdAt)],
-        with: {
-          sessions: {
-            orderBy: (sessions, { desc }) => [desc(sessions.updatedAt)],
-          },
-        },
-      });
+      const { keyword, page, pageSize } = request;
 
-      this.log('info', `查询到 ${allUsers.length} 个用户`);
+      // 构建查询条件
+      const conditions = [];
 
-      // 为每个用户获取角色信息和消息数量
-      const usersWithRoles: UserWithRoles[] = [];
-
-      for (const user of allUsers) {
-        let roles: RoleItem[] = [];
-
-        try {
-          const rbacModel = new RbacModel(this.db, user.id);
-          roles = await rbacModel.getUserRoles();
-        } catch (error) {
-          // 单个用户角色查询失败不影响整体结果
-          this.log('warn', `获取用户 ${user.id} 的角色信息失败`, {
-            error: error instanceof Error ? error.message : String(error),
-          });
-        }
-
-        // 获取用户消息数量
-        const messageCount = await this.getUserMessageCount(user.id);
-
-        usersWithRoles.push({
-          ...user,
-          messageCount,
-          roles,
-          sessions: user.sessions as SessionItem[],
-        });
+      if (keyword) {
+        conditions.push(ilike(users.fullName, `%${keyword}%`));
       }
 
+      const offset = (page - 1) * pageSize;
+
+      const userQuery = this.db
+        .select({
+          messageCount: count(messages.id),
+          roles: roles,
+          user: users,
+        })
+        .from(users)
+        .innerJoin(userRoles, eq(users.id, userRoles.userId))
+        .innerJoin(roles, eq(userRoles.roleId, roles.id))
+        .leftJoin(messages, eq(users.id, messages.userId))
+        .where(and(...conditions))
+        .limit(pageSize)
+        .offset(offset);
+
+      const totalRequested = this.db
+        .select({ count: count() })
+        .from(users)
+        .where(and(...conditions));
+
+      const [userList, totalCount] = await Promise.all([userQuery, totalRequested]);
+
+      const usersWithRoles = groupBy(userList, 'id');
+
       this.log('info', '成功获取所有用户信息及其角色、sessions和消息数量');
-      return usersWithRoles;
+
+      return {
+        totalCount: totalCount[0].count,
+        users: Object.values(usersWithRoles).map((user) => ({
+          ...user[0].user,
+          messageCount: user[0].messageCount,
+          roles: user.map((u) => u.roles),
+        })),
+      };
     } catch (error) {
       return this.handleServiceError(error, '获取用户列表');
     }
@@ -169,59 +175,45 @@ export class UserService extends BaseService {
     this.log('info', '创建新用户', { userData });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_CREATE', 'ALL');
+      const permissionResult = await this.resolveOperationPermission('USER_CREATE');
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限创建用户');
       }
 
-      // 检查用户名和邮箱是否已存在
-      if (userData.username) {
-        const existingUserByUsername = await this.db.query.users.findFirst({
-          where: eq(users.username, userData.username),
-        });
-        if (existingUserByUsername) {
-          throw this.createBusinessError('用户名已存在');
-        }
-      }
+      const { roleIds, ...rest } = userData;
 
-      if (userData.email) {
-        const existingUserByEmail = await this.db.query.users.findFirst({
-          where: eq(users.email, userData.email),
-        });
-        if (existingUserByEmail) {
-          throw this.createBusinessError('邮箱已存在');
-        }
+      // 检查用户名和邮箱是否已存在
+      const existingUser = await this.db.query.users.findFirst({
+        where: or(eq(users.username, rest.username || ''), eq(users.email, rest.email || '')),
+      });
+      if (existingUser) {
+        throw this.createBusinessError('用户名或邮箱已存在');
       }
 
       // 生成新用户ID
-      const userId = userData.id || uuid();
-      const currentTime = new Date();
-
-      // 构建新用户数据
-      const newUser: NewUser = {
-        id: userId,
-        ...userData,
-        createdAt: currentTime,
-        updatedAt: currentTime,
-      };
+      const userId = idGenerator('user');
 
       // 插入新用户
-      const [createdUser] = await this.db.insert(users).values(newUser).returning();
+      const [createdUser] = await this.db
+        .insert(users)
+        .values({
+          id: userId,
+          ...rest,
+        })
+        .returning();
+
+      // 插入用户角色
+      if (roleIds && roleIds.length > 0) {
+        const rbacModel = new RbacModel(this.db, userId);
+        await rbacModel.updateUserRoles(userId, roleIds);
+      }
 
       this.log('info', '用户创建成功', { userId: createdUser.id });
 
       // 返回包含角色信息的用户数据
-      return {
-        ...createdUser,
-        messageCount: 0, // 新用户没有消息
-        roles: [], // 新用户暂时没有角色
-      };
+      return this.getUserWithRoles(userId);
     } catch (error) {
       return this.handleServiceError(error, '创建用户');
     }
@@ -237,18 +229,16 @@ export class UserService extends BaseService {
     this.log('info', '更新用户信息', { userData, userId });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('USER_UPDATE', {
         targetUserId: userId,
       });
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限更新该用户');
       }
+
+      const { roleIds, ...rest } = userData;
 
       // 检查用户是否存在
       const existingUser = await this.db.query.users.findFirst({
@@ -260,60 +250,42 @@ export class UserService extends BaseService {
       }
 
       // 检查用户名和邮箱是否被其他用户使用
-      if (userData.username && userData.username !== existingUser.username) {
+      if (rest.username && rest.username !== existingUser.username) {
         const existingUserByUsername = await this.db.query.users.findFirst({
-          where: eq(users.username, userData.username),
+          where: and(eq(users.username, rest.username), ne(users.id, userId)),
         });
-        if (existingUserByUsername && existingUserByUsername.id !== userId) {
+
+        if (existingUserByUsername) {
           throw this.createBusinessError('用户名已被其他用户使用');
         }
       }
 
-      if (userData.email && userData.email !== existingUser.email) {
+      if (rest.email && rest.email !== existingUser.email) {
         const existingUserByEmail = await this.db.query.users.findFirst({
-          where: eq(users.email, userData.email),
+          where: and(eq(users.email, rest.email), ne(users.id, userId)),
         });
-        if (existingUserByEmail && existingUserByEmail.id !== userId) {
+        if (existingUserByEmail) {
           throw this.createBusinessError('邮箱已被其他用户使用');
         }
       }
 
-      if (userData.roleIds && userData.roleIds.length > 0) {
+      if (roleIds && roleIds.length > 0) {
         const rbacModel = new RbacModel(this.db, userId);
-        await rbacModel.updateUserRoles(userId, userData.roleIds);
+        await rbacModel.updateUserRoles(userId, roleIds);
       }
 
       // 更新用户信息
-      const [updatedUser] = await this.db
+      await this.db
         .update(users)
         .set({
-          ...userData,
+          ...rest,
           updatedAt: new Date(),
         })
-        .where(eq(users.id, userId))
-        .returning();
+        .where(eq(users.id, userId));
 
       this.log('info', '用户信息更新成功', { userId });
 
-      // 获取用户角色信息
-      let roles: RoleItem[] = [];
-      try {
-        const rbacModel = new RbacModel(this.db, userId);
-        roles = await rbacModel.getUserRoles();
-      } catch (error) {
-        this.log('warn', '获取用户角色信息失败', {
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-
-      // 获取用户消息数量
-      const messageCount = await this.getUserMessageCount(userId);
-
-      return {
-        ...updatedUser,
-        messageCount,
-        roles,
-      };
+      return this.getUserWithRoles(userId);
     } catch (error) {
       return this.handleServiceError(error, '更新用户');
     }
@@ -328,12 +300,8 @@ export class UserService extends BaseService {
     this.log('info', '删除用户', { userId });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_DELETE', {
+      const permissionResult = await this.resolveOperationPermission('USER_DELETE', {
         targetUserId: userId,
       });
 
@@ -342,16 +310,11 @@ export class UserService extends BaseService {
       }
 
       // 检查用户是否存在
-      const existingUser = await this.db.query.users.findFirst({
-        where: eq(users.id, userId),
-      });
+      const result = await this.db.delete(users).where(eq(users.id, userId));
 
-      if (!existingUser) {
+      if (!result.rowCount) {
         throw this.createNotFoundError('用户不存在');
       }
-
-      // 执行删除操作
-      await this.db.delete(users).where(eq(users.id, userId));
 
       this.log('info', '用户删除成功', { userId });
 
@@ -370,12 +333,8 @@ export class UserService extends BaseService {
     this.log('info', '根据ID获取用户信息', { userId });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', {
+      const permissionResult = await this.resolveOperationPermission('USER_READ', {
         targetUserId: userId,
       });
 
@@ -384,127 +343,9 @@ export class UserService extends BaseService {
       }
 
       // 查询用户基本信息
-      const user = await this.db.query.users.findFirst({
-        where: eq(users.id, userId),
-      });
-
-      if (!user) {
-        throw this.createNotFoundError('用户不存在');
-      }
-
-      // 获取用户角色信息
-      let roles: RoleItem[] = [];
-      try {
-        const rbacModel = new RbacModel(this.db, userId);
-        roles = await rbacModel.getUserRoles();
-      } catch (error) {
-        this.log('warn', '获取用户角色信息失败', {
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-
-      // 获取用户消息数量
-      const messageCount = await this.getUserMessageCount(userId);
-
-      return {
-        ...user,
-        messageCount,
-        roles,
-      };
+      return this.getUserWithRoles(userId);
     } catch (error) {
       return this.handleServiceError(error, '获取用户信息');
-    }
-  }
-
-  /**
-   * 搜索用户
-   * @param keyword 搜索关键词，为空时返回用户列表
-   * @param pageSize 页面大小，限制返回的用户数量
-   * @param page 页码，从1开始
-   * @returns 匹配的用户列表（包含角色信息和消息数量）
-   */
-  async searchUsers(
-    keyword: string,
-    pageSize: number = 10,
-    page: number = 1,
-  ): ServiceResult<UserWithRoles[]> {
-    this.log('info', '搜索用户', { keyword, page, pageSize });
-
-    try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
-      // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', 'ALL');
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '没有权限搜索用户');
-      }
-
-      // 计算偏移量
-      const offset = (page - 1) * pageSize;
-
-      let searchResults;
-
-      if (!keyword || keyword.trim().length === 0) {
-        // 当关键词为空时，返回按创建时间倒序排列的用户列表
-        searchResults = await this.db.query.users.findMany({
-          limit: pageSize,
-          offset,
-          orderBy: (users, { desc }) => [desc(users.createdAt)],
-        });
-      } else {
-        // 有关键词时进行模糊搜索
-        const searchTerm = `%${keyword.trim()}%`;
-        searchResults = await this.db.query.users.findMany({
-          limit: pageSize,
-          offset,
-          orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
-          where: or(
-            ilike(users.fullName, searchTerm),
-            ilike(users.email, searchTerm),
-            ilike(users.username, searchTerm),
-          ),
-        });
-      }
-
-      this.log('info', `搜索到 ${searchResults.length} 个匹配用户`, { keyword });
-
-      // 为每个用户获取角色信息和消息数量
-      const usersWithRoles: UserWithRoles[] = [];
-
-      for (const user of searchResults) {
-        let roles: RoleItem[] = [];
-
-        try {
-          const rbacModel = new RbacModel(this.db, user.id);
-          roles = await rbacModel.getUserRoles();
-        } catch (error) {
-          // 单个用户角色查询失败不影响整体结果
-          this.log('warn', `获取用户 ${user.id} 的角色信息失败`, {
-            error: error instanceof Error ? error.message : String(error),
-          });
-        }
-
-        // 获取用户消息数量
-        const messageCount = await this.getUserMessageCount(user.id);
-
-        usersWithRoles.push({
-          ...user,
-          messageCount,
-          roles,
-        });
-      }
-
-      this.log('info', '用户搜索完成', {
-        keyword,
-        resultCount: usersWithRoles.length,
-      });
-
-      return usersWithRoles;
-    } catch (error) {
-      return this.handleServiceError(error, '搜索用户');
     }
   }
 
@@ -518,19 +359,15 @@ export class UserService extends BaseService {
     userId: string,
     request: UpdateUserRolesRequest,
   ): ServiceResult<UserRolesResponse> {
-    this.log('info', '更新用户角色', {
-      addRoles: request.addRoles?.length || 0,
-      removeRoles: request.removeRoles?.length || 0,
-      userId,
-    });
-
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
+      this.log('info', '更新用户角色', {
+        addRoles: request.addRoles?.length || 0,
+        removeRoles: request.removeRoles?.length || 0,
+        userId,
+      });
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', {
+      const permissionResult = await this.resolveOperationPermission('RBAC_USER_ROLE_UPDATE', {
         targetUserId: userId,
       });
 
@@ -565,17 +402,7 @@ export class UserService extends BaseService {
           if (missingRoleIds.length > 0) {
             throw this.createBusinessError(`以下角色不存在或未激活: ${missingRoleIds.join(', ')}`);
           }
-
-          // 4. 权限检查：验证操作者是否有权限分配这些角色
-          // 这里可以添加更复杂的权限检查逻辑
-          // 例如：不允许分配比操作者权限更高的角色
         }
-
-        // 5. 获取用户当前的角色关联
-        const currentUserRoles = await tx.query.userRoles.findMany({
-          where: eq(userRoles.userId, userId),
-        });
-        const currentRoleIds = new Set(currentUserRoles.map((ur) => ur.roleId));
 
         const result: UserRoleOperationResult = {
           added: 0,
@@ -583,100 +410,49 @@ export class UserService extends BaseService {
           removed: 0,
         };
 
-        // 6. 处理移除角色
+        // 5. 处理移除角色
         if (request.removeRoles && request.removeRoles.length > 0) {
-          const rolesToRemove = request.removeRoles.filter((roleId) => currentRoleIds.has(roleId));
-
-          if (rolesToRemove.length > 0) {
-            await tx
-              .delete(userRoles)
-              .where(and(eq(userRoles.userId, userId), inArray(userRoles.roleId, rolesToRemove)));
-
-            result.removed = rolesToRemove.length;
-            this.log('info', '移除用户角色', { removedRoles: rolesToRemove, userId });
-          }
-
-          // 记录无效的移除操作
-          const invalidRemoves = request.removeRoles.filter(
-            (roleId) => !currentRoleIds.has(roleId),
-          );
-          if (invalidRemoves.length > 0) {
-            result.errors?.push(`用户没有以下角色，无法移除: ${invalidRemoves.join(', ')}`);
-          }
-        }
-
-        // 7. 处理添加角色
-        if (request.addRoles && request.addRoles.length > 0) {
-          const rolesToAdd = request.addRoles.filter((role) => !currentRoleIds.has(role.roleId));
-
-          if (rolesToAdd.length > 0) {
-            const insertData = rolesToAdd.map((role) => ({
-              createdAt: new Date(),
-              expiresAt: role.expiresAt ? new Date(role.expiresAt) : null,
-              roleId: role.roleId,
-              userId: userId,
-            }));
-
-            await tx.insert(userRoles).values(insertData);
-
-            result.added = rolesToAdd.length;
-            this.log('info', '添加用户角色', {
-              addedRoles: rolesToAdd.map((r) => r.roleId),
-              userId,
-            });
-          }
-
-          // 记录重复的添加操作
-          const duplicateAdds = request.addRoles.filter((role) => currentRoleIds.has(role.roleId));
-          if (duplicateAdds.length > 0) {
-            result.errors?.push(
-              `用户已拥有以下角色: ${duplicateAdds.map((r) => r.roleId).join(', ')}`,
+          await tx
+            .delete(userRoles)
+            .where(
+              and(eq(userRoles.userId, userId), inArray(userRoles.roleId, request.removeRoles)),
             );
-          }
+
+          this.log('info', '移除用户角色成功');
         }
 
-        // 8. 获取更新后的用户角色信息
-        const updatedUserRoles = await tx
-          .select({
-            createdAt: userRoles.createdAt,
-            expiresAt: userRoles.expiresAt,
-            role: {
-              accessedAt: roles.accessedAt,
-              createdAt: roles.createdAt,
-              description: roles.description,
-              displayName: roles.displayName,
-              id: roles.id,
-              isActive: roles.isActive,
-              isSystem: roles.isSystem,
-              metadata: roles.metadata,
-              name: roles.name,
-              updatedAt: roles.updatedAt,
-            },
-            roleId: userRoles.roleId,
-            userId: userRoles.userId,
-          })
+        // 6. 处理添加角色
+        if (request.addRoles && request.addRoles.length > 0) {
+          await tx
+            .insert(userRoles)
+            .values(
+              request.addRoles.map((role) => ({
+                createdAt: new Date(),
+                expiresAt: role.expiresAt ? new Date(role.expiresAt) : null,
+                roleId: role.roleId,
+                userId: userId,
+              })),
+            )
+            .onConflictDoNothing();
+        }
+
+        // 7. 获取更新后的用户角色信息
+        const userWithRoles = await tx
+          .select({ roles: roles, user: users })
           .from(userRoles)
           .innerJoin(roles, eq(userRoles.roleId, roles.id))
+          .innerJoin(users, eq(userRoles.userId, users.id))
           .where(eq(userRoles.userId, userId));
-
-        const userRoleDetails: UserRoleDetail[] = updatedUserRoles.map((ur) => ({
-          createdAt: ur.createdAt,
-          expiresAt: ur.expiresAt,
-          role: ur.role,
-          roleId: ur.roleId,
-          userId: ur.userId,
-        }));
 
         this.log('info', '用户角色更新完成', {
           result,
-          totalRoles: userRoleDetails.length,
+          totalRoles: userWithRoles.length,
           userId,
         });
 
         return {
-          roles: userRoleDetails,
-          totalCount: userRoleDetails.length,
-          userId,
+          roles: userWithRoles.map((r) => r.roles),
+          user: userWithRoles[0].user,
         };
       });
     } catch (error) {
@@ -693,12 +469,8 @@ export class UserService extends BaseService {
     this.log('info', '获取用户角色信息', { userId });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('未授权操作');
-      }
-
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('USER_READ', {
+      const permissionResult = await this.resolveOperationPermission('RBAC_USER_ROLE_READ', {
         targetUserId: userId,
       });
 
@@ -706,51 +478,20 @@ export class UserService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户角色');
       }
 
-      // 验证用户存在
-      const user = await this.db.query.users.findFirst({
-        where: eq(users.id, userId),
-      });
-
-      if (!user) {
-        throw this.createNotFoundError(`用户 ID "${userId}" 不存在`);
-      }
-
-      // 获取用户的角色信息
-      const userRoleData = await this.db
-        .select({
-          createdAt: userRoles.createdAt,
-          expiresAt: userRoles.expiresAt,
-          role: {
-            accessedAt: roles.accessedAt,
-            createdAt: roles.createdAt,
-            description: roles.description,
-            displayName: roles.displayName,
-            id: roles.id,
-            isActive: roles.isActive,
-            isSystem: roles.isSystem,
-            metadata: roles.metadata,
-            name: roles.name,
-            updatedAt: roles.updatedAt,
-          },
-          roleId: userRoles.roleId,
-          userId: userRoles.userId,
-        })
+      const results = await this.db
+        .select({ roles: roles, user: users })
         .from(userRoles)
+        .innerJoin(userRoles, eq(userRoles.userId, userId))
         .innerJoin(roles, eq(userRoles.roleId, roles.id))
         .where(eq(userRoles.userId, userId));
 
-      const userRoleDetails: UserRoleDetail[] = userRoleData.map((ur) => ({
-        createdAt: ur.createdAt,
-        expiresAt: ur.expiresAt,
-        role: ur.role,
-        roleId: ur.roleId,
-        userId: ur.userId,
-      }));
+      if (!results.length) {
+        throw this.createNotFoundError(`用户 ID "${userId}" 不存在`);
+      }
 
       return {
-        roles: userRoleDetails,
-        totalCount: userRoleDetails.length,
-        userId,
+        roles: results.map((r) => r.roles),
+        user: results[0].user,
       };
     } catch (error) {
       return this.handleServiceError(error, '获取用户角色');
