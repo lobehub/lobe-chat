@@ -17,10 +17,10 @@ alwaysApply: false
 
 ```bash
 # 1. 先在客户端环境测试（快速验证）
-npx vitest run --config vitest.config.ts src/database/models/__tests__/myModel.test.ts
+bunx vitest run --config vitest.config.ts src/database/models/__tests__/myModel.test.ts
 
 # 2. 再在服务端环境测试（兼容性验证）
-npx vitest run --config vitest.config.server.ts src/database/models/__tests__/myModel.test.ts
+bunx vitest run --config vitest.config.server.ts src/database/models/__tests__/myModel.test.ts
 ```
 
 ### 创建新 Model 测试的最佳实践 📋

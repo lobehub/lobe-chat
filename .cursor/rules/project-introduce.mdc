@@ -54,5 +54,5 @@ bun run type-check
 pnpm install
 
 # run tests
-npx vitest run --config vitest.config.ts '[file-path-pattern]'
+bunx vitest run --config vitest.config.ts '[file-path-pattern]'
 ```

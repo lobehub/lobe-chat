@@ -51,7 +51,7 @@ jobs:
           # assignee_trigger: "claude-bot"
 
           # Optional: Allow Claude to run specific commands
-          allowed_tools: 'Bash(bun run:*),Bash(pnpm run:*),Bash(npm run:*),Bash(npx vitest:*),Bash(rg:*),Bash(find:*),Bash(sed:*),Bash(grep:*),Bash(awk:*),Bash(wc:*),Bash(xargs:*)'
+          allowed_tools: 'Bash(bun run:*),Bash(pnpm run:*),Bash(npm run:*),Bash(npx:*),Bash(bunx:*),Bash(vitest:*),Bash(rg:*),Bash(find:*),Bash(sed:*),Bash(grep:*),Bash(awk:*),Bash(wc:*),Bash(xargs:*)'
 
           # Optional: Add custom instructions for Claude to customize its behavior for your project
           # custom_instructions: |

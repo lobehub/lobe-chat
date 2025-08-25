@@ -34,20 +34,20 @@ LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 
 ```bash
 # 运行所有客户端/服务端测试
-npx vitest run --config vitest.config.ts        # 客户端测试
-npx vitest run --config vitest.config.server.ts # 服务端测试
+bunx vitest run --config vitest.config.ts        # 客户端测试
+bunx vitest run --config vitest.config.server.ts # 服务端测试
 
 # 运行特定测试文件 (支持模糊匹配)
-npx vitest run --config vitest.config.ts user.test.ts
+bunx vitest run --config vitest.config.ts user.test.ts
 
 # 运行特定测试用例名称 (使用 -t 参数)
-npx vitest run --config vitest.config.ts -t "test case name"
+bunx vitest run --config vitest.config.ts -t "test case name"
 
 # 组合使用文件和测试名称过滤
-npx vitest run --config vitest.config.ts filename.test.ts -t "specific test"
+bunx vitest run --config vitest.config.ts filename.test.ts -t "specific test"
 
 # 生成覆盖率报告 (使用 --coverage 参数)
-npx vitest run --config vitest.config.ts --coverage
+bunx vitest run --config vitest.config.ts --coverage
 ```
 
 ### ❌ 避免的命令格式
@@ -434,7 +434,9 @@ mockStream.toReadableStream = () => mockStream;
 // ✅ 使用中括号访问私有属性和方法（推荐）
 class MyClass {
   private _cache = new Map();
-  private getFromCache(key: string) { /* ... */ }
+  private getFromCache(key: string) {
+    /* ... */
+  }
 }
 
 const instance = new MyClass();
@@ -444,8 +446,8 @@ await instance['getFromCache']('test-key');
 expect(instance['_cache'].size).toBe(1);
 
 // 避免：使用 as any 访问私有成员
-await (instance as any).getFromCache('test-key');  // ❌ 不推荐
-expect((instance as any)._cache.size).toBe(1);     // ❌ 不推荐
+await (instance as any).getFromCache('test-key'); // ❌ 不推荐
+expect((instance as any)._cache.size).toBe(1); // ❌ 不推荐
 ```
 
 #### 🎯 适用场景
@@ -504,7 +506,7 @@ git show HEAD -- path/to/component.ts | cat # 查看最新提交的修改
 
 ## 🎯 核心要点
 
-- **命令格式**: 使用 `npx vitest run --config [config-file]` 并指定文件过滤
+- **命令格式**: 使用 `bunx vitest run --config [config-file]` 并指定文件过滤
 - **修复原则**: 失败1-2次后寻求帮助，测试命名关注行为而非实现细节
 - **调试流程**: 复现 → 分析 → 假设 → 修复 → 验证 → 总结
 - **文件组织**: 优先在现有 `describe` 块中添加测试，避免创建冗余顶级块
