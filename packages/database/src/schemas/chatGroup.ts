@@ -15,6 +15,7 @@ import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
 
 import { timestamps } from './_helpers';
 import { agents } from './agent';
+import { sessionGroups } from './session';
 import { users } from './user';
 
 /**
@@ -52,6 +53,8 @@ export const chatGroups = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+
+    groupId: text('group_id').references(() => sessionGroups.id, { onDelete: 'set null' }),
 
     pinned: boolean('pinned').default(false),
 

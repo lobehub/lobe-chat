@@ -107,9 +107,10 @@ export const sessionRouter = router({
     const chatGroups = await chatGroupModel.queryWithMemberDetails();
 
     const groupSessions: LobeGroupSession[] = chatGroups.map((group) => {
-      const { title, description, avatar, backgroundColor, ...rest } = group;
+      const { title, description, avatar, backgroundColor, groupId, ...rest } = group;
       return {
         ...rest,
+        group: groupId, // Map groupId to group for consistent API
         meta: { avatar, backgroundColor, description, title },
         type: 'group',
       };

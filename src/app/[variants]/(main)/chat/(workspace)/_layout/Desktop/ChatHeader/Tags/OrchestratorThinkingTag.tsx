@@ -20,7 +20,7 @@ const OrchestratorThinkingTag = memo(() => {
   return (
     <Flexbox align={'center'} gap={4} horizontal>
       <Icon color={theme.colorTextSecondary} icon={LoaderCircle} size={12} spin />
-      <Text align={'center'} fontSize={12} type={'secondary'}>
+      <Text fontSize={12} type={'secondary'}>
         {t('group.orchestratorThinking')}
       </Text>
     </Flexbox>

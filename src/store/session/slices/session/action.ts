@@ -13,6 +13,7 @@ import {
 } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
+import { chatGroupService } from '@/services/chatGroup';
 import { SessionStore } from '@/store/session';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
@@ -206,7 +207,16 @@ export const createSessionSlice: StateCreator<
     );
   },
   updateSessionGroupId: async (sessionId, group) => {
-    await get().internal_updateSession(sessionId, { group });
+    const session = sessionSelectors.getSessionById(sessionId)(get());
+    
+    if (session?.type === 'group') {
+      // For group sessions (chat groups), use the chat group service
+      await chatGroupService.updateGroup(sessionId, { groupId: group === 'default' ? null : group });
+      await get().refreshSessions();
+    } else {
+      // For regular agent sessions, use the existing session service
+      await get().internal_updateSession(sessionId, { group });
+    }
   },
 
   updateSessionMeta: async (meta) => {
