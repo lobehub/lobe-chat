@@ -25,7 +25,10 @@ export const LobeAkashChatAI = createOpenAICompatibleRuntime({
   models: async ({ client }) => {
     try {
       const modelsPage = (await client.models.list()) as any;
-      const modelList: AkashChatModelCard[] = modelsPage.data || [];
+      const rawList: any[] = modelsPage.data || [];
+
+      // Remove `created` field from each model item
+      const modelList: AkashChatModelCard[] = rawList.map(({ created, ...rest }) => rest);
 
       return await processMultiProviderModelList(modelList, 'akashchat');
     } catch (error) {
