@@ -136,6 +136,7 @@ export const generateAIGroupChat: StateCreator<
         files: files?.map((f) => f.id),
         role: 'user',
         groupId,
+        sessionId: useSessionStore.getState().activeId,
         topicId: activeTopicId,
         targetId: targetMemberId,
       };
@@ -287,6 +288,7 @@ export const generateAIGroupChat: StateCreator<
         content: LOADING_FLAT,
         fromProvider: agentProvider,
         agentId,
+        sessionId: useSessionStore.getState().activeId,
         topicId: activeTopicId,
         targetId: targetId, // Use targetId when provided for DM messages
       };

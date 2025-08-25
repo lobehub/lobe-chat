@@ -190,8 +190,8 @@ describe('ChatGroupModel', () => {
         ]);
 
         await trx.insert(chatGroupsAgents).values([
-          { chatGroupId: 'group-with-agents', agentId: 'agent-1', userId, order: '1' },
-          { chatGroupId: 'group-with-agents', agentId: 'agent-2', userId, order: '2' },
+          { chatGroupId: 'group-with-agents', agentId: 'agent-1', userId, order: 1 },
+          { chatGroupId: 'group-with-agents', agentId: 'agent-2', userId, order: 2 },
         ]);
       });
 
@@ -218,8 +218,7 @@ describe('ChatGroupModel', () => {
         description: 'A test chat group',
         pinned: true,
         config: {
-          autoResponse: true,
-          maxAgents: 5,
+          maxResponseInRow: 5,
           responseOrder: 'sequential',
         },
       };
@@ -349,7 +348,7 @@ describe('ChatGroupModel', () => {
       });
 
       const result = await chatGroupModel.addAgentToGroup('test-group', 'test-agent', {
-        order: '5',
+        order: 5,
         role: 'moderator',
       });
 
@@ -542,14 +541,14 @@ describe('ChatGroupModel', () => {
           agentId: 'update-agent',
           userId,
           enabled: true,
-          order: '0',
+          order: 0,
           role: 'participant',
         });
       });
 
       const result = await chatGroupModel.updateAgentInGroup('update-agent-group', 'update-agent', {
         enabled: false,
-        order: '5',
+        order: 5,
         role: 'moderator',
       });
 
