@@ -1,3 +1,4 @@
+export { LobeAkashChatAI } from './akashchat';
 export { LobeAnthropicAI } from './anthropic';
 export { LobeAzureAI } from './azureai';
 export { LobeAzureOpenAI } from './azureOpenai';
