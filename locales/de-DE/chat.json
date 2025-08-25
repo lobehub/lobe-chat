@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Tiefdenk-Schalter"
     },
-    "title": "Modell Erweiterungsfunktionen"
+    "title": "Modell Erweiterungsfunktionen",
+    "urlContext": {
+      "desc": "Wenn aktiviert, wird die URL automatisch analysiert, um den tatsächlichen Kontext der Webseite zu ermitteln.",
+      "title": "URL-Kontextextraktion"
+    }
   },
   "history": {
     "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"

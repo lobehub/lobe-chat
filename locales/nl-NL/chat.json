@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Diepdenkschakelaar"
     },
-    "title": "Modeluitbreidingsfunctie"
+    "title": "Modeluitbreidingsfunctie",
+    "urlContext": {
+      "desc": "Wanneer ingeschakeld wordt de URL automatisch geanalyseerd om de daadwerkelijke context van de webpagina te verkrijgen",
+      "title": "URL-context ophalen"
+    }
   },
   "history": {
     "title": "De assistent onthoudt alleen de laatste {{count}} berichten"

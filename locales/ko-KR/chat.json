@@ -52,7 +52,11 @@
     "thinking": {
       "title": "심층 사고 스위치"
     },
-    "title": "모델 확장 기능"
+    "title": "모델 확장 기능",
+    "urlContext": {
+      "desc": "활성화하면 URL을 자동으로 분석하여 실제 웹페이지의 문맥 내용을 가져옵니다",
+      "title": "URL 컨텍스트 추출"
+    }
   },
   "history": {
     "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
