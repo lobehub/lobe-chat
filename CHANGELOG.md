@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.117.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.117.0...v1.117.1)
+<sup>Released on **2025-08-25**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **files**: Remove force-static rendering to enable session access.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **files**: Remove force-static rendering to enable session access, closes [#8900](https://github.com/jaworldwideorg/OneJA-Bot/issues/8900) ([6100d21](https://github.com/jaworldwideorg/OneJA-Bot/commit/6100d21))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.117.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.116.0...v1.117.0)
 <sup>Released on **2025-08-22**</sup>
 
