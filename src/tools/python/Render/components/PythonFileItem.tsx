@@ -1,6 +1,7 @@
 import { Icon, Image, MaterialFileTypeIcon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
+import { basename } from 'node:path';
 import React, { memo } from 'react';
 
 import { fileService } from '@/services/file';
@@ -58,13 +59,14 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
   const { data } = useFetchPythonFileItem(fileId);
   const { styles } = useImageStyles();
 
-  let imageUrl = data?.url ?? previewUrl;
+  const imageUrl = data?.url ?? previewUrl;
+  const baseName = basename(data?.filename ?? filename);
 
   if (imageUrl) {
     return (
       <div className={styles.container}>
-        <Tooltip title={filename}>
-          <Image alt={filename} onLoad={() => URL.revokeObjectURL(imageUrl)} src={imageUrl} />
+        <Tooltip title={baseName}>
+          <Image alt={baseName} onLoad={() => URL.revokeObjectURL(imageUrl)} src={imageUrl} />
         </Tooltip>
       </div>
     );
@@ -76,6 +78,7 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
 // 文件显示子组件
 const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
   const { styles } = useFileStyles();
+  const baseName = basename(filename);
   const onDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     let downloadUrl = previewUrl;
@@ -85,13 +88,13 @@ const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
     }
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = filename;
+    link.download = baseName;
     link.click();
   };
   return (
     <div className={styles.container} onClick={onDownload}>
-      <MaterialFileTypeIcon filename={filename} size={20} type="file" />
-      <Text>{filename}</Text>
+      <MaterialFileTypeIcon filename={baseName} size={20} type="file" />
+      <Text>{baseName}</Text>
       <Icon icon={Download} size={'small'} />
     </div>
   );

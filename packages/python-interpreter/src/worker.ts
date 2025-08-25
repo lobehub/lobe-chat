@@ -68,9 +68,13 @@ class PythonWorker {
    */
   async uploadFiles(files: File[]) {
     for (const file of files) {
-      console.log('input file', file.name);
       const content = new Uint8Array(await file.arrayBuffer());
-      this.pyodide.FS.writeFile(`/mnt/data/${file.name}`, content);
+      // TODO: 此处可以考虑使用 WORKERFS 减少一次拷贝
+      if (file.name.startsWith('/')) {
+        this.pyodide.FS.writeFile(file.name, content);
+      } else {
+        this.pyodide.FS.writeFile(`/mnt/data/${file.name}`, content);
+      }
       this.uploadedFiles.push(file);
     }
   }
@@ -87,7 +91,7 @@ class PythonWorker {
       // pyodide 的 FS 类型定义有问题，只能采用 any
       const content = (this.pyodide.FS as any).readFile(filePath, { encoding: 'binary' });
       const blob = new Blob([content]);
-      const file = new File([blob], entry);
+      const file = new File([blob], filePath);
       if (await this.isNewFile(file)) {
         result.push(file);
       }

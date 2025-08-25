@@ -14,7 +14,7 @@ export const PythonManifest: BuiltinToolManifest = {
             type: 'string',
           },
           packages: {
-            description: 'The packages needed for the code to run.',
+            description: 'The packages to install before running the code.',
             items: {
               type: 'string',
             },

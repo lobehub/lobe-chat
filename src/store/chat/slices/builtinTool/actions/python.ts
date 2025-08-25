@@ -41,44 +41,26 @@ export const pythonSlice: StateCreator<
 
     togglePythonExecuting(id, true);
 
-    const toFile = async ({ url, fileId }: { fileId?: string, url?: string; }) => {
-      if (url) {
-        return await fetch(url).then((res) => res.blob());
-      }
-      if (fileId) {
-        const item = await fileService.getFile(fileId);
-        return await toFile({ url: item.url });
-      }
-      return null;
-    };
-
     // TODO: 应该只下载 AI 用到的文件
     const files: File[] = [];
     for (const message of chatSelectors.mainDisplayChats(get())) {
       for (const file of message.fileList ?? []) {
-        const fileItem = await toFile({ fileId: file.id, url: file.url });
-        if (fileItem) {
-          files.push(new File([fileItem], file.name));
-        }
+        const blob = await fetch(file.url).then((res) => res.blob());
+        files.push(new File([blob], file.name));
       }
       for (const image of message.imageList ?? []) {
-        const fileItem = await toFile({ fileId: image.id });
-        if (fileItem) {
-          files.push(new File([fileItem], image.alt));
-        }
+        const blob = await fetch(image.url).then((res) => res.blob());
+        files.push(new File([blob], image.alt));
       }
       for (const tool of message.tools ?? []) {
         if (tool.identifier === PythonToolIdentifier) {
           const message = chatSelectors.getMessageByToolCallId(tool.id)(get());
           if (message?.content) {
             const content = JSON.parse(message.content) as PythonResponse;
-            if (content.files) {
-              for (const file of content.files) {
-                const fileItem = await toFile({ fileId: file.fileId });
-                if (fileItem) {
-                  files.push(new File([fileItem], file.filename));
-                }
-              }
+            for (const file of content.files ?? []) {
+              const item = await fileService.getFile(file.fileId!);
+              const blob = await fetch(item.url).then((res) => res.blob());
+              files.push(new File([blob], file.filename));
             }
           }
         }
