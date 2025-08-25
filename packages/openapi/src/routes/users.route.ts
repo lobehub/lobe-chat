@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { getScopePermissions } from '@/utils/rbac';
+import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 
 import { UserController } from '../controllers';
 import { requireAuth } from '../middleware/auth';
@@ -27,8 +27,8 @@ UserRoutes.get('/me', requireAuth, async (c) => {
 });
 
 /**
- * 获取系统中所有用户列表
- * GET /api/v1/users
+ * 获取系统中所有用户列表 (支持搜索)
+ * GET /api/v1/users?keyword=xxx&page=1&pageSize=10
  * 需要用户管理权限
  */
 UserRoutes.get(
@@ -38,9 +38,10 @@ UserRoutes.get(
     getScopePermissions('USER_READ', ['ALL', 'WORKSPACE']),
     '您没有权限查看用户列表',
   ),
+  zValidator('query', UserSearchRequestSchema),
   async (c) => {
     const userController = new UserController();
-    return await userController.getAllUsers(c);
+    return await userController.getUsers(c);
   },
 );
 
@@ -64,26 +65,6 @@ UserRoutes.post(
 );
 
 /**
- * 搜索用户
- * GET /api/v1/users/search?keyword=xxx
- * 需要用户读取权限
- * 注意：此路由必须在 /:id 路由之前定义，避免路径冲突
- */
-UserRoutes.get(
-  '/search',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('USER_READ', ['ALL', 'WORKSPACE']),
-    '您没有权限搜索用户',
-  ),
-  zValidator('query', UserSearchRequestSchema),
-  async (c) => {
-    const userController = new UserController();
-    return await userController.searchUsers(c);
-  },
-);
-
-/**
  * 获取用户角色信息
  * GET /api/v1/users/:id/roles
  * 需要用户角色查看权限
@@ -91,10 +72,7 @@ UserRoutes.get(
 UserRoutes.get(
   '/:id/roles',
   requireAuth,
-  requireAnyPermission(
-    getScopePermissions('RBAC_USER_PERMISSION_VIEW', ['ALL', 'WORKSPACE']),
-    '您没有权限查看用户角色',
-  ),
+  requireAnyPermission(getAllScopePermissions('RBAC_USER_ROLE_READ'), '您没有权限查看用户角色'),
   zValidator('param', UserIdParamSchema),
   async (c) => {
     const userController = new UserController();
@@ -104,16 +82,13 @@ UserRoutes.get(
 
 /**
  * 更新用户关联的角色
- * PUT /api/v1/users/:id/roles
+ * PATCH /api/v1/users/:id/roles
  * 需要用户角色分配权限
  */
-UserRoutes.put(
+UserRoutes.patch(
   '/:id/roles',
   requireAuth,
-  requireAnyPermission(
-    getScopePermissions('RBAC_USER_ROLE_ASSIGN', ['ALL', 'WORKSPACE']),
-    '您没有权限分配用户角色',
-  ),
+  requireAnyPermission(getAllScopePermissions('RBAC_USER_ROLE_UPDATE'), '您没有权限分配用户角色'),
   zValidator('param', UserIdParamSchema),
   zValidator('json', UpdateUserRolesRequestSchema),
   async (c) => {
@@ -130,10 +105,7 @@ UserRoutes.put(
 UserRoutes.get(
   '/:id',
   requireAuth,
-  requireAnyPermission(
-    getScopePermissions('USER_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看用户详情',
-  ),
+  requireAnyPermission(getAllScopePermissions('USER_READ'), '您没有权限查看用户详情'),
   zValidator('param', UserIdParamSchema),
   async (c) => {
     const userController = new UserController();
@@ -142,17 +114,14 @@ UserRoutes.get(
 );
 
 /**
- * 更新用户信息
- * PUT /api/v1/users/:id
+ * 更新用户信息 (RESTful 部分更新)
+ * PATCH /api/v1/users/:id
  * 需要用户更新权限
  */
-UserRoutes.put(
+UserRoutes.patch(
   '/:id',
   requireAuth,
-  requireAnyPermission(
-    getScopePermissions('USER_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限更新用户信息',
-  ),
+  requireAnyPermission(getAllScopePermissions('USER_UPDATE'), '您没有权限更新用户信息'),
   zValidator('param', UserIdParamSchema),
   zValidator('json', UpdateUserRequestSchema),
   async (c) => {
@@ -169,10 +138,7 @@ UserRoutes.put(
 UserRoutes.delete(
   '/:id',
   requireAuth,
-  requireAnyPermission(
-    getScopePermissions('USER_DELETE', ['ALL', 'WORKSPACE']),
-    '您没有权限删除用户',
-  ),
+  requireAnyPermission(getAllScopePermissions('USER_DELETE'), '您没有权限删除用户'),
   zValidator('param', UserIdParamSchema),
   async (c) => {
     const userController = new UserController();

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { RoleItem, SessionItem, UserItem, UserRoleItem } from '@/database/schemas';
+import { RoleItem, UserItem, UserRoleItem } from '@/database/schemas';
 
 /**
  * 扩展的用户信息类型，包含角色信息
@@ -8,7 +8,6 @@ import { RoleItem, SessionItem, UserItem, UserRoleItem } from '@/database/schema
 export type UserWithRoles = UserItem & {
   messageCount?: number;
   roles?: RoleItem[];
-  sessions?: SessionItem[];
 };
 
 /**
@@ -22,6 +21,7 @@ export interface CreateUserRequest {
   id?: string;
   lastName?: string;
   phone?: string;
+  roleIds?: number[];
   username?: string;
 }
 
@@ -79,7 +79,7 @@ export const UpdateUserRequestSchema = z.object({
 });
 
 /**
- * 用户搜索请求验证Schema
+ * 用户列表请求验证Schema
  */
 export const UserSearchRequestSchema = z.object({
   keyword: z
@@ -110,12 +110,23 @@ export const UserSearchRequestSchema = z.object({
     }),
 });
 
+export interface UserListRequest {
+  keyword?: string;
+  page: number;
+  pageSize: number;
+}
+
+export interface UserListResponse {
+  totalCount: number;
+  users: UserWithRoles[];
+}
+
 /**
  * 单个添加角色的请求
  */
 export interface AddRoleRequest {
-  expiresAt?: string;
-  roleId: number; // ISO 8601 格式的过期时间
+  expiresAt?: string; // ISO 8601 格式的过期时间
+  roleId: number;
 }
 
 /**
@@ -137,9 +148,8 @@ export interface UserRoleDetail extends UserRoleItem {
  * 用户角色操作响应
  */
 export interface UserRolesResponse {
-  roles: UserRoleDetail[];
-  totalCount: number;
-  userId: string;
+  roles: RoleItem[];
+  user: UserItem;
 }
 
 /**

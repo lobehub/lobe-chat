@@ -2,7 +2,12 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { UserService } from '../services';
-import { CreateUserRequest, UpdateUserRequest, UpdateUserRolesRequest } from '../types/user.type';
+import {
+  CreateUserRequest,
+  UpdateUserRequest,
+  UpdateUserRolesRequest,
+  UserListRequest,
+} from '../types/user.type';
 
 /**
  * 用户控制器类
@@ -28,16 +33,19 @@ export class UserController extends BaseController {
   }
 
   /**
-   * 获取系统中所有用户列表
+   * 统一获取用户列表 (支持搜索和分页)
    * @param c Hono Context
    * @returns 用户列表响应
    */
-  async getAllUsers(c: Context): Promise<Response> {
+  async getUsers(c: Context): Promise<Response> {
     try {
+      const request = this.getQuery<UserListRequest>(c);
+
       // 获取数据库连接并创建服务实例
       const db = await this.getDatabase();
       const userService = new UserService(db, this.getUserId(c));
-      const userList = await userService.getAllUsers();
+
+      const userList = await userService.getUsers(request);
 
       return this.success(c, userList, '获取用户列表成功');
     } catch (error) {
@@ -127,32 +135,8 @@ export class UserController extends BaseController {
   }
 
   /**
-   * 搜索用户
-   * @param c Hono Context
-   * @returns 匹配的用户列表响应
-   */
-  async searchUsers(c: Context): Promise<Response> {
-    try {
-      const { keyword, page, pageSize } = this.getQuery<{
-        keyword?: string;
-        page: number;
-        pageSize: number;
-      }>(c);
-
-      // 获取数据库连接并创建服务实例
-      const db = await this.getDatabase();
-      const userService = new UserService(db, this.getUserId(c));
-      const searchResults = await userService.searchUsers(keyword || '', pageSize, page);
-
-      return this.success(c, searchResults, `搜索到 ${searchResults.length} 个匹配用户`);
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 更新用户角色
-   * PUT /api/v1/users/:id/roles
+   * 更新用户角色 (RESTful 部分更新)
+   * PATCH /api/v1/users/:id/roles
    * @param c Hono Context
    * @returns 用户角色更新响应
    */

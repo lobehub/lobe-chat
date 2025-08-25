@@ -206,20 +206,19 @@ export class RbacModel {
   };
 
   /**
-   * 更新用户角色，为了避免在更新时新旧角色数量不同导致的刷新问题，先删除所有角色，再添加新角色
+   * 更新用户角色
    * @param userId 用户ID
    * @param roles 角色ID数组
    */
-  updateUserRoles = async (userId: string, roles: number[]): Promise<void> => {
-    // 删除用户所有角色
-    await this.db.delete(userRoles).where(eq(userRoles.userId, userId));
-
-    // 添加新角色
-    await this.db.insert(userRoles).values(
-      roles.map((roleId) => ({
-        roleId,
-        userId,
-      })),
-    );
+  updateUserRoles = async (userId: string, roleIds: number[]): Promise<void> => {
+    await this.db
+      .insert(userRoles)
+      .values(
+        roleIds.map((roleId) => ({
+          roleId,
+          userId,
+        })),
+      )
+      .onConflictDoNothing();
   };
 }

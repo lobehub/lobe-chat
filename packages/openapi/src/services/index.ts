@@ -2,7 +2,7 @@ export * from './agent.service';
 export * from './chat.service';
 export * from './file.service';
 export * from './message.service';
-export * from './message-translate.service';
+export * from './message-translations.service';
 export * from './model.service';
 export * from './role.service';
 export * from './session.service';
