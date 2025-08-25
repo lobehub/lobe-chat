@@ -179,7 +179,14 @@ class PythonWorker {
 
   private async isNewFile(file: File) {
     const isSameFile = async (a: File, b: File) => {
-      if (a.name !== b.name) return false;
+      // a 是传入的文件，可能使用了绝对路径或相对路径
+      // b 是解释器环境中的文件，使用绝对路径
+      if (a.name.startsWith('/')) {
+        if (a.name !== b.name) return false;
+      } else {
+        if (`/mnt/data/${a.name}` !== b.name) return false;
+      }
+
       if (a.size !== b.size) return false;
 
       const aBuffer = await a.arrayBuffer();
