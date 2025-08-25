@@ -1,12 +1,10 @@
 import { z } from 'zod';
 
-// Request schemas
-export const TopicListParamSchema = z.object({
-  sessionId: z.string().min(1, '会话ID不能为空'),
-});
+import { TopicItem, UserItem } from '@/database/schemas';
 
 export const TopicListQuerySchema = z.object({
   keyword: z.string().nullish(),
+  sessionId: z.string().nullish(), // 支持通过查询参数过滤会话
 });
 
 export const TopicGetParamSchema = z.object({
@@ -16,11 +14,6 @@ export const TopicGetParamSchema = z.object({
 export const TopicCreateRequestSchema = z.object({
   sessionId: z.string().min(1, '会话ID不能为空'),
   title: z.string().min(1, '标题不能为空'),
-});
-
-export const TopicSummaryParamSchema = z.object({
-  id: z.string().min(1, '话题ID不能为空'),
-  lang: z.string().nullish(),
 });
 
 export const TopicDeleteParamSchema = z.object({
@@ -35,13 +28,9 @@ export const TopicUpdateRequestSchema = z.object({
   title: z.string().min(1, '标题不能为空'),
 });
 
-// TypeScript types
-export interface TopicListParam {
-  sessionId: string;
-}
-
 export interface TopicListQuery {
   keyword?: string;
+  sessionId?: string; // 支持会话过滤
 }
 
 export interface TopicCreateRequest {
@@ -49,35 +38,11 @@ export interface TopicCreateRequest {
   title: string;
 }
 
-export interface TopicSummaryRequest {
-  id: string;
-  lang?: string;
-}
-
 export interface TopicUpdateRequest {
   title: string;
 }
 
-// User info for topic response
-export interface TopicUserInfo {
-  avatar: string | null;
-  email: string | null;
-  fullName: string | null;
-  id: string;
-  username: string | null;
-}
-
-// Response type (represents the topic table structure)
-export interface TopicResponse {
-  clientId: string | null;
-  createdAt: string;
-  favorite: boolean;
-  historySummary: string | null;
-  id: string;
+export interface TopicResponse extends TopicItem {
   messageCount: number;
-  metadata: any | null;
-  sessionId: string | null;
-  title: string | null;
-  updatedAt: string;
-  user: TopicUserInfo;
+  user: UserItem;
 }

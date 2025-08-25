@@ -2,23 +2,23 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { TopicService } from '../services/topic.service';
-import { TopicCreateRequest, TopicSummaryRequest, TopicUpdateRequest } from '../types/topic.type';
+import { TopicCreateRequest, TopicListQuery, TopicUpdateRequest } from '../types/topic.type';
 
 export class TopicController extends BaseController {
   /**
-   * 获取指定会话的所有话题
-   * GET /api/v1/topics/session/:sessionId
-   * Query: { keyword?: string }
+   * 统一获取话题列表 (支持会话过滤)
+   * GET /api/v1/topics?sessionId=xxx&keyword=xxx
+   * Query: { sessionId?: string, keyword?: string }
    */
-  async handleGetTopicsBySession(c: Context) {
+  async handleGetTopics(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const { sessionId } = this.getParams<{ sessionId: string }>(c);
-      const { keyword } = this.getQuery<{ keyword?: string }>(c);
+      const request = this.getQuery<TopicListQuery>(c);
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
-      const topics = await topicService.getTopicsBySessionId(sessionId, keyword);
+
+      const topics = await topicService.getTopicsBySessionId(request);
 
       return this.success(c, topics, '获取话题列表成功');
     } catch (error) {
@@ -54,7 +54,7 @@ export class TopicController extends BaseController {
   async handleCreateTopic(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const { sessionId, title } = (await this.getBody<TopicCreateRequest>(c))!;
+      const { sessionId, title } = await this.getBody<TopicCreateRequest>(c);
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
@@ -75,11 +75,11 @@ export class TopicController extends BaseController {
     try {
       const userId = this.getUserId(c)!;
       const { id } = this.getParams<{ id: string }>(c);
-      const { title } = (await this.getBody<TopicUpdateRequest>(c))!;
+      const payload = await this.getBody<TopicUpdateRequest>(c);
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
-      const updatedTopic = await topicService.updateTopic(id, title);
+      const updatedTopic = await topicService.updateTopic(id, payload);
 
       return this.success(c, updatedTopic, '更新话题成功');
     } catch (error) {
@@ -102,26 +102,6 @@ export class TopicController extends BaseController {
       await topicService.deleteTopic(topicId);
 
       return this.success(c, null, '删除话题成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 总结对应的话题
-   * POST /api/v1/topics/:id/summary-title
-   * Params: { id: string }
-   */
-  async handleSummarizeTopicTitle(c: Context) {
-    try {
-      const userId = this.getUserId(c)!;
-      const params = (await this.getBody<TopicSummaryRequest>(c))!;
-
-      const db = await this.getDatabase();
-      const topicService = new TopicService(db, userId);
-      const updatedTopic = await topicService.summarizeTopicTitle(params);
-
-      return this.success(c, updatedTopic, '话题总结成功');
     } catch (error) {
       return this.handleError(c, error);
     }
