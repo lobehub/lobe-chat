@@ -1,7 +1,7 @@
 import { Icon, Image, MaterialFileTypeIcon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
-import { basename } from 'node:path';
+import * as path from 'node:path';
 import React, { memo } from 'react';
 
 import { fileService } from '@/services/file';
@@ -60,7 +60,7 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
   const { styles } = useImageStyles();
 
   const imageUrl = data?.url ?? previewUrl;
-  const baseName = basename(data?.filename ?? filename);
+  const baseName = path.basename(data?.filename ?? filename);
 
   if (imageUrl) {
     return (
@@ -78,7 +78,7 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
 // 文件显示子组件
 const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
   const { styles } = useFileStyles();
-  const baseName = basename(filename);
+  const baseName = path.basename(filename);
   const onDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     let downloadUrl = previewUrl;

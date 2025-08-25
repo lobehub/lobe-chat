@@ -26,7 +26,6 @@ export default {
     executing: '执行中...',
     files: '文件：',
     output: '输出：',
-    rerun: '重新执行',
     returnValue: '返回值：',
   },
   search: {
