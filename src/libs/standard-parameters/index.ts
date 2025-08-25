@@ -40,6 +40,7 @@ export const ModelParamsMetaSchema = z.object({
     .object({
       default: z.string().nullable().optional(),
       description: z.string().optional(),
+      maxFileSize: z.number().optional(),
       type: z.tuple([z.literal('string'), z.literal('null')]).optional(),
     })
     .optional(),
@@ -48,6 +49,8 @@ export const ModelParamsMetaSchema = z.object({
     .object({
       default: z.array(z.string()),
       description: z.string().optional(),
+      maxCount: z.number().optional(),
+      maxFileSize: z.number().optional(),
       type: z.literal('array').optional(),
     })
     .optional(),
