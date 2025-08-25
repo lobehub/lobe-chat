@@ -79,6 +79,7 @@ export enum ModelProvider {
   Upstage = 'upstage',
   V0 = 'v0',
   VLLM = 'vllm',
+  VercelAIGateway = 'vercelaigateway',
   VertexAI = 'vertexai',
   Volcengine = 'volcengine',
   Wenxin = 'wenxin',

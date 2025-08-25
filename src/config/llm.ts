@@ -175,6 +175,9 @@ export const getLLMConfig = () => {
       ENABLED_V0: z.boolean(),
       V0_API_KEY: z.string().optional(),
 
+      ENABLED_VERCELAIGATEWAY: z.boolean(),
+      VERCELAIGATEWAY_API_KEY: z.string().optional(),
+
       ENABLED_AI302: z.boolean(),
       AI302_API_KEY: z.string().optional(),
 
@@ -352,6 +355,9 @@ export const getLLMConfig = () => {
 
       ENABLED_V0: !!process.env.V0_API_KEY,
       V0_API_KEY: process.env.V0_API_KEY,
+
+      ENABLED_VERCELAIGATEWAY: !!process.env.VERCELAIGATEWAY_API_KEY,
+      VERCELAIGATEWAY_API_KEY: process.env.VERCELAIGATEWAY_API_KEY,
 
       ENABLED_AI302: !!process.env.AI302_API_KEY,
       AI302_API_KEY: process.env.AI302_API_KEY,
