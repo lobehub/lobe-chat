@@ -7,27 +7,13 @@ This document serves as a shared guideline for all team members when using Claud
 - When searching the project source code, it is recommended to exclude: `src/database/migrations/meta`, `**/*.test.*`, `**/__snapshots__`, `**/fixtures`
 - Please store all temporary scripts (such as migration and refactoring scripts) in the `docs/.local/` directory; the contents of this folder will not be committed.
 
-## Technologies Stack
+## Tech Stack
 
 read @.cursor/rules/project-introduce.mdc for more details.
 
 ### Directory Structure
 
-```plaintext
-src/
-├── app/                 # Next.js App Router
-├── features/            # Feature-based UI components
-├── store/              # Zustand state stores
-├── services/           # Client services (tRPC/Model calls)
-├── server/             # Server-side (tRPC routers, services)
-├── database/           # Schemas, models, repositories
-├── libs/               # External library integrations
-```
-
-### Data Flow
-
-- **Client DB Version**: UI → Zustand → Service → Model → PGLite
-- **Server DB Version**: UI → Zustand → Service → tRPC → Repository/Model → PostgreSQL
+read @.cursor/rules/project-structure.mdc for more details.
 
 ## Development
 
@@ -59,7 +45,10 @@ see @.cursor/rules/typescript.mdc
 Testing work follows the Rule-Aware Task Execution system above.
 
 - **Required Rule**: `testing-guide/testing-guide.mdc`
-- **Command**: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`, wrapped in single quotes to avoid shell expansion
+- **Command**:
+  - web: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`
+  - packages(eg: database): `cd packages/database && bunx vitest run --silent='passed-only' '[file-path-pattern]'`
+  - **Important**: wrapped the file path in single quotes to avoid shell expansion.
 
 **Important**:
 

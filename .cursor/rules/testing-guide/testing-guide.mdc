@@ -5,7 +5,7 @@ alwaysApply: false
 
 # 测试指南 - LobeChat Testing Guide
 
-## 🧪 测试环境概览
+## 测试环境概览
 
 LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 
@@ -28,11 +28,11 @@ LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
 - **用途**: 测试数据库模型、服务端逻辑、API 端点等
 - **设置文件**: [packages/database/tests/setup-db.ts](mdc:packages/database/tests/setup-db.ts)
 
-## 🚀 测试运行命令
+## 测试运行命令
 
-**🚨 性能警告**: 项目包含 3000+ 测试用例，完整运行需要约 10 分钟。务必使用文件过滤或测试名称过滤。
+** 性能警告**: 项目包含 3000+ 测试用例，完整运行需要约 10 分钟。务必使用文件过滤或测试名称过滤。
 
-### ✅ 正确的命令格式
+### 正确的命令格式
 
 ```bash
 # 运行所有客户端/服务端测试
@@ -52,27 +52,27 @@ bunx vitest run --silent='passed-only' filename.test.ts -t "specific test"
 bunx vitest run --silent='passed-only' --coverage
 ```
 
-### ❌ 避免的命令格式
+### 避免的命令格式
 
 ```bash
-# ❌ 这些命令会运行所有 3000+ 测试用例，耗时约 10 分钟！
+#  这些命令会运行所有 3000+ 测试用例，耗时约 10 分钟！
 npm test
 npm test some-file.test.ts
 
-# ❌ 不要使用裸 vitest (会进入 watch 模式)
+#  不要使用裸 vitest (会进入 watch 模式)
 vitest test-file.test.ts
 ```
 
-## 🔧 测试修复原则
+## 测试修复原则
 
-### 核心原则 ⚠️
+### 核心原则
 
 1. **充分阅读测试代码**: 在修复测试之前，必须完整理解测试的意图和实现
 2. **测试优先修复**: 如果是测试本身写错了，修改测试而不是实现代码
 3. **专注单一问题**: 只修复指定的测试，不要添加额外测试或功能
 4. **不自作主张**: 不要因为发现其他问题就直接修改，先提出再讨论
 
-### 测试协作最佳实践 🤝
+### 测试协作最佳实践
 
 基于实际开发经验总结的重要协作原则：
 
@@ -86,10 +86,10 @@ vitest test-file.test.ts
 - **避免陷阱**: 不要陷入"不断尝试相同或类似方法"的循环
 
 ```typescript
-// ❌ 错误做法：连续失败后继续盲目尝试
+//  错误做法：连续失败后继续盲目尝试
 // 第3次、第4次仍在用相似的方法修复同一个问题
 
-// ✅ 正确做法：失败1-2次后总结问题
+//  正确做法：失败1-2次后总结问题
 /*
 问题总结：
 1. 尝试过的方法：修改 mock 数据结构
@@ -108,7 +108,7 @@ vitest test-file.test.ts
 - **保持稳定性**: 测试名称应该在代码重构后仍然有意义
 
 ```typescript
-// ❌ 错误的测试命名
+//  错误的测试命名
 describe('User component coverage', () => {
   it('covers line 45-50 in getUserData', () => {
     // 为了覆盖第45-50行而写的测试
@@ -119,7 +119,7 @@ describe('User component coverage', () => {
   });
 });
 
-// ✅ 正确的测试命名
+//  正确的测试命名
 describe('<UserAvatar />', () => {
   it('should render fallback icon when image url is not provided', () => {
     // 测试具体的业务场景，自然会覆盖相关代码分支
@@ -133,8 +133,8 @@ describe('<UserAvatar />', () => {
 
 **覆盖率提升的正确思路**:
 
-- ✅ 通过设计各种业务场景（正常流程、边缘情况、错误处理）来自然提升覆盖率
-- ❌ 不要为了达到覆盖率数字而写测试，更不要在测试中注释"为了覆盖 xxx 行"
+- 通过设计各种业务场景（正常流程、边缘情况、错误处理）来自然提升覆盖率
+- 不要为了达到覆盖率数字而写测试，更不要在测试中注释"为了覆盖 xxx 行"
 
 #### 3. 测试组织结构
 
@@ -145,7 +145,7 @@ describe('<UserAvatar />', () => {
 - **避免碎片化**: 不要为了单个测试用例就创建新的顶级 `describe` 块
 
 ```typescript
-// ❌ 错误的组织方式：创建过多顶级块
+//  错误的组织方式：创建过多顶级块
 describe('<UserProfile />', () => {
   it('should render user name', () => {});
 });
@@ -160,7 +160,7 @@ describe('UserProfile edge cases', () => {
   it('should handle missing avatar', () => {});
 });
 
-// ✅ 正确的组织方式：合并相关测试
+//  正确的组织方式：合并相关测试
 describe('<UserProfile />', () => {
   it('should render user name', () => {});
 
@@ -216,9 +216,9 @@ describe('<UserProfile />', () => {
 **修复方法**: 更新了测试文件中的 mock 数据结构，使其与最新的 API 响应格式保持一致。具体修改了 `user.test.ts` 中的 `mockUserData` 对象结构。
 ```
 
-## 🎯 测试编写最佳实践
+## 测试编写最佳实践
 
-### Mock 数据策略：追求"低成本的真实性" 📋
+### Mock 数据策略：追求"低成本的真实性"
 
 **核心原则**: 测试数据应默认追求真实性，只有在引入"高昂的测试成本"时才进行简化。
 
@@ -230,10 +230,10 @@ describe('<UserProfile />', () => {
 - **网络请求**：HTTP 调用、数据库连接
 - **系统调用**：获取系统时间、环境变量等
 
-#### ✅ 推荐做法：Mock 依赖，保留真实数据
+#### 推荐做法：Mock 依赖，保留真实数据
 
 ```typescript
-// ✅ 好的做法：Mock I/O 操作，但使用真实的文件内容格式
+//  好的做法：Mock I/O 操作，但使用真实的文件内容格式
 describe('parseContentType', () => {
   beforeEach(() => {
     // Mock 文件读取操作（避免真实 I/O）
@@ -251,7 +251,7 @@ describe('parseContentType', () => {
   });
 });
 
-// ❌ 过度简化：使用不真实的数据
+//  过度简化：使用不真实的数据
 describe('parseContentType', () => {
   it('should detect PDF content type correctly', () => {
     // 这种简化数据没有测试价值
@@ -261,17 +261,17 @@ describe('parseContentType', () => {
 });
 ```
 
-#### 🎯 真实标识符的价值
+#### 真实标识符的价值
 
 ```typescript
-// ✅ 使用真实的提供商标识符
+//  使用真实的提供商标识符
 it('should parse OpenAI model list correctly', () => {
   const result = parseModelString('openai', '+gpt-4,+gpt-3.5-turbo');
   expect(result.add).toHaveLength(2);
   expect(result.add[0].id).toBe('gpt-4');
 });
 
-// ❌ 使用占位符标识符（价值较低）
+//  使用占位符标识符（价值较低）
 it('should parse model list correctly', () => {
   const result = parseModelString('test-provider', '+model1,+model2');
   expect(result.add).toHaveLength(2);
@@ -279,24 +279,24 @@ it('should parse model list correctly', () => {
 });
 ```
 
-### 错误处理测试：测试"行为"而非"文本" ⚠️
+### 错误处理测试：测试"行为"而非"文本"
 
 **核心原则**: 测试应该验证程序在错误发生时的行为是可预测的，而不是验证易变的错误信息文本。
 
-#### ✅ 推荐的错误测试方式
+#### 推荐的错误测试方式
 
 ```typescript
-// ✅ 测试是否抛出错误
+//  测试是否抛出错误
 it('should throw error when invalid input provided', () => {
   expect(() => processInput(null)).toThrow();
 });
 
-// ✅ 测试错误类型（最推荐）
+//  测试错误类型（最推荐）
 it('should throw ValidationError for invalid data', () => {
   expect(() => validateUser({})).toThrow(ValidationError);
 });
 
-// ✅ 测试错误属性而非消息文本
+//  测试错误属性而非消息文本
 it('should throw error with correct error code', () => {
   expect(() => processPayment({})).toThrow(
     expect.objectContaining({
@@ -307,32 +307,32 @@ it('should throw error with correct error code', () => {
 });
 ```
 
-#### ❌ 应避免的做法
+#### 应避免的做法
 
 ```typescript
-// ❌ 过度依赖具体错误信息文本
+//  过度依赖具体错误信息文本
 it('should throw specific error message', () => {
   expect(() => processUser({})).toThrow('用户数据不能为空，请检查输入参数');
   // 这种测试很脆弱，错误文案稍有修改就会失败
 });
 ```
 
-#### 🎯 例外情况：何时可以测试错误信息
+#### 例外情况：何时可以测试错误信息
 
 ```typescript
-// ✅ 测试标准 API 错误（这是契约的一部分）
+//  测试标准 API 错误（这是契约的一部分）
 it('should return proper HTTP error for API', () => {
   expect(response.statusCode).toBe(400);
   expect(response.error).toBe('Bad Request');
 });
 
-// ✅ 测试错误信息的关键部分（使用正则）
+//  测试错误信息的关键部分（使用正则）
 it('should include field name in validation error', () => {
   expect(() => validateField('email', '')).toThrow(/email/i);
 });
 ```
 
-### 疑难解答：警惕模块污染 🚨
+### 疑难解答：警惕模块污染
 
 **识别信号**: 当你的测试出现以下"灵异"现象时，优先怀疑模块污染：
 
@@ -343,7 +343,7 @@ it('should include field name in validation error', () => {
 #### 典型场景：动态 Mock 同一模块
 
 ```typescript
-// ❌ 容易出现模块污染的写法
+//  容易出现模块污染的写法
 describe('ConfigService', () => {
   it('should work in development mode', async () => {
     vi.doMock('./config', () => ({ isDev: true }));
@@ -354,11 +354,11 @@ describe('ConfigService', () => {
   it('should work in production mode', async () => {
     vi.doMock('./config', () => ({ isDev: false }));
     const { getSettings } = await import('./configService'); // 可能使用缓存的旧版本！
-    expect(getSettings().debugMode).toBe(false); // ❌ 可能失败
+    expect(getSettings().debugMode).toBe(false); //  可能失败
   });
 });
 
-// ✅ 使用 resetModules 解决模块污染
+//  使用 resetModules 解决模块污染
 describe('ConfigService', () => {
   beforeEach(() => {
     vi.resetModules(); // 清除模块缓存，确保每个测试都是干净的环境
@@ -373,12 +373,12 @@ describe('ConfigService', () => {
   it('should work in production mode', async () => {
     vi.doMock('./config', () => ({ isDev: false }));
     const { getSettings } = await import('./configService');
-    expect(getSettings().debugMode).toBe(false); // ✅ 测试通过
+    expect(getSettings().debugMode).toBe(false); //  测试通过
   });
 });
 ```
 
-#### 🔧 排查和解决步骤
+#### 排查和解决步骤
 
 1. **识别问题**: 测试失败时，首先问自己："是否有多个测试在 Mock 同一个模块？"
 2. **添加隔离**: 在 `beforeEach` 中添加 `vi.resetModules()`
@@ -386,7 +386,7 @@ describe('ConfigService', () => {
 
 **记住**: `vi.resetModules()` 是解决测试"灵异"失败的终极武器，当常规调试方法都无效时，它往往能一针见血地解决问题。
 
-## 📂 测试文件组织
+## 测试文件组织
 
 ### 文件命名约定
 
@@ -410,7 +410,7 @@ src/components/Button/
 - 也有少数情况会统一放到 `__tests__` 文件夹， 例如 `packages/database/src/models/__tests__`
 - 测试使用的辅助文件放到 fixtures 文件夹
 
-## 🛠️ 测试调试技巧
+## 测试调试技巧
 
 ### 测试调试步骤
 
@@ -419,23 +419,23 @@ src/components/Button/
 3. **分析错误**: 仔细阅读错误信息、堆栈跟踪和最近的文件修改记录
 4. **添加调试**: 在测试中添加 `console.log` 了解执行流程
 
-### TypeScript 类型处理 📝
+### TypeScript 类型处理
 
 在测试中，为了提高编写效率和可读性，可以适当放宽 TypeScript 类型检测：
 
-#### ✅ 推荐的类型放宽策略
+#### 推荐的类型放宽策略
 
 ```typescript
-// ✅ 使用非空断言访问测试中确定存在的属性
+//  使用非空断言访问测试中确定存在的属性
 const result = await someFunction();
 expect(result!.data).toBeDefined();
 expect(result!.status).toBe('success');
 
-// ✅ 使用 any 类型简化复杂的 Mock 设置
+//  使用 any 类型简化复杂的 Mock 设置
 const mockStream = new ReadableStream() as any;
 mockStream.toReadableStream = () => mockStream;
 
-// ✅ 使用中括号访问私有属性和方法（推荐）
+//  使用中括号访问私有属性和方法（推荐）
 class MyClass {
   private _cache = new Map();
   private getFromCache(key: string) {
@@ -450,11 +450,11 @@ await instance['getFromCache']('test-key');
 expect(instance['_cache'].size).toBe(1);
 
 // 避免：使用 as any 访问私有成员
-await (instance as any).getFromCache('test-key'); // ❌ 不推荐
-expect((instance as any)._cache.size).toBe(1); // ❌ 不推荐
+await (instance as any).getFromCache('test-key'); //  不推荐
+expect((instance as any)._cache.size).toBe(1); //  不推荐
 ```
 
-#### 🎯 适用场景
+#### 适用场景
 
 - **Mock 对象**: 对于测试用的 Mock 数据，使用 `as any` 避免复杂的类型定义
 - **第三方库**: 处理复杂的第三方库类型时，适当使用 `any` 提高效率
@@ -462,44 +462,30 @@ expect((instance as any)._cache.size).toBe(1); // ❌ 不推荐
 - **私有成员访问**: 优先使用中括号 `instance['privateMethod']()` 而不是 `(instance as any).privateMethod()`
 - **临时调试**: 快速编写测试时，先用 `any` 保证功能，后续可选择性地优化类型
 
-#### ⚠️ 注意事项
+#### 注意事项
 
 - **适度使用**: 不要过度依赖 `any`，核心业务逻辑的类型仍应保持严格
 - **私有成员访问优先级**: 中括号访问 > `as any` 转换，保持更好的类型安全性
 - **文档说明**: 对于使用 `any` 的复杂场景，添加注释说明原因
 - **测试覆盖**: 确保即使使用了 `any`，测试仍能有效验证功能正确性
 
-### 检查最近修改记录 🔍
+### 检查最近修改记录
 
-系统性地检查相关文件的修改历史是问题定位的关键步骤。
+**核心原则**：测试突然失败时，优先检查最近的代码修改。
 
-#### 三步检查法
-
-**Step 1: 查看当前状态**
+#### 快速检查方法
 
 ```bash
-git status                               # 查看未提交的修改
-git diff path/to/component.test.ts | cat # 查看测试文件修改
-git diff path/to/component.ts | cat      # 查看实现文件修改
+git status                  # 查看当前修改状态
+git diff HEAD -- '*.test.*' # 检查测试文件改动
+git diff main...HEAD        # 对比主分支差异
+gh pr diff                  # 查看PR中的所有改动
 ```
 
-**Step 2: 查看提交历史**
+#### 常见原因与解决
 
-```bash
-git log --pretty=format:"%h %ad %s" --date=relative -3 path/to/component.ts | cat
-```
-
-**Step 3: 查看具体修改内容**
-
-```bash
-git show HEAD -- path/to/component.ts | cat # 查看最新提交的修改
-```
-
-#### 时间相关性判断
-
-- **24小时内的提交**: 🔴 **高度相关** - 很可能是直接原因
-- **1-7天内的提交**: 🟡 **中等相关** - 需要仔细分析
-- **超过1周的提交**: ⚪ **低相关性** - 除非重大重构
+- **最新提交引入bug** → 检查并修复实现代码
+- **分支代码滞后** → `git rebase main` 同步主分支
 
 ## 特殊场景的测试
 
@@ -508,7 +494,7 @@ git show HEAD -- path/to/component.ts | cat # 查看最新提交的修改
 - [Electron IPC 接口测试策略](mdc:./electron-ipc-test.mdc)
 - [数据库 Model 测试指南](mdc:./db-model-test.mdc)
 
-## 🎯 核心要点
+## 核心要点
 
 - **命令格式**: 使用 `bunx vitest run --silent='passed-only'` 并指定文件过滤
 - **修复原则**: 失败1-2次后寻求帮助，测试命名关注行为而非实现细节
