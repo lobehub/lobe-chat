@@ -113,13 +113,6 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
-      - name: Test Client DB
-        run: pnpm --filter @lobechat/database test:client-db
-        env:
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
-          S3_PUBLIC_DOMAIN: https://example.com
-          APP_URL: https://home.com
-
       - name: Test Coverage
         run: pnpm --filter @lobechat/database test:coverage
         env:
