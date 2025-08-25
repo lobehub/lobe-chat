@@ -13,18 +13,22 @@ const PATCH_MATPLOTLIB = `
 def patch_matplotlib():
   import matplotlib
   import matplotlib.pyplot as plt
+  from matplotlib import font_manager
 
+  # patch plt.show
   matplotlib.use('Agg')
-
   index = 1
-
   def show():
     nonlocal index
     plt.savefig(f'/mnt/data/plot_{index}.png', format="png")
     plt.clf()
     index += 1
-
   plt.show = show
+
+  # patch fonts
+  font_path = '/usr/share/fonts/truetype/STSong.ttf'
+  font_manager.fontManager.addfont(font_path)
+  plt.rcParams['font.family'] = 'STSong'
 
 patch_matplotlib()`;
 
@@ -115,10 +119,10 @@ class PythonWorker {
    * @param code 代码
    */
   async runPython(code: string): Promise<PythonResult> {
+    await this.patchFonts();
     // NOTE: loadPackagesFromImports 只会处理 pyodide 官方包
     await this.pyodide.loadPackagesFromImports(code);
     await this.patchPackages();
-    await this.patchFonts();
 
     // 安装依赖后再捕获标准输出，避免记录安装日志
     const output: PythonOutput[] = [];
@@ -161,14 +165,15 @@ class PythonWorker {
   }
 
   private async patchFonts() {
-    this.pyodide.FS.mkdirTree('/fonts');
+    this.pyodide.FS.mkdirTree('/usr/share/fonts/truetype');
     const fontFiles = {
       'STSong.ttf':
         'https://cdn.jsdelivr.net/gh/Haixing-Hu/latex-chinese-fonts@latest/chinese/宋体/STSong.ttf',
     };
     for (const [filename, url] of Object.entries(fontFiles)) {
       const buffer = await fetch(url, { cache: 'force-cache' }).then((res) => res.arrayBuffer());
-      this.pyodide.FS.writeFile(`/fonts/${filename}`, new Uint8Array(buffer));
+      // NOTE: 此处理论上使用 createLazyFile 更好，但 pyodide 中使用会导致报错
+      this.pyodide.FS.writeFile(`/usr/share/fonts/truetype/${filename}`, new Uint8Array(buffer));
     }
   }
 

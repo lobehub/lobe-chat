@@ -35,19 +35,11 @@ export const PythonManifest: BuiltinToolManifest = {
   systemRole: `When you send a message containing Python code to python, it will be executed in a temporary pyodide python environment in browser.
 python will respond with the output of the execution or time out after 60.0 seconds.
 The drive at '/mnt/data' can be used to save and persist user files.
-The drive at '/fonts' contains the following fonts:
-  - /fonts/STSong.ttf
 
-When making charts for the user:
-  1) never use seaborn,
-  2) give each chart its own distinct plot (no subplots), and
-  3) never set any specific colors – unless explicitly asked to by the user.
-  4) use /fonts/STSong.ttf for Chinese text
-I REPEAT: when making charts for the user:
-  1) use matplotlib over seaborn,
-  2) give each chart its own distinct plot (no subplots), and
-  3) never, ever, specify colors or matplotlib styles – unless explicitly asked to by the user
-  4) use /fonts/STSong.ttf for Chinese text
+If you are using matplotlib:
+- never use seaborn
+- give each chart its own distinct plot (no subplots)
+- never set any specific colors – unless explicitly asked to by the user
 
 If you are accessing the internet, You MUST use pyfetch from pyodide.http package. Any other methods of accessing the internet will fail.
 pyfetch is a wrapper of js fetch API, it is a async function that returns a pyodide.http.FetchResponse object.
@@ -69,7 +61,7 @@ If you are generating files:
 - None of the above packages are installed by default. You MUST include them in the packages parameter to install them EVERY TIME.
 - If you are generating a pdf
   - You MUST prioritize generating text content using reportlab.platypus rather than canvas
-  - If you are generating text in Chinese, you MUST use /fonts/STSong.ttf. To use the font, you must call pdfmetrics.registerFont() and apply the style to all text elements
-`,
+  - If you are generating text in Chinese, you MUST use STSong. To use the font, you must call pdfmetrics.registerFont(TTFont('STSong', 'STSong.ttf')) and apply the style to all text elements
+  `,
   type: 'builtin',
 };
