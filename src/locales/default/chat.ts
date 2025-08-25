@@ -65,6 +65,7 @@ export default {
   group: {
     desc: '与多个 AI 助手在共享的对话空间中协作。',
     memberTooltip: '群内有 {{count}} 个成员',
+    orchestratorThinking: '主持人正在思考中...',
     title: '群组',
   },
   groupDescription: '群组描述',
