@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-22",
+    "version": "1.114.6"
+  },
+  {
     "children": {
       "improvements": ["Update mistral model vision ability."]
     },
