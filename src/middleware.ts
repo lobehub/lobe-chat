@@ -11,7 +11,6 @@ import { appEnv } from '@/envs/app';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';
-import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
@@ -66,13 +65,6 @@ const defaultMiddleware = (request: NextRequest) => {
     return NextResponse.next();
   }
 
-  const oTheme = request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
-  let explicitlyTheme = (url.searchParams.get('thm') || undefined);
-  if(explicitlyTheme) {
-    const exTheme = ['l', 'd'].includes(explicitlyTheme || '') ? {'d': 'dark', 'l': 'light'}[explicitlyTheme || ''] : oTheme
-    request.cookies.set(LOBE_THEME_APPEARANCE, exTheme)
-    explicitlyTheme = exTheme;
-  }
   // 1. Read user preferences from cookies
   const theme = explicitlyTheme;
 
@@ -106,12 +98,11 @@ const defaultMiddleware = (request: NextRequest) => {
     locale,
     theme,
   });
-  const exTheme = ['l', 'd'].includes(explicitlyTheme || '') ? {'d': 'dark', 'l': 'light'}[explicitlyTheme || ''] : theme
   // 2. Create normalized preference values
   const route = RouteVariants.serializeVariants({
     isMobile: !!explicitlyMobile || device.type === 'mobile',
     locale,
-    theme: exTheme,
+    theme,
   });
 
   logDefault('Serialized route variant: %s', route);
