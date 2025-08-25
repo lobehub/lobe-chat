@@ -242,54 +242,6 @@ export class AgentService extends BaseService {
   }
 
   /**
-   * 根据 Session ID 获取关联的 Agent 详情
-   * @param sessionId Session ID
-   * @returns Agent 详情
-   */
-  async getAgentBySessionId(sessionId: string): ServiceResult<AgentDetailResponse | null> {
-    this.log('info', '根据 Session ID 获取 Agent 详情', { sessionId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_READ', {
-        targetSessionId: sessionId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话');
-      }
-
-      // 查找 session 是否存在且属于当前用户
-      const session = await this.db.query.sessions.findFirst({
-        where: and(
-          eq(sessions.id, sessionId),
-          permissionResult.condition?.userId
-            ? eq(sessions.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
-      });
-
-      if (!session) {
-        this.log('warn', 'Session 不存在', { sessionId });
-        return null;
-      }
-
-      // 查找关联的 Agent
-      const agentModel = new AgentModel(this.db, this.userId!);
-      const agent = await agentModel.findBySessionId(sessionId);
-
-      if (!agent || !agent.id) {
-        this.log('warn', 'Session 没有关联的 Agent', { sessionId });
-        return null;
-      }
-
-      return agent as AgentDetailResponse;
-    } catch (error) {
-      this.handleServiceError(error, '根据 Session ID 获取 Agent 详情');
-    }
-  }
-
-  /**
    * 迁移 Agent 的会话到另一个 Agent
    * @param fromAgentId 源 Agent ID
    * @param toAgentId 目标 Agent ID
@@ -301,26 +253,14 @@ export class AgentService extends BaseService {
     try {
       // 使用数据库事务确保数据一致性
       await this.db.transaction(async (tx) => {
-        // 查找所有关联到源 Agent 的会话
-        const sessionRelations = await tx.query.agentsToSessions.findMany({
-          where: eq(agentsToSessions.agentId, fromAgentId),
-        });
+        this.log('info', '开始迁移会话', { fromAgentId, toAgentId });
 
-        this.log('info', `找到 ${sessionRelations.length} 个会话需要迁移`);
+        await tx
+          .update(agentsToSessions)
+          .set({ agentId: toAgentId })
+          .where(eq(agentsToSessions.agentId, fromAgentId));
 
-        if (sessionRelations.length > 0) {
-          // 删除旧的关联关系
-          await tx.delete(agentsToSessions).where(eq(agentsToSessions.agentId, fromAgentId));
-
-          // 创建新的关联关系
-          const newRelations = sessionRelations.map((relation) => ({
-            agentId: toAgentId,
-            sessionId: relation.sessionId,
-            userId: relation.userId,
-          }));
-
-          await tx.insert(agentsToSessions).values(newRelations);
-        }
+        this.log('info', '迁移会话完成');
       });
 
       this.log('info', '会话迁移成功', { fromAgentId, toAgentId });
