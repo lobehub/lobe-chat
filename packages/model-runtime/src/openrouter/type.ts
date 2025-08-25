@@ -5,16 +5,11 @@ interface ModelPricing {
   request: string;
 }
 
-interface ModelEndpoint {
-  max_completion_tokens: number | null;
-  supported_parameters: string[];
-}
-
 export interface OpenRouterModelCard {
   context_length: number;
   created: number;
   description?: string;
-  endpoint: ModelEndpoint;
+  endpoint: OpenRouterModelEndpoint;
   input_modalities?: string[];
   name?: string;
   output_modalities?: string[];
@@ -25,13 +20,10 @@ export interface OpenRouterModelCard {
 }
 
 interface OpenRouterModelEndpoint {
+  max_completion_tokens: number | null;
+  supported_parameters: string[];
   supports_reasoning?: boolean;
   supports_tool_parameters?: boolean;
-}
-
-export interface OpenRouterModelExtraInfo {
-  endpoint?: OpenRouterModelEndpoint;
-  slug: string;
 }
 
 interface OpenRouterOpenAIReasoning {

@@ -16,6 +16,7 @@ export const LobeNovitaAI = createOpenAICompatibleRuntime({
   models: async ({ client }) => {
     const modelsPage = (await client.models.list()) as any;
     const modelList: NovitaModelCard[] = modelsPage.data;
+
     const formatPrice = (price?: number) => {
       if (price === undefined || price === null) return undefined;
       // Convert Novita price to desired unit: e.g. 5700 -> 0.57

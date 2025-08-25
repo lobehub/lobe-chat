@@ -3,7 +3,7 @@ import OpenRouterModels from '@/config/aiModels/openrouter';
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
-import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
+import { OpenRouterModelCard, OpenRouterReasoning } from './type';
 
 const formatPrice = (price: string) => {
   if (price === '-1') return undefined;
@@ -55,33 +55,29 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
   },
-  models: async ({ client }) => {
-    const modelsPage = (await client.models.list()) as any;
-    const modelList: OpenRouterModelCard[] = modelsPage.data;
+  models: async () => {
+    let modelList: OpenRouterModelCard[] = [];
 
-    const modelsExtraInfo: OpenRouterModelExtraInfo[] = [];
     try {
       const response = await fetch('https://openrouter.ai/api/frontend/models');
       if (response.ok) {
         const data = await response.json();
-        modelsExtraInfo.push(...data['data']);
+        modelList = data['data'];
       }
     } catch (error) {
       console.error('Failed to fetch OpenRouter frontend models:', error);
+      return [];
     }
 
-    // 先处理抓取的模型信息，转换为标准格式
+    // 处理前端获取的模型信息，转换为标准格式
     const formattedModels = modelList.map((model) => {
-      const extraInfo = modelsExtraInfo.find(
-        (m) => (m.slug ?? '').toLowerCase() === (model.slug ?? '').toLowerCase(),
-      );
 
       return {
         contextWindowTokens: model.context_length,
         description: model.description,
         displayName: model.short_name ?? model.name ?? model.slug,
         functionCall:
-          extraInfo?.endpoint?.supports_tool_parameters ||
+          model.endpoint?.supports_tool_parameters ||
           false,
         id: model.slug,
         maxOutput:
@@ -92,7 +88,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
           input: formatPrice(model.pricing.prompt),
           output: formatPrice(model.pricing.completion),
         },
-        reasoning: extraInfo?.endpoint?.supports_reasoning || false,
+        reasoning: model.endpoint?.supports_reasoning || false,
         releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
         vision: Array.isArray(model.input_modalities) && model.input_modalities.includes('image') || false,
       };
