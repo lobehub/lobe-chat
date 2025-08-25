@@ -86,8 +86,8 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
             ? model.endpoint.max_completion_tokens
             : undefined,
         pricing: {
-          input: formatPrice(model.endpoint?.pricing.prompt),
-          output: formatPrice(model.endpoint?.pricing.completion),
+          input: formatPrice(model.endpoint?.pricing?.prompt),
+          output: formatPrice(model.endpoint?.pricing?.completion),
         },
         reasoning: model.endpoint?.supports_reasoning || false,
         releasedAt: new Date(model.created_at).toISOString().split('T')[0],
