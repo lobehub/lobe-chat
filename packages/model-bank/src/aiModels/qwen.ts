@@ -63,7 +63,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' }, // tokens 32K ~ 128K
+        { name: 'textInput_cacheRead', rate: 6 * 0.2, strategy: 'fixed', unit: 'millionTokens' }, // tokens 32K ~ 128K
         { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
       ],
@@ -88,7 +88,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' }, // tokens 32K ~ 128K
+        { name: 'textInput_cacheRead', rate: 1.5 * 0.2, strategy: 'fixed', unit: 'millionTokens' }, // tokens 32K ~ 128K
         { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
       ],
@@ -482,9 +482,9 @@ const qwenChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheRead',
           strategy: 'tiered',
           tiers: [
-            { rate: 0.15 * 0.4, upTo: 0.128 },
-            { rate: 0.6 * 0.4, upTo: 0.256 },
-            { rate: 1.2 * 0.4, upTo: 'infinity' },
+            { rate: 0.15 * 0.2, upTo: 0.128 },
+            { rate: 0.6 * 0.2, upTo: 0.256 },
+            { rate: 1.2 * 0.2, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -516,7 +516,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3 * 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
@@ -550,9 +550,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 128_000]': 0.8 * 0.4,
-              '[128_000, 256_000]': 2.4 * 0.4,
-              '[256_000, infinity]': 4.8 * 0.4,
+              '[0, 128_000]': 0.8 * 0.2,
+              '[128_000, 256_000]': 2.4 * 0.2,
+              '[256_000, infinity]': 4.8 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -618,7 +618,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.96, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 2.4 * 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
@@ -711,7 +711,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 0.8 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.8 * 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
@@ -735,7 +735,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 1.6 * 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.6 * 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
