@@ -1,5 +1,5 @@
 {
-  "id": "644d6ad4-7c1a-4c19-b6d9-d0b66d18e859",
+  "id": "84bd563b-b828-4146-87ac-cee5398bdf4c",
   "prevId": "8d45019c-2f55-4c12-b87e-a7ce441df121",
   "version": "7",
   "dialect": "postgresql",
@@ -946,6 +946,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "pinned": {
           "name": "pinned",
           "type": "boolean",
@@ -1011,6 +1017,19 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "chat_groups_group_id_session_groups_id_fk": {
+          "name": "chat_groups_group_id_session_groups_id_fk",
+          "tableFrom": "chat_groups",
+          "tableTo": "session_groups",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1058,10 +1077,10 @@
         },
         "order": {
           "name": "order",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": "'0'"
+          "default": 0
         },
         "role": {
           "name": "role",

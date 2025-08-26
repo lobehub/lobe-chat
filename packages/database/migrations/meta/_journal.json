@@ -214,22 +214,8 @@
     {
       "idx": 30,
       "version": "7",
-      "when": 1755845061329,
-      "tag": "0030_add_group_chat",
-      "breakpoints": true
-    },
-    {
-      "idx": 31,
-      "version": "7",
-      "when": 1756104385805,
-      "tag": "0031_whole_beyonder",
-      "breakpoints": true
-    },
-    {
-      "idx": 32,
-      "version": "7",
-      "when": 1756104600000,
-      "tag": "0032_add_group_id_to_chat_groups",
+      "when": 1756194503346,
+      "tag": "0030_cuddly_madame_masque",
       "breakpoints": true
     }
   ],
