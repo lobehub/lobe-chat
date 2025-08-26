@@ -1,9 +1,8 @@
-import { Icon } from '@lobehub/ui';
+import { Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Lock } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { useChatGroupStore } from '@/store/chatGroup';
@@ -64,39 +63,23 @@ const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
   };
 
   return (
-    <Flexbox
-      align="center"
-      gap={24}
-      horizontal
+    <Tag
+      color="default"
+      icon={<Lock size={12} />}
       onClick={handleOpenThread}
-      paddingInline={4}
+      size="small"
       style={{ cursor: 'pointer' }}
     >
-      <Flexbox align="center" flex={1} gap={6} horizontal>
-        <Icon icon={<Lock size={12} />} style={{ color: theme.colorSuccess }} />
-
-        <span
-          style={{
-            color: theme.colorSuccess,
-            fontWeight: 500,
-          }}
-        >
-          Only Visible to {/* {t('messages.dm.sentTo')} */}
-          {targetInfo.name}
-        </span>
-      </Flexbox>
-
-      {/* <Flexbox align="center" gap={6} horizontal>
-        <Button
-          onClick={handleOpenThread}
-          size="small"
-          style={{ color: theme.colorSuccess }}
-          type="text"
-        >
-          {involvesUser ? 'Open in Thread' : 'Reveal'}
-        </Button>
-      </Flexbox> */}
-    </Flexbox>
+      <span
+        style={{
+          // color: theme.colorSuccess,
+          // fontWeight: 500,
+        }}
+      >
+        Only Visible to {/* {t('messages.dm.sentTo')} */}
+        {targetInfo.name}
+      </span>
+    </Tag>
   );
 });
 

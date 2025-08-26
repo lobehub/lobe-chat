@@ -261,7 +261,7 @@ const Item = memo<ChatListItemProps>(
               avatar={{
                 ...item.meta,
                 title: (
-                  <Flexbox align="center" gap={8} horizontal>
+                  <Flexbox align="baseline" gap={8} horizontal>
                     <div style={{ flex: 1, textWrap: 'nowrap' }}>{item.meta.title}</div>
                     {isDM && <DMTag senderId={item.agentId} targetId={item.targetId} />}
                   </Flexbox>
