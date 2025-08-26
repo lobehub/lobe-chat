@@ -6,6 +6,7 @@ import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'r
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import DMTag from '@/components/DMTag';
 import { isDesktop } from '@/const/version';
 import ChatItem from '@/features/ChatItem';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
@@ -13,6 +14,8 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
@@ -29,8 +32,6 @@ import History from '../History';
 import { markdownElements } from '../MarkdownElements';
 import { InPortalThreadContext } from './InPortalThreadContext';
 import { normalizeThinkTags, processWithArtifact } from './utils';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
@@ -78,8 +79,6 @@ const Item = memo<ChatListItemProps>(
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
     const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
     const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);
-
-    console.log("item", item);
 
     const [
       isMessageLoading,
@@ -192,10 +191,10 @@ const Item = memo<ChatListItemProps>(
           item?.role === 'user'
             ? undefined
             : item?.search?.citations &&
-            // if the citations are all empty, we should not show the citations
-            item?.search?.citations.length > 0 &&
-            // if the citations's url and title are all the same, we should not show the citations
-            item?.search?.citations.every((item) => item.title !== item.url),
+              // if the citations are all empty, we should not show the citations
+              item?.search?.citations.length > 0 &&
+              // if the citations's url and title are all the same, we should not show the citations
+              item?.search?.citations.every((item) => item.title !== item.url),
       }),
       [animated, components, markdownCustomRender, item?.role, item?.search],
     );
@@ -246,6 +245,9 @@ const Item = memo<ChatListItemProps>(
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
 
+    // DM tag logic - show for assistant messages with targetId when not in thread panel
+    const isDM = !!item?.targetId && !inPortalThread && item?.role === 'assistant';
+
     return (
       item && (
         <InPortalThreadContext.Provider value={inPortalThread}>
@@ -256,7 +258,15 @@ const Item = memo<ChatListItemProps>(
           >
             <ChatItem
               actions={actionBar}
-              avatar={item.meta}
+              avatar={{
+                ...item.meta,
+                title: (
+                  <Flexbox align="center" gap={8} horizontal>
+                    <div style={{ flex: 1, textWrap: 'nowrap' }}>{item.meta.title}</div>
+                    {isDM && <DMTag senderId={item.agentId} targetId={item.targetId} />}
+                  </Flexbox>
+                ),
+              }}
               belowMessage={belowMessage}
               editing={editing}
               error={error}
