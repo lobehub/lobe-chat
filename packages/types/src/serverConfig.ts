@@ -1,6 +1,6 @@
 import type { PartialDeep } from 'type-fest';
 
-import { IFeatureFlags } from '@/config/featureFlags';
+import { IFeatureFlagsState } from '@/config/featureFlags';
 
 import { ChatModelCard } from './llm';
 import { GlobalLLMProviderKey, UserDefaultAgent, UserSystemAgentConfig } from './user/settings';
@@ -39,5 +39,5 @@ export interface GlobalServerConfig {
 
 export interface GlobalRuntimeConfig {
   serverConfig: GlobalServerConfig;
-  serverFeatureFlags: IFeatureFlags;
+  serverFeatureFlags: IFeatureFlagsState;
 }
