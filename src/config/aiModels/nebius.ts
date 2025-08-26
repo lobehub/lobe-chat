@@ -722,6 +722,38 @@ const nebiusChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Hermes-4-70B',
+    id: 'NousResearch/Hermes-4-70B',
+    organization: 'NousResearch',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Hermes-4-405B',
+    id: 'NousResearch/Hermes-4-405B',
+    organization: 'NousResearch',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
