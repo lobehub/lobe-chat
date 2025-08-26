@@ -21,7 +21,11 @@ read @.cursor/rules/project-structure.mdc
 
 ### Package Management
 
-this is a monorepo project and we use `pnpm` as package manager
+This repository adopts a monorepo structure.
+
+- Use `pnpm` as the primary package manager for dependency management.
+- Use `bun` to run npm scripts at the root level. For executing scripts within sub-packages, prefer `pnpm --filter`.
+- Use `bunx` to run executable npm packages.
 
 ### TypeScript Code Style Guide
 
