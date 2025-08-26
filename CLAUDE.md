@@ -2,39 +2,20 @@
 
 This document serves as a shared guideline for all team members when using Claude Code in this repository.
 
-## Suggestions
+## Tech Stack
 
-- When searching the project source code, it is recommended to exclude: `src/database/migrations/meta`, `**/*.test.*`, `**/__snapshots__`, `**/fixtures`
-- Please store all temporary scripts (such as migration and refactoring scripts) in the `docs/.local/` directory; the contents of this folder will not be committed.
+read @.cursor/rules/project-introduce.mdc
 
-## Technologies Stack
+## Directory Structure
 
-read @.cursor/rules/project-introduce.mdc for more details.
-
-### Directory Structure
-
-```plaintext
-src/
-├── app/                 # Next.js App Router
-├── features/            # Feature-based UI components
-├── store/              # Zustand state stores
-├── services/           # Client services (tRPC/Model calls)
-├── server/             # Server-side (tRPC routers, services)
-├── database/           # Schemas, models, repositories
-├── libs/               # External library integrations
-```
-
-### Data Flow
-
-- **Client DB Version**: UI → Zustand → Service → Model → PGLite
-- **Server DB Version**: UI → Zustand → Service → tRPC → Repository/Model → PostgreSQL
+read @.cursor/rules/project-structure.mdc
 
 ## Development
 
 ### Git Workflow
 
-- use rebase for git pull.
-- git commit message should prefix with gitmoji.
+- use rebase for git pull
+- git commit message should prefix with gitmoji
 - git branch name format example: tj/feat/feature-name
 - use .github/PULL_REQUEST_TEMPLATE.md to generate pull request description
 
@@ -59,10 +40,13 @@ see @.cursor/rules/typescript.mdc
 Testing work follows the Rule-Aware Task Execution system above.
 
 - **Required Rule**: `testing-guide/testing-guide.mdc`
-- **Command**: `npx vitest run --config vitest.config.ts '[file-path-pattern]'`, wrapped in single quotes to avoid shell expansion
+- **Command**:
+  - web: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`
+  - packages(eg: database): `cd packages/database && bunx vitest run --silent='passed-only' '[file-path-pattern]'`
 
 **Important**:
 
+- wrapped the file path in single quotes to avoid shell expansion
 - Never run `bun run test` etc to run tests, this will run all tests and cost about 10mins
 - If try to fix the same test twice, but still failed, stop and ask for help.
 
@@ -96,7 +80,7 @@ Some useful rules of this project. Read them when needed.
 
 - `zustand-slice-organization.mdc` - Store organization
 - `zustand-action-patterns.mdc` - Action patterns
-- `packages/react-layout-kit.mdc` - Layout components usage
+- `packages/react-layout-kit.mdc` - flex layout components usage
 
 **Testing & Quality**
 
