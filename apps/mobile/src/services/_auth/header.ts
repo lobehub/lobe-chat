@@ -114,27 +114,25 @@ export const createHeaderWithAuth = async (
   try {
     authLogger.info('Creating headers with authentication');
 
-    // 获取访问令牌
     const accessToken = await TokenStorage.getAccessToken();
-    if (!accessToken) {
-      authLogger.error('No access token available');
-      return headers;
-    }
 
-    authLogger.info('Access token found');
-
-    // 检查令牌是否过期
+    // 检查令牌是否过期（当 token 缺失时也会返回 true）
     const isExpired = await TokenStorage.isAccessTokenExpired();
     authLogger.info('Token expiry check', { isExpired });
 
-    if (isExpired) {
-      authLogger.warn('Token expired, attempting refresh');
+    if (!accessToken || isExpired) {
+      authLogger.warn('Access token missing or expired, attempting refresh');
       try {
         await useUserStore.getState().refreshToken();
         const newAccessToken = await TokenStorage.getAccessToken();
         if (newAccessToken) {
           authLogger.info('Token refreshed successfully');
           headers[LOBE_CHAT_OIDC_AUTH_HEADER] = newAccessToken;
+        } else {
+          authLogger.error('Refreshed but no access token available');
+          // 刷新后仍无 token，视为未认证
+          await useUserStore.getState().logout();
+          throw new Error('Authentication required');
         }
       } catch (refreshError) {
         authLogger.error('Token refresh failed', refreshError);
