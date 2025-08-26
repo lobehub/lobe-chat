@@ -20,13 +20,13 @@ import { useStyles } from './style';
 
 // 内部组件，使用 ThemeProvider 包装
 interface ThemeTokensContentProps {
-  localFontSize: number;
-  localNeutralColor: NeutralColors;
-  localPrimaryColor: PrimaryColors;
+  localFontSize?: number;
+  localNeutralColor?: NeutralColors | undefined;
+  localPrimaryColor?: PrimaryColors | undefined;
   localThemeMode: 'light' | 'dark';
   onFontSizeChange: (size: number) => void;
-  onNeutralColorChange: (color: NeutralColors) => void;
-  onPrimaryColorChange: (color: PrimaryColors) => void;
+  onNeutralColorChange: (color?: NeutralColors | undefined) => void;
+  onPrimaryColorChange: (color?: PrimaryColors | undefined) => void;
   onToggleTheme: () => void;
 }
 
@@ -102,8 +102,8 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
 
 // 主组件，包装 ThemeProvider
 const ThemeTokensPlayground: React.FC = () => {
-  const [localPrimaryColor, setLocalPrimaryColor] = useState('primary' as PrimaryColors);
-  const [localNeutralColor, setLocalNeutralColor] = useState('mauve' as NeutralColors);
+  const [localPrimaryColor, setLocalPrimaryColor] = useState<PrimaryColors | undefined>();
+  const [localNeutralColor, setLocalNeutralColor] = useState<NeutralColors | undefined>();
   const [localFontSize, setLocalFontSize] = useState(14);
   const [localThemeMode, setLocalThemeMode] = useState<'light' | 'dark'>('light');
 

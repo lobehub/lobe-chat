@@ -17,12 +17,12 @@ import { useStyles } from './style';
 
 // 主题控制器组件接口
 interface ThemeControlsProps {
-  fontSize: number;
-  neutralColor: NeutralColors;
+  fontSize?: number;
+  neutralColor?: NeutralColors;
   onFontSizeChange: (size: number) => void;
   onNeutralColorChange: (color: NeutralColors) => void;
   onPrimaryColorChange: (color: PrimaryColors) => void;
-  primaryColor: PrimaryColors;
+  primaryColor?: PrimaryColors;
 }
 
 const ThemeControls: React.FC<ThemeControlsProps> = ({
