@@ -75,6 +75,7 @@ Some useful rules of this project. Read them when needed.
 - `react-component.mdc` - antd-style, Lobe UI usage
 - `drizzle-schema-style-guide.mdc` - Schema naming, patterns
 - `define-database-model.mdc` - Model templates, CRUD patterns
+- `i18n.mdc` - Internationalization workflow
 
 **State & UI**
 
@@ -94,8 +95,3 @@ Some useful rules of this project. Read them when needed.
 - `desktop-menu-configuration.mdc` - App menu, context menu, tray menu
 - `desktop-window-management.mdc` - Window creation, state management, multi-window
 - `desktop-controller-tests.mdc` - Controller unit testing guide
-
-**Development Tools**
-
-- `i18n.mdc` - Internationalization workflow
-- `debug.mdc` - Debugging strategies
