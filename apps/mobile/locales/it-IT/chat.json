@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni Assistente]({{url}}) per completare le mie informazioni.",
+  "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a conversare!",
+  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, iniziamo a conversare!",
   "confirmDelete": "Conferma eliminazione",
   "copyFailed": "Copia non riuscita",
+  "defaultAgent": "Assistente personalizzato",
   "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
   "history": "Cronologia conversazioni",
+  "inbox": {
+    "desc": "Attiva il cluster cerebrale, stimola scintille di pensiero. Il tuo assistente intelligente, qui per parlare di tutto con te",
+    "title": "Parliamo un po'"
+  },
   "messageCopied": "Messaggio copiato",
   "newChat": "Nuova conversazione",
   "placeholder": "Inserisci il tuo messaggio...",

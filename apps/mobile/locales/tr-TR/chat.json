@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilir veya [Asistan Ayarları]({{url}}) bölümüne giderek bilgilerimi güncelleyebilirsin.",
+  "agentDefaultMessageWithSystemRole": "Merhaba, ben **{{name}}**, {{systemRole}}. Haydi sohbetimize başlayalım!",
+  "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Haydi sohbetimize başlayalım!",
   "confirmDelete": "Silme işlemini onayla",
   "copyFailed": "Kopyalama başarısız oldu",
+  "defaultAgent": "Özel Asistan",
   "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
   "history": "Sohbet geçmişi",
+  "inbox": {
+    "desc": "Beyin kümesini aç, düşünce kıvılcımlarını ateşle. Akıllı asistanın, burada seninle her şeyi konuşmak için hazır.",
+    "title": "Rastgele Sohbet"
+  },
   "messageCopied": "Mesaj kopyalandı",
   "newChat": "Yeni sohbet",
   "placeholder": "Mesajınızı yazın...",

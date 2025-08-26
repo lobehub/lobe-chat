@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Tema predeterminado",
+  "empty": "No hay temas",
+  "guide": {
+    "desc": "Haz clic en el botón de la izquierda para guardar la conversación actual como un tema histórico y comenzar una nueva conversación",
+    "title": "Lista de temas"
+  },
+  "loading": "Cargando...",
+  "newTopic": "Nuevo tema",
+  "searchPlaceholder": "Buscar temas...",
+  "temp": "Temporal",
+  "title": "Tema"
+}

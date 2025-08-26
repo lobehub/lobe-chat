@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Sujet par défaut",
+  "empty": "Aucun sujet pour le moment",
+  "guide": {
+    "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme sujet historique et commencer une nouvelle conversation",
+    "title": "Liste des sujets"
+  },
+  "loading": "Chargement...",
+  "newTopic": "Nouveau sujet",
+  "searchPlaceholder": "Rechercher un sujet...",
+  "temp": "Temporaire",
+  "title": "Sujet"
+}
