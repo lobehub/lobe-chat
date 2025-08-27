@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Ajouter un paramètre",
+    "argumentPlaceholder": "Paramètre {{index}}",
+    "enterFirstArgument": "Saisissez le premier paramètre..."
+  },
   "DragUpload": {
     "dragDesc": "Faites glisser des fichiers ici, plusieurs images peuvent être téléchargées.",
     "dragFileDesc": "Faites glisser des images et des fichiers ici, plusieurs images et fichiers peuvent être téléchargés.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} téléchargées"
+    },
+    "validation": {
+      "fileSizeExceeded": "Taille du fichier dépassée",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) dépasse la taille maximale autorisée de {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} fichiers dépassent la taille maximale autorisée de {{maxSize}} : {{fileList}}",
+      "imageCountExceeded": "Limite du nombre d'images dépassée"
     }
   },
   "OllamaSetupGuide": {
