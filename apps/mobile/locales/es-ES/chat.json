@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a conversar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
+  "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos la conversación!",
+  "agentDefaultMessageWithoutEdit": "Hola, soy **{{name}}**, ¡comencemos la conversación!",
   "confirmDelete": "Confirmar eliminación",
   "copyFailed": "Error al copiar",
+  "defaultAgent": "Asistente personalizado",
   "deleteMessageConfirm": "¿Está seguro de que desea eliminar este mensaje?",
   "history": "Historial de conversaciones",
+  "inbox": {
+    "desc": "Activa el clúster cerebral y enciende la chispa del pensamiento. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
+    "title": "Charlemos"
+  },
   "messageCopied": "Mensaje copiado",
   "newChat": "Nueva conversación",
   "placeholder": "Escriba su mensaje...",

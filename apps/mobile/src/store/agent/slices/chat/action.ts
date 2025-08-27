@@ -1,339 +1,257 @@
-import { SWRResponse } from 'swr';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
-import { merge } from '@/utils/merge';
-import { AgentState } from './initialState';
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { agentService } from '@/services/agent';
+import { sessionService } from '@/services/session';
+import { AgentState } from '@/store/agent/slices/chat/initialState';
+import { useSessionStore } from '@/store/session';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { KnowledgeItem } from '@/types/knowledgeBase';
+import { merge } from '@/utils/merge';
+
+import { AgentStore } from '../../store';
+import { agentSelectors } from './selectors';
 
 /**
- * Agent Store 类型定义（完整的 store 接口）
- */
-export interface AgentStore extends AgentState, AgentChatAction {}
-
-/**
- * Agent 聊天相关 Actions (与 web 端完全一致)
+ * 助手接口
  */
 export interface AgentChatAction {
-  /**
-   * 添加文件到 Agent
-   */
-  addFilesToAgent: (fileIds: string[], enabled?: boolean) => Promise<void>;
-
-  /**
-   * 添加知识库到 Agent
-   */
+  addFilesToAgent: (fileIds: string[], boolean?: boolean) => Promise<void>;
   addKnowledgeBaseToAgent: (knowledgeBaseId: string) => Promise<void>;
-
-  /**
-   * 获取指定会话的 Agent 配置
-   * @param sessionId - 会话 ID
-   */
-  getAgentConfigById: (sessionId: string) => LobeAgentConfig;
-
-  /**
-   * 内部方法：创建中止控制器
-   */
   internal_createAbortController: (key: keyof AgentState) => AbortController;
 
-  /**
-   * 内部方法：分发 AgentMap 更新
-   */
   internal_dispatchAgentMap: (
     id: string,
     config: PartialDeep<LobeAgentConfig>,
     actions?: string,
   ) => void;
-
-  /**
-   * 内部方法：刷新 Agent 配置
-   */
   internal_refreshAgentConfig: (id: string) => Promise<void>;
-
-  /**
-   * 内部方法：刷新 Agent 知识库
-   */
   internal_refreshAgentKnowledge: () => Promise<void>;
-
-  /**
-   * 内部方法：更新 Agent 配置
-   */
   internal_updateAgentConfig: (
     id: string,
     data: PartialDeep<LobeAgentConfig>,
     signal?: AbortSignal,
   ) => Promise<void>;
-
-  /**
-   * 内部方法：直接更新 agentMap (移动端兼容)
-   * @param sessionId - 会话 ID
-   * @param config - 配置
-   */
-  internal_updateAgentMap: (sessionId: string, config: PartialDeep<LobeAgentConfig>) => void;
-
-  /**
-   * 从 Agent 移除文件
-   */
   removeFileFromAgent: (fileId: string) => Promise<void>;
-
-  /**
-   * 从 Agent 移除知识库
-   */
   removeKnowledgeBaseFromAgent: (knowledgeBaseId: string) => Promise<void>;
 
-  /**
-   * 移除插件
-   */
   removePlugin: (id: string) => void;
-
-  /**
-   * 重置 Agent 配置为默认值
-   * @param sessionId - 会话 ID（可选，不传则重置当前会话）
-   */
-  resetAgentConfig: (sessionId?: string) => void;
-
-  /**
-   * 切换文件状态
-   */
   toggleFile: (id: string, open?: boolean) => Promise<void>;
-
-  /**
-   * 切换知识库状态
-   */
   toggleKnowledgeBase: (id: string, open?: boolean) => Promise<void>;
 
-  /**
-   * 切换插件状态
-   */
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
-
-  /**
-   * 更新 Agent 聊天配置
-   */
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
-
-  /**
-   * 更新 Agent 配置
-   * @param config - 要更新的配置
-   */
   updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
-
-  /**
-   * 更新指定会话的 Agent 配置
-   * @param sessionId - 会话 ID
-   * @param config - 要更新的配置
-   */
-  updateAgentConfigById: (sessionId: string, config: PartialDeep<LobeAgentConfig>) => Promise<void>;
-
-  /**
-   * 使用 SWR 获取 Agent 配置
-   */
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
-
-  /**
-   * 使用 SWR 获取文件和知识库
-   */
   useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
-
-  /**
-   * 使用 SWR 初始化 Inbox Agent Store
-   */
   useInitInboxAgentStore: (
     isLogin: boolean | undefined,
     defaultAgentConfig?: PartialDeep<LobeAgentConfig>,
   ) => SWRResponse<PartialDeep<LobeAgentConfig>>;
 }
 
-/**
- * 创建 Agent 聊天 Slice
- */
-export const createChatSlice: StateCreator<AgentStore, [], [], AgentChatAction> = (set, get) => ({
-  // 文件相关方法 (移动端简化实现)
+const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
+const FETCH_AGENT_KNOWLEDGE_KEY = 'FETCH_AGENT_KNOWLEDGE';
+
+export const createChatSlice: StateCreator<
+  AgentStore,
+  [['zustand/devtools', never]],
+  [],
+  AgentChatAction
+> = (set, get) => ({
   addFilesToAgent: async (fileIds, enabled) => {
-    // TODO: 移动端暂不实现文件功能，提供占位实现
-    console.log('addFilesToAgent not implemented in mobile', { enabled, fileIds });
-  },
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+    if (fileIds.length === 0) return;
 
+    await agentService.createAgentFiles(activeAgentId, fileIds, enabled);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
   addKnowledgeBaseToAgent: async (knowledgeBaseId) => {
-    // TODO: 移动端暂不实现知识库功能，提供占位实现
-    console.log('addKnowledgeBaseToAgent not implemented in mobile', { knowledgeBaseId });
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+
+    await agentService.createAgentKnowledgeBase(activeAgentId, knowledgeBaseId, true);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
   },
-
-  getAgentConfigById: (sessionId) => {
-    const state = get();
-    const agentConfig = state.agentMap[sessionId];
-
-    // 使用merge函数合并默认配置和会话特定配置
-    return merge(state.defaultAgentConfig, agentConfig || {}) as LobeAgentConfig;
-  },
-
-  internal_createAbortController: (key) => {
-    const abortController = get()[key] as AbortController;
-    if (abortController) abortController.abort('新请求取消之前的请求');
-    const controller = new AbortController();
-    set({ [key]: controller }, false);
-
-    return controller;
-  },
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  internal_dispatchAgentMap: (id, config, _actions) => {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
-    const currentAgentMap = get().agentMap;
-    const existingConfig = currentAgentMap[id];
-
-    const newConfig = existingConfig ? merge(existingConfig, config) : config;
-
-    // 检查是否有实际变化
-    if (JSON.stringify(existingConfig) === JSON.stringify(newConfig)) return;
-
-    set((state) => ({
-      agentMap: {
-        ...state.agentMap,
-        [id]: newConfig,
-      },
-    }));
-  },
-
-  internal_refreshAgentConfig: async (id) => {
-    // TODO: 移动端暂不实现服务器刷新，提供占位实现
-    console.log('internal_refreshAgentConfig not implemented in mobile', { id });
-  },
-
-  internal_refreshAgentKnowledge: async () => {
-    // TODO: 移动端暂不实现知识库刷新，提供占位实现
-    console.log('internal_refreshAgentKnowledge not implemented in mobile');
-  },
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  internal_updateAgentConfig: async (id, data, _signal) => {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
-    // 移动端简化实现：乐观更新，暂不同步服务器
-    get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
-
-    // TODO: 如果需要，这里可以添加持久化到服务器的逻辑
-    console.log('internal_updateAgentConfig simplified for mobile', { data, id });
-  },
-
-  internal_updateAgentMap: (sessionId, config) => {
-    set((state) => ({
-      agentMap: {
-        ...state.agentMap,
-        [sessionId]: {
-          ...state.agentMap[sessionId],
-          ...config,
-        },
-      },
-    }));
-  },
-
   removeFileFromAgent: async (fileId) => {
-    // TODO: 移动端暂不实现文件功能，提供占位实现
-    console.log('removeFileFromAgent not implemented in mobile', { fileId });
-  },
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
 
+    await agentService.deleteAgentFile(activeAgentId, fileId);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
   removeKnowledgeBaseFromAgent: async (knowledgeBaseId) => {
-    // TODO: 移动端暂不实现知识库功能，提供占位实现
-    console.log('removeKnowledgeBaseFromAgent not implemented in mobile', { knowledgeBaseId });
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+
+    await agentService.deleteAgentKnowledgeBase(activeAgentId, knowledgeBaseId);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
   },
 
-  removePlugin: (id) => {
-    // TODO: 移动端暂不实现插件功能，提供占位实现
-    console.log('removePlugin not implemented in mobile', { id });
+  removePlugin: async (id) => {
+    await get().togglePlugin(id, false);
   },
-
-  resetAgentConfig: (sessionId) => {
-    const targetId = sessionId || get().activeId;
-
-    set((state) => ({
-      agentConfigInitMap: {
-        ...state.agentConfigInitMap,
-        [targetId]: true,
-      },
-      agentMap: {
-        ...state.agentMap,
-        [targetId]: {},
-      },
-    }));
-  },
-
   toggleFile: async (id, open) => {
-    // TODO: 移动端暂不实现文件功能，提供占位实现
-    console.log('toggleFile not implemented in mobile', { id, open });
-  },
+    const { activeAgentId, internal_refreshAgentConfig } = get();
+    if (!activeAgentId) return;
 
+    await agentService.toggleFile(activeAgentId, id, open);
+
+    await internal_refreshAgentConfig(get().activeId);
+  },
   toggleKnowledgeBase: async (id, open) => {
-    // TODO: 移动端暂不实现知识库功能，提供占位实现
-    console.log('toggleKnowledgeBase not implemented in mobile', { id, open });
-  },
+    const { activeAgentId, internal_refreshAgentConfig } = get();
+    if (!activeAgentId) return;
 
+    await agentService.toggleKnowledgeBase(activeAgentId, id, open);
+
+    await internal_refreshAgentConfig(get().activeId);
+  },
   togglePlugin: async (id, open) => {
-    // TODO: 移动端暂不实现插件功能，提供占位实现
-    console.log('togglePlugin not implemented in mobile', { id, open });
-  },
+    const originConfig = agentSelectors.currentAgentConfig(get());
 
+    const config = produce(originConfig, (draft) => {
+      draft.plugins = produce(draft.plugins || [], (plugins) => {
+        const index = plugins.indexOf(id);
+        const shouldOpen = open !== undefined ? open : index === -1;
+
+        if (shouldOpen) {
+          // 如果 open 为 true 或者 id 不存在于 plugins 中，则添加它
+          if (index === -1) {
+            plugins.push(id);
+          }
+        } else {
+          // 如果 open 为 false 或者 id 存在于 plugins 中，则移除它
+          if (index !== -1) {
+            plugins.splice(index, 1);
+          }
+        }
+      });
+    });
+
+    await get().updateAgentConfig(config);
+  },
   updateAgentChatConfig: async (config) => {
     const { activeId } = get();
+
     if (!activeId) return;
 
     await get().updateAgentConfig({ chatConfig: config });
   },
-
   updateAgentConfig: async (config) => {
     const { activeId } = get();
+
     if (!activeId) return;
 
     const controller = get().internal_createAbortController('updateAgentConfigSignal');
+
     await get().internal_updateAgentConfig(activeId, config, controller.signal);
   },
+  useFetchAgentConfig: (isLogin, sessionId) =>
+    useSWR<LobeAgentConfig>(
+      isLogin ? [FETCH_AGENT_CONFIG_KEY, sessionId] : null,
+      ([, id]: string[]) => sessionService.getSessionConfig(id),
+      {
+        onSuccess: (data) => {
+          get().internal_dispatchAgentMap(sessionId, data, 'fetch');
 
-  updateAgentConfigById: async (sessionId, config) => {
-    // 更新 agentMap
-    get().internal_updateAgentMap(sessionId, config);
-
-    // 标记为已初始化
-    set((state) => ({
-      agentConfigInitMap: {
-        ...state.agentConfigInitMap,
-        [sessionId]: true,
+          set(
+            {
+              activeAgentId: data.id,
+              agentConfigInitMap: { ...get().agentConfigInitMap, [sessionId]: true },
+            },
+            false,
+            'fetchAgentConfig',
+          );
+        },
       },
-    }));
-
-    // TODO: 如果需要，这里可以添加持久化到服务器的逻辑
-    // 移动端暂时只做本地存储
-  },
-
-  useFetchAgentConfig: (isLogin, sessionId) => {
-    // TODO: 移动端暂不实现 SWR 功能，返回 mock 对象
-    return {
-      data: get().getAgentConfigById(sessionId),
-      error: null,
-      isLoading: false,
-      isValidating: false,
-      mutate: async () => {},
-    } as SWRResponse<LobeAgentConfig>;
-  },
-
+    ),
   useFetchFilesAndKnowledgeBases: () => {
-    // TODO: 移动端暂不实现知识库功能，返回空数组
-    return {
-      data: [],
-      error: null,
-      isLoading: false,
-      isValidating: false,
-      mutate: async () => {},
-    } as SWRResponse<KnowledgeItem[]>;
+    return useSWR<KnowledgeItem[]>(
+      [FETCH_AGENT_KNOWLEDGE_KEY, get().activeAgentId],
+      ([, id]: string[]) => agentService.getFilesAndKnowledgeBases(id),
+      {
+        fallbackData: [],
+        suspense: true,
+      },
+    );
   },
 
-  useInitInboxAgentStore: (isLogin, defaultAgentConfig) => {
-    // TODO: 移动端暂不实现 Inbox 初始化，返回 mock 对象
-    return {
-      data: defaultAgentConfig || {},
-      error: null,
-      isLoading: false,
-      isValidating: false,
-      mutate: async () => {},
-    } as SWRResponse<PartialDeep<LobeAgentConfig>>;
+  useInitInboxAgentStore: (isLogin, defaultAgentConfig) =>
+    useSWR<PartialDeep<LobeAgentConfig>>(
+      !!isLogin ? 'fetchInboxAgentConfig' : null,
+      () => sessionService.getSessionConfig(INBOX_SESSION_ID),
+      {
+        onSuccess: (data) => {
+          set(
+            {
+              defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
+              isInboxAgentConfigInit: true,
+            },
+            false,
+            'initDefaultAgent',
+          );
+
+          if (data) {
+            get().internal_dispatchAgentMap(INBOX_SESSION_ID, data, 'initInbox');
+          }
+        },
+        refreshWhenOffline: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      },
+    ),
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
+
+  internal_dispatchAgentMap: (id, config, actions) => {
+    const agentMap = produce(get().agentMap, (draft) => {
+      if (!draft[id]) {
+        draft[id] = config;
+      } else {
+        draft[id] = merge(draft[id], config);
+      }
+    });
+
+    if (isEqual(get().agentMap, agentMap)) return;
+
+    set({ agentMap }, false, 'dispatchAgent' + (actions ? `/${actions}` : ''));
+  },
+
+  internal_updateAgentConfig: async (id, data, signal) => {
+    const prevModel = agentSelectors.currentAgentModel(get());
+    // optimistic update at frontend
+    get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
+
+    await sessionService.updateSessionConfig(id, data, signal);
+    await get().internal_refreshAgentConfig(id);
+
+    // refresh sessions to update the agent config if the model has changed
+    if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
+  },
+
+  internal_refreshAgentConfig: async (id) => {
+    await mutate([FETCH_AGENT_CONFIG_KEY, id]);
+  },
+
+  internal_refreshAgentKnowledge: async () => {
+    await mutate([FETCH_AGENT_KNOWLEDGE_KEY, get().activeAgentId]);
+  },
+  internal_createAbortController: (key) => {
+    const abortController = get()[key] as AbortController;
+    if (abortController) abortController.abort(MESSAGE_CANCEL_FLAT);
+    const controller = new AbortController();
+    set({ [key]: controller }, false, 'internal_createAbortController');
+
+    return controller;
   },
 });

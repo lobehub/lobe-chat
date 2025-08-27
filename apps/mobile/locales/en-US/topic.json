@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Default Topic",
+  "empty": "No Topics Available",
+  "guide": {
+    "desc": "Click the send button on the left to save the current conversation as a historical topic and start a new session",
+    "title": "Topic List"
+  },
+  "loading": "Loading...",
+  "newTopic": "New Topic",
+  "searchPlaceholder": "Search Topics...",
+  "temp": "Temporary",
+  "title": "Topic"
+}

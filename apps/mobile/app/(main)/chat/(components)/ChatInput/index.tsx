@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IconBtn from './(components)/IconBtn';
 import { ICON_SIZE } from '@/const/common';
 import { useChat } from '@/hooks/useChat';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useThemeToken } from '@/theme';
 import ModelSwitch from './(components)/ModelSwitch';
 
@@ -23,6 +24,7 @@ interface ChatInputProps {
 const ChatInput = memo(({ style }: ChatInputProps) => {
   const { t } = useTranslation(['chat']);
   const { input, handleInputChange, handleSubmit, isLoading, canSend, stopGenerating } = useChat();
+  useInitAgentConfig(); // 关键：触发agent配置加载
   const insets = useSafeAreaInsets();
   const token = useThemeToken();
   const { styles } = useStyles();
