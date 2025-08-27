@@ -366,7 +366,7 @@ export const processMultiProviderModelList = async (
     }
   }
 
-  return Promise.all(
+  const processedResults = await Promise.all(
     modelList.map(async (model) => {
       const detectedProvider = detectModelProvider(model.id);
       const config = MODEL_LIST_CONFIGS[detectedProvider];
@@ -389,16 +389,50 @@ export const processMultiProviderModelList = async (
 
       const processedModel = processModelCard(model, config, knownModel);
 
-      // 如果找到了本地配置中的模型，使用其 enabled 状态
-      if (
-        processedModel &&
-        providerLocalModelConfig &&
-        typeof providerLocalModelConfig.enabled === 'boolean'
-      ) {
-        processedModel.enabled = providerLocalModelConfig.enabled;
+      // 如果找到了本地配置中的模型，使用其 enabled 状态和其他属性
+      if (processedModel && providerLocalModelConfig) {
+        if (typeof providerLocalModelConfig.enabled === 'boolean') {
+          processedModel.enabled = providerLocalModelConfig.enabled;
+        }
+        // 使用本地配置的 contextWindowTokens
+        if (providerLocalModelConfig.contextWindowTokens) {
+          processedModel.contextWindowTokens = providerLocalModelConfig.contextWindowTokens;
+        }
+        // 使用本地配置的 displayName
+        if (providerLocalModelConfig.displayName) {
+          processedModel.displayName = providerLocalModelConfig.displayName;
+        }
+        // 使用本地配置的 description
+        if (providerLocalModelConfig.description) {
+          processedModel.description = providerLocalModelConfig.description;
+        }
       }
 
       return processedModel;
     }),
-  ).then((results) => results.filter((result) => !!result));
+  );
+
+  const validResults = processedResults.filter((result): result is ChatModelCard => !!result);
+
+  // 如果有本地配置，按照本地配置的顺序重新排序
+  if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+    const sortedResults: ChatModelCard[] = [];
+    const remainingResults = [...validResults];
+
+    // 按照本地配置的顺序添加模型
+    for (const localModel of providerLocalConfig) {
+      const foundIndex = remainingResults.findIndex((result) => result.id === localModel.id);
+      if (foundIndex !== -1) {
+        sortedResults.push(remainingResults[foundIndex]);
+        remainingResults.splice(foundIndex, 1);
+      }
+    }
+
+    // 添加剩余的模型（本地配置中没有的）
+    sortedResults.push(...remainingResults);
+
+    return sortedResults;
+  }
+
+  return validResults;
 };
