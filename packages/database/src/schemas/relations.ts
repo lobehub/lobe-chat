@@ -4,11 +4,12 @@ import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAt } from './_helpers';
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
+import { aiModels, aiProviders } from './aiInfra';
 import { asyncTasks } from './asyncTask';
 import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
 import { generationBatches, generationTopics, generations } from './generation';
-import { messages, messagesFiles } from './message';
+import { messageTTS, messageTranslates, messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topicDocuments, topics } from './topic';
@@ -89,6 +90,11 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
     references: [sessions.id],
   }),
 
+  user: one(users, {
+    fields: [messages.userId],
+    references: [users.id],
+  }),
+
   parent: one(messages, {
     fields: [messages.parentId],
     references: [messages.id],
@@ -102,6 +108,16 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
   thread: one(threads, {
     fields: [messages.threadId],
     references: [threads.id],
+  }),
+
+  translation: one(messageTranslates, {
+    fields: [messages.id],
+    references: [messageTranslates.id],
+  }),
+
+  tts: one(messageTTS, {
+    fields: [messages.id],
+    references: [messageTTS.id],
   }),
 }));
 
@@ -183,6 +199,10 @@ export const sessionsRelations = relations(sessions, ({ many, one }) => ({
   group: one(sessionGroups, {
     fields: [sessions.groupId],
     references: [sessionGroups.id],
+  }),
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
   }),
 }));
 
@@ -278,5 +298,43 @@ export const generationsRelations = relations(generations, ({ one }) => ({
   file: one(files, {
     fields: [generations.fileId],
     references: [files.id],
+  }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+}));
+
+export const messageTranslatesRelations = relations(messageTranslates, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTranslates.id],
+    references: [messages.id],
+  }),
+}));
+
+export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTTS.id],
+    references: [messages.id],
+  }),
+}));
+
+// AI 基础设施关系定义
+export const aiProvidersRelations = relations(aiProviders, ({ many, one }) => ({
+  models: many(aiModels),
+  user: one(users, {
+    fields: [aiProviders.userId],
+    references: [users.id],
+  }),
+}));
+
+export const aiModelsRelations = relations(aiModels, ({ one }) => ({
+  provider: one(aiProviders, {
+    fields: [aiModels.providerId, aiModels.userId],
+    references: [aiProviders.id, aiProviders.userId],
+  }),
+  user: one(users, {
+    fields: [aiModels.userId],
+    references: [users.id],
   }),
 }));
