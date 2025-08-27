@@ -16,10 +16,11 @@ const openrouterChatModels: AIChatModelCard[] = [
       imageOutput: true,
       vision: true,
     },
-    contextWindowTokens: 32_768 + 32_768,
+    contextWindowTokens: 32_768,
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
     displayName: 'Gemini 2.5 Flash Image Preview',
     id: 'google/gemini-2.5-flash-image-preview',
+    maxOutput: 8192,
     pricing: {
       units: [
         { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
@@ -39,6 +40,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
     displayName: 'Gemini 2.5 Flash Image Preview (free)',
     id: 'google/gemini-2.5-flash-image-preview:free',
+    maxOutput: 8192,
     releasedAt: '2025-08-26',
     type: 'chat',
   },
