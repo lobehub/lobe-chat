@@ -20,16 +20,6 @@ const akashChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 65_536,
-    displayName: 'DeepSeek R1',
-    id: 'DeepSeek-R1',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 65_536,
     displayName: 'DeepSeek R1 Distill Qwen 32B',
     id: 'DeepSeek-R1-Distill-Qwen-32B',
     type: 'chat',
