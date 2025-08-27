@@ -423,6 +423,7 @@ describe('TopicModel', () => {
         userId,
         historySummary: null,
         metadata: null,
+        groupId: null,
         clientId: null,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
