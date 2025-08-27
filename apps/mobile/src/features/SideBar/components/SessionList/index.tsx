@@ -7,8 +7,8 @@ import { useStyles } from './style';
 
 import Inbox from './Inbox';
 import SessionItem from './SessionItem';
-import { useGlobalStore } from '@/store/global';
 import { useAuth } from '@/store/user';
+import { SessionListSkeleton } from './components/SkeletonList';
 
 export default function SideBar() {
   const { t } = useTranslation(['chat']);
@@ -16,13 +16,9 @@ export default function SideBar() {
   const { sessions } = useSessionStore();
   const { styles, token } = useStyles();
 
-  const [drawerOpen] = useGlobalStore((s) => [s.drawerOpen]);
   const { useFetchSessions } = useSessionStore();
   const { isAuthenticated } = useAuth();
-  useFetchSessions(drawerOpen, isAuthenticated);
-  // useEffect(() => {
-  //   if (drawerOpen) mutate();
-  // }, [drawerOpen]);
+  const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
   const filteredSessions =
     sessions?.filter(
@@ -30,6 +26,14 @@ export default function SideBar() {
         session.meta.title?.toLowerCase().includes(searchText.toLowerCase()) ||
         session.meta.description?.toLowerCase().includes(searchText.toLowerCase()),
     ) || [];
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <SessionListSkeleton />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
