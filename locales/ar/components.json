@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "إضافة معامل",
+    "argumentPlaceholder": "المعامل {{index}}",
+    "enterFirstArgument": "أدخل المعامل الأول..."
+  },
   "DragUpload": {
     "dragDesc": "اسحب الملفات هنا، يدعم تحميل عدة صور.",
     "dragFileDesc": "اسحب الصور والملفات هنا، يدعم تحميل عدة صور وملفات.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "تم تحميل {{completed}} من أصل {{total}}"
+    },
+    "validation": {
+      "fileSizeExceeded": "تجاوز حجم الملف الحد المسموح به",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) يتجاوز الحد الأقصى للحجم وهو {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} من الملفات تتجاوز الحد الأقصى للحجم {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "تجاوز عدد الصور الحد المسموح به"
     }
   },
   "OllamaSetupGuide": {

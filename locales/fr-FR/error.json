@@ -85,6 +85,17 @@
     "CreateMessageError": "Désolé, le message n'a pas pu être envoyé correctement. Veuillez copier le contenu et le renvoyer. Ce message ne sera pas conservé après le rafraîchissement de la page.",
     "ExceededContextWindow": "Le contenu de la demande actuelle dépasse la longueur que le modèle peut traiter. Veuillez réduire la quantité de contenu et réessayer.",
     "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Votre contenu contient des termes interdits. Veuillez vérifier et modifier votre saisie, puis réessayez.",
+      "IMAGE_SAFETY": "La génération de l'image a été bloquée pour des raisons de sécurité. Veuillez modifier votre requête de génération d'image et réessayer.",
+      "LANGUAGE": "La langue que vous utilisez n'est pas prise en charge pour le moment. Veuillez réessayer en anglais ou dans une autre langue prise en charge.",
+      "OTHER": "Le contenu a été bloqué pour une raison inconnue. Veuillez reformuler votre demande et réessayer.",
+      "PROHIBITED_CONTENT": "Votre requête pourrait contenir du contenu prohibé. Veuillez ajuster votre demande pour qu'elle respecte les règles d'utilisation.",
+      "RECITATION": "Votre contenu a été bloqué car il pourrait enfreindre des droits d'auteur. Veuillez utiliser du contenu original ou reformuler votre demande.",
+      "SAFETY": "Votre contenu a été bloqué en raison des règles de sécurité. Veuillez modifier votre demande pour éviter tout contenu potentiellement dangereux ou inapproprié.",
+      "SPII": "Votre contenu pourrait contenir des informations personnelles sensibles. Pour protéger la confidentialité, supprimez ces informations sensibles puis réessayez.",
+      "default": "Contenu bloqué : {{blockReason}}。请调整您的请求内容后重试。"
+    },
     "InsufficientQuota": "Désolé, le quota de cette clé a atteint sa limite. Veuillez vérifier si le solde de votre compte est suffisant ou augmenter le quota de la clé avant de réessayer.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
@@ -113,18 +124,6 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
-
-    "GoogleAIBlockReason": {
-      "BLOCKLIST": "Votre contenu contient des termes interdits. Veuillez vérifier et modifier votre saisie avant de réessayer.",
-      "IMAGE_SAFETY": "Le contenu d'image généré a été bloqué pour des raisons de sécurité. Veuillez essayer de modifier votre demande de génération d'image.",
-      "LANGUAGE": "La langue que vous avez utilisée n'est pas supportée. Veuillez essayer d'utiliser l'anglais ou d'autres langues supportées.",
-      "OTHER": "Le contenu a été bloqué pour des raisons inconnues. Veuillez essayer de reformuler votre demande ou contacter le support technique.",
-      "PROHIBITED_CONTENT": "Votre contenu peut contenir des types de contenu interdits. Veuillez ajuster votre demande pour vous assurer qu'elle respecte les directives d'utilisation.",
-      "RECITATION": "Votre contenu a été bloqué en raison de problèmes potentiels de droits d'auteur. Veuillez essayer d'utiliser du contenu original ou de reformuler votre demande.",
-      "SAFETY": "Votre contenu a été bloqué en raison des politiques de sécurité. Veuillez essayer d'ajuster votre demande pour éviter du contenu potentiellement nuisible ou inapproprié.",
-      "SPII": "Votre contenu peut contenir des informations personnelles identifiables sensibles. Pour la protection de la vie privée, veuillez supprimer les informations sensibles pertinentes avant de réessayer.",
-      "default": "Contenu bloqué : {{blockReason}}. Veuillez ajuster le contenu de votre demande et réessayer."
-    },
     "QuotaLimitReached": "Désolé, l'utilisation actuelle des tokens ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de cette clé ou réessayer plus tard.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
     "SubscriptionKeyMismatch": "Nous sommes désolés, en raison d'une défaillance système occasionnelle, l'utilisation actuelle de l'abonnement est temporairement inactive. Veuillez cliquer sur le bouton ci-dessous pour rétablir votre abonnement ou nous contacter par e-mail pour obtenir de l'aide.",

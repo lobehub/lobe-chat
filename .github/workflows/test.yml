@@ -23,8 +23,6 @@ jobs:
         with:
           node-version: 22
 
-      - uses: pnpm/action-setup@v4
-
       - name: Install bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -34,7 +32,7 @@ jobs:
         run: bun i
 
       - name: Test ${{ matrix.package }} package with coverage
-        run: pnpm --filter @lobechat/${{ matrix.package }} test:coverage
+        run: bun run --filter @lobechat/${{ matrix.package }} test:coverage
 
       - name: Upload ${{ matrix.package }} coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -111,17 +109,15 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - uses: pnpm/action-setup@v4
-
       - name: Test Client DB
-        run: pnpm --filter @lobechat/database test:client-db
+        run: bun run --filter @lobechat/database test:client-db
         env:
           KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
       - name: Test Coverage
-        run: pnpm --filter @lobechat/database test:coverage
+        run: bun run --filter @lobechat/database test:coverage
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
