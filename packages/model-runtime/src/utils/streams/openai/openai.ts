@@ -233,6 +233,8 @@ const transformOpenAIStream = (
           streamContext.thinkingInContent = false;
         }
 
+        const events: StreamProtocolChunk[] = [];
+
         // 判断是否有 citations 内容，更新 returnedCitation 状态
         if (!streamContext?.returnedCitation) {
           const citations =
@@ -247,35 +249,38 @@ const transformOpenAIStream = (
 
           if (citations) {
             streamContext.returnedCitation = true;
-
-            return [
-              {
-                data: {
-                  citations: (citations as any[])
-                    .map((item) => ({
-                      title: typeof item === 'string' ? item : item.title,
-                      url: typeof item === 'string' ? item : item.url || item.link,
-                    }))
-                    .filter((c) => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
-                },
-                id: chunk.id,
-                type: 'grounding',
+            events.push({
+              data: {
+                citations: (citations as any[])
+                  .map((item) => ({
+                    title: typeof item === 'string' ? item : item.title,
+                    url: typeof item === 'string' ? item : item.url || item.link,
+                  }))
+                  .filter((c) => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
               },
-              {
-                data: thinkingContent,
-                id: chunk.id,
-                type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
-              },
-            ];
+              id: chunk.id,
+              type: 'grounding',
+            });
           }
         }
 
-        // 根据当前思考模式确定返回类型
-        return {
+        // 文本事件
+        events.push({
           data: thinkingContent,
           id: chunk.id,
           type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
-        };
+        });
+
+        // 如果同一个 chunk 同时包含 usage（例如 OpenRouter 的 Gemini 2.5 Flash Image Preview），同时输出 usage 事件
+        if (chunk.usage) {
+          events.push({
+            data: convertUsage(chunk.usage as any, provider),
+            id: chunk.id,
+            type: 'usage',
+          });
+        }
+
+        return events.length === 1 ? events[0] : events;
       }
 
       // 处理 base64_image 字段 (用于 OpenRouter)
