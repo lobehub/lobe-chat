@@ -9,6 +9,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/ar/discover.json'),
     error: () => import('../../locales/ar/error.json'),
     setting: () => import('../../locales/ar/setting.json'),
+    welcome: () => import('../../locales/ar/welcome.json'),
   },
   'bg-BG': {
     auth: () => import('../../locales/bg-BG/auth.json'),
@@ -17,6 +18,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/bg-BG/discover.json'),
     error: () => import('../../locales/bg-BG/error.json'),
     setting: () => import('../../locales/bg-BG/setting.json'),
+    welcome: () => import('../../locales/bg-BG/welcome.json'),
   },
   'de-DE': {
     auth: () => import('../../locales/de-DE/auth.json'),
@@ -25,6 +27,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/de-DE/discover.json'),
     error: () => import('../../locales/de-DE/error.json'),
     setting: () => import('../../locales/de-DE/setting.json'),
+    welcome: () => import('../../locales/de-DE/welcome.json'),
   },
   'en-US': {
     auth: () => import('../../locales/en-US/auth.json'),
@@ -33,6 +36,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/en-US/discover.json'),
     error: () => import('../../locales/en-US/error.json'),
     setting: () => import('../../locales/en-US/setting.json'),
+    welcome: () => import('../../locales/en-US/welcome.json'),
   },
   'es-ES': {
     auth: () => import('../../locales/es-ES/auth.json'),
@@ -41,6 +45,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/es-ES/discover.json'),
     error: () => import('../../locales/es-ES/error.json'),
     setting: () => import('../../locales/es-ES/setting.json'),
+    welcome: () => import('../../locales/es-ES/welcome.json'),
   },
   'fa-IR': {
     auth: () => import('../../locales/fa-IR/auth.json'),
@@ -49,6 +54,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/fa-IR/discover.json'),
     error: () => import('../../locales/fa-IR/error.json'),
     setting: () => import('../../locales/fa-IR/setting.json'),
+    welcome: () => import('../../locales/fa-IR/welcome.json'),
   },
   'fr-FR': {
     auth: () => import('../../locales/fr-FR/auth.json'),
@@ -57,6 +63,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/fr-FR/discover.json'),
     error: () => import('../../locales/fr-FR/error.json'),
     setting: () => import('../../locales/fr-FR/setting.json'),
+    welcome: () => import('../../locales/fr-FR/welcome.json'),
   },
   'it-IT': {
     auth: () => import('../../locales/it-IT/auth.json'),
@@ -65,6 +72,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/it-IT/discover.json'),
     error: () => import('../../locales/it-IT/error.json'),
     setting: () => import('../../locales/it-IT/setting.json'),
+    welcome: () => import('../../locales/it-IT/welcome.json'),
   },
   'ja-JP': {
     auth: () => import('../../locales/ja-JP/auth.json'),
@@ -73,6 +81,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/ja-JP/discover.json'),
     error: () => import('../../locales/ja-JP/error.json'),
     setting: () => import('../../locales/ja-JP/setting.json'),
+    welcome: () => import('../../locales/ja-JP/welcome.json'),
   },
   'ko-KR': {
     auth: () => import('../../locales/ko-KR/auth.json'),
@@ -81,6 +90,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/ko-KR/discover.json'),
     error: () => import('../../locales/ko-KR/error.json'),
     setting: () => import('../../locales/ko-KR/setting.json'),
+    welcome: () => import('../../locales/ko-KR/welcome.json'),
   },
   'nl-NL': {
     auth: () => import('../../locales/nl-NL/auth.json'),
@@ -89,6 +99,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/nl-NL/discover.json'),
     error: () => import('../../locales/nl-NL/error.json'),
     setting: () => import('../../locales/nl-NL/setting.json'),
+    welcome: () => import('../../locales/nl-NL/welcome.json'),
   },
   'pl-PL': {
     auth: () => import('../../locales/pl-PL/auth.json'),
@@ -97,6 +108,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/pl-PL/discover.json'),
     error: () => import('../../locales/pl-PL/error.json'),
     setting: () => import('../../locales/pl-PL/setting.json'),
+    welcome: () => import('../../locales/pl-PL/welcome.json'),
   },
   'pt-BR': {
     auth: () => import('../../locales/pt-BR/auth.json'),
@@ -105,6 +117,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/pt-BR/discover.json'),
     error: () => import('../../locales/pt-BR/error.json'),
     setting: () => import('../../locales/pt-BR/setting.json'),
+    welcome: () => import('../../locales/pt-BR/welcome.json'),
   },
   'ru-RU': {
     auth: () => import('../../locales/ru-RU/auth.json'),
@@ -113,6 +126,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/ru-RU/discover.json'),
     error: () => import('../../locales/ru-RU/error.json'),
     setting: () => import('../../locales/ru-RU/setting.json'),
+    welcome: () => import('../../locales/ru-RU/welcome.json'),
   },
   'tr-TR': {
     auth: () => import('../../locales/tr-TR/auth.json'),
@@ -121,6 +135,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/tr-TR/discover.json'),
     error: () => import('../../locales/tr-TR/error.json'),
     setting: () => import('../../locales/tr-TR/setting.json'),
+    welcome: () => import('../../locales/tr-TR/welcome.json'),
   },
   'vi-VN': {
     auth: () => import('../../locales/vi-VN/auth.json'),
@@ -129,6 +144,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/vi-VN/discover.json'),
     error: () => import('../../locales/vi-VN/error.json'),
     setting: () => import('../../locales/vi-VN/setting.json'),
+    welcome: () => import('../../locales/vi-VN/welcome.json'),
   },
   'zh-CN': {
     auth: () => import('../../locales/zh-CN/auth.json'),
@@ -137,6 +153,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/zh-CN/discover.json'),
     error: () => import('../../locales/zh-CN/error.json'),
     setting: () => import('../../locales/zh-CN/setting.json'),
+    welcome: () => import('../../locales/zh-CN/welcome.json'),
   },
   'zh-TW': {
     auth: () => import('../../locales/zh-TW/auth.json'),
@@ -145,6 +162,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
     discover: () => import('../../locales/zh-TW/discover.json'),
     error: () => import('../../locales/zh-TW/error.json'),
     setting: () => import('../../locales/zh-TW/setting.json'),
+    welcome: () => import('../../locales/zh-TW/welcome.json'),
   },
 };
 

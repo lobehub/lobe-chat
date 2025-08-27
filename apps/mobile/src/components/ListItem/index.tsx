@@ -28,11 +28,9 @@ const ListItem = ({ title, avatar, description, extra, onPress, href, active }: 
         <Text numberOfLines={1} style={styles.title}>
           {title}
         </Text>
-        {description && (
-          <Text numberOfLines={1} style={styles.description}>
-            {description}
-          </Text>
-        )}
+        <Text numberOfLines={1} style={styles.description}>
+          {description}
+        </Text>
       </View>
       {extra && <Text style={styles.extra}>{extra}</Text>}
     </View>
