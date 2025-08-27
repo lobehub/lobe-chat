@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "引数を追加",
+    "argumentPlaceholder": "引数 {{index}}",
+    "enterFirstArgument": "最初の引数を入力してください..."
+  },
   "DragUpload": {
     "dragDesc": "ここにファイルをドラッグ＆ドロップしてください。複数の画像のアップロードがサポートされています。",
     "dragFileDesc": "ここに画像やファイルをドラッグ＆ドロップしてください。複数の画像やファイルのアップロードがサポートされています。",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} アップロード済み"
+    },
+    "validation": {
+      "fileSizeExceeded": "ファイルサイズが上限を超えています",
+      "fileSizeExceededDetail": "{{fileName}}（{{actualSize}}）は最大サイズ {{maxSize}} を超えています",
+      "fileSizeExceededMultiple": "{{count}} 個のファイルが最大サイズ {{maxSize}} を超えています：{{fileList}}",
+      "imageCountExceeded": "画像の数が上限を超えています"
     }
   },
   "OllamaSetupGuide": {

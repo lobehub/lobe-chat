@@ -10,7 +10,7 @@ Emoji logo: 🤯
 
 ## Project Technologies Stack
 
-read [package.json](mdc:package.json) to know all npm packages you can use. read [folder-structure.mdx](mdc:docs/development/basic/folder-structure.mdx) to learn project structure.
+read [package.json](mdc:package.json) to know all npm packages you can use.
 
 The project uses the following technologies:
 
@@ -42,17 +42,3 @@ The project uses the following technologies:
 - Cursor AI for code editing and AI coding assistance
 
 Note: All tools and libraries used are the latest versions. The application only needs to be compatible with the latest browsers;
-
-## Often used npm scripts and commands
-
-```bash
-# !: don't  any build script to check weather code can work after modify
-# type check
-bun run type-check
-
-# install dependencies
-pnpm install
-
-# run tests
-npx vitest run --config vitest.config.ts '[file-path-pattern]'
-```
