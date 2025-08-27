@@ -419,12 +419,13 @@ export const chatMessage: StateCreator<
           [key]: toggleBooleanList(get()[key] as string[], id!, loading),
         },
         false,
+        action,
       );
 
       return abortController;
     } else {
       if (!id) {
-        set({ [abortControllerKey]: undefined, [key]: [] }, false);
+        set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
         set(
           {
@@ -432,6 +433,7 @@ export const chatMessage: StateCreator<
             [key]: toggleBooleanList(get()[key] as string[], id, loading),
           },
           false,
+          action,
         );
 
       // window.removeEventListener('beforeunload', preventLeavingFn);

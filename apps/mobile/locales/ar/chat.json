@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في التحدث معي فورًا، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لتحديث معلوماتي.",
+  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، هيا نبدأ المحادثة!",
+  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، هيا نبدأ المحادثة!",
   "confirmDelete": "تأكيد الحذف",
   "copyFailed": "فشل النسخ",
+  "defaultAgent": "مساعد مخصص",
   "deleteMessageConfirm": "هل أنت متأكد من حذف هذه الرسالة؟",
   "history": "تاريخ المحادثة",
+  "inbox": {
+    "desc": "قم بتشغيل مجموعة العقول لإشعال شرارة الأفكار. مساعدك الذكي هنا للتواصل معك في كل شيء.",
+    "title": "دردشة عشوائية"
+  },
   "messageCopied": "تم نسخ الرسالة",
   "newChat": "محادثة جديدة",
   "placeholder": "أدخل رسالتك...",

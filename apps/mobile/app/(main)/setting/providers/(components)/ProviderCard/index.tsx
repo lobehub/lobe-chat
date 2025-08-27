@@ -24,8 +24,7 @@ const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
   const { toggleProviderEnabled } = useAiInfraStore();
 
   const handlePress = () => {
-    // 使用动态路由方案A: /setting/providers/[id]
-    router.push(`/setting/providers/${id}` as any);
+    router.push(`/setting/providers/${id}`);
   };
 
   const handleSwitchChange = async (value: boolean) => {
