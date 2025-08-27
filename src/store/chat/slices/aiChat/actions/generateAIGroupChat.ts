@@ -50,6 +50,38 @@ const getDebounceThreshold = (responseSpeed?: 'slow' | 'medium' | 'fast'): numbe
   }
 };
 
+/**
+ * Check if a message is a tool calling message that requires a follow-up
+ */
+const isToolCallMessage = (message: ChatMessage): boolean => {
+  return message.role === 'assistant' && !!message.tools && message.tools.length > 0;
+};
+
+/**
+ * Check if we should avoid supervisor decisions based on recent messages
+ * Returns true if the conversation flow should continue without supervisor intervention
+ */
+const shouldAvoidSupervisorDecision = (messages: ChatMessage[]): boolean => {
+  if (messages.length === 0) return true;
+  
+  const lastMessage = messages.at(-1);
+  if (!lastMessage) return true;
+  
+  // Don't make decisions if the last message is a tool calling message
+  // (it needs a follow-up assistant message)
+  if (isToolCallMessage(lastMessage)) {
+    return true;
+  }
+  
+  // Don't make decisions if the last message is a tool response
+  // (the conversation might still be in a tool calling sequence)
+  if (lastMessage.role === 'tool') {
+    return true;
+  }
+  
+  return false;
+};
+
 export interface AIGroupChatAction {
   /**
    * Sends a new message to a group chat and triggers agent responses
@@ -167,6 +199,12 @@ export const generateAIGroupChat: StateCreator<
 
     if (messages.length === 0) return;
 
+    // Skip supervisor decision if we're in the middle of tool calling sequence
+    if (shouldAvoidSupervisorDecision(messages)) {
+      console.log('Skipping supervisor decision - waiting for tool calling sequence to complete');
+      return;
+    }
+
     internal_toggleSupervisorLoading(true, groupId);
 
     const groupConfig = chatGroupSelectors.currentGroupConfig(useChatGroupStore.getState());
@@ -230,6 +268,8 @@ export const generateAIGroupChat: StateCreator<
       activeTopicId,
       internal_dispatchMessage,
       internal_toggleChatLoading,
+      triggerToolCalls,
+      internal_triggerSupervisorDecisionDebounced,
     } = get();
 
     try {
@@ -329,7 +369,7 @@ export const generateAIGroupChat: StateCreator<
       const messagesForAPI = [systemMessage, ...messagesWithAuthors, userMessage];
 
       if (assistantId) {
-        await internal_fetchAIChatMessage({
+        const { isFunctionCall } = await internal_fetchAIChatMessage({
           messages: messagesForAPI,
           messageId: assistantId,
           model: agentModel,
@@ -339,6 +379,19 @@ export const generateAIGroupChat: StateCreator<
             agentConfig: agentData,
           },
         });
+
+        // Handle tool calling in group chat like single chat
+        if (isFunctionCall) {
+          get().internal_toggleMessageInToolsCalling(true, assistantId);
+          await refreshMessages();
+          await triggerToolCalls(assistantId, {
+            threadId: undefined,
+            inPortalThread: false,
+          });
+          // After tool calls complete, trigger supervisor decision to continue conversation
+          internal_triggerSupervisorDecisionDebounced(groupId);
+          return;
+        }
       }
 
       await refreshMessages();
