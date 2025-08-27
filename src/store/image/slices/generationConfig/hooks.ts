@@ -97,7 +97,7 @@ export function useDimensionControl() {
   }, [paramsSchema]);
 
   // 只要不是所有维度相关的控件都不显示，那么这个容器就应该显示
-  const showDimensionControl = !(!isSupportAspectRatio && !isSupportWidth && !isSupportHeight);
+  const showDimensionControl = isSupportAspectRatio || isSupportWidth || isSupportHeight;
 
   return {
     isLocked: store.isAspectRatioLocked,

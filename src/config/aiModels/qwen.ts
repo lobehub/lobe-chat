@@ -1357,8 +1357,8 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       size: {
-        default: '1328*1328',
-        enum: ['1664*928', '1472*1140', '1328*1328', '1140*1472', '928*1664'],
+        default: '1328x1328',
+        enum: ['1664x928', '1472x1140', '1328x1328', '1140x1472', '928x1664'],
       },
     },
     pricing: {
