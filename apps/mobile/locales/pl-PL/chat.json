@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
+  "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
+  "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**, zacznijmy rozmowę!",
   "confirmDelete": "Potwierdź usunięcie",
   "copyFailed": "Kopiowanie nie powiodło się",
+  "defaultAgent": "Niestandardowy asystent",
   "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
   "history": "Historia rozmów",
+  "inbox": {
+    "desc": "Włącz klaster mózgów, aby rozbudzić iskrę myśli. Twój inteligentny asystent, tutaj, aby rozmawiać o wszystkim.",
+    "title": "Porozmawiajmy swobodnie"
+  },
   "messageCopied": "Wiadomość skopiowana",
   "newChat": "Nowa rozmowa",
   "placeholder": "Wpisz swoją wiadomość...",
