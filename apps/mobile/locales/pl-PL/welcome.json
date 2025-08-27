@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Zmień zestaw",
+      "title": "Nowe rekomendacje asystentów:"
+    },
+    "defaultMessage": "Jestem Twoim prywatnym inteligentnym asystentem {{appName}}, w czym mogę teraz pomóc?<br />Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij <plus />, aby stworzyć własnego asystenta",
+    "defaultMessageWithoutCreate": "Jestem Twoim prywatnym inteligentnym asystentem {{appName}}, w czym mogę teraz pomóc?",
+    "qa": {
+      "q01": "Czym jest LobeHub?",
+      "q02": "Czym jest {{appName}}?",
+      "q03": "Czy {{appName}} ma wsparcie społeczności?",
+      "q04": "Jakie funkcje obsługuje {{appName}}?",
+      "q05": "Jak wdrożyć i używać {{appName}}?",
+      "q06": "Jak wygląda cennik {{appName}}?",
+      "q07": "Czy {{appName}} jest darmowy?",
+      "q08": "Czy jest dostępna wersja chmurowa?",
+      "q09": "Czy obsługiwane są lokalne modele językowe?",
+      "q10": "Czy obsługiwane jest rozpoznawanie i generowanie obrazów?",
+      "q11": "Czy obsługiwane są synteza mowy i rozpoznawanie mowy?",
+      "q12": "Czy jest system wtyczek?",
+      "q13": "Czy istnieje własny rynek do pozyskiwania GPT?",
+      "q14": "Czy obsługiwanych jest wielu dostawców usług AI?",
+      "q15": "Co zrobić, gdy napotkam problemy podczas korzystania?"
+    }
+  },
+  "header": "Witamy",
+  "pickAgent": "Lub wybierz spośród poniższych szablonów asystentów",
+  "questions": {
+    "moreBtn": "Dowiedz się więcej",
+    "title": "Najczęściej zadawane pytania:"
+  },
+  "skip": "Pomiń tworzenie",
+  "slogan": {
+    "desc1": "Uruchom klaster mózgów, rozpal iskrę myśli. Twój inteligentny asystent jest zawsze przy Tobie.",
+    "desc2": "Stwórz swojego pierwszego asystenta, zacznijmy~",
+    "title": "Daj sobie mądrzejszy mózg"
+  },
+  "welcome": {
+    "afternoon": "Dzień dobry po południu",
+    "morning": "Dzień dobry rano",
+    "night": "Dobry wieczór",
+    "noon": "Dzień dobry w południe"
+  }
+}

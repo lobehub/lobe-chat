@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Changer de lot",
+      "title": "Nouveaux assistants recommandés :"
+    },
+    "defaultMessage": "Je suis votre assistant intelligent personnel {{appName}}, comment puis-je vous aider aujourd'hui ?<br />Pour obtenir un assistant plus professionnel ou personnalisé, cliquez sur <plus /> pour créer un assistant personnalisé",
+    "defaultMessageWithoutCreate": "Je suis votre assistant intelligent personnel {{appName}}, comment puis-je vous aider aujourd'hui ?",
+    "qa": {
+      "q01": "Qu'est-ce que LobeHub ?",
+      "q02": "Qu'est-ce que {{appName}} ?",
+      "q03": "{{appName}} bénéficie-t-il d'un support communautaire ?",
+      "q04": "Quelles fonctionnalités {{appName}} prend-il en charge ?",
+      "q05": "Comment déployer et utiliser {{appName}} ?",
+      "q06": "Quelle est la tarification de {{appName}} ?",
+      "q07": "{{appName}} est-il gratuit ?",
+      "q08": "Existe-t-il une version cloud ?",
+      "q09": "Prend-il en charge les modèles de langage locaux ?",
+      "q10": "Prend-il en charge la reconnaissance et la génération d'images ?",
+      "q11": "Prend-il en charge la synthèse vocale et la reconnaissance vocale ?",
+      "q12": "Prend-il en charge un système de plugins ?",
+      "q13": "Dispose-t-il d'un marché pour obtenir des GPTs ?",
+      "q14": "Prend-il en charge plusieurs fournisseurs de services IA ?",
+      "q15": "Que faire si je rencontre un problème lors de l'utilisation ?"
+    }
+  },
+  "header": "Bienvenue",
+  "pickAgent": "Ou choisissez parmi les modèles d'assistants ci-dessous",
+  "questions": {
+    "moreBtn": "En savoir plus",
+    "title": "Les questions fréquentes :"
+  },
+  "skip": "Passer la création",
+  "slogan": {
+    "desc1": "Activez un réseau de cerveaux, stimulez les étincelles de la pensée. Votre assistant intelligent est toujours là.",
+    "desc2": "Créez votre premier assistant, commençons~",
+    "title": "Offrez-vous un cerveau plus intelligent"
+  },
+  "welcome": {
+    "afternoon": "Bon après-midi",
+    "morning": "Bonjour",
+    "night": "Bonsoir",
+    "noon": "Bon midi"
+  }
+}

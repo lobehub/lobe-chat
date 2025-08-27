@@ -38,7 +38,7 @@ const AgentCardSkeleton = () => {
           {/* Author info */}
           <Space align="center" direction="horizontal" size={8}>
             <Skeleton.Avatar animated shape="circle" size={24} />
-            <Skeleton.Paragraph animated rows={1} width="120" />
+            <Skeleton.Paragraph animated rows={1} width={120} />
           </Space>
         </View>
       </View>

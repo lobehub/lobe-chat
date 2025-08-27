@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir chatten oder unter [Assistenteneinstellungen]({{url}}) meine Informationen vervollständigen.",
+  "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns das Gespräch beginnen!",
+  "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lass uns das Gespräch beginnen!",
   "confirmDelete": "Löschen bestätigen",
   "copyFailed": "Kopieren fehlgeschlagen",
+  "defaultAgent": "Benutzerdefinierter Assistent",
   "deleteMessageConfirm": "Möchten Sie diese Nachricht wirklich löschen?",
   "history": "Chatverlauf",
+  "inbox": {
+    "desc": "Aktiviere das Gehirnnetzwerk und entfalte kreative Gedanken. Dein intelligenter Assistent, der hier ist, um mit dir über alles zu sprechen.",
+    "title": "Einfach plaudern"
+  },
   "messageCopied": "Nachricht kopiert",
   "newChat": "Neuer Chat",
   "placeholder": "Geben Sie Ihre Nachricht ein...",
