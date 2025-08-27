@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。",
+  "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！",
+  "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，让我们开始对话吧！",
   "confirmDelete": "确认删除",
   "copyFailed": "复制失败",
+  "defaultAgent": "自定义助手",
   "deleteMessageConfirm": "确定要删除这条消息吗？",
   "history": "对话历史",
+  "inbox": {
+    "desc": "开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切",
+    "title": "随便聊聊"
+  },
   "messageCopied": "消息已复制",
   "newChat": "新对话",
   "placeholder": "输入您的消息...",
@@ -15,10 +23,6 @@
       "placeholder": "搜索会话"
     },
     "title": "随便聊聊"
-  },
-  "inbox": {
-    "desc": "在这里，您可以查看和管理您的消息和通知。",
-    "title": "收件箱"
   },
   "share": "分享",
   "stop": "停止",

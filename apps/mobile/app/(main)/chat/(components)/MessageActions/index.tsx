@@ -7,7 +7,6 @@ import { Alert, TouchableOpacity, View } from 'react-native';
 import { useToast } from '@/components';
 import { ICON_SIZE_TINY } from '@/const/common';
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session';
 import { useThemeToken } from '@/theme';
 import { ChatMessage } from '@/types/message';
 
@@ -19,7 +18,6 @@ interface MessageActionsProps {
 
 const MessageActions: React.FC<MessageActionsProps> = ({ message }) => {
   const { t } = useTranslation(['chat', 'common']);
-  const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
   const token = useThemeToken();
@@ -46,7 +44,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message }) => {
   // 重新生成消息
   const handleRegenerate = async () => {
     try {
-      await regenerateMessage(activeId, message.id);
+      await regenerateMessage(message.id);
     } catch (error: any) {
       toast.error(error.message || t('regenerateFailed', { ns: 'chat' }));
     }
@@ -61,7 +59,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message }) => {
       },
       {
         onPress: () => {
-          deleteMessage(activeId, message.id);
+          deleteMessage(message.id);
         },
         style: 'destructive',
         text: t('delete', { ns: 'common' }),
