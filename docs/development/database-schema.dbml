@@ -129,6 +129,39 @@ table async_tasks {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+table chat_groups {
+  id text [pk, not null]
+  title text
+  description text
+  config jsonb
+  client_id text
+  user_id text [not null]
+  pinned boolean [default: false]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'chat_groups_client_id_user_id_unique', unique]
+  }
+}
+
+table chat_groups_agents {
+  chat_group_id text [not null]
+  agent_id text [not null]
+  user_id text [not null]
+  enabled boolean [default: true]
+  order integer [default: 0]
+  role text [default: 'participant']
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (chat_group_id, agent_id) [pk]
+  }
+}
+
 table document_chunks {
   document_id varchar(30) [not null]
   chunk_id uuid [not null]
@@ -372,6 +405,8 @@ table messages {
   parent_id text
   quota_id text
   agent_id text
+  group_id text
+  target_id text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -838,6 +873,7 @@ table topics {
   title text
   favorite boolean [default: false]
   session_id text
+  group_id text
   user_id text [not null]
   client_id text
   history_summary text
@@ -908,6 +944,14 @@ ref: agents_knowledge_bases.agent_id > agents.id
 ref: agents_to_sessions.session_id > sessions.id
 
 ref: agents_to_sessions.agent_id > agents.id
+
+ref: chat_groups_agents.chat_group_id > chat_groups.id
+
+ref: chat_groups_agents.agent_id > agents.id
+
+ref: chat_groups_agents.user_id - users.id
+
+ref: chat_groups.user_id - users.id
 
 ref: unstructured_chunks.file_id - files.id
 
