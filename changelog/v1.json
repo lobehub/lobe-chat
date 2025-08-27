@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-27",
+    "version": "1.116.1"
+  },
+  {
     "children": {
       "features": ["Add gemini 2.5 flash image for vertex ai."]
     },
