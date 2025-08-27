@@ -9,8 +9,6 @@ import {
   buildGroupChatSystemPrompt,
   filterMessagesForAgent,
 } from '@/prompts/groupChat';
-import { agentSelectors } from '@/store/agent/selectors';
-import { getAgentStoreState } from '@/store/agent/store';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { chatGroupSelectors } from '@/store/chatGroup/selectors';
@@ -253,14 +251,16 @@ export const generateAIGroupChat: StateCreator<
       const agentProvider = agentData.provider || undefined;
       const agentModel = agentData.model || undefined;
 
+      console.log('DEBUG: Group chat agent data:', agentData);
+
       if (!agentProvider || !agentModel) {
         console.error(`No provider or model configured for agent ${agentId}`);
         return;
       }
 
       // Get the individual agent's full configuration including temperature, top_p, etc.
-      const agentStoreState = getAgentStoreState();
-      const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
+      // const agentStoreState = getAgentStoreState();
+      // const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
 
       // Get real user name from user store
       const userStoreState = getUserStoreState();
@@ -307,8 +307,7 @@ export const generateAIGroupChat: StateCreator<
       const userMessage: ChatMessage = {
         id: 'group-user',
         role: 'user',
-        content:
-          `Now it's your turn to respond. Based on supervisor decision, your message will be sent to ${targetId ? targetId : 'the group publicly'}. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`,
+        content: `Now it's your turn to respond. Based on supervisor decision, your message will be sent to ${targetId ? targetId : 'the group publicly'}. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         meta: {},
@@ -337,9 +336,7 @@ export const generateAIGroupChat: StateCreator<
           provider: agentProvider,
           params: {
             traceId: `group-${groupId}-agent-${agentId}`,
-            // Include the agent's individual configuration parameters
-            // This ensures each agent uses their own temperature, top_p, max_tokens, etc.
-            agentConfig,
+            agentConfig: agentData,
           },
         });
       }
