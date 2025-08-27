@@ -118,7 +118,13 @@ const transformGoogleGenerativeAIStream = (
   }
 
   // Extract text from chunk.text or candidate content parts for compatibility
-  const text = chunk.text || candidate?.content?.parts?.map((part: any) => part?.text).filter(Boolean).join('') || '';
+  const text =
+    chunk.text ||
+    candidate?.content?.parts
+      ?.map((part: any) => part?.text)
+      .filter(Boolean)
+      .join('') ||
+    '';
 
   if (candidate) {
     // 首先检查是否为 reasoning 内容 (thought: true)
@@ -179,11 +185,30 @@ const transformGoogleGenerativeAIStream = (
     }
 
     if (candidate.finishReason) {
+      const chunks: StreamProtocolChunk[] = [];
+
+      // Add text if present
+      if (!!text?.trim()) {
+        chunks.push({ data: text, id: context?.id, type: 'text' });
+      }
+
+      // Check for image in parts
+      if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
+        const part = candidate.content.parts[0];
+        if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
+          chunks.push({
+            data: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
+            id: context.id,
+            type: 'base64_image',
+          });
+        }
+      }
+
+      // Add usage chunks
+      chunks.push(...usageChunks);
+
       if (chunk.usageMetadata) {
-        return [
-          !!text ? { data: text, id: context?.id, type: 'text' } : undefined,
-          ...usageChunks,
-        ].filter(Boolean) as StreamProtocolChunk[];
+        return chunks;
       }
       return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }
