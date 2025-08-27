@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version&nbsp;1.118.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.117.1...v1.118.0)
+<sup>Released on **2025-08-27**</sup>
+
+
+#### ✨ Features
+
+- **image**: Polish ai image.
+- **misc**: Add gemini 2.5 flash image for vertex ai.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **image**: Polish ai image, closes [#8915](https://github.com/jaworldwideorg/OneJA-Bot/issues/8915) ([0efe28d](https://github.com/jaworldwideorg/OneJA-Bot/commit/0efe28d))
+* **misc**: Add gemini 2.5 flash image for vertex ai, closes [#8943](https://github.com/jaworldwideorg/OneJA-Bot/issues/8943) ([74d9bb5](https://github.com/jaworldwideorg/OneJA-Bot/commit/74d9bb5))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.117.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.117.0...v1.117.1)
 <sup>Released on **2025-08-25**</sup>
 
