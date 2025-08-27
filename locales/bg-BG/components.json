@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Добави параметър",
+    "argumentPlaceholder": "Параметър {{index}}",
+    "enterFirstArgument": "Въведете първия параметър..."
+  },
   "DragUpload": {
     "dragDesc": "Плъзнете файлове тук, поддържа качване на множество изображения.",
     "dragFileDesc": "Плъзнете изображения и файлове тук, поддържа качване на множество изображения и файлове.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} качени"
+    },
+    "validation": {
+      "fileSizeExceeded": "Превишен допустим размер на файла",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) надвишава максимално допустимия размер {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} файла надвишават максимално допустимия размер {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Надвишен е допустимият брой изображения"
     }
   },
   "OllamaSetupGuide": {
