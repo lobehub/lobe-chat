@@ -9,7 +9,11 @@ import {
 } from 'react-native';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 // import ScrollToBottom from '../ScrollToBottom';
+import MessageSkeletonList from '../MessageSkeletonList';
+import WelcomeMessage from '../WelcomeMessage';
 import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
@@ -17,7 +21,7 @@ import ChatBubble from '../ChatBubble';
 
 interface ChatListProps {
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  scrollViewRef?: React.RefObject<FlatList<ChatMessage> | null>;
+  scrollViewRef?: React.RefObject<FlatList<ChatMessage>>;
   style?: ViewStyle;
 }
 
@@ -47,6 +51,7 @@ export default function ChatList({
 
   const { messages } = useChat();
   const { styles } = useStyles();
+  const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
   // const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
@@ -57,6 +62,17 @@ export default function ChatList({
   );
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
+
+  // const handleScroll = useCallback(
+  //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  //     const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
+  //     setShowScrollToBottom(!isAtBottom);
+  //     onScroll?.(event);
+  //   },
+  //   [onScroll],
+  // );
+  const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
 
   // const handleScroll = useCallback(
   //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -80,9 +96,18 @@ export default function ChatList({
     }
   }, [scrollViewRef, messages.length]);
 
+  if (!isCurrentChatLoaded) {
+    return (
+      <View style={[{ flex: 1 }, style]}>
+        <MessageSkeletonList />
+      </View>
+    );
+  }
+
   return (
     <View style={[{ flex: 1 }, style]}>
       <FlatList
+        ListEmptyComponent={renderEmptyComponent}
         data={messages}
         initialNumToRender={10}
         keyExtractor={keyExtractor}

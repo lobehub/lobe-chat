@@ -33,7 +33,7 @@ export const AgentCard = ({ item }: AgentCardProps) => {
         <View style={styles.cardContent}>
           <View style={styles.headerContainer}>
             <View style={styles.titleContainer}>
-              <Text style={styles.name}>{item.meta.title}</Text>
+              <Text style={styles.name}>{item.title}</Text>
 
               <Space align="center">
                 <GitHubAvatar size={24} username={item.author} />
@@ -44,16 +44,16 @@ export const AgentCard = ({ item }: AgentCardProps) => {
               </Space>
             </View>
 
-            <Avatar avatar={item.meta.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />
+            <Avatar avatar={item.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />
           </View>
 
           <Text numberOfLines={2} style={styles.description}>
-            {item.meta.description}
+            {item.description}
           </Text>
 
-          {item.meta.tags && item.meta.tags.length > 0 && (
+          {item.tags && item.tags.length > 0 && (
             <View style={styles.tagsContainer}>
-              {item.meta.tags.map((tag: string) => (
+              {item.tags.map((tag: string) => (
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </View>

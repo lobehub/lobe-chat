@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Ersetze eine Gruppe",
+      "title": "Empfohlene neue Assistenten:"
+    },
+    "defaultMessage": "Ich bin Ihr persönlicher intelligenter Assistent {{appName}}. Wie kann ich Ihnen jetzt helfen?<br />Wenn Sie einen professionelleren oder maßgeschneiderten Assistenten wünschen, klicken Sie auf <plus />, um einen benutzerdefinierten Assistenten zu erstellen.",
+    "defaultMessageWithoutCreate": "Ich bin Ihr persönlicher intelligenter Assistent {{appName}}. Wie kann ich Ihnen jetzt helfen?",
+    "qa": {
+      "q01": "Was ist LobeHub?",
+      "q02": "Was ist {{appName}}?",
+      "q03": "Gibt es eine Community-Unterstützung für {{appName}}?",
+      "q04": "Welche Funktionen unterstützt {{appName}}?",
+      "q05": "Wie wird {{appName}} bereitgestellt und verwendet?",
+      "q06": "Wie gestaltet sich die Preisgestaltung von {{appName}}?",
+      "q07": "Ist {{appName}} kostenlos?",
+      "q08": "Gibt es eine Cloud-Service-Version?",
+      "q09": "Wird ein lokales Sprachmodell unterstützt?",
+      "q10": "Unterstützt es Bilderkennung und -erzeugung?",
+      "q11": "Unterstützt es Sprachsynthese und Spracherkennung?",
+      "q12": "Gibt es ein Plugin-System?",
+      "q13": "Gibt es einen eigenen Marktplatz für GPTs?",
+      "q14": "Unterstützt es mehrere KI-Dienstanbieter?",
+      "q15": "Was soll ich tun, wenn ich bei der Nutzung auf Probleme stoße?"
+    }
+  },
+  "header": "Willkommen",
+  "pickAgent": "Oder wählen Sie aus den folgenden Assistentenvorlagen",
+  "questions": {
+    "moreBtn": "Mehr erfahren",
+    "title": "Das fragen alle:"
+  },
+  "skip": "Erstellung überspringen",
+  "slogan": {
+    "desc1": "Aktivieren Sie ein Gehirnnetzwerk und entfachen Sie Funken des Denkens. Ihr intelligenter Assistent ist immer für Sie da.",
+    "desc2": "Erstellen Sie Ihren ersten Assistenten, lassen Sie uns anfangen~",
+    "title": "Geben Sie sich ein klügeres Gehirn"
+  },
+  "welcome": {
+    "afternoon": "Guten Nachmittag",
+    "morning": "Guten Morgen",
+    "night": "Guten Abend",
+    "noon": "Guten Tag"
+  }
+}

@@ -1,10 +1,9 @@
-import { useRef } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { memo, useCallback, useMemo } from 'react';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useGlobalStore } from '@/store/global';
-import { ChatMessage } from '@/types/message';
 import Hydration from '@/features/Hydration';
 import TopicDrawer from '@/features/TopicDrawer';
 import ChatHeader from './(components)/ChatHeader';
@@ -22,35 +21,43 @@ export default function ChatWithDrawer() {
     s.setDrawerOpen,
     s.toggleDrawer,
   ]);
-  const chatListRef = useRef<FlatList<ChatMessage>>(null);
 
-  const ChatContent = () => (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      style={styles.chatContainer}
-    >
-      <ChatHeader onDrawerToggle={toggleDrawer} />
+  // 稳定的关闭抽屉函数引用
+  const handleDrawerClose = useCallback(() => setDrawerOpen(false), [setDrawerOpen]);
+  const handleDrawerOpen = useCallback(() => setDrawerOpen(true), [setDrawerOpen]);
 
-      <ChatList scrollViewRef={chatListRef} />
-
-      <ChatInput />
-    </KeyboardAvoidingView>
+  // 将ChatContent改为接收props的组件，便于memo优化
+  const ChatContent = useMemo(
+    () =>
+      memo<{
+        containerStyle: any;
+        onDrawerToggle: () => void;
+      }>(({ onDrawerToggle, containerStyle }) => (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+          style={containerStyle}
+        >
+          <ChatHeader onDrawerToggle={onDrawerToggle} />
+          <ChatList />
+          <ChatInput />
+        </KeyboardAvoidingView>
+      )),
+    [],
   );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
-
       {/* 左侧Session抽屉 */}
       <Drawer
         drawerPosition="left"
         drawerStyle={styles.drawerStyle}
         drawerType="slide"
         hideStatusBarOnOpen={false}
-        onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(true)}
+        onClose={handleDrawerClose}
+        onOpen={handleDrawerOpen}
         open={drawerOpen}
         overlayStyle={styles.drawerOverlay}
         renderDrawerContent={() => <SessionList />}
@@ -59,7 +66,7 @@ export default function ChatWithDrawer() {
       >
         {/* 右侧Topic抽屉 */}
         <TopicDrawer>
-          <ChatContent />
+          <ChatContent containerStyle={styles.chatContainer} onDrawerToggle={toggleDrawer} />
         </TopicDrawer>
       </Drawer>
     </View>

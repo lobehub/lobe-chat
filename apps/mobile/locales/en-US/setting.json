@@ -45,14 +45,6 @@
     "auto": "Follow System",
     "dark": "Dark Mode",
     "light": "Light Mode",
-    "neutralColor": {
-      "description": "Choose the neutral color tone for the app",
-      "title": "Neutral Color"
-    },
-    "primaryColor": {
-      "description": "Choose the primary color tone for the app",
-      "title": "Primary Color"
-    },
     "sectionDescription": "Choose your preferred theme style and click to switch your selection",
     "sectionTitle": "Theme",
     "title": "Theme Settings"

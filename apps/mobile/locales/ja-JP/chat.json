@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることができますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
+  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}**、{{systemRole}} です。さあ、会話を始めましょう！",
+  "agentDefaultMessageWithoutEdit": "こんにちは、私は **{{name}}** です。さあ、会話を始めましょう！",
   "confirmDelete": "削除を確認",
   "copyFailed": "コピーに失敗しました",
+  "defaultAgent": "カスタムアシスタント",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
+  "inbox": {
+    "desc": "ブレインクラスターを起動し、思考の火花を刺激します。あなたのスマートアシスタントがここであらゆることを話し合います。",
+    "title": "気軽におしゃべり"
+  },
   "messageCopied": "メッセージがコピーされました",
   "newChat": "新しいチャット",
   "placeholder": "メッセージを入力してください...",

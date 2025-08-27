@@ -84,13 +84,17 @@ class ChatService {
     { messages, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
+    // Remove plugins field as it's not supported by most providers
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { plugins: _plugins, ...cleanParams } = params;
+
     const payload = merge(
       {
         model: DEFAULT_AGENT_CONFIG.model,
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
       },
-      params,
+      cleanParams,
     );
 
     // ============  1. preprocess messages   ============ //
@@ -213,9 +217,13 @@ class ChatService {
       ? 'responses'
       : undefined;
 
+    // Remove plugins field as it's not supported by most providers
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { plugins: _plugins, ...cleanRes } = res;
+
     const payload = merge(
       { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
-      { ...res, apiMode, model },
+      { ...cleanRes, apiMode, model },
     );
 
     /**

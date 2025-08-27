@@ -45,14 +45,6 @@
     "auto": "跟随系统",
     "dark": "深色模式",
     "light": "浅色模式",
-    "neutralColor": {
-      "description": "选择应用的中性色调",
-      "title": "中性色配置"
-    },
-    "primaryColor": {
-      "description": "选择应用的主色调",
-      "title": "主色配置"
-    },
     "sectionDescription": "选择您喜欢的主题风格，点击切换您的选择",
     "sectionTitle": "主题",
     "title": "主题设置"

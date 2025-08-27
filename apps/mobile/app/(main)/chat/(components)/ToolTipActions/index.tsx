@@ -1,12 +1,11 @@
 import * as Clipboard from 'expo-clipboard';
-import { Copy, LucideIcon, RefreshCw, Trash2 } from 'lucide-react-native';
+import { Copy, LucideIcon, RefreshCw, RotateCcw, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 import { useToast, Tooltip } from '@/components';
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session';
 import { useThemeToken } from '@/theme';
 import { ChatMessage } from '@/types/message';
 
@@ -19,7 +18,6 @@ interface ToolTipActionsProps {
 
 const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) => {
   const { t } = useTranslation(['chat', 'common']);
-  const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
   const token = useThemeToken();
@@ -45,7 +43,7 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
   // 重新生成消息
   const handleRegenerate = async () => {
     try {
-      await regenerateMessage(activeId, message.id);
+      await regenerateMessage(message.id);
       setTooltipVisible(false); // 关闭tooltip
     } catch (error: any) {
       toast.error(error.message || t('regenerateFailed', { ns: 'chat' }));
@@ -63,7 +61,7 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
       },
       {
         onPress: () => {
-          deleteMessage(activeId, message.id);
+          deleteMessage(message.id);
         },
         style: 'destructive',
         text: t('delete', { ns: 'common' }),
@@ -93,11 +91,16 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
         </View>
       );
     } else {
-      // 用户消息操作：复制、删除
+      // 用户消息操作：复制、重新生成、删除
       return (
         <View style={styles.actionsContainer}>
           <View style={styles.actionsRow}>
             {renderActionItem(Copy, t('actions.copy', { ns: 'common' }), handleCopy)}
+            {renderActionItem(
+              RotateCcw,
+              t('actions.regenerate', { ns: 'common' }),
+              handleRegenerate,
+            )}
             {renderActionItem(Trash2, t('actions.delete', { ns: 'common' }), handleDelete)}
           </View>
         </View>

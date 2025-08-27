@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Argomento predefinito",
+  "empty": "Nessun argomento",
+  "guide": {
+    "desc": "Clicca il pulsante a sinistra per salvare la conversazione corrente come argomento storico e avviare una nuova conversazione",
+    "title": "Elenco argomenti"
+  },
+  "loading": "Caricamento in corso...",
+  "newTopic": "Nuovo argomento",
+  "searchPlaceholder": "Cerca argomenti...",
+  "temp": "Temporaneo",
+  "title": "Argomento"
+}

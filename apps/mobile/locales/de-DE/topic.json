@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Standardthema",
+  "empty": "Keine Themen vorhanden",
+  "guide": {
+    "desc": "Klicken Sie auf die linke Schaltfläche zum Senden, um die aktuelle Unterhaltung als Verlaufsthema zu speichern und eine neue Unterhaltung zu starten",
+    "title": "Themenliste"
+  },
+  "loading": "Wird geladen...",
+  "newTopic": "Neues Thema",
+  "searchPlaceholder": "Themen suchen...",
+  "temp": "Temporär",
+  "title": "Thema"
+}

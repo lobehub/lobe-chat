@@ -1,4 +1,4 @@
-import { SectionList, View, ActivityIndicator, Text } from 'react-native';
+import { SectionList, View, Text } from 'react-native';
 import isEqual from 'fast-deep-equal';
 
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -6,6 +6,7 @@ import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { useStyles } from './styles';
 
 import ProviderCard from './(components)/ProviderCard';
+import ProviderListSkeleton from './(components)/ProviderListSkeleton';
 
 const ProviderList = () => {
   const { styles } = useStyles();
@@ -22,12 +23,7 @@ const ProviderList = () => {
 
   // Loading状态
   if (isLoading) {
-    return (
-      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
-        <ActivityIndicator size="large" />
-        <Text style={styles.label}>Loading providers...</Text>
-      </View>
-    );
+    return <ProviderListSkeleton />;
   }
 
   // Error状态

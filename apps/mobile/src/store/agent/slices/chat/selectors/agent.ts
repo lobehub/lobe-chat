@@ -1,134 +1,149 @@
-import type { AgentState } from '../initialState';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings/agent';
+import { INBOX_SESSION_ID } from '@/const/session';
+import {
+  DEFAULT_AGENT_CONFIG,
+  DEFAULT_MODEL,
+  DEFAULT_PROVIDER,
+  DEFAUTT_AGENT_TTS_CONFIG,
+} from '@/const/settings';
+import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
+import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
-import { KnowledgeItem } from '@/types/knowledgeBase';
 
-const INBOX_SESSION_ID = 'inbox';
-
-const isInboxSession = (s: AgentState) => s.activeId === INBOX_SESSION_ID;
+const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
 
-const inboxAgentConfig = (s: AgentState): LobeAgentConfig =>
-  merge(s.defaultAgentConfig, s.agentMap[INBOX_SESSION_ID] || {}) as LobeAgentConfig;
+const inboxAgentConfig = (s: AgentStoreState) =>
+  merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 
-/**
- * 根据 ID 获取 Agent 配置
- */
 const getAgentConfigById =
   (id: string) =>
-  (s: AgentState): LobeAgentConfig =>
-    merge(s.defaultAgentConfig, s.agentMap[id] as Partial<LobeAgentConfig>);
+  (s: AgentStoreState): LobeAgentConfig =>
+    merge(s.defaultAgentConfig, s.agentMap[id]);
 
-/**
- * 获取当前 Agent 配置
- */
-export const currentAgentConfig = (s: AgentState): LobeAgentConfig =>
+export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
   getAgentConfigById(s.activeId)(s);
 
-// ==========   Model   ============== //
+const currentAgentSystemRole = (s: AgentStoreState) => {
+  return currentAgentConfig(s).systemRole;
+};
 
-const currentAgentModel = (s: AgentState): string => {
+const currentAgentModel = (s: AgentStoreState): string => {
   const config = currentAgentConfig(s);
-  return config?.model || DEFAULT_AGENT_CONFIG.model;
+
+  return config?.model || DEFAULT_MODEL;
 };
 
-const currentAgentModelProvider = (s: AgentState): string => {
+const currentAgentModelProvider = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
-  return config?.provider || DEFAULT_AGENT_CONFIG.provider || 'openai';
+
+  return config?.provider || DEFAULT_PROVIDER;
 };
 
-const inboxAgentModel = (s: AgentState): string => {
-  const config = inboxAgentConfig(s);
-  return config?.model || DEFAULT_AGENT_CONFIG.model;
-};
-
-// ==========   System Role   ============== //
-
-const currentAgentSystemRole = (s: AgentState): string => {
+const currentAgentPlugins = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
-  return config?.systemRole || DEFAULT_AGENT_CONFIG.systemRole || '';
+
+  return config?.plugins || [];
 };
 
-const hasSystemRole = (s: AgentState): boolean => {
+const currentAgentKnowledgeBases = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
-  return !!(config?.systemRole && config.systemRole.trim().length > 0);
+
+  return config?.knowledgeBases || [];
 };
 
-// ==========   Files & Knowledge   ============== //
-
-const currentAgentFiles = (): string[] => {
-  // TODO: 移动端暂不实现文件功能
-  return [];
-};
-
-const currentAgentKnowledgeBases = (): string[] => {
-  // TODO: 移动端暂不实现知识库功能
-  return [];
-};
-
-const currentEnabledKnowledge = (): KnowledgeItem[] => {
-  // TODO: 移动端暂不实现知识库功能
-  return [];
-};
-
-const currentKnowledgeIds = (): string[] => {
-  // TODO: 移动端暂不实现知识库功能
-  return [];
-};
-
-const hasKnowledge = (): boolean => {
-  // TODO: 移动端暂不实现知识库功能
-  return false;
-};
-
-const hasEnabledKnowledge = (): boolean => {
-  // TODO: 移动端暂不实现知识库功能
-  return false;
-};
-
-// ==========   Plugins   ============== //
-
-const currentAgentPlugins = (): string[] => {
-  // TODO: 移动端暂不实现插件功能
-  return [];
-};
-
-// ==========   TTS   ============== //
-
-const currentAgentTTS = (s: AgentState): LobeAgentTTSConfig => {
+const currentAgentFiles = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
-  return config?.tts || {};
+
+  return config?.files || [];
 };
 
-const currentAgentTTSVoice = (s: AgentState): string => {
-  const ttsConfig = currentAgentTTS(s);
-  return typeof ttsConfig?.voice === 'string' ? ttsConfig.voice : '';
-};
-
-// ==========   Opening   ============== //
-
-const openingQuestions = (s: AgentState): string[] => {
+const currentAgentTTS = (s: AgentStoreState): LobeAgentTTSConfig => {
   const config = currentAgentConfig(s);
-  return config?.chatConfig?.autoCreateTopicThreshold ? [] : [];
+
+  return config?.tts || DEFAUTT_AGENT_TTS_CONFIG;
 };
 
-const openingMessage = (s: AgentState): string => {
+const currentAgentTTSVoice =
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (lang: string) =>
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,unicorn/consistent-function-scoping
+    (s: AgentStoreState): string => {
+      // const { voice, ttsService } = currentAgentTTS(s);
+      // const voiceList = new VoiceList(lang);
+      // let currentVoice;
+      // switch (ttsService) {
+      //   case 'openai': {
+      //     currentVoice = voice.openai || (VoiceList.openaiVoiceOptions?.[0].value as string);
+      //     break;
+      //   }
+      //   case 'edge': {
+      //     currentVoice = voice.edge || (voiceList.edgeVoiceOptions?.[0].value as string);
+      //     break;
+      //   }
+      //   case 'microsoft': {
+      //     currentVoice = voice.microsoft || (voiceList.microsoftVoiceOptions?.[0].value as string);
+      //     break;
+      //   }
+      // }
+      // return currentVoice || 'alloy'; TODO
+      return 'alloy';
+    };
+
+const currentEnabledKnowledge = (s: AgentStoreState) => {
+  const knowledgeBases = currentAgentKnowledgeBases(s);
+  const files = currentAgentFiles(s);
+
+  return [
+    ...files
+      .filter((f) => f.enabled)
+      .map((f) => ({ fileType: f.type, id: f.id, name: f.name, type: KnowledgeType.File })),
+    ...knowledgeBases
+      .filter((k) => k.enabled)
+      .map((k) => ({ id: k.id, name: k.name, type: KnowledgeType.KnowledgeBase })),
+  ] as KnowledgeItem[];
+};
+
+const hasSystemRole = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
-  return config?.openingMessage || '';
+
+  return !!config.systemRole;
 };
 
-// ==========   Loading State   ============== //
+const hasKnowledgeBases = (s: AgentStoreState) => {
+  const knowledgeBases = currentAgentKnowledgeBases(s);
 
-const isAgentConfigLoading = (): boolean => {
-  // 简化版本，移动端暂不实现复杂的加载状态
-  return false;
+  return knowledgeBases.length > 0;
 };
 
-/**
- * Agent 选择器聚合 (与 web 端完全一致)
- */
+const hasFiles = (s: AgentStoreState) => {
+  const files = currentAgentFiles(s);
+
+  return files.length > 0;
+};
+
+const hasKnowledge = (s: AgentStoreState) => hasKnowledgeBases(s) || hasFiles(s);
+const hasEnabledKnowledge = (s: AgentStoreState) => currentEnabledKnowledge(s).length > 0;
+const currentKnowledgeIds = (s: AgentStoreState) => {
+  return {
+    fileIds: currentAgentFiles(s)
+      .filter((item) => item.enabled)
+      .map((f) => f.id),
+    knowledgeBaseIds: currentAgentKnowledgeBases(s)
+      .filter((item) => item.enabled)
+      .map((k) => k.id),
+  };
+};
+
+const isAgentConfigLoading = (s: AgentStoreState) => !s.agentConfigInitMap[s.activeId];
+
+const openingQuestions = (s: AgentStoreState) =>
+  // currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS; TODO
+  currentAgentConfig(s).openingQuestions || [];
+const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
+
 export const agentSelectors = {
   currentAgentConfig,
   currentAgentFiles,
