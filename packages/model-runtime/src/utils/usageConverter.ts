@@ -20,12 +20,13 @@ export const convertUsage = (
   const totalOutputTokens = usage.completion_tokens;
   const outputReasoning = usage.completion_tokens_details?.reasoning_tokens || 0;
   const outputAudioTokens = usage.completion_tokens_details?.audio_tokens || 0;
+  const outputImageTokens = (usage.completion_tokens_details as any)?.image_tokens || 0;
 
   // XAI 的 completion_tokens 不包含 reasoning_tokens，需要特殊处理
   const outputTextTokens =
     provider === 'xai'
       ? totalOutputTokens - outputAudioTokens
-      : totalOutputTokens - outputReasoning - outputAudioTokens;
+      : totalOutputTokens - outputReasoning - outputAudioTokens - outputImageTokens;
 
   const totalTokens = inputCitationTokens + usage.total_tokens;
 
@@ -37,6 +38,7 @@ export const convertUsage = (
     inputCitationTokens: inputCitationTokens,
     inputTextTokens: inputTextTokens,
     outputAudioTokens: outputAudioTokens,
+    outputImageTokens: outputImageTokens,
     outputReasoningTokens: outputReasoning,
     outputTextTokens: outputTextTokens,
     rejectedPredictionTokens: usage.completion_tokens_details?.rejected_prediction_tokens,
@@ -75,6 +77,7 @@ export const convertResponseUsage = (usage: OpenAI.Responses.ResponseUsage): Mod
 
   // For ResponseUsage, outputTextTokens is totalOutputTokens minus reasoning, as no audio output tokens are specified.
   const outputTextTokens = totalOutputTokens - outputReasoningTokens;
+  const outputImageTokens = (usage.output_tokens_details as any)?.image_tokens || 0;
 
   // 3. Construct the comprehensive data object (matching ModelTokensUsage structure)
   const data = {
@@ -87,6 +90,7 @@ export const convertResponseUsage = (usage: OpenAI.Responses.ResponseUsage): Mod
     inputCitationTokens: undefined, // Not in ResponseUsage
     inputTextTokens: inputTextTokens,
     outputAudioTokens: undefined, // Not in ResponseUsage
+    outputImageTokens: outputImageTokens,
     outputReasoningTokens: outputReasoningTokens,
     outputTextTokens: outputTextTokens,
     rejectedPredictionTokens: undefined, // Not in ResponseUsage

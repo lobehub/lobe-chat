@@ -96,6 +96,36 @@ const transformOpenAIStream = (
       }
     }
 
+    // Handle image preview chunks (e.g. Gemini 2.5 flash image preview)
+    // Example shape:
+    // choices[0].delta.images = [{ type: 'image_url', image_url: { url: 'data:image/png;base64,...' }, index: 0 }]
+    if (
+      (item as any).delta &&
+      Array.isArray((item as any).delta.images) &&
+      (item as any).delta.images.length > 0
+    ) {
+      const images = (item as any).delta.images as any[];
+
+      return images
+        .map((img) => {
+          // support multiple possible shapes for the url
+          const url =
+            img?.image_url?.url ||
+            img?.image_url?.image_url?.url ||
+            img?.url ||
+            (typeof img === 'string' ? img : undefined);
+
+          if (!url) return null;
+
+          return {
+            data: url,
+            id: chunk.id,
+            type: 'base64_image',
+          } as StreamProtocolChunk;
+        })
+        .filter(Boolean) as StreamProtocolChunk[];
+    }
+
     // 给定结束原因
     if (item.finish_reason) {
       // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
@@ -233,7 +263,11 @@ const transformOpenAIStream = (
           streamContext.thinkingInContent = false;
         }
 
-        const events: StreamProtocolChunk[] = [];
+        // 如果 content 是空字符串但 chunk 带有 usage，则优先返回 usage（例如 Gemini image-preview 最终会在单独的 chunk 中返回 usage）
+        if (content === '' && chunk.usage) {
+          const usage = chunk.usage;
+          return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+        }
 
         // 判断是否有 citations 内容，更新 returnedCitation 状态
         if (!streamContext?.returnedCitation) {
@@ -249,46 +283,34 @@ const transformOpenAIStream = (
 
           if (citations) {
             streamContext.returnedCitation = true;
-            events.push({
-              data: {
-                citations: (citations as any[])
-                  .map((item) => ({
-                    title: typeof item === 'string' ? item : item.title,
-                    url: typeof item === 'string' ? item : item.url || item.link,
-                  }))
-                  .filter((c) => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
+
+            return [
+              {
+                data: {
+                  citations: (citations as any[])
+                    .map((item) => ({
+                      title: typeof item === 'string' ? item : item.title,
+                      url: typeof item === 'string' ? item : item.url || item.link,
+                    }))
+                    .filter((c) => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
+                },
+                id: chunk.id,
+                type: 'grounding',
               },
-              id: chunk.id,
-              type: 'grounding',
-            });
+              {
+                data: thinkingContent,
+                id: chunk.id,
+                type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
+              },
+            ];
           }
         }
 
-        // 文本事件
-        events.push({
+        // 根据当前思考模式确定返回类型
+        return {
           data: thinkingContent,
           id: chunk.id,
           type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
-        });
-
-        // 如果同一个 chunk 同时包含 usage（例如 OpenRouter 的 Gemini 2.5 Flash Image Preview），同时输出 usage 事件
-        if (chunk.usage) {
-          events.push({
-            data: convertUsage(chunk.usage as any, provider),
-            id: chunk.id,
-            type: 'usage',
-          });
-        }
-
-        return events.length === 1 ? events[0] : events;
-      }
-
-      // 处理 base64_image 字段 (用于 OpenRouter)
-      if ('base64_image' in item.delta && item.delta.base64_image) {
-        return {
-          data: item.delta.base64_image,
-          id: chunk.id,
-          type: 'base64_image',
         };
       }
     }
