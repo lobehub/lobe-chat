@@ -111,13 +111,14 @@ export const getThumbnailMaxWidth = (
 ): number => {
   const dimensions = getImageDimensions(generation, generationBatch);
 
-  // Return default width if dimensions are not available
-  if (!dimensions.width || !dimensions.height) {
+  // Return default width if no dimension information is available
+  if (!dimensions.aspectRatio) {
     return DEFAULT_MAX_ITEM_WIDTH;
   }
 
-  const { width: originalWidth, height: originalHeight } = dimensions;
-  const aspectRatio = originalWidth / originalHeight;
+  // Parse aspect ratio string (format: "16 / 9")
+  const [widthStr, heightStr] = dimensions.aspectRatio.split(' / ');
+  const aspectRatio = Number(widthStr) / Number(heightStr);
 
   // Apply screen height constraint (half of screen height)
   // Note: window.innerHeight is safe to use here as this function is client-side only

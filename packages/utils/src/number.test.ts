@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { MAX_SEED, calculateThumbnailDimensions, generateUniqueSeeds } from './number';
+import { MAX_SEED } from '@/const/image';
+
+import { calculateThumbnailDimensions, generateUniqueSeeds } from './number';
 
 describe('number utilities', () => {
   describe('MAX_SEED constant', () => {
