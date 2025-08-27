@@ -16,13 +16,13 @@ const openrouterChatModels: AIChatModelCard[] = [
       imageOutput: true,
       vision: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 32_768 + 32_768,
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
     displayName: 'Gemini 2.5 Flash Image Preview',
     id: 'google/gemini-2.5-flash-image-preview',
     pricing: {
       units: [
-        { name: 'imageGeneration', rate: 0.03, strategy: 'fixed', unit: 'image' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
