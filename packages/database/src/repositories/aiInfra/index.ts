@@ -201,7 +201,7 @@ export class AiInfraRepos {
     providerId: string,
   ): Promise<AiProviderModelListItem[] | undefined> => {
     try {
-      const { default: providerModels } = await import(`@/config/aiModels/${providerId}`);
+      const { default: providerModels } = await import(`@/config/aiModels/${providerId}.ts`);
 
       // use the serverModelLists as the defined server model list
       const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;

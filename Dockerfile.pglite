@@ -249,7 +249,11 @@ ENV \
     # Infini-AI
     INFINIAI_API_KEY="" INFINIAI_MODEL_LIST="" \
     # 302.AI
-    AI302_API_KEY="" AI302_MODEL_LIST=""
+    AI302_API_KEY="" AI302_MODEL_LIST="" \
+    # FAL
+    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    # BFL
+    BFL_API_KEY="" BFL_MODEL_LIST=""
 
 USER nextjs
 

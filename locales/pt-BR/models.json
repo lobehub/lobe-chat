@@ -332,11 +332,20 @@
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
     "description": "Qwen3-30B-A3B-Instruct-2507 é uma versão atualizada do Qwen3-30B-A3B no modo não reflexivo. Este é um modelo de especialista misto (MoE) com um total de 30,5 bilhões de parâmetros e 3,3 bilhões de parâmetros ativados. O modelo apresenta melhorias significativas em vários aspectos, incluindo um aumento notável na capacidade de seguir instruções, raciocínio lógico, compreensão de texto, matemática, ciências, codificação e uso de ferramentas. Além disso, alcança avanços substanciais na cobertura de conhecimento em múltiplos idiomas e melhor alinhamento com as preferências dos usuários em tarefas subjetivas e abertas, permitindo gerar respostas mais úteis e textos de maior qualidade. A capacidade de compreensão de textos longos também foi ampliada para 256K. Este modelo suporta apenas o modo não reflexivo e não gera tags `<think></think>` em sua saída."
   },
+  "Qwen/Qwen3-30B-A3B-Thinking-2507": {
+    "description": "Qwen3-30B-A3B-Thinking-2507 é o mais recente modelo de raciocínio da série Qwen3, lançado pela equipe Tongyi Qianwen da Alibaba. Como um modelo Mixture-of-Experts (MoE) com um total de 30,5 bilhões de parâmetros e 3,3 bilhões de parâmetros de ativação, ele foca em aprimorar a capacidade de lidar com tarefas complexas. O modelo apresenta melhorias de desempenho significativas em benchmarks acadêmicos de raciocínio lógico, matemática, ciências, programação e outras tarefas que exigem conhecimento especializado humano. Além disso, suas capacidades gerais — como cumprimento de instruções, uso de ferramentas, geração de texto e alinhamento com preferências humanas — também foram significativamente aprimoradas. O modelo oferece suporte nativo à compreensão de contexto longo de 256K tokens e pode ser expandido até 1 milhão de tokens. Esta versão foi projetada especificamente para o 'modo de pensamento', visando resolver tarefas altamente complexas por meio de um raciocínio passo a passo detalhado, e suas capacidades como agente (Agent) também se destacam."
+  },
   "Qwen/Qwen3-32B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
   },
   "Qwen/Qwen3-8B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
+  },
+  "Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+    "description": "Qwen3-Coder-30B-A3B-Instruct é um modelo de código da série Qwen3 desenvolvido pela equipe Tongyi Qianwen da Alibaba. Como um modelo enxuto e otimizado, ele mantém alto desempenho e eficiência, ao mesmo tempo em que se concentra em aprimorar a capacidade de processamento de código. Esse modelo demonstra vantagens de desempenho notáveis entre modelos de código aberto em tarefas complexas, como programação agente (Agentic Coding), automação de operações de navegador e chamadas de ferramentas. Ele suporta nativamente contexto longo de 256K tokens e pode ser expandido até 1M tokens, permitindo um entendimento e processamento mais aprofundados em nível de repositório de código. Além disso, o modelo oferece forte suporte a codificação por agentes em plataformas como Qwen Code e CLINE, e foi projetado com um formato dedicado para chamadas de função."
+  },
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct é o modelo de código com maior capacidade agentic (de atuação autônoma) publicado pela Alibaba até o momento. É um modelo de especialistas mistos (MoE) com 480 bilhões de parâmetros totais e 35 bilhões de parâmetros ativados, que alcança um equilíbrio entre eficiência e desempenho. O modelo oferece suporte nativo a um comprimento de contexto de 256K (aproximadamente 260 mil) tokens e pode ser estendido até 1 milhão de tokens por meio de métodos de extrapolação como YaRN, permitindo lidar com grandes bases de código e tarefas de programação complexas. O Qwen3-Coder foi projetado para fluxos de trabalho de codificação baseados em agentes: além de gerar código, ele pode interagir de forma autônoma com ferramentas e ambientes de desenvolvimento para resolver problemas de programação complexos. Em diversos benchmarks de tarefas de codificação e de agentes, este modelo alcançou desempenho de ponta entre os modelos de código aberto, comparável a modelos líderes como o Claude Sonnet 4."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 é a mais recente série do modelo Qwen, suportando 128k de contexto. Em comparação com os melhores modelos de código aberto atuais, o Qwen2-72B supera significativamente os modelos líderes em várias capacidades, incluindo compreensão de linguagem natural, conhecimento, código, matemática e multilinguismo."
@@ -1103,11 +1112,26 @@
   "flux-dev": {
     "description": "FLUX.1 [dev] é um modelo open source refinado e com pesos voltado para aplicações não comerciais. Mantém qualidade de imagem e capacidade de seguir instruções próximas à versão profissional FLUX, com maior eficiência operacional. Em comparação com modelos padrão de tamanho similar, é mais eficiente no uso de recursos."
   },
+  "flux-kontext-max": {
+    "description": "Geração e edição de imagens contextuais de ponta — combinando texto e imagens para obter resultados precisos e coerentes."
+  },
+  "flux-kontext-pro": {
+    "description": "Geração e edição de imagens contextuais de ponta — combinando texto e imagens para obter resultados precisos e coerentes."
+  },
   "flux-kontext/dev": {
     "description": "Modelo FLUX.1 focado em tarefas de edição de imagens, suportando entrada de texto e imagem."
   },
   "flux-merged": {
     "description": "O modelo FLUX.1-merged combina as características profundas exploradas na fase de desenvolvimento \"DEV\" com as vantagens de execução rápida representadas por \"Schnell\". Essa combinação não só eleva os limites de desempenho do modelo, como também amplia seu campo de aplicação."
+  },
+  "flux-pro": {
+    "description": "Modelo de geração de imagens por IA de primeira linha para uso comercial — qualidade de imagem incomparável e resultados altamente diversificados."
+  },
+  "flux-pro-1.1": {
+    "description": "Modelo profissional aprimorado de geração de imagens por IA — oferece qualidade de imagem excepcional e precisão no atendimento às instruções de prompt."
+  },
+  "flux-pro-1.1-ultra": {
+    "description": "Geração de imagens por IA em altíssima resolução — suporta saída de 4 megapixels e gera imagens em alta definição em até 10 segundos."
   },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] pode processar texto e imagens de referência como entrada, realizando edições locais direcionadas e transformações complexas de cenas inteiras de forma fluida."
@@ -1192,6 +1216,9 @@
   },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash é o modelo com melhor custo-benefício do Google, oferecendo funcionalidades abrangentes."
+  },
+  "gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash Image Preview é o modelo multimodal nativo mais recente, mais rápido e mais eficiente do Google, que permite gerar e editar imagens por meio de conversas."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite é o modelo mais compacto e com melhor custo-benefício do Google, projetado para uso em larga escala."
@@ -1294,6 +1321,9 @@
   },
   "glm-4.5-x": {
     "description": "Versão ultrarrápida do GLM-4.5, combinando alto desempenho com velocidade de geração de até 100 tokens por segundo."
+  },
+  "glm-4.5v": {
+    "description": "A nova geração do modelo de raciocínio visual da Zhipu, baseada na arquitetura MOE, com 106B de parâmetros totais e 12B de parâmetros de ativação, alcança o estado da arte (SOTA) entre modelos multimodais de código aberto de nível semelhante em diversos benchmarks, abrangendo tarefas comuns como compreensão de imagens, vídeos, documentos e de interfaces gráficas (GUI)."
   },
   "glm-4v": {
     "description": "O GLM-4V oferece uma forte capacidade de compreensão e raciocínio de imagens, suportando várias tarefas visuais."
@@ -1434,7 +1464,7 @@
     "description": "GPT-4.1 mini oferece um equilíbrio entre inteligência, velocidade e custo, tornando-se um modelo atraente para muitos casos de uso."
   },
   "gpt-4.5-preview": {
-    "description": "Versão de pesquisa do GPT-4.5, que é o nosso maior e mais poderoso modelo GPT até agora. Ele possui um amplo conhecimento sobre o mundo e consegue entender melhor a intenção do usuário, destacando-se em tarefas criativas e planejamento autônomo. O GPT-4.5 aceita entradas de texto e imagem, gerando saídas de texto (incluindo saídas estruturadas). Suporta recursos essenciais para desenvolvedores, como chamadas de função, API em lote e saída em fluxo. O GPT-4.5 se destaca especialmente em tarefas que requerem criatividade, pensamento aberto e diálogo (como escrita, aprendizado ou exploração de novas ideias). A data limite do conhecimento é outubro de 2023."
+    "description": "GPT-4.5-preview é o modelo de uso geral mais recente, com amplo conhecimento do mundo e uma compreensão aprimorada das intenções dos usuários, sendo proficiente em tarefas criativas e no planejamento de agentes. A data de corte do conhecimento deste modelo é outubro de 2023."
   },
   "gpt-4o": {
     "description": "O ChatGPT-4o é um modelo dinâmico, atualizado em tempo real para manter a versão mais atual. Ele combina uma poderosa capacidade de compreensão e geração de linguagem, adequado para cenários de aplicação em larga escala, incluindo atendimento ao cliente, educação e suporte técnico."
@@ -1637,8 +1667,17 @@
   "image-01-live": {
     "description": "Modelo de geração de imagens com detalhes refinados, suportando geração a partir de texto e configuração de estilo visual."
   },
+  "imagen-4.0-fast-generate-001": {
+    "description": "Imagen, série de modelos texto para imagem de 4ª geração — versão Fast"
+  },
+  "imagen-4.0-generate-001": {
+    "description": "Série de modelos Imagen de 4ª geração para gerar imagens a partir de texto"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Série de modelos de texto para imagem da 4ª geração Imagen"
+  },
+  "imagen-4.0-ultra-generate-001": {
+    "description": "Imagen: modelo de geração de imagens a partir de texto de 4ª geração — versão Ultra"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Série de modelos de texto para imagem da 4ª geração Imagen, versão Ultra"
@@ -1678,6 +1717,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 é um modelo base com arquitetura MoE, com capacidades excepcionais em código e agentes, totalizando 1T de parâmetros e 32B de parâmetros ativados. Nos principais benchmarks de raciocínio de conhecimento geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
+  },
+  "kimi-k2-turbo-preview": {
+    "description": "kimi-k2 é um modelo base com arquitetura MoE que oferece capacidades avançadas para programação e agentes, com 1T de parâmetros totais e 32B de parâmetros ativados. Em testes de benchmark nas principais categorias — raciocínio de conhecimento geral, programação, matemática e agentes — o desempenho do modelo K2 supera outros modelos de código aberto mais populares."
   },
   "kimi-latest": {
     "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
@@ -1762,6 +1804,9 @@
   },
   "llava:34b": {
     "description": "LLaVA é um modelo multimodal que combina um codificador visual e Vicuna, projetado para forte compreensão visual e linguística."
+  },
+  "magistral-medium-latest": {
+    "description": "Magistral Medium 1.1 é um modelo de inferência de ponta lançado pela Mistral AI em julho de 2025."
   },
   "mathstral": {
     "description": "MathΣtral é projetado para pesquisa científica e raciocínio matemático, oferecendo capacidade de cálculo eficaz e interpretação de resultados."
@@ -2094,7 +2139,7 @@
     "description": "o1-mini é um modelo de raciocínio rápido e econômico, projetado para cenários de programação, matemática e ciências. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
   },
   "o1-preview": {
-    "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
+    "description": "Focado em raciocínio avançado e na resolução de problemas complexos, incluindo tarefas de matemática e ciências. Muito adequado para aplicações que exigem compreensão profunda do contexto e fluxos de trabalho autônomos."
   },
   "o1-pro": {
     "description": "A série o1 é treinada com aprendizado por reforço, capaz de pensar antes de responder e executar tarefas complexas de raciocínio. O modelo o1-pro utiliza mais recursos computacionais para um pensamento mais profundo, oferecendo respostas de qualidade superior continuamente."
@@ -2213,8 +2258,14 @@
   "qwen-coder-turbo-latest": {
     "description": "Modelo de código Qwen."
   },
+  "qwen-flash": {
+    "description": "A série Tongyi Qianwen oferece modelos com a maior velocidade e custo muito baixo, adequados para tarefas simples."
+  },
   "qwen-image": {
-    "description": "Modelo poderoso de imagens brutas da equipe Qwen, com impressionante capacidade de geração de texto em chinês e diversos estilos visuais de imagens."
+    "description": "Qwen-Image é um modelo de geração de imagens de uso geral que suporta diversos estilos artísticos. É especialmente eficaz na renderização de textos complexos, em particular na renderização de textos em chinês e inglês. O modelo oferece suporte a layouts de múltiplas linhas, geração de texto em nível de parágrafo e detalhamento de alta precisão, possibilitando a criação de designs complexos com layouts híbridos de imagem e texto."
+  },
+  "qwen-image-edit": {
+    "description": "O modelo profissional de edição de imagens lançado pela equipe Qwen suporta edição semântica e de aparência, conseguindo editar com precisão textos em chinês e inglês e realizar transformações de estilo, rotação de objetos e outras edições de imagem de alta qualidade."
   },
   "qwen-long": {
     "description": "O Qwen é um modelo de linguagem em larga escala que suporta contextos de texto longos e funcionalidades de diálogo baseadas em documentos longos e múltiplos cenários."
@@ -2241,7 +2292,7 @@
     "description": "Versão aprimorada do modelo de linguagem em larga escala Qwen, que suporta entradas em diferentes idiomas, como português e inglês."
   },
   "qwen-turbo": {
-    "description": "O modelo de linguagem em larga escala Qwen suporta entradas em diferentes idiomas, como português e inglês."
+    "description": "通义千问 Turbo não receberá mais atualizações; recomendamos substituí-lo pelo 通义千问 Flash. 通义千问 é um modelo de linguagem em larga escala que suporta entradas em chinês, inglês e outros idiomas."
   },
   "qwen-vl-chat-v1": {
     "description": "O Qwen VL suporta uma maneira de interação flexível, incluindo múltiplas imagens, perguntas e respostas em várias rodadas, e capacidades criativas."
@@ -2558,8 +2609,14 @@
   "step-2x-large": {
     "description": "Nova geração do modelo Xingchen Step, focado em geração de imagens, capaz de criar imagens de alta qualidade a partir de descrições textuais fornecidas pelo usuário. O novo modelo gera imagens com textura mais realista e melhor capacidade de geração de texto em chinês e inglês."
   },
+  "step-3": {
+    "description": "Este modelo possui forte percepção visual e capacidade de raciocínio complexo. Pode realizar com precisão a compreensão de conhecimentos complexos entre diferentes áreas, a análise cruzada entre informações matemáticas e visuais, além de resolver diversos tipos de problemas de análise visual do cotidiano."
+  },
   "step-r1-v-mini": {
     "description": "Este modelo é um grande modelo de inferência com forte capacidade de compreensão de imagens, capaz de processar informações de imagem e texto, gerando conteúdo textual após um profundo raciocínio. O modelo se destaca no campo do raciocínio visual, além de possuir habilidades de raciocínio matemático, código e texto de primeira linha. O comprimento do contexto é de 100k."
+  },
+  "stepfun-ai/step3": {
+    "description": "Step3 é um modelo avançado de raciocínio multimodal lançado pela StepFun, construído sobre uma arquitetura de mistura de especialistas (Mixture of Experts, MoE) com 321B de parâmetros totais e 38B de parâmetros de ativação. O modelo adota um design ponta a ponta, visando minimizar o custo de decodificação enquanto oferece desempenho de primeira linha em raciocínio visão-linguagem. Por meio do design cooperativo de Atenção por Decomposição em Múltiplas Matrizes (MFA) e do Desacoplamento Atenção-FFN (AFD), o Step3 mantém excelente eficiência tanto em aceleradores de alto desempenho quanto em aceleradores de baixo custo. Na fase de pré-treinamento, o Step3 processou mais de 20T tokens de texto e 4T tokens multimodais de imagem e texto, cobrindo mais de dez idiomas. O modelo alcançou posições de liderança entre modelos open-source em vários benchmarks, incluindo matemática, código e tarefas multimodais."
   },
   "taichu_llm": {
     "description": "O modelo de linguagem Taichu possui uma forte capacidade de compreensão de linguagem, além de habilidades em criação de texto, perguntas e respostas, programação de código, cálculos matemáticos, raciocínio lógico, análise de sentimentos e resumo de texto. Inova ao combinar pré-treinamento com grandes dados e conhecimento rico de múltiplas fontes, aprimorando continuamente a tecnologia de algoritmos e absorvendo novos conhecimentos de vocabulário, estrutura, gramática e semântica de grandes volumes de dados textuais, proporcionando aos usuários informações e serviços mais convenientes e uma experiência mais inteligente."
@@ -2707,5 +2764,8 @@
   },
   "zai-org/GLM-4.5-Air": {
     "description": "GLM-4.5-Air é um modelo base projetado para aplicações de agentes inteligentes, utilizando arquitetura Mixture-of-Experts (MoE). Otimizado para chamadas de ferramentas, navegação web, engenharia de software e programação front-end, suporta integração perfeita com agentes de código como Claude Code e Roo Code. Adota modo de raciocínio híbrido, adaptando-se a cenários de raciocínio complexo e uso cotidiano."
+  },
+  "zai-org/GLM-4.5V": {
+    "description": "GLM-4.5V é a mais recente geração de modelo de linguagem visual (VLM) lançada pela Zhipu AI (智谱 AI). O modelo é construído sobre o modelo de texto carro‑chefe GLM-4.5-Air, que possui 106 bilhões de parâmetros totais e 12 bilhões de parâmetros de ativação, adotando uma arquitetura de especialistas mistos (MoE) com o objetivo de oferecer desempenho de alto nível a um custo de inferência reduzido. Tecnicamente, o GLM-4.5V dá continuidade à linha do GLM-4.1V-Thinking e introduz inovações como a codificação de posição rotacional 3D (3D-RoPE), que aumentam significativamente a percepção e o raciocínio sobre relações espaciais tridimensionais. Por meio de otimizações nas fases de pré-treinamento, ajuste fino supervisionado e aprendizado por reforço, o modelo é capaz de processar diversos tipos de conteúdo visual — incluindo imagens, vídeos e longos documentos — e alcançou desempenho de ponta entre modelos open-source da mesma categoria em 41 benchmarks multimodais públicos. Além disso, o modelo inclui um interruptor de \"modo de pensamento\", que permite aos usuários alternar de forma flexível entre respostas rápidas e raciocínio aprofundado, equilibrando eficiência e eficácia."
   }
 }
