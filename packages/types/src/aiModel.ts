@@ -121,7 +121,8 @@ export type PricingUnitName =
   | 'audioInput_cacheRead' // corresponds to ChatModelPricing.cachedAudioInput
 
   // Image-based pricing units
-  | 'imageGeneration'; // for image generation models
+  | 'imageGeneration' // for image generation models
+  | 'imageOutput';
 
 export type PricingUnitType =
   | 'millionTokens' // per 1M tokens
