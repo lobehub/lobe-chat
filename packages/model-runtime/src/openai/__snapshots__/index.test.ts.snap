@@ -366,7 +366,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "maxOutput": undefined,
     "reasoning": false,
     "releasedAt": "2022-12-16",
-    "type": "chat",
+    "type": "embedding",
     "vision": false,
   },
   {
