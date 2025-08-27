@@ -192,11 +192,11 @@ const transformOpenAIStream = (
         if ('content' in item.delta && Array.isArray(item.delta.content)) {
           return item.delta.content
             .filter((block: any) => block.type === 'thinking' && Array.isArray(block.thinking))
-            .map((block: any) => 
+            .map((block: any) =>
               block.thinking
                 .filter((thinkItem: any) => thinkItem.type === 'text' && thinkItem.text)
                 .map((thinkItem: any) => thinkItem.text)
-                .join('')
+                .join(''),
             )
             .join('');
         }
@@ -275,6 +275,15 @@ const transformOpenAIStream = (
           data: thinkingContent,
           id: chunk.id,
           type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
+        };
+      }
+
+      // 处理 base64_image 字段 (用于 OpenRouter)
+      if ('base64_image' in item.delta && item.delta.base64_image) {
+        return {
+          data: item.delta.base64_image,
+          id: chunk.id,
+          type: 'base64_image',
         };
       }
     }
