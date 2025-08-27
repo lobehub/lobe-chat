@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
 
 import type { ModelProviderKey } from '../types';
 
@@ -168,11 +168,8 @@ const findKnownModelByProvider = async (
   const lowerModelId = modelId.toLowerCase();
 
   try {
-    // 动态构建导入路径
-    const modulePath = `@/config/aiModels/${provider}`;
-
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(modulePath);
+    const moduleImport = await import(`@/config/aiModels/${provider}`);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找
