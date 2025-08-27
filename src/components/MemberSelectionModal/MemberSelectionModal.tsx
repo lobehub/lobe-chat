@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { useActionSWR } from '@/libs/swr';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
@@ -236,16 +235,18 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
       setSearchTerm('');
     };
 
-    const { mutate: confirmAction, isValidating: isAdding } = useActionSWR(
-      ['memberSelectionModal.confirm', mode, groupId],
-      async () => {
+    const [isAdding, setIsAdding] = useState(false);
+
+    const handleConfirm = async () => {
+      try {
+        setIsAdding(true);
         await onConfirm(selectedAgents);
         handleReset();
-      },
-    );
-
-    const handleConfirm = () => {
-      confirmAction();
+      } catch (error) {
+        console.error('Failed to confirm action:', error);
+      } finally {
+        setIsAdding(false);
+      }
     };
 
     const handleCancel = () => {

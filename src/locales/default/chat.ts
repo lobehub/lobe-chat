@@ -254,6 +254,8 @@ export default {
     confirmRemoveGroupAlert: '即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作',
     createAgentSuccess: '助手创建成功',
     createGroup: '添加新分组',
+    createGroupFailed: '群聊创建失败',
+    createGroupSuccess: '群聊创建成功',
     createSuccess: '分组创建成功',
     creatingAgent: '助手创建中...',
     inputPlaceholder: '请输入分组名称...',
