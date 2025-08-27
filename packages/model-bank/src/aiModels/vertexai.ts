@@ -74,25 +74,6 @@ const vertexaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      imageOutput: true,
-      vision: true,
-    },
-    contextWindowTokens: 32_768 + 8192,
-    description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
-    displayName: 'Gemini 2.5 Flash Image Preview',
-    id: 'gemini-2.5-flash-image-preview',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-08-26',
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       reasoning: true,
       search: true,
