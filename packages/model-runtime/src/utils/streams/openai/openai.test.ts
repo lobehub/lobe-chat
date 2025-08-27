@@ -2272,20 +2272,28 @@ describe('OpenAIStream', () => {
     });
   });
 
-  it('should handle base64_image in delta', async () => {
+  it('should handle base64_image in delta.images (image_url shape)', async () => {
+    const base64 =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
     const mockOpenAIStream = new ReadableStream({
       start(controller) {
         controller.enqueue({
           choices: [
             {
               delta: {
-                base64_image:
-                  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                images: [
+                  {
+                    type: 'image_url',
+                    image_url: { url: base64 },
+                    index: 0,
+                  },
+                ],
               },
               index: 0,
             },
           ],
-          id: '5',
+          id: '6',
         });
 
         controller.close();
@@ -2302,10 +2310,6 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([
-      'id: 5\n',
-      'event: base64_image\n',
-      `data: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="\n\n`,
-    ]);
+    expect(chunks).toEqual(['id: 6\n', 'event: base64_image\n', `data: "${base64}"\n\n`]);
   });
 });
