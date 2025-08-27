@@ -5,6 +5,7 @@ import discover from './discover';
 import error from './error';
 import setting from './setting';
 import topic from './topic';
+import welcome from './welcome';
 
 const resources = {
   auth,
@@ -14,6 +15,7 @@ const resources = {
   error,
   setting,
   topic,
+  welcome,
 } as const;
 
 export default resources;
