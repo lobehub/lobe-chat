@@ -1,0 +1,13 @@
+{
+  "defaultTitle": "Domyślny temat",
+  "empty": "Brak tematów",
+  "guide": {
+    "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematów i rozpocząć nową sesję",
+    "title": "Lista tematów"
+  },
+  "loading": "Ładowanie...",
+  "newTopic": "Nowy temat",
+  "searchPlaceholder": "Szukaj tematów...",
+  "temp": "Tymczasowy",
+  "title": "Temat"
+}
