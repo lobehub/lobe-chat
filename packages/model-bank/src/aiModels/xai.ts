@@ -155,6 +155,30 @@ const xaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
+    displayName: 'Grok Code Fast 1',
+    id: 'grok-code-fast-1',
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-27',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,

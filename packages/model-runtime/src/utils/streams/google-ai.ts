@@ -117,7 +117,8 @@ const transformGoogleGenerativeAIStream = (
     ];
   }
 
-  const text = chunk.text;
+  // Extract text from chunk.text or candidate content parts for compatibility
+  const text = chunk.text || candidate?.content?.parts?.map((part: any) => part?.text).filter(Boolean).join('') || '';
 
   if (candidate) {
     // 首先检查是否为 reasoning 内容 (thought: true)
