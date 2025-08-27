@@ -301,6 +301,28 @@ const googleChatModels: AIChatModelCard[] = [
       imageOutput: true,
       vision: true,
     },
+    contextWindowTokens: 32_768 + 32_768,
+    description:
+      'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    displayName: 'Gemini 2.5 Flash Image Preview',
+    enabled: true,
+    id: 'gemini-2.5-flash-image-preview',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-05-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      vision: true,
+    },
     contextWindowTokens: 32_768 + 8192,
     description: 'Gemini 2.0 Flash 预览模型，支持图像生成',
     displayName: 'Gemini 2.0 Flash Preview Image Generation',
