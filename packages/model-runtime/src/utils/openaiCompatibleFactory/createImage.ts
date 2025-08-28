@@ -21,7 +21,7 @@ async function generateByImageMode(
 
   log('Creating image with model: %s and params: %O', model, params);
 
-  // 映射参数名称，将 imageUrls 映射为 image
+  // Map parameter names, mapping imageUrls to image
   const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
     ['imageUrls', 'image'],
     ['imageUrl', 'image'],
@@ -35,18 +35,18 @@ async function generateByImageMode(
 
   // https://platform.openai.com/docs/api-reference/images/createEdit
   const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
-  // 如果有 imageUrls 参数，将其转换为 File 对象
+  // If there are imageUrls parameters, convert them to File objects
   if (isImageEdit) {
     log('Converting imageUrls to File objects: %O', userInput.image);
     try {
-      // 转换所有图片 URL 为 File 对象
+      // Convert all image URLs to File objects
       const imageFiles = await Promise.all(
         userInput.image.map((url: string) => convertImageUrlToFile(url)),
       );
 
       log('Successfully converted %d images to File objects', imageFiles.length);
 
-      // 根据官方文档，如果有多个图片，传递数组；如果只有一个，传递单个 File
+      // According to official docs, if there are multiple images, pass an array; if only one, pass a single File
       userInput.image = imageFiles.length === 1 ? imageFiles[0] : imageFiles;
     } catch (error) {
       log('Error converting imageUrls to File objects: %O', error);
@@ -74,12 +74,12 @@ async function generateByImageMode(
 
   log('options: %O', options);
 
-  // 判断是否为图片编辑操作
+  // Determine if it's an image editing operation
   const img = isImageEdit
     ? await client.images.edit(options as any)
     : await client.images.generate(options as any);
 
-  // 检查响应数据的完整性
+  // Check the integrity of response data
   if (!img || !img.data || !Array.isArray(img.data) || img.data.length === 0) {
     log('Invalid image response: missing data array');
     throw new Error('Invalid image response: missing or empty data array');
@@ -93,21 +93,21 @@ async function generateByImageMode(
 
   let imageUrl: string;
 
-  // 处理 base64 格式的响应
+  // Handle base64 format response
   if (imageData.b64_json) {
-    // 确定图片的 MIME 类型，默认为 PNG
-    const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
+    // Determine the image's MIME type, default to PNG
+    const mimeType = 'image/png'; // OpenAI image generation defaults to PNG format
 
-    // 将 base64 字符串转换为完整的 data URL
+    // Convert base64 string to complete data URL
     imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
     log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
   }
-  // 处理 URL 格式的响应
+  // Handle URL format response
   else if (imageData.url) {
     imageUrl = imageData.url;
     log('Using direct image URL: %s', imageUrl);
   }
-  // 如果两种格式都不存在，抛出错误
+  // If neither format exists, throw error
   else {
     log('Invalid image response: missing both b64_json and url fields');
     throw new Error('Invalid image response: missing both b64_json and url fields');

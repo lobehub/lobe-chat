@@ -2,23 +2,23 @@ import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
 import type { AiModelType } from '@/types/aiModel';
 import type { ChatModelCard } from '@/types/llm';
 
-// 支持自动生成图像模型的白名单
+// Whitelist for automatic image model generation
 export const IMAGE_GENERATION_MODEL_WHITELIST = [
   'gemini-2.5-flash-image-preview',
-  // 未来可以添加更多模型
+  // More models can be added in the future
 ] as const;
 
 /**
- * 处理模型列表：确保 type 字段存在，并为白名单模型生成图像生成模型
- * @param models 原始模型列表
- * @param getModelTypeProperty 可选的获取模型 type 属性的回调函数
- * @returns 处理后的模型列表（包含图像生成模型）
+ * Process model list: ensure type field exists and generate image generation models for whitelisted models
+ * @param models Original model list
+ * @param getModelTypeProperty Optional callback function to get model type property
+ * @returns Processed model list (including image generation models)
  */
 export async function postPrecessModelList(
   models: ChatModelCard[],
   getModelTypeProperty?: (modelId: string) => Promise<AiModelType>,
 ): Promise<ChatModelCard[]> {
-  // 1. 确保所有模型都有 type 字段
+  // 1. Ensure all models have type field
   const finalModels = await Promise.all(
     models.map(async (model) => {
       let modelType: AiModelType | undefined = model.type;
@@ -34,7 +34,7 @@ export async function postPrecessModelList(
     }),
   );
 
-  // 2. 检查白名单中的模型并生成对应的图像版本
+  // 2. Check whitelist models and generate corresponding image versions
   const imageModels: ChatModelCard[] = [];
 
   for (const whitelistPattern of IMAGE_GENERATION_MODEL_WHITELIST) {
@@ -42,11 +42,11 @@ export async function postPrecessModelList(
 
     for (const model of matchingModels) {
       imageModels.push({
-        ...model, // 复用原模型的所有配置
+        ...model, // Reuse all configurations from the original model
         id: `${model.id}:image`,
-        // 覆盖为 image 类型
+        // Override to image type
         parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
-        type: 'image', // 设置图像参数
+        type: 'image', // Set image parameters
       });
     }
   }
