@@ -16,6 +16,7 @@ import { authSelectors } from '@/store/user/selectors';
 import HistoryLimitTags from './HistoryLimitTags';
 import KnowledgeTag from './KnowledgeTag';
 import SearchTags from './SearchTags';
+import {aiModelSelectors, useAiInfraStore} from "@/store/aiInfra";
 
 const TitleTags = memo(() => {
   const [model, provider, hasKnowledge, isLoading] = useAgentStore((s) => [
@@ -25,6 +26,7 @@ const TitleTags = memo(() => {
     agentSelectors.isAgentConfigLoading(s),
   ]);
 
+  const currentModel = useAiInfraStore(aiModelSelectors.getEnabledModelById(model, provider));
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
   const enableHistoryCount = useAgentStore(agentChatConfigSelectors.enableHistoryCount);
@@ -39,7 +41,7 @@ const TitleTags = memo(() => {
   ) : (
     <Flexbox align={'center'} gap={4} horizontal>
       <ModelSwitchPanel>
-        <ModelTag model={model} />
+        <ModelTag model={currentModel?.displayName || model} />
       </ModelSwitchPanel>
       {isAgentEnableSearch && <SearchTags />}
       {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
