@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, SortableList, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, SortableList, Tabs, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LoaderCircle, MessageSquare, UserMinus, UserPlus } from 'lucide-react';
@@ -9,8 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
-import SidebarHeader from '@/components/SidebarHeader';
 import { DEFAULT_AVATAR } from '@/const/meta';
+
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useChatGroupStore } from '@/store/chatGroup';
@@ -23,12 +23,13 @@ import { LobeGroupSession } from '@/types/session';
 import AgentSettings from '../../../features/AgentSettings';
 import Header from '../Header';
 import TopicListContent from '../TopicListContent';
+import GroupRoleContent from './GroupRoleContent';
 
 const GroupChatThread = lazy(() => import('./thread'));
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
-    padding: 0;
+    padding: ${token.paddingSM}px 0;
     min-height: 200px;
     height: fit-content;
     overflow-y: auto;
@@ -61,6 +62,10 @@ const useStyles = createStyles(({ css, token }) => ({
     padding: ${token.paddingLG}px;
     text-align: center;
   `,
+  prompt: css`
+    font-size: ${token.fontSizeSM}px;
+    line-height: 1.6;
+  `,
   sectionTitle: css`
     color: ${token.colorTextSecondary};
     font-size: ${token.fontSizeSM}px;
@@ -79,6 +84,7 @@ const GroupChatSidebar = memo(() => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
   const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>();
+  const [activeTab, setActiveTab] = useState('members');
   const { t } = useTranslation('chat');
 
   const activeGroupId = useSessionStore((s) => s.activeId);
@@ -169,149 +175,171 @@ const GroupChatSidebar = memo(() => {
             transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
             <Flexbox height={'100%'}>
-              <SidebarHeader
-                actions={
-                  <ActionIcon
-                    icon={UserPlus}
-                    key="addMember"
-                    onClick={() => setAddModalOpen(true)}
-                    size={'small'}
-                    title="Add Member"
-                  />
-                }
-                style={{ cursor: 'pointer' }}
-                title={
-                  <Flexbox align={'center'} gap={8} horizontal>
-                    Members {(currentSession?.members?.length || 0) + 1}
-                  </Flexbox>
-                }
-              />
+              <Flexbox gap={0}>
+                <Tabs
+                  activeKey={activeTab}
+                  items={[
+                    {
+                      key: 'members',
+                      label: `Members`,
+                    },
+                    {
+                      key: 'role',
+                      label: 'Role',
+                    },
+                  ]}
+                  onChange={(key) => setActiveTab(key)}
+                  size="small"
+                  variant="rounded"
+                />
+              </Flexbox>
 
               <Flexbox className={styles.content} flex={0.6} gap={0}>
-                {/* Orchestrator - Show supervisor loading state */}
-                <div className={styles.memberItem} style={{ marginBottom: 8 }}>
-                  <Flexbox align={'center'} gap={8} horizontal>
-                    <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
-                      <SortableList.DragHandle />
-                    </div>
-                    <Avatar avatar={'🎙️'} size={24} />
-                    <Flexbox flex={1}>
-                      <div
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: 500,
-                        }}
-                      >
-                        Orchestrator
-                      </div>
-                    </Flexbox>
-                    {isSupervisorLoading && (
-                      <Flexbox gap={4} horizontal>
-                        <Tooltip title="Orchestrator is thinking...">
-                          <ActionIcon icon={LoaderCircle} size={14} spin />
-                        </Tooltip>
-                      </Flexbox>
-                    )}
-                  </Flexbox>
-                </div>
-
-                {/* Current User - Always shown first */}
-                <div className={styles.memberItem} style={{ marginBottom: 8 }}>
-                  <Flexbox align={'center'} gap={8} horizontal>
-                    <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
-                      <SortableList.DragHandle />
-                    </div>
-                    <Avatar avatar={currentUser.avatar} size={24} />
-                    <Flexbox flex={1}>
-                      <div
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: 500,
-                        }}
-                      >
-                        {currentUser.name}
-                      </div>
-                    </Flexbox>
-                  </Flexbox>
-                </div>
-
-                {members && members.length > 0 ? (
-                  <SortableList
-                    items={members}
-                    onChange={async (items: any[]) => {
-                      setMembers(items);
-                      if (!activeGroupId) return;
-                      // persist new order
-                      const orderedIds = items.map((m) => m.id);
-                      // fire and forget; store action will refresh groups and sessions
-                      persistReorder(activeGroupId, orderedIds).catch(() => {
-                        console.error('Failed to persist reorder');
-                      });
-                    }}
-                    renderItem={(item: any) => (
-                      <SortableList.Item className={styles.memberItem} id={item.id}>
-                        <Flexbox
-                          align={'center'}
-                          gap={8}
-                          horizontal
-                          justify={'space-between'}
-                          onMouseEnter={() => setHoveredMemberId(item.id)}
-                          onMouseLeave={() => setHoveredMemberId(null)}
-                        >
-                          <Flexbox
-                            align={'center'}
-                            flex={1}
-                            gap={8}
-                            horizontal
-                            onClick={() => handleMemberClick(item.id)}
-                            style={{ cursor: 'pointer' }}
+                {activeTab === 'members' && (
+                  <>
+                    {/* Member list content */}
+                    {/* Orchestrator - Show supervisor loading state */}
+                    <div className={styles.memberItem} style={{ marginBottom: 8 }}>
+                      <Flexbox align={'center'} gap={8} horizontal>
+                        <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
+                          <SortableList.DragHandle />
+                        </div>
+                        <Avatar avatar={'🎙️'} size={24} />
+                        <Flexbox flex={1}>
+                          <div
+                            style={{
+                              fontSize: '14px',
+                              fontWeight: 500,
+                            }}
                           >
-                            <SortableList.DragHandle />
-                            <Avatar
-                              avatar={item.avatar || DEFAULT_AVATAR}
-                              background={item.backgroundColor!}
-                              size={24}
-                            />
-                            <Flexbox flex={1}>
-                              <div
-                                style={{
-                                  fontSize: '14px',
-                                  fontWeight: 500,
-                                }}
-                              >
-                                {item.title || t('defaultSession', { ns: 'common' })}
-                              </div>
-                            </Flexbox>
-                          </Flexbox>
-                          {hoveredMemberId === item.id && (
-                            <Flexbox gap={4} horizontal>
-                              <ActionIcon
-                                icon={MessageSquare}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleThread(item.id);
-                                }}
-                                size={'small'}
-                                title={t('dm.tooltip')}
-                              />
-                              <ActionIcon
-                                danger
-                                icon={UserMinus}
-                                loading={removingMemberIds.includes(item.id)}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleRemoveMember(item.id);
-                                }}
-                                size={'small'}
-                                title="Remove Member"
-                              />
-                            </Flexbox>
-                          )}
+                            Orchestrator
+                          </div>
                         </Flexbox>
-                      </SortableList.Item>
-                    )}
-                  />
-                ) : null}
+                        {isSupervisorLoading && (
+                          <Flexbox gap={4} horizontal>
+                            <Tooltip title="Orchestrator is thinking...">
+                              <ActionIcon icon={LoaderCircle} size={14} spin />
+                            </Tooltip>
+                          </Flexbox>
+                        )}
+                      </Flexbox>
+                    </div>
+
+                    {/* Current User - Always shown first */}
+                    <div className={styles.memberItem} style={{ marginBottom: 8 }}>
+                      <Flexbox align={'center'} gap={8} horizontal>
+                        <div style={{ opacity: 0.3, pointerEvents: 'none' }}>
+                          <SortableList.DragHandle />
+                        </div>
+                        <Avatar avatar={currentUser.avatar} size={24} />
+                        <Flexbox flex={1}>
+                          <div
+                            style={{
+                              fontSize: '14px',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {currentUser.name}
+                          </div>
+                        </Flexbox>
+                      </Flexbox>
+                    </div>
+
+                    {members && members.length > 0 ? (
+                      <SortableList
+                        items={members}
+                        onChange={async (items: any[]) => {
+                          setMembers(items);
+                          if (!activeGroupId) return;
+                          // persist new order
+                          const orderedIds = items.map((m) => m.id);
+                          // fire and forget; store action will refresh groups and sessions
+                          persistReorder(activeGroupId, orderedIds).catch(() => {
+                            console.error('Failed to persist reorder');
+                          });
+                        }}
+                        renderItem={(item: any) => (
+                          <SortableList.Item className={styles.memberItem} id={item.id}>
+                            <Flexbox
+                              align={'center'}
+                              gap={8}
+                              horizontal
+                              justify={'space-between'}
+                              onMouseEnter={() => setHoveredMemberId(item.id)}
+                              onMouseLeave={() => setHoveredMemberId(null)}
+                            >
+                              <Flexbox
+                                align={'center'}
+                                flex={1}
+                                gap={8}
+                                horizontal
+                                onClick={() => handleMemberClick(item.id)}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <SortableList.DragHandle />
+                                <Avatar
+                                  avatar={item.avatar || DEFAULT_AVATAR}
+                                  background={item.backgroundColor!}
+                                  size={24}
+                                />
+                                <Flexbox flex={1}>
+                                  <div
+                                    style={{
+                                      fontSize: '14px',
+                                      fontWeight: 500,
+                                    }}
+                                  >
+                                    {item.title || t('defaultSession', { ns: 'common' })}
+                                  </div>
+                                </Flexbox>
+                              </Flexbox>
+                              {hoveredMemberId === item.id && (
+                                <Flexbox gap={4} horizontal>
+                                  <ActionIcon
+                                    icon={MessageSquare}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleThread(item.id);
+                                    }}
+                                    size={'small'}
+                                    title={t('dm.tooltip')}
+                                  />
+                                  <ActionIcon
+                                    danger
+                                    icon={UserMinus}
+                                    loading={removingMemberIds.includes(item.id)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleRemoveMember(item.id);
+                                    }}
+                                    size={'small'}
+                                    title="Remove Member"
+                                  />
+                                </Flexbox>
+                              )}
+                            </Flexbox>
+                          </SortableList.Item>
+                        )}
+                      />
+                    ) : null}
+
+                    <div style={{ padding: '8px 8px 0 8px' }}>
+                      <Button
+                        block
+                        icon={UserPlus}
+                        onClick={() => setAddModalOpen(true)}
+                        size="middle"
+                        variant="dashed"
+                      >
+                        Add Member
+                      </Button>
+                    </div>
+                  </>
+                )}
+
+                {activeTab === 'role' && (
+                  <GroupRoleContent currentSession={currentSession} />
+                )}
               </Flexbox>
 
               <Flexbox className={styles.topicList} flex={1}>
