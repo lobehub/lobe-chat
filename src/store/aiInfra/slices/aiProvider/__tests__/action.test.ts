@@ -6,7 +6,7 @@ import { getModelListByType } from '../action';
 
 // Mock getModelPropertyWithFallback
 vi.mock('@/utils/getFallbackModelProperty', () => ({
-  getModelPropertyWithFallback: vi.fn().mockReturnValue({ size: '1024x1024' }),
+  getModelPropertyWithFallback: vi.fn().mockResolvedValue({ size: '1024x1024' }),
 }));
 
 describe('getModelListByType', () => {
@@ -48,9 +48,9 @@ describe('getModelListByType', () => {
       abilities: {} as ModelAbilities,
       displayName: 'DALL-E 3',
       enabled: true,
-      parameters: { 
+      parameters: {
         prompt: { default: '' },
-        size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] }
+        size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
       },
     },
     {
@@ -66,15 +66,15 @@ describe('getModelListByType', () => {
   const allModels = [...mockChatModels, ...mockImageModels];
 
   describe('basic functionality', () => {
-    it('should filter models by providerId and type correctly', () => {
-      const result = getModelListByType(allModels, 'openai', 'chat');
+    it('should filter models by providerId and type correctly', async () => {
+      const result = await getModelListByType(allModels, 'openai', 'chat');
 
       expect(result).toHaveLength(2);
       expect(result.map((m) => m.id)).toEqual(['gpt-4', 'gpt-3.5-turbo']);
     });
 
-    it('should return correct model structure', () => {
-      const result = getModelListByType(allModels, 'openai', 'chat');
+    it('should return correct model structure', async () => {
+      const result = await getModelListByType(allModels, 'openai', 'chat');
 
       expect(result[0]).toEqual({
         abilities: { functionCall: true, files: true },
@@ -84,23 +84,23 @@ describe('getModelListByType', () => {
       });
     });
 
-    it('should add parameters field for image models', () => {
-      const result = getModelListByType(allModels, 'openai', 'image');
+    it('should add parameters field for image models', async () => {
+      const result = await getModelListByType(allModels, 'openai', 'image');
 
       expect(result[0]).toEqual({
         abilities: {},
         contextWindowTokens: undefined,
         displayName: 'DALL-E 3',
         id: 'dall-e-3',
-        parameters: { 
+        parameters: {
           prompt: { default: '' },
-          size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] }
+          size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
         },
       });
     });
 
-    it('should use fallback parameters for image models without parameters', () => {
-      const result = getModelListByType(allModels, 'midjourney', 'image');
+    it('should use fallback parameters for image models without parameters', async () => {
+      const result = await getModelListByType(allModels, 'midjourney', 'image');
 
       expect(result[0]).toEqual({
         abilities: {},
@@ -113,22 +113,22 @@ describe('getModelListByType', () => {
   });
 
   describe('edge cases', () => {
-    it('should handle empty model list', () => {
-      const result = getModelListByType([], 'openai', 'chat');
+    it('should handle empty model list', async () => {
+      const result = await getModelListByType([], 'openai', 'chat');
       expect(result).toEqual([]);
     });
 
-    it('should handle non-existent providerId', () => {
-      const result = getModelListByType(allModels, 'nonexistent', 'chat');
+    it('should handle non-existent providerId', async () => {
+      const result = await getModelListByType(allModels, 'nonexistent', 'chat');
       expect(result).toEqual([]);
     });
 
-    it('should handle non-existent type', () => {
-      const result = getModelListByType(allModels, 'openai', 'nonexistent');
+    it('should handle non-existent type', async () => {
+      const result = await getModelListByType(allModels, 'openai', 'nonexistent');
       expect(result).toEqual([]);
     });
 
-    it('should handle missing displayName', () => {
+    it('should handle missing displayName', async () => {
       const modelsWithoutDisplayName: EnabledAiModel[] = [
         {
           id: 'test-model',
@@ -139,11 +139,11 @@ describe('getModelListByType', () => {
         },
       ];
 
-      const result = getModelListByType(modelsWithoutDisplayName, 'test', 'chat');
+      const result = await getModelListByType(modelsWithoutDisplayName, 'test', 'chat');
       expect(result[0].displayName).toBe('');
     });
 
-    it('should handle missing abilities', () => {
+    it('should handle missing abilities', async () => {
       const modelsWithoutAbilities: EnabledAiModel[] = [
         {
           id: 'test-model',
@@ -153,13 +153,13 @@ describe('getModelListByType', () => {
         } as EnabledAiModel,
       ];
 
-      const result = getModelListByType(modelsWithoutAbilities, 'test', 'chat');
+      const result = await getModelListByType(modelsWithoutAbilities, 'test', 'chat');
       expect(result[0].abilities).toEqual({});
     });
   });
 
   describe('deduplication', () => {
-    it('should remove duplicate model IDs', () => {
+    it('should remove duplicate model IDs', async () => {
       const duplicateModels: EnabledAiModel[] = [
         {
           id: 'gpt-4',
@@ -179,7 +179,7 @@ describe('getModelListByType', () => {
         },
       ];
 
-      const result = getModelListByType(duplicateModels, 'openai', 'chat');
+      const result = await getModelListByType(duplicateModels, 'openai', 'chat');
 
       expect(result).toHaveLength(1);
       expect(result[0].displayName).toBe('GPT-4 Version 1');
@@ -187,7 +187,7 @@ describe('getModelListByType', () => {
   });
 
   describe('type casting', () => {
-    it('should handle image model type casting correctly', () => {
+    it('should handle image model type casting correctly', async () => {
       const imageModel: EnabledAiModel[] = [
         {
           id: 'dall-e-3',
@@ -200,14 +200,14 @@ describe('getModelListByType', () => {
         } as any, // Simulate AIImageModelCard type
       ];
 
-      const result = getModelListByType(imageModel, 'openai', 'image');
+      const result = await getModelListByType(imageModel, 'openai', 'image');
 
       expect(result[0]).toHaveProperty('parameters');
       expect(result[0].parameters).toEqual({ size: '1024x1024' });
     });
 
-    it('should not add parameters field for non-image models', () => {
-      const result = getModelListByType(mockChatModels, 'openai', 'chat');
+    it('should not add parameters field for non-image models', async () => {
+      const result = await getModelListByType(mockChatModels, 'openai', 'chat');
 
       result.forEach((model) => {
         expect(model).not.toHaveProperty('parameters');

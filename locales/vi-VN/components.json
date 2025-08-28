@@ -130,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "Đã tải lên {{completed}}/{{total}}"
+    },
+    "validation": {
+      "fileSizeExceeded": "Kích thước tệp vượt quá giới hạn",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) vượt quá kích thước tối đa cho phép là {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} tệp vượt quá kích thước tối đa cho phép là {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Số lượng hình ảnh vượt quá giới hạn"
     }
   },
   "OllamaSetupGuide": {

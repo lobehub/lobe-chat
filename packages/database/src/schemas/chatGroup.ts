@@ -11,11 +11,11 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
+import { idGenerator } from '@/database/utils/idGenerator';
+import type { ChatGroupConfig } from '@/database/types/chatGroup';
 
 import { timestamps } from './_helpers';
 import { agents } from './agent';
-import { sessionGroups } from './session';
 import { users } from './user';
 
 /**
@@ -29,32 +29,19 @@ export const chatGroups = pgTable(
       .primaryKey()
       .$defaultFn(() => idGenerator('chatGroups'))
       .notNull(),
-    slug: varchar('slug', { length: 100 })
-      .$defaultFn(() => randomSlug(4))
-      .unique(),
     title: text('title'),
     description: text('description'),
 
     /**
      * Group configuration
      */
-    config: jsonb('config').$type<{
-      maxResponseInRow?: number;
-      orchestratorModel?: string;
-      orchestratorProvider?: string;
-      responseOrder?: 'sequential' | 'natural';
-      responseSpeed?: 'slow' | 'medium' | 'fast';
-      revealDM?: boolean;
-      systemPrompt?: string;
-    }>(),
+    config: jsonb('config').$type<ChatGroupConfig>(),
 
     clientId: text('client_id'),
 
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
-
-    groupId: text('group_id').references(() => sessionGroups.id, { onDelete: 'set null' }),
 
     pinned: boolean('pinned').default(false),
 
@@ -108,9 +95,4 @@ export const chatGroupsAgents = pgTable(
 );
 
 export type NewChatGroupAgent = typeof chatGroupsAgents.$inferInsert;
-export type ChatGroupAgentItem = typeof chatGroupsAgents.$inferSelect;
-
-// Type for ChatGroupAgent with joined agent data
-export type ChatGroupAgentWithAgent = ChatGroupAgentItem & {
-  agent: typeof agents.$inferSelect;
-};
+export type ChatGroupAgentItem = typeof agents.$inferInsert

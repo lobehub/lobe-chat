@@ -223,10 +223,7 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": [
-      "DROP TABLE \"user_budgets\";",
-      "\nDROP TABLE \"user_subscriptions\";"
-    ],
+    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -298,9 +295,7 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": [
-      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
-    ],
+    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -515,9 +510,7 @@
     "hash": "a7ccf007fd185ff922823148d1eae6fafe652fc98d2fd2793f84a84f29e93cd1"
   },
   {
-    "sql": [
-      "ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"
-    ],
+    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
     "bps": true,
     "folderMillis": 1749309388370,
     "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
@@ -569,22 +562,21 @@
   },
   {
     "sql": [
-      "CREATE TABLE \"chat_groups\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"slug\" varchar(100),\n\t\"title\" text,\n\t\"description\" text,\n\t\"config\" jsonb,\n\t\"client_id\" text,\n\t\"user_id\" text NOT NULL,\n\t\"group_id\" text,\n\t\"pinned\" boolean DEFAULT false,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"chat_groups_slug_unique\" UNIQUE(\"slug\")\n);\n",
-      "\nCREATE TABLE \"chat_groups_agents\" (\n\t\"chat_group_id\" text NOT NULL,\n\t\"agent_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"enabled\" boolean DEFAULT true,\n\t\"order\" integer DEFAULT 0,\n\t\"role\" text DEFAULT 'participant',\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"chat_groups_agents_chat_group_id_agent_id_pk\" PRIMARY KEY(\"chat_group_id\",\"agent_id\")\n);\n",
-      "\nALTER TABLE \"messages\" ADD COLUMN \"group_id\" text;",
-      "\nALTER TABLE \"messages\" ADD COLUMN \"target_id\" text;",
-      "\nALTER TABLE \"topics\" ADD COLUMN \"group_id\" text;",
+      "CREATE TABLE IF NOT EXISTS \"chat_groups\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"title\" text,\n\t\"description\" text,\n\t\"config\" jsonb,\n\t\"client_id\" text,\n\t\"user_id\" text NOT NULL,\n\t\"pinned\" boolean DEFAULT false,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"chat_groups_agents\" (\n\t\"chat_group_id\" text NOT NULL,\n\t\"agent_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"enabled\" boolean DEFAULT true,\n\t\"order\" integer DEFAULT 0,\n\t\"role\" text DEFAULT 'participant',\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"chat_groups_agents_chat_group_id_agent_id_pk\" PRIMARY KEY(\"chat_group_id\",\"agent_id\")\n);\n",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"target_id\" text;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
       "\nALTER TABLE \"chat_groups\" ADD CONSTRAINT \"chat_groups_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nALTER TABLE \"chat_groups\" ADD CONSTRAINT \"chat_groups_group_id_session_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"session_groups\"(\"id\") ON DELETE set null ON UPDATE no action;",
       "\nALTER TABLE \"chat_groups_agents\" ADD CONSTRAINT \"chat_groups_agents_chat_group_id_chat_groups_id_fk\" FOREIGN KEY (\"chat_group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nALTER TABLE \"chat_groups_agents\" ADD CONSTRAINT \"chat_groups_agents_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nALTER TABLE \"chat_groups_agents\" ADD CONSTRAINT \"chat_groups_agents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nCREATE UNIQUE INDEX \"chat_groups_client_id_user_id_unique\" ON \"chat_groups\" USING btree (\"client_id\",\"user_id\");",
       "\nALTER TABLE \"messages\" ADD CONSTRAINT \"messages_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE set null ON UPDATE no action;",
-      "\nALTER TABLE \"topics\" ADD CONSTRAINT \"topics_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;"
+      "\nALTER TABLE \"topics\" ADD CONSTRAINT \"topics_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;\n"
     ],
     "bps": true,
-    "folderMillis": 1756194503346,
-    "hash": "cafb0b9f1cc773a9609a48ae958ed11fb2ead8498449694dc0dea81bc94b6fd5"
+    "folderMillis": 1756298669289,
+    "hash": "3af468ca75761ca4ca4e32ba8704728f0499aa935bfe00ae5aabfa8405a18bd4"
   }
 ]

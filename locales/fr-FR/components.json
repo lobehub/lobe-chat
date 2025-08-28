@@ -130,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} téléchargées"
+    },
+    "validation": {
+      "fileSizeExceeded": "Taille du fichier dépassée",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) dépasse la taille maximale autorisée de {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} fichiers dépassent la taille maximale autorisée de {{maxSize}} : {{fileList}}",
+      "imageCountExceeded": "Limite du nombre d'images dépassée"
     }
   },
   "OllamaSetupGuide": {

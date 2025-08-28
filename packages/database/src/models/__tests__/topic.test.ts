@@ -1,8 +1,8 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '../../type';
 import { messages, sessions, topics, users } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
@@ -423,6 +423,7 @@ describe('TopicModel', () => {
         userId,
         historySummary: null,
         metadata: null,
+        groupId: null,
         clientId: null,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
@@ -469,6 +470,7 @@ describe('TopicModel', () => {
         title: 'New Topic',
         favorite: false,
         clientId: null,
+        groupId: null,
         historySummary: null,
         metadata: null,
         sessionId,

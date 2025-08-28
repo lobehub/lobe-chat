@@ -130,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} 已上傳"
+    },
+    "validation": {
+      "fileSizeExceeded": "檔案大小已超過限制",
+      "fileSizeExceededDetail": "{{fileName}}（{{actualSize}}）超過最大檔案大小限制 {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} 個檔案超過最大檔案大小限制 {{maxSize}}：{{fileList}}",
+      "imageCountExceeded": "圖片數量已超出限制"
     }
   },
   "OllamaSetupGuide": {

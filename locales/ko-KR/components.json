@@ -130,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} 업로드 완료"
+    },
+    "validation": {
+      "fileSizeExceeded": "파일 용량이 허용된 최대 크기를 초과했습니다",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}})이(가) 허용된 최대 크기 {{maxSize}}를 초과했습니다",
+      "fileSizeExceededMultiple": "{{count}}개의 파일이 허용된 최대 크기 {{maxSize}}를 초과합니다: {{fileList}}",
+      "imageCountExceeded": "이미지 수가 허용된 한도를 초과했습니다"
     }
   },
   "OllamaSetupGuide": {

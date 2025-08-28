@@ -131,13 +131,11 @@ table async_tasks {
 
 table chat_groups {
   id text [pk, not null]
-  slug varchar(100) [unique]
   title text
   description text
   config jsonb
   client_id text
   user_id text [not null]
-  group_id text
   pinned boolean [default: false]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]

@@ -130,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} качени"
+    },
+    "validation": {
+      "fileSizeExceeded": "Превишен допустим размер на файла",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) надвишава максимално допустимия размер {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} файла надвишават максимално допустимия размер {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Надвишен е допустимият брой изображения"
     }
   },
   "OllamaSetupGuide": {

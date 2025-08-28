@@ -5,6 +5,8 @@ alwaysApply: false
 
 ## 🗃️ 数据库 Model 测试指南
 
+测试 `packages/database` 下的数据库 Model 层。
+
 ### 测试环境选择 💡
 
 数据库 Model 层通过环境变量控制数据库类型，在两种测试环境下有不同的数据库后端：客户端环境 (PGLite) 和 服务端环境 (PostgreSQL)
@@ -17,10 +19,10 @@ alwaysApply: false
 
 ```bash
 # 1. 先在客户端环境测试（快速验证）
-npx vitest run --config vitest.config.ts src/database/models/__tests__/myModel.test.ts
+cd packages/database && TEST_SERVER_DB=0 bunx vitest run --silent='passed-only' src/database/models/__tests__/myModel.test.ts
 
-# 2. 再在服务端环境测试（兼容性验证）
-npx vitest run --config vitest.config.server.ts src/database/models/__tests__/myModel.test.ts
+# 2. 再在服务端环境测试（兼容性验证）, 需要设置环境变量 `TEST_SERVER_DB=1`
+cd packages/database && TEST_SERVER_DB=1 bunx vitest run --silent='passed-only' src/database/models/__tests__/myModel.test.ts #
 ```
 
 ### 创建新 Model 测试的最佳实践 📋
