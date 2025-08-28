@@ -33,17 +33,31 @@ const links = [
       const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
       const { fetchErrorNotification } = await import('@/components/Error/fetchErrorNotification');
 
-      errorRes.forEach((item) => {
+      errorRes.forEach(async (item) => {
         const errorData = item.error.json;
         const status = errorData.data.httpStatus;
+        const message = errorData.message;
+
+        // Check for account deletion error
+        if (message === 'Account has been deleted') {
+          const { handleAccountDeleted } = await import('@/utils/account');
+          await handleAccountDeleted();
+          return;
+        }
 
         switch (status) {
           case 401: {
+            // Additional check for deleted account in 401 errors
+            if (message === 'Account has been deleted') {
+              const { handleAccountDeleted } = await import('@/utils/account');
+              await handleAccountDeleted();
+              return;
+            }
             loginRequired.redirect();
             break;
           }
           default: {
-            fetchErrorNotification.error({ errorMessage: errorData.message, status });
+            fetchErrorNotification.error({ errorMessage: message, status });
           }
         }
       });

@@ -1,4 +1,5 @@
 import { UserJSON } from '@clerk/backend';
+import { TRPCError } from '@trpc/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
@@ -51,6 +52,15 @@ export const userRouter = router({
     while (!state) {
       try {
         state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+        
+        // Check if user is deleted
+        const user = await UserModel.findById(ctx.serverDB, ctx.userId);
+        if (user?.isDeleted) {
+          throw new TRPCError({ 
+            code: 'UNAUTHORIZED', 
+            message: 'Account has been deleted' 
+          });
+        }
       } catch (error) {
         // user not create yet
         if (error instanceof UserNotFoundError) {
@@ -232,6 +242,10 @@ export const userRouter = router({
 
       return ctx.userModel.updateSetting(nextValue);
     }),
+
+  deleteAccount: userProcedure.mutation(async ({ ctx }) => {
+    return ctx.userModel.deleteAccount();
+  }),
 });
 
 export type UserRouter = typeof userRouter;

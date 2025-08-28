@@ -2,8 +2,13 @@
 
 import { UserProfile } from '@clerk/nextjs';
 import { ElementsConfig } from '@clerk/types';
+import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
+
+import { handleAccountDeleted } from '@/utils/account';
+
+import DeleteAccountModal from './DeleteAccountModal';
 
 export const useStyles = createStyles(
   ({ css, responsive, token }) =>
@@ -53,16 +58,37 @@ export const useStyles = createStyles(
     }) as Partial<Record<keyof ElementsConfig, any>>,
 );
 
+const handleDeleteAccountConfirm = async () => {
+  await handleAccountDeleted();
+};
+
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles } = useStyles(mobile);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
-    <UserProfile
-      appearance={{
-        elements: styles,
-      }}
-      path={'/profile'}
-    />
+    <div>
+      <UserProfile
+        appearance={{
+          elements: styles,
+        }}
+        path={'/profile'}
+      />
+
+      <Button
+        danger
+        onClick={() => setShowDeleteModal(true)}
+        type="primary"
+      >
+        注销账户
+      </Button>
+
+      <DeleteAccountModal
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccountConfirm}
+        open={showDeleteModal}
+      />
+    </div>
   );
 });
 

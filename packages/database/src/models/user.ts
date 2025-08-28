@@ -66,6 +66,7 @@ export class UserModel {
         email: users.email,
         firstName: users.firstName,
         fullName: users.fullName,
+        isDeleted: users.isDeleted,
         isOnboarded: users.isOnboarded,
         lastName: users.lastName,
         preference: users.preference,
@@ -89,6 +90,14 @@ export class UserModel {
     }
 
     const state = result[0];
+
+    // Check if user account is deleted
+    if (state.isDeleted) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Account has been deleted'
+      });
+    }
 
     // Decrypt keyVaults
     let decryptKeyVaults = {};
@@ -185,6 +194,13 @@ export class UserModel {
     return this.db
       .update(users)
       .set({ preference: { ...prevPreference, guide: merge(prevPreference.guide || {}, value) } })
+      .where(eq(users.id, this.userId));
+  };
+
+  deleteAccount = async () => {
+    return this.db
+      .update(users)
+      .set({ isDeleted: true, updatedAt: new Date() })
       .where(eq(users.id, this.userId));
   };
 
