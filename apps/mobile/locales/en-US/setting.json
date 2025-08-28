@@ -41,6 +41,7 @@
   },
   "providers": "AI Providers",
   "support": "Email Support",
+  "developer": "Developer Options",
   "theme": {
     "auto": "Follow System",
     "dark": "Dark Mode",

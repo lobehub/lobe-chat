@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text } from 'react-native';
+import { isDev } from '@/utils/env';
 
 import { ListGroup, ColorSwatches } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
@@ -208,8 +209,14 @@ export default function SettingScreen() {
           title={t('locale.title', { ns: 'setting' })}
         />
         <SettingItem href="/setting/account" title={t('account.title', { ns: 'setting' })} />
-        <SettingItem href="/setting/providers" isLast title={t('providers', { ns: 'setting' })} />
+        <SettingItem href="/setting/providers" title={t('providers', { ns: 'setting' })} />
       </ListGroup>
+
+      {isDev && (
+        <ListGroup>
+          <SettingItem href="/setting/developer" isLast title={t('developer', { ns: 'setting' })} />
+        </ListGroup>
+      )}
 
       <ListGroup>
         <SettingItem

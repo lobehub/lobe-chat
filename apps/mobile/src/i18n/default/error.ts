@@ -14,4 +14,7 @@ export default {
     notFoundMessage: '该页面不存在。',
     notFoundTitle: '哎呀！',
   },
+  session: {
+    expired: '登录已过期，请重新登录',
+  },
 };

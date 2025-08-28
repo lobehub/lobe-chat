@@ -39,6 +39,13 @@ export default function SettingRoutesLayout() {
           headerTitle: t('account.title', { ns: 'setting' }),
         }}
       />
+      {/* Developer options screen */}
+      <Stack.Screen
+        name="developer/index"
+        options={{
+          headerTitle: t('developer', { ns: 'setting' }),
+        }}
+      />
     </Stack>
   );
 }

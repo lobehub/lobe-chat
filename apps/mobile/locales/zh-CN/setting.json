@@ -41,6 +41,7 @@
   },
   "providers": "AI 服务商",
   "support": "邮件支持",
+  "developer": "开发者选项",
   "theme": {
     "auto": "跟随系统",
     "dark": "深色模式",

@@ -15,6 +15,7 @@ export default {
     title: '账号设置',
   },
   changelog: '更新日志',
+  developer: '开发者选项',
   feedback: '意见反馈',
   help: '使用帮助',
   locale: {
@@ -39,8 +40,8 @@ export default {
     validationFailed: '验证失败',
     validationSuccess: '验证成功',
   },
-  providers: 'AI 服务商',
 
+  providers: 'AI 服务商',
   support: '邮件支持',
   theme: {
     auto: '跟随系统',
