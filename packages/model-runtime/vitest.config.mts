@@ -13,6 +13,9 @@ export default defineConfig({
       '@': resolve(__dirname, '../../src'),
       /* eslint-enable */
     },
+    coverage: {
+      reporter: ['text', 'json', 'lcov', 'text-summary'],
+    },
     environment: 'happy-dom',
   },
 });
