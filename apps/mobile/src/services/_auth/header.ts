@@ -131,12 +131,10 @@ export const createHeaderWithAuth = async (
         } else {
           authLogger.error('Refreshed but no access token available');
           // 刷新后仍无 token，视为未认证
-          await useUserStore.getState().logout();
           throw new Error('Authentication required');
         }
       } catch (refreshError) {
         authLogger.error('Token refresh failed', refreshError);
-        console.error('Token refresh failed:', refreshError);
         // 刷新失败，清除认证状态
         await useUserStore.getState().logout();
         throw new Error('Authentication required');

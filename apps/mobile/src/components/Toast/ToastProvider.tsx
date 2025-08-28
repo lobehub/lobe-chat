@@ -7,16 +7,17 @@ import Toast, { ToastProps, ToastType } from './Toast';
 interface ToastConfig {
   duration?: number;
   message: string;
+  onClose?: () => void;
   type: ToastType;
 }
 
 interface ToastContextType {
-  error: (message: string, duration?: number) => void;
+  error: (message: string, duration?: number, onClose?: () => void) => void;
   hide: (id: string) => void;
-  info: (message: string, duration?: number) => void;
-  loading: (message: string, duration?: number) => void;
+  info: (message: string, duration?: number, onClose?: () => void) => void;
+  loading: (message: string, duration?: number, onClose?: () => void) => void;
   show: (config: ToastConfig) => void;
-  success: (message: string, duration?: number) => void;
+  success: (message: string, duration?: number, onClose?: () => void) => void;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -26,6 +27,7 @@ interface ToastProviderProps {
 }
 
 interface ToastItem extends Omit<ToastProps, 'opacity'> {
+  onClosed?: () => void;
   opacity: Animated.Value;
   timeoutId?: ReturnType<typeof setTimeout>;
   translateY: Animated.Value;
@@ -62,6 +64,12 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
               useNativeDriver: true,
             }),
           ]).start(() => {
+            // 触发用户自定义关闭回调
+            if (toast.onClosed) {
+              try {
+                toast.onClosed();
+              } catch {}
+            }
             removeToast(id);
           });
         }
@@ -82,6 +90,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
         duration,
         id,
         message: config.message,
+        onClosed: config.onClose,
         opacity,
         translateY,
         type: config.type,
@@ -115,29 +124,29 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   );
 
   const success = useCallback(
-    (message: string, duration?: number) => {
-      show({ duration, message, type: 'success' });
+    (message: string, duration?: number, onClose?: () => void) => {
+      show({ duration, message, onClose, type: 'success' });
     },
     [show],
   );
 
   const error = useCallback(
-    (message: string, duration?: number) => {
-      show({ duration, message, type: 'error' });
+    (message: string, duration?: number, onClose?: () => void) => {
+      show({ duration, message, onClose, type: 'error' });
     },
     [show],
   );
 
   const info = useCallback(
-    (message: string, duration?: number) => {
-      show({ duration, message, type: 'info' });
+    (message: string, duration?: number, onClose?: () => void) => {
+      show({ duration, message, onClose, type: 'info' });
     },
     [show],
   );
 
   const loading = useCallback(
-    (message: string, duration?: number) => {
-      show({ duration, message, type: 'loading' });
+    (message: string, duration?: number, onClose?: () => void) => {
+      show({ duration, message, onClose, type: 'loading' });
     },
     [show],
   );
