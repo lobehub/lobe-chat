@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.116.3](https://github.com/lobehub/lobe-chat/compare/v1.116.2...v1.116.3)
+
+<sup>Released on **2025-08-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop route error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop route error, closes [#8962](https://github.com/lobehub/lobe-chat/issues/8962) ([27a4b34](https://github.com/lobehub/lobe-chat/commit/27a4b34))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.116.2](https://github.com/lobehub/lobe-chat/compare/v1.116.1...v1.116.2)
 
 <sup>Released on **2025-08-28**</sup>
