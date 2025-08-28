@@ -9,6 +9,7 @@ export default defineConfig({
       '@/utils/errorResponse': resolve(__dirname, '../../src/utils/errorResponse'),
       '@/utils': resolve(__dirname, '../utils/src'),
       '@/database': resolve(__dirname, '../database/src'),
+      '@/libs/model-runtime': resolve(__dirname, '../model-runtime/src'),
       '@/types': resolve(__dirname, '../types/src'),
       '@': resolve(__dirname, '../../src'),
       /* eslint-enable */
