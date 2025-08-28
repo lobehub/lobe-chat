@@ -1,0 +1,40 @@
+description: LobeHub Prompts Testing Suite
+
+# Default providers for testing - can be overridden in individual test configs
+providers:
+  - openai:gpt-4o-mini
+  - openai:gpt-3.5-turbo
+  - anthropic:claude-3-haiku-20240307
+
+# Test configurations
+tests:
+  - promptfoo/summary-title.yaml
+  - promptfoo/language-detection.yaml
+  - promptfoo/translation.yaml
+  - promptfoo/emoji-picker.yaml
+  - promptfoo/knowledge-qa.yaml
+
+# Output configuration
+outputPath: promptfoo-results.json
+
+# Default test settings
+defaultTest:
+  assert:
+    - type: llm-rubric
+      value: "The response should be relevant and well-formatted"
+    - type: cost
+      threshold: 0.01  # Maximum cost per test in USD
+
+# Environment variables for API keys
+env:
+  OPENAI_API_KEY: ${OPENAI_API_KEY}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+
+# Evaluation settings
+evaluateOptions:
+  maxConcurrency: 5
+  delay: 100
+
+# TypeScript support
+transforms:
+  - "typescript"

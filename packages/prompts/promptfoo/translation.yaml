@@ -1,0 +1,91 @@
+description: Test translation accuracy between different languages
+
+providers:
+  - openai:gpt-4o-mini
+  - openai:gpt-4.1-mini
+
+prompts:
+  - file://promptfoo/prompts/translation.ts
+
+tests:
+  - vars:
+      content: "Hello, how are you?"
+      from: "en-US"
+      to: "zh-CN"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural Chinese translation of the English greeting"
+      - type: contains-any
+        value: ["你好", "您好"]
+      - type: not-contains
+        value: "Hello"
+
+  - vars:
+      content: "你好，你怎么样？"
+      from: "zh-CN"
+      to: "en-US"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural English translation of the Chinese greeting"
+      - type: contains-any
+        value: ["Hello", "Hi", "how are you", "How are you"]
+      - type: not-contains
+        value: "你好"
+
+  - vars:
+      content: "Je suis content de vous rencontrer"
+      from: "fr-FR"
+      to: "en-US"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural English translation expressing pleasure to meet someone"
+      - type: contains-any
+        value: ["pleased", "happy", "glad", "meet", "meeting"]
+      - type: not-contains
+        value: "Je suis"
+
+  - vars:
+      content: "The weather is beautiful today"
+      from: "en-US"
+      to: "es-ES"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural Spanish translation about beautiful weather"
+      - type: contains-any
+        value: ["tiempo", "clima", "hermoso", "bonito", "hoy"]
+      - type: not-contains
+        value: "weather"
+
+  - vars:
+      content: "I love programming with TypeScript"
+      from: "en-US"
+      to: "ja-JP"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural Japanese translation about loving TypeScript programming"
+      - type: contains
+        value: "TypeScript"  # Technical terms often remain unchanged
+      - type: not-contains
+        value: "I love"
+
+  - vars:
+      content: "Machine learning is revolutionizing technology"
+      from: "en-US"
+      to: "de-DE"
+    assert:
+      - type: llm-rubric
+        value: "The response should be a natural German translation about machine learning and technology"
+      - type: contains-any
+        value: ["Technologie", "revolutioniert", "maschinelles", "Lernen"]
+      - type: not-contains
+        value: "Machine learning"
+
+  - vars:
+      content: "API_KEY_12345"
+      from: "en-US"
+      to: "zh-CN"
+    assert:
+      - type: llm-rubric
+        value: "Technical identifiers like API keys should typically remain unchanged"
+      - type: contains
+        value: "API_KEY_12345"

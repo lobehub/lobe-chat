@@ -1,0 +1,76 @@
+description: Test language detection accuracy for various text inputs
+
+providers:
+  - openai:gpt-4o-mini
+
+prompts:
+  - file://promptfoo/prompts/language-detection.ts
+
+tests:
+  - vars:
+      text: "Hello, how are you today? I hope you're having a great day!"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'en' || result.language === 'english' || result.language === 'English';
+
+  - vars:
+      text: "Bonjour, comment allez-vous? J'espère que vous passez une excellente journée!"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'fr' || result.language === 'french' || result.language === 'français';
+
+  - vars:
+      text: "你好，你今天怎么样？希望你过得愉快！"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'zh' || result.language === 'chinese' || result.language === '中文';
+
+  - vars:
+      text: "Hola, ¿cómo estás hoy? ¡Espero que tengas un gran día!"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'es' || result.language === 'spanish' || result.language === 'español';
+
+  - vars:
+      text: "Привет, как дела сегодня? Надеюсь, у тебя отличный день!"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'ru' || result.language === 'russian' || result.language === 'русский';
+
+  - vars:
+      text: "こんにちは、今日はいかがですか？素晴らしい一日をお過ごしください！"
+    assert:
+      - type: is-valid-json
+      - type: javascript
+        value: |
+          const result = JSON.parse(output);
+          return result.language === 'ja' || result.language === 'japanese' || result.language === '日本語';
+
+  - vars:
+      text: "Hello 你好 Bonjour mix of languages here"
+    assert:
+      - type: is-valid-json
+      - type: llm-rubric
+        value: "Should identify this as mixed language content or primary language"
+
+  - vars:
+      text: "12345 !@#$% numeric and symbols only"
+    assert:
+      - type: is-valid-json
+      - type: llm-rubric
+        value: "Should handle non-linguistic content appropriately"

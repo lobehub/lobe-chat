@@ -1,0 +1,95 @@
+description: Test emoji selection for different conversation topics and contexts
+
+providers:
+  - openai:gpt-4o-mini
+
+prompts:
+  - file://promptfoo/prompts/emoji-picker.ts
+
+tests:
+  - vars:
+      messages:
+        - role: "user"
+          content: "I just got a promotion at work! I'm so excited!"
+        - role: "assistant" 
+          content: "Congratulations! That's wonderful news. You must be feeling thrilled about this achievement."
+    assert:
+      - type: llm-rubric
+        value: "Should select a positive, celebratory emoji appropriate for work success"
+      - type: regex
+        value: "^[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]+$"
+      - type: javascript
+        value: |
+          // Check if it's a single emoji
+          const emojiRegex = /^[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]+$/u;
+          return emojiRegex.test(output) && Array.from(output).length <= 3;
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "My dog passed away yesterday. I'm really sad."
+        - role: "assistant"
+          content: "I'm so sorry for your loss. Losing a beloved pet is incredibly difficult and heartbreaking."
+    assert:
+      - type: llm-rubric
+        value: "Should select a sympathetic, sad emoji appropriate for loss and grief"
+      - type: javascript
+        value: |
+          const sadEmojis = ['😢', '😭', '💔', '😔', '🥺', '😞', '😥'];
+          return sadEmojis.some(emoji => output.includes(emoji));
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "Can you help me with this math problem?"
+        - role: "assistant"
+          content: "Of course! I'd be happy to help you solve the math problem. Please share the details."
+    assert:
+      - type: llm-rubric
+        value: "Should select an emoji related to learning, thinking, or mathematics"
+      - type: javascript
+        value: |
+          const studyEmojis = ['🤔', '📚', '✏️', '📝', '🧮', '💭', '🔢'];
+          return studyEmojis.some(emoji => output.includes(emoji));
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "I'm going on vacation to Hawaii next week!"
+        - role: "assistant"
+          content: "How exciting! Hawaii is such a beautiful destination. You'll have an amazing time there."
+    assert:
+      - type: llm-rubric
+        value: "Should select an emoji related to vacation, travel, or tropical themes"
+      - type: javascript
+        value: |
+          const vacationEmojis = ['🌺', '🏖️', '✈️', '🌴', '☀️', '😎', '🏝️'];
+          return vacationEmojis.some(emoji => output.includes(emoji));
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "I'm learning to cook Italian food"
+        - role: "assistant"
+          content: "That sounds delicious! Italian cuisine has so many wonderful dishes to master."
+    assert:
+      - type: llm-rubric
+        value: "Should select an emoji related to cooking or Italian food"
+      - type: javascript
+        value: |
+          const cookingEmojis = ['🍝', '🍕', '👨‍🍳', '👩‍🍳', '🍽️', '🔥', '😋'];
+          return cookingEmojis.some(emoji => output.includes(emoji));
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "Technical documentation about API endpoints"
+        - role: "assistant"
+          content: "I'll help you create clear and comprehensive API documentation with proper examples."
+    assert:
+      - type: llm-rubric
+        value: "Should select an emoji related to technology, development, or documentation"
+      - type: javascript
+        value: |
+          const techEmojis = ['💻', '📖', '⚙️', '🔧', '📝', '🤖', '💡'];
+          return techEmojis.some(emoji => output.includes(emoji));
