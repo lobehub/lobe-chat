@@ -7,7 +7,6 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 import { LayoutProps } from './_layout/type';
-import SettingsContent from './SettingsContent';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
@@ -22,11 +21,9 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 const SettingsLayout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 
 const SettingsPage = async (props: DynamicLayoutProps) => {
-  const isMobile = await RouteVariants.getIsMobile(props);
   return (
-    <SettingsLayout {...props}>
-      <SettingsContent mobile={isMobile} />
-    </SettingsLayout>
+    // @ts-ignore
+    <SettingsLayout {...props} />
   );
 };
 

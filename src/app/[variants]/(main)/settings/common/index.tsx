@@ -4,7 +4,7 @@ import Common from './features/Common/Common';
 
 const Page = (props: any) => {
   return (
-    < >
+    <>
       <Common {...props} />
       <Appearance />
       <ChatAppearance />

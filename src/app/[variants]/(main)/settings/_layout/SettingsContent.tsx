@@ -1,11 +1,14 @@
 'use client';
 
-import { SettingsTabs } from '@/store/global/initialState';
+import { createStyles, css, cx } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
+
+import { LayoutSettingsFooterClassName } from '@/features/Setting/Footer';
+import { SettingsTabs } from '@/store/global/initialState';
 
 import About from '../about/index';
 import Agent from '../agent/index';
-import CommonForm from '../common'; // 直接使用纯组件
+import CommonForm from '../common';
 import Hotkey from '../hotkey/page';
 import LLM from '../llm/index';
 import Provider from '../provider/page';
@@ -14,8 +17,6 @@ import Storage from '../storage/page';
 import Sync from '../sync/index';
 import SystemAgent from '../system-agent/index';
 import TTS from '../tts/index';
-import { createStyles, css, cx } from 'antd-style';
-import { LayoutSettingsFooterClassName } from '@/features/Setting/Footer';
 
 interface SettingsContentProps {
   actions: any;
@@ -26,23 +27,24 @@ interface SettingsContentProps {
 
 const useStyles = createStyles(() => ({
   agentLayout: css`
-
-      .${LayoutSettingsFooterClassName}{
-        display: none
-      }
-    `,
+    .${LayoutSettingsFooterClassName} {
+      display: none;
+    }
+  `,
 }));
 
 const SettingsContent = ({ mobile, activeTab, state, actions }: SettingsContentProps) => {
   const getDisplayStyle = (tabName: string) => ({
     display: activeTab === tabName ? 'block' : 'none',
     height: '100%',
-    paddingBlock: (tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile) ? 0 : 24,
-    paddingInline: (tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile) ? 0 : 32,
-    width: '100%'
+    paddingBlock:
+      tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 24,
+    paddingInline:
+      tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 32,
+    width: '100%',
   });
 
-  const { styles } = useStyles()
+  const { styles } = useStyles();
 
   return (
     <Flexbox height={'100%'} width={'100%'}>
