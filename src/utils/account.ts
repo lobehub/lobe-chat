@@ -1,10 +1,5 @@
-import { useClerk } from '@clerk/nextjs';
-
 import { enableClerk } from '@/const/auth';
 
-/**
- * 清理浏览器中的所有账户相关数据
- */
 export const clearAccountData = () => {
   if (typeof window === 'undefined') return;
 
@@ -40,8 +35,10 @@ export const handleAccountDeleted = async () => {
   clearAccountData();
 
   // For Clerk users, also sign out
+  // @ts-ignore
   if (enableClerk && typeof window.Clerk !== 'undefined') {
     try {
+      // @ts-ignore
       await window.Clerk.signOut();
     } catch (error) {
       console.warn('Failed to sign out from Clerk:', error);
@@ -52,27 +49,4 @@ export const handleAccountDeleted = async () => {
   const loginUrl = new URL('/login', window.location.origin);
   loginUrl.searchParams.set('deleted', 'true');
   window.location.href = loginUrl.toString();
-};
-
-export const useHandleAccountDeleted = () => {
-  const clerk = useClerk();
-
-  return async () => {
-    // Clear all browser data
-    clearAccountData();
-
-    // For Clerk users, also sign out
-    if (enableClerk && clerk) {
-      try {
-        await clerk.signOut();
-      } catch (error) {
-        console.warn('Failed to sign out from Clerk:', error);
-      }
-    }
-
-    // Redirect to login page with deleted account flag
-    const loginUrl = new URL('/login', window.location.origin);
-    loginUrl.searchParams.set('deleted', 'true');
-    window.location.href = loginUrl.toString();
-  };
 };
