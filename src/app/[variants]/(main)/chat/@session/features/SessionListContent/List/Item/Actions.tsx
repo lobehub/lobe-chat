@@ -175,7 +175,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                   message.success(t('confirmRemoveSessionSuccess'));
                 },
                 rootClassName: styles.modalRoot,
-                title: sessionType === 'group' ? t('confirmRemoveGroupItemAlert') : t('confirmRemoveSessionItemAlert'),
+                title: sessionType === 'group' ? t('confirmRemoveChatGroupItemAlert') : t('confirmRemoveSessionItemAlert'),
               });
             },
           },

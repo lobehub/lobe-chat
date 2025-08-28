@@ -57,10 +57,8 @@ export class GroupChatSupervisor {
 
       return decision;
     } catch (error) {
-      console.error('Supervisor decision failed:', error);
-
-      // Fallback: return empty result to stop conversation when error occurs
-      return [];
+      // Re-throw the error so it can be caught and displayed to the user via toast
+      throw new Error(`Supervisor decision failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -138,8 +136,8 @@ export class GroupChatSupervisor {
 
       return decisions;
     } catch (error) {
-      console.error('Failed to parse supervisor decision:', error);
-      throw error;
+      // Re-throw the error with more context so it can be caught and displayed to the user via toast
+      throw new Error(`Failed to parse supervisor decision: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

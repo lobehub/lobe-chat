@@ -22,6 +22,7 @@ export default {
   },
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
+  confirmRemoveChatGroupItemAlert: '即将删除该群聊，删除后该群聊的成员将保留，请确认你的操作',
   confirmRemoveGroupItemAlert: '即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   confirmRemoveSessionSuccess: '助手删除成功',
