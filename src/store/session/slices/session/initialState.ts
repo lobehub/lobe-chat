@@ -6,6 +6,11 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
+  /**
+   * @title 并行会话IDs
+   * @description 并行打开的多个会话的ID列表
+   */
+  parallelSessionIds: string[];
   defaultSessions: LobeAgentSession[];
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
@@ -21,6 +26,7 @@ export interface SessionState {
 
 export const initialSessionState: SessionState = {
   activeId: 'inbox',
+  parallelSessionIds: [],
   defaultSessions: [],
   isSearching: false,
   isSessionsFirstFetchFinished: false,
