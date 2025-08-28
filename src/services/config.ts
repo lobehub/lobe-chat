@@ -1,11 +1,9 @@
+import { BRANDING_NAME, isDeprecatedEdition, isServerMode } from '@lobechat/const';
+import { downloadFile, exportJSONFile } from '@lobechat/utils/client';
 import dayjs from 'dayjs';
 
-import { BRANDING_NAME } from '@/const/branding';
-import { isDeprecatedEdition, isServerMode } from '@/const/version';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportPgDataStructure } from '@/types/export';
-import { downloadFile } from '@/utils/client/downloadFile';
-import { exportJSONFile } from '@/utils/client/exportFile';
 
 import { exportService } from './export';
 import { configService as deprecatedExportService } from './export/_deprecated';

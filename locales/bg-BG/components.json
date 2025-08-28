@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Назад"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Изтегляне",
+      "preview": "Преглед"
+    },
+    "iframeTitle": "HTML Преглед",
+    "mode": {
+      "code": "Код",
+      "preview": "Преглед"
+    },
+    "title": "HTML Преглед"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Кликнете, за да смените изображението",
