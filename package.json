@@ -353,7 +353,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx": "^3.1.0",
     "remark-parse": "^11.0.0",
-    "semantic-release": "^21.1.2",
+    "semantic-release": "^24.0.0",
     "serwist": "^9.1.1",
     "stylelint": "^15.11.0",
     "tsx": "^4.20.3",
