@@ -14,7 +14,9 @@ export default {
     notFoundMessage: '该页面不存在。',
     notFoundTitle: '哎呀！',
   },
-  session: {
-    expired: '登录已过期，请重新登录',
+  sessionExpired: {
+    desc: '为了保护您的账户安全，请重新登录',
+    login: '立即登录',
+    title: '登录已过期',
   },
 };

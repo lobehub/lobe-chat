@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { ListGroup } from '@/components';
 import { SettingItem } from '../(components)';
 import { useStyles } from './styles';
+import {
+  clearAuthData,
+  expireAccessTokenNow,
+  expireRefreshTokenNow,
+  invalidateAccessToken,
+  invalidateRefreshToken,
+} from './utils';
 
 export default function DeveloperScreen() {
   const { styles } = useStyles();
@@ -35,6 +42,64 @@ export default function DeveloperScreen() {
           isLast
           onPress={() => Alert.alert('Developer', 'Placeholder action')}
           title="Placeholder"
+        />
+      </ListGroup>
+      <ListGroup>
+        <SettingItem
+          onPress={async () => {
+            try {
+              await expireAccessTokenNow();
+              Alert.alert('Developer', '已使访问令牌立即过期');
+            } catch (e) {
+              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            }
+          }}
+          title="访问令牌过期"
+        />
+        <SettingItem
+          onPress={async () => {
+            try {
+              await expireRefreshTokenNow();
+              Alert.alert('Developer', '已使刷新令牌立即过期');
+            } catch (e) {
+              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            }
+          }}
+          title="刷新令牌过期"
+        />
+        <SettingItem
+          onPress={async () => {
+            try {
+              await invalidateAccessToken();
+              Alert.alert('Developer', '已写入无效的访问令牌');
+            } catch (e) {
+              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            }
+          }}
+          title="无效访问令牌"
+        />
+        <SettingItem
+          onPress={async () => {
+            try {
+              await invalidateRefreshToken();
+              Alert.alert('Developer', '已写入无效的刷新令牌');
+            } catch (e) {
+              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            }
+          }}
+          title="无效刷新令牌"
+        />
+        <SettingItem
+          isLast
+          onPress={async () => {
+            try {
+              await clearAuthData();
+              Alert.alert('Developer', '已清空认证数据');
+            } catch (e) {
+              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            }
+          }}
+          title="清空认证数据"
         />
       </ListGroup>
     </ScrollView>

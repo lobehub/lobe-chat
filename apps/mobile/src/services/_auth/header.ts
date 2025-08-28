@@ -5,6 +5,7 @@ import { LOBE_CHAT_OIDC_AUTH_HEADER, LOBE_CHAT_AUTH_HEADER } from '@/const/auth'
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
+import { authExpired } from '@/features/Error/AuthExpired';
 
 /**
  * 认证参数接口，与 Web 端保持一致
@@ -131,13 +132,11 @@ export const createHeaderWithAuth = async (
         } else {
           authLogger.error('Refreshed but no access token available');
           // 刷新后仍无 token，视为未认证
-          throw new Error('Authentication required');
+          throw new Error('Token refresh failed');
         }
       } catch (refreshError) {
         authLogger.error('Token refresh failed', refreshError);
-        // 刷新失败，清除认证状态
-        await useUserStore.getState().logout();
-        throw new Error('Authentication required');
+        authExpired.redirect();
       }
     } else {
       authLogger.info('Token valid, adding authorization header');
@@ -170,7 +169,6 @@ export const createHeaderWithAuth = async (
           'AI provider authentication failed, continuing with OIDC only',
           providerError,
         );
-        console.warn('AI provider authentication failed:', providerError);
       }
     }
 
@@ -180,7 +178,6 @@ export const createHeaderWithAuth = async (
     return finalHeaders;
   } catch (error) {
     authLogger.error('Error creating headers with auth', error);
-    console.error('Error creating headers with auth:', error);
     throw error;
   }
 };

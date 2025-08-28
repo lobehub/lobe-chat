@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "このページは存在しません。",
     "notFoundTitle": "おっと！"
+  },
+  "sessionExpired": {
+    "desc": "アカウントの安全を守るため、再度ログインしてください",
+    "login": "すぐにログイン",
+    "title": "ログインの有効期限が切れました"
   }
 }

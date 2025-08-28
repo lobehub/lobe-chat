@@ -15,6 +15,7 @@
     "title": "账号设置"
   },
   "changelog": "更新日志",
+  "developer": "开发者选项",
   "feedback": "意见反馈",
   "help": "使用帮助",
   "locale": {
@@ -41,7 +42,6 @@
   },
   "providers": "AI 服务商",
   "support": "邮件支持",
-  "developer": "开发者选项",
   "theme": {
     "auto": "跟随系统",
     "dark": "深色模式",

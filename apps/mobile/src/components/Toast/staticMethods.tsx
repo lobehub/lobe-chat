@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
 
-import { useToast } from './ToastProvider';
+import { useToast } from './InnerToastProvider';
 
 // Global toast manager for static methods
 let globalToastContext: ReturnType<typeof useToast> | null = null;

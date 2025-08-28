@@ -1,12 +1,34 @@
 import i18n from '@/i18n';
-
-import { Toast } from '@/components';
 import { useUserStore } from '@/store/user';
+import { router } from 'expo-router';
+import { Alert } from 'react-native';
 
-export const AuthExpired = {
-  redirect: ({ timeout = 2000 }: { timeout?: number } = {}) => {
-    Toast.error(i18n.t('session.expired', { ns: 'error' }), timeout, () => {
-      useUserStore.getState().logout();
-    });
+let isAuthExpiredAlertVisible = false;
+
+export const authExpired = {
+  redirect: () => {
+    if (isAuthExpiredAlertVisible) return;
+    isAuthExpiredAlertVisible = true;
+    Alert.alert(
+      i18n.t('sessionExpired.title', { ns: 'error' }),
+      i18n.t('sessionExpired.desc', { ns: 'error' }),
+      [
+        {
+          onPress: () => {
+            isAuthExpiredAlertVisible = false;
+            useUserStore.getState().logout();
+            router.replace('/login');
+          },
+          style: 'default',
+          text: i18n.t('sessionExpired.login', { ns: 'error' }),
+        },
+      ],
+      {
+        cancelable: false,
+        onDismiss: () => {
+          isAuthExpiredAlertVisible = false;
+        },
+      },
+    );
   },
 };

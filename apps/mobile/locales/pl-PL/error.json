@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "Ta strona nie istnieje.",
     "notFoundTitle": "Ups!"
+  },
+  "sessionExpired": {
+    "desc": "Aby chronić bezpieczeństwo Twojego konta, zaloguj się ponownie",
+    "login": "Zaloguj się teraz",
+    "title": "Sesja wygasła"
   }
 }
