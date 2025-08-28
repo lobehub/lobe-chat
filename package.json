@@ -223,7 +223,7 @@
     "oidc-provider": "^9.4.0",
     "ollama": "^0.5.16",
     "openai": "^4.104.0",
-    "openapi-fetch": "^0.9.8",
+    "openapi-fetch": "^0.14.0",
     "partial-json": "^0.1.7",
     "path-browserify-esm": "^1.0.6",
     "pdf-parse": "^1.1.1",
