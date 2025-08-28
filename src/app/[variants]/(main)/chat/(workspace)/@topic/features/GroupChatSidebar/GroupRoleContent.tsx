@@ -9,7 +9,6 @@ import GroupInfo from '@/features/GroupInfo';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { chatGroupSelectors } from '@/store/chatGroup/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { LobeGroupSession } from '@/types/session';
 
 import { useStyles } from './style';
@@ -18,6 +17,9 @@ interface GroupRoleContentProps {
   currentSession: LobeGroupSession;
 }
 
+/**
+ * Config for group role in sidebar
+ */
 const GroupRoleContent = memo<GroupRoleContentProps>(({ currentSession }) => {
   const { styles } = useStyles();
   const [systemPromptEditing, setSystemPromptEditing] = useState(false);
@@ -35,10 +37,7 @@ const GroupRoleContent = memo<GroupRoleContentProps>(({ currentSession }) => {
 
   return (
     <Flexbox gap={0} style={{ padding: '16px' }}>
-      <div
-        onClick={() => setSystemPromptModalOpen(true)}
-        style={{ cursor: 'pointer' }}
-      >
+      <div onClick={() => setSystemPromptModalOpen(true)} style={{ cursor: 'pointer' }}>
         <EditableMessage
           classNames={{ markdown: styles.prompt }}
           editing={systemPromptEditing}

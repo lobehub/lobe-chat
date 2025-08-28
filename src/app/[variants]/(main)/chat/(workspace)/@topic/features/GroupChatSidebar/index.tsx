@@ -10,7 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR } from '@/const/meta';
-
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useChatGroupStore } from '@/store/chatGroup';
@@ -181,11 +180,11 @@ const GroupChatSidebar = memo(() => {
                   items={[
                     {
                       key: 'members',
-                      label: `Members`,
+                      label: t('groupSidebar.tabs.members'),
                     },
                     {
                       key: 'role',
-                      label: 'Role',
+                      label: t('groupSidebar.tabs.role'),
                     },
                   ]}
                   onChange={(key) => setActiveTab(key)}
@@ -212,12 +211,12 @@ const GroupChatSidebar = memo(() => {
                               fontWeight: 500,
                             }}
                           >
-                            Orchestrator
+                            {t('groupSidebar.members.orchestrator')}
                           </div>
                         </Flexbox>
                         {isSupervisorLoading && (
                           <Flexbox gap={4} horizontal>
-                            <Tooltip title="Orchestrator is thinking...">
+                            <Tooltip title={t('groupSidebar.members.orchestratorThinking')}>
                               <ActionIcon icon={LoaderCircle} size={14} spin />
                             </Tooltip>
                           </Flexbox>
@@ -313,7 +312,7 @@ const GroupChatSidebar = memo(() => {
                                       handleRemoveMember(item.id);
                                     }}
                                     size={'small'}
-                                    title="Remove Member"
+                                    title={t('groupSidebar.members.removeMember')}
                                   />
                                 </Flexbox>
                               )}
@@ -323,23 +322,21 @@ const GroupChatSidebar = memo(() => {
                       />
                     ) : null}
 
-                    <div style={{ padding: '8px 8px 0 8px' }}>
+                    <div style={{ padding: '0 8px 0 8px' }}>
                       <Button
                         block
                         icon={UserPlus}
                         onClick={() => setAddModalOpen(true)}
                         size="middle"
-                        variant="dashed"
+                        variant="filled"
                       >
-                        Add Member
+                        {t('groupSidebar.members.addMember')}
                       </Button>
                     </div>
                   </>
                 )}
 
-                {activeTab === 'role' && (
-                  <GroupRoleContent currentSession={currentSession} />
-                )}
+                {activeTab === 'role' && <GroupRoleContent currentSession={currentSession} />}
               </Flexbox>
 
               <Flexbox className={styles.topicList} flex={1}>
