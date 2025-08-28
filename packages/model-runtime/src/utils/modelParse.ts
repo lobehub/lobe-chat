@@ -111,6 +111,7 @@ export const IMAGE_MODEL_KEYWORDS = [
   'wanxiang',
   'DESCRIBE',
   'UPSCALE',
+  '!gemini', // 排除 gemini 模型，即使包含 -image 也是 chat 模型
   '-image',
   '^V3',
   '^V_2',
