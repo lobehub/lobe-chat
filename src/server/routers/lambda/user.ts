@@ -37,6 +37,10 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
 });
 
 export const userRouter = router({
+  deleteAccount: userProcedure.mutation(async ({ ctx }) => {
+    return ctx.userModel.deleteAccount();
+  }),
+  
   getUserRegistrationDuration: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserRegistrationDuration();
   }),
@@ -52,13 +56,13 @@ export const userRouter = router({
     while (!state) {
       try {
         state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
-        
+
         // Check if user is deleted
         const user = await UserModel.findById(ctx.serverDB, ctx.userId);
         if (user?.isDeleted) {
-          throw new TRPCError({ 
-            code: 'UNAUTHORIZED', 
-            message: 'Account has been deleted' 
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'Account has been deleted'
           });
         }
       } catch (error) {
@@ -243,9 +247,6 @@ export const userRouter = router({
       return ctx.userModel.updateSetting(nextValue);
     }),
 
-  deleteAccount: userProcedure.mutation(async ({ ctx }) => {
-    return ctx.userModel.deleteAccount();
-  }),
 });
 
 export type UserRouter = typeof userRouter;

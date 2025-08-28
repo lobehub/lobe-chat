@@ -2,21 +2,18 @@
 
 import { Button, Modal, Typography } from 'antd';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
 import { lambdaClient } from '@/libs/trpc/client';
 import { handleAccountDeleted } from '@/utils/account';
 
 const { Title, Paragraph, Text } = Typography;
 
 interface DeleteAccountModalProps {
-  open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  open: boolean;
 }
 
 const DeleteAccountModal = ({ open, onCancel, onConfirm }: DeleteAccountModalProps) => {
-  const { t } = useTranslation('auth');
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -36,24 +33,24 @@ const DeleteAccountModal = ({ open, onCancel, onConfirm }: DeleteAccountModalPro
   return (
     <Modal
       centered
-      open={open}
-      onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
           取消
         </Button>,
         <Button 
-          key="confirm" 
-          type="primary" 
           danger 
-          loading={loading}
+          key="confirm" 
+          loading={loading} 
           onClick={handleConfirm}
+          type="primary"
         >
           确认删除账户
         </Button>,
       ]}
+      onCancel={onCancel}
+      open={open}
       title={
-        <Title level={4} style={{ margin: 0, color: '#ff4d4f' }}>
+        <Title level={4} style={{ color: '#ff4d4f', margin: 0 }}>
           账户注销：重要须知
         </Title>
       }
