@@ -201,7 +201,7 @@
     "jose": "^5.10.0",
     "js-sha256": "^0.11.1",
     "jsonl-parse-stringify": "^1.0.3",
-    "keyv": "^4.5.4",
+    "keyv": "^5.0.0",
     "langchain": "^0.3.30",
     "langfuse": "^3.38.4",
     "langfuse-core": "^3.38.4",
