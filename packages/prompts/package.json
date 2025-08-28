@@ -8,7 +8,6 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*"
   }
 }

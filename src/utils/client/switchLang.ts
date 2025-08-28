@@ -1,7 +1,7 @@
-import { LOBE_LOCALE_COOKIE } from '@lobechat/const';
 import { setCookie } from '@lobechat/utils';
 import { changeLanguage } from 'i18next';
 
+import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LocaleMode } from '@/types/locale';
 
 export const switchLang = (locale: LocaleMode) => {
