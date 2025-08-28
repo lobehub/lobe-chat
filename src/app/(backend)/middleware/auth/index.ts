@@ -5,6 +5,7 @@ import {
   ModelRuntime,
 } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
+import { getXorPayload } from '@lobechat/utils/server';
 import { NextRequest } from 'next/server';
 
 import {
@@ -17,7 +18,6 @@ import {
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
