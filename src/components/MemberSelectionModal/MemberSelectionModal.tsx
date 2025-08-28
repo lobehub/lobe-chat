@@ -136,7 +136,7 @@ export interface MemberSelectionModalProps {
 }
 
 const MemberSelectionModal = memo<MemberSelectionModalProps>(
-  ({ existingMembers = [], groupId, mode, onCancel, onConfirm, open, preSelectedAgents = [] }) => {
+  ({ existingMembers = [], mode, onCancel, onConfirm, open, preSelectedAgents = [] }) => {
     const { t } = useTranslation(['chat', 'common']);
     const { styles, cx } = useStyles();
     const [selectedAgents, setSelectedAgents] = useState<string[]>(preSelectedAgents);

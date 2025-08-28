@@ -10,7 +10,7 @@ import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, id, content, targetId }) => {
+export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
   const loading = useChatStore(chatSelectors.isMessageGenerating(id));
 
   const showTranslate = !!extra?.translate;
