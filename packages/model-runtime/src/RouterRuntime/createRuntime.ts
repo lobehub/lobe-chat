@@ -10,7 +10,7 @@ import {
   CreateImageOptions,
   CustomClientOptions,
 } from '@/libs/model-runtime/utils/openaiCompatibleFactory';
-import { postPrecessModelList } from '@/libs/model-runtime/utils/postProcessModelList';
+import { postProcessModelList } from '@/libs/model-runtime/utils/postProcessModelList';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -213,7 +213,7 @@ export const createRouterRuntime = ({
         const lastRuntime = this._runtimes.at(-1)?.runtime;
         if (lastRuntime && 'client' in lastRuntime) {
           const modelList = await models({ client: (lastRuntime as any).client });
-          return await postPrecessModelList(modelList);
+          return await postProcessModelList(modelList);
         }
       }
       return this._runtimes.at(-1)?.runtime.models?.();

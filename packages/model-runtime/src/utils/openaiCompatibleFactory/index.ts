@@ -30,7 +30,7 @@ import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../openaiHelpers';
-import { postPrecessModelList } from '../postProcessModelList';
+import { postProcessModelList } from '../postProcessModelList';
 import { StreamingResponse } from '../response';
 import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
 import { createOpenAICompatibleImage } from './createImage';
@@ -387,7 +387,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           .filter(Boolean) as ChatModelCard[];
       }
 
-      return await postPrecessModelList(resultModels, (modelId) =>
+      return await postProcessModelList(resultModels, (modelId) =>
         getModelPropertyWithFallback<AiModelType>(modelId, 'type'),
       );
     }

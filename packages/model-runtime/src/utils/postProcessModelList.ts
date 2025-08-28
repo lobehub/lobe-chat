@@ -14,7 +14,7 @@ export const IMAGE_GENERATION_MODEL_WHITELIST = [
  * @param getModelTypeProperty Optional callback function to get model type property
  * @returns Processed model list (including image generation models)
  */
-export async function postPrecessModelList(
+export async function postProcessModelList(
   models: ChatModelCard[],
   getModelTypeProperty?: (modelId: string) => Promise<AiModelType>,
 ): Promise<ChatModelCard[]> {
