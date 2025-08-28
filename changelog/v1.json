@@ -11,7 +11,18 @@
   },
   {
     "children": {
-      "features": ["Add gemini 2.5 flash image for vertex ai."]
+      "features": [
+        "Add gemini 2.5 flash image for vertex ai."
+      ]
+    },
+    "date": "2025-08-27",
+    "version": "1.118.0"
+  },
+  {
+    "children": {
+      "features": [
+        "Add gemini 2.5 flash image for vertex ai."
+      ]
     },
     "date": "2025-08-27",
     "version": "1.116.0"
