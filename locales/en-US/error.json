@@ -85,6 +85,17 @@
     "CreateMessageError": "Sorry, the message could not be sent successfully. Please copy the content and try sending it again. This message will not be retained after refreshing the page.",
     "ExceededContextWindow": "The current request content exceeds the length that the model can handle. Please reduce the amount of content and try again.",
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Your content contains prohibited terms. Please review and modify your input, then try again.",
+      "IMAGE_SAFETY": "The generated image content was blocked for safety reasons. Please try changing your image generation request.",
+      "LANGUAGE": "The language you used is not currently supported. Please try again in English or another supported language.",
+      "OTHER": "The content was blocked for an unknown reason. Please try rephrasing your request.",
+      "PROHIBITED_CONTENT": "Your request may contain prohibited content. Please adjust your request to comply with the usage guidelines.",
+      "RECITATION": "Your content was blocked due to potential copyright concerns. Please try using original content or rephrase your request.",
+      "SAFETY": "Your content was blocked by safety policies. Please modify your request to avoid potentially harmful or inappropriate content.",
+      "SPII": "Your content may contain sensitive personal identifying information. To protect privacy, please remove such information and try again.",
+      "default": "Content blocked: {{blockReason}}. Please adjust your request and try again."
+    },
     "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
@@ -113,18 +124,6 @@
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
     "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information",
-
-    "GoogleAIBlockReason": {
-      "BLOCKLIST": "Your content contains prohibited terms. Please review and modify your input before retrying.",
-      "IMAGE_SAFETY": "Generated image content was blocked for safety reasons. Please try modifying your image generation request.",
-      "LANGUAGE": "The language you used is not supported. Please try using English or other supported languages.",
-      "OTHER": "Content was blocked for unknown reasons. Please try rephrasing your request or contact technical support.",
-      "PROHIBITED_CONTENT": "Your content may contain prohibited content types. Please adjust your request to ensure it complies with usage guidelines.",
-      "RECITATION": "Your content was blocked due to potential copyright issues. Please try using original content or rephrasing your request.",
-      "SAFETY": "Your content was blocked due to safety policies. Please try adjusting your request to avoid potentially harmful or inappropriate content.",
-      "SPII": "Your content may contain sensitive personally identifiable information. For privacy protection, please remove relevant sensitive information before retrying.",
-      "default": "Content was blocked: {{blockReason}}. Please adjust your request content and try again."
-    },
     "QuotaLimitReached": "We apologize, but the current token usage or number of requests has reached the quota limit for this key. Please increase the quota for this key or try again later.",
     "StreamChunkError": "Error parsing the message chunk of the streaming request. Please check if the current API interface complies with the standard specifications, or contact your API provider for assistance.",
     "SubscriptionKeyMismatch": "We apologize for the inconvenience. Due to a temporary system malfunction, your current subscription usage is inactive. Please click the button below to restore your subscription, or contact us via email for support.",
