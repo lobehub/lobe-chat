@@ -1,5 +1,4 @@
 import { Tag } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
 import { Lock } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +23,6 @@ export interface DMTagProps {
 
 const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
   const toggleThread = useChatGroupStore((s) => s.toggleThread);
 
   const currentUserAvatar = useUserStore(userProfileSelectors.userAvatar);
@@ -43,7 +41,7 @@ const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
     return {
       avatar: agentMeta.avatar || DEFAULT_INBOX_AVATAR,
       backgroundColor: agentMeta.backgroundColor,
-      name: agentMeta.title || t('untitledAgent'),
+      name: ` ${agentMeta.title || t('untitledAgent')} `,
     };
   });
 
@@ -70,15 +68,7 @@ const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
       size="small"
       style={{ cursor: 'pointer' }}
     >
-      <span
-        style={{
-          // color: theme.colorSuccess,
-          // fontWeight: 500,
-        }}
-      >
-        Only Visible to {/* {t('messages.dm.sentTo')} */}
-        {targetInfo.name}
-      </span>
+      {t('messages.dm.sentTo', { name: targetInfo.name })}
     </Tag>
   );
 });

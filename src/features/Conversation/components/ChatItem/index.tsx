@@ -258,15 +258,7 @@ const Item = memo<ChatListItemProps>(
           >
             <ChatItem
               actions={actionBar}
-              avatar={{
-                ...item.meta,
-                title: (
-                  <Flexbox align="center" gap={8} horizontal>
-                    <div style={{ flex: 1, textWrap: 'nowrap' }}>{item.meta.title}</div>
-                    {isDM && <DMTag senderId={item.agentId} targetId={item.targetId} />}
-                  </Flexbox>
-                ),
-              }}
+              avatar={item.meta}
               belowMessage={belowMessage}
               editing={editing}
               error={error}
@@ -286,6 +278,7 @@ const Item = memo<ChatListItemProps>(
               showTitle={isGroupSession && item.role !== 'user' && !inPortalThread}
               text={text}
               time={item.updatedAt || item.createdAt}
+              titleAddon={isDM && <DMTag senderId={item.agentId} targetId={item.targetId} />}
               variant={type === 'chat' ? 'bubble' : 'docs'}
             />
             {endRender}

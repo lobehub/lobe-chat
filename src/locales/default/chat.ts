@@ -140,7 +140,7 @@ export default {
 
   messages: {
     dm: {
-      sentTo: '发送给',
+      sentTo: '仅对{{name}}可见',
       title: '私信',
     },
     modelCard: {

@@ -4,9 +4,11 @@ import { ActionIcon, Avatar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Edit, UserMinus } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
+import { DEFAULT_AVATAR } from '@/const/meta';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { chatGroupSelectors } from '@/store/chatGroup/selectors';
 import { useSessionStore } from '@/store/session';
@@ -42,6 +44,7 @@ const useStyles = createStyles(({ css, token }) => ({
 const GroupMembers = memo(() => {
   const { styles } = useStyles();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const { t } = useTranslation('common');
 
   const activeGroupId = useSessionStore((s) => s.activeId);
   const currentSession = useSessionStore(sessionSelectors.currentSession) as LobeGroupSession;
@@ -101,7 +104,7 @@ const GroupMembers = memo(() => {
           <div className={styles.memberItem} key={agent.id}>
             <Flexbox align={'center'} gap={12} horizontal>
               <Avatar
-                avatar={agent.avatar}
+                avatar={agent.avatar || DEFAULT_AVATAR}
                 background={agent.backgroundColor || undefined}
                 size={32}
               />
@@ -112,7 +115,7 @@ const GroupMembers = memo(() => {
                     fontWeight: 500,
                   }}
                 >
-                  {agent.title}
+                  {agent.title || t('defaultSession')}
                 </div>
                 {agent.description && (
                   <div
