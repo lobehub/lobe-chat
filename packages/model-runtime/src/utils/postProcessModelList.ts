@@ -14,7 +14,7 @@ export const IMAGE_GENERATION_MODEL_WHITELIST = [
  * @param getModelTypeProperty 可选的获取模型 type 属性的回调函数
  * @returns 处理后的模型列表（包含图像生成模型）
  */
-export async function processModelListWithImageModels(
+export async function postPrecessModelList(
   models: ChatModelCard[],
   getModelTypeProperty?: (modelId: string) => Promise<AiModelType>,
 ): Promise<ChatModelCard[]> {

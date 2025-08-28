@@ -198,7 +198,7 @@ async function generateByChatModel(
 
   // Check if response has images in the expected format
   if ((message as any).images && Array.isArray((message as any).images)) {
-    const images = (message as any).images;
+    const { images } = message as any;
     if (images.length > 0) {
       const image = images[0];
       if (image.image_url?.url) {
