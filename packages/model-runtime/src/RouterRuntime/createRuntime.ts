@@ -10,6 +10,7 @@ import {
   CreateImageOptions,
   CustomClientOptions,
 } from '@/libs/model-runtime/utils/openaiCompatibleFactory';
+import { processModelListWithImageModels } from '@/libs/model-runtime/utils/pullModelsPostProcess';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -211,7 +212,8 @@ export const createRouterRuntime = ({
         // 如果是函数式配置，使用最后一个 runtime 的 client 调用函数
         const lastRuntime = this._runtimes.at(-1)?.runtime;
         if (lastRuntime && 'client' in lastRuntime) {
-          return await models({ client: (lastRuntime as any).client });
+          const modelList = await models({ client: (lastRuntime as any).client });
+          return await processModelListWithImageModels(modelList);
         }
       }
       return this._runtimes.at(-1)?.runtime.models?.();
