@@ -8,6 +8,7 @@ export const DEFAULT_CHAT_GROUP_CHAT_CONFIG: LobeChatGroupChatConfig = {
     responseOrder: 'natural',
     responseSpeed: 'fast',
     revealDM: false,
+    systemPrompt: '',
 };
 
 export const DEFAULT_CHAT_GROUP_META_CONFIG: LobeChatGroupMetaConfig = {
