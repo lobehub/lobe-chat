@@ -107,11 +107,6 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorFillQuaternary};
     opacity: 0.6;
   `,
-  title: css`
-    line-height: 1.2;
-    font-size: 13px;
-    font-weight: 500;
-  `,
 }));
 
 export type MemberSelectionMode = 'create' | 'add';
@@ -256,11 +251,10 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
 
     // Dynamic content based on mode
     const modalTitle =
-      mode === 'create'
-        ? t('memberSelection.setInitialMembers', { ns: 'chat' })
-        : t('memberSelection.addMember', { ns: 'chat' });
+      mode === 'create' ? t('memberSelection.setInitialMembers') : t('memberSelection.addMember');
 
-    const confirmButtonText = mode === 'create' ? 'Create Group' : 'Add';
+    const confirmButtonText =
+      mode === 'create' ? t('memberSelection.createGroup') : t('memberSelection.addMember');
 
     const minMembersRequired = mode === 'create' ? 1 : 0; // At least 1 member for group creation
     const isConfirmDisabled = selectedAgents.length < minMembersRequired || isAdding;

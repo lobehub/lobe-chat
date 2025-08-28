@@ -134,11 +134,12 @@ export default {
     viewMore: '查看更多',
   },
   memberSelection: {
-    addMember: 'Add Member',
-    noAvailableAgents: 'No available agents',
-    noSelectedAgents: 'No selected agents',
-    searchAgents: 'Search agents...',
-    setInitialMembers: 'Set Initial Members',
+    addMember: '添加成员',
+    createGroup: '创建群聊',
+    noAvailableAgents: '没有可邀请的助手',
+    noSelectedAgents: '还未选择助手',
+    searchAgents: '搜索助手...',
+    setInitialMembers: '选择群成员',
   },
 
   members: 'Members',

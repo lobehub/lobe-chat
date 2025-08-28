@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, Button, SortableList, Tabs, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, SortableList, Tabs, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LoaderCircle, MessageSquare, UserMinus, UserPlus } from 'lucide-react';
@@ -232,14 +232,7 @@ const GroupChatSidebar = memo(() => {
                         </div>
                         <Avatar avatar={currentUser.avatar} size={24} />
                         <Flexbox flex={1}>
-                          <div
-                            style={{
-                              fontSize: '14px',
-                              fontWeight: 500,
-                            }}
-                          >
-                            {currentUser.name}
-                          </div>
+                          <div>{currentUser.name}</div>
                         </Flexbox>
                       </Flexbox>
                     </div>
@@ -269,11 +262,10 @@ const GroupChatSidebar = memo(() => {
                             >
                               <Flexbox
                                 align={'center'}
-                                flex={1}
                                 gap={8}
                                 horizontal
                                 onClick={() => handleMemberClick(item.id)}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer', flex: '1 1 0', minWidth: 0 }}
                               >
                                 <SortableList.DragHandle />
                                 <Avatar
@@ -281,16 +273,11 @@ const GroupChatSidebar = memo(() => {
                                   background={item.backgroundColor!}
                                   size={24}
                                 />
-                                <Flexbox flex={1}>
-                                  <div
-                                    style={{
-                                      fontSize: '14px',
-                                      fontWeight: 500,
-                                    }}
-                                  >
+                                <div style={{ flex: '1 1 0', minWidth: 0, overflow: 'hidden' }}>
+                                  <Text ellipsis style={{ display: 'block' }}>
                                     {item.title || t('defaultSession', { ns: 'common' })}
-                                  </div>
-                                </Flexbox>
+                                  </Text>
+                                </div>
                               </Flexbox>
                               {hoveredMemberId === item.id && (
                                 <Flexbox gap={4} horizontal>
