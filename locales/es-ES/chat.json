@@ -72,8 +72,8 @@
     "addUser": "Agregar un mensaje de usuario",
     "more": "más",
     "send": "Enviar",
-    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
-    "sendWithEnter": "Enviar con Enter",
+    "sendWithCmdEnter": "Presiona <key/> para enviar",
+    "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
     "warp": "Salto de línea"
   },
@@ -231,6 +231,10 @@
     "divider": "Subtema",
     "threadMessageCount": "{{messageCount}} mensajes",
     "title": "Subtema"
+  },
+  "toggleWideScreen": {
+    "off": "Desactivar modo de pantalla ancha",
+    "on": "Activar modo de pantalla ancha"
   },
   "tokenDetails": {
     "chats": "Mensajes de chat",

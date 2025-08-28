@@ -72,8 +72,8 @@
     "addUser": "إضافة رسالة مستخدم",
     "more": "المزيد",
     "send": "إرسال",
-    "sendWithCmdEnter": "اضغط {{meta}} + Enter للإرسال",
-    "sendWithEnter": "اضغط Enter للإرسال",
+    "sendWithCmdEnter": "اضغط <key/> للإرسال",
+    "sendWithEnter": "اضغط <key/> للإرسال",
     "stop": "توقف",
     "warp": "تغيير السطر"
   },
@@ -231,6 +231,10 @@
     "divider": "موضوع فرعي",
     "threadMessageCount": "{{messageCount}} رسالة",
     "title": "موضوع فرعي"
+  },
+  "toggleWideScreen": {
+    "off": "إيقاف وضع الشاشة العريضة",
+    "on": "تشغيل وضع الشاشة العريضة"
   },
   "tokenDetails": {
     "chats": "رسائل المحادثة",

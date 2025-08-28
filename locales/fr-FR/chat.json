@@ -72,8 +72,8 @@
     "addUser": "Ajouter un message utilisateur",
     "more": "Plus",
     "send": "Envoyer",
-    "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
-    "sendWithEnter": "Envoyer avec Entrée",
+    "sendWithCmdEnter": "Appuyez sur <key/> pour envoyer",
+    "sendWithEnter": "Appuyez sur <key/> pour envoyer",
     "stop": "Arrêter",
     "warp": "Saut de ligne"
   },
@@ -231,6 +231,10 @@
     "divider": "Sous-sujet",
     "threadMessageCount": "{{messageCount}} messages",
     "title": "Sous-sujet"
+  },
+  "toggleWideScreen": {
+    "off": "Désactiver le mode écran large",
+    "on": "Activer le mode écran large"
   },
   "tokenDetails": {
     "chats": "Messages de discussion",

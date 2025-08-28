@@ -1505,7 +1505,9 @@
   "gpt-4.1-nano": {
     "description": "GPT-4.1 mini ofrece un equilibrio entre inteligencia, velocidad y costo, lo que lo convierte en un modelo atractivo para muchos casos de uso."
   },
-  "gpt-4.5-preview": "GPT-4.5-preview es el modelo de propósito general más reciente, con un profundo conocimiento del mundo y una mejor comprensión de las intenciones de los usuarios; destaca en tareas creativas y en la planificación de agentes. El conocimiento de este modelo está actualizado hasta octubre de 2023.",
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5-preview es el modelo de propósito general más reciente, con un profundo conocimiento del mundo y una mejor comprensión de las intenciones de los usuarios; destaca en tareas creativas y en la planificación de agentes. El conocimiento de este modelo está actualizado hasta octubre de 2023."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o es un modelo dinámico que se actualiza en tiempo real para mantener la versión más actual. Combina una poderosa comprensión y generación de lenguaje, adecuado para aplicaciones a gran escala, incluyendo servicio al cliente, educación y soporte técnico."
   },

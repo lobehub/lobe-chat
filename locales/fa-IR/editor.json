@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "جمع کردن",
+      "on": "باز کردن"
+    },
+    "typobar": {
+      "off": "مخفی کردن نوار ابزار قالب‌بندی",
+      "on": "نمایش نوار ابزار قالب‌بندی"
+    }
+  },
+  "file": {
+    "error": "خطا: {{message}}",
+    "uploading": "در حال بارگذاری فایل..."
+  },
+  "image": {
+    "broken": "تصویر خراب است"
+  },
+  "link": {
+    "edit": "ویرایش پیوند",
+    "open": "باز کردن پیوند",
+    "placeholder": "آدرس URL پیوند را وارد کنید",
+    "unlink": "حذف پیوند"
+  },
+  "table": {
+    "delete": "حذف جدول",
+    "deleteColumn": "حذف ستون",
+    "deleteRow": "حذف ردیف",
+    "insertColumnLeft": "درج {{count}} ستون در سمت چپ",
+    "insertColumnRight": "درج {{count}} ستون در سمت راست",
+    "insertRowAbove": "درج {{count}} ردیف در بالا",
+    "insertRowBelow": "درج {{count}} ردیف در پایین"
+  },
+  "typobar": {
+    "blockquote": "نقل قول",
+    "bold": "پررنگ",
+    "bulletList": "فهرست نشانه‌دار",
+    "code": "کد درون‌خطی",
+    "codeblock": "بلوک کد",
+    "italic": "ایتالیک",
+    "link": "پیوند",
+    "numberList": "فهرست شماره‌دار",
+    "strikethrough": "خط خورده",
+    "table": "درج جدول",
+    "underline": "زیرخط"
+  }
+}

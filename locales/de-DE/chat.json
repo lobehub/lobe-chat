@@ -72,8 +72,8 @@
     "addUser": "Fügen Sie eine Benutzer-Nachricht hinzu",
     "more": "Mehr",
     "send": "Senden",
-    "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
-    "sendWithEnter": "Mit Eingabetaste senden",
+    "sendWithCmdEnter": "Drücken Sie <key/>, um zu senden",
+    "sendWithEnter": "Drücken Sie <key/>, um zu senden",
     "stop": "Stoppen",
     "warp": "Zeilenumbruch"
   },
@@ -231,6 +231,10 @@
     "divider": "Unterthema",
     "threadMessageCount": "{{messageCount}} Nachrichten",
     "title": "Unterthema"
+  },
+  "toggleWideScreen": {
+    "off": "Breitbildmodus deaktivieren",
+    "on": "Breitbildmodus aktivieren"
   },
   "tokenDetails": {
     "chats": "Chats",

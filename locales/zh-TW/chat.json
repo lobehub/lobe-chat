@@ -72,8 +72,8 @@
     "addUser": "新增一條使用者訊息",
     "more": "更多",
     "send": "發送",
-    "sendWithCmdEnter": "按 {{meta}} + Enter 鍵發送",
-    "sendWithEnter": "按 Enter 鍵發送",
+    "sendWithCmdEnter": "按 <key/> 鍵發送",
+    "sendWithEnter": "按 <key/> 鍵發送",
     "stop": "停止",
     "warp": "換行"
   },
@@ -231,6 +231,10 @@
     "divider": "子話題",
     "threadMessageCount": "{{messageCount}} 條消息",
     "title": "子話題"
+  },
+  "toggleWideScreen": {
+    "off": "關閉寬螢幕模式",
+    "on": "開啟寬螢幕模式"
   },
   "tokenDetails": {
     "chats": "聊天訊息",

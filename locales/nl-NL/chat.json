@@ -72,8 +72,8 @@
     "addUser": "Voeg een gebruikersbericht toe",
     "more": "Meer",
     "send": "Verzenden",
-    "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
-    "sendWithEnter": "Verzenden met Enter",
+    "sendWithCmdEnter": "Druk op <key/> om te verzenden",
+    "sendWithEnter": "Druk op <key/> om te verzenden",
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
@@ -231,6 +231,10 @@
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
     "title": "Subonderwerp"
+  },
+  "toggleWideScreen": {
+    "off": "Schakel breedbeeldmodus uit",
+    "on": "Schakel breedbeeldmodus in"
   },
   "tokenDetails": {
     "chats": "Chats",
