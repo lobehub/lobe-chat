@@ -6,6 +6,7 @@ import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import type { ChatModelCard } from '@/types/llm';
 
@@ -50,6 +51,12 @@ export const CHAT_MODELS_BLOCK_LIST = [
   'whisper',
   'dall-e',
 ];
+
+// 支持自动生成图像模型的白名单
+const IMAGE_GENERATION_MODEL_WHITELIST = [
+  'gemini-2.5-flash-image-preview',
+  // 未来可以添加更多模型
+] as const;
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
 export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
@@ -489,7 +496,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           .filter(Boolean) as ChatModelCard[];
       }
 
-      return (await Promise.all(
+      const finalModels = (await Promise.all(
         resultModels.map(async (model) => {
           return {
             ...model,
@@ -497,6 +504,25 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           };
         }),
       )) as ChatModelCard[];
+
+      // 检查白名单中的模型并生成对应的图像版本
+      const imageModels: ChatModelCard[] = [];
+
+      for (const whitelistPattern of IMAGE_GENERATION_MODEL_WHITELIST) {
+        const matchingModels = finalModels.filter((model) => model.id.endsWith(whitelistPattern));
+
+        for (const model of matchingModels) {
+          imageModels.push({
+            ...model, // 复用原模型的所有配置
+            id: `${model.id}:image`,
+            // 覆盖为 image 类型
+parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS, 
+            type: 'image', // 设置图像参数
+          });
+        }
+      }
+
+      return [...finalModels, ...imageModels];
     }
 
     async embeddings(

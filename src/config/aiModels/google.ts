@@ -1,3 +1,4 @@
+import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
 import { ModelParamsSchema } from '@/libs/standard-parameters';
 import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
@@ -615,12 +616,7 @@ const googleImageModels: AIImageModelCard[] = [
     description:
       'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     releasedAt: '2025-08-26',
-    parameters: {
-      prompt: { default: '' },
-      imageUrl: {
-        default: null,
-      },
-    },
+    parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
