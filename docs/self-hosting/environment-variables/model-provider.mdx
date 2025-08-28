@@ -646,8 +646,33 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Optional
 - Description: Used to control the FAL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
 - Default: `-`
-- Example: `-all,+fal-model-1,+fal-model-2=fal-special`
+- Example: `-all,+flux/schnell,+flux-pro/kontext=FLUX.1 Kontext [pro]`
 
-The above example disables all models first, then enables `fal-model-1` and `fal-model-2` (displayed as `fal-special`).
+The above example disables all models first, then enables `flux/schnell` and `flux-pro/kontext` (displayed as `FLUX.1 Kontext [pro]`).
+
+## BFL
+
+### `ENABLED_BFL`
+
+- Type: Optional
+- Description: Enables BFL as a model provider by default. Set to `0` to disable the BFL service.
+- Default: `1`
+- Example: `0`
+
+### `BFL_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the BFL service.
+- Default: -
+- Example: `12345678-1234-1234-1234-123456789abc`
+
+### `BFL_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the BFL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+flux-pro-1.1,+flux-kontext-pro=FLUX.1 Kontext [pro]`
+
+The above example disables all models first, then enables `flux-pro-1.1` and `flux-kontext-pro` (displayed as `FLUX.1 Kontext [pro]`).
 
 [model-list]: /docs/self-hosting/advanced/model-list

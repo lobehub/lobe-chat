@@ -1,7 +1,12 @@
-import { DEFAULT_AGENT_META } from '@/const/meta';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings/llm';
-import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
-import { UserDefaultAgent } from '@/types/user/settings';
+import {
+  LobeAgentChatConfig,
+  LobeAgentConfig,
+  LobeAgentTTSConfig,
+  UserDefaultAgent,
+} from '@lobechat/types';
+
+import { DEFAULT_AGENT_META } from '../meta';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
 
 export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   showAllLocaleVoice: false,

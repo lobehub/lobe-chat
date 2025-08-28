@@ -18,10 +18,14 @@ import { useConfigPanelStyles } from '../style';
 // ======== Business Types ======== //
 
 export interface ImageUploadProps {
-  // Callback when URL changes
+  // Callback when URL changes - supports both old API (string) and new API (object with dimensions)
   className?: string; // Image URL
   maxFileSize?: number;
-  onChange?: (url?: string) => void;
+  onChange?: (
+    data?:
+      | string // Old API: just URL
+      | { dimensions?: { height: number, width: number; }, url: string; }, // New API: URL with dimensions
+  ) => void;
   style?: React.CSSProperties;
   value?: string | null;
 }
@@ -483,8 +487,11 @@ const ImageUpload: FC<ImageUploadProps> = memo(
         });
 
         if (result?.url) {
-          // Upload successful
-          onChange?.(result.url);
+          // Upload successful - pass dimensions if available
+          const callbackData = result.dimensions
+            ? { dimensions: result.dimensions, url: result.url }
+            : result.url;
+          onChange?.(callbackData);
         }
       } catch {
         // Upload failed
@@ -563,8 +570,11 @@ const ImageUpload: FC<ImageUploadProps> = memo(
         });
 
         if (result?.url) {
-          // Upload successful
-          onChange?.(result.url);
+          // Upload successful - pass dimensions if available
+          const callbackData = result.dimensions
+            ? { dimensions: result.dimensions, url: result.url }
+            : result.url;
+          onChange?.(callbackData);
         }
       } catch {
         // Upload failed

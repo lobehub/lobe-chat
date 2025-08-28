@@ -37,11 +37,15 @@ interface DisplayItem {
 }
 
 export interface MultiImagesUploadProps {
-  // Callback when URLs change
+  // Callback when URLs change - supports both old API (string[]) and new API (object with dimensions)
   className?: string; // Array of image URLs
   maxCount?: number;
   maxFileSize?: number;
-  onChange?: (urls: string[]) => void;
+  onChange?: (
+    data:
+      | string[] // Old API: just URLs
+      | { dimensions?: { height: number, width: number; }, urls: string[]; }, // New API: URLs with first image dimensions
+  ) => void;
   style?: React.CSSProperties;
   value?: string[];
 }
@@ -648,15 +652,21 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
         }),
       );
 
-      // Wait for all uploads to complete and collect successful URLs
+      // Wait for all uploads to complete and collect successful URLs and dimensions
       const uploadResults = await Promise.allSettled(uploadPromises);
       const successfulUrls: string[] = [];
+      let firstImageDimensions: { height: number, width: number; } | undefined;
 
       uploadResults.forEach((result, index) => {
         const displayItem = newDisplayItems[index];
 
         if (result.status === 'fulfilled' && result.value) {
           successfulUrls.push(result.value.url);
+
+          // Collect the first image's dimensions for auto-setting parameters
+          if (index === 0 && result.value.dimensions) {
+            firstImageDimensions = result.value.dimensions;
+          }
 
           // Update display item with final URL and success status
           setDisplayItems((prev) =>
@@ -694,10 +704,18 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
         }
       });
 
-      // Update parent component with new URLs
+      // Update parent component with new URLs and dimensions (if applicable)
       if (successfulUrls.length > 0) {
         const updatedUrls = [...currentUrls, ...successfulUrls];
-        onChange?.(updatedUrls);
+
+        // Pass dimensions if this is the first upload (no existing images) and only one image uploaded
+        const shouldPassDimensions = currentUrls.length === 0 && successfulUrls.length === 1;
+
+        if (shouldPassDimensions && firstImageDimensions) {
+          onChange?.({ dimensions: firstImageDimensions, urls: updatedUrls });
+        } else {
+          onChange?.(updatedUrls);
+        }
       }
 
       // Clear display items after all uploads complete

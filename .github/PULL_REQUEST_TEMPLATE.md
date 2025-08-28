@@ -8,6 +8,7 @@
 - [ ] 💄 style
 - [ ] 👷 build
 - [ ] ⚡️ perf
+- [ ] ✅ test
 - [ ] 📝 docs
 - [ ] 🔨 chore
 

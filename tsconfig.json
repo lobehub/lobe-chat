@@ -21,7 +21,7 @@
       "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
       "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
-      "@/const/*": ["./packages/const/src/*"],
+      "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
       "@/types/*": ["./packages/types/src/*", "./src/types/*"],
       "@/*": ["./src/*"],
@@ -34,14 +34,5 @@
     ]
   },
   "exclude": ["node_modules", "public/sw.js", "apps/desktop", "tmp", "temp", ".temp"],
-  "include": [
-    "**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next-env.d.ts",
-    "src",
-    "tests",
-    "vitest.config.ts"
-  ]
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
 }

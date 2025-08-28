@@ -1,9 +1,8 @@
+import { correctOIDCUrl, getUserAuth } from '@lobechat/utils/server';
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { OIDCService } from '@/server/services/oidc';
-import { getUserAuth } from '@/utils/server/auth';
-import { correctOIDCUrl } from '@/utils/server/correctOIDCUrl';
 
 const log = debug('lobe-oidc:consent');
 
