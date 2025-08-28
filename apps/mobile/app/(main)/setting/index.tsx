@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, Text } from 'react-native';
 import { isDev } from '@/utils/env';
 
-import { ListGroup, ColorSwatches } from '@/components';
+import { ColorSwatches } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { version } from '../../../package.json';
 import {
@@ -18,8 +18,9 @@ import { useStyles } from './styles';
 import { useSettingStore } from '@/store/setting';
 import Slider from '@/components/Slider';
 
-import { SettingItem } from './(components)';
+import { SettingItem, SettingGroup } from './(components)';
 import { FONT_SIZE_STANDARD, FONT_SIZE_LARGE, FONT_SIZE_SMALL } from '@/const/common';
+import Preview from './Preview';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
@@ -121,7 +122,8 @@ export default function SettingScreen() {
   return (
     <ScrollView style={styles.container}>
       {/* Theme settings inline */}
-      <ListGroup>
+      <SettingGroup>
+        <SettingItem customContent={<Preview />} title={t('theme.preview', { ns: 'setting' })} />
         <SettingItem
           onSwitchChange={(enabled) => setThemeMode(enabled ? 'auto' : 'light')}
           showSwitch
@@ -197,12 +199,11 @@ export default function SettingScreen() {
               value={fontSize}
             />
           }
-          isLast
           title={t('theme.fontSize.title', { ns: 'setting' })}
         />
-      </ListGroup>
+      </SettingGroup>
 
-      <ListGroup>
+      <SettingGroup>
         <SettingItem
           extra={getLocaleDisplayName()}
           href="/setting/locale"
@@ -210,15 +211,15 @@ export default function SettingScreen() {
         />
         <SettingItem href="/setting/account" title={t('account.title', { ns: 'setting' })} />
         <SettingItem href="/setting/providers" title={t('providers', { ns: 'setting' })} />
-      </ListGroup>
+      </SettingGroup>
 
       {isDev && (
-        <ListGroup>
-          <SettingItem href="/setting/developer" isLast title={t('developer', { ns: 'setting' })} />
-        </ListGroup>
+        <SettingGroup>
+          <SettingItem href="/setting/developer" title={t('developer', { ns: 'setting' })} />
+        </SettingGroup>
       )}
 
-      <ListGroup>
+      <SettingGroup>
         <SettingItem
           href="https://lobehub.com/docs?utm_source=mobile"
           title={t('help', { ns: 'setting' })}
@@ -232,8 +233,8 @@ export default function SettingScreen() {
           title={t('changelog', { ns: 'setting' })}
         />
         <SettingItem href="mailto:support@lobehub.com" title={t('support', { ns: 'setting' })} />
-        <SettingItem extra={version} isLast showNewBadge title={t('about', { ns: 'setting' })} />
-      </ListGroup>
+        <SettingItem extra={version} showNewBadge title={t('about', { ns: 'setting' })} />
+      </SettingGroup>
     </ScrollView>
   );
 }

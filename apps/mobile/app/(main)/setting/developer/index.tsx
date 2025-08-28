@@ -2,8 +2,7 @@ import React from 'react';
 import { ScrollView, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { ListGroup } from '@/components';
-import { SettingItem } from '../(components)';
+import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
 import {
   clearAuthData,
@@ -30,7 +29,7 @@ export default function DeveloperScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-      <ListGroup>
+      <SettingGroup>
         <SettingItem
           onSwitchChange={toggleVerboseLog}
           showSwitch
@@ -43,8 +42,8 @@ export default function DeveloperScreen() {
           onPress={() => Alert.alert('Developer', 'Placeholder action')}
           title="Placeholder"
         />
-      </ListGroup>
-      <ListGroup>
+      </SettingGroup>
+      <SettingGroup>
         <SettingItem
           onPress={async () => {
             try {
@@ -101,7 +100,7 @@ export default function DeveloperScreen() {
           }}
           title="清空认证数据"
         />
-      </ListGroup>
+      </SettingGroup>
     </ScrollView>
   );
 }

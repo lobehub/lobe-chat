@@ -1,12 +1,11 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 
-import { ListGroup } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { LANGUAGE_OPTIONS, LocaleMode } from '@/i18n/resource';
 import { useTranslation } from 'react-i18next';
 
-import { SettingItem } from '../(components)';
+import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
 
 export default function LocaleScreen() {
@@ -25,7 +24,7 @@ export default function LocaleScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-      <ListGroup>
+      <SettingGroup>
         {localeOptions.map((option, index) => (
           <SettingItem
             description={
@@ -39,7 +38,7 @@ export default function LocaleScreen() {
             title={option.label}
           />
         ))}
-      </ListGroup>
+      </SettingGroup>
     </ScrollView>
   );
 }

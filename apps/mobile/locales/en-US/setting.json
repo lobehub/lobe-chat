@@ -54,6 +54,7 @@
       "description": "Choose the neutral color tone for the app",
       "title": "Neutral Color"
     },
+    "preview": "Theme Preview",
     "primaryColor": {
       "description": "Choose the primary color tone for the app",
       "title": "Primary Color"
