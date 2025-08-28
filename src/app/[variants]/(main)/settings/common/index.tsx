@@ -1,11 +1,11 @@
 import Appearance from './features/Appearance';
 import ChatAppearance from './features/ChatAppearance';
-import Common from './features/Common';
+import Common from './features/Common/Common';
 
-const Page = () => {
+const Page = (props: any) => {
   return (
-    <>
-      <Common />
+    < >
+      <Common {...props} />
       <Appearance />
       <ChatAppearance />
     </>

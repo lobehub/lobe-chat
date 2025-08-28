@@ -19,7 +19,7 @@ export const useActiveSettingsKey = () => {
 
   const tabs = pathname.split('/').at(-1);
 
-  if (tabs === 'settings') return SettingsTabs.Common;
+  if (tabs === 'settings') return 'root' as SettingsTabs;
 
   return tabs as SettingsTabs;
 };

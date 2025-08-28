@@ -30,7 +30,7 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles } = useStyles();
 
   return (
-    <>
+    < >
       <Form.Group
         style={{ width: '100%' }}
         title={`${t('about')} ${BRANDING_NAME}`}
