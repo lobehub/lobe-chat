@@ -60,12 +60,15 @@ export const LobeNebiusAI = createOpenAICompatibleRuntime({
         contextWindowTokens: m.context_length ?? undefined,
         description: m.description ?? '',
         displayName: m.name ?? m.id,
+        functionCall: m.features?.includes('function-calling'),
         id: m.id,
         pricing: {
           input: m.pricing.prompt * 1_000_000,
           output: m.pricing.completion * 1_000_000,
         },
+        reasoning: m.features?.includes('reasoning'),
         type: inferredType,
+        vision: m.features?.includes('vision'),
       };
     });
 
