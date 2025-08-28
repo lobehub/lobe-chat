@@ -11,11 +11,11 @@ import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
-import { parseBrowserLanguage } from '@/utils/locale';
 import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import { oidcEnv } from './envs/oidc';
+import { parseBrowserLanguage } from './utils/locale';
 
 // Create debug logger instances
 const logDefault = debug('middleware:default');
