@@ -7,19 +7,19 @@ import { Flexbox } from 'react-layout-kit';
 import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
+import { SettingsTabs } from '@/store/global/initialState';
 
+import { useSettingsStore } from '../../hooks/useSettingsStore';
+import CategoryContent from '../CategoryContent';
+import SettingsContent from '../SettingsContent';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
-import CategoryContent from '../CategoryContent';
-import { SettingsTabs } from '@/store/global/initialState';
-import SettingsContent from '../SettingsContent';
-import { useSettingsStore } from '../../hooks/useSettingsStore';
 
 const Layout = memo<LayoutProps>(() => {
-  const [activeTab, setActiveTab] = useState(SettingsTabs.Common)
+  const [activeTab, setActiveTab] = useState(SettingsTabs.Common);
   const { state, actions } = useSettingsStore();
-  const category = <CategoryContent onMenuSelect={setActiveTab} />
+  const category = <CategoryContent onMenuSelect={setActiveTab} />;
   const ref = useRef<any>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
@@ -44,9 +44,9 @@ const Layout = memo<LayoutProps>(() => {
         <SettingsContent
           actions={actions}
           activeTab={activeTab}
+          mobile={false}
           state={state}
           // 应该改造成从顶部传入
-          mobile={false}
         />
       </SettingContainer>
       <InitClientDB />

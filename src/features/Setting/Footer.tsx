@@ -22,7 +22,7 @@ const useStyles = createStyles(
   `,
 );
 
-export const LayoutSettingsFooterClassName = 'settings-layout-footer'
+export const LayoutSettingsFooterClassName = 'settings-layout-footer';
 
 const Footer = memo<PropsWithChildren>(() => {
   const { t } = useTranslation('common');
@@ -34,7 +34,7 @@ const Footer = memo<PropsWithChildren>(() => {
 
   return hideGitHub ? null : (
     <>
-      <Flexbox justify={'flex-end'} className={LayoutSettingsFooterClassName}>
+      <Flexbox className={LayoutSettingsFooterClassName} justify={'flex-end'}>
         <Center
           as={'footer'}
           className={styles}
