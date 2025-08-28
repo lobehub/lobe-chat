@@ -1,7 +1,18 @@
 [
   {
     "children": {
-      "fixes": ["Fix desktop route error."]
+      "fixes": [
+        "Fix desktop route error."
+      ]
+    },
+    "date": "2025-08-28",
+    "version": "1.118.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix desktop route error."
+      ]
     },
     "date": "2025-08-28",
     "version": "1.116.3"
