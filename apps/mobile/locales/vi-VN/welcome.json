@@ -1,1 +1,45 @@
-{}
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Đổi một nhóm",
+      "title": "Gợi ý trợ lý mới:"
+    },
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn bây giờ?<br />Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn <plus /> để tạo trợ lý tùy chỉnh",
+    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn bây giờ?",
+    "qa": {
+      "q01": "LobeHub là gì?",
+      "q02": "{{appName}} là gì?",
+      "q03": "{{appName}} có hỗ trợ cộng đồng không?",
+      "q04": "{{appName}} hỗ trợ những chức năng nào?",
+      "q05": "Làm thế nào để triển khai và sử dụng {{appName}}?",
+      "q06": "Giá cả của {{appName}} như thế nào?",
+      "q07": "{{appName}} có miễn phí không?",
+      "q08": "Có phiên bản dịch vụ đám mây không?",
+      "q09": "Có hỗ trợ mô hình ngôn ngữ cục bộ không?",
+      "q10": "Có hỗ trợ nhận dạng và tạo hình ảnh không?",
+      "q11": "Có hỗ trợ tổng hợp giọng nói và nhận dạng giọng nói không?",
+      "q12": "Có hỗ trợ hệ thống plugin không?",
+      "q13": "Có chợ riêng để lấy GPTs không?",
+      "q14": "Có hỗ trợ nhiều nhà cung cấp dịch vụ AI không?",
+      "q15": "Nếu tôi gặp vấn đề khi sử dụng thì nên làm gì?"
+    }
+  },
+  "header": "Chào mừng bạn sử dụng",
+  "pickAgent": "Hoặc chọn từ mẫu trợ lý dưới đây",
+  "questions": {
+    "moreBtn": "Tìm hiểu thêm",
+    "title": "Mọi người đang hỏi:"
+  },
+  "skip": "Bỏ qua tạo",
+  "slogan": {
+    "desc1": "Kích hoạt cụm não bộ, khơi nguồn ý tưởng. Trợ lý thông minh của bạn luôn bên cạnh.",
+    "desc2": "Tạo trợ lý đầu tiên của bạn, hãy bắt đầu nào~",
+    "title": "Hãy cho mình một bộ não thông minh hơn"
+  },
+  "welcome": {
+    "afternoon": "Chào buổi chiều",
+    "morning": "Chào buổi sáng",
+    "night": "Chào buổi tối",
+    "noon": "Chào buổi trưa"
+  }
+}

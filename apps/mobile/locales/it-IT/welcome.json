@@ -22,24 +22,24 @@
       "q13": "Ha un proprio marketplace per ottenere GPT?",
       "q14": "Supporta diversi fornitori di servizi AI?",
       "q15": "Cosa devo fare se incontro problemi durante l'uso?"
+    },
+    "questions": {
+      "moreBtn": "Scopri di più",
+      "title": "Domande frequenti:"
+    },
+    "welcome": {
+      "afternoon": "Buon pomeriggio",
+      "morning": "Buongiorno",
+      "night": "Buonasera",
+      "noon": "Buon mezzogiorno"
     }
   },
   "header": "Benvenuto",
   "pickAgent": "O scegli un modello di assistente tra quelli seguenti",
-  "questions": {
-    "moreBtn": "Scopri di più",
-    "title": "Domande frequenti:"
-  },
   "skip": "Salta creazione",
   "slogan": {
     "desc1": "Attiva un cluster cerebrale, accendi scintille di pensiero. Il tuo assistente intelligente è sempre con te.",
     "desc2": "Crea il tuo primo assistente, iniziamo~",
     "title": "Dai a te stesso un cervello più intelligente"
-  },
-  "welcome": {
-    "afternoon": "Buon pomeriggio",
-    "morning": "Buongiorno",
-    "night": "Buonasera",
-    "noon": "Buon mezzogiorno"
   }
 }

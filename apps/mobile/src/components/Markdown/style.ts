@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { Platform } from 'react-native';
 
-import { createStyles, useThemeToken } from '@/theme';
+import { useThemeToken } from '@/theme';
 
 import type { RemarkStyles } from './context';
 
@@ -12,74 +12,10 @@ export type RemarkStyleOptions = {
   marginMultiple: number;
 };
 
-export const useRemarkStyles = createStyles((token, options: RemarkStyleOptions) => ({
-  blockquote: {
-    borderLeftColor: token.colorBorder,
-    borderLeftWidth: 4,
-    color: token.colorTextSecondary,
-    marginVertical: options.fontSize * options.marginMultiple * 0.5,
-    paddingHorizontal: options.fontSize,
-  },
-  break: {},
-  container: { flex: 1 },
-  image: {
-    borderColor: token.colorBorderSecondary,
-    borderRadius: token.borderRadius,
-    borderWidth: 1,
-    marginVertical: token.marginMD,
-  },
-  inlineCode: {
-    backgroundColor: token.colorFillSecondary,
-    color: token.colorText,
-    fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
-    fontSize: options.fontSize * 0.875,
-  },
-  link: {
-    color: token.colorLink,
-    textDecorationLine: 'none',
-  },
-  linkReference: {
-    color: token.colorLink,
-    textDecorationLine: 'none',
-  },
-  list: {
-    marginVertical: token.marginXS,
-  },
-  listItem: {
-    marginVertical: token.marginXS,
-  },
-  paragraph: {
-    color: token.colorText,
-    letterSpacing: 0.2,
-    lineHeight: options.lineHeight * options.fontSize,
-    marginBlock: token.marginXXS,
-    marginBlockEnd: options.marginMultiple * 0.5 * options.fontSize,
-  },
-  strong: {
-    color: token.colorTextHeading,
-    fontWeight: token.fontWeightStrong,
-  },
-  tableCell: {
-    color: token.colorText,
-    minWidth: 120,
-    padding: token.paddingSM,
-  },
-  text: { color: token.colorText },
-  thematicBreak: {
-    borderBottomWidth: 1,
-    borderColor: token.colorBorderSecondary,
-    borderStyle: 'dashed',
-    marginVertical: token.marginLG,
-  },
-  tr: {
-    borderColor: token.colorBorderSecondary,
-    flexDirection: 'row',
-  },
-}));
-
-export const useHeading = (options: RemarkStyleOptions): NonNullable<RemarkStyles['heading']> => {
+export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
   const token = useThemeToken();
-  return useMemo(() => {
+
+  const heading = useCallback(() => {
     return (level: number) => {
       const mapping = [0, 1.5, 1, 0.5, 0.25, 0, 0];
       const multiple = mapping[level] ?? 0;
@@ -93,4 +29,85 @@ export const useHeading = (options: RemarkStyleOptions): NonNullable<RemarkStyle
       } as const;
     };
   }, [options.fontSize, options.headerMultiple, options.marginMultiple, token]);
+
+  return {
+    blockquote: {
+      borderLeftColor: token.colorBorder,
+      borderLeftWidth: 4,
+      marginVertical: options.fontSize * options.marginMultiple * 0.5,
+      paddingHorizontal: options.fontSize,
+    },
+    borderColor: token.colorBorder,
+    break: {},
+    container: { flex: 1 },
+    delete: {
+      color: token.colorTextDescription,
+      textDecorationLine: 'line-through',
+    },
+    emphasis: {
+      fontStyle: 'italic',
+    },
+    footnoteReference: {
+      color: '#8b949e',
+      fontSize: options.fontSize * 0.875,
+      marginBlockStart: options.fontSize * options.marginMultiple,
+    },
+    heading: heading(),
+    image: {
+      borderColor: token.colorBorder,
+      borderRadius: token.borderRadius,
+      borderWidth: 1,
+      marginBlock: options.fontSize * options.marginMultiple * 0.5,
+    },
+    inlineCode: {
+      backgroundColor: token.colorFillSecondary,
+      color: token.colorText,
+      fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
+      fontSize: options.fontSize * 0.875,
+    },
+    link: {
+      color: token.colorLink,
+      textDecorationLine: 'none',
+    },
+    linkReference: {
+      color: token.colorLink,
+      textDecorationLine: 'none',
+    },
+    list: {
+      marginVertical: token.marginXS,
+    },
+    listItem: {
+      marginVertical: token.marginXS,
+    },
+    paragraph: {
+      color: token.colorText,
+      letterSpacing: 0.2,
+      lineHeight: options.lineHeight * options.fontSize,
+      marginBlock: token.marginXXS,
+      marginBlockEnd: options.marginMultiple * 0.5 * options.fontSize,
+    },
+    strong: {
+      color: token.colorTextHeading,
+      fontWeight: token.fontWeightStrong,
+    },
+    tableCell: {
+      color: token.colorText,
+      minWidth: 120,
+      padding: token.paddingSM,
+    },
+    text: {
+      // 从 父节点继承
+      // color: token.colorText
+    },
+    thematicBreak: {
+      borderBottomWidth: 1,
+      borderColor: token.colorBorderSecondary,
+      borderStyle: 'dashed',
+      marginVertical: token.marginLG,
+    },
+    tr: {
+      borderColor: token.colorBorderSecondary,
+      flexDirection: 'row',
+    },
+  };
 };

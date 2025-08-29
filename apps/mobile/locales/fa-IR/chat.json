@@ -1,6 +1,10 @@
 {
+  "agentDefaultMessage": "سلام، من **{{name}}** هستم، می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
+  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
+  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
   "confirmDelete": "تأیید حذف",
   "copyFailed": "کپی کردن ناموفق بود",
+  "defaultAgent": "دستیار سفارشی",
   "deleteMessageConfirm": "آیا مطمئن هستید که می‌خواهید این پیام را حذف کنید؟",
   "history": "تاریخچه گفتگو",
   "inbox": {

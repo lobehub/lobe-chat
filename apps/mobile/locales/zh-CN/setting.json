@@ -54,7 +54,6 @@
       "description": "选择应用的中性色调",
       "title": "中性色配置"
     },
-    "preview": "主题预览",
     "primaryColor": {
       "description": "选择应用的主色调",
       "title": "主色配置"

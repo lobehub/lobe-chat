@@ -10,9 +10,11 @@ import { MarkdownContextProvider, RemarkStyles } from './context';
 import { defaultRenderers } from './renderers';
 import { Renderers } from './renderers/renderers';
 import { RootRenderer } from './renderers/root';
-import { RemarkStyleOptions, useHeading, useRemarkStyles } from './style';
+import { RemarkStyleOptions, useRemarkStyles } from './style';
 
-const parser = unified().use(remarkParse).use(remarkGfm);
+const parser = unified().use(remarkParse).use(remarkGfm, {
+  singleTilde: false,
+});
 
 function extractDefinitions(tree: Root): Record<string, Definition> {
   const definitions: Record<string, Definition> = {};
@@ -62,16 +64,14 @@ export const Markdown = ({
   };
 
   const options: RemarkStyleOptions = { fontSize, headerMultiple, lineHeight, marginMultiple };
-  const { styles } = useRemarkStyles(options);
-  const heading = useHeading(options);
+  const remarkStyles = useRemarkStyles(options);
 
   const mergedStyles = useMemo(
     () => ({
-      ...styles,
-      heading,
+      ...remarkStyles,
       ...customStyles,
     }),
-    [styles, heading, customStyles],
+    [remarkStyles, customStyles],
   );
 
   return (

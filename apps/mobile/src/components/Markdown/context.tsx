@@ -1,12 +1,13 @@
 import { Definition, Root } from 'mdast';
 import React, { createContext, useContext } from 'react';
-import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 import { Renderers } from './renderers/renderers';
 
 export type RemarkStyles = {
   blockquote?: ViewStyle;
-  break?: TextStyle;
+  borderColor: ColorValue;
+  break?: ViewStyle;
   container?: ViewStyle;
   delete?: TextStyle;
   emphasis?: TextStyle;
