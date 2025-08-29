@@ -2,6 +2,74 @@
 
 # Changelog
 
+## [Version&nbsp;1.119.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.118.2...v1.119.0)
+<sup>Released on **2025-08-29**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Move chat item into chat.
+
+
+#### ✨ Features
+
+- **misc**: Add new provider AkashChat, ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add Content-Security-Policy env.
+
+
+#### 💄 Styles
+
+- **misc**: Support Gemini URL context tool, support html preview, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Move chat item into chat, closes [#8970](https://github.com/jaworldwideorg/OneJA-Bot/issues/8970) ([e09817e](https://github.com/jaworldwideorg/OneJA-Bot/commit/e09817e))
+
+
+
+#### What's improved
+
+* **misc**: Add new provider AkashChat, closes [#8923](https://github.com/jaworldwideorg/OneJA-Bot/issues/8923) ([2f3bf0f](https://github.com/jaworldwideorg/OneJA-Bot/commit/2f3bf0f))
+* **misc**: Ai image support Gemini 2.5 Flash Image, closes [#8966](https://github.com/jaworldwideorg/OneJA-Bot/issues/8966) ([64b969e](https://github.com/jaworldwideorg/OneJA-Bot/commit/64b969e))
+* **misc**: Support Gemini 2.5 Flash Image Preview in OpenRouter, closes [#8944](https://github.com/jaworldwideorg/OneJA-Bot/issues/8944) ([23dcf4c](https://github.com/jaworldwideorg/OneJA-Bot/commit/23dcf4c))
+
+
+
+#### What's fixed
+
+* **misc**: Add Content-Security-Policy env, closes [#8752](https://github.com/jaworldwideorg/OneJA-Bot/issues/8752) ([9250540](https://github.com/jaworldwideorg/OneJA-Bot/commit/9250540))
+
+
+
+#### Styles
+
+* **misc**: Support Gemini URL context tool, closes [#8731](https://github.com/jaworldwideorg/OneJA-Bot/issues/8731) ([5d4ed11](https://github.com/jaworldwideorg/OneJA-Bot/commit/5d4ed11))
+* **misc**: Support html preview, closes [#8969](https://github.com/jaworldwideorg/OneJA-Bot/issues/8969) ([82abf6d](https://github.com/jaworldwideorg/OneJA-Bot/commit/82abf6d))
+* **misc**: Update i18n, closes [#8975](https://github.com/jaworldwideorg/OneJA-Bot/issues/8975) ([6872798](https://github.com/jaworldwideorg/OneJA-Bot/commit/6872798))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.118.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.118.1...v1.118.2)
 <sup>Released on **2025-08-28**</sup>
 
