@@ -12,7 +12,7 @@ Built with modern technologies:
 - **Database**: PostgreSQL, PGLite, Drizzle ORM
 - **Testing**: Vitest, Testing Library
 - **Package Manager**: pnpm (monorepo structure)
-- **Build Tools**: Turbo, Vite
+- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod), Vitest
 
 ## Directory Structure
 
@@ -38,13 +38,13 @@ The project follows a well-organized monorepo structure:
 - Use `pnpm` as the primary package manager
 - Use `bun` to run npm scripts
 - Use `bunx` to run executable npm packages
-- Use `pnpm dlx turbo run where <project_name>` to jump to packages
+- Navigate to specific packages using `cd packages/<package-name>`
 
 ### Code Style Guidelines
 
 #### TypeScript
 
-- Follow strict TypeScript practices
+- Follow strict TypeScript practices for type safety and code quality
 - Use proper type annotations
 - Prefer interfaces over types for object shapes
 - Use generics for reusable components
