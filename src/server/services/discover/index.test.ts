@@ -23,7 +23,7 @@ vi.mock('@/locales/resources', () => ({
 process.env.MARKET_BASE_URL = 'http://localhost:8787/api';
 
 // Mock constants with inline data
-vi.mock('@/config/aiModels', () => ({
+vi.mock('model-bank', () => ({
   LOBE_DEFAULT_MODEL_LIST: [
     {
       id: 'gpt-4',

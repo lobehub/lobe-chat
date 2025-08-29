@@ -1,6 +1,6 @@
 import { ModelProvider } from '@lobechat/model-runtime';
+import * as AiModels from 'model-bank';
 
-import * as AiModels from '@/config/aiModels';
 import { getLLMConfig } from '@/config/llm';
 import { AiFullModelCard } from '@/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';

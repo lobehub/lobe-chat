@@ -119,12 +119,7 @@ export const IMAGE_MODEL_KEYWORDS = [
 ] as const;
 
 // 嵌入模型关键词配置
-export const EMBEDDING_MODEL_KEYWORDS = [
-  'embedding',
-  'embed',
-  'bge',
-  'm3e',
-] as const;
+export const EMBEDDING_MODEL_KEYWORDS = ['embedding', 'embed', 'bge', 'm3e'] as const;
 
 /**
  * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
@@ -287,9 +282,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
@@ -342,7 +337,7 @@ export const processModelList = async (
   config: ModelProcessorConfig,
   provider?: keyof typeof MODEL_LIST_CONFIGS,
 ): Promise<ChatModelCard[]> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -375,7 +370,7 @@ export const processMultiProviderModelList = async (
   modelList: Array<{ id: string }>,
   providerid?: ModelProviderKey,
 ): Promise<ChatModelCard[]> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // 如果提供了 providerid，尝试获取该提供商的本地配置
   let providerLocalConfig: any[] | null = null;

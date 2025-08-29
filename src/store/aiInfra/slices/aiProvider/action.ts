@@ -232,7 +232,7 @@ export const createAiProviderSlice: StateCreator<
       !isDeprecatedEdition ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
       async ([, isLogin]) => {
         const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
-          await Promise.all([import('@/config/aiModels'), import('@/config/modelProviders')]);
+          await Promise.all([import('model-bank'), import('@/config/modelProviders')]);
 
         if (isLogin) {
           const data = await aiProviderService.getAiProviderRuntimeState();
