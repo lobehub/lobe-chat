@@ -6,7 +6,6 @@ import { useStyles } from './style';
 
 interface TokenDisplayProps {
   tokens: ThemedToken[][];
-  type?: 'default' | 'compact';
 }
 
 function generateLineKey(lineIndex: number, lineContent: ThemedToken[]) {
@@ -18,22 +17,15 @@ function generateTokenKey(lineIndex: number, tokenIndex: number, token: ThemedTo
   return `token-${lineIndex}-${tokenIndex}-${token.offset}-${token.content}`;
 }
 
-export function TokenDisplay({ tokens, type = 'default' }: TokenDisplayProps) {
+export function TokenDisplay({ tokens }: TokenDisplayProps) {
   const { styles } = useStyles();
 
-  const containerStyle =
-    type === 'compact' ? [styles.codeContainer, styles.codeContainerCompact] : styles.codeContainer;
-  const lineStyle =
-    type === 'compact' ? [styles.codeLine, styles.codeLineCompact] : styles.codeLine;
-  const textStyle =
-    type === 'compact' ? [styles.codeText, styles.codeTextCompact] : styles.codeText;
-
   return (
-    <ScrollView style={containerStyle}>
+    <ScrollView style={styles.codeContainer}>
       <ScrollView horizontal showsHorizontalScrollIndicator>
         <View style={styles.codeScrollContainer}>
           {tokens.map((line, lineIndex) => (
-            <View key={generateLineKey(lineIndex, line)} style={lineStyle as any}>
+            <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
               {line.map((tokenItem, tokenIndex) => (
                 <Text
                   key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
@@ -42,7 +34,7 @@ export function TokenDisplay({ tokens, type = 'default' }: TokenDisplayProps) {
                       color: tokenItem.color,
                       fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
                     },
-                    textStyle,
+                    styles.codeText,
                   ]}
                 >
                   {tokenItem.content}

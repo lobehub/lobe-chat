@@ -40,7 +40,6 @@ interface HighlighterProps {
   onCopy?: (code: string) => void;
   showLanguage?: boolean;
   style?: StyleProp<ViewStyle>;
-  type?: 'default' | 'compact';
 }
 
 const Highlighter: React.FC<HighlighterProps> = ({
@@ -51,7 +50,6 @@ const Highlighter: React.FC<HighlighterProps> = ({
   showLanguage = true,
   fileName,
   defalutExpand = true,
-  type = 'compact',
   allowChangeLanguage = false,
   style,
   onCopy,
@@ -88,7 +86,6 @@ const Highlighter: React.FC<HighlighterProps> = ({
         onCopy={onCopy}
         showLanguage={showLanguage}
         style={style}
-        type={type}
       />
     );
   }
@@ -107,7 +104,7 @@ const Highlighter: React.FC<HighlighterProps> = ({
       {error ? (
         <Text style={{ color: token.colorText, margin: 8 }}>{code}</Text>
       ) : (
-        <TokenDisplay tokens={tokens} type={type} />
+        <TokenDisplay tokens={tokens} />
       )}
     </View>
   );

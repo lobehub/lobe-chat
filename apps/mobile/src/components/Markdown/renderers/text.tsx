@@ -13,7 +13,7 @@ export const TextRenderer = ({ node, parent }: RendererArgs<MdText>): ReactNode 
 
   // 如果父级是 blockquote，则继承颜色
   const textStyle =
-    parent?.type === 'blockquote' ? { ...styles.text, color: styles.blockquoteColor } : styles.text;
+    parent?.type === 'blockquote' ? { ...styles.text, color: styles.blockQuoteColor } : styles.text;
 
   return <Text style={textStyle}>{value}</Text>;
 };

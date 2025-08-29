@@ -152,7 +152,7 @@ export const TableCellRenderer = ({
     cellTextStyle,
   ];
 
-  const padding = 8;
+  const padding = 0;
   const onTextLayout = useCallback(
     (e: LayoutChangeEvent) => setColumnWidth(columnIndex, e.nativeEvent.layout.width + padding * 2),
     [columnIndex, setColumnWidth],

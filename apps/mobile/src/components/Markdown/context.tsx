@@ -5,8 +5,9 @@ import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { Renderers } from './renderers/renderers';
 
 export type RemarkStyles = {
-  blockquote?: ViewStyle;
-  blockquoteColor: ColorValue;
+  blockCode?: ViewStyle;
+  blockQuote?: ViewStyle;
+  blockQuoteColor: ColorValue;
   borderColor: ColorValue;
   break?: TextStyle;
   container?: ViewStyle;

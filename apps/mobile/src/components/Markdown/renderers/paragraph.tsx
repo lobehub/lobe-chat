@@ -12,7 +12,7 @@ export const ParagraphRenderer = ({ node, parent }: RendererArgs<Paragraph>): Re
   // 如果父级是 blockquote，则继承其颜色样式
   const paragraphStyle =
     parent?.type === 'blockquote'
-      ? { ...styles.paragraph, color: styles.blockquoteColor }
+      ? { ...styles.paragraph, color: styles.blockQuoteColor }
       : styles.paragraph;
 
   return (

@@ -10,7 +10,7 @@ export const BlockquoteRenderer = ({ node }: RendererArgs<Blockquote>): ReactNod
   const { BlockContentRenderer, DefinitionContentRenderer } = renderers;
 
   return (
-    <View style={[styles.container, styles.blockquote]}>
+    <View style={[styles.container, styles.blockQuote]}>
       {node.children.map((child, idx) => (
         <Fragment key={idx}>
           <BlockContentRenderer index={idx} node={child as BlockContent} parent={node} />

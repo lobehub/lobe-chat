@@ -48,10 +48,6 @@ interface FullFeaturedProps {
    * Custom styles for the component.
    */
   style?: StyleProp<ViewStyle>;
-  /**
-   * The type of display for the tokens.
-   */
-  type?: 'default' | 'compact';
 }
 
 const FullFeatured: React.FC<FullFeaturedProps> = ({
@@ -61,7 +57,6 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
   showLanguage = true,
   fileName,
   defalutExpand = true,
-  type = 'compact',
   allowChangeLanguage = false,
   style,
   onCopy,
@@ -129,7 +124,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           // 降级为纯文本
           <Text style={{ color: token.colorText, margin: token.paddingXS }}>{code}</Text>
         ) : (
-          <TokenDisplay tokens={tokens} type={type} />
+          <TokenDisplay tokens={tokens} />
         ))}
     </View>
   );

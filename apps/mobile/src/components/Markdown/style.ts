@@ -30,14 +30,25 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     };
   }, [options.fontSize, options.headerMultiple, options.marginMultiple, token]);
 
+  const tdth = {
+    color: token.colorText,
+    fontSize: options.fontSize,
+    minWidth: 120,
+    paddingHorizontal: options.fontSize,
+    paddingVertical: options.fontSize * 0.75,
+  };
+
   return {
-    blockquote: {
+    blockCode: {
+      marginVertical: options.fontSize * options.marginMultiple * 0.25,
+    },
+    blockQuote: {
       borderLeftColor: token.colorBorder,
       borderLeftWidth: 4,
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
       paddingHorizontal: options.fontSize,
     },
-    blockquoteColor: token.colorTextTertiary,
+    blockQuoteColor: token.colorTextTertiary,
     borderColor: token.colorBorder,
     break: {},
     container: { flex: 1 },
@@ -51,14 +62,14 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     footnoteReference: {
       color: '#8b949e',
       fontSize: options.fontSize * 0.875,
-      marginBlockStart: options.fontSize * options.marginMultiple,
+      marginVertical: options.fontSize * options.marginMultiple * 0.5,
     },
     heading: heading(),
     image: {
       borderColor: token.colorBorder,
       borderRadius: token.borderRadius,
       borderWidth: 1,
-      marginBlock: options.fontSize * options.marginMultiple * 0.5,
+      marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     inlineCode: {
       backgroundColor: token.colorFillSecondary,
@@ -84,8 +95,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       color: token.colorText,
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
-      marginBlock: 4,
-      marginBlockEnd: options.marginMultiple * 0.5 * options.fontSize,
+      marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     strong: {
       color: token.colorTextHeading,
@@ -95,24 +105,14 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       backgroundColor: token.colorFillQuaternary,
       borderColor: token.colorBorder,
       borderRadius: token.borderRadius,
-      marginBlock: options.fontSize * options.marginMultiple * 0.5,
+      marginVertical: options.fontSize * options.marginMultiple * 0.5,
     },
-    td: {
-      color: token.colorText,
-      minWidth: 120,
-      paddingBlock: 0.75 * options.fontSize,
-      paddingInline: options.fontSize,
-    },
+    td: tdth,
     text: {
       // 从 父节点继承,否则一些样式带不下来
       // color: token.colorText
     },
-    th: {
-      color: token.colorText,
-      minWidth: 120,
-      paddingBlock: 0.75 * options.fontSize,
-      paddingInline: options.fontSize,
-    },
+    th: tdth,
     thead: {
       backgroundColor: token.colorFillQuaternary,
     },
@@ -120,7 +120,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       borderColor: token.colorBorder,
       borderStyle: 'dashed',
       borderWidth: 0.5,
-      marginBlock: options.fontSize * options.marginMultiple * 1.5,
+      marginVertical: options.fontSize * options.marginMultiple * 0.75,
       width: '100%',
     },
     tr: {

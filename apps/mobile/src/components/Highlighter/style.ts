@@ -16,19 +16,13 @@ export const useStyles = createStyles((token) => ({
     margin: 0,
     padding: token.paddingSM,
   },
-  codeContainerCompact: {
-    padding: token.paddingXS,
-  },
   codeLine: {
     flexDirection: 'row',
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
   },
-  codeLineCompact: {
-    fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM,
-  },
+
   codeScrollContainer: {
     flexDirection: 'column',
     minWidth: '100%',
@@ -37,10 +31,6 @@ export const useStyles = createStyles((token) => ({
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
-  },
-  codeTextCompact: {
-    fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM,
   },
   container: {
     backgroundColor: token.colorBgElevated,
