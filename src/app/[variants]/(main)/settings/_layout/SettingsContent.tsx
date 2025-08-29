@@ -1,6 +1,7 @@
 'use client';
 
 import { createStyles, css, cx } from 'antd-style';
+import { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LayoutSettingsFooterClassName } from '@/features/Setting/Footer';
@@ -34,15 +35,19 @@ const useStyles = createStyles(() => ({
 }));
 
 const SettingsContent = ({ mobile, activeTab, state, actions }: SettingsContentProps) => {
-  const getDisplayStyle = (tabName: string) => ({
-    display: activeTab === tabName ? 'block' : 'none',
-    height: '100%',
-    paddingBlock:
-      tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 24,
-    paddingInline:
-      tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 32,
-    width: '100%',
-  });
+  const getDisplayStyle = (tabName: string) =>
+    ({
+      alignItems: 'center',
+      // display: activeTab === tabName ? 'block' : 'none',
+      display: activeTab === tabName ? 'flex' : 'none',
+      flexDirection: 'column',
+      height: '100%',
+      paddingBlock:
+        tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 24,
+      paddingInline:
+        tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 32,
+      width: '100%',
+    }) as CSSProperties;
 
   const { styles } = useStyles();
 

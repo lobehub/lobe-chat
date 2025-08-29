@@ -7,11 +7,11 @@ import { Flexbox, FlexboxProps } from 'react-layout-kit';
 interface SettingContainerProps extends FlexboxProps {
   addonAfter?: ReactNode;
   addonBefore?: ReactNode;
-  maxWidth?: number;
+  maxWidth?: number | string;
   variant?: 'default' | 'secondary';
 }
 const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
-  ({ variant, maxWidth = 1024, children, addonAfter, addonBefore, style,...rest }) => {
+  ({ variant, maxWidth = 1024, children, addonAfter, addonBefore, style, ...rest }) => {
     const theme = useTheme();
 
     return (

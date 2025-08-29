@@ -5,7 +5,6 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
-import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -40,14 +39,11 @@ const Layout = memo<LayoutProps>(() => {
       ) : (
         <Header getContainer={() => ref.current!}>{category}</Header>
       )}
-      <SettingContainer addonAfter={<Footer />}>
-        <SettingsContent
-          actions={actions}
-          activeTab={activeTab}
-          mobile={false}
-          state={state}
-          // 应该改造成从顶部传入
-        />
+      <SettingContainer
+        // addonAfter={<Footer />}
+        maxWidth={'none'}
+      >
+        <SettingsContent actions={actions} activeTab={activeTab} mobile={false} state={state} />
       </SettingContainer>
       <InitClientDB />
     </Flexbox>
