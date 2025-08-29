@@ -128,6 +128,7 @@ export default {
       inputWriteCached: '输入缓存写入',
       output: '输出',
       outputAudio: '音频输出',
+      outputImage: '图像输出',
       outputText: '文本输出',
       outputTitle: '输出明细',
       reasoning: '深度思考',
