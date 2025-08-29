@@ -44,6 +44,14 @@ export function useGenerationConfigParam<
       paramConfig && typeof paramConfig === 'object' && 'enum' in paramConfig
         ? paramConfig.enum
         : undefined;
+    const maxFileSize =
+      paramConfig && typeof paramConfig === 'object' && 'maxFileSize' in paramConfig
+        ? paramConfig.maxFileSize
+        : undefined;
+    const maxCount =
+      paramConfig && typeof paramConfig === 'object' && 'maxCount' in paramConfig
+        ? paramConfig.maxCount
+        : undefined;
 
     return {
       description,
@@ -51,6 +59,8 @@ export function useGenerationConfigParam<
       min,
       step,
       enumValues,
+      maxFileSize,
+      maxCount,
     };
   }, [paramConfig]);
 
@@ -87,7 +97,7 @@ export function useDimensionControl() {
   }, [paramsSchema]);
 
   // 只要不是所有维度相关的控件都不显示，那么这个容器就应该显示
-  const showDimensionControl = !(!isSupportAspectRatio && !isSupportWidth && !isSupportHeight);
+  const showDimensionControl = isSupportAspectRatio || isSupportWidth || isSupportHeight;
 
   return {
     isLocked: store.isAspectRatioLocked,

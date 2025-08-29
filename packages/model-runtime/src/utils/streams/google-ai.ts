@@ -57,8 +57,20 @@ const transformGoogleGenerativeAIStream = (
   if (candidate?.finishReason && usage) {
     // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
     const reasoningTokens = usage.thoughtsTokenCount;
-    const outputTextTokens = usage.candidatesTokenCount ?? 0;
-    const totalOutputTokens = outputTextTokens + (reasoningTokens ?? 0);
+
+    const candidatesDetails = usage.candidatesTokensDetails;
+    const candidatesTotal =
+      usage.candidatesTokenCount ??
+      candidatesDetails?.reduce((s: number, i: any) => s + (i?.tokenCount ?? 0), 0) ??
+      0;
+
+    const outputImageTokens =
+      candidatesDetails?.find((i: any) => i.modality === 'IMAGE')?.tokenCount ?? 0;
+    const outputTextTokens =
+      candidatesDetails?.find((i: any) => i.modality === 'TEXT')?.tokenCount ??
+      Math.max(0, candidatesTotal - outputImageTokens);
+
+    const totalOutputTokens = candidatesTotal + (reasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -69,6 +81,7 @@ const transformGoogleGenerativeAIStream = (
             ?.tokenCount,
           inputTextTokens: usage.promptTokensDetails?.find((i) => i.modality === 'TEXT')
             ?.tokenCount,
+          outputImageTokens,
           outputReasoningTokens: reasoningTokens,
           outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
@@ -139,6 +152,31 @@ const transformGoogleGenerativeAIStream = (
       ];
     }
 
+    // Check for image data before handling finishReason
+    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
+      const part = candidate.content.parts[0];
+
+      if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
+        const imageChunk = {
+          data: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
+          id: context.id,
+          type: 'base64_image' as const,
+        };
+
+        // If also has finishReason, combine image with finish chunks
+        if (candidate.finishReason) {
+          const chunks: StreamProtocolChunk[] = [imageChunk];
+          if (chunk.usageMetadata) {
+            chunks.push(...usageChunks);
+          }
+          chunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
+          return chunks;
+        }
+
+        return imageChunk;
+      }
+    }
+
     if (candidate.finishReason) {
       if (chunk.usageMetadata) {
         return [
@@ -150,23 +188,10 @@ const transformGoogleGenerativeAIStream = (
     }
 
     if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };
-
-    // streaming the image
-    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
-      const part = candidate.content.parts[0];
-
-      if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
-        return {
-          data: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
-          id: context.id,
-          type: 'base64_image',
-        };
-      }
-    }
   }
 
   return {
-    data: text,
+    data: text || '',
     id: context?.id,
     type: 'text',
   };

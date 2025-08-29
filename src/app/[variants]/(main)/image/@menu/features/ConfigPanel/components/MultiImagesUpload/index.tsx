@@ -13,6 +13,7 @@ import { FileUploadStatus } from '@/types/files/upload';
 
 import { CONFIG_PANEL_WIDTH } from '../../constants';
 import { useDragAndDrop } from '../../hooks/useDragAndDrop';
+import { useUploadFilesValidation } from '../../hooks/useUploadFilesValidation';
 import { useConfigPanelStyles } from '../../style';
 import ImageManageModal, { type ImageItem } from './ImageManageModal';
 
@@ -36,9 +37,15 @@ interface DisplayItem {
 }
 
 export interface MultiImagesUploadProps {
-  // Callback when URLs change
+  // Callback when URLs change - supports both old API (string[]) and new API (object with dimensions)
   className?: string; // Array of image URLs
-  onChange?: (urls: string[]) => void;
+  maxCount?: number;
+  maxFileSize?: number;
+  onChange?: (
+    data:
+      | string[] // Old API: just URLs
+      | { dimensions?: { height: number, width: number; }, urls: string[]; }, // New API: URLs with first image dimensions
+  ) => void;
   style?: React.CSSProperties;
   value?: string[];
 }
@@ -311,7 +318,7 @@ const ImageUploadPlaceholder: FC<ImageUploadPlaceholderProps> = memo(({ isDragOv
 
 ImageUploadPlaceholder.displayName = 'ImageUploadPlaceholder';
 
-// ======== 圆形进度组件 ======== //
+// ======== Circular Progress Component ======== //
 
 interface CircularProgressProps {
   className?: string;
@@ -466,7 +473,7 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
       const showOverlay = isLastItem && remainingCount > 1;
 
       return (
-        <div className={styles.imageItem} key={imageUrl}>
+        <div className={styles.imageItem} key={`${imageUrl}-${index}`}>
           <Image
             alt={`Uploaded image ${index + 1}`}
             fill
@@ -559,12 +566,13 @@ SingleImageDisplay.displayName = 'SingleImageDisplay';
 // ======== Main Component ======== //
 
 const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
-  ({ value, onChange, style, className }) => {
+  ({ value, onChange, style, className, maxCount, maxFileSize }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
     const [displayItems, setDisplayItems] = useState<DisplayItem[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const { styles: configStyles } = useConfigPanelStyles();
+    const { validateFiles } = useUploadFilesValidation(maxCount, maxFileSize);
 
     // Cleanup blob URLs to prevent memory leaks
     useEffect(() => {
@@ -600,6 +608,11 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
       if (files.length === 0) return;
 
       const currentUrls = baseUrls !== undefined ? baseUrls : value || [];
+
+      // Validate files, pass current image count
+      if (!validateFiles(files, currentUrls.length)) {
+        return;
+      }
 
       // Create initial display items with blob URLs for immediate preview
       const newDisplayItems: DisplayItem[] = files.map((file) => ({
@@ -639,15 +652,21 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
         }),
       );
 
-      // Wait for all uploads to complete and collect successful URLs
+      // Wait for all uploads to complete and collect successful URLs and dimensions
       const uploadResults = await Promise.allSettled(uploadPromises);
       const successfulUrls: string[] = [];
+      let firstImageDimensions: { height: number, width: number; } | undefined;
 
       uploadResults.forEach((result, index) => {
         const displayItem = newDisplayItems[index];
 
         if (result.status === 'fulfilled' && result.value) {
           successfulUrls.push(result.value.url);
+
+          // Collect the first image's dimensions for auto-setting parameters
+          if (index === 0 && result.value.dimensions) {
+            firstImageDimensions = result.value.dimensions;
+          }
 
           // Update display item with final URL and success status
           setDisplayItems((prev) =>
@@ -685,10 +704,18 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
         }
       });
 
-      // Update parent component with new URLs
+      // Update parent component with new URLs and dimensions (if applicable)
       if (successfulUrls.length > 0) {
         const updatedUrls = [...currentUrls, ...successfulUrls];
-        onChange?.(updatedUrls);
+
+        // Pass dimensions if this is the first upload (no existing images) and only one image uploaded
+        const shouldPassDimensions = currentUrls.length === 0 && successfulUrls.length === 1;
+
+        if (shouldPassDimensions && firstImageDimensions) {
+          onChange?.({ dimensions: firstImageDimensions, urls: updatedUrls });
+        } else {
+          onChange?.(updatedUrls);
+        }
       }
 
       // Clear display items after all uploads complete
@@ -716,17 +743,17 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
       onDrop: handleDrop,
     });
 
-    // 处理 Modal 完成回调
+    // Handle Modal completion callback
     const handleModalComplete = async (imageItems: ImageItem[]) => {
-      // 分离现有URL和新文件
+      // Separate existing URLs and new files
       const existingUrls = imageItems.filter((item) => item.url).map((item) => item.url!);
 
       const newFiles = imageItems.filter((item) => item.file).map((item) => item.file!);
 
-      // 立即更新现有URL（删除的图片会被过滤掉）
+      // Immediately update existing URLs (deleted images will be filtered out)
       onChange?.(existingUrls);
 
-      // 如果有新文件需要上传，基于 existingUrls 启动上传流程
+      // If there are new files to upload, start upload process based on existingUrls
       if (newFiles.length > 0) {
         await handleFilesSelected(newFiles, existingUrls);
       }
@@ -793,6 +820,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
         {/* Image Management Modal */}
         <ImageManageModal
           images={value || []}
+          maxCount={maxCount}
           onClose={handleCloseModal}
           onComplete={handleModalComplete}
           open={modalOpen}

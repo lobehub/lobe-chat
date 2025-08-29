@@ -10,6 +10,7 @@ import {
   CreateImageOptions,
   CustomClientOptions,
 } from '@/libs/model-runtime/utils/openaiCompatibleFactory';
+import { postProcessModelList } from '@/libs/model-runtime/utils/postProcessModelList';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -146,27 +147,27 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 获取 runtime 的 models 列表，支持同步数组和异步函数，带缓存机制
+    // Get runtime's models list, supporting both synchronous arrays and asynchronous functions with caching
     private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
       const cacheKey = runtimeItem.id;
 
-      // 如果是同步数组，直接返回不需要缓存
+      // If it's a synchronous array, return directly without caching
       if (typeof runtimeItem.models !== 'function') {
         return runtimeItem.models || [];
       }
 
-      // 检查缓存
+      // Check cache
       if (this._modelCache.has(cacheKey)) {
         return this._modelCache.get(cacheKey)!;
       }
 
-      // 获取模型列表并缓存结果
+      // Get model list and cache result
       const models = await runtimeItem.models();
       this._modelCache.set(cacheKey, models);
       return models;
     }
 
-    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
+    // Check if it can match a specific model, otherwise default to using the last runtime
     async getRuntimeByModel(model: string) {
       for (const runtimeItem of this._runtimes) {
         const models = await this.getModels(runtimeItem);
@@ -208,10 +209,11 @@ export const createRouterRuntime = ({
 
     async models() {
       if (models && typeof models === 'function') {
-        // 如果是函数式配置，使用最后一个 runtime 的 client 调用函数
+        // If it's function-style configuration, use the last runtime's client to call the function
         const lastRuntime = this._runtimes.at(-1)?.runtime;
         if (lastRuntime && 'client' in lastRuntime) {
-          return await models({ client: (lastRuntime as any).client });
+          const modelList = await models({ client: (lastRuntime as any).client });
+          return await postProcessModelList(modelList);
         }
       }
       return this._runtimes.at(-1)?.runtime.models?.();
@@ -230,8 +232,8 @@ export const createRouterRuntime = ({
     }
 
     /**
-     * 清除模型列表缓存，强制下次获取时重新加载
-     * @param runtimeId - 可选，指定清除特定 runtime 的缓存，不传则清除所有缓存
+     * Clear model list cache, forcing reload on next access
+     * @param runtimeId - Optional, specify to clear cache for a specific runtime, omit to clear all caches
      */
     clearModelCache(runtimeId?: string) {
       if (runtimeId) {

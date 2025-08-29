@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Przełącznik głębokiego myślenia"
     },
-    "title": "Funkcje rozszerzenia modelu"
+    "title": "Funkcje rozszerzenia modelu",
+    "urlContext": {
+      "desc": "Po włączeniu automatycznie analizuje linki do stron internetowych, aby uzyskać rzeczywistą zawartość kontekstu strony",
+      "title": "Wyodrębnij zawartość linku do strony"
+    }
   },
   "history": {
     "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Zapisz wejście w pamięci podręcznej",
       "output": "Wyjście",
       "outputAudio": "Wyjście audio",
+      "outputImage": "Wyjściowy obraz",
       "outputText": "Wyjście tekstowe",
       "outputTitle": "Szczegóły wyjścia",
       "reasoning": "Głębokie myślenie",
