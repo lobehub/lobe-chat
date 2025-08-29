@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
+import { users } from '@/database/schemas';
 import { AiProviderModelListItem, EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
@@ -25,6 +26,10 @@ beforeEach(async () => {
   vi.clearAllMocks();
 
   repo = new AiInfraRepos(clientDB as any, userId, mockProviderConfigs);
+});
+
+afterEach(async () => {
+  vi.restoreAllMocks();
 });
 
 describe('AiInfraRepos', () => {

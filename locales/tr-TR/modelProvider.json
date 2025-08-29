@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "AWS Access Key Id girin",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "AccessKeyId / SecretAccessKey'in doğru girilip girilmediğini test edin"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "AWS Bölgesi girin",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
-      "title": "AWS Bölgesi"
-    },
-    "secretAccessKey": {
-      "desc": "AWS Secret Access Key girin",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "AWS SSO/STS kullanıyorsanız, lütfen AWS Oturum Tokeninizi girin",
-      "placeholder": "AWS Oturum Tokeni",
-      "title": "AWS Oturum Tokeni (isteğe bağlı)"
+      "title": "AWS Region"
     },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Özel Bölge",
-      "customSessionToken": "Özel Oturum Tokeni",
-      "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
-      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek üretime başlayabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
-      "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {

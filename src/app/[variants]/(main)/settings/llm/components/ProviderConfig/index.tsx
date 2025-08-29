@@ -231,7 +231,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
       showChecker
         ? (checkerItem ?? {
-            children: <Checker model={checkModel!} provider={id} />,
+            children: <Checker model={checkModel} provider={id} />,
             desc: t('llm.checker.desc'),
             label: t('llm.checker.title'),
             minWidth: undefined,

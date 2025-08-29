@@ -75,7 +75,42 @@ const removeDirectories = async () => {
   }
 };
 
+// Bedrock配置检查
+const checkBedrockConfig = () => {
+  const bearerToken = process.env.AWS_BEARER_TOKEN_BEDROCK;
+  const awsAccessKey = process.env.AWS_ACCESS_KEY_ID;
+  const awsSecretKey = process.env.AWS_SECRET_ACCESS_KEY;
+  const enabledBedrock = process.env.ENABLED_AWS_BEDROCK === '1';
+  
+  // 只有在配置了相关参数或启用了Bedrock时才检查
+  if (!bearerToken && !awsAccessKey && !awsSecretKey && !enabledBedrock) {
+    return; // 没有任何Bedrock相关配置，跳过检查
+  }
+  
+  if (awsAccessKey || awsSecretKey) {
+    console.warn('⚠️  Deprecated AWS credentials detected and will be ignored:');
+    if (awsAccessKey) console.warn('   - AWS_ACCESS_KEY_ID');
+    if (awsSecretKey) console.warn('   - AWS_SECRET_ACCESS_KEY');
+    console.warn('   Consider removing these variables');
+  }
+
+  if (!bearerToken) {
+    console.warn('⚠️  AWS_BEARER_TOKEN_BEDROCK not configured');
+    console.warn('   Set AWS_BEARER_TOKEN_BEDROCK to enable Bedrock');
+    console.warn('   See: https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html');
+    return;
+  }
+
+  if (bearerToken.length < 20) {
+    console.error('❌ AWS_BEARER_TOKEN_BEDROCK appears invalid (too short)');
+    process.exit(1);
+  }
+};
+
 // 执行删除操作
 console.log('Starting prebuild cleanup...');
 await removeDirectories();
 console.log('Prebuild cleanup completed.');
+
+// 检查Bedrock配置
+checkBedrockConfig();

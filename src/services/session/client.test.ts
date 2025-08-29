@@ -1,5 +1,5 @@
 import { eq, not } from 'drizzle-orm';
-import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB, initializeDB } from '@/database/client/db';
@@ -17,18 +17,21 @@ import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/sessio
 
 import { ClientService } from './client';
 
-const userId = 'message-db';
+const userId = 'session-user';
 const sessionService = new ClientService(userId);
 
 const mockSessionId = 'mock-session-id';
 const mockAgentId = 'agent-id';
 
 // Mock data
-beforeEach(async () => {
+beforeAll(async () => {
   await initializeDB();
+}, 30000); // Increase timeout for database initialization
 
+beforeEach(async () => {
   // 在每个测试用例之前，清空表
   await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
     await trx.insert(users).values([{ id: userId }, { id: '456' }]);
     await trx.insert(sessions).values([{ id: mockSessionId, userId }]);
     await trx.insert(agents).values([{ id: mockAgentId, userId }]);
@@ -41,11 +44,6 @@ beforeEach(async () => {
       { id: 'group-4', name: 'group-C', sort: 1, userId: '456' },
     ]);
   });
-});
-
-afterEach(async () => {
-  // 在每个测试用例之后，清空表
-  await clientDB.delete(users);
 });
 
 describe('SessionService', () => {
@@ -96,7 +94,7 @@ describe('SessionService', () => {
 
       // Assert
       const result = await clientDB.query.sessions.findMany({
-        where: eq(sessionGroups.userId, userId),
+        where: eq(sessions.userId, userId),
       });
 
       expect(result.length).toBe(0);

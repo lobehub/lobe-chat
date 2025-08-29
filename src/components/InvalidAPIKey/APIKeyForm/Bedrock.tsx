@@ -2,7 +2,7 @@ import { ModelProvider } from '@lobechat/model-runtime';
 import { Aws } from '@lobehub/icons';
 import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { Network, ShieldPlus } from 'lucide-react';
+import { Network } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,12 +13,9 @@ import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 const BedrockForm = memo<{ description: string }>(({ description }) => {
   const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
-  const [showSessionToken, setShowSessionToken] = useState(false);
 
-  const [accessKeyId, secretAccessKey, sessionToken, region, setConfig] = useUserStore((s) => [
-    keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
-    keyVaultsConfigSelectors.bedrockConfig(s).secretAccessKey,
-    keyVaultsConfigSelectors.bedrockConfig(s).sessionToken,
+  const [bearerToken, region, setConfig] = useUserStore((s) => [
+    keyVaultsConfigSelectors.bedrockConfig(s).bearerToken,
     keyVaultsConfigSelectors.bedrockConfig(s).region,
     s.updateKeyVaultConfig,
   ]);
@@ -33,43 +30,12 @@ const BedrockForm = memo<{ description: string }>(({ description }) => {
       <InputPassword
         autoComplete={'new-password'}
         onChange={(e) => {
-          setConfig(ModelProvider.Bedrock, { accessKeyId: e.target.value });
+          setConfig(ModelProvider.Bedrock, { bearerToken: e.target.value });
         }}
-        placeholder={'Aws Access Key Id'}
-        value={accessKeyId}
+        placeholder={t('bedrock.token.placeholder')}
+        value={bearerToken}
         variant={'filled'}
       />
-      <InputPassword
-        autoComplete={'new-password'}
-        onChange={(e) => {
-          setConfig(ModelProvider.Bedrock, { secretAccessKey: e.target.value });
-        }}
-        placeholder={'Aws Secret Access Key'}
-        value={secretAccessKey}
-        variant={'filled'}
-      />
-      {showSessionToken ? (
-        <InputPassword
-          autoComplete={'new-password'}
-          onChange={(e) => {
-            setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
-          }}
-          placeholder={'Aws Session Token'}
-          value={sessionToken}
-          variant={'filled'}
-        />
-      ) : (
-        <Button
-          block
-          icon={ShieldPlus}
-          onClick={() => {
-            setShowSessionToken(true);
-          }}
-          type={'text'}
-        >
-          {t('bedrock.unlock.customSessionToken')}
-        </Button>
-      )}
       {showRegion ? (
         <Select
           onChange={(region) => {

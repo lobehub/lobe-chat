@@ -2,7 +2,7 @@ export * from './agent';
 export * from './artifact';
 export * from './chunk';
 export * from './clientDB';
-export * from './eval';
+export * from './eval/index';
 export * from './fetch';
 export * from './knowledgeBase';
 export * from './llm';

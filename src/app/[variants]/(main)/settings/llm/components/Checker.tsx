@@ -14,7 +14,7 @@ import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/message';
 
 interface ConnectionCheckerProps {
-  model: string;
+  model?: string;
   provider: string;
 }
 
@@ -46,12 +46,43 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
 
   const [loading, setLoading] = useState(false);
   const [pass, setPass] = useState(false);
+  // Remove unused setCheckModel state
 
   const theme = useTheme();
   const [error, setError] = useState<ChatMessageError | undefined>();
 
+  const getFirstAvailableModel = async () => {
+    if (model) return model;
+
+    try {
+      const response = await fetch(`/webapi/models/${provider}`);
+      if (response.ok) {
+        const models = await response.json();
+        return models.length > 0 ? models[0].id : null;
+      }
+    } catch (e) {
+      console.error('Failed to fetch models:', e);
+    }
+    return null;
+  };
+
   const checkConnection = async () => {
     let isError = false;
+    setError(undefined);
+    setPass(false);
+
+    const modelToCheck = await getFirstAvailableModel();
+    if (!modelToCheck) {
+      setError({
+        body: null,
+        message: t('response.NoAvailableModels', 'No available models found', { ns: 'error' }),
+        type: 'NoAvailableModels',
+      });
+      setPass(false);
+      return;
+    }
+
+    // modelToCheck is used directly in the API call below
 
     await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
@@ -67,7 +98,9 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
           setPass(false);
           setError({
             body: value,
-            message: t('response.ConnectionCheckFailed', { ns: 'error' }),
+            message: t('response.ConnectionCheckFailed', 'Connection check failed', {
+              ns: 'error',
+            }),
             type: 'ConnectionCheckFailed',
           });
         }
@@ -82,12 +115,12 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
             role: 'user',
           },
         ],
-        model,
+        model: modelToCheck,
         provider,
       },
       trace: {
         sessionId: `connection:${provider}`,
-        topicId: model,
+        topicId: modelToCheck,
         traceName: TraceNameMap.ConnectivityChecker,
       },
     });

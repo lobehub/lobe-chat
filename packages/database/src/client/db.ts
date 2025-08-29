@@ -161,7 +161,8 @@ export class DatabaseManager {
     if (this.isLocalDBSchemaSynced && skipMultiRun) return this.db;
 
     let hash: string | undefined;
-    if (typeof localStorage !== 'undefined') {
+    // Skip cache check in test environment for faster execution
+    if (typeof localStorage !== 'undefined' && process.env.NODE_ENV !== 'test') {
       const cacheHash = localStorage.getItem(pgliteSchemaHashCache);
       hash = Md5.hashStr(JSON.stringify(migrations));
       // if hash is the same, no need to migrate

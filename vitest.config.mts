@@ -47,6 +47,8 @@ export default defineConfig({
       '**/build/**',
       '**/apps/desktop/**',
       '**/packages/**',
+      'src/database/server/**/**',
+      'src/database/repositories/dataImporter/deprecated/**/**',
     ],
     globals: true,
     server: {

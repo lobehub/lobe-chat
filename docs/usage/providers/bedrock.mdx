@@ -1,13 +1,14 @@
 ---
 title: Using Amazon Bedrock API Key in LobeChat
 description: >-
-  Learn how to integrate Amazon Bedrock models into LobeChat for AI-powered conversations. Follow these steps to grant access, obtain API keys, and configure Amazon Bedrock.
+  Learn how to integrate Amazon Bedrock models into LobeChat for AI-powered conversations. Follow these steps to grant access, obtain API keys, and configure Amazon Bedrock with cross-region inference profiles.
 
 tags:
   - Amazon Bedrock
   - Claude 3.5 sonnect
   - API keys
   - Claude 3 Opus
+  - Cross-Region Inference
   - Web UI
 ---
 
@@ -15,7 +16,7 @@ tags:
 
 <Image alt={'Using Amazon Bedrock in LobeChat'} cover src={'https://github.com/lobehub/lobe-chat/assets/34400653/74768b36-28ca-4ec3-a42d-b32abe2c7057'} />
 
-Amazon Bedrock is a fully managed foundational model API service that allows users to access models from leading AI companies (such as AI21 Labs, Anthropic, Cohere, Meta, Stability AI) and Amazon's own foundational models.
+Amazon Bedrock is a fully managed foundational model API service that allows users to access models from leading AI companies (such as AI21 Labs, Anthropic, Cohere, Meta, Stability AI) and Amazon's own foundational models. Bedrock also supports cross-region inference profiles for improved performance and availability.
 
 This document will guide you on how to use Amazon Bedrock in LobeChat:
 
@@ -37,48 +38,39 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
 
   <Callout type={'info'}>Some models may require additional information from you</Callout>
 
-  ### Step 2: Obtain API Access Keys
+  ### Step 2: Get Amazon Bedrock API Key
 
-  - Continue searching for IAM in the AWS console and enter the IAM service
+  AWS Bedrock uses Bearer Token authentication for secure and simple access.
 
-  <Image alt={'Enter IAM service'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/f9a5a394-c8f8-4567-9d51-cf84811418ca'} />
-
-  - In the `Users` menu, create a new IAM user
-
-  <Image alt={'Create a new IAM user'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/750b5cd1-f16a-4330-b899-c27b28b1e837'} />
-
-  - Enter the user name in the pop-up dialog box
-
-  <Image alt={'Enter user name'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/22ce5a72-bc46-41f3-b402-bda6dee90184'} />
-
-  - Add permissions for this user or join an existing user group to ensure access to Amazon Bedrock
-
-  <Image alt={'Add permissions for the user'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/94836b32-7fc5-45ca-8556-7a23f53b15f9'} />
-
-  - Create an access key for the added user
-
-  <Image alt={'Create an access key'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/ac2ed716-d270-43f6-856b-3ff81265f4e6'} />
-
-  - Copy and securely store the access key and secret access key, as they will be needed later
-
-  <Image alt={'Enter IAM service'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/3c64b747-f6f1-4ed2-84bc-bfa8e5d90966'} />
+  - In the AWS Console, navigate to Amazon Bedrock service
+  - Go to `API keys` in the left menu
+  - Click `Create API key`
+  - Copy and securely store the generated API key (Bearer Token)
 
   <Callout type={'warning'}>
-    Please securely store the keys as they will only be shown once. If you lose them accidentally, you
-    will need to create a new access key.
+    Please securely store the API key as it will only be shown once. If you lose it accidentally, you
+    will need to create a new API key.
   </Callout>
 
   ### Step 3: Configure Amazon Bedrock in LobeChat
 
   - Access the `Settings` interface in LobeChat
   - Find the setting for `Amazon Bedrock` under `AI Service Provider` and open it
-
-  <Image alt={'Enter Amazon Bedrock keys in LobeChat'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/7468594b-3355-4cb9-85bc-c9dace137653'} />
-
-  - Open Amazon Bedrock and enter the obtained access key and secret access key
+  - Enter your API key (Bearer Token) in the API Key field
+  - Select your AWS region (optional, defaults to us-east-1)
   - Choose an Amazon Bedrock model for your assistant to start the conversation
 
   <Image alt={'Select and use Amazon Bedrock model'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/164b34b5-671e-418d-b34a-3b70f1156d06'} />
+
+  #### Environment Variables (Server Deployment):
+
+  For server deployments, you can set the following environment variables:
+
+  ```bash
+  AWS_BEARER_TOKEN_BEDROCK=your_bearer_token_here
+  AWS_REGION=us-east-1  # Optional, defaults to us-east-1
+  AWS_BEDROCK_MODEL_LIST=all  # Optional, see model configuration below
+  ```
 
   <Callout type={'warning'}>
     You may incur charges while using the API service, please refer to Amazon Bedrock's pricing
@@ -86,4 +78,141 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
   </Callout>
 </Steps>
 
-You can now engage in conversations using the models provided by Amazon Bedrock in LobeChat.
+## Cross-Region Inference Profiles
+
+Amazon Bedrock supports cross-region inference profiles that provide improved performance, availability, and cost optimization by automatically routing requests across multiple AWS regions.
+
+### System Predefined Cross-Region Inference Profiles
+
+LobeChat supports all AWS Bedrock system predefined cross-region inference profile IDs. These profiles automatically distribute your requests across multiple regions for better performance and reliability.
+
+#### US Region Profiles
+
+- **Amazon Nova Models:**
+  - `us.amazon.nova-premier-v1:0` - Most advanced multimodal model
+  - `us.amazon.nova-pro-v1:0` - Balanced performance and cost
+  - `us.amazon.nova-lite-v1:0` - Fast and cost-effective
+  - `us.amazon.nova-micro-v1:0` - Text-only, optimized for speed
+
+- **Claude Models:**
+  - `us.anthropic.claude-3-7-sonnet-20250219-v1:0` - Latest Claude 3.7 Sonnet
+  - `us.anthropic.claude-3-5-sonnet-20241022-v2:0` - Claude 3.5 Sonnet v2
+  - `us.anthropic.claude-3-5-sonnet-20240620-v1:0` - Claude 3.5 Sonnet 0620
+  - `us.anthropic.claude-3-haiku-20240307-v1:0` - Fast and compact
+  - `us.anthropic.claude-3-sonnet-20240229-v1:0` - Balanced intelligence and speed
+  - `us.anthropic.claude-3-opus-20240229-v1:0` - Most powerful model
+  - `us.anthropic.claude-opus-4-20250514-v1:0` - Next-generation flagship
+  - `us.anthropic.claude-sonnet-4-20250514-v1:0` - Next-generation balanced
+
+- **Meta Llama Models:**
+  - `us.meta.llama3-1-405b-instruct-v1:0` - Largest Llama 3.1 model
+  - `us.meta.llama3-1-70b-instruct-v1:0` - High-performance Llama 3.1
+  - `us.meta.llama3-1-8b-instruct-v1:0` - Efficient Llama 3.1
+  - `us.meta.llama3-2-11b-instruct-v1:0` - Medium-sized Llama 3.2
+  - `us.meta.llama3-2-1b-instruct-v1:0` - Lightweight Llama 3.2
+  - `us.meta.llama3-2-3b-instruct-v1:0` - Small but powerful Llama 3.2
+  - `us.meta.llama3-2-90b-instruct-v1:0` - Large high-performance Llama 3.2
+  - `us.meta.llama3-3-70b-instruct-v1:0` - Latest generation Llama 3.3
+  - `us.meta.llama4-maverick-17b-instruct-v1:0` - Early Llama 4 variant
+  - `us.meta.llama4-scout-17b-instruct-v1:0` - Exploration Llama 4 variant
+
+- **Other Models:**
+  - `us.deepseek.r1-v1:0` - Advanced reasoning model
+  - `us.mistral.pixtral-large-2502-v1:0` - Multimodal Mistral model
+
+#### EU Region Profiles
+
+- **Amazon Nova Models:**
+  - `eu.amazon.nova-pro-v1:0` - Balanced performance and cost
+  - `eu.amazon.nova-lite-v1:0` - Fast and cost-effective
+  - `eu.amazon.nova-micro-v1:0` - Text-only, optimized for speed
+
+- **Claude Models:**
+  - `eu.anthropic.claude-3-7-sonnet-20250219-v1:0` - Latest Claude 3.7 Sonnet
+  - `eu.anthropic.claude-3-haiku-20240307-v1:0` - Fast and compact
+  - `eu.anthropic.claude-3-sonnet-20240229-v1:0` - Balanced intelligence and speed
+  - `eu.anthropic.claude-sonnet-4-20250514-v1:0` - Next-generation balanced
+
+- **Meta Llama Models:**
+  - `eu.meta.llama3-2-1b-instruct-v1:0` - Lightweight Llama 3.2
+  - `eu.meta.llama3-2-3b-instruct-v1:0` - Small but powerful Llama 3.2
+
+- **Mistral Models:**
+  - `eu.mistral.pixtral-large-2502-v1:0` - Multimodal Mistral model
+
+#### APAC Region Profiles
+
+- **Amazon Nova Models:**
+  - `apac.amazon.nova-pro-v1:0` - Balanced performance and cost
+  - `apac.amazon.nova-lite-v1:0` - Fast and cost-effective
+  - `apac.amazon.nova-micro-v1:0` - Text-only, optimized for speed
+
+- **Claude Models:**
+  - `apac.anthropic.claude-3-7-sonnet-20250219-v1:0` - Latest Claude 3.7 Sonnet
+  - `apac.anthropic.claude-3-5-sonnet-20241022-v2:0` - Claude 3.5 Sonnet v2
+  - `apac.anthropic.claude-3-5-sonnet-20240620-v1:0` - Claude 3.5 Sonnet 0620
+  - `apac.anthropic.claude-3-haiku-20240307-v1:0` - Fast and compact
+  - `apac.anthropic.claude-3-sonnet-20240229-v1:0` - Balanced intelligence and speed
+  - `apac.anthropic.claude-sonnet-4-20250514-v1:0` - Next-generation balanced
+
+#### AWS GovCloud Profiles
+
+- **Claude Models:**
+  - `us-gov.anthropic.claude-3-5-sonnet-20240620-v1:0` - Claude 3.5 Sonnet for government
+  - `us-gov.anthropic.claude-3-haiku-20240307-v1:0` - Claude 3 Haiku for government
+
+### Model Configuration
+
+You can configure which models are available in LobeChat using the `AWS_BEDROCK_MODEL_LIST` environment variable. This supports flexible inclusion/exclusion syntax:
+
+#### Configuration Examples
+
+```bash
+# Use all available models (default)
+AWS_BEDROCK_MODEL_LIST=all
+
+# Use specific cross-region models only
+AWS_BEDROCK_MODEL_LIST=us.amazon.nova-premier-v1:0,us.anthropic.claude-3-7-sonnet-20250219-v1:0,eu.anthropic.claude-3-haiku-20240307-v1:0
+
+# Use all models except specific ones
+AWS_BEDROCK_MODEL_LIST=all,-us.amazon.nova-micro-v1:0,-eu.meta.llama3-2-1b-instruct-v1:0
+
+# Use specific models with + prefix (explicit inclusion)
+AWS_BEDROCK_MODEL_LIST=+us.amazon.nova-pro-v1:0,+us.anthropic.claude-3-5-sonnet-20241022-v2:0,+apac.anthropic.claude-3-haiku-20240307-v1:0
+
+# Mixed syntax: include all, exclude some, add specific ones
+AWS_BEDROCK_MODEL_LIST=all,-us.amazon.nova-micro-v1:0,+us.deepseek.r1-v1:0
+```
+
+#### Syntax Rules
+
+- `all` - Include all available models
+- `model-id` - Include specific model
+- `+model-id` - Explicitly include model (same as without +)
+- `-model-id` - Exclude specific model
+- Comma-separated list supported
+- Whitespace is ignored
+- Exclusions take precedence over inclusions
+
+### Benefits of Cross-Region Inference Profiles
+
+1. **Improved Performance**: Automatic routing to the best-performing region
+2. **Higher Availability**: Failover across multiple regions
+3. **Cost Optimization**: Intelligent routing for cost efficiency
+4. **Simplified Management**: Single model ID works across regions
+5. **Reduced Latency**: Requests routed to nearest available region
+
+### Usage Examples
+
+```typescript
+// Using cross-region inference profile in your application
+const modelId = 'us.anthropic.claude-3-7-sonnet-20250219-v1:0';
+
+// The same model ID will automatically route to the best region
+const response = await bedrockClient.chat({
+  model: modelId,
+  messages: [{ role: 'user', content: 'Hello!' }]
+});
+```
+
+You can now engage in conversations using the models provided by Amazon Bedrock in LobeChat, with the added benefits of cross-region inference profiles for improved performance and reliability.

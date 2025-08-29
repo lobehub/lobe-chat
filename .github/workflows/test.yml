@@ -73,7 +73,7 @@ jobs:
           files: ./coverage/app/lcov.info
           flags: app
 
-  test-databsae:
+  test-server:
     name: Test Database
 
     runs-on: ubuntu-latest
@@ -130,5 +130,5 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/database/coverage/lcov.info
-          flags: database
+          files: ./coverage/server/lcov.info
+          flags: server

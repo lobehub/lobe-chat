@@ -98,7 +98,7 @@
     },
     "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
-    "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
+    "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the Bearer Token and retry.",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
     "InvalidGithubToken": "The GitHub Personal Access Token is incorrect or empty. Please check your GitHub Personal Access Token and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",

@@ -1,0 +1,13 @@
+{
+  "state": {
+    "settings": {
+      "keyVaults": {
+        "bedrock": {
+          "apiKey": "",
+          "baseURL": "",
+          "region": "us-west-2"
+        }
+      }
+    }
+  }
+}

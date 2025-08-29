@@ -1,0 +1,13 @@
+{
+  "state": {
+    "settings": {
+      "keyVaults": {
+        "bedrock": {
+          "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+          "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "region": "us-west-2"
+        }
+      }
+    }
+  }
+}

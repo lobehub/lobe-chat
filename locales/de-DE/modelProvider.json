@@ -38,36 +38,25 @@
     }
   },
   "bedrock": {
-    "accessKeyId": {
-      "desc": "Geben Sie Ihre AWS Access Key Id ein",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
     "checker": {
-      "desc": "Testen Sie, ob AccessKeyId / SecretAccessKey korrekt eingegeben wurden"
+      "desc": "Test if Bearer Token is filled in correctly"
     },
     "region": {
-      "desc": "Geben Sie Ihre AWS Region ein",
+      "desc": "Enter AWS Region",
       "placeholder": "AWS Region",
       "title": "AWS Region"
     },
-    "secretAccessKey": {
-      "desc": "Geben Sie Ihren AWS Secret Access Key ein",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Wenn Sie AWS SSO/STS verwenden, geben Sie Ihr AWS Session Token ein",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (optional)"
-    },
     "title": "Bedrock",
+    "token": {
+      "desc": "Enter AWS Bedrock API Key (Bearer Token)",
+      "placeholder": "AWS Bedrock API Key",
+      "title": "AWS Bedrock API Key"
+    },
     "unlock": {
-      "customRegion": "Benutzerdefinierter Regionsservice",
-      "customSessionToken": "Benutzerdefiniertes Sitzungstoken",
-      "description": "Geben Sie Ihren AWS AccessKeyId / SecretAccessKey ein, um das Gespräch zu beginnen. Die App speichert Ihre Authentifizierungsinformationen nicht.",
-      "imageGenerationDescription": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um mit der Generierung zu beginnen. Die Anwendung speichert Ihre Authentifizierungsdaten nicht.",
-      "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS Bearer Token to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS Bearer Token to start generating. The application will not store your authentication credentials.",
+      "title": "Use Custom Bedrock Authentication Information"
     }
   },
   "cloudflare": {
