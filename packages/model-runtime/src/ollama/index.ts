@@ -119,7 +119,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   }
 
   async models() {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const list = await this.client.list();
 

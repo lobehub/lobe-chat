@@ -12,7 +12,7 @@ export const getModelPropertyWithFallback = async <T>(
   propertyName: keyof AiFullModelCard,
   providerId?: string,
 ): Promise<T> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // Step 1: If providerId is provided, prioritize an exact match (same provider + same id)
   if (providerId) {

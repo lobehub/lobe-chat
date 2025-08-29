@@ -1,4 +1,4 @@
-import OpenRouterModels from '@/config/aiModels/openrouter';
+import { openrouter as OpenRouterModels } from 'model-bank';
 
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';

@@ -1,12 +1,12 @@
-import { StateCreator } from 'zustand/vanilla';
-
 import {
   ModelParamsSchema,
   RuntimeImageGenParams,
   RuntimeImageGenParamsKeys,
   RuntimeImageGenParamsValue,
   extractDefaultValues,
-} from '@/libs/standard-parameters/index';
+} from 'model-bank';
+import { StateCreator } from 'zustand/vanilla';
+
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { AIImageModelCard } from '@/types/aiModel';
 

@@ -1,8 +1,7 @@
 import { imageUrlToBase64 } from '@lobechat/utils';
 import createDebug from 'debug';
+import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
-
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { convertImageUrlToFile } from '../openaiHelpers';
