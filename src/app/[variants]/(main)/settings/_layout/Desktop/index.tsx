@@ -2,7 +2,7 @@
 
 import { useResponsive, useTheme } from 'antd-style';
 import { usePathname } from 'next/navigation';
-import { PropsWithChildren, memo, useEffect, useRef } from 'react';
+import { PropsWithChildren, memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
@@ -30,10 +30,6 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
-
-  useEffect(() => {
-    console.log('settings render');
-  });
 
   return (
     <Flexbox
