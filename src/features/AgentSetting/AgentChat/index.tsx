@@ -99,15 +99,6 @@ const AgentChat = memo(() => {
         name: 'enableCompressHistory',
         valuePropName: 'checked',
       },
-      {
-        children: <Switch />,
-        desc: t('settingChat.enableStreaming.desc'),
-        label: t('settingChat.enableStreaming.title'),
-        layout: 'horizontal',
-        minWidth: undefined,
-        name: 'enableStreaming',
-        valuePropName: 'checked',
-      },
     ],
     title: t('settingChat.title'),
   };
