@@ -24,7 +24,7 @@ const Header = memo(() => {
   const activeSettingsKey = useActiveSettingsKey();
   const isSessionActive = useSessionStore((s) => !!s.activeId);
   const pathname = usePathname();
-  const isProvider = pathname.includes('/settings/provider/');
+  const isProvider = pathname.includes('/settings?active=provider');
   const providerName = useProviderName(activeSettingsKey);
 
   const handleBackClick = () => {

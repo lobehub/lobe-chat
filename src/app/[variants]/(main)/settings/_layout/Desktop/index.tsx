@@ -2,27 +2,35 @@
 
 import { useResponsive, useTheme } from 'antd-style';
 import { memo, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
 import SettingContainer from '@/features/Setting/SettingContainer';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import { useSettingsStore } from '../../hooks/useSettingsStore';
 import CategoryContent from '../CategoryContent';
 import SettingsContent from '../SettingsContent';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const Layout = memo<LayoutProps>(() => {
+const Layout = memo<LayoutProps>((props) => {
+  const { showLLM = true } = props
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState(SettingsTabs.Common);
-  const { state, actions } = useSettingsStore();
   const category = <CategoryContent onMenuSelect={setActiveTab} />;
   const ref = useRef<any>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
-
+  
+  useEffect(() => {
+    const activeParam = searchParams.get('active');
+    if (activeParam && Object.values(SettingsTabs).includes(activeParam as SettingsTabs)) {
+      setActiveTab(activeParam as SettingsTabs);
+    }
+  }, [searchParams]);
+  
   useEffect(() => {
     console.log('settings render');
   });
@@ -40,10 +48,9 @@ const Layout = memo<LayoutProps>(() => {
         <Header getContainer={() => ref.current!}>{category}</Header>
       )}
       <SettingContainer
-        // addonAfter={<Footer />}
         maxWidth={'none'}
       >
-        <SettingsContent actions={actions} activeTab={activeTab} mobile={false} state={state} />
+        <SettingsContent  activeTab={activeTab} mobile={false} showLLM={showLLM}/>
       </SettingContainer>
       <InitClientDB />
     </Flexbox>

@@ -143,6 +143,7 @@ export interface AiProviderListItem {
   name?: string;
   sort?: number;
   source: AiProviderSourceType;
+  onClick?:(id: string)=>void
 }
 
 // Detail Query

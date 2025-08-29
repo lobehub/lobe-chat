@@ -2,7 +2,6 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -36,7 +35,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ProviderItem = memo<AiProviderListItem>(({ id, name, source, enabled, logo }) => {
+const ProviderItem = memo<AiProviderListItem>(({ id, name, source, enabled, logo, onClick = () => {} }) => {
   const { styles, cx } = useStyles();
   const pathname = usePathname();
 
@@ -44,9 +43,9 @@ const ProviderItem = memo<AiProviderListItem>(({ id, name, source, enabled, logo
 
   const isCustom = source === AiProviderSourceEnum.Custom;
   return (
-    <Link
+    <div
       className={cx(styles.container, activeKey === id && styles.active)}
-      href={`/settings/provider/${id}`}
+      onClick={() => { onClick(id) }}
     >
       <Flexbox gap={8} horizontal>
         {isCustom && logo ? (
@@ -72,7 +71,7 @@ const ProviderItem = memo<AiProviderListItem>(({ id, name, source, enabled, logo
 
         {/* cloud slot */}
       </Flexbox>
-    </Link>
+    </div>
   );
 });
 export default ProviderItem;

@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -15,14 +14,6 @@ const ClientMode = memo<{ id: string }>(({ id }) => {
   const { data, isLoading } = useClientDataSWR('get-client-provider', () =>
     aiProviderService.getAiProviderById(id),
   );
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && !data?.id) {
-      router.push('/settings/provider');
-    }
-  }, [isLoading, data]);
 
   if (isLoading || !data || !data.id) return <Loading />;
 

@@ -1,10 +1,10 @@
-import { serverFeatureFlags } from '@/config/featureFlags';
 import { OpenAIProviderCard } from '@/config/modelProviders';
 
 import ProviderDetail from '../[id]';
+import { useSettingsContext } from '../../../_layout/ContextProvider';
 
-const Page = async () => {
-  const { showOpenAIProxyUrl, showOpenAIApiKey } = serverFeatureFlags();
+const Page =() => {
+  const { showOpenAIProxyUrl, showOpenAIApiKey } = useSettingsContext()
 
   return (
     <ProviderDetail

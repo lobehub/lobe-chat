@@ -1,15 +1,12 @@
 'use client';
 
-import { createStyles, css, cx } from 'antd-style';
 import { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { LayoutSettingsFooterClassName } from '@/features/Setting/Footer';
 import { SettingsTabs } from '@/store/global/initialState';
-
+import { notFound } from 'next/navigation';
 import About from '../about/index';
 import Agent from '../agent/index';
-import CommonForm from '../common';
+import Common from '../common';
 import Hotkey from '../hotkey/page';
 import LLM from '../llm/index';
 import Provider from '../provider/page';
@@ -20,25 +17,16 @@ import SystemAgent from '../system-agent/index';
 import TTS from '../tts/index';
 
 interface SettingsContentProps {
-  actions: any;
   activeTab?: string;
   mobile?: boolean;
-  state: any;
+  showLLM?: boolean;
 }
 
-const useStyles = createStyles(() => ({
-  agentLayout: css`
-    .${LayoutSettingsFooterClassName} {
-      display: none;
-    }
-  `,
-}));
+const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentProps) => {
 
-const SettingsContent = ({ mobile, activeTab, state, actions }: SettingsContentProps) => {
   const getDisplayStyle = (tabName: string) =>
     ({
       alignItems: 'center',
-      // display: activeTab === tabName ? 'block' : 'none',
       display: activeTab === tabName ? 'flex' : 'none',
       flexDirection: 'column',
       height: '100%',
@@ -49,21 +37,72 @@ const SettingsContent = ({ mobile, activeTab, state, actions }: SettingsContentP
       width: '100%',
     }) as CSSProperties;
 
-  const { styles } = useStyles();
 
+  if (mobile) {
+    switch (activeTab) {
+      case SettingsTabs.Common: {
+        return <Common />;
+      }
+      case SettingsTabs.About: {
+        return <About mobile={mobile} />;
+      }
+      case SettingsTabs.Agent: {
+        return <Agent mobile={mobile} />;
+      }
+      case SettingsTabs.Hotkey: {
+        return <Hotkey />;
+      }
+      case SettingsTabs.LLM: {
+        if (!showLLM) {
+          notFound()
+        } else {
+          return <LLM />;
+        }
+        break
+      }
+      case SettingsTabs.Provider: {
+        if (!showLLM) {
+          notFound()
+        } else {
+          return <Provider />;
+        }
+        break
+      }
+      case SettingsTabs.Proxy: {
+        return <Proxy />;
+      }
+      case SettingsTabs.Storage: {
+        return <Storage />;
+      }
+      case SettingsTabs.Sync: {
+        return <Sync />;
+      }
+      case SettingsTabs.SystemAgent: {
+        return <SystemAgent />;
+      }
+      case SettingsTabs.TTS: {
+        return <TTS />;
+      }
+      default: {
+        return <Common />;
+      }
+    }
+  }
+
+  // Desktop use Load All
   return (
     <Flexbox height={'100%'} width={'100%'}>
       <div style={getDisplayStyle(SettingsTabs.Common)}>
-        <CommonForm {...state.common} {...actions.common} mobile={mobile} />
+        <Common />
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.About)}>
         <About mobile={mobile} />
       </div>
 
-      <div className={cx(styles.agentLayout)} style={getDisplayStyle(SettingsTabs.Agent)}>
+      {showLLM ? <div style={getDisplayStyle(SettingsTabs.Agent)}>
         <Agent mobile={mobile} />
-      </div>
+      </div> : notFound()}
 
       <div style={getDisplayStyle(SettingsTabs.Hotkey)}>
         <Hotkey />
@@ -73,9 +112,11 @@ const SettingsContent = ({ mobile, activeTab, state, actions }: SettingsContentP
         <LLM />
       </div>
 
-      <div style={getDisplayStyle(SettingsTabs.Provider)}>
-        <Provider />
-      </div>
+      {showLLM ?
+        <div style={getDisplayStyle(SettingsTabs.Provider)}>
+          <Provider mobile={mobile} />
+        </div> : notFound()
+      }
 
       <div style={getDisplayStyle(SettingsTabs.Proxy)}>
         <Proxy />
