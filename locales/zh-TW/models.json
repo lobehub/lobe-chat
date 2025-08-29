@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多項評測成績超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他開源模型，並在性能上和世界頂尖的閉源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1：下一代推理模型，提升了複雜推理與鏈路思考能力，適合需要深入分析的任務。"
+  },
   "DeepSeek-V3-Fast": {
     "description": "模型供應商為：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS極速版，滿血非量化，代碼與數學能力更強，響應更快！"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "適用於視覺理解代理應用的高級圖像推理能力。"
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B：通用性強的 Transformer 模型，適用於對話和生成任務。"
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1指令調優的文本模型，針對多語言對話用例進行了優化，在許多可用的開源和封閉聊天模型中，在常見行業基準上表現優異。"
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick：基於 Mixture-of-Experts 的大規模模型，提供高效的專家啟動策略以在推理中表現優異。"
   },
   "MiniMax-M1": {
     "description": "全新自研推理模型。全球領先：80K思維鏈 x 1M輸入，效果比肩海外頂尖模型。"
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B，MoE（混合專家模型）模型，引入了「混合推理模式」，支援用戶在「思考模式」和「非思考模式」之間無縫切換，支援119種語言和方言理解與推理，並具備強大的工具調用能力，在綜合能力、程式碼與數學、多語言能力、知識與推理等多項基準測試中，都能與DeepSeek R1、OpenAI o1、o3-mini、Grok 3和谷歌Gemini 2.5 Pro等目前市場上的主流大型模型競爭。"
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507：面向高級推理與對話指令優化的模型，混合專家架構以在大規模參數下保持推理效率。"
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B，稠密模型（Dense Model），引入了「混合推理模式」，支援用戶在「思考模式」和「非思考模式」之間無縫切換，由於模型架構改進、訓練資料增加以及更有效的訓練方法，整體性能與Qwen2.5-72B表現相當。"
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高階推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生較高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可透過「推理最大令牌數」參數進行配置，如文件中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash 實驗模型，支援圖像生成"
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash 實驗模型，支援圖像生成"
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高級推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生更高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可通過「推理最大令牌數」參數進行配置，如文檔中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
@@ -1532,6 +1550,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B 是 OpenAI 發布的開源大型語言模型，採用 MXFP4 量化技術，適合在高端消費級 GPU 或 Apple Silicon Mac 上運行。該模型在對話生成、程式碼撰寫和推理任務方面表現出色，支援函數呼叫和工具使用。"
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 量化的 Transformer 結構，在資源受限時仍能保持強勁性能。"
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B 是 OpenAI 發布的大型開源語言模型，採用 MXFP4 量化技術，為旗艦級模型。需要多 GPU 或高效能工作站環境運行，在複雜推理、程式碼生成和多語言處理方面具備卓越性能，支援高級函數呼叫和工具整合。"

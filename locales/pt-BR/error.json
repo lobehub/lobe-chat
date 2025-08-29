@@ -87,14 +87,14 @@
     "FreePlanLimit": "Atualmente, você é um usuário gratuito e não pode usar essa função. Por favor, faça upgrade para um plano pago para continuar usando.",
     "GoogleAIBlockReason": {
       "BLOCKLIST": "Seu conteúdo contém palavras proibidas. Verifique e modifique sua entrada e tente novamente.",
-      "IMAGE_SAFETY": "A geração da imagem foi bloqueada por motivos de segurança. Tente modificar sua solicitação de geração de imagem.",
-      "LANGUAGE": "O idioma que você está usando não é suportado no momento. Tente perguntar novamente em inglês ou em outro idioma suportado.",
-      "OTHER": "O conteúdo foi bloqueado por motivo desconhecido. Tente reformular sua solicitação.",
-      "PROHIBITED_CONTENT": "Sua solicitação pode conter conteúdo proibido. Ajuste seu pedido para garantir que esteja em conformidade com as diretrizes de uso.",
-      "RECITATION": "Seu conteúdo foi bloqueado por possível violação de direitos autorais. Tente usar conteúdo original ou reformular sua solicitação.",
-      "SAFETY": "Seu conteúdo foi bloqueado pelas regras de segurança. Tente ajustar sua solicitação, evitando conteúdo potencialmente nocivo ou inadequado.",
-      "SPII": "Seu conteúdo pode conter informações pessoais sensíveis (SPII). Para proteger a privacidade, remova as informações sensíveis e tente novamente.",
-      "default": "Conteúdo bloqueado: {{blockReason}}. Ajuste sua solicitação e tente novamente."
+      "IMAGE_SAFETY": "A geração da imagem foi bloqueada por motivos de segurança. Tente alterar seu pedido de geração de imagem.",
+      "LANGUAGE": "O idioma que você usou não é suportado no momento. Tente refazer a solicitação em inglês ou em outro idioma suportado.",
+      "OTHER": "O conteúdo foi bloqueado por um motivo desconhecido. Tente reformular sua solicitação.",
+      "PROHIBITED_CONTENT": "Seu pedido pode conter conteúdo proibido. Ajuste sua solicitação para garantir que esteja em conformidade com as diretrizes de uso.",
+      "RECITATION": "Seu conteúdo foi bloqueado por possível violação de direitos autorais. Tente usar conteúdo original ou reformular seu pedido.",
+      "SAFETY": "Seu conteúdo foi bloqueado por políticas de segurança. Tente ajustar sua solicitação para evitar conteúdo potencialmente nocivo ou inadequado.",
+      "SPII": "Seu conteúdo pode conter informações pessoais sensíveis. Para proteger a privacidade, remova essas informações e tente novamente.",
+      "default": "Conteúdo bloqueado: {{blockReason}}。Ajuste sua solicitação e tente novamente。"
     },
     "InsufficientQuota": "Desculpe, a cota dessa chave atingiu o limite. Verifique se o saldo da conta é suficiente ou aumente a cota da chave e tente novamente.",
     "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",

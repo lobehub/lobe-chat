@@ -52,7 +52,11 @@
     "thinking": {
       "title": "심층 사고 스위치"
     },
-    "title": "모델 확장 기능"
+    "title": "모델 확장 기능",
+    "urlContext": {
+      "desc": "활성화하면 실제 웹페이지 컨텍스트 내용을 얻기 위해 웹 링크를 자동으로 분석합니다",
+      "title": "웹 링크 내용 추출"
+    }
   },
   "history": {
     "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
@@ -125,6 +129,7 @@
       "inputWriteCached": "입력 캐시 쓰기",
       "output": "출력",
       "outputAudio": "오디오 출력",
+      "outputImage": "이미지 출력",
       "outputText": "텍스트 출력",
       "outputTitle": "출력 세부사항",
       "reasoning": "심층 사고",

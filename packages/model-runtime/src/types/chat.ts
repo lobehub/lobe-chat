@@ -138,6 +138,10 @@ export interface ChatStreamPayload {
    */
   top_p?: number;
   truncation?: 'auto' | 'disabled';
+  /**
+   * @title Gemini URL 上下文获取工具开关
+   */
+  urlContext?: boolean;
   verbosity?: 'low' | 'medium' | 'high';
 }
 

@@ -484,14 +484,28 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     tools: ChatCompletionTool[] | undefined,
     payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
-    // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
-    if (payload?.messages?.some((m) => m.tool_calls?.length)) {
+    const hasToolCalls = payload?.messages?.some((m) => m.tool_calls?.length);
+    const hasSearch = payload?.enabledSearch;
+    const hasUrlContext = payload?.urlContext;
+    const hasFunctionTools = tools && tools.length > 0;
+
+    // 如果已经有 tool_calls，优先处理 function declarations
+    if (hasToolCalls && hasFunctionTools) {
       return this.buildFunctionDeclarations(tools);
     }
-    if (payload?.enabledSearch) {
+
+    // 构建并返回搜索相关工具（搜索工具不能与 FunctionCall 同时使用）
+    if (hasUrlContext && hasSearch) {
+      return [{ urlContext: {} }, { googleSearch: {} }];
+    }
+    if (hasUrlContext) {
+      return [{ urlContext: {} }];
+    }
+    if (hasSearch) {
       return [{ googleSearch: {} }];
     }
 
+    // 最后考虑 function declarations
     return this.buildFunctionDeclarations(tools);
   }
 

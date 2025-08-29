@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle MoE développé en interne par la société DeepSeek. Les performances de DeepSeek-V3 surpassent celles d'autres modèles open source tels que Qwen2.5-72B et Llama-3.1-405B, et se mesurent à la performance des modèles fermés de pointe au monde comme GPT-4o et Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1 : modèle d'inférence de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Fournisseur du modèle : plateforme sophnet. DeepSeek V3 Fast est la version ultra-rapide à TPS élevé de DeepSeek V3 0324, entièrement non quantifiée, avec des capacités de code et mathématiques renforcées, offrant une réactivité accrue !"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Capacités avancées de raisonnement d'image adaptées aux applications d'agents de compréhension visuelle."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B : modèle Transformer polyvalent, adapté aux tâches de dialogue et de génération."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Modèle de texte optimisé pour les instructions de Llama 3.1, conçu pour des cas d'utilisation de dialogue multilingue, qui se distingue dans de nombreux modèles de chat open source et fermés sur des benchmarks industriels courants."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 est le modèle de langage open source multilingue le plus avancé de la série Llama, offrant des performances comparables à celles d'un modèle de 405B à un coût très faible. Basé sur une architecture Transformer, il a été amélioré en utilité et en sécurité grâce à un ajustement supervisé (SFT) et à un apprentissage par renforcement avec retour humain (RLHF). Sa version optimisée pour les instructions est spécialement conçue pour les dialogues multilingues et surpasse de nombreux modèles de chat open source et fermés sur plusieurs benchmarks industriels. La date limite des connaissances est décembre 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick : modèle à grande échelle basé sur le Mixture-of-Experts, offrant une stratégie d'activation experte efficace pour des performances optimales en inférence."
   },
   "MiniMax-M1": {
     "description": "Modèle d'inférence entièrement développé en interne. Leader mondial : 80K chaînes de pensée x 1M d'entrées, des performances comparables aux meilleurs modèles internationaux."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B est un modèle MoE (modèle d'experts mixtes) qui introduit un « mode de raisonnement hybride », permettant aux utilisateurs de basculer sans interruption entre le « mode réflexif » et le « mode non réflexif ». Il prend en charge la compréhension et le raisonnement dans 119 langues et dialectes, et dispose de puissantes capacités d'appel d'outils. Sur plusieurs benchmarks, notamment en capacités globales, codage et mathématiques, multilinguisme, connaissances et raisonnement, il rivalise avec les principaux grands modèles du marché tels que DeepSeek R1, OpenAI o1, o3-mini, Grok 3 et Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507 : modèle optimisé pour le raisonnement avancé et les instructions de dialogue, avec une architecture à experts mixtes pour maintenir l'efficacité de l'inférence à grande échelle."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B est un modèle dense (Dense Model) qui introduit un « mode de raisonnement hybride », permettant aux utilisateurs de basculer sans interruption entre le « mode réflexif » et le « mode non réflexif ». Grâce à des améliorations de l'architecture du modèle, à l'augmentation des données d'entraînement et à des méthodes d'entraînement plus efficaces, ses performances globales sont comparables à celles de Qwen2.5-72B."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash est le modèle principal le plus avancé de Google, conçu pour des tâches avancées de raisonnement, de codage, de mathématiques et de sciences. Il intègre une capacité de « réflexion » intégrée, lui permettant de fournir des réponses avec une précision accrue et un traitement contextuel plus détaillé.\n\nRemarque : ce modèle existe en deux variantes : avec réflexion et sans réflexion. Le tarif de sortie varie considérablement selon que la capacité de réflexion est activée ou non. Si vous choisissez la variante standard (sans le suffixe « :thinking »), le modèle évitera explicitement de générer des jetons de réflexion.\n\nPour exploiter la capacité de réflexion et recevoir des jetons de réflexion, vous devez sélectionner la variante « :thinking », ce qui entraînera un tarif de sortie plus élevé pour la réflexion.\n\nDe plus, Gemini 2.5 Flash peut être configuré via le paramètre « nombre maximal de jetons pour le raisonnement », comme décrit dans la documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Modèle expérimental Gemini 2.5 Flash, supportant la génération d'images."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Modèle expérimental Gemini 2.5 Flash, supportant la génération d'images."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash est le modèle phare le plus avancé de Google, conçu pour des tâches de raisonnement avancé, de codage, de mathématiques et de sciences. Il comprend des capacités de 'pensée' intégrées, lui permettant de fournir des réponses avec une plus grande précision et un traitement contextuel détaillé.\n\nRemarque : ce modèle a deux variantes : pensée et non-pensée. La tarification de sortie varie considérablement en fonction de l'activation de la capacité de pensée. Si vous choisissez la variante standard (sans le suffixe ':thinking'), le modèle évitera explicitement de générer des jetons de pensée.\n\nPour tirer parti de la capacité de pensée et recevoir des jetons de pensée, vous devez choisir la variante ':thinking', ce qui entraînera une tarification de sortie de pensée plus élevée.\n\nDe plus, Gemini 2.5 Flash peut être configuré via le paramètre 'nombre maximal de jetons de raisonnement', comme décrit dans la documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1534,6 +1552,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, adapté pour fonctionner sur des GPU grand public haut de gamme ou des Mac Apple Silicon. Ce modèle excelle dans la génération de dialogues, la rédaction de code et les tâches de raisonnement, avec prise en charge des appels de fonctions et de l'utilisation d'outils."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 : architecture Transformer quantifiée, offrant des performances solides même en ressources limitées."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, conçu comme un modèle phare. Il nécessite un environnement multi-GPU ou une station de travail haute performance, offrant des performances exceptionnelles en raisonnement complexe, génération de code et traitement multilingue, avec prise en charge avancée des appels de fonctions et de l'intégration d'outils."
