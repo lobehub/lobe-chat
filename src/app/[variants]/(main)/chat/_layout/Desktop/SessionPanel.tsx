@@ -1,7 +1,7 @@
 'use client';
 
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles, useResponsive, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
 
@@ -69,6 +69,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
     if (!md) updatePreference({ showSessionPanel: false });
   }, [md, cacheExpand]);
 
+  const { appearance } = useThemeMode();
+
   const SessionPanel = useMemo(() => {
     return (
       <DraggablePanel
@@ -90,7 +92,7 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
         </DraggablePanelContainer>
       </DraggablePanel>
     );
-  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth]);
+  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance]);
 
   return SessionPanel;
 });
