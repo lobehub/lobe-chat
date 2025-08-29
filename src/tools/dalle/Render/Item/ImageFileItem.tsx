@@ -44,12 +44,12 @@ const ImageFileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) =>
     <Image
       alt={data?.name || id || ''}
       alwaysShowActions={alwaysShowClose}
+      classNames={{ wrapper: cx(styles.image, editable && styles.editableImage) }}
       height={isSafari ? 'auto' : '100%'}
       isLoading={isLoading}
       size={IMAGE_SIZE as any}
       src={data?.url}
       style={{ height: isSafari ? 'auto' : '100%' }}
-      wrapperClassName={cx(styles.image, editable && styles.editableImage)}
     />
   );
 });
