@@ -2,6 +2,8 @@ import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { serverDBEnv } from '@/config/db';
+import { serverDB } from '@/database/server';
+import { dateKeys } from '@/libs/next-auth/adapter';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 
 const log = debug('lobe-next-auth:api:auth:adapter');
@@ -29,7 +31,16 @@ export async function POST(req: NextRequest) {
     // Parse the request body
     const data = await req.json();
     log('Received request data:', data);
-    const service = new NextAuthUserService();
+    // Preprocess
+    if (data?.data) {
+      for (const key of dateKeys) {
+        if (data?.data && data.data[key]) {
+          data.data[key] = new Date(data.data[key]);
+          continue;
+        }
+      }
+    }
+    const service = new NextAuthUserService(serverDB);
     let result;
     switch (data.action) {
       case 'createAuthenticator': {
@@ -117,6 +128,8 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ data: result, success: true });
   } catch (error) {
+    log('Error processing request:');
+    log(error);
     return NextResponse.json({ error, success: false }, { status: 400 });
   }
 }

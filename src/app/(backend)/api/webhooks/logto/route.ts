@@ -36,6 +36,15 @@ export const POST = async (req: Request): Promise<NextResponse> => {
         },
       );
     }
+    case 'User.SuspensionStatus.Updated': {
+      if (data.isSuspended) {
+        return nextAuthUserService.safeSignOutUser({
+          provider: 'logto',
+          providerAccountId: data.id,
+        });
+      }
+      return NextResponse.json({ message: 'user reactivated', success: true }, { status: 200 });
+    }
 
     default: {
       pino.warn(
