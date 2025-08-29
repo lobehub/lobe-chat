@@ -1,6 +1,6 @@
+import { ModelParamsSchema } from 'model-bank';
 import { ReactNode } from 'react';
 
-import { ModelParamsSchema } from '@/libs/standard-parameters';
 import { AiModelType, Pricing } from '@/types/aiModel';
 import { AiProviderSettings } from '@/types/aiProvider';
 

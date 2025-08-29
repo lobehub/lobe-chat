@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { getModelPropertyWithFallback } from './getFallbackModelProperty';
 
 // Mock LOBE_DEFAULT_MODEL_LIST for testing
-vi.mock('@/config/aiModels', () => ({
+vi.mock('model-bank', () => ({
   LOBE_DEFAULT_MODEL_LIST: [
     {
       id: 'gpt-4',

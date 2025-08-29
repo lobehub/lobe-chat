@@ -32,6 +32,15 @@ const AgentModal = memo(() => {
         tag: 'model',
       },
       {
+        children: <Switch />,
+        desc: t('settingChat.enableStreaming.desc'),
+        label: t('settingChat.enableStreaming.title'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: 'enableStreaming',
+        valuePropName: 'checked',
+      },
+      {
         children: <SliderWithInput max={2} min={0} step={0.1} />,
         desc: t('settingModel.temperature.desc'),
         label: t('settingModel.temperature.title'),

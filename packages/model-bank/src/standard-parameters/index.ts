@@ -1,7 +1,7 @@
 import type { Simplify } from 'type-fest';
 import { z } from 'zod';
 
-import { MAX_SEED } from '@/const/image';
+export const MAX_SEED = 2 ** 31 - 1;
 
 // 定义顶层的元规范 - 平铺结构
 export const ModelParamsMetaSchema = z.object({
