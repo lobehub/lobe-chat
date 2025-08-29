@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Back"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Download",
+      "preview": "Preview"
+    },
+    "iframeTitle": "HTML Preview",
+    "mode": {
+      "code": "Code",
+      "preview": "Preview"
+    },
+    "title": "HTML Preview"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Click to change image",

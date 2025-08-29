@@ -1,3 +1,4 @@
+import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
 import { ModelParamsSchema } from '@/libs/standard-parameters';
 import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
@@ -605,71 +606,90 @@ const imagenBaseParameters: ModelParamsSchema = {
   prompt: { default: '' },
 };
 
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 const googleImageModels: AIImageModelCard[] = [
   {
-    description: 'Imagen 4th generation text-to-image model series',
-    displayName: 'Imagen 4',
+    displayName: 'Gemini 2.5 Flash Image Preview',
+    id: 'gemini-2.5-flash-image-preview:image',
     enabled: true,
+    type: 'image',
+    description:
+      'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    releasedAt: '2025-08-26',
+    parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+  },
+  {
+    displayName: 'Imagen 4',
     id: 'imagen-4.0-generate-001',
+    enabled: true,
+    type: 'image',
+    description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
+    releasedAt: '2025-08-15',
     parameters: imagenBaseParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2024-08-14',
-    type: 'image',
   },
   {
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
     displayName: 'Imagen 4 Ultra',
-    enabled: true,
     id: 'imagen-4.0-ultra-generate-001',
+    enabled: true,
+    type: 'image',
+    description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
+    releasedAt: '2025-08-15',
     parameters: imagenBaseParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2024-08-14',
-    type: 'image',
   },
   {
-    description: 'Imagen 4th generation text-to-image model series Fast version',
     displayName: 'Imagen 4 Fast',
-    enabled: true,
     id: 'imagen-4.0-fast-generate-001',
+    enabled: true,
+    type: 'image',
+    description: 'Imagen 4th generation text-to-image model series Fast version',
     organization: 'Deepmind',
+    releasedAt: '2025-08-15',
     parameters: imagenBaseParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2024-08-14',
-    type: 'image',
   },
   {
-    description: 'Imagen 4th generation text-to-image model series',
     displayName: 'Imagen 4 Preview 06-06',
     id: 'imagen-4.0-generate-preview-06-06',
+    type: 'image',
+    description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
+    releasedAt: '2024-06-06',
     parameters: imagenBaseParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2024-06-06',
-    type: 'image',
   },
   {
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
     displayName: 'Imagen 4 Ultra Preview 06-06',
     id: 'imagen-4.0-ultra-generate-preview-06-06',
+    type: 'image',
+    description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
+    releasedAt: '2025-06-11',
     parameters: imagenBaseParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2024-06-06',
-    type: 'image',
   },
 ];
+/* eslint-enable sort-keys-fix/sort-keys-fix */
 
 export const allModels = [...googleChatModels, ...googleImageModels];
 

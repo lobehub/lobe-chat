@@ -45,7 +45,7 @@ const LobeMockProvider = createOpenAICompatibleRuntime({
 beforeEach(() => {
   instance = new LobeMockProvider({ apiKey: 'test' });
 
-  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+  // Use vi.spyOn to mock the chat.completions.create method
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
     new ReadableStream() as any,
   );
@@ -540,16 +540,16 @@ describe('LobeOpenAICompatibleFactory', () => {
           { signal: controller.signal },
         );
 
-        // 给一些时间让请求开始
+        // Give some time for the request to start
         await sleep(50);
 
         controller.abort();
 
-        // 等待并断言 Promise 被拒绝
-        // 使用 try-catch 来捕获和验证错误
+        // Wait and assert that Promise is rejected
+        // Use try-catch to capture and verify errors
         try {
           await chatPromise;
-          // 如果 Promise 没有被拒绝，测试应该失败
+          // If Promise is not rejected, test should fail
           expect.fail('Expected promise to be rejected');
         } catch (error) {
           expect((error as any).errorType).toBe('AgentRuntimeError');
@@ -753,7 +753,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
     describe('chat with callback and headers', () => {
       it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
+        // Mock chat.completions.create method to return a readable stream
         const mockCreateMethod = vi
           .spyOn(instance['client'].chat.completions, 'create')
           .mockResolvedValue(
@@ -774,14 +774,14 @@ describe('LobeOpenAICompatibleFactory', () => {
             }) as any,
           );
 
-        // 准备 callback 和 headers
+        // Prepare callback and headers
         const mockCallback: ChatStreamCallbacks = {
           onStart: vi.fn(),
           onCompletion: vi.fn(),
         };
         const mockHeaders = { 'Custom-Header': 'TestValue' };
 
-        // 执行测试
+        // Execute test
         const result = await instance.chat(
           {
             messages: [{ content: 'Hello', role: 'user' }],
@@ -791,17 +791,17 @@ describe('LobeOpenAICompatibleFactory', () => {
           { callback: mockCallback, headers: mockHeaders },
         );
 
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
+        // Verify callback is called
+        await result.text(); // Ensure stream is consumed
         expect(mockCallback.onStart).toHaveBeenCalled();
         expect(mockCallback.onCompletion).toHaveBeenCalledWith({
           text: 'hello',
         });
 
-        // 验证 headers 被正确传递
+        // Verify headers are correctly passed
         expect(result.headers.get('Custom-Header')).toEqual('TestValue');
 
-        // 清理
+        // Cleanup
         mockCreateMethod.mockRestore();
       });
     });
@@ -940,40 +940,40 @@ describe('LobeOpenAICompatibleFactory', () => {
     describe('DEBUG', () => {
       it('should call debugStream and return StreamingTextResponse when DEBUG_OPENROUTER_CHAT_COMPLETION is 1', async () => {
         // Arrange
-        const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
+        const mockProdStream = new ReadableStream() as any; // Mocked prod stream
         const mockDebugStream = new ReadableStream({
           start(controller) {
             controller.enqueue('Debug stream content');
             controller.close();
           },
         }) as any;
-        mockDebugStream.toReadableStream = () => mockDebugStream; // 添加 toReadableStream 方法
+        mockDebugStream.toReadableStream = () => mockDebugStream; // Add toReadableStream method
 
-        // 模拟 chat.completions.create 返回值，包括模拟的 tee 方法
+        // Mock chat.completions.create return value, including mocked tee method
         (instance['client'].chat.completions.create as Mock).mockResolvedValue({
           tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
         });
 
-        // 保存原始环境变量值
+        // Save original environment variable value
         const originalDebugValue = process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION;
 
-        // 模拟环境变量
+        // Mock environment variable
         process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION = '1';
         vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
-        // 执行测试
-        // 运行你的测试函数，确保它会在条件满足时调用 debugStream
-        // 假设的测试函数调用，你可能需要根据实际情况调整
+        // Execute test
+        // Run your test function, ensuring it calls debugStream when conditions are met
+        // Hypothetical test function call, you may need to adjust based on actual situation
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'mistralai/mistral-7b-instruct:free',
           temperature: 0,
         });
 
-        // 验证 debugStream 被调用
+        // Verify debugStream is called
         expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
-        // 恢复原始环境变量值
+        // Restore original environment variable value
         process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION = originalDebugValue;
       });
     });

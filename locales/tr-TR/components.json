@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Geri dön"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "İndir",
+      "preview": "Önizleme"
+    },
+    "iframeTitle": "HTML Önizlemesi",
+    "mode": {
+      "code": "Kod",
+      "preview": "Önizleme"
+    },
+    "title": "HTML Önizlemesi"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Resmi değiştirmek için tıklayın",

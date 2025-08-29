@@ -1,12 +1,11 @@
 import { getModelPropertyWithFallback } from '@lobechat/utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import createDebug from 'debug';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
+import type { AiModelType } from '@/types/aiModel';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
@@ -30,13 +29,11 @@ import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
-import {
-  convertImageUrlToFile,
-  convertOpenAIMessages,
-  convertOpenAIResponseInputs,
-} from '../openaiHelpers';
+import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../openaiHelpers';
+import { postProcessModelList } from '../postProcessModelList';
 import { StreamingResponse } from '../response';
 import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
+import { createOpenAICompatibleImage } from './createImage';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -334,107 +331,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         });
       }
 
-      // Otherwise use default OpenAI compatible implementation
-      const { model, params } = payload;
-      const log = createDebug(`lobe-image:model-runtime`);
-
-      log('Creating image with model: %s and params: %O', model, params);
-
-      // 映射参数名称，将 imageUrls 映射为 image
-      const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
-        ['imageUrls', 'image'],
-        ['imageUrl', 'image'],
-      ]);
-      const userInput: Record<string, any> = Object.fromEntries(
-        Object.entries(params).map(([key, value]) => [
-          paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
-          value,
-        ]),
-      );
-
-      // https://platform.openai.com/docs/api-reference/images/createEdit
-      const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
-      // 如果有 imageUrls 参数，将其转换为 File 对象
-      if (isImageEdit) {
-        log('Converting imageUrls to File objects: %O', userInput.image);
-        try {
-          // 转换所有图片 URL 为 File 对象
-          const imageFiles = await Promise.all(
-            userInput.image.map((url: string) => convertImageUrlToFile(url)),
-          );
-
-          log('Successfully converted %d images to File objects', imageFiles.length);
-
-          // 根据官方文档，如果有多个图片，传递数组；如果只有一个，传递单个 File
-          userInput.image = imageFiles.length === 1 ? imageFiles[0] : imageFiles;
-        } catch (error) {
-          log('Error converting imageUrls to File objects: %O', error);
-          throw new Error(`Failed to convert image URLs to File objects: ${error}`);
-        }
-      } else {
-        delete userInput.image;
-      }
-
-      if (userInput.size === 'auto') {
-        delete userInput.size;
-      }
-
-      const defaultInput = {
-        n: 1,
-        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
-        ...(isImageEdit ? { input_fidelity: 'high' } : {}),
-      };
-
-      const options = {
-        model,
-        ...defaultInput,
-        ...userInput,
-      };
-
-      log('options: %O', options);
-
-      // 判断是否为图片编辑操作
-      const img = isImageEdit
-        ? await this.client.images.edit(options as any)
-        : await this.client.images.generate(options as any);
-
-      // 检查响应数据的完整性
-      if (!img || !img.data || !Array.isArray(img.data) || img.data.length === 0) {
-        log('Invalid image response: missing data array');
-        throw new Error('Invalid image response: missing or empty data array');
-      }
-
-      const imageData = img.data[0];
-      if (!imageData) {
-        log('Invalid image response: first data item is null/undefined');
-        throw new Error('Invalid image response: first data item is null or undefined');
-      }
-
-      let imageUrl: string;
-
-      // 处理 base64 格式的响应
-      if (imageData.b64_json) {
-        // 确定图片的 MIME 类型，默认为 PNG
-        const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
-
-        // 将 base64 字符串转换为完整的 data URL
-        imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
-        log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
-      }
-      // 处理 URL 格式的响应
-      else if (imageData.url) {
-        imageUrl = imageData.url;
-        log('Using direct image URL: %s', imageUrl);
-      }
-      // 如果两种格式都不存在，抛出错误
-      else {
-        log('Invalid image response: missing both b64_json and url fields');
-        throw new Error('Invalid image response: missing both b64_json and url fields');
-      }
-
-      return {
-        imageUrl,
-      };
+      // Use the new createOpenAICompatibleImage function
+      return createOpenAICompatibleImage(this.client, payload, provider);
     }
 
     async models() {
@@ -489,14 +387,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           .filter(Boolean) as ChatModelCard[];
       }
 
-      return (await Promise.all(
-        resultModels.map(async (model) => {
-          return {
-            ...model,
-            type: model.type || (await getModelPropertyWithFallback(model.id, 'type')),
-          };
-        }),
-      )) as ChatModelCard[];
+      return await postProcessModelList(resultModels, (modelId) =>
+        getModelPropertyWithFallback<AiModelType>(modelId, 'type'),
+      );
     }
 
     async embeddings(

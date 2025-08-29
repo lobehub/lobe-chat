@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "عودة"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "تنزيل",
+      "preview": "معاينة"
+    },
+    "iframeTitle": "معاينة HTML",
+    "mode": {
+      "code": "رمز",
+      "preview": "معاينة"
+    },
+    "title": "معاينة HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "انقر لتغيير الصورة",

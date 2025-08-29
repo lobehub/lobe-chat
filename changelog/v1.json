@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support html preview."]
+    },
+    "date": "2025-08-28",
+    "version": "1.116.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop route error."]
     },
     "date": "2025-08-28",

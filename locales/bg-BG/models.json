@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview е най-новият, най-бързият и най-ефективният роден мултимодален модел на Google; той ви позволява чрез диалог да създавате и редактирате изображения."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview е най-новият, най-бързият и най-ефективният мултимодален модел на Google, който ви позволява да генерирате и редактирате изображения чрез разговор."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite е най-малкият и най-ефективен модел на Google, създаден специално за масово използване."
   },

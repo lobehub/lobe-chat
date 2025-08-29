@@ -111,6 +111,7 @@ export const IMAGE_MODEL_KEYWORDS = [
   'wanxiang',
   'DESCRIBE',
   'UPSCALE',
+  '!gemini', // 排除 gemini 模型，即使包含 -image 也是 chat 模型
   '-image',
   '^V3',
   '^V_2',
@@ -169,7 +170,7 @@ const findKnownModelByProvider = async (
 
   try {
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(`@/config/aiModels/${provider}`);
+    const moduleImport = await import(`@/config/aiModels/${provider}.ts`);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找

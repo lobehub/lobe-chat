@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview هو أحدث وأسرع وأكثر كفاءة نموذج متعدد الوسائط أصلي من Google، ويتيح لك إنشاء الصور وتحريرها من خلال المحادثة."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "معاينة صورة فلاش جيميني 2.5 هي أحدث وأسرع وأكثر نموذج متعدد الوسائط كفاءة من جوجل، تتيح لك إنشاء وتحرير الصور من خلال المحادثة."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite هو أصغر وأفضل نموذج من حيث التكلفة من Google، مصمم للاستخدام على نطاق واسع."
   },
