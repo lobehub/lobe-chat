@@ -16,7 +16,7 @@ type StyleCreator<T, P extends any[] = []> = (token: AliasToken, ...customParams
  * @param creator 样式创建函数，接收 token 和用户参数
  * @returns 返回 useStyles 钩子函数
  */
-export const createStyles = <T extends NamedStyles<T>, P extends any[] = []>(
+export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P extends any[] = []>(
   creator: StyleCreator<T, P>,
 ) => {
   // 返回一个hook函数，自动推断参数类型

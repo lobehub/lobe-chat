@@ -81,7 +81,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <View style={[styles.headerContainer, expanded && styles.headerExpanded]}>
+      <View style={[styles.headerContainer]}>
         <View style={styles.headerLeft}>
           <Pressable onPress={() => setExpanded(!expanded)} style={styles.expandIcon}>
             {expanded ? (
@@ -92,15 +92,13 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           </Pressable>
         </View>
 
-        <View style={styles.headerCenter}>
-          {allowChangeLanguage && showLanguage ? (
-            <LanguageSelect onSelect={handleLanguageChange} value={language} />
-          ) : (
-            (showLanguage || fileName) && (
-              <Text style={styles.headerTitle}>{fileName || language}</Text>
-            )
-          )}
-        </View>
+        {allowChangeLanguage && showLanguage ? (
+          <LanguageSelect onSelect={handleLanguageChange} value={language} />
+        ) : (
+          (showLanguage || fileName) && (
+            <Text style={styles.headerTitle}>{fileName || language}</Text>
+          )
+        )}
 
         <View style={styles.headerRight}>
           {copyable && (

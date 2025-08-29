@@ -29,30 +29,11 @@ export const useStyles = createStyles((token) => ({
   expandIcon: {
     padding: token.paddingXXS,
   },
-  header: {
-    marginBottom: token.marginLG,
-    marginHorizontal: token.marginLG,
-    marginTop: token.marginXXL,
-  },
-  headerCenter: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    minWidth: 180,
-    paddingHorizontal: 50,
-  },
   headerContainer: {
     alignItems: 'center',
     backgroundColor: token.colorFillQuaternary,
-    flexDirection: 'row',
     height: 42,
-    justifyContent: 'space-between',
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
-  },
-  headerExpanded: {
-    borderBottomColor: token.colorBorder,
-    borderBottomWidth: token.lineWidth,
+    justifyContent: 'center',
   },
   headerLeft: {
     alignItems: 'center',
@@ -74,19 +55,6 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeSM,
     fontWeight: token.fontWeightStrong,
     textAlign: 'center',
-  },
-  languageTag: {
-    backgroundColor: token.colorFillSecondary,
-    borderRadius: token.borderRadiusXS,
-    color: token.colorText,
-    fontSize: token.fontSizeSM,
-    fontWeight: token.fontWeightStrong,
-    paddingHorizontal: token.paddingXS,
-    paddingVertical: 2,
-    position: 'absolute',
-    right: token.paddingSM,
-    top: token.paddingXS,
-    zIndex: 1,
   },
   simpleCopyButton: {
     backgroundColor: token.colorBgContainer,
