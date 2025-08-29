@@ -19,6 +19,9 @@ interface BackendAdapterResponse {
   success: boolean;
 }
 
+// Due to use direct HTTP Post, the date string cannot parse automatically
+export const dateKeys = ['expires', 'emailVerified'];
+
 /**
  * @description LobeNextAuthDbAdapter is implemented to handle the database operations
  * for NextAuth, this function do the same things as `src/app/api/webhooks/clerk/route.ts`
@@ -52,8 +55,17 @@ export function LobeNextAuthDbAdapter(): Adapter {
     const data = (await res.json()) as BackendAdapterResponse;
     log('LobeNextAuthDbAdapter: postProcessor called with data:', data);
     if (!data.success) {
-      log('LobeNextAuthDbAdapter: Error in postProcessor:', data.error);
+      log('LobeNextAuthDbAdapter: Error in postProcessor:');
+      log(data);
       throw new Error(`LobeNextAuthDbAdapter: ${data.error}`);
+    }
+    if (data?.data) {
+      for (const key of dateKeys) {
+        if (data.data[key]) {
+          data.data[key] = new Date(data.data[key]);
+          continue;
+        }
+      }
     }
     return data.data;
   };

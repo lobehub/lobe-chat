@@ -9,7 +9,7 @@ import {
   nextauthAuthenticators,
   nextauthSessions,
   nextauthVerificationTokens,
-  users
+  users,
 } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { pino } from '@/libs/logger';
@@ -59,8 +59,33 @@ export class NextAuthUserService {
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
   };
 
+  safeSignOutUser = async ({
+    providerAccountId,
+    provider,
+  }: {
+    provider: string;
+    providerAccountId: string;
+  }) => {
+    pino.info(`Signing out user "${JSON.stringify({ provider, providerAccountId })}"`);
+    const user = await this.getUserByAccount({
+      provider,
+      providerAccountId,
+    });
+
+    // 2. If found, Update user data from provider
+    if (user?.id) {
+      // Perform update
+      await this.db.delete(nextauthSessions).where(eq(nextauthSessions.userId, user.id));
+    } else {
+      pino.warn(
+        `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" to signout", but no user was found by the providerAccountId.`,
+      );
+    }
+    return NextResponse.json({ message: 'user signed out', success: true }, { status: 200 });
+  };
+
   createAuthenticator: NonNullable<Adapter['createAuthenticator']> = async (authenticator) => {
-    return this.db
+    return await this.db
       .insert(nextauthAuthenticators)
       .values(authenticator)
       .returning()
@@ -68,7 +93,7 @@ export class NextAuthUserService {
   };
 
   createSession: NonNullable<Adapter['createSession']> = async (data) => {
-    return this.db
+    return await this.db
       .insert(nextauthSessions)
       .values(data)
       .returning()
@@ -123,19 +148,17 @@ export class NextAuthUserService {
   };
 
   deleteSession: NonNullable<Adapter['deleteSession']> = async (sessionToken) => {
-    await this.db
-      .delete(nextauthSessions)
-      .where(eq(nextauthSessions.sessionToken, sessionToken));
-  }
+    await this.db.delete(nextauthSessions).where(eq(nextauthSessions.sessionToken, sessionToken));
+  };
 
   deleteUser: NonNullable<Adapter['deleteUser']> = async (id) => {
     const user = await UserModel.findById(this.db, id);
     if (!user) throw new Error('NextAuth: Delete User not found');
     await UserModel.deleteUser(this.db, id);
-  }
+  };
 
   getAccount: NonNullable<Adapter['getAccount']> = async (providerAccountId, provider) => {
-    return await this.db
+    return (await this.db
       .select()
       .from(nextauthAccounts)
       .where(
@@ -144,7 +167,7 @@ export class NextAuthUserService {
           eq(nextauthAccounts.providerAccountId, providerAccountId),
         ),
       )
-      .then((res: any) => res[0] ?? null) as Promise<AdapterAccount | null>;
+      .then((res: any) => res[0] ?? null)) as Promise<AdapterAccount | null>;
   };
 
   getAuthenticator: NonNullable<Adapter['getAuthenticator']> = async (credentialID) => {
@@ -220,7 +243,9 @@ export class NextAuthUserService {
     return account as any;
   };
 
-  listAuthenticatorsByUserId: NonNullable<Adapter['listAuthenticatorsByUserId']> = async (userId) => {
+  listAuthenticatorsByUserId: NonNullable<Adapter['listAuthenticatorsByUserId']> = async (
+    userId,
+  ) => {
     const result = await this.db
       .select()
       .from(nextauthAuthenticators)
@@ -242,7 +267,10 @@ export class NextAuthUserService {
       );
   };
 
-  updateAuthenticatorCounter: NonNullable<Adapter['updateAuthenticatorCounter']> = async (credentialID, counter) => {
+  updateAuthenticatorCounter: NonNullable<Adapter['updateAuthenticatorCounter']> = async (
+    credentialID,
+    counter,
+  ) => {
     const result = await this.db
       .update(nextauthAuthenticators)
       .set({ counter })
@@ -281,7 +309,7 @@ export class NextAuthUserService {
   };
 
   useVerificationToken: NonNullable<Adapter['useVerificationToken']> = async (identifier_token) => {
-    return this.db
+    return await this.db
       .delete(nextauthVerificationTokens)
       .where(
         and(
