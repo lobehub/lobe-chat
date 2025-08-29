@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: de volgende generatie redeneermodel, verbeterd in complexe redenering en ketendenken, geschikt voor taken die diepgaande analyse vereisen."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Modelleverancier: sophnet-platform. DeepSeek V3 Fast is de high-TPS snelle versie van DeepSeek V3 0324, volledig niet-gequantiseerd, met sterkere codeer- en wiskundige capaciteiten en snellere respons!"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Geavanceerde beeldredeneringscapaciteiten voor visuele begripstoepassingen."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: een veelzijdig Transformer-model, geschikt voor dialoog- en generatietaken."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 instructie-geoptimaliseerd tekstmodel, geoptimaliseerd voor meertalige gesprekstoepassingen, presteert uitstekend op veel beschikbare open-source en gesloten chatmodellen op veelvoorkomende industriële benchmarks."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmiddel in de Llama-serie, dat prestaties biedt die vergelijkbaar zijn met die van een 405B-model tegen zeer lage kosten. Gebaseerd op de Transformer-structuur en verbeterd door middel van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF) voor nuttigheid en veiligheid. De instructie-geoptimaliseerde versie is speciaal geoptimaliseerd voor meertalige gesprekken en presteert beter dan veel open-source en gesloten chatmodellen op verschillende industriële benchmarks. Kennisafkapdatum is december 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: een grootschalig model gebaseerd op Mixture-of-Experts, biedt een efficiënte expertactivatiestrategie voor uitstekende prestaties tijdens het redeneren."
   },
   "MiniMax-M1": {
     "description": "Een gloednieuw zelfontwikkeld redeneermodel. Wereldwijd toonaangevend: 80K denkpatronen x 1M invoer, prestaties vergelijkbaar met topmodellen uit het buitenland."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B is een MoE (hybride expertmodel) dat de \"hybride redeneermodus\" introduceert, waarmee gebruikers naadloos kunnen schakelen tussen \"denkmodus\" en \"niet-denkmodus\". Het ondersteunt begrip en redenering in 119 talen en dialecten en beschikt over krachtige tool-aanroepmogelijkheden. Op het gebied van algemene vaardigheden, codering en wiskunde, meertalige capaciteiten, kennis en redenering kan het concurreren met toonaangevende grote modellen op de markt zoals DeepSeek R1, OpenAI o1, o3-mini, Grok 3 en Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: een model geoptimaliseerd voor geavanceerde redenering en dialooginstructies, met een hybride expertarchitectuur die redeneringsefficiëntie behoudt bij grootschalige parameters."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B is een dense model dat de \"hybride redeneermodus\" introduceert, waarmee gebruikers naadloos kunnen schakelen tussen \"denkmodus\" en \"niet-denkmodus\". Dankzij verbeteringen in de modelarchitectuur, toegenomen trainingsdata en effectievere trainingsmethoden presteert het model in het algemeen vergelijkbaar met Qwen2.5-72B."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is het meest geavanceerde hoofdmodel van Google, speciaal ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denk'-mogelijkheden, waardoor het reacties kan leveren met hogere nauwkeurigheid en gedetailleerdere contextverwerking.\n\nLet op: dit model heeft twee varianten: denkend en niet-denkend. De prijsstelling van de output verschilt aanzienlijk afhankelijk van of de denkcapaciteit is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' achtervoegsel), zal het model expliciet vermijden denk-tokens te genereren.\n\nOm gebruik te maken van de denkcapaciteit en denk-tokens te ontvangen, moet u de ':thinking' variant selecteren, wat resulteert in een hogere prijs voor denk-output.\n\nDaarnaast kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'maximale tokens voor redenering', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash experimenteel model, ondersteunt beeldgeneratie"
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash experimenteel model, ondersteunt beeldgeneratie"
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1534,6 +1552,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B is een open-source groot taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en geschikt is voor gebruik op high-end consumentengpu's of Apple Silicon Macs. Dit model presteert uitstekend bij dialooggeneratie, code schrijven en redeneertaken, en ondersteunt functieverzoeken en het gebruik van tools."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4-gekwantificeerd Transformer-structuur, behoudt sterke prestaties zelfs bij beperkte middelen."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is een groot open-source taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en als vlaggenschipmodel fungeert. Het vereist een multi-gpu- of high-performance workstation-omgeving en levert uitstekende prestaties bij complexe redenering, codegeneratie en meertalige verwerking, met ondersteuning voor geavanceerde functieverzoeken en toolintegratie."

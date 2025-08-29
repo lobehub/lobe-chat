@@ -86,15 +86,15 @@
     "ExceededContextWindow": "De inhoud van de huidige aanvraag overschrijdt de lengte die het model kan verwerken. Verminder de hoeveelheid inhoud en probeer het opnieuw.",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
     "GoogleAIBlockReason": {
-      "BLOCKLIST": "Uw inhoud bevat verboden woorden. Controleer en pas uw invoer aan en probeer het opnieuw.",
-      "IMAGE_SAFETY": "De gegenereerde afbeelding is om veiligheidsredenen geblokkeerd. Probeer uw aanvraag voor afbeeldingsgeneratie aan te passen.",
+      "BLOCKLIST": "Uw inhoud bevat verboden woorden. Controleer en wijzig uw invoer en probeer het opnieuw.",
+      "IMAGE_SAFETY": "Het gegenereerde afbeeldingsmateriaal is om veiligheidsredenen geblokkeerd. Probeer uw afbeeldingsaanvraag te wijzigen.",
       "LANGUAGE": "De door u gebruikte taal wordt momenteel niet ondersteund. Probeer het opnieuw in het Engels of een andere ondersteunde taal.",
-      "OTHER": "De inhoud is om onbekende redenen geblokkeerd. Probeer uw verzoek anders te formuleren.",
-      "PROHIBITED_CONTENT": "Uw verzoek kan verboden inhoud bevatten. Pas uw verzoek aan zodat het voldoet aan de gebruiksregels.",
-      "RECITATION": "Uw inhoud is mogelijk geblokkeerd vanwege auteursrechtelijke kwesties. Gebruik originele inhoud of formuleer uw verzoek opnieuw.",
-      "SAFETY": "Uw inhoud is geblokkeerd door het veiligheidsbeleid. Pas uw verzoek aan en vermijd mogelijk schadelijke of ongepaste inhoud.",
-      "SPII": "Uw inhoud kan gevoelige persoonsgegevens bevatten. Verwijder de betreffende informatie ter bescherming van de privacy en probeer het opnieuw.",
-      "default": "Inhoud geblokkeerd: {{blockReason}}。请调整您的请求内容后重试。"
+      "OTHER": "De inhoud is om een onbekende reden geblokkeerd. Probeer uw verzoek anders te formuleren.",
+      "PROHIBITED_CONTENT": "Uw verzoek kan verboden inhoud bevatten. Pas uw verzoek aan zodat het voldoet aan de gebruiksrichtlijnen.",
+      "RECITATION": "Uw inhoud is mogelijk geblokkeerd vanwege mogelijke auteursrechtelijke kwesties. Probeer originele inhoud te gebruiken of formuleer uw verzoek anders.",
+      "SAFETY": "Uw inhoud is geblokkeerd vanwege veiligheidsbeleid. Probeer uw verzoek aan te passen en vermijd mogelijk schadelijke of ongepaste inhoud.",
+      "SPII": "Uw inhoud kan gevoelige persoonlijke identificatiegegevens bevatten. Verwijder dergelijke gevoelige gegevens om de privacy te beschermen en probeer het opnieuw.",
+      "default": "Inhoud geblokkeerd: {{blockReason}}. Pas uw verzoek aan en probeer het opnieuw."
     },
     "InsufficientQuota": "Het spijt ons, de quotum van deze sleutel is bereikt. Controleer of uw account voldoende saldo heeft of vergroot het sleutelquotum en probeer het opnieuw.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",

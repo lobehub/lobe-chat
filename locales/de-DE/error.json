@@ -86,15 +86,15 @@
     "ExceededContextWindow": "Der aktuelle Anfrageinhalt überschreitet die von dem Modell verarbeitbare Länge. Bitte reduzieren Sie die Menge des Inhalts und versuchen Sie es erneut.",
     "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
     "GoogleAIBlockReason": {
-      "BLOCKLIST": "Ihr Inhalt enthält verbotene Begriffe. Bitte überprüfen und ändern Sie Ihre Eingabe und versuchen Sie es erneut.",
-      "IMAGE_SAFETY": "Die erzeugten Bildinhalte wurden aus Sicherheitsgründen blockiert. Bitte versuchen Sie, Ihre Bildgenerierungsanfrage zu ändern.",
+      "BLOCKLIST": "Ihr Inhalt enthält verbotene Wörter. Bitte prüfen und ändern Sie Ihre Eingabe und versuchen Sie es erneut.",
+      "IMAGE_SAFETY": "Die Bildgenerierung wurde aus Sicherheitsgründen blockiert. Bitte passen Sie Ihre Anfrage zur Bildgenerierung an und versuchen Sie es erneut.",
       "LANGUAGE": "Die von Ihnen verwendete Sprache wird derzeit nicht unterstützt. Bitte versuchen Sie es erneut auf Englisch oder in einer anderen unterstützten Sprache.",
-      "OTHER": "Der Inhalt wurde aus einem unbekannten Grund blockiert. Bitte formulieren Sie Ihre Anfrage neu und versuchen Sie es erneut.",
+      "OTHER": "Der Inhalt wurde aus unbekannten Gründen blockiert. Bitte formulieren Sie Ihre Anfrage neu.",
       "PROHIBITED_CONTENT": "Ihre Anfrage könnte verbotene Inhalte enthalten. Bitte passen Sie Ihre Anfrage an und stellen Sie sicher, dass sie den Nutzungsrichtlinien entspricht.",
-      "RECITATION": "Ihr Inhalt wurde möglicherweise wegen möglicher Urheberrechtsverletzungen blockiert. Bitte verwenden Sie eigene Inhalte oder formulieren Sie Ihre Anfrage um.",
-      "SAFETY": "Ihr Inhalt wurde aufgrund der Sicherheitsrichtlinien blockiert. Bitte passen Sie Ihre Anfrage an und vermeiden Sie potenziell schädliche oder unangemessene Inhalte.",
-      "SPII": "Ihr Inhalt könnte sensible personenbezogene Daten enthalten. Zum Schutz der Privatsphäre entfernen Sie bitte die betreffenden Informationen und versuchen Sie es erneut.",
-      "default": "Inhalt blockiert: {{blockReason}}。请调整您的请求内容后重试。"
+      "RECITATION": "Ihr Inhalt wurde wegen möglicher Urheberrechtsverletzungen blockiert. Bitte verwenden Sie Originalinhalte oder formulieren Sie Ihre Anfrage um.",
+      "SAFETY": "Ihr Inhalt wurde aufgrund von Sicherheitsrichtlinien blockiert. Bitte passen Sie Ihre Anfrage an und vermeiden Sie potenziell schädliche oder unangemessene Inhalte.",
+      "SPII": "Ihr Inhalt könnte sensible personenbezogene Daten enthalten. Zum Schutz der Privatsphäre entfernen Sie bitte diese Informationen und versuchen Sie es erneut.",
+      "default": "Inhalt blockiert: {{blockReason}}. Bitte passen Sie Ihre Anfrage an und versuchen Sie es erneut."
     },
     "InsufficientQuota": "Es tut uns leid, das Kontingent (Quota) für diesen Schlüssel ist erreicht. Bitte überprüfen Sie Ihr Kontoguthaben oder erhöhen Sie das Kontingent des Schlüssels und versuchen Sie es erneut.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",

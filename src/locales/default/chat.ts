@@ -54,6 +54,10 @@ export default {
       title: '深度思考开关',
     },
     title: '模型扩展功能',
+    urlContext: {
+      desc: '开启后将自动解析网页链接，以获取实际网页上下文内容',
+      title: '提取网页链接内容',
+    },
   },
   history: {
     title: '助手将只记住最后{{count}}条消息',
