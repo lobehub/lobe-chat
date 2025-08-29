@@ -210,7 +210,8 @@ export class AiInfraRepos {
         enabled: m.enabled || false,
         source: AiModelSourceEnum.Builtin,
       }));
-    } catch {
+    } catch (error) {
+      console.error(error);
       // maybe provider id not exist
     }
   };
