@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Grok Code Fast 1 model."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.2"
+  },
+  {
+    "children": {
       "fixes": ["Add Content-Security-Policy env."],
       "improvements": ["Support Gemini URL context tool."]
     },
