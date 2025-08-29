@@ -1,11 +1,15 @@
 {
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작할 수 있으며, [도우미 설정]({{url}})에서 제 정보를 더 완벽하게 설정할 수도 있습니다.",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**이며, {{systemRole}}입니다. 대화를 시작해 볼까요!",
+  "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 볼까요!",
   "confirmDelete": "삭제 확인",
   "copyFailed": "복사 실패",
+  "defaultAgent": "맞춤 도우미",
   "deleteMessageConfirm": "이 메시지를 삭제하시겠습니까?",
   "history": "대화 기록",
   "inbox": {
-    "desc": "여기에서 메시지와 알림을 확인하고 관리할 수 있습니다.",
-    "title": "받은 편지함"
+    "desc": "두뇌 집단을 활성화하여 사고의 불꽃을 일으키세요. 당신의 지능형 도우미가 여기서 모든 대화를 함께합니다.",
+    "title": "편하게 이야기해요"
   },
   "messageCopied": "메시지가 복사되었습니다",
   "newChat": "새 대화",

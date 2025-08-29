@@ -1,71 +1,72 @@
-import { useLocalSearchParams, router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BotMessageSquare } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useSWR from 'swr';
 
-import { AssistantService } from '@/services/assistant';
-import { useSessionStore } from '@/store/session';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
 import DetailHeader from './components/Header';
 import SkeletonDetail from './components/SkeletonDetail';
 import { Tag, Button, Markdown } from '@/components';
 import { useStyles } from './styles';
 import { ICON_SIZE } from '@/const/common';
-import { DEFAULT_MODEL } from '@/const/settings';
-
-const ASSISTANT_DETAIL_KEY = 'discover-assistant-detail';
+import { useDiscoverStore } from '@/store/discover';
+import { useSessionStore } from '@/store/session';
+import { useGlobalStore } from '@/store/global';
 
 const AssistantDetail = () => {
   const { identifier } = useLocalSearchParams<{ identifier: string }>();
   const { styles, token } = useStyles();
-  const { t, i18n } = useTranslation(['common', 'discover']);
+  const { t } = useTranslation(['common', 'discover']);
   const [isAdding, setIsAdding] = useState(false);
-  const { addSession } = useSessionStore();
+  const createSession = useSessionStore((s) => s.createSession);
+  const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
+  const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
   const {
     data: agent,
     error,
     isLoading,
-  } = useSWR(
-    [ASSISTANT_DETAIL_KEY, identifier as string, i18n.language],
-    async ([, id, language]: [string, string, string]) => {
-      const assistantService = new AssistantService();
-      const data = await assistantService.getAssistantDetail(id, language);
-      return data;
-    },
-  );
+  } = useAssistantDetail({
+    identifier: identifier as string,
+  });
 
-  const handleAddAssistant = () => {
-    if (!agent) return;
+  // const handleAddAgentAndConverse = async () => {
+  //   if (!config) return;
+  //
+  //   setIsLoading(true);
+  //   const session = await createSession({
+  //     config,
+  //     meta,
+  //   });
+  //   setIsLoading(false);
+  //   message.success(t('assistants.addAgentSuccess'));
+  //   router.push(SESSION_CHAT_URL(session, mobile));
+  // };
+
+  const handleAddAssistant = async () => {
+    if (!agent?.config) return;
+
+    const { config } = agent;
+    const meta = {
+      avatar: agent.avatar,
+      backgroundColor: agent.backgroundColor,
+      description: agent.description,
+      tags: agent.tags,
+      title: agent.title,
+    };
 
     setIsAdding(true);
     try {
-      // 创建新的会话
-      const newSession: LobeAgentSession = {
-        createdAt: new Date(),
-        id: `agent-${agent.identifier}-${Date.now()}`,
-        meta: {
-          author: agent.author || 'LobeChat',
-          avatar: agent.meta.avatar || '🤖',
-          description: agent.meta.description,
-          tags: agent.meta.tags || [],
-          title: agent.meta.title,
-        },
-        model: agent.config?.model || DEFAULT_MODEL,
-        pinned: false,
-        type: LobeSessionType.Agent,
-        updatedAt: new Date(),
-      };
-
       // 添加到会话列表
-      addSession(newSession);
-
+      const session = await createSession({
+        config,
+        meta,
+      });
+      toggleDrawer();
       // 导航到会话页面
       router.replace({
-        params: { id: newSession.id },
+        params: { session: session },
         pathname: '/chat',
       });
     } catch (err) {
@@ -124,18 +125,18 @@ const AssistantDetail = () => {
           {/* Header with avatar on left, title/author/date on right */}
           <DetailHeader
             author={agent.author || 'LobeChat'}
-            avatar={agent.meta.avatar || '🤖'}
+            avatar={agent.avatar || '🤖'}
             createdAt={agent.createdAt}
-            title={agent.meta.title}
+            title={agent.title}
           />
 
           {/* 描述信息 */}
-          <Text style={styles.description}>{agent.meta.description}</Text>
+          <Text style={styles.description}>{agent.description}</Text>
 
           {/* 标签列表 */}
-          {agent.meta.tags && agent.meta.tags.length > 0 && (
+          {agent.tags && agent.tags.length > 0 && (
             <View style={styles.tagsContainer}>
-              {agent.meta.tags.map((tag: string) => (
+              {agent.tags.map((tag: string) => (
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </View>
@@ -154,9 +155,9 @@ const AssistantDetail = () => {
               {t('assistant.detail.addAndChat', { ns: 'discover' })}
             </Button>
 
-            {/* <Button 
-              type="default" 
-              size="large" 
+            {/* <Button
+              type="default"
+              size="large"
               onPress={handleShare}
             >
               <Share2 size={ICON_SIZE_SMALL} color={token.colorText} />

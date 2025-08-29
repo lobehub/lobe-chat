@@ -41,11 +41,11 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
   const handleModelSelect = useCallback(
     async (model: string, provider: string) => {
       try {
+        onClose();
         await updateAgentConfig({
           model,
           provider,
         });
-        onClose();
       } catch (error) {
         console.error('Failed to update model:', error);
       }

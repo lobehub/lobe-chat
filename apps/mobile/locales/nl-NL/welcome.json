@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Vervang een batch",
+      "title": "Aanbevolen nieuwe assistenten:"
+    },
+    "defaultMessage": "Ik ben uw persoonlijke slimme assistent {{appName}}, hoe kan ik u nu helpen?<br />Als u een professionelere of aangepaste assistent wilt, kunt u op <plus /> klikken om een aangepaste assistent te maken",
+    "defaultMessageWithoutCreate": "Ik ben uw persoonlijke slimme assistent {{appName}}, hoe kan ik u nu helpen?",
+    "qa": {
+      "q01": "Wat is LobeHub?",
+      "q02": "Wat is {{appName}}?",
+      "q03": "Heeft {{appName}} community-ondersteuning?",
+      "q04": "Welke functies ondersteunt {{appName}}?",
+      "q05": "Hoe wordt {{appName}} geïmplementeerd en gebruikt?",
+      "q06": "Hoe is de prijsstelling van {{appName}}?",
+      "q07": "Is {{appName}} gratis?",
+      "q08": "Is er een cloudserviceversie?",
+      "q09": "Worden lokale taalmodellen ondersteund?",
+      "q10": "Wordt beeldherkenning en -generatie ondersteund?",
+      "q11": "Worden spraaksynthese en spraakherkenning ondersteund?",
+      "q12": "Wordt een plug-insysteem ondersteund?",
+      "q13": "Is er een eigen markt om GPT's te verkrijgen?",
+      "q14": "Worden meerdere AI-dienstverleners ondersteund?",
+      "q15": "Wat moet ik doen als ik problemen ondervind tijdens het gebruik?"
+    }
+  },
+  "header": "Welkom",
+  "pickAgent": "Of kies uit de onderstaande assistent-sjablonen",
+  "questions": {
+    "moreBtn": "Meer weten",
+    "title": "Veelgestelde vragen:"
+  },
+  "skip": "Overslaan maken",
+  "slogan": {
+    "desc1": "Activeer een breincluster, ontsteek de vonk van gedachten. Uw slimme assistent is er altijd voor u.",
+    "desc2": "Maak uw eerste assistent, laten we beginnen~",
+    "title": "Geef uzelf een slimmer brein"
+  },
+  "welcome": {
+    "afternoon": "Goedemiddag",
+    "morning": "Goedemorgen",
+    "night": "Goedenavond",
+    "noon": "Goedemiddag"
+  }
+}

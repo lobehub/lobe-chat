@@ -65,7 +65,7 @@ export const useStyles = createStyles((token) => ({
 
   // 获取按钮文字
   fetchButtonText: {
-    color: token.colorWhite,
+    color: token.colorTextLightSolid,
     fontSize: 12,
     fontWeight: '600',
     marginLeft: 4,

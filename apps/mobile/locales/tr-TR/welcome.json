@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Başka bir grup seç",
+      "title": "Yeni Asistan Önerileri:"
+    },
+    "defaultMessage": "Ben sizin kişisel akıllı asistanınız {{appName}}. Size şimdi nasıl yardımcı olabilirim?<br />Daha profesyonel veya özel asistanlar için <plus /> tıklayarak özel asistan oluşturabilirsiniz",
+    "defaultMessageWithoutCreate": "Ben sizin kişisel akıllı asistanınız {{appName}}. Size şimdi nasıl yardımcı olabilirim?",
+    "qa": {
+      "q01": "LobeHub nedir?",
+      "q02": "{{appName}} nedir?",
+      "q03": "{{appName}} topluluk desteğine sahip mi?",
+      "q04": "{{appName}} hangi özellikleri destekliyor?",
+      "q05": "{{appName}} nasıl kurulur ve kullanılır?",
+      "q06": "{{appName}} fiyatlandırması nasıl?",
+      "q07": "{{appName}} ücretsiz mi?",
+      "q08": "Bulut hizmeti sürümü var mı?",
+      "q09": "Yerel dil modelleri destekleniyor mu?",
+      "q10": "Görüntü tanıma ve oluşturma destekleniyor mu?",
+      "q11": "Ses sentezi ve ses tanıma destekleniyor mu?",
+      "q12": "Eklenti sistemi destekleniyor mu?",
+      "q13": "GPT'leri edinmek için kendi pazarı var mı?",
+      "q14": "Çoklu yapay zeka hizmet sağlayıcıları destekleniyor mu?",
+      "q15": "Kullanım sırasında sorun yaşarsam ne yapmalıyım?"
+    }
+  },
+  "header": "Hoş geldiniz",
+  "pickAgent": "Ya da aşağıdaki asistan şablonlarından seçin",
+  "questions": {
+    "moreBtn": "Daha fazla öğren",
+    "title": "Herkesin sorduğu sorular:"
+  },
+  "skip": "Oluşturmadan geç",
+  "slogan": {
+    "desc1": "Beyin kümesini aç, düşünce kıvılcımlarını ateşle. Akıllı asistanınız her zaman yanınızda.",
+    "desc2": "İlk asistanınızı oluşturun, haydi başlayalım~",
+    "title": "Kendinize daha akıllı bir beyin hediye edin"
+  },
+  "welcome": {
+    "afternoon": "İyi öğleden sonralar",
+    "morning": "Günaydın",
+    "night": "İyi akşamlar",
+    "noon": "İyi günler"
+  }
+}

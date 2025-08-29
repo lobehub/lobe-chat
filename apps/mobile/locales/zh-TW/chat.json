@@ -1,11 +1,15 @@
 {
+  "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
+  "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
+  "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，讓我們開始對話吧！",
   "confirmDelete": "確認刪除",
   "copyFailed": "複製失敗",
+  "defaultAgent": "自訂助手",
   "deleteMessageConfirm": "確定要刪除這則訊息嗎？",
   "history": "對話歷史",
   "inbox": {
-    "desc": "在這裡，您可以查看和管理您的訊息和通知。",
-    "title": "收件匣"
+    "desc": "開啟大腦集群，激發思維火花。你的智慧助理，在這裡與你交流一切",
+    "title": "隨便聊聊"
   },
   "messageCopied": "訊息已複製",
   "newChat": "新對話",

@@ -10,7 +10,7 @@ export const useStyles = createStyles(
     },
     description: {
       color: token.colorTextSecondary,
-      fontSize: token.fontSize,
+      fontSize: token.fontSize * 0.9, //To fix iOS text clipping issue
     },
     emoji: {
       fontSize: token.controlHeightLG,

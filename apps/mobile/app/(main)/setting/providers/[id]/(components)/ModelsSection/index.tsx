@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { RefreshCcw, Search } from 'lucide-react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -11,6 +11,7 @@ import { AiProviderModelListItem } from '@/types/aiModel';
 import { InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 
 import { useStyles } from './style';
+import ModelListSkeleton from '../ModelListSkeleton';
 
 interface ModelsSectionProps {
   providerId: string;
@@ -73,6 +74,7 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
 const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
   const { styles } = useStyles();
   const token = useThemeToken();
+  const toast = useToast();
 
   // Store hooks
   const { useFetchAiProviderModels, fetchRemoteModelList, toggleModelEnabled } = useAiInfraStore();
@@ -87,7 +89,7 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
     setIsFetching(true);
     try {
       await fetchRemoteModelList(providerId);
-      Alert.alert('Success', 'Models fetched successfully!');
+      toast.success('Models fetched successfully!');
     } catch (error) {
       console.error('Failed to fetch models:', error);
       Alert.alert('Error', 'Failed to fetch models. Please try again.');
@@ -109,8 +111,8 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
     [toggleModelEnabled],
   );
 
-  // Filter and group models
-  const filteredAndGroupedModels = useMemo(() => {
+  // Filter and flatten models for FlatList
+  const flatListData = useMemo(() => {
     if (!modelList) return [];
 
     const filtered = modelList.filter((model) => {
@@ -125,38 +127,54 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
     const enabled = filtered.filter((model) => model.enabled);
     const disabled = filtered.filter((model) => !model.enabled);
 
-    const sections = [];
+    const flatData: Array<
+      { title: string; type: 'header' } | { data: AiProviderModelListItem; type: 'model' }
+    > = [];
+
     if (enabled.length > 0) {
-      sections.push({
-        data: enabled,
-        title: `Enabled (${enabled.length})`,
-      });
-    }
-    if (disabled.length > 0) {
-      sections.push({
-        data: disabled,
-        title: `Disabled (${disabled.length})`,
-      });
+      flatData.push({ title: `Enabled (${enabled.length})`, type: 'header' });
+      enabled.forEach((model) => flatData.push({ data: model, type: 'model' }));
     }
 
-    return sections;
+    if (disabled.length > 0) {
+      flatData.push({ title: `Disabled (${disabled.length})`, type: 'header' });
+      disabled.forEach((model) => flatData.push({ data: model, type: 'model' }));
+    }
+
+    return flatData;
   }, [modelList, searchKeyword]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.titleRow}>
-            <Text style={styles.sectionTitle}>Models</Text>
+  // FlatList render functions
+  const renderItem = useCallback(
+    ({
+      item,
+    }: {
+      item: { title: string; type: 'header' } | { data: AiProviderModelListItem; type: 'model' };
+    }) => {
+      if (item.type === 'header') {
+        return (
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionHeaderText}>{item.title}</Text>
           </View>
-        </View>
-        <View style={styles.loadingContainerPage}>
-          <ActivityIndicator size="large" />
-          <Text style={styles.loadingText}>Loading models...</Text>
-        </View>
-      </View>
-    );
-  }
+        );
+      }
+
+      return <ModelCard model={item.data} onToggle={handleToggleModel} />;
+    },
+    [styles, handleToggleModel],
+  );
+
+  const keyExtractor = useCallback(
+    (
+      item: { title: string; type: 'header' } | { data: AiProviderModelListItem; type: 'model' },
+    ) => {
+      if (item.type === 'header') {
+        return `header-${item.title}`;
+      }
+      return `model-${item.data.id}`;
+    },
+    [],
+  );
 
   return (
     <View style={styles.container}>
@@ -196,7 +214,9 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
         </View>
       </View>
 
-      {filteredAndGroupedModels.length === 0 ? (
+      {isLoading ? (
+        <ModelListSkeleton />
+      ) : flatListData.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             {searchKeyword.trim()
@@ -205,18 +225,13 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
           </Text>
         </View>
       ) : (
-        <View>
-          {filteredAndGroupedModels.map((section) => (
-            <View key={section.title}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionHeaderText}>{section.title}</Text>
-              </View>
-              {section.data.map((item) => (
-                <ModelCard key={item.id} model={item} onToggle={handleToggleModel} />
-              ))}
-            </View>
-          ))}
-        </View>
+        <FlatList
+          data={flatListData}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+        />
       )}
     </View>
   );

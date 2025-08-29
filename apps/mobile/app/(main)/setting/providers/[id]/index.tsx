@@ -1,14 +1,12 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { ScrollView, SafeAreaView, Text, View } from 'react-native';
 
-import { useAiInfraStore } from '@/store/aiInfra';
-import { aiProviderSelectors } from '@/store/aiInfra/selectors';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
-import ProviderInfoSection from './(components)/ProviderInfoSection';
-import ConfigurationSection from './(components)/ConfigurationSection';
-import ModelsSection from './(components)/ModelsSection';
 import { useStyles } from './styles';
+import ProviderInfoSection from './(components)/ProviderInfoSection';
+import ModelsSection from './(components)/ModelsSection';
 
 const ProviderDetailPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,9 +17,7 @@ const ProviderDetailPage = () => {
   const { useFetchAiProviderItem } = useAiInfraStore();
   const { data: providerDetail, isLoading, error } = useFetchAiProviderItem(id!);
   // 获取provider配置状态
-  const isConfigLoading = aiProviderSelectors.isAiProviderConfigLoading(id!)(
-    useAiInfraStore.getState(),
-  );
+  const isConfigLoading = useAiInfraStore(aiProviderSelectors.isAiProviderConfigLoading(id!));
 
   // 动态设置页面标题
   useEffect(() => {
@@ -68,8 +64,7 @@ const ProviderDetailPage = () => {
         {/* Provider基本信息 */}
         <ProviderInfoSection provider={providerDetail!} />
 
-        {/* 配置区域 */}
-        <ConfigurationSection provider={providerDetail!} />
+        {/*<ConfigurationSection provider={providerDetail!} />*/}
 
         {/* Model列表区域 */}
         <ModelsSection providerId={id!} />

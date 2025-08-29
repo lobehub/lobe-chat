@@ -1,0 +1,45 @@
+{
+  "guide": {
+    "agents": {
+      "replaceBtn": "Cambia gruppo",
+      "title": "Nuovi assistenti consigliati:"
+    },
+    "defaultMessage": "Sono il tuo assistente intelligente personale {{appName}}, come posso aiutarti ora?<br />Se desideri un assistente più professionale o personalizzato, puoi cliccare su <plus /> per creare un assistente personalizzato",
+    "defaultMessageWithoutCreate": "Sono il tuo assistente intelligente personale {{appName}}, come posso aiutarti ora?",
+    "qa": {
+      "q01": "Cos'è LobeHub?",
+      "q02": "Cos'è {{appName}}?",
+      "q03": "{{appName}} ha supporto comunitario?",
+      "q04": "Quali funzionalità supporta {{appName}}?",
+      "q05": "Come si installa e utilizza {{appName}}?",
+      "q06": "Qual è la politica di prezzi di {{appName}}?",
+      "q07": "{{appName}} è gratuito?",
+      "q08": "Esiste una versione cloud?",
+      "q09": "Supporta modelli linguistici locali?",
+      "q10": "Supporta il riconoscimento e la generazione di immagini?",
+      "q11": "Supporta la sintesi vocale e il riconoscimento vocale?",
+      "q12": "Supporta un sistema di plugin?",
+      "q13": "Ha un proprio marketplace per ottenere GPT?",
+      "q14": "Supporta diversi fornitori di servizi AI?",
+      "q15": "Cosa devo fare se incontro problemi durante l'uso?"
+    }
+  },
+  "header": "Benvenuto",
+  "pickAgent": "O scegli un modello di assistente tra quelli seguenti",
+  "questions": {
+    "moreBtn": "Scopri di più",
+    "title": "Domande frequenti:"
+  },
+  "skip": "Salta creazione",
+  "slogan": {
+    "desc1": "Attiva un cluster cerebrale, accendi scintille di pensiero. Il tuo assistente intelligente è sempre con te.",
+    "desc2": "Crea il tuo primo assistente, iniziamo~",
+    "title": "Dai a te stesso un cervello più intelligente"
+  },
+  "welcome": {
+    "afternoon": "Buon pomeriggio",
+    "morning": "Buongiorno",
+    "night": "Buonasera",
+    "noon": "Buon mezzogiorno"
+  }
+}

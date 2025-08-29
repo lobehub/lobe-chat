@@ -1,11 +1,15 @@
 {
+  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start chatting with me right away, or visit [Assistant Settings]({{url}}) to update my information.",
+  "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**, {{systemRole}}. Let's start our conversation!",
+  "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. Let's start our conversation!",
   "confirmDelete": "Confirm Delete",
   "copyFailed": "Copy Failed",
+  "defaultAgent": "Custom Assistant",
   "deleteMessageConfirm": "Are you sure you want to delete this message?",
   "history": "Chat History",
   "inbox": {
-    "desc": "Here, you can view and manage your messages and notifications.",
-    "title": "Inbox"
+    "desc": "Activate the brain cluster and spark your creativity. Your intelligent assistant is here to chat about anything with you.",
+    "title": "Casual Chat"
   },
   "messageCopied": "Message Copied",
   "newChat": "New Chat",

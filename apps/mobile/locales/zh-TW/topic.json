@@ -5,7 +5,7 @@
     "desc": "點擊發送左側按鈕可將當前會話保存為歷史話題，並開啟新一輪會話",
     "title": "話題列表"
   },
-  "loading": "載入中...",
+  "loading": "加載中...",
   "newTopic": "新建話題",
   "searchPlaceholder": "搜尋話題...",
   "temp": "臨時",

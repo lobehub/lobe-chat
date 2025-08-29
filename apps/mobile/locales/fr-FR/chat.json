@@ -1,11 +1,15 @@
 {
+  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou aller dans les [paramètres de l'assistant]({{url}}) pour compléter mes informations.",
+  "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}, commençons notre conversation !",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, commençons notre conversation !",
   "confirmDelete": "Confirmer la suppression",
   "copyFailed": "Échec de la copie",
+  "defaultAgent": "Assistant personnalisé",
   "deleteMessageConfirm": "Voulez-vous vraiment supprimer ce message ?",
   "history": "Historique des conversations",
   "inbox": {
-    "desc": "Ici, vous pouvez consulter et gérer vos messages et notifications.",
-    "title": "Boîte de réception"
+    "desc": "Activez le réseau cérébral pour stimuler les étincelles de pensée. Votre assistant intelligent est ici pour tout discuter avec vous.",
+    "title": "Discutons librement"
   },
   "messageCopied": "Message copié",
   "newChat": "Nouvelle conversation",
