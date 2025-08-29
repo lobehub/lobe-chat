@@ -18,6 +18,7 @@
     "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
+      "@/config/aiModels": ["./packages/model-bank/src/aiModels/index.ts"],
       "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
       "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],

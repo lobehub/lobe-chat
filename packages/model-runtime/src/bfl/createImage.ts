@@ -1,7 +1,6 @@
 import { imageUrlToBase64 } from '@lobechat/utils';
 import createDebug from 'debug';
-
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
+import { RuntimeImageGenParamsValue } from 'model-bank';
 
 import { AgentRuntimeErrorType } from '../error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';

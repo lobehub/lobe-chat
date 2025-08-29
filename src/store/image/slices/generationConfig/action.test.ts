@@ -1,12 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
+import { ModelParamsSchema, RuntimeImageGenParams, extractDefaultValues } from 'model-bank';
+import { fluxSchnellParamsSchema } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsSchema } from '@/config/aiModels/fal';
-import {
-  ModelParamsSchema,
-  RuntimeImageGenParams,
-  extractDefaultValues,
-} from '@/libs/standard-parameters/index';
 import { useImageStore } from '@/store/image';
 import { AIImageModelCard } from '@/types/aiModel';
 

@@ -1,6 +1,5 @@
+import { ModelParamsSchema } from 'model-bank';
 import { z } from 'zod';
-
-import { ModelParamsSchema } from '@/libs/standard-parameters';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
