@@ -173,7 +173,7 @@ const findKnownModelByProvider = async (
 
   try {
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(`@/config/aiModels/${provider}.ts`);
+    const moduleImport = await import(`model-bank/${provider}`);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找
@@ -376,7 +376,7 @@ export const processMultiProviderModelList = async (
   let providerLocalConfig: any[] | null = null;
   if (providerid) {
     try {
-      const moduleImport = await import(`@/config/aiModels/${providerid}.ts`);
+      const moduleImport = await import(`model-bank/${providerid}`);
       providerLocalConfig = moduleImport.default;
     } catch {
       // 如果配置文件不存在或导入失败，保持为 null
