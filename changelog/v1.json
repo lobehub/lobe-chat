@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Add Content-Security-Policy env."],
+      "improvements": ["Support Gemini URL context tool."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.1"
+  },
+  {
+    "children": {
       "features": ["Add new provider AkashChat."]
     },
     "date": "2025-08-29",
