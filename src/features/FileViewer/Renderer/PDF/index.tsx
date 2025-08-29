@@ -17,8 +17,8 @@ import useResizeObserver from './useResizeObserver';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/build/pdf.worker.min.mjs`;
 
 const options = {
-  cMapUrl: '/cmaps/',
-  standardFontDataUrl: '/standard_fonts/',
+  cMapUrl: `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/cmaps/`,
+  standardFontDataUrl: `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/standard_fonts/`,
 };
 
 const maxWidth = 1200;

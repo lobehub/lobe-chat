@@ -1,3 +1,5 @@
+import { ModelParamsSchema } from '@/libs/standard-parameters';
+
 /**
  * 默认宽高比，当模型不支持原生宽高比时使用
  */
@@ -40,3 +42,10 @@ export const DEFAULT_DIMENSION_CONSTRAINTS = {
 } as const;
 
 export const MAX_SEED = 2 ** 31 - 1;
+
+export const CHAT_MODEL_IMAGE_GENERATION_PARAMS: ModelParamsSchema = {
+  imageUrl: {
+    default: null,
+  },
+  prompt: { default: '' },
+};

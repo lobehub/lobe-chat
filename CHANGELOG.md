@@ -2,6 +2,173 @@
 
 # Changelog
 
+## [Version 1.117.0](https://github.com/lobehub/lobe-chat/compare/v1.116.4...v1.117.0)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Ai image support Gemini 2.5 Flash Image.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Ai image support Gemini 2.5 Flash Image, closes [#8966](https://github.com/lobehub/lobe-chat/issues/8966) ([64b969e](https://github.com/lobehub/lobe-chat/commit/64b969e))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8975](https://github.com/lobehub/lobe-chat/issues/8975) ([6872798](https://github.com/lobehub/lobe-chat/commit/6872798))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.117.0](https://github.com/lobehub/lobe-chat/compare/v1.116.4...v1.117.0)
+
+<sup>Released on **2025-08-28**</sup>
+
+#### ✨ Features
+
+- **misc**: Ai image support Gemini 2.5 Flash Image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Ai image support Gemini 2.5 Flash Image, closes [#8966](https://github.com/lobehub/lobe-chat/issues/8966) ([64b969e](https://github.com/lobehub/lobe-chat/commit/64b969e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.116.4](https://github.com/lobehub/lobe-chat/compare/v1.116.3...v1.116.4)
+
+<sup>Released on **2025-08-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support html preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support html preview, closes [#8969](https://github.com/lobehub/lobe-chat/issues/8969) ([82abf6d](https://github.com/lobehub/lobe-chat/commit/82abf6d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.116.3](https://github.com/lobehub/lobe-chat/compare/v1.116.2...v1.116.3)
+
+<sup>Released on **2025-08-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop route error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop route error, closes [#8962](https://github.com/lobehub/lobe-chat/issues/8962) ([27a4b34](https://github.com/lobehub/lobe-chat/commit/27a4b34))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.116.2](https://github.com/lobehub/lobe-chat/compare/v1.116.1...v1.116.2)
+
+<sup>Released on **2025-08-28**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.116.1](https://github.com/lobehub/lobe-chat/compare/v1.116.0...v1.116.1)
+
+<sup>Released on **2025-08-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.116.0](https://github.com/lobehub/lobe-chat/compare/v1.115.0...v1.116.0)
+
+<sup>Released on **2025-08-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Add gemini 2.5 flash image for vertex ai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add gemini 2.5 flash image for vertex ai, closes [#8943](https://github.com/lobehub/lobe-chat/issues/8943) ([74d9bb5](https://github.com/lobehub/lobe-chat/commit/74d9bb5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.115.0](https://github.com/lobehub/lobe-chat/compare/v1.114.6...v1.115.0)
 
 <sup>Released on **2025-08-26**</sup>

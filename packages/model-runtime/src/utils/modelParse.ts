@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
 
 import type { ModelProviderKey } from '../types';
 
@@ -111,6 +111,7 @@ export const IMAGE_MODEL_KEYWORDS = [
   'wanxiang',
   'DESCRIBE',
   'UPSCALE',
+  '!gemini', // 排除 gemini 模型，即使包含 -image 也是 chat 模型
   '-image',
   '^V3',
   '^V_2',
@@ -168,11 +169,8 @@ const findKnownModelByProvider = async (
   const lowerModelId = modelId.toLowerCase();
 
   try {
-    // 动态构建导入路径
-    const modulePath = `@/config/aiModels/${provider}`;
-
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(modulePath);
+    const moduleImport = await import(`@/config/aiModels/${provider}.ts`);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找
@@ -211,9 +209,21 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
  * @param timestamp 时间戳（秒）
  * @returns 格式化的日期字符串 (YYYY-MM-DD)
  */
-const formatTimestampToDate = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000); // 将秒转换为毫秒
-  return date.toISOString().split('T')[0]; // 返回 YYYY-MM-DD 格式
+const formatTimestampToDate = (timestamp: number): string | undefined => {
+  if (timestamp === null || timestamp === undefined || Number.isNaN(timestamp)) return undefined;
+
+  // 支持秒级或毫秒级时间戳：
+  // - 如果是毫秒级（>= 1e12），直接当作毫秒；
+  // - 否则视为秒，需要 *1000 转为毫秒
+  const msTimestamp = timestamp > 1e12 ? timestamp : timestamp * 1000;
+  const date = new Date(msTimestamp);
+
+  // 验证解析结果和年份范围（只接受 4 位年份，避免超出 varchar(10) 的 YYYY-MM-DD）
+  const year = date.getUTCFullYear();
+  if (year < 1000 || year > 9999) return undefined;
+
+  const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+  return dateStr.length === 10 ? dateStr : undefined;
 };
 
 /**

@@ -85,6 +85,17 @@
     "CreateMessageError": "Het spijt ons, het bericht kon niet correct worden verzonden. Kopieer de inhoud en probeer het opnieuw. Na het vernieuwen van de pagina gaat dit bericht verloren.",
     "ExceededContextWindow": "De inhoud van de huidige aanvraag overschrijdt de lengte die het model kan verwerken. Verminder de hoeveelheid inhoud en probeer het opnieuw.",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Uw inhoud bevat verboden woorden. Controleer en pas uw invoer aan en probeer het opnieuw.",
+      "IMAGE_SAFETY": "De gegenereerde afbeelding is om veiligheidsredenen geblokkeerd. Probeer uw aanvraag voor afbeeldingsgeneratie aan te passen.",
+      "LANGUAGE": "De door u gebruikte taal wordt momenteel niet ondersteund. Probeer het opnieuw in het Engels of een andere ondersteunde taal.",
+      "OTHER": "De inhoud is om onbekende redenen geblokkeerd. Probeer uw verzoek anders te formuleren.",
+      "PROHIBITED_CONTENT": "Uw verzoek kan verboden inhoud bevatten. Pas uw verzoek aan zodat het voldoet aan de gebruiksregels.",
+      "RECITATION": "Uw inhoud is mogelijk geblokkeerd vanwege auteursrechtelijke kwesties. Gebruik originele inhoud of formuleer uw verzoek opnieuw.",
+      "SAFETY": "Uw inhoud is geblokkeerd door het veiligheidsbeleid. Pas uw verzoek aan en vermijd mogelijk schadelijke of ongepaste inhoud.",
+      "SPII": "Uw inhoud kan gevoelige persoonsgegevens bevatten. Verwijder de betreffende informatie ter bescherming van de privacy en probeer het opnieuw.",
+      "default": "Inhoud geblokkeerd: {{blockReason}}。请调整您的请求内容后重试。"
+    },
     "InsufficientQuota": "Het spijt ons, de quotum van deze sleutel is bereikt. Controleer of uw account voldoende saldo heeft of vergroot het sleutelquotum en probeer het opnieuw.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
