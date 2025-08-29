@@ -290,4 +290,62 @@ describe('convertUsage', () => {
       totalTokens: 6550,
     });
   });
+
+  it('should handle output image tokens correctly', () => {
+    // Arrange
+    const usageWithImage = {
+      prompt_tokens: 100,
+      completion_tokens: 200,
+      completion_tokens_details: {
+        image_tokens: 60,
+        reasoning_tokens: 30,
+      },
+      total_tokens: 300,
+    } as OpenAI.Completions.CompletionUsage;
+
+    // Act
+    const result = convertUsage(usageWithImage);
+
+    // Assert
+    expect(result).toEqual({
+      inputTextTokens: 100,
+      totalInputTokens: 100,
+      totalOutputTokens: 200,
+      outputImageTokens: 60,
+      outputReasoningTokens: 30,
+      outputTextTokens: 110, // 200 - 60 - 30
+      totalTokens: 300,
+    });
+  });
+
+  it('should handle response output image tokens correctly for ResponseUsage', () => {
+    // Arrange
+    const responseUsage = {
+      input_tokens: 100,
+      input_tokens_details: {
+        cached_tokens: 0,
+      },
+      output_tokens: 200,
+      output_tokens_details: {
+        image_tokens: 60,
+        reasoning_tokens: 30,
+      },
+      total_tokens: 300,
+    } as OpenAI.Responses.ResponseUsage;
+
+    // Act
+    const result = convertResponseUsage(responseUsage);
+
+    // Assert
+    expect(result).toEqual({
+      inputTextTokens: 100,
+      inputCacheMissTokens: 100, // 100 - 0
+      totalInputTokens: 100,
+      totalOutputTokens: 200,
+      outputImageTokens: 60,
+      outputReasoningTokens: 30,
+      outputTextTokens: 170, // 200 - 30
+      totalTokens: 300,
+    });
+  });
 });

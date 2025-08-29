@@ -61,6 +61,12 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
         ? detailTokens.outputReasoning.credit
         : detailTokens.outputReasoning.token,
     },
+    !!detailTokens.outputImage && {
+      color: theme.purple,
+      id: 'outputImage',
+      title: t('messages.tokenDetails.outputImage'),
+      value: isShowCredit ? detailTokens.outputImage.credit : detailTokens.outputImage.token,
+    },
     !!detailTokens.outputAudio && {
       color: theme.cyan9,
       id: 'outputAudio',

@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix cung cấp truy cập đến nhiều mô hình AI thông qua một giao diện API thống nhất."
   },
+  "akashchat": {
+    "description": "Akash là một thị trường tài nguyên đám mây phi tập trung, có giá cả cạnh tranh so với các nhà cung cấp đám mây truyền thống."
+  },
   "anthropic": {
     "description": "Anthropic là một công ty tập trung vào nghiên cứu và phát triển trí tuệ nhân tạo, cung cấp một loạt các mô hình ngôn ngữ tiên tiến như Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus và Claude 3 Haiku. Những mô hình này đạt được sự cân bằng lý tưởng giữa trí thông minh, tốc độ và chi phí, phù hợp cho nhiều ứng dụng từ khối lượng công việc doanh nghiệp đến phản hồi nhanh. Claude 3.5 Sonnet, là mô hình mới nhất của họ, thể hiện xuất sắc trong nhiều đánh giá, đồng thời duy trì tỷ lệ hiệu suất cao."
   },

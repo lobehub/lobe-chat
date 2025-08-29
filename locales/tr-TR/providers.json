@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix, çeşitli yapay zeka modellerine tek bir API arayüzü üzerinden erişim sağlar."
   },
+  "akashchat": {
+    "description": "Akash, geleneksel bulut sağlayıcılarına kıyasla rekabetçi fiyatlandırmaya sahip, izin gerektirmeyen bir bulut kaynakları pazar yeridir."
+  },
   "anthropic": {
     "description": "Anthropic, yapay zeka araştırma ve geliştirmeye odaklanan bir şirkettir. Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus ve Claude 3 Haiku gibi bir dizi gelişmiş dil modeli sunmaktadır. Bu modeller, zeka, hız ve maliyet arasında ideal bir denge sağlamaktadır ve kurumsal düzeydeki iş yüklerinden hızlı yanıt gerektiren çeşitli uygulama senaryolarına kadar geniş bir yelpazede kullanılmaktadır. Claude 3.5 Sonnet, en son modeli olarak, birçok değerlendirmede mükemmel performans sergilemekte ve yüksek maliyet etkinliğini korumaktadır."
   },

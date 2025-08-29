@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "返回"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "下載",
+      "preview": "預覽"
+    },
+    "iframeTitle": "HTML 預覽",
+    "mode": {
+      "code": "程式碼",
+      "preview": "預覽"
+    },
+    "title": "HTML 預覽"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "點擊更換圖片",

@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interruttore di pensiero profondo"
     },
-    "title": "Funzionalità di estensione del modello"
+    "title": "Funzionalità di estensione del modello",
+    "urlContext": {
+      "desc": "Se abilitato, analizzerà automaticamente i link delle pagine web per ottenere il contenuto contestuale reale della pagina",
+      "title": "Estrai contenuto dal link della pagina web"
+    }
   },
   "history": {
     "title": "L'assistente ricorderà solo gli ultimi {{count}} messaggi"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Scrittura cache input",
       "output": "Output",
       "outputAudio": "Output audio",
+      "outputImage": "Output immagine",
       "outputText": "Output testo",
       "outputTitle": "Dettagli output",
       "reasoning": "Ragionamento profondo",

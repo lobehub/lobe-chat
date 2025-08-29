@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Terug"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Downloaden",
+      "preview": "Voorbeeld"
+    },
+    "iframeTitle": "HTML Voorbeeld",
+    "mode": {
+      "code": "Code",
+      "preview": "Voorbeeld"
+    },
+    "title": "HTML Voorbeeld"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Klik om afbeelding te wijzigen",

@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "بازگشت"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "دانلود",
+      "preview": "پیش‌نمایش"
+    },
+    "iframeTitle": "پیش‌نمایش HTML",
+    "mode": {
+      "code": "کد",
+      "preview": "پیش‌نمایش"
+    },
+    "title": "پیش‌نمایش HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "برای تغییر تصویر کلیک کنید",
