@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix chat session part switch theme issue."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.4"
+  },
+  {
+    "children": {
       "fixes": ["Correct totalOutputTokens calculation for XAI provider."]
     },
     "date": "2025-08-29",
