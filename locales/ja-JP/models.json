@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview は Google の最新かつ最速で最も効率的なネイティブなマルチモーダルモデルであり、対話を通じて画像を生成・編集することを可能にします。"
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview は、Google の最新かつ最速で最も効率的なネイティブマルチモーダルモデルであり、対話を通じて画像の生成と編集を可能にします。"
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite は、Google の中で最も小さく、コストパフォーマンスに優れたモデルであり、大規模な利用を目的に設計されています。"
   },

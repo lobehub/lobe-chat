@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview آخرین، سریع‌ترین و کارآمدترین مدل چندمودالی بومی گوگل است که به شما امکان می‌دهد از طریق گفتگو تصاویر را تولید و ویرایش کنید."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview جدیدترین، سریع‌ترین و کارآمدترین مدل چندرسانه‌ای بومی گوگل است که به شما امکان می‌دهد از طریق گفتگو تصاویر را تولید و ویرایش کنید."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite کوچک‌ترین و مقرون‌به‌صرفه‌ترین مدل گوگل است که برای استفاده در مقیاس وسیع طراحی شده است."
   },
