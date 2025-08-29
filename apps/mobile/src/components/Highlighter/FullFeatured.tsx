@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import { ICON_SIZE_TINY } from '@/const/common';
-import { useTheme } from '@/theme';
 
 import { LanguageSelect } from './components/LanguageSelect';
-import { TokenDisplay } from './TokenDisplay';
-import { useTokenize } from './hooks/useTokenize';
+import { TokenDisplay } from './components/TokenDisplay';
 import { useStyles } from './style';
 
 interface FullFeaturedProps {
@@ -61,13 +59,10 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
   style,
   onCopy,
 }) => {
-  const { styles, token } = useStyles();
-  const { theme } = useTheme();
   const [expanded, setExpanded] = useState(defalutExpand);
+  const { styles, token } = useStyles();
   const [copied, setCopied] = useState(false);
   const [language, setLanguage] = useState(lang);
-
-  const { tokens, error } = useTokenize(code, language, theme.isDark ? 'dark' : 'light');
 
   const handleCopy = async () => {
     try {
@@ -86,7 +81,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, expanded && styles.headerExpanded]}>
         <View style={styles.headerLeft}>
           <Pressable onPress={() => setExpanded(!expanded)} style={styles.expandIcon}>
             {expanded ? (
@@ -119,13 +114,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           )}
         </View>
       </View>
-      {expanded &&
-        (error ? (
-          // 降级为纯文本
-          <Text style={{ color: token.colorText, margin: token.paddingXS }}>{code}</Text>
-        ) : (
-          <TokenDisplay tokens={tokens} />
-        ))}
+      {expanded && <TokenDisplay code={code} lang={language} />}
     </View>
   );
 };

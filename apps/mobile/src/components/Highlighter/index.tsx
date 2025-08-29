@@ -1,15 +1,13 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, Copy } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 
 import { ICON_SIZE_TINY } from '@/const/common';
-import { useTheme } from '@/theme';
 
 import FullFeatured from './FullFeatured';
-import { TokenDisplay } from './TokenDisplay';
+import { TokenDisplay } from './components/TokenDisplay';
 import { HighlighterProvider, supportedLanguageIds } from './contexts/highlighter';
-import { useTokenize } from './hooks/useTokenize';
 import { useStyles } from './style';
 
 export const FALLBACK_LANG = 'markdown';
@@ -54,14 +52,10 @@ const Highlighter: React.FC<HighlighterProps> = ({
   style,
   onCopy,
 }) => {
-  const { theme } = useTheme();
   const { styles, token } = useStyles();
   const [copied, setCopied] = useState(false);
   const language = lang.toLowerCase();
   const matchedLanguage = supportedLanguageIds.includes(language) ? language : FALLBACK_LANG;
-
-  // Always call hooks in the same order
-  const { tokens, error } = useTokenize(code, matchedLanguage, theme.isDark ? 'dark' : 'light');
 
   const handleCopy = async () => {
     try {
@@ -101,11 +95,8 @@ const Highlighter: React.FC<HighlighterProps> = ({
           )}
         </Pressable>
       )}
-      {error ? (
-        <Text style={{ color: token.colorText, margin: 8 }}>{code}</Text>
-      ) : (
-        <TokenDisplay tokens={tokens} />
-      )}
+
+      <TokenDisplay code={code} lang={matchedLanguage} />
     </View>
   );
 };
