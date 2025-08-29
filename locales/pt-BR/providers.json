@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix oferece acesso a diversos modelos de IA por meio de uma API unificada."
   },
+  "akashchat": {
+    "description": "Akash é um mercado de recursos em nuvem sem necessidade de permissão, com preços competitivos em comparação aos provedores tradicionais de nuvem."
+  },
   "anthropic": {
     "description": "A Anthropic é uma empresa focada em pesquisa e desenvolvimento de inteligência artificial, oferecendo uma gama de modelos de linguagem avançados, como Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus e Claude 3 Haiku. Esses modelos alcançam um equilíbrio ideal entre inteligência, velocidade e custo, adequando-se a uma variedade de cenários de aplicação, desde cargas de trabalho empresariais até respostas rápidas. O Claude 3.5 Sonnet, como seu modelo mais recente, se destacou em várias avaliações, mantendo uma alta relação custo-benefício."
   },

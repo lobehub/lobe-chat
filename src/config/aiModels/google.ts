@@ -42,7 +42,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -86,7 +86,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-05',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -157,7 +157,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -184,7 +184,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-05-20',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -233,7 +233,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-07-22',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -261,7 +261,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-11',
     settings: {
-      extendParams: ['thinkingBudget'],
+      extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -288,6 +288,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-05',
     settings: {
+      extendParams: ['urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -314,6 +315,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-05',
     settings: {
+      extendParams: ['urlContext'],
       searchImpl: 'params',
       searchProvider: 'google',
     },

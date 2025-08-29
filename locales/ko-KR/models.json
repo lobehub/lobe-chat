@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3는 심층 탐색 회사에서 자체 개발한 MoE 모델입니다. DeepSeek-V3는 여러 평가에서 Qwen2.5-72B 및 Llama-3.1-405B와 같은 다른 오픈 소스 모델을 초월하며, 성능 면에서 세계 최고의 폐쇄형 모델인 GPT-4o 및 Claude-3.5-Sonnet과 동등합니다."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: 차세대 추론 모델로, 복잡한 추론과 연쇄적 사고 능력을 향상시켜 심층 분석이 필요한 작업에 적합합니다."
+  },
   "DeepSeek-V3-Fast": {
     "description": "모델 공급자는 sophnet 플랫폼입니다. DeepSeek V3 Fast는 DeepSeek V3 0324 버전의 고TPS 초고속 버전으로, 완전 비양자화되어 코드와 수학 능력이 더욱 강력하며 반응 속도가 훨씬 빠릅니다!"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "시각적 이해 에이전트 응용 프로그램에 적합한 고급 이미지 추론 능력입니다."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: 대화 및 생성 작업에 적합한 범용 Transformer 모델입니다."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 지시 조정 텍스트 모델로, 다국어 대화 사용 사례에 최적화되어 있으며, 많은 오픈 소스 및 폐쇄형 채팅 모델 중에서 일반 산업 기준에서 우수한 성능을 보입니다."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 그 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 기준에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: Mixture-of-Experts 기반의 대규모 모델로, 효율적인 전문가 활성화 전략을 제공하여 추론 성능을 극대화합니다."
   },
   "MiniMax-M1": {
     "description": "완전히 새로 개발된 추론 모델입니다. 세계 최고 수준: 80K 사고 체인 x 1M 입력, 해외 최상위 모델과 견줄 만한 성능을 자랑합니다."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B는 MoE(혼합 전문가 모델)로, '혼합 추론 모드'를 도입하여 사용자가 '사고 모드'와 '비사고 모드' 사이를 원활하게 전환할 수 있습니다. 119개 언어 및 방언의 이해와 추론을 지원하며 강력한 도구 호출 능력을 갖추고 있습니다. 종합 능력, 코드 및 수학, 다국어 능력, 지식 및 추론 등 여러 벤치마크 테스트에서 DeepSeek R1, OpenAI o1, o3-mini, Grok 3, 구글 Gemini 2.5 Pro 등 현재 시장의 주요 대형 모델들과 경쟁할 수 있습니다."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: 고급 추론 및 대화 지시 최적화를 위한 모델로, 대규모 파라미터 환경에서도 추론 효율을 유지하는 혼합 전문가 아키텍처를 갖추고 있습니다."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B는 밀집 모델(Dense Model)로, '혼합 추론 모드'를 도입하여 사용자가 '사고 모드'와 '비사고 모드' 사이를 원활하게 전환할 수 있습니다. 모델 아키텍처 개선, 학습 데이터 증가 및 더 효율적인 학습 방법 덕분에 전체 성능이 Qwen2.5-72B와 유사한 수준입니다."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하여 더 높은 정확도와 세밀한 문맥 처리가 가능한 응답을 제공합니다.\n\n참고: 이 모델에는 사고형과 비사고형 두 가지 변형이 있습니다. 출력 가격은 사고 능력 활성화 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사 없음)을 선택하면 모델이 명확히 사고 토큰 생성을 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 받으려면 ‘:thinking’ 변형을 선택해야 하며, 이 경우 더 높은 사고 출력 가격이 적용됩니다.\n\n또한, Gemini 2.5 Flash는 문서(https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)에 설명된 대로 '최대 추론 토큰 수' 매개변수를 통해 구성할 수 있습니다."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash 실험 모델로, 이미지 생성을 지원합니다."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash 실험 모델로, 이미지 생성을 지원합니다."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1532,6 +1550,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B는 OpenAI에서 발표한 오픈 소스 대형 언어 모델로, MXFP4 양자화 기술을 사용하여 고급 소비자용 GPU 또는 Apple Silicon Mac에서 실행하기에 적합합니다. 이 모델은 대화 생성, 코드 작성 및 추론 작업에서 뛰어난 성능을 보이며, 함수 호출과 도구 사용을 지원합니다."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 양자화된 Transformer 구조로, 자원이 제한된 환경에서도 강력한 성능을 유지합니다."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B는 OpenAI에서 발표한 대형 오픈 소스 언어 모델로, MXFP4 양자화 기술을 적용한 플래그십 모델입니다. 다중 GPU 또는 고성능 워크스테이션 환경에서 실행해야 하며, 복잡한 추론, 코드 생성 및 다국어 처리에서 탁월한 성능을 발휘하고 고급 함수 호출과 도구 통합을 지원합니다."

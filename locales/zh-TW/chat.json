@@ -52,7 +52,11 @@
     "thinking": {
       "title": "深度思考開關"
     },
-    "title": "模型擴展功能"
+    "title": "模型擴展功能",
+    "urlContext": {
+      "desc": "開啟後將自動解析網頁連結，以取得實際網頁上下文內容",
+      "title": "擷取網頁連結內容"
+    }
   },
   "history": {
     "title": "助手將只記住最後{{count}}條消息"
@@ -125,6 +129,7 @@
       "inputWriteCached": "輸入快取寫入",
       "output": "輸出",
       "outputAudio": "音頻輸出",
+      "outputImage": "圖像輸出",
       "outputText": "文本輸出",
       "outputTitle": "輸出明細",
       "reasoning": "深度思考",
