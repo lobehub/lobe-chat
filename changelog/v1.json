@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Move chat item into chat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.117.1"
+  },
+  {
+    "children": {
       "features": [
         "Ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter."
       ],
