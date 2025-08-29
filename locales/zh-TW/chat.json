@@ -54,8 +54,8 @@
     },
     "title": "模型擴展功能",
     "urlContext": {
-      "desc": "開啟後將自動解析網址 URL，以取得實際網頁的上下文內容",
-      "title": "URL 上下文擷取"
+      "desc": "開啟後將自動解析網頁連結，以取得實際網頁上下文內容",
+      "title": "擷取網頁連結內容"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "輸入快取寫入",
       "output": "輸出",
       "outputAudio": "音頻輸出",
+      "outputImage": "圖像輸出",
       "outputText": "文本輸出",
       "outputTitle": "輸出明細",
       "reasoning": "深度思考",

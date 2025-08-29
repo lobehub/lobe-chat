@@ -54,8 +54,8 @@
     },
     "title": "Funcionalidad de extensión del modelo",
     "urlContext": {
-      "desc": "Al activarlo, se analizará automáticamente la URL para extraer el contenido contextual real de la página web",
-      "title": "Extracción de contexto de la URL"
+      "desc": "Al activarlo, se analizarán automáticamente los enlaces web para obtener el contenido contextual real de la página",
+      "title": "Extraer contenido del enlace web"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Escritura en caché de entrada",
       "output": "Salida",
       "outputAudio": "Salida de audio",
+      "outputImage": "Salida de imagen",
       "outputText": "Salida de texto",
       "outputTitle": "Detalles de salida",
       "reasoning": "Razonamiento profundo",

@@ -54,8 +54,8 @@
     },
     "title": "Model Extension Features",
     "urlContext": {
-      "desc": "When enabled, the URL will be automatically parsed to retrieve the webpage's contextual content.",
-      "title": "URL Context Extraction"
+      "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
+      "title": "Extract Webpage Link Content"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Input cache write",
       "output": "Output",
       "outputAudio": "Audio Output",
+      "outputImage": "Image Output",
       "outputText": "Text Output",
       "outputTitle": "Output Details",
       "reasoning": "Deep Thinking",

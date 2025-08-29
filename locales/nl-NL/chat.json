@@ -54,8 +54,8 @@
     },
     "title": "Modeluitbreidingsfunctie",
     "urlContext": {
-      "desc": "Wanneer ingeschakeld wordt de URL automatisch geanalyseerd om de daadwerkelijke context van de webpagina te verkrijgen",
-      "title": "URL-context ophalen"
+      "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
+      "title": "Inhoud van webkoppeling extraheren"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Invoer cache schrijven",
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
+      "outputImage": "Afbeelding uitvoer",
       "outputText": "Tekstuitvoer",
       "outputTitle": "Uitvoerdetails",
       "reasoning": "Diep nadenken",

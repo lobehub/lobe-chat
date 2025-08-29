@@ -54,8 +54,8 @@
     },
     "title": "Model Genişletme Özellikleri",
     "urlContext": {
-      "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlamını almak için URL'yi otomatik olarak analiz eder.",
-      "title": "URL Bağlamı Çıkarımı"
+      "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlam içeriğini almak için web bağlantıları otomatik olarak çözümlenir",
+      "title": "Web Bağlantısı İçeriğini Çıkar"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Giriş önbelleği yazma",
       "output": "Çıkış",
       "outputAudio": "Ses çıkışı",
+      "outputImage": "Görüntü Çıktısı",
       "outputText": "Metin çıkışı",
       "outputTitle": "Çıkış detayları",
       "reasoning": "Derin düşünme",

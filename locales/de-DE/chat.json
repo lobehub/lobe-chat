@@ -54,8 +54,8 @@
     },
     "title": "Modell Erweiterungsfunktionen",
     "urlContext": {
-      "desc": "Wenn aktiviert, wird die URL automatisch analysiert, um den tatsächlichen Kontext der Webseite zu ermitteln.",
-      "title": "URL-Kontextextraktion"
+      "desc": "Wenn aktiviert, werden Webseiten-Links automatisch analysiert, um den tatsächlichen Webseiteninhalt zu erfassen",
+      "title": "Webseiten-Link-Inhalt extrahieren"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Eingabe Cache schreiben",
       "output": "Ausgabe",
       "outputAudio": "Audioausgabe",
+      "outputImage": "Bildausgabe",
       "outputText": "Text-Ausgabe",
       "outputTitle": "Ausgabedetails",
       "reasoning": "Tiefes Denken",

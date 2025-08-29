@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren, derinlemesine analiz gerektiren görevler için uygun bir sonraki nesil çıkarım modeli."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Model sağlayıcısı: sophnet platformu. DeepSeek V3 Fast, DeepSeek V3 0324 sürümünün yüksek TPS hızlı versiyonudur, tam performanslı ve kuantize edilmemiştir, kodlama ve matematik yetenekleri daha güçlüdür, yanıt süresi daha hızlıdır!"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Görsel anlama ajan uygulamaları için gelişmiş görüntü akıl yürütme yeteneği."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: Diyalog ve üretim görevleri için uygun, yüksek genel amaçlı Transformer modeli."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog kullanım durumları için optimize edilmiştir ve birçok mevcut açık kaynak ve kapalı sohbet modelinde yaygın endüstri kıyaslamalarında mükemmel performans göstermektedir."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve yararlılığını ve güvenliğini artırmak için denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) kullanılmıştır. Talimat ayarlı versiyonu çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 yılı Aralık ayıdır."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: Mixture-of-Experts tabanlı büyük ölçekli model, çıkarımda üstün performans için verimli uzman aktivasyon stratejisi sunar."
   },
   "MiniMax-M1": {
     "description": "Tamamen kendi geliştirdiğimiz yeni çıkarım modeli. Küresel lider: 80K düşünce zinciri x 1M giriş, performansı uluslararası üst düzey modellerle eşdeğer."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B, MoE (Hibrit Uzman Modeli) modelidir ve \"Hibrit Akıl Yürütme Modu\"nu tanıtmaktadır. Kullanıcıların \"düşünme modu\" ile \"düşünme modu dışı\" arasında kesintisiz geçiş yapmasını destekler, 119 dil ve lehçede anlama ve akıl yürütme yeteneğine sahiptir ve güçlü araç çağırma kapasitesine sahiptir. Kapsamlı yetenekler, kodlama ve matematik, çok dilli yetenekler, bilgi ve akıl yürütme gibi çeşitli kıyaslama testlerinde, DeepSeek R1, OpenAI o1, o3-mini, Grok 3 ve Google Gemini 2.5 Pro gibi piyasadaki önde gelen büyük modellerle rekabet edebilmektedir."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: Gelişmiş çıkarım ve diyalog talimatları için optimize edilmiş model, büyük ölçekli parametrelerde çıkarım verimliliğini koruyan karma uzman mimarisi."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B, Yoğun Model (Dense Model) olup \"Hibrit Akıl Yürütme Modu\"nu tanıtmaktadır. Kullanıcıların \"düşünme modu\" ile \"düşünme modu dışı\" arasında kesintisiz geçiş yapmasını destekler. Model mimarisi iyileştirmeleri, artırılmış eğitim verisi ve daha etkili eğitim yöntemleri sayesinde genel performansı Qwen2.5-72B ile karşılaştırılabilir düzeydedir."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash, Google'ın en gelişmiş ana modeli olup, ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. Yerleşik \"düşünme\" yeteneği sayesinde, daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar sunabilir.\n\nNot: Bu modelin iki varyantı vardır: düşünme ve düşünmeme. Çıktı fiyatlandırması, düşünme yeteneğinin etkin olup olmamasına göre önemli ölçüde farklılık gösterir. Standart varyantı (\" :thinking\" eki olmayan) seçerseniz, model düşünme tokenları üretmekten açıkça kaçınır.\n\nDüşünme yeteneğinden yararlanmak ve düşünme tokenları almak için \" :thinking\" varyantını seçmeniz gerekir; bu, daha yüksek bir düşünme çıktı fiyatlandırmasıyla sonuçlanır.\n\nAyrıca, Gemini 2.5 Flash, belgelerde belirtildiği gibi (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning) \"maksimum akıl yürütme token sayısı\" parametresi ile yapılandırılabilir."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash deneysel modeli, görüntü oluşturmayı destekler."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash deneysel modeli, görüntü oluşturmayı destekler."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash, Google'ın en gelişmiş ana modelidir ve ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. Daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar sunabilen yerleşik 'düşünme' yeteneğine sahiptir.\n\nNot: Bu modelin iki varyantı vardır: düşünme ve düşünmeme. Çıktı fiyatlandırması, düşünme yeteneğinin etkin olup olmamasına göre önemli ölçüde farklılık gösterir. Standart varyantı (':thinking' eki olmadan) seçerseniz, model açıkça düşünme tokenleri üretmekten kaçınacaktır.\n\nDüşünme yeteneğinden yararlanmak ve düşünme tokenleri almak için, ':thinking' varyantını seçmelisiniz; bu, daha yüksek düşünme çıktı fiyatlandırması ile sonuçlanacaktır.\n\nAyrıca, Gemini 2.5 Flash, belgede belirtildiği gibi 'akıl yürütme maksimum token sayısı' parametresi ile yapılandırılabilir (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1534,6 +1552,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B, OpenAI tarafından yayımlanan açık kaynaklı büyük dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Yüksek performanslı tüketici sınıfı GPU'lar veya Apple Silicon Mac üzerinde çalışmaya uygundur. Bu model, diyalog üretimi, kod yazımı ve çıkarım görevlerinde üstün performans sergiler ve fonksiyon çağrıları ile araç kullanımını destekler."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 kuantize edilmiş Transformer yapısı, sınırlı kaynaklarda bile güçlü performans sağlar."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B, OpenAI tarafından yayımlanan büyük ölçekli açık kaynak dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Amiral gemisi model olarak çoklu GPU veya yüksek performanslı iş istasyonu ortamlarında çalıştırılması gerekmektedir. Karmaşık çıkarım, kod üretimi ve çok dilli işleme konularında üstün performans sunar ve gelişmiş fonksiyon çağrıları ile araç entegrasyonunu destekler."

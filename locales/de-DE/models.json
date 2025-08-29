@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: Das nächste Generation Inferenzmodell, das komplexe Schlussfolgerungen und vernetztes Denken verbessert und sich für Aufgaben eignet, die eine tiefgehende Analyse erfordern."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Modellanbieter: sophnet-Plattform. DeepSeek V3 Fast ist die Hochgeschwindigkeitsversion mit hohem TPS des DeepSeek V3 0324 Modells, voll funktionsfähig ohne Quantisierung, mit stärkerer Code- und mathematischer Leistungsfähigkeit und schnellerer Reaktionszeit!"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Fortgeschrittene Bildschlussfolgerungsfähigkeiten für Anwendungen im Bereich der visuellen Verständigung."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: Ein vielseitiges Transformer-Modell, geeignet für Dialog- und Generierungsaufgaben."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Das auf Anweisungen optimierte Textmodell Llama 3.1 wurde für mehrsprachige Dialoganwendungen optimiert und zeigt in vielen verfügbaren Open-Source- und geschlossenen Chat-Modellen in gängigen Branchenbenchmarks hervorragende Leistungen."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 ist das fortschrittlichste mehrsprachige Open-Source-Sprachmodell der Llama-Serie, das eine Leistung bietet, die mit einem 405B-Modell vergleichbar ist, und das zu extrem niedrigen Kosten. Es basiert auf der Transformer-Architektur und wurde durch überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF) in Bezug auf Nützlichkeit und Sicherheit verbessert. Die auf Anweisungen optimierte Version ist speziell für mehrsprachige Dialoge optimiert und übertrifft in mehreren Branchenbenchmarks viele verfügbare Open-Source- und geschlossene Chat-Modelle. Das Wissensdatum endet im Dezember 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: Ein groß angelegtes Modell basierend auf Mixture-of-Experts, das eine effiziente Expertenaktivierungsstrategie bietet, um bei der Inferenz herausragende Leistungen zu erzielen."
   },
   "MiniMax-M1": {
     "description": "Ein völlig neu entwickeltes Inferenzmodell. Weltweit führend: 80K Denkketten x 1M Eingaben, Leistung auf Augenhöhe mit den besten Modellen im Ausland."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B ist ein MoE (Mixture-of-Experts)-Modell, das den „Hybrid-Reasoning-Modus“ einführt und Nutzern nahtloses Umschalten zwischen „Denkmodus“ und „Nicht-Denkmodus“ ermöglicht. Es unterstützt das Verständnis und die Argumentation in 119 Sprachen und Dialekten und verfügt über leistungsstarke Werkzeugaufruffähigkeiten. In umfassenden Benchmark-Tests zu allgemeinen Fähigkeiten, Programmierung und Mathematik, Mehrsprachigkeit, Wissen und Argumentation konkurriert es mit führenden aktuellen Großmodellen auf dem Markt wie DeepSeek R1, OpenAI o1, o3-mini, Grok 3 und Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: Ein Modell, optimiert für fortgeschrittene Schlussfolgerungen und Dialoganweisungen, mit einer hybriden Expertenarchitektur, die bei großem Parameterumfang die Inferenz-Effizienz bewahrt."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B ist ein dichtes Modell (Dense Model), das den „Hybrid-Reasoning-Modus“ einführt und Nutzern nahtloses Umschalten zwischen „Denkmodus“ und „Nicht-Denkmodus“ ermöglicht. Aufgrund von Verbesserungen in der Modellarchitektur, einer Erweiterung der Trainingsdaten und effizienteren Trainingsmethoden entspricht die Gesamtleistung der von Qwen2.5-72B."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, speziell entwickelt für anspruchsvolle Aufgaben in den Bereichen logisches Denken, Programmierung, Mathematik und Wissenschaft. Es verfügt über eingebaute \"Denkfähigkeiten\", die es ermöglichen, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell gibt es in zwei Varianten: mit und ohne Denkfähigkeit. Die Preisgestaltung für die Ausgabe variiert erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, vermeidet das Modell ausdrücklich die Erzeugung von Denk-Token.\n\nUm die Denkfähigkeit zu nutzen und Denk-Token zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Kosten für die Denk-Ausgabe führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"Maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash Experimentelles Modell, unterstützt Bildgenerierung"
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash Experimentelles Modell, unterstützt Bildgenerierung"
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, das für fortgeschrittenes Denken, Codierung, Mathematik und wissenschaftliche Aufgaben entwickelt wurde. Es enthält die eingebaute Fähigkeit zu \"denken\", was es ihm ermöglicht, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell hat zwei Varianten: Denken und Nicht-Denken. Die Ausgabepreise variieren erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist oder nicht. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, wird das Modell ausdrücklich vermeiden, Denk-Tokens zu generieren.\n\nUm die Denkfähigkeit zu nutzen und Denk-Tokens zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Preisen für Denk-Ausgaben führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1534,6 +1552,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B ist ein von OpenAI veröffentlichtes Open-Source-Sprachmodell, das die MXFP4-Quantisierungstechnologie verwendet und sich für den Einsatz auf High-End-Consumer-GPUs oder Apple Silicon Macs eignet. Dieses Modell zeigt hervorragende Leistungen bei der Dialoggenerierung, Codeerstellung und bei Inferenzaufgaben und unterstützt Funktionsaufrufe sowie die Nutzung von Werkzeugen."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 quantisierte Transformer-Struktur, die auch bei begrenzten Ressourcen starke Leistung beibehält."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B ist ein von OpenAI veröffentlichtes großes Open-Source-Sprachmodell, das die MXFP4-Quantisierungstechnologie verwendet und als Flaggschiff-Modell gilt. Es erfordert den Betrieb auf Multi-GPU- oder Hochleistungs-Workstation-Umgebungen und bietet herausragende Leistungen bei komplexen Inferenzaufgaben, Codegenerierung und mehrsprachiger Verarbeitung. Es unterstützt fortgeschrittene Funktionsaufrufe und die Integration von Werkzeugen."

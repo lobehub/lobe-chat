@@ -54,8 +54,8 @@
     },
     "title": "Chức năng mở rộng mô hình",
     "urlContext": {
-      "desc": "Khi bật, hệ thống sẽ tự động phân tích URL để lấy nội dung ngữ cảnh thực tế của trang web",
-      "title": "Trích xuất ngữ cảnh URL"
+      "desc": "Bật tính năng này sẽ tự động phân tích liên kết trang web để lấy nội dung ngữ cảnh thực tế của trang web",
+      "title": "Trích xuất nội dung liên kết trang web"
     }
   },
   "history": {
@@ -129,6 +129,7 @@
       "inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
       "output": "Xuất",
       "outputAudio": "Âm thanh xuất",
+      "outputImage": "Xuất hình ảnh",
       "outputText": "Văn bản xuất",
       "outputTitle": "Chi tiết xuất",
       "reasoning": "Suy nghĩ sâu sắc",

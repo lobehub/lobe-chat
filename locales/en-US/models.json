@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: Next-generation reasoning model, enhancing complex reasoning and chain-of-thought capabilities, ideal for tasks requiring in-depth analysis."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Model provider: sophnet platform. DeepSeek V3 Fast is the high-TPS ultra-fast version of DeepSeek V3 0324, fully powered without quantization, featuring enhanced coding and mathematical capabilities for faster response!"
   },
@@ -170,6 +173,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Advanced image reasoning capabilities suitable for visual understanding agent applications."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: A versatile Transformer model suitable for conversational and generative tasks."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
   },
@@ -187,6 +193,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at a very low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: A large-scale model based on Mixture-of-Experts, offering an efficient expert activation strategy for superior inference performance."
   },
   "MiniMax-M1": {
     "description": "A brand-new self-developed inference model. Globally leading: 80K reasoning chains x 1M input, performance comparable to top overseas models."
@@ -376,6 +385,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B is a Mixture of Experts (MoE) model that introduces a \"Hybrid Reasoning Mode,\" allowing users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" It supports understanding and reasoning in 119 languages and dialects and possesses powerful tool invocation capabilities. In comprehensive benchmarks covering overall ability, coding and mathematics, multilingual proficiency, knowledge, and reasoning, it competes with leading large models on the market such as DeepSeek R1, OpenAI o1, o3-mini, Grok 3, and Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: A model optimized for advanced reasoning and dialogue instructions, featuring a mixture-of-experts architecture to maintain inference efficiency at large scale."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B is a dense model that introduces a \"Hybrid Reasoning Mode,\" enabling users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" Thanks to architectural improvements, increased training data, and more efficient training methods, its overall performance is comparable to that of Qwen2.5-72B."
@@ -1364,6 +1376,12 @@
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It features built-in \"thinking\" capabilities, enabling it to provide responses with higher accuracy and more nuanced contextual understanding.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly depending on whether the thinking capability is activated. If you choose the standard variant (without the \":thinking\" suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the \":thinking\" variant, which incurs higher pricing for thinking outputs.\n\nAdditionally, Gemini 2.5 Flash can be configured via the \"max tokens for reasoning\" parameter, as detailed in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash experimental model, supporting image generation."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash experimental model, supporting image generation."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1534,6 +1552,9 @@
   },
   "gpt-oss": {
     "description": "GPT-OSS 20B is an open-source large language model released by OpenAI, utilizing MXFP4 quantization technology. It is suitable for running on high-end consumer GPUs or Apple Silicon Macs. This model excels in dialogue generation, code writing, and reasoning tasks, supporting function calls and tool usage."
+  },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 quantized Transformer architecture, delivering strong performance even under resource constraints."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is a large open-source language model released by OpenAI, employing MXFP4 quantization technology as a flagship model. It requires multi-GPU or high-performance workstation environments to operate and delivers outstanding performance in complex reasoning, code generation, and multilingual processing, supporting advanced function calls and tool integration."
