@@ -35,6 +35,11 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "groupTab": {
+    "chat": "Groepschat",
+    "members": "Leden",
+    "meta": "Groepschatinformatie"
+  },
   "header": {
     "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
@@ -290,6 +295,69 @@
     },
     "title": "Algemene instellingen"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Voer de groepsbeschrijving in",
+      "title": "Groepsbeschrijving"
+    },
+    "name": {
+      "placeholder": "Voer de groepsnaam in",
+      "title": "Groepsnaam"
+    },
+    "submit": "Groep bijwerken",
+    "systemPrompt": {
+      "placeholder": "Voer de systeemprompt in",
+      "title": "Systeemprompt"
+    },
+    "title": "Groepsinformatie"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Kies hoeveel berichten leden achter elkaar mogen beantwoorden. Stel in op 0 om uit te schakelen.",
+      "title": "Maximaal aantal opeenvolgende berichten"
+    },
+    "model": {
+      "desc": "Kies het model voor groepsgesprekken",
+      "title": "Orchestrator-model"
+    },
+    "responseOrder": {
+      "desc": "Agenten reageren in de volgorde zoals ze in de groep zijn ingesteld",
+      "options": {
+        "natural": "Natuurlijk",
+        "sequential": "Sequentieel"
+      },
+      "placeholder": "Selecteer de volgorde van reacties",
+      "title": "Volgorde van reacties"
+    },
+    "responseSpeed": {
+      "desc": "Kies hoe agenten reageren in groepsgesprekken",
+      "options": {
+        "fast": "Snel",
+        "medium": "Gemiddeld",
+        "slow": "Langzaam"
+      },
+      "placeholder": "Selecteer reactiesnelheid",
+      "title": "Reactiesnelheid"
+    },
+    "revealDM": {
+      "desc": "Maak DM-berichten die naar andere leden zijn gestuurd zichtbaar voor jou.",
+      "title": "DM zichtbaar maken"
+    },
+    "submit": "Instellingen bijwerken",
+    "systemPrompt": {
+      "desc": "Aangepaste systeemprompt voor de groepsgesprek-orchestrator. Dit overschrijft het standaardgedrag van de orchestrator.",
+      "placeholder": "Voer aangepaste systeemprompt voor de orchestrator in...",
+      "title": "Orchestrator-systeemprompt"
+    },
+    "title": "Chatinstellingen"
+  },
+  "settingGroupMembers": {
+    "edit": "Lid bewerken",
+    "empty": "Er zijn nog geen agenten in deze groep. Klik op de + knop om leden toe te voegen.",
+    "owner": "Jij (Eigenaar)",
+    "remove": "Lid verwijderen",
+    "you": "Jij"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
@@ -510,6 +578,11 @@
       "label": "AI-schilderij onderwerp naamgevingsmodel",
       "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
       "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+    },
+    "groupChatSupervisor": {
+      "label": "Model voor groepschattoezicht",
+      "modelDesc": "Speciaal model voor het toezicht en beheer van groepschatgesprekken",
+      "title": "Groepschattoezicht en -beheer"
     },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {

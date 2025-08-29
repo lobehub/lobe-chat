@@ -35,6 +35,11 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "groupTab": {
+    "chat": "Trò chuyện nhóm",
+    "members": "Thành viên",
+    "meta": "Thông tin nhóm"
+  },
   "header": {
     "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
@@ -290,6 +295,69 @@
     },
     "title": "Cài đặt chung"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Nhập mô tả nhóm",
+      "title": "Mô tả nhóm"
+    },
+    "name": {
+      "placeholder": "Nhập tên nhóm",
+      "title": "Tên nhóm"
+    },
+    "submit": "Cập nhật nhóm",
+    "systemPrompt": {
+      "placeholder": "Nhập lời nhắc hệ thống",
+      "title": "Lời nhắc hệ thống"
+    },
+    "title": "Thông tin nhóm"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Chọn số lượng tin nhắn mà mỗi thành viên có thể phản hồi liên tiếp. Đặt là 0 để tắt.",
+      "title": "Số tin nhắn tối đa liên tiếp"
+    },
+    "model": {
+      "desc": "Chọn mô hình để sử dụng cho các cuộc trò chuyện nhóm",
+      "title": "Mô hình điều phối"
+    },
+    "responseOrder": {
+      "desc": "Các tác nhân sẽ phản hồi theo thứ tự đã được thiết lập trong nhóm",
+      "options": {
+        "natural": "Tự nhiên",
+        "sequential": "Tuần tự"
+      },
+      "placeholder": "Chọn thứ tự phản hồi",
+      "title": "Thứ tự phản hồi"
+    },
+    "responseSpeed": {
+      "desc": "Chọn cách các tác nhân phản hồi trong các cuộc trò chuyện nhóm",
+      "options": {
+        "fast": "Nhanh",
+        "medium": "Trung bình",
+        "slow": "Chậm"
+      },
+      "placeholder": "Chọn tốc độ phản hồi",
+      "title": "Tốc độ phản hồi"
+    },
+    "revealDM": {
+      "desc": "Hiển thị nội dung DM mà các thành viên gửi cho nhau cho bạn.",
+      "title": "Hiển thị DM"
+    },
+    "submit": "Cập nhật cài đặt",
+    "systemPrompt": {
+      "desc": "Prompt hệ thống tùy chỉnh cho bộ điều phối cuộc trò chuyện nhóm. Thiết lập này sẽ ghi đè hành vi mặc định của bộ điều phối.",
+      "placeholder": "Nhập prompt hệ thống tùy chỉnh cho bộ điều phối...",
+      "title": "Prompt hệ thống của bộ điều phối"
+    },
+    "title": "Cài đặt trò chuyện nhóm"
+  },
+  "settingGroupMembers": {
+    "edit": "Chỉnh sửa thành viên",
+    "empty": "Chưa có đại lý nào trong nhóm này. Nhấn nút + để thêm thành viên.",
+    "owner": "Bạn (Chủ sở hữu)",
+    "remove": "Xóa thành viên",
+    "you": "Bạn"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Bật giới hạn phản hồi một lần"
@@ -510,6 +578,11 @@
       "label": "Mô hình đặt tên chủ đề vẽ AI",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề cho vẽ AI",
       "title": "Tự động đặt tên chủ đề vẽ AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Mô hình giám sát cuộc trò chuyện nhóm",
+      "modelDesc": "Mô hình được chỉ định để giám sát và quản lý các cuộc trò chuyện nhóm",
+      "title": "Quản lý giám sát cuộc trò chuyện nhóm"
     },
     "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {

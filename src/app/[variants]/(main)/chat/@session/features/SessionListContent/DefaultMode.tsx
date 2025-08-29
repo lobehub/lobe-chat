@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useFetchSessions } from '@/hooks/useFetchSessions';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { SessionDefaultGroup } from '@/types/session';
+import { LobeSessions, SessionDefaultGroup } from '@/types/session';
 
 import CollapseGroup from './CollapseGroup';
 import Actions from './CollapseGroup/Actions';
@@ -26,9 +28,24 @@ const DefaultMode = memo(() => {
 
   useFetchSessions();
 
+  const isMobile = useServerConfigStore(serverConfigSelectors.isMobile);
+
   const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
   const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
+
+  // Filter out group sessions on mobile
+  const filterSessionsForMobile = (sessions: LobeSessions): LobeSessions => {
+    if (!isMobile) return sessions;
+    return sessions.filter((session) => session.type !== 'group');
+  };
+
+  const filteredDefaultSessions = filterSessionsForMobile(defaultSessions);
+  const filteredPinnedSessions = filterSessionsForMobile(pinnedSessions);
+  const filteredCustomSessionGroups = customSessionGroups?.map((group) => ({
+    ...group,
+    children: filterSessionsForMobile(group.children),
+  }));
 
   const [sessionGroupKeys, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.sessionGroupKeys(s),
@@ -38,14 +55,14 @@ const DefaultMode = memo(() => {
   const items = useMemo(
     () =>
       [
-        pinnedSessions &&
-          pinnedSessions.length > 0 && {
-            children: <SessionList dataSource={pinnedSessions} />,
+        filteredPinnedSessions &&
+          filteredPinnedSessions.length > 0 && {
+            children: <SessionList dataSource={filteredPinnedSessions} />,
             extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
             key: SessionDefaultGroup.Pinned,
             label: t('pin'),
           },
-        ...(customSessionGroups || []).map(({ id, name, children }) => ({
+        ...(filteredCustomSessionGroups || []).map(({ id, name, children }) => ({
           children: <SessionList dataSource={children} groupId={id} />,
           extra: (
             <Actions
@@ -62,13 +79,13 @@ const DefaultMode = memo(() => {
           label: name,
         })),
         {
-          children: <SessionList dataSource={defaultSessions || []} />,
+          children: <SessionList dataSource={filteredDefaultSessions || []} />,
           extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Default,
           label: t('defaultList'),
         },
       ].filter(Boolean) as CollapseProps['items'],
-    [t, customSessionGroups, pinnedSessions, defaultSessions],
+    [t, filteredCustomSessionGroups, filteredPinnedSessions, filteredDefaultSessions],
   );
 
   return (

@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modell"
   },
+  "active": "Aktiv",
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns chatten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lassen Sie uns ins Gespräch kommen!",
@@ -13,17 +14,23 @@
     "thought": "Denkenprozess",
     "unknownTitle": "Unbenanntes Werk"
   },
+  "availableAgents": "Verfügbare Assistenten",
   "backToBottom": "Zurück zum Ende",
   "chatList": {
     "longMessageDetail": "Details anzeigen"
   },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmRemoveGroupItemAlert": "Sie sind dabei, diese Gruppe zu löschen. Nach der Löschung werden die Assistenten dieser Gruppe in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "confirmRemoveSessionSuccess": "Hilfe wurde erfolgreich entfernt",
   "defaultAgent": "Standardassistent",
   "defaultList": "Standardliste",
   "defaultSession": "Standardassistent",
+  "dm": {
+    "placeholder": "Ihre Direktnachrichten mit {{agentTitle}} werden hier angezeigt.",
+    "tooltip": "Direktnachricht senden"
+  },
   "duplicateSession": {
     "loading": "Kopieren läuft...",
     "success": "Kopieren erfolgreich",
@@ -54,11 +61,18 @@
     },
     "title": "Modell Erweiterungsfunktionen"
   },
+  "group": {
+    "desc": "Mit mehreren KI‑Assistenten in einem gemeinsamen Gesprächsraum zusammenarbeiten.",
+    "memberTooltip": "In der Gruppe sind {{count}} Mitglieder",
+    "title": "Gruppe"
+  },
+  "groupDescription": "Gruppenbeschreibung",
   "history": {
     "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"
   },
   "historyRange": "Verlaufsbereich",
   "historySummary": "Zusammenfassung historischer Nachrichten",
+  "inactive": "Inaktiv",
   "inbox": {
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
@@ -76,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Verstehe und analysiere gerade Ihre Absicht..."
   },
+  "inviteMembers": "Mitglieder einladen",
   "knowledgeBase": {
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
@@ -94,12 +109,24 @@
     "uploadGuide": "Hochgeladene Dateien können in der „Wissensdatenbank“ eingesehen werden.",
     "viewMore": "Mehr anzeigen"
   },
+  "memberSelection": {
+    "addMember": "Mitglied hinzufügen",
+    "noAvailableAgents": "Keine verfügbaren Agenten",
+    "noSelectedAgents": "Keine Agenten ausgewählt",
+    "searchAgents": "Agenten suchen...",
+    "setInitialMembers": "Anfangsmitglieder festlegen"
+  },
+  "members": "Mitglieder",
   "messageAction": {
     "delAndRegenerate": "Löschen und neu generieren",
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Senden an",
+      "title": "Direktnachricht"
+    },
     "modelCard": {
       "credit": "Punkte",
       "creditPricing": "Preisgestaltung",
@@ -143,6 +170,13 @@
     }
   },
   "newAgent": "Neuer Assistent",
+  "newGroupChat": "Neue Gruppe erstellen",
+  "noAgentsYet": "In dieser Gruppe gibt es noch keine Assistenten. Klicken Sie auf die + Schaltfläche, um einen Assistenten einzuladen.",
+  "noAvailableAgents": "Keine verfügbaren Assistenten zum Einladen.",
+  "noMatchingAgents": "Keine passenden Assistenten",
+  "noMembersYet": "Diese Gruppe hat noch keine Mitglieder. Klicken Sie auf die +-Schaltfläche, um Assistenten einzuladen.",
+  "noSelectedAgents": "Noch keinen Assistenten ausgewählt",
+  "owner": "Gruppeninhaber",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
   "rag": {
@@ -183,6 +217,8 @@
     "title": "Netzwerksuche"
   },
   "searchAgentPlaceholder": "Suchassistent...",
+  "searchAgents": "Suchassistent...",
+  "selectedAgents": "Ausgewählte Assistenten",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionGroup": {
     "config": "Gruppenkonfiguration",
@@ -256,6 +292,7 @@
     "action": "Sprachausgabe",
     "clear": "Sprachausgabe löschen"
   },
+  "untitledAgent": "Unbenannter Assistent",
   "updateAgent": "Assistenteninformationen aktualisieren",
   "upload": {
     "action": {
@@ -278,5 +315,6 @@
       }
     }
   },
+  "you": "du",
   "zenMode": "Fokusmodus"
 }

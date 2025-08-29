@@ -35,6 +35,11 @@
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
+  "groupTab": {
+    "chat": "Gruppenchat",
+    "members": "Mitglieder",
+    "meta": "Gruppenchat-Informationen"
+  },
   "header": {
     "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
@@ -290,6 +295,69 @@
     },
     "title": "Allgemeine Einstellungen"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Gruppenbeschreibung eingeben",
+      "title": "Gruppenbeschreibung"
+    },
+    "name": {
+      "placeholder": "Gruppennamen eingeben",
+      "title": "Gruppenname"
+    },
+    "submit": "Gruppe aktualisieren",
+    "systemPrompt": {
+      "placeholder": "Systemaufforderung eingeben",
+      "title": "Systemaufforderung"
+    },
+    "title": "Gruppeninformationen"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Wählen Sie aus, wie viele Nachrichten Mitglieder hintereinander beantworten können. Auf 0 setzen, um die Funktion zu deaktivieren.",
+      "title": "Max. Nachrichten in Folge"
+    },
+    "model": {
+      "desc": "Wählen Sie das Modell für Gruppengespräche.",
+      "title": "Orchestrator-Modell"
+    },
+    "responseOrder": {
+      "desc": "Agenten antworten in der Reihenfolge, in der sie in der Gruppe festgelegt sind.",
+      "options": {
+        "natural": "Natürlich",
+        "sequential": "Sequentiell"
+      },
+      "placeholder": "Antwortreihenfolge wählen",
+      "title": "Antwortreihenfolge"
+    },
+    "responseSpeed": {
+      "desc": "Wählen Sie, wie schnell Agenten in Gruppengesprächen antworten sollen.",
+      "options": {
+        "fast": "Schnell",
+        "medium": "Mittel",
+        "slow": "Langsam"
+      },
+      "placeholder": "Antwortgeschwindigkeit wählen",
+      "title": "Antwortgeschwindigkeit"
+    },
+    "revealDM": {
+      "desc": "Macht den Inhalt von DMs, die an andere Mitglieder gesendet wurden, für Sie sichtbar.",
+      "title": "DM anzeigen"
+    },
+    "submit": "Einstellungen aktualisieren",
+    "systemPrompt": {
+      "desc": "Benutzerdefinierte Systemaufforderung für den Gruppenkonversations-Orchestrator. Diese überschreibt das Standardverhalten des Orchestrators.",
+      "placeholder": "Benutzerdefinierte Systemaufforderung für den Orchestrator eingeben...",
+      "title": "Systemaufforderung des Orchestrators"
+    },
+    "title": "Chat-Einstellungen"
+  },
+  "settingGroupMembers": {
+    "edit": "Mitglied bearbeiten",
+    "empty": "In dieser Gruppe sind noch keine Agenten. Klicken Sie auf die '+'-Schaltfläche, um Mitglieder hinzuzufügen.",
+    "owner": "Sie (Eigentümer)",
+    "remove": "Mitglied entfernen",
+    "you": "Sie"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
@@ -510,6 +578,11 @@
       "label": "Modell zur Benennung von KI-Malthemen",
       "modelDesc": "Modell zur automatischen Benennung von Themen für KI-Malerei",
       "title": "Automatische Benennung von KI-Malthemen"
+    },
+    "groupChatSupervisor": {
+      "label": "Gruppenchat-Überwachungsmodell",
+      "modelDesc": "Ein Modell, das zur Überwachung und Verwaltung von Gruppenchats verwendet wird.",
+      "title": "Überwachung und Verwaltung von Gruppenchats"
     },
     "helpInfo": "Beim Erstellen eines neuen Assistenten werden die Standardassistenteneinstellungen als Voreinstellungen verwendet.",
     "historyCompress": {

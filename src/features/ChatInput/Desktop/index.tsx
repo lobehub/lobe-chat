@@ -9,6 +9,7 @@ import { CHAT_TEXTAREA_HEIGHT, CHAT_TEXTAREA_MAX_HEIGHT } from '@/const/layoutTo
 import { ActionKeys } from '../ActionBar/config';
 import LocalFiles from './FilePreview';
 import Head from './Header';
+import MentionedUsers from './MentionedUsers';
 
 export type FooterRender = (params: {
   expand: boolean;
@@ -16,6 +17,7 @@ export type FooterRender = (params: {
 }) => ReactNode;
 
 interface DesktopChatInputProps {
+  inThread?: boolean;
   inputHeight: number;
   leftActions: ActionKeys[];
   onInputHeightChange?: (height: number) => void;
@@ -32,6 +34,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
     inputHeight,
     onInputHeightChange,
     renderFooter,
+    inThread,
   }) => {
     const [expand, setExpand] = useState<boolean>(false);
     const onSend = useCallback(() => {
@@ -41,6 +44,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
     return (
       <>
         {!expand && leftActions.includes('fileUpload') && <LocalFiles />}
+        {!expand && leftActions.includes('mention') && <MentionedUsers />}
         <DraggablePanel
           fullscreen={expand}
           maxHeight={CHAT_TEXTAREA_MAX_HEIGHT}
@@ -68,6 +72,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
               leftActions={leftActions}
               rightActions={rightActions}
               setExpand={setExpand}
+              showExpandButton={!inThread}
             />
             {renderTextArea(onSend)}
             {renderFooter({ expand, onExpandChange: setExpand })}

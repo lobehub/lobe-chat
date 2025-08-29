@@ -47,10 +47,11 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
 
 interface FooterProps {
   expand: boolean;
+  inThread?: boolean;
   onExpandChange: (expand: boolean) => void;
 }
 
-const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
+const Footer = memo<FooterProps>(({ onExpandChange, expand, inThread }) => {
   const { t } = useTranslation('chat');
 
   const { styles } = useStyles();
@@ -87,7 +88,7 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
         </Flexbox>
         <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
           <ShortcutHint />
-          <SaveTopic />
+          {!inThread && <SaveTopic />}
           <Flexbox style={{ minWidth: 92 }}>
             {isAIGenerating ? (
               <Button
@@ -119,7 +120,5 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
     </>
   );
 });
-
-Footer.displayName = 'Footer';
 
 export default Footer;

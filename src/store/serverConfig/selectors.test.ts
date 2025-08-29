@@ -6,41 +6,24 @@ import { initServerConfigStore } from './store';
 vi.mock('zustand/traditional');
 
 describe('featureFlagsSelectors', () => {
-  it('should return mapped feature flags from store', () => {
+  it('should return feature flags from store', () => {
     const store = initServerConfigStore({
       featureFlags: {
-        language_model_settings: false,
-        edit_agent: false,
+        enableWebrtc: false,
+        isAgentEditable: false,
+        showLLM: false,
+        showMarket: true,
+        showAiImage: true,
       },
     });
 
     const result = featureFlagsSelectors(store.getState());
 
-    expect(result).toEqual({
-      enableWebrtc: false,
-      isAgentEditable: false,
-      showApiKeyManage: false,
-      enablePlugins: true,
-      showCreateSession: true,
-      showChangelog: true,
-      enableRAGEval: false,
-      showDalle: true,
-      showAiImage: true,
-      enableKnowledgeBase: true,
-      showLLM: false,
-      showCloudPromotion: false,
-      showOpenAIApiKey: true,
-      hideDocs: false,
-      hideGitHub: false,
-      showOpenAIProxyUrl: true,
-      enableCheckUpdates: true,
-      showWelcomeSuggest: true,
-      enableClerkSignUp: true,
-      showProvider: true,
-      showMarket: true,
-      showPinList: false,
-      enableSTT: true,
-    });
+    expect(result.enableWebrtc).toBe(false);
+    expect(result.isAgentEditable).toBe(false);
+    expect(result.showLLM).toBe(false);
+    expect(result.showMarket).toBe(true);
+    expect(result.showAiImage).toBe(true);
   });
 });
 

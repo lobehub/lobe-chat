@@ -331,8 +331,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   // 添加文本buffer和计时器相关变量
   let textBuffer = '';
-  // eslint-disable-next-line no-undef
-  let bufferTimer: NodeJS.Timeout | null = null;
+  let bufferTimer: ReturnType<typeof setTimeout> | null = null;
   const BUFFER_INTERVAL = 300; // 300ms
 
   const flushTextBuffer = () => {
@@ -363,8 +362,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let thinkingBuffer = '';
-  // eslint-disable-next-line no-undef
-  let thinkingBufferTimer: NodeJS.Timeout | null = null;
+  let thinkingBufferTimer: ReturnType<typeof setTimeout> | null = null;
 
   // 创建一个函数来处理buffer的刷新
   const flushThinkingBuffer = () => {
@@ -403,14 +401,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           error.type
             ? error
             : {
-                body: {
-                  message: error.message,
-                  name: error.name,
-                  stack: error.stack,
-                },
+              body: {
                 message: error.message,
-                type: ChatErrorType.UnknownChatFetchError,
+                name: error.name,
+                stack: error.stack,
               },
+              message: error.message,
+              type: ChatErrorType.UnknownChatFetchError,
+            },
         );
         return;
       }

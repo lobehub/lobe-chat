@@ -1,8 +1,8 @@
 {
   "ArgsInput": {
-    "addArgument": "إضافة معامل",
-    "argumentPlaceholder": "المعامل {{index}}",
-    "enterFirstArgument": "أدخل المعامل الأول..."
+    "addArgument": "إضافة وسيط",
+    "argumentPlaceholder": "الوسيط {{index}}",
+    "enterFirstArgument": "أدخل الوسيط الأول..."
   },
   "DragUpload": {
     "dragDesc": "اسحب الملفات هنا، يدعم تحميل عدة صور.",
@@ -73,18 +73,6 @@
   "GoBack": {
     "back": "عودة"
   },
-  "HtmlPreview": {
-    "actions": {
-      "download": "تنزيل",
-      "preview": "معاينة"
-    },
-    "iframeTitle": "معاينة HTML",
-    "mode": {
-      "code": "رمز",
-      "preview": "معاينة"
-    },
-    "title": "معاينة HTML"
-  },
   "ImageUpload": {
     "actions": {
       "changeImage": "انقر لتغيير الصورة",
@@ -142,12 +130,6 @@
     },
     "progress": {
       "uploadingWithCount": "تم تحميل {{completed}} من أصل {{total}}"
-    },
-    "validation": {
-      "fileSizeExceeded": "تجاوز حجم الملف الحد المسموح به",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) يتجاوز الحد الأقصى للحجم وهو {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} من الملفات تتجاوز الحد الأقصى للحجم {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "تجاوز عدد الصور الحد المسموح به"
     }
   },
   "OllamaSetupGuide": {

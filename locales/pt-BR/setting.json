@@ -35,6 +35,11 @@
       "title": "Redefinir Todas as Configurações"
     }
   },
+  "groupTab": {
+    "chat": "Bate-papo em grupo",
+    "members": "Membros",
+    "meta": "Informações do grupo"
+  },
   "header": {
     "desc": "Preferências e configurações do modelo.",
     "global": "Configurações Globais",
@@ -290,6 +295,69 @@
     },
     "title": "Configurações Comuns"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Digite a descrição do grupo",
+      "title": "Descrição do grupo"
+    },
+    "name": {
+      "placeholder": "Digite o nome do grupo",
+      "title": "Nome do grupo"
+    },
+    "submit": "Atualizar grupo",
+    "systemPrompt": {
+      "placeholder": "Digite o prompt do sistema",
+      "title": "Prompt do sistema"
+    },
+    "title": "Informações do grupo"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Escolha quantas mensagens os membros podem responder consecutivamente. Defina como 0 para desativar.",
+      "title": "Máximo de mensagens seguidas"
+    },
+    "model": {
+      "desc": "Escolha o modelo a ser usado em conversas em grupo",
+      "title": "Modelo do Orquestrador"
+    },
+    "responseOrder": {
+      "desc": "Os agentes responderão na ordem em que estão configurados no grupo",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequencial"
+      },
+      "placeholder": "Selecione a ordem de resposta",
+      "title": "Ordem de Resposta"
+    },
+    "responseSpeed": {
+      "desc": "Escolha a velocidade de resposta dos agentes em conversas em grupo",
+      "options": {
+        "fast": "Rápida",
+        "medium": "Média",
+        "slow": "Lenta"
+      },
+      "placeholder": "Selecione a velocidade de resposta",
+      "title": "Velocidade de Resposta"
+    },
+    "revealDM": {
+      "desc": "Tornar visível para você o conteúdo de mensagens diretas enviadas a outros membros.",
+      "title": "Exibir Mensagens Diretas"
+    },
+    "submit": "Atualizar configurações",
+    "systemPrompt": {
+      "desc": "Prompt do sistema personalizado para o orquestrador de conversas em grupo. Isso substitui o comportamento padrão do orquestrador.",
+      "placeholder": "Insira o prompt do sistema personalizado para o orquestrador...",
+      "title": "Prompt do Sistema do Orquestrador"
+    },
+    "title": "Configurações do Chat"
+  },
+  "settingGroupMembers": {
+    "edit": "Editar membro",
+    "empty": "Ainda não há agentes neste grupo. Clique no botão + para adicionar membros.",
+    "owner": "Você (Proprietário)",
+    "remove": "Remover membro",
+    "you": "Você"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Ativar limite de resposta única"
@@ -510,6 +578,11 @@
       "label": "Modelo de Nomeação de Tópicos para Pintura AI",
       "modelDesc": "Modelo designado para nomeação automática de tópicos em pintura AI",
       "title": "Nomeação Automática de Tópicos para Pintura AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Modelo de supervisão de chats em grupo",
+      "modelDesc": "Modelo designado para supervisionar e gerenciar conversas em grupo",
+      "title": "Supervisão de chats em grupo"
     },
     "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {

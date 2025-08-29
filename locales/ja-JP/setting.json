@@ -35,6 +35,11 @@
       "title": "すべての設定をリセット"
     }
   },
+  "groupTab": {
+    "chat": "グループチャット",
+    "members": "メンバー",
+    "meta": "グループ情報"
+  },
   "header": {
     "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
@@ -290,6 +295,69 @@
     },
     "title": "一般設定"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "グループの説明を入力してください",
+      "title": "グループの説明"
+    },
+    "name": {
+      "placeholder": "グループ名を入力してください",
+      "title": "グループ名"
+    },
+    "submit": "グループを更新",
+    "systemPrompt": {
+      "placeholder": "システムプロンプトを入力してください",
+      "title": "システムプロンプト"
+    },
+    "title": "グループ情報"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "メンバーが連続して返信できるメッセージ数を選択します。無効にするには0に設定してください。",
+      "title": "連続メッセージの最大数"
+    },
+    "model": {
+      "desc": "グループ会話で使用するモデルを選択します",
+      "title": "オーケストレーターモデル"
+    },
+    "responseOrder": {
+      "desc": "エージェントはグループで設定された順序で応答します",
+      "options": {
+        "natural": "自然",
+        "sequential": "順番に"
+      },
+      "placeholder": "応答順序を選択してください",
+      "title": "応答順序"
+    },
+    "responseSpeed": {
+      "desc": "グループ会話でエージェントの応答速度を選択します",
+      "options": {
+        "fast": "高速",
+        "medium": "標準",
+        "slow": "低速"
+      },
+      "placeholder": "応答速度を選択してください",
+      "title": "応答速度"
+    },
+    "revealDM": {
+      "desc": "他のメンバーに送られたDMの内容をあなたにも表示します。",
+      "title": "DMを表示"
+    },
+    "submit": "設定を更新",
+    "systemPrompt": {
+      "desc": "グループ会話のオーケストレーター用のカスタムシステムプロンプトです。これによりデフォルトのオーケストレーター動作が上書きされます。",
+      "placeholder": "カスタムのオーケストレーター用システムプロンプトを入力してください...",
+      "title": "オーケストレーターのシステムプロンプト"
+    },
+    "title": "チャット設定"
+  },
+  "settingGroupMembers": {
+    "edit": "メンバーを編集",
+    "empty": "このグループにはまだエージェントがいません。+ボタンをクリックしてメンバーを追加してください。",
+    "owner": "あなた（オーナー）",
+    "remove": "メンバーを削除",
+    "you": "あなた"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "単一応答制限を有効にする"
@@ -510,6 +578,11 @@
       "label": "AI絵画トピック命名モデル",
       "modelDesc": "AI絵画の自動トピック命名に使用されるモデルを指定します",
       "title": "AI絵画自動トピック命名"
+    },
+    "groupChatSupervisor": {
+      "label": "グループチャット監督モデル",
+      "modelDesc": "グループチャットの会話を監督・管理するために使用するモデルを指定します",
+      "title": "グループチャットの監督・管理"
     },
     "helpInfo": "新しいアシスタントを作成するとき、デフォルトのアシスタント設定がプリセット値として使用されます。",
     "historyCompress": {

@@ -1,0 +1,14 @@
+---
+description: Explain how group chat works in LobeHub
+globs:
+alwaysApply: false
+---
+
+This rule explains how group chat (multi-agent orchestration) works. Not confused with session group, which is a organization method to manage session.
+
+## Key points
+
+- A supervisor will devide who and how will speak next
+- Each agent will speak just like in single chat (if was asked to speak)
+
+## Files

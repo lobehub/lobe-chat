@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "مدل"
   },
+  "active": "فعال",
   "agentDefaultMessage": "سلام، من **{{name}}** هستم. می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
   "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
   "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
@@ -13,17 +14,23 @@
     "thought": "فرآیند تفکر",
     "unknownTitle": "اثر بدون نام"
   },
+  "availableAgents": "دستیاران در دسترس",
   "backToBottom": "بازگشت به پایین",
   "chatList": {
     "longMessageDetail": "مشاهده جزئیات"
   },
   "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
   "confirmClearCurrentMessages": "پیام‌های جلسه فعلی به زودی پاک خواهند شد و پس از پاک شدن قابل بازیابی نخواهند بود. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveGroupItemAlert": "در حال حذف این گروه هستید؛ پس از حذف، دستیاران این گروه به فهرست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
   "confirmRemoveSessionItemAlert": "این دستیار به زودی حذف خواهد شد و پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید.",
   "confirmRemoveSessionSuccess": "حذف دستیار با موفقیت انجام شد",
   "defaultAgent": "دستیار سفارشی",
   "defaultList": "فهرست پیش‌فرض",
   "defaultSession": "دستیار سفارشی",
+  "dm": {
+    "placeholder": "پیام‌های خصوصی بین شما و {{agentTitle}} در اینجا نمایش داده می‌شوند.",
+    "tooltip": "ارسال پیام خصوصی"
+  },
   "duplicateSession": {
     "loading": "در حال کپی کردن...",
     "success": "کپی با موفقیت انجام شد",
@@ -54,11 +61,18 @@
     },
     "title": "ویژگی‌های گسترش مدل"
   },
+  "group": {
+    "desc": "در یک فضای گفتگوی مشترک با چندین دستیار هوش مصنوعی همکاری کنید.",
+    "memberTooltip": "این گروه {{count}} عضو دارد",
+    "title": "گروه‌ها"
+  },
+  "groupDescription": "توضیحات گروه",
   "history": {
     "title": "دستیار فقط آخرین {{count}} پیام را به خاطر خواهد سپرد"
   },
   "historyRange": "محدوده تاریخی",
   "historySummary": "خلاصه پیام‌های تاریخی",
+  "inactive": "غیرفعال",
   "inbox": {
     "desc": "خوشه‌های مغزی را فعال کنید و جرقه‌های تفکر را برانگیزید. دستیار هوشمند شما اینجاست تا با شما در مورد هر چیزی صحبت کند.",
     "title": "گپ دوستانه"
@@ -76,6 +90,7 @@
   "intentUnderstanding": {
     "title": "در حال درک و تحلیل نیت شما..."
   },
+  "inviteMembers": "دعوت اعضا",
   "knowledgeBase": {
     "all": "همه محتوا",
     "allFiles": "همه فایل‌ها",
@@ -94,12 +109,24 @@
     "uploadGuide": "فایل‌های آپلود شده را می‌توانید در «پایگاه دانش» مشاهده کنید.",
     "viewMore": "مشاهده بیشتر"
   },
+  "memberSelection": {
+    "addMember": "افزودن عضو",
+    "noAvailableAgents": "هیچ نماینده‌ای در دسترس نیست",
+    "noSelectedAgents": "هیچ نماینده‌ای انتخاب نشده است",
+    "searchAgents": "جستجوی نمایندگان…",
+    "setInitialMembers": "تنظیم اعضای اولیه"
+  },
+  "members": "اعضا",
   "messageAction": {
     "delAndRegenerate": "حذف و بازتولید",
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
     "regenerate": "بازتولید"
   },
   "messages": {
+    "dm": {
+      "sentTo": "ارسال به",
+      "title": "پیام خصوصی"
+    },
     "modelCard": {
       "credit": "اعتبار",
       "creditPricing": "قیمت گذاری",
@@ -143,6 +170,13 @@
     }
   },
   "newAgent": "دستیار جدید",
+  "newGroupChat": "ایجاد چت گروهی جدید",
+  "noAgentsYet": "در این گروه هنوز هیچ دستیار وجود ندارد. برای دعوت دستیار، روی دکمهٔ «+» کلیک کنید.",
+  "noAvailableAgents": "هیچ دستیاری برای دعوت موجود نیست",
+  "noMatchingAgents": "هیچ دستیار مطابقتی یافت نشد",
+  "noMembersYet": "این گروه هنوز عضوی ندارد. برای دعوت دستیاران، روی دکمهٔ + کلیک کنید.",
+  "noSelectedAgents": "هنوز هیچ دستیار انتخاب نشده است",
+  "owner": "صاحب گروه",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",
   "rag": {
@@ -183,6 +217,8 @@
     "title": "جستجوی متصل"
   },
   "searchAgentPlaceholder": "جستجوی دستیار...",
+  "searchAgents": "دستیار جستجو...",
+  "selectedAgents": "دستیاران انتخاب‌شده",
   "sendPlaceholder": "نوشتن پیام...",
   "sessionGroup": {
     "config": "مدیریت گروه",
@@ -256,6 +292,7 @@
     "action": "خواندن با صدا",
     "clear": "حذف صدا"
   },
+  "untitledAgent": "دستیار بدون نام",
   "updateAgent": "به‌روزرسانی اطلاعات دستیار",
   "upload": {
     "action": {
@@ -278,5 +315,6 @@
       }
     }
   },
+  "you": "شما",
   "zenMode": "حالت تمرکز"
 }
