@@ -46,6 +46,13 @@ export default function SettingRoutesLayout() {
           headerTitle: t('developer', { ns: 'setting' }),
         }}
       />
+      {/* Theme settings screen */}
+      <Stack.Screen
+        name="theme/index"
+        options={{
+          headerTitle: t('theme.title', { ns: 'setting' }),
+        }}
+      />
     </Stack>
   );
 }
