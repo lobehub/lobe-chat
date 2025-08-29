@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Correct totalOutputTokens calculation for XAI provider."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.3"
+  },
+  {
+    "children": {
       "improvements": ["Add Grok Code Fast 1 model."]
     },
     "date": "2025-08-29",
