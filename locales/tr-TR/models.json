@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; sohbet yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; sohbet yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite, Google'ın en küçük ve en uygun maliyetli modeli olup, geniş çaplı kullanım için tasarlanmıştır."
   },

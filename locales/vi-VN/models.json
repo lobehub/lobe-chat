@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google; nó cho phép bạn tạo và chỉnh sửa hình ảnh thông qua hội thoại."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview là mô hình đa phương thức gốc mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho việc sử dụng quy mô lớn."
   },
