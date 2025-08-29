@@ -21,9 +21,10 @@ const xaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-28',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
+    // settings: {
+      // reasoning_effort is not supported by grok-code. Specifying reasoning_effort parameter will get an error response.
+      // extendParams: ['reasoningEffort'],
+    // },
     type: 'chat',
   },
   {
