@@ -45,6 +45,8 @@ export const Markdown = ({
 }: MarkdownProps) => {
   const tree = useMemo(() => parser.parse(children), [children]);
 
+  console.log(JSON.stringify(tree, null, 2));
+
   const renderers = useMemo(
     () => ({
       ...defaultRenderers,

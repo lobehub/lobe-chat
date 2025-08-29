@@ -74,10 +74,10 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       textDecorationLine: 'none',
     },
     list: {
-      marginVertical: token.marginXS,
+      marginInlineStart: options.fontSize * options.marginMultiple * 0.5,
     },
     listItem: {
-      marginVertical: token.marginXS,
+      flex: 1,
     },
     paragraph: {
       color: token.colorText,
@@ -100,10 +100,11 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       // color: token.colorText
     },
     thematicBreak: {
-      borderBottomWidth: 1,
-      borderColor: token.colorBorderSecondary,
+      borderColor: token.colorBorder,
       borderStyle: 'dashed',
-      marginVertical: token.marginLG,
+      borderWidth: 0.5,
+      marginBlock: options.fontSize * options.marginMultiple * 1.5,
+      width: '100%',
     },
     tr: {
       borderColor: token.colorBorderSecondary,
