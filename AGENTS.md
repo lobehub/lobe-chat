@@ -4,7 +4,7 @@ This document serves as a comprehensive guide for all team members when developi
 
 ## Tech Stack
 
-LobeChat is built with modern technologies:
+Built with modern technologies:
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **UI Components**: Ant Design, @lobehub/ui, antd-style
@@ -18,7 +18,7 @@ LobeChat is built with modern technologies:
 
 The project follows a well-organized monorepo structure:
 
-- `apps/` - Main applications (web, desktop)
+- `apps/` - Main applications
 - `packages/` - Shared packages and libraries
 - `src/` - Main source code
 - `docs/` - Documentation
@@ -53,7 +53,7 @@ The project follows a well-organized monorepo structure:
 
 - Use functional components with hooks
 - Follow the component structure guidelines
-- Use antd-style for styling
+- Use antd-style & @lobehub/ui for styling
 - Implement proper error boundaries
 
 #### Database Schema
@@ -125,7 +125,7 @@ The project provides comprehensive rules in `.cursor/rules/` directory:
 ## Best Practices
 
 - **Conservative for existing code, modern approaches for new features**
-- **Code Language**: Use Chinese for files with existing Chinese comments, American English for new files\*\*
+- **Code Language**: Use Chinese for files with existing Chinese comments, American English for new files
 - Always add tests for new functionality
 - Follow the established patterns in the codebase
 - Use proper error handling and logging
