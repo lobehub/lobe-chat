@@ -64,6 +64,10 @@
     "./zeroone": "./src/aiModels/zeroone.ts",
     "./zhipu": "./src/aiModels/zhipu.ts"
   },
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
   "dependencies": {
     "zod": "^3.25.76"
   }
