@@ -1,3 +1,4 @@
+import { exportFile } from '@lobechat/utils/client';
 import { Button, Form, type FormItemProps, copyToClipboard } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -12,7 +13,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
-import { exportFile } from '@/utils/client/exportFile';
 
 import { useStyles } from '../style';
 import Preview from './Preview';

@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
 
 import type { ModelProviderKey } from '../types';
 
@@ -111,10 +111,19 @@ export const IMAGE_MODEL_KEYWORDS = [
   'wanxiang',
   'DESCRIBE',
   'UPSCALE',
+  '!gemini', // 排除 gemini 模型，即使包含 -image 也是 chat 模型
   '-image',
   '^V3',
   '^V_2',
   '^V_1',
+] as const;
+
+// 嵌入模型关键词配置
+export const EMBEDDING_MODEL_KEYWORDS = [
+  'embedding',
+  'embed',
+  'bge',
+  'm3e',
 ] as const;
 
 /**
@@ -168,11 +177,8 @@ const findKnownModelByProvider = async (
   const lowerModelId = modelId.toLowerCase();
 
   try {
-    // 动态构建导入路径
-    const modulePath = `@/config/aiModels/${provider}`;
-
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(modulePath);
+    const moduleImport = await import(`@/config/aiModels/${provider}.ts`);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找
@@ -280,7 +286,12 @@ const processModelCard = (
       IMAGE_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
     )
       ? 'image'
-      : 'chat');
+      : isKeywordListMatch(
+        model.id.toLowerCase(),
+        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+      )
+        ? 'embedding'
+        : 'chat');
 
   // image model can't find parameters
   if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {

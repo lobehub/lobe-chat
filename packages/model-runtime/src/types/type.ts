@@ -32,6 +32,7 @@ export enum ModelProvider {
   Ai302 = 'ai302',
   Ai360 = 'ai360',
   AiHubMix = 'aihubmix',
+  AkashChat = 'akashchat',
   Anthropic = 'anthropic',
   Azure = 'azure',
   AzureAI = 'azureai',

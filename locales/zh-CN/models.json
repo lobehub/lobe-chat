@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。"
   },

@@ -9,6 +9,7 @@ import { createdAt, timestamps, timestamptz } from './_helpers';
 import { documents } from './document';
 import { sessions } from './session';
 import { users } from './user';
+import { chatGroups } from './chatGroup';
 
 export const topics = pgTable(
   'topics',
@@ -19,6 +20,7 @@ export const topics = pgTable(
     title: text('title'),
     favorite: boolean('favorite').default(false),
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
+    groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),

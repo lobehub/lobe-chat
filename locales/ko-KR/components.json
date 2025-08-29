@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "뒤로 가기"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "다운로드",
+      "preview": "미리보기"
+    },
+    "iframeTitle": "HTML 미리보기",
+    "mode": {
+      "code": "코드",
+      "preview": "미리보기"
+    },
+    "title": "HTML 미리보기"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "이미지 변경 클릭",

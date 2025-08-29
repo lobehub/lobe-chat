@@ -75,6 +75,18 @@ export default {
   GoBack: {
     back: '返回',
   },
+  HtmlPreview: {
+    actions: {
+      download: '下载',
+      preview: '预览',
+    },
+    iframeTitle: 'HTML 预览',
+    mode: {
+      code: '代码',
+      preview: '预览',
+    },
+    title: 'HTML 预览',
+  },
   ImageUpload: {
     actions: {
       changeImage: '点击更换图片',
