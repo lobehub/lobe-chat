@@ -12,6 +12,7 @@ import { HeadingRenderer } from './heading';
 import { HtmlRenderer } from './html';
 import { ImageReferenceRenderer, ImageRenderer } from './image';
 import { InlineCodeRenderer } from './inlineCode';
+import { InlineMathRenderer, MathRenderer } from './math';
 import { LinkReferenceRenderer, LinkRenderer } from './link';
 import { ListItemRenderer, ListRenderer } from './list';
 import { ParagraphRenderer } from './paragraph';
@@ -40,10 +41,12 @@ export const defaultRenderers: Renderers = {
   ImageReferenceRenderer,
   ImageRenderer,
   InlineCodeRenderer,
+  InlineMathRenderer,
   LinkReferenceRenderer,
   LinkRenderer,
   ListItemRenderer,
   ListRenderer,
+  MathRenderer,
   ParagraphRenderer,
   PhrasingContentRenderer,
   RootContentRenderer,

@@ -13,6 +13,7 @@ export type RemarkStyles = {
   container?: ViewStyle;
   delete?: TextStyle;
   emphasis?: TextStyle;
+  fontSize?: number;
   footnoteReference?: TextStyle;
   heading?: (level: number) => TextStyle;
   image?: ImageStyle;
@@ -26,6 +27,7 @@ export type RemarkStyles = {
   table?: ViewStyle;
   td?: TextStyle;
   text?: TextStyle;
+  textColor?: string;
   th?: TextStyle;
   thead?: ViewStyle;
   thematicBreak?: ViewStyle;

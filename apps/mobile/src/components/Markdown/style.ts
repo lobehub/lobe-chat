@@ -59,6 +59,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     emphasis: {
       fontStyle: 'italic',
     },
+    fontSize: options.fontSize,
     footnoteReference: {
       color: '#8b949e',
       fontSize: options.fontSize * 0.875,
@@ -112,6 +113,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       // 从 父节点继承,否则一些样式带不下来
       // color: token.colorText
     },
+    textColor: token.colorText,
     th: tdth,
     thead: {
       backgroundColor: token.colorFillQuaternary,

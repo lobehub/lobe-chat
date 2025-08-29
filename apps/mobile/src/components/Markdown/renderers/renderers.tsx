@@ -32,6 +32,17 @@ import {
 } from 'mdast';
 import { ReactNode } from 'react';
 
+// 扩展 Node 类型以支持数学公式
+interface MathNode extends Node {
+  type: 'math';
+  value: string;
+}
+
+interface InlineMathNode extends Node {
+  type: 'inlineMath';
+  value: string;
+}
+
 export type RendererArgs<This extends Node> = {
   index?: number;
   node: This;
@@ -56,10 +67,12 @@ export interface Renderers {
   ImageReferenceRenderer: RenderFunc<ImageReference>;
   ImageRenderer: RenderFunc<Image>;
   InlineCodeRenderer: RenderFunc<InlineCode>;
+  InlineMathRenderer: RenderFunc<InlineMathNode>;
   LinkReferenceRenderer: RenderFunc<LinkReference>;
   LinkRenderer: RenderFunc<Link>;
   ListItemRenderer: RenderFunc<ListItem>;
   ListRenderer: RenderFunc<List>;
+  MathRenderer: RenderFunc<MathNode>;
   ParagraphRenderer: RenderFunc<Paragraph>;
   PhrasingContentRenderer: RenderFunc<PhrasingContent>;
   RootContentRenderer: RenderFunc<RootContent>;

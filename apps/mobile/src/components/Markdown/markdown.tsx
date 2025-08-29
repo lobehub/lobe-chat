@@ -2,6 +2,7 @@ import { Definition, Root } from 'mdast';
 import { useMemo, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
@@ -12,9 +13,12 @@ import { Renderers } from './renderers/renderers';
 import { RootRenderer } from './renderers/root';
 import { RemarkStyleOptions, useRemarkStyles } from './style';
 
-const parser = unified().use(remarkParse).use(remarkGfm, {
-  singleTilde: false,
-});
+const parser = unified()
+  .use(remarkParse)
+  .use(remarkGfm, {
+    singleTilde: false,
+  })
+  .use(remarkMath);
 
 function extractDefinitions(tree: Root): Record<string, Definition> {
   const definitions: Record<string, Definition> = {};

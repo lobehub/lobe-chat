@@ -20,7 +20,7 @@
 ```bash
 # 基础依赖
 npm install react-native-markdown-display react-native-mathjax-html-to-svg
-npm install markdown-it markdown-it-mathjax3
+npm install remark-math
 
 # Expo相关依赖
 npx expo install expo-av
@@ -50,10 +50,13 @@ function hello() {
 行内公式：$E = mc^2$
 
 块级公式：
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
+
+$$
+\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}
+$$
   `;
 
-  return <MarkdownRender content={markdownContent} />;
+  return <MarkdownRender>{markdownContent}</MarkdownRender>;
 }
 ```
 
@@ -63,10 +66,10 @@ $$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
 
 | 属性             | 类型     | 默认值 | 描述                              |
 | ---------------- | -------- | ------ | --------------------------------- |
-| `content`        | `string` | -      | **必需** - 要渲染的 Markdown 内容 |
+| `children`       | `string` | -      | **必需** - 要渲染的 Markdown 内容 |
 | `fontSize`       | `number` | `16`   | 基础字体大小（px）                |
 | `headerMultiple` | `number` | `1`    | 标题字体大小倍数                  |
-| `marginMultiple` | `number` | `1.5`  | 边距倍数                          |
+| `marginMultiple` | `number` | `2`    | 边距倍数                          |
 | `lineHeight`     | `number` | `1.8`  | 行高倍数                          |
 
 ### 样式配置
@@ -218,7 +221,7 @@ $$
 
 1. **数学公式不显示**
    - 确保安装了`react-native-mathjax-html-to-svg`
-   - 检查 MathJax 语法是否正确
+   - 检查数学公式语法是否正确
 
 2. **代码高亮不工作**
    - 确保 Highlighter 组件正确导入
@@ -266,6 +269,4 @@ $$
 查看`demos/`目录下的完整示例：
 
 - `basic.tsx` - 基础用法示例
-- `advanced.tsx` - 高级特性示例
-- `math.tsx` - 数学公式示例
-- `styling.tsx` - 样式配置示例
+- `katex.tsx` - 数学公式示例

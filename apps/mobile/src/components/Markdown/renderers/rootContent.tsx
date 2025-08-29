@@ -4,7 +4,13 @@ import { ReactNode } from 'react';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 
-export const RootContentRenderer = ({ node, ...args }: RendererArgs<RootContent>): ReactNode => {
+// 扩展 RootContent 类型以支持数学公式
+type ExtendedRootContent = RootContent | { type: 'math'; value: string };
+
+export const RootContentRenderer = ({
+  node,
+  ...args
+}: RendererArgs<ExtendedRootContent>): ReactNode => {
   const { renderers } = useMarkdownContext();
   const {
     BlockquoteRenderer,
@@ -24,6 +30,7 @@ export const RootContentRenderer = ({ node, ...args }: RendererArgs<RootContent>
     LinkReferenceRenderer,
     ListRenderer,
     ListItemRenderer,
+    MathRenderer,
     ParagraphRenderer,
     StrongRenderer,
     TextRenderer,
@@ -86,6 +93,9 @@ export const RootContentRenderer = ({ node, ...args }: RendererArgs<RootContent>
     case 'listItem': {
       return <ListItemRenderer node={node} {...args} />;
     }
+    case 'math': {
+      return <MathRenderer node={node} {...args} />;
+    }
     case 'paragraph': {
       return <ParagraphRenderer node={node} {...args} />;
     }
@@ -112,7 +122,7 @@ export const RootContentRenderer = ({ node, ...args }: RendererArgs<RootContent>
     }
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
-      const _: never = node;
+      // const _: never = node;
       return null;
     }
   }

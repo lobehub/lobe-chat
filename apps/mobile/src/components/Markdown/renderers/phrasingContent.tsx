@@ -4,10 +4,13 @@ import { ReactNode } from 'react';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 
+// 扩展 PhrasingContent 类型以支持行内数学公式
+type ExtendedPhrasingContent = PhrasingContent | { type: 'inlineMath'; value: string };
+
 export const PhrasingContentRenderer = ({
   node,
   ...args
-}: RendererArgs<PhrasingContent>): ReactNode => {
+}: RendererArgs<ExtendedPhrasingContent>): ReactNode => {
   const { renderers } = useMarkdownContext();
   const {
     BreakRenderer,
@@ -18,6 +21,7 @@ export const PhrasingContentRenderer = ({
     ImageRenderer,
     ImageReferenceRenderer,
     InlineCodeRenderer,
+    InlineMathRenderer,
     LinkRenderer,
     LinkReferenceRenderer,
     StrongRenderer,
@@ -48,6 +52,9 @@ export const PhrasingContentRenderer = ({
     }
     case 'inlineCode': {
       return <InlineCodeRenderer node={node} {...args} />;
+    }
+    case 'inlineMath': {
+      return <InlineMathRenderer node={node} {...args} />;
     }
     case 'link': {
       return <LinkRenderer node={node} {...args} />;
