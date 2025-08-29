@@ -119,12 +119,7 @@ export const IMAGE_MODEL_KEYWORDS = [
 ] as const;
 
 // 嵌入模型关键词配置
-export const EMBEDDING_MODEL_KEYWORDS = [
-  'embedding',
-  'embed',
-  'bge',
-  'm3e',
-] as const;
+export const EMBEDDING_MODEL_KEYWORDS = ['embedding', 'embed', 'bge', 'm3e'] as const;
 
 /**
  * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
@@ -287,9 +282,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
@@ -297,34 +292,6 @@ const processModelCard = (
   if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {
     return undefined;
   }
-
-  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
-    if (!pricing || typeof pricing !== 'object') return undefined;
-    if (Array.isArray(pricing.units)) {
-      return { units: pricing.units };
-    }
-    const { input, output } = pricing;
-    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
-
-    const units = [];
-    if (typeof input === 'number') {
-      units.push({
-        name: 'textInput' as const,
-        rate: input,
-        strategy: 'fixed' as const,
-        unit: 'millionTokens' as const,
-      });
-    }
-    if (typeof output === 'number') {
-      units.push({
-        name: 'textOutput' as const,
-        rate: output,
-        strategy: 'fixed' as const,
-        unit: 'millionTokens' as const,
-      });
-    }
-    return { units };
-  };
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
@@ -340,7 +307,7 @@ const processModelCard = (
         false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
-    pricing: formatPricing(model?.pricing) ?? undefined,
+    // pricing: knownModel?.pricing ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??

@@ -3,7 +3,7 @@ import OpenRouterModels from '@/config/aiModels/openrouter';
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
-import { OpenRouterModelCard, OpenRouterReasoning } from './type';
+import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
 
 const formatPrice = (price: string) => {
   if (price === '-1') return undefined;
@@ -55,45 +55,48 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
   },
-  models: async () => {
-    let modelList: OpenRouterModelCard[] = [];
+  models: async ({ client }) => {
+    const modelsPage = (await client.models.list()) as any;
+    const modelList: OpenRouterModelCard[] = modelsPage.data;
 
+    const modelsExtraInfo: OpenRouterModelExtraInfo[] = [];
     try {
       const response = await fetch('https://openrouter.ai/api/frontend/models');
       if (response.ok) {
         const data = await response.json();
-        modelList = data['data'];
+        modelsExtraInfo.push(...data['data']);
       }
     } catch (error) {
       console.error('Failed to fetch OpenRouter frontend models:', error);
-      return [];
     }
 
-    // 处理前端获取的模型信息，转换为标准格式
+    // 先处理抓取的模型信息，转换为标准格式
     const formattedModels = modelList.map((model) => {
-      const displayName = model.slug?.toLowerCase().includes('deepseek')
-        ? (model.name ?? model.slug)
-        : (model.short_name ?? model.name ?? model.slug);
+      const extraInfo = modelsExtraInfo.find(
+        (m) => m.slug.toLowerCase() === model.id.toLowerCase(),
+      );
 
       return {
         contextWindowTokens: model.context_length,
         description: model.description,
-        displayName,
-        functionCall: model.endpoint?.supports_tool_parameters || false,
-        id: model.slug,
+        displayName: model.name,
+        functionCall:
+          model.description.includes('function calling') ||
+          model.description.includes('tools') ||
+          extraInfo?.endpoint?.supports_tool_parameters ||
+          false,
+        id: model.id,
         maxOutput:
-          typeof model.endpoint?.max_completion_tokens === 'number'
-            ? model.endpoint.max_completion_tokens
+          typeof model.top_provider.max_completion_tokens === 'number'
+            ? model.top_provider.max_completion_tokens
             : undefined,
         pricing: {
-          input: formatPrice(model.endpoint?.pricing?.prompt),
-          output: formatPrice(model.endpoint?.pricing?.completion),
+          input: formatPrice(model.pricing.prompt),
+          output: formatPrice(model.pricing.completion),
         },
-        reasoning: model.endpoint?.supports_reasoning || false,
-        releasedAt: new Date(model.created_at).toISOString().split('T')[0],
-        vision:
-          (Array.isArray(model.input_modalities) && model.input_modalities.includes('image')) ||
-          false,
+        reasoning: extraInfo?.endpoint?.supports_reasoning || false,
+        releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
+        vision: model.architecture.modality.includes('image') || false,
       };
     });
 
