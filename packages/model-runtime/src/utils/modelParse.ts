@@ -25,15 +25,15 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
-  llama: {
-    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
-    reasoningKeywords: [],
-    visionKeywords: ['llava'],
-  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
     visionKeywords: ['vision', 'kimi-latest', 'kimi-thinking-preview'],
+  },
+  ollama: {
+    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
+    reasoningKeywords: [],
+    visionKeywords: ['llava'],
   },
   openai: {
     excludeKeywords: ['audio'],
@@ -173,8 +173,9 @@ const findKnownModelByProvider = async (
 
   try {
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(`model-bank/${provider}`);
-    const providerModels = moduleImport.default;
+    const modules = await import('model-bank');
+
+    const providerModels = modules[provider];
 
     // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
@@ -376,8 +377,9 @@ export const processMultiProviderModelList = async (
   let providerLocalConfig: any[] | null = null;
   if (providerid) {
     try {
-      const moduleImport = await import(`model-bank/${providerid}`);
-      providerLocalConfig = moduleImport.default;
+      const modules = await import('model-bank');
+
+      providerLocalConfig = modules[providerid];
     } catch {
       // 如果配置文件不存在或导入失败，保持为 null
       providerLocalConfig = null;

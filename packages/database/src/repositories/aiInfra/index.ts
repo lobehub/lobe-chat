@@ -201,7 +201,11 @@ export class AiInfraRepos {
     providerId: string,
   ): Promise<AiProviderModelListItem[] | undefined> => {
     try {
-      const { default: providerModels } = await import(`model-bank/${providerId}`);
+      const modules = await import('model-bank');
+
+      // TODO: when model-bank is a separate module, we will try import from model-bank/[prividerId] again
+      // @ts-expect-error providerId is string
+      const providerModels = modules[providerId];
 
       // use the serverModelLists as the defined server model list
       const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
