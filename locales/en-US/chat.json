@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Deep Thinking Switch"
     },
-    "title": "Model Extension Features"
+    "title": "Model Extension Features",
+    "urlContext": {
+      "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
+      "title": "Extract Webpage Link Content"
+    }
   },
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
@@ -125,6 +129,7 @@
       "inputWriteCached": "Input cache write",
       "output": "Output",
       "outputAudio": "Audio Output",
+      "outputImage": "Image Output",
       "outputText": "Text Output",
       "outputTitle": "Output Details",
       "reasoning": "Deep Thinking",

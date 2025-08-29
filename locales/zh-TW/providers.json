@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix 透過統一的 API 介面提供對多種 AI 模型的存取。"
   },
+  "akashchat": {
+    "description": "Akash 是一個無需許可的雲端資源市場，與傳統雲端供應商相比，其定價具有競爭力。"
+  },
   "anthropic": {
     "description": "Anthropic 是一家專注於人工智慧研究和開發的公司，提供了一系列先進的語言模型，如 Claude 3.5 Sonnet、Claude 3 Sonnet、Claude 3 Opus 和 Claude 3 Haiku。這些模型在智能、速度和成本之間取得了理想的平衡，適用於從企業級工作負載到快速響應的各種應用場景。Claude 3.5 Sonnet 作為其最新模型，在多項評估中表現優異，同時保持了較高的性價比。"
   },

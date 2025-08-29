@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
     },
-    "title": "Fonctionnalités d'extension du modèle"
+    "title": "Fonctionnalités d'extension du modèle",
+    "urlContext": {
+      "desc": "Une fois activé, il analysera automatiquement les liens web pour obtenir le contenu contextuel réel de la page web",
+      "title": "Extraction du contenu des liens web"
+    }
   },
   "history": {
     "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Écriture de cache d'entrée",
       "output": "Sortie",
       "outputAudio": "Sortie audio",
+      "outputImage": "Sortie d'image",
       "outputText": "Sortie texte",
       "outputTitle": "Détails de la sortie",
       "reasoning": "Raisonnement approfondi",

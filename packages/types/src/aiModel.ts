@@ -52,6 +52,7 @@ const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
   reasoning: z.boolean().optional(),
+  search: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 
@@ -214,7 +215,8 @@ export type ExtendParamsType =
   | 'gpt5ReasoningEffort'
   | 'textVerbosity'
   | 'thinking'
-  | 'thinkingBudget';
+  | 'thinkingBudget'
+  | 'urlContext';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
