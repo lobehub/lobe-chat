@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add new provider AkashChat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.0"
+  },
+  {
+    "children": {
       "improvements": ["Move chat item into chat."]
     },
     "date": "2025-08-29",
