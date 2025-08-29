@@ -90,14 +90,31 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       color: token.colorTextHeading,
       fontWeight: token.fontWeightStrong,
     },
-    tableCell: {
+    table: {
+      backgroundColor: token.colorFillQuaternary,
+      borderColor: token.colorBorder,
+      borderRadius: token.borderRadius,
+      marginBlock: options.fontSize * options.marginMultiple * 0.5,
+    },
+
+    td: {
       color: token.colorText,
       minWidth: 120,
-      padding: token.paddingSM,
+      paddingBlock: 0.75 * options.fontSize,
+      paddingInline: options.fontSize,
     },
     text: {
       // 从 父节点继承
       // color: token.colorText
+    },
+    th: {
+      color: token.colorText,
+      minWidth: 120,
+      paddingBlock: 0.75 * options.fontSize,
+      paddingInline: options.fontSize,
+    },
+    thead: {
+      backgroundColor: token.colorFillQuaternary,
     },
     thematicBreak: {
       borderColor: token.colorBorder,
@@ -107,8 +124,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       width: '100%',
     },
     tr: {
-      borderColor: token.colorBorderSecondary,
-      flexDirection: 'row',
+      borderColor: token.colorBorder,
     },
   };
 };

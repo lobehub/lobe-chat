@@ -21,8 +21,11 @@ export type RemarkStyles = {
   listItem?: ViewStyle;
   paragraph?: TextStyle;
   strong?: TextStyle;
-  tableCell?: TextStyle;
+  table?: ViewStyle;
+  td?: TextStyle;
   text?: TextStyle;
+  th?: TextStyle;
+  thead?: ViewStyle;
   thematicBreak?: ViewStyle;
   tr?: ViewStyle;
 };

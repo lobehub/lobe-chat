@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { LayoutChangeEvent, ScrollView, Text, View } from 'react-native';
+import { LayoutChangeEvent, Text, TextStyle, View } from 'react-native';
 
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
@@ -53,8 +53,9 @@ const TableContextProvider = ({ rowCount, columnCount, children }: TableContextP
   const setColumnWidth = useCallback(
     (index: number, width: number) => {
       setColumnWidths((prev) => {
-        const minWidth = Math.max(contentSize.width / columnCount, 64);
-        const maxWidth = 180;
+        // Web: th/td { min-width: 120px }
+        const minWidth = 120;
+        const maxWidth = Number.POSITIVE_INFINITY;
         const old = prev[index] ?? 0;
         const newWidth = Math.min(Math.max(Math.max(old, width), minWidth), maxWidth);
         if (newWidth === old) return prev;
@@ -80,7 +81,7 @@ const TableContextProvider = ({ rowCount, columnCount, children }: TableContextP
 };
 
 export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
-  const { renderers } = useMarkdownContext();
+  const { renderers, styles } = useMarkdownContext();
   const { TableRowRenderer } = renderers;
 
   return (
@@ -88,13 +89,22 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       columnCount={node.children[0]?.children.length ?? 0}
       rowCount={node.children.length ?? 0}
     >
-      <ScrollView horizontal>
-        <View>
-          {node.children.map((child, idx) => (
-            <TableRowRenderer index={idx} key={idx} node={child} parent={node} />
-          ))}
-        </View>
-      </ScrollView>
+      {/* <ScrollView horizontal> */}
+      <View
+        style={[
+          {
+            boxSizing: 'border-box',
+            overflow: 'scroll',
+            width: '100%',
+          },
+          styles.table,
+        ]}
+      >
+        {node.children.map((child, idx) => (
+          <TableRowRenderer index={idx} key={idx} node={child} parent={node} />
+        ))}
+      </View>
+      {/* </ScrollView> */}
     </TableContextProvider>
   );
 };
@@ -103,14 +113,10 @@ export const TableRowRenderer = ({ node, index }: RendererArgs<TableRow>): React
   const { renderers, styles } = useMarkdownContext();
   const { TableCellRenderer } = renderers;
 
-  return (
-    <View
-      style={{
-        borderBottomWidth: index === 0 ? 3 : 1,
+  const rowStyle = index === 0 ? styles.thead : styles.tr;
 
-        ...styles.tr,
-      }}
-    >
+  return (
+    <View style={[{ flexDirection: 'row' }, rowStyle]}>
       {node.children.map((child, idx) => (
         <TableCellRenderer index={idx} key={idx} node={child} parent={node} rowIndex={index ?? 0} />
       ))}
@@ -129,11 +135,21 @@ export const TableCellRenderer = ({
   const { PhrasingContentRenderer } = renderers;
 
   const width = columnWidths[columnIndex];
-  const baseStyle = [styles.tableCell, { fontWeight: rowIndex === 0 ? 'bold' : 'normal' }];
-  const measuredStyle = [
-    styles.tableCell,
+
+  const cellTextStyle = rowIndex === 0 ? styles.th : styles.td;
+
+  const baseTextStyle = [cellTextStyle, rowIndex === 0 ? { fontWeight: 'bold' } : null];
+  const measuredTextStyle: (TextStyle | undefined)[] = [
     { maxWidth: undefined, minWidth: undefined, width: undefined },
-    { opacity: 0, position: 'absolute', zIndex: -1000 },
+    {
+      opacity: 0,
+      position: 'absolute',
+      textAlign: 'left',
+      unicodeBidi: 'isolate',
+      wordWrap: 'break-word',
+      zIndex: -1000,
+    },
+    cellTextStyle,
   ];
 
   const padding = 8;
@@ -160,9 +176,9 @@ export const TableCellRenderer = ({
           width: width,
         }}
       >
-        <Text style={baseStyle as any}>{content}</Text>
+        <Text style={baseTextStyle as any}>{content}</Text>
       </View>
-      <Text numberOfLines={1} onLayout={onTextLayout} style={measuredStyle as any}>
+      <Text numberOfLines={1} onLayout={onTextLayout} style={measuredTextStyle as any}>
         {content}
       </Text>
     </View>
