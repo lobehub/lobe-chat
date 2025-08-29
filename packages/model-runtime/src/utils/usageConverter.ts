@@ -27,6 +27,8 @@ export const convertUsage = (
     provider === 'xai'
       ? totalOutputTokens - outputAudioTokens
       : totalOutputTokens - outputReasoning - outputAudioTokens - outputImageTokens;
+  const totalOutputTokensNormalized =
+    provider === 'xai' ? totalOutputTokens + outputReasoning : totalOutputTokens;
 
   const totalTokens = inputCitationTokens + usage.total_tokens;
 
@@ -43,7 +45,7 @@ export const convertUsage = (
     outputTextTokens: outputTextTokens,
     rejectedPredictionTokens: usage.completion_tokens_details?.rejected_prediction_tokens,
     totalInputTokens,
-    totalOutputTokens: totalOutputTokens,
+    totalOutputTokens: totalOutputTokensNormalized,
     totalTokens,
   } satisfies ModelTokensUsage;
 
