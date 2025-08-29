@@ -23,6 +23,7 @@ import { chunks, embeddings } from './rag';
 import { sessions } from './session';
 import { threads, topics } from './topic';
 import { users } from './user';
+import { chatGroups } from './chatGroup';
 
 // @ts-ignore
 export const messages = pgTable(
@@ -64,7 +65,9 @@ export const messages = pgTable(
 
     // used for group chat
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
-
+    groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
+    // targetId can be an agent ID, "user", or null - no FK constraint
+    targetId: text('target_id'),
     ...timestamps,
   },
   (table) => ({

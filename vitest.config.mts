@@ -13,6 +13,7 @@ export default defineConfig({
       '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
       '@/database': resolve(__dirname, './packages/database/src'),
       '@/utils/client/switchLang': resolve(__dirname, './src/utils/client/switchLang'),
+      '@/const/locale': resolve(__dirname, './src/const/locale'),
       // TODO: after refactor the errorResponse, we can remove it
       '@/utils/errorResponse': resolve(__dirname, './src/utils/errorResponse'),
       '@/utils': resolve(__dirname, './packages/utils/src'),

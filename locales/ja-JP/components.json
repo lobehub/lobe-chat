@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "戻る"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "ダウンロード",
+      "preview": "プレビュー"
+    },
+    "iframeTitle": "HTML プレビュー",
+    "mode": {
+      "code": "コード",
+      "preview": "プレビュー"
+    },
+    "title": "HTML プレビュー"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "画像を変更するにはクリックしてください",

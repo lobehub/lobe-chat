@@ -1,11 +1,11 @@
 // @vitest-environment node
+import * as utils from '@lobechat/utils/server';
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createCallerFactory } from '@/libs/trpc/edge';
 import { AuthContext, createContextInner } from '@/libs/trpc/edge/context';
 import { edgeTrpc as trpc } from '@/libs/trpc/edge/init';
-import * as utils from '@/utils/server/xor';
 
 import { jwtPayloadChecker } from './jwtPayload';
 

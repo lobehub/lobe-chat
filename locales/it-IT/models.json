@@ -1220,6 +1220,9 @@
   "gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Image Preview è il modello multimodale nativo più recente, veloce ed efficiente di Google, che consente di generare e modificare immagini tramite conversazioni."
   },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Gemini 2.5 Flash Image Preview è il modello multimodale nativo più recente, veloce ed efficiente di Google, che consente di generare e modificare immagini tramite conversazioni."
+  },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite è il modello più piccolo e conveniente di Google, progettato per un utilizzo su larga scala."
   },
