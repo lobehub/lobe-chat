@@ -200,4 +200,36 @@ describe('createTokenSpeedCalculator', async () => {
     const results = await processChunk(transformer, chunks);
     expect(results).toHaveLength(chunks.length);
   });
+
+  it('should calculate token speed considering outputImageTokens when totalOutputTokens is missing', async () => {
+    const chunks = [
+      { data: '', id: 'chatcmpl-image-1', type: 'text' },
+      { data: 'hi', id: 'chatcmpl-image-1', type: 'text' },
+      { data: 'stop', id: 'chatcmpl-image-1', type: 'stop' },
+      {
+        data: {
+          inputTextTokens: 9,
+          outputTextTokens: 1,
+          outputImageTokens: 4,
+          totalInputTokens: 9,
+          // totalOutputTokens intentionally omitted to force summation path
+          totalTokens: 13,
+        },
+        id: 'chatcmpl-image-1',
+        type: 'usage',
+      },
+    ];
+
+    const transformer = createTokenSpeedCalculator((v) => v, { inputStartAt });
+    const results = await processChunk(transformer, chunks);
+
+    // should push an extra speed chunk
+    expect(results).toHaveLength(chunks.length + 1);
+    const speedChunk = results.slice(-1)[0];
+    expect(speedChunk.id).toBe('output_speed');
+    expect(speedChunk.type).toBe('speed');
+    // tps and ttft should be numeric (avoid flakiness if interval is 0ms)
+    expect(speedChunk.data.tps).not.toBeNaN();
+    expect(speedChunk.data.ttft).not.toBeNaN();
+  });
 });
