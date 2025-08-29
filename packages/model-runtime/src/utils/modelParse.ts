@@ -118,6 +118,14 @@ export const IMAGE_MODEL_KEYWORDS = [
   '^V_1',
 ] as const;
 
+// 嵌入模型关键词配置
+export const EMBEDDING_MODEL_KEYWORDS = [
+  'embedding',
+  'embed',
+  'bge',
+  'm3e',
+] as const;
+
 /**
  * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
  * @param modelId 模型ID（小写）
@@ -278,7 +286,12 @@ const processModelCard = (
       IMAGE_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
     )
       ? 'image'
-      : 'chat');
+      : isKeywordListMatch(
+        model.id.toLowerCase(),
+        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+      )
+        ? 'embedding'
+        : 'chat');
 
   // image model can't find parameters
   if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {
