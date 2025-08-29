@@ -17,6 +17,11 @@ export interface LobeAgentChatConfig {
   enableMaxTokens?: boolean;
 
   /**
+   * 是否开启流式输出
+   */
+  enableStreaming?: boolean;
+
+  /**
    * 是否开启推理
    */
   enableReasoning?: boolean;
@@ -68,6 +73,7 @@ export const AgentChatConfigSchema = z.object({
   enableMaxTokens: z.boolean().optional(),
   enableReasoning: z.boolean().optional(),
   enableReasoningEffort: z.boolean().optional(),
+  enableStreaming: z.boolean().optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
   searchFCModel: z
