@@ -18,6 +18,7 @@ const mockGoogleAPIKey = 'google-api-key';
 const mockAnthropicAPIKey = 'anthropic-api-key';
 const mockMistralAPIKey = 'mistral-api-key';
 const mockOpenRouterAPIKey = 'openrouter-api-key';
+const mockCometAPIKey = 'cometapi-api-key';
 const mockTogetherAIAPIKey = 'togetherai-api-key';
 
 // mock the traditional zustand
@@ -64,6 +65,13 @@ describe('getProviderAuthPayload', () => {
       apiKey: mockOpenRouterAPIKey,
     });
     expect(payload).toEqual({ apiKey: mockOpenRouterAPIKey });
+  });
+
+  it('should return correct payload for CometAPI provider', () => {
+    const payload = getProviderAuthPayload(ModelProvider.CometAPI, {
+      apiKey: mockCometAPIKey,
+    });
+    expect(payload).toEqual({ apiKey: mockCometAPIKey });
   });
 
   it('should return correct payload for TogetherAI provider', () => {

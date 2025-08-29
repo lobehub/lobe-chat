@@ -1,0 +1,143 @@
+---
+title: 在 LobeChat 中使用 CometAPI
+description: >-
+  学习如何将 CometAPI 的语言模型 API 集成到 LobeChat 中。按照以下步骤注册、创建 API 密钥、配置设置并开始与 CometAPI 模型进行对话。
+
+tags:
+  - CometAPI
+  - AI 模型
+  - API 密钥
+  - LLM
+  - Web UI
+---
+
+# 在 LobeChat 中使用 CometAPI
+
+<Image alt={'在 LobeChat 中使用 CometAPI'} cover src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-integration.png'} />
+
+[CometAPI](https://api.cometapi.com/) 是一个统一的 API 平台，提供对各种前沿语言模型的访问，包括 GPT-3.5/4、Claude、Llama 以及许多其他尖端模型。它提供了一个简单的、OpenAI 兼容的接口，使集成变得无缝。
+
+本文档将指导您如何在 LobeChat 中使用 CometAPI：
+
+<Steps>
+  ### 步骤 1：注册并登录 CometAPI
+
+  - 访问 [CometAPI.com](https://api.cometapi.com/) 并创建账户
+  - 您可以使用电子邮件地址注册
+  - 注册后，验证您的电子邮件以激活账户
+
+  <Image alt={'注册 CometAPI'} height={457} inStep src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-register.png'} />
+
+  ### 步骤 2：创建 API 密钥
+
+  - 转到 [API 控制台](https://api.cometapi.com/console/token) 或导航到 API 密钥部分
+  - 点击 "创建新密钥" 生成新的 API 密钥
+  - 为您的 API 密钥命名，例如 "LobeChat 集成"
+  - 复制生成的 API 密钥并安全存储
+
+  <Image alt={'创建 CometAPI 密钥'} height={460} inStep src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-key.png'} />
+
+  <Callout type={'warning'}>
+    请安全地存储 API 密钥，因为它提供对您的 CometAPI 账户的访问权限。切勿公开分享或提交到版本控制中。
+  </Callout>
+
+  ### 步骤 3：检查账户余额
+
+  - 访问您的[账户仪表板](https://api.cometapi.com/console/account)检查可用余额
+  - CometAPI 通常为新用户提供初始测试余额
+  - 您可以根据使用需求添加更多余额
+  - 不同模型有不同的定价，您可以在模型文档中查看
+
+  <Image alt={'CometAPI 余额'} height={385} inStep src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-credits.png'} />
+
+  ### 步骤 4：在 LobeChat 中配置 CometAPI
+
+  - 打开 LobeChat 中的`设置`界面
+  - 导航到`AI 服务提供商`部分
+  - 从提供商列表中找到并选择`CometAPI`
+  - 启用 CometAPI 并输入您在步骤 2 中获得的 API 密钥
+
+  <Image alt={'在 LobeChat 中配置 CometAPI'} height={518} inStep src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-config.png'} />
+
+  ### 步骤 5：选择并使用 CometAPI 模型
+
+  - 配置 API 密钥后，您可以从可用的 CometAPI 模型中选择
+  - 选择适合您需求的模型（例如，用于一般任务的 GPT-3.5-turbo，用于复杂推理的 GPT-4）
+  - 开始新对话或修改现有助手以使用选定的 CometAPI 模型
+
+  <Image alt={'使用 CometAPI 模型'} height={518} inStep src={'https://github.com/lobehub/lobe-chat/assets/example-cometapi-usage.png'} />
+
+  <Callout type={'info'}>
+    CometAPI 支持流式响应以实现实时对话。集成会自动处理这一点，以获得流畅的聊天体验。
+  </Callout>
+
+  <Callout type={'warning'}>
+    使用费用基于您使用的模型和处理的令牌数量。请参考 CometAPI 的定价文档了解详细信息。
+  </Callout>
+</Steps>
+
+## 可用模型
+
+CometAPI 提供对广泛模型的访问，包括：
+
+- **OpenAI 模型**：GPT-3.5-turbo、GPT-4、GPT-4-turbo
+- **Anthropic 模型**：Claude-3-sonnet、Claude-3-haiku、Claude-3-opus
+- **开源模型**：Llama-2、Mistral、CodeLlama
+- **专用模型**：针对特定任务优化的各种模型
+
+确切的模型可用性可能会有所变化。请检查 CometAPI 仪表板以获取最新的支持模型列表。
+
+## 环境配置
+
+对于自托管的 LobeChat 实例，您可以使用环境变量配置 CometAPI：
+
+```bash
+# CometAPI 配置
+COMETAPI_KEY=your_api_key_here
+COMETAPI_BASE_URL=https://api.cometapi.com/v1  # 可选：自定义端点
+```
+
+## 故障排除
+
+### 常见问题
+
+**身份验证错误 (401)**
+
+- 验证您的 API 密钥是否在设置中正确输入
+- 检查您的 API 密钥是否仍然有效且未过期
+- 确保您的账户有足够余额
+
+**模型不可用 (404)**
+
+- 验证选定的模型 ID 在 CometAPI 中存在
+- 检查模型是否需要特殊权限或订阅
+
+**请求限制 (429)**
+
+- CometAPI 基于您的订阅层级有请求限制
+- 如果经常遇到请求限制，请考虑升级您的计划
+- 如果需要，在请求之间实施适当的延迟
+
+**连接问题**
+
+- 验证您的网络连接
+- 通过状态页面检查 CometAPI 服务是否正常运行
+- 如果特定模型有问题，请尝试切换到其他模型
+
+### 调试模式
+
+对于故障排除，您可以通过设置环境变量启用调试模式：
+
+```bash
+DEBUG_COMETAPI_CHAT_COMPLETION=1
+```
+
+这将提供 API 请求和响应的详细日志记录。
+
+## 支持
+
+- **CometAPI 文档**：[https://api.cometapi.com/doc](https://api.cometapi.com/doc)
+- **CometAPI 支持**：通过其官方支持渠道联系
+- **LobeChat 问题**：在 [LobeChat GitHub 仓库](https://github.com/lobehub/lobe-chat/issues) 上报告集成问题
+
+现在您可以在 LobeChat 中通过 CometAPI 享受与各种前沿语言模型的对话！

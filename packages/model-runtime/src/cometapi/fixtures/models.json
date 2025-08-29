@@ -1,0 +1,34 @@
+[
+  {
+    "id": "gpt-3.5-turbo",
+    "object": "model",
+    "created": 1677610602,
+    "owned_by": "openai",
+    "name": "GPT-3.5 Turbo",
+    "description": "Fast, capable model for everyday tasks with function calling support",
+    "context_length": 4096,
+    "pricing": {
+      "prompt": "0.001",
+      "completion": "0.002"
+    },
+    "top_provider": {
+      "max_completion_tokens": 4096
+    }
+  },
+  {
+    "id": "gpt-4",
+    "object": "model",
+    "created": 1687882411,
+    "owned_by": "openai",
+    "name": "GPT-4",
+    "description": "Advanced reasoning model with tools support",
+    "context_length": 8192,
+    "pricing": {
+      "prompt": "0.03",
+      "completion": "0.06"
+    },
+    "top_provider": {
+      "max_completion_tokens": 4096
+    }
+  }
+]
