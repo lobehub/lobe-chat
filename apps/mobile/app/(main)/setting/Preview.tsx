@@ -1,13 +1,17 @@
 import React, { memo } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { createStyles } from '@/theme/ThemeProvider';
 
 const useStyles = createStyles((token) => ({
   backButton: {
+    alignItems: 'center',
     backgroundColor: token.colorTextSecondary,
-    borderRadius: 2,
-    height: 8,
-    width: 8,
+    borderColor: token.primaryColor,
+    borderRadius: 24,
+    borderWidth: 2,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
   },
 
   // 聊天内容区域
@@ -65,27 +69,25 @@ const useStyles = createStyles((token) => ({
 
   messageBubbleBot: {
     backgroundColor: token.colorBgContainer,
-    borderBottomLeftRadius: 4,
     borderColor: token.colorBorderSecondary,
-    borderRadius: 16,
+    borderRadius: 6,
     borderWidth: 1,
     marginBottom: 2,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 8,
   },
 
   messageBubbleUser: {
-    backgroundColor: token.colorPrimary,
-    borderBottomRightRadius: 4,
-    borderRadius: 16,
+    backgroundColor: token.colorBgContainer,
+    borderRadius: 6,
     marginBottom: 2,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 8,
   },
 
   // 消息样式
   messageContainer: {
-    maxWidth: '80%',
+    maxWidth: '75%',
   },
 
   messageContainerBot: {
@@ -122,6 +124,19 @@ const useStyles = createStyles((token) => ({
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
 
+  messageText: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+
+  messageTextBot: {
+    color: token.colorText,
+  },
+
+  messageTextUser: {
+    color: token.colorText,
+  },
+
   navIcon: {
     backgroundColor: token.colorTextSecondary,
     borderRadius: 2,
@@ -140,7 +155,7 @@ const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     gap: 8,
   },
-  
+
   navTitle: {
     backgroundColor: token.colorTextSecondary,
     borderRadius: 2,
@@ -148,7 +163,7 @@ const useStyles = createStyles((token) => ({
     width: 80,
   },
   // 移动端顶部导航栏
-navbar: {
+  navbar: {
     alignItems: 'center',
     backgroundColor: token.colorBgContainer,
     borderBottomColor: token.colorBorderSecondary,
@@ -165,12 +180,6 @@ navbar: {
     height: 36,
     justifyContent: 'center',
     width: 36,
-  },
-  sendIcon: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 1,
-    height: 8,
-    width: 8,
   },
 }));
 
@@ -197,70 +206,62 @@ const Preview = memo(() => {
       {/* 用户消息 1 */}
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLineShort]} />
+          <Text style={[styles.messageText, styles.messageTextUser]}>主题预览看起来怎么样？</Text>
         </View>
       </View>
 
       {/* AI 回复消息 1 */}
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineShort]} />
+          <Text style={[styles.messageText, styles.messageTextBot]}>
+            这个主题预览展示了当前的主色和中性色配置。你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。
+          </Text>
         </View>
       </View>
 
       {/* 用户消息 2 */}
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLinePartial]} />
+          <Text style={[styles.messageText, styles.messageTextUser]}>能切换到深色模式看看吗？</Text>
         </View>
       </View>
 
       {/* AI 回复消息 2 */}
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineShort]} />
+          <Text style={[styles.messageText, styles.messageTextBot]}>
+            当然可以！你可以关闭&quot;跟随系统&quot;开关，然后选择深色模式。预览界面会立即反映深色主题下的颜色效果，包括背景色、文字颜色和边框颜色的变化。
+          </Text>
         </View>
       </View>
 
       {/* 用户消息 3 */}
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLinePartial]} />
+          <Text style={[styles.messageText, styles.messageTextUser]}>很棒！</Text>
         </View>
       </View>
 
       {/* AI 回复消息 3 */}
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLineFull]} />
+          <Text style={[styles.messageText, styles.messageTextBot]}>
+            很高兴你喜欢！这个预览功能让你可以在应用设置之前直观地看到主题效果。
+          </Text>
         </View>
       </View>
 
       {/* 用户消息 4 */}
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLineFull]} />
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLinePartial]} />
-          <View style={[styles.messageLine, styles.messageLineUser, styles.messageLineShort]} />
+          <Text style={[styles.messageText, styles.messageTextUser]}>字体大小也能调整吗？</Text>
         </View>
       </View>
 
       {/* AI 回复消息 4 - 正在输入 */}
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
-          <View style={[styles.messageLine, styles.messageLineBot, styles.messageLinePartial]} />
+          <Text style={[styles.messageText, styles.messageTextBot]}>当然可以...</Text>
         </View>
       </View>
     </View>
@@ -269,12 +270,8 @@ const Preview = memo(() => {
   // 输入区域
   const inputArea = (
     <View style={styles.inputArea}>
-      <View style={styles.inputBox}>
-        <View style={styles.inputPlaceholder} />
-      </View>
-      <View style={styles.sendButton}>
-        <View style={styles.sendIcon} />
-      </View>
+      <View style={styles.inputBox} />
+      <View style={styles.sendButton} />
     </View>
   );
 
