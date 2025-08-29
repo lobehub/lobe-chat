@@ -176,7 +176,7 @@ export class NextAuthUserService {
       .from(nextauthAuthenticators)
       .where(eq(nextauthAuthenticators.credentialID, credentialID))
       .then((res) => res[0] ?? null);
-    if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator');
+    if (!result) throw new Error('NextAuthUserService: Failed to get authenticator');
     return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
   };
 
@@ -252,7 +252,7 @@ export class NextAuthUserService {
       .where(eq(nextauthAuthenticators.userId, userId))
       .then((res: any) => res);
     if (result.length === 0)
-      throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator list');
+      throw new Error('NextAuthUserService: Failed to get authenticator list');
     return result.map((r: any) => mapAuthenticatorQueryResutlToAdapterAuthenticator(r));
   };
 
@@ -277,7 +277,7 @@ export class NextAuthUserService {
       .where(eq(nextauthAuthenticators.credentialID, credentialID))
       .returning()
       .then((res: any) => res[0]);
-    if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to update authenticator counter');
+    if (!result) throw new Error('NextAuthUserService: Failed to update authenticator counter');
     return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
   };
 
