@@ -6,6 +6,7 @@ import { Renderers } from './renderers/renderers';
 
 export type RemarkStyles = {
   blockquote?: ViewStyle;
+  blockquoteColor: ColorValue;
   borderColor: ColorValue;
   break?: TextStyle;
   container?: ViewStyle;

@@ -37,6 +37,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
       paddingHorizontal: options.fontSize,
     },
+    blockquoteColor: token.colorTextTertiary,
     borderColor: token.colorBorder,
     break: {},
     container: { flex: 1 },
@@ -81,9 +82,9 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     paragraph: {
       color: token.colorText,
-      letterSpacing: 0.2,
+      letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
-      marginBlock: token.marginXXS,
+      marginBlock: 4,
       marginBlockEnd: options.marginMultiple * 0.5 * options.fontSize,
     },
     strong: {
@@ -96,7 +97,6 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       borderRadius: token.borderRadius,
       marginBlock: options.fontSize * options.marginMultiple * 0.5,
     },
-
     td: {
       color: token.colorText,
       minWidth: 120,
@@ -104,7 +104,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       paddingInline: options.fontSize,
     },
     text: {
-      // 从 父节点继承
+      // 从 父节点继承,否则一些样式带不下来
       // color: token.colorText
     },
     th: {
