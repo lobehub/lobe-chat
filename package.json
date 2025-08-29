@@ -272,6 +272,7 @@
     "use-merge-value": "^1.2.0",
     "uuid": "^11.1.0",
     "ws": "^8.18.3",
+    "word-extractor": "^1.0.4",
     "y-protocols": "^1.0.6",
     "y-webrtc": "^10.3.0",
     "yaml": "^2.8.1",
