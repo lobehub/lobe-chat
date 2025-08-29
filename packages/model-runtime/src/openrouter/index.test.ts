@@ -4,10 +4,8 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
 import { testProvider } from '@/libs/model-runtime/providerTestUtils';
 
-import frontendModels from './fixtures/frontendModels.json';
 import models from './fixtures/models.json';
 import { LobeOpenRouterAI } from './index';
-import global from '@/styles/global';
 
 const provider = 'openrouter';
 const defaultBaseURL = 'https://openrouter.ai/api/v1';
@@ -24,7 +22,7 @@ testProvider({
 });
 
 // Mock the console.error to avoid polluting test output
-vi.spyOn(console, 'error').mockImplementation(() => { });
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
 let instance: LobeOpenAICompatibleRuntime;
 
@@ -168,7 +166,7 @@ describe('LobeOpenRouterAI', () => {
       (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
 
       // 在测试环境中，需要先修改 fetch 的实现，确保错误被捕获
-      vi.spyOn(global, 'fetch').mockImplementation(() => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
         throw new Error('Network error');
       });
 
