@@ -24,10 +24,10 @@ vi.mock('@/database/server', () => ({
 vi.mock('@/database/models/message');
 vi.mock('@/database/models/session');
 vi.mock('@/database/models/user');
-vi.mock('@/libs/next-auth/adapter');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
 vi.mock('@/server/modules/S3');
 vi.mock('@/server/services/user');
+vi.mock('@/server/services/nextAuthUser');
 vi.mock('@/const/auth', () => ({
   enableClerk: true,
 }));
@@ -245,19 +245,6 @@ describe('userRouter', () => {
       await expect(
         userRouter.createCaller({ ...mockCtx }).unlinkSSOProvider(mockInput),
       ).rejects.toThrow('The account does not exist');
-    });
-
-    it('should throw error if adapter methods are not implemented', async () => {
-      const mockInput = {
-        provider: 'google',
-        providerAccountId: '123',
-      };
-
-      vi.mocked(NextAuthUserService).mockReturnValue({} as any);
-
-      await expect(
-        userRouter.createCaller({ ...mockCtx }).unlinkSSOProvider(mockInput),
-      ).rejects.toThrow('The method in NextAuthUserService `unlinkAccount` is not implemented');
     });
   });
 
