@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
+import { BadgeCentIcon, ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
@@ -54,6 +54,15 @@ export const useCategory = () => {
         </Link>
       ),
     },
+    {
+      icon: <Icon icon={BadgeCentIcon} />,
+      key: ProfileTabs.Usage,
+      label: (
+        <Link href={'/profile/usage'} onClick={(e) => e.preventDefault()}>
+          {'Usage'}
+        </Link>
+      ),
+    }
   ].filter(Boolean) as MenuProps['items'];
 
   return cateItems;

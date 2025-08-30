@@ -1,6 +1,6 @@
 import type { PartialDeep } from 'type-fest';
 
-import { ModelTokensUsage, ToolFunction } from '@/types/message';
+import { ModelSpeed, ModelTokensUsage, ToolFunction } from '@/types/message';
 
 export interface MessageToolCall {
   /**
@@ -196,6 +196,7 @@ export interface ChatCompletionTool {
 
 interface OnFinishData {
   grounding?: any;
+  speed?: ModelSpeed;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
