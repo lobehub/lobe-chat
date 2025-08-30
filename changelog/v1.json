@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-30",
+    "version": "1.119.2"
+  },
+  {
     "children": {
       "fixes": ["Update enableStreaming name."]
     },
