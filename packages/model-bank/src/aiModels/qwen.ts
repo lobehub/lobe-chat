@@ -19,6 +19,9 @@ const qwenChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
