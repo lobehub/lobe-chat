@@ -1,6 +1,5 @@
-import { ModelTokensUsage } from '@/types/message';
-
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
+import { ModelTokensUsage } from './usage';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
