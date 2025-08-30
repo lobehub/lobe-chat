@@ -1,42 +1,42 @@
+import { ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { lighten } from 'polished';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
+import { useChatInput } from '../../hooks/useChatInput';
 import FileItem from './FileItem';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css }) => ({
   container: css`
     overflow-x: scroll;
-
     width: 100%;
-    border-start-start-radius: 8px;
-    border-start-end-radius: 8px;
-
-    background: ${lighten(0.01, token.colorBgLayout)};
   `,
 }));
 
 const FileList = memo(() => {
+  const { expand } = useChatInput();
   const inputFilesList = useFileStore(fileChatSelectors.chatUploadFileList);
   const showFileList = useFileStore(fileChatSelectors.chatUploadFileListHasItem);
   const { styles } = useStyles();
 
-  if (!inputFilesList.length) return null;
+  if (!inputFilesList.length || !showFileList) return null;
 
   return (
-    <Flexbox
+    <ScrollShadow
       className={styles.container}
-      gap={6}
+      hideScrollBar
       horizontal
-      padding={showFileList ? '16px 16px 12px' : 0}
+      orientation={'horizontal'}
+      size={8}
     >
-      {inputFilesList.map((item) => (
-        <FileItem key={item.id} {...item} />
-      ))}
-    </Flexbox>
+      <Flexbox gap={6} horizontal paddingBlock={8} paddingInline={expand ? 0 : 12}>
+        {inputFilesList.map((item) => (
+          <FileItem key={item.id} {...item} />
+        ))}
+      </Flexbox>
+    </ScrollShadow>
   );
 });
 

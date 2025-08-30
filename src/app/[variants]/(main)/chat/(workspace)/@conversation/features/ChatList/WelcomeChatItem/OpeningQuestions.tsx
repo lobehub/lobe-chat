@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useSend } from '@/features/ChatInput/hooks/useSend';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
@@ -42,7 +42,7 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => 
   const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
 
   const { styles } = useStyles();
-  const { send: sendMessage } = useSendMessage();
+  const { send: sendMessage } = useSend();
 
   return (
     <div className={styles.container}>

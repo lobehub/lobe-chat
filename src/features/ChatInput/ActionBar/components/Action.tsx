@@ -51,6 +51,10 @@ const Action = memo<ActionProps>(
           placement: 'bottom',
         }}
         {...rest}
+        size={{
+          blockSize: 36,
+          size: 20,
+        }}
       />
     );
 

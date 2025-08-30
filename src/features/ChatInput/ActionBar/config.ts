@@ -7,6 +7,7 @@ import STT from './STT';
 import Search from './Search';
 import { MainToken, PortalToken } from './Token';
 import Tools from './Tools';
+import Typo from './Typo';
 import Upload from './Upload';
 
 export const actionMap = {
@@ -22,6 +23,9 @@ export const actionMap = {
   stt: STT,
   temperature: Params,
   tools: Tools,
+  typo: Typo,
 } as const;
 
-export type ActionKeys = keyof typeof actionMap;
+type ActionKey = keyof typeof actionMap;
+
+export type ActionKeys = ActionKey | ActionKey[] | '---';

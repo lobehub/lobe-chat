@@ -3,7 +3,8 @@
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   message: css`
@@ -30,7 +31,13 @@ const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
   const { cx, styles } = useStyles();
 
   return (
-    <Flexbox gap={24} padding={mobile ? 8 : 12} style={{ marginTop: 24 }}>
+    <WideScreenContainer
+      flex={1}
+      gap={24}
+      height={'100%'}
+      padding={mobile ? 8 : 12}
+      style={{ marginTop: 24 }}
+    >
       <Skeleton
         active
         avatar={{ size: mobile ? 32 : 40 }}
@@ -45,7 +52,7 @@ const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
         paragraph={{ width: mobile ? ['80%', '40%'] : ['50%', '30%'] }}
         title={false}
       />
-    </Flexbox>
+    </WideScreenContainer>
   );
 });
 export default SkeletonList;

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
 import { useClearCurrentMessages } from '@/features/ChatInput/ActionBar/Clear';
-import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useSend } from '@/features/ChatInput/hooks/useSend';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
@@ -75,7 +75,7 @@ export const useToggleRightPanelHotkey = () => {
 };
 
 export const useAddUserMessageHotkey = () => {
-  const { send } = useSendMessage();
+  const { send } = useSend();
   return useHotkeyById(HotkeyEnum.AddUserMessage, () => send({ onlyAddUserMessage: true }));
 };
 

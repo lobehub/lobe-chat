@@ -1,55 +1,41 @@
-import { ChatInputActionBar } from '@lobehub/ui/chat';
-import { ReactNode, memo } from 'react';
+import { ChatInputActions, type ChatInputActionsProps } from '@lobehub/editor/react';
+import { memo, useMemo } from 'react';
 
-import { ActionKeys, actionMap } from './config';
+import { ActionKeys, actionMap } from '../ActionBar/config';
+import { useChatInput } from '../hooks/useChatInput';
 
-const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
-  <>
-    {dataSource.map((key) => {
-      const Render = actionMap[key];
-      return <Render key={key} />;
-    })}
-  </>
-);
-
-export interface ActionBarProps {
-  leftActions: ActionKeys[];
-  leftAreaEndRender?: ReactNode;
-  leftAreaStartRender?: ReactNode;
-  padding?: number | string;
-  rightActions: ActionKeys[];
-  rightAreaEndRender?: ReactNode;
-  rightAreaStartRender?: ReactNode;
-}
-
-const ActionBar = memo<ActionBarProps>(
-  ({
-    padding = '0 8px',
-    rightAreaStartRender,
-    rightAreaEndRender,
-    leftAreaStartRender,
-    leftAreaEndRender,
-    leftActions,
-    rightActions,
-  }) => (
-    <ChatInputActionBar
-      leftAddons={
-        <>
-          {leftAreaStartRender}
-          <RenderActionList dataSource={leftActions} />
-          {leftAreaEndRender}
-        </>
+const mapActionsToItems = (keys: ActionKeys[]): ChatInputActionsProps['items'] =>
+  keys.map((item) => {
+    if (typeof item === 'string') {
+      if (item === '---') {
+        return {
+          type: 'divider',
+        };
       }
-      padding={padding}
-      rightAddons={
-        <>
-          {rightAreaStartRender}
-          <RenderActionList dataSource={rightActions} />
-          {rightAreaEndRender}
-        </>
-      }
-    />
-  ),
-);
+      const Render = actionMap[item];
+      return {
+        alwaysDisplay: item === 'mainToken',
+        children: <Render />,
+        key: item,
+      };
+    } else {
+      return {
+        children: item.map((i) => {
+          const Render = actionMap[i];
+          return {
+            children: <Render />,
+            key: i,
+          };
+        }),
+        type: 'collapse',
+      };
+    }
+  });
 
-export default ActionBar;
+const ActionToolbar = memo(() => {
+  const { actions, mobile } = useChatInput();
+  const items = useMemo(() => mapActionsToItems(actions), [actions]);
+  return <ChatInputActions collapseOffset={mobile ? 48 : 80} items={items} />;
+});
+
+export default ActionToolbar;

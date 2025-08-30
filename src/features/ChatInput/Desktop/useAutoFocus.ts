@@ -1,10 +1,10 @@
-import { TextAreaRef } from 'antd/es/input/TextArea';
+import { IEditor } from '@lobehub/editor';
 import { RefObject, useEffect } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-export const useAutoFocus = (inputRef: RefObject<TextAreaRef>) => {
+export const useAutoFocus = (inputRef: RefObject<IEditor | null>) => {
   const chatKey = useChatStore(chatSelectors.currentChatKey);
 
   useEffect(() => {

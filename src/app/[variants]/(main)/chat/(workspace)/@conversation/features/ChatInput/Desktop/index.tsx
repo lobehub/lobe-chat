@@ -2,50 +2,31 @@
 
 import { memo } from 'react';
 
-import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import DesktopChatInput, { FooterRender } from '@/features/ChatInput/Desktop';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
-
-import Footer from './Footer';
-import TextArea from './TextArea';
-
-const leftActions = [
-  'model',
-  'search',
-  'fileUpload',
-  'knowledgeBase',
-  'params',
-  'history',
-  'stt',
-  'tools',
-  'mainToken',
-] as ActionKeys[];
-
-const rightActions = ['clear'] as ActionKeys[];
-
-const renderTextArea = (onSend: () => void) => <TextArea onSend={onSend} />;
-const renderFooter: FooterRender = ({ expand, onExpandChange }) => (
-  <Footer expand={expand} onExpandChange={onExpandChange} />
-);
+import DesktopChatInput from '@/features/ChatInput/Desktop';
+import { ChatInputProvider } from '@/features/ChatInput/hooks/useChatInput';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 
 const Desktop = memo(() => {
-  const [inputHeight, updatePreference] = useGlobalStore((s) => [
-    systemStatusSelectors.inputHeight(s),
-    s.updateSystemStatus,
-  ]);
-
   return (
-    <DesktopChatInput
-      inputHeight={inputHeight}
-      leftActions={leftActions}
-      onInputHeightChange={(height) => {
-        updatePreference({ inputHeight: height });
+    <ChatInputProvider
+      config={{
+        actions: [
+          'model',
+          'search',
+          'typo',
+          'fileUpload',
+          'knowledgeBase',
+          'tools',
+          '---',
+          ['params', 'history', 'stt', 'clear'],
+          'mainToken',
+        ],
       }}
-      renderFooter={renderFooter}
-      renderTextArea={renderTextArea}
-      rightActions={rightActions}
-    />
+    >
+      <WideScreenContainer>
+        <DesktopChatInput />
+      </WideScreenContainer>
+    </ChatInputProvider>
   );
 });
 

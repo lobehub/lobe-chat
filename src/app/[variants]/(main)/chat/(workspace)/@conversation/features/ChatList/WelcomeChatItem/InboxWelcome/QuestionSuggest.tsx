@@ -11,7 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { USAGE_DOCUMENTS } from '@/const/url';
-import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useSend } from '@/features/ChatInput/hooks/useSend';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
@@ -60,7 +60,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-  const { send: sendMessage } = useSendMessage();
+  const { send: sendMessage } = useSend();
 
   return (
     <Flexbox gap={8} width={'100%'}>

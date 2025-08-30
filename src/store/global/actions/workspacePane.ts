@@ -16,6 +16,7 @@ export interface GlobalWorkspacePaneAction {
   toggleMobilePortal: (visible?: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
+  toggleWideScreen: (enable?: boolean) => void;
   toggleZenMode: () => void;
 }
 
@@ -79,6 +80,11 @@ export const globalWorkspaceSlice: StateCreator<
     const showSystemRole = typeof newValue === 'boolean' ? newValue : !get().status.mobileShowTopic;
 
     get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
+  },
+  toggleWideScreen: (newValue) => {
+    const wideScreen = typeof newValue === 'boolean' ? newValue : !get().status.wideScreen;
+
+    get().updateSystemStatus({ wideScreen }, n('toggleWideScreen', newValue));
   },
   toggleZenMode: () => {
     const { status } = get();

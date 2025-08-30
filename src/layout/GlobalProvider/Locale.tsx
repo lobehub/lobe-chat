@@ -1,7 +1,6 @@
 'use client';
 
 import { ConfigProvider } from 'antd';
-import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
@@ -9,6 +8,8 @@ import { isRtlLang } from 'rtl-detect';
 import { createI18nNext } from '@/locales/create';
 import { isOnServerSide } from '@/utils/env';
 import { getAntdLocale } from '@/utils/locale';
+
+import Editor from './Editor';
 
 const updateDayjs = async (lang: string) => {
   // load default lang
@@ -36,7 +37,6 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
   const [i18n] = useState(createI18nNext(defaultLang));
   const [lang, setLang] = useState(defaultLang);
   const [locale, setLocale] = useState(antdLocale);
-  const theme = useTheme();
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
@@ -91,30 +91,10 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
           Button: {
             contentFontSizeSM: 12,
           },
-          DatePicker: {
-            activeBorderColor: theme.colorBorder,
-            hoverBorderColor: theme.colorBorder,
-          },
-          Input: {
-            activeBorderColor: theme.colorBorder,
-            hoverBorderColor: theme.colorBorder,
-          },
-          InputNumber: {
-            activeBorderColor: theme.colorBorder,
-            hoverBorderColor: theme.colorBorder,
-          },
-          Mentions: {
-            activeBorderColor: theme.colorBorder,
-            hoverBorderColor: theme.colorBorder,
-          },
-          Select: {
-            activeBorderColor: theme.colorBorder,
-            hoverBorderColor: theme.colorBorder,
-          },
         },
       }}
     >
-      {children}
+      <Editor>{children}</Editor>
     </ConfigProvider>
   );
 });

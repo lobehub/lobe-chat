@@ -4,63 +4,55 @@ import { Alert } from '@lobehub/ui';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Trans } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
-import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import DesktopChatInput, { FooterRender } from '@/features/ChatInput/Desktop';
+import DesktopChatInput from '@/features/ChatInput/Desktop';
+import { ChatInputProvider } from '@/features/ChatInput/hooks/useChatInput';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-import Footer from './Footer';
-import TextArea from './TextArea';
-
-const leftActions = ['stt', 'portalToken'] as ActionKeys[];
-
-const rightActions = [] as ActionKeys[];
-
-const renderTextArea = (onSend: () => void) => <TextArea onSend={onSend} />;
-const renderFooter: FooterRender = (props) => <Footer {...props} />;
-
 const Desktop = memo(() => {
-  const [inputHeight, hideThreadLimitAlert, updateSystemStatus] = useGlobalStore((s) => [
-    systemStatusSelectors.threadInputHeight(s),
+  const [hideThreadLimitAlert, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.systemStatus(s).hideThreadLimitAlert,
     s.updateSystemStatus,
   ]);
 
+  // TODO: 修复一下话题的发送
+
   return (
-    <>
+    <WideScreenContainer>
       {!hideThreadLimitAlert && (
-        <Alert
-          banner
-          closable
-          message={
-            <Trans i18nKey={'notSupportMultiModals'} ns={'thread'}>
-              子话题暂不支持文件/图片上传，如有需求，欢迎留言：
-              <Link
-                href={'https://github.com/lobehub/lobe-chat/discussions/4717'}
-                style={{ textDecoration: 'underline' }}
-              >
-                💬 讨论
-              </Link>
-            </Trans>
-          }
-          onClose={() => {
-            updateSystemStatus({ hideThreadLimitAlert: true });
-          }}
-          type={'info'}
-        />
+        <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
+          <Alert
+            closable
+            message={
+              <Trans i18nKey={'notSupportMultiModals'} ns={'thread'}>
+                子话题暂不支持文件/图片上传，如有需求，欢迎留言：
+                <Link
+                  href={'https://github.com/lobehub/lobe-chat/discussions/4717'}
+                  style={{ textDecoration: 'underline' }}
+                >
+                  💬 讨论
+                </Link>
+              </Trans>
+            }
+            onClose={() => {
+              updateSystemStatus({ hideThreadLimitAlert: true });
+            }}
+            type={'info'}
+          />
+        </Flexbox>
       )}
-      <DesktopChatInput
-        inputHeight={inputHeight}
-        leftActions={leftActions}
-        onInputHeightChange={(height) => {
-          updateSystemStatus({ threadInputHeight: height });
+
+      <ChatInputProvider
+        config={{
+          actions: ['typo', 'stt', 'portalToken'],
         }}
-        renderFooter={renderFooter}
-        renderTextArea={renderTextArea}
-        rightActions={rightActions}
-      />
-    </>
+      >
+        <DesktopChatInput />
+      </ChatInputProvider>
+    </WideScreenContainer>
   );
 });
 

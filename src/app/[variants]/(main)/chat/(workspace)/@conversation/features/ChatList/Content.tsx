@@ -3,6 +3,7 @@
 import React, { memo, useCallback } from 'react';
 
 import { SkeletonList, VirtualizedList } from '@/features/Conversation';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -27,7 +28,12 @@ const Content = memo<ListProps>(({ mobile }) => {
 
   if (!isCurrentChatLoaded) return <SkeletonList mobile={mobile} />;
 
-  if (data.length === 0) return <Welcome />;
+  if (data.length === 0)
+    return (
+      <WideScreenContainer flex={1} height={'100%'}>
+        <Welcome />
+      </WideScreenContainer>
+    );
 
   return <VirtualizedList dataSource={data} itemContent={itemContent} mobile={mobile} />;
 });
