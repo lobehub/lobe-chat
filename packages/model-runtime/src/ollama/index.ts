@@ -5,7 +5,6 @@ import { ClientOptions } from 'openai';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
@@ -16,6 +15,7 @@ import {
   OpenAIChatMessage,
   PullModelParams,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';

@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { AgentRuntimeErrorType } from '../error';
+import { AgentRuntimeErrorType } from '../types/error';
 
 export const handleOpenAIError = (
   error: any,

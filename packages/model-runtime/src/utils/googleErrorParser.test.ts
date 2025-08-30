@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AgentRuntimeErrorType } from '../error';
+import { AgentRuntimeErrorType } from '../types/error';
 import {
   cleanErrorMessage,
   extractStatusCodeFromError,

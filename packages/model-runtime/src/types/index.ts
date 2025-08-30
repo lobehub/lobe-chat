@@ -1,5 +1,7 @@
 export * from './chat';
 export * from './embeddings';
+export * from './error';
+export * from './image';
 export * from './model';
 export * from './textToImage';
 export * from './toolsCalling';

@@ -9,7 +9,6 @@ import { Stream } from 'openai/streaming';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import {
   ChatCompletionErrorPayload,
   ChatCompletionTool,
@@ -24,6 +23,7 @@ import {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';

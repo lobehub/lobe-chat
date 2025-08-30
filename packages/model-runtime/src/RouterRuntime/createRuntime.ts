@@ -4,17 +4,11 @@
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
-import { CreateImagePayload, CreateImageResponse } from '@/libs/model-runtime/types/image';
-import {
-  CreateImageOptions,
-  CustomClientOptions,
-} from '@/libs/model-runtime/utils/openaiCompatibleFactory';
-import { postProcessModelList } from '@/libs/model-runtime/utils/postProcessModelList';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { LobeOpenAI } from '../openai';
+import { CreateImagePayload, CreateImageResponse, ILobeAgentRuntimeErrorType } from '../types';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
@@ -25,6 +19,8 @@ import {
   TextToImagePayload,
   TextToSpeechPayload,
 } from '../types';
+import { CreateImageOptions, CustomClientOptions } from '../utils/openaiCompatibleFactory';
+import { postProcessModelList } from '../utils/postProcessModelList';
 import { baseRuntimeMap } from './baseRuntimeMap';
 
 export interface RuntimeItem {
