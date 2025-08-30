@@ -1,7 +1,5 @@
-import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
-
-import { ModelParamsSchema } from '../standard-parameters';
+import { CHAT_MODEL_IMAGE_GENERATION_PARAMS, ModelParamsSchema } from '../standard-parameters';
+import { AIChatModelCard, AIImageModelCard } from '../types';
 
 const googleChatModels: AIChatModelCard[] = [
   {

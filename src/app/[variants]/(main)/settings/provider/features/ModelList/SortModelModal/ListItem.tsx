@@ -3,7 +3,7 @@ import { SortableList } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 
 const ListItem = memo<AiProviderModelListItem>(({ id, displayName }) => {
   return (

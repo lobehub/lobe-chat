@@ -4,7 +4,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import {
   MODEL_LIST_CONFIGS,
-  PROVIDER_DETECTION_CONFIG,
+  MODEL_OWNER_DETECTION_CONFIG,
   detectModelProvider,
   processModelList,
   processMultiProviderModelList,
@@ -754,7 +754,7 @@ describe('modelParse', () => {
   describe('MODEL_LIST_CONFIGS and PROVIDER_DETECTION_CONFIG', () => {
     it('should have matching keys in both configuration objects', () => {
       const modelConfigKeys = Object.keys(MODEL_LIST_CONFIGS);
-      const providerDetectionKeys = Object.keys(PROVIDER_DETECTION_CONFIG);
+      const providerDetectionKeys = Object.keys(MODEL_OWNER_DETECTION_CONFIG);
       expect(modelConfigKeys.sort()).toEqual(providerDetectionKeys.sort());
     });
   });

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { AiModelType } from '@/types/aiModel';
+import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 
 interface ModelConfigFormProps {

@@ -1,9 +1,8 @@
 // @vitest-environment node
 import { fal } from '@fal-ai/client';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CreateImagePayload } from '@/libs/model-runtime/types/image';
-
+import { CreateImagePayload } from '../types';
 import { LobeFalAI } from './index';
 
 // Mock the fal client

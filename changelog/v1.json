@@ -1,6 +1,33 @@
 [
   {
     "children": {
+      "improvements": ["Remove webrtc sync feature flag."],
+      "features": ["Rename Gemini 2.5 flash image to Nano Banana."]
+    },
+    "date": "2025-08-30",
+    "version": "1.120.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-30",
+    "version": "1.119.2"
+  },
+  {
+    "children": {
+      "fixes": ["Update enableStreaming name."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.1"
+  },
+  {
+    "children": {
+      "features": ["Added support for Azure OpenAI Image Generation."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.0"
+  },
+  {
+    "children": {
       "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
     },
     "date": "2025-08-30",

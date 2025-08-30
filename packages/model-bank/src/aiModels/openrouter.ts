@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 // https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [
@@ -37,7 +37,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 8192,
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
-    displayName: 'Gemini 2.5 Flash Image Preview',
+    displayName: 'Nano Banana',
     id: 'google/gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
@@ -57,7 +57,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 8192,
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
-    displayName: 'Gemini 2.5 Flash Image Preview (free)',
+    displayName: 'Nano Banana (free)',
     id: 'google/gemini-2.5-flash-image-preview:free',
     maxOutput: 8192,
     releasedAt: '2025-08-26',

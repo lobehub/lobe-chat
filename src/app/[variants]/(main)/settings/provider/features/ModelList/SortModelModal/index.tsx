@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra';
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 
 import ListItem from './ListItem';
 

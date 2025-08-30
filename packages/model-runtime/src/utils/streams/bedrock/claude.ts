@@ -1,7 +1,7 @@
 import { InvokeModelWithResponseStreamResponse } from '@aws-sdk/client-bedrock-runtime';
-import { nanoid } from '@lobechat/utils';
 
 import { ChatStreamCallbacks } from '../../../types';
+import { nanoid } from '../../uuid';
 import { transformAnthropicStream } from '../anthropic';
 import {
   StreamContext,

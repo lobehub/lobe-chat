@@ -37,7 +37,7 @@ const AgentModal = memo(() => {
         label: t('settingChat.enableStreaming.title'),
         layout: 'horizontal',
         minWidth: undefined,
-        name: 'enableStreaming',
+        name: ['chatConfig', 'enableStreaming'],
         valuePropName: 'checked',
       },
       {

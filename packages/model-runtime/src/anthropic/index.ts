@@ -1,13 +1,13 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';

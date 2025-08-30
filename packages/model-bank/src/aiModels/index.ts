@@ -1,4 +1,4 @@
-import { AiFullModelCard, LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { AiFullModelCard, LobeDefaultAiModelListItem } from '../types/aiModel';
 
 import { default as ai21 } from './ai21';
 import { default as ai302 } from './ai302';
