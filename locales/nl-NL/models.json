@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "Ons nieuwste en krachtigste vlaggenschipmodel, uitmuntend in natuurlijke taalverwerking, wiskundige berekeningen en redeneren — een perfecte allrounder."
   },
+  "grok-code-fast-1": {
+    "description": "We zijn verheugd om grok-code-fast-1 te introduceren, een snel en kostenefficiënt inferentiemodel dat uitblinkt in agentcodering."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
   },

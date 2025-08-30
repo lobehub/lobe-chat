@@ -1,6 +1,5 @@
+import { ModelParamsSchema } from 'model-bank';
 import { z } from 'zod';
-
-import { ModelParamsSchema } from '@/libs/standard-parameters';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
@@ -52,6 +51,7 @@ const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
   reasoning: z.boolean().optional(),
+  search: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 

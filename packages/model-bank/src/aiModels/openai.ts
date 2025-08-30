@@ -1,4 +1,4 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
+import { ModelParamsSchema } from '../standard-parameters';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,

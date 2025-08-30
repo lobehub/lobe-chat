@@ -237,6 +237,10 @@
       "title": "Limite du nombre de messages historiques",
       "unlimited": "Aucune limite sur le nombre de messages historiques"
     },
+    "enableStreaming": {
+      "desc": "Activez la diffusion en continu pour afficher les réponses en temps réel. Si désactivé, seule la réponse complète sera affichée.",
+      "title": "Activer la diffusion en continu"
+    },
     "historyCount": {
       "desc": "Nombre de messages historiques à inclure dans chaque requête",
       "title": "Nombre de messages historiques inclus"

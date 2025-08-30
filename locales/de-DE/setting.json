@@ -237,6 +237,10 @@
       "title": "Historiennachrichten begrenzen",
       "unlimited": "Unbegrenzte Historiennachrichten"
     },
+    "enableStreaming": {
+      "desc": "Aktivieren Sie den Streaming-Ausgang, um Antworten in Echtzeit anzuzeigen. Wenn deaktiviert, wird nur die vollständige Antwort angezeigt.",
+      "title": "Streaming-Ausgabe aktivieren"
+    },
     "historyCount": {
       "desc": "Anzahl der Nachrichten pro Anfrage (einschließlich der neuesten Fragen und Antworten. Jede Frage und Antwort zählt als 1)",
       "title": "Anzahl der mitgelieferten Nachrichten"

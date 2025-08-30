@@ -1,4 +1,4 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
+import { ModelParamsSchema } from '../standard-parameters';
 import { AIImageModelCard } from '@/types/aiModel';
 
 export const fluxSchnellParamsSchema: ModelParamsSchema = {

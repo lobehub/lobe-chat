@@ -55,7 +55,7 @@ export const LobeHuggingFaceAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_HUGGINGFACE_CHAT_COMPLETION === '1',
   },
   models: async () => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const visionKeywords = ['image-text-to-text', 'multimodal', 'vision'];
 

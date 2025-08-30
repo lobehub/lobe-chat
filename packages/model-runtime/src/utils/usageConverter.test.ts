@@ -271,7 +271,7 @@ describe('convertUsage', () => {
     // Assert
     expect(xaiResult).toMatchObject({
       totalInputTokens: 6103,
-      totalOutputTokens: 66,
+      totalOutputTokens: 447, // 66 + 381，xai的reasoning_tokens和completion_tokens价格一样
       outputTextTokens: 66, // 不减去 reasoning_tokens
       outputReasoningTokens: 381,
       totalTokens: 6550,

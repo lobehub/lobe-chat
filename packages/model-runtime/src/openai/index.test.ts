@@ -2,9 +2,6 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// 引入模块以便于对函数进行spy
-import { ChatStreamCallbacks } from '@/libs/model-runtime';
-
 import * as debugStreamModule from '../utils/debugStream';
 import officalOpenAIModels from './fixtures/openai-models.json';
 import { LobeOpenAI } from './index';

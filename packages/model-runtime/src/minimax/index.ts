@@ -1,4 +1,4 @@
-import minimaxChatModels from '@/config/aiModels/minimax';
+import { minimax as minimaxChatModels } from 'model-bank';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';

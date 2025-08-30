@@ -141,7 +141,7 @@ export const transformToAiModelList = async ({
   }
 
   // 异步获取配置
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   return produce(chatModels, (draft) => {
     // 处理添加或替换逻辑

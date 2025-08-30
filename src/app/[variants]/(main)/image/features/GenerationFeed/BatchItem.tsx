@@ -9,12 +9,12 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { omit } from 'lodash-es';
 import { CopyIcon, RotateCcwSquareIcon, Trash2 } from 'lucide-react';
+import { RuntimeImageGenParams } from 'model-bank';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import InvalidAPIKey from '@/components/InvalidAPIKey';
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';

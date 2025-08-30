@@ -1,6 +1,6 @@
+import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import urlJoin from 'url-join';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { responsesAPIModels } from '@/const/models';
 
 import { createRouterRuntime } from '../RouterRuntime';

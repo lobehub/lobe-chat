@@ -1,4 +1,4 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
+import { ModelParamsSchema } from 'model-bank';
 
 /**
  * 默认宽高比，当模型不支持原生宽高比时使用

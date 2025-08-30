@@ -36,7 +36,7 @@ export const LobeStepfunAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_STEPFUN_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     // ref: https://platform.stepfun.com/docs/llm/modeloverview
     const functionCallKeywords = ['step-1-', 'step-1o-', 'step-1v-', 'step-2-'];
