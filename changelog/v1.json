@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Added support for Azure OpenAI Image Generation."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.0"
+  },
+  {
+    "children": {
       "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
     },
     "date": "2025-08-30",
