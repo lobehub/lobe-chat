@@ -9,12 +9,12 @@ import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { pino } from '@/libs/logger';
-import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
+import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
 import {
   NextAuthAccountSchame,
@@ -29,7 +29,7 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
     ctx: {
       clerkAuth: new ClerkAuth(),
       fileService: new FileService(ctx.serverDB, ctx.userId),
-      nextAuthDbAdapter: LobeNextAuthDbAdapter(ctx.serverDB),
+      nextAuthUserService: new NextAuthUserService(ctx.serverDB),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -134,19 +134,10 @@ export const userRouter = router({
 
   unlinkSSOProvider: userProcedure.input(NextAuthAccountSchame).mutation(async ({ ctx, input }) => {
     const { provider, providerAccountId } = input;
-    if (
-      ctx.nextAuthDbAdapter?.unlinkAccount &&
-      typeof ctx.nextAuthDbAdapter.unlinkAccount === 'function' &&
-      ctx.nextAuthDbAdapter?.getAccount &&
-      typeof ctx.nextAuthDbAdapter.getAccount === 'function'
-    ) {
-      const account = await ctx.nextAuthDbAdapter.getAccount(providerAccountId, provider);
-      // The userId can either get from ctx.nextAuth?.id or ctx.userId
-      if (!account || account.userId !== ctx.userId) throw new Error('The account does not exist');
-      await ctx.nextAuthDbAdapter.unlinkAccount({ provider, providerAccountId });
-    } else {
-      throw new Error('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented');
-    }
+    const account = await ctx.nextAuthUserService.getAccount(providerAccountId, provider);
+    // The userId can either get from ctx.nextAuth?.id or ctx.userId
+    if (!account || account.userId !== ctx.userId) throw new Error('The account does not exist');
+    await ctx.nextAuthUserService.unlinkAccount({ provider, providerAccountId });
   }),
 
   // 服务端上传头像
