@@ -278,6 +278,7 @@ export default {
       actionFiletip: '上传文件',
       actionTooltip: '上传',
       disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+      fileNotSupported: '浏览器模式下暂不支持上传文件，仅支持图片',
     },
     preview: {
       prepareTasks: '准备分块...',
@@ -285,6 +286,9 @@ export default {
         pending: '准备上传...',
         processing: '文件处理中...',
       },
+    },
+    validation: {
+      videoSizeExceeded: '视频文件大小不能超过 20MB，当前文件大小为 {{actualSize}}',
     },
   },
   zenMode: '专注模式',

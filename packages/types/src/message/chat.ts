@@ -10,6 +10,7 @@ import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
 import { ChatImageItem } from './image';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
+import { ChatVideoItem } from './video';
 
 /**
  * 聊天消息错误对象
@@ -77,13 +78,11 @@ export interface ChatMessage {
   id: string;
   imageList?: ChatImageItem[];
   meta: MetaData;
-
   metadata?: MessageMetadata | null;
   /**
    * observation id
    */
   observationId?: string;
-
   /**
    * parent message id
    */
@@ -97,14 +96,12 @@ export interface ChatMessage {
   quotaId?: string;
   ragQuery?: string | null;
   ragQueryId?: string | null;
-
   ragRawQuery?: string | null;
   reasoning?: ModelReasoning | null;
   /**
    * message role type
    */
   role: MessageRoleType;
-
   search?: GroundingSearch | null;
   sessionId?: string;
   threadId?: string | null;
@@ -119,6 +116,7 @@ export interface ChatMessage {
    */
   traceId?: string;
   updatedAt: number;
+  videoList?: ChatVideoItem[];
 }
 
 export interface CreateMessageParams

@@ -273,7 +273,11 @@
     "clientMode": {
       "actionFiletip": "Upload File",
       "actionTooltip": "Upload",
-      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature.",
+      "fileNotSupported": "Browser mode does not support file uploads currently, only images are supported"
+    },
+    "validation": {
+      "videoSizeExceeded": "Video file size cannot exceed 20MB, current file size is {{actualSize}}"
     },
     "preview": {
       "prepareTasks": "Preparing chunks...",

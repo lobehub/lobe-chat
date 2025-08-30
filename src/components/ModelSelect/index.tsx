@@ -1,3 +1,4 @@
+import { ChatModelCard, ModelAbilities } from '@lobechat/types';
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Avatar, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
@@ -9,15 +10,14 @@ import {
   LucideImage,
   LucidePaperclip,
   ToyBrick,
+  Video,
 } from 'lucide-react';
 import numeral from 'numeral';
 import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ModelAbilities } from '@/types/aiModel';
 import { AiProviderSourceType } from '@/types/aiProvider';
-import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
 export const TAG_CLASSNAME = 'lobe-model-info-tags';
@@ -96,6 +96,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           >
             <Tag className={styles.tag} color={'success'} size={'small'}>
               <Icon icon={LucideEye} />
+            </Tag>
+          </Tooltip>
+        )}
+        {model.video && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.video')}
+          >
+            <Tag className={styles.tag} color={'magenta'} size={'small'}>
+              <Icon icon={Video} />
             </Tag>
           </Tooltip>
         )}

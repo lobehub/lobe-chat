@@ -60,7 +60,8 @@ export const useSendMessage = () => {
 
     // 直接使用现有数据结构判断消息类型
     const hasImages = fileList.some((file) => file.file?.type?.startsWith('image'));
-    const messageType = fileList.length === 0 ? 'text' : hasImages ? 'image' : 'file';
+    const hasVideos = fileList.some((file) => file.file?.type?.startsWith('video'));
+    const messageType = fileList.length === 0 ? 'text' : hasImages || hasVideos ? 'image' : 'file';
 
     analytics?.track({
       name: 'send_message',

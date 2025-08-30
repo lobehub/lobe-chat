@@ -1,4 +1,5 @@
 export * from './agent';
+export * from './aiModel';
 export * from './artifact';
 export * from './chunk';
 export * from './clientDB';
