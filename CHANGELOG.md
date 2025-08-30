@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.119.2](https://github.com/lobehub/lobe-chat/compare/v1.119.1...v1.119.2)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **model-runtime**: Refactor model-runtime dependencies and clean code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **model-runtime**: Refactor model-runtime dependencies and clean code, closes [#8997](https://github.com/lobehub/lobe-chat/issues/8997) ([9f7677d](https://github.com/lobehub/lobe-chat/commit/9f7677d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.119.1](https://github.com/lobehub/lobe-chat/compare/v1.119.0...v1.119.1)
 
 <sup>Released on **2025-08-30**</sup>
