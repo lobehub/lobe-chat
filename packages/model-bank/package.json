@@ -59,6 +59,7 @@
     "./togetherai": "./src/aiModels/togetherai.ts",
     "./upstage": "./src/aiModels/upstage.ts",
     "./v0": "./src/aiModels/v0.ts",
+    "./vercelaigateway": "./src/aiModels/vercelaigateway.ts",
     "./vertexai": "./src/aiModels/vertexai.ts",
     "./vllm": "./src/aiModels/vllm.ts",
     "./volcengine": "./src/aiModels/volcengine.ts",
