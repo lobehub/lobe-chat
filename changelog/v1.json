@@ -1,71 +1,120 @@
 [
   {
     "children": {
-      "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
+      "improvements": [
+        "Add Grok Code Fast 1 model, fix chat session part switch theme issue, fix clerk scrollBox style, ModelFetcher support getting prices, support non-stream mode, update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, update i18n."
+      ],
+      "fixes": [
+        "Correct totalOutputTokens calculation for XAI provider."
+      ]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.1"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support Gemini URL context tool, support html preview, update i18n."
+      ],
+      "features": [
+        "Add new provider AkashChat, ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter."
+      ],
+      "fixes": [
+        "Add Content-Security-Policy env."
+      ]
+    },
+    "date": "2025-08-29",
+    "version": "1.119.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."
+      ]
     },
     "date": "2025-08-30",
     "version": "1.118.8"
   },
   {
     "children": {
-      "improvements": ["Update i18n."]
+      "improvements": [
+        "Update i18n."
+      ]
     },
     "date": "2025-08-30",
     "version": "1.118.7"
   },
   {
     "children": {
-      "improvements": ["Support non-stream mode."]
+      "improvements": [
+        "Support non-stream mode."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.6"
   },
   {
     "children": {
-      "improvements": ["Fix clerk scrollBox style, ModelFetcher support getting prices."]
+      "improvements": [
+        "Fix clerk scrollBox style, ModelFetcher support getting prices."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.5"
   },
   {
     "children": {
-      "improvements": ["Fix chat session part switch theme issue."]
+      "improvements": [
+        "Fix chat session part switch theme issue."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.4"
   },
   {
     "children": {
-      "fixes": ["Correct totalOutputTokens calculation for XAI provider."]
+      "fixes": [
+        "Correct totalOutputTokens calculation for XAI provider."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.3"
   },
   {
     "children": {
-      "improvements": ["Add Grok Code Fast 1 model."]
+      "improvements": [
+        "Add Grok Code Fast 1 model."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.2"
   },
   {
     "children": {
-      "fixes": ["Add Content-Security-Policy env."],
-      "improvements": ["Support Gemini URL context tool."]
+      "fixes": [
+        "Add Content-Security-Policy env."
+      ],
+      "improvements": [
+        "Support Gemini URL context tool."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.1"
   },
   {
     "children": {
-      "features": ["Add new provider AkashChat."]
+      "features": [
+        "Add new provider AkashChat."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.118.0"
   },
   {
     "children": {
-      "improvements": ["Move chat item into chat."]
+      "improvements": [
+        "Move chat item into chat."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.117.1"
@@ -75,21 +124,27 @@
       "features": [
         "Ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter."
       ],
-      "improvements": ["Update i18n."]
+      "improvements": [
+        "Update i18n."
+      ]
     },
     "date": "2025-08-29",
     "version": "1.117.0"
   },
   {
     "children": {
-      "improvements": ["Support html preview."]
+      "improvements": [
+        "Support html preview."
+      ]
     },
     "date": "2025-08-28",
     "version": "1.116.4"
   },
   {
     "children": {
-      "fixes": ["Fix desktop route error."]
+      "fixes": [
+        "Fix desktop route error."
+      ]
     },
     "date": "2025-08-28",
     "version": "1.116.3"
