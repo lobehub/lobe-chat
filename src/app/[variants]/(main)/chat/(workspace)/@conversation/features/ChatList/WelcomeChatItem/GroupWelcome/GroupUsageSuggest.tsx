@@ -8,7 +8,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useSendGroupMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
@@ -85,7 +85,7 @@ const GroupUsageSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
   const { styles } = useStyles();
-  const { send: sendMessage } = useSendMessage();
+  const { send: sendMessage } = useSendGroupMessage();
 
   const itemsPerPage = mobile ? 2 : 4;
 

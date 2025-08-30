@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type FormGroupItemType, SliderWithInput } from '@lobehub/ui';
-import { Input, Select, Switch } from 'antd';
+import { Form, type FormGroupItemType, Select, SliderWithInput } from '@lobehub/ui';
+import { Input, Switch } from 'antd';
 import { isEqual } from 'lodash';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +69,10 @@ const ChatGroupSettings = memo(() => {
         children: (
           <Select
             options={[
-              { label: t('settingGroupChat.responseOrder.options.sequential'), value: 'sequential' },
+              {
+                label: t('settingGroupChat.responseOrder.options.sequential'),
+                value: 'sequential',
+              },
               { label: t('settingGroupChat.responseOrder.options.natural'), value: 'natural' },
             ]}
             placeholder={t('settingGroupChat.responseOrder.placeholder')}

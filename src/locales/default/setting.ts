@@ -323,7 +323,7 @@ export default {
       title: '连续回复消息数',
     },
     model: {
-      desc: '选择用于群聊对话的模型',
+      desc: '选择用于主持群聊对话的模型。群成员发言不受影响。',
       title: '主持人模型',
     },
     orchestratorTitle: '主持人设置',
