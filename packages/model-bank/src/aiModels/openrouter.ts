@@ -13,6 +13,25 @@ const openrouterChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.1是一款支持128K长上下文和高效模式切换的大型混合推理模型，它在工具调用、代码生成和复杂推理任务上实现了卓越的性能与速度。',
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek/deepseek-chat-v3.1',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-21',
+    type: 'chat',
+  },
+  {
+    abilities: {
       imageOutput: true,
       vision: true,
     },
@@ -42,6 +61,25 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash-image-preview:free',
     maxOutput: 8192,
     releasedAt: '2025-08-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.1是一款支持128K长上下文和高效模式切换的大型混合推理模型，它在工具调用、代码生成和复杂推理任务上实现了卓越的性能与速度。',
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek/deepseek-chat-v3.1',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-21',
     type: 'chat',
   },
   {

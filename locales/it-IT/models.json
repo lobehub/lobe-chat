@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "Il nostro modello di punta più recente e potente, eccellente nell'elaborazione del linguaggio naturale, nel calcolo matematico e nel ragionamento — un vero campione versatile e completo."
   },
+  "grok-code-fast-1": {
+    "description": "Siamo lieti di presentare grok-code-fast-1, un modello di inferenza rapido ed economico, eccellente nella codifica degli agenti."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B è un modello linguistico che combina creatività e intelligenza, unendo diversi modelli di punta."
   },
