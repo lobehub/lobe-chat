@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
+    },
+    "date": "2025-08-30",
+    "version": "1.118.8"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-08-30",
