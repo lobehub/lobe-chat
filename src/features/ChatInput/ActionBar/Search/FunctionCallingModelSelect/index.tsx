@@ -37,7 +37,14 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, ...rest }) => {
       provider.children
         .filter((model) => !!model.abilities.functionCall)
         .map((model) => ({
-          label: <ModelItemRender {...model} {...model.abilities} showInfoTag={false} />,
+          label: (
+            <ModelItemRender
+              {...model}
+              {...model.abilities}
+              provider={provider.name}
+              showInfoTag={false}
+            />
+          ),
           provider: provider.id,
           value: `${provider.id}/${model.id}`,
         }));
