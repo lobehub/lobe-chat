@@ -154,6 +154,17 @@ export const messageRouter = router({
       return ctx.messageModel.deleteMessagesBySession(input.sessionId, input.topicId, input.groupId);
     }),
 
+  removeMessagesByGroup: messageProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);
+    }),
+
   searchMessages: messageProcedure
     .input(z.object({ keywords: z.string() }))
     .query(async ({ input, ctx }) => {

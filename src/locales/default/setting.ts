@@ -337,7 +337,7 @@ export default {
       title: '回复顺序',
     },
     responseSpeed: {
-      desc: '选择代理在群聊对话中的回复速度',
+      desc: '控制群聊的整体进行速度',
       options: {
         fast: '快速',
         medium: '中等',

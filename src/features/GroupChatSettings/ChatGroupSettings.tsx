@@ -69,10 +69,10 @@ const ChatGroupSettings = memo(() => {
         children: (
           <Select
             options={[
-              { label: 'Sequential', value: 'sequential' },
-              { label: 'Natural', value: 'natural' },
+              { label: t('settingGroupChat.responseOrder.options.sequential'), value: 'sequential' },
+              { label: t('settingGroupChat.responseOrder.options.natural'), value: 'natural' },
             ]}
-            placeholder="Select response order"
+            placeholder={t('settingGroupChat.responseOrder.placeholder')}
           />
         ),
         desc: t('settingGroupChat.responseOrder.desc'),
@@ -103,7 +103,7 @@ const ChatGroupSettings = memo(() => {
         <Form.SubmitFooter
           texts={{
             reset: t('submitFooter.reset'),
-            submit: 'Update Settings',
+            submit: t('submitFooter.submit'),
             unSaved: t('submitFooter.unSaved'),
             unSavedWarning: t('submitFooter.unSavedWarning'),
           }}

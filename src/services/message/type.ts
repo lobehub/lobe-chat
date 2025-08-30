@@ -44,6 +44,7 @@ export interface IMessageService {
   removeMessage(id: string): Promise<any>;
   removeMessages(ids: string[]): Promise<any>;
   removeMessagesByAssistant(assistantId: string, topicId?: string): Promise<any>;
+  removeMessagesByGroup(groupId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
   messageCountToCheckTrace(): Promise<boolean>;
   hasMessages(): Promise<boolean>;

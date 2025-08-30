@@ -140,6 +140,13 @@ export class ClientService extends BaseClientService implements IMessageService 
     return this.messageModel.deleteMessagesBySession(this.toDbSessionId(sessionId), topicId);
   };
 
+  removeMessagesByGroup: IMessageService['removeMessagesByGroup'] = async (
+    groupId,
+    topicId,
+  ) => {
+    return this.messageModel.deleteMessagesBySession(null, topicId, groupId);
+  };
+
   removeAllMessages: IMessageService['removeAllMessages'] = async () => {
     return this.messageModel.deleteAllMessages();
   };

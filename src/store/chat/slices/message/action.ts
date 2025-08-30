@@ -14,6 +14,8 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   ChatMessage,
@@ -204,9 +206,25 @@ export const chatMessage: StateCreator<
   },
 
   clearMessage: async () => {
-    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
+    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic, activeSessionType } = get();
 
-    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
+    // Check if this is a group session - use activeSessionType if available, otherwise check session store
+    let isGroupSession = activeSessionType === 'group';
+    if (activeSessionType === undefined) {
+      // Fallback: check session store directly
+      const sessionStore = useSessionStore.getState();
+      isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
+    }
+
+    // For group sessions, we need to clear group messages using groupId
+    // For regular sessions, we clear session messages using sessionId
+    if (isGroupSession) {
+      // For group chat, activeId is the groupId
+      await messageService.removeMessagesByGroup(activeId, activeTopicId);
+    } else {
+      // For regular session, activeId is the sessionId
+      await messageService.removeMessagesByAssistant(activeId, activeTopicId);
+    }
 
     if (activeTopicId) {
       await topicService.removeTopic(activeTopicId);
