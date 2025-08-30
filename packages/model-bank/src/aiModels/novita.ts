@@ -4,6 +4,130 @@ import { AIChatModelCard } from '@/types/aiModel';
 const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek/deepseek-v3.1',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.66, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3 Coder 480B A35B Instruct',
+    id: 'qwen/qwen3-coder-480b-a35b-instruct',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'OpenAI GPT OSS 120B',
+    id: 'openai/gpt-oss-120b',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'OpenAI: GPT OSS 20B',
+    id: 'openai/gpt-oss-20b',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'GLM-4.5',
+    id: 'zai-org/glm-4.5',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3 235B A22B Instruct 2507',
+    id: 'qwen/qwen3-235b-a22b-instruct-2507',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 235B A22b Thinking 2507',
+    id: 'qwen/qwen3-235b-a22b-thinking-2507',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'BaiChuan M2 32B',
+    id: 'baichuan/baichuan-m2-32b',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -34,6 +158,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 120_000,
     displayName: 'ERNIE 4.5 0.3B',
     id: 'baidu/ernie-4.5-0.3b',
@@ -46,13 +173,16 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 120_000,
     displayName: 'ERNIE 4.5 21B A3B',
     id: 'baidu/ernie-4.5-21B-a3b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -74,6 +204,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -82,8 +213,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'baidu/ernie-4.5-vl-28b-a3b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.14, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -211,6 +342,7 @@ const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout 17B Instruct',
@@ -227,6 +359,7 @@ const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
     },
     contextWindowTokens: 1_048_576,
     displayName: 'Llama 4 Maverick 17B Instruct',
@@ -234,7 +367,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.17, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.85, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -286,7 +419,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'google/gemma-3-27b-it',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.119, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -562,6 +695,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 8192,
     displayName: 'L3 70B Euryale v2.1',
     id: 'sao10k/l3-70b-euryale-v2.1',
@@ -653,6 +789,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 8192,
     displayName: 'L31 70B Euryale v2.2',
     id: 'sao10k/l31-70b-euryale-v2.2',
@@ -673,8 +812,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen2.5-7b-instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -688,8 +827,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'thudm/glm-4-32b-0414',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.66, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

@@ -167,9 +167,13 @@ const transformGoogleGenerativeAIStream = (
         if (candidate.finishReason) {
           const chunks: StreamProtocolChunk[] = [imageChunk];
           if (chunk.usageMetadata) {
+            // usageChunks already includes the 'stop' chunk as its first entry when usage exists,
+            // so append usageChunks to avoid sending a duplicate 'stop'.
             chunks.push(...usageChunks);
+          } else {
+            // No usage metadata, we need to send the stop chunk explicitly.
+            chunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
           }
-          chunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
           return chunks;
         }
 
