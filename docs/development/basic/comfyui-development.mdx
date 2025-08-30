@@ -1,0 +1,1336 @@
+---
+title: ComfyUI Extension Development Guide
+description: Learn how to add new models, workflows, and features to LobeChat's ComfyUI integration
+tags:
+  - ComfyUI
+  - Development Guide
+  - Model Extension
+  - Workflow Development
+---
+
+# ComfyUI Extension Development Guide
+
+This guide helps developers extend LobeChat's ComfyUI integration, including adding new models, creating workflows, and developing LoRA and ControlNet support.
+
+## Architecture Overview
+
+LobeChat's ComfyUI integration uses a configuration-driven modular architecture:
+
+```
+packages/model-runtime/src/comfyui/
+├── config/                    # Configuration registries
+│   ├── modelRegistry.ts       # 127 model configurations
+│   ├── systemComponents.ts    # 6 system components
+│   ├── loraRegistry.ts        # 23 LoRA adapters
+│   └── controlnetRegistry.ts  # 3 ControlNet models
+├── workflows/                 # Workflow templates
+│   ├── flux-dev.ts           # FLUX Dev workflow
+│   ├── flux-schnell.ts       # FLUX Schnell workflow
+│   ├── flux-kontext.ts       # FLUX Kontext workflow
+│   ├── flux-krea.ts          # FLUX Krea workflow
+│   └── sd35.ts               # SD3.5 workflow
+└── utils/                     # Utilities
+    ├── modelResolverError.ts       # Model resolver
+    ├── workflowRouter.ts      # Workflow router
+    ├── workflowDetector.ts    # Workflow detector
+    └── promptSplitter.ts      # Prompt splitter
+```
+
+## TypeScript Interface Definitions
+
+### Core Interfaces
+
+```typescript
+/**
+ * Model configuration interface for registry entries
+ */
+export interface ModelConfig {
+  modelFamily: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
+  priority: number; // 1=Official, 2=Enterprise, 3=Community
+  recommendedDtype: 'default' | 'fp8_e4m3fn' | 'fp8_e5m2' | 'fp8_e4m3fn_fast';
+  variant: 'dev' | 'schnell' | 'kontext' | 'krea' | 'fill' | 'redux' | 'sd35';
+}
+
+/**
+ * LoRA adapter configuration
+ */
+export interface LoRAConfig {
+  compatibleVariants: string[];
+  modelFamily: 'FLUX';
+  priority: number;
+}
+
+/**
+ * ControlNet model configuration
+ */
+export interface ControlNetConfig {
+  compatibleVariants: string[];
+  modelFamily: 'FLUX';
+  priority: number;
+  type: 'canny' | 'depth' | 'hed' | 'pose' | 'scribble' | 'normal' | 'semantic';
+}
+
+/**
+ * System component configuration (VAE, CLIP, T5, etc.)
+ */
+export interface SystemComponentConfig {
+  type: 'vae' | 'clip' | 't5' | 'controlnet' | 'upscaler' | 'ipadapter';
+  priority: number;
+  description: string;
+}
+
+/**
+ * Model detection result from WorkflowDetector
+ */
+export interface ModelDetectionResult {
+  isSupported: boolean;
+  modelFamily?: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
+  variant?: string;
+  confidence: number; // 0-1 confidence score
+  detectionMethod: 'filename' | 'registry' | 'fallback';
+}
+
+/**
+ * Workflow parameters for image generation
+ */
+export interface WorkflowParams {
+  prompt: string;
+  width?: number;
+  height?: number;
+  steps?: number;
+  cfg?: number;
+  seed?: number;
+  // Model-specific parameters
+  guidance?: number;    // FLUX guidance
+  shift?: number;       // SD3.5 shift parameter
+  negativePrompt?: string;
+}
+
+/**
+ * Registry query options
+ */
+export interface RegistryQueryOptions {
+  modelFamily?: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
+  variant?: string;
+  priority?: number;
+  type?: string; // For system components
+}
+
+/**
+ * Component with name from system registry
+ */
+export interface ComponentWithName {
+  name: string;
+  config: SystemComponentConfig;
+}
+```
+
+### Error System Interfaces
+
+```typescript
+/**
+ * Base internal error with reason and details
+ */
+export abstract class ComfyUIInternalError extends Error {
+  public readonly reason: string;
+  public readonly details?: Record<string, any>;
+
+  constructor(message: string, reason: string, details?: Record<string, any>);
+}
+
+/**
+ * Configuration layer error reasons
+ */
+export const ConfigErrorReasons = {
+  INVALID_CONFIG: 'INVALID_CONFIG',
+  MISSING_CONFIG: 'MISSING_CONFIG',
+  CONFIG_PARSE_ERROR: 'CONFIG_PARSE_ERROR',
+  REGISTRY_ERROR: 'REGISTRY_ERROR',
+} as const;
+
+/**
+ * Workflow layer error reasons
+ */
+export const WorkflowErrorReasons = {
+  INVALID_CONFIG: 'INVALID_CONFIG',
+  MISSING_COMPONENT: 'MISSING_COMPONENT',
+  MISSING_ENCODER: 'MISSING_ENCODER',
+  UNSUPPORTED_MODEL: 'UNSUPPORTED_MODEL',
+  INVALID_PARAMS: 'INVALID_PARAMS',
+} as const;
+
+/**
+ * Utils layer error reasons
+ */
+export const UtilsErrorReasons = {
+  CONNECTION_ERROR: 'CONNECTION_ERROR',
+  DETECTION_FAILED: 'DETECTION_FAILED',
+  INVALID_API_KEY: 'INVALID_API_KEY',
+  INVALID_MODEL_FORMAT: 'INVALID_MODEL_FORMAT',
+  ROUTING_FAILED: 'ROUTING_FAILED',
+  SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+} as const;
+
+/**
+ * Model resolver error reasons
+ */
+export const ModelResolverErrorReasons = {
+  CONNECTION_ERROR: 'CONNECTION_ERROR',
+  INVALID_API_KEY: 'INVALID_API_KEY',
+  MODEL_NOT_FOUND: 'MODEL_NOT_FOUND',
+  PERMISSION_DENIED: 'PERMISSION_DENIED',
+  SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+} as const;
+
+/**
+ * Type guards for error checking
+ */
+export function isComfyUIInternalError(error: unknown): error is ComfyUIInternalError;
+export function isConfigError(error: unknown): error is ConfigError;
+export function isWorkflowError(error: unknown): error is WorkflowError;
+export function isUtilsError(error: unknown): error is UtilsError;
+export function isModelResolverError(error: unknown): error is ModelResolverError;
+```
+
+### Registry API Interface
+
+```typescript
+/**
+ * Model Registry API
+ */
+export interface ModelRegistryAPI {
+  /**
+   * Get model configuration by filename
+   */
+  getModelConfig(modelName: string): ModelConfig | undefined;
+
+  /**
+   * Get all registered model names
+   */
+  getAllModelNames(): string[];
+
+  /**
+   * Get models by variant (dev, schnell, etc.)
+   */
+  getModelsByVariant(variant: string): Array<{ name: string; config: ModelConfig }>;
+
+  /**
+   * Get models by priority level
+   */
+  getModelsByPriority(priority: number): Array<{ name: string; config: ModelConfig }>;
+
+  /**
+   * Check if model exists in registry
+   */
+  hasModel(modelName: string): boolean;
+}
+
+/**
+ * System Components Registry API
+ */
+export interface SystemComponentsAPI {
+  /**
+   * Get all components of specific type
+   */
+  getAllComponentsWithNames(options: { type?: string }): ComponentWithName[];
+
+  /**
+   * Get component configuration
+   */
+  getComponentConfig(componentName: string): SystemComponentConfig | undefined;
+
+  /**
+   * Check component availability
+   */
+  hasComponent(componentName: string): boolean;
+
+  /**
+   * Get components by priority
+   */
+  getComponentsByPriority(type: string, priority: number): ComponentWithName[];
+}
+```
+
+### Workflow Builder Interface
+
+```typescript
+/**
+ * Workflow builder function signature
+ */
+export type WorkflowBuilder = (
+  modelId: string,
+  modelFileName: string,
+  params: WorkflowParams
+) => PromptBuilder<any, any, any>;
+
+/**
+ * Workflow router interface
+ */
+export interface WorkflowRouterAPI {
+  /**
+   * Route workflow based on model detection
+   */
+  routeWorkflow(
+    model: string,
+    detectionResult: ModelDetectionResult,
+    modelFileName: string,
+    params: Record<string, any>
+  ): PromptBuilder<any, any, any>;
+
+  /**
+   * Get available workflow variants
+   */
+  getAvailableWorkflows(): string[];
+
+  /**
+   * Check if variant is supported
+   */
+  isWorkflowSupported(variant: string): boolean;
+}
+
+/**
+ * Model resolver interface
+ */
+export interface ModelResolverAPI {
+  /**
+   * Get available model files from ComfyUI server
+   */
+  getAvailableModelFiles(): Promise<string[]>;
+
+  /**
+   * Find best model match for request
+   */
+  findBestModel(modelRequest: string, options?: RegistryQueryOptions): Promise<string>;
+
+  /**
+   * Validate model exists on server
+   */
+  validateModel(modelFileName: string): Promise<boolean>;
+
+  /**
+   * Get model recommendations
+   */
+  getModelRecommendations(variant?: string): Promise<string[]>;
+}
+```
+
+## Adding New Models
+
+### 1. Update Model Registry
+
+Add new models to `config/modelRegistry.ts`:
+
+```typescript
+export const MODEL_REGISTRY: Record<string, ModelConfig> = {
+  // Existing models...
+
+  // Add new model
+  'your-new-model.safetensors': {
+    priority: 2, // 1=Official, 2=Enterprise, 3=Community
+    variant: 'dev', // 'dev' | 'schnell' | 'kontext' | 'krea' | 'sd35'
+    modelFamily: 'FLUX', // 'FLUX' | 'SD3'
+    recommendedDtype: 'default', // 'default' | 'fp8_e4m3fn' | 'fp8_e5m2'
+  },
+
+  // Quantized versions
+  'your-new-model-fp8.safetensors': {
+    priority: 2,
+    variant: 'dev',
+    modelFamily: 'FLUX',
+    recommendedDtype: 'fp8_e4m3fn',
+  },
+};
+```
+
+### 2. Model Configuration Interface
+
+```typescript
+export interface ModelConfig {
+  modelFamily: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
+  priority: number; // Priority: 1-3
+  recommendedDtype: 'default' | 'fp8_e4m3fn' | 'fp8_e5m2' | 'fp8_e4m3fn_fast';
+  variant: 'dev' | 'schnell' | 'kontext' | 'krea' | 'fill' | 'redux' | 'sd35';
+}
+```
+
+### 3. Testing New Models
+
+```typescript
+// config/modelRegistry.test.ts
+import { getModelConfig, getAllModelNames } from '../modelRegistry';
+
+describe('New Model Registration', () => {
+  test('should find new model in registry', () => {
+    const config = getModelConfig('your-new-model.safetensors');
+    expect(config).toBeDefined();
+    expect(config?.variant).toBe('dev');
+    expect(config?.modelFamily).toBe('FLUX');
+  });
+
+  test('should support priority-based queries', () => {
+    const priority1Models = getAllModelNames().filter(name => {
+      const config = getModelConfig(name);
+      return config?.priority === 1;
+    });
+    expect(priority1Models.length).toBeGreaterThan(0);
+  });
+});
+```
+
+## Creating New Workflows
+
+### 1. Workflow Template Structure
+
+Create a new workflow file `workflows/your-workflow.ts`:
+
+```typescript
+import { ComfyNodeBuilder, PromptBuilder } from '@saintno/comfyui-sdk';
+
+/**
+ * Build custom workflow
+ */
+export function buildYourWorkflow(
+  modelId: string,
+  modelFileName: string,
+  params: {
+    prompt: string;
+    width?: number;
+    height?: number;
+    steps?: number;
+    cfg?: number;
+    seed?: number;
+    // Custom parameters
+    customParam?: string;
+  }
+): PromptBuilder<any, any, any> {
+  const {
+    prompt,
+    width = 1024,
+    height = 1024,
+    steps = 20,
+    cfg = 3.5,
+    seed = -1,
+    customParam = 'default_value'
+  } = params;
+
+  // Build ComfyUI workflow nodes
+  const workflow = new PromptBuilder();
+
+  // 1. Model loader node
+  const modelLoader = new ComfyNodeBuilder('CheckpointLoaderSimple')
+    .setInput('ckpt_name', modelFileName)
+    .setTitle('Model Loader');
+
+  // 2. CLIP text encoder node
+  const textEncoder = new ComfyNodeBuilder('CLIPTextEncode')
+    .setInput('text', prompt)
+    .setInput('clip', modelLoader.getOutput('clip'))
+    .setTitle('Text Encoder');
+
+  // 3. Empty latent image node
+  const noiseGenerator = new ComfyNodeBuilder('EmptyLatentImage')
+    .setInput('width', width)
+    .setInput('height', height)
+    .setInput('batch_size', 1)
+    .setTitle('Empty Latent Image');
+
+  // 4. Sampler node
+  const sampler = new ComfyNodeBuilder('KSampler')
+    .setInput('model', modelLoader.getOutput('model'))
+    .setInput('positive', textEncoder.getOutput('conditioning'))
+    .setInput('negative', '') // Can add negative prompts
+    .setInput('latent_image', noiseGenerator.getOutput('latent'))
+    .setInput('seed', seed)
+    .setInput('steps', steps)
+    .setInput('cfg', cfg)
+    .setInput('sampler_name', 'euler')
+    .setInput('scheduler', 'normal')
+    .setInput('denoise', 1.0)
+    .setTitle('KSampler');
+
+  // 5. VAE decoder node
+  const decoder = new ComfyNodeBuilder('VAEDecode')
+    .setInput('samples', sampler.getOutput('latent'))
+    .setInput('vae', modelLoader.getOutput('vae'))
+    .setTitle('VAE Decode');
+
+  // 6. Save image node
+  const saveImage = new ComfyNodeBuilder('SaveImage')
+    .setInput('images', decoder.getOutput('image'))
+    .setInput('filename_prefix', 'LobeChat_YourWorkflow')
+    .setTitle('Save Image');
+
+  // Add all nodes to workflow
+  workflow
+    .addNode(modelLoader)
+    .addNode(textEncoder)
+    .addNode(noiseGenerator)
+    .addNode(sampler)
+    .addNode(decoder)
+    .addNode(saveImage);
+
+  return workflow;
+}
+```
+
+### 2. Update Workflow Router
+
+Add routing logic to `utils/workflowRouter.ts`:
+
+```typescript
+import { buildYourWorkflow } from '../workflows/your-workflow';
+
+export class WorkflowRouter {
+  static routeWorkflow(
+    model: string,
+    detectionResult: ModelDetectionResult,
+    modelFileName: string,
+    params: Record<string, any>
+  ): PromptBuilder<any, any, any> {
+
+    // Existing routing logic...
+
+    // Add new workflow routing
+    if (detectionResult.variant === 'your_variant') {
+      return buildYourWorkflow(model, modelFileName, params);
+    }
+
+    // Default handling...
+  }
+}
+```
+
+### 3. Test Workflow
+
+```typescript
+// workflows/your-workflow.test.ts
+import { buildYourWorkflow } from './your-workflow';
+
+describe('Your Custom Workflow', () => {
+  test('should build workflow with correct parameters', () => {
+    const workflow = buildYourWorkflow('test-model', 'test.safetensors', {
+      prompt: 'test prompt',
+      width: 512,
+      height: 512,
+      steps: 10,
+    });
+
+    expect(workflow).toBeDefined();
+    // Verify workflow structure
+    const nodes = workflow.getNodes();
+    expect(nodes.length).toBeGreaterThan(0);
+  });
+});
+```
+
+## Advanced Workflow Features
+
+### SD3.5 Dynamic Encoder Detection
+
+The SD3.5 workflow supports sophisticated encoder detection and configuration, automatically adapting to available text encoders in your ComfyUI installation.
+
+#### Supported Encoder Configurations
+
+SD3.5 supports three encoder configurations with automatic fallback:
+
+1. **Triple Encoder** (Best Quality): CLIP L + CLIP G + T5XXL
+2. **Dual CLIP**: CLIP L + CLIP G only
+3. **T5 Only**: T5XXL encoder only
+
+#### Dynamic Detection API
+
+```typescript
+/**
+ * SD3.5 Encoder Detection Result Interface
+ */
+interface EncoderDetectionResult {
+  clipL?: string;    // CLIP L encoder filename
+  clipG?: string;    // CLIP G encoder filename
+  t5?: string;       // T5XXL encoder filename
+  type: 'triple' | 'dual_clip' | 't5';
+}
+
+/**
+ * Detect available encoder configuration for SD3.5
+ * Auto-detects optimal encoder setup based on available components
+ */
+function detectAvailableEncoder(): EncoderDetectionResult | null {
+  // Get all available CLIP and T5 components from registry
+  const clipComponents = getAllComponentsWithNames({ type: 'clip' });
+  const t5Components = getAllComponentsWithNames({ type: 't5' });
+
+  // Find specific encoder files
+  const clipL = clipComponents.find(c => c.name === 'clip_l.safetensors');
+  const clipG = clipComponents.find(c => c.name === 'clip_g.safetensors');
+
+  // Find T5XXL with priority-based selection (fp16 > fp8)
+  const t5 = t5Components.sort((a, b) => a.config.priority - b.config.priority)[0];
+
+  // Triple encoder configuration (best quality)
+  if (clipL && clipG && t5) {
+    return {
+      clipL: clipL.name,
+      clipG: clipG.name,
+      t5: t5.name,
+      type: 'triple'
+    };
+  }
+
+  // Dual CLIP configuration
+  if (clipL && clipG) {
+    return {
+      clipL: clipL.name,
+      clipG: clipG.name,
+      type: 'dual_clip'
+    };
+  }
+
+  // T5-only configuration
+  if (t5) {
+    return {
+      t5: t5.name,
+      type: 't5'
+    };
+  }
+
+  return null; // No compatible encoders found
+}
+```
+
+#### SD3.5 Workflow Implementation
+
+The complete SD3.5 workflow with dynamic encoder detection:
+
+```typescript
+import { ComfyNodeBuilder, PromptBuilder } from '@saintno/comfyui-sdk';
+import { WorkflowError } from '../errors';
+
+/**
+ * Build SD3.5 workflow with dynamic encoder detection
+ */
+export function buildSD35Workflow(
+  modelId: string,
+  modelFileName: string,
+  params: {
+    prompt: string;
+    width?: number;
+    height?: number;
+    steps?: number;
+    cfg?: number;
+    seed?: number;
+    shift?: number; // SD3.5-specific parameter
+  }
+): PromptBuilder<any, any, any> {
+  const {
+    prompt,
+    width = 1024,
+    height = 1024,
+    steps = 28,
+    cfg = 4.5,
+    seed = -1,
+    shift = 3.0
+  } = params;
+
+  // Detect available encoder configuration
+  const encoderConfig = detectAvailableEncoder();
+  if (!encoderConfig) {
+    throw new WorkflowError(
+      'SD3.5 requires at least one text encoder (CLIP L/G or T5XXL)',
+      WorkflowError.Reasons.MISSING_ENCODER,
+      { modelType: 'SD3.5', availableEncoders: [] }
+    );
+  }
+
+  const workflow = new PromptBuilder();
+  const [seed1] = generateUniqueSeeds(1, seed);
+
+  // 1. Model loader
+  const modelLoader = new ComfyNodeBuilder('CheckpointLoaderSimple')
+    .setInput('ckpt_name', modelFileName)
+    .setTitle('SD3.5 Model Loader');
+
+  // 2. Build encoder nodes based on detected configuration
+  let conditioning: any;
+
+  switch (encoderConfig.type) {
+    case 'triple': {
+      // Triple encoder: CLIP L + CLIP G + T5
+      const dualClipLoader = new ComfyNodeBuilder('DualCLIPLoader')
+        .setInput('clip_name1', encoderConfig.clipL!)
+        .setInput('clip_name2', encoderConfig.clipG!)
+        .setTitle('Dual CLIP Loader');
+
+      const t5Loader = new ComfyNodeBuilder('CLIPLoader')
+        .setInput('clip_name', encoderConfig.t5!)
+        .setTitle('T5XXL Loader');
+
+      // Encode with CLIP
+      const clipEncode = new ComfyNodeBuilder('CLIPTextEncode')
+        .setInput('text', prompt)
+        .setInput('clip', dualClipLoader.getOutput('clip'))
+        .setTitle('CLIP Text Encode');
+
+      // Encode with T5
+      const t5Encode = new ComfyNodeBuilder('CLIPTextEncode')
+        .setInput('text', prompt)
+        .setInput('clip', t5Loader.getOutput('clip'))
+        .setTitle('T5 Text Encode');
+
+      // Combine encoders
+      const conditioningCombine = new ComfyNodeBuilder('ConditioningCombine')
+        .setInput('conditioning_1', clipEncode.getOutput('conditioning'))
+        .setInput('conditioning_2', t5Encode.getOutput('conditioning'))
+        .setTitle('Conditioning Combine');
+
+      conditioning = conditioningCombine.getOutput('conditioning');
+
+      workflow
+        .addNode(dualClipLoader)
+        .addNode(t5Loader)
+        .addNode(clipEncode)
+        .addNode(t5Encode)
+        .addNode(conditioningCombine);
+      break;
+    }
+
+    case 'dual_clip': {
+      // Dual CLIP only
+      const dualClipLoader = new ComfyNodeBuilder('DualCLIPLoader')
+        .setInput('clip_name1', encoderConfig.clipL!)
+        .setInput('clip_name2', encoderConfig.clipG!)
+        .setTitle('Dual CLIP Loader');
+
+      const clipEncode = new ComfyNodeBuilder('CLIPTextEncode')
+        .setInput('text', prompt)
+        .setInput('clip', dualClipLoader.getOutput('clip'))
+        .setTitle('CLIP Text Encode');
+
+      conditioning = clipEncode.getOutput('conditioning');
+
+      workflow
+        .addNode(dualClipLoader)
+        .addNode(clipEncode);
+      break;
+    }
+
+    case 't5': {
+      // T5 only
+      const t5Loader = new ComfyNodeBuilder('CLIPLoader')
+        .setInput('clip_name', encoderConfig.t5!)
+        .setTitle('T5XXL Loader');
+
+      const t5Encode = new ComfyNodeBuilder('CLIPTextEncode')
+        .setInput('text', prompt)
+        .setInput('clip', t5Loader.getOutput('clip'))
+        .setTitle('T5 Text Encode');
+
+      conditioning = t5Encode.getOutput('conditioning');
+
+      workflow
+        .addNode(t5Loader)
+        .addNode(t5Encode);
+      break;
+    }
+  }
+
+  // 3. Empty latent image
+  const noiseGenerator = new ComfyNodeBuilder('EmptySD3LatentImage')
+    .setInput('width', width)
+    .setInput('height', height)
+    .setInput('batch_size', 1)
+    .setTitle('Empty SD3 Latent');
+
+  // 4. SD3.5-specific sampler with shift parameter
+  const sampler = new ComfyNodeBuilder('KSampler')
+    .setInput('model', modelLoader.getOutput('model'))
+    .setInput('positive', conditioning)
+    .setInput('negative', '') // Can add negative conditioning
+    .setInput('latent_image', noiseGenerator.getOutput('latent'))
+    .setInput('seed', seed1)
+    .setInput('steps', steps)
+    .setInput('cfg', cfg)
+    .setInput('sampler_name', 'dpmpp_2m')
+    .setInput('scheduler', 'sgm_uniform')
+    .setInput('denoise', 1.0)
+    .setInput('shift', shift) // SD3.5-specific parameter
+    .setTitle('SD3.5 Sampler');
+
+  // 5. VAE decoder
+  const decoder = new ComfyNodeBuilder('VAEDecode')
+    .setInput('samples', sampler.getOutput('latent'))
+    .setInput('vae', modelLoader.getOutput('vae'))
+    .setTitle('VAE Decode');
+
+  // 6. Save image
+  const saveImage = new ComfyNodeBuilder('SaveImage')
+    .setInput('images', decoder.getOutput('image'))
+    .setInput('filename_prefix', `LobeChat_SD35_${encoderConfig.type}`)
+    .setTitle('Save Image');
+
+  // Add common nodes
+  workflow
+    .addNode(modelLoader)
+    .addNode(noiseGenerator)
+    .addNode(sampler)
+    .addNode(decoder)
+    .addNode(saveImage);
+
+  return workflow;
+}
+```
+
+#### System Components Configuration
+
+The encoder detection relies on the system components registry:
+
+```typescript
+// config/systemComponents.ts
+export const SYSTEM_COMPONENTS: Record<string, SystemComponentConfig> = {
+  // CLIP components
+  'clip_l.safetensors': {
+    type: 'clip',
+    priority: 1,
+    description: 'CLIP L text encoder for SD3 models',
+  },
+  'clip_g.safetensors': {
+    type: 'clip',
+    priority: 1,
+    description: 'CLIP G text encoder for SD3 models',
+  },
+
+  // T5 components (priority-based selection)
+  't5xxl_fp16.safetensors': {
+    type: 't5',
+    priority: 1, // Prefer fp16 for quality
+    description: 'T5XXL text encoder (fp16) for SD3 models',
+  },
+  't5xxl_fp8_e4m3fn.safetensors': {
+    type: 't5',
+    priority: 2, // Fallback to fp8 for VRAM efficiency
+    description: 'T5XXL text encoder (fp8) for SD3 models',
+  },
+};
+
+export interface SystemComponentConfig {
+  type: 'vae' | 'clip' | 't5' | 'controlnet' | 'upscaler' | 'ipadapter';
+  priority: number;
+  description: string;
+}
+```
+
+#### Usage Examples
+
+```typescript
+// Example 1: Automatic encoder detection
+const sd35Workflow = buildSD35Workflow('sd35-large', 'sd_3.5_large.safetensors', {
+  prompt: 'beautiful landscape painting, highly detailed',
+  width: 1024,
+  height: 1024,
+  steps: 28,
+  cfg: 4.5,
+  shift: 3.0 // SD3.5-specific parameter
+});
+
+// Example 2: Check encoder configuration before workflow
+const encoderConfig = detectAvailableEncoder();
+if (encoderConfig) {
+  console.log(`Using ${encoderConfig.type} encoder configuration`);
+  console.log('Available encoders:', encoderConfig);
+} else {
+  throw new Error('No compatible encoders found for SD3.5');
+}
+
+// Example 3: Error handling for missing encoders
+try {
+  const workflow = buildSD35Workflow(model, modelFile, params);
+  return workflow;
+} catch (error) {
+  if (error instanceof WorkflowError &&
+      error.reason === WorkflowError.Reasons.MISSING_ENCODER) {
+    console.error('SD3.5 encoder requirements not met:', error.details);
+    // Suggest encoder installation or fallback to different model
+  }
+  throw error;
+}
+```
+
+## Adding LoRA Support
+
+### 1. Update LoRA Registry
+
+Add new LoRA to `config/loraRegistry.ts`:
+
+```typescript
+export const LORA_REGISTRY: Record<string, LoRAConfig> = {
+  // Existing LoRAs...
+
+  'your-custom-lora.safetensors': {
+    compatibleVariants: ['dev', 'schnell'], // Compatible model variants
+    modelFamily: 'FLUX',
+    priority: 2, // 1=Official, 2=Professional, 3=Community
+  },
+};
+```
+
+### 2. Using LoRA in Workflows
+
+```typescript
+// Add LoRA node in workflow builder
+const loraLoader = new ComfyNodeBuilder('LoraLoader')
+  .setInput('model', modelLoader.getOutput('model'))
+  .setInput('clip', modelLoader.getOutput('clip'))
+  .setInput('lora_name', 'your-custom-lora.safetensors')
+  .setInput('strength_model', 1.0)
+  .setInput('strength_clip', 1.0)
+  .setTitle('LoRA Loader');
+
+// Update subsequent nodes to use LoRA-enhanced model
+const textEncoder = new ComfyNodeBuilder('CLIPTextEncode')
+  .setInput('text', prompt)
+  .setInput('clip', loraLoader.getOutput('clip')) // Use LoRA-enhanced CLIP
+  .setTitle('Text Encoder');
+```
+
+## Adding ControlNet Support
+
+### 1. Update ControlNet Registry
+
+Add new ControlNet model to `config/controlnetRegistry.ts`:
+
+```typescript
+export const CONTROLNET_REGISTRY: Record<string, ControlNetConfig> = {
+  // Existing models...
+
+  'flux-controlnet-pose-v1.safetensors': {
+    compatibleVariants: ['dev'],
+    modelFamily: 'FLUX',
+    priority: 1,
+    type: 'pose', // New control type
+  },
+};
+```
+
+### 2. Extend ControlNet Interface
+
+```typescript
+export interface ControlNetConfig {
+  compatibleVariants: string[];
+  modelFamily: 'FLUX';
+  priority: number;
+  type: 'canny' | 'depth' | 'hed' | 'pose' | 'scribble' | 'normal' | 'semantic';
+}
+```
+
+### 3. Using ControlNet in Workflows
+
+```typescript
+// Add ControlNet preprocessor
+const preprocessor = new ComfyNodeBuilder('CannyEdgePreprocessor')
+  .setInput('image', inputImage)
+  .setInput('low_threshold', 100)
+  .setInput('high_threshold', 200)
+  .setTitle('Canny Edge Preprocessor');
+
+// Add ControlNet apply node
+const controlNetApply = new ComfyNodeBuilder('ControlNetApply')
+  .setInput('conditioning', textEncoder.getOutput('conditioning'))
+  .setInput('control_net', controlNetLoader.getOutput('control_net'))
+  .setInput('image', preprocessor.getOutput('image'))
+  .setInput('strength', 1.0)
+  .setTitle('ControlNet Apply');
+```
+
+## Development Best Practices
+
+### 1. Configuration-Driven Principle
+
+- Store all model information in registries, avoid hardcoding
+- Use priority system for automatic best model selection
+- Support dynamic fallback mechanisms
+
+### 2. Error Handling
+
+LobeChat's ComfyUI integration uses a sophisticated layered error handling system that maintains clear architectural boundaries between internal ComfyUI logic and framework-level error handling.
+
+#### 2.1. Layered Error Architecture
+
+The error system consists of four distinct layers:
+
+```
+┌─────────────────────────────────────┐
+│        Framework Errors             │  ← User-facing errors
+│   (AgentRuntimeError)              │
+└─────────────────────────────────────┘
+                    ↑
+        Internal → Framework Mapping
+                    ↓
+┌─────────────────────────────────────┐
+│        Internal Errors             │  ← Architecture boundary
+│  ConfigError | WorkflowError       │
+│  UtilsError | ModelResolverError   │
+└─────────────────────────────────────┘
+                    ↑
+┌─────────────────────────────────────┐
+│     ComfyUI Internal Layers        │
+│  Config → Workflow → Utils          │
+└─────────────────────────────────────┘
+```
+
+#### 2.2. Internal Error Classes
+
+All ComfyUI internal layers use these error classes instead of framework errors to maintain proper architectural boundaries:
+
+```typescript
+import {
+  ConfigError,
+  WorkflowError,
+  UtilsError,
+  ModelResolverError,
+  isComfyUIInternalError
+} from '../errors';
+
+// Base internal error interface
+abstract class ComfyUIInternalError extends Error {
+  public readonly reason: string;
+  public readonly details?: Record<string, any>;
+
+  constructor(message: string, reason: string, details?: Record<string, any>) {
+    super(message);
+    this.reason = reason;
+    this.details = details;
+  }
+}
+```
+
+##### ConfigError - Configuration Layer Errors
+
+Used for configuration validation and registry issues:
+
+```typescript
+export class ConfigError extends ComfyUIInternalError {
+  static readonly Reasons = {
+    INVALID_CONFIG: 'INVALID_CONFIG',
+    MISSING_CONFIG: 'MISSING_CONFIG',
+    CONFIG_PARSE_ERROR: 'CONFIG_PARSE_ERROR',
+    REGISTRY_ERROR: 'REGISTRY_ERROR',
+  } as const;
+}
+
+// Usage example
+try {
+  const config = getModelConfig(modelName);
+  if (!config) {
+    throw new ConfigError(
+      `Model configuration not found: ${modelName}`,
+      ConfigError.Reasons.MISSING_CONFIG,
+      { modelName }
+    );
+  }
+} catch (error) {
+  // Will be caught and mapped to framework error
+  throw error;
+}
+```
+
+##### WorkflowError - Workflow Construction Errors
+
+Used for workflow building and validation issues:
+
+```typescript
+export class WorkflowError extends ComfyUIInternalError {
+  static readonly Reasons = {
+    INVALID_CONFIG: 'INVALID_CONFIG',
+    MISSING_COMPONENT: 'MISSING_COMPONENT',
+    MISSING_ENCODER: 'MISSING_ENCODER',
+    UNSUPPORTED_MODEL: 'UNSUPPORTED_MODEL',
+    INVALID_PARAMS: 'INVALID_PARAMS',
+  } as const;
+}
+
+// Usage in workflow builders
+function buildFluxWorkflow(model: string, params: any) {
+  try {
+    // Validate required components
+    if (!hasRequiredComponent('flux_vae')) {
+      throw new WorkflowError(
+        'FLUX VAE component not found',
+        WorkflowError.Reasons.MISSING_COMPONENT,
+        { component: 'flux_vae', model }
+      );
+    }
+
+    // Build workflow...
+    return workflow;
+  } catch (error) {
+    // Let internal errors bubble up for proper mapping
+    throw error;
+  }
+}
+```
+
+##### UtilsError - Utility Layer Errors
+
+Used for utility function failures:
+
+```typescript
+export class UtilsError extends ComfyUIInternalError {
+  static readonly Reasons = {
+    CONNECTION_ERROR: 'CONNECTION_ERROR',
+    DETECTION_FAILED: 'DETECTION_FAILED',
+    INVALID_API_KEY: 'INVALID_API_KEY',
+    INVALID_MODEL_FORMAT: 'INVALID_MODEL_FORMAT',
+    ROUTING_FAILED: 'ROUTING_FAILED',
+    SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+  } as const;
+}
+```
+
+##### ModelResolverError - Model Resolution Errors
+
+Specialized error for model resolution operations:
+
+```typescript
+export class ModelResolverError extends Error {
+  public readonly reason: string;
+  public readonly details?: Record<string, any>;
+
+  static readonly Reasons = {
+    CONNECTION_ERROR: 'CONNECTION_ERROR',
+    INVALID_API_KEY: 'INVALID_API_KEY',
+    MODEL_NOT_FOUND: 'MODEL_NOT_FOUND',
+    PERMISSION_DENIED: 'PERMISSION_DENIED',
+    SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+  } as const;
+}
+```
+
+#### 2.3. Error Type Guards
+
+Use type guards for safe error checking:
+
+```typescript
+import {
+  isComfyUIInternalError,
+  isConfigError,
+  isWorkflowError,
+  isUtilsError
+} from '../errors';
+
+function handleComfyUIError(error: unknown) {
+  if (isComfyUIInternalError(error)) {
+    console.log(`Internal error: ${error.reason}`, error.details);
+
+    if (isConfigError(error)) {
+      // Handle configuration-specific logic
+      console.log('Configuration issue:', error.reason);
+    } else if (isWorkflowError(error)) {
+      // Handle workflow-specific logic
+      console.log('Workflow issue:', error.reason);
+    }
+  }
+}
+```
+
+#### 2.4. Internal-to-Framework Error Mapping
+
+The main entry point maps internal errors to framework errors for consistent user experience:
+
+```typescript
+// In main createImage method
+try {
+  const result = await this.executeWorkflow(workflow);
+  return result;
+} catch (error) {
+  // Handle ComfyUI internal errors with proper mapping
+  if (isComfyUIInternalError(error)) {
+    let errorType: string;
+
+    // Map internal error reasons to framework error types
+    if (error instanceof ConfigError) {
+      const mapping: Record<string, string> = {
+        [ConfigError.Reasons.INVALID_CONFIG]: AgentRuntimeErrorType.ComfyUIBizError,
+        [ConfigError.Reasons.MISSING_CONFIG]: AgentRuntimeErrorType.ComfyUIBizError,
+        [ConfigError.Reasons.CONFIG_PARSE_ERROR]: AgentRuntimeErrorType.ComfyUIBizError,
+        [ConfigError.Reasons.REGISTRY_ERROR]: AgentRuntimeErrorType.ComfyUIBizError,
+      };
+      errorType = mapping[error.reason] || AgentRuntimeErrorType.ComfyUIBizError;
+
+    } else if (error instanceof WorkflowError) {
+      const mapping: Record<string, string> = {
+        [WorkflowError.Reasons.INVALID_CONFIG]: AgentRuntimeErrorType.ComfyUIWorkflowError,
+        [WorkflowError.Reasons.MISSING_COMPONENT]: AgentRuntimeErrorType.ComfyUIModelError,
+        [WorkflowError.Reasons.MISSING_ENCODER]: AgentRuntimeErrorType.ComfyUIModelError,
+        [WorkflowError.Reasons.UNSUPPORTED_MODEL]: AgentRuntimeErrorType.ModelNotFound,
+        [WorkflowError.Reasons.INVALID_PARAMS]: AgentRuntimeErrorType.ComfyUIWorkflowError,
+      };
+      errorType = mapping[error.reason] || AgentRuntimeErrorType.ComfyUIWorkflowError;
+
+    } else if (error instanceof UtilsError || error instanceof ModelResolverError) {
+      const mapping: Record<string, string> = {
+        CONNECTION_ERROR: AgentRuntimeErrorType.ComfyUIServiceUnavailable,
+        DETECTION_FAILED: AgentRuntimeErrorType.ComfyUIBizError,
+        INVALID_API_KEY: AgentRuntimeErrorType.InvalidProviderAPIKey,
+        MODEL_NOT_FOUND: AgentRuntimeErrorType.ModelNotFound,
+        PERMISSION_DENIED: AgentRuntimeErrorType.PermissionDenied,
+        ROUTING_FAILED: AgentRuntimeErrorType.ComfyUIWorkflowError,
+        SERVICE_UNAVAILABLE: AgentRuntimeErrorType.ComfyUIServiceUnavailable,
+      };
+      errorType = mapping[error.reason] || AgentRuntimeErrorType.ComfyUIBizError;
+    }
+
+    // Create framework error with mapped type
+    throw AgentRuntimeError.createImage({
+      error: { message: error.message, details: error.details },
+      errorType: errorType as any,
+      provider: 'comfyui',
+    });
+  }
+
+  // Handle other error types...
+  const { error: parsedError, errorType } = parseComfyUIErrorMessage(error);
+  throw AgentRuntimeError.createImage({
+    error: parsedError,
+    errorType,
+    provider: 'comfyui',
+  });
+}
+```
+
+#### 2.5. Best Practices for Error Handling
+
+1. **Use Internal Errors in ComfyUI Layers**: Always throw internal error classes with appropriate reasons
+2. **Let Errors Bubble Up**: Don't catch and re-throw internal errors in intermediate layers
+3. **Map at Entry Point**: Convert internal errors to framework errors only at the main entry point
+4. **Include Context**: Provide helpful details in error objects for debugging
+5. **Use Type Guards**: Check error types safely before handling
+
+```typescript
+// ✅ Good: Throw internal error with context
+throw new WorkflowError(
+  'SD3.5 requires at least one text encoder',
+  WorkflowError.Reasons.MISSING_ENCODER,
+  { encodersFound: [], modelType: 'SD3.5' }
+);
+
+// ❌ Bad: Mixing internal and framework errors
+throw AgentRuntimeError.createError(AgentRuntimeErrorType.ComfyUIBizError);
+
+// ✅ Good: Let internal errors bubble up
+function buildWorkflow(model: string) {
+  validateModel(model); // May throw WorkflowError - let it bubble up
+  return createWorkflowNodes();
+}
+
+// ❌ Bad: Catching and re-throwing breaks the mapping system
+function buildWorkflow(model: string) {
+  try {
+    validateModel(model);
+  } catch (error) {
+    throw new Error('Workflow failed'); // Loses error context and type
+  }
+}
+```
+
+### 3. Performance Optimization
+
+```typescript
+// Use caching to reduce repeated computations
+private static workflowCache: Map<string, PromptBuilder<any, any, any>> = new Map();
+
+static getCachedWorkflow(key: string): PromptBuilder<any, any, any> | undefined {
+  return this.workflowCache.get(key);
+}
+
+static setCachedWorkflow(key: string, workflow: PromptBuilder<any, any, any>): void {
+  this.workflowCache.set(key, workflow);
+}
+```
+
+### 4. Test Coverage
+
+Ensure tests are added for each new feature:
+
+```typescript
+// Integration test example
+describe('ComfyUI Integration', () => {
+  test('should handle new model workflow end-to-end', async () => {
+    const comfyUI = new LobeComfyUI({
+      baseURL: 'http://localhost:8188',
+      authType: 'none',
+    });
+
+    const result = await comfyUI.createImage({
+      model: 'your-new-model',
+      params: {
+        prompt: 'test image generation',
+        width: 512,
+        height: 512,
+      },
+    });
+
+    expect(result.imageUrl).toBeDefined();
+    expect(result.width).toBe(512);
+    expect(result.height).toBe(512);
+  });
+});
+```
+
+## Deployment and Publishing
+
+### 1. Validation Checklist
+
+Before releasing new features, ensure:
+
+- [ ] All new models added to corresponding registries
+- [ ] Workflow tests pass
+- [ ] Error handling is complete
+- [ ] Documentation is updated
+- [ ] Performance tests pass
+
+### 2. Documentation Updates
+
+Update relevant documentation files:
+
+- `docs/usage/providers/comfyui.mdx` - User documentation
+- `docs/development/basic/comfyui-development.mdx` - Developer documentation
+- README and CHANGELOG
+
+### 3. Example Code
+
+Provide complete usage examples:
+
+```typescript
+// Complete example using new features
+const comfyUI = new LobeComfyUI({
+  baseURL: process.env.COMFYUI_BASE_URL,
+  authType: 'bearer',
+  apiKey: process.env.COMFYUI_API_KEY,
+});
+
+// Generate image using new model
+const result = await comfyUI.createImage({
+  model: 'your-new-model',
+  params: {
+    prompt: 'beautiful landscape painting, high quality, detailed',
+    width: 1024,
+    height: 1024,
+    steps: 20,
+    cfg: 3.5,
+    // Custom parameters
+    customParam: 'special_value',
+  },
+});
+
+console.log('Generated image URL:', result.imageUrl);
+```
+
+## Contributing Guidelines
+
+1. **Fork Project**: Fork the LobeChat repository on GitHub
+2. **Create Branch**: `git checkout -b feature/your-feature-name`
+3. **Develop Feature**: Implement new features following this guide
+4. **Add Tests**: Ensure test coverage
+5. **Update Documentation**: Synchronize related documentation
+6. **Submit PR**: Create detailed Pull Request
+
+By following this guide, you can easily extend LobeChat's ComfyUI integration functionality and provide users with more model choices and workflow options.
