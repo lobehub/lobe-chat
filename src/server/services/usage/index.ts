@@ -1,4 +1,4 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import { AiModelModel } from '@/database/models/aiModel';
 import { UsageRecordModel } from '@/database/models/usage';
 import { NewUsageRecord } from '@/database/schemas';

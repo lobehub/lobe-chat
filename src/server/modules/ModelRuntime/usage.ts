@@ -2,7 +2,7 @@ import { after } from 'next/server'
 import debug from 'debug';
 import urlJoin from 'url-join';
 
-import { ChatStreamCallbacks, ChatStreamPayload } from '@/libs/model-runtime';
+import { ChatStreamCallbacks, ChatStreamPayload } from '@lobechat/model-runtime';
 import { serverDBEnv } from '@/config/db';
 import { appEnv } from '@/envs/app';
 
@@ -15,7 +15,7 @@ export const createUsageTracker = (
         provider: string,
     }
 ) => {
-    const { messages, model, tools, ...parameters } = payload;
+    const { model, tools } = payload;
     const baseUrl = appEnv.APP_URL;
 
     // Ensure the baseUrl is set, otherwise throw an error
