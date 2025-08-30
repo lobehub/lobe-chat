@@ -5,7 +5,6 @@ import { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
