@@ -1,13 +1,14 @@
+import * as runtimeModule from '@lobechat/model-runtime';
+import type { EnabledAiModel, ModelAbilities } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
-
-import type { EnabledAiModel, ModelAbilities } from '../../../../../../packages/model-bank/src/types/aiModel';
 
 import { getModelListByType } from '../action';
 
-// Mock getModelPropertyWithFallback
-vi.mock('@/utils/getFallbackModelProperty', () => ({
-  getModelPropertyWithFallback: vi.fn().mockResolvedValue({ size: '1024x1024' }),
-}));
+//
+// // Mock getModelPropertyWithFallback
+// vi.mock('@lobechat/model-runtime', () => ({
+//   getModelPropertyWithFallback: vi.fn().mockResolvedValue({ size: '1024x1024' }),
+// }));
 
 describe('getModelListByType', () => {
   const mockChatModels: EnabledAiModel[] = [

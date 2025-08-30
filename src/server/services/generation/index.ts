@@ -1,3 +1,4 @@
+import { parseDataUri } from '@lobechat/model-runtime';
 import debug from 'debug';
 import { sha256 } from 'js-sha256';
 import mime from 'mime';
@@ -6,7 +7,6 @@ import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
 import { LobeChatDatabase } from '@/database/type';
-import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { FileService } from '@/server/services/file';
 import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
