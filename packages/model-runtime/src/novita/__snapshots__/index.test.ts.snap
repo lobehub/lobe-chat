@@ -298,7 +298,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "description": "The uncensored llama3 model is a powerhouse of creativity, excelling in both roleplay and story writing. It offers a liberating experience during roleplays, free from any restrictions. This model stands out for its immense creativity, boasting a vast array of unique ideas and plots, truly a treasure trove for those seeking originality. Its unrestricted nature during roleplays allows for the full breadth of imagination to unfold, akin to an enhanced, big-brained version of Stheno. Perfect for creative minds seeking a boundless platform for their imaginative expressions, the uncensored llama3 model is an ideal choice",
     "displayName": "sao10k/l3-70b-euryale-v2.1",
     "enabled": false,
-    "functionCall": true,
+    "functionCall": false,
     "id": "sao10k/l3-70b-euryale-v2.1",
     "maxOutput": undefined,
     "pricing": {
