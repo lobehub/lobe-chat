@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update enableStreaming name."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.1"
+  },
+  {
+    "children": {
       "features": ["Added support for Azure OpenAI Image Generation."]
     },
     "date": "2025-08-30",
