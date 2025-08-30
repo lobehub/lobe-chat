@@ -2,6 +2,65 @@
 
 # Changelog
 
+### [Version&nbsp;1.119.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.119.0...v1.119.1)
+<sup>Released on **2025-08-30**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the `model-bank` package from `src/config/aiModels`.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correct totalOutputTokens calculation for XAI provider.
+
+
+#### 💄 Styles
+
+- **misc**: Add Grok Code Fast 1 model, fix chat session part switch theme issue, fix clerk scrollBox style, ModelFetcher support getting prices, support non-stream mode, update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor the `model-bank` package from `src/config/aiModels`, closes [#8983](https://github.com/jaworldwideorg/OneJA-Bot/issues/8983) ([c65eb09](https://github.com/jaworldwideorg/OneJA-Bot/commit/c65eb09))
+
+
+
+#### What's fixed
+
+* **misc**: Correct totalOutputTokens calculation for XAI provider, closes [#8984](https://github.com/jaworldwideorg/OneJA-Bot/issues/8984) ([09ce90a](https://github.com/jaworldwideorg/OneJA-Bot/commit/09ce90a))
+
+
+
+#### Styles
+
+* **misc**: Add Grok Code Fast 1 model, closes [#8982](https://github.com/jaworldwideorg/OneJA-Bot/issues/8982) ([dbcec3d](https://github.com/jaworldwideorg/OneJA-Bot/commit/dbcec3d))
+* **misc**: Fix chat session part switch theme issue, closes [#8987](https://github.com/jaworldwideorg/OneJA-Bot/issues/8987) ([b7111be](https://github.com/jaworldwideorg/OneJA-Bot/commit/b7111be))
+* **misc**: Fix clerk scrollBox style, closes [#8989](https://github.com/jaworldwideorg/OneJA-Bot/issues/8989) ([b25b5a0](https://github.com/jaworldwideorg/OneJA-Bot/commit/b25b5a0))
+* **misc**: ModelFetcher support getting prices, closes [#8985](https://github.com/jaworldwideorg/OneJA-Bot/issues/8985) ([58b73ec](https://github.com/jaworldwideorg/OneJA-Bot/commit/58b73ec))
+* **misc**: Support non-stream mode, closes [#8751](https://github.com/jaworldwideorg/OneJA-Bot/issues/8751) ([ce623bb](https://github.com/jaworldwideorg/OneJA-Bot/commit/ce623bb))
+* **misc**: Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, closes [#8878](https://github.com/jaworldwideorg/OneJA-Bot/issues/8878) ([5d538a2](https://github.com/jaworldwideorg/OneJA-Bot/commit/5d538a2))
+* **misc**: Update i18n, closes [#8990](https://github.com/jaworldwideorg/OneJA-Bot/issues/8990) ([136bc5a](https://github.com/jaworldwideorg/OneJA-Bot/commit/136bc5a))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.119.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.118.2...v1.119.0)
 <sup>Released on **2025-08-29**</sup>
 
