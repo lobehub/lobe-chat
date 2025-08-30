@@ -1,4 +1,5 @@
 import type { ChatModelCard } from '@lobechat/types';
+import { AIBaseModelCard } from 'model-bank';
 
 import type { ModelProviderKey } from '../types';
 
@@ -180,7 +181,7 @@ const findKnownModelByProvider = async (
       return null;
     }
 
-    const providerModels = modules[provider as keyof typeof modules];
+    const providerModels = modules[provider as keyof typeof modules] as AIBaseModelCard[];
 
     // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
