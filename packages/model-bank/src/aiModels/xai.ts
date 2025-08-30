@@ -11,7 +11,6 @@ const xaiChatModels: AIChatModelCard[] = [
     description:
       '我们很高兴推出 grok-code-fast-1，这是一款快速且经济高效的推理模型，在代理编码方面表现出色。',
     displayName: 'Grok Code Fast 1',
-    enabled: true,
     id: 'grok-code-fast-1',
     pricing: {
       units: [
@@ -20,7 +19,7 @@ const xaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-08-28',
+    releasedAt: '2025-08-27',
     // settings: {
       // reasoning_effort is not supported by grok-code. Specifying reasoning_effort parameter will get an error response.
       // extendParams: ['reasoningEffort'],
@@ -146,30 +145,6 @@ const xaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-03',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 256_000,
-    description:
-      '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
-    displayName: 'Grok Code Fast 1',
-    id: 'grok-code-fast-1',
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-08-27',
     settings: {
       extendParams: ['reasoningEffort'],
       searchImpl: 'params',
