@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。"
   },
+  "grok-code-fast-1": {
+    "description": "我们很高兴推出 grok-code-fast-1，这是一款快速且经济高效的推理模型，在代理编码方面表现出色。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。"
   },

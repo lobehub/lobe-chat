@@ -1581,6 +1581,9 @@
   "grok-4": {
     "description": "저희의 최신이자 가장 강력한 플래그십 모델로, 자연어 처리, 수학 계산 및 추론에서 뛰어난 성능을 자랑합니다 — 완벽한 만능형 선수입니다."
   },
+  "grok-code-fast-1": {
+    "description": "우리는 에이전트 코딩에 탁월한 빠르고 경제적인 추론 모델인 grok-code-fast-1을 출시하게 되어 기쁩니다."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B는 여러 최상위 모델을 통합한 창의성과 지능이 결합된 언어 모델입니다."
   },
