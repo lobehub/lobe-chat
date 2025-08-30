@@ -11,7 +11,7 @@ import {
   EnabledAiModel,
   LobeDefaultAiModelListItem,
   ModelAbilities,
-} from '@/types/aiModel';
+} from '../../../../../packages/model-bank/src/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,

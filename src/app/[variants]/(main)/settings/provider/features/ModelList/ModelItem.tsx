@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
+import { AiModelSourceEnum, AiProviderModelListItem } from '../../../../../../../../packages/model-bank/src/types/aiModel';
 import { formatPriceByCurrency } from '@/utils/format';
 import {
   getAudioInputUnitRate,

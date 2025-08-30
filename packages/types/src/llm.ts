@@ -1,7 +1,6 @@
-import { ModelParamsSchema } from 'model-bank';
+import { ModelParamsSchema , AiModelType, Pricing } from 'model-bank';
 import { ReactNode } from 'react';
 
-import { AiModelType, Pricing } from './aiModel';
 import { AiProviderSettings } from './aiProvider';
 
 export interface ChatModelCard {
@@ -61,15 +60,6 @@ export interface ChatModelCard {
    */
   vision?: boolean;
 }
-
-export type ResponseAnimationStyle = 'smooth' | 'fadeIn' | 'none';
-export type ResponseAnimation =
-  | {
-      speed?: number;
-      text?: ResponseAnimationStyle;
-      toolsCalling?: ResponseAnimationStyle;
-    }
-  | ResponseAnimationStyle;
 
 export interface ModelProviderCard {
   /**

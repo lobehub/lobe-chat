@@ -1,7 +1,7 @@
 import { DEFAULT_SYNC_CONFIG } from '@/const/settings/sync';
 import { UserSyncSettings } from '@/types/user/settings';
 
-import { UserStore } from '../../store';
+import type { UserStore } from '../../store';
 import { currentSettings } from '../settings/selectors/settings';
 
 const syncConfig = (s: UserStore): UserSyncSettings =>

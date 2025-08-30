@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { memo } from 'react';
 
-import { AiModelType } from '@/types/aiModel';
+import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 
 const icons: Record<AiModelType, LucideIcon> = {
   chat: MessageSquareTextIcon,

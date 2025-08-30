@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem } from '../../../packages/model-bank/src/types/aiModel';
 
 import { ServerService } from './server';
 

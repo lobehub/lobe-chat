@@ -8,7 +8,7 @@ import {
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { AIImageModelCard } from '@/types/aiModel';
+import { AIImageModelCard } from '../../../../../packages/model-bank/src/types/aiModel';
 
 import type { ImageStore } from '../../store';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';

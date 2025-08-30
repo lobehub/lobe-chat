@@ -1,5 +1,5 @@
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiModelSourceEnum } from '@/types/aiModel';
+import { AiModelSourceEnum } from '../../../../../packages/model-bank/src/types/aiModel';
 import { ModelSearchImplement } from '@/types/search';
 
 const aiProviderChatModelListIds = (s: AIProviderStoreState) =>

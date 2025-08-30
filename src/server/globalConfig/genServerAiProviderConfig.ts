@@ -2,7 +2,7 @@ import { ModelProvider } from '@lobechat/model-runtime';
 import * as AiModels from 'model-bank';
 
 import { getLLMConfig } from '@/config/llm';
-import { AiFullModelCard } from '@/types/aiModel';
+import { AiFullModelCard } from '../../../packages/model-bank/src/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
 import { extractEnabledModels, transformToAiModelList } from '@/utils/parseModels';
 

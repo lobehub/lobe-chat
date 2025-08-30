@@ -1,5 +1,5 @@
 export * from './agent';
-export * from './aiModel';
+export * from './aiProvider';
 export * from './artifact';
 export * from './chunk';
 export * from './clientDB';
@@ -9,6 +9,7 @@ export * from './knowledgeBase';
 export * from './llm';
 export * from './message';
 export * from './meta';
+export * from './serverConfig';
 export * from './user';
 export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types

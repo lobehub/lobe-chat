@@ -4,7 +4,7 @@ import { fluxSchnellParamsSchema } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useImageStore } from '@/store/image';
-import { AIImageModelCard } from '@/types/aiModel';
+import { AIImageModelCard } from '../../../../../packages/model-bank/src/types/aiModel';
 
 import { useGenerationConfigParam } from './hooks';
 

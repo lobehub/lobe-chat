@@ -7,7 +7,7 @@ import {
   AiProviderModelListItem,
   EnabledAiModel,
   ToggleAiModelEnableParams,
-} from '@/types/aiModel';
+} from 'packages/model-bank/src/types/aiModel';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels } from '../schemas';
 

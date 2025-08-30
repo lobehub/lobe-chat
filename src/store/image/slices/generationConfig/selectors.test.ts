@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ImageStore } from '@/store/image';
 import { initialState } from '@/store/image/initialState';
-import { AIImageModelCard } from '@/types/aiModel';
+import { AIImageModelCard } from '../../../../../packages/model-bank/src/types/aiModel';
 import { merge } from '@/utils/merge';
 
 import { imageGenerationConfigSelectors } from './selectors';

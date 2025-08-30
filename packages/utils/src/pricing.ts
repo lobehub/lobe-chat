@@ -1,4 +1,4 @@
-import { Pricing, PricingUnit, PricingUnitName } from '@/types/aiModel';
+import { Pricing, PricingUnit, PricingUnitName } from 'packages/model-bank/src/types/aiModel';
 
 /**
  * Internal helper to extract the displayed unit rate from a pricing unit by strategy

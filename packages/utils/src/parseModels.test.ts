@@ -1,7 +1,7 @@
 import { LOBE_DEFAULT_MODEL_LIST, openaiChatModels } from 'model-bank';
 import { describe, expect, it } from 'vitest';
 
-import { AiFullModelCard } from '@/types/aiModel';
+import { AiFullModelCard } from 'packages/model-bank/src/types/aiModel';
 
 import { extractEnabledModels, parseModelString, transformToAiModelList } from './parseModels';
 

@@ -1,5 +1,6 @@
-import { ModelParamsSchema } from 'model-bank';
 import { z } from 'zod';
+
+import { ModelParamsSchema } from '../standard-parameters';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
@@ -8,6 +9,7 @@ export const AiModelSourceEnum = {
   Custom: 'custom',
   Remote: 'remote',
 } as const;
+
 export type AiModelSourceType = (typeof AiModelSourceEnum)[keyof typeof AiModelSourceEnum];
 
 export type AiModelType =

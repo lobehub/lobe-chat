@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 
-import { AiFullModelCard, AiModelType } from '@/types/aiModel';
+import { AiFullModelCard, AiModelType } from 'packages/model-bank/src/types/aiModel';
 
 import { getModelPropertyWithFallback } from './getFallbackModelProperty';
 import { merge } from './merge';

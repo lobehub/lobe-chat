@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 // https://cloud.infini-ai.com/genstudio/model
 // All models are currently free

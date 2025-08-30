@@ -5,7 +5,7 @@ import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import type { AiModelType } from '@/types/aiModel';
+import type { AiModelType } from 'model-bank/src/types/aiModel';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { EnabledAiModel, ModelAbilities } from '@/types/aiModel';
+import type { EnabledAiModel, ModelAbilities } from '../../../../../../packages/model-bank/src/types/aiModel';
 
 import { getModelListByType } from '../action';
 

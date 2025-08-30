@@ -12,7 +12,7 @@ import {
   CreateAiModelSchema,
   ToggleAiModelEnableSchema,
   UpdateAiModelSchema,
-} from '@/types/aiModel';
+} from '../../../../packages/model-bank/src/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
 
 const aiModelProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiModelSourceEnum } from '@/types/aiModel';
+import { AiModelSourceEnum } from '../../../../../packages/model-bank/src/types/aiModel';
 
 import { aiModelSelectors } from './selectors';
 

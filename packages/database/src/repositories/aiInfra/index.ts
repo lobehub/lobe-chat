@@ -7,7 +7,7 @@ import {
   AiModelSourceEnum,
   AiProviderModelListItem,
   EnabledAiModel,
-} from '@/types/aiModel';
+} from 'packages/model-bank/src/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,

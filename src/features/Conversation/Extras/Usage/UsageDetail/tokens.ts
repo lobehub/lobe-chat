@@ -1,4 +1,4 @@
-import { LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { LobeDefaultAiModelListItem } from '../../../../../../packages/model-bank/src/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
 import { getAudioInputUnitRate, getAudioOutputUnitRate } from '@/utils/pricing';
 

@@ -10,7 +10,7 @@ import {
   AiProviderModelListItem,
   CreateAiModelParams,
   ToggleAiModelEnableParams,
-} from '@/types/aiModel';
+} from '../../../../../packages/model-bank/src/types/aiModel';
 
 const FETCH_AI_PROVIDER_MODEL_LIST_KEY = 'FETCH_AI_PROVIDER_MODELS';
 

@@ -1,5 +1,5 @@
 import { CHAT_MODEL_IMAGE_GENERATION_PARAMS } from '@/const/image';
-import type { AiModelType } from '@/types/aiModel';
+import type { AiModelType } from 'model-bank/src/types/aiModel';
 import type { ChatModelCard } from '@/types/llm';
 
 // Whitelist for automatic image model generation
