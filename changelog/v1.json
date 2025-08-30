@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support non-stream mode."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.6"
+  },
+  {
+    "children": {
       "improvements": ["Fix clerk scrollBox style, ModelFetcher support getting prices."]
     },
     "date": "2025-08-29",
