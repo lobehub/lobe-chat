@@ -1,8 +1,8 @@
-import { imageUrlToBase64 } from '@lobechat/utils';
 import { OpenAI } from 'openai';
 import { describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage, UserMessageContentPart } from '../types/chat';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import {
   buildAnthropicBlock,
   buildAnthropicMessage,
@@ -19,7 +19,7 @@ vi.mock('./uriParser', () => ({
     type: 'base64',
   }),
 }));
-vi.mock('@lobechat/utils');
+vi.mock('../utils/imageToBase64');
 
 describe('anthropicHelpers', () => {
   describe('buildAnthropicBlock', () => {

@@ -9,7 +9,6 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
-import { imageUrlToBase64, safeParseJSON } from '@lobechat/utils';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import {
@@ -24,7 +23,9 @@ import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { StreamingResponse } from '../utils/response';
+import { safeParseJSON } from '../utils/safeParseJSON';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { createGoogleImage } from './createImage';

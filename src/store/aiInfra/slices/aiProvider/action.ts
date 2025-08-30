@@ -1,4 +1,5 @@
 import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@lobechat/const';
+import { getModelPropertyWithFallback } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
 import {
   AIImageModelCard,
@@ -24,7 +25,6 @@ import {
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
-import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 /**
  * Get models by provider ID and type, with proper formatting and deduplication

@@ -22,6 +22,7 @@ export { LobeTogetherAI } from './togetherai';
 export * from './types';
 export * from './types/error';
 export { AgentRuntimeError } from './utils/createError';
+export { getModelPropertyWithFallback } from './utils/getFallbackModelProperty';
 export { createOpenAICompatibleRuntime } from './utils/openaiCompatibleFactory';
 export { pruneReasoningPayload } from './utils/openaiHelpers';
 export { LobeVolcengineAI } from './volcengine';

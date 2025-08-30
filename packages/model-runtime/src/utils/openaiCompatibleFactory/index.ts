@@ -1,4 +1,3 @@
-import { getModelPropertyWithFallback } from '@lobechat/utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
@@ -28,6 +27,7 @@ import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
+import { getModelPropertyWithFallback } from '../getFallbackModelProperty';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../openaiHelpers';
 import { postProcessModelList } from '../postProcessModelList';

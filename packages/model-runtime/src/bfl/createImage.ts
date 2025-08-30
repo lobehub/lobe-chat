@@ -1,4 +1,3 @@
-import { imageUrlToBase64 } from '@lobechat/utils';
 import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 
@@ -6,6 +5,7 @@ import { AgentRuntimeErrorType } from '../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { type TaskResult, asyncifyPolling } from '../utils/asyncifyPolling';
 import { AgentRuntimeError } from '../utils/createError';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { parseDataUri } from '../utils/uriParser';
 import {
   BFL_ENDPOINTS,
