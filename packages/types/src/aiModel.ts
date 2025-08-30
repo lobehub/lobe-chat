@@ -42,6 +42,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports video
+   */
+  video?: boolean;
+  /**
    *  whether model supports vision
    */
   vision?: boolean;
@@ -71,6 +75,11 @@ export interface LLMParams {
    * @default 0
    */
   presence_penalty?: number;
+  /**
+   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * @default 1
+   */
+  reasoning_effort?: string;
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
