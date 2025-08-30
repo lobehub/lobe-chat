@@ -2,6 +2,190 @@
 
 # Changelog
 
+### [Version 1.118.8](https://github.com/lobehub/lobe-chat/compare/v1.118.7...v1.118.8)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, closes [#8878](https://github.com/lobehub/lobe-chat/issues/8878) ([5d538a2](https://github.com/lobehub/lobe-chat/commit/5d538a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.7](https://github.com/lobehub/lobe-chat/compare/v1.118.6...v1.118.7)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8990](https://github.com/lobehub/lobe-chat/issues/8990) ([136bc5a](https://github.com/lobehub/lobe-chat/commit/136bc5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.6](https://github.com/lobehub/lobe-chat/compare/v1.118.5...v1.118.6)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support non-stream mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support non-stream mode, closes [#8751](https://github.com/lobehub/lobe-chat/issues/8751) ([ce623bb](https://github.com/lobehub/lobe-chat/commit/ce623bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.5](https://github.com/lobehub/lobe-chat/compare/v1.118.4...v1.118.5)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the `model-bank` package from `src/config/aiModels`.
+
+#### 💄 Styles
+
+- **misc**: Fix clerk scrollBox style, ModelFetcher support getting prices.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the `model-bank` package from `src/config/aiModels`, closes [#8983](https://github.com/lobehub/lobe-chat/issues/8983) ([c65eb09](https://github.com/lobehub/lobe-chat/commit/c65eb09))
+
+#### Styles
+
+- **misc**: Fix clerk scrollBox style, closes [#8989](https://github.com/lobehub/lobe-chat/issues/8989) ([b25b5a0](https://github.com/lobehub/lobe-chat/commit/b25b5a0))
+- **misc**: ModelFetcher support getting prices, closes [#8985](https://github.com/lobehub/lobe-chat/issues/8985) ([58b73ec](https://github.com/lobehub/lobe-chat/commit/58b73ec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.4](https://github.com/lobehub/lobe-chat/compare/v1.118.3...v1.118.4)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix chat session part switch theme issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix chat session part switch theme issue, closes [#8987](https://github.com/lobehub/lobe-chat/issues/8987) ([b7111be](https://github.com/lobehub/lobe-chat/commit/b7111be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.3](https://github.com/lobehub/lobe-chat/compare/v1.118.2...v1.118.3)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correct totalOutputTokens calculation for XAI provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Correct totalOutputTokens calculation for XAI provider, closes [#8984](https://github.com/lobehub/lobe-chat/issues/8984) ([09ce90a](https://github.com/lobehub/lobe-chat/commit/09ce90a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.2](https://github.com/lobehub/lobe-chat/compare/v1.118.1...v1.118.2)
+
+<sup>Released on **2025-08-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Grok Code Fast 1 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Grok Code Fast 1 model, closes [#8982](https://github.com/lobehub/lobe-chat/issues/8982) ([dbcec3d](https://github.com/lobehub/lobe-chat/commit/dbcec3d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.118.1](https://github.com/lobehub/lobe-chat/compare/v1.118.0...v1.118.1)
 
 <sup>Released on **2025-08-29**</sup>

@@ -31,7 +31,7 @@ export const LobeGroq = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_GROQ_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const functionCallKeywords = [
       'tool',

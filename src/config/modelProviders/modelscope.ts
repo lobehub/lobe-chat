@@ -51,6 +51,7 @@ const ModelScope: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   name: 'ModelScope',
   settings: {
+    disableBrowserRequest: true, // CORS Error
     proxyUrl: {
       placeholder: 'https://api-inference.modelscope.cn/v1',
     },

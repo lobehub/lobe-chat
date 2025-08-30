@@ -17,23 +17,23 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['claude'],
   },
   deepseek: {
-    functionCallKeywords: ['v3', 'r1'],
-    reasoningKeywords: ['r1'],
+    functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
+    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1'],
   },
   google: {
     functionCallKeywords: ['gemini'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
-  llama: {
-    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
-    reasoningKeywords: [],
-    visionKeywords: ['llava'],
-  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
     visionKeywords: ['vision', 'kimi-latest', 'kimi-thinking-preview'],
+  },
+  ollama: {
+    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
+    reasoningKeywords: [],
+    visionKeywords: ['llava'],
   },
   openai: {
     excludeKeywords: ['audio'],
@@ -67,7 +67,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   xai: {
     functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4'],
+    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast'],
     visionKeywords: ['vision', 'grok-4'],
   },
   zeroone: {
@@ -86,8 +86,8 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
-  llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
+  ollama: ['llama', 'llava'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
@@ -119,12 +119,7 @@ export const IMAGE_MODEL_KEYWORDS = [
 ] as const;
 
 // 嵌入模型关键词配置
-export const EMBEDDING_MODEL_KEYWORDS = [
-  'embedding',
-  'embed',
-  'bge',
-  'm3e',
-] as const;
+export const EMBEDDING_MODEL_KEYWORDS = ['embedding', 'embed', 'bge', 'm3e'] as const;
 
 /**
  * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
@@ -178,8 +173,9 @@ const findKnownModelByProvider = async (
 
   try {
     // 尝试动态导入对应的配置文件
-    const moduleImport = await import(`@/config/aiModels/${provider}.ts`);
-    const providerModels = moduleImport.default;
+    const modules = await import('model-bank');
+
+    const providerModels = modules[provider];
 
     // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
@@ -287,9 +283,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
@@ -297,6 +293,34 @@ const processModelCard = (
   if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {
     return undefined;
   }
+
+  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
+    if (!pricing || typeof pricing !== 'object') return undefined;
+    if (Array.isArray(pricing.units)) {
+      return { units: pricing.units };
+    }
+    const { input, output } = pricing;
+    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
+
+    const units = [];
+    if (typeof input === 'number') {
+      units.push({
+        name: 'textInput' as const,
+        rate: input,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof output === 'number') {
+      units.push({
+        name: 'textOutput' as const,
+        rate: output,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    return { units };
+  };
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
@@ -312,7 +336,7 @@ const processModelCard = (
         false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
-    // pricing: knownModel?.pricing ?? undefined,
+    pricing: formatPricing(model?.pricing) ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??
@@ -342,7 +366,7 @@ export const processModelList = async (
   config: ModelProcessorConfig,
   provider?: keyof typeof MODEL_LIST_CONFIGS,
 ): Promise<ChatModelCard[]> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -375,14 +399,15 @@ export const processMultiProviderModelList = async (
   modelList: Array<{ id: string }>,
   providerid?: ModelProviderKey,
 ): Promise<ChatModelCard[]> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // 如果提供了 providerid，尝试获取该提供商的本地配置
   let providerLocalConfig: any[] | null = null;
   if (providerid) {
     try {
-      const moduleImport = await import(`@/config/aiModels/${providerid}.ts`);
-      providerLocalConfig = moduleImport.default;
+      const modules = await import('model-bank');
+
+      providerLocalConfig = modules[providerid];
     } catch {
       // 如果配置文件不存在或导入失败，保持为 null
       providerLocalConfig = null;

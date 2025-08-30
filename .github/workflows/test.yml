@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   # Package tests - using each package's own test script
-  test-packages:
+  test-intenral-packages:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,6 +40,41 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
           flags: packages/${{ matrix.package }}
+
+  test-packages:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [model-bank]
+
+    name: Test package ${{ matrix.package }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Test ${{ matrix.package }} package with coverage
+        run: bun run --filter ${{ matrix.package }} test:coverage
+
+      - name: Upload ${{ matrix.package }} coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/${{ matrix.package }}/coverage/lcov.info
+          flags: packages/${{ matrix.package }}
+
 
   # App tests
   test-website:

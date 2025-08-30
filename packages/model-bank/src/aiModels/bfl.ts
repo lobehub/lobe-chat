@@ -1,5 +1,5 @@
 import { PRESET_ASPECT_RATIOS } from '@/const/image';
-import { ModelParamsSchema } from '@/libs/standard-parameters';
+import { ModelParamsSchema } from '../standard-parameters';
 import { AIImageModelCard } from '@/types/aiModel';
 
 // https://docs.bfl.ai/api-reference/tasks/edit-or-create-an-image-with-flux-kontext-pro

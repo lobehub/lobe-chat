@@ -326,12 +326,32 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      '我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。',
+    displayName: 'Grok 4 0709',
+    enabled: true,
+    id: 'grok-4',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 3.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-07-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     contextWindowTokens: 131_072,
     description:
       '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3',
-    enabled: true,
     id: 'grok-3',
     pricing: {
       units: [
@@ -352,7 +372,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
     displayName: 'Grok 3 Mini',
-    enabled: true,
     id: 'grok-3-mini',
     pricing: {
       units: [
@@ -535,11 +554,29 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
+    displayName: 'DeepSeek V3.1',
+    enabled: true,
+    id: 'DeepSeek-V3.1',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     description:
       '已升级至最新版本250528；字节火山云开源部署的满血 R1，总参数量 671B，输入最高 64k。目前最稳定，推荐用这个。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'DeepSeek-R1',
     pricing: {
       units: [
@@ -571,10 +608,9 @@ const aihubmixModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 131_072,
     description: '字节火山云开源部署目前最稳定，推荐用这个。已经自动升级为最新发布的版本 250324 。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'DeepSeek-V3',
     pricing: {
       units: [
@@ -655,6 +691,25 @@ const aihubmixModels: AIChatModelCard[] = [
       searchImpl: 'params',
       searchProvider: 'google',
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_768 + 8192,
+    description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
+    displayName: 'Gemini 2.5 Flash Image Preview',
+    id: 'gemini-2.5-flash-image-preview',
+    maxOutput: 8192,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-26',
     type: 'chat',
   },
   {

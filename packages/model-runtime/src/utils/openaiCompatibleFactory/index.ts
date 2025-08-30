@@ -1,10 +1,10 @@
 import { getModelPropertyWithFallback } from '@lobechat/utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { AiModelType } from '@/types/aiModel';
 import type { ChatModelCard } from '@/types/llm';
 

@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "Nasz najnowszy i najpotężniejszy model flagowy, który wyróżnia się doskonałymi wynikami w przetwarzaniu języka naturalnego, obliczeniach matematycznych i rozumowaniu — to idealny wszechstronny zawodnik."
   },
+  "grok-code-fast-1": {
+    "description": "Z radością przedstawiamy grok-code-fast-1, szybki i ekonomiczny model inferencyjny, który doskonale sprawdza się w kodowaniu agentów."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
   },
