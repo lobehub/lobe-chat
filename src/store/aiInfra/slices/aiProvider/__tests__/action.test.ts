@@ -4,12 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { getModelListByType } from '../action';
 
-//
-// // Mock getModelPropertyWithFallback
-// vi.mock('@lobechat/model-runtime', () => ({
-//   getModelPropertyWithFallback: vi.fn().mockResolvedValue({ size: '1024x1024' }),
-// }));
-
 describe('getModelListByType', () => {
   const mockChatModels: EnabledAiModel[] = [
     {
@@ -101,6 +95,11 @@ describe('getModelListByType', () => {
     });
 
     it('should use fallback parameters for image models without parameters', async () => {
+      // Mock getModelPropertyWithFallback
+      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValueOnce({
+        size: '1024x1024',
+      });
+
       const result = await getModelListByType(allModels, 'midjourney', 'image');
 
       expect(result[0]).toEqual({
