@@ -34,7 +34,7 @@
     // make stylelint work with tsx antd-style css template string
     "typescriptreact"
   ],
-  "vitest.maximumConfigs": 10,
+  "vitest.maximumConfigs": 20,
   "workbench.editor.customLabels.patterns": {
     "**/app/**/[[]*[]]/[[]*[]]/page.tsx": "${dirname(2)}/${dirname(1)}/${dirname} • page component",
     "**/app/**/[[]*[]]/page.tsx": "${dirname(1)}/${dirname} • page component",
@@ -81,8 +81,7 @@
     "**/src/store/*/slices/*/reducer.ts": "${dirname(2)}/${dirname} • reducer",
 
     "**/src/config/modelProviders/*.ts": "${filename} • provider",
-    "**/src/config/aiModels/*.ts": "${filename} • model",
-    "**/src/config/paramsSchemas/*/*.json": "${dirname(1)}/${filename} • params",
+    "**/packages/model-bank/src/aiModels/aiModels/*.ts": "${filename} • model",
     "**/packages/model-runtime/src/*/index.ts": "${dirname} • runtime",
 
     "**/src/server/services/*/index.ts": "${dirname} • server/service",

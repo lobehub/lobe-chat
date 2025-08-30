@@ -196,8 +196,8 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 8192,
     description:
-      'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
-    displayName: 'Gemini 2.5 Flash Image Preview',
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    displayName: 'Nano Banana',
     enabled: true,
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
@@ -610,12 +610,12 @@ const imagenBaseParameters: ModelParamsSchema = {
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 const googleImageModels: AIImageModelCard[] = [
   {
-    displayName: 'Gemini 2.5 Flash Image Preview',
+    displayName: 'Nano Banana',
     id: 'gemini-2.5-flash-image-preview:image',
     enabled: true,
     type: 'image',
     description:
-      'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     releasedAt: '2025-08-26',
     parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
     pricing: {
