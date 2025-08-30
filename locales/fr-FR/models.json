@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "Notre tout dernier modèle phare, le plus puissant, excelle dans le traitement du langage naturel, le calcul mathématique et le raisonnement — un véritable champion polyvalent."
   },
+  "grok-code-fast-1": {
+    "description": "Nous sommes ravis de présenter grok-code-fast-1, un modèle d'inférence rapide et économique, excellent dans le codage des agents."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B est un modèle linguistique combinant créativité et intelligence, intégrant plusieurs modèles de pointe."
   },

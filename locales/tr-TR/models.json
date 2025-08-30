@@ -1583,6 +1583,9 @@
   "grok-4": {
     "description": "En yeni ve en güçlü amiral gemisi modelimiz, doğal dil işleme, matematiksel hesaplama ve akıl yürütme alanlarında üstün performans sergiliyor — mükemmel bir çok yönlü oyuncu."
   },
+  "grok-code-fast-1": {
+    "description": "Hızlı ve ekonomik bir çıkarım modeli olan grok-code-fast-1'i sunmaktan mutluluk duyuyoruz; ajan kodlamasında mükemmel performans sergiler."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
   },
