@@ -67,7 +67,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   xai: {
     functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4'],
+    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast'],
     visionKeywords: ['vision', 'grok-4'],
   },
   zeroone: {
