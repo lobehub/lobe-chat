@@ -1,7 +1,7 @@
 import { USD_TO_CNY } from '@lobechat/const';
-import { ModelPriceCurrency } from '@lobechat/types';
 import dayjs from 'dayjs';
 import { isNumber } from 'lodash-es';
+import { ModelPriceCurrency } from 'model-bank';
 import numeral from 'numeral';
 
 export const formatSize = (bytes: number, fractionDigits: number = 1): string => {

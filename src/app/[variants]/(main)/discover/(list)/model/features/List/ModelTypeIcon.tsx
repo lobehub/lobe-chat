@@ -12,9 +12,8 @@ import {
   PhoneIcon,
   VideoIcon,
 } from 'lucide-react';
+import { AiModelType } from 'model-bank';
 import { memo } from 'react';
-
-import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 
 const icons: Record<AiModelType, LucideIcon> = {
   chat: MessageSquareTextIcon,
