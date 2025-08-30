@@ -5,7 +5,7 @@ import {
   CreateAiModelParams,
   ToggleAiModelEnableParams,
   UpdateAiModelParams,
-} from '../../../packages/model-bank/src/types/aiModel';
+} from 'model-bank';
 
 export interface IAiModelService {
   createAiModel: (params: CreateAiModelParams) => Promise<any>;

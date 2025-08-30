@@ -8,7 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as langfuseCfg from '@/config/langfuse';
 import { createTraceOptions } from '@/server/modules/ModelRuntime';
 
-import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '..';
+import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '.';
 import { AgentChatOptions } from './ModelRuntime';
 import { providerRuntimeMap } from './runtimeMap';
 import { CreateImagePayload } from './types/image';
