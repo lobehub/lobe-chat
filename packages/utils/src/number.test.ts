@@ -1,6 +1,5 @@
+import { MAX_SEED } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
-
-import { MAX_SEED } from '@/const/image';
 
 import { calculateThumbnailDimensions, generateUniqueSeeds } from './number';
 

@@ -2,10 +2,7 @@ import { ChatModelCard } from '@lobechat/types';
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
-import { createErrorResponse } from '@/utils/errorResponse';
-
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
@@ -16,8 +13,10 @@ import {
   OpenAIChatMessage,
   PullModelParams,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { createErrorResponse } from '../utils/errorResponse';
 import { StreamingResponse } from '../utils/response';
 import { OllamaStream, convertIterableToStream, createModelPullStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';

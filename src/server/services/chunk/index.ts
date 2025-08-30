@@ -1,4 +1,5 @@
-import { ClientSecretPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@lobechat/types';
+
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { FileModel } from '@/database/models/file';
 import { LobeChatDatabase } from '@/database/type';

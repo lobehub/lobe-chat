@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 // ref: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models
 const vertexaiChatModels: AIChatModelCard[] = [

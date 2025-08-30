@@ -6,7 +6,7 @@ import {
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-} from '@/types/aiModel';
+} from '../types/aiModel';
 
 export const gptImage1ParamsSchema: ModelParamsSchema = {
   imageUrls: { default: [] },

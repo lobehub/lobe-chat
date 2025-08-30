@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 // https://platform.sensenova.cn/pricing
 // https://www.sensecore.cn/help/docs/model-as-a-service/nova/release

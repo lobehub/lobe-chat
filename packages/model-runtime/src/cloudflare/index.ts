@@ -1,8 +1,8 @@
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,

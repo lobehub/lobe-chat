@@ -1,5 +1,5 @@
-import { LobeAgentTTSConfig } from '@/types/agent';
-import { FewShots, LLMParams } from '@/types/llm';
+import { FewShots, LobeAgentTTSConfig } from '@lobechat/types';
+import { LLMParams } from 'model-bank';
 
 /**
  * Lobe Agent

@@ -1,9 +1,9 @@
 import { Content, GoogleGenAI, Part } from '@google/genai';
-import { imageUrlToBase64 } from '@lobechat/utils';
 
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { parseDataUri } from '../utils/uriParser';
 
 /**

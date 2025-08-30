@@ -1,5 +1,6 @@
-import { ModelParamsSchema } from 'model-bank';
 import { z } from 'zod';
+
+import { ModelParamsSchema } from '../standard-parameters';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
@@ -8,6 +9,7 @@ export const AiModelSourceEnum = {
   Custom: 'custom',
   Remote: 'remote',
 } as const;
+
 export type AiModelSourceType = (typeof AiModelSourceEnum)[keyof typeof AiModelSourceEnum];
 
 export type AiModelType =
@@ -42,6 +44,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports video
+   */
+  video?: boolean;
+  /**
    *  whether model supports vision
    */
   vision?: boolean;
@@ -71,6 +77,11 @@ export interface LLMParams {
    * @default 0
    */
   presence_penalty?: number;
+  /**
+   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * @default 1
+   */
+  reasoning_effort?: string;
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1

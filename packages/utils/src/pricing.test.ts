@@ -1,6 +1,5 @@
+import { Pricing } from 'model-bank';
 import { describe, expect, it } from 'vitest';
-
-import { Pricing } from '@/types/aiModel';
 
 import {
   getAudioInputUnitRate,

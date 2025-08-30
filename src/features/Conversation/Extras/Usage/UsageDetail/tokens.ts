@@ -1,5 +1,6 @@
-import { LobeDefaultAiModelListItem } from '@/types/aiModel';
-import { ModelTokensUsage } from '@/types/message';
+import type { ModelTokensUsage } from '@lobechat/model-runtime';
+import { LobeDefaultAiModelListItem } from 'model-bank';
+
 import { getAudioInputUnitRate, getAudioOutputUnitRate } from '@/utils/pricing';
 
 import { getPrice } from './pricing';

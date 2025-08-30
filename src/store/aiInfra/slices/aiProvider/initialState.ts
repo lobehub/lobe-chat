@@ -1,4 +1,5 @@
-import { EnabledAiModel } from '@/types/aiModel';
+import { EnabledAiModel } from 'model-bank';
+
 import {
   AiProviderDetailItem,
   AiProviderListItem,

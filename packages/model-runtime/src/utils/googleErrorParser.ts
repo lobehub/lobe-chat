@@ -1,4 +1,4 @@
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../types/error';
 
 export interface ParsedError {
   error: any;

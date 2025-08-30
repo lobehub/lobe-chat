@@ -1,5 +1,4 @@
-import { responsesAPIModels } from '@/const/models';
-
+import { responsesAPIModels } from '../const/models';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -19,7 +18,7 @@ const supportsFlexTier = (model: string) => {
   if (model.startsWith('o3-mini')) {
     return false;
   }
-  return flexSupportedModels.some(supportedModel => model.startsWith(supportedModel));
+  return flexSupportedModels.some((supportedModel) => model.startsWith(supportedModel));
 };
 
 export const LobeOpenAI = createOpenAICompatibleRuntime({
@@ -54,7 +53,12 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         } as any;
       }
 
-      return { ...rest, model, ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }), stream: payload.stream ?? true };
+      return {
+        ...rest,
+        model,
+        ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
+        stream: payload.stream ?? true,
+      };
     },
   },
   debug: {
@@ -97,13 +101,17 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           tools: openaiTools as any,
           // computer-use series must set truncation as auto
           ...(model.startsWith('computer-use') && { truncation: 'auto' }),
-          text: verbosity
-            ? { verbosity }
-            : undefined,
+          text: verbosity ? { verbosity } : undefined,
         }) as any;
       }
 
-      return { ...rest, model, ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }), stream: payload.stream ?? true, tools: openaiTools } as any;
+      return {
+        ...rest,
+        model,
+        ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
+        stream: payload.stream ?? true,
+        tools: openaiTools,
+      } as any;
     },
   },
 });
