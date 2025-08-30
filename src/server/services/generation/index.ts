@@ -1,10 +1,10 @@
 import debug from 'debug';
 import { sha256 } from 'js-sha256';
 import mime from 'mime';
+import { IMAGE_GENERATION_CONFIG } from 'model-bank';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
-import { IMAGE_GENERATION_CONFIG } from '@/const/image';
 import { LobeChatDatabase } from '@/database/type';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { FileService } from '@/server/services/file';
