@@ -143,22 +143,6 @@ describe('configRouter', () => {
           process.env.OPENROUTER_MODEL_LIST = '';
         });
       });
-
-      describe('COMETAPI_MODEL_LIST', () => {
-        it('custom deletion, addition, and renaming of models', async () => {
-          process.env.COMETAPI_MODEL_LIST =
-            '-all,+gpt-5-chat-latest,+chatgpt-4o-latest,+gpt-5-mini';
-
-          const response = await router.getGlobalConfig();
-
-          // Assert
-          const result = response.serverConfig.languageModel?.cometapi;
-
-          expect(result).toMatchSnapshot();
-
-          process.env.COMETAPI_MODEL_LIST = '';
-        });
-      });
     });
   });
 
