@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import { ICON_SIZE_TINY } from '@/const/common';
-import { useTheme } from '@/theme';
 
-import { LanguageSelect } from './LanguageSelect';
-import { TokenDisplay } from './TokenDisplay';
-import { useTokenize } from './hooks/useTokenize';
+import { LanguageSelect } from './components/LanguageSelect';
+import { TokenDisplay } from './components/TokenDisplay';
 import { useStyles } from './style';
 
 interface FullFeaturedProps {
@@ -48,10 +46,6 @@ interface FullFeaturedProps {
    * Custom styles for the component.
    */
   style?: StyleProp<ViewStyle>;
-  /**
-   * The type of display for the tokens.
-   */
-  type?: 'default' | 'compact';
 }
 
 const FullFeatured: React.FC<FullFeaturedProps> = ({
@@ -61,18 +55,14 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
   showLanguage = true,
   fileName,
   defalutExpand = true,
-  type = 'compact',
   allowChangeLanguage = false,
   style,
   onCopy,
 }) => {
-  const { styles, token } = useStyles();
-  const { theme } = useTheme();
   const [expanded, setExpanded] = useState(defalutExpand);
+  const { styles, token } = useStyles();
   const [copied, setCopied] = useState(false);
   const [language, setLanguage] = useState(lang);
-
-  const { tokens, error } = useTokenize(code, language, theme.isDark ? 'dark' : 'light');
 
   const handleCopy = async () => {
     try {
@@ -91,7 +81,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer]}>
         <View style={styles.headerLeft}>
           <Pressable onPress={() => setExpanded(!expanded)} style={styles.expandIcon}>
             {expanded ? (
@@ -102,15 +92,13 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           </Pressable>
         </View>
 
-        <View style={styles.headerCenter}>
-          {allowChangeLanguage && showLanguage ? (
-            <LanguageSelect onSelect={handleLanguageChange} value={language} />
-          ) : (
-            (showLanguage || fileName) && (
-              <Text style={styles.headerTitle}>{fileName || language}</Text>
-            )
-          )}
-        </View>
+        {allowChangeLanguage && showLanguage ? (
+          <LanguageSelect onSelect={handleLanguageChange} value={language} />
+        ) : (
+          (showLanguage || fileName) && (
+            <Text style={styles.headerTitle}>{fileName || language}</Text>
+          )
+        )}
 
         <View style={styles.headerRight}>
           {copyable && (
@@ -124,13 +112,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           )}
         </View>
       </View>
-      {expanded &&
-        (error ? (
-          // 降级为纯文本
-          <Text style={{ color: token.colorText, margin: token.paddingXS }}>{code}</Text>
-        ) : (
-          <TokenDisplay tokens={tokens} type={type} />
-        ))}
+      {expanded && <TokenDisplay code={code} lang={language} />}
     </View>
   );
 };

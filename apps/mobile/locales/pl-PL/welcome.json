@@ -22,24 +22,24 @@
       "q13": "Czy istnieje własny rynek do pozyskiwania GPT?",
       "q14": "Czy obsługiwanych jest wielu dostawców usług AI?",
       "q15": "Co zrobić, gdy napotkam problemy podczas korzystania?"
+    },
+    "questions": {
+      "moreBtn": "Dowiedz się więcej",
+      "title": "Wszyscy pytają:"
+    },
+    "welcome": {
+      "afternoon": "Dzień dobry po południu",
+      "morning": "Dzień dobry rano",
+      "night": "Dobry wieczór",
+      "noon": "Dzień dobry w południe"
     }
   },
   "header": "Witamy",
   "pickAgent": "Lub wybierz spośród poniższych szablonów asystentów",
-  "questions": {
-    "moreBtn": "Dowiedz się więcej",
-    "title": "Najczęściej zadawane pytania:"
-  },
   "skip": "Pomiń tworzenie",
   "slogan": {
     "desc1": "Uruchom klaster mózgów, rozpal iskrę myśli. Twój inteligentny asystent jest zawsze przy Tobie.",
     "desc2": "Stwórz swojego pierwszego asystenta, zacznijmy~",
     "title": "Daj sobie mądrzejszy mózg"
-  },
-  "welcome": {
-    "afternoon": "Dzień dobry po południu",
-    "morning": "Dzień dobry rano",
-    "night": "Dobry wieczór",
-    "noon": "Dzień dobry w południe"
   }
 }

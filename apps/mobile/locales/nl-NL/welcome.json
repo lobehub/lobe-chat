@@ -22,24 +22,24 @@
       "q13": "Is er een eigen markt om GPT's te verkrijgen?",
       "q14": "Worden meerdere AI-dienstverleners ondersteund?",
       "q15": "Wat moet ik doen als ik problemen ondervind tijdens het gebruik?"
+    },
+    "questions": {
+      "moreBtn": "Meer weten",
+      "title": "Veelgestelde vragen:"
+    },
+    "welcome": {
+      "afternoon": "Goedemiddag",
+      "morning": "Goedemorgen",
+      "night": "Goedenavond",
+      "noon": "Goedemiddag"
     }
   },
   "header": "Welkom",
   "pickAgent": "Of kies uit de onderstaande assistent-sjablonen",
-  "questions": {
-    "moreBtn": "Meer weten",
-    "title": "Veelgestelde vragen:"
-  },
   "skip": "Overslaan maken",
   "slogan": {
     "desc1": "Activeer een breincluster, ontsteek de vonk van gedachten. Uw slimme assistent is er altijd voor u.",
     "desc2": "Maak uw eerste assistent, laten we beginnen~",
     "title": "Geef uzelf een slimmer brein"
-  },
-  "welcome": {
-    "afternoon": "Goedemiddag",
-    "morning": "Goedemorgen",
-    "night": "Goedenavond",
-    "noon": "Goedemiddag"
   }
 }
