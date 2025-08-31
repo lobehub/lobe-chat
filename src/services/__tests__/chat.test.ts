@@ -2,7 +2,6 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
-  LobeCometAI,
   LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
@@ -2234,21 +2233,6 @@ describe('ModelRuntimeOnClient', () => {
         const runtime = await initializeWithClientStore(ModelProvider.OpenRouter, {});
         expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
-      });
-
-      it('CometAPI provider: with apiKey', async () => {
-        merge(initialSettingsState, {
-          settings: {
-            keyVaults: {
-              cometapi: {
-                apiKey: 'user-cometapi-key',
-              },
-            },
-          },
-        } as UserSettingsState) as unknown as UserStore;
-        const runtime = await initializeWithClientStore(ModelProvider.CometAPI, {});
-        expect(runtime).toBeInstanceOf(ModelRuntime);
-        expect(runtime['_runtime']).toBeInstanceOf(LobeCometAI);
       });
 
       it('TogetherAI provider: with apiKey', async () => {

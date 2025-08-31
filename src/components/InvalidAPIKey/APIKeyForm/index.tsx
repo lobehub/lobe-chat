@@ -35,10 +35,6 @@ const APIKeyForm = memo<APIKeyFormProps>(
           return 'sk-or-********************************';
         }
 
-        case ModelProvider.CometAPI: {
-          return 'sk-********************************';
-        }
-
         case ModelProvider.Perplexity: {
           return 'pplx-********************************';
         }

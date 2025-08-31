@@ -4,7 +4,6 @@ export { LobeAzureOpenAI } from './azureOpenai';
 export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';
 export { LobeBflAI } from './bfl';
-export { LobeCometAI } from './cometapi';
 export { LobeDeepSeekAI } from './deepseek';
 export * from './error';
 export { LobeGoogleAI } from './google';
