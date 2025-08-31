@@ -5,7 +5,7 @@ import { Langfuse } from 'langfuse';
 import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as langfuseCfg from '@/config/langfuse';
+import * as langfuseCfg from '@/envs/langfuse';
 import { createTraceOptions } from '@/server/modules/ModelRuntime';
 
 import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '.';
