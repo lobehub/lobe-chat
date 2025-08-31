@@ -4,7 +4,7 @@ export const useStyles = createStyles((token) => ({
   activeContainer: {
     backgroundColor: token.colorPrimaryBg,
     borderColor: token.colorPrimary,
-    borderWidth: 1,
+    borderWidth: token.lineWidth,
   },
 
   activeTitle: {
@@ -14,11 +14,11 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
-    borderRadius: 8,
-    borderWidth: 1,
-    marginHorizontal: 12,
-    marginVertical: 4,
-    paddingHorizontal: 12,
+    borderRadius: token.borderRadiusLG,
+    borderWidth: token.lineWidth,
+    marginHorizontal: token.marginSM,
+    marginVertical: token.marginXXS,
+    paddingHorizontal: token.paddingSM,
     paddingVertical: 10,
   },
 
@@ -28,8 +28,8 @@ export const useStyles = createStyles((token) => ({
 
   title: {
     color: token.colorText,
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 20,
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
+    lineHeight: token.lineHeightSM,
   },
 }));

@@ -21,13 +21,13 @@ export const useStyles = createStyles((token) => ({
   defaultTopicContainer: {
     alignItems: 'center',
     borderColor: token.colorBorder,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     borderStyle: 'dashed',
-    borderWidth: 1,
+    borderWidth: token.lineWidth,
     flexDirection: 'row',
-    marginHorizontal: 12,
-    marginVertical: 8,
-    paddingHorizontal: 12,
+    marginHorizontal: token.marginSM,
+    marginVertical: token.marginXS,
+    paddingHorizontal: token.paddingSM,
     paddingVertical: 10,
   },
 
@@ -41,7 +41,7 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     height: 20,
     justifyContent: 'center',
-    marginRight: 8,
+    marginRight: token.marginXS,
     width: 20,
   },
 
@@ -49,7 +49,7 @@ export const useStyles = createStyles((token) => ({
   defaultTopicTitle: {
     color: token.colorText,
     flex: 1,
-    fontSize: 14,
+    fontSize: token.fontSize,
   },
 
   // 空状态容器
@@ -57,13 +57,13 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: token.paddingLG,
   },
 
   // 空状态文本
   emptyText: {
     color: token.colorTextTertiary,
-    fontSize: 14,
+    fontSize: token.fontSize,
     textAlign: 'center',
   },
 
@@ -71,13 +71,13 @@ export const useStyles = createStyles((token) => ({
   header: {
     borderBottomColor: token.colorBorderSecondary,
     borderBottomWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.padding,
   },
 
   // 滚动内容容器
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: token.marginMD,
   },
 
   // 滚动视图
@@ -88,7 +88,7 @@ export const useStyles = createStyles((token) => ({
   // 临时标签
   tempBadge: {
     backgroundColor: token.colorFillTertiary,
-    borderRadius: 4,
+    borderRadius: token.borderRadiusXS,
     color: token.colorTextSecondary,
     fontSize: 10,
     paddingHorizontal: 6,
@@ -104,15 +104,15 @@ export const useStyles = createStyles((token) => ({
   // 标题
   title: {
     color: token.colorText,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
   },
 
   // Topic项（临时样式）
   topicItem: {
     borderBottomColor: token.colorBorderSecondary,
     borderBottomWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
 }));

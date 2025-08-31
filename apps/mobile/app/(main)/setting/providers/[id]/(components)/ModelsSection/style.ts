@@ -5,7 +5,7 @@ export const useStyles = createStyles((token) => ({
   actionsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
   },
 
   // 底部行（模型ID标签）
@@ -18,8 +18,8 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgContainer,
     borderBottomColor: token.colorBorderSecondary,
     borderBottomWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
 
   // 卡片内容
@@ -31,20 +31,20 @@ export const useStyles = createStyles((token) => ({
   // 主容器
   container: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     overflow: 'hidden',
   },
 
   // 空状态容器
   emptyContainer: {
     alignItems: 'center',
-    padding: 32,
+    padding: token.paddingXL,
   },
 
   // 空状态文字
   emptyText: {
     color: token.colorTextTertiary,
-    fontSize: 14,
+    fontSize: token.fontSize,
     textAlign: 'center',
   },
 
@@ -52,9 +52,9 @@ export const useStyles = createStyles((token) => ({
   fetchButton: {
     alignItems: 'center',
     backgroundColor: token.colorPrimary,
-    borderRadius: 6,
+    borderRadius: token.borderRadius,
     flexDirection: 'row',
-    paddingHorizontal: 12,
+    paddingHorizontal: token.paddingSM,
     paddingVertical: 6,
   },
 
@@ -66,9 +66,9 @@ export const useStyles = createStyles((token) => ({
   // 获取按钮文字
   fetchButtonText: {
     color: token.colorTextLightSolid,
-    fontSize: 12,
-    fontWeight: '600',
-    marginLeft: 4,
+    fontSize: token.fontSizeSM,
+    fontWeight: token.fontWeightStrong,
+    marginLeft: token.marginXXS,
   },
 
   // 获取按钮文字禁用状态
@@ -78,35 +78,35 @@ export const useStyles = createStyles((token) => ({
 
   // 头部
   header: {
-    padding: 16,
+    padding: token.padding,
   },
 
   // Loading容器 - 固定宽度避免布局跳跃
   loadingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
+    marginRight: token.marginXS,
     width: 20,
   },
 
   // Loading容器（页面级）
   loadingContainerPage: {
     alignItems: 'center',
-    padding: 32,
+    padding: token.paddingXL,
   },
 
   // Loading文字
   loadingText: {
     color: token.colorTextSecondary,
-    fontSize: 14,
-    marginTop: 8,
+    fontSize: token.fontSize,
+    marginTop: token.marginXS,
     textAlign: 'center',
   },
 
   // 模型数量
   modelCount: {
     color: token.colorTextSecondary,
-    fontSize: 12,
+    fontSize: token.fontSizeSM,
   },
 
   // 模型ID标签
@@ -119,21 +119,21 @@ export const useStyles = createStyles((token) => ({
   // 模型ID文字
   modelIdText: {
     color: token.colorTextSecondary,
-    fontSize: 12,
+    fontSize: token.fontSizeSM,
     fontWeight: '500',
   },
 
   // 模型信息
   modelInfo: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
 
   // 模型元信息
   modelMeta: {
     color: token.colorTextSecondary,
-    fontSize: 12,
+    fontSize: token.fontSizeSM,
     lineHeight: 16,
   },
 
@@ -141,7 +141,7 @@ export const useStyles = createStyles((token) => ({
   modelName: {
     color: token.colorText,
     flex: 1,
-    fontSize: 14,
+    fontSize: token.fontSize,
     fontWeight: '500',
   },
 
@@ -150,42 +150,42 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     backgroundColor: token.colorBgLayout,
     borderColor: token.colorBorder,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     borderWidth: 1,
     flexDirection: 'row',
-    marginBottom: 16,
-    paddingHorizontal: 12,
+    marginBottom: token.margin,
+    paddingHorizontal: token.paddingSM,
   },
 
   // 搜索输入框
   searchInput: {
     color: token.colorText,
     flex: 1,
-    fontSize: 14,
-    marginLeft: 8,
+    fontSize: token.fontSize,
+    marginLeft: token.marginXS,
     paddingVertical: 10,
   },
 
   // 分组头部
   sectionHeader: {
     backgroundColor: token.colorFillQuaternary,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingXS,
   },
 
   // 分组头部文字
   sectionHeaderText: {
     color: token.colorText,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
   },
 
   // 章节标题
   sectionTitle: {
     color: token.colorText,
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.marginXXS,
   },
 
   // Switch容器
@@ -204,14 +204,14 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: token.marginSM,
   },
 
   // 顶部行（显示名称 + 能力图标）
   topRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 8,
+    gap: token.marginXS,
+    marginBottom: token.marginXS,
   },
 }));
