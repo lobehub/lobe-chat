@@ -117,6 +117,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'slider': {
+        router.push('/playground/components/slider');
+
+        break;
+      }
       case 'theme-provider': {
         router.push('/playground/components/theme-provider');
 

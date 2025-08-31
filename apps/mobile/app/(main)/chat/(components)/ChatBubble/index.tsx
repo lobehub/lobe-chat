@@ -23,7 +23,7 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     if (isLoading) {
       return <LoadingDots />;
     }
-    return <Markdown content={message.content} />;
+    return <Markdown>{message.content}</Markdown>;
   }, [isLoading, message.content]);
 
   return (
