@@ -6,12 +6,13 @@ import type { ModelProviderKey } from '../types';
 export interface ModelProcessorConfig {
   excludeKeywords?: readonly string[]; // 对符合的模型不添加标签
   functionCallKeywords?: readonly string[];
+  imageOutputKeywords?: readonly string[];
   reasoningKeywords?: readonly string[];
-  visionKeywords?: readonly string[];
   searchKeywords?: readonly string[];
+  visionKeywords?: readonly string[];
 }
 
-// 默认兜底关键字：任意包含 -search 的模型 ID 视为支持联网搜索
+// 默认关键字：任意包含 -search 的模型 ID 视为支持联网搜索
 const DEFAULT_SEARCH_KEYWORDS = ['-search'] as const;
 
 // 模型能力标签关键词配置
@@ -27,6 +28,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   google: {
     functionCallKeywords: ['gemini'],
+    imageOutputKeywords:['-image-'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
@@ -296,6 +298,7 @@ const processModelCard = (
     reasoningKeywords = [],
     excludeKeywords = [],
     searchKeywords = DEFAULT_SEARCH_KEYWORDS,
+    imageOutputKeywords = [],
   } = config;
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
@@ -378,8 +381,10 @@ const processModelCard = (
       model.search ??
       knownModel?.abilities?.search ??
       ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
-    imageOutput: model.imageOutput ?? knownModel?.abilities?.imageOutput ?? false,
-
+    imageOutput:
+      model.imageOutput ??
+      knownModel?.abilities?.imageOutput ??
+      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) || false),
   };
 };
 
