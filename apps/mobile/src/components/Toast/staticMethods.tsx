@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
 
-import { useToast } from './ToastProvider';
+import { useToast } from './InnerToastProvider';
 
 // Global toast manager for static methods
 let globalToastContext: ReturnType<typeof useToast> | null = null;
@@ -11,20 +11,20 @@ const setGlobalToastContext = (context: ReturnType<typeof useToast>) => {
 
 // Static methods interface
 export interface ToastStatic {
-  error: (message: string, duration?: number) => void;
-  info: (message: string, duration?: number) => void;
-  loading: (message: string, duration?: number) => void;
-  success: (message: string, duration?: number) => void;
+  error: (message: string, duration?: number, onClose?: () => void) => void;
+  info: (message: string, duration?: number, onClose?: () => void) => void;
+  loading: (message: string, duration?: number, onClose?: () => void) => void;
+  success: (message: string, duration?: number, onClose?: () => void) => void;
 }
 
 const createStaticMethod = (type: 'success' | 'error' | 'info' | 'loading') => {
-  return (message: string, duration?: number) => {
+  return (message: string, duration?: number, onClose?: () => void) => {
     if (!globalToastContext) {
       console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
       return;
     }
 
-    globalToastContext[type](message, duration);
+    globalToastContext[type](message, duration, onClose);
   };
 };
 
