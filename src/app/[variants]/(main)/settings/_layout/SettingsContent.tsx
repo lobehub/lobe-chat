@@ -1,17 +1,19 @@
 'use client';
 
+import { notFound } from 'next/navigation';
 import { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
 import { SettingsTabs } from '@/store/global/initialState';
-import { notFound } from 'next/navigation';
+
 import About from '../about/index';
 import Agent from '../agent/index';
 import Common from '../common';
-import Hotkey from '../hotkey/page';
+import Hotkey from '../hotkey/index';
 import LLM from '../llm/index';
-import Provider from '../provider/page';
+import Provider from '../provider/index';
 import Proxy from '../proxy/index';
-import Storage from '../storage/page';
+import Storage from '../storage/index';
 import Sync from '../sync/index';
 import SystemAgent from '../system-agent/index';
 import TTS from '../tts/index';
@@ -23,7 +25,6 @@ interface SettingsContentProps {
 }
 
 const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentProps) => {
-
   const getDisplayStyle = (tabName: string) =>
     ({
       alignItems: 'center',
@@ -36,7 +37,6 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
         tabName === SettingsTabs.Agent || tabName === SettingsTabs.Provider || mobile ? 0 : 32,
       width: '100%',
     }) as CSSProperties;
-
 
   if (mobile) {
     switch (activeTab) {
@@ -54,19 +54,19 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
       }
       case SettingsTabs.LLM: {
         if (!showLLM) {
-          notFound()
+          notFound();
         } else {
           return <LLM />;
         }
-        break
+        break;
       }
       case SettingsTabs.Provider: {
         if (!showLLM) {
-          notFound()
+          notFound();
         } else {
           return <Provider />;
         }
-        break
+        break;
       }
       case SettingsTabs.Proxy: {
         return <Proxy />;
@@ -100,9 +100,13 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
         <About mobile={mobile} />
       </div>
 
-      {showLLM ? <div style={getDisplayStyle(SettingsTabs.Agent)}>
-        <Agent mobile={mobile} />
-      </div> : notFound()}
+      {showLLM ? (
+        <div style={getDisplayStyle(SettingsTabs.Agent)}>
+          <Agent mobile={mobile} />
+        </div>
+      ) : (
+        notFound()
+      )}
 
       <div style={getDisplayStyle(SettingsTabs.Hotkey)}>
         <Hotkey />
@@ -112,11 +116,13 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
         <LLM />
       </div>
 
-      {showLLM ?
+      {showLLM ? (
         <div style={getDisplayStyle(SettingsTabs.Provider)}>
           <Provider mobile={mobile} />
-        </div> : notFound()
-      }
+        </div>
+      ) : (
+        notFound()
+      )}
 
       <div style={getDisplayStyle(SettingsTabs.Proxy)}>
         <Proxy />

@@ -1,11 +1,11 @@
 import Page from './(list)';
 
 type ProviderPageType = {
-  mobile?: boolean
-}
+  mobile?: boolean;
+};
 
 export default (props: ProviderPageType) => {
-  const { mobile } = props
+  const { mobile } = props;
 
-  return <Page mobile={mobile}/>
+  return <Page mobile={mobile} />;
 };

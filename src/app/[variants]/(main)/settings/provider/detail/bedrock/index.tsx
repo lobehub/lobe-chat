@@ -11,7 +11,7 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { KeyVaultsConfigKey } from '../../const';
 import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
-import ProviderDetail from '../[id]';
+import ProviderDetail from '../default';
 
 const providerKey: GlobalLLMProviderKey = 'bedrock';
 

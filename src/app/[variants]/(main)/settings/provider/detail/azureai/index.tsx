@@ -1,18 +1,18 @@
 'use client';
 
+import { ModelProvider } from '@lobechat/model-runtime';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
-import { CloudflareProviderCard } from '@/config/modelProviders';
+import { AzureAIProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
 
-import { KeyVaultsConfigKey } from '../../const';
+import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
-import ProviderDetail from '../[id]';
+import ProviderDetail from '../default';
 
-const providerKey: GlobalLLMProviderKey = 'cloudflare';
+const providerKey = ModelProvider.AzureAI;
 
 const useProviderCard = (): ProviderItem => {
   const { t } = useTranslation('modelProvider');
@@ -20,7 +20,7 @@ const useProviderCard = (): ProviderItem => {
   const isLoading = useAiInfraStore(aiProviderSelectors.isAiProviderConfigLoading(providerKey));
 
   return {
-    ...CloudflareProviderCard,
+    ...AzureAIProviderCard,
     apiKeyItems: [
       {
         children: isLoading ? (
@@ -28,22 +28,22 @@ const useProviderCard = (): ProviderItem => {
         ) : (
           <FormPassword
             autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.apiKey.placeholder`)}
+            placeholder={t('azureai.token.placeholder')}
           />
         ),
-        desc: t(`${providerKey}.apiKey.desc`),
-        label: t(`${providerKey}.apiKey.title`),
-        name: [KeyVaultsConfigKey, 'apiKey'],
+        desc: t('azureai.token.desc'),
+        label: t('azureai.token.title'),
+        name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
       {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <FormInput placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)} />
+          <FormInput allowClear placeholder={t('azureai.endpoint.placeholder')} />
         ),
-        desc: t(`${providerKey}.baseURLOrAccountID.desc`),
-        label: t(`${providerKey}.baseURLOrAccountID.title`),
-        name: [KeyVaultsConfigKey, 'baseURLOrAccountID'],
+        desc: t('azureai.endpoint.desc'),
+        label: t('azureai.endpoint.title'),
+        name: [KeyVaultsConfigKey, LLMProviderBaseUrlKey],
       },
     ],
   };

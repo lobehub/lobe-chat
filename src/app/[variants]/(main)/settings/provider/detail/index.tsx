@@ -1,16 +1,14 @@
-import Azure from './azure/page';
-import AzureAI from './azureai/page';
-import Bedrock from './bedrock/page';
-import Cloudflare from './cloudflare/page';
-import GitHub from './github/page';
-import Ollama from './ollama/page';
-import OpenAI from './openai/page';
-import VertexAI from './vertexai/page';
-import DefaultPage from './[id]/page'
+import Azure from './azure';
+import AzureAI from './azureai';
+import Bedrock from './bedrock';
+import Cloudflare from './cloudflare';
+import DefaultPage from './default/ProviderDetialPage';
+import GitHub from './github';
+import Ollama from './ollama';
+import OpenAI from './openai';
+import VertexAI from './vertexai';
 
-const ProviderDetailPage = (props: {
-  id?: string;
-}) => {
+const ProviderDetailPage = (props: { id?: string }) => {
   const { id } = props;
 
   switch (id) {
@@ -39,7 +37,7 @@ const ProviderDetailPage = (props: {
       return <VertexAI />;
     }
     default: {
-      return <DefaultPage params={{id: id}}/>;
+      return <DefaultPage id={id} />;
     }
   }
 };

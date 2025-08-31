@@ -14,7 +14,7 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
-import ProviderDetail from '../[id]';
+import ProviderDetail from '../default';
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { OllamaProviderCard } from '@/config/modelProviders';
 
-import ProviderDetail from '../[id]';
+import ProviderDetail from '../default';
 import CheckError from './CheckError';
 
 const Page = () => {
