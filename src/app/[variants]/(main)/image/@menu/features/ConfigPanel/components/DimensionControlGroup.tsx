@@ -15,7 +15,6 @@ const styles = {
     width: '100%',
   },
   label: {
-    fontSize: 12,
     fontWeight: 500,
   },
 } as const;

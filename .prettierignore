@@ -5,7 +5,6 @@
 .DS_Store
 .editorconfig
 .idea
-.vscode
 .history
 .temp
 .env.local

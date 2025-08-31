@@ -21,9 +21,9 @@ import {
   ModelProvider,
 } from '@lobechat/model-runtime';
 import { ModelRuntime } from '@lobechat/model-runtime';
+import { ClientSecretPayload } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ClientSecretPayload } from '@/const/auth';
 import { LobeStepfunAI } from '@/libs/model-runtime/stepfun';
 
 import { initModelRuntimeWithUserPayload } from './index';

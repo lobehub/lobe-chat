@@ -27,7 +27,8 @@ export interface TopActionProps {
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
-  const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const { showMarket, enableKnowledgeBase, showAiImage } =
+    useServerConfigStore(featureFlagsSelectors);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.NavigateToChat));
 
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
@@ -75,15 +76,17 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           />
         </Link>
       )}
-      <Link aria-label={t('tab.aiImage')} href={'/image'}>
-        <ActionIcon
-          active={isImageActive}
-          icon={Palette}
-          size={ICON_SIZE}
-          title={t('tab.aiImage')}
-          tooltipProps={{ placement: 'right' }}
-        />
-      </Link>
+      {showAiImage && (
+        <Link aria-label={t('tab.aiImage')} href={'/image'}>
+          <ActionIcon
+            active={isImageActive}
+            icon={Palette}
+            size={ICON_SIZE}
+            title={t('tab.aiImage')}
+            tooltipProps={{ placement: 'right' }}
+          />
+        </Link>
+      )}
       {showMarket && (
         <Link aria-label={t('tab.discover')} href={'/discover'}>
           <ActionIcon

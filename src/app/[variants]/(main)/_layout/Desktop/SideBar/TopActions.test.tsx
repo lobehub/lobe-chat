@@ -13,7 +13,7 @@ import { useSessionStore } from '@/store/session';
 import TopActions, { TopActionProps } from './TopActions';
 
 beforeAll(() => {
-  initServerConfigStore({ featureFlags: { market: true } });
+  initServerConfigStore({ featureFlags: { market: true, ai_image: true } });
 });
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  createServerConfigStore().setState({ featureFlags: { market: true } });
+  createServerConfigStore().setState({ featureFlags: { market: true, ai_image: true } });
   cleanup();
 });
 
@@ -56,10 +56,11 @@ const renderTopActions = (props: TopActionProps = {}) => {
 };
 
 describe('TopActions', () => {
-  it('should render Chat and Market by default', () => {
+  it('should render Chat, AI Image and Market by default', () => {
     renderTopActions();
 
     expect(screen.getByText('tab.chat')).toBeInTheDocument();
+    expect(screen.getByText('tab.aiImage')).toBeInTheDocument();
     expect(screen.getByText('tab.discover')).toBeInTheDocument();
   });
 
@@ -83,6 +84,17 @@ describe('TopActions', () => {
 
     expect(screen.getByText('tab.chat')).toBeInTheDocument();
     expect(screen.queryByText('tab.files')).not.toBeInTheDocument();
+  });
+
+  it('should not render AI Image icon when ai_image is disabled', () => {
+    act(() => {
+      createServerConfigStore().setState({ featureFlags: { ai_image: false } });
+    });
+
+    renderTopActions();
+
+    expect(screen.getByText('tab.chat')).toBeInTheDocument();
+    expect(screen.queryByText('tab.aiImage')).not.toBeInTheDocument();
   });
 
   it('should switch back to previous active session', () => {

@@ -22,8 +22,8 @@ export default {
     url: connectionString,
   },
   dialect: 'postgresql',
-  out: './src/database/migrations',
+  out: './packages/database/migrations',
 
-  schema: './src/database/schemas',
+  schema: './packages/database/src/schemas',
   strict: true,
 } satisfies Config;

@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
     },
-    "title": "Model Genişletme Özellikleri"
+    "title": "Model Genişletme Özellikleri",
+    "urlContext": {
+      "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlam içeriğini almak için web bağlantıları otomatik olarak çözümlenir",
+      "title": "Web Bağlantısı İçeriğini Çıkar"
+    }
   },
   "history": {
     "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Giriş önbelleği yazma",
       "output": "Çıkış",
       "outputAudio": "Ses çıkışı",
+      "outputImage": "Görüntü Çıktısı",
       "outputText": "Metin çıkışı",
       "outputTitle": "Çıkış detayları",
       "reasoning": "Derin düşünme",

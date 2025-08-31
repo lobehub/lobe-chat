@@ -1,7 +1,10 @@
+import {
+  DEFAULT_ASPECT_RATIO,
+  PRESET_ASPECT_RATIOS,
+  RuntimeImageGenParams,
+  RuntimeImageGenParamsKeys,
+} from 'model-bank';
 import { useCallback, useMemo } from 'react';
-
-import { DEFAULT_ASPECT_RATIO, PRESET_ASPECT_RATIOS } from '@/const/image';
-import { RuntimeImageGenParams, RuntimeImageGenParamsKeys } from '@/libs/standard-parameters/index';
 
 import { useImageStore } from '../../store';
 import { imageGenerationConfigSelectors } from './selectors';
@@ -44,6 +47,14 @@ export function useGenerationConfigParam<
       paramConfig && typeof paramConfig === 'object' && 'enum' in paramConfig
         ? paramConfig.enum
         : undefined;
+    const maxFileSize =
+      paramConfig && typeof paramConfig === 'object' && 'maxFileSize' in paramConfig
+        ? paramConfig.maxFileSize
+        : undefined;
+    const maxCount =
+      paramConfig && typeof paramConfig === 'object' && 'maxCount' in paramConfig
+        ? paramConfig.maxCount
+        : undefined;
 
     return {
       description,
@@ -51,6 +62,8 @@ export function useGenerationConfigParam<
       min,
       step,
       enumValues,
+      maxFileSize,
+      maxCount,
     };
   }, [paramConfig]);
 
@@ -77,21 +90,17 @@ export function useDimensionControl() {
   const aspectRatioOptions = useMemo(() => {
     const modelOptions = paramsSchema?.aspectRatio?.enum || [];
 
-    // 合并选项，优先使用预设选项，然后添加模型特有的选项
-    const allOptions = [...PRESET_ASPECT_RATIOS];
+    // 如果 schema 里面有 aspectRatio 并且不为空，直接使用 schema 里面的选项
+    if (modelOptions.length > 0) {
+      return modelOptions;
+    }
 
-    // 添加模型选项中不在预设中的选项
-    modelOptions.forEach((option) => {
-      if (!allOptions.includes(option)) {
-        allOptions.push(option);
-      }
-    });
-
-    return allOptions;
+    // 否则使用预设选项
+    return PRESET_ASPECT_RATIOS;
   }, [paramsSchema]);
 
   // 只要不是所有维度相关的控件都不显示，那么这个容器就应该显示
-  const showDimensionControl = !(!isSupportAspectRatio && !isSupportWidth && !isSupportHeight);
+  const showDimensionControl = isSupportAspectRatio || isSupportWidth || isSupportHeight;
 
   return {
     isLocked: store.isAspectRatioLocked,

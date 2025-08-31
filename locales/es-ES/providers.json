@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix ofrece acceso a múltiples modelos de IA a través de una interfaz API unificada."
   },
+  "akashchat": {
+    "description": "Akash es un mercado de recursos en la nube sin necesidad de permisos, con precios competitivos en comparación con los proveedores de nube tradicionales."
+  },
   "anthropic": {
     "description": "Anthropic es una empresa centrada en la investigación y desarrollo de inteligencia artificial, que ofrece una serie de modelos de lenguaje avanzados, como Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus y Claude 3 Haiku. Estos modelos logran un equilibrio ideal entre inteligencia, velocidad y costo, adecuados para una variedad de escenarios de aplicación, desde cargas de trabajo empresariales hasta respuestas rápidas. Claude 3.5 Sonnet, como su modelo más reciente, ha demostrado un rendimiento excepcional en múltiples evaluaciones, manteniendo una alta relación calidad-precio."
   },
@@ -25,6 +28,9 @@
   },
   "bedrock": {
     "description": "Bedrock es un servicio proporcionado por Amazon AWS, enfocado en ofrecer modelos de lenguaje y visuales avanzados para empresas. Su familia de modelos incluye la serie Claude de Anthropic, la serie Llama 3.1 de Meta, entre otros, abarcando una variedad de opciones desde ligeras hasta de alto rendimiento, apoyando tareas como generación de texto, diálogos y procesamiento de imágenes, adecuadas para aplicaciones empresariales de diferentes escalas y necesidades."
+  },
+  "bfl": {
+    "description": "Laboratorio líder en investigación de inteligencia artificial de vanguardia, construyendo la infraestructura visual del mañana."
   },
   "cloudflare": {
     "description": "Ejecuta modelos de aprendizaje automático impulsados por GPU sin servidor en la red global de Cloudflare."

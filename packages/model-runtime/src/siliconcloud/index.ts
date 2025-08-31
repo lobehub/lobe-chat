@@ -1,5 +1,5 @@
-import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
@@ -45,7 +45,7 @@ export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
 
       return {
         ...rest,
-        ...(['qwen3'].some((keyword) => model.toLowerCase().includes(keyword))
+        ...(['qwen3', 'deepseek-v3.1'].some((keyword) => model.toLowerCase().includes(keyword))
           ? {
               enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
               thinking_budget:
@@ -71,7 +71,7 @@ export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: SiliconCloudModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'siliconcloud');
   },
   provider: ModelProvider.SiliconCloud,
 });

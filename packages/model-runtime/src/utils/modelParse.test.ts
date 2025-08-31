@@ -4,7 +4,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import {
   MODEL_LIST_CONFIGS,
-  PROVIDER_DETECTION_CONFIG,
+  MODEL_OWNER_DETECTION_CONFIG,
   detectModelProvider,
   processModelList,
   processMultiProviderModelList,
@@ -98,7 +98,7 @@ const mockDefaultModelList: (Partial<ChatModelCard> & { id: string })[] = [
 ];
 
 // Mock the import
-vi.mock('@/config/aiModels', () => ({
+vi.mock('model-bank', () => ({
   LOBE_DEFAULT_MODEL_LIST: mockDefaultModelList,
 }));
 
@@ -181,7 +181,7 @@ describe('modelParse', () => {
 
       const gpt4Result = result.find((m) => m.id === 'gpt-4')!;
       expect(gpt4Result.displayName).toBe('GPT-4');
-      expect(gpt4Result.enabled).toBe(true);
+      expect(gpt4Result.enabled).toBe(false);
       expect(gpt4Result.contextWindowTokens).toBe(8192);
       expect(gpt4Result.maxOutput).toBe(4096);
       expect(gpt4Result.functionCall).toBe(false); // From knownModel.abilities
@@ -287,7 +287,7 @@ describe('modelParse', () => {
           { id: 'unknown-model-for-enabled-test' }, // unknown
         ];
         const result = await processModelList(modelList, config);
-        expect(result.find((m) => m.id === 'gpt-4')!.enabled).toBe(true);
+        expect(result.find((m) => m.id === 'gpt-4')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'model-known-disabled')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'unknown-model-for-enabled-test')!.enabled).toBe(false);
       });
@@ -394,7 +394,7 @@ describe('modelParse', () => {
           reasoning: true,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -406,9 +406,9 @@ describe('modelParse', () => {
       expect(model.displayName).toBe('Test Claude Known Abilities');
       // 虽然 'claude' 是 anthropic 的 functionCall 和 vision 关键词，
       // 但是 knownModel.abilities.functionCall 和 knownModel.abilities.vision 是 false
-      // 关键词匹配优先，所以应该是 true
-      expect(model.functionCall).toBe(true); // 关键词 'claude' 匹配
-      expect(model.vision).toBe(true); // 关键词 'claude' 匹配
+      // 本地模型配置优先，所以应该是 false
+      expect(model.functionCall).toBe(false); // 从 knownModel.abilities.functionCall
+      expect(model.vision).toBe(false); // 从 knownModel.abilities.vision
       expect(model.reasoning).toBe(true); // 从 knownModel.abilities.reasoning
     });
 
@@ -481,7 +481,7 @@ describe('modelParse', () => {
           contextWindowTokens: 5000,
         };
 
-        const mockModule = await import('@/config/aiModels');
+        const mockModule = await import('model-bank');
         mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempModelEntry as any);
 
         const config = MODEL_LIST_CONFIGS.openai;
@@ -490,7 +490,7 @@ describe('modelParse', () => {
         expect(result[0].displayName).toBe('Direct Special Model'); // From model (priority)
         expect(result[0].contextWindowTokens).toBe(5000); // From model (priority)
         expect(result[0].maxOutput).toBe(2000); // From knownModel
-        expect(result[0].enabled).toBe(true); // From knownModel
+        expect(result[0].enabled).toBe(false);
       });
 
       it('should correctly process reasoning capabilities based on keywords', async () => {
@@ -706,7 +706,7 @@ describe('modelParse', () => {
           reasoning: true,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -735,7 +735,7 @@ describe('modelParse', () => {
           reasoning: false,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -754,7 +754,7 @@ describe('modelParse', () => {
   describe('MODEL_LIST_CONFIGS and PROVIDER_DETECTION_CONFIG', () => {
     it('should have matching keys in both configuration objects', () => {
       const modelConfigKeys = Object.keys(MODEL_LIST_CONFIGS);
-      const providerDetectionKeys = Object.keys(PROVIDER_DETECTION_CONFIG);
+      const providerDetectionKeys = Object.keys(MODEL_OWNER_DETECTION_CONFIG);
       expect(modelConfigKeys.sort()).toEqual(providerDetectionKeys.sort());
     });
   });

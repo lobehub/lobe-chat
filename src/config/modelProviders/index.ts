@@ -4,11 +4,13 @@ import Ai21Provider from './ai21';
 import Ai302Provider from './ai302';
 import Ai360Provider from './ai360';
 import AiHubMixProvider from './aihubmix';
+import AkashChatProvider from './akashchat';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
+import BflProvider from './bfl';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import DeepSeekProvider from './deepseek';
@@ -132,8 +134,10 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   HuggingFaceProvider,
   CloudflareProvider,
   GithubProvider,
+  BflProvider,
   NovitaProvider,
   PPIOProvider,
+  Ai302Provider,
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
@@ -169,8 +173,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   Search1APIProvider,
   InfiniAIProvider,
+  AkashChatProvider,
   QiniuProvider,
-  Ai302Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -186,11 +190,13 @@ export { default as Ai21ProviderCard } from './ai21';
 export { default as Ai302ProviderCard } from './ai302';
 export { default as Ai360ProviderCard } from './ai360';
 export { default as AiHubMixProviderCard } from './aihubmix';
+export { default as AkashChatProviderCard } from './akashchat';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
+export { default as BflProviderCard } from './bfl';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as DeepSeekProviderCard } from './deepseek';

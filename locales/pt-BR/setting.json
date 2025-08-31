@@ -237,6 +237,10 @@
       "title": "Limitar número de mensagens de histórico",
       "unlimited": "Sem limite de mensagens de histórico"
     },
+    "enableStreaming": {
+      "desc": "Ative a saída em fluxo para exibir respostas em tempo real. Quando desativado, apenas a resposta completa será exibida.",
+      "title": "Ativar saída em fluxo"
+    },
     "historyCount": {
       "desc": "Número de mensagens incluídas em cada solicitação (incluindo a última pergunta feita. Cada pergunta e resposta contam como 1)",
       "title": "Número de mensagens incluídas"

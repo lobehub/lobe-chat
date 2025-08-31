@@ -38,7 +38,7 @@ export const LobeAi360AI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_AI360_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const reasoningKeywords = ['360gpt2-o1', '360zhinao2-o1'];
 

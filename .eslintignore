@@ -29,3 +29,20 @@ logs
 # misc
 # add other ignore file below
 .next
+
+# temporary directories
+tmp
+temp
+.temp
+.local
+docs/.local
+
+# cache directories
+.cache
+
+# AI coding tools directories
+.claude
+.serena
+
+# MCP tools
+/.serena/**

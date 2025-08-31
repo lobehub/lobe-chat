@@ -8,7 +8,7 @@ import { electronSystemService } from '@/services/electron/system';
 import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
 import { merge } from '@/utils/merge';
 
-import { ElectronStore } from '../store';
+import type { ElectronStore } from '../store';
 
 // ======== Action Interface ======== //
 

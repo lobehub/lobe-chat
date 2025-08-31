@@ -1,10 +1,10 @@
+import { ClientSecretPayload } from '@lobechat/types';
 import { parse } from 'cookie';
 import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 import {
-  ClientSecretPayload,
   LOBE_CHAT_AUTH_HEADER,
   LOBE_CHAT_OIDC_AUTH_HEADER,
   enableClerk,

@@ -1,21 +1,21 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { parseDefaultThemeFromCountry } from '@lobechat/utils/server';
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
+import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
-import { parseBrowserLanguage } from '@/utils/locale';
-import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
-import { RouteVariants } from '@/utils/server/routeVariants';
 
-import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
+import { parseBrowserLanguage } from './utils/locale';
+import { RouteVariants } from './utils/server/routeVariants';
 
 // Create debug logger instances
 const logDefault = debug('middleware:default');

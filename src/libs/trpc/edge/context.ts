@@ -1,12 +1,8 @@
+import { ClientSecretPayload } from '@lobechat/types';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
-import {
-  ClientSecretPayload,
-  LOBE_CHAT_AUTH_HEADER,
-  enableClerk,
-  enableNextAuth,
-} from '@/const/auth';
+import { LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
 import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
 
 export interface AuthContext {

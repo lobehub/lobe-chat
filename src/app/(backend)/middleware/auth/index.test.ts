@@ -1,9 +1,9 @@
 import { AgentRuntimeError } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
+import { getXorPayload } from '@lobechat/utils/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getXorPayload } from '@/utils/server/xor';
 
 import { RequestHandler, checkAuth } from './index';
 import { checkAuthMethod } from './utils';
@@ -20,7 +20,7 @@ vi.mock('./utils', () => ({
   checkAuthMethod: vi.fn(),
 }));
 
-vi.mock('@/utils/server/xor', () => ({
+vi.mock('@lobechat/utils/server', () => ({
   getXorPayload: vi.fn(),
 }));
 

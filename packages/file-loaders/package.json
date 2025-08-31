@@ -21,7 +21,8 @@
   "sideEffects": false,
   "main": "./src/index.ts",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "@langchain/community": "^0.3.41",
@@ -32,7 +33,7 @@
     "mammoth": "^1.8.0",
     "officeparser": "5.1.1",
     "pdfjs-dist": "4.10.38",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "yauzl": "^3.2.0"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import { AgentRuntimeError } from '@lobechat/model-runtime';
 import { ChatErrorType, ErrorType, TraceNameMap } from '@lobechat/types';
+import { getXorPayload } from '@lobechat/utils/server';
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
@@ -8,7 +9,6 @@ import { LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { getAppConfig } from '@/envs/app';
 import { TraceClient } from '@/libs/traces';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getXorPayload } from '@/utils/server/xor';
 import { getTracePayload } from '@/utils/trace';
 
 import { parserPluginSettings } from './settings';

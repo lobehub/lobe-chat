@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Dodaj parametr",
+    "argumentPlaceholder": "Parametr {{index}}",
+    "enterFirstArgument": "Wprowadź pierwszy parametr..."
+  },
   "DragUpload": {
     "dragDesc": "Przeciągnij pliki tutaj, aby przesłać wiele obrazów.",
     "dragFileDesc": "Przeciągnij obrazy i pliki tutaj, aby przesłać wiele obrazów i plików.",
@@ -68,6 +73,18 @@
   "GoBack": {
     "back": "Wróć"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Pobierz",
+      "preview": "Podgląd"
+    },
+    "iframeTitle": "Podgląd HTML",
+    "mode": {
+      "code": "Kod",
+      "preview": "Podgląd"
+    },
+    "title": "Podgląd HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Kliknij, aby zmienić obraz",
@@ -125,6 +142,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} przesłano"
+    },
+    "validation": {
+      "fileSizeExceeded": "Przekroczono limit rozmiaru pliku",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) przekracza maksymalny dozwolony rozmiar {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} plików przekracza maksymalny dozwolony rozmiar {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Przekroczono dopuszczalną liczbę obrazów"
     }
   },
   "OllamaSetupGuide": {

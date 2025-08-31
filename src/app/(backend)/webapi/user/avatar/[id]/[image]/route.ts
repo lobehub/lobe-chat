@@ -1,3 +1,4 @@
+import { serverDB } from '@/database/server';
 import { UserService } from '@/server/services/user';
 
 export const runtime = 'nodejs';
@@ -31,7 +32,7 @@ export const GET = async (req: Request, segmentData: { params: Params }) => {
   try {
     const params = await segmentData.params;
     const type = getContentType(params.image);
-    const userService = new UserService();
+    const userService = new UserService(serverDB);
 
     const userAvatar = await userService.getUserAvatar(params.id, params.image);
     if (!userAvatar) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
+import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 
@@ -20,7 +21,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
   pino.trace(`logto webhook payload: ${{ data, event }}`);
 
-  const nextAuthUserService = new NextAuthUserService();
+  const nextAuthUserService = new NextAuthUserService(serverDB);
   switch (event) {
     case 'User.Data.Updated': {
       return nextAuthUserService.safeUpdateUser(

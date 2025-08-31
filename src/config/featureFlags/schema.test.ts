@@ -12,6 +12,7 @@ describe('FeatureFlagsSchema', () => {
       create_session: true,
       edit_agent: false,
       dalle: true,
+      ai_image: true,
     });
 
     expect(result.success).toBe(true);
@@ -19,7 +20,7 @@ describe('FeatureFlagsSchema', () => {
 
   it('should reject invalid feature flags', () => {
     const result = FeatureFlagsSchema.safeParse({
-      webrtc_sync: 'yes', // Invalid type, should be boolean
+      edit_agent: 'yes', // Invalid type, should be boolean
     });
 
     expect(result.success).toBe(false);
@@ -36,18 +37,19 @@ describe('mapFeatureFlagsEnvToState', () => {
       create_session: true,
       edit_agent: false,
       dalle: true,
+      ai_image: true,
       check_updates: true,
       welcome_suggest: true,
     };
 
     const expectedState = {
-      enableWebrtc: true,
       isAgentEditable: false,
       showCreateSession: true,
       showLLM: false,
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: false,
       showDalle: true,
+      showAiImage: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
     };
