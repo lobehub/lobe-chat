@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Quay lại"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Tải xuống",
+      "preview": "Xem trước"
+    },
+    "iframeTitle": "Xem trước HTML",
+    "mode": {
+      "code": "Mã",
+      "preview": "Xem trước"
+    },
+    "title": "Xem trước HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Nhấn để thay đổi hình ảnh",

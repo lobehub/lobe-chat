@@ -2,7 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '../../type';import { AsyncTaskStatus } from '@/types/asyncTask';
+import { AsyncTaskStatus } from '@/types/asyncTask';
 import { GenerationConfig } from '@/types/generation';
 
 import {
@@ -12,6 +12,7 @@ import {
   generations,
   users,
 } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { GenerationBatchModel } from '../generationBatch';
 import { getTestDB } from './_util';
 
@@ -364,6 +365,51 @@ describe('GenerationBatchModel', () => {
 
       expect(results[0].config).toEqual({
         imageUrls: ['https://example.com/url1.jpg', 'https://example.com/url2.jpg'],
+      });
+    });
+
+    it('should transform single config imageUrl through FileService', async () => {
+      const [createdBatch] = await serverDB
+        .insert(generationBatches)
+        .values({
+          ...testBatch,
+          userId,
+          config: { imageUrl: 'single-image.jpg', prompt: 'test prompt' },
+        })
+        .returning();
+
+      const results = await generationBatchModel.queryGenerationBatchesByTopicIdWithGenerations(
+        testTopic.id,
+      );
+
+      expect(results[0].config).toEqual({
+        imageUrl: 'https://example.com/single-image.jpg',
+        prompt: 'test prompt',
+      });
+    });
+
+    it('should transform both imageUrl and imageUrls when both are present', async () => {
+      const [createdBatch] = await serverDB
+        .insert(generationBatches)
+        .values({
+          ...testBatch,
+          userId,
+          config: {
+            imageUrl: 'single-image.jpg',
+            imageUrls: ['url1.jpg', 'url2.jpg'],
+            prompt: 'test prompt',
+          },
+        })
+        .returning();
+
+      const results = await generationBatchModel.queryGenerationBatchesByTopicIdWithGenerations(
+        testTopic.id,
+      );
+
+      expect(results[0].config).toEqual({
+        imageUrl: 'https://example.com/single-image.jpg',
+        imageUrls: ['https://example.com/url1.jpg', 'https://example.com/url2.jpg'],
+        prompt: 'test prompt',
       });
     });
 

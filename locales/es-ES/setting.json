@@ -237,6 +237,10 @@
       "title": "Limitar número de mensajes históricos",
       "unlimited": "Sin límite de mensajes históricos"
     },
+    "enableStreaming": {
+      "desc": "Habilita la salida en streaming para mostrar la respuesta en tiempo real. Si se desactiva, solo se mostrará la respuesta completa.",
+      "title": "Habilitar salida en streaming"
+    },
     "historyCount": {
       "desc": "Número de mensajes incluidos en cada solicitud (incluyendo las preguntas más recientes. Cada pregunta y respuesta se cuenta como 1)",
       "title": "Número de mensajes incluidos"

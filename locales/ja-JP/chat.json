@@ -52,7 +52,11 @@
     "thinking": {
       "title": "深い思考のスイッチ"
     },
-    "title": "モデル拡張機能"
+    "title": "モデル拡張機能",
+    "urlContext": {
+      "desc": "有効にすると、実際のウェブページのコンテキスト内容を取得するためにウェブリンクを自動的に解析します",
+      "title": "ウェブリンク内容の抽出"
+    }
   },
   "history": {
     "title": "アシスタントは最後の{{count}}件のメッセージのみを記憶します"
@@ -125,6 +129,7 @@
       "inputWriteCached": "入力キャッシュ書き込み",
       "output": "出力",
       "outputAudio": "音声出力",
+      "outputImage": "画像出力",
       "outputText": "テキスト出力",
       "outputTitle": "出力の詳細",
       "reasoning": "深い思考",

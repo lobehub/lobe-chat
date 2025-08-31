@@ -73,6 +73,18 @@
   "GoBack": {
     "back": "Indietro"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Scarica",
+      "preview": "Anteprima"
+    },
+    "iframeTitle": "Anteprima HTML",
+    "mode": {
+      "code": "Codice",
+      "preview": "Anteprima"
+    },
+    "title": "Anteprima HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Clicca per cambiare immagine",

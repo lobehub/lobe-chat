@@ -2,7 +2,10 @@
   "name": "@lobechat/model-runtime",
   "version": "1.0.0",
   "private": true,
-  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vertexai": "./src/vertexai/index.ts"
+  },
   "scripts": {
     "test": "vitest",
     "test:coverage": "vitest --coverage"
@@ -12,6 +15,7 @@
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "debug": "^4.4.1",
+    "model-bank": "workspace:*",
     "openai": "^4.104.0"
   }
 }

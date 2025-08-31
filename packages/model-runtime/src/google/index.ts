@@ -9,10 +9,8 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
-import { imageUrlToBase64, safeParseJSON } from '@lobechat/utils';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   ChatCompletionTool,
   ChatMethodOptions,
@@ -20,13 +18,17 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { StreamingResponse } from '../utils/response';
+import { safeParseJSON } from '../utils/safeParseJSON';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
+import { createGoogleImage } from './createImage';
 
 const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
 
@@ -258,49 +260,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   /**
-   * Generate images using Google AI Imagen API
+   * Generate images using Google AI Imagen API or Gemini Chat Models
    * @see https://ai.google.dev/gemini-api/docs/image-generation#imagen
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
-    try {
-      const { model, params } = payload;
-
-      const response = await this.client.models.generateImages({
-        config: {
-          aspectRatio: params.aspectRatio,
-          numberOfImages: 1,
-        },
-        model,
-        prompt: params.prompt,
-      });
-
-      if (!response.generatedImages || response.generatedImages.length === 0) {
-        throw new Error('No images generated');
-      }
-
-      const generatedImage = response.generatedImages[0];
-      if (!generatedImage.image || !generatedImage.image.imageBytes) {
-        throw new Error('Invalid image data');
-      }
-
-      const { imageBytes } = generatedImage.image;
-      // 1. official doc use png as example
-      // 2. no responseType param support like openai now.
-      // I think we can just hard code png now
-      const imageUrl = `data:image/png;base64,${imageBytes}`;
-
-      return { imageUrl };
-    } catch (error) {
-      const err = error as Error;
-      console.error('Google AI image generation error:', err);
-
-      const { errorType, error: parsedError } = parseGoogleErrorMessage(err.message);
-      throw AgentRuntimeError.createImage({
-        error: parsedError,
-        errorType,
-        provider: this.provider,
-      });
-    }
+    return createGoogleImage(this.client, this.provider, payload);
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
@@ -521,14 +485,28 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     tools: ChatCompletionTool[] | undefined,
     payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
-    // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
-    if (payload?.messages?.some((m) => m.tool_calls?.length)) {
+    const hasToolCalls = payload?.messages?.some((m) => m.tool_calls?.length);
+    const hasSearch = payload?.enabledSearch;
+    const hasUrlContext = payload?.urlContext;
+    const hasFunctionTools = tools && tools.length > 0;
+
+    // 如果已经有 tool_calls，优先处理 function declarations
+    if (hasToolCalls && hasFunctionTools) {
       return this.buildFunctionDeclarations(tools);
     }
-    if (payload?.enabledSearch) {
+
+    // 构建并返回搜索相关工具（搜索工具不能与 FunctionCall 同时使用）
+    if (hasUrlContext && hasSearch) {
+      return [{ urlContext: {} }, { googleSearch: {} }];
+    }
+    if (hasUrlContext) {
+      return [{ urlContext: {} }];
+    }
+    if (hasSearch) {
       return [{ googleSearch: {} }];
     }
 
+    // 最后考虑 function declarations
     return this.buildFunctionDeclarations(tools);
   }
 

@@ -178,6 +178,9 @@ export const getLLMConfig = () => {
       ENABLED_AI302: z.boolean(),
       AI302_API_KEY: z.string().optional(),
 
+      ENABLED_AKASHCHAT: z.boolean(),
+      AKASHCHAT_API_KEY: z.string().optional(),
+
       ENABLED_AIHUBMIX: z.boolean(),
       AIHUBMIX_API_KEY: z.string().optional(),
     },
@@ -355,6 +358,9 @@ export const getLLMConfig = () => {
 
       ENABLED_AI302: !!process.env.AI302_API_KEY,
       AI302_API_KEY: process.env.AI302_API_KEY,
+
+      ENABLED_AKASHCHAT: !!process.env.AKASHCHAT_API_KEY,
+      AKASHCHAT_API_KEY: process.env.AKASHCHAT_API_KEY,
 
       ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
       AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,

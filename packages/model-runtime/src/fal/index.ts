@@ -1,12 +1,11 @@
 import { fal } from '@fal-ai/client';
 import debug from 'debug';
 import { pick } from 'lodash-es';
+import { RuntimeImageGenParamsValue } from 'model-bank';
 import { ClientOptions } from 'openai';
 
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
-
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
+import { AgentRuntimeErrorType } from '../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 

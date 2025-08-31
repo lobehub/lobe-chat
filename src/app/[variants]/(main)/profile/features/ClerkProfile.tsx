@@ -48,7 +48,7 @@ export const useStyles = createStyles(
         height: 100%;
       `,
       scrollBox: css`
-        background: transparent;
+        background: transparent !important;
       `,
     }) as Partial<Record<keyof ElementsConfig, any>>,
 );

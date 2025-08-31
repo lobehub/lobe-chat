@@ -87,13 +87,13 @@
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
     "GoogleAIBlockReason": {
       "BLOCKLIST": "Your content contains prohibited terms. Please review and modify your input, then try again.",
-      "IMAGE_SAFETY": "The generated image content was blocked for safety reasons. Please try changing your image generation request.",
-      "LANGUAGE": "The language you used is not currently supported. Please try again in English or another supported language.",
+      "IMAGE_SAFETY": "The generated image was blocked for safety reasons. Please try modifying your image request.",
+      "LANGUAGE": "The language you are using is not supported. Please try again in English or another supported language.",
       "OTHER": "The content was blocked for an unknown reason. Please try rephrasing your request.",
       "PROHIBITED_CONTENT": "Your request may contain prohibited content. Please adjust your request to comply with the usage guidelines.",
       "RECITATION": "Your content was blocked due to potential copyright concerns. Please try using original content or rephrase your request.",
-      "SAFETY": "Your content was blocked by safety policies. Please modify your request to avoid potentially harmful or inappropriate content.",
-      "SPII": "Your content may contain sensitive personal identifying information. To protect privacy, please remove such information and try again.",
+      "SAFETY": "Your content was blocked for safety policy reasons. Please adjust your request to avoid potentially harmful or inappropriate content.",
+      "SPII": "Your content may contain sensitive personally identifiable information (PII). To protect privacy, please remove any sensitive details and try again.",
       "default": "Content blocked: {{blockReason}}. Please adjust your request and try again."
     },
     "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",

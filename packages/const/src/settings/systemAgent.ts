@@ -6,9 +6,6 @@ import {
 
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
 
-export const DEFAULT_REWRITE_QUERY =
-  'Given the following conversation and a follow-up question, rephrase the follow up question to be a standalone question, in its original language. Keep as much details as possible from previous messages. Keep entity names and all.';
-
 export const DEFAULT_SYSTEM_AGENT_ITEM: SystemAgentItem = {
   model: DEFAULT_MODEL,
   provider: DEFAULT_PROVIDER,

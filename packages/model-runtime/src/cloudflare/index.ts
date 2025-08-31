@@ -1,8 +1,8 @@
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
@@ -112,7 +112,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   }
 
   async models(): Promise<ChatModelCard[]> {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
     const response = await fetch(url, {

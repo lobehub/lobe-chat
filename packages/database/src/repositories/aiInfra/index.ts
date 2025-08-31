@@ -1,13 +1,13 @@
 import { isEmpty } from 'lodash-es';
-import pMap from 'p-map';
-
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import {
   AIChatModelCard,
   AiModelSourceEnum,
   AiProviderModelListItem,
   EnabledAiModel,
-} from '@/types/aiModel';
+} from 'model-bank';
+import pMap from 'p-map';
+
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -201,7 +201,11 @@ export class AiInfraRepos {
     providerId: string,
   ): Promise<AiProviderModelListItem[] | undefined> => {
     try {
-      const { default: providerModels } = await import(`@/config/aiModels/${providerId}.ts`);
+      const modules = await import('model-bank');
+
+      // TODO: when model-bank is a separate module, we will try import from model-bank/[prividerId] again
+      // @ts-expect-error providerId is string
+      const providerModels = modules[providerId];
 
       // use the serverModelLists as the defined server model list
       const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
@@ -210,7 +214,8 @@ export class AiInfraRepos {
         enabled: m.enabled || false,
         source: AiModelSourceEnum.Builtin,
       }));
-    } catch {
+    } catch (error) {
+      console.error(error);
       // maybe provider id not exist
     }
   };

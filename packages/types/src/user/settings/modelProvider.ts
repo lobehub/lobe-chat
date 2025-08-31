@@ -1,5 +1,5 @@
 import { ModelProviderKey } from '@/libs/model-runtime';
-import { AiFullModelCard } from '@/types/aiModel';
+import { AiFullModelCard } from '../../../../model-bank/src/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 
 export interface ProviderConfig {

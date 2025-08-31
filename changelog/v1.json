@@ -1,6 +1,138 @@
 [
   {
     "children": {
+      "improvements": ["Remove webrtc sync feature flag."],
+      "features": ["Rename Gemini 2.5 flash image to Nano Banana."]
+    },
+    "date": "2025-08-30",
+    "version": "1.120.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-30",
+    "version": "1.119.2"
+  },
+  {
+    "children": {
+      "fixes": ["Update enableStreaming name."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.1"
+  },
+  {
+    "children": {
+      "features": ["Added support for Azure OpenAI Image Generation."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
+    },
+    "date": "2025-08-30",
+    "version": "1.118.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-30",
+    "version": "1.118.7"
+  },
+  {
+    "children": {
+      "improvements": ["Support non-stream mode."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix clerk scrollBox style, ModelFetcher support getting prices."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix chat session part switch theme issue."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.4"
+  },
+  {
+    "children": {
+      "fixes": ["Correct totalOutputTokens calculation for XAI provider."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add Grok Code Fast 1 model."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.2"
+  },
+  {
+    "children": {
+      "fixes": ["Add Content-Security-Policy env."],
+      "improvements": ["Support Gemini URL context tool."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.1"
+  },
+  {
+    "children": {
+      "features": ["Add new provider AkashChat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.0"
+  },
+  {
+    "children": {
+      "improvements": ["Move chat item into chat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.117.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter."
+      ],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-29",
+    "version": "1.117.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support html preview."]
+    },
+    "date": "2025-08-28",
+    "version": "1.116.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop route error."]
+    },
+    "date": "2025-08-28",
+    "version": "1.116.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-28",
+    "version": "1.116.2"
+  },
+  {
+    "children": {},
+    "date": "2025-08-27",
+    "version": "1.116.1"
+  },
+  {
+    "children": {
       "features": ["Add gemini 2.5 flash image for vertex ai."]
     },
     "date": "2025-08-27",

@@ -237,6 +237,10 @@
       "title": "Giới hạn số lượng tin nhắn lịch sử",
       "unlimited": "Không giới hạn số lượng tin nhắn lịch sử"
     },
+    "enableStreaming": {
+      "desc": "Bật phát trực tiếp để hiển thị phản hồi theo thời gian thực. Tắt sẽ chỉ hiển thị phản hồi đầy đủ.",
+      "title": "Bật phát trực tiếp"
+    },
     "historyCount": {
       "desc": "Số lượng tin nhắn được gửi mỗi lần yêu cầu (bao gồm cả câu hỏi mới nhất. Mỗi câu hỏi và câu trả lời đều tính là 1)",
       "title": "Số lượng tin nhắn đi kèm"

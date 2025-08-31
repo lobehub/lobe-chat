@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interruptor de pensamiento profundo"
     },
-    "title": "Funcionalidad de extensión del modelo"
+    "title": "Funcionalidad de extensión del modelo",
+    "urlContext": {
+      "desc": "Al activarlo, se analizarán automáticamente los enlaces web para obtener el contenido contextual real de la página",
+      "title": "Extraer contenido del enlace web"
+    }
   },
   "history": {
     "title": "El asistente solo recordará los últimos {{count}} mensajes"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Escritura en caché de entrada",
       "output": "Salida",
       "outputAudio": "Salida de audio",
+      "outputImage": "Salida de imagen",
       "outputText": "Salida de texto",
       "outputTitle": "Detalles de salida",
       "reasoning": "Razonamiento profundo",

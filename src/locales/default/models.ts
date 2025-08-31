@@ -1,4 +1,4 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 
 const locales: {
   [key: string]: {

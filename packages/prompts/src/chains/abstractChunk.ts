@@ -1,4 +1,3 @@
-import { DEFAULT_MODEL } from '@lobechat/const';
 import { ChatStreamPayload } from '@lobechat/types';
 
 export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload> => {
@@ -14,6 +13,5 @@ export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload>
         role: 'user',
       },
     ],
-    model: DEFAULT_MODEL,
   };
 };
