@@ -4,7 +4,7 @@ import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-nati
 import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 
-import { useToast } from '../ToastProvider';
+import { useToast } from '../InnerToastProvider';
 
 export default function IntegrationDemo() {
   const toast = useToast();

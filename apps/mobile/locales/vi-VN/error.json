@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "Trang này không tồn tại.",
     "notFoundTitle": "Ôi không!"
+  },
+  "sessionExpired": {
+    "desc": "Để bảo vệ an toàn cho tài khoản của bạn, vui lòng đăng nhập lại",
+    "login": "Đăng nhập ngay",
+    "title": "Phiên đăng nhập đã hết hạn"
   }
 }

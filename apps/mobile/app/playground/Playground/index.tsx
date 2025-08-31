@@ -92,7 +92,7 @@ const ComponentPlayground = ({
         ) : (
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.readmeContainer}>
-              <Markdown content={readmeContent} />
+              <Markdown>{readmeContent}</Markdown>
             </View>
           </ScrollView>
         )}

@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import { Md5 } from 'ts-md5';
 
 import { useHighlighter } from './useHighlighter';
+import type { ThemedToken } from '@shikijs/core';
 
 const MD5_LENGTH_THRESHOLD = 10_000;
 
@@ -23,7 +24,7 @@ export function useTokenize(code: string, lang: string, theme: 'light' | 'dark')
   }, [code, lang]);
 
   // 计算高亮结果
-  const result = useMemo(() => {
+  const result: { error: Error | null; tokens: ThemedToken[][] } = useMemo(() => {
     if (cache.current.has(cacheKey)) {
       return { error: null, tokens: cache.current.get(cacheKey) };
     }

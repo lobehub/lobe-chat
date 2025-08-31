@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { DEFAULT_LANG } from '@/const/locale';
+import { isDev } from '@/utils/env';
 
 import { loadAllResources, getSupportedLocales } from './generatedConfig';
 import { getDetectedLocale } from './resource';
@@ -50,14 +51,13 @@ const languageDetector = {
 // 初始化 i18n
 const initI18n = async () => {
   try {
-    // 动态加载所有语言包
     const resources = await loadAllResources();
 
     await i18n
       .use(languageDetector)
       .use(initReactI18next)
       .init({
-        debug: process.env.NODE_ENV === 'development',
+        debug: isDev,
         defaultNS: 'common',
         fallbackLng: DEFAULT_LANG,
 

@@ -15,6 +15,7 @@
     "title": "계정 설정"
   },
   "changelog": "업데이트 로그",
+  "developer": "개발자 옵션",
   "feedback": "의견 보내기",
   "help": "도움말",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "시스템 설정 따름",
     "dark": "다크 모드",
+    "fontSize": {
+      "standard": "표준",
+      "title": "글꼴 크기"
+    },
     "light": "라이트 모드",
+    "neutralColor": {
+      "description": "애플리케이션에 적용할 중립 색조 선택",
+      "title": "중립 색상 구성"
+    },
+    "primaryColor": {
+      "description": "애플리케이션의 주요 색상 선택",
+      "title": "주요 색상 구성"
+    },
     "sectionDescription": "선호하는 테마 스타일을 선택하고 클릭하여 변경하세요",
     "sectionTitle": "테마",
     "title": "테마 설정"
