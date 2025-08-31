@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "Bu sayfa mevcut değil.",
     "notFoundTitle": "Ayy!"
+  },
+  "sessionExpired": {
+    "desc": "Hesabınızın güvenliğini korumak için lütfen tekrar giriş yapınız",
+    "login": "Hemen Giriş Yap",
+    "title": "Oturum Süresi Doldu"
   }
 }

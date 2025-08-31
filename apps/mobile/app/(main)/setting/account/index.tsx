@@ -2,11 +2,10 @@ import React from 'react';
 import { ScrollView, View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Stack } from 'expo-router';
-import { ListGroup } from '@/components';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
-import { SettingItem } from '../(components)/SettingItem';
+import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './style';
 
 export default function AccountScreen() {
@@ -57,7 +56,7 @@ export default function AccountScreen() {
             </View>
 
             {/* User Information */}
-            <ListGroup>
+            <SettingGroup>
               <SettingItem
                 extra={user.name || user.username || ''}
                 title={t('account.profile.name', { ns: 'setting' })}
@@ -67,7 +66,7 @@ export default function AccountScreen() {
                 isLast
                 title={t('account.profile.email', { ns: 'setting' })}
               />
-            </ListGroup>
+            </SettingGroup>
 
             {/* Logout Section */}
             <View style={styles.signOutSection}>

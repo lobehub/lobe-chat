@@ -174,7 +174,7 @@ const AssistantDetail = () => {
                 </Text>
               </View>
               <View style={styles.systemRoleContentContainer}>
-                <Markdown content={systemRoleContent} fontSize={14} />
+                <Markdown fontSize={14}>{systemRoleContent}</Markdown>
               </View>
             </View>
           )}

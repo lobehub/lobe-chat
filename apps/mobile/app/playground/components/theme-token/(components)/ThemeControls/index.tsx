@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Text, View } from 'react-native';
 
-import Button from '@/components/Button';
 import ColorSwatches from '@/components/ColorSwatches';
+import Slider from '@/components/Slider';
+import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
 import {
   findCustomThemeName,
   PrimaryColors,
@@ -16,12 +17,12 @@ import { useStyles } from './style';
 
 // 主题控制器组件接口
 interface ThemeControlsProps {
-  fontSize: number;
-  neutralColor: NeutralColors;
+  fontSize?: number;
+  neutralColor?: NeutralColors;
   onFontSizeChange: (size: number) => void;
   onNeutralColorChange: (color: NeutralColors) => void;
   onPrimaryColorChange: (color: PrimaryColors) => void;
-  primaryColor: PrimaryColors;
+  primaryColor?: PrimaryColors;
 }
 
 const ThemeControls: React.FC<ThemeControlsProps> = ({
@@ -94,6 +95,10 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
   // 预设中性色
   const neutralColorSwatchesData = [
     {
+      color: 'rgba(0, 0, 0, 0)',
+      title: 'Default',
+    },
+    {
       color: neutralColors.mauve,
       title: 'Mauve',
     },
@@ -114,9 +119,6 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
       title: 'Sand',
     },
   ];
-
-  // 预设字体大小
-  const fontSizePresets = [12, 14, 16, 18, 20];
 
   return (
     <View style={[styles.controlsContainer, { backgroundColor: token.colorBgElevated }]}>
@@ -153,41 +155,19 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
       {/* 字体大小控制 */}
       <View style={styles.controlItem}>
         <Text style={[styles.controlLabel, { color: token.colorText }]}>字体大小 (fontSize)</Text>
-        <View style={styles.controlRow}>
-          <TextInput
-            keyboardType="numeric"
-            onChangeText={(text) => {
-              const size = parseInt(text, 10);
-              if (!isNaN(size) && size > 0) {
-                onFontSizeChange(size);
-              }
-            }}
-            placeholder="14"
-            placeholderTextColor={token.colorTextPlaceholder}
-            style={[
-              styles.controlInput,
-              {
-                backgroundColor: token.colorBgContainer,
-                borderColor: token.colorBorder,
-                color: token.colorText,
-              },
-            ]}
-            value={String(fontSize)}
-          />
-          <Text style={[{ color: token.colorTextSecondary }]}>px</Text>
-        </View>
-        <View style={styles.presetRow}>
-          {fontSizePresets.map((size) => (
-            <Button
-              key={size}
-              onPress={() => onFontSizeChange(size)}
-              size="small"
-              type={fontSize === size ? 'primary' : 'default'}
-            >
-              {size}px
-            </Button>
-          ))}
-        </View>
+        <Slider
+          marks={{
+            [FONT_SIZE_SMALL]: { label: <Text style={styles.fontSizeSmall}>A</Text> },
+            [FONT_SIZE_STANDARD]: { label: <Text style={styles.fontSizeStandard}>标准</Text> },
+            // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+            [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
+          }}
+          max={FONT_SIZE_LARGE}
+          min={FONT_SIZE_SMALL}
+          onChangeComplete={onFontSizeChange}
+          step={1}
+          value={fontSize}
+        />
       </View>
     </View>
   );
