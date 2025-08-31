@@ -14,6 +14,56 @@
     },
     "title": "Accountinstellingen"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Voer de API-sleutel van {name} in",
+        "label": "API-sleutel",
+        "placeholder": "Voer de API-sleutel van {name} in"
+      },
+      "proxyUrl": {
+        "desc": "Moet http(s):// bevatten",
+        "invalid": "Voer een geldige URL in die begint met http:// of https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API-proxyadres"
+      },
+      "saving": "Configuratie wordt opgeslagen...",
+      "title": "Configuratie",
+      "updateFailedDesc": "Opslaan mislukt, probeer het opnieuw",
+      "updateFailedTitle": "Opslaan mislukt"
+    },
+    "detail": {
+      "loadFailed": "Laden van providerconfiguratie mislukt",
+      "loading": "Providerconfiguratie wordt geladen..."
+    },
+    "info": {
+      "builtIn": "Ingebouwde provider",
+      "custom": "Aangepaste provider"
+    },
+    "list": {
+      "disabled": "Uitgeschakeld",
+      "enabled": "Ingeschakeld",
+      "loadFailed": "Lijst met providers laden mislukt"
+    },
+    "models": {
+      "copySuccess": "Kopiëren geslaagd",
+      "disableFailed": "Het uitschakelen van het model is mislukt",
+      "emptyNoSearch": "Geen modellen gevonden, probeer op de server op te halen",
+      "emptyWithSearch": "Geen modellen die aan de zoekcriteria voldoen",
+      "enableFailed": "Het inschakelen van het model is mislukt",
+      "fetch": "Model ophalen",
+      "fetchFailed": "Het ophalen van modellen is mislukt, probeer het opnieuw",
+      "fetchSuccess": "Model lijst succesvol opgehaald!",
+      "fetching": "Bezig met ophalen...",
+      "modelsAvailable": "In totaal {{count}} beschikbare modellen",
+      "searchPlaceholder": "Zoek modellen...",
+      "title": "Modellen"
+    },
+    "skeleton": {
+      "disabled": "Uitgeschakeld",
+      "enabled": "Ingeschakeld"
+    }
+  },
   "changelog": "Wijzigingslogboek",
   "developer": "Ontwikkelaarsopties",
   "feedback": "Feedback",

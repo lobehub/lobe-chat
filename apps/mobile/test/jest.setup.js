@@ -105,14 +105,18 @@ jest.mock('react-native', () => {
 });
 
 // Mock Markdown dependencies
-jest.mock('react-native-markdown-display', () => ({
-  MarkdownIt: jest.fn(() => ({
-    use: jest.fn(() => ({})),
-    render: jest.fn(() => 'mocked markdown'),
-  })),
-}));
+jest.mock(
+  'react-native-markdown-display',
+  () => ({
+    MarkdownIt: jest.fn(() => ({
+      use: jest.fn(() => ({})),
+      render: jest.fn(() => 'mocked markdown'),
+    })),
+  }),
+  { virtual: true },
+);
 
-jest.mock('markdown-it-mathjax3', () => jest.fn());
+jest.mock('markdown-it-mathjax3', () => jest.fn(), { virtual: true });
 
 // Mock MathJax
 jest.mock('react-native-mathjax-html-to-svg', () => {

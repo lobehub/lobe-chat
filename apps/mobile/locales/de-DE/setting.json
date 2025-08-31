@@ -14,6 +14,56 @@
     },
     "title": "Kontoeinstellungen"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Bitte geben Sie den API-Schlüssel für {name} ein",
+        "label": "API-Schlüssel",
+        "placeholder": "Bitte geben Sie den API-Schlüssel für {name} ein"
+      },
+      "proxyUrl": {
+        "desc": "Muss http(s):// enthalten",
+        "invalid": "Bitte geben Sie eine gültige URL ein, die mit http:// oder https:// beginnt",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API-Proxy-Adresse"
+      },
+      "saving": "Konfiguration wird gespeichert...",
+      "title": "Konfiguration",
+      "updateFailedDesc": "Speichern fehlgeschlagen, bitte versuchen Sie es erneut",
+      "updateFailedTitle": "Speichern fehlgeschlagen"
+    },
+    "detail": {
+      "loadFailed": "Fehler beim Laden der Anbieter-Konfiguration",
+      "loading": "Anbieter-Konfiguration wird geladen..."
+    },
+    "info": {
+      "builtIn": "Eingebauter Anbieter",
+      "custom": "Benutzerdefinierter Anbieter"
+    },
+    "list": {
+      "disabled": "Deaktiviert",
+      "enabled": "Aktiviert",
+      "loadFailed": "Fehler beim Laden der Anbieterliste"
+    },
+    "models": {
+      "copySuccess": "Kopieren erfolgreich",
+      "disableFailed": "Deaktivieren des Modells fehlgeschlagen",
+      "emptyNoSearch": "Keine Modelle gefunden, versuche vom Server zu laden",
+      "emptyWithSearch": "Keine Modelle entsprechen den Suchkriterien",
+      "enableFailed": "Aktivieren des Modells fehlgeschlagen",
+      "fetch": "Modelle abrufen",
+      "fetchFailed": "Modellabruf fehlgeschlagen, bitte erneut versuchen",
+      "fetchSuccess": "Modellliste erfolgreich abgerufen!",
+      "fetching": "Wird abgerufen...",
+      "modelsAvailable": "Insgesamt {{count}} verfügbare Modelle",
+      "searchPlaceholder": "Modelle suchen...",
+      "title": "Modelle"
+    },
+    "skeleton": {
+      "disabled": "Deaktiviert",
+      "enabled": "Aktiviert"
+    }
+  },
   "changelog": "Änderungsprotokoll",
   "developer": "Entwickleroptionen",
   "feedback": "Feedback",

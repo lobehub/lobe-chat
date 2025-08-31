@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
 import { ScrollView, SafeAreaView, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
@@ -12,6 +13,7 @@ const ProviderDetailPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const navigation = useNavigation();
   const { styles } = useStyles();
+  const { t } = useTranslation(['setting']);
 
   // 获取provider详细信息
   const { useFetchAiProviderItem } = useAiInfraStore();
@@ -38,7 +40,9 @@ const ProviderDetailPage = () => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading provider configuration...</Text>
+          <Text style={styles.loadingText}>
+            {t('aiProviders.detail.loading', { ns: 'setting' })}
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -48,7 +52,9 @@ const ProviderDetailPage = () => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.errorText}>Failed to load provider configuration</Text>
+          <Text style={styles.errorText}>
+            {t('aiProviders.detail.loadFailed', { ns: 'setting' })}
+          </Text>
         </View>
       </SafeAreaView>
     );

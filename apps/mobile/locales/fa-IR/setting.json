@@ -14,6 +14,56 @@
     },
     "title": "تنظیمات حساب کاربری"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "لطفاً کلید API {name} را وارد کنید",
+        "label": "کلید API",
+        "placeholder": "لطفاً کلید API {name} را وارد کنید"
+      },
+      "proxyUrl": {
+        "desc": "باید شامل http(s):// باشد",
+        "invalid": "لطفاً یک URL معتبر که با http:// یا https:// شروع می‌شود وارد کنید",
+        "placeholder": "https://api.example.com/v1",
+        "title": "آدرس پراکسی API"
+      },
+      "saving": "در حال ذخیره تنظیمات...",
+      "title": "پیکربندی",
+      "updateFailedDesc": "ذخیره‌سازی ناموفق بود، لطفاً دوباره تلاش کنید",
+      "updateFailedTitle": "ذخیره‌سازی ناموفق"
+    },
+    "detail": {
+      "loadFailed": "بارگذاری پیکربندی ارائه‌دهنده سرویس ناموفق بود",
+      "loading": "در حال بارگذاری پیکربندی ارائه‌دهنده سرویس..."
+    },
+    "info": {
+      "builtIn": "ارائه‌دهنده سرویس داخلی",
+      "custom": "ارائه‌دهنده سرویس سفارشی"
+    },
+    "list": {
+      "disabled": "غیرفعال",
+      "enabled": "فعال",
+      "loadFailed": "بارگذاری فهرست ارائه‌دهندگان سرویس ناموفق بود"
+    },
+    "models": {
+      "copySuccess": "کپی با موفقیت انجام شد",
+      "disableFailed": "غیرفعال کردن مدل ناموفق بود",
+      "emptyNoSearch": "هیچ مدلی یافت نشد، تلاش برای دریافت از سرور",
+      "emptyWithSearch": "هیچ مدلی مطابق با شرایط جستجو یافت نشد",
+      "enableFailed": "فعال کردن مدل ناموفق بود",
+      "fetch": "دریافت مدل",
+      "fetchFailed": "دریافت مدل ناموفق بود، لطفاً دوباره تلاش کنید",
+      "fetchSuccess": "فهرست مدل‌ها با موفقیت دریافت شد!",
+      "fetching": "در حال دریافت...",
+      "modelsAvailable": "در مجموع {{count}} مدل در دسترس است",
+      "searchPlaceholder": "جستجوی مدل...",
+      "title": "مدل"
+    },
+    "skeleton": {
+      "disabled": "غیرفعال",
+      "enabled": "فعال"
+    }
+  },
   "changelog": "لیست تغییرات",
   "developer": "گزینه‌های توسعه‌دهنده",
   "feedback": "بازخورد",

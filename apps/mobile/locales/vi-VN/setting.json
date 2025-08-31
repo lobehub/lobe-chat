@@ -14,6 +14,56 @@
     },
     "title": "Cài đặt tài khoản"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Vui lòng nhập API Key của {name}",
+        "label": "API Key",
+        "placeholder": "Vui lòng nhập API Key của {name}"
+      },
+      "proxyUrl": {
+        "desc": "Phải bao gồm http(s)://",
+        "invalid": "Vui lòng nhập URL hợp lệ bắt đầu bằng http:// hoặc https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "Địa chỉ proxy API"
+      },
+      "saving": "Đang lưu cấu hình...",
+      "title": "Cấu hình",
+      "updateFailedDesc": "Lưu thất bại, vui lòng thử lại",
+      "updateFailedTitle": "Lưu thất bại"
+    },
+    "detail": {
+      "loadFailed": "Tải cấu hình nhà cung cấp dịch vụ thất bại",
+      "loading": "Đang tải cấu hình nhà cung cấp dịch vụ..."
+    },
+    "info": {
+      "builtIn": "Nhà cung cấp tích hợp sẵn",
+      "custom": "Nhà cung cấp tùy chỉnh"
+    },
+    "list": {
+      "disabled": "Chưa kích hoạt",
+      "enabled": "Đã kích hoạt",
+      "loadFailed": "Tải danh sách nhà cung cấp dịch vụ thất bại"
+    },
+    "models": {
+      "copySuccess": "Sao chép thành công",
+      "disableFailed": "Vô hiệu hóa mô hình thất bại",
+      "emptyNoSearch": "Không tìm thấy mô hình nào, thử lấy từ máy chủ",
+      "emptyWithSearch": "Không có mô hình nào phù hợp với điều kiện tìm kiếm",
+      "enableFailed": "Kích hoạt mô hình thất bại",
+      "fetch": "Lấy mô hình",
+      "fetchFailed": "Lấy mô hình thất bại, vui lòng thử lại",
+      "fetchSuccess": "Lấy danh sách mô hình thành công!",
+      "fetching": "Đang lấy...",
+      "modelsAvailable": "Tổng cộng {{count}} mô hình khả dụng",
+      "searchPlaceholder": "Tìm kiếm mô hình...",
+      "title": "Mô hình"
+    },
+    "skeleton": {
+      "disabled": "Chưa kích hoạt",
+      "enabled": "Đã kích hoạt"
+    }
+  },
   "changelog": "Nhật ký cập nhật",
   "developer": "Tùy chọn nhà phát triển",
   "feedback": "Phản hồi ý kiến",

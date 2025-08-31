@@ -14,6 +14,56 @@
     },
     "title": "Configurações da Conta"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Por favor, insira a chave API do {name}",
+        "label": "Chave API",
+        "placeholder": "Por favor, insira a chave API do {name}"
+      },
+      "proxyUrl": {
+        "desc": "Deve incluir http(s)://",
+        "invalid": "Por favor, insira uma URL válida que comece com http:// ou https://",
+        "placeholder": "https://api.exemplo.com/v1",
+        "title": "Endereço do proxy da API"
+      },
+      "saving": "Salvando configurações...",
+      "title": "Configuração",
+      "updateFailedDesc": "Falha ao salvar, por favor tente novamente",
+      "updateFailedTitle": "Falha ao salvar"
+    },
+    "detail": {
+      "loadFailed": "Falha ao carregar a configuração do provedor",
+      "loading": "Carregando configuração do provedor..."
+    },
+    "info": {
+      "builtIn": "Provedor embutido",
+      "custom": "Provedor personalizado"
+    },
+    "list": {
+      "disabled": "Desativado",
+      "enabled": "Ativado",
+      "loadFailed": "Falha ao carregar a lista de provedores"
+    },
+    "models": {
+      "copySuccess": "Copiado com sucesso",
+      "disableFailed": "Falha ao desativar o modelo",
+      "emptyNoSearch": "Nenhum modelo encontrado, tente obter do servidor",
+      "emptyWithSearch": "Nenhum modelo corresponde aos critérios de busca",
+      "enableFailed": "Falha ao ativar o modelo",
+      "fetch": "Obter modelo",
+      "fetchFailed": "Falha ao obter modelos, por favor tente novamente",
+      "fetchSuccess": "Lista de modelos obtida com sucesso!",
+      "fetching": "Obtendo...",
+      "modelsAvailable": "Total de {{count}} modelos disponíveis",
+      "searchPlaceholder": "Pesquisar modelos...",
+      "title": "Modelos"
+    },
+    "skeleton": {
+      "disabled": "Desativado",
+      "enabled": "Ativado"
+    }
+  },
   "changelog": "Registro de Atualizações",
   "developer": "Opções de desenvolvedor",
   "feedback": "Feedback",

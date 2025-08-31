@@ -14,6 +14,56 @@
     },
     "title": "Impostazioni account"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Inserisci la API Key di {name}",
+        "label": "API Key",
+        "placeholder": "Inserisci la API Key di {name}"
+      },
+      "proxyUrl": {
+        "desc": "Deve includere http(s)://",
+        "invalid": "Inserisci un URL valido che inizi con http:// o https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "Indirizzo proxy API"
+      },
+      "saving": "Salvataggio della configurazione in corso...",
+      "title": "Configurazione",
+      "updateFailedDesc": "Salvataggio non riuscito, riprova",
+      "updateFailedTitle": "Salvataggio non riuscito"
+    },
+    "detail": {
+      "loadFailed": "Caricamento della configurazione del provider fallito",
+      "loading": "Caricamento della configurazione del provider in corso..."
+    },
+    "info": {
+      "builtIn": "Provider integrato",
+      "custom": "Provider personalizzato"
+    },
+    "list": {
+      "disabled": "Disabilitato",
+      "enabled": "Abilitato",
+      "loadFailed": "Caricamento della lista dei provider fallito"
+    },
+    "models": {
+      "copySuccess": "Copia riuscita",
+      "disableFailed": "Disabilitazione del modello non riuscita",
+      "emptyNoSearch": "Nessun modello trovato, prova a recuperare dal server",
+      "emptyWithSearch": "Nessun modello corrisponde ai criteri di ricerca",
+      "enableFailed": "Abilitazione del modello non riuscita",
+      "fetch": "Recupera modello",
+      "fetchFailed": "Recupero del modello non riuscito, riprova",
+      "fetchSuccess": "Elenco modelli recuperato con successo!",
+      "fetching": "Recupero in corso...",
+      "modelsAvailable": "Totale {{count}} modelli disponibili",
+      "searchPlaceholder": "Cerca modelli...",
+      "title": "Modelli"
+    },
+    "skeleton": {
+      "disabled": "Disabilitato",
+      "enabled": "Abilitato"
+    }
+  },
   "changelog": "Registro delle modifiche",
   "developer": "Opzioni sviluppatore",
   "feedback": "Feedback",

@@ -133,7 +133,6 @@ export const useStyles = createStyles(
       text: {
         color: typeStyles.textColor,
         fontSize: sizeStyles.fontSize,
-        fontWeight: type === 'primary' ? '600' : '400',
         textAlign: 'center' as const,
         textDecorationLine: type === 'link' ? 'underline' : 'none',
       },

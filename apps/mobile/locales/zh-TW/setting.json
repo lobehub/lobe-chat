@@ -14,6 +14,56 @@
     },
     "title": "帳號設定"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "請輸入 {name} 的 API Key",
+        "label": "API Key",
+        "placeholder": "請輸入 {name} 的 API Key"
+      },
+      "proxyUrl": {
+        "desc": "必須包含 http(s)://",
+        "invalid": "請輸入以 http:// 或 https:// 開頭的有效 URL",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API 代理地址"
+      },
+      "saving": "正在保存配置...",
+      "title": "配置",
+      "updateFailedDesc": "保存失敗，請重試",
+      "updateFailedTitle": "保存失敗"
+    },
+    "detail": {
+      "loadFailed": "加載服務商配置失敗",
+      "loading": "正在加載服務商配置..."
+    },
+    "info": {
+      "builtIn": "內建服務商",
+      "custom": "自訂服務商"
+    },
+    "list": {
+      "disabled": "未啟用",
+      "enabled": "已啟用",
+      "loadFailed": "服務商列表加載失敗"
+    },
+    "models": {
+      "copySuccess": "複製成功",
+      "disableFailed": "停用模型失敗",
+      "emptyNoSearch": "沒有找到任何模型，嘗試從伺服器獲取",
+      "emptyWithSearch": "沒有符合搜尋條件的模型",
+      "enableFailed": "啟用模型失敗",
+      "fetch": "取得模型",
+      "fetchFailed": "獲取模型失敗，請重試",
+      "fetchSuccess": "模型列表獲取成功！",
+      "fetching": "正在獲取...",
+      "modelsAvailable": "共 {{count}} 個可用模型",
+      "searchPlaceholder": "搜尋模型...",
+      "title": "模型"
+    },
+    "skeleton": {
+      "disabled": "未啟用",
+      "enabled": "已啟用"
+    }
+  },
   "changelog": "更新日誌",
   "developer": "開發者選項",
   "feedback": "意見回饋",
