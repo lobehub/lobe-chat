@@ -59,6 +59,16 @@ export interface ChatModelCard {
    *  whether model supports vision
    */
   vision?: boolean;
+
+  /**
+   *  whether model supports search
+   */
+  search?: boolean;
+
+  /**
+   *  whether model supports imageOutput
+   */
+  imageOutput?: boolean;
 }
 
 export interface ModelProviderCard {

@@ -8,7 +8,11 @@ export interface ModelProcessorConfig {
   functionCallKeywords?: readonly string[];
   reasoningKeywords?: readonly string[];
   visionKeywords?: readonly string[];
+  searchKeywords?: readonly string[];
 }
+
+// 默认兜底关键字：任意包含 -search 的模型 ID 视为支持联网搜索
+const DEFAULT_SEARCH_KEYWORDS = ['-search'] as const;
 
 // 模型能力标签关键词配置
 export const MODEL_LIST_CONFIGS = {
@@ -303,6 +307,7 @@ const processModelCard = (
     visionKeywords = [],
     reasoningKeywords = [],
     excludeKeywords = [],
+    searchKeywords = DEFAULT_SEARCH_KEYWORDS,
   } = config;
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
@@ -409,6 +414,12 @@ const processModelCard = (
       model.vision ??
       knownModel?.abilities?.vision ??
       ((isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) || false),
+    search:
+      model.search ??
+      knownModel?.abilities?.search ??
+      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
+    imageOutput: model.imageOutput ?? knownModel?.abilities?.imageOutput ?? false,
+
   };
 };
 
