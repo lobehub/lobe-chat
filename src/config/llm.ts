@@ -181,6 +181,9 @@ export const getLLMConfig = () => {
       ENABLED_AKASHCHAT: z.boolean(),
       AKASHCHAT_API_KEY: z.string().optional(),
 
+      ENABLED_COMETAPI: z.boolean(),
+      COMETAPI_KEY: z.string().optional(),
+
       ENABLED_AIHUBMIX: z.boolean(),
       AIHUBMIX_API_KEY: z.string().optional(),
     },
@@ -361,6 +364,9 @@ export const getLLMConfig = () => {
 
       ENABLED_AKASHCHAT: !!process.env.AKASHCHAT_API_KEY,
       AKASHCHAT_API_KEY: process.env.AKASHCHAT_API_KEY,
+
+      ENABLED_COMETAPI: !!process.env.COMETAPI_KEY,
+      COMETAPI_KEY: process.env.COMETAPI_KEY,
 
       ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
       AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
