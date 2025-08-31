@@ -80,6 +80,9 @@
   "DeepSeek-V3-Fast": {
     "description": "Proveedor del modelo: plataforma sophnet. DeepSeek V3 Fast es la versión de alta velocidad y alto TPS de DeepSeek V3 0324, completamente sin cuantificación, con mayor capacidad en código y matemáticas, ¡y respuesta más rápida!"
   },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 es un nuevo modelo híbrido de razonamiento lanzado por DeepSeek, que soporta dos modos de razonamiento: con pensamiento y sin pensamiento, con una eficiencia de pensamiento superior a DeepSeek-R1-0528. Tras una optimización post-entrenamiento, el uso de herramientas Agent y el rendimiento en tareas inteligentes han mejorado significativamente."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite ofrece una velocidad de respuesta excepcional y una mejor relación calidad-precio, proporcionando opciones más flexibles para diferentes escenarios de los clientes. Soporta inferencia y ajuste fino con una ventana de contexto de 128k."
   },
@@ -134,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Modelo de lenguaje de alto rendimiento desarrollado por Baidu, lanzado en 2024, con capacidades generales excepcionales, superando a ERNIE Speed, adecuado como modelo base para ajustes finos, manejando mejor problemas en escenarios específicos, y con un rendimiento de inferencia excelente."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev es un modelo multimodal de generación y edición de imágenes desarrollado por Black Forest Labs, basado en la arquitectura Rectified Flow Transformer, con una escala de 12 mil millones de parámetros. Se especializa en generar, reconstruir, mejorar o editar imágenes bajo condiciones contextuales dadas. Combina las ventajas de generación controlada de modelos de difusión con la capacidad de modelado contextual de Transformers, soportando salidas de alta calidad y aplicándose ampliamente en tareas como restauración de imágenes, completado y reconstrucción de escenas visuales."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev es un modelo multimodal de lenguaje (MLLM) de código abierto desarrollado por Black Forest Labs, optimizado para tareas de texto e imagen, integrando capacidades de comprensión y generación tanto visual como textual. Está basado en avanzados modelos de lenguaje grande (como Mistral-7B) y mediante un codificador visual cuidadosamente diseñado y un ajuste fino por etapas con instrucciones, logra procesamiento colaborativo de texto e imagen y razonamiento para tareas complejas."
@@ -265,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 671 mil millones de parámetros, que utiliza atención potencial de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando estrategias de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Preentrenado en 14.8 billones de tokens de alta calidad, y ajustado mediante supervisión y aprendizaje por refuerzo, DeepSeek-V3 supera a otros modelos de código abierto y se acerca a los modelos cerrados líderes."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 es un modelo de lenguaje grande híbrido lanzado por DeepSeek AI, que incorpora múltiples mejoras importantes sobre su predecesor. Una innovación clave es la integración de los modos \"Pensamiento\" y \"No pensamiento\" en un solo modelo, permitiendo a los usuarios alternar flexiblemente mediante la configuración de plantillas de chat para adaptarse a diferentes tareas. Gracias a una optimización post-entrenamiento especializada, V3.1 mejora significativamente el rendimiento en llamadas a herramientas y tareas Agent, soportando mejor herramientas de búsqueda externas y la ejecución de tareas complejas en múltiples pasos. Basado en DeepSeek-V3.1-Base, se amplió considerablemente la cantidad de datos de entrenamiento mediante un método de extensión de texto largo en dos fases, mejorando su desempeño en documentos extensos y código largo. Como modelo de código abierto, DeepSeek-V3.1 demuestra capacidades comparables a los mejores modelos cerrados en benchmarks de codificación, matemáticas y razonamiento, y gracias a su arquitectura de expertos mixtos (MoE), mantiene una gran capacidad de modelo mientras reduce eficazmente los costos de inferencia."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 es un modelo base con arquitectura MoE que posee capacidades avanzadas de codificación y agentes, con un total de 1 billón de parámetros y 32 mil millones de parámetros activados. En pruebas de referencia en categorías principales como razonamiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera a otros modelos de código abierto populares."
@@ -845,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 6710 millones de parámetros, que utiliza atención latente de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando una estrategia de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Al ser preentrenado en 14.8 billones de tokens de alta calidad y realizar ajustes supervisados y aprendizaje reforzado, DeepSeek-V3 supera en rendimiento a otros modelos de código abierto, acercándose a los modelos cerrados líderes."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 es un modelo de lenguaje grande híbrido lanzado por DeepSeek AI, que incorpora múltiples mejoras importantes sobre su predecesor. Una innovación clave es la integración de los modos \"Pensamiento\" y \"No pensamiento\" en un solo modelo, permitiendo a los usuarios alternar flexiblemente mediante la configuración de plantillas de chat para adaptarse a diferentes tareas. Gracias a una optimización post-entrenamiento especializada, V3.1 mejora significativamente el rendimiento en llamadas a herramientas y tareas Agent, soportando mejor herramientas de búsqueda externas y la ejecución de tareas complejas en múltiples pasos. Basado en DeepSeek-V3.1-Base, se amplió considerablemente la cantidad de datos de entrenamiento mediante un método de extensión de texto largo en dos fases, mejorando su desempeño en documentos extensos y código largo. Como modelo de código abierto, DeepSeek-V3.1 demuestra capacidades comparables a los mejores modelos cerrados en benchmarks de codificación, matemáticas y razonamiento, y gracias a su arquitectura de expertos mixtos (MoE), mantiene una gran capacidad de modelo mientras reduce eficazmente los costos de inferencia."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B es un modelo avanzado entrenado para diálogos de alta complejidad."
   },
@@ -915,7 +930,7 @@
     "description": "DeepSeek R1 versión completa, con 671B de parámetros, que soporta búsqueda en línea en tiempo real, con una capacidad de comprensión y generación más potente."
   },
   "deepseek-reasoner": {
-    "description": "Modelo de inferencia lanzado por DeepSeek. Antes de proporcionar la respuesta final, el modelo genera primero una cadena de pensamiento para mejorar la precisión de la respuesta final."
+    "description": "Modo de pensamiento DeepSeek V3.1. Antes de emitir la respuesta final, el modelo genera una cadena de razonamiento para mejorar la precisión de la respuesta."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 es un modelo de lenguaje Mixture-of-Experts eficiente, adecuado para necesidades de procesamiento económico."
@@ -929,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 es un modelo MoE de 671B parámetros, destacándose en habilidades de programación y técnicas, comprensión del contexto y procesamiento de textos largos."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 es un nuevo modelo híbrido de razonamiento lanzado por DeepSeek, que soporta dos modos de razonamiento: con pensamiento y sin pensamiento, con una eficiencia de pensamiento superior a DeepSeek-R1-0528. Tras una optimización post-entrenamiento, el uso de herramientas Agent y el rendimiento en tareas inteligentes han mejorado significativamente. Soporta una ventana de contexto de 128k y una longitud máxima de salida de 64k tokens."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 es un modelo experto de mezcla de 685B parámetros, la última iteración de la serie de modelos de chat insignia del equipo de DeepSeek.\n\nHereda el modelo [DeepSeek V3](/deepseek/deepseek-chat-v3) y se desempeña excepcionalmente en diversas tareas."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 es un modelo experto de mezcla de 685B parámetros, la última iteración de la serie de modelos de chat insignia del equipo de DeepSeek.\n\nHereda el modelo [DeepSeek V3](/deepseek/deepseek-chat-v3) y se desempeña excepcionalmente en diversas tareas."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1 es un modelo híbrido de razonamiento grande que soporta contexto largo de 128K y cambio eficiente de modos, logrando un rendimiento y velocidad sobresalientes en llamadas a herramientas, generación de código y tareas complejas de razonamiento."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 mejora significativamente la capacidad de razonamiento del modelo con muy pocos datos etiquetados. Antes de proporcionar la respuesta final, el modelo genera una cadena de pensamiento para mejorar la precisión de la respuesta final."
@@ -1230,10 +1251,10 @@
     "description": "Gemini 2.5 Flash es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
   },
   "gemini-2.5-flash-image-preview": {
-    "description": "Gemini 2.5 Flash Image Preview es el modelo multimodal nativo más reciente, rápido y eficiente de Google; le permite generar y editar imágenes a través de conversaciones."
+    "description": "Nano Banana es el modelo multimodal nativo más reciente, rápido y eficiente de Google, que permite generar y editar imágenes mediante diálogo."
   },
   "gemini-2.5-flash-image-preview:image": {
-    "description": "Gemini 2.5 Flash Image Preview es el modelo multimodal nativo más reciente, rápido y eficiente de Google, que le permite generar y editar imágenes mediante conversaciones."
+    "description": "Nano Banana es el modelo multimodal nativo más reciente, rápido y eficiente de Google, que permite generar y editar imágenes mediante diálogo."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite es el modelo más pequeño y rentable de Google, diseñado para un uso a gran escala."
