@@ -15,7 +15,6 @@ export const FALLBACK =
 
 const AutoSizedImage = ({ uri }: AutoSizedImageProps) => {
   const { contentSize, styles } = useMarkdownContext();
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [size, setSize] = useState<{ height: number; width: number }>({
     height: 0,
@@ -31,20 +30,15 @@ const AutoSizedImage = ({ uri }: AutoSizedImageProps) => {
     });
   }, [contentSize, uri]);
 
-  return loading ? (
-    <Skeleton.Image animated width={contentSize.width} />
-  ) : (
+  if (size.width === 0 || size.height === 0) {
+    return <Skeleton.Image animated key={uri} />;
+  }
+
+  return (
     <Image
       key={uri}
       onError={() => {
         setError(true);
-        setLoading(false);
-      }}
-      onLoad={() => {
-        setLoading(false);
-      }}
-      onLoadEnd={() => {
-        setLoading(false);
       }}
       source={error ? { uri: FALLBACK } : { uri }}
       style={[styles.image, { height: size.height, width: size.width }]}
