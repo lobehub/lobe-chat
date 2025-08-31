@@ -335,7 +335,7 @@
     "fake-indexeddb": "^6.0.1",
     "fs-extra": "^11.3.1",
     "glob": "^11.0.3",
-    "happy-dom": "^17.6.3",
+    "happy-dom": "^18.0.0",
     "husky": "^9.1.7",
     "just-diff": "^6.0.2",
     "lint-staged": "^15.5.2",
