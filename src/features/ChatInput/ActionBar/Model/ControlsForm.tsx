@@ -1,6 +1,6 @@
 import { Form } from '@lobehub/ui';
 import type { FormItemProps } from '@lobehub/ui';
-import { Form as AntdForm, Switch } from 'antd';
+import { Form as AntdForm, Switch, Grid } from 'antd';
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -32,17 +32,21 @@ const ControlsForm = memo(() => {
 
   const modelExtendParams = useAiInfraStore(aiModelSelectors.modelExtendParams(model, provider));
 
+  const screens = Grid.useBreakpoint();
+  const isNarrow = !screens.sm;
+
+  const descWide = { display: 'inline-block', width: 300 } as const;
+  const descNarrow = {
+    display: 'block',
+    maxWidth: '100%',
+    whiteSpace: 'normal',
+  } as const;
+
   const items = [
     {
       children: <ContextCachingSwitch />,
       desc: (
-        <span
-          style={{
-            display: 'block',
-            maxWidth: 300,
-            whiteSpace: 'normal',
-          }}
-        >
+        <span style={isNarrow ? descNarrow : descWide}>
           <Trans i18nKey={'extendParams.disableContextCaching.desc'} ns={'chat'}>
             单条对话生成成本最高可降低 90%，响应速度提升 4 倍（
             <Link
@@ -56,19 +60,14 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.disableContextCaching.title'),
+      layout: isNarrow ? 'vertical' : 'horizontal',
       minWidth: undefined,
       name: 'disableContextCaching',
     },
     {
       children: <Switch />,
       desc: (
-        <span
-          style={{
-            display: 'block',
-            maxWidth: 300,
-            whiteSpace: 'normal',
-          }}
-        >
+        <span style={isNarrow ? descNarrow : descWide}>
           <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'}>
             基于 Claude Thinking 机制限制（
             <Link
@@ -84,7 +83,7 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.enableReasoning.title'),
-      layout: 'horizontal',
+      layout: isNarrow ? 'vertical' : 'horizontal',
       minWidth: undefined,
       name: 'enableReasoning',
     },
@@ -144,21 +143,16 @@ const ControlsForm = memo(() => {
     },
     {
       children: <Switch />,
-      desc: (
-        <span
-          style={{
-            display: 'block',
-            maxWidth: 400,
-            whiteSpace: 'normal',
-          }}
-        >
-          {t('extendParams.urlContext.desc')}
-        </span>
+      desc: isNarrow ? (
+        <span style={descNarrow}>{t('extendParams.urlContext.desc')}</span>
+      ) : (
+        t('extendParams.urlContext.desc')
       ),
       label: t('extendParams.urlContext.title'),
-      layout: 'horizontal',
+      layout: isNarrow ? 'vertical' : 'horizontal',
       minWidth: undefined,
       name: 'urlContext',
+      style: isNarrow ? undefined : { width: 445 },
       tag: 'urlContext',
     },
     {
