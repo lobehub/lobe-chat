@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.1"
+  },
+  {
+    "children": {
       "improvements": ["Remove webrtc sync feature flag."],
       "features": ["Rename Gemini 2.5 flash image to Nano Banana."]
     },
