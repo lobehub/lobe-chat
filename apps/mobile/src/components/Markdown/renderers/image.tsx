@@ -32,7 +32,7 @@ const AutoSizedImage = ({ uri }: AutoSizedImageProps) => {
   }, [contentSize, uri]);
 
   return loading ? (
-    <Skeleton.Paragraph animated rows={3} width={contentSize.width} />
+    <Skeleton.Image animated width={contentSize.width} />
   ) : (
     <Image
       key={uri}
