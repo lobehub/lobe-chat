@@ -15,6 +15,7 @@
     "title": "Accountinstellingen"
   },
   "changelog": "Wijzigingslogboek",
+  "developer": "Ontwikkelaarsopties",
   "feedback": "Feedback",
   "help": "Hulp",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "Systeem volgen",
     "dark": "Donkere modus",
+    "fontSize": {
+      "standard": "Standaard",
+      "title": "Lettergrootte"
+    },
     "light": "Lichte modus",
+    "neutralColor": {
+      "description": "Kies de neutrale tint voor de applicatie",
+      "title": "Neutrale kleurinstelling"
+    },
+    "primaryColor": {
+      "description": "Kies de hoofdkleur voor de applicatie",
+      "title": "Hoofdkleurinstelling"
+    },
     "sectionDescription": "Kies uw favoriete thema en klik om uw keuze te wijzigen",
     "sectionTitle": "Thema",
     "title": "Thema-instellingen"

@@ -6,6 +6,9 @@ declare global {
   }
 
   const crypto: Crypto;
+
+  /** Expo / React Native 全局开发标记 */
+  const __DEV__: boolean;
 }
 
 // JSON 模块声明

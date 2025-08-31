@@ -15,6 +15,7 @@
     "title": "Account Settings"
   },
   "changelog": "Changelog",
+  "developer": "Developer Options",
   "feedback": "Feedback",
   "help": "Help",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "Follow System",
     "dark": "Dark Mode",
+    "fontSize": {
+      "standard": "Standard",
+      "title": "Font Size"
+    },
     "light": "Light Mode",
+    "neutralColor": {
+      "description": "Select the neutral tone for the application",
+      "title": "Neutral Color Settings"
+    },
+    "primaryColor": {
+      "description": "Select the primary color for the application",
+      "title": "Primary Color Settings"
+    },
     "sectionDescription": "Choose your preferred theme style and click to switch your selection",
     "sectionTitle": "Theme",
     "title": "Theme Settings"

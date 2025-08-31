@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import {  ToastContextSetter } from './staticMethods';
+import { ToastContextSetter } from './staticMethods';
 import { ToastProvider as OriginalToastProvider } from './ToastProvider';
 
 // Enhanced ToastProvider that sets global context
@@ -16,6 +16,4 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   );
 };
 
-
-
-export {staticMethods} from './staticMethods';
+export { staticMethods } from './staticMethods';

@@ -15,6 +15,7 @@
     "title": "帳號設定"
   },
   "changelog": "更新日誌",
+  "developer": "開發者選項",
   "feedback": "意見回饋",
   "help": "使用說明",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "跟隨系統",
     "dark": "深色模式",
+    "fontSize": {
+      "standard": "標準",
+      "title": "字體大小"
+    },
     "light": "淺色模式",
+    "neutralColor": {
+      "description": "選擇應用的中性色調",
+      "title": "中性色配置"
+    },
+    "primaryColor": {
+      "description": "選擇應用的主色調",
+      "title": "主色配置"
+    },
     "sectionDescription": "選擇您喜歡的主題風格，點擊切換您的選擇",
     "sectionTitle": "主題",
     "title": "主題設定"

@@ -22,24 +22,24 @@
       "q13": "Dispose-t-il d'un marché pour obtenir des GPTs ?",
       "q14": "Prend-il en charge plusieurs fournisseurs de services IA ?",
       "q15": "Que faire si je rencontre un problème lors de l'utilisation ?"
+    },
+    "questions": {
+      "moreBtn": "En savoir plus",
+      "title": "Les questions fréquentes :"
+    },
+    "welcome": {
+      "afternoon": "Bon après-midi",
+      "morning": "Bonjour",
+      "night": "Bonsoir",
+      "noon": "Bon midi"
     }
   },
   "header": "Bienvenue",
   "pickAgent": "Ou choisissez parmi les modèles d'assistants ci-dessous",
-  "questions": {
-    "moreBtn": "En savoir plus",
-    "title": "Les questions fréquentes :"
-  },
   "skip": "Passer la création",
   "slogan": {
     "desc1": "Activez un réseau de cerveaux, stimulez les étincelles de la pensée. Votre assistant intelligent est toujours là.",
     "desc2": "Créez votre premier assistant, commençons~",
     "title": "Offrez-vous un cerveau plus intelligent"
-  },
-  "welcome": {
-    "afternoon": "Bon après-midi",
-    "morning": "Bonjour",
-    "night": "Bonsoir",
-    "noon": "Bon midi"
   }
 }

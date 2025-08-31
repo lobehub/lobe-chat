@@ -133,6 +133,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['color', 'picker', 'swatch', 'form', 'ui'],
   },
   {
+    category: 'form',
+    description: 'React Native 版本的滑动输入条组件，支持自定义范围、步长和手势交互',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Slider',
+    path: 'slider',
+    tags: ['slider', 'range', 'input', 'gesture', 'form'],
+  },
+  {
     category: 'display',
     description: '基于 LobeUI 重写的色板展示组件，支持完整的颜色级别、透明色和复制功能',
     hasDemos: true,

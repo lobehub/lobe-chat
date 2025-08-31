@@ -15,6 +15,7 @@
     "title": "Configuración de la cuenta"
   },
   "changelog": "Registro de cambios",
+  "developer": "Opciones de desarrollador",
   "feedback": "Comentarios",
   "help": "Ayuda",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "Seguir sistema",
     "dark": "Modo oscuro",
+    "fontSize": {
+      "standard": "Estándar",
+      "title": "Tamaño de fuente"
+    },
     "light": "Modo claro",
+    "neutralColor": {
+      "description": "Selecciona el tono neutro de la aplicación",
+      "title": "Configuración de color neutro"
+    },
+    "primaryColor": {
+      "description": "Selecciona el color principal de la aplicación",
+      "title": "Configuración de color principal"
+    },
     "sectionDescription": "Elija el estilo de tema que prefiera y haga clic para cambiar su selección",
     "sectionTitle": "Tema",
     "title": "Configuración de tema"

@@ -15,6 +15,7 @@
     "title": "Impostazioni account"
   },
   "changelog": "Registro delle modifiche",
+  "developer": "Opzioni sviluppatore",
   "feedback": "Feedback",
   "help": "Guida all'uso",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "Segui sistema",
     "dark": "Tema scuro",
+    "fontSize": {
+      "standard": "Standard",
+      "title": "Dimensione del carattere"
+    },
     "light": "Tema chiaro",
+    "neutralColor": {
+      "description": "Seleziona la tonalità neutra dell'applicazione",
+      "title": "Configurazione colore neutro"
+    },
+    "primaryColor": {
+      "description": "Seleziona la tonalità principale dell'applicazione",
+      "title": "Configurazione colore principale"
+    },
     "sectionDescription": "Scegli lo stile del tema che preferisci, clicca per cambiare la tua selezione",
     "sectionTitle": "Tema",
     "title": "Impostazioni tema"

@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "Deze pagina bestaat niet.",
     "notFoundTitle": "Oeps!"
+  },
+  "sessionExpired": {
+    "desc": "Om de veiligheid van uw account te waarborgen, log alstublieft opnieuw in",
+    "login": "Direct inloggen",
+    "title": "Sessie verlopen"
   }
 }
