@@ -13,5 +13,10 @@
   "page": {
     "notFoundMessage": "該頁面不存在。",
     "notFoundTitle": "哎呀！"
+  },
+  "sessionExpired": {
+    "desc": "為了保護您的帳戶安全，請重新登入",
+    "login": "立即登入",
+    "title": "登入已過期"
   }
 }

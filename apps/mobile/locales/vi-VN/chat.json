@@ -1,8 +1,16 @@
 {
+  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**. Bạn có thể bắt đầu trò chuyện với tôi ngay hoặc đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
+  "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu cuộc trò chuyện nhé!",
+  "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**. Hãy bắt đầu cuộc trò chuyện nhé!",
   "confirmDelete": "Xác nhận xóa",
   "copyFailed": "Sao chép thất bại",
+  "defaultAgent": "Trợ lý tùy chỉnh",
   "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
   "history": "Lịch sử trò chuyện",
+  "inbox": {
+    "desc": "Tại đây, bạn có thể xem và quản lý tin nhắn cùng thông báo của mình.",
+    "title": "Hộp thư đến"
+  },
   "messageCopied": "Đã sao chép tin nhắn",
   "newChat": "Cuộc trò chuyện mới",
   "placeholder": "Nhập tin nhắn của bạn...",

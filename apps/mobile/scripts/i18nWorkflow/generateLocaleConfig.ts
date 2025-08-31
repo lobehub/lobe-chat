@@ -51,8 +51,8 @@ export const loadLocaleResources = async (locale: string): Promise<Record<string
   
   for (const [namespace, importFn] of Object.entries(localeConfig)) {
     try {
-      const module = await importFn();
-      resources[namespace] = module.default || module;
+      const moduleFn = await importFn();
+      resources[namespace] = moduleFn.default || moduleFn;
     } catch (error) {
       console.warn(\`Failed to load \${locale}/\${namespace}:\`, error);
     }
