@@ -15,6 +15,7 @@
     "title": "Cài đặt tài khoản"
   },
   "changelog": "Nhật ký cập nhật",
+  "developer": "Tùy chọn nhà phát triển",
   "feedback": "Phản hồi ý kiến",
   "help": "Trợ giúp sử dụng",
   "locale": {
@@ -44,7 +45,19 @@
   "theme": {
     "auto": "Theo hệ thống",
     "dark": "Chế độ tối",
+    "fontSize": {
+      "standard": "Tiêu chuẩn",
+      "title": "Cỡ chữ"
+    },
     "light": "Chế độ sáng",
+    "neutralColor": {
+      "description": "Chọn tông màu trung tính cho ứng dụng",
+      "title": "Cấu hình màu trung tính"
+    },
+    "primaryColor": {
+      "description": "Chọn tông màu chủ đạo cho ứng dụng",
+      "title": "Cấu hình màu chủ đạo"
+    },
     "sectionDescription": "Chọn phong cách chủ đề bạn yêu thích, nhấp để chuyển đổi lựa chọn của bạn",
     "sectionTitle": "Chủ đề",
     "title": "Cài đặt chủ đề"

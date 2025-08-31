@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/Button';
 import { useThemeToken } from '@/theme';
 
-import { useToast } from '../ToastProvider';
+import { useToast } from '../InnerToastProvider';
 
 const styles = StyleSheet.create({
   buttonGroup: {
