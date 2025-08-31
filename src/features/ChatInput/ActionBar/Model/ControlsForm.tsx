@@ -36,7 +36,13 @@ const ControlsForm = memo(() => {
     {
       children: <ContextCachingSwitch />,
       desc: (
-        <span style={{ display: 'inline-block', width: 300 }}>
+        <span
+          style={{
+            display: 'block',
+            maxWidth: 300,
+            whiteSpace: 'normal',
+          }}
+        >
           <Trans i18nKey={'extendParams.disableContextCaching.desc'} ns={'chat'}>
             单条对话生成成本最高可降低 90%，响应速度提升 4 倍（
             <Link
@@ -56,7 +62,13 @@ const ControlsForm = memo(() => {
     {
       children: <Switch />,
       desc: (
-        <span style={{ display: 'inline-block', width: 300 }}>
+        <span
+          style={{
+            display: 'block',
+            maxWidth: 300,
+            whiteSpace: 'normal',
+          }}
+        >
           <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'}>
             基于 Claude Thinking 机制限制（
             <Link
@@ -132,14 +144,21 @@ const ControlsForm = memo(() => {
     },
     {
       children: <Switch />,
-      desc: t('extendParams.urlContext.desc'),
+      desc: (
+        <span
+          style={{
+            display: 'block',
+            maxWidth: 400,
+            whiteSpace: 'normal',
+          }}
+        >
+          {t('extendParams.urlContext.desc')}
+        </span>
+      ),
       label: t('extendParams.urlContext.title'),
       layout: 'horizontal',
       minWidth: undefined,
       name: 'urlContext',
-      style: {
-        width: 445,
-      },
       tag: 'urlContext',
     },
     {
