@@ -22,6 +22,7 @@ export type RemarkStyles = {
   linkReference?: TextStyle;
   list?: ViewStyle;
   listItem?: ViewStyle;
+  listMarkerColor: ColorValue;
   paragraph?: TextStyle;
   strong?: TextStyle;
   table?: ViewStyle;
