@@ -29,14 +29,14 @@ export interface FileUploadRequest {
 export interface FileUploadResponse {
   /** 文件MIME类型 */
   fileType: string;
-  /** 文件名 */
-  filename: string;
   /** 文件哈希值 */
   hash: string;
   /** 文件ID */
   id?: string;
   /** 文件元数据 */
   metadata: FileMetadata;
+  /** 文件名 */
+  name: string;
   /** 文件大小（字节） */
   size: number;
   /** 上传时间 */
@@ -67,14 +67,14 @@ export interface PublicFileUploadRequest {
 export interface PublicFileUploadResponse {
   /** 文件MIME类型 */
   fileType: string;
-  /** 文件名 */
-  filename: string;
   /** 文件哈希值 */
   hash: string;
   /** 文件ID */
   id: string;
   /** 文件元数据 */
   metadata: FileMetadata;
+  /** 文件名 */
+  name: string;
   /** 文件大小（字节） */
   size: number;
   /** 上传时间 */
@@ -92,7 +92,7 @@ export interface PreSignedUrlRequest {
   /** 文件MIME类型 */
   fileType: string;
   /** 文件名 */
-  filename: string;
+  name: string;
   /** 自定义路径（可选） */
   pathname?: string;
   /** 文件大小（字节） */
@@ -101,7 +101,7 @@ export interface PreSignedUrlRequest {
 
 export const PreSignedUrlRequestSchema = z.object({
   fileType: z.string().min(1, '文件类型不能为空'),
-  filename: z.string().min(1, '文件名不能为空'),
+  name: z.string().min(1, '文件名不能为空'),
   pathname: z.string().nullish(),
   size: z.number().positive('文件大小必须大于0'),
 });
@@ -172,20 +172,6 @@ export interface FileListResponse {
 }
 
 /**
- * 文件详情响应类型
- */
-export interface FileDetailResponse extends FileUploadResponse {
-  /** Base64编码的文件内容（仅图片文件） */
-  base64?: string;
-  /** 解析错误信息 */
-  parseError?: string;
-  /** 解析状态 */
-  parseStatus?: 'pending' | 'processing' | 'completed' | 'failed';
-  /** 是否支持内容解析 */
-  supportContentParsing: boolean;
-}
-
-/**
  * 文件删除响应类型
  */
 export interface FileDeleteResponse {
@@ -224,7 +210,7 @@ export interface FileUrlResponse {
   /** 文件ID */
   fileId: string;
   /** 文件名 */
-  filename: string;
+  name: string;
   /** 预签名访问URL */
   url: string;
 }
@@ -254,7 +240,7 @@ export interface BatchFileUploadResponse {
   /** 失败的文件及错误信息 */
   failed: Array<{
     error: string;
-    filename: string;
+    name: string;
   }>;
   /** 成功上传的文件 */
   successful: FileUploadResponse[];
@@ -290,7 +276,7 @@ export interface BatchGetFilesResponse {
   /** 文件列表 */
   files: Array<{
     /** 文件详情（图片文件会包含base64字段） */
-    fileItem: FileDetailResponse;
+    fileItem: FileUploadResponse;
     /** 解析结果（非图片文件） */
     parseResult?: FileParseResponse;
   }>;
@@ -332,8 +318,6 @@ export interface FileParseResponse {
   fileId: string;
   /** 文件类型 */
   fileType: string;
-  /** 文件名 */
-  filename: string;
   /** 文档元数据 */
   metadata?: {
     /** 页数 */
@@ -345,6 +329,8 @@ export interface FileParseResponse {
     /** 行总数 */
     totalLineCount?: number;
   };
+  /** 文件名 */
+  name: string;
   /** 解析状态 */
   parseStatus: 'completed' | 'failed';
   /** 解析时间 */
@@ -356,7 +342,7 @@ export interface FileParseResponse {
  */
 export interface FileUploadAndParseResponse {
   /** 文件项 */
-  fileItem: FileDetailResponse;
+  fileItem: FileUploadResponse;
   /** 解析结果 */
   parseResult: FileParseResponse;
 }

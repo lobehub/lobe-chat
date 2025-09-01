@@ -6,6 +6,7 @@ import { getServerDB } from '@/database/core/db-adaptor';
 import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
+import { parseFormData } from '../helpers/file';
 import { ApiResponse } from '../types';
 
 /**
@@ -141,7 +142,7 @@ export abstract class BaseController {
    * @returns Request form data object
    */
   protected async getFormData<T = any>(c: Context): Promise<T> {
-    return c.req.formData() as T;
+    return parseFormData(c) as T;
   }
 
   /**

@@ -3,12 +3,13 @@ import { and, count, desc, eq, ilike, inArray, isNull } from 'drizzle-orm';
 import { messages, messagesFiles } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
+import { FileService as CoreFileService } from '@/server/services/file';
 
 import { BaseService } from '../common/base.service';
-import { transformMessageToResponse } from '../helpers/message';
 import { ServiceResult } from '../types';
 import {
   MessageResponse,
+  MessageResponseFromDatabase,
   MessagesCountQuery,
   MessagesCreateRequest,
   MessagesListQuery,
@@ -28,8 +29,41 @@ export interface MessageCountResult {
  * 提供各种消息数量统计功能
  */
 export class MessageService extends BaseService {
+  private coreFileService: CoreFileService;
+
   constructor(db: LobeChatDatabase, userId: string | null) {
     super(db, userId);
+
+    this.coreFileService = new CoreFileService(db, userId!);
+  }
+
+  /**
+   * 对消息内容进行格式化，目前主要是对文件列表进行格式化
+   * @param fileId 文件ID
+   * @returns
+   */
+  private async formatMessages(
+    messages: MessageResponseFromDatabase[],
+  ): Promise<MessageResponse[]> {
+    return await Promise.all(
+      messages.map(async (message) => {
+        return {
+          ...message,
+          files: await Promise.all(
+            message.filesToMessages?.map(async ({ file }) => {
+              if (file.url.startsWith('http')) {
+                return file;
+              }
+
+              return {
+                ...file,
+                url: await this.coreFileService.getFullFileUrl(file.url),
+              };
+            }) ?? [],
+          ),
+        };
+      }),
+    );
   }
 
   /**
@@ -173,7 +207,7 @@ export class MessageService extends BaseService {
       }
 
       // 使用 with 关联查询获取完整的消息信息
-      const result = await this.db.query.messages.findMany({
+      const result = (await this.db.query.messages.findMany({
         limit: limit,
         offset: offset,
         orderBy: desc(messages.createdAt),
@@ -182,21 +216,21 @@ export class MessageService extends BaseService {
           contentMatchedMessages.map((msg) => msg.id),
         ),
         with: {
-          messagesFiles: {
+          filesToMessages: {
             with: {
               file: true,
             },
           },
           translation: true,
         },
-      });
+      })) as MessageResponseFromDatabase[];
 
       this.log('info', '关键词搜索消息完成', {
         keyword,
         resultCount: result.length,
       });
 
-      return result.map(transformMessageToResponse);
+      return this.formatMessages(result);
     } catch (error) {
       this.handleServiceError(error, '关键词搜索消息');
     }
@@ -295,7 +329,7 @@ export class MessageService extends BaseService {
       const offset = query.offset || (query.page ? (query.page - 1) * (query.limit || 20) : 0);
 
       // 执行查询
-      const messageList = await this.db.query.messages.findMany({
+      const messageList = (await this.db.query.messages.findMany({
         limit: query.limit,
         offset: offset,
         orderBy:
@@ -308,16 +342,16 @@ export class MessageService extends BaseService {
               : desc(messages.createdAt),
         where: and(...conditions),
         with: {
-          messagesFiles: {
+          filesToMessages: {
             with: {
               file: true,
             },
           },
           translation: true,
         },
-      });
+      })) as MessageResponseFromDatabase[];
 
-      const messageListWithFiles = messageList.map(transformMessageToResponse);
+      const messageListWithFiles = await this.formatMessages(messageList);
 
       this.log('info', '获取消息列表完成', { count: messageListWithFiles.length });
 
@@ -351,17 +385,17 @@ export class MessageService extends BaseService {
         conditions.push(eq(messages.userId, permissionResult.condition.userId));
       }
 
-      const message = await this.db.query.messages.findFirst({
+      const message = (await this.db.query.messages.findFirst({
         where: and(...conditions),
         with: {
-          messagesFiles: {
+          filesToMessages: {
             with: {
               file: true,
             },
           },
           translation: true,
         },
-      });
+      })) as MessageResponseFromDatabase;
 
       if (!message) {
         this.log('info', '消息不存在或无权限访问', { messageId });
@@ -369,7 +403,10 @@ export class MessageService extends BaseService {
       }
 
       this.log('info', '获取消息详情完成', { messageId });
-      return transformMessageToResponse(message);
+
+      const messageWithFiles = await this.formatMessages([message]);
+
+      return messageWithFiles[0];
     } catch (error) {
       this.handleServiceError(error, '获取消息详情');
     }
@@ -433,17 +470,17 @@ export class MessageService extends BaseService {
       }
 
       // 重新查询包含 session 和 user 信息的完整消息
-      const completeMessage = await this.db.query.messages.findFirst({
+      const completeMessage = (await this.db.query.messages.findFirst({
         where: eq(messages.id, newMessage.id),
         with: {
-          messagesFiles: {
+          filesToMessages: {
             with: {
               file: true,
             },
           },
           translation: true,
         },
-      });
+      })) as MessageResponseFromDatabase;
 
       if (!completeMessage) {
         throw new Error('无法查询到刚创建的消息');
@@ -451,7 +488,9 @@ export class MessageService extends BaseService {
 
       this.log('info', '创建消息完成', { messageId: newMessage.id });
 
-      return transformMessageToResponse(completeMessage);
+      const completeMessageWithFiles = await this.formatMessages([completeMessage]);
+
+      return completeMessageWithFiles[0];
     } catch (error) {
       this.handleServiceError(error, '创建消息');
     }
