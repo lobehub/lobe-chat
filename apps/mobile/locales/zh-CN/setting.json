@@ -14,6 +14,56 @@
     },
     "title": "账号设置"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "请输入 {name} 的 API Key",
+        "label": "API Key",
+        "placeholder": "请输入 {name} 的 API Key"
+      },
+      "proxyUrl": {
+        "desc": "必须包含 http(s)://",
+        "invalid": "请输入以 http:// 或 https:// 开头的有效 URL",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API 代理地址"
+      },
+      "saving": "正在保存配置...",
+      "title": "配置",
+      "updateFailedDesc": "保存失败，请重试",
+      "updateFailedTitle": "保存失败"
+    },
+    "detail": {
+      "loadFailed": "加载服务商配置失败",
+      "loading": "正在加载服务商配置..."
+    },
+    "info": {
+      "builtIn": "内置服务商",
+      "custom": "自定义服务商"
+    },
+    "list": {
+      "disabled": "未启用",
+      "enabled": "已启用",
+      "loadFailed": "服务商列表加载失败"
+    },
+    "models": {
+      "copySuccess": "复制成功",
+      "disableFailed": "禁用模型失败",
+      "emptyNoSearch": "没有找到任何模型，尝试从服务器获取",
+      "emptyWithSearch": "没有符合搜索条件的模型",
+      "enableFailed": "启用模型失败",
+      "fetch": "获取模型",
+      "fetchFailed": "获取模型失败，请重试",
+      "fetchSuccess": "模型列表获取成功！",
+      "fetching": "正在获取...",
+      "modelsAvailable": "共 {{count}} 个可用模型",
+      "searchPlaceholder": "搜索模型...",
+      "title": "模型"
+    },
+    "skeleton": {
+      "disabled": "未启用",
+      "enabled": "已启用"
+    }
+  },
   "changelog": "更新日志",
   "developer": "开发者选项",
   "feedback": "意见反馈",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "选择应用的中性色调",
       "title": "中性色配置"
+    },
+    "preview": "预览",
+    "previewMessages": {
+      "botHowToUse": "你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。",
+      "userHowToUse": "主题预览如何使用？"
     },
     "primaryColor": {
       "description": "选择应用的主色调",

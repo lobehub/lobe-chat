@@ -20,13 +20,7 @@ export const MathRenderer = ({ node }: RendererArgs<MathNode>) => {
   const { styles } = useMarkdownContext();
   return (
     <View style={{ marginVertical: 8 }}>
-      <MathJaxSvg
-        color={styles.textColor}
-        fontSize={styles.fontSize}
-        style={{
-          flex: 1,
-        }}
-      >
+      <MathJaxSvg color={styles.textColor} fontCache={true} fontSize={styles.fontSize}>
         {`$$${node.value}$$`}
       </MathJaxSvg>
     </View>
@@ -37,14 +31,8 @@ export const InlineMathRenderer = ({ node }: RendererArgs<InlineMathNode>) => {
   const { styles } = useMarkdownContext();
 
   return (
-    <MathJaxSvg
-      color={styles.textColor}
-      fontSize={styles.fontSize}
-      style={{
-        backgroundColor: 'transparent',
-      }}
-    >
-      {`$$${node.value}$$`}
+    <MathJaxSvg color={styles.textColor} fontCache={true} fontSize={styles.fontSize}>
+      {`$${node.value}$`}
     </MathJaxSvg>
   );
 };

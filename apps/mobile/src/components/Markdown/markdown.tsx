@@ -2,6 +2,7 @@ import { Definition, Root } from 'mdast';
 import { useMemo, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
 import remarkGfm from 'remark-gfm';
+// 仅用于解析数学公式
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';

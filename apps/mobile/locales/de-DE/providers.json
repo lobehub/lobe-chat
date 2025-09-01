@@ -1,0 +1,173 @@
+{
+  "ai21": {
+    "description": "AI21 Labs entwickelt Basismodelle und KI-Systeme für Unternehmen, um den Einsatz generativer KI in der Produktion zu beschleunigen."
+  },
+  "ai302": {
+    "description": "302.AI ist eine Pay-per-Use KI-Anwendungsplattform, die die umfassendsten KI-APIs und Online-KI-Anwendungen auf dem Markt anbietet."
+  },
+  "ai360": {
+    "description": "360 AI ist die von 360 entwickelte Plattform für KI-Modelle und -Services, die verschiedene fortschrittliche Modelle für die Verarbeitung natürlicher Sprache bietet, darunter 360GPT2 Pro, 360GPT Pro, 360GPT Turbo und 360GPT Turbo Responsibility 8K. Diese Modelle kombinieren umfangreiche Parameter und multimodale Fähigkeiten und werden breit eingesetzt in Textgenerierung, semantischem Verständnis, Dialogsystemen und Codegenerierung. Mit flexiblen Preismodellen erfüllt 360 AI vielfältige Nutzerbedürfnisse, unterstützt Entwickler bei der Integration und fördert Innovation und Entwicklung intelligenter Anwendungen."
+  },
+  "aihubmix": {
+    "description": "AiHubMix bietet über eine einheitliche API-Schnittstelle Zugriff auf verschiedene KI-Modelle."
+  },
+  "anthropic": {
+    "description": "Anthropic ist ein auf KI-Forschung und -Entwicklung spezialisiertes Unternehmen, das eine Reihe fortschrittlicher Sprachmodelle wie Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus und Claude 3 Haiku anbietet. Diese Modelle bieten eine ideale Balance zwischen Intelligenz, Geschwindigkeit und Kosten und eignen sich für vielfältige Anwendungen von Unternehmens-Workloads bis hin zu schnellen Reaktionsszenarien. Claude 3.5 Sonnet ist das neueste Modell und überzeugt in zahlreichen Bewertungen mit hervorragender Leistung bei gleichzeitig hoher Kosteneffizienz."
+  },
+  "azure": {
+    "description": "Azure bietet eine Vielzahl fortschrittlicher KI-Modelle, darunter GPT-3.5 und die neueste GPT-4-Serie, unterstützt verschiedene Datentypen und komplexe Aufgaben und setzt auf sichere, zuverlässige und nachhaltige KI-Lösungen."
+  },
+  "azureai": {
+    "description": "Azure bietet eine Vielzahl fortschrittlicher KI-Modelle, darunter GPT-3.5 und die neueste GPT-4-Serie, unterstützt verschiedene Datentypen und komplexe Aufgaben und setzt auf sichere, zuverlässige und nachhaltige KI-Lösungen."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent ist ein Unternehmen, das sich auf die Entwicklung großer KI-Modelle spezialisiert hat. Seine Modelle zeichnen sich durch hervorragende Leistungen bei chinesischen Aufgaben wie Wissensdatenbanken, Langtextverarbeitung und kreativer Generierung aus und übertreffen internationale Mainstream-Modelle. Baichuan Intelligent verfügt zudem über branchenführende multimodale Fähigkeiten und erzielt in zahlreichen renommierten Bewertungen Spitzenwerte. Zu den Modellen gehören Baichuan 4, Baichuan 3 Turbo und Baichuan 3 Turbo 128k, die jeweils für unterschiedliche Anwendungsfälle optimiert sind und kosteneffiziente Lösungen bieten."
+  },
+  "bedrock": {
+    "description": "Bedrock ist ein Service von Amazon AWS, der Unternehmen fortschrittliche KI-Sprach- und Visuelle Modelle bereitstellt. Die Modellfamilie umfasst Anthropics Claude-Serie, Metas Llama 3.1-Serie und weitere, die von leichtgewichtig bis leistungsstark reichen und Aufgaben wie Textgenerierung, Dialog und Bildverarbeitung unterstützen – geeignet für Unternehmen jeder Größe und Anforderung."
+  },
+  "cloudflare": {
+    "description": "Auf dem globalen Netzwerk von Cloudflare laufen serverlose, GPU-gestützte Machine-Learning-Modelle."
+  },
+  "cohere": {
+    "description": "Cohere bietet modernste mehrsprachige Modelle, fortschrittliche Suchfunktionen und einen auf Unternehmen zugeschnittenen KI-Arbeitsbereich – alles integriert in einer sicheren Plattform."
+  },
+  "deepseek": {
+    "description": "DeepSeek ist ein Unternehmen, das sich auf KI-Technologieforschung und -anwendung spezialisiert hat. Das neueste Modell DeepSeek-V3 übertrifft in mehreren Bewertungen Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und erreicht eine Leistung auf dem Niveau führender Closed-Source-Modelle wie GPT-4o und Claude-3.5-Sonnet."
+  },
+  "fal": {
+    "description": "Eine generative Medienplattform für Entwickler."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI ist ein führender Anbieter fortschrittlicher Sprachmodelle, spezialisiert auf Funktionsaufrufe und multimodale Verarbeitung. Das neueste Modell Firefunction V2 basiert auf Llama-3 und ist für Funktionsaufrufe, Dialoge und Befolgung von Anweisungen optimiert. Das visuelle Sprachmodell FireLLaVA-13B unterstützt gemischte Bild- und Texteingaben. Weitere bemerkenswerte Modelle sind die Llama- und Mixtral-Serien, die effiziente mehrsprachige Anweisungsbefolgung und Generierung bieten."
+  },
+  "giteeai": {
+    "description": "Die Serverless API von Gitee AI bietet Entwicklern sofort einsatzbereite APIs für die Inferenz großer Modelle."
+  },
+  "github": {
+    "description": "Mit GitHub-Modellen können Entwickler zu KI-Ingenieuren werden und mit branchenführenden KI-Modellen bauen."
+  },
+  "google": {
+    "description": "Die Gemini-Serie von Google ist das fortschrittlichste und vielseitigste KI-Modell von Google DeepMind, speziell für multimodale Anwendungen entwickelt. Es unterstützt nahtloses Verständnis und Verarbeitung von Text, Code, Bildern, Audio und Video. Geeignet für Umgebungen von Rechenzentren bis zu mobilen Geräten, steigert es Effizienz und Anwendungsvielfalt von KI-Modellen erheblich."
+  },
+  "groq": {
+    "description": "Der LPU-Inferenzmotor von Groq erzielt herausragende Ergebnisse in den neuesten unabhängigen Benchmarks für große Sprachmodelle (LLM) und definiert mit seiner beeindruckenden Geschwindigkeit und Effizienz neue Standards für KI-Lösungen. Groq steht für sofortige Inferenzgeschwindigkeit und zeigt in Cloud-basierten Deployments starke Leistung."
+  },
+  "higress": {
+    "description": "Higress ist ein cloud-nativer API-Gateway, das intern bei Alibaba entwickelt wurde, um Probleme mit Tengine Reload bei Langzeitverbindungen sowie unzureichende Lastverteilung bei gRPC/Dubbo zu lösen."
+  },
+  "huggingface": {
+    "description": "Die HuggingFace Inference API bietet eine schnelle und kostenlose Möglichkeit, Tausende von Modellen für verschiedenste Aufgaben zu erkunden. Egal, ob Sie Prototypen für neue Anwendungen erstellen oder maschinelles Lernen ausprobieren – diese API ermöglicht sofortigen Zugriff auf leistungsstarke Modelle aus vielen Bereichen."
+  },
+  "hunyuan": {
+    "description": "Ein von Tencent entwickeltes großes Sprachmodell mit starker chinesischer Kreativitätsfähigkeit, logischem Denken in komplexen Kontexten und zuverlässiger Aufgabenausführung."
+  },
+  "infiniai": {
+    "description": "Bietet Anwendungsentwicklern leistungsstarke, benutzerfreundliche und sichere große Modellservices, die den gesamten Prozess von der Modellentwicklung bis zur serviceorientierten Bereitstellung abdecken."
+  },
+  "internlm": {
+    "description": "Eine Open-Source-Organisation, die sich der Forschung an großen Modellen und der Entwicklung von Toolchains widmet. Sie bietet allen KI-Entwicklern eine effiziente und benutzerfreundliche Open-Source-Plattform, um modernste große Modelle und Algorithmustechnologien zugänglich zu machen."
+  },
+  "jina": {
+    "description": "Jina AI, gegründet 2020, ist ein führendes Such-KI-Unternehmen. Unsere Suchplattform umfasst Vektormodelle, Re-Ranker und kleine Sprachmodelle, die Unternehmen helfen, zuverlässige und hochwertige generative KI- und multimodale Suchanwendungen zu entwickeln."
+  },
+  "lmstudio": {
+    "description": "LM Studio ist eine Desktop-Anwendung zum Entwickeln und Experimentieren mit großen Sprachmodellen (LLMs) auf Ihrem eigenen Computer."
+  },
+  "minimax": {
+    "description": "MiniMax ist ein 2021 gegründetes Unternehmen für allgemeine KI-Technologie, das sich der gemeinsamen Schaffung von Intelligenz mit Nutzern widmet. MiniMax hat multimodale große Modelle mit Billionen von Parametern selbst entwickelt, darunter MoE-Textmodelle, Sprachmodelle und Bildmodelle, und bietet Anwendungen wie Conch AI an."
+  },
+  "mistral": {
+    "description": "Mistral bietet fortschrittliche allgemeine, professionelle und forschungsorientierte Modelle, die in komplexer Argumentation, mehrsprachigen Aufgaben und Codegenerierung breit eingesetzt werden. Über Funktionsaufruf-Schnittstellen können Nutzer benutzerdefinierte Funktionen integrieren und spezifische Anwendungen realisieren."
+  },
+  "modelscope": {
+    "description": "ModelScope ist eine von Alibaba Cloud bereitgestellte Plattform für Modell-als-Service, die eine Vielzahl von KI-Modellen und Inferenzdiensten bietet."
+  },
+  "moonshot": {
+    "description": "Moonshot ist eine Open-Source-Plattform der Beijing Moon's Dark Side Technology Co., Ltd., die verschiedene Modelle für die Verarbeitung natürlicher Sprache bereitstellt. Die Anwendungsbereiche sind vielfältig und umfassen unter anderem Content-Erstellung, akademische Forschung, intelligente Empfehlungen und medizinische Diagnostik. Unterstützt werden Langtextverarbeitung und komplexe Generierungsaufgaben."
+  },
+  "novita": {
+    "description": "Novita AI ist eine Plattform, die APIs für verschiedene große Sprachmodelle und KI-Bildgenerierung anbietet – flexibel, zuverlässig und kosteneffizient. Sie unterstützt neueste Open-Source-Modelle wie Llama3 und Mistral und bietet umfassende, benutzerfreundliche und automatisch skalierende API-Lösungen für die Entwicklung generativer KI-Anwendungen, ideal für schnell wachsende KI-Startups."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ bietet Container für selbstverwaltete GPU-beschleunigte Inferenz-Microservices und unterstützt die Bereitstellung vortrainierter und kundenspezifischer KI-Modelle in der Cloud, im Rechenzentrum sowie auf RTX™ AI-PCs und Workstations."
+  },
+  "ollama": {
+    "description": "Ollama bietet Modelle, die ein breites Spektrum abdecken, darunter Codegenerierung, mathematische Berechnungen, mehrsprachige Verarbeitung und Dialoginteraktion, und unterstützt vielfältige Anforderungen an Unternehmens- und lokale Bereitstellungen."
+  },
+  "openai": {
+    "description": "OpenAI ist eine weltweit führende KI-Forschungseinrichtung, deren Modelle wie die GPT-Serie die Spitzenposition in der Verarbeitung natürlicher Sprache einnehmen. OpenAI setzt sich dafür ein, durch innovative und effiziente KI-Lösungen verschiedene Branchen zu transformieren. Ihre Produkte zeichnen sich durch herausragende Leistung und Wirtschaftlichkeit aus und werden breit in Forschung, Wirtschaft und Innovation eingesetzt."
+  },
+  "openrouter": {
+    "description": "OpenRouter ist eine Serviceplattform, die Schnittstellen zu verschiedenen führenden großen Modellen bietet, darunter OpenAI, Anthropic, LLaMA und weitere. Sie eignet sich für vielfältige Entwicklungs- und Anwendungsbedürfnisse. Nutzer können je nach Bedarf das optimale Modell und Preismodell wählen, um das KI-Erlebnis zu verbessern."
+  },
+  "perplexity": {
+    "description": "Perplexity ist ein führender Anbieter von dialoggenerierenden Modellen und bietet verschiedene fortschrittliche Llama 3.1-Modelle, die sowohl online als auch offline eingesetzt werden können und sich besonders für komplexe Aufgaben der natürlichen Sprachverarbeitung eignen."
+  },
+  "ppio": {
+    "description": "PPIO Paiou Cloud bietet stabile und kosteneffiziente Open-Source-Modell-API-Services und unterstützt branchenführende große Modelle wie die gesamte DeepSeek-Serie, Llama und Qwen."
+  },
+  "qiniu": {
+    "description": "Qiniu, ein etablierter Cloud-Service-Anbieter, bietet kosteneffiziente und stabile Echtzeit- und Batch-KI-Inferenzdienste, die einfach zu nutzen sind."
+  },
+  "qwen": {
+    "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes großskaliges Sprachmodell mit starker Fähigkeit zum Verständnis und zur Generierung natürlicher Sprache. Es kann Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und ist in vielen Bereichen einsetzbar."
+  },
+  "sambanova": {
+    "description": "SambaNova Cloud ermöglicht Entwicklern den einfachen Zugriff auf die besten Open-Source-Modelle und bietet die schnellste Inferenzgeschwindigkeit."
+  },
+  "search1api": {
+    "description": "Search1API bietet Zugriff auf die DeepSeek-Modellreihe, die je nach Bedarf online verbunden werden kann, einschließlich Standard- und Schnellversionen, mit Unterstützung für Modelle unterschiedlicher Parametergrößen."
+  },
+  "sensenova": {
+    "description": "SenseNova bietet auf der starken Basis von SenseTime eine effiziente und benutzerfreundliche Full-Stack-Plattform für große Modelle."
+  },
+  "siliconcloud": {
+    "description": "SiliconCloud ist ein kosteneffizienter GenAI-Cloud-Service, der auf hervorragenden Open-Source-Basismodellen basiert."
+  },
+  "spark": {
+    "description": "Das Xinghuo-Großmodell von iFLYTEK bietet leistungsstarke KI-Fähigkeiten in mehreren Bereichen und Sprachen und nutzt fortschrittliche Technologien der natürlichen Sprachverarbeitung, um innovative Anwendungen für intelligente Hardware, intelligente Medizin, intelligente Finanzen und weitere vertikale Szenarien zu entwickeln."
+  },
+  "stepfun": {
+    "description": "Das Jiejixingchen-Großmodell verfügt über branchenführende multimodale und komplexe Argumentationsfähigkeiten, unterstützt das Verständnis sehr langer Texte und bietet eine leistungsstarke selbststeuernde Suchmaschinenfunktion."
+  },
+  "taichu": {
+    "description": "Das neue multimodale Großmodell, entwickelt vom Institut für Automatisierung der Chinesischen Akademie der Wissenschaften und dem Wuhan AI-Institut, unterstützt mehrstufige Frage-Antwort-Systeme, Textkreation, Bildgenerierung, 3D-Verständnis, Signalanalyse und weitere umfassende Aufgaben. Es bietet stärkere kognitive, verständnis- und kreative Fähigkeiten und ermöglicht ein völlig neues interaktives Erlebnis."
+  },
+  "tencentcloud": {
+    "description": "Die atomaren Fähigkeiten der Knowledge Engine (LLM Knowledge Engine Atomic Power) basieren auf der Knowledge Engine und bieten Unternehmen und Entwicklern eine flexible Möglichkeit, Modellanwendungen zu erstellen und zu entwickeln. Sie können mit verschiedenen atomaren Fähigkeiten Ihren eigenen Modellservice zusammenstellen und Dienste wie Dokumentenparsing, Aufteilung, Embedding und mehrstufige Umschreibung nutzen, um maßgeschneiderte KI-Geschäftsanwendungen zu realisieren."
+  },
+  "togetherai": {
+    "description": "Together AI setzt auf innovative KI-Modelle für führende Leistung und bietet umfangreiche Anpassungsmöglichkeiten, einschließlich schneller Skalierung und intuitiver Bereitstellungsprozesse, um die vielfältigen Anforderungen von Unternehmen zu erfüllen."
+  },
+  "upstage": {
+    "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, darunter Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) für die Arbeit zu realisieren. Über die Chat-API können einfache Dialogagenten erstellt werden, die Funktionsaufrufe, Übersetzungen, Einbettungen und domänenspezifische Anwendungen unterstützen."
+  },
+  "v0": {
+    "description": "v0 ist ein Pair-Programming-Assistent, der anhand natürlicher Sprache Ihre Ideen in Code und Benutzeroberflächen (UI) für Ihr Projekt umsetzt."
+  },
+  "vertexai": {
+    "description": "Die Gemini-Serie von Google ist das fortschrittlichste und vielseitigste KI-Modell von Google DeepMind, speziell für multimodale Anwendungen entwickelt. Es unterstützt nahtloses Verständnis und Verarbeitung von Text, Code, Bildern, Audio und Video. Geeignet für Umgebungen von Rechenzentren bis zu mobilen Geräten, steigert es Effizienz und Anwendungsvielfalt von KI-Modellen erheblich."
+  },
+  "vllm": {
+    "description": "vLLM ist eine schnelle und benutzerfreundliche Bibliothek für die Inferenz und den Betrieb großer Sprachmodelle (LLM)."
+  },
+  "volcengine": {
+    "description": "Die von ByteDance entwickelte Entwicklungsplattform für große Modellservices bietet funktionsreiche, sichere und preislich wettbewerbsfähige Modellaufrufdienste sowie End-to-End-Funktionen wie Modelldaten, Feintuning, Inferenz und Bewertung, um die Entwicklung und Umsetzung Ihrer KI-Anwendungen umfassend zu unterstützen."
+  },
+  "wenxin": {
+    "description": "Eine unternehmensgerechte All-in-One-Plattform für die Entwicklung großer Modelle und KI-native Anwendungen, die die umfassendsten und benutzerfreundlichsten Tools für die Entwicklung generativer KI-Modelle und Anwendungen bereitstellt."
+  },
+  "xai": {
+    "description": "xAI ist ein Unternehmen, das sich der Entwicklung von KI widmet, um die wissenschaftliche Entdeckung der Menschheit zu beschleunigen. Unsere Mission ist es, unser gemeinsames Verständnis des Universums voranzutreiben."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) ist eine Open-Source-Plattform zur Vereinfachung des Betriebs und der Integration verschiedener KI-Modelle. Mit Xinference können Sie beliebige Open-Source-LLMs, Einbettungsmodelle und multimodale Modelle in Cloud- oder lokalen Umgebungen für Inferenz betreiben und leistungsstarke KI-Anwendungen erstellen."
+  },
+  "zeroone": {
+    "description": "ZeroOne Wanwu engagiert sich für die Förderung der menschenzentrierten KI 2.0-Technologierevolution mit dem Ziel, durch große Sprachmodelle erheblichen wirtschaftlichen und gesellschaftlichen Wert zu schaffen und neue KI-Ökosysteme und Geschäftsmodelle zu etablieren."
+  },
+  "zhipu": {
+    "description": "Zhipu AI bietet eine offene Plattform für multimodale und Sprachmodelle, die eine breite Palette von KI-Anwendungsszenarien unterstützt, darunter Textverarbeitung, Bildverständnis und Programmierhilfe."
+  }
+}
