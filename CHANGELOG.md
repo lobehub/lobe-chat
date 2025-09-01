@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.120.4](https://github.com/lobehub/lobe-chat/compare/v1.120.3...v1.120.4)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display, closes [#9013](https://github.com/lobehub/lobe-chat/issues/9013) ([c6038c0](https://github.com/lobehub/lobe-chat/commit/c6038c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.3](https://github.com/lobehub/lobe-chat/compare/v1.120.2...v1.120.3)
 
 <sup>Released on **2025-09-01**</sup>
