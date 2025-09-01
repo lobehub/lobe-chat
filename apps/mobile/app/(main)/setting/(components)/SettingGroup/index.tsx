@@ -14,7 +14,7 @@ export const SettingGroup = ({ children, style, title, ...rest }: SettingGroupPr
   const newItems = items.map((child, index) => {
     if (React.isValidElement(child)) {
       const isLast = index === items.length - 1;
-      return React.cloneElement(child as ReactElement, { isLast });
+      return React.cloneElement(child as ReactElement<any>, { isLast });
     }
     return child;
   });

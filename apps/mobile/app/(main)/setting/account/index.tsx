@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
@@ -13,6 +13,7 @@ export default function AccountScreen() {
   const { user, isAuthenticated } = useAuth();
   const { logout } = useAuthActions();
   const { styles } = useStyles();
+  const router = useRouter();
 
   const handleSignOut = async () => {
     if (!isAuthenticated) {
@@ -31,6 +32,8 @@ export default function AccountScreen() {
           onPress: async () => {
             try {
               await logout();
+              // Ensure we leave the authenticated stack immediately after logout
+              router.replace('/login');
             } catch (error) {
               const errorMessage = error instanceof Error ? error.message : 'Logout failed';
               Alert.alert(t('error.title', { ns: 'error' }), errorMessage);

@@ -8,8 +8,7 @@ import { LANGUAGE_OPTIONS, LocaleMode, getDetectedLocale } from '@/i18n/resource
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 
 export const useLocale = () => {
-  const { i18n } = useTranslation();
-  const { t } = useTranslation(['setting']);
+  const { t, i18n } = useTranslation('setting');
   const [localeMode, setLocaleModeState] = useState<LocaleMode>('auto');
 
   // 从 AsyncStorage 加载语言设置
