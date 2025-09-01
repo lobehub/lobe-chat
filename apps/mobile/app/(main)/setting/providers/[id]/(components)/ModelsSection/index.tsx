@@ -3,12 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, Alert, FlatList } from 'react-
 import { RefreshCcw, Search } from 'lucide-react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useTranslation } from 'react-i18next';
 
 import { useThemeToken } from '@/theme';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderModelListItem } from '@/types/aiModel';
-import { InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
+import { Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 
 import { useStyles } from './style';
 import ModelListSkeleton from '../ModelListSkeleton';
@@ -26,6 +27,7 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
   const { styles } = useStyles();
   const token = useThemeToken();
   const toast = useToast();
+  const { t } = useTranslation(['setting']);
 
   const handleToggle = (value: boolean) => {
     onToggle(model.id, value);
@@ -33,7 +35,7 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
 
   const handleCopyModelId = () => {
     Clipboard.setString(model.id);
-    toast.success('复制成功');
+    toast.success(t('aiProviders.models.copySuccess', { ns: 'setting' }));
   };
 
   return (
@@ -75,6 +77,7 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
   const { styles } = useStyles();
   const token = useThemeToken();
   const toast = useToast();
+  const { t } = useTranslation(['setting']);
 
   // Store hooks
   const { useFetchAiProviderModels, fetchRemoteModelList, toggleModelEnabled } = useAiInfraStore();
@@ -89,10 +92,13 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
     setIsFetching(true);
     try {
       await fetchRemoteModelList(providerId);
-      toast.success('Models fetched successfully!');
+      toast.success(t('aiProviders.models.fetchSuccess', { ns: 'setting' }));
     } catch (error) {
       console.error('Failed to fetch models:', error);
-      Alert.alert('Error', 'Failed to fetch models. Please try again.');
+      Alert.alert(
+        t('error', { ns: 'common' }),
+        t('aiProviders.models.fetchFailed', { ns: 'setting' }),
+      );
     } finally {
       setIsFetching(false);
     }
@@ -105,7 +111,12 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
         console.log(`Model ${modelId} ${enabled ? 'enabled' : 'disabled'}`);
       } catch (error) {
         console.error(`Failed to toggle model ${modelId}:`, error);
-        Alert.alert('Error', `Failed to ${enabled ? 'enable' : 'disable'} model.`);
+        Alert.alert(
+          t('error', { ns: 'common' }),
+          enabled
+            ? t('aiProviders.models.enableFailed', { ns: 'setting' })
+            : t('aiProviders.models.disableFailed', { ns: 'setting' }),
+        );
       }
     },
     [toggleModelEnabled],
@@ -132,12 +143,18 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
     > = [];
 
     if (enabled.length > 0) {
-      flatData.push({ title: `Enabled (${enabled.length})`, type: 'header' });
+      flatData.push({
+        title: `${t('aiProviders.list.enabled', { ns: 'setting' })} (${enabled.length})`,
+        type: 'header',
+      });
       enabled.forEach((model) => flatData.push({ data: model, type: 'model' }));
     }
 
     if (disabled.length > 0) {
-      flatData.push({ title: `Disabled (${disabled.length})`, type: 'header' });
+      flatData.push({
+        title: `${t('aiProviders.list.disabled', { ns: 'setting' })} (${disabled.length})`,
+        type: 'header',
+      });
       disabled.forEach((model) => flatData.push({ data: model, type: 'model' }));
     }
 
@@ -181,24 +198,25 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
       <View style={styles.header}>
         <View style={styles.titleRow}>
           <View style={styles.titleContainer}>
-            <Text style={styles.sectionTitle}>Models</Text>
-            <Text style={styles.modelCount}>{totalModels} models available</Text>
+            <Text style={styles.sectionTitle}>
+              {t('aiProviders.models.title', { ns: 'setting' })}
+            </Text>
+            <Text style={styles.modelCount}>
+              {t('aiProviders.models.modelsAvailable', { count: totalModels, ns: 'setting' })}
+            </Text>
           </View>
 
           <View style={styles.actionsContainer}>
-            <TouchableOpacity
+            <Button
               disabled={isFetching}
+              icon={<RefreshCcw />}
               onPress={handleFetchModels}
-              style={[styles.fetchButton, isFetching && styles.fetchButtonDisabled]}
+              type="primary"
             >
-              <RefreshCcw
-                color={isFetching ? token.colorTextTertiary : token.colorWhite}
-                size={14}
-              />
-              <Text style={[styles.fetchButtonText, isFetching && styles.fetchButtonTextDisabled]}>
-                {isFetching ? 'Fetching...' : 'Fetch models'}
-              </Text>
-            </TouchableOpacity>
+              {isFetching
+                ? t('aiProviders.models.fetching', { ns: 'setting' })
+                : t('aiProviders.models.fetch', { ns: 'setting' })}
+            </Button>
           </View>
         </View>
 
@@ -206,7 +224,7 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
           <Search color={token.colorTextSecondary} size={16} />
           <TextInput
             onChangeText={setSearchKeyword}
-            placeholder="Search models..."
+            placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
             placeholderTextColor={token.colorTextTertiary}
             style={styles.searchInput}
             value={searchKeyword}
@@ -220,8 +238,8 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             {searchKeyword.trim()
-              ? 'No models match your search criteria'
-              : 'No models found for this provider.\nTry fetching models from the server.'}
+              ? t('aiProviders.models.emptyWithSearch', { ns: 'setting' })
+              : t('aiProviders.models.emptyNoSearch', { ns: 'setting' })}
           </Text>
         </View>
       ) : (

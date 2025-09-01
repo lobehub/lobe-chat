@@ -45,13 +45,13 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = React.memo(
                   />
                 )}
                 <Text style={[styles.tabText, isActive && styles.tabTextActive]}>{item.label}</Text>
-                {item.count !== undefined && item.count > 0 && (
+                {/* {item.count !== undefined && item.count > 0 && (
                   <View style={[styles.countBadge, isActive && styles.countBadgeActive]}>
                     <Text style={[styles.countText, isActive && styles.countTextActive]}>
                       {item.count}
                     </Text>
                   </View>
-                )}
+                )} */}
               </View>
             </TouchableOpacity>
           );

@@ -6,6 +6,7 @@ import { AiProviderDetailItem } from '@/types/aiProvider';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { InstantSwitch } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 import { useStyles } from './style';
 import { ProviderCombine } from '@lobehub/icons-rn';
@@ -17,6 +18,7 @@ interface ProviderInfoSectionProps {
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
   const { styles } = useStyles();
   const token = useThemeToken();
+  const { t } = useTranslation(['setting']);
 
   // Store hooks
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -46,7 +48,9 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
             size={24}
           />
           <Text style={styles.subtitle}>
-            {provider.source === 'builtin' ? 'Built-in Provider' : 'Custom Provider'}
+            {provider.source === 'builtin'
+              ? t('aiProviders.info.builtIn', { ns: 'setting' })
+              : t('aiProviders.info.custom', { ns: 'setting' })}
           </Text>
         </View>
 
