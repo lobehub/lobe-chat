@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { useStyles } from './style';
+import { useTranslation } from 'react-i18next';
 
 const Preview = memo(() => {
   const { styles } = useStyles();
+  const { t } = useTranslation(['setting']);
 
   // 移动端导航栏
   const navbar = (
@@ -25,7 +27,9 @@ const Preview = memo(() => {
       {/* 用户消息 1 */}
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <Text style={[styles.messageText, styles.messageTextUser]}>主题预览看起来怎么样？</Text>
+          <Text style={[styles.messageText, styles.messageTextUser]}>
+            {t('theme.previewMessages.userHowToUse', { ns: 'setting' })}
+          </Text>
         </View>
       </View>
 
@@ -33,16 +37,16 @@ const Preview = memo(() => {
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
           <Text style={[styles.messageText, styles.messageTextBot]}>
-            这个主题预览展示了当前的主色和中性色配置。你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。
+            {t('theme.previewMessages.botHowToUse', { ns: 'setting' })}
           </Text>
         </View>
       </View>
 
-      <View style={[styles.messageContainer, styles.messageContainerUser]}>
+      {/* <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
           <Text style={[styles.messageText, styles.messageTextUser]}>很棒！</Text>
         </View>
-      </View>
+      </View> */}
 
       {/* 用户消息 2 */}
       {/* <View style={[styles.messageContainer, styles.messageContainerUser]}>

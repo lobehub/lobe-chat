@@ -1,5 +1,6 @@
 import { SectionList, View, Text } from 'react-native';
 import isEqual from 'fast-deep-equal';
+import { useTranslation } from 'react-i18next';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
@@ -10,6 +11,7 @@ import ProviderListSkeleton from './(components)/ProviderListSkeleton';
 
 const ProviderList = () => {
   const { styles } = useStyles();
+  const { t } = useTranslation(['setting']);
 
   // 获取store数据和方法
   const { useFetchAiProviderList } = useAiInfraStore();
@@ -30,7 +32,7 @@ const ProviderList = () => {
   if (error) {
     return (
       <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
-        <Text style={styles.label}>Failed to load providers</Text>
+        <Text style={styles.label}>{t('aiProviders.list.loadFailed', { ns: 'setting' })}</Text>
       </View>
     );
   }
@@ -40,12 +42,12 @@ const ProviderList = () => {
     {
       count: enabledProviders.length,
       data: enabledProviders,
-      title: 'Enabled',
+      title: t('aiProviders.list.enabled', { ns: 'setting' }),
     },
     {
       count: disabledProviders.length,
       data: disabledProviders,
-      title: 'Disabled',
+      title: t('aiProviders.list.disabled', { ns: 'setting' }),
     },
   ].filter((section) => section.data.length > 0); // 只显示有数据的section
 

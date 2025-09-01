@@ -14,6 +14,56 @@
     },
     "title": "Paramètres du compte"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Veuillez saisir la clé API de {name}",
+        "label": "Clé API",
+        "placeholder": "Veuillez saisir la clé API de {name}"
+      },
+      "proxyUrl": {
+        "desc": "Doit inclure http(s)://",
+        "invalid": "Veuillez saisir une URL valide commençant par http:// ou https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "Adresse du proxy API"
+      },
+      "saving": "Enregistrement de la configuration en cours...",
+      "title": "Configuration",
+      "updateFailedDesc": "Échec de l'enregistrement, veuillez réessayer",
+      "updateFailedTitle": "Échec de l'enregistrement"
+    },
+    "detail": {
+      "loadFailed": "Échec du chargement de la configuration du fournisseur",
+      "loading": "Chargement de la configuration du fournisseur en cours..."
+    },
+    "info": {
+      "builtIn": "Fournisseur intégré",
+      "custom": "Fournisseur personnalisé"
+    },
+    "list": {
+      "disabled": "Désactivé",
+      "enabled": "Activé",
+      "loadFailed": "Échec du chargement de la liste des fournisseurs"
+    },
+    "models": {
+      "copySuccess": "Copié avec succès",
+      "disableFailed": "Échec de la désactivation du modèle",
+      "emptyNoSearch": "Aucun modèle trouvé, essayez de récupérer depuis le serveur",
+      "emptyWithSearch": "Aucun modèle ne correspond aux critères de recherche",
+      "enableFailed": "Échec de l'activation du modèle",
+      "fetch": "Obtenir le modèle",
+      "fetchFailed": "Échec de la récupération des modèles, veuillez réessayer",
+      "fetchSuccess": "Liste des modèles récupérée avec succès !",
+      "fetching": "Récupération en cours...",
+      "modelsAvailable": "{{count}} modèles disponibles au total",
+      "searchPlaceholder": "Rechercher un modèle...",
+      "title": "Modèles"
+    },
+    "skeleton": {
+      "disabled": "Désactivé",
+      "enabled": "Activé"
+    }
+  },
   "changelog": "Journal des mises à jour",
   "developer": "Options pour les développeurs",
   "feedback": "Retour d'information",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "Choisissez la teinte neutre de l'application",
       "title": "Configuration des couleurs neutres"
+    },
+    "preview": "Aperçu",
+    "previewMessages": {
+      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres à l'aide du sélecteur de couleurs ci-dessous. L'aperçu se mettra à jour en temps réel pour afficher l'effet.",
+      "userHowToUse": "Comment utiliser l'aperçu du thème ?"
     },
     "primaryColor": {
       "description": "Choisissez la couleur principale de l'application",

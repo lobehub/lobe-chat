@@ -3,7 +3,6 @@ import { AlignJustify, MoreHorizontal, MessagesSquare } from 'lucide-react-nativ
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { ICON_SIZE } from '@/const/common';
-import { DEFAULT_AUTHOR, DEFAULT_INBOX_TITLE } from '@/const/meta';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -11,6 +10,7 @@ import { useThemeToken } from '@/theme';
 
 import { useStyles } from './style';
 import { Avatar } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 interface ChatHeaderProps {
   onDrawerToggle?: () => void;
@@ -18,6 +18,7 @@ interface ChatHeaderProps {
 
 export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+  const { t } = useTranslation(['chat']);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
@@ -26,7 +27,7 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
 
   const router = useRouter();
 
-  const displayTitle = isInbox ? DEFAULT_INBOX_TITLE : title;
+  const displayTitle = isInbox ? t('inbox.title', { ns: 'chat' }) : title;
 
   return (
     <View style={[styles.header, { height: 44 }]}>
@@ -37,10 +38,12 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
         <View style={styles.headerInfo}>
           <Avatar avatar={avatar} size={42} />
           <View style={styles.headerText}>
-            <Text style={styles.headerTitle}>{displayTitle}</Text>
-            <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerSubtitle}>
-              {DEFAULT_AUTHOR}
+            <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerTitle}>
+              {displayTitle}
             </Text>
+            {/* <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerSubtitle}>
+              {displayAuthor}
+            </Text> */}
           </View>
         </View>
       </View>

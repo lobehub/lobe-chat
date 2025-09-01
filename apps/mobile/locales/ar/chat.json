@@ -5,6 +5,7 @@
   "confirmDelete": "تأكيد الحذف",
   "copyFailed": "فشل النسخ",
   "defaultAgent": "مساعد مخصص",
+  "defaultList": "القائمة الافتراضية",
   "deleteMessageConfirm": "هل أنت متأكد من حذف هذه الرسالة؟",
   "history": "تاريخ المحادثة",
   "inbox": {

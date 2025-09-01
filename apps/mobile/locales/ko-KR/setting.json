@@ -14,6 +14,56 @@
     },
     "title": "계정 설정"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "{name}의 API 키를 입력하세요",
+        "label": "API 키",
+        "placeholder": "{name}의 API 키를 입력하세요"
+      },
+      "proxyUrl": {
+        "desc": "http(s)://를 포함해야 합니다",
+        "invalid": "http:// 또는 https://로 시작하는 유효한 URL을 입력하세요",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API 프록시 주소"
+      },
+      "saving": "구성 저장 중...",
+      "title": "구성",
+      "updateFailedDesc": "저장에 실패했습니다. 다시 시도하세요",
+      "updateFailedTitle": "저장 실패"
+    },
+    "detail": {
+      "loadFailed": "서비스 제공자 구성 로드 실패",
+      "loading": "서비스 제공자 구성 로드 중..."
+    },
+    "info": {
+      "builtIn": "내장 서비스 제공자",
+      "custom": "사용자 정의 서비스 제공자"
+    },
+    "list": {
+      "disabled": "사용 안 함",
+      "enabled": "사용",
+      "loadFailed": "서비스 제공자 목록 로드 실패"
+    },
+    "models": {
+      "copySuccess": "복사 성공",
+      "disableFailed": "모델 비활성화 실패",
+      "emptyNoSearch": "모델을 찾을 수 없습니다. 서버에서 가져오기를 시도하세요",
+      "emptyWithSearch": "검색 조건에 맞는 모델이 없습니다",
+      "enableFailed": "모델 활성화 실패",
+      "fetch": "모델 가져오기",
+      "fetchFailed": "모델 가져오기 실패, 다시 시도하세요",
+      "fetchSuccess": "모델 목록을 성공적으로 가져왔습니다!",
+      "fetching": "가져오는 중...",
+      "modelsAvailable": "총 {{count}}개의 사용 가능한 모델",
+      "searchPlaceholder": "모델 검색...",
+      "title": "모델"
+    },
+    "skeleton": {
+      "disabled": "사용 안 함",
+      "enabled": "사용"
+    }
+  },
   "changelog": "업데이트 로그",
   "developer": "개발자 옵션",
   "feedback": "의견 보내기",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "애플리케이션에 적용할 중립 색조 선택",
       "title": "중립 색상 구성"
+    },
+    "preview": "미리보기",
+    "previewMessages": {
+      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중간 색상을 조정할 수 있으며, 미리보기는 실시간으로 업데이트되어 효과를 보여줍니다.",
+      "userHowToUse": "테마 미리보기를 어떻게 사용하나요?"
     },
     "primaryColor": {
       "description": "애플리케이션의 주요 색상 선택",

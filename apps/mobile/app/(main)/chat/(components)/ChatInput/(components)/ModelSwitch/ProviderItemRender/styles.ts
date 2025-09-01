@@ -1,10 +1,11 @@
+import { ICON_SIZE_SMALL } from '@/const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 4,
+    gap: token.marginXXS,
   },
 
   customIcon: {
@@ -14,13 +15,13 @@ export const useStyles = createStyles((token) => ({
   },
 
   icon: {
-    height: 20,
-    width: 20,
+    height: ICON_SIZE_SMALL,
+    width: ICON_SIZE_SMALL,
   },
 
   name: {
     color: token.colorTextSecondary,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
   },
 }));

@@ -4,20 +4,20 @@ export const useStyles = createStyles((token) => ({
   // 主容器
   container: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: token.borderRadiusLG,
+    padding: token.padding,
   },
 
   // 错误文字
   errorText: {
     color: token.colorError,
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: token.fontSizeSM,
+    marginTop: token.marginXXS,
   },
 
   // 眼睛按钮
   eyeButton: {
-    padding: 12,
+    padding: token.paddingSM,
   },
 
   // 输入框容器
@@ -25,7 +25,7 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     backgroundColor: token.colorBgLayout,
     borderColor: token.colorBorder,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     borderWidth: 1,
     flexDirection: 'row',
   },
@@ -38,45 +38,45 @@ export const useStyles = createStyles((token) => ({
   // 输入描述文字
   inputDescription: {
     color: token.colorTextSecondary,
-    fontSize: 12,
-    marginBottom: 12,
+    fontSize: token.fontSizeSM,
+    marginBottom: token.marginSM,
   },
 
   // 输入组容器
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: token.marginMD,
   },
 
   // 输入标签
   inputLabel: {
     color: token.colorText,
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.marginXS,
   },
 
   // 章节标题
   sectionTitle: {
     color: token.colorText,
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 16,
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.margin,
   },
 
   // 文本输入框
   textInput: {
     color: token.colorText,
     flex: 1,
-    fontSize: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    fontSize: token.fontSize,
+    paddingHorizontal: token.paddingSM,
+    paddingVertical: token.paddingSM,
   },
 
   // 更新状态指示器
   updatingIndicator: {
     color: token.colorTextTertiary,
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: token.fontSizeSM,
+    marginTop: token.marginXS,
     textAlign: 'center',
   },
 }));

@@ -14,6 +14,56 @@
     },
     "title": "إعدادات الحساب"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "يرجى إدخال مفتاح API الخاص بـ {name}",
+        "label": "مفتاح API",
+        "placeholder": "يرجى إدخال مفتاح API الخاص بـ {name}"
+      },
+      "proxyUrl": {
+        "desc": "يجب أن يحتوي على http(s)://",
+        "invalid": "يرجى إدخال عنوان URL صالح يبدأ بـ http:// أو https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "عنوان وكيل API"
+      },
+      "saving": "جارٍ حفظ الإعدادات...",
+      "title": "الإعدادات",
+      "updateFailedDesc": "فشل الحفظ، يرجى المحاولة مرة أخرى",
+      "updateFailedTitle": "فشل الحفظ"
+    },
+    "detail": {
+      "loadFailed": "فشل تحميل إعدادات مزود الخدمة",
+      "loading": "جارٍ تحميل إعدادات مزود الخدمة..."
+    },
+    "info": {
+      "builtIn": "مزود مدمج",
+      "custom": "مزود مخصص"
+    },
+    "list": {
+      "disabled": "غير مفعل",
+      "enabled": "مفعل",
+      "loadFailed": "فشل تحميل قائمة المزودين"
+    },
+    "models": {
+      "copySuccess": "تم النسخ بنجاح",
+      "disableFailed": "فشل في تعطيل النموذج",
+      "emptyNoSearch": "لم يتم العثور على أي نموذج، حاول الحصول عليه من الخادم",
+      "emptyWithSearch": "لا توجد نماذج تطابق شروط البحث",
+      "enableFailed": "فشل في تمكين النموذج",
+      "fetch": "جلب النموذج",
+      "fetchFailed": "فشل في الحصول على النموذج، يرجى المحاولة مرة أخرى",
+      "fetchSuccess": "تم الحصول على قائمة النماذج بنجاح!",
+      "fetching": "جارٍ الحصول على البيانات...",
+      "modelsAvailable": "يوجد {{count}} نموذج متاح",
+      "searchPlaceholder": "ابحث عن نموذج...",
+      "title": "النماذج"
+    },
+    "skeleton": {
+      "disabled": "غير مفعل",
+      "enabled": "مفعل"
+    }
+  },
   "changelog": "سجل التحديثات",
   "developer": "خيارات المطور",
   "feedback": "ملاحظات",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "اختر الدرجة اللونية المحايدة للتطبيق",
       "title": "إعداد اللون المحايد"
+    },
+    "preview": "معاينة",
+    "previewMessages": {
+      "botHowToUse": "يمكنك تعديل اللون الرئيسي واللون المحايد من خلال محدد الألوان أدناه، وسيتم تحديث المعاينة في الوقت الفعلي لعرض التأثير.",
+      "userHowToUse": "كيف تستخدم معاينة السمة؟"
     },
     "primaryColor": {
       "description": "اختر اللون الأساسي للتطبيق",

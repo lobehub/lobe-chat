@@ -6,27 +6,27 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 40,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: token.paddingContentHorizontal,
+    paddingVertical: token.paddingContentVerticalSM,
   },
 
   leftSection: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
     minWidth: 0, // 允许文字收缩
   },
 
   modelName: {
     color: token.colorText,
     flex: 1,
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
   },
 
   rightSection: {
     flexShrink: 0,
-    marginLeft: 8,
+    marginLeft: token.marginXS,
   },
 }));

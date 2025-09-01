@@ -7,27 +7,27 @@ export const useStyles = createStyles((token) => ({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 12,
-    paddingTop: 8,
+    paddingHorizontal: token.paddingSM,
+    paddingTop: token.paddingXS,
   },
   errorText: {
     color: token.colorError,
-    fontSize: 14,
+    fontSize: token.fontSize,
     textAlign: 'center',
   },
   loadingContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    padding: 32,
+    padding: token.paddingXL,
   },
   loadingText: {
     color: token.colorTextSecondary,
-    fontSize: 14,
+    fontSize: token.fontSize,
     textAlign: 'center',
   },
   scrollContainer: {
-    gap: 16,
-    paddingBottom: 20,
+    gap: token.margin,
+    paddingBottom: token.marginMD,
   },
 }));

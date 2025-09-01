@@ -7,6 +7,7 @@ import {
   TextStyle,
   ViewStyle,
   StyleProp,
+  View,
 } from 'react-native';
 
 import { useStyles, ButtonType, ButtonSize } from './style';
@@ -16,6 +17,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   children?: React.ReactNode;
   danger?: boolean;
   disabled?: boolean;
+  icon?: React.ReactNode;
   loading?: boolean;
   onPress?: () => void;
   size?: ButtonSize;
@@ -35,6 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   onPress,
   style,
   textStyle,
+  icon,
   ...rest
 }) => {
   const { styles } = useStyles({ block, danger, disabled: disabled || loading, size, type });
@@ -43,6 +46,29 @@ const Button: React.FC<ButtonProps> = ({
     if (!disabled && !loading && onPress) {
       onPress();
     }
+  };
+
+  const renderIcon = () => {
+    if (loading || !icon) return null;
+
+    const iconColor = (styles.text?.color as string) ?? undefined;
+    const iconSize = (styles.text?.fontSize as number) ?? undefined;
+
+    let iconNode = icon;
+    if (React.isValidElement(icon)) {
+      const prevStyle = (icon.props as any)?.style;
+      iconNode = React.cloneElement(icon as React.ReactElement<any>, {
+        color: iconColor,
+        size: iconSize,
+        style: [prevStyle, { color: iconColor, fontSize: iconSize }],
+      });
+    }
+
+    return (
+      <View style={styles.loading} testID="button-icon">
+        {iconNode}
+      </View>
+    );
   };
 
   return (
@@ -63,6 +89,7 @@ const Button: React.FC<ButtonProps> = ({
           testID="loading-indicator"
         />
       )}
+      {renderIcon()}
       <Text style={[styles.text, textStyle]}>{children}</Text>
     </TouchableOpacity>
   );

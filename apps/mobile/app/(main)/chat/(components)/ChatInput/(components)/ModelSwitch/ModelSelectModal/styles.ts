@@ -4,20 +4,20 @@ export const useStyles = createStyles((token) => ({
   abilitiesContainer: {
     flexDirection: 'row',
     gap: 6,
-    marginTop: 4,
+    marginTop: token.marginXXS,
   },
   abilityTag: {
-    borderRadius: 4,
+    borderRadius: token.borderRadiusSM,
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
   checkIcon: {
-    marginLeft: 12,
+    marginLeft: token.marginSM,
   },
   closeButton: {
     backgroundColor: token.colorFillTertiary,
     borderRadius: 20,
-    padding: 8,
+    padding: token.paddingXS,
   },
   container: {
     backgroundColor: token.colorBgContainer,
@@ -26,30 +26,30 @@ export const useStyles = createStyles((token) => ({
   emptyContent: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
     justifyContent: 'center',
   },
   emptyModelItem: {
     alignItems: 'center',
-    marginHorizontal: 16,
-    marginVertical: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginHorizontal: token.margin,
+    marginVertical: token.marginXS,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
   emptyProviderItem: {
     alignItems: 'center',
-    marginVertical: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginVertical: token.marginXS,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
   emptyText: {
     color: token.colorTextTertiary,
-    fontSize: 16,
+    fontSize: token.fontSizeLG,
     textAlign: 'center',
   },
   errorText: {
     color: token.colorError,
-    fontSize: 16,
+    fontSize: token.fontSizeLG,
     textAlign: 'center',
   },
   functionTag: {
@@ -65,17 +65,17 @@ export const useStyles = createStyles((token) => ({
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
   },
   headerTitle: {
     color: token.colorText,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
   },
   loadingText: {
     color: token.colorTextSecondary,
-    fontSize: 16,
+    fontSize: token.fontSizeLG,
     textAlign: 'center',
   },
   modelInfo: {
@@ -83,12 +83,12 @@ export const useStyles = createStyles((token) => ({
   },
   modelItem: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     flexDirection: 'row',
-    marginBottom: 4,
-    marginHorizontal: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginBottom: token.marginXXS,
+    marginHorizontal: token.margin,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingSM,
     position: 'relative',
   },
   modelItemNormal: {
@@ -98,10 +98,10 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorPrimaryBg,
   },
   modelList: {
-    paddingTop: 8,
+    paddingTop: token.paddingXS,
   },
   modelName: {
-    fontSize: 16,
+    fontSize: token.fontSizeLG,
   },
   modelNameNormal: {
     color: token.colorText,
@@ -109,32 +109,32 @@ export const useStyles = createStyles((token) => ({
   },
   modelNameSelected: {
     color: token.colorPrimaryText,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
   },
   providerGroup: {
-    marginBottom: 24,
+    marginBottom: token.marginLG,
   },
   providerHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: token.padding,
+    paddingVertical: token.paddingXS,
   },
   providerTitle: {
     color: token.colorTextSecondary,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
   },
   scrollContainer: {
     flex: 1,
   },
   scrollContent: {
-    paddingVertical: 16,
+    paddingVertical: token.padding,
   },
   selectedIndicator: {
     backgroundColor: token.colorPrimary,
-    borderRadius: 2,
+    borderRadius: token.borderRadiusXS,
     height: 4,
     position: 'absolute',
-    right: 8,
+    right: token.marginXS,
     top: '50%',
     transform: [{ translateY: -2 }],
     width: 4,
@@ -147,8 +147,8 @@ export const useStyles = createStyles((token) => ({
   },
   subText: {
     color: token.colorTextQuaternary,
-    fontSize: 14,
-    marginTop: 8,
+    fontSize: token.fontSize,
+    marginTop: token.marginXS,
     textAlign: 'center',
   },
   visionTag: {

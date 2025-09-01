@@ -4,43 +4,43 @@ export const useStyles = createStyles((token) => ({
   // 主容器
   container: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: token.borderRadiusLG,
+    padding: token.padding,
   },
 
   // 描述文字
   description: {
     color: token.colorTextSecondary,
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: 8,
+    fontSize: token.fontSize,
+    lineHeight: token.lineHeightSM,
+    marginTop: token.marginXS,
   },
 
   // 头部区域
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: token.marginSM,
   },
 
   // Loading容器 - 固定宽度避免布局跳跃
   loadingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
+    marginRight: token.marginXS,
     width: 24,
   },
 
   // Logo容器
   logoContainer: {
     alignItems: 'flex-start',
-    marginRight: 12,
+    marginRight: token.marginSM,
   },
 
   // 副标题
   subtitle: {
     color: token.colorTextSecondary,
-    fontSize: 12,
+    fontSize: token.fontSizeSM,
     marginTop: 2,
   },
 
@@ -54,7 +54,7 @@ export const useStyles = createStyles((token) => ({
   title: {
     color: token.colorText,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: token.fontWeightStrong,
   },
 
   // 标题容器

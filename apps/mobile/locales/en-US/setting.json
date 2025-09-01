@@ -14,6 +14,56 @@
     },
     "title": "Account Settings"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Please enter the API Key for {name}",
+        "label": "API Key",
+        "placeholder": "Please enter the API Key for {name}"
+      },
+      "proxyUrl": {
+        "desc": "Must include http(s)://",
+        "invalid": "Please enter a valid URL starting with http:// or https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API Proxy URL"
+      },
+      "saving": "Saving configuration...",
+      "title": "Configuration",
+      "updateFailedDesc": "Save failed, please try again",
+      "updateFailedTitle": "Save Failed"
+    },
+    "detail": {
+      "loadFailed": "Failed to load provider configuration",
+      "loading": "Loading provider configuration..."
+    },
+    "info": {
+      "builtIn": "Built-in Provider",
+      "custom": "Custom Provider"
+    },
+    "list": {
+      "disabled": "Disabled",
+      "enabled": "Enabled",
+      "loadFailed": "Failed to load provider list"
+    },
+    "models": {
+      "copySuccess": "Copy successful",
+      "disableFailed": "Failed to disable model",
+      "emptyNoSearch": "No models found, trying to fetch from server",
+      "emptyWithSearch": "No models match the search criteria",
+      "enableFailed": "Failed to enable model",
+      "fetch": "Fetch Models",
+      "fetchFailed": "Failed to fetch models, please try again",
+      "fetchSuccess": "Model list fetched successfully!",
+      "fetching": "Fetching...",
+      "modelsAvailable": "{{count}} models available",
+      "searchPlaceholder": "Search models...",
+      "title": "Models"
+    },
+    "skeleton": {
+      "disabled": "Disabled",
+      "enabled": "Enabled"
+    }
+  },
   "changelog": "Changelog",
   "developer": "Developer Options",
   "feedback": "Feedback",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "Select the neutral tone for the application",
       "title": "Neutral Color Settings"
+    },
+    "preview": "Preview",
+    "previewMessages": {
+      "botHowToUse": "You can adjust the primary and neutral colors using the color picker below. The preview will update in real-time to show the effect.",
+      "userHowToUse": "How to use the theme preview?"
     },
     "primaryColor": {
       "description": "Select the primary color for the application",
