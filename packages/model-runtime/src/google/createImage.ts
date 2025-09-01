@@ -1,10 +1,44 @@
 import { Content, GoogleGenAI, Part } from '@google/genai';
-import { imageUrlToBase64 } from '@lobechat/utils';
 
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { parseDataUri } from '../utils/uriParser';
+
+// Maximum number of images allowed for processing
+const MAX_IMAGE_COUNT = 10;
+
+/**
+ * Process a single image URL and convert it to Google AI Part format
+ */
+async function processImageForParts(imageUrl: string): Promise<Part> {
+  const { mimeType, base64, type } = parseDataUri(imageUrl);
+
+  if (type === 'base64') {
+    if (!base64) {
+      throw new TypeError("Image URL doesn't contain base64 data");
+    }
+
+    return {
+      inlineData: {
+        data: base64,
+        mimeType: mimeType || 'image/png',
+      },
+    };
+  } else if (type === 'url') {
+    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+
+    return {
+      inlineData: {
+        data: urlBase64,
+        mimeType: urlMimeType,
+      },
+    };
+  } else {
+    throw new TypeError(`currently we don't support image url: ${imageUrl}`);
+  }
+}
 
 /**
  * Extract image data from generateContent response
@@ -71,36 +105,30 @@ async function generateImageByChatModel(
   const { model, params } = payload;
   const actualModel = model.replace(':image', '');
 
+  // Check for conflicting image parameters
+  if (params.imageUrl && params.imageUrls && params.imageUrls.length > 0) {
+    throw new TypeError('Cannot provide both imageUrl and imageUrls parameters simultaneously');
+  }
+
   // Build content parts
   const parts: Part[] = [{ text: params.prompt }];
 
   // Add image for editing if provided
   if (params.imageUrl && params.imageUrl !== null) {
-    const { mimeType, base64, type } = parseDataUri(params.imageUrl);
+    const imagePart = await processImageForParts(params.imageUrl);
+    parts.push(imagePart);
+  }
 
-    if (type === 'base64') {
-      if (!base64) {
-        throw new TypeError("Image URL doesn't contain base64 data");
-      }
-
-      parts.push({
-        inlineData: {
-          data: base64,
-          mimeType: mimeType || 'image/png',
-        },
-      });
-    } else if (type === 'url') {
-      const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(params.imageUrl);
-
-      parts.push({
-        inlineData: {
-          data: urlBase64,
-          mimeType: urlMimeType,
-        },
-      });
-    } else {
-      throw new TypeError(`currently we don't support image url: ${params.imageUrl}`);
+  // Add multiple images for editing if provided
+  if (params.imageUrls && Array.isArray(params.imageUrls) && params.imageUrls.length > 0) {
+    if (params.imageUrls.length > MAX_IMAGE_COUNT) {
+      throw new TypeError(`Too many images provided. Maximum ${MAX_IMAGE_COUNT} images allowed`);
     }
+
+    const imageParts = await Promise.all(
+      params.imageUrls.map((imageUrl) => processImageForParts(imageUrl)),
+    );
+    parts.push(...imageParts);
   }
 
   const contents: Content[] = [

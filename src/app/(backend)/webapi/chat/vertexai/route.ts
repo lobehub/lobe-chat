@@ -1,7 +1,7 @@
 import { ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
+import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { LobeVertexAI } from '@/libs/model-runtime/vertexai';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { POST as UniverseRoute } from '../[provider]/route';

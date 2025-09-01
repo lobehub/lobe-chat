@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { ChatModelCard } from '@/types/llm';
+import { AIBaseModelCard } from 'model-bank';
 
 import {
   ChatMethodOptions,
@@ -45,7 +45,7 @@ export abstract class LobeOpenAICompatibleRuntime {
   abstract chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
   abstract createImage(payload: CreateImagePayload): Promise<CreateImageResponse>;
 
-  abstract models(): Promise<ChatModelCard[]>;
+  abstract models(): Promise<AIBaseModelCard[]>;
 
   abstract embeddings(
     payload: EmbeddingsPayload,

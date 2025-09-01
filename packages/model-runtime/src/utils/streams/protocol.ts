@@ -1,10 +1,10 @@
-import { nanoid, safeParseJSON } from '@lobechat/utils';
-
 import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
 
-import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
 import { ChatStreamCallbacks } from '../../types';
+import { AgentRuntimeErrorType } from '../../types/error';
+import { safeParseJSON } from '../safeParseJSON';
+import { nanoid } from '../uuid';
 
 /**
  * context in the stream to save temporarily data

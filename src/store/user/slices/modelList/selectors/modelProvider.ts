@@ -1,12 +1,15 @@
+import type {
+  ChatModelCard,
+  EnabledProviderWithModels,
+  GlobalLLMProviderKey,
+  ModelProviderCard,
+} from '@lobechat/types';
+import { ServerModelProviderConfig } from '@lobechat/types';
 import { uniqBy } from 'lodash-es';
 
 import { filterEnabledModels } from '@/config/modelProviders';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
-import { ChatModelCard, ModelProviderCard } from '@/types/llm';
-import { ServerModelProviderConfig } from '@/types/serverConfig';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
+import type { UserStore } from '@/store/user';
 
-import { UserStore } from '../../../store';
 import { currentSettings, getProviderConfigById } from '../../settings/selectors/settings';
 
 /**

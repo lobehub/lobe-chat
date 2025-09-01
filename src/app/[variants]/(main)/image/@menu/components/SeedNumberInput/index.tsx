@@ -2,11 +2,11 @@
 
 import { Button, InputNumber, Tooltip } from '@lobehub/ui';
 import { Dices } from 'lucide-react';
+import { MAX_SEED } from 'model-bank';
 import { CSSProperties, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { MAX_SEED } from '@/const/image';
 import { generateUniqueSeeds } from '@/utils/number';
 
 export interface SeedNumberInputProps {

@@ -1,7 +1,7 @@
 import { GenerateContentResponse } from '@google/genai';
-import * as uuidModule from '@lobechat/utils';
 import { describe, expect, it, vi } from 'vitest';
 
+import * as uuidModule from '../uuid';
 import { GoogleGenerativeAIStream } from './google-ai';
 
 describe('GoogleGenerativeAIStream', () => {

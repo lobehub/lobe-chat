@@ -1,20 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-import { transform } from 'lodash-es';
 
-import { withBasePath } from '@/utils/basePath';
 
-const mapWithBasePath = <T extends object>(apis: T): T => {
-  return transform(apis, (result, value, key) => {
-    if (typeof value === 'string') {
-      // @ts-ignore
-      result[key] = withBasePath(value);
-    } else {
-      result[key] = value;
-    }
-  });
-};
-
-export const API_ENDPOINTS = mapWithBasePath({
+export const API_ENDPOINTS = {
   oauth: '/api/auth',
 
   proxy: '/webapi/proxy',
@@ -26,11 +13,11 @@ export const API_ENDPOINTS = mapWithBasePath({
   trace: '/webapi/trace',
 
   // chat
-  chat: (provider: string) => withBasePath(`/webapi/chat/${provider}`),
+  chat: (provider: string) => `/webapi/chat/${provider}`,
 
   // models
-  models: (provider: string) => withBasePath(`/webapi/models/${provider}`),
-  modelPull: (provider: string) => withBasePath(`/webapi/models/${provider}/pull`),
+  models: (provider: string) => `/webapi/models/${provider}`,
+  modelPull: (provider: string) => `/webapi/models/${provider}/pull`,
 
   // image
   images: (provider: string) => `/webapi/text-to-image/${provider}`,
@@ -42,4 +29,4 @@ export const API_ENDPOINTS = mapWithBasePath({
   tts: '/webapi/tts/openai',
   edge: '/webapi/tts/edge',
   microsoft: '/webapi/tts/microsoft',
-});
+};

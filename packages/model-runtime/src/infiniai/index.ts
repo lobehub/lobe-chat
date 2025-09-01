@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface InfiniAIModelCard {
@@ -42,7 +42,7 @@ export const LobeInfiniAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_INFINIAI_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const reasoningKeywords = ['deepseek-r1', 'qwq', 'qwen3'];
     const visionKeywords = ['qwen2.5-vl'];

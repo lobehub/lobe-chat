@@ -14,7 +14,7 @@ export const LobeLMStudioAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_LMSTUDIO_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: LMStudioModelCard[] = modelsPage.data;

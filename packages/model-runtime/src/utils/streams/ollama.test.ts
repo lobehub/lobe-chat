@@ -1,7 +1,7 @@
-import * as uuidModule from '@lobechat/utils';
 import { ChatResponse } from 'ollama/browser';
 import { describe, expect, it, vi } from 'vitest';
 
+import * as uuidModule from '../uuid';
 import { OllamaStream } from './ollama';
 
 describe('OllamaStream', () => {
