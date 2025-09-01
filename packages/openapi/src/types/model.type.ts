@@ -1,7 +1,8 @@
-import { AiModelSourceType } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AiModelSelectItem } from '@/database/schemas';
+
+import { AiModelSourceType } from '../../../model-bank/src/types';
 
 // ==================== Model Configuration Query Types ====================
 

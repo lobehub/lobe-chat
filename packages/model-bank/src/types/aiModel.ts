@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-import { ModelPriceCurrency } from '.';
 import { ModelParamsSchema } from '../standard-parameters';
+
+export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
   Builtin: 'builtin',
