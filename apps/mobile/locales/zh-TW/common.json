@@ -7,6 +7,7 @@
     "copy": "複製",
     "delete": "刪除",
     "edit": "編輯",
+    "regenerate": "重新產生",
     "retry": "重試",
     "save": "儲存"
   },
