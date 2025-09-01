@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.120.6](https://github.com/lobehub/lobe-chat/compare/v1.120.5...v1.120.6)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add upload hint for non-visual model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add upload hint for non-visual model, closes [#7969](https://github.com/lobehub/lobe-chat/issues/7969) ([1224f4e](https://github.com/lobehub/lobe-chat/commit/1224f4e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.5](https://github.com/lobehub/lobe-chat/compare/v1.120.4...v1.120.5)
 
 <sup>Released on **2025-09-01**</sup>
