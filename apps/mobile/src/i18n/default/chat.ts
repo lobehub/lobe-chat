@@ -6,6 +6,7 @@ export default {
   confirmDelete: '确认删除',
   copyFailed: '复制失败',
   defaultAgent: '自定义助手',
+  defaultList: '默认列表',
   deleteMessageConfirm: '确定要删除这条消息吗？',
   history: '对话历史',
   inbox: {

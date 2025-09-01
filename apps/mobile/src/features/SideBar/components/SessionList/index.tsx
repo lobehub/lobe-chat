@@ -50,7 +50,7 @@ export default function SideBar() {
       <ScrollView style={styles.sessionList}>
         <Inbox />
         <View style={styles.header}>
-          <Text style={styles.headerText}>默认列表</Text>
+          <Text style={styles.headerText}>{t('defaultList', { ns: 'chat' })}</Text>
         </View>
         {filteredSessions.map((session) => (
           <SessionItem id={session.id} key={session.id} />

@@ -9,16 +9,18 @@ import { InstantSwitch } from '@/components';
 
 import { useStyles } from './style';
 import { ProviderCombine } from '@lobehub/icons-rn';
+import { useTranslation } from 'react-i18next';
 
 interface ProviderCardProps {
   provider: AiProviderListItem;
 }
 
 const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
+  const { t } = useTranslation('providers');
   const { styles } = useStyles();
   const router = useRouter();
   const token = useThemeToken();
-  const { description, id, enabled } = provider;
+  const { description, id, enabled, source } = provider;
 
   // 获取store中的方法
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -69,7 +71,7 @@ const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
         {/* 中部：描述文字（可点击跳转） */}
         <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
           <Text numberOfLines={2} style={styles.description}>
-            {description}
+            {source === 'custom' ? description : t(`${id}.description`)}
           </Text>
         </TouchableOpacity>
       </View>
