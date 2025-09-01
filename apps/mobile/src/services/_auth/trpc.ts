@@ -7,8 +7,12 @@ import { OFFICIAL_URL } from '@/const/url';
 
 // Local type reference to server router
 import type { MobileRouter } from '../../../../../src/server/routers/mobile';
+import { Platform } from 'react-native';
 
-const remoteUrl = process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL;
+const remoteUrl =
+  (Platform.OS === 'ios'
+    ? process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER
+    : process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER_ANDROID) || OFFICIAL_URL;
 
 const links = [
   httpBatchLink({
