@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.120.3](https://github.com/lobehub/lobe-chat/compare/v1.120.2...v1.120.3)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support new provider Nebius.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support new provider Nebius, closes [#8903](https://github.com/lobehub/lobe-chat/issues/8903) ([c15791d](https://github.com/lobehub/lobe-chat/commit/c15791d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.2](https://github.com/lobehub/lobe-chat/compare/v1.120.1...v1.120.2)
 
 <sup>Released on **2025-08-31**</sup>
