@@ -31,6 +31,7 @@ import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import ModelScopeProvider from './modelscope';
 import MoonshotProvider from './moonshot';
+import NebiusProvider from './nebius';
 import NovitaProvider from './novita';
 import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
@@ -175,6 +176,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   InfiniAIProvider,
   AkashChatProvider,
   QiniuProvider,
+  NebiusProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -218,6 +220,7 @@ export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as ModelScopeProviderCard } from './modelscope';
 export { default as MoonshotProviderCard } from './moonshot';
+export { default as NebiusProviderCard } from './nebius';
 export { default as NovitaProviderCard } from './novita';
 export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';
