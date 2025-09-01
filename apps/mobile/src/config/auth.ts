@@ -1,6 +1,7 @@
 import { OFFICIAL_URL } from '@/const/url';
 import { AuthConfig } from '@/_types/user';
 import { isDev } from '@/utils/env';
+import { Platform } from 'react-native';
 
 /**
  * 认证配置
@@ -12,7 +13,10 @@ export const authConfig: AuthConfig = {
     prompt: 'consent',
   },
   clientId: process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID || 'lobehub-mobile',
-  issuer: process.env.EXPO_PUBLIC_OAUTH_ISSUER || OFFICIAL_URL,
+  issuer:
+    (Platform.OS === 'ios'
+      ? process.env.EXPO_PUBLIC_OAUTH_ISSUER
+      : process.env.EXPO_PUBLIC_OAUTH_ISSUER_ANDROID) || OFFICIAL_URL,
   redirectUri: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_URI || 'com.lobehub.app://auth/callback',
   scopes: ['openid', 'profile', 'email', 'offline_access'],
 };
