@@ -1,4 +1,4 @@
-import { AiFullModelCard } from '@/types/aiModel';
+import type { AiFullModelCard } from 'model-bank';
 
 /**
  * Get the model property value, first from the specified provider, and then from other providers as a fallback.

@@ -15,7 +15,7 @@ import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ModelAbilities } from '@/types/aiModel';
+import { ModelAbilities } from '../../../packages/model-bank/src/types/aiModel';
 import { AiProviderSourceType } from '@/types/aiProvider';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';

@@ -3,6 +3,7 @@ import {
   ChatCompletionErrorPayload,
   ModelProvider,
   ModelRuntime,
+  parseDataUri,
 } from '@lobechat/model-runtime';
 import { BuiltinSystemRolePrompts, filesPrompts } from '@lobechat/prompts';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
@@ -15,7 +16,6 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
-import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';

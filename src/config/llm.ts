@@ -87,6 +87,9 @@ export const getLLMConfig = () => {
       ENABLED_STEPFUN: z.boolean(),
       STEPFUN_API_KEY: z.string().optional(),
 
+      ENABLED_NEBIUS: z.boolean(),
+      NEBIUS_API_KEY: z.string().optional(),
+
       ENABLED_NOVITA: z.boolean(),
       NOVITA_API_KEY: z.string().optional(),
 
@@ -364,6 +367,9 @@ export const getLLMConfig = () => {
 
       ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
       AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
+
+      ENABLED_NEBIUS: !!process.env.NEBIUS_API_KEY,
+      NEBIUS_API_KEY: process.env.NEBIUS_API_KEY,
     },
   });
 };

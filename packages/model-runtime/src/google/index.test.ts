@@ -1,6 +1,5 @@
 // @vitest-environment edge-runtime
 import { GenerateContentResponse, Tool } from '@google/genai';
-import * as imageToBase64Module from '@lobechat/utils';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,6 +7,7 @@ import { OpenAIChatMessage } from '@/libs/model-runtime';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import * as debugStreamModule from '../utils/debugStream';
+import * as imageToBase64Module from '../utils/imageToBase64';
 import { LobeGoogleAI } from './index';
 
 const provider = 'google';

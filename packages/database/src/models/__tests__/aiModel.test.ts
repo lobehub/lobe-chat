@@ -1,8 +1,7 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
+import { AiProviderModelListItem } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-
-import { AiProviderModelListItem } from '@/types/aiModel';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels, users } from '../../schemas';
 import { LobeChatDatabase } from '../../type';

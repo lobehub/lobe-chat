@@ -1,9 +1,36 @@
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 
 // modelInfo https://www.volcengine.com/docs/82379/1330310
 // pricing https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement
 
 const doubaoChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    config: {
+      deploymentName: 'deepseek-v3-1-250821',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。支持 128k 上下文窗口，输出长度支持最大 64k tokens。',
+    displayName: 'DeepSeek V3.1',
+    id: 'deepseek-v3.1',
+    maxOutput: 32_768,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
   {
     abilities: {
       functionCall: true,

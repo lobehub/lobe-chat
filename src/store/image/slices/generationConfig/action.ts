@@ -1,4 +1,5 @@
 import {
+  AIImageModelCard,
   ModelParamsSchema,
   RuntimeImageGenParams,
   RuntimeImageGenParamsKeys,
@@ -8,7 +9,6 @@ import {
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { AIImageModelCard } from '@/types/aiModel';
 
 import type { ImageStore } from '../../store';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';

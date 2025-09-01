@@ -80,6 +80,9 @@
   "DeepSeek-V3-Fast": {
     "description": "Nhà cung cấp mô hình: nền tảng sophnet. DeepSeek V3 Fast là phiên bản tốc độ cao TPS của DeepSeek V3 0324, không lượng tử hóa, có khả năng mã hóa và toán học mạnh mẽ hơn, phản hồi nhanh hơn!"
   },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 là mô hình suy luận hỗn hợp hoàn toàn mới do DeepSeek phát hành, hỗ trợ hai chế độ suy luận: suy nghĩ và không suy nghĩ, với hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Sau khi tối ưu hóa Post-Training, việc sử dụng công cụ Agent và hiệu suất nhiệm vụ của tác nhân được cải thiện đáng kể."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite sở hữu tốc độ phản hồi tối ưu, hiệu quả chi phí tốt hơn, cung cấp lựa chọn linh hoạt hơn cho các kịch bản khác nhau của khách hàng. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 128k."
   },
@@ -134,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Mô hình ngôn ngữ quy mô lớn hiệu suất cao do Baidu phát hành vào năm 2024, có khả năng tổng quát xuất sắc, hiệu quả tốt hơn ERNIE Speed, phù hợp làm mô hình nền để tinh chỉnh, xử lý tốt hơn các vấn đề trong các tình huống cụ thể, đồng thời có khả năng suy diễn tuyệt vời."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev là mô hình tạo và chỉnh sửa hình ảnh đa phương thức dựa trên kiến trúc Rectified Flow Transformer do Black Forest Labs phát triển, với quy mô 12 tỷ tham số, tập trung vào việc tạo, tái cấu trúc, nâng cao hoặc chỉnh sửa hình ảnh dựa trên điều kiện ngữ cảnh cho trước. Mô hình kết hợp ưu điểm tạo có kiểm soát của mô hình khuếch tán và khả năng mô hình hóa ngữ cảnh của Transformer, hỗ trợ xuất hình ảnh chất lượng cao, ứng dụng rộng rãi trong sửa chữa hình ảnh, hoàn thiện hình ảnh, tái cấu trúc cảnh quan trực quan."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev là mô hình ngôn ngữ đa phương thức mã nguồn mở do Black Forest Labs phát triển, tối ưu cho các tác vụ kết hợp hình ảnh và văn bản. Nó tích hợp khả năng hiểu và tạo hình ảnh cùng văn bản, xây dựng trên nền tảng các mô hình ngôn ngữ lớn tiên tiến như Mistral-7B, thông qua bộ mã hóa thị giác thiết kế tinh vi và điều chỉnh chỉ dẫn đa giai đoạn, đạt được khả năng xử lý phối hợp hình ảnh-văn bản và suy luận tác vụ phức tạp."
@@ -265,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng chú ý tiềm ẩn đa đầu (MLA) và kiến trúc DeepSeekMoE, kết hợp chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội hơn các mô hình mã nguồn mở khác, gần với các mô hình đóng kín hàng đầu."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 là mô hình ngôn ngữ lớn chế độ hỗn hợp do DeepSeek AI phát hành, với nhiều nâng cấp quan trọng dựa trên phiên bản trước. Một đổi mới lớn của mô hình là tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode) trong cùng một mô hình, người dùng có thể linh hoạt chuyển đổi bằng cách điều chỉnh mẫu trò chuyện để phù hợp với các yêu cầu nhiệm vụ khác nhau. Qua tối ưu hóa sau huấn luyện chuyên biệt, V3.1 đã cải thiện đáng kể hiệu suất trong việc gọi công cụ và nhiệm vụ Agent, hỗ trợ tốt hơn cho các công cụ tìm kiếm bên ngoài và thực hiện các nhiệm vụ phức tạp nhiều bước. Mô hình được huấn luyện tiếp dựa trên DeepSeek-V3.1-Base, sử dụng phương pháp mở rộng văn bản dài hai giai đoạn, tăng đáng kể lượng dữ liệu huấn luyện, giúp cải thiện khả năng xử lý tài liệu dài và mã nguồn dài. Là một mô hình mã nguồn mở, DeepSeek-V3.1 thể hiện năng lực tương đương với các mô hình đóng hàng đầu trong các bài kiểm tra chuẩn về mã hóa, toán học và suy luận, đồng thời với kiến trúc chuyên gia hỗn hợp (MoE), nó duy trì dung lượng mô hình lớn trong khi giảm chi phí suy luận hiệu quả."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 là mô hình nền tảng kiến trúc MoE với khả năng mã hóa và đại lý vượt trội, tổng tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra chuẩn về suy luận kiến thức chung, lập trình, toán học và đại lý, hiệu suất của mô hình K2 vượt trội so với các mô hình mã nguồn mở phổ biến khác."
@@ -845,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng chú ý tiềm ẩn đa đầu (MLA) và kiến trúc DeepSeekMoE, kết hợp với chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội về hiệu suất so với các mô hình mã nguồn mở khác, gần gũi với các mô hình đóng nguồn hàng đầu."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 là mô hình ngôn ngữ lớn chế độ hỗn hợp do DeepSeek AI phát hành, với nhiều nâng cấp quan trọng dựa trên phiên bản trước. Một đổi mới lớn của mô hình là tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode) trong cùng một mô hình, người dùng có thể linh hoạt chuyển đổi bằng cách điều chỉnh mẫu trò chuyện để phù hợp với các yêu cầu nhiệm vụ khác nhau. Qua tối ưu hóa sau huấn luyện chuyên biệt, V3.1 đã cải thiện đáng kể hiệu suất trong việc gọi công cụ và nhiệm vụ Agent, hỗ trợ tốt hơn cho các công cụ tìm kiếm bên ngoài và thực hiện các nhiệm vụ phức tạp nhiều bước. Mô hình được huấn luyện tiếp dựa trên DeepSeek-V3.1-Base, sử dụng phương pháp mở rộng văn bản dài hai giai đoạn, tăng đáng kể lượng dữ liệu huấn luyện, giúp cải thiện khả năng xử lý tài liệu dài và mã nguồn dài. Là một mô hình mã nguồn mở, DeepSeek-V3.1 thể hiện năng lực tương đương với các mô hình đóng hàng đầu trong các bài kiểm tra chuẩn về mã hóa, toán học và suy luận, đồng thời với kiến trúc chuyên gia hỗn hợp (MoE), nó duy trì dung lượng mô hình lớn trong khi giảm chi phí suy luận hiệu quả."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B là mô hình tiên tiến được huấn luyện cho các cuộc đối thoại phức tạp."
   },
@@ -915,7 +930,7 @@
     "description": "DeepSeek R1 phiên bản đầy đủ, có 671B tham số, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, có khả năng hiểu và tạo ra mạnh mẽ hơn."
   },
   "deepseek-reasoner": {
-    "description": "Mô hình suy diễn do DeepSeek phát triển. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một đoạn nội dung chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối."
+    "description": "DeepSeek V3.1 Chế độ suy nghĩ. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối cùng."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 là mô hình ngôn ngữ Mixture-of-Experts hiệu quả, phù hợp cho các nhu cầu xử lý tiết kiệm."
@@ -929,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 là mô hình MoE với 671B tham số, nổi bật trong khả năng lập trình và kỹ thuật, hiểu ngữ cảnh và xử lý văn bản dài."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 là mô hình suy luận hỗn hợp hoàn toàn mới do DeepSeek phát hành, hỗ trợ hai chế độ suy luận: suy nghĩ và không suy nghĩ, với hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Sau khi tối ưu hóa Post-Training, việc sử dụng công cụ Agent và hiệu suất nhiệm vụ của tác nhân được cải thiện đáng kể. Hỗ trợ cửa sổ ngữ cảnh 128k, độ dài đầu ra tối đa lên đến 64k tokens."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 là một mô hình hỗn hợp chuyên gia với 685B tham số, là phiên bản mới nhất trong dòng mô hình trò chuyện flagship của đội ngũ DeepSeek.\n\nNó kế thừa mô hình [DeepSeek V3](/deepseek/deepseek-chat-v3) và thể hiện xuất sắc trong nhiều nhiệm vụ."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 là một mô hình hỗn hợp chuyên gia với 685B tham số, là phiên bản mới nhất trong dòng mô hình trò chuyện flagship của đội ngũ DeepSeek.\n\nNó kế thừa mô hình [DeepSeek V3](/deepseek/deepseek-chat-v3) và thể hiện xuất sắc trong nhiều nhiệm vụ."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1 là mô hình suy luận hỗn hợp lớn hỗ trợ ngữ cảnh dài 128K và chuyển đổi chế độ hiệu quả, đạt hiệu suất và tốc độ xuất sắc trong việc gọi công cụ, tạo mã và các nhiệm vụ suy luận phức tạp."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 đã nâng cao khả năng suy luận của mô hình một cách đáng kể với rất ít dữ liệu được gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối cùng."
@@ -1230,10 +1251,10 @@
     "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
   },
   "gemini-2.5-flash-image-preview": {
-    "description": "Gemini 2.5 Flash Image Preview là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google; nó cho phép bạn tạo và chỉnh sửa hình ảnh thông qua hội thoại."
+    "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
   },
   "gemini-2.5-flash-image-preview:image": {
-    "description": "Gemini 2.5 Flash Image Preview là mô hình đa phương thức gốc mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
+    "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho việc sử dụng quy mô lớn."

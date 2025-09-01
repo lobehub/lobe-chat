@@ -4,8 +4,8 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
 import { isRtlLang } from 'rtl-detect';
 
-import { getDebugConfig } from '@/config/debug';
 import { DEFAULT_LANG } from '@/const/locale';
+import { getDebugConfig } from '@/envs/debug';
 import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
 

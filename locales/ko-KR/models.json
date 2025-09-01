@@ -80,6 +80,9 @@
   "DeepSeek-V3-Fast": {
     "description": "모델 공급자는 sophnet 플랫폼입니다. DeepSeek V3 Fast는 DeepSeek V3 0324 버전의 고TPS 초고속 버전으로, 완전 비양자화되어 코드와 수학 능력이 더욱 강력하며 반응 속도가 훨씬 빠릅니다!"
   },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 뛰어납니다. 사후 학습(Post-Training) 최적화를 거쳐 에이전트 도구 사용과 지능형 작업 성능이 크게 향상되었습니다."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite는 탁월한 응답 속도와 뛰어난 가성비를 자랑하며, 고객의 다양한 시나리오에 더 유연한 선택을 제공합니다. 128k 컨텍스트 윈도우 추론 및 미세 조정을 지원합니다."
   },
@@ -134,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "바이두가 2024년에 최신 발표한 자체 개발 고성능 대언어 모델로, 일반 능력이 뛰어나며, ERNIE Speed보다 더 나은 성능을 보여 특정 시나리오 문제를 더 잘 처리하기 위해 기본 모델로 조정하는 데 적합하며, 뛰어난 추론 성능을 갖추고 있습니다."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev는 Black Forest Labs가 개발한 Rectified Flow Transformer 아키텍처 기반의 다중 모달 이미지 생성 및 편집 모델로, 120억(12B) 파라미터 규모를 갖추고 있습니다. 주어진 컨텍스트 조건 하에서 이미지 생성, 재구성, 향상 또는 편집에 특화되어 있습니다. 이 모델은 확산 모델의 제어 가능한 생성 장점과 Transformer의 컨텍스트 모델링 능력을 결합하여 고품질 이미지 출력을 지원하며, 이미지 복원, 이미지 보완, 시각적 장면 재구성 등 다양한 작업에 널리 활용됩니다."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev는 Black Forest Labs가 개발한 오픈 소스 다중 모달 언어 모델(MLLM)로, 이미지와 텍스트 이해 및 생성 능력을 융합하여 이미지-텍스트 작업에 최적화되어 있습니다. Mistral-7B와 같은 최첨단 대형 언어 모델을 기반으로 정교하게 설계된 시각 인코더와 다단계 명령 미세 조정을 통해 이미지-텍스트 협업 처리 및 복잡한 작업 추론 능력을 구현합니다."
@@ -265,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3는 6710억 개의 매개변수를 가진 혼합 전문가(MoE) 언어 모델로, 다중 헤드 잠재 주의(MLA) 및 DeepSeekMoE 아키텍처를 사용하여 보조 손실 없는 부하 균형 전략을 결합하여 추론 및 훈련 효율성을 최적화합니다. 14.8조 개의 고품질 토큰에서 사전 훈련을 수행하고 감독 미세 조정 및 강화 학습을 통해 DeepSeek-V3는 성능 면에서 다른 오픈 소스 모델을 초월하며, 선도적인 폐쇄형 모델에 근접합니다."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1은 DeepSeek AI에서 발표한 하이브리드 모드 대형 언어 모델로, 이전 모델을 기반으로 다방면에서 중요한 업그레이드를 이루었습니다. 이 모델의 주요 혁신은 '사고 모드'(Thinking Mode)와 '비사고 모드'(Non-thinking Mode)를 통합하여 사용자가 채팅 템플릿을 조정해 다양한 작업 요구에 유연하게 대응할 수 있다는 점입니다. 전용 사후 학습 최적화를 통해 V3.1은 도구 호출과 에이전트 작업 성능이 크게 향상되어 외부 검색 도구 지원과 다단계 복잡 작업 수행에 뛰어납니다. 이 모델은 DeepSeek-V3.1-Base를 기반으로 사후 학습되었으며, 2단계 장문 확장 방식을 통해 학습 데이터 양을 대폭 늘려 긴 문서와 장문의 코드 처리에 우수한 성능을 보입니다. 오픈소스 모델로서 DeepSeek-V3.1은 코딩, 수학, 추론 등 여러 벤치마크에서 최상위 폐쇄형 모델과 견줄 만한 능력을 보여주며, 혼합 전문가(MoE) 아키텍처 덕분에 대규모 모델 용량을 유지하면서도 추론 비용을 효과적으로 낮췄습니다."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2는 초강력 코드 및 에이전트 능력을 갖춘 MoE 아키텍처 기반 모델로, 총 파라미터 1조, 활성화 파라미터 320억입니다. 범용 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야 벤치마크에서 K2 모델은 다른 주류 오픈 소스 모델을 능가하는 성능을 보입니다."
@@ -845,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3는 6710억 개의 매개변수를 가진 혼합 전문가(MoE) 언어 모델로, 다중 헤드 잠재 주의(MLA) 및 DeepSeekMoE 아키텍처를 채택하여 보조 손실 없는 부하 균형 전략을 결합하여 추론 및 훈련 효율성을 최적화합니다. 14.8조 개의 고품질 토큰에서 사전 훈련을 수행하고 감독 미세 조정 및 강화 학습을 통해 DeepSeek-V3는 성능 면에서 다른 오픈 소스 모델을 초월하며, 선도적인 폐쇄형 모델에 근접합니다."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1은 DeepSeek AI에서 발표한 하이브리드 모드 대형 언어 모델로, 이전 모델을 기반으로 다방면에서 중요한 업그레이드를 이루었습니다. 이 모델의 주요 혁신은 '사고 모드'(Thinking Mode)와 '비사고 모드'(Non-thinking Mode)를 통합하여 사용자가 채팅 템플릿을 조정해 다양한 작업 요구에 유연하게 대응할 수 있다는 점입니다. 전용 사후 학습 최적화를 통해 V3.1은 도구 호출과 에이전트 작업 성능이 크게 향상되어 외부 검색 도구 지원과 다단계 복잡 작업 수행에 뛰어납니다. 이 모델은 DeepSeek-V3.1-Base를 기반으로 사후 학습되었으며, 2단계 장문 확장 방식을 통해 학습 데이터 양을 대폭 늘려 긴 문서와 장문의 코드 처리에 우수한 성능을 보입니다. 오픈소스 모델로서 DeepSeek-V3.1은 코딩, 수학, 추론 등 여러 벤치마크에서 최상위 폐쇄형 모델과 견줄 만한 능력을 보여주며, 혼합 전문가(MoE) 아키텍처 덕분에 대규모 모델 용량을 유지하면서도 추론 비용을 효과적으로 낮췄습니다."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B는 고복잡성 대화를 위해 훈련된 고급 모델입니다."
   },
@@ -915,7 +930,7 @@
     "description": "DeepSeek R1 풀 버전으로, 671B 매개변수를 가지고 있으며 실시간 온라인 검색을 지원하여 더 강력한 이해 및 생성 능력을 제공합니다."
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek에서 제공하는 추론 모델입니다. 최종 답변을 출력하기 전에 모델은 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
+    "description": "DeepSeek V3.1 사고 모드입니다. 최종 답변을 출력하기 전에 모델이 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2는 경제적이고 효율적인 처리 요구에 적합한 Mixture-of-Experts 언어 모델입니다."
@@ -929,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324는 671B 매개변수를 가진 MoE 모델로, 프로그래밍 및 기술 능력, 맥락 이해 및 긴 텍스트 처리 등에서 두드러진 장점을 보입니다."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며 DeepSeek-R1-0528보다 사고 효율이 더 뛰어납니다. 사후 학습 최적화를 거쳐 에이전트 도구 사용과 지능형 작업 성능이 크게 향상되었습니다. 128k 컨텍스트 윈도우를 지원하며, 출력 길이는 최대 64k 토큰까지 가능합니다."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3는 685B 매개변수를 가진 전문가 혼합 모델로, DeepSeek 팀의 플래그십 채팅 모델 시리즈의 최신 반복입니다.\n\n이 모델은 [DeepSeek V3](/deepseek/deepseek-chat-v3) 모델을 계승하며 다양한 작업에서 뛰어난 성능을 보입니다."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3는 685B 매개변수를 가진 전문가 혼합 모델로, DeepSeek 팀의 플래그십 채팅 모델 시리즈의 최신 반복입니다.\n\n이 모델은 [DeepSeek V3](/deepseek/deepseek-chat-v3) 모델을 계승하며 다양한 작업에서 뛰어난 성능을 보입니다."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1은 128K 긴 컨텍스트와 효율적인 모드 전환을 지원하는 대형 하이브리드 추론 모델로, 도구 호출, 코드 생성 및 복잡한 추론 작업에서 탁월한 성능과 속도를 구현했습니다."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1은 극히 적은 주석 데이터로 모델의 추론 능력을 크게 향상시킵니다. 최종 답변을 출력하기 전에 모델은 먼저 사고의 연쇄 내용을 출력하여 최종 답변의 정확성을 높입니다."
@@ -1230,10 +1251,10 @@
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
   "gemini-2.5-flash-image-preview": {
-    "description": "Gemini 2.5 Flash Image Preview는 Google의 최신이자 가장 빠르고 효율적인 네이티브 멀티모달 모델로, 대화를 통해 이미지를 생성하고 편집할 수 있게 해줍니다."
+    "description": "Nano Banana는 구글의 최신이자 가장 빠르고 효율적인 네이티브 멀티모달 모델로, 대화를 통해 이미지 생성 및 편집이 가능합니다."
   },
   "gemini-2.5-flash-image-preview:image": {
-    "description": "Gemini 2.5 Flash Image Preview는 Google의 최신이자 가장 빠르고 효율적인 네이티브 멀티모달 모델로, 대화를 통해 이미지를 생성하고 편집할 수 있습니다."
+    "description": "Nano Banana는 구글의 최신이자 가장 빠르고 효율적인 네이티브 멀티모달 모델로, 대화를 통해 이미지 생성 및 편집이 가능합니다."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite는 Google의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."

@@ -1,25 +1,5 @@
-import type { PartialDeep } from 'type-fest';
-
-import { ModelTokensUsage, ToolFunction } from '@/types/message';
-
-export interface MessageToolCall {
-  /**
-   * The function that the model called.
-   */
-  function: ToolFunction;
-
-  /**
-   * The ID of the tool call.
-   */
-  id: string;
-
-  /**
-   * The type of the tool. Currently, only `function` is supported.
-   */
-  type: 'function' | string;
-}
-
-export type MessageToolCallChunk = PartialDeep<MessageToolCall> & { index: number };
+import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
+import { ModelTokensUsage } from './usage';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 

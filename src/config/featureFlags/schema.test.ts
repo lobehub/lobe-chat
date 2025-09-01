@@ -20,7 +20,7 @@ describe('FeatureFlagsSchema', () => {
 
   it('should reject invalid feature flags', () => {
     const result = FeatureFlagsSchema.safeParse({
-      webrtc_sync: 'yes', // Invalid type, should be boolean
+      edit_agent: 'yes', // Invalid type, should be boolean
     });
 
     expect(result.success).toBe(false);
@@ -43,7 +43,6 @@ describe('mapFeatureFlagsEnvToState', () => {
     };
 
     const expectedState = {
-      enableWebrtc: true,
       isAgentEditable: false,
       showCreateSession: true,
       showLLM: false,

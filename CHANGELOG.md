@@ -2,6 +2,239 @@
 
 # Changelog
 
+### [Version 1.120.4](https://github.com/lobehub/lobe-chat/compare/v1.120.3...v1.120.4)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display, closes [#9013](https://github.com/lobehub/lobe-chat/issues/9013) ([c6038c0](https://github.com/lobehub/lobe-chat/commit/c6038c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.3](https://github.com/lobehub/lobe-chat/compare/v1.120.2...v1.120.3)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support new provider Nebius.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support new provider Nebius, closes [#8903](https://github.com/lobehub/lobe-chat/issues/8903) ([c15791d](https://github.com/lobehub/lobe-chat/commit/c15791d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.2](https://github.com/lobehub/lobe-chat/compare/v1.120.1...v1.120.2)
+
+<sup>Released on **2025-08-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove base path.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove base path, closes [#9015](https://github.com/lobehub/lobe-chat/issues/9015) ([2a5f8d7](https://github.com/lobehub/lobe-chat/commit/2a5f8d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.1](https://github.com/lobehub/lobe-chat/compare/v1.120.0...v1.120.1)
+
+<sup>Released on **2025-08-31**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9005](https://github.com/lobehub/lobe-chat/issues/9005) ([63760f9](https://github.com/lobehub/lobe-chat/commit/63760f9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.120.0](https://github.com/lobehub/lobe-chat/compare/v1.119.2...v1.120.0)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove webrtc sync feature flag.
+
+#### ✨ Features
+
+- **misc**: Rename Gemini 2.5 flash image to Nano Banana.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove webrtc sync feature flag, closes [#9002](https://github.com/lobehub/lobe-chat/issues/9002) ([0924d98](https://github.com/lobehub/lobe-chat/commit/0924d98))
+
+#### What's improved
+
+- **misc**: Rename Gemini 2.5 flash image to Nano Banana, closes [#9004](https://github.com/lobehub/lobe-chat/issues/9004) ([dac5a6f](https://github.com/lobehub/lobe-chat/commit/dac5a6f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.119.2](https://github.com/lobehub/lobe-chat/compare/v1.119.1...v1.119.2)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **model-runtime**: Refactor model-runtime dependencies and clean code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **model-runtime**: Refactor model-runtime dependencies and clean code, closes [#8997](https://github.com/lobehub/lobe-chat/issues/8997) ([9f7677d](https://github.com/lobehub/lobe-chat/commit/9f7677d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.119.1](https://github.com/lobehub/lobe-chat/compare/v1.119.0...v1.119.1)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update enableStreaming name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update enableStreaming name, closes [#8995](https://github.com/lobehub/lobe-chat/issues/8995) ([7c7de40](https://github.com/lobehub/lobe-chat/commit/7c7de40))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.119.0](https://github.com/lobehub/lobe-chat/compare/v1.118.8...v1.119.0)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Added support for Azure OpenAI Image Generation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Added support for Azure OpenAI Image Generation, closes [#8898](https://github.com/lobehub/lobe-chat/issues/8898) ([6042340](https://github.com/lobehub/lobe-chat/commit/6042340))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.118.8](https://github.com/lobehub/lobe-chat/compare/v1.118.7...v1.118.8)
+
+<sup>Released on **2025-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, closes [#8878](https://github.com/lobehub/lobe-chat/issues/8878) ([5d538a2](https://github.com/lobehub/lobe-chat/commit/5d538a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.118.7](https://github.com/lobehub/lobe-chat/compare/v1.118.6...v1.118.7)
 
 <sup>Released on **2025-08-30**</sup>

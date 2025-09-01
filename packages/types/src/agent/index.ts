@@ -1,6 +1,7 @@
+import { LLMParams } from '../../../model-bank/src/types/aiModel';
 import { FileItem } from '../files';
 import { KnowledgeBaseItem } from '../knowledgeBase';
-import { FewShots, LLMParams } from '../llm';
+import { FewShots } from '../llm';
 import { LobeAgentChatConfig } from './chatConfig';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
