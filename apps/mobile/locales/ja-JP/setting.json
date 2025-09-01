@@ -14,6 +14,56 @@
     },
     "title": "アカウント設定"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "{name} の API キーを入力してください",
+        "label": "API キー",
+        "placeholder": "{name} の API キーを入力してください"
+      },
+      "proxyUrl": {
+        "desc": "http(s):// を含める必要があります",
+        "invalid": "http:// または https:// で始まる有効な URL を入力してください",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API プロキシアドレス"
+      },
+      "saving": "設定を保存しています...",
+      "title": "設定",
+      "updateFailedDesc": "保存に失敗しました。再試行してください",
+      "updateFailedTitle": "保存失敗"
+    },
+    "detail": {
+      "loadFailed": "サービスプロバイダーの設定の読み込みに失敗しました",
+      "loading": "サービスプロバイダーの設定を読み込み中..."
+    },
+    "info": {
+      "builtIn": "組み込みサービスプロバイダー",
+      "custom": "カスタムサービスプロバイダー"
+    },
+    "list": {
+      "disabled": "無効",
+      "enabled": "有効",
+      "loadFailed": "サービスプロバイダーリストの読み込みに失敗しました"
+    },
+    "models": {
+      "copySuccess": "コピーに成功しました",
+      "disableFailed": "モデルの無効化に失敗しました",
+      "emptyNoSearch": "モデルが見つかりません。サーバーから取得を試みてください",
+      "emptyWithSearch": "検索条件に一致するモデルがありません",
+      "enableFailed": "モデルの有効化に失敗しました",
+      "fetch": "モデルを取得",
+      "fetchFailed": "モデルの取得に失敗しました。再試行してください",
+      "fetchSuccess": "モデルリストの取得に成功しました！",
+      "fetching": "取得中...",
+      "modelsAvailable": "利用可能なモデルは合計 {{count}} 件です",
+      "searchPlaceholder": "モデルを検索...",
+      "title": "モデル"
+    },
+    "skeleton": {
+      "disabled": "無効",
+      "enabled": "有効"
+    }
+  },
   "changelog": "更新履歴",
   "developer": "開発者オプション",
   "feedback": "フィードバック",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "アプリのニュートラルカラーを選択してください",
       "title": "ニュートラルカラー設定"
+    },
+    "preview": "プレビュー",
+    "previewMessages": {
+      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで更新され、効果を確認できます。",
+      "userHowToUse": "テーマプレビューの使い方は？"
     },
     "primaryColor": {
       "description": "アプリのプライマリカラーを選択してください",

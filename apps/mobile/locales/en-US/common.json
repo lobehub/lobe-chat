@@ -7,6 +7,7 @@
     "copy": "Copy",
     "delete": "Delete",
     "edit": "Edit",
+    "regenerate": "Regenerate",
     "retry": "Retry",
     "save": "Save"
   },

@@ -14,6 +14,56 @@
     },
     "title": "Configuración de la cuenta"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Por favor, introduzca la clave API de {name}",
+        "label": "Clave API",
+        "placeholder": "Por favor, introduzca la clave API de {name}"
+      },
+      "proxyUrl": {
+        "desc": "Debe incluir http(s)://",
+        "invalid": "Por favor, introduzca una URL válida que comience con http:// o https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "Dirección del proxy API"
+      },
+      "saving": "Guardando configuración...",
+      "title": "Configuración",
+      "updateFailedDesc": "Error al guardar, por favor intente de nuevo",
+      "updateFailedTitle": "Error al guardar"
+    },
+    "detail": {
+      "loadFailed": "Error al cargar la configuración del proveedor",
+      "loading": "Cargando configuración del proveedor..."
+    },
+    "info": {
+      "builtIn": "Proveedor incorporado",
+      "custom": "Proveedor personalizado"
+    },
+    "list": {
+      "disabled": "No habilitado",
+      "enabled": "Habilitado",
+      "loadFailed": "Error al cargar la lista de proveedores"
+    },
+    "models": {
+      "copySuccess": "Copiado con éxito",
+      "disableFailed": "Error al desactivar el modelo",
+      "emptyNoSearch": "No se encontraron modelos, intenta obtenerlos del servidor",
+      "emptyWithSearch": "No hay modelos que coincidan con los criterios de búsqueda",
+      "enableFailed": "Error al activar el modelo",
+      "fetch": "Obtener modelo",
+      "fetchFailed": "Error al obtener los modelos, por favor intenta de nuevo",
+      "fetchSuccess": "¡Lista de modelos obtenida con éxito!",
+      "fetching": "Obteniendo...",
+      "modelsAvailable": "Total de {{count}} modelos disponibles",
+      "searchPlaceholder": "Buscar modelos...",
+      "title": "Modelos"
+    },
+    "skeleton": {
+      "disabled": "No habilitado",
+      "enabled": "Habilitado"
+    }
+  },
   "changelog": "Registro de cambios",
   "developer": "Opciones de desarrollador",
   "feedback": "Comentarios",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "Selecciona el tono neutro de la aplicación",
       "title": "Configuración de color neutro"
+    },
+    "preview": "Vista previa",
+    "previewMessages": {
+      "botHowToUse": "Puedes ajustar el color principal y los colores neutros mediante el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "userHowToUse": "¿Cómo usar la vista previa del tema?"
     },
     "primaryColor": {
       "description": "Selecciona el color principal de la aplicación",

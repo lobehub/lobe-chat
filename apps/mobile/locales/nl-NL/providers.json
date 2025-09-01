@@ -1,0 +1,173 @@
+{
+  "ai21": {
+    "description": "AI21 Labs bouwt fundamentele modellen en AI-systemen voor bedrijven om de toepassing van generatieve AI in productie te versnellen."
+  },
+  "ai302": {
+    "description": "302.AI is een pay-as-you-go AI-applicatieplatform dat de meest uitgebreide AI-API's en online AI-toepassingen op de markt biedt."
+  },
+  "ai360": {
+    "description": "360 AI is een AI-model- en serviceplatform gelanceerd door 360, dat diverse geavanceerde natuurlijke taalverwerkingsmodellen aanbiedt, waaronder 360GPT2 Pro, 360GPT Pro, 360GPT Turbo en 360GPT Turbo Responsibility 8K. Deze modellen combineren grootschalige parameters en multimodale capaciteiten en worden breed ingezet voor tekstgeneratie, semantisch begrip, dialogsysteem en codegeneratie. Met flexibele prijsstrategieën voldoet 360 AI aan diverse gebruikersbehoeften, ondersteunt integratie door ontwikkelaars en stimuleert innovatie en ontwikkeling van intelligente toepassingen."
+  },
+  "aihubmix": {
+    "description": "AiHubMix biedt toegang tot diverse AI-modellen via een uniforme API-interface."
+  },
+  "anthropic": {
+    "description": "Anthropic is een bedrijf dat zich richt op AI-onderzoek en -ontwikkeling en een reeks geavanceerde taalmodellen aanbiedt, zoals Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus en Claude 3 Haiku. Deze modellen bieden een ideale balans tussen intelligentie, snelheid en kosten, geschikt voor uiteenlopende toepassingen van bedrijfsbelastingen tot snelle respons. Claude 3.5 Sonnet is het nieuwste model en presteert uitstekend in diverse evaluaties, met een hoge kosteneffectiviteit."
+  },
+  "azure": {
+    "description": "Azure biedt diverse geavanceerde AI-modellen, waaronder GPT-3.5 en de nieuwste GPT-4-serie, die meerdere datatypes en complexe taken ondersteunen, met een focus op veilige, betrouwbare en duurzame AI-oplossingen."
+  },
+  "azureai": {
+    "description": "Azure biedt diverse geavanceerde AI-modellen, waaronder GPT-3.5 en de nieuwste GPT-4-serie, die meerdere datatypes en complexe taken ondersteunen, met een focus op veilige, betrouwbare en duurzame AI-oplossingen."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent is een bedrijf dat zich richt op de ontwikkeling van grote AI-modellen en uitblinkt in Chinese taken zoals kennisencyclopedie, lange tekstverwerking en creatieve generatie, die beter presteren dan buitenlandse mainstream modellen. Baichuan Intelligent beschikt ook over toonaangevende multimodale capaciteiten en scoort hoog in diverse autoritatieve evaluaties. Hun modellen omvatten Baichuan 4, Baichuan 3 Turbo en Baichuan 3 Turbo 128k, geoptimaliseerd voor verschillende toepassingen en bieden kosteneffectieve oplossingen."
+  },
+  "bedrock": {
+    "description": "Bedrock is een dienst van Amazon AWS die geavanceerde AI-taal- en visuele modellen voor bedrijven aanbiedt. Het modelportfolio omvat onder andere Anthropic's Claude-serie en Meta's Llama 3.1-serie, met opties variërend van lichtgewicht tot high-performance, geschikt voor tekstgeneratie, dialoog, beeldverwerking en meer, afgestemd op diverse bedrijfsbehoeften."
+  },
+  "cloudflare": {
+    "description": "Draai machine learning-modellen aangedreven door serverloze GPU's op het wereldwijde netwerk van Cloudflare."
+  },
+  "cohere": {
+    "description": "Cohere biedt geavanceerde meertalige modellen, geavanceerde zoekfuncties en een AI-werkruimte op maat voor moderne bedrijven, allemaal geïntegreerd in een veilig platform."
+  },
+  "deepseek": {
+    "description": "DeepSeek is een bedrijf gespecialiseerd in AI-technologieonderzoek en -toepassingen. Hun nieuwste model DeepSeek-V3 overtreft in diverse evaluaties open source modellen zoals Qwen2.5-72B en Llama-3.1-405B en presteert op niveau met toonaangevende gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
+  },
+  "fal": {
+    "description": "Een generatief mediaplatform gericht op ontwikkelaars."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI is een toonaangevende aanbieder van geavanceerde taalmodellen, gespecialiseerd in functieaanroepen en multimodale verwerking. Hun nieuwste model Firefunction V2, gebaseerd op Llama-3, is geoptimaliseerd voor functieaanroepen, dialoog en instructievolging. Het visuele taalmodel FireLLaVA-13B ondersteunt gecombineerde beeld- en tekstinvoer. Andere opmerkelijke modellen zijn de Llama- en Mixtral-series, die efficiënte meertalige instructievolging en generatie bieden."
+  },
+  "giteeai": {
+    "description": "Gitee AI's Serverless API biedt AI-ontwikkelaars direct bruikbare grote model inferentie-API-diensten."
+  },
+  "github": {
+    "description": "Met GitHub-modellen kunnen ontwikkelaars AI-engineers worden en bouwen met toonaangevende AI-modellen in de industrie."
+  },
+  "google": {
+    "description": "Google's Gemini-serie is hun meest geavanceerde en veelzijdige AI-model, ontwikkeld door Google DeepMind, speciaal ontworpen voor multimodale toepassingen en ondersteunt naadloos begrip en verwerking van tekst, code, beeld, audio en video. Geschikt voor diverse omgevingen van datacenters tot mobiele apparaten, wat de efficiëntie en toepasbaarheid van AI-modellen aanzienlijk verbetert."
+  },
+  "groq": {
+    "description": "Groq's LPU-inferentie-engine presteert uitstekend in de nieuwste onafhankelijke benchmarks voor grote taalmodellen (LLM) en herdefinieert AI-oplossingsstandaarden met verbluffende snelheid en efficiëntie. Groq staat voor onmiddellijke inferentiesnelheid en toont sterke prestaties in cloudgebaseerde implementaties."
+  },
+  "higress": {
+    "description": "Higress is een cloud-native API-gateway, intern ontwikkeld bij Alibaba om problemen met Tengine reload bij langdurige verbindingen en beperkte load balancing voor gRPC/Dubbo op te lossen."
+  },
+  "huggingface": {
+    "description": "De HuggingFace Inference API biedt een snelle en gratis manier om duizenden modellen te verkennen voor diverse taken. Of u nu prototypes bouwt voor nieuwe applicaties of machine learning-functies uitprobeert, deze API geeft directe toegang tot hoogwaardige modellen uit verschillende domeinen."
+  },
+  "hunyuan": {
+    "description": "Een door Tencent ontwikkeld groot taalmodel met krachtige Chinese creatieve capaciteiten, logisch redeneren in complexe contexten en betrouwbare taakuitvoering."
+  },
+  "infiniai": {
+    "description": "Biedt ontwikkelaars van applicaties hoogwaardige, gebruiksvriendelijke, veilige en betrouwbare grote modelservices, die het volledige proces van ontwikkeling tot service-implementatie van grote modellen dekken."
+  },
+  "internlm": {
+    "description": "Een open source organisatie gericht op onderzoek naar grote modellen en ontwikkeltools. Biedt alle AI-ontwikkelaars een efficiënt en gebruiksvriendelijk open source platform om de nieuwste grote modellen en algoritmische technologieën toegankelijk te maken."
+  },
+  "jina": {
+    "description": "Jina AI, opgericht in 2020, is een toonaangevend zoek-AI-bedrijf. Hun zoekplatform omvat vector-modellen, herordenaars en kleine taalmodellen, die bedrijven helpen betrouwbare en hoogwaardige generatieve AI- en multimodale zoektoepassingen te bouwen."
+  },
+  "lmstudio": {
+    "description": "LM Studio is een desktopapplicatie voor het ontwikkelen en experimenteren met grote taalmodellen (LLM's) op uw eigen computer."
+  },
+  "minimax": {
+    "description": "MiniMax, opgericht in 2021, is een algemeen AI-technologiebedrijf dat zich richt op co-creatie van intelligentie met gebruikers. MiniMax ontwikkelde zelfstandig multimodale algemene grote modellen, waaronder een biljoen-parameter MoE-tekstmodel, spraak- en beeldmodellen, en lanceerde toepassingen zoals Conch AI."
+  },
+  "mistral": {
+    "description": "Mistral biedt geavanceerde algemene, professionele en onderzoeksmodellen, breed toepasbaar in complexe redenering, meertalige taken en codegeneratie. Via functieaanroepinterfaces kunnen gebruikers aangepaste functies integreren voor specifieke toepassingen."
+  },
+  "modelscope": {
+    "description": "ModelScope is een model-als-een-service platform gelanceerd door Alibaba Cloud, dat een breed scala aan AI-modellen en inferentiediensten biedt."
+  },
+  "moonshot": {
+    "description": "Moonshot is een open source platform van Beijing Moon's Dark Side Technology Co., Ltd., dat diverse natuurlijke taalverwerkingsmodellen aanbiedt voor brede toepassingen, waaronder contentcreatie, academisch onderzoek, intelligente aanbevelingen en medische diagnose, met ondersteuning voor lange tekstverwerking en complexe generatie."
+  },
+  "novita": {
+    "description": "Novita AI is een platform dat diverse grote taalmodellen en AI-beeldgeneratie-API-diensten biedt, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open source modellen zoals Llama3 en Mistral en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor generatieve AI-applicatieontwikkeling, ideaal voor snelle groei van AI-startups."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ biedt containers voor zelfgehoste GPU-versnelde inferentiemicroservices, geschikt voor implementatie van voorgetrainde en aangepaste AI-modellen in de cloud, datacenters, RTX™ AI-pc's en werkstations."
+  },
+  "ollama": {
+    "description": "Ollama biedt modellen die breed inzetbaar zijn voor codegeneratie, wiskundige berekeningen, meertalige verwerking en dialooginteractie, en ondersteunt diverse behoeften voor bedrijfs- en lokale implementaties."
+  },
+  "openai": {
+    "description": "OpenAI is een wereldwijd toonaangevend AI-onderzoeksinstituut, wiens modellen zoals de GPT-serie de voorhoede van natuurlijke taalverwerking vormen. OpenAI streeft ernaar om met innovatieve en efficiënte AI-oplossingen diverse industrieën te transformeren. Hun producten bieden uitstekende prestaties en kosteneffectiviteit en worden breed ingezet voor onderzoek, commercie en innovatie."
+  },
+  "openrouter": {
+    "description": "OpenRouter is een serviceplatform dat diverse geavanceerde grote modelinterfaces biedt, waaronder OpenAI, Anthropic, LLaMA en meer, geschikt voor uiteenlopende ontwikkelings- en toepassingsbehoeften. Gebruikers kunnen flexibel het beste model en prijs kiezen om de AI-ervaring te verbeteren."
+  },
+  "perplexity": {
+    "description": "Perplexity is een toonaangevende aanbieder van dialooggeneratiemodellen, met diverse geavanceerde Llama 3.1-modellen die online en offline toepassingen ondersteunen, vooral geschikt voor complexe natuurlijke taalverwerkingstaken."
+  },
+  "ppio": {
+    "description": "PPIO Paiou Cloud biedt stabiele, kosteneffectieve open source model-API-diensten, met ondersteuning voor de volledige DeepSeek-serie, Llama, Qwen en andere toonaangevende grote modellen in de industrie."
+  },
+  "qiniu": {
+    "description": "Qiniu, een gevestigde cloudserviceprovider, biedt kosteneffectieve en stabiele realtime en batch AI-inferentiediensten die eenvoudig te gebruiken zijn."
+  },
+  "qwen": {
+    "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld ultragroot taalmodel met krachtige natuurlijke taalbegrip- en generatiecapaciteiten. Het kan diverse vragen beantwoorden, teksten creëren, meningen uitdrukken en code schrijven, en speelt een rol in meerdere domeinen."
+  },
+  "sambanova": {
+    "description": "SambaNova Cloud stelt ontwikkelaars in staat om gemakkelijk de beste open source modellen te gebruiken en te profiteren van de snelste inferentiesnelheden."
+  },
+  "search1api": {
+    "description": "Search1API biedt toegang tot DeepSeek-seriemodellen die naar wens online kunnen worden verbonden, inclusief standaard- en snelle versies, met ondersteuning voor modelkeuze in verschillende parametergroottes."
+  },
+  "sensenova": {
+    "description": "SenseNova, ondersteund door de krachtige infrastructuur van SenseTime, biedt efficiënte en gebruiksvriendelijke full-stack grote modelservices."
+  },
+  "siliconcloud": {
+    "description": "SiliconCloud is een kosteneffectieve GenAI-cloudservice gebaseerd op uitstekende open source fundamentele modellen."
+  },
+  "spark": {
+    "description": "iFLYTEK Spark grote model biedt krachtige AI-capaciteiten in meerdere domeinen en talen, gebruikt geavanceerde natuurlijke taalverwerkingstechnologieën en bouwt innovatieve toepassingen voor slimme hardware, slimme gezondheidszorg, slimme financiën en andere verticale scenario's."
+  },
+  "stepfun": {
+    "description": "StepFun grote model beschikt over toonaangevende multimodale en complexe redeneervaardigheden, ondersteunt begrip van zeer lange teksten en heeft een krachtige autonome plannings- en zoekmachinefunctionaliteit."
+  },
+  "taichu": {
+    "description": "Het Institute of Automation van de Chinese Academie van Wetenschappen en het Wuhan AI Institute hebben een nieuwe generatie multimodaal groot model gelanceerd, dat meervoudige vraag-en-antwoord, tekstcreatie, beeldgeneratie, 3D-begrip, signaalanalyse en andere uitgebreide taken ondersteunt, met sterkere cognitieve, begrip- en creatieve capaciteiten voor een vernieuwde interactieve ervaring."
+  },
+  "tencentcloud": {
+    "description": "Knowledge Engine Atomic Power (LLM Knowledge Engine Atomic Power) is gebaseerd op de Knowledge Engine en biedt een volledige keten van kennisvraag- en antwoordmogelijkheden voor bedrijven en ontwikkelaars. U kunt met diverse atomic capabilities uw eigen modelservices samenstellen, met functies zoals documentanalyse, splitsing, embedding en meervoudige herformulering, om op maat gemaakte AI-bedrijfsoplossingen te creëren."
+  },
+  "togetherai": {
+    "description": "Together AI streeft ernaar om met innovatieve AI-modellen toonaangevende prestaties te leveren, met uitgebreide aanpassingsmogelijkheden, snelle schaalondersteuning en intuïtieve implementatieprocessen om aan diverse bedrijfsbehoeften te voldoen."
+  },
+  "upstage": {
+    "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor diverse zakelijke behoeften, waaronder Solar LLM en Document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI) voor werk. Via de Chat API kunnen eenvoudige dialoogagenten worden gemaakt, met ondersteuning voor functieaanroepen, vertalingen, embeddings en domeinspecifieke toepassingen."
+  },
+  "v0": {
+    "description": "v0 is een pair programming-assistent die code en gebruikersinterfaces (UI) genereert voor uw projecten op basis van natuurlijke taalbeschrijvingen van uw ideeën."
+  },
+  "vertexai": {
+    "description": "Google's Gemini-serie is hun meest geavanceerde en veelzijdige AI-model, ontwikkeld door Google DeepMind, speciaal ontworpen voor multimodale toepassingen en ondersteunt naadloos begrip en verwerking van tekst, code, beeld, audio en video. Geschikt voor diverse omgevingen van datacenters tot mobiele apparaten, wat de efficiëntie en toepasbaarheid van AI-modellen aanzienlijk verbetert."
+  },
+  "vllm": {
+    "description": "vLLM is een snelle en gebruiksvriendelijke bibliotheek voor inferentie en service van grote taalmodellen (LLM)."
+  },
+  "volcengine": {
+    "description": "Volcengine, het ontwikkelplatform voor grote modelservices van ByteDance, biedt functioneel rijke, veilige en prijsconcurrerende modelaanroepdiensten, evenals end-to-end functies zoals modeldata, fijn afstemmen, inferentie en evaluatie, die de ontwikkeling en implementatie van uw AI-toepassingen volledig ondersteunen."
+  },
+  "wenxin": {
+    "description": "Een enterprise-grade one-stop platform voor grote modellen en AI-native applicatieontwikkeling en -diensten, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor generatieve AI-modelontwikkeling en applicatieontwikkeling."
+  },
+  "xai": {
+    "description": "xAI is een bedrijf dat zich inzet voor het bouwen van kunstmatige intelligentie om menselijke wetenschappelijke ontdekkingen te versnellen. Onze missie is het bevorderen van ons gezamenlijke begrip van het universum."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) is een open source platform dat het draaien en integreren van diverse AI-modellen vereenvoudigt. Met Xinference kunt u elk open source LLM, embedding-model en multimodaal model uitvoeren in cloud- of lokale omgevingen en krachtige AI-toepassingen creëren."
+  },
+  "zeroone": {
+    "description": "ZeroOne Wanwu zet zich in voor het stimuleren van een mensgerichte AI 2.0-technologische revolutie, met als doel enorme economische en maatschappelijke waarde te creëren via grote taalmodellen en een nieuw AI-ecosysteem en bedrijfsmodel te ontwikkelen."
+  },
+  "zhipu": {
+    "description": "Zhipu AI biedt een open platform voor multimodale en taalmodellen, dat brede AI-toepassingsscenario's ondersteunt, waaronder tekstverwerking, beeldbegrip en programmeerhulp."
+  }
+}

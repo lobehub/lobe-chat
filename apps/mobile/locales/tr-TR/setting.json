@@ -14,6 +14,56 @@
     },
     "title": "Hesap Ayarları"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "{name} API Anahtarını girin",
+        "label": "API Anahtarı",
+        "placeholder": "{name} API Anahtarını girin"
+      },
+      "proxyUrl": {
+        "desc": "http(s):// içermelidir",
+        "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL girin",
+        "placeholder": "https://api.example.com/v1",
+        "title": "API Vekil Adresi"
+      },
+      "saving": "Yapılandırma kaydediliyor...",
+      "title": "Yapılandırma",
+      "updateFailedDesc": "Kaydetme başarısız oldu, lütfen tekrar deneyin",
+      "updateFailedTitle": "Kaydetme Başarısız"
+    },
+    "detail": {
+      "loadFailed": "Sağlayıcı yapılandırması yüklenemedi",
+      "loading": "Sağlayıcı yapılandırması yükleniyor..."
+    },
+    "info": {
+      "builtIn": "Yerleşik Sağlayıcı",
+      "custom": "Özel Sağlayıcı"
+    },
+    "list": {
+      "disabled": "Etkin Değil",
+      "enabled": "Etkin",
+      "loadFailed": "Sağlayıcı listesi yüklenemedi"
+    },
+    "models": {
+      "copySuccess": "Kopyalama başarılı",
+      "disableFailed": "Model devre dışı bırakılamadı",
+      "emptyNoSearch": "Hiç model bulunamadı, sunucudan almaya çalışılıyor",
+      "emptyWithSearch": "Arama kriterlerine uyan model bulunamadı",
+      "enableFailed": "Model etkinleştirilemedi",
+      "fetch": "Model al",
+      "fetchFailed": "Model alınamadı, lütfen tekrar deneyin",
+      "fetchSuccess": "Model listesi başarıyla alındı!",
+      "fetching": "Alınıyor...",
+      "modelsAvailable": "Toplam {{count}} kullanılabilir model",
+      "searchPlaceholder": "Model ara...",
+      "title": "Modeller"
+    },
+    "skeleton": {
+      "disabled": "Etkin Değil",
+      "enabled": "Etkin"
+    }
+  },
   "changelog": "Güncelleme Günlüğü",
   "developer": "Geliştirici Seçenekleri",
   "feedback": "Geri Bildirim",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "Uygulamanın nötr tonunu seçin",
       "title": "Nötr Renk Ayarları"
+    },
+    "preview": "Önizleme",
+    "previewMessages": {
+      "botHowToUse": "Ana renk ve nötr renkleri ayarlamak için aşağıdaki renk seçiciyi kullanabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
+      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
     },
     "primaryColor": {
       "description": "Uygulamanın ana rengini seçin",
