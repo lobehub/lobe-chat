@@ -29,7 +29,7 @@
       },
       "saving": "구성 저장 중...",
       "title": "구성",
-      "updateFailedDesc": "저장에 실패했습니다. 다시 시도하세요",
+      "updateFailedDesc": "저장 실패, 다시 시도하세요",
       "updateFailedTitle": "저장 실패"
     },
     "detail": {
@@ -41,8 +41,8 @@
       "custom": "사용자 정의 서비스 제공자"
     },
     "list": {
-      "disabled": "사용 안 함",
-      "enabled": "사용",
+      "disabled": "비활성화됨",
+      "enabled": "활성화됨",
       "loadFailed": "서비스 제공자 목록 로드 실패"
     },
     "models": {
@@ -53,25 +53,52 @@
       "enableFailed": "모델 활성화 실패",
       "fetch": "모델 가져오기",
       "fetchFailed": "모델 가져오기 실패, 다시 시도하세요",
-      "fetchSuccess": "모델 목록을 성공적으로 가져왔습니다!",
+      "fetchSuccess": "모델 목록 가져오기 성공!",
       "fetching": "가져오는 중...",
       "modelsAvailable": "총 {{count}}개의 사용 가능한 모델",
       "searchPlaceholder": "모델 검색...",
       "title": "모델"
     },
     "skeleton": {
-      "disabled": "사용 안 함",
-      "enabled": "사용"
+      "disabled": "비활성화됨",
+      "enabled": "활성화됨"
     }
   },
   "changelog": "업데이트 로그",
-  "developer": "개발자 옵션",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "액세스 토큰이 즉시 만료되었습니다",
+        "title": "액세스 토큰 만료"
+      },
+      "invalidate": {
+        "success": "무효 액세스 토큰이 기록되었습니다",
+        "title": "무효 액세스 토큰"
+      }
+    },
+    "clearAuthData": {
+      "success": "인증 데이터가 삭제되었습니다",
+      "title": "인증 데이터 삭제"
+    },
+    "failurePrefix": "작업 실패: ",
+    "refreshToken": {
+      "expire": {
+        "success": "리프레시 토큰이 즉시 만료되었습니다",
+        "title": "리프레시 토큰 만료"
+      },
+      "invalidate": {
+        "success": "무효 리프레시 토큰이 기록되었습니다",
+        "title": "무효 리프레시 토큰"
+      }
+    },
+    "title": "개발자 옵션"
+  },
   "feedback": "의견 보내기",
   "help": "도움말",
   "locale": {
     "auto": {
       "description": "시스템 언어 설정을 따름",
-      "title": "시스템 언어 따름"
+      "title": "시스템 따라가기"
     },
     "title": "언어 설정"
   },
@@ -82,7 +109,7 @@
     "checkApiKey": "API 키가 올바른지 확인하세요",
     "checkProxyAddress": "서버에 연결할 수 없습니다. 프록시 주소가 올바른지 확인하세요",
     "connectionSuccess": "연결 성공, API 키와 프록시 주소가 올바르게 설정되었습니다",
-    "connectivityHint": "연결 테스트 후 API 키와 프록시 주소가 올바르게 입력되었는지 검증합니다",
+    "connectivityHint": "연결 테스트 후 API 키와 프록시 주소가 올바른지 검증합니다",
     "pleaseEnterApiKey": "API 키를 입력하세요",
     "proxyAddress": "API 프록시 주소",
     "proxyPlaceholder": "http(s)://를 포함해야 합니다",
@@ -93,7 +120,7 @@
   "providers": "AI 서비스 제공자",
   "support": "이메일 지원",
   "theme": {
-    "auto": "시스템 설정 따름",
+    "auto": "시스템 따라가기",
     "dark": "다크 모드",
     "fontSize": {
       "standard": "표준",
@@ -101,19 +128,19 @@
     },
     "light": "라이트 모드",
     "neutralColor": {
-      "description": "애플리케이션에 적용할 중립 색조 선택",
-      "title": "중립 색상 구성"
+      "description": "앱의 중립 색조 선택",
+      "title": "중립 색상 설정"
     },
     "preview": "미리보기",
     "previewMessages": {
-      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중간 색상을 조정할 수 있으며, 미리보기는 실시간으로 업데이트되어 효과를 보여줍니다.",
-      "userHowToUse": "테마 미리보기를 어떻게 사용하나요?"
+      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중립 색상을 조정할 수 있으며, 미리보기에서 실시간으로 효과를 확인할 수 있습니다.",
+      "userHowToUse": "테마 미리보기 사용 방법"
     },
     "primaryColor": {
-      "description": "애플리케이션의 주요 색상 선택",
-      "title": "주요 색상 구성"
+      "description": "앱의 주 색상 선택",
+      "title": "주 색상 설정"
     },
-    "sectionDescription": "선호하는 테마 스타일을 선택하고 클릭하여 변경하세요",
+    "sectionDescription": "원하는 테마 스타일을 선택하고 클릭하여 변경하세요",
     "sectionTitle": "테마",
     "title": "테마 설정"
   },

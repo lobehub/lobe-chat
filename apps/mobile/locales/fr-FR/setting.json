@@ -27,14 +27,14 @@
         "placeholder": "https://api.example.com/v1",
         "title": "Adresse du proxy API"
       },
-      "saving": "Enregistrement de la configuration en cours...",
+      "saving": "Enregistrement de la configuration...",
       "title": "Configuration",
       "updateFailedDesc": "Échec de l'enregistrement, veuillez réessayer",
       "updateFailedTitle": "Échec de l'enregistrement"
     },
     "detail": {
       "loadFailed": "Échec du chargement de la configuration du fournisseur",
-      "loading": "Chargement de la configuration du fournisseur en cours..."
+      "loading": "Chargement de la configuration du fournisseur..."
     },
     "info": {
       "builtIn": "Fournisseur intégré",
@@ -46,12 +46,12 @@
       "loadFailed": "Échec du chargement de la liste des fournisseurs"
     },
     "models": {
-      "copySuccess": "Copié avec succès",
+      "copySuccess": "Copie réussie",
       "disableFailed": "Échec de la désactivation du modèle",
       "emptyNoSearch": "Aucun modèle trouvé, essayez de récupérer depuis le serveur",
       "emptyWithSearch": "Aucun modèle ne correspond aux critères de recherche",
       "enableFailed": "Échec de l'activation du modèle",
-      "fetch": "Obtenir le modèle",
+      "fetch": "Récupération des modèles",
       "fetchFailed": "Échec de la récupération des modèles, veuillez réessayer",
       "fetchSuccess": "Liste des modèles récupérée avec succès !",
       "fetching": "Récupération en cours...",
@@ -65,7 +65,34 @@
     }
   },
   "changelog": "Journal des mises à jour",
-  "developer": "Options pour les développeurs",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Le jeton d'accès a expiré immédiatement",
+        "title": "Expiration du jeton d'accès"
+      },
+      "invalidate": {
+        "success": "Le jeton d'accès invalide a été enregistré",
+        "title": "Jeton d'accès invalide"
+      }
+    },
+    "clearAuthData": {
+      "success": "Données d'authentification effacées",
+      "title": "Effacer les données d'authentification"
+    },
+    "failurePrefix": "Échec de l'opération : ",
+    "refreshToken": {
+      "expire": {
+        "success": "Le jeton de rafraîchissement a expiré immédiatement",
+        "title": "Expiration du jeton de rafraîchissement"
+      },
+      "invalidate": {
+        "success": "Le jeton de rafraîchissement invalide a été enregistré",
+        "title": "Jeton de rafraîchissement invalide"
+      }
+    },
+    "title": "Options développeur"
+  },
   "feedback": "Retour d'information",
   "help": "Aide à l'utilisation",
   "locale": {
@@ -79,10 +106,10 @@
   "openaiSettings": {
     "apiKey": "Clé API",
     "apiKeyPlaceholder": "Veuillez saisir votre clé API OpenAI",
-    "checkApiKey": "Veuillez vérifier si la clé API est correcte",
-    "checkProxyAddress": "Impossible de se connecter au serveur, veuillez vérifier si l'adresse du proxy est correcte",
-    "connectionSuccess": "Connexion réussie, la clé API et l'adresse du proxy sont correctement configurées",
-    "connectivityHint": "Après avoir testé la connectivité, la clé API et l'adresse du proxy seront vérifiées",
+    "checkApiKey": "Veuillez vérifier que la clé API est correcte",
+    "checkProxyAddress": "Impossible de se connecter au serveur, veuillez vérifier l'adresse du proxy",
+    "connectionSuccess": "Connexion réussie, clé API et adresse du proxy configurées correctement",
+    "connectivityHint": "Après le test de connectivité, la clé API et l'adresse du proxy seront vérifiées",
     "pleaseEnterApiKey": "Veuillez saisir la clé API",
     "proxyAddress": "Adresse du proxy API",
     "proxyPlaceholder": "Doit inclure http(s)://",
@@ -90,7 +117,7 @@
     "validationFailed": "Échec de la validation",
     "validationSuccess": "Validation réussie"
   },
-  "providers": "Fournisseurs de services IA",
+  "providers": "Fournisseurs d'IA",
   "support": "Support par e-mail",
   "theme": {
     "auto": "Suivre le système",
@@ -106,7 +133,7 @@
     },
     "preview": "Aperçu",
     "previewMessages": {
-      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres à l'aide du sélecteur de couleurs ci-dessous. L'aperçu se mettra à jour en temps réel pour afficher l'effet.",
+      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres avec le sélecteur ci-dessous, l'aperçu se mettra à jour en temps réel.",
       "userHowToUse": "Comment utiliser l'aperçu du thème ?"
     },
     "primaryColor": {

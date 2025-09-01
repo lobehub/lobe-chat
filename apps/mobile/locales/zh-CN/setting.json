@@ -65,7 +65,34 @@
     }
   },
   "changelog": "更新日志",
-  "developer": "开发者选项",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "已使访问令牌立即过期",
+        "title": "访问令牌过期"
+      },
+      "invalidate": {
+        "success": "已写入无效的访问令牌",
+        "title": "无效访问令牌"
+      }
+    },
+    "clearAuthData": {
+      "success": "已清空认证数据",
+      "title": "清空认证数据"
+    },
+    "failurePrefix": "操作失败: ",
+    "refreshToken": {
+      "expire": {
+        "success": "已使刷新令牌立即过期",
+        "title": "刷新令牌过期"
+      },
+      "invalidate": {
+        "success": "已写入无效的刷新令牌",
+        "title": "无效刷新令牌"
+      }
+    },
+    "title": "开发者选项"
+  },
   "feedback": "意见反馈",
   "help": "使用帮助",
   "locale": {

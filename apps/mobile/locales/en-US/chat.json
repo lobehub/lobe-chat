@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start chatting with me right away, or visit [Assistant Settings]({{url}}) to update my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**, {{systemRole}}. Let's start our conversation!",
   "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. Let's start our conversation!",
+  "agentRoleEdit": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "placeholder": "Please enter the role prompt",
+    "roleSetting": "Role Settings",
+    "title": "Role Settings"
+  },
   "confirmDelete": "Confirm Delete",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. This action cannot be undone. Please confirm your operation.",
   "copyFailed": "Copy Failed",
   "defaultAgent": "Custom Assistant",
   "defaultList": "Default List",

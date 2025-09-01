@@ -43,7 +43,7 @@ export default function SettingRoutesLayout() {
       <Stack.Screen
         name="developer/index"
         options={{
-          headerTitle: t('developer', { ns: 'setting' }),
+          headerTitle: t('developer.title', { ns: 'setting' }),
         }}
       />
       {/* Theme settings screen */}

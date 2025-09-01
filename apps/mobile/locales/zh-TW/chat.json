@@ -2,7 +2,16 @@
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，讓我們開始對話吧！",
+  "agentRoleEdit": {
+    "cancel": "取消",
+    "confirm": "確認",
+    "edit": "編輯",
+    "placeholder": "請輸入角色 Prompt 提示詞",
+    "roleSetting": "角色設定",
+    "title": "角色設定"
+  },
   "confirmDelete": "確認刪除",
+  "confirmRemoveSessionItemAlert": "即將刪除該助理，刪除後將無法找回，請確認你的操作",
   "copyFailed": "複製失敗",
   "defaultAgent": "自訂助手",
   "defaultList": "預設列表",

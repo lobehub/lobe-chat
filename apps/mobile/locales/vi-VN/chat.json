@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**. Bạn có thể bắt đầu trò chuyện với tôi ngay hoặc đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu cuộc trò chuyện nhé!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**. Hãy bắt đầu cuộc trò chuyện nhé!",
+  "agentRoleEdit": {
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "edit": "Chỉnh sửa",
+    "placeholder": "Vui lòng nhập từ khóa Prompt cho vai trò",
+    "roleSetting": "Cài đặt vai trò",
+    "title": "Cài đặt vai trò"
+  },
   "confirmDelete": "Xác nhận xóa",
+  "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận thao tác của bạn",
   "copyFailed": "Sao chép thất bại",
   "defaultAgent": "Trợ lý tùy chỉnh",
   "defaultList": "Danh sách mặc định",

@@ -10,7 +10,7 @@
     },
     "signOut": {
       "confirm": "Sei sicuro di voler uscire?",
-      "label": "Disconnetti"
+      "label": "Esci"
     },
     "title": "Impostazioni account"
   },
@@ -27,14 +27,14 @@
         "placeholder": "https://api.example.com/v1",
         "title": "Indirizzo proxy API"
       },
-      "saving": "Salvataggio della configurazione in corso...",
+      "saving": "Salvataggio configurazione in corso...",
       "title": "Configurazione",
-      "updateFailedDesc": "Salvataggio non riuscito, riprova",
-      "updateFailedTitle": "Salvataggio non riuscito"
+      "updateFailedDesc": "Salvataggio fallito, riprova",
+      "updateFailedTitle": "Salvataggio fallito"
     },
     "detail": {
-      "loadFailed": "Caricamento della configurazione del provider fallito",
-      "loading": "Caricamento della configurazione del provider in corso..."
+      "loadFailed": "Caricamento configurazione provider fallito",
+      "loading": "Caricamento configurazione provider in corso..."
     },
     "info": {
       "builtIn": "Provider integrato",
@@ -43,19 +43,19 @@
     "list": {
       "disabled": "Disabilitato",
       "enabled": "Abilitato",
-      "loadFailed": "Caricamento della lista dei provider fallito"
+      "loadFailed": "Caricamento lista provider fallito"
     },
     "models": {
       "copySuccess": "Copia riuscita",
-      "disableFailed": "Disabilitazione del modello non riuscita",
+      "disableFailed": "Disabilitazione modello fallita",
       "emptyNoSearch": "Nessun modello trovato, prova a recuperare dal server",
       "emptyWithSearch": "Nessun modello corrisponde ai criteri di ricerca",
-      "enableFailed": "Abilitazione del modello non riuscita",
-      "fetch": "Recupera modello",
-      "fetchFailed": "Recupero del modello non riuscito, riprova",
-      "fetchSuccess": "Elenco modelli recuperato con successo!",
+      "enableFailed": "Abilitazione modello fallita",
+      "fetch": "Recupera modelli",
+      "fetchFailed": "Recupero modelli fallito, riprova",
+      "fetchSuccess": "Lista modelli recuperata con successo!",
       "fetching": "Recupero in corso...",
-      "modelsAvailable": "Totale {{count}} modelli disponibili",
+      "modelsAvailable": "{{count}} modelli disponibili in totale",
       "searchPlaceholder": "Cerca modelli...",
       "title": "Modelli"
     },
@@ -64,56 +64,83 @@
       "enabled": "Abilitato"
     }
   },
-  "changelog": "Registro delle modifiche",
-  "developer": "Opzioni sviluppatore",
+  "changelog": "Registro aggiornamenti",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Token di accesso scaduto immediatamente",
+        "title": "Scadenza token di accesso"
+      },
+      "invalidate": {
+        "success": "Token di accesso invalidato",
+        "title": "Token di accesso non valido"
+      }
+    },
+    "clearAuthData": {
+      "success": "Dati di autenticazione cancellati",
+      "title": "Cancella dati di autenticazione"
+    },
+    "failurePrefix": "Operazione fallita: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Token di aggiornamento scaduto immediatamente",
+        "title": "Scadenza token di aggiornamento"
+      },
+      "invalidate": {
+        "success": "Token di aggiornamento invalidato",
+        "title": "Token di aggiornamento non valido"
+      }
+    },
+    "title": "Opzioni sviluppatore"
+  },
   "feedback": "Feedback",
   "help": "Guida all'uso",
   "locale": {
     "auto": {
-      "description": "Segui le impostazioni della lingua di sistema",
+      "description": "Segui la lingua del sistema",
       "title": "Segui sistema"
     },
     "title": "Impostazioni lingua"
   },
   "openai": "Impostazioni OpenAI",
   "openaiSettings": {
-    "apiKey": "Chiave API",
-    "apiKeyPlaceholder": "Inserisci la tua chiave API OpenAI",
-    "checkApiKey": "Controlla che la chiave API sia corretta",
-    "checkProxyAddress": "Impossibile connettersi al server, verifica che l'indirizzo del proxy sia corretto",
-    "connectionSuccess": "Connessione riuscita, chiave API e indirizzo proxy configurati correttamente",
-    "connectivityHint": "Dopo il test di connettività, verrà verificata la correttezza della chiave API e dell'indirizzo proxy",
-    "pleaseEnterApiKey": "Inserisci la chiave API",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Inserisci la tua API Key OpenAI",
+    "checkApiKey": "Controlla che la API Key sia corretta",
+    "checkProxyAddress": "Impossibile connettersi al server, verifica l'indirizzo proxy",
+    "connectionSuccess": "Connessione riuscita, API Key e indirizzo proxy corretti",
+    "connectivityHint": "Dopo il test di connettività, verrà verificata la correttezza della API Key e dell'indirizzo proxy",
+    "pleaseEnterApiKey": "Inserisci la API Key",
     "proxyAddress": "Indirizzo proxy API",
     "proxyPlaceholder": "Deve includere http(s)://",
     "testConnectivity": "Testa connettività",
     "validationFailed": "Validazione fallita",
     "validationSuccess": "Validazione riuscita"
   },
-  "providers": "Fornitori AI",
+  "providers": "Provider AI",
   "support": "Supporto via email",
   "theme": {
     "auto": "Segui sistema",
-    "dark": "Tema scuro",
+    "dark": "Modalità scura",
     "fontSize": {
       "standard": "Standard",
-      "title": "Dimensione del carattere"
+      "title": "Dimensione carattere"
     },
-    "light": "Tema chiaro",
+    "light": "Modalità chiara",
     "neutralColor": {
-      "description": "Seleziona la tonalità neutra dell'applicazione",
+      "description": "Seleziona la tonalità neutra dell'app",
       "title": "Configurazione colore neutro"
     },
     "preview": "Anteprima",
     "previewMessages": {
-      "botHowToUse": "Puoi regolare il colore principale e i colori neutri tramite il selettore di colori qui sotto; l'anteprima si aggiornerà in tempo reale per mostrarti l'effetto.",
-      "userHowToUse": "Come si usa l'anteprima del tema?"
+      "botHowToUse": "Puoi regolare il colore principale e i colori neutri tramite il selettore sottostante; l'anteprima si aggiornerà in tempo reale per mostrare l'effetto.",
+      "userHowToUse": "Come usare l'anteprima del tema?"
     },
     "primaryColor": {
-      "description": "Seleziona la tonalità principale dell'applicazione",
+      "description": "Seleziona il colore principale dell'app",
       "title": "Configurazione colore principale"
     },
-    "sectionDescription": "Scegli lo stile del tema che preferisci, clicca per cambiare la tua selezione",
+    "sectionDescription": "Scegli lo stile del tema che preferisci, clicca per applicare la tua scelta",
     "sectionTitle": "Tema",
     "title": "Impostazioni tema"
   },

@@ -29,30 +29,30 @@
       },
       "saving": "Konfiguration wird gespeichert...",
       "title": "Konfiguration",
-      "updateFailedDesc": "Speichern fehlgeschlagen, bitte versuchen Sie es erneut",
+      "updateFailedDesc": "Speichern fehlgeschlagen, bitte erneut versuchen",
       "updateFailedTitle": "Speichern fehlgeschlagen"
     },
     "detail": {
-      "loadFailed": "Fehler beim Laden der Anbieter-Konfiguration",
+      "loadFailed": "Laden der Anbieter-Konfiguration fehlgeschlagen",
       "loading": "Anbieter-Konfiguration wird geladen..."
     },
     "info": {
-      "builtIn": "Eingebauter Anbieter",
+      "builtIn": "Integrierter Anbieter",
       "custom": "Benutzerdefinierter Anbieter"
     },
     "list": {
       "disabled": "Deaktiviert",
       "enabled": "Aktiviert",
-      "loadFailed": "Fehler beim Laden der Anbieterliste"
+      "loadFailed": "Laden der Anbieterliste fehlgeschlagen"
     },
     "models": {
       "copySuccess": "Kopieren erfolgreich",
-      "disableFailed": "Deaktivieren des Modells fehlgeschlagen",
+      "disableFailed": "Modell deaktivieren fehlgeschlagen",
       "emptyNoSearch": "Keine Modelle gefunden, versuche vom Server zu laden",
       "emptyWithSearch": "Keine Modelle entsprechen den Suchkriterien",
-      "enableFailed": "Aktivieren des Modells fehlgeschlagen",
+      "enableFailed": "Modell aktivieren fehlgeschlagen",
       "fetch": "Modelle abrufen",
-      "fetchFailed": "Modellabruf fehlgeschlagen, bitte erneut versuchen",
+      "fetchFailed": "Modelle abrufen fehlgeschlagen, bitte erneut versuchen",
       "fetchSuccess": "Modellliste erfolgreich abgerufen!",
       "fetching": "Wird abgerufen...",
       "modelsAvailable": "Insgesamt {{count}} verfügbare Modelle",
@@ -65,13 +65,40 @@
     }
   },
   "changelog": "Änderungsprotokoll",
-  "developer": "Entwickleroptionen",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Zugriffstoken wurde sofort ungültig gemacht",
+        "title": "Zugriffstoken abgelaufen"
+      },
+      "invalidate": {
+        "success": "Ungültiges Zugriffstoken wurde eingetragen",
+        "title": "Ungültiges Zugriffstoken"
+      }
+    },
+    "clearAuthData": {
+      "success": "Authentifizierungsdaten wurden gelöscht",
+      "title": "Authentifizierungsdaten löschen"
+    },
+    "failurePrefix": "Vorgang fehlgeschlagen: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Refresh-Token wurde sofort ungültig gemacht",
+        "title": "Refresh-Token abgelaufen"
+      },
+      "invalidate": {
+        "success": "Ungültiges Refresh-Token wurde eingetragen",
+        "title": "Ungültiges Refresh-Token"
+      }
+    },
+    "title": "Entwickleroptionen"
+  },
   "feedback": "Feedback",
   "help": "Hilfe",
   "locale": {
     "auto": {
-      "description": "Folgt den Systemeinstellungen",
-      "title": "Systemsprache verwenden"
+      "description": "Folgt der Systemsprache",
+      "title": "Systemsprache folgen"
     },
     "title": "Spracheinstellungen"
   },
@@ -83,14 +110,14 @@
     "checkProxyAddress": "Verbindung zum Server fehlgeschlagen, bitte überprüfen Sie die Proxy-Adresse",
     "connectionSuccess": "Verbindung erfolgreich, API-Schlüssel und Proxy-Adresse sind korrekt konfiguriert",
     "connectivityHint": "Nach dem Verbindungstest wird überprüft, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
-    "pleaseEnterApiKey": "Bitte geben Sie den API-Schlüssel ein",
+    "pleaseEnterApiKey": "Bitte API-Schlüssel eingeben",
     "proxyAddress": "API-Proxy-Adresse",
     "proxyPlaceholder": "Muss http(s):// enthalten",
     "testConnectivity": "Verbindung testen",
     "validationFailed": "Validierung fehlgeschlagen",
     "validationSuccess": "Validierung erfolgreich"
   },
-  "providers": "KI-Dienstanbieter",
+  "providers": "KI-Anbieter",
   "support": "E-Mail-Support",
   "theme": {
     "auto": "Systemeinstellung folgen",
@@ -102,20 +129,20 @@
     "light": "Hellmodus",
     "neutralColor": {
       "description": "Wählen Sie den neutralen Farbton der Anwendung",
-      "title": "Neutrale Farbanpassung"
+      "title": "Neutrale Farbeinstellungen"
     },
     "preview": "Vorschau",
     "previewMessages": {
-      "botHowToUse": "Sie können die Haupt- und Neutralfarben über den untenstehenden Farbwähler anpassen. Die Vorschau wird in Echtzeit aktualisiert, um die Wirkung anzuzeigen.",
-      "userHowToUse": "Wie verwendet man die Themenvorschau?"
+      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem Farbwähler unten anpassen. Die Vorschau aktualisiert sich in Echtzeit, um die Wirkung zu zeigen.",
+      "userHowToUse": "Wie benutzt man die Themenvorschau?"
     },
     "primaryColor": {
       "description": "Wählen Sie den Hauptfarbton der Anwendung",
-      "title": "Primäre Farbanpassung"
+      "title": "Hauptfarbeinstellungen"
     },
-    "sectionDescription": "Wählen Sie Ihren bevorzugten Stil und klicken Sie, um Ihre Auswahl zu ändern",
+    "sectionDescription": "Wählen Sie Ihren bevorzugten Themenstil und klicken Sie, um Ihre Auswahl zu wechseln",
     "sectionTitle": "Thema",
-    "title": "Theme-Einstellungen"
+    "title": "Themeinstellungen"
   },
   "title": "Einstellungen"
 }

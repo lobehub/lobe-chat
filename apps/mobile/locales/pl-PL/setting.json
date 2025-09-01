@@ -51,7 +51,7 @@
       "emptyNoSearch": "Nie znaleziono żadnych modeli, spróbuj pobrać z serwera",
       "emptyWithSearch": "Brak modeli spełniających kryteria wyszukiwania",
       "enableFailed": "Nie udało się włączyć modelu",
-      "fetch": "Pobierz model",
+      "fetch": "Pobieranie modeli",
       "fetchFailed": "Nie udało się pobrać modeli, spróbuj ponownie",
       "fetchSuccess": "Lista modeli została pomyślnie pobrana!",
       "fetching": "Pobieranie...",
@@ -65,12 +65,39 @@
     }
   },
   "changelog": "Dziennik zmian",
-  "developer": "Opcje programisty",
-  "feedback": "Opinie",
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Token dostępu wygasł natychmiast",
+        "title": "Wygasł token dostępu"
+      },
+      "invalidate": {
+        "success": "Token dostępu został unieważniony",
+        "title": "Unieważniony token dostępu"
+      }
+    },
+    "clearAuthData": {
+      "success": "Dane uwierzytelniające zostały wyczyszczone",
+      "title": "Wyczyść dane uwierzytelniające"
+    },
+    "failurePrefix": "Operacja nie powiodła się: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Token odświeżania wygasł natychmiast",
+        "title": "Wygasł token odświeżania"
+      },
+      "invalidate": {
+        "success": "Token odświeżania został unieważniony",
+        "title": "Unieważniony token odświeżania"
+      }
+    },
+    "title": "Opcje deweloperskie"
+  },
+  "feedback": "Opinie i sugestie",
   "help": "Pomoc",
   "locale": {
     "auto": {
-      "description": "Podążaj za ustawieniami języka systemu",
+      "description": "Dopasuj do języka systemowego",
       "title": "Automatycznie"
     },
     "title": "Ustawienia języka"
@@ -79,11 +106,11 @@
   "openaiSettings": {
     "apiKey": "Klucz API",
     "apiKeyPlaceholder": "Wprowadź swój klucz API OpenAI",
-    "checkApiKey": "Proszę sprawdzić, czy klucz API jest poprawny",
-    "checkProxyAddress": "Nie można połączyć się z serwerem, sprawdź, czy adres proxy jest poprawny",
-    "connectionSuccess": "Połączenie udane, klucz API i adres proxy są poprawnie skonfigurowane",
-    "connectivityHint": "Po przetestowaniu łączności zostanie zweryfikowane, czy klucz API i adres proxy są poprawnie wprowadzone",
-    "pleaseEnterApiKey": "Proszę wprowadzić klucz API",
+    "checkApiKey": "Sprawdź, czy klucz API jest poprawny",
+    "checkProxyAddress": "Nie można połączyć się z serwerem, sprawdź poprawność adresu proxy",
+    "connectionSuccess": "Połączenie udane, klucz API i adres proxy są poprawne",
+    "connectivityHint": "Po teście łączności zostanie zweryfikowane, czy klucz API i adres proxy są poprawnie wprowadzone",
+    "pleaseEnterApiKey": "Wprowadź klucz API",
     "proxyAddress": "Adres proxy API",
     "proxyPlaceholder": "Musi zawierać http(s)://",
     "testConnectivity": "Testuj łączność",
@@ -93,7 +120,7 @@
   "providers": "Dostawcy AI",
   "support": "Wsparcie mailowe",
   "theme": {
-    "auto": "Automatycznie",
+    "auto": "Dopasuj do systemu",
     "dark": "Tryb ciemny",
     "fontSize": {
       "standard": "Standardowy",
@@ -102,18 +129,18 @@
     "light": "Tryb jasny",
     "neutralColor": {
       "description": "Wybierz neutralny odcień aplikacji",
-      "title": "Konfiguracja kolorów neutralnych"
+      "title": "Konfiguracja neutralnych kolorów"
     },
     "preview": "Podgląd",
     "previewMessages": {
-      "botHowToUse": "Możesz dostosować kolor główny i kolory neutralne za pomocą poniższego selektora kolorów, a podgląd będzie aktualizowany na bieżąco, aby pokazać efekt.",
+      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą selektora kolorów poniżej, podgląd będzie aktualizowany na żywo.",
       "userHowToUse": "Jak korzystać z podglądu motywu?"
     },
     "primaryColor": {
       "description": "Wybierz główny kolor aplikacji",
       "title": "Konfiguracja koloru głównego"
     },
-    "sectionDescription": "Wybierz preferowany styl motywu i kliknij, aby zmienić swój wybór",
+    "sectionDescription": "Wybierz preferowany styl motywu i kliknij, aby zastosować swój wybór",
     "sectionTitle": "Motyw",
     "title": "Ustawienia motywu"
   },

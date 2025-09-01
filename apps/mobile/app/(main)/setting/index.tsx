@@ -59,7 +59,7 @@ export default function SettingScreen() {
 
       {isDev && (
         <SettingGroup>
-          <SettingItem href="/setting/developer" title={t('developer', { ns: 'setting' })} />
+          <SettingItem href="/setting/developer" title={t('developer.title', { ns: 'setting' })} />
         </SettingGroup>
       )}
 
