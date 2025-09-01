@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 import { AiModelSelectItem } from '@/database/schemas';
-
-import { AiModelSourceType } from '../../../model-bank/src/types';
+import { AiModelSourceType } from '@/libs/model-bank/types';
 
 // ==================== Model Configuration Query Types ====================
 
