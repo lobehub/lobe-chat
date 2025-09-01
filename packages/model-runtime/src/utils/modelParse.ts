@@ -432,7 +432,7 @@ const processModelCard = (
  * 处理单一提供商的模型列表
  * @param modelList 模型列表
  * @param config 提供商配置
- * @param provider 提供商类型（可选，用于优先匹配对应的本地配置）
+ * @param provider 提供商类型（可选，用于优先匹配对应的本地配置, 当提供了 provider 时，才会尝试从本地配置覆盖 enabled）
  * @returns 处理后的模型卡片列表
  */
 export const processModelList = async (
@@ -441,6 +441,19 @@ export const processModelList = async (
   provider?: keyof typeof MODEL_LIST_CONFIGS,
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
+
+  // 如果提供了 provider，尝试获取该提供商的本地配置
+  let providerLocalConfig: any[] | null = null;
+  if (provider) {
+    try {
+      const modules = await import('model-bank');
+
+      providerLocalConfig = (modules as any)[provider];
+    } catch {
+      // 如果配置文件不存在或导入失败，保持为 null
+      providerLocalConfig = null;
+    }
+  }
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -458,7 +471,24 @@ export const processModelList = async (
         );
       }
 
-      return processModelCard(model, config, knownModel);
+      const processedModel = processModelCard(model, config, knownModel);
+
+      // 如果提供了 provider 且有本地配置，尝试从中获取模型的 enabled 状态
+      let providerLocalModelConfig = null;
+      if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+        providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
+      }
+
+      // 如果找到了本地配置中的模型，使用其 enabled 状态
+      if (
+        processedModel &&
+        providerLocalModelConfig &&
+        typeof providerLocalModelConfig.enabled === 'boolean'
+      ) {
+        processedModel.enabled = providerLocalModelConfig.enabled;
+      }
+
+      return processedModel;
     }),
   ).then((results) => results.filter((result) => !!result));
 };
