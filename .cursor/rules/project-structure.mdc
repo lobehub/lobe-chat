@@ -62,6 +62,7 @@ src/
 │   │   ├── oidc/                   # OpenID Connect endpoints
 │   │   ├── trpc/                   # tRPC API routes
 │   │   │   ├── async/              # Async tRPC endpoints
+│   │   │   ├── desktop/            # Desktop runtime endpoints
 │   │   │   ├── edge/               # Edge runtime endpoints
 │   │   │   ├── lambda/             # Lambda runtime endpoints
 │   │   │   └── tools/              # Tools-specific endpoints
@@ -167,43 +168,15 @@ packages/
 └── web-crawler/                    # Web crawling functionality
 ```
 
-## Architecture Layers
+## Architecture Map
 
-### 1. **Presentation Layer**
-
-- Business-specific feature components and reusable UI components
-- Global layout providers and responsive design wrappers
-
-### 2. **State Management Layer**
-
-- Zustand-based client state with domain-specific slices
-- Actions and selectors for predictable state updates
-
-### 3. **Client Service Layer**
-
-- Environment-adaptive services (local Model vs remote tRPC)
-- Dual implementation pattern for multi-runtime compatibility
-
-### 4. **API Interface Layer**
-
-- Type-safe tRPC routers organized by runtime environment
-- Request routing and validation
-
-### 5. **Server Service Layer**
-
-- Platform-agnostic business logic with implementation abstractions
-- Reusable, testable service composition
-
-### 6. **Data Access Layer**
-
-- **Repository**: Complex queries, joins, and transaction management
-- **Model**: Basic CRUD operations and single-table queries
-- **Schema**: Drizzle ORM definitions and migration management
-
-### 7. **Integration & Extensions**
-
-- **External**: Third-party service integrations and library wrappers
-- **Built-in**: AI runtime, tool system, file processing, and web crawling
+- Presentation: `src/features`, `src/components`, `src/layout` — UI composition, global providers
+- State: `src/store` — Zustand slices, selectors, middleware
+- Client Services: `src/services/<domain>/{client|server}.ts` — client: PGLite; server: tRPC bridge
+- API Routers: `src/app/(backend)/webapi` (REST), `src/app/(backend)/trpc/{edge|lambda|async|desktop|tools}`; Lambda router triggers Async router for long-running tasks (e.g., image)
+- Server Services: `src/server/services` (business logic), `src/server/modules` (infra adapters)
+- Data Access: `packages/database/src/{schemas,models,repositories}` — Schema (Drizzle), Model (CRUD), Repository (complex queries)
+- Integrations: `src/libs` — analytics, auth, trpc, logging, runtime helpers
 
 ## Data Flow Architecture
 
@@ -249,6 +222,7 @@ _\*Depends on cloud sync configuration_
 - Add tRPC endpoint: `src/server/routers/{edge|lambda|desktop}/...`
 - Add client/server service: `src/services/<domain>/{client|server}.ts` (client: PGLite; server: tRPC)
 - Add server service: `src/server/services/<domain>`
+- Add a new model/provider: `src/config/modelProviders/<provider>.ts` + `packages/model-bank/src/aiModels/<provider>.ts` + `packages/model-runtime/src/<provider>/index.ts`
 - Add DB schema/model/repository: `packages/database/src/{schemas|models|repositories}`
 - Add Zustand slice: `src/store/<domain>/slices`
 
@@ -263,13 +237,3 @@ _\*Depends on cloud sync configuration_
 - Keep client logic in `src/services`; server-only logic stays in `src/server/services`
 - Don’t mix Web API (`webapi/`) with tRPC (`src/server/routers/`)
 - Place business UI under `src/features`, global reusable UI under `src/components`
-- Co-locate tests with modules/packages
-
-## Glossary
-
-- Model: single-table CRUD and simple queries
-- Repository: cross-table/complex queries and aggregations
-- Client Service: client-side business logic (env-adaptive)
-- Server Service: server-side business logic (platform-agnostic)
-- Router: tRPC endpoint collection by runtime
-- Tool: built-in capability exposed to the chat runtime
