@@ -6,7 +6,7 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorTextSecondary,
     borderColor: token.colorPrimary,
     borderRadius: 24,
-    borderWidth: token.lineWidthBold,
+    // borderWidth: token.lineWidthBold,
     height: 24,
     justifyContent: 'center',
     width: 24,
