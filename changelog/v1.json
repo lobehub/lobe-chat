@@ -1,6 +1,32 @@
 [
   {
     "children": {
+      "improvements": ["Add upload hint for non-visual model."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.6"
+  },
+  {
+    "children": {},
+    "date": "2025-09-01",
+    "version": "1.120.5"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust ControlsForm component to adapt to mobile phone display."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.4"
+  },
+  {
+    "children": {
+      "improvements": ["Support new provider Nebius."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.3"
+  },
+  {
+    "children": {
       "improvements": ["Remove base path."]
     },
     "date": "2025-08-31",

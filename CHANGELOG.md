@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 1.120.6](https://github.com/lobehub/lobe-chat/compare/v1.120.5...v1.120.6)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add upload hint for non-visual model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add upload hint for non-visual model, closes [#7969](https://github.com/lobehub/lobe-chat/issues/7969) ([1224f4e](https://github.com/lobehub/lobe-chat/commit/1224f4e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.5](https://github.com/lobehub/lobe-chat/compare/v1.120.4...v1.120.5)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ai-image**: Save config.imageUrl with fullUrl instead of key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ai-image**: Save config.imageUrl with fullUrl instead of key, closes [#9016](https://github.com/lobehub/lobe-chat/issues/9016) ([bad009a](https://github.com/lobehub/lobe-chat/commit/bad009a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.4](https://github.com/lobehub/lobe-chat/compare/v1.120.3...v1.120.4)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust ControlsForm component to adapt to mobile phone display, closes [#9013](https://github.com/lobehub/lobe-chat/issues/9013) ([c6038c0](https://github.com/lobehub/lobe-chat/commit/c6038c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.120.3](https://github.com/lobehub/lobe-chat/compare/v1.120.2...v1.120.3)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support new provider Nebius.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support new provider Nebius, closes [#8903](https://github.com/lobehub/lobe-chat/issues/8903) ([c15791d](https://github.com/lobehub/lobe-chat/commit/c15791d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.2](https://github.com/lobehub/lobe-chat/compare/v1.120.1...v1.120.2)
 
 <sup>Released on **2025-08-31**</sup>
