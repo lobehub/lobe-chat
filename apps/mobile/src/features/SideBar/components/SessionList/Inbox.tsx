@@ -7,7 +7,7 @@ import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 
 const Inbox = () => {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const switchSession = useSwitchSession();
   const activeId = useSessionStore((s) => s.activeId);
 

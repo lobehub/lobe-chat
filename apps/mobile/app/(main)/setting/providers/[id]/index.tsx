@@ -8,6 +8,7 @@ import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useStyles } from './styles';
 import ProviderInfoSection from './(components)/ProviderInfoSection';
 import ModelsSection from './(components)/ModelsSection';
+import ConfigurationSection from './(components)/ConfigurationSection';
 
 const ProviderDetailPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -70,7 +71,7 @@ const ProviderDetailPage = () => {
         {/* Provider基本信息 */}
         <ProviderInfoSection provider={providerDetail!} />
 
-        {/*<ConfigurationSection provider={providerDetail!} />*/}
+        <ConfigurationSection provider={providerDetail!} />
 
         {/* Model列表区域 */}
         <ModelsSection providerId={id!} />

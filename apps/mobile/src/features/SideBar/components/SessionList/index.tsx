@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View, Text } from 'react-native';
+import { ScrollView, TextInput, View, Text, Alert } from 'react-native';
 
 import { useSessionStore } from '@/store/session';
 import { useStyles } from './style';
@@ -9,14 +9,18 @@ import Inbox from './Inbox';
 import SessionItem from './SessionItem';
 import { useAuth } from '@/store/user';
 import { SessionListSkeleton } from './components/SkeletonList';
+import * as ContextMenu from 'zeego/context-menu';
+import { Toast } from '@/components';
+import { useGlobalStore } from '@/store/global';
 
 export default function SideBar() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const [searchText, setSearchText] = useState('');
   const { sessions } = useSessionStore();
   const { styles, token } = useStyles();
+  const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
-  const { useFetchSessions } = useSessionStore();
+  const { useFetchSessions, removeSession } = useSessionStore();
   const { isAuthenticated } = useAuth();
   const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
@@ -53,7 +57,45 @@ export default function SideBar() {
           <Text style={styles.headerText}>{t('defaultList', { ns: 'chat' })}</Text>
         </View>
         {filteredSessions.map((session) => (
-          <SessionItem id={session.id} key={session.id} />
+          <ContextMenu.Root key={session.id}>
+            <ContextMenu.Trigger>
+              <SessionItem id={session.id} key={session.id} />
+            </ContextMenu.Trigger>
+            <ContextMenu.Content>
+              <ContextMenu.Item
+                destructive
+                key={session.id}
+                onSelect={() => {
+                  Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
+                    {
+                      style: 'cancel',
+                      text: t('actions.cancel', { ns: 'common' }),
+                    },
+                    {
+                      onPress: () => {
+                        removeSession(session.id).then(() => {
+                          Toast.success(t('status.success', { ns: 'common' }));
+                          toggleDrawer();
+                        });
+                      },
+                      style: 'destructive',
+                      text: t('actions.confirm', { ns: 'common' }),
+                    },
+                  ]);
+                }}
+              >
+                <ContextMenu.ItemTitle>
+                  {t('actions.delete', { ns: 'common' })}
+                </ContextMenu.ItemTitle>
+                <ContextMenu.ItemIcon
+                  ios={{
+                    name: 'trash',
+                    pointSize: 18,
+                  }}
+                />
+              </ContextMenu.Item>
+            </ContextMenu.Content>
+          </ContextMenu.Root>
         ))}
       </ScrollView>
     </View>

@@ -22,24 +22,24 @@
       "q13": "Có chợ riêng để lấy GPTs không?",
       "q14": "Có hỗ trợ nhiều nhà cung cấp dịch vụ AI không?",
       "q15": "Nếu tôi gặp vấn đề khi sử dụng thì nên làm gì?"
-    },
-    "questions": {
-      "moreBtn": "Tìm hiểu thêm",
-      "title": "Mọi người đều hỏi:"
-    },
-    "welcome": {
-      "afternoon": "Chào buổi chiều",
-      "morning": "Chào buổi sáng",
-      "night": "Chào buổi tối",
-      "noon": "Chào buổi trưa"
     }
   },
   "header": "Chào mừng bạn sử dụng",
   "pickAgent": "Hoặc chọn từ mẫu trợ lý dưới đây",
+  "questions": {
+    "moreBtn": "Tìm hiểu thêm",
+    "title": "Mọi người đang hỏi:"
+  },
   "skip": "Bỏ qua tạo",
   "slogan": {
     "desc1": "Kích hoạt cụm não bộ, khơi nguồn ý tưởng. Trợ lý thông minh của bạn luôn bên cạnh.",
     "desc2": "Tạo trợ lý đầu tiên của bạn, hãy bắt đầu nào~",
     "title": "Hãy cho mình một bộ não thông minh hơn"
+  },
+  "welcome": {
+    "afternoon": "Chào buổi chiều",
+    "morning": "Chào buổi sáng",
+    "night": "Chào buổi tối",
+    "noon": "Chào buổi trưa"
   }
 }

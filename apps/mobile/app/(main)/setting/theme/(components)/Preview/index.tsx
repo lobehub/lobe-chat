@@ -16,7 +16,7 @@ const Preview = memo(() => {
       </View>
       <View style={styles.navRight}>
         <View style={styles.navIcon} />
-        <View style={styles.navIcown} />
+        <View style={styles.navIcon} />
       </View>
     </View>
   );

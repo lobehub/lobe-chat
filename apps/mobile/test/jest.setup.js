@@ -138,6 +138,26 @@ jest.mock('react-native-mathjax-html-to-svg', () => {
   };
 });
 
+// Mock MathJax
+jest.mock('react-native-mathjax-html-to-svg', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return {
+    MathJaxSvg: jest.fn().mockImplementation(({ children, fontSize, color, style }) => {
+      return React.createElement(
+        View,
+        {
+          style,
+          'testID': 'mathjax',
+          'data-font-size': fontSize,
+          'data-color': color,
+        },
+        React.createElement(Text, {}, children),
+      );
+    }),
+  };
+});
+
 // Silence console warnings during tests
 console.warn = jest.fn();
 console.error = jest.fn();
