@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.120.2](https://github.com/lobehub/lobe-chat/compare/v1.120.1...v1.120.2)
+
+<sup>Released on **2025-08-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove base path.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove base path, closes [#9015](https://github.com/lobehub/lobe-chat/issues/9015) ([2a5f8d7](https://github.com/lobehub/lobe-chat/commit/2a5f8d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.1](https://github.com/lobehub/lobe-chat/compare/v1.120.0...v1.120.1)
 
 <sup>Released on **2025-08-31**</sup>

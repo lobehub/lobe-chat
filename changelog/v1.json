@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove base path."]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-08-31",
