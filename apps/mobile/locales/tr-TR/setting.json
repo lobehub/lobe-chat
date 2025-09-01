@@ -104,6 +104,11 @@
       "description": "Uygulamanın nötr tonunu seçin",
       "title": "Nötr Renk Ayarları"
     },
+    "preview": "Önizleme",
+    "previewMessages": {
+      "botHowToUse": "Ana renk ve nötr renkleri ayarlamak için aşağıdaki renk seçiciyi kullanabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
+      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
+    },
     "primaryColor": {
       "description": "Uygulamanın ana rengini seçin",
       "title": "Ana Renk Ayarları"

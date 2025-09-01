@@ -104,6 +104,11 @@
       "description": "Wybierz neutralny odcień aplikacji",
       "title": "Konfiguracja kolorów neutralnych"
     },
+    "preview": "Podgląd",
+    "previewMessages": {
+      "botHowToUse": "Możesz dostosować kolor główny i kolory neutralne za pomocą poniższego selektora kolorów, a podgląd będzie aktualizowany na bieżąco, aby pokazać efekt.",
+      "userHowToUse": "Jak korzystać z podglądu motywu?"
+    },
     "primaryColor": {
       "description": "Wybierz główny kolor aplikacji",
       "title": "Konfiguracja koloru głównego"

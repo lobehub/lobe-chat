@@ -104,6 +104,11 @@
       "description": "Seleziona la tonalità neutra dell'applicazione",
       "title": "Configurazione colore neutro"
     },
+    "preview": "Anteprima",
+    "previewMessages": {
+      "botHowToUse": "Puoi regolare il colore principale e i colori neutri tramite il selettore di colori qui sotto; l'anteprima si aggiornerà in tempo reale per mostrarti l'effetto.",
+      "userHowToUse": "Come si usa l'anteprima del tema?"
+    },
     "primaryColor": {
       "description": "Seleziona la tonalità principale dell'applicazione",
       "title": "Configurazione colore principale"

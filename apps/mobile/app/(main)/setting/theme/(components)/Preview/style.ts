@@ -32,8 +32,6 @@ export const useStyles = createStyles((token) => ({
     borderColor: token.colorBorder,
     borderRadius: token.borderRadiusLG,
     borderWidth: token.lineWidth,
-    height: 360,
-    overflow: 'scroll',
     width: '100%',
   },
 

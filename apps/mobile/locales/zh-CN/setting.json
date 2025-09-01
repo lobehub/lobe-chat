@@ -104,6 +104,11 @@
       "description": "选择应用的中性色调",
       "title": "中性色配置"
     },
+    "preview": "预览",
+    "previewMessages": {
+      "botHowToUse": "你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。",
+      "userHowToUse": "主题预览如何使用？"
+    },
     "primaryColor": {
       "description": "选择应用的主色调",
       "title": "主色配置"

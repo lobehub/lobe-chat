@@ -104,6 +104,11 @@
       "description": "애플리케이션에 적용할 중립 색조 선택",
       "title": "중립 색상 구성"
     },
+    "preview": "미리보기",
+    "previewMessages": {
+      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중간 색상을 조정할 수 있으며, 미리보기는 실시간으로 업데이트되어 효과를 보여줍니다.",
+      "userHowToUse": "테마 미리보기를 어떻게 사용하나요?"
+    },
     "primaryColor": {
       "description": "애플리케이션의 주요 색상 선택",
       "title": "주요 색상 구성"

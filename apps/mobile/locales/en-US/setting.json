@@ -104,6 +104,11 @@
       "description": "Select the neutral tone for the application",
       "title": "Neutral Color Settings"
     },
+    "preview": "Preview",
+    "previewMessages": {
+      "botHowToUse": "You can adjust the primary and neutral colors using the color picker below. The preview will update in real-time to show the effect.",
+      "userHowToUse": "How to use the theme preview?"
+    },
     "primaryColor": {
       "description": "Select the primary color for the application",
       "title": "Primary Color Settings"

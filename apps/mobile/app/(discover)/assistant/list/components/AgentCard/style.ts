@@ -52,7 +52,7 @@ export const useStyles = createStyles((token) => ({
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginLeft: -token.marginXXS,
+    gap: token.marginXXS,
   },
   titleContainer: {
     flex: 1,

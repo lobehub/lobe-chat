@@ -104,6 +104,11 @@
       "description": "Chọn tông màu trung tính cho ứng dụng",
       "title": "Cấu hình màu trung tính"
     },
+    "preview": "Xem trước",
+    "previewMessages": {
+      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính thông qua bộ chọn màu bên dưới, bản xem trước sẽ cập nhật ngay lập tức để hiển thị hiệu ứng.",
+      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
+    },
     "primaryColor": {
       "description": "Chọn tông màu chủ đạo cho ứng dụng",
       "title": "Cấu hình màu chủ đạo"

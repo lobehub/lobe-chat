@@ -104,6 +104,11 @@
       "description": "Kies de neutrale tint voor de applicatie",
       "title": "Neutrale kleurinstelling"
     },
+    "preview": "Voorbeeld",
+    "previewMessages": {
+      "botHowToUse": "Je kunt de hoofdkleur en neutrale kleur aanpassen met de onderstaande kleurkiezer. De preview wordt realtime bijgewerkt om het effect te tonen.",
+      "userHowToUse": "Hoe gebruik je de thema-preview?"
+    },
     "primaryColor": {
       "description": "Kies de hoofdkleur voor de applicatie",
       "title": "Hoofdkleurinstelling"

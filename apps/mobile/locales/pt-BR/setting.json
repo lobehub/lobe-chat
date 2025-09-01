@@ -104,6 +104,11 @@
       "description": "Escolha o tom neutro para o aplicativo",
       "title": "Configuração de Cor Neutra"
     },
+    "preview": "Visualizar",
+    "previewMessages": {
+      "botHowToUse": "Você pode ajustar a cor principal e as cores neutras usando o seletor de cores abaixo. A pré-visualização será atualizada em tempo real para mostrar o efeito.",
+      "userHowToUse": "Como usar a pré-visualização do tema?"
+    },
     "primaryColor": {
       "description": "Escolha a cor principal para o aplicativo",
       "title": "Configuração de Cor Primária"

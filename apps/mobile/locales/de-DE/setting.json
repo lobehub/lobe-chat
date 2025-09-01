@@ -104,6 +104,11 @@
       "description": "Wählen Sie den neutralen Farbton der Anwendung",
       "title": "Neutrale Farbanpassung"
     },
+    "preview": "Vorschau",
+    "previewMessages": {
+      "botHowToUse": "Sie können die Haupt- und Neutralfarben über den untenstehenden Farbwähler anpassen. Die Vorschau wird in Echtzeit aktualisiert, um die Wirkung anzuzeigen.",
+      "userHowToUse": "Wie verwendet man die Themenvorschau?"
+    },
     "primaryColor": {
       "description": "Wählen Sie den Hauptfarbton der Anwendung",
       "title": "Primäre Farbanpassung"
