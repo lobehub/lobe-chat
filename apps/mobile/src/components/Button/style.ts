@@ -53,7 +53,7 @@ export const useStyles = createStyles(
           return {
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
             borderColor: disabled ? token.colorPrimaryBorder : token.colorBgElevated,
-            textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
+            textColor: disabled ? token.colorTextDisabled : token.colorTextLightSolid,
           };
         }
         case 'text': {
