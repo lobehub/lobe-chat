@@ -53,7 +53,7 @@ export const useStyles = createStyles(
           return {
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
             borderColor: disabled ? token.colorPrimaryBorder : token.colorBgElevated,
-            textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
+            textColor: disabled ? token.colorTextDisabled : token.colorTextLightSolid,
           };
         }
         case 'text': {
@@ -133,7 +133,6 @@ export const useStyles = createStyles(
       text: {
         color: typeStyles.textColor,
         fontSize: sizeStyles.fontSize,
-        fontWeight: type === 'primary' ? '600' : '400',
         textAlign: 'center' as const,
         textDecorationLine: type === 'link' ? 'underline' : 'none',
       },

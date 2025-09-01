@@ -6,7 +6,7 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorTextSecondary,
     borderColor: token.colorPrimary,
     borderRadius: 24,
-    borderWidth: 2,
+    borderWidth: token.lineWidthBold,
     height: 24,
     justifyContent: 'center',
     width: 24,
@@ -22,18 +22,16 @@ export const useStyles = createStyles((token) => ({
 
   chatContent: {
     flex: 1,
-    gap: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    gap: token.marginSM,
+    paddingHorizontal: token.paddingSM,
+    paddingVertical: token.paddingSM,
   },
 
   container: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,
     borderRadius: token.borderRadiusLG,
-    borderWidth: 1,
-    height: 360,
-    overflow: 'scroll',
+    borderWidth: token.lineWidth,
     width: '100%',
   },
 
@@ -44,20 +42,20 @@ export const useStyles = createStyles((token) => ({
     borderTopColor: token.colorBorderSecondary,
     borderTopWidth: 1,
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
     height: 60,
-    paddingHorizontal: 12,
+    paddingHorizontal: token.paddingSM,
   },
 
   inputBox: {
     backgroundColor: token.colorBgLayout,
     borderColor: token.colorBorder,
     borderRadius: 18,
-    borderWidth: 1,
+    borderWidth: token.lineWidth,
     flex: 1,
     height: 36,
     justifyContent: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: token.paddingSM,
   },
 
   inputPlaceholder: {
@@ -70,19 +68,19 @@ export const useStyles = createStyles((token) => ({
   messageBubbleBot: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorderSecondary,
-    borderRadius: 6,
-    borderWidth: 1,
+    borderRadius: token.borderRadius,
+    borderWidth: token.lineWidth,
     marginBottom: 2,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: token.paddingXS,
   },
 
   messageBubbleUser: {
     backgroundColor: token.colorBgContainer,
-    borderRadius: 6,
+    borderRadius: token.borderRadius,
     marginBottom: 2,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: token.paddingXS,
   },
 
   // 消息样式
@@ -139,7 +137,7 @@ export const useStyles = createStyles((token) => ({
 
   navIcon: {
     backgroundColor: token.colorTextSecondary,
-    borderRadius: 2,
+    borderRadius: token.borderRadiusXS,
     height: 10,
     width: 10,
   },
@@ -147,18 +145,18 @@ export const useStyles = createStyles((token) => ({
   navLeft: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
   },
 
   navRight: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
   },
 
   navTitle: {
     backgroundColor: token.colorTextSecondary,
-    borderRadius: 2,
+    borderRadius: token.borderRadiusXS,
     height: 10,
     width: 80,
   },
@@ -171,7 +169,7 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     height: 44,
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: token.padding,
   },
   sendButton: {
     alignItems: 'center',

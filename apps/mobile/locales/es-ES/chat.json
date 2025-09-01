@@ -5,6 +5,7 @@
   "confirmDelete": "Confirmar eliminación",
   "copyFailed": "Error al copiar",
   "defaultAgent": "Asistente personalizado",
+  "defaultList": "Lista predeterminada",
   "deleteMessageConfirm": "¿Está seguro de que desea eliminar este mensaje?",
   "history": "Historial de conversaciones",
   "inbox": {
