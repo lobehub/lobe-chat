@@ -13,14 +13,12 @@ import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseService } from '../common/base.service';
-import { addFileUrlPrefix } from '../helpers/file';
 import {
   BatchFileUploadRequest,
   BatchFileUploadResponse,
   BatchGetFilesRequest,
   BatchGetFilesResponse,
   FileDeleteResponse,
-  FileDetailResponse,
   FileListQuery,
   FileListResponse,
   FileParseRequest,
@@ -52,6 +50,42 @@ export class FileUploadService extends BaseService {
     this.coreFileService = new CoreFileService(db, userId!);
     this.documentService = new DocumentService(db, userId);
     this.s3Service = new S3();
+  }
+
+  /**
+   * 确保获取完整URL，避免重复拼接
+   * 检查URL是否已经是完整URL，如果不是则生成完整URL
+   */
+  private async ensureFullUrl(url?: string): Promise<string> {
+    if (!url) {
+      return '';
+    }
+
+    // 检查URL是否已经是完整URL（向后兼容历史数据）
+    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+      return url; // 已经是完整URL，直接返回
+    } else {
+      // 相对路径，生成完整URL
+      return await this.coreFileService.getFullFileUrl(url);
+    }
+  }
+
+  /**
+   * 转换为上传响应格式
+   */
+  private async convertToUploadResponse(file: FileItem): Promise<FileUploadResponse> {
+    const fullUrl = await this.ensureFullUrl(file.url);
+
+    return {
+      fileType: file.fileType,
+      hash: file.fileHash || '',
+      id: file.id,
+      metadata: file.metadata as FileMetadata,
+      name: file.name,
+      size: file.size,
+      uploadedAt: file.createdAt.toISOString(),
+      url: fullUrl || file.url,
+    };
   }
 
   /**
@@ -88,12 +122,12 @@ export class FileUploadService extends BaseService {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           results.failed.push({
             error: errorMessage,
-            filename: file.name,
+            name: file.name,
           });
           results.summary.failed++;
           this.log('warn', 'File upload failed in batch', {
             error: errorMessage,
-            filename: file.name,
+            name: file.name,
           });
         }
       }
@@ -189,7 +223,9 @@ export class FileUploadService extends BaseService {
       const totalCount = totalResult[0]?.count || 0;
 
       // 转换为响应格式
-      const responseFiles = filesResult.map((file) => this.convertToUploadResponse(file));
+      const responseFiles = await Promise.all(
+        filesResult.map((file) => this.convertToUploadResponse(file)),
+      );
 
       this.log('info', 'File list retrieved successfully', {
         count: filesResult.length,
@@ -212,7 +248,7 @@ export class FileUploadService extends BaseService {
   /**
    * 获取文件详情
    */
-  async getFileDetail(fileId: string): Promise<FileDetailResponse> {
+  async getFileDetail(fileId: string): Promise<FileUploadResponse> {
     try {
       // 权限校验
       const permissionResult = await this.resolveOperationPermission('FILE_READ', {
@@ -237,13 +273,7 @@ export class FileUploadService extends BaseService {
         throw this.createCommonError('File not found');
       }
 
-      const baseResponse = this.convertToUploadResponse(file);
-
-      return {
-        ...baseResponse,
-        parseStatus: 'pending',
-        supportContentParsing: !isChunkingUnsupported(file.fileType),
-      };
+      return this.convertToUploadResponse(file);
     } catch (error) {
       this.handleServiceError(error, '获取文件详情');
     }
@@ -280,14 +310,14 @@ export class FileUploadService extends BaseService {
       this.log('info', 'File URL generated successfully', {
         expiresIn,
         fileId,
-        filename: file.name,
+        name: file.name,
       });
 
       return {
         expiresAt,
         expiresIn,
         fileId,
-        filename: file.name,
+        name: file.name,
         url: signedUrl,
       };
     } catch (error) {
@@ -311,7 +341,7 @@ export class FileUploadService extends BaseService {
 
       this.log('info', 'Starting public file upload', {
         directory: options.directory,
-        filename: file.name,
+        name: file.name,
         size: file.size,
         type: file.type,
       });
@@ -330,8 +360,8 @@ export class FileUploadService extends BaseService {
         if (existingFileCheck.isExist) {
           this.log('info', 'Public file already exists, checking user file record', {
             existingUrl: existingFileCheck.url,
-            filename: file.name,
             hash,
+            name: file.name,
           });
 
           // 检查当前用户是否已经有这个文件的记录
@@ -341,7 +371,7 @@ export class FileUploadService extends BaseService {
             // 用户已有此文件记录，直接返回
             this.log('info', 'User already has this public file record', {
               fileId: existingUserFile.id,
-              filename: existingUserFile.name,
+              name: existingUserFile.name,
             });
 
             // 如果提供了 sessionId，创建文件和会话的关联关系
@@ -353,21 +383,24 @@ export class FileUploadService extends BaseService {
               });
             }
 
+            // 生成返回的完整URL
+            const publicUrl = await this.ensureFullUrl(existingUserFile.url);
+
             return {
               fileType: existingUserFile.fileType,
-              filename: existingUserFile.name,
               hash,
               id: existingUserFile.id,
               metadata: existingUserFile.metadata as FileMetadata,
+              name: existingUserFile.name,
               size: existingUserFile.size,
               uploadedAt: existingUserFile.createdAt.toISOString(),
-              url: existingUserFile.url,
+              url: publicUrl,
             };
           } else {
             // 文件在全局表中存在，但用户没有记录，创建用户文件记录
             this.log('info', 'Public file exists globally, creating user file record', {
-              filename: file.name,
               hash,
+              name: file.name,
             });
 
             const fileRecord = {
@@ -402,15 +435,17 @@ export class FileUploadService extends BaseService {
               url: existingFileCheck.url,
             });
 
+            const publicUrl = await this.ensureFullUrl(existingFileCheck.url);
+
             return {
               fileType: file.type,
-              filename: file.name,
               hash,
               id: createResult.id,
               metadata: existingFileCheck.metadata as FileMetadata,
+              name: file.name,
               size: file.size,
               uploadedAt: new Date().toISOString(),
-              url: existingFileCheck.url!,
+              url: publicUrl,
             };
           }
         }
@@ -423,9 +458,6 @@ export class FileUploadService extends BaseService {
       const fileBuffer = Buffer.from(fileArrayBuffer);
       await this.s3Service.uploadBuffer(metadata.path, fileBuffer, file.type);
 
-      // 6. 生成访问 URL
-      const publicUrl = await this.coreFileService.getFullFileUrl(metadata.path);
-
       // 7. 保存文件记录到数据库
       const fileRecord = {
         chunkTaskId: null,
@@ -437,7 +469,7 @@ export class FileUploadService extends BaseService {
         metadata: metadata,
         name: file.name,
         size: file.size,
-        url: publicUrl,
+        url: metadata.path,
       };
 
       const createResult = await this.fileModel.create(fileRecord, true);
@@ -451,6 +483,9 @@ export class FileUploadService extends BaseService {
         });
       }
 
+      // 7. 生成返回的完整URL
+      const publicUrl = await this.ensureFullUrl(metadata.path);
+
       this.log('info', 'Public file uploaded successfully', {
         fileId: createResult.id,
         path: metadata.path,
@@ -461,10 +496,10 @@ export class FileUploadService extends BaseService {
 
       return {
         fileType: file.type,
-        filename: file.name,
         hash,
         id: createResult.id,
         metadata,
+        name: file.name,
         size: file.size,
         uploadedAt: new Date().toISOString(),
         url: publicUrl,
@@ -514,13 +549,13 @@ export class FileUploadService extends BaseService {
             content: existingDocument.content as string,
             fileId,
             fileType: file.fileType,
-            filename: file.name,
             metadata: {
               pages: existingDocument.pages?.length || 0,
               title: existingDocument.title || undefined,
               totalCharCount: existingDocument.totalCharCount || undefined,
               totalLineCount: existingDocument.totalLineCount || undefined,
             },
+            name: file.name,
             parseStatus: 'completed',
             parsedAt: existingDocument.createdAt.toISOString(),
           };
@@ -530,7 +565,7 @@ export class FileUploadService extends BaseService {
       this.log('info', 'Starting file parsing', {
         fileId,
         fileType: file.fileType,
-        filename: file.name,
+        name: file.name,
         skipExist: options.skipExist,
       });
 
@@ -550,13 +585,13 @@ export class FileUploadService extends BaseService {
           content: document.content || '',
           fileId,
           fileType: file.fileType,
-          filename: file.name,
           metadata: {
             pages: document.pages?.length || 0,
             title: document.title || undefined,
             totalCharCount: document.totalCharCount || undefined,
             totalLineCount: document.totalLineCount || undefined,
           },
+          name: file.name,
           parseStatus: 'completed',
           parsedAt: new Date().toISOString(),
         };
@@ -567,7 +602,7 @@ export class FileUploadService extends BaseService {
         this.log('error', 'File parsing failed', {
           error: errorMessage,
           fileId,
-          filename: file.name,
+          name: file.name,
         });
 
         // 返回失败结果
@@ -576,7 +611,7 @@ export class FileUploadService extends BaseService {
           error: errorMessage,
           fileId,
           fileType: file.fileType,
-          filename: file.name,
+          name: file.name,
           parseStatus: 'failed',
           parsedAt: new Date().toISOString(),
         };
@@ -606,7 +641,7 @@ export class FileUploadService extends BaseService {
       }
 
       // 删除S3文件
-      await this.coreFileService.deleteFile((file.metadata as unknown as FileMetadata)?.path);
+      await this.coreFileService.deleteFile(file.url);
 
       // 删除数据库记录
       await this.fileModel.delete(fileId);
@@ -726,22 +761,6 @@ export class FileUploadService extends BaseService {
   }
 
   /**
-   * 转换为上传响应格式
-   */
-  private convertToUploadResponse(file: FileItem): FileUploadResponse {
-    return {
-      fileType: file.fileType,
-      filename: file.name,
-      hash: file.fileHash || '',
-      id: file.id,
-      metadata: file.metadata as FileMetadata,
-      size: file.size,
-      uploadedAt: file.createdAt.toISOString(),
-      url: addFileUrlPrefix({ path: file.url, url: file.url }).url || file.url,
-    };
-  }
-
-  /**
    * 获取文件详情并解析文件内容
    */
   async getFileAndParse(
@@ -762,7 +781,7 @@ export class FileUploadService extends BaseService {
 
       this.log('info', 'File retrieval and parsing completed successfully', {
         fileId,
-        filename: uploadResult.filename,
+        name: uploadResult.name,
         parseStatus: parseResult.parseStatus,
       });
 
@@ -785,7 +804,7 @@ export class FileUploadService extends BaseService {
   ): Promise<FileUploadAndParseResponse> {
     try {
       this.log('info', 'Starting file upload and parsing', {
-        filename: file.name,
+        name: file.name,
         size: file.size,
         skipExist: parseOptions.skipExist,
         type: file.type,
@@ -799,7 +818,7 @@ export class FileUploadService extends BaseService {
 
       this.log('info', 'File upload and parsing completed successfully', {
         fileId: uploadResult.id,
-        filename: uploadResult.filename,
+        name: uploadResult.name,
         parseStatus: parseResult.parseStatus,
       });
 

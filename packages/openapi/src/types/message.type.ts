@@ -1,7 +1,9 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 /* eslint-disable typescript-sort-keys/interface */
-import { MessageItem } from '@lobechat/types';
+import { FileItem, MessageItem } from '@lobechat/types';
 import { z } from 'zod';
+
+import { SessionItem, TopicItem, UserItem } from '@/database/schemas';
 
 // ==================== Message Query Types ====================
 
@@ -208,13 +210,21 @@ export const MessagesDeleteBatchRequestSchema = z.object({
 
 // ==================== Message Response Types ====================
 
-/**
- * 消息查询时的返回类型，包含关联的 session 和 user 信息
- */
-export type MessageResponse = MessageItem;
-
 export interface MessageIdParam {
   id: string;
+}
+
+// 从数据库联表查询出来的消息类型，包含关联的 session 和 user 信息
+export interface MessageResponseFromDatabase extends Omit<MessageItem, 'files'> {
+  session: SessionItem | null;
+  user: UserItem;
+  topic: TopicItem | null;
+  filesToMessages: { file: FileItem; messageId: string }[] | null;
+}
+
+// 消息查询时的返回类型，包含关联的 session 和 user 信息
+export interface MessageResponse extends Omit<MessageResponseFromDatabase, 'filesToMessages'> {
+  files: FileItem[] | null;
 }
 
 // ==================== Common Schemas ====================
