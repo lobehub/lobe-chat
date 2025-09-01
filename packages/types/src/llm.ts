@@ -30,6 +30,12 @@ export interface ChatModelCard {
    */
   functionCall?: boolean;
   id: string;
+
+  /**
+   *  whether model supports imageOutput
+   */
+  imageOutput?: boolean;
+
   /**
    * whether model is custom
    */
@@ -53,22 +59,17 @@ export interface ChatModelCard {
    */
   releasedAt?: string;
 
+  /**
+   *  whether model supports search
+   */
+  search?: boolean;
+
   type?: AiModelType;
 
   /**
    *  whether model supports vision
    */
   vision?: boolean;
-
-  /**
-   *  whether model supports search
-   */
-  search?: boolean;
-
-  /**
-   *  whether model supports imageOutput
-   */
-  imageOutput?: boolean;
 }
 
 export interface ModelProviderCard {

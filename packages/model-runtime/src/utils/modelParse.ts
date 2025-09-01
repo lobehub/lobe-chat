@@ -401,6 +401,10 @@ const processModelCard = (
       ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
         false),
     id: model.id,
+    imageOutput:
+      model.imageOutput ??
+      knownModel?.abilities?.imageOutput ??
+      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) || false),
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     pricing: formatPricing(model?.pricing) ?? undefined,
     reasoning:
@@ -408,6 +412,10 @@ const processModelCard = (
       knownModel?.abilities?.reasoning ??
       (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
     releasedAt: processReleasedAt(model, knownModel),
+    search:
+      model.search ??
+      knownModel?.abilities?.search ??
+      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
     type: modelType,
     // current, only image model use the parameters field
     ...(modelType === 'image' && {
@@ -417,14 +425,6 @@ const processModelCard = (
       model.vision ??
       knownModel?.abilities?.vision ??
       ((isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) || false),
-    search:
-      model.search ??
-      knownModel?.abilities?.search ??
-      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
-    imageOutput:
-      model.imageOutput ??
-      knownModel?.abilities?.imageOutput ??
-      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) || false),
   };
 };
 
