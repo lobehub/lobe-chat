@@ -24,6 +24,31 @@ import { generateUniqueSeeds } from '@/utils/number';
 
 const log = debug('lobe-image:lambda');
 
+/**
+ * Recursively validate that no full URLs are present in the config
+ * This is a defensive check to ensure only keys are stored in database
+ */
+function validateNoUrlsInConfig(obj: any, path: string = ''): void {
+  if (typeof obj === 'string') {
+    if (obj.startsWith('http://') || obj.startsWith('https://')) {
+      throw new Error(
+        `Invalid configuration: Found full URL instead of key at ${path || 'root'}. ` +
+          `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
+          `All URLs must be converted to storage keys before database insertion.`,
+      );
+    }
+  } else if (Array.isArray(obj)) {
+    obj.forEach((item, index) => {
+      validateNoUrlsInConfig(item, `${path}[${index}]`);
+    });
+  } else if (obj && typeof obj === 'object') {
+    Object.entries(obj).forEach(([key, value]) => {
+      const currentPath = path ? `${path}.${key}` : key;
+      validateNoUrlsInConfig(value, currentPath);
+    });
+  }
+}
+
 const imageProcedure = authedProcedure
   .use(keyVaults)
   .use(serverDatabase)
@@ -71,8 +96,9 @@ export const imageRouter = router({
 
     log('Starting image creation process, input: %O', input);
 
-    // 如果 params 中包含 imageUrls，将它们转换为 S3 keys 用于数据库存储
+    // 规范化参考图地址，统一存储 S3 key（避免把会过期的预签名 URL 存进数据库）
     let configForDatabase = { ...params };
+    // 1) 处理多图 imageUrls
     if (Array.isArray(params.imageUrls) && params.imageUrls.length > 0) {
       log('Converting imageUrls to S3 keys for database storage: %O', params.imageUrls);
       try {
@@ -82,18 +108,30 @@ export const imageRouter = router({
           return key;
         });
 
-        // 将转换后的 keys 存储为数据库配置
         configForDatabase = {
-          ...params,
+          ...configForDatabase,
           imageUrls: imageKeys,
         };
         log('Successfully converted imageUrls to keys for database: %O', imageKeys);
       } catch (error) {
         log('Error converting imageUrls to keys: %O', error);
-        // 如果转换失败，保持原始 URLs（可能是本地文件或其他格式）
         log('Keeping original imageUrls due to conversion error');
       }
     }
+    // 2) 处理单图 imageUrl
+    if (typeof params.imageUrl === 'string' && params.imageUrl) {
+      try {
+        const key = fileService.getKeyFromFullUrl(params.imageUrl);
+        log('Converted single imageUrl to key: %s -> %s', params.imageUrl, key);
+        configForDatabase = { ...configForDatabase, imageUrl: key };
+      } catch (error) {
+        log('Error converting imageUrl to key: %O', error);
+        // 转换失败则保留原始值
+      }
+    }
+
+    // 防御性检测：确保没有完整URL进入数据库
+    validateNoUrlsInConfig(configForDatabase, 'configForDatabase');
 
     // 步骤 1: 在事务中原子性地创建所有数据库记录
     const { batch: createdBatch, generationsWithTasks } = await serverDB.transaction(async (tx) => {
