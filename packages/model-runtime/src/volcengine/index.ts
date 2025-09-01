@@ -1,4 +1,4 @@
-import volcengineAllModels from '@/config/aiModels/volcengine';
+import volcengineAllModels from 'model-bank/volcengine';
 
 import { ModelProvider } from '../types';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
@@ -28,8 +28,8 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
         model,
         ...(THINKING_MODELS.some((keyword) => model.toLowerCase().includes(keyword))
           ? {
-              thinking: { type: thinking?.type },
-            }
+            thinking: { type: thinking?.type },
+          }
           : {}),
       } as any;
     },
