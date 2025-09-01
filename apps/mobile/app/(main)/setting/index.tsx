@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { isDev } from '@/utils/env';
 
 import { useLocale } from '@/hooks/useLocale';
@@ -29,7 +29,7 @@ export default function SettingScreen() {
           title={t('theme.auto', { ns: 'setting' })}
         />
         {!isFollowSystem && (
-          <>
+          <View>
             <SettingItem
               isSelected={theme.mode === 'light'}
               onPress={() => setThemeMode('light')}
@@ -42,7 +42,7 @@ export default function SettingScreen() {
               showCheckmark
               title={t('theme.dark', { ns: 'setting' })}
             />
-          </>
+          </View>
         )}
         <SettingItem href={'/setting/theme' as any} title={t('theme.title', { ns: 'setting' })} />
         <SettingItem
