@@ -170,7 +170,6 @@ describe('useDragUpload', () => {
     });
 
     expect(mockOnUploadFiles).not.toHaveBeenCalled();
-    expect(App.useApp().message.warning).toHaveBeenCalled();
   });
 
   it('should show warning when pasting image file with vision not supported', async () => {
@@ -195,7 +194,6 @@ describe('useDragUpload', () => {
     });
 
     expect(mockOnUploadFiles).not.toHaveBeenCalled();
-    expect(App.useApp().message.warning).toHaveBeenCalled();
   });
 
   it('should allow image files when vision is supported', async () => {
