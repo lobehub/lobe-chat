@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.120.5](https://github.com/lobehub/lobe-chat/compare/v1.120.4...v1.120.5)
+
+<sup>Released on **2025-09-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ai-image**: Save config.imageUrl with fullUrl instead of key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ai-image**: Save config.imageUrl with fullUrl instead of key, closes [#9016](https://github.com/lobehub/lobe-chat/issues/9016) ([bad009a](https://github.com/lobehub/lobe-chat/commit/bad009a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.4](https://github.com/lobehub/lobe-chat/compare/v1.120.3...v1.120.4)
 
 <sup>Released on **2025-09-01**</sup>
