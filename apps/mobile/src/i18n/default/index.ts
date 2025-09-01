@@ -6,6 +6,7 @@ import error from './error';
 import setting from './setting';
 import topic from './topic';
 import welcome from './welcome';
+import providers from './providers';
 
 const resources = {
   auth,
@@ -13,6 +14,7 @@ const resources = {
   common,
   discover,
   error,
+  providers,
   setting,
   topic,
   welcome,

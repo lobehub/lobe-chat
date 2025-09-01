@@ -5,6 +5,7 @@
   "confirmDelete": "削除を確認",
   "copyFailed": "コピーに失敗しました",
   "defaultAgent": "カスタムアシスタント",
+  "defaultList": "デフォルトリスト",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
   "inbox": {
