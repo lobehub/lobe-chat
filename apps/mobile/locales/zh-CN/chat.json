@@ -26,5 +26,14 @@
   },
   "share": "分享",
   "stop": "停止",
-  "thinking": "思考中..."
+  "thinking": "思考中...",
+  "agentRoleEdit": {
+    "edit": "编辑",
+    "placeholder": "请输入角色 Prompt 提示词",
+    "roleSetting": "角色设定",
+    "cancel": "取消",
+    "confirm": "确认",
+    "title": "角色设定"
+  },
+  "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作"
 }

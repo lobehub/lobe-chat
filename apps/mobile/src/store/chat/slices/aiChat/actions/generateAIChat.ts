@@ -26,6 +26,7 @@ import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/mes
 import { ChatImageItem } from '@/types/message/image';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
+import Toast from '@/components/Toast';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
 
@@ -619,6 +620,7 @@ export const generateAIChat: StateCreator<
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
+        if (error.body?.error?.message) Toast.error(error.body?.error?.message, 3000);
       },
       onFinish: async (
         content,

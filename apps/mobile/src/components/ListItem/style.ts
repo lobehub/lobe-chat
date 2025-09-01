@@ -34,7 +34,6 @@ export const useStyles = createStyles(
       color: active ? token.colorText : token.colorTextTertiary,
       flexDirection: 'row',
       gap: token.marginSM,
-      marginBottom: token.marginXS,
       padding: token.paddingSM,
     },
     title: {

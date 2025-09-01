@@ -55,6 +55,8 @@ const TopicList = memo(() => {
       {/* Topic列表 */}
       <ScrollView
         contentContainerStyle={styles.scrollContent}
+        removeClippedSubviews={true}
+        scrollEventThrottle={32}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >

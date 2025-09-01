@@ -50,7 +50,7 @@ export const SearchBarSkeleton = () => {
 };
 
 // Session List Skeleton (for multiple items)
-export const SessionListSkeleton = ({ count = 5 }: { count?: number }) => {
+export const SessionListSkeleton = ({ count = 2 }: { count?: number }) => {
   return (
     <View style={{ flex: 1 }}>
       {/* Search bar skeleton */}

@@ -38,6 +38,7 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/withFbjniFix",
       [
         "expo-splash-screen",
         {
