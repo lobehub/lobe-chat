@@ -14,7 +14,7 @@ const WelcomeChatBubble = React.memo(({ message }: WelcomeChatBubbleProps) => {
   const { styles } = useStyles();
 
   const content = useMemo(() => {
-    return <Markdown content={message.content} />;
+    return <Markdown>{message.content}</Markdown>;
   }, [message.content]);
 
   return (
