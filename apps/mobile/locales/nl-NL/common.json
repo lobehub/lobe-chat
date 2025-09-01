@@ -7,6 +7,7 @@
     "copy": "Kopiëren",
     "delete": "Verwijderen",
     "edit": "Bewerken",
+    "regenerate": "Opnieuw genereren",
     "retry": "Opnieuw proberen",
     "save": "Opslaan"
   },

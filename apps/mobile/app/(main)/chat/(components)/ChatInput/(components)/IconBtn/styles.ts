@@ -16,8 +16,9 @@ export const useStyles = createStyles((token) => ({
   } as ViewStyle,
 
   buttonPrimary: {
-    backgroundColor: token.colorBgSolidActive,
-    borderColor: token.colorPrimaryText,
+    backgroundColor: token.colorPrimary,
+    borderColor: token.colorBgElevated,
+    color: token.colorTextLightSolid,
   } as ViewStyle,
 }));
 
