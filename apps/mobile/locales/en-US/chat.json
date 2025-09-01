@@ -5,6 +5,7 @@
   "confirmDelete": "Confirm Delete",
   "copyFailed": "Copy Failed",
   "defaultAgent": "Custom Assistant",
+  "defaultList": "Default List",
   "deleteMessageConfirm": "Are you sure you want to delete this message?",
   "history": "Chat History",
   "inbox": {

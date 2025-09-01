@@ -22,8 +22,9 @@ const Inbox = () => {
     <ListItem
       active={isActive}
       avatar={DEFAULT_INBOX_AVATAR}
+      description={t('inbox.desc', { ns: 'chat' })}
       onPress={handlePress}
-      title={t('session.title', { ns: 'chat' })}
+      title={t('inbox.title', { ns: 'chat' })}
     />
   );
 };

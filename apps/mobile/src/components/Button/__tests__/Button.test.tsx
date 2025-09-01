@@ -155,4 +155,10 @@ describe('Button', () => {
     );
     expect(toJSON()).toBeTruthy();
   });
+
+  it('renders icon when icon prop is provided and not loading', () => {
+    const { getByTestId } = renderWithTheme(<Button icon={<View />}>With Icon</Button>);
+
+    expect(getByTestId('button-icon')).toBeTruthy();
+  });
 });

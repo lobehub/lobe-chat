@@ -25,9 +25,9 @@ an example | *an example* | **an example**
 
 ---
 
-![](https://github.com/user-attachments/assets/2428a136-38bf-488c-8033-d9f261d67f3d)
+![](https://hub-apac-1.lobeobjects.space/docs/6b2cb238d130a1a3a1ab493944dd3c34.png)
 
-![](https://github.com/user-attachments/assets/625cf558-4c32-4489-970a-2723ebadbc23)
+![](https://hub-apac-1.lobeobjects.space/docs/7ec9cf497e68ce0e3185ba751091abed.png)
 
 <video src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2"/>
 

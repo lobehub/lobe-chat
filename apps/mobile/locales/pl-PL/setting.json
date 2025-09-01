@@ -14,6 +14,56 @@
     },
     "title": "Ustawienia konta"
   },
+  "aiProviders": {
+    "configuration": {
+      "apiKey": {
+        "description": "Wprowadź klucz API dla {name}",
+        "label": "Klucz API",
+        "placeholder": "Wprowadź klucz API dla {name}"
+      },
+      "proxyUrl": {
+        "desc": "Musi zawierać http(s)://",
+        "invalid": "Wprowadź poprawny adres URL zaczynający się od http:// lub https://",
+        "placeholder": "https://api.example.com/v1",
+        "title": "Adres proxy API"
+      },
+      "saving": "Zapisywanie konfiguracji...",
+      "title": "Konfiguracja",
+      "updateFailedDesc": "Zapisywanie nie powiodło się, spróbuj ponownie",
+      "updateFailedTitle": "Błąd zapisu"
+    },
+    "detail": {
+      "loadFailed": "Nie udało się załadować konfiguracji dostawcy",
+      "loading": "Ładowanie konfiguracji dostawcy..."
+    },
+    "info": {
+      "builtIn": "Wbudowany dostawca",
+      "custom": "Niestandardowy dostawca"
+    },
+    "list": {
+      "disabled": "Nieaktywne",
+      "enabled": "Aktywne",
+      "loadFailed": "Nie udało się załadować listy dostawców"
+    },
+    "models": {
+      "copySuccess": "Skopiowano pomyślnie",
+      "disableFailed": "Nie udało się wyłączyć modelu",
+      "emptyNoSearch": "Nie znaleziono żadnych modeli, spróbuj pobrać z serwera",
+      "emptyWithSearch": "Brak modeli spełniających kryteria wyszukiwania",
+      "enableFailed": "Nie udało się włączyć modelu",
+      "fetch": "Pobierz model",
+      "fetchFailed": "Nie udało się pobrać modeli, spróbuj ponownie",
+      "fetchSuccess": "Lista modeli została pomyślnie pobrana!",
+      "fetching": "Pobieranie...",
+      "modelsAvailable": "Dostępnych modeli: {{count}}",
+      "searchPlaceholder": "Szukaj modeli...",
+      "title": "Modele"
+    },
+    "skeleton": {
+      "disabled": "Nieaktywne",
+      "enabled": "Aktywne"
+    }
+  },
   "changelog": "Dziennik zmian",
   "developer": "Opcje programisty",
   "feedback": "Opinie",
@@ -53,6 +103,11 @@
     "neutralColor": {
       "description": "Wybierz neutralny odcień aplikacji",
       "title": "Konfiguracja kolorów neutralnych"
+    },
+    "preview": "Podgląd",
+    "previewMessages": {
+      "botHowToUse": "Możesz dostosować kolor główny i kolory neutralne za pomocą poniższego selektora kolorów, a podgląd będzie aktualizowany na bieżąco, aby pokazać efekt.",
+      "userHowToUse": "Jak korzystać z podglądu motywu?"
     },
     "primaryColor": {
       "description": "Wybierz główny kolor aplikacji",
