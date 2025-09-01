@@ -2,22 +2,22 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   backButton: {
-    marginRight: 8,
+    marginRight: token.marginXS,
   },
   container: {
     backgroundColor: token.colorBgContainer,
     flex: 1,
-    paddingBottom: 16, // 底部留白
+    paddingBottom: token.padding, // 底部留白
   },
   content: {
-    padding: 16,
+    padding: token.padding,
   },
   eyeButton: {
     alignItems: 'center',
     bottom: 0,
     justifyContent: 'center',
     position: 'absolute',
-    right: 8,
+    right: token.marginXS,
     top: 0,
     width: 36,
   },
@@ -25,33 +25,33 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 16,
+    paddingHorizontal: token.padding,
   },
   headerTitle: {
     color: token.colorText,
     flex: 1,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
     marginRight: 40,
     textAlign: 'center',
   },
   hint: {
     color: token.colorTextSecondary,
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: token.fontSizeSM,
+    marginTop: token.marginXS,
   },
   input: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,
-    borderRadius: 8,
+    borderRadius: token.borderRadiusLG,
     borderWidth: 1,
     color: token.colorText,
-    fontSize: 16,
+    fontSize: token.fontSizeLG,
     height: 44,
-    paddingHorizontal: 12,
+    paddingHorizontal: token.paddingSM,
   },
   inputContainer: {
-    marginBottom: 16,
+    marginBottom: token.margin,
     position: 'relative',
   },
   inputWithIcon: {
@@ -59,15 +59,15 @@ export const useStyles = createStyles((token) => ({
   },
   label: {
     color: token.colorText,
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: token.fontSize,
+    marginBottom: token.marginXS,
   },
   // Section样式 - 对标web端
   sectionHeader: {
     backgroundColor: token.colorBgContainer,
-    paddingBottom: 8,
-    paddingHorizontal: 16,
-    paddingTop: 24,
+    paddingBottom: token.paddingXS,
+    paddingHorizontal: token.padding,
+    paddingTop: token.paddingLG,
   },
   sectionSeparator: {
     backgroundColor: token.colorBgContainer,
@@ -76,7 +76,7 @@ export const useStyles = createStyles((token) => ({
   sectionTitle: {
     color: token.colorText,
     fontSize: 18, // 对标web端字体大小
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
   },
   // 卡片间分隔 - 对标web端Grid gap
   separator: {
@@ -84,6 +84,6 @@ export const useStyles = createStyles((token) => ({
     height: 16, // 对标web端16px gap
   },
   validateButton: {
-    marginTop: 16,
+    marginTop: token.margin,
   },
 }));

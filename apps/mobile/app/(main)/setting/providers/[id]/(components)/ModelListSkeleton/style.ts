@@ -12,6 +12,6 @@ export const useStyles = createStyles((token) => ({
   },
   sectionHeaderText: {
     fontSize: token.fontSizeSM,
-    fontWeight: '600',
+    fontWeight: token.fontWeightStrong,
   },
 }));

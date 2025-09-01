@@ -144,7 +144,7 @@ export const useStyles = createStyles((token) => ({
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: token.marginXXS,
     marginBottom: token.marginLG,
-    marginLeft: -token.marginXXS,
   },
 }));
