@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-01",
+    "version": "1.120.5"
+  },
+  {
     "children": {
       "improvements": ["Adjust ControlsForm component to adapt to mobile phone display."]
     },

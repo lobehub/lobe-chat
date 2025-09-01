@@ -1,5 +1,4 @@
 import { existsSync, readFileSync } from 'node:fs';
-import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { electronIpcClient } from '@/server/modules/ElectronIPCClient';
@@ -233,6 +232,52 @@ describe('DesktopLocalFileImpl', () => {
 
       // 验证
       expect(result).toBe('');
+    });
+
+    // Legacy bug compatibility tests - https://github.com/lobehub/lobe-chat/issues/8994
+    describe('legacy bug compatibility', () => {
+      it('should handle full URL input by extracting key', async () => {
+        const fullUrl = 'http://localhost:3000/desktop-file/documents/test.txt';
+
+        // Mock getKeyFromFullUrl and getLocalFileUrl
+        vi.spyOn(service, 'getKeyFromFullUrl').mockReturnValue('desktop://documents/test.txt');
+        const getLocalFileUrlSpy = vi.spyOn(service as any, 'getLocalFileUrl');
+        getLocalFileUrlSpy.mockResolvedValueOnce('data:image/png;base64,test');
+
+        const result = await service.getFullFileUrl(fullUrl);
+
+        expect(service.getKeyFromFullUrl).toHaveBeenCalledWith(fullUrl);
+        expect(getLocalFileUrlSpy).toHaveBeenCalledWith('desktop://documents/test.txt');
+        expect(result).toBe('data:image/png;base64,test');
+      });
+
+      it('should handle normal desktop:// key input without extraction', async () => {
+        const key = 'desktop://documents/test.txt';
+
+        const extractSpy = vi.spyOn(service, 'getKeyFromFullUrl');
+        const getLocalFileUrlSpy = vi.spyOn(service as any, 'getLocalFileUrl');
+        getLocalFileUrlSpy.mockResolvedValueOnce('data:image/png;base64,test');
+
+        const result = await service.getFullFileUrl(key);
+
+        expect(extractSpy).not.toHaveBeenCalled();
+        expect(getLocalFileUrlSpy).toHaveBeenCalledWith(key);
+        expect(result).toBe('data:image/png;base64,test');
+      });
+
+      it('should handle https:// URLs for legacy compatibility', async () => {
+        const httpsUrl = 'https://localhost:3000/desktop-file/images/photo.jpg';
+
+        vi.spyOn(service, 'getKeyFromFullUrl').mockReturnValue('desktop://images/photo.jpg');
+        const getLocalFileUrlSpy = vi.spyOn(service as any, 'getLocalFileUrl');
+        getLocalFileUrlSpy.mockResolvedValueOnce('data:image/jpeg;base64,test');
+
+        const result = await service.getFullFileUrl(httpsUrl);
+
+        expect(service.getKeyFromFullUrl).toHaveBeenCalledWith(httpsUrl);
+        expect(getLocalFileUrlSpy).toHaveBeenCalledWith('desktop://images/photo.jpg');
+        expect(result).toBe('data:image/jpeg;base64,test');
+      });
     });
   });
 
