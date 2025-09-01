@@ -24,6 +24,31 @@ import { generateUniqueSeeds } from '@/utils/number';
 
 const log = debug('lobe-image:lambda');
 
+/**
+ * Recursively validate that no full URLs are present in the config
+ * This is a defensive check to ensure only keys are stored in database
+ */
+function validateNoUrlsInConfig(obj: any, path: string = ''): void {
+  if (typeof obj === 'string') {
+    if (obj.startsWith('http://') || obj.startsWith('https://')) {
+      throw new Error(
+        `Invalid configuration: Found full URL instead of key at ${path || 'root'}. ` +
+          `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
+          `All URLs must be converted to storage keys before database insertion.`,
+      );
+    }
+  } else if (Array.isArray(obj)) {
+    obj.forEach((item, index) => {
+      validateNoUrlsInConfig(item, `${path}[${index}]`);
+    });
+  } else if (obj && typeof obj === 'object') {
+    Object.entries(obj).forEach(([key, value]) => {
+      const currentPath = path ? `${path}.${key}` : key;
+      validateNoUrlsInConfig(value, currentPath);
+    });
+  }
+}
+
 const imageProcedure = authedProcedure
   .use(keyVaults)
   .use(serverDatabase)
@@ -104,6 +129,9 @@ export const imageRouter = router({
         // 转换失败则保留原始值
       }
     }
+
+    // 防御性检测：确保没有完整URL进入数据库
+    validateNoUrlsInConfig(configForDatabase, 'configForDatabase');
 
     // 步骤 1: 在事务中原子性地创建所有数据库记录
     const { batch: createdBatch, generationsWithTasks } = await serverDB.transaction(async (tx) => {
