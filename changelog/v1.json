@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support new provider Nebius."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.3"
+  },
+  {
+    "children": {
       "improvements": ["Remove base path."]
     },
     "date": "2025-08-31",
