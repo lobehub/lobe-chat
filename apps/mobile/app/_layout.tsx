@@ -3,10 +3,10 @@ import { PortalProvider } from '@gorhom/portal';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { I18nextProvider } from 'react-i18next';
 
 import { ToastProvider } from '@/components';
-import '@/i18n';
+import i18n from '@/i18n';
 import { useAuth, useUserStore } from '@/store/user';
 import { ThemeProvider } from '@/theme';
 import { authLogger } from '@/utils/logger';
@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
 import '../polyfills';
+import { I18nReadyGate } from '@/i18n/ReadyGate';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete
 SplashScreen.preventAutoHideAsync();
@@ -135,27 +136,29 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <AuthProvider>
-          <QueryProvider>
-            <ActionSheetProvider>
-              <PortalProvider>
-                <ToastProvider>
-                  <Stack screenOptions={{ headerShown: false }}>
-                    {/* 指定首页, 防止 expo 路由错乱 */}
-                    <Stack.Screen name="index" options={{ animation: 'none' }} />
-                    {/* main page should not have animation */}
-                    <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-                    {/* auth page should not have animation  */}
-                    <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
-                  </Stack>
-                </ToastProvider>
-              </PortalProvider>
-            </ActionSheetProvider>
-          </QueryProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <ThemeProvider>
+      <AuthProvider>
+        <QueryProvider>
+          <ActionSheetProvider>
+            <PortalProvider>
+              <I18nextProvider i18n={i18n}>
+                <I18nReadyGate>
+                  <ToastProvider>
+                    <Stack screenOptions={{ headerShown: false }}>
+                      {/* 指定首页, 防止 expo 路由错乱 */}
+                      <Stack.Screen name="index" options={{ animation: 'none' }} />
+                      {/* main page should not have animation */}
+                      <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                      {/* auth page should not have animation  */}
+                      <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                    </Stack>
+                  </ToastProvider>
+                </I18nReadyGate>
+              </I18nextProvider>
+            </PortalProvider>
+          </ActionSheetProvider>
+        </QueryProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
