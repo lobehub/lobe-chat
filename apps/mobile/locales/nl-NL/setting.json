@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Voer de API-sleutel van {name} in",
+        "description": "Voer de API-sleutel van {{name}} in",
         "label": "API-sleutel",
-        "placeholder": "Voer de API-sleutel van {name} in"
+        "placeholder": "Voer de API-sleutel van {{name}} in"
       },
       "proxyUrl": {
         "desc": "Moet http(s):// bevatten",
