@@ -77,7 +77,7 @@ export default function SettingScreen() {
           title={t('changelog', { ns: 'setting' })}
         />
         <SettingItem href="mailto:support@lobehub.com" title={t('support', { ns: 'setting' })} />
-        <SettingItem extra={version} showNewBadge title={t('about', { ns: 'setting' })} />
+        <SettingItem extra={version} title={t('version', { ns: 'setting' })} />
       </SettingGroup>
     </ScrollView>
   );

@@ -103,7 +103,6 @@ export default {
     title: '语言设置',
   },
   openai: 'OpenAI 设置',
-
   openaiSettings: {
     apiKey: 'API Key',
     apiKeyPlaceholder: '请输入你的 OpenAI API Key',
@@ -118,7 +117,6 @@ export default {
     validationFailed: '验证失败',
     validationSuccess: '验证成功',
   },
-
   providers: 'AI 服务商',
   support: '邮件支持',
   theme: {
@@ -147,4 +145,5 @@ export default {
     title: '主题设置',
   },
   title: '设置',
+  version: '当前版本',
 };

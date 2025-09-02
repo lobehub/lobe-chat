@@ -22,12 +22,6 @@ export default function SettingRoutesLayout() {
         }}
       />
       <Stack.Screen
-        name="providers/openai"
-        options={{
-          headerTitle: t('openai', { ns: 'setting' }),
-        }}
-      />
-      <Stack.Screen
         name="locale/index"
         options={{
           headerTitle: t('locale.title', { ns: 'setting' }),

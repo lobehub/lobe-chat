@@ -144,5 +144,6 @@
     "sectionTitle": "Theme",
     "title": "Theme Settings"
   },
-  "title": "Settings"
+  "title": "Settings",
+  "version": "Current Version"
 }
