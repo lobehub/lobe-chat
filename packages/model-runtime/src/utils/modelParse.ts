@@ -331,9 +331,7 @@ const processModelCard = (
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
     description: model.description ?? knownModel?.description ?? '',
-    displayName: (model.displayName ?? knownModel?.displayName ?? model.id)
-      .replaceAll(/\s*[(（][^)）]*[)）]\s*/g, '')
-      .trim(), // 去除括号内容
+    displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: model?.enabled || false,
     functionCall:
       model.functionCall ??
