@@ -1,10 +1,9 @@
+import { BRANDING_NAME, isDesktop } from '@lobechat/const';
+import { LobeUser } from '@lobechat/types';
 import { t } from 'i18next';
 
 import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
-import { BRANDING_NAME } from '@/const/branding';
-import { isDesktop } from '@/const/version';
-import { UserStore } from '@/store/user';
-import { LobeUser } from '@/types/user';
+import type { UserStore } from '@/store/user';
 
 const DEFAULT_USERNAME = BRANDING_NAME;
 

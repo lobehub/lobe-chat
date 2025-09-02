@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Diepdenkschakelaar"
     },
-    "title": "Modeluitbreidingsfunctie"
+    "title": "Modeluitbreidingsfunctie",
+    "urlContext": {
+      "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
+      "title": "Inhoud van webkoppeling extraheren"
+    }
   },
   "history": {
     "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Invoer cache schrijven",
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
+      "outputImage": "Afbeelding uitvoer",
       "outputText": "Tekstuitvoer",
       "outputTitle": "Uitvoerdetails",
       "reasoning": "Diep nadenken",
@@ -268,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Bestand uploaden",
       "actionTooltip": "Uploaden",
-      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+      "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
     },
     "preview": {
       "prepareTasks": "Voorbereiden van blokken...",

@@ -6,6 +6,7 @@ import { electronIpcClient } from '@/server/modules/ElectronIPCClient';
 import { inferContentTypeFromImageUrl } from '@/utils/url';
 
 import { FileServiceImpl } from './type';
+import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
 /**
  * 桌面应用本地文件服务实现
@@ -127,7 +128,11 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
    */
   async getFullFileUrl(url?: string | null): Promise<string> {
     if (!url) return '';
-    return this.getLocalFileUrl(url);
+
+    // Handle legacy data compatibility using shared utility
+    const key = extractKeyFromUrlOrReturnOriginal(url, this.getKeyFromFullUrl.bind(this));
+
+    return this.getLocalFileUrl(key);
   }
 
   /**

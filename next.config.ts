@@ -9,10 +9,10 @@ const buildWithDocker = process.env.DOCKER === 'true';
 const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
+const shouldUseCSP = process.env.ENABLED_CSP === '1';
 
 // if you need to proxy the api endpoint to remote server
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 const isStandaloneMode = buildWithDocker || isDesktop;
 
 const standaloneConfig: NextConfig = {
@@ -22,7 +22,6 @@ const standaloneConfig: NextConfig = {
 
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
-  basePath,
   compress: isProd,
   experimental: {
     optimizePackageImports: [
@@ -41,14 +40,29 @@ const nextConfig: NextConfig = {
     webVitalsAttribution: ['CLS', 'LCP'],
   },
   async headers() {
+    const securityHeaders = [
+      {
+        key: 'x-robots-tag',
+        value: 'all',
+      },
+    ];
+
+    if (shouldUseCSP) {
+      securityHeaders.push(
+        {
+          key: 'X-Frame-Options',
+          value: 'DENY',
+        },
+        {
+          key: 'Content-Security-Policy',
+          value: "frame-ancestors 'none';",
+        },
+      );
+    }
+
     return [
       {
-        headers: [
-          {
-            key: 'x-robots-tag',
-            value: 'all',
-          },
-        ],
+        headers: securityHeaders,
         source: '/:path*',
       },
       {

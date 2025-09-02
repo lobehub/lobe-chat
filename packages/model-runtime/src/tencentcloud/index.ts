@@ -13,7 +13,7 @@ export const LobeTencentCloudAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_TENCENT_CLOUD_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
     const reasoningKeywords = ['deepseek-r1'];
 

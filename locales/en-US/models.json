@@ -74,8 +74,14 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1: Next-generation reasoning model, enhancing complex reasoning and chain-of-thought capabilities, ideal for tasks requiring in-depth analysis."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Model provider: sophnet platform. DeepSeek V3 Fast is the high-TPS ultra-fast version of DeepSeek V3 0324, fully powered without quantization, featuring enhanced coding and mathematical capabilities for faster response!"
+  },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting two reasoning modes: thinking and non-thinking. It offers higher thinking efficiency compared to DeepSeek-R1-0528. With post-training optimization, the use of Agent tools and agent task performance have been significantly enhanced."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."
@@ -131,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Baidu's latest self-developed high-performance large language model released in 2024, with outstanding general capabilities, providing better results than ERNIE Speed, suitable as a base model for fine-tuning, effectively addressing specific scenario issues while also exhibiting excellent inference performance."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev is a multimodal image generation and editing model developed by Black Forest Labs based on the Rectified Flow Transformer architecture, featuring 12 billion parameters. It specializes in generating, reconstructing, enhancing, or editing images under given contextual conditions. The model combines the controllable generation advantages of diffusion models with the contextual modeling capabilities of Transformers, supporting high-quality image output and widely applicable to image restoration, completion, and visual scene reconstruction tasks."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev is an open-source multimodal language model (MLLM) developed by Black Forest Labs, optimized for vision-and-language tasks by integrating image and text understanding and generation capabilities. Built upon advanced large language models such as Mistral-7B, it achieves vision-language collaborative processing and complex task reasoning through a carefully designed visual encoder and multi-stage instruction fine-tuning."
@@ -170,6 +182,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Advanced image reasoning capabilities suitable for visual understanding agent applications."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B: A versatile Transformer model suitable for conversational and generative tasks."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
   },
@@ -187,6 +202,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at a very low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick: A large-scale model based on Mixture-of-Experts, offering an efficient expert activation strategy for superior inference performance."
   },
   "MiniMax-M1": {
     "description": "A brand-new self-developed inference model. Globally leading: 80K reasoning chains x 1M input, performance comparable to top overseas models."
@@ -256,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 is a mixed expert (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy without auxiliary loss to optimize inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervision and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 is a hybrid large language model released by DeepSeek AI, featuring multiple significant upgrades over its predecessor. A key innovation of this model is the integration of both \"Thinking Mode\" and \"Non-thinking Mode,\" allowing users to flexibly switch between modes by adjusting chat templates to suit different task requirements. Through dedicated post-training optimization, V3.1 significantly enhances performance in tool invocation and Agent tasks, better supporting external search tools and executing complex multi-step tasks. Based on DeepSeek-V3.1-Base, it employs a two-stage long-text extension method to greatly increase training data volume, improving its handling of long documents and extensive code. As an open-source model, DeepSeek-V3.1 demonstrates capabilities comparable to top closed-source models across benchmarks in coding, mathematics, and reasoning. Its Mixture of Experts (MoE) architecture maintains a massive model capacity while effectively reducing inference costs."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
@@ -332,11 +353,20 @@
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
     "description": "Qwen3-30B-A3B-Instruct-2507 is an updated version of the Qwen3-30B-A3B non-thinking mode. It is a Mixture of Experts (MoE) model with a total of 30.5 billion parameters and 3.3 billion active parameters. The model features key enhancements across multiple areas, including significant improvements in instruction following, logical reasoning, text comprehension, mathematics, science, coding, and tool usage. Additionally, it has made substantial progress in covering long-tail multilingual knowledge and better aligns with user preferences in subjective and open-ended tasks, enabling it to generate more helpful responses and higher-quality text. Furthermore, its long-text comprehension capability has been extended to 256K tokens. This model supports only the non-thinking mode and does not generate `<think></think>` tags in its output."
   },
+  "Qwen/Qwen3-30B-A3B-Thinking-2507": {
+    "description": "Qwen3-30B-A3B-Thinking-2507 is the latest “thinking” model in the Qwen3 series released by Alibaba’s Tongyi Qianwen team. As a mixture-of-experts (MoE) model with 30.5 billion total parameters and 3.3 billion active parameters, it is designed to improve capabilities for handling complex tasks. The model demonstrates significant performance gains on academic benchmarks requiring logical reasoning, mathematics, science, programming, and domain expertise. At the same time, its general abilities—such as instruction following, tool use, text generation, and alignment with human preferences—have been substantially enhanced. The model natively supports long-context understanding of 256K tokens and can scale up to 1 million tokens. This version is tailored for “thinking mode,” intended to solve highly complex problems through detailed step-by-step reasoning, and it also exhibits strong agent capabilities."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
   },
   "Qwen/Qwen3-8B": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
+  "Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+    "description": "Qwen3-Coder-30B-A3B-Instruct is a code model in the Qwen3 series developed by Alibaba's Tongyi Qianwen team. As a streamlined and optimized model, it focuses on enhancing code-handling capabilities while maintaining high performance and efficiency. The model demonstrates notable advantages among open-source models on complex tasks such as agentic coding, automated browser operations, and tool invocation. It natively supports a long context of 256K tokens and can be extended up to 1M tokens, enabling better understanding and processing at the codebase level. Additionally, the model provides robust agentic coding support for platforms like Qwen Code and CLINE, and it employs a dedicated function-calling format."
+  },
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct, released by Alibaba, is the most agentic code model to date. It is a mixture-of-experts (MoE) model with 480 billion total parameters and 35 billion active parameters, striking a balance between efficiency and performance. The model natively supports a 256K (~260k) token context window and can be extended to 1,000,000 tokens through extrapolation methods such as YaRN, enabling it to handle large codebases and complex programming tasks. Qwen3-Coder is designed for agent-style coding workflows: it not only generates code but can autonomously interact with development tools and environments to solve complex programming problems. On multiple benchmarks for coding and agent tasks, this model achieves top-tier results among open-source models, with performance comparable to leading models like Claude Sonnet 4."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
@@ -367,6 +397,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B is a Mixture of Experts (MoE) model that introduces a \"Hybrid Reasoning Mode,\" allowing users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" It supports understanding and reasoning in 119 languages and dialects and possesses powerful tool invocation capabilities. In comprehensive benchmarks covering overall ability, coding and mathematics, multilingual proficiency, knowledge, and reasoning, it competes with leading large models on the market such as DeepSeek R1, OpenAI o1, o3-mini, Grok 3, and Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507: A model optimized for advanced reasoning and dialogue instructions, featuring a mixture-of-experts architecture to maintain inference efficiency at large scale."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B is a dense model that introduces a \"Hybrid Reasoning Mode,\" enabling users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" Thanks to architectural improvements, increased training data, and more efficient training methods, its overall performance is comparable to that of Qwen2.5-72B."
@@ -824,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 is a mixture of experts (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy that does not rely on auxiliary loss, optimizing inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervision and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models in performance."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 is a hybrid large language model released by DeepSeek AI, featuring multiple significant upgrades over its predecessor. A key innovation of this model is the integration of both \"Thinking Mode\" and \"Non-thinking Mode,\" allowing users to flexibly switch between modes by adjusting chat templates to suit different task requirements. Through dedicated post-training optimization, V3.1 significantly enhances performance in tool invocation and Agent tasks, better supporting external search tools and executing complex multi-step tasks. Based on DeepSeek-V3.1-Base, it employs a two-stage long-text extension method to greatly increase training data volume, improving its handling of long documents and extensive code. As an open-source model, DeepSeek-V3.1 demonstrates capabilities comparable to top closed-source models across benchmarks in coding, mathematics, and reasoning. Its Mixture of Experts (MoE) architecture maintains a massive model capacity while effectively reducing inference costs."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B is an advanced model trained for highly complex conversations."
   },
@@ -894,7 +930,7 @@
     "description": "DeepSeek R1 full version, with 671B parameters, supporting real-time online search, offering enhanced understanding and generation capabilities."
   },
   "deepseek-reasoner": {
-    "description": "The reasoning model launched by DeepSeek. Before outputting the final answer, the model first provides a chain of thought to enhance the accuracy of the final response."
+    "description": "DeepSeek V3.1 Thinking Mode. Before outputting the final answer, the model first generates a chain of thought to improve the accuracy of the final response."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 is an efficient Mixture-of-Experts language model, suitable for cost-effective processing needs."
@@ -908,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 is a 671B parameter MoE model, excelling in programming and technical capabilities, contextual understanding, and long text processing."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting two reasoning modes: thinking and non-thinking. It offers higher thinking efficiency compared to DeepSeek-R1-0528. With post-training optimization, the use of Agent tools and agent task performance have been significantly enhanced. It supports a 128k context window and an output length of up to 64k tokens."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1 is a large hybrid reasoning model supporting 128K long context and efficient mode switching, delivering outstanding performance and speed in tool invocation, code generation, and complex reasoning tasks."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."
@@ -1103,11 +1145,26 @@
   "flux-dev": {
     "description": "FLUX.1 [dev] is an open-source weight and fine-tuned model for non-commercial applications. It maintains image quality and instruction-following capabilities close to the FLUX professional version while offering higher operational efficiency. Compared to standard models of the same size, it is more resource-efficient."
   },
+  "flux-kontext-max": {
+    "description": "State-of-the-art contextual image generation and editing — combining text and images for precise, coherent results."
+  },
+  "flux-kontext-pro": {
+    "description": "State-of-the-art contextual image generation and editing — combining text and images for precise, coherent results."
+  },
   "flux-kontext/dev": {
     "description": "FLUX.1 model focused on image editing tasks, supporting both text and image inputs."
   },
   "flux-merged": {
     "description": "The FLUX.1-merged model combines the deep features explored during the development phase of “DEV” with the high-speed execution advantages represented by “Schnell.” This integration not only pushes the model's performance boundaries but also broadens its application scope."
+  },
+  "flux-pro": {
+    "description": "A top-tier commercial AI image generation model — delivering unparalleled image quality and a wide variety of outputs."
+  },
+  "flux-pro-1.1": {
+    "description": "Upgraded professional-grade AI image generation model — delivers outstanding image quality and precise adherence to prompts."
+  },
+  "flux-pro-1.1-ultra": {
+    "description": "Ultra-high-resolution AI image generation — supports up to 4-megapixel output, producing ultra-high-definition images in under 10 seconds."
   },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] can process text and reference images as input, seamlessly enabling targeted local edits and complex overall scene transformations."
@@ -1192,6 +1249,12 @@
   },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is Google's most cost-effective model, offering comprehensive capabilities."
+  },
+  "gemini-2.5-flash-image-preview": {
+    "description": "Nano Banana is Google's latest, fastest, and most efficient native multimodal model, enabling you to generate and edit images through conversation."
+  },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana is Google's latest, fastest, and most efficient native multimodal model, enabling you to generate and edit images through conversation."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite is Google's smallest and most cost-effective model, designed for large-scale use."
@@ -1295,6 +1358,9 @@
   "glm-4.5-x": {
     "description": "The high-speed version of GLM-4.5, combining strong performance with generation speeds up to 100 tokens per second."
   },
+  "glm-4.5v": {
+    "description": "Zhipu's next-generation visual reasoning model is built on a Mixture-of-Experts (MoE) architecture. With 106B total parameters and 12B activated parameters, it achieves state-of-the-art performance among open-source multimodal models of similar scale across various benchmarks, supporting common tasks such as image, video, document understanding, and GUI-related tasks."
+  },
   "glm-4v": {
     "description": "GLM-4V provides strong image understanding and reasoning capabilities, supporting various visual tasks."
   },
@@ -1330,6 +1396,12 @@
   },
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It features built-in \"thinking\" capabilities, enabling it to provide responses with higher accuracy and more nuanced contextual understanding.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly depending on whether the thinking capability is activated. If you choose the standard variant (without the \":thinking\" suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the \":thinking\" variant, which incurs higher pricing for thinking outputs.\n\nAdditionally, Gemini 2.5 Flash can be configured via the \"max tokens for reasoning\" parameter, as detailed in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash experimental model, supporting image generation."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash experimental model, supporting image generation."
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
@@ -1434,7 +1506,7 @@
     "description": "GPT-4.1 nano provides a balance of intelligence, speed, and cost, making it an appealing model for numerous applications."
   },
   "gpt-4.5-preview": {
-    "description": "The research preview of GPT-4.5, our largest and most powerful GPT model to date. It possesses extensive world knowledge and better understands user intent, excelling in creative tasks and autonomous planning. GPT-4.5 accepts both text and image inputs and generates text outputs (including structured outputs). It supports key developer features such as function calling, batch API, and streaming output. GPT-4.5 particularly shines in tasks that require creativity, open-ended thinking, and dialogue, such as writing, learning, or exploring new ideas. Knowledge cutoff date is October 2023."
+    "description": "GPT-4.5-preview is the latest general-purpose model, offering extensive world knowledge and an improved understanding of user intent. It excels at creative tasks and agent-style planning. The model's knowledge cutoff is October 2023."
   },
   "gpt-4o": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to stay current with the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications, including customer service, education, and technical support."
@@ -1502,6 +1574,9 @@
   "gpt-oss": {
     "description": "GPT-OSS 20B is an open-source large language model released by OpenAI, utilizing MXFP4 quantization technology. It is suitable for running on high-end consumer GPUs or Apple Silicon Macs. This model excels in dialogue generation, code writing, and reasoning tasks, supporting function calls and tool usage."
   },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 quantized Transformer architecture, delivering strong performance even under resource constraints."
+  },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is a large open-source language model released by OpenAI, employing MXFP4 quantization technology as a flagship model. It requires multi-GPU or high-performance workstation environments to operate and delivers outstanding performance in complex reasoning, code generation, and multilingual processing, supporting advanced function calls and tool integration."
   },
@@ -1528,6 +1603,9 @@
   },
   "grok-4": {
     "description": "Our latest and most powerful flagship model, excelling in natural language processing, mathematical computation, and reasoning — a perfect all-rounder."
+  },
+  "grok-code-fast-1": {
+    "description": "We are excited to introduce grok-code-fast-1, a fast and cost-effective inference model that excels in agent coding."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is a language model that combines creativity and intelligence by merging multiple top models."
@@ -1637,8 +1715,17 @@
   "image-01-live": {
     "description": "An image generation model with delicate visual performance, supporting text-to-image generation and style setting."
   },
+  "imagen-4.0-fast-generate-001": {
+    "description": "Imagen 4th-generation text-to-image model, Fast version"
+  },
+  "imagen-4.0-generate-001": {
+    "description": "Imagen 4th-generation text-to-image model series"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series"
+  },
+  "imagen-4.0-ultra-generate-001": {
+    "description": "Imagen 4th-generation text-to-image model, Ultra version"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series Ultra version"
@@ -1678,6 +1765,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 is a MoE architecture base model with powerful coding and agent capabilities, totaling 1 trillion parameters with 32 billion active parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
+  },
+  "kimi-k2-turbo-preview": {
+    "description": "Kimi-K2 is a Mixture-of-Experts (MoE) foundation model with exceptional coding and agent capabilities, featuring 1T total parameters and 32B activated parameters. In benchmark evaluations across core categories — general knowledge reasoning, programming, mathematics, and agent tasks — the K2 model outperforms other leading open-source models."
   },
   "kimi-latest": {
     "description": "The Kimi Smart Assistant product uses the latest Kimi large model, which may include features that are not yet stable. It supports image understanding and will automatically select the 8k/32k/128k model as the billing model based on the length of the request context."
@@ -1762,6 +1852,9 @@
   },
   "llava:34b": {
     "description": "LLaVA is a multimodal model that combines a visual encoder with Vicuna for powerful visual and language understanding."
+  },
+  "magistral-medium-latest": {
+    "description": "Magistral Medium 1.1 is a state-of-the-art inference model released by Mistral AI in July 2025."
   },
   "mathstral": {
     "description": "MathΣtral is designed for scientific research and mathematical reasoning, providing effective computational capabilities and result interpretation."
@@ -2094,7 +2187,7 @@
     "description": "o1-mini is a fast and cost-effective reasoning model designed for programming, mathematics, and scientific applications. This model features a 128K context and has a knowledge cutoff date of October 2023."
   },
   "o1-preview": {
-    "description": "o1 is OpenAI's new reasoning model, suitable for complex tasks that require extensive general knowledge. This model features a 128K context and has a knowledge cutoff date of October 2023."
+    "description": "Focused on advanced reasoning and solving complex problems, including mathematical and scientific tasks. Ideal for applications that require deep contextual understanding and autonomous workflows."
   },
   "o1-pro": {
     "description": "The o1 series models are trained with reinforcement learning to think before answering and perform complex reasoning tasks. The o1-pro model uses more computational resources for deeper thinking, consistently delivering higher-quality responses."
@@ -2213,8 +2306,14 @@
   "qwen-coder-turbo-latest": {
     "description": "The Tongyi Qianwen Coder model."
   },
+  "qwen-flash": {
+    "description": "The Tongyi Qianwen Flash series offers the fastest, most cost-effective models, suitable for simple tasks."
+  },
   "qwen-image": {
-    "description": "A powerful raw image model from the Qwen team, featuring impressive Chinese text generation capabilities and diverse visual styles."
+    "description": "Qwen-Image is a general-purpose image generation model that supports a wide range of artistic styles and is particularly adept at rendering complex text, especially Chinese and English. The model supports multi-line layouts, paragraph-level text generation, and fine-grained detail rendering, enabling complex mixed text-and-image layout designs."
+  },
+  "qwen-image-edit": {
+    "description": "A professional image-editing model released by the Qwen team, supporting semantic editing and appearance editing. It can precisely edit Chinese and English text and perform high-quality image edits such as style transfer and object rotation."
   },
   "qwen-long": {
     "description": "Qwen is a large-scale language model that supports long text contexts and dialogue capabilities based on long documents and multiple documents."
@@ -2241,7 +2340,7 @@
     "description": "Qwen Plus is an enhanced large-scale language model supporting input in various languages including Chinese and English."
   },
   "qwen-turbo": {
-    "description": "Qwen Turbo is a large-scale language model supporting input in various languages including Chinese and English."
+    "description": "Tongyi Qianwen Turbo will no longer receive updates; it is recommended to switch to Tongyi Qianwen Flash. Tongyi Qianwen is an ultra-large language model that supports input in Chinese, English, and other languages."
   },
   "qwen-vl-chat-v1": {
     "description": "Qwen VL supports flexible interaction methods, including multi-image, multi-turn Q&A, and creative capabilities."
@@ -2558,8 +2657,14 @@
   "step-2x-large": {
     "description": "Step Star next-generation image generation model, focusing on image generation tasks. It can generate high-quality images based on user-provided text descriptions. The new model produces more realistic textures and stronger Chinese and English text generation capabilities."
   },
+  "step-3": {
+    "description": "This model has powerful visual perception and advanced reasoning capabilities. It can accurately handle complex cross-domain knowledge comprehension, perform integrated analysis of mathematical and visual information, and solve a wide range of visual analysis tasks encountered in everyday life."
+  },
   "step-r1-v-mini": {
     "description": "This model is a powerful reasoning model with strong image understanding capabilities, able to process both image and text information, generating text content after deep reasoning. It excels in visual reasoning while also possessing first-tier capabilities in mathematics, coding, and text reasoning. The context length is 100k."
+  },
+  "stepfun-ai/step3": {
+    "description": "Step3 is a cutting-edge multimodal reasoning model released by StepFun. It is built on a mixture-of-experts (MoE) architecture with 321B total parameters and 38B active parameters. The model adopts an end-to-end design to minimize decoding cost while delivering top-tier performance in visual-language reasoning. Through the combined design of Multi-Matrix Factorized Attention (MFA) and Attention-FFN Decoupling (AFD), Step3 maintains exceptional efficiency on both high-end and low-end accelerators. During pretraining, Step3 processed over 20 trillion text tokens and 4 trillion image-text mixed tokens, covering more than a dozen languages. The model achieves leading performance among open-source models across benchmarks in mathematics, code, and multimodal tasks."
   },
   "taichu_llm": {
     "description": "The ZD Taichu language model possesses strong language understanding capabilities and excels in text creation, knowledge Q&A, code programming, mathematical calculations, logical reasoning, sentiment analysis, and text summarization. It innovatively combines large-scale pre-training with rich knowledge from multiple sources, continuously refining algorithmic techniques and absorbing new knowledge in vocabulary, structure, grammar, and semantics from vast text data, resulting in an evolving model performance. It provides users with more convenient information and services, as well as a more intelligent experience."
@@ -2588,17 +2693,8 @@
   "thudm/glm-4-9b-chat": {
     "description": "The open-source version of the latest generation pre-trained model from the GLM-4 series released by Zhiyuan AI."
   },
-  "thudm/glm-4-9b:free": {
-    "description": "GLM-4-9B-0414 is a 9 billion parameter language model in the GLM-4 series developed by THUDM. GLM-4-9B-0414 is trained using the same reinforcement learning and alignment strategies as its larger 32B counterpart, achieving high performance relative to its scale, making it suitable for resource-constrained deployments that still require strong language understanding and generation capabilities."
-  },
   "thudm/glm-z1-32b": {
     "description": "GLM-Z1-32B-0414 is an enhanced reasoning variant of GLM-4-32B, built for deep mathematics, logic, and code-oriented problem solving. It applies extended reinforcement learning (task-specific and based on general pairwise preferences) to improve performance on complex multi-step tasks. Compared to the base GLM-4-32B model, Z1 significantly enhances capabilities in structured reasoning and formal domains.\n\nThis model supports enforcing 'thinking' steps through prompt engineering and provides improved coherence for long-format outputs. It is optimized for agent workflows and supports long context (via YaRN), JSON tool calls, and fine-grained sampling configurations for stable reasoning. It is ideal for use cases requiring thoughtful, multi-step reasoning or formal derivation."
-  },
-  "thudm/glm-z1-32b:free": {
-    "description": "GLM-Z1-32B-0414 is an enhanced reasoning variant of GLM-4-32B, built for deep mathematics, logic, and code-oriented problem solving. It applies extended reinforcement learning (task-specific and based on general pairwise preferences) to improve performance on complex multi-step tasks. Compared to the base GLM-4-32B model, Z1 significantly enhances capabilities in structured reasoning and formal domains.\n\nThis model supports enforcing 'thinking' steps through prompt engineering and provides improved coherence for long-format outputs. It is optimized for agent workflows and supports long context (via YaRN), JSON tool calls, and fine-grained sampling configurations for stable reasoning. It is ideal for use cases requiring thoughtful, multi-step reasoning or formal derivation."
-  },
-  "thudm/glm-z1-9b:free": {
-    "description": "GLM-Z1-9B-0414 is a 9 billion parameter language model in the GLM-4 series developed by THUDM. It employs techniques initially applied to the larger GLM-Z1 model, including extended reinforcement learning, pairwise ranking alignment, and training for reasoning-intensive tasks such as mathematics, coding, and logic. Despite its smaller scale, it demonstrates strong performance on general reasoning tasks and outperforms many open-source models at its weight level."
   },
   "thudm/glm-z1-rumination-32b": {
     "description": "THUDM: GLM Z1 Rumination 32B is a deep reasoning model with 32 billion parameters in the GLM-4-Z1 series, optimized for complex, open-ended tasks that require prolonged thought. It builds upon glm-4-32b-0414, adding additional reinforcement learning stages and multi-stage alignment strategies, introducing a 'rumination' capability designed to simulate extended cognitive processing. This includes iterative reasoning, multi-hop analysis, and tool-enhanced workflows such as search, retrieval, and citation-aware synthesis.\n\nThe model excels in research-style writing, comparative analysis, and complex question answering. It supports function calls for search and navigation primitives (`search`, `click`, `open`, `finish`), allowing it to be used in agent-based pipelines. The rumination behavior is shaped by rule-based rewards and a delayed decision-making mechanism, controlled by multi-round cycles, benchmarked against deep research frameworks like OpenAI's internal alignment stack. This variant is suitable for scenarios requiring depth over speed."
@@ -2707,5 +2803,8 @@
   },
   "zai-org/GLM-4.5-Air": {
     "description": "GLM-4.5-Air is a foundational model designed specifically for agent applications, using a Mixture-of-Experts (MoE) architecture. It is deeply optimized for tool invocation, web browsing, software engineering, and front-end programming, supporting seamless integration with code agents like Claude Code and Roo Code. GLM-4.5 employs a hybrid inference mode, adaptable to complex reasoning and everyday use scenarios."
+  },
+  "zai-org/GLM-4.5V": {
+    "description": "GLM-4.5V is the latest-generation vision-language model (VLM) released by Zhipu AI. It is built on the flagship text model GLM-4.5-Air, which has 106B total parameters and 12B active parameters, and adopts a Mixture-of-Experts (MoE) architecture to deliver outstanding performance at reduced inference cost. Technically, GLM-4.5V continues the trajectory of GLM-4.1V-Thinking and introduces innovations such as three-dimensional rotary position encoding (3D-RoPE), significantly improving perception and reasoning of three-dimensional spatial relationships. Through optimizations across pretraining, supervised fine-tuning, and reinforcement learning stages, the model can handle a wide range of visual content including images, video, and long documents, and has achieved top-tier performance among comparable open-source models across 41 public multimodal benchmarks. The model also adds a \"Thinking Mode\" toggle that lets users flexibly choose between fast responses and deep reasoning to balance efficiency and effectiveness."
   }
 }

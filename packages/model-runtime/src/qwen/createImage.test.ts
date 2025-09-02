@@ -327,25 +327,6 @@ describe('createQwenImage', () => {
   });
 
   describe('Error scenarios', () => {
-    it('should handle unsupported model', async () => {
-      const payload: CreateImagePayload = {
-        model: 'unsupported-model',
-        params: {
-          prompt: 'Test prompt',
-        },
-      };
-
-      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
-        expect.objectContaining({
-          errorType: 'ProviderBizError',
-          provider: 'qwen',
-        }),
-      );
-
-      // Should not make any fetch calls
-      expect(fetch).not.toHaveBeenCalled();
-    });
-
     it('should handle task creation failure', async () => {
       global.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,

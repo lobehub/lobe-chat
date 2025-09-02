@@ -1,11 +1,9 @@
+import { BRANDING_NAME, isDeprecatedEdition, isServerMode } from '@lobechat/const';
+import { downloadFile, exportJSONFile } from '@lobechat/utils/client';
 import dayjs from 'dayjs';
 
-import { BRANDING_NAME } from '@/const/branding';
-import { isDeprecatedEdition, isServerMode } from '@/const/version';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportPgDataStructure } from '@/types/export';
-import { downloadFile } from '@/utils/client/downloadFile';
-import { exportJSONFile } from '@/utils/client/exportFile';
 
 import { exportService } from './export';
 import { configService as deprecatedExportService } from './export/_deprecated';
@@ -94,7 +92,7 @@ class ConfigService {
     data: any,
     mode: 'pglite' | 'postgres',
   ): Promise<ImportPgDataStructure> => {
-    const { default: json } = await import('@/database/client/migrations.json');
+    const { default: json } = await import('@/database/core/migrations.json');
     const latestHash = json.at(-1)?.hash;
     if (!latestHash) {
       throw new Error('Not find database sql hash');

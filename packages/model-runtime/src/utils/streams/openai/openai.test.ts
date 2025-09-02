@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeErrorType } from '@/libs/model-runtime';
-
+import { AgentRuntimeErrorType } from '../../../types/error';
 import { FIRST_CHUNK_ERROR_KEY } from '../protocol';
 import { OpenAIStream } from './openai';
 
@@ -2270,5 +2269,46 @@ describe('OpenAIStream', () => {
         ].map((i) => `${i}\n`),
       );
     });
+  });
+
+  it('should handle base64_image in delta.images (image_url shape)', async () => {
+    const base64 =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          choices: [
+            {
+              delta: {
+                images: [
+                  {
+                    type: 'image_url',
+                    image_url: { url: base64 },
+                    index: 0,
+                  },
+                ],
+              },
+              index: 0,
+            },
+          ],
+          id: '6',
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(['id: 6\n', 'event: base64_image\n', `data: "${base64}"\n\n`]);
   });
 });

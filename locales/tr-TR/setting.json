@@ -237,6 +237,10 @@
       "title": "Geçmiş Mesaj Sayısı Sınırlama",
       "unlimited": "Sınırsız geçmiş mesaj sayısı"
     },
+    "enableStreaming": {
+      "desc": "Yanıtları gerçek zamanlı göstermek için akışlı çıktıyı etkinleştirin. Devre dışı bırakıldığında yalnızca tam yanıt gösterilir.",
+      "title": "Akışlı Çıktıyı Etkinleştir"
+    },
     "historyCount": {
       "desc": "Her istekle taşınan tarihsel mesaj sayısı",
       "title": "Eklenen Geçmiş Mesaj Sayısı"

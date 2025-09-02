@@ -112,6 +112,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "enableCompressHistory": true,
       "enableHistoryCount": true,
       "enableReasoning": false,
+      "enableStreaming": true,
       "historyCount": 20,
       "reasoningBudgetToken": 1024,
       "searchFCModel": {
@@ -156,6 +157,7 @@ exports[`settingsSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CON
     "enableCompressHistory": true,
     "enableHistoryCount": true,
     "enableReasoning": false,
+    "enableStreaming": true,
     "historyCount": 20,
     "reasoningBudgetToken": 1024,
     "searchFCModel": {

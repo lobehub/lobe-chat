@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { Mock, afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
 import { testProvider } from '@/libs/model-runtime/providerTestUtils';

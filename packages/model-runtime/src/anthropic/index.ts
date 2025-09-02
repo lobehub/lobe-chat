@@ -1,21 +1,21 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 import { handleAnthropicError } from './handleAnthropicError';
-import { processModelList, MODEL_LIST_CONFIGS } from '../utils/modelParse';
 
 export interface AnthropicModelCard {
   created_at: string;
@@ -120,7 +120,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       enabledSearch,
     } = payload;
 
-    const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
+    const { anthropic: anthropicModels } = await import('model-bank');
     const modelConfig = anthropicModels.find((m) => m.id === model);
     const defaultMaxOutput = modelConfig?.maxOutput;
 
@@ -231,10 +231,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const modelList: AnthropicModelCard[] = json['data'];
 
     const standardModelList = modelList.map((model) => ({
-          created: model.created_at,
-          displayName: model.display_name,
-          id: model.id,
-        }));
+      created: model.created_at,
+      displayName: model.display_name,
+      id: model.id,
+    }));
     return processModelList(standardModelList, MODEL_LIST_CONFIGS.anthropic, 'anthropic');
   }
 

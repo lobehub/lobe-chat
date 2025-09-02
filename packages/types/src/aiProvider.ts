@@ -1,7 +1,15 @@
 import { z } from 'zod';
 
-import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from './aiModel';
-import { ResponseAnimation } from './llm';
+import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '../../model-bank/src/types/aiModel';
+
+export type ResponseAnimationStyle = 'smooth' | 'fadeIn' | 'none';
+export type ResponseAnimation =
+  | {
+      speed?: number;
+      text?: ResponseAnimationStyle;
+      toolsCalling?: ResponseAnimationStyle;
+    }
+  | ResponseAnimationStyle;
 
 export const AiProviderSourceEnum = {
   Builtin: 'builtin',

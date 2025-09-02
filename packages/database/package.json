@@ -1,0 +1,26 @@
+{
+  "name": "@lobechat/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "npm run test:client-db && npm run test:server-db",
+    "test:client-db": "vitest run",
+    "test:coverage": "vitest --coverage --config vitest.config.server.mts",
+    "test:server-db": "vitest run --config vitest.config.server.mts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.2.17",
+    "@lobechat/const": "workspace:*",
+    "@lobechat/types": "workspace:*",
+    "@lobechat/utils": "workspace:*",
+    "dayjs": "^1.11.13",
+    "drizzle-orm": "^0.44.4",
+    "nanoid": "^5.1.5",
+    "pg": "^8.16.3",
+    "random-words": "^2.0.1",
+    "ts-md5": "^2.0.1",
+    "ws": "^8.18.3"
+  }
+}

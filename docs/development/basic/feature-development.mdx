@@ -456,7 +456,7 @@ The project uses vitest for unit testing.
 
 Since our two new configuration fields are both optional, theoretically you could pass the tests without updating them. However, since we added the `openingQuestions` field to the `DEFAULT_AGENT_CONFIG` mentioned earlier, this causes many tests to calculate configurations that include this field, so we still need to update some test snapshots.
 
-For the current scenario, I recommend running the tests locally to see which tests fail, and then update them as needed. For example, for the test file `src/store/agent/slices/chat/selectors/agent.test.ts`, you need to run `npx vitest -u src/store/agent/slices/chat/selectors/agent.test.ts` to update the snapshot.
+For the current scenario, I recommend running the tests locally to see which tests fail, and then update them as needed. For example, for the test file `src/store/agent/slices/chat/selectors/agent.test.ts`, you need to run `bunx vitest -u src/store/agent/slices/chat/selectors/agent.test.ts` to update the snapshot.
 
 ## Summary
 

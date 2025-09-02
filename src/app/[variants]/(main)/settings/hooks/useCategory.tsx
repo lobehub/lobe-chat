@@ -1,8 +1,7 @@
-import { Icon, Tag } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import {
   Bot,
   Brain,
-  Cloudy,
   Database,
   EthernetPort,
   Info,
@@ -13,7 +12,6 @@ import {
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import type { MenuProps } from '@/components/Menu';
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
@@ -23,8 +21,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 export const useCategory = () => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const { enableWebrtc, showLLM, enableSTT, hideDocs } =
-    useServerConfigStore(featureFlagsSelectors);
+  const { showLLM, enableSTT, hideDocs } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(
     () =>
@@ -38,19 +35,6 @@ export const useCategory = () => {
           icon: <Icon icon={Bot} />,
           key: SettingsTabs.Agent,
           label: t('tab.agent'),
-        },
-        // TODO: remove in V2
-        enableWebrtc && {
-          icon: <Icon icon={Cloudy} />,
-          key: SettingsTabs.Sync,
-          label: (
-            <Flexbox align={'center'} gap={8} horizontal>
-              {t('tab.sync')}
-              <Tag bordered={false} color={'warning'}>
-                {t('tab.experiment')}
-              </Tag>
-            </Flexbox>
-          ),
         },
         !mobile && {
           icon: <Icon icon={KeyboardIcon} />,
@@ -103,7 +87,7 @@ export const useCategory = () => {
           label: t('tab.about'),
         },
       ].filter(Boolean) as MenuProps['items'],
-    [t, enableWebrtc, showLLM, enableSTT, hideDocs, mobile],
+    [t, showLLM],
   );
 
   return cateItems;

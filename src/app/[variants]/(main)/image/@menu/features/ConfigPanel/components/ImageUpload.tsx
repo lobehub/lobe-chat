@@ -12,14 +12,20 @@ import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
 
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { useUploadFilesValidation } from '../hooks/useUploadFilesValidation';
 import { useConfigPanelStyles } from '../style';
 
 // ======== Business Types ======== //
 
 export interface ImageUploadProps {
-  // Callback when URL changes
+  // Callback when URL changes - supports both old API (string) and new API (object with dimensions)
   className?: string; // Image URL
-  onChange?: (url?: string) => void;
+  maxFileSize?: number;
+  onChange?: (
+    data?:
+      | string // Old API: just URL
+      | { dimensions?: { height: number, width: number; }, url: string; }, // New API: URL with dimensions
+  ) => void;
   style?: React.CSSProperties;
   value?: string | null;
 }
@@ -414,212 +420,227 @@ SuccessDisplay.displayName = 'SuccessDisplay';
 
 // ======== Main Component ======== //
 
-const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, className }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
-  const [uploadState, setUploadState] = useState<UploadState | null>(null);
-  const { t } = useTranslation('components');
-  const { message } = App.useApp();
+const ImageUpload: FC<ImageUploadProps> = memo(
+  ({ value, onChange, style, className, maxFileSize }) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
+    const [uploadState, setUploadState] = useState<UploadState | null>(null);
+    const { t } = useTranslation('components');
+    const { message } = App.useApp();
+    const { validateFiles } = useUploadFilesValidation(undefined, maxFileSize);
 
-  // Cleanup blob URLs to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (uploadState?.previewUrl && isLocalBlobUrl(uploadState.previewUrl)) {
-        URL.revokeObjectURL(uploadState.previewUrl);
+    // Cleanup blob URLs to prevent memory leaks
+    useEffect(() => {
+      return () => {
+        if (uploadState?.previewUrl && isLocalBlobUrl(uploadState.previewUrl)) {
+          URL.revokeObjectURL(uploadState.previewUrl);
+        }
+      };
+    }, [uploadState?.previewUrl]);
+
+    const handleFileSelect = () => {
+      inputRef.current?.click();
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      // Validate file using unified validation hook
+      if (!validateFiles([file])) return;
+
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+
+      // Set initial upload state
+      setUploadState({
+        previewUrl,
+        progress: 0,
+        status: 'pending',
+      });
+
+      try {
+        // Start upload
+        const result = await uploadWithProgress({
+          file,
+          onStatusUpdate: (updateData) => {
+            if (updateData.type === 'updateFile') {
+              setUploadState((prev) => {
+                if (!prev) return null;
+
+                const fileStatus = updateData.value.status;
+                if (!fileStatus) return prev;
+
+                return {
+                  ...prev,
+                  error: fileStatus === 'error' ? 'Upload failed' : undefined,
+                  progress: updateData.value.uploadState?.progress || 0,
+                  status: fileStatus,
+                };
+              });
+            } else if (updateData.type === 'removeFile') {
+              // Handle file removal
+              setUploadState(null);
+            }
+          },
+          skipCheckFileType: true,
+        });
+
+        if (result?.url) {
+          // Upload successful - pass dimensions if available
+          const callbackData = result.dimensions
+            ? { dimensions: result.dimensions, url: result.url }
+            : result.url;
+          onChange?.(callbackData);
+        }
+      } catch {
+        // Upload failed
+        setUploadState((prev) =>
+          prev
+            ? {
+                ...prev,
+                error: 'Upload failed',
+                status: 'error',
+              }
+            : null,
+        );
+      } finally {
+        // Cleanup
+        if (isLocalBlobUrl(previewUrl)) {
+          URL.revokeObjectURL(previewUrl);
+        }
+
+        // Clear upload state after a delay to show completion
+        setTimeout(() => {
+          setUploadState(null);
+        }, 1000);
       }
     };
-  }, [uploadState?.previewUrl]);
 
-  const handleFileSelect = () => {
-    inputRef.current?.click();
-  };
+    const handleDelete = () => {
+      onChange?.(undefined);
+    };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const handleDrop = async (files: File[]) => {
+      // Show warning if multiple files detected
+      if (files.length > 1) {
+        message.warning(t('ImageUpload.actions.dropMultipleFiles'));
+      }
 
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file);
+      // Take the first image file
+      const file = files[0];
 
-    // Set initial upload state
-    setUploadState({
-      previewUrl,
-      progress: 0,
-      status: 'pending',
-    });
+      // Validate file using unified validation hook
+      if (!validateFiles([file])) return;
 
-    try {
-      // Start upload
-      const result = await uploadWithProgress({
-        file,
-        onStatusUpdate: (updateData) => {
-          if (updateData.type === 'updateFile') {
-            setUploadState((prev) => {
-              if (!prev) return null;
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
 
-              const fileStatus = updateData.value.status;
-              if (!fileStatus) return prev;
-
-              return {
-                ...prev,
-                error: fileStatus === 'error' ? 'Upload failed' : undefined,
-                progress: updateData.value.uploadState?.progress || 0,
-                status: fileStatus,
-              };
-            });
-          } else if (updateData.type === 'removeFile') {
-            // Handle file removal
-            setUploadState(null);
-          }
-        },
-        skipCheckFileType: true,
+      // Set initial upload state
+      setUploadState({
+        previewUrl,
+        progress: 0,
+        status: 'pending',
       });
 
-      if (result?.url) {
-        // Upload successful
-        onChange?.(result.url);
-      }
-    } catch {
-      // Upload failed
-      setUploadState((prev) =>
-        prev
-          ? {
-              ...prev,
-              error: 'Upload failed',
-              status: 'error',
+      try {
+        // Start upload using the same logic as handleFileChange
+        const result = await uploadWithProgress({
+          file,
+          onStatusUpdate: (updateData) => {
+            if (updateData.type === 'updateFile') {
+              setUploadState((prev) => {
+                if (!prev) return null;
+
+                const fileStatus = updateData.value.status;
+                if (!fileStatus) return prev;
+
+                return {
+                  ...prev,
+                  error: fileStatus === 'error' ? 'Upload failed' : undefined,
+                  progress: updateData.value.uploadState?.progress || 0,
+                  status: fileStatus,
+                };
+              });
+            } else if (updateData.type === 'removeFile') {
+              setUploadState(null);
             }
-          : null,
-      );
-    } finally {
-      // Cleanup
-      if (isLocalBlobUrl(previewUrl)) {
-        URL.revokeObjectURL(previewUrl);
+          },
+          skipCheckFileType: true,
+        });
+
+        if (result?.url) {
+          // Upload successful - pass dimensions if available
+          const callbackData = result.dimensions
+            ? { dimensions: result.dimensions, url: result.url }
+            : result.url;
+          onChange?.(callbackData);
+        }
+      } catch {
+        // Upload failed
+        setUploadState((prev) =>
+          prev
+            ? {
+                ...prev,
+                error: 'Upload failed',
+                status: 'error',
+              }
+            : null,
+        );
+      } finally {
+        // Cleanup
+        if (isLocalBlobUrl(previewUrl)) {
+          URL.revokeObjectURL(previewUrl);
+        }
+
+        // Clear upload state after a delay to show completion
+        setTimeout(() => {
+          setUploadState(null);
+        }, 1000);
       }
+    };
 
-      // Clear upload state after a delay to show completion
-      setTimeout(() => {
-        setUploadState(null);
-      }, 1000);
-    }
-  };
-
-  const handleDelete = () => {
-    onChange?.(undefined);
-  };
-
-  const handleDrop = async (files: File[]) => {
-    // Show warning if multiple files detected
-    if (files.length > 1) {
-      message.warning(t('ImageUpload.actions.dropMultipleFiles'));
-    }
-
-    // Take the first image file
-    const file = files[0];
-
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file);
-
-    // Set initial upload state
-    setUploadState({
-      previewUrl,
-      progress: 0,
-      status: 'pending',
+    const { isDragOver, dragHandlers } = useDragAndDrop({
+      accept: 'image/*',
+      onDrop: handleDrop,
     });
 
-    try {
-      // Start upload using the same logic as handleFileChange
-      const result = await uploadWithProgress({
-        file,
-        onStatusUpdate: (updateData) => {
-          if (updateData.type === 'updateFile') {
-            setUploadState((prev) => {
-              if (!prev) return null;
+    // Determine which view to render
+    const hasImage = Boolean(value);
+    const isUploading = Boolean(uploadState);
 
-              const fileStatus = updateData.value.status;
-              if (!fileStatus) return prev;
-
-              return {
-                ...prev,
-                error: fileStatus === 'error' ? 'Upload failed' : undefined,
-                progress: updateData.value.uploadState?.progress || 0,
-                status: fileStatus,
-              };
-            });
-          } else if (updateData.type === 'removeFile') {
-            setUploadState(null);
-          }
-        },
-        skipCheckFileType: true,
-      });
-
-      if (result?.url) {
-        // Upload successful
-        onChange?.(result.url);
-      }
-    } catch {
-      // Upload failed
-      setUploadState((prev) =>
-        prev
-          ? {
-              ...prev,
-              error: 'Upload failed',
-              status: 'error',
-            }
-          : null,
-      );
-    } finally {
-      // Cleanup
-      if (isLocalBlobUrl(previewUrl)) {
-        URL.revokeObjectURL(previewUrl);
-      }
-
-      // Clear upload state after a delay to show completion
-      setTimeout(() => {
-        setUploadState(null);
-      }, 1000);
-    }
-  };
-
-  const { isDragOver, dragHandlers } = useDragAndDrop({
-    accept: 'image/*',
-    onDrop: handleDrop,
-  });
-
-  // Determine which view to render
-  const hasImage = Boolean(value);
-  const isUploading = Boolean(uploadState);
-
-  return (
-    <div className={className} {...dragHandlers} style={style}>
-      {/* Hidden file input */}
-      <input
-        accept="image/*"
-        onChange={handleFileChange}
-        onClick={(e) => {
-          // Reset value to allow re-selecting the same file
-          e.currentTarget.value = '';
-        }}
-        ref={inputRef}
-        style={{ display: 'none' }}
-        type="file"
-      />
-
-      {/* Conditional rendering based on state */}
-      {isUploading && uploadState ? (
-        <UploadingDisplay previewUrl={uploadState.previewUrl} progress={uploadState.progress} />
-      ) : hasImage ? (
-        <SuccessDisplay
-          imageUrl={value!}
-          isDragOver={isDragOver}
-          onChangeImage={handleFileSelect}
-          onDelete={handleDelete}
+    return (
+      <div className={className} {...dragHandlers} style={style}>
+        {/* Hidden file input */}
+        <input
+          accept="image/*"
+          onChange={handleFileChange}
+          onClick={(e) => {
+            // Reset value to allow re-selecting the same file
+            e.currentTarget.value = '';
+          }}
+          ref={inputRef}
+          style={{ display: 'none' }}
+          type="file"
         />
-      ) : (
-        <Placeholder isDragOver={isDragOver} onClick={handleFileSelect} />
-      )}
-    </div>
-  );
-});
+
+        {/* Conditional rendering based on state */}
+        {isUploading && uploadState ? (
+          <UploadingDisplay previewUrl={uploadState.previewUrl} progress={uploadState.progress} />
+        ) : hasImage ? (
+          <SuccessDisplay
+            imageUrl={value!}
+            isDragOver={isDragOver}
+            onChangeImage={handleFileSelect}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <Placeholder isDragOver={isDragOver} onClick={handleFileSelect} />
+        )}
+      </div>
+    );
+  },
+);
 
 ImageUpload.displayName = 'ImageUpload';
 
