@@ -95,7 +95,7 @@ export const LobeNewAPIAI = (() => {
         console.debug('Failed to fetch NewAPI pricing info:', error);
       }
 
-      // 处理模型列表：根据优先级决定 provider
+      // Process the model list: determine the provider for each model based on priority rules
       const enrichedModelList = modelList.map((model) => {
         let enhancedModel: any = { ...model };
 
