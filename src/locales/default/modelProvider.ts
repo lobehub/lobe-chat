@@ -288,11 +288,21 @@ export default {
           placeholder: '请输入模型 id，例如 gpt-4o 或 claude-3.5-sonnet',
           title: '模型 ID',
         },
+        imageOutput: {
+          extra:
+            '此配置将仅开启模型生成图片的能力，具体效果完全取决于模型本身，请自行测试该模型是否具备可用的图片生成能力',
+          title: '支持图片生成',
+        },
         modalTitle: '自定义模型配置',
         reasoning: {
           extra:
             '此配置将仅开启模型深度思考的能力，具体效果完全取决于模型本身，请自行测试该模型是否具备可用的深度思考能力',
           title: '支持深度思考',
+        },
+        search: {
+          extra:
+            '此配置将仅开启模型内置搜索引擎的联网搜索能力，是否支持内置搜索引擎取决于模型本身，请自行测试该模型的内置搜索引擎能力可用性',
+          title: '支持联网搜索',
         },
         tokens: {
           extra: '设置模型支持的最大 Token 数',
