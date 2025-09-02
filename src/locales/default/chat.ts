@@ -62,7 +62,8 @@ export default {
   geminiImageChineseWarning: {
     content:
       '使用中文可能会影响 Gemini 2.5 Flash Image Preview 生成图片的成功率。建议使用英文以获得更好的效果。',
-    continue: '继续发送',
+    continueGenerate: '继续生成',
+    continueSend: '继续发送',
     doNotShowAgain: '不再提示',
     title: '中文输入提示',
   },
