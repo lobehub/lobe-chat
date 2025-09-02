@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-02",
+    "version": "1.120.7"
+  },
+  {
+    "children": {
       "improvements": ["Add upload hint for non-visual model."]
     },
     "date": "2025-09-01",
