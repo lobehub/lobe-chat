@@ -17,7 +17,7 @@ export const UserMessage = memo<
   if (content === LOADING_FLAT) return <BubblesLoading />;
 
   return (
-    <Flexbox gap={8} id={id} className={MessageContentClassName}>
+    <Flexbox className={MessageContentClassName} gap={8} id={id}>
       {editableContent}
       {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
       {fileList && fileList?.length > 0 && (
