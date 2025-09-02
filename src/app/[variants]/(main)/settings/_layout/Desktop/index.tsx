@@ -30,13 +30,9 @@ const Layout = memo<LayoutProps>((props) => {
   useEffect(() => {
     const activeParam = searchParams.get('active');
     if (activeParam && Object.values(SettingsTabs).includes(activeParam as SettingsTabs)) {
-      setActiveTab(activeParam as SettingsTabs);
+      setActiveTab((activeParam as SettingsTabs) || SettingsTabs.Common);
     }
   }, [searchParams, setActiveTab]);
-
-  useEffect(() => {
-    console.log('settings render');
-  });
 
   return (
     <Flexbox

@@ -1,14 +1,15 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
-
-import Header from './Header';
-import SettingsContent from '../SettingsContent';
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { SettingsTabs } from '@/store/global/initialState';
+
+import SettingsContent from '../SettingsContent';
+import Header from './Header';
 
 const Layout = () => {
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ const Layout = () => {
 
   return (
     <MobileContentLayout header={<Header />}>
-      <SettingsContent activeTab={activeTab} mobile={true}/>
+      <SettingsContent activeTab={activeTab} mobile={true} />
       <Footer />
       <InitClientDB />
     </MobileContentLayout>

@@ -1,21 +1,24 @@
 'use client';
 
 import { notFound } from 'next/navigation';
-import { CSSProperties } from 'react';
+import React, { CSSProperties, Suspense, lazy } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import SkeletonLoading from '@/components/Loading/SkeletonLoading';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import About from '../about/index';
 import Agent from '../agent/index';
 import Common from '../common';
-import Hotkey from '../hotkey/index';
 import LLM from '../llm/index';
 import Provider from '../provider/index';
-import Proxy from '../proxy/index';
-import Storage from '../storage/index';
-import SystemAgent from '../system-agent/index';
-import TTS from '../tts/index';
+
+// Lazy load components
+const About = lazy(() => import('../about/index'));
+const Hotkey = lazy(() => import('../hotkey/index'));
+const Proxy = lazy(() => import('../proxy/index'));
+const Storage = lazy(() => import('../storage/index'));
+const SystemAgent = lazy(() => import('../system-agent/index'));
+const TTS = lazy(() => import('../tts/index'));
 
 interface SettingsContentProps {
   activeTab?: string;
@@ -37,63 +40,114 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
       width: '100%',
     }) as CSSProperties;
 
+  const LazyWrapper = ({
+    children,
+    isActive,
+  }: {
+    children: React.ReactNode;
+    isActive: boolean;
+  }) => {
+    if (!isActive) return null;
+    return <Suspense fallback={<SkeletonLoading />}>{children}</Suspense>;
+  };
+
   if (mobile) {
     switch (activeTab) {
       case SettingsTabs.Common: {
         return <Common />;
       }
       case SettingsTabs.About: {
-        return <About mobile={mobile} />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <About mobile={mobile} />
+          </Suspense>
+        );
       }
       case SettingsTabs.Agent: {
-        return <Agent mobile={mobile} />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Agent mobile={mobile} />
+          </Suspense>
+        );
       }
       case SettingsTabs.Hotkey: {
-        return <Hotkey />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Hotkey />
+          </Suspense>
+        );
       }
       case SettingsTabs.LLM: {
         if (!showLLM) {
           notFound();
-        } else {
-          return <LLM />;
         }
-        break;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <LLM />
+          </Suspense>
+        );
       }
       case SettingsTabs.Provider: {
         if (!showLLM) {
           notFound();
-        } else {
-          return <Provider mobile={mobile} />;
         }
-        break;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Provider mobile={mobile} />
+          </Suspense>
+        );
       }
       case SettingsTabs.Proxy: {
-        return <Proxy />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Proxy />
+          </Suspense>
+        );
       }
       case SettingsTabs.Storage: {
-        return <Storage />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Storage />
+          </Suspense>
+        );
       }
       case SettingsTabs.SystemAgent: {
-        return <SystemAgent />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <SystemAgent />
+          </Suspense>
+        );
       }
       case SettingsTabs.TTS: {
-        return <TTS />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <TTS />
+          </Suspense>
+        );
       }
       default: {
-        return <Common />;
+        return (
+          <Suspense fallback={<SkeletonLoading />}>
+            <Common />
+          </Suspense>
+        );
       }
     }
   }
 
-  // Desktop use Load All
+  // Desktop use Lazy Load
   return (
     <Flexbox height={'100%'} width={'100%'}>
       <div style={getDisplayStyle(SettingsTabs.Common)}>
-        <Common />
+        <LazyWrapper isActive={activeTab === SettingsTabs.Common}>
+          <Common />
+        </LazyWrapper>
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.About)}>
-        <About mobile={mobile} />
+        <LazyWrapper isActive={activeTab === SettingsTabs.About}>
+          <About mobile={mobile} />
+        </LazyWrapper>
       </div>
 
       {showLLM ? (
@@ -101,11 +155,13 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
           <Agent mobile={mobile} />
         </div>
       ) : (
-        notFound()
+        activeTab === SettingsTabs.Agent && notFound()
       )}
 
       <div style={getDisplayStyle(SettingsTabs.Hotkey)}>
-        <Hotkey />
+        <LazyWrapper isActive={activeTab === SettingsTabs.Hotkey}>
+          <Hotkey />
+        </LazyWrapper>
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.LLM)}>
@@ -117,23 +173,31 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
           <Provider mobile={mobile} />
         </div>
       ) : (
-        notFound()
+        activeTab === SettingsTabs.Provider && notFound()
       )}
 
       <div style={getDisplayStyle(SettingsTabs.Proxy)}>
-        <Proxy />
+        <LazyWrapper isActive={activeTab === SettingsTabs.Proxy}>
+          <Proxy />
+        </LazyWrapper>
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.Storage)}>
-        <Storage />
+        <LazyWrapper isActive={activeTab === SettingsTabs.Storage}>
+          <Storage />
+        </LazyWrapper>
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.SystemAgent)}>
-        <SystemAgent />
+        <LazyWrapper isActive={activeTab === SettingsTabs.SystemAgent}>
+          <SystemAgent />
+        </LazyWrapper>
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.TTS)}>
-        <TTS />
+        <LazyWrapper isActive={activeTab === SettingsTabs.TTS}>
+          <TTS />
+        </LazyWrapper>
       </div>
     </Flexbox>
   );
