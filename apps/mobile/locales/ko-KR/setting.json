@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "시스템 설정 따름",
     "dark": "다크 모드",
-    "light": "라이트 모드"
+    "light": "라이트 모드",
+    "title": "테마 모드"
   },
   "title": "설정",
   "version": "현재 버전"

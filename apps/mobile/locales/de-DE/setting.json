@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Systemeinstellung folgen",
     "dark": "Dunkelmodus",
-    "light": "Hellmodus"
+    "light": "Hellmodus",
+    "title": "Themenmodus"
   },
   "title": "Einstellungen",
   "version": "Aktuelle Version"

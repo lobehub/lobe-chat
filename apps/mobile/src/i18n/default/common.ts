@@ -18,6 +18,7 @@ export default {
     noMatch: '未找到匹配的助手',
     search: '搜索助手...',
   },
+  defaultSession: '自定义助手',
   navigation: {
     goToHomeScreen: '返回首页',
   },

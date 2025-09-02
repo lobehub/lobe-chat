@@ -13,7 +13,14 @@ import { useTheme } from '@/theme';
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
   const { getLocaleDisplayName } = useLocale();
-  const { getThemeModeDisplayName } = useTheme();
+  const { theme } = useTheme();
+
+  const getThemeModeDisplayName = () => {
+    if (theme.mode === 'auto') {
+      return t('themeMode.auto', { ns: 'setting' });
+    }
+    return t(`themeMode.${theme.mode}`, { ns: 'setting' });
+  };
 
   const { styles } = useStyles();
 

@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Dopasuj do systemu",
     "dark": "Tryb ciemny",
-    "light": "Tryb jasny"
+    "light": "Tryb jasny",
+    "title": "Tryb motywu"
   },
   "title": "Ustawienia",
   "version": "Aktualna wersja"

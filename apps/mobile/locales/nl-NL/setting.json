@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Volg systeem",
     "dark": "Donkere modus",
-    "light": "Lichte modus"
+    "light": "Lichte modus",
+    "title": "Themamodus"
   },
   "title": "Instellingen",
   "version": "Huidige versie"

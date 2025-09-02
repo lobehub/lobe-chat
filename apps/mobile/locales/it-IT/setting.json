@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Segui il sistema",
     "dark": "Modalità scura",
-    "light": "Modalità chiara"
+    "light": "Modalità chiara",
+    "title": "Modalità tema"
   },
   "title": "Impostazioni",
   "version": "Versione attuale"

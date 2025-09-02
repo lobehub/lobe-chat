@@ -113,6 +113,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     td: tdth,
     text: {
+      fontSize: options.fontSize,
       // 从 父节点继承,否则一些样式带不下来
       // color: token.colorText
     },

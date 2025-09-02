@@ -115,7 +115,8 @@
   "themeMode": {
     "auto": "跟隨系統",
     "dark": "深色模式",
-    "light": "淺色模式"
+    "light": "淺色模式",
+    "title": "主題模式"
   },
   "title": "設定",
   "version": "當前版本"

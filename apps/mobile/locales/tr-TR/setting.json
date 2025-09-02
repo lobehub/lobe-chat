@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Sistemi Takip Et",
     "dark": "Koyu Mod",
-    "light": "Açık Mod"
+    "light": "Açık Mod",
+    "title": "Tema Modu"
   },
   "title": "Ayarlar",
   "version": "Mevcut Sürüm"

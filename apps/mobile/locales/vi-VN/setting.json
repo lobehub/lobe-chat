@@ -142,7 +142,8 @@
   "themeMode": {
     "auto": "Theo hệ thống",
     "dark": "Chế độ tối",
-    "light": "Chế độ sáng"
+    "light": "Chế độ sáng",
+    "title": "Chế độ chủ đề"
   },
   "title": "Cài đặt",
   "version": "Phiên bản hiện tại"
