@@ -2,6 +2,21 @@
   {
     "children": {
       "improvements": [
+        "Add upload hint for non-visual model, adjust ControlsForm component to adapt to mobile phone display, Support new provider Nebius, update i18n, update i18n."
+      ],
+      "features": [
+        "Added support for Azure OpenAI Image Generation, rename Gemini 2.5 flash image to Nano Banana."
+      ],
+      "fixes": [
+        "Update enableStreaming name."
+      ]
+    },
+    "date": "2025-09-02",
+    "version": "1.120.0"
+  },
+  {
+    "children": {
+      "improvements": [
         "Add Grok Code Fast 1 model, fix chat session part switch theme issue, fix clerk scrollBox style, ModelFetcher support getting prices, support non-stream mode, update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models, update i18n."
       ],
       "fixes": [
