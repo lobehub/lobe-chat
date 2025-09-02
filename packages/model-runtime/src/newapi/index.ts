@@ -1,3 +1,5 @@
+import urlJoin from 'url-join';
+
 import { createRouterRuntime } from '../RouterRuntime';
 import { responsesAPIModels } from '../const/models';
 import { ModelProvider } from '../types';
@@ -56,6 +58,9 @@ export const LobeNewAPIAI = (() => {
   // 实例级别的路由映射，避免全局变量污染
   let modelRouteMap: Map<string, string> = new Map();
 
+  // 存储基础 URL（不包含 /v1）
+  let baseURL: string = '';
+
   return createRouterRuntime({
     debug: {
       chatCompletion: () => process.env.DEBUG_NEWAPI_CHAT_COMPLETION === '1',
@@ -68,14 +73,16 @@ export const LobeNewAPIAI = (() => {
       // 每次调用 models 时清空并重建路由映射
       modelRouteMap.clear();
 
+      // 保存基础 URL（移除末尾的 /v1）供 routers 使用
+      baseURL = openAIClient.baseURL.replace(/\/v1\/?$/, '');
+
       const modelsPage = (await openAIClient.models.list()) as any;
       const modelList: NewAPIModelCard[] = modelsPage.data || [];
 
       // 尝试获取 pricing 信息以补充模型详细信息
       let pricingMap: Map<string, NewAPIPricing> = new Map();
       try {
-        // 获取 baseURL，移除末尾的 /v1
-        const baseURL = openAIClient.baseURL.replace(/\/v1\/?$/, '');
+        // 使用保存的 baseURL
         const pricingResponse = await fetch(`${baseURL}/api/pricing`, {
           headers: {
             Authorization: `Bearer ${openAIClient.apiKey}`,
@@ -186,55 +193,47 @@ export const LobeNewAPIAI = (() => {
     routers: [
       {
         apiType: 'anthropic',
-        models: () => {
-          const anthropicModels: string[] = [];
-          modelRouteMap.forEach((provider, modelId) => {
-            if (provider === 'anthropic') {
-              anthropicModels.push(modelId);
-            }
-          });
-          return Promise.resolve(anthropicModels);
-        },
+        models: () =>
+          Promise.resolve(
+            Array.from(modelRouteMap.entries())
+              .filter(([, provider]) => provider === 'anthropic')
+              .map(([modelId]) => modelId),
+          ),
         options: {
-          // Anthropic 使用 /v1 路径，但会自动转换为 /v1/messages
-          baseURL: '/v1',
+          // Anthropic 在 NewAPI 中使用 /v1 路径，会自动转换为 /v1/messages
+          baseURL: urlJoin(baseURL, '/v1'),
         },
       },
       {
         apiType: 'google',
-        models: () => {
-          const googleModels: string[] = [];
-          modelRouteMap.forEach((provider, modelId) => {
-            if (provider === 'google') {
-              googleModels.push(modelId);
-            }
-          });
-          return Promise.resolve(googleModels);
-        },
+        models: () =>
+          Promise.resolve(
+            Array.from(modelRouteMap.entries())
+              .filter(([, provider]) => provider === 'google')
+              .map(([modelId]) => modelId),
+          ),
         options: {
-          // Gemini 使用 /v1beta 路径
-          baseURL: '/v1beta',
+          // Gemini 在 NewAPI 中使用 /v1beta 路径
+          baseURL: urlJoin(baseURL, '/v1beta'),
         },
       },
       {
         apiType: 'xai',
-        models: () => {
-          const xaiModels: string[] = [];
-          modelRouteMap.forEach((provider, modelId) => {
-            if (provider === 'xai') {
-              xaiModels.push(modelId);
-            }
-          });
-          return Promise.resolve(xaiModels);
-        },
+        models: () =>
+          Promise.resolve(
+            Array.from(modelRouteMap.entries())
+              .filter(([, provider]) => provider === 'xai')
+              .map(([modelId]) => modelId),
+          ),
         options: {
           // xAI 使用标准 OpenAI 格式，走 /v1 路径
-          baseURL: '/v1',
+          baseURL: urlJoin(baseURL, '/v1'),
         },
       },
       {
         apiType: 'openai',
         options: {
+          baseURL: urlJoin(baseURL, '/v1'),
           chatCompletion: {
             handlePayload,
           },
