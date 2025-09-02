@@ -1,0 +1,1204 @@
+---
+title: 在 LobeChat 中使用 ComfyUI 生成图像
+description: 学习如何在 LobeChat 中配置和使用 ComfyUI 服务，支持 FLUX 系列模型的高质量图像生成和编辑功能
+tags:
+  - ComfyUI
+  - FLUX
+  - 文生图
+  - 图像编辑
+  - AI 图像生成
+---
+
+# 在 LobeChat 中使用 ComfyUI
+
+<Image alt={'在 LobeChat 中使用 ComfyUI'} cover src={'https://github.com/lobehub/lobe-chat/assets/17870709/c9e5eafc-ca22-496b-a88d-cc0ae53bf720'} />
+
+本文档将指导你如何在 LobeChat 中使用 [ComfyUI](https://github.com/comfyanonymous/ComfyUI) 进行高质量的 AI 图像生成和编辑。
+
+## ComfyUI 简介
+
+ComfyUI 是一个功能强大的稳定扩散和流扩散 GUI，提供基于节点的工作流界面。LobeChat 集成了 ComfyUI，支持完整的 FLUX 系列模型，包括文本生成图像和图像编辑功能。
+
+### 主要特性
+
+- **广泛模型支持**：支持 223 个模型，包含 FLUX 系列（130 个）和 SD 系列（93 个）
+- **配置驱动架构**：注册表系统提供智能模型选择
+- **多格式支持**：支持 .safetensors 和 .gguf 格式，包含多种量化级别
+- **动态精度选择**：支持 default、fp8\_e4m3fn、fp8\_e5m2、fp8\_e4m3fn\_fast 精度
+- **多种认证方式**：支持无认证、基本认证、Bearer Token 和自定义认证
+- **智能组件选择**：自动选择最优的 T5、CLIP、VAE 编码器组合
+- **企业级优化**：包含 NF4、SVDQuant、TorchAO、MFLUX 等优化变体
+
+## 支持的模型
+
+LobeChat ComfyUI 集成采用配置驱动的架构，支持 **223 个模型**，提供从官方模型到社区优化版本的全覆盖。
+
+### 模型分类体系
+
+#### 优先级 1：官方核心模型
+
+**FLUX.1 Official 系列**：
+
+- `flux1-dev.safetensors` - 高质量创作模型
+- `flux1-schnell.safetensors` - 快速生成模型
+- `flux1-kontext-dev.safetensors` - 图像编辑模型
+- `flux1-krea-dev.safetensors` - 安全增强模型
+
+**SD3.5 Official 系列**：
+
+- `sd3.5_large.safetensors` - SD3.5 大型基础模型
+- `sd3.5_large_turbo.safetensors` - 快速生成版本
+- `sd3.5_medium.safetensors` - 中等规模模型
+
+#### 优先级 2：企业优化模型（106 个 FLUX）
+
+**量化优化系列**：
+
+- **GGUF 量化**：每个变体支持 11 种量化级别（F16, Q8\_0, Q6\_K, Q5\_K\_M, Q5\_K\_S, Q4\_K\_M, Q4\_K\_S, Q4\_0, Q3\_K\_M, Q3\_K\_S, Q2\_K）
+- **FP8 精度**：fp8\_e4m3fn、fp8\_e5m2 优化版本
+- **企业轻量级**：FLUX.1-lite-8B 系列
+- **技术实验**：NF4、SVDQuant、TorchAO、optimum-quanto、MFLUX 优化版本
+
+#### 优先级 3：社区精调模型（48 个 FLUX）
+
+**社区优化系列**：
+
+- **Jib Mix Flux** 系列：高质量混合模型
+- **Real Dream FLUX** 系列：现实主义风格
+- **Vision Realistic** 系列：视觉现实化
+- **PixelWave FLUX** 系列：像素艺术优化
+- **Fluxmania** 系列：多样化风格支持
+
+### SD 系列模型支持（93 个）
+
+**SD3.5 系列**：5 个模型
+**SD1.5 系列**：37 个模型（包括官方、量化和社区版本）
+**SDXL 系列**：50 个模型（包括基础、Refiner 和 Playground 模型）
+
+### 工作流支持
+
+系统支持 **6 种工作流**：
+
+- **flux-dev**：高质量创作工作流
+- **flux-schnell**：快速生成工作流
+- **flux-kontext**：图像编辑工作流
+- **sd35**：SD3.5 专用工作流
+- **simple-sd**：简单 SD 工作流
+- **index**：工作流入口
+
+### 模型选择策略
+
+**智能模型解析**：
+
+- **优先级排序**：P1 官方 → P2 企业 → P3 社区
+- **格式兼容**：自动识别 .safetensors 和 .gguf 格式
+- **精度匹配**：根据硬件能力选择最适合的量化级别
+- **回退机制**：当首选模型不可用时自动选择替代方案
+
+### 关键特性
+
+#### FLUX 系列通用参数
+
+| 模型类型        | 推荐步数 | CFG Scale | 分辨率范围               |
+| ----------- | ---- | --------- | ------------------- |
+| **Schnell** | 4 步  | -         | 512×512 至 1536×1536 |
+| **Dev**     | 20 步 | 3.5       | 512×512 至 2048×2048 |
+| **Kontext** | 20 步 | 3.5       | 512×512 至 2048×2048 |
+| **Krea**    | 20 步 | 4.5       | 512×512 至 2048×2048 |
+
+#### SD3.5 系列参数
+
+| 模型类型            | 推荐步数 | CFG Scale | 分辨率范围               |
+| --------------- | ---- | --------- | ------------------- |
+| **Large**       | 25 步 | 7.0       | 512×512 至 2048×2048 |
+| **Large Turbo** | 8 步  | 3.5       | 512×512 至 1536×1536 |
+| **Medium**      | 20 步 | 6.0       | 512×512 至 1536×1536 |
+
+<Steps>
+  ### 步骤一：安装和配置 ComfyUI 服务器
+
+  #### 1. 安装 ComfyUI
+
+  ```bash
+  # 克隆 ComfyUI 仓库
+  git clone https://github.com/comfyanonymous/ComfyUI.git
+  cd ComfyUI
+
+  # 安装依赖
+  pip install -r requirements.txt
+
+  # 可选：安装JWT支持（用于Token认证）
+  pip install PyJWT
+
+  # 启动 ComfyUI 服务器
+  python main.py --listen 0.0.0.0 --port 8188
+  ```
+
+  #### 2. 下载模型文件
+
+  LobeChat 支持 223 个模型，您可以根据需求选择下载：
+
+  **推荐基础配置** (最小化安装)：
+
+  **主模型** (放入 `models/diffusion_models/` 目录)：
+
+  - `flux1-schnell.safetensors` - 快速生成（4 步）
+  - `flux1-dev.safetensors` - 高质量创作（20 步）
+
+  **必需组件** (放入相应目录)：
+
+  - `models/vae/ae.safetensors` - VAE 编码器
+  - `models/clip/clip_l.safetensors` - CLIP 文本编码器
+  - `models/clip/t5xxl_fp16.safetensors` - T5 文本编码器
+
+  **扩展模型选择** (可选)：
+
+  **图像编辑能力**：
+
+  - `flux1-kontext-dev.safetensors` - 支持图像编辑
+  - `flux1-krea-dev.safetensors` - 安全增强版本
+
+  **SD3.5 支持**：
+
+  - `sd3.5_large.safetensors` - SD3.5 大模型
+  - `sd3.5_large_turbo.safetensors` - SD3.5 快速版本
+
+  **量化优化版本** (节省显存)：
+
+  - `flux1-dev-fp8-e4m3fn.safetensors` - FP8 量化版本
+  - `flux1-schnell-Q4_0.gguf` - GGUF Q4 量化版本
+
+  **LoRA 扩展** (放入 `models/loras/` 目录)：
+
+  - `realism_lora.safetensors` - 现实主义风格
+  - `anime_lora.safetensors` - 动漫风格
+  - `disney_lora.safetensors` - 迪士尼风格
+
+  **ControlNet 支持** (放入 `models/controlnet/` 目录)：
+
+  - `flux-controlnet-canny-v3.safetensors` - 边缘检测控制
+  - `flux-controlnet-depth-v3.safetensors` - 深度图控制
+  - `flux-controlnet-hed-v3.safetensors` - HED 边缘检测
+
+  <Callout type={'info'}>
+    **智能模型选择**：LobeChat 会根据服务器上可用的模型文件自动选择最佳模型。您无需下载所有模型，系统会在可用模型中按优先级（官方 > 企业 > 社区）自动选择。
+  </Callout>
+
+  #### 3. 验证服务器运行
+
+  访问 `http://localhost:8188` 确认 ComfyUI 界面正常加载。
+
+  ### 步骤二：在 LobeChat 中配置 ComfyUI
+
+  #### 1. 打开设置界面
+
+  - 访问 LobeChat 的 `设置` 界面
+  - 在 `AI 服务商` 下找到 `ComfyUI` 的设置项
+
+  <Image alt={'ComfyUI 设置界面'} inStep src={'https://github.com/lobehub/lobe-chat/assets/17870709/3f31bc33-509f-4ad2-ba81-280c2a6ec5fa'} />
+
+  #### 2. 配置连接参数
+
+  **基本配置**：
+
+  - **服务器地址**：输入 ComfyUI 服务器地址，如 `http://localhost:8188`
+  - **认证类型**：选择合适的认证方式
+
+  ### 步骤三：配置认证方式
+
+  ComfyUI 支持四种认证方式，请根据你的服务器配置和安全需求选择合适的认证方式：
+
+  #### 无认证 (none)
+
+  **适用场景**：
+
+  - 本地开发环境（localhost）
+  - 内网环境且信任所有用户
+  - 个人使用的单机部署
+  - 测试和实验环境
+
+  **配置方法**：
+
+  ```yaml
+  认证类型：无认证
+  服务器地址：http://localhost:8188
+  ```
+
+  **安全提醒**：
+
+  - 仅适用于可信任的网络环境
+  - 不建议在公网环境中使用
+  - 确保防火墙正确配置
+
+  **启动 ComfyUI（无认证）**：
+
+  ```bash
+  # 标准启动方式
+  python main.py --listen 0.0.0.0 --port 8188
+
+  # Docker 方式
+  docker run -p 8188:8188 comfyui/comfyui
+  ```
+
+  #### 基本认证 (basic)
+
+  **适用场景**：
+
+  - 使用 Nginx 反向代理的部署
+  - 需要简单用户名密码验证的环境
+  - 配置了 HTTP Basic Auth 的服务器
+  - 团队内部使用且需要基础访问控制
+
+  **支持的插件 / 扩展**：
+
+  - **ComfyUI-Manager**：支持通过环境变量设置认证 (`Comfy-Org/ComfyUI-Manager`)
+  - **ComfyUI Workspace Manager**：可配置用户权限 (`11cafe/comfyui-workspace-manager`)
+  - **ComfyUI-Custom-Scripts**：UI 增强脚本，支持认证功能 (`pythongosssss/ComfyUI-Custom-Scripts`)
+
+  **获取认证信息**：
+
+  1. **使用 Nginx 反向代理**：
+
+  ```nginx
+  # /etc/nginx/sites-available/comfyui
+  server {
+      listen 80;
+      server_name your-domain.com;
+      
+      location / {
+          auth_basic "ComfyUI Access";
+          auth_basic_user_file /etc/nginx/.htpasswd;
+          proxy_pass http://localhost:8188;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+      }
+  }
+  ```
+
+  2. **创建用户密码**：
+
+  ```bash
+  # 安装 apache2-utils
+  sudo apt-get install apache2-utils
+
+  # 创建用户 'admin'，会提示输入密码
+  sudo htpasswd -c /etc/nginx/.htpasswd admin
+
+  # 添加更多用户
+  sudo htpasswd /etc/nginx/.htpasswd user2
+  ```
+
+  **LobeChat 配置**：
+
+  ```yaml
+  认证类型：基本认证
+  服务器地址：http://your-domain.com
+  用户名：admin
+  密码：your_secure_password
+  ```
+
+  **配置示例**：
+
+  ```bash
+  # 使用环境变量配置认证
+  export COMFYUI_AUTH_USER="admin"
+  export COMFYUI_AUTH_PASSWORD="your_password"
+  python main.py --listen 0.0.0.0 --port 8188
+  ```
+
+  #### Bearer Token (bearer)
+
+  **适用场景**：
+
+  - API 驱动的应用集成
+  - 需要 Token 认证的企业环境
+  - 使用 JWT 或 OAuth2 的系统
+  - 需要可撤销访问权限的场景
+
+  **支持的插件 / 扩展**：
+
+  - **ComfyUI-Login**：基础密码认证插件 (`liusida/ComfyUI-Login`)
+  - **ComfyUI SDK**：支持多种认证方式的 SDK (`comfy-addons/comfyui-sdk`)
+  - **ComfyUI-Manager**：扩展管理，支持认证配置 (`Comfy-Org/ComfyUI-Manager`)
+
+  **获取 Token 方法**：
+
+  1. **使用 ComfyUI-Login 插件**：
+
+  ```bash
+  # 安装插件
+  cd ComfyUI/custom_nodes
+  git clone https://github.com/liusida/ComfyUI-Login.git
+  cd ComfyUI-Login
+  pip install -r requirements.txt
+
+  # 重启ComfyUI，首次登录时可设置任意密码
+  # 密码将被加密并存储在 ComfyUI/login/PASSWORD 文件中
+  ```
+
+  2. **手动生成 JWT Token**：
+
+  ```python
+  # 首先安装JWT依赖
+  # pip install PyJWT
+
+  import jwt
+  import datetime
+
+  # 定义 payload
+  payload = {
+      'user': 'admin',
+      'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30),
+      'iat': datetime.datetime.utcnow()
+  }
+
+  # 生成 token（替换为你的密钥）
+  secret_key = "your-secret-key"
+  token = jwt.encode(payload, secret_key, algorithm='HS256')
+  print(f"Bearer Token: {token}")
+  ```
+
+  **LobeChat 配置**：
+
+  ```yaml
+  认证类型：Bearer Token
+  服务器地址：http://your-server:8188
+  API 密钥：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  ```
+
+  **启动配置**：
+
+  ```bash
+  # 设置 Token 验证
+  export COMFYUI_AUTH_TOKEN="your_bearer_token"
+  export COMFYUI_AUTH_SECRET="your-secret-key"
+  python main.py --listen 0.0.0.0 --port 8188 --auth-token
+  ```
+
+  **验证 Token 有效性**：
+
+  ```bash
+  # 设置环境变量（推荐安全方式）
+  export COMFYUI_TOKEN="your_actual_token_here"
+
+  # 测试 API 调用（使用环境变量）
+  curl -H "Authorization: Bearer $COMFYUI_TOKEN" \
+       http://your-server:8188/system_stats
+
+  # 或者使用文件方式（更安全）
+  echo "Bearer your_actual_token_here" > ~/.comfyui_token
+  curl -H "Authorization: $(cat ~/.comfyui_token)" \
+       http://your-server:8188/system_stats
+  ```
+
+  #### 自定义认证 (custom)
+
+  **适用场景**：
+
+  - 集成现有企业认证系统
+  - 使用专有认证协议
+  - 需要多重认证头的系统
+  - 与第三方认证服务集成
+
+  **支持的插件 / 扩展**：
+
+  - **ComfyUI-Login**：基础认证系统 (`liusida/ComfyUI-Login`)
+  - **ComfyUI SDK**：自定义认证头支持 (`comfy-addons/comfyui-sdk`)
+  - **WASasquatch Plugins**：100 + 节点扩展包 (`WASasquatch/comfyui-plugins`)
+
+  **常见自定义认证配置**：
+
+  1. **API Key + 签名认证**：
+
+  ```json
+  {
+    "X-API-Key": "your_api_key",
+    "X-Signature": "sha256_signature",
+    "X-Timestamp": "1640995200"
+  }
+  ```
+
+  2. **多重认证头**：
+
+  ```json
+  {
+    "Authorization": "Bearer your_token",
+    "X-Client-ID": "your_client_id",
+    "X-User-ID": "user_123"
+  }
+  ```
+
+  3. **企业 SSO 集成**：
+
+  ```json
+  {
+    "Authorization": "SAML your_saml_token",
+    "X-Organization": "your_org_id"
+  }
+  ```
+
+  **配置 ComfyUI 中间件**：
+
+  创建认证中间件文件 `auth_middleware.py`：
+
+  ```python
+  import functools
+  import hashlib
+  import hmac
+  import time
+
+  class CustomAuthMiddleware:
+      def __init__(self, app):
+          self.app = app
+          self.api_keys = {
+              "your_api_key": "your_secret"
+          }
+
+      def verify_signature(self, api_key, signature, timestamp, body):
+          secret = self.api_keys.get(api_key)
+          if not secret:
+              return False
+              
+          # 验证时间戳（5分钟内有效）
+          if abs(time.time() - int(timestamp)) > 300:
+              return False
+              
+          # 生成预期签名
+          message = f"{api_key}{timestamp}{body}"
+          expected = hmac.new(
+              secret.encode(), 
+              message.encode(), 
+              hashlib.sha256
+          ).hexdigest()
+          
+          return hmac.compare_digest(signature, expected)
+
+      def __call__(self, environ, start_response):
+          headers = {k[5:].replace('_', '-').title(): v 
+                    for k, v in environ.items() 
+                    if k.startswith('HTTP_')}
+          
+          api_key = headers.get('X-Api-Key')
+          signature = headers.get('X-Signature')
+          timestamp = headers.get('X-Timestamp')
+          
+          if not all([api_key, signature, timestamp]):
+              start_response('401 Unauthorized', [])
+              return [b'Missing authentication headers']
+              
+          # 获取请求体
+          content_length = int(environ.get('CONTENT_LENGTH', 0))
+          body = environ['wsgi.input'].read(content_length).decode('utf-8')
+          
+          if not self.verify_signature(api_key, signature, timestamp, body):
+              start_response('401 Unauthorized', [])
+              return [b'Invalid signature']
+              
+          return self.app(environ, start_response)
+  ```
+
+  **启动 ComfyUI 使用自定义认证**：
+
+  ```bash
+  # 应用自定义中间件
+  export COMFYUI_MIDDLEWARE="auth_middleware:CustomAuthMiddleware"
+  python main.py --listen 0.0.0.0 --port 8188 --custom-auth
+  ```
+
+  **LobeChat 配置**：
+
+  ```yaml
+  认证类型：自定义
+  服务器地址：http://your-server:8188
+  自定义请求头：
+  {
+    "X-API-Key": "your_api_key",
+    "X-Signature": "auto_generated",
+    "X-Timestamp": "auto_generated",
+    "X-Client-ID": "lobechat"
+  }
+  ```
+
+  ### 认证故障排除
+
+  #### 常见错误码及解决方案
+
+  **401 Unauthorized**：
+
+  - **原因**：认证信息错误或过期
+  - **解决**：
+    ```bash
+    # 设置安全的认证变量
+    export COMFYUI_TOKEN="your_actual_token_here"
+
+    # 检查认证配置（使用环境变量）
+    curl -v -H "Authorization: Bearer $COMFYUI_TOKEN" \
+         http://your-server:8188/system_stats
+
+    # 验证用户名密码
+    echo -n "admin:password" | base64
+
+    # 测试 Bearer Token（使用环境变量）
+    curl -H "Authorization: Bearer $COMFYUI_TOKEN" \
+         http://your-server:8188/system_stats
+
+    # 或使用文件方式避免环境变量泄露
+    echo "Bearer your_actual_token_here" > ~/.comfyui_token
+    chmod 600 ~/.comfyui_token  # 限制文件权限
+    curl -H "Authorization: $(cat ~/.comfyui_token)" \
+         http://your-server:8188/system_stats
+    ```
+
+  **403 Forbidden**：
+
+  - **原因**：认证成功但权限不足
+  - **解决**：检查用户权限配置，确认用户组设置
+
+  **连接被拒绝**：
+
+  - **原因**：服务器未正确启动或网络配置问题
+  - **解决**：
+    ```bash
+    # 检查服务器状态
+    netstat -tulpn | grep 8188
+
+    # 检查防火墙
+    sudo ufw status
+    sudo ufw allow 8188
+
+    # 查看服务器日志
+    tail -f comfyui.log
+    ```
+
+  #### 安全最佳实践
+
+  1. **密码安全**：
+     - 使用强密码（至少 12 位，包含大小写字母、数字和特殊字符）
+     - 定期更换密码
+     - 不在配置文件中明文存储密码
+
+  2. **Token 管理**：
+     - 设置合理的过期时间（建议 30 天内）
+     - 定期轮换 Token
+     - 撤销不再使用的 Token
+
+  3. **网络安全**：
+     - 使用 HTTPS（推荐配置 SSL 证书）
+     - 限制访问 IP 地址
+     - 启用请求频率限制
+
+  4. **监控和日志**：
+     - 启用访问日志记录
+     - 监控异常登录尝试
+     - 设置告警机制
+
+  5. **命令行安全**：
+     - 避免在 curl 命令中直接暴露 Token（防止历史记录泄露）
+     - 使用环境变量或文件存储敏感认证信息
+     - 限制认证文件的访问权限（chmod 600）
+     - 定期清理包含敏感信息的命令历史
+
+  **HTTPS 配置示例**：
+
+  ```nginx
+  server {
+      listen 443 ssl;
+      server_name your-domain.com;
+      
+      ssl_certificate /path/to/cert.pem;
+      ssl_certificate_key /path/to/key.pem;
+      
+      location / {
+          auth_basic "ComfyUI Access";
+          auth_basic_user_file /etc/nginx/.htpasswd;
+          proxy_pass http://localhost:8188;
+          proxy_set_header X-Forwarded-Proto https;
+      }
+  }
+  ```
+
+  ### 步骤四：选择模型并开始生成图像
+
+  #### 1. 选择 FLUX 模型
+
+  在对话界面中：
+
+  - 点击模型选择按钮
+  - 从 ComfyUI 分类中选择所需的 FLUX 模型
+
+  <Image alt={'选择 FLUX 模型'} inStep src={'https://github.com/lobehub/lobe-chat/assets/17870709/ff7ebacf-27f0-42d7-810b-00314499a084'} />
+
+  #### 2. 文本生成图像
+
+  **使用 FLUX Schnell（快速生成）**：
+
+  ```
+  Generate an image: A cute orange cat sitting on a sunny windowsill, warm lighting, detailed fur texture
+  ```
+
+  **使用 FLUX Dev（高质量生成）**：
+
+  ```
+  Generate high quality image: City skyline at sunset, cyberpunk style, neon lights, 4K high resolution, detailed architecture
+  ```
+
+  #### 3. 图像编辑
+
+  **使用 FLUX Kontext-dev 编辑图像**：
+
+  ```
+  Edit this image: Change the background to a starry night sky, keep the main subject, cosmic atmosphere
+  ```
+
+  然后上传需要编辑的原始图像。
+
+  <Callout type={'info'}>
+    图像编辑功能需要先上传原始图像，然后描述你希望进行的修改。
+  </Callout>
+</Steps>
+
+## 参数配置参考
+
+### 通用参数
+
+| 参数         | 描述    | 范围       | 推荐值         |
+| ---------- | ----- | -------- | ----------- |
+| **prompt** | 文本提示词 | -        | 详细描述期望的图像内容 |
+| **width**  | 图像宽度  | 512-2048 | 1024        |
+| **height** | 图像高度  | 512-2048 | 1024        |
+| **seed**   | 随机种子  | -1 或正整数  | -1 (随机)     |
+
+### 模型特定参数
+
+#### FLUX Schnell 专用参数
+
+| 参数        | 描述   | 范围  | 推荐值 |
+| --------- | ---- | --- | --- |
+| **steps** | 生成步数 | 1-4 | 4   |
+
+#### FLUX Dev/Krea-dev/Kontext-dev 专用参数
+
+| 参数        | 描述        | 范围    | 推荐值                   |
+| --------- | --------- | ----- | --------------------- |
+| **steps** | 生成步数      | 10-50 | 20                    |
+| **cfg**   | CFG Scale | 1-10  | 3.5 (Dev), 4.5 (Krea) |
+
+#### FLUX Kontext-dev 图像编辑专用参数
+
+| 参数           | 描述       | 范围  | 推荐值      |
+| ------------ | -------- | --- | -------- |
+| **imageUrl** | 输入图像 URL | -   | 必需上传原始图像 |
+| **strength** | 编辑强度     | 0-1 | 0.8      |
+
+## 故障排除
+
+### 智能错误诊断系统
+
+LobeChat 集成了智能错误处理系统，能够自动诊断并提供针对性的解决方案。当遇到问题时，系统会根据错误类型提供相应的解决指导。
+
+#### 错误类型与解决方案
+
+##### 🔗 连接和服务问题
+
+**常见错误**：
+
+- 无法连接到 ComfyUI 服务器
+- 服务器响应超时
+- 服务不可用
+
+**智能诊断**：
+系统会自动检测网络连接状态和服务器可用性。
+
+**解决步骤**：
+
+1. **检查服务器状态**：
+   ```bash
+   # 确认 ComfyUI 正在运行
+   curl http://localhost:8188/system_stats
+
+   # 检查端口是否开放
+   netstat -tulpn | grep 8188
+   ```
+
+2. **验证网络连接**：
+   - 确认服务器地址和端口配置正确
+   - 检查防火墙设置是否阻止连接
+   - 测试网络可达性
+
+3. **重启服务**：
+   ```bash
+   # 重启 ComfyUI 服务器
+   python main.py --listen 0.0.0.0 --port 8188
+   ```
+
+##### 🔑 认证和权限问题
+
+**常见错误**：
+
+- API 密钥无效
+- 认证失败
+- 权限不足
+
+**智能诊断**：
+系统能够识别不同的认证错误类型并提供精确的解决方案。
+
+**解决步骤**：
+
+**API 密钥错误 (401)**：
+
+1. **验证认证配置**：
+   - 检查 API 密钥是否正确
+   - 确认认证类型设置匹配服务器配置
+   - 验证 Bearer Token 是否过期
+
+2. **重新生成凭据**：
+   ```bash
+   # JWT Token 重新生成
+   python generate_token.py --user admin --expires 30d
+
+   # 基本认证密码重置
+   sudo htpasswd /etc/nginx/.htpasswd admin
+   ```
+
+**权限不足 (403)**：
+
+1. **检查用户权限**：
+   - 确认用户账户是否有访问权限
+   - 检查用户组设置
+   - 验证文件访问权限
+
+2. **权限修复**：
+   ```bash
+   # 修复模型文件权限
+   chmod -R 755 ComfyUI/models/
+   chown -R $USER:$USER ComfyUI/
+   ```
+
+##### 📁 配置和模型问题
+
+**常见错误**：
+
+- 配置文件错误
+- 模型文件缺失
+- 模型格式不支持
+
+**智能诊断**：
+系统会自动验证配置完整性和模型可用性。
+
+**解决步骤**：
+
+**配置问题**：
+
+1. **验证配置文件**：
+   - 检查配置文件语法正确性
+   - 确认必需配置项已设置
+   - 验证路径配置是否正确
+
+2. **重置配置**：
+   ```bash
+   # 备份现有配置
+   cp config.yaml config.yaml.backup
+
+   # 使用默认配置
+   cp config.yaml.example config.yaml
+   ```
+
+**模型文件问题**：
+
+1. **检查模型文件**：
+   ```bash
+   # 列出可用模型
+   ls -la ComfyUI/models/diffusion_models/
+
+   # 验证文件完整性
+   sha256sum flux1-dev.safetensors
+   ```
+
+2. **重新下载模型**：
+   - 确认模型文件完整下载
+   - 验证文件格式正确（.safetensors 或 .gguf）
+   - 检查模型文件权限
+
+##### ⚙️ 参数和生成问题
+
+**常见错误**：
+
+- 输入参数无效
+- 工作流配置错误
+- 生成过程失败
+
+**智能诊断**：
+系统会验证输入参数的有效性和工作流配置的正确性。
+
+**解决步骤**：
+
+**参数验证**：
+
+1. **检查参数范围**：
+   - 图像尺寸：512-2048 像素
+   - 生成步数：1-50 步
+   - CFG Scale：1.0-10.0
+
+2. **调整参数**：
+   ```yaml
+   # FLUX Schnell 推荐参数
+   steps: 4
+   cfg_scale: # 不使用
+   size: 1024x1024
+
+   # FLUX Dev 推荐参数
+   steps: 20
+   cfg_scale: 3.5
+   size: 1024x1024
+   ```
+
+**工作流问题**：
+
+1. **验证工作流**：
+   - 确认选择的模型支持当前工作流
+   - 检查必需组件是否可用
+   - 验证编码器配置正确
+
+2. **工作流重置**：
+   - 使用默认工作流模板
+   - 清除缓存数据
+   - 重新初始化组件
+
+#### 自动错误恢复
+
+系统具备以下自动恢复能力：
+
+1. **智能重试机制**：网络临时故障时自动重试
+2. **模型自动选择**：当指定模型不可用时，自动选择兼容的替代模型
+3. **参数自动调整**：当参数超出范围时，自动调整到有效值
+4. **缓存自动清理**：定期清理无效缓存，避免积累错误
+
+### 传统故障排除
+
+#### 1. 连接失败
+
+**问题**：无法连接到 ComfyUI 服务器
+
+**解决方案**：
+
+- 确认 ComfyUI 服务器正在运行
+- 检查服务器地址和端口是否正确
+- 确认防火墙设置允许连接
+
+#### 2. 模型加载失败
+
+**问题**：提示模型文件未找到
+
+**解决方案**：
+
+- 确认模型文件已下载到正确目录
+- 检查模型文件完整性
+- 重启 ComfyUI 服务器
+
+#### 3. 内存不足
+
+**问题**：生成过程中出现内存错误
+
+**解决方案**：
+
+- 降低图像分辨率
+- 减少生成步数
+- 启用 CPU 卸载选项
+
+### 自定义模型使用
+
+#### 配置自定义 SD 模型
+
+LobeChat 支持使用自定义的 Stable Diffusion 模型。系统使用固定的文件名来识别自定义模型，让您可以轻松切换自己训练或下载的模型。
+
+##### 1. 模型文件准备
+
+**必需文件**：
+
+- **主模型文件**：`custom_sd_lobe.safetensors`
+- **VAE 文件（可选）**：`custom_sd_vae_lobe.safetensors`
+
+**文件位置**：
+
+```bash
+# 主模型文件放入
+ComfyUI/models/diffusion_models/custom_sd_lobe.safetensors
+
+# VAE 文件放入（如果有）
+ComfyUI/models/vae/custom_sd_vae_lobe.safetensors
+```
+
+##### 2. 添加自定义模型
+
+**方法一：重命名现有模型**
+
+```bash
+# 将您的模型重命名为固定文件名
+mv your_custom_model.safetensors custom_sd_lobe.safetensors
+mv your_custom_vae.safetensors custom_sd_vae_lobe.safetensors
+
+# 移动到正确目录
+mv custom_sd_lobe.safetensors ComfyUI/models/diffusion_models/
+mv custom_sd_vae_lobe.safetensors ComfyUI/models/vae/
+```
+
+**方法二：创建符号链接（推荐）**
+
+```bash
+# 创建软链接，方便切换不同模型
+ln -s /path/to/your_model.safetensors ComfyUI/models/diffusion_models/custom_sd_lobe.safetensors
+ln -s /path/to/your_vae.safetensors ComfyUI/models/vae/custom_sd_vae_lobe.safetensors
+```
+
+##### 3. 使用自定义模型
+
+在 LobeChat 中，自定义模型会显示为两个选项：
+
+- **stable-diffusion-custom**：标准自定义模型
+- **stable-diffusion-custom-refiner**：Refiner 自定义模型
+
+两个选项都使用相同的模型文件（`custom_sd_lobe.safetensors`），但可能使用不同的参数配置。
+
+##### 4. 模型切换
+
+要切换到不同的自定义模型：
+
+```bash
+# 备份当前模型
+mv custom_sd_lobe.safetensors custom_sd_lobe.safetensors.backup
+
+# 添加新模型
+cp new_custom_model.safetensors custom_sd_lobe.safetensors
+
+# 重启 ComfyUI 服务器使更改生效
+```
+
+#### 自定义模型兼容性
+
+**支持的模型类型**：
+
+- SD 1.5 系列模型
+- SDXL 系列模型
+- 精调模型（Fine-tuned）
+- LoRA 合并模型
+- 混合模型（Merged models）
+
+**文件格式要求**：
+
+- 支持格式：`.safetensors`（推荐）、`.ckpt`、`.pt`、`.pth`
+- 建议使用 `.safetensors` 格式，加载更安全快速
+
+**注意事项**：
+
+1. 确保模型文件完整且未损坏
+2. VAE 文件是可选的，如果没有提供，系统会使用默认 VAE
+3. 切换模型后需要重启 ComfyUI 服务器
+4. 自定义模型使用 `simple-sd` 工作流，支持基本的文生图功能
+
+#### 自定义模型参数建议
+
+| 参数            | SD 1.5 模型 | SDXL 模型   | 说明        |
+| ------------- | --------- | --------- | --------- |
+| **steps**     | 20-30     | 25-40     | 生成步数      |
+| **cfg**       | 7.0       | 6.0-8.0   | CFG Scale |
+| **width**     | 512       | 1024      | 默认宽度      |
+| **height**    | 512       | 1024      | 默认高度      |
+| **sampler**   | euler\_a  | dpmpp\_2m | 采样器       |
+| **scheduler** | karras    | karras    | 调度器       |
+
+<Callout type={'info'}>
+  **提示**：自定义模型的最佳参数可能因模型而异。建议先使用默认参数测试，然后根据生成效果调整。
+</Callout>
+
+#### 故障排除
+
+**模型不显示**：
+
+- 确认文件名为 `custom_sd_lobe.safetensors`
+- 检查文件权限：`chmod 644 custom_sd_lobe.safetensors`
+- 重启 ComfyUI 服务器
+
+**生成失败**：
+
+- 验证模型文件完整性
+- 检查 ComfyUI 日志：`tail -f ComfyUI/comfyui.log`
+- 确认模型与 VAE 兼容
+
+**性能问题**：
+
+- 考虑使用量化版本的模型
+- 调整图像分辨率
+- 减少生成步数
+
+### 性能优化建议
+
+#### 硬件要求
+
+**最低配置** (GGUF 量化模型)：
+
+- GPU：6GB VRAM (使用 Q4 量化)
+- RAM：12GB
+- 存储：30GB 可用空间
+
+**推荐配置** (标准模型)：
+
+- GPU：12GB+ VRAM (RTX 4070 Ti 或更高)
+- RAM：24GB+
+- 存储：SSD 100GB+ 可用空间
+
+**高端配置** (全模型支持)：
+
+- GPU：24GB+ VRAM (RTX 4090/A6000)
+- RAM：64GB+
+- 存储：NVMe SSD 500GB+ 可用空间
+
+#### 量化选择策略
+
+**根据显存选择最佳量化**：
+
+| 显存容量        | 推荐量化            | 模型示例                               | 性能特点    |
+| ----------- | --------------- | ---------------------------------- | ------- |
+| **6-8GB**   | Q4\_0, Q4\_K\_S | `flux1-dev-Q4_0.gguf`              | 最小显存占用  |
+| **10-12GB** | Q6\_K, Q8\_0    | `flux1-dev-Q6_K.gguf`              | 平衡性能与质量 |
+| **16GB+**   | FP8, FP16       | `flux1-dev-fp8-e4m3fn.safetensors` | 接近原始质量  |
+| **24GB+**   | 完整模型            | `flux1-dev.safetensors`            | 最佳质量    |
+
+#### 系统优化设置
+
+1. **智能模型选择**：系统自动根据可用显存选择合适的量化级别
+2. **动态精度**：启用 `--fp16` 或让系统自动选择 FP8 优化
+3. **内存管理**：使用 `--cpu` 在显存不足时卸载到系统内存
+4. **批量优化**：多图生成时使用批处理模式提高效率
+5. **缓存策略**：系统缓存模型解析结果，减少重复计算
+
+#### 企业级优化
+
+**专用优化版本**：
+
+- **MFLUX 系列**：Apple Silicon (M1/M2/M3) 优化
+- **TorchAO 系列**：使用 TorchAO 量化框架
+- **SVDQuant 系列**：使用奇异值分解量化
+- **NF4 系列**：使用 4-bit NormalFloat 量化
+
+**选择指南**：
+
+- **Apple Silicon**：优先选择 MFLUX 优化版本
+- **NVIDIA GPU**：使用 FP8 或 TorchAO 版本
+- **AMD GPU**：使用标准 GGUF 量化版本
+- **CPU 推理**：选择 Q4 或 Q6 量化版本
+
+## API 参考
+
+### 请求格式
+
+LobeChat 通过以下接口与 ComfyUI 通信：
+
+```typescript
+interface ComfyUIRequest {
+  model: string; // 模型 ID，如 'flux-schnell'
+  prompt: string; // 文本提示词
+  width: number; // 图像宽度
+  height: number; // 图像高度
+  steps: number; // 生成步数
+  seed: number; // 随机种子
+  cfg?: number; // CFG Scale (Dev/Krea/Kontext 专用)
+  strength?: number; // 编辑强度 (Kontext 专用)
+  imageUrl?: string; // 输入图像 (Kontext 专用)
+}
+```
+
+### 响应格式
+
+```typescript
+interface ComfyUIResponse {
+  images: Array<{
+    url: string; // 生成的图像 URL
+    filename: string; // 文件名
+    subfolder: string; // 子目录
+    type: string; // 文件类型
+  }>;
+  prompt_id: string; // 提示 ID
+}
+```
+
+### 错误处理
+
+#### 智能错误分类
+
+系统采用分层错误处理架构，自动将技术错误转换为用户友好的提示：
+
+| 错误类型     | HTTP 状态码 | 用户提示                | 自动诊断             |
+| -------- | -------- | ------------------- | ---------------- |
+| **连接问题** | 网络错误     | "无法连接到 ComfyUI 服务器" | 自动检测服务器状态和网络连通性  |
+| **认证问题** | 401      | "API 密钥无效或已过期"      | 自动验证认证凭据有效性      |
+| **权限问题** | 403      | "访问权限不足"            | 自动检查用户权限和文件访问权限  |
+| **模型问题** | 404      | "找不到指定的模型文件"        | 自动扫描可用模型并建议替代方案  |
+| **配置问题** | 400      | "配置文件存在错误"          | 自动验证配置完整性和语法正确性  |
+| **服务问题** | 500      | "ComfyUI 服务器内部错误"   | 自动检查服务器状态和资源使用情况 |
+| **参数问题** | 400      | "输入参数超出有效范围"        | 自动验证并建议有效的参数值    |
+
+#### 错误恢复策略
+
+**自动恢复**：
+
+- 网络临时中断：自动重试机制（最多 3 次）
+- 模型不可用：智能选择同类型的可用模型
+- 参数超范围：自动调整到有效范围内
+- 缓存损坏：自动清理并重建缓存
+
+**用户干预**：
+
+- 认证失败：需要用户重新配置认证信息
+- 权限不足：需要用户检查文件和目录权限
+- 服务器错误：需要用户检查 ComfyUI 服务器状态
+- 配置错误：需要用户修正配置文件
+
+#### 常见错误代码对照
+
+| 错误代码  | 描述      | 智能诊断建议                  |
+| ----- | ------- | ----------------------- |
+| `400` | 请求参数无效  | 检查参数格式和范围，系统会自动建议有效值    |
+| `401` | 认证失败    | 验证 API 密钥和认证配置，查看认证故障排除 |
+| `403` | 权限不足    | 检查用户权限和文件访问权限           |
+| `404` | 模型未找到   | 确认模型文件存在，系统会建议可用模型      |
+| `500` | 服务器内部错误 | 检查 ComfyUI 服务器状态和日志     |
+
+## 最佳实践
+
+### 提示词编写
+
+1. **详细描述**：提供清晰、详细的图像描述
+2. **风格指定**：明确指定艺术风格、色彩风格等
+3. **质量关键词**：添加 "4K", "high quality", "detailed" 等关键词
+4. **避免矛盾**：确保描述内容逻辑一致
+
+**示例**：
+
+```
+A young woman with flowing long hair, wearing an elegant blue dress, standing in a cherry blossom park, 
+sunlight filtering through leaves, warm atmosphere, cinematic lighting, 4K high resolution, detailed, photorealistic
+```
+
+### 参数调优
+
+1. **FLUX Schnell**：适合快速预览，使用 4 步生成
+2. **FLUX Dev**：平衡质量和速度，CFG 3.5，步数 20
+3. **FLUX Krea-dev**：安全创作，CFG 4.5，注意内容过滤
+4. **FLUX Kontext-dev**：图像编辑，strength 0.6-0.9
+
+### 资源管理
+
+1. **合理排队**：避免同时提交过多请求
+2. **监控资源**：关注 GPU 和内存使用情况
+3. **定期清理**：清理生成的临时文件
+4. **备份模型**：保持模型文件的备份
+
+<Callout type={'warning'}>
+  在使用过程中请注意：
+
+  - FLUX Dev、Krea-dev、Kontext-dev 模型仅限非商业使用
+  - 生成内容请遵守相关法律法规和平台政策
+  - 大型模型生成可能需要较长时间，请耐心等待
+</Callout>
+
+至此你已经可以在 LobeChat 中使用 ComfyUI 进行高质量的 AI 图像生成和编辑了。如果遇到问题，请参考故障排除部分或查阅 [ComfyUI 官方文档](https://github.com/comfyanonymous/ComfyUI)。
