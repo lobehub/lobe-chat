@@ -39,6 +39,7 @@ const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 export interface ChatMessageAction {
   // create
   addAIMessage: () => Promise<void>;
+  addUserMessage: (params: { message: string; fileList?: string[] }) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -206,6 +207,21 @@ export const chatMessage: StateCreator<
     await internal_createMessage({
       content: inputMessage,
       role: 'assistant',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
+  addUserMessage: async ({ message, fileList }) => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    if (!activeId) return;
+
+    await internal_createMessage({
+      content: message,
+      files: fileList,
+      role: 'user',
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,

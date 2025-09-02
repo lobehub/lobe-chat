@@ -2,6 +2,7 @@ export * from './client/cookie';
 export * from './detectChinese';
 export * from './format';
 export * from './imageToBase64';
+export * from './object';
 export * from './parseModels';
 export * from './pricing';
 export * from './safeParseJSON';

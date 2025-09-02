@@ -1,4 +1,5 @@
 export * from './agent';
+export * from './aiChat';
 export * from './aiProvider';
 export * from './artifact';
 export * from './asyncTask';
@@ -12,6 +13,7 @@ export * from './llm';
 export * from './message';
 export * from './meta';
 export * from './serverConfig';
+export * from './topic';
 export * from './user';
 export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types
