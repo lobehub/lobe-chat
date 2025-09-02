@@ -35,7 +35,9 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ProviderItem = memo<AiProviderListItem>(
+const ProviderItem = memo<AiProviderListItem & {
+  onClick: (id: string) => void
+}>(
   ({ id, name, source, enabled, logo, onClick = () => {} }) => {
     const { styles, cx } = useStyles();
     const searchParams = useSearchParams();

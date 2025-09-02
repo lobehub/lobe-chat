@@ -14,7 +14,6 @@ import LLM from '../llm/index';
 import Provider from '../provider/index';
 import Proxy from '../proxy/index';
 import Storage from '../storage/index';
-import Sync from '../sync/index';
 import SystemAgent from '../system-agent/index';
 import TTS from '../tts/index';
 
@@ -74,9 +73,6 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
       case SettingsTabs.Storage: {
         return <Storage />;
       }
-      case SettingsTabs.Sync: {
-        return <Sync />;
-      }
       case SettingsTabs.SystemAgent: {
         return <SystemAgent />;
       }
@@ -130,10 +126,6 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
 
       <div style={getDisplayStyle(SettingsTabs.Storage)}>
         <Storage />
-      </div>
-
-      <div style={getDisplayStyle(SettingsTabs.Sync)}>
-        <Sync mobile={mobile} />
       </div>
 
       <div style={getDisplayStyle(SettingsTabs.SystemAgent)}>
