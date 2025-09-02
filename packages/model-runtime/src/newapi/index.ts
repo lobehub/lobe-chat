@@ -173,9 +173,9 @@ export const LobeNewAPIAI = (() => {
       // 如果我们检测到了 provider，确保它被正确应用
       return processedModels.map((model: any) => {
         if (model._detectedProvider) {
-          // 这里可以根据需要调整模型的某些属性
-          // FIXME: 目前数据结构不支持，New-api 官方也没有提供类似字段
-          delete model._detectedProvider; // 清理临时字段
+          // Here you can adjust certain model properties as needed.
+          // FIXME: The current data structure does not support storing provider information, and the official NewAPI does not provide a corresponding field. Consider extending the model schema if provider tracking is required in the future.
+          delete model._detectedProvider; // Remove temporary field
         }
         return model;
       });
