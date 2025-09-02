@@ -58,12 +58,6 @@
       "title": "Extract Webpage Link Content"
     }
   },
-  "geminiImageChineseWarning": {
-    "content": "Using Chinese may affect the success rate of image generation with Gemini 2.5 Flash Image Preview. English is recommended for better results.",
-    "continue": "Continue Sending",
-    "doNotShowAgain": "Don't show again",
-    "title": "Chinese Input Warning"
-  },
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
   },
