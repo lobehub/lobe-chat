@@ -1,7 +1,8 @@
 import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import React, { ReactNode } from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { Switch } from '@/components';
 
 import { ICON_SIZE_SMALL } from '@/const/common';
 
@@ -42,17 +43,7 @@ export const SettingItem = ({
 
   const renderRightContent = () => {
     if (showSwitch) {
-      return (
-        <Switch
-          onValueChange={onSwitchChange}
-          thumbColor={switchValue ? token.colorBgContainer : token.colorBgContainer}
-          trackColor={{
-            false: token.colorBgContainer,
-            true: token.colorPrimary,
-          }}
-          value={switchValue}
-        />
-      );
+      return <Switch onValueChange={onSwitchChange} value={switchValue} />;
     }
 
     return (

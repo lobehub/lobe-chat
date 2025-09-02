@@ -31,7 +31,7 @@ const InstantSwitch = memo<InstantSwitchProps>(
     trackColor,
     trackStyle,
   }) => {
-    const { styles } = useStyles({ disabled, size });
+    const { styles, token } = useStyles({ disabled, size });
 
     // 本地状态管理
     const [localEnabled, setLocalEnabled] = useState(enabled);
@@ -83,19 +83,19 @@ const InstantSwitch = memo<InstantSwitchProps>(
       if (trackColor) return trackColor;
 
       return {
-        false: '#e9e9eb', // iOS风格关闭状态
-        true: '#34c759', // iOS风格开启状态
+        false: token.colorBgContainerDisabled,
+        true: token.colorPrimary,
       };
     };
 
     const getThumbColor = () => {
       if (thumbColor) return thumbColor;
-      return '#ffffff'; // 默认白色滑块
+      return token.colorTextLightSolid;
     };
 
     const getLoadingColor = () => {
       if (loadingColor) return loadingColor;
-      return '#007AFF'; // 默认蓝色loading
+      return token.colorPrimary;
     };
 
     return (
