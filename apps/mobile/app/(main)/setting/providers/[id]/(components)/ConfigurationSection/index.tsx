@@ -21,7 +21,7 @@ const isValidUrl = (url: string) => {
 const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const { styles } = useStyles();
   const token = useThemeToken();
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   // Store hooks
   const { useFetchAiProviderItem, updateAiProviderConfig } = useAiInfraStore();

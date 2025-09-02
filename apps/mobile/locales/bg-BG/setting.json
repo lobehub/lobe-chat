@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Моля, въведете API ключа за {name}",
+        "description": "Моля, въведете API ключа за {{name}}",
         "label": "API ключ",
-        "placeholder": "Моля, въведете API ключа за {name}"
+        "placeholder": "Моля, въведете API ключа за {{name}}"
       },
       "proxyUrl": {
         "desc": "Трябва да съдържа http(s)://",
