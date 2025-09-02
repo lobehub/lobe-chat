@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Dosya Yükle",
       "actionTooltip": "Yükle",
-      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin"
+      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
+      "visionNotSupported": "Seçili model görsel tanımayı desteklemiyor, lütfen başka bir modele geçiş yaparak kullanın"
     },
     "preview": {
       "prepareTasks": "Parçaları Hazırlıyor...",
