@@ -83,7 +83,11 @@ export const SettingItem = ({
     </View>
   );
 
-  const touchableContent = <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity>;
+  const touchableContent = (
+    <TouchableOpacity activeOpacity={1} onPress={onPress}>
+      {content}
+    </TouchableOpacity>
+  );
 
   if (href) {
     return (
@@ -93,5 +97,9 @@ export const SettingItem = ({
     );
   }
 
-  return <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity>;
+  return (
+    <TouchableOpacity activeOpacity={1} onPress={onPress}>
+      {content}
+    </TouchableOpacity>
+  );
 };
