@@ -21,7 +21,6 @@ export class UsageRecordModel {
     const [result] = await this.db
       .insert(usageRecords)
       .values({ ...params, userId: this.userId })
-      .onConflictDoNothing()
       .returning();
     return result;
   };

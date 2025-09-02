@@ -33,7 +33,9 @@ export class UsageRecordService {
                 if (modelListItem) {
                     model = modelListItem as AiProviderModelListItem;
                 }
-            } catch { }
+            } catch (error) {
+                log('Error finding model in default models:', JSON.stringify(error));
+            }
             if (!model || !model?.pricing) {
                 log(`Model with ID ${data.model} not found in default models for provider ${data.provider}`);
                 throw new Error(`Model with ID ${data.model} not found for provider ${data.provider}`);

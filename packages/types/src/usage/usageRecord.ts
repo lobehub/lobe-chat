@@ -1,28 +1,52 @@
 import { z } from 'zod';
 
-import { UsageRecordItem } from '@/database/schemas';
-
-import { ChatModelPricing } from 'model-bank';
 import { MessageMetadata } from '../message';
 
-export interface RequestLog {
+export interface UsageRecordItem {
   /**
-   * 请求标识
-   */
-  callType: 'chat' | 'history_summary';
+   * 记录 ID
+   **/
+  id: number;
   /**
-   * 用量信息
-   */
-  metadata?: MessageMetadata;
-  /**
-   * 模型信息
+   * 模型id
    */
   model: string;
   /**
-   * 费用
+   * 提供商
    */
-  pricing?: ChatModelPricing;
   provider: string;
+  /**
+   * 花费
+   **/
+  spend: number;
+  /**
+   * 调用类型
+   **/
+  callType: string;
+  /**
+   * 用户 ID
+   **/
+  userId: string;
+  /**
+   * 性能信息
+   **/
+  ttft?: number | null;
+  tps?: number | null;
+  inputStartAt?: Date | null;
+  outputStartAt?: Date | null;
+  outputFinishAt?: Date | null;
+  /**
+   * 使用信息
+   **/
+  totalInputTokens?: number | null;
+  totalOutputTokens?: number | null;
+  totalTokens?: number | null;
+  /**
+   * 元数据
+   **/
+  metadata?: MessageMetadata | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const RequestLogSchema = z.object({
