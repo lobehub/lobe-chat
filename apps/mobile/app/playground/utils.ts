@@ -125,6 +125,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'form',
+    description: '基于 React Native Switch 的主题封装，固定配色并支持主题',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Switch',
+    path: 'switch',
+    tags: ['switch', 'toggle', 'form'],
+  },
+  {
+    category: 'form',
     description: '基于 LobeUI 重写的颜色选择器组件，支持圆形/方形样式、透明色处理',
     hasDemos: true,
     hasReadme: true,

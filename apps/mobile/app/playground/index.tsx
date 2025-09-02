@@ -132,6 +132,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'switch': {
+        router.push('/playground/components/switch');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }
