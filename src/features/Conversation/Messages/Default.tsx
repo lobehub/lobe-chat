@@ -6,6 +6,8 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
+export const MessageContentClassName = 'msg_content_flag'
+
 export const DefaultMessage = memo<
   ChatMessage & {
     addIdOnDOM?: boolean;

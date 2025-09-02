@@ -7,6 +7,7 @@ import { ChatMessage } from '@/types/message';
 
 import FileListViewer from './FileListViewer';
 import ImageFileListViewer from './ImageFileListViewer';
+import { MessageContentClassName } from '../Default';
 
 export const UserMessage = memo<
   ChatMessage & {
@@ -16,7 +17,7 @@ export const UserMessage = memo<
   if (content === LOADING_FLAT) return <BubblesLoading />;
 
   return (
-    <Flexbox gap={8} id={id}>
+    <Flexbox gap={8} id={id} className={MessageContentClassName}>
       {editableContent}
       {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
       {fileList && fileList?.length > 0 && (
