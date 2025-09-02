@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Vui lòng nhập API Key của {name}",
+        "description": "Vui lòng nhập API Key của {{name}}",
         "label": "API Key",
-        "placeholder": "Vui lòng nhập API Key của {name}"
+        "placeholder": "Vui lòng nhập API Key của {{name}}"
       },
       "proxyUrl": {
         "desc": "Phải bao gồm http(s)://",

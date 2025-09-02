@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "لطفاً کلید API {name} را وارد کنید",
+        "description": "لطفاً کلید API {{name}} را وارد کنید",
         "label": "کلید API",
-        "placeholder": "لطفاً کلید API {name} را وارد کنید"
+        "placeholder": "لطفاً کلید API {{name}} را وارد کنید"
       },
       "proxyUrl": {
         "desc": "باید شامل http(s):// باشد",

@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "{name}의 API 키를 입력하세요",
+        "description": "{{name}}의 API 키를 입력하세요",
         "label": "API 키",
-        "placeholder": "{name}의 API 키를 입력하세요"
+        "placeholder": "{{name}}의 API 키를 입력하세요"
       },
       "proxyUrl": {
         "desc": "http(s)://를 포함해야 합니다",
