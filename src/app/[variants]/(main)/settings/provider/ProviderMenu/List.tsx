@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiProviderSelectors } from '@/store/aiInfra';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 
@@ -15,8 +14,11 @@ import All from './All';
 import ProviderItem from './Item';
 import SortProviderModal from './SortProviderModal';
 
-const ProviderList = (props: { onProviderSelect: (providerKey: string) => void }) => {
-  const { onProviderSelect } = props;
+const ProviderList = (props: {
+  mobile?: boolean;
+  onProviderSelect: (providerKey: string) => void;
+}) => {
+  const { onProviderSelect, mobile } = props;
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
   const enabledModelProviderList = useAiInfraStore(
@@ -28,11 +30,9 @@ const ProviderList = (props: { onProviderSelect: (providerKey: string) => void }
     aiProviderSelectors.disabledAiProviderList,
     isEqual,
   );
-
-  const isMobile = useIsMobile();
   return (
     <ScrollShadow gap={4} height={'100%'} paddingInline={12} size={4} style={{ paddingBottom: 32 }}>
-      {!isMobile && <All onClick={onProviderSelect} />}
+      {!mobile && <All onClick={onProviderSelect} />}
       <Flexbox
         align={'center'}
         horizontal

@@ -80,7 +80,7 @@ const ProviderMenu = ({
     s.providerSearchKeyword,
   ]);
 
-  let Content = <ProviderList onProviderSelect={onProviderSelect} />;
+  let Content = <ProviderList mobile={mobile} onProviderSelect={onProviderSelect} />;
 
   // loading
   if (!initAiProviderList) Content = <SkeletonList />;

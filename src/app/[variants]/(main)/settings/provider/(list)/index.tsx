@@ -1,7 +1,6 @@
 'use client';
 
 import { useQueryState } from 'nuqs';
-import { useEffect } from 'react';
 
 import { isCustomBranding } from '@/const/version';
 
@@ -9,22 +8,14 @@ import DesktopLayout from '../_layout/Desktop';
 import MobileLayout from '../_layout/Mobile';
 import ProviderDetailPage from '../detail';
 import Footer from './Footer';
-import ProviderGrid from './ProviderGrid';
 
 const Page = (props: { mobile?: boolean }) => {
   const [Provider, setProvider] = useQueryState('provider');
-
-  useEffect(() => {
-    console.log('Provider', Provider);
-  }, [Provider]);
-
   const { mobile } = props;
   const ProviderLayout = mobile ? MobileLayout : DesktopLayout;
-  const ProviderPage = Provider ? <ProviderDetailPage id={Provider} /> : <ProviderGrid />;
-
   return (
     <ProviderLayout onProviderSelect={setProvider}>
-      {ProviderPage}
+      <ProviderDetailPage id={Provider} />
       {!isCustomBranding && <Footer />}
     </ProviderLayout>
   );

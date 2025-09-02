@@ -63,7 +63,7 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
         if (!showLLM) {
           notFound();
         } else {
-          return <Provider />;
+          return <Provider mobile={mobile} />;
         }
         break;
       }

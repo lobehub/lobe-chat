@@ -18,7 +18,7 @@ const Layout = ({
       }}
       width={'100%'}
     >
-      <ProviderMenu onProviderSelect={onProviderSelect} />
+      <ProviderMenu mobile={false} onProviderSelect={onProviderSelect} />
       <Container>{children}</Container>
     </Flexbox>
   );

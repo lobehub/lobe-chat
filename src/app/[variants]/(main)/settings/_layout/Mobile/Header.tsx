@@ -2,13 +2,12 @@
 
 import { Tag } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
-import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { useProviderName } from '@/hooks/useProviderName';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
@@ -21,11 +20,13 @@ const Header = memo(() => {
 
   const router = useQueryRoute();
   const showMobileWorkspace = useShowMobileWorkspace();
-  const activeSettingsKey = useActiveSettingsKey();
+
+  const searchParams = useSearchParams();
+
+  const activeSettingsKey = searchParams.get('provider') as SettingsTabs;
   const isSessionActive = useSessionStore((s) => !!s.activeId);
-  const pathname = usePathname();
-  const isProvider = pathname.includes('/settings?active=provider');
-  const providerName = useProviderName(activeSettingsKey);
+  const isProvider = activeSettingsKey ? true : false;
+  const providerName = useProviderName(activeSettingsKey || '');
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
@@ -42,7 +43,7 @@ const Header = memo(() => {
           title={
             <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}>
-                {isProvider ? providerName : t(`tab.${activeSettingsKey}`)}
+                {isProvider ? providerName : t(`tab.${activeSettingsKey || 'provider'}`)}
               </span>
               {activeSettingsKey === SettingsTabs.Sync && (
                 <Tag bordered={false} color={'warning'}>
