@@ -116,9 +116,12 @@ export const LobeNewAPIAI = (() => {
           if (pricing.quota_type === 0) {
             // 按量计费
             if (pricing.model_price && pricing.model_price > 0) {
-              // model_price 直接是价格，需要确认单位
-              // 假设 model_price 也是基于 $0.002/1K 的倍率
-              inputPrice = pricing.model_price * 2; // 转换为 $/1M tokens
+              // model_price is a direct price value; need to confirm its unit.
+              // Assumption: model_price is the price per 1,000 tokens (i.e., $/1K tokens).
+              // To convert to price per 1,000,000 tokens ($/1M tokens), multiply by 1,000,000 / 1,000 = 1,000.
+              // Since the base price is $0.002/1K tokens, multiplying by 2 gives $2/1M tokens.
+              // Therefore, inputPrice = model_price * 2 converts the price to $/1M tokens for LobeChat.
+              inputPrice = pricing.model_price * 2;
             } else if (pricing.model_ratio) {
               // model_ratio × $0.002/1K = model_ratio × $2/1M
               inputPrice = pricing.model_ratio * 2; // 转换为 $/1M tokens
