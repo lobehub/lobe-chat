@@ -1,3 +1,4 @@
+import ProviderGrid from '../(list)/ProviderGrid';
 import Azure from './azure';
 import AzureAI from './azureai';
 import Bedrock from './bedrock';
@@ -8,10 +9,13 @@ import Ollama from './ollama';
 import OpenAI from './openai';
 import VertexAI from './vertexai';
 
-const ProviderDetailPage = (props: { id?: string }) => {
+const ProviderDetailPage = (props: { id?: string | null }) => {
   const { id } = props;
 
   switch (id) {
+    case 'all': {
+      return <ProviderGrid />;
+    }
     case 'azure': {
       return <Azure />;
     }

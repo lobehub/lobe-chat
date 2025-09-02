@@ -4,23 +4,28 @@ import { memo } from 'react';
 
 import Menu from '@/components/Menu';
 import { withSuspense } from '@/components/withSuspense';
-import { useCategory } from '../hooks/useCategory';
 import { SettingsTabs } from '@/store/global/initialState';
 
+import { useCategory } from '../hooks/useCategory';
+
 type CategoryContentProps = {
-  onMenuSelect: (key: SettingsTabs)=>void
-}
+  activeTab: string | undefined;
+  onMenuSelect: (key: SettingsTabs) => void;
+};
 
 const CategoryContent = memo((props: CategoryContentProps) => {
   const cateItems = useCategory();
 
-  const { onMenuSelect} = props
+  const { onMenuSelect, activeTab } = props;
 
   return (
     <Menu
       compact
+      defaultSelectedKeys={[activeTab || SettingsTabs.Common]}
       items={cateItems}
-      onClick={({ key }) => {onMenuSelect(key as SettingsTabs)}}
+      onClick={({ key }) => {
+        onMenuSelect(key as SettingsTabs);
+      }}
       selectable
     />
   );

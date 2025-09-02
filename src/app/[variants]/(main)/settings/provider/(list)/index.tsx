@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useQueryState } from 'nuqs';
+import { useEffect } from 'react';
 
 import { isCustomBranding } from '@/const/version';
 
@@ -11,7 +12,7 @@ import Footer from './Footer';
 import ProviderGrid from './ProviderGrid';
 
 const Page = (props: { mobile?: boolean }) => {
-  const [Provider, setProvider] = useState<string | undefined>();
+  const [Provider, setProvider] = useQueryState('provider');
 
   useEffect(() => {
     console.log('Provider', Provider);
