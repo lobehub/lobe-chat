@@ -1,14 +1,12 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => {
-  console.log('colorBgContainer', token.colorBgContainer);
   return {
     backButton: {
       alignItems: 'center',
       backgroundColor: token.colorTextSecondary,
       borderColor: token.colorPrimary,
       borderRadius: 24,
-      // borderWidth: token.lineWidthBold,
       height: 24,
       justifyContent: 'center',
       width: 24,

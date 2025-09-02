@@ -54,6 +54,13 @@ export default function SettingRoutesLayout() {
           headerTitle: t('themeMode.title', { ns: 'setting' }),
         }}
       />
+      {/* Font size settings screen */}
+      <Stack.Screen
+        name="fontSize/index"
+        options={{
+          headerTitle: t('fontSize.title', { ns: 'setting' }),
+        }}
+      />
     </Stack>
   );
 }

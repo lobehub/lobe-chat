@@ -26,6 +26,7 @@ export default function SettingScreen() {
           title={t('themeMode.title', { ns: 'setting' })}
         />
         <SettingItem href={'/setting/color'} title={t('color.title', { ns: 'setting' })} />
+        <SettingItem href={'/setting/fontSize'} title={t('fontSize.title', { ns: 'setting' })} />
         <SettingItem
           extra={getLocaleDisplayName()}
           href="/setting/locale"

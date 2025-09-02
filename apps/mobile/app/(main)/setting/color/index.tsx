@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { ColorSwatches } from '@/components';
-import Slider from '@/components/Slider';
 import { useSettingStore } from '@/store/setting';
 import {
   findCustomThemeName,
@@ -14,15 +13,13 @@ import {
 } from '@/theme';
 import { useStyles } from '../styles';
 import { SettingItem, SettingGroup } from '../(components)';
-import { FONT_SIZE_STANDARD, FONT_SIZE_LARGE, FONT_SIZE_SMALL } from '@/const/common';
 import Preview from './(components)/Preview';
 
 export default function ThemeSettingScreen() {
   const { t } = useTranslation(['setting']);
   const { styles } = useStyles();
 
-  const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor, fontSize, setFontSize } =
-    useSettingStore();
+  const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor } = useSettingStore();
 
   const primaryColorSwatchesData = [
     { color: 'rgba(0, 0, 0, 0)', title: 'Default' },
@@ -51,8 +48,8 @@ export default function ThemeSettingScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <SettingGroup>
-        <SettingItem customContent={<Preview />} title={t('color.preview', { ns: 'setting' })} />
+      <Preview />
+      <SettingGroup style={{ marginTop: 16 }}>
         <SettingItem
           customContent={
             <ColorSwatches
@@ -82,29 +79,6 @@ export default function ThemeSettingScreen() {
             />
           }
           title={t('color.neutral.title', { ns: 'setting' })}
-        />
-        <SettingItem
-          customContent={
-            <Slider
-              marks={{
-                [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
-                [FONT_SIZE_SMALL]: { label: <Text style={styles.fontSizeSmall}>A</Text> },
-                [FONT_SIZE_STANDARD]: {
-                  label: (
-                    <Text style={styles.fontSizeStandard}>
-                      {t('fontSize.standard', { ns: 'setting' })}
-                    </Text>
-                  ),
-                },
-              }}
-              max={FONT_SIZE_LARGE}
-              min={FONT_SIZE_SMALL}
-              onChangeComplete={setFontSize}
-              step={1}
-              value={fontSize}
-            />
-          }
-          title={t('fontSize.title', { ns: 'setting' })}
         />
       </SettingGroup>
     </ScrollView>
