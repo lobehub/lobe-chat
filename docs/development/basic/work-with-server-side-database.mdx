@@ -1,0 +1,77 @@
+# Work with Server-Side Database
+
+LobeChat provides a battery-included experience with its client-side database.
+While some features you really care about is only available at a server-side development.
+
+In order to work with the aspect of server-side database,
+you can setup all the prerequisites by following the [Deploying Server-Side Database](https://lobehub.com/docs/self-hosting/server-database) story.
+But here is the easier approach that can reduce your pain.
+
+## Quick Setup
+
+### Environment Configuration
+
+The project already includes a `.env.development` file with all necessary environment variables for server-side database mode. This file configures:
+
+- **Service Mode**: `NEXT_PUBLIC_SERVICE_MODE=server`
+- **Database**: PostgreSQL with connection string
+- **Authentication**: NextAuth with Casdoor SSO
+- **Storage**: MinIO S3-compatible storage
+- **Search**: SearXNG search engine
+
+### Start Docker Services
+
+Start all required services using Docker Compose:
+
+```bash
+docker-compose -f docker-compose.development.yml up -d
+```
+
+This will start the following services:
+
+- PostgreSQL database (port 5432)
+- MinIO storage (port 9000)
+- Casdoor authentication (port 8000)
+- SearXNG search (port 8080)
+
+### Run Database Migrations
+
+Execute the database migration script to create all necessary tables:
+
+```bash
+pnpm db:migrate
+```
+
+You should see: `✅ database migration pass.`
+
+### Start Development Server
+
+Launch the LobeChat development server:
+
+```bash
+pnpm dev
+```
+
+The server will start on `http://localhost:3010`
+
+And you can check all Docker services are running by running:
+
+```bash
+docker-compose -f docker-compose.development.yml ps
+```
+
+### Reset Services
+
+If you encounter issues, you can reset the entire stack:
+
+```bash
+# Stop and remove all containers
+docker-compose -f docker-compose.development.yml down
+
+# Remove volumes (this will delete all data)
+docker-compose -f docker-compose.development.yml down -v
+
+# Start fresh
+docker-compose -f docker-compose.development.yml up -d
+pnpm db:migrate
+```
