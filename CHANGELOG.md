@@ -2,6 +2,80 @@
 
 # Changelog
 
+## [Version&nbsp;1.120.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.119.1...v1.120.0)
+<sup>Released on **2025-09-02**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **model-runtime**: Refactor model-runtime dependencies and clean code.
+- **misc**: Remove base path, remove webrtc sync feature flag.
+
+
+#### ✨ Features
+
+- **misc**: Added support for Azure OpenAI Image Generation, rename Gemini 2.5 flash image to Nano Banana.
+
+
+#### 🐛 Bug Fixes
+
+- **ai-image**: Save config.imageUrl with fullUrl instead of key.
+- **misc**: Update enableStreaming name.
+
+
+#### 💄 Styles
+
+- **misc**: Add upload hint for non-visual model, adjust ControlsForm component to adapt to mobile phone display, Support new provider Nebius, update i18n, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **model-runtime**: Refactor model-runtime dependencies and clean code, closes [#8997](https://github.com/jaworldwideorg/OneJA-Bot/issues/8997) ([9f7677d](https://github.com/jaworldwideorg/OneJA-Bot/commit/9f7677d))
+* **misc**: Remove base path, closes [#9015](https://github.com/jaworldwideorg/OneJA-Bot/issues/9015) ([2a5f8d7](https://github.com/jaworldwideorg/OneJA-Bot/commit/2a5f8d7))
+* **misc**: Remove webrtc sync feature flag, closes [#9002](https://github.com/jaworldwideorg/OneJA-Bot/issues/9002) ([0924d98](https://github.com/jaworldwideorg/OneJA-Bot/commit/0924d98))
+
+
+
+#### What's improved
+
+* **misc**: Added support for Azure OpenAI Image Generation, closes [#8898](https://github.com/jaworldwideorg/OneJA-Bot/issues/8898) ([6042340](https://github.com/jaworldwideorg/OneJA-Bot/commit/6042340))
+* **misc**: Rename Gemini 2.5 flash image to Nano Banana, closes [#9004](https://github.com/jaworldwideorg/OneJA-Bot/issues/9004) ([dac5a6f](https://github.com/jaworldwideorg/OneJA-Bot/commit/dac5a6f))
+
+
+
+#### What's fixed
+
+* **ai-image**: Save config.imageUrl with fullUrl instead of key, closes [#9016](https://github.com/jaworldwideorg/OneJA-Bot/issues/9016) ([bad009a](https://github.com/jaworldwideorg/OneJA-Bot/commit/bad009a))
+* **misc**: Update enableStreaming name, closes [#8995](https://github.com/jaworldwideorg/OneJA-Bot/issues/8995) ([7c7de40](https://github.com/jaworldwideorg/OneJA-Bot/commit/7c7de40))
+
+
+
+#### Styles
+
+* **misc**: Add upload hint for non-visual model, closes [#7969](https://github.com/jaworldwideorg/OneJA-Bot/issues/7969) ([1224f4e](https://github.com/jaworldwideorg/OneJA-Bot/commit/1224f4e))
+* **misc**: Adjust ControlsForm component to adapt to mobile phone display, closes [#9013](https://github.com/jaworldwideorg/OneJA-Bot/issues/9013) ([c6038c0](https://github.com/jaworldwideorg/OneJA-Bot/commit/c6038c0))
+* **misc**: Support new provider Nebius, closes [#8903](https://github.com/jaworldwideorg/OneJA-Bot/issues/8903) ([c15791d](https://github.com/jaworldwideorg/OneJA-Bot/commit/c15791d))
+* **misc**: Update i18n, closes [#9033](https://github.com/jaworldwideorg/OneJA-Bot/issues/9033) ([650e552](https://github.com/jaworldwideorg/OneJA-Bot/commit/650e552))
+* **misc**: Update i18n, closes [#9005](https://github.com/jaworldwideorg/OneJA-Bot/issues/9005) ([63760f9](https://github.com/jaworldwideorg/OneJA-Bot/commit/63760f9))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.119.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.119.0...v1.119.1)
 <sup>Released on **2025-08-30**</sup>
 
