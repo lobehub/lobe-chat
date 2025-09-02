@@ -1,8 +1,8 @@
+import { AiProviderModelListItem, EnabledAiModel } from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
-import { AiProviderModelListItem, EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,

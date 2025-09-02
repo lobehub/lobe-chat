@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { LobeDefaultAiModelListItem } from '../../../../../../packages/model-bank/src/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
 
 import { getDetailsToken } from './tokens';
@@ -140,6 +140,44 @@ describe('getDetailsToken', () => {
     expect(result.outputText).toEqual({
       credit: 2, // (150 - 50) * 0.02 = 2
       token: 100,
+    });
+  });
+
+  it('should handle outputImageTokens correctly', () => {
+    const usage = {
+      inputTextTokens: 100,
+      outputImageTokens: 60,
+      outputReasoningTokens: 30,
+      totalOutputTokens: 200,
+      totalTokens: 300,
+    } as ModelTokensUsage;
+
+    const result = getDetailsToken(usage, mockModelCard);
+
+    expect(result.outputImage).toEqual({
+      credit: 1, // 60 * 0.02 = 1.2 -> 1
+      id: 'outputImage',
+      token: 60,
+    });
+
+    expect(result.outputReasoning).toEqual({
+      credit: 1, // 30 * 0.02 = 0.6 -> 1
+      token: 30,
+    });
+
+    expect(result.outputText).toEqual({
+      credit: 2, // (200 - 30 - 60) * 0.02 = 2.2 -> 2
+      token: 110,
+    });
+
+    expect(result.totalOutput).toEqual({
+      credit: 4, // 200 * 0.02 = 4
+      token: 200,
+    });
+
+    expect(result.totalTokens).toEqual({
+      credit: 4, // total credit equals totalOutputCredit here
+      token: 300,
     });
   });
 

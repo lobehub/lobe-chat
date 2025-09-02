@@ -4,7 +4,6 @@ import { ZodObject } from 'zod';
 import { nanoid } from '@/utils/uuid';
 
 import { BrowserDB, BrowserDBSchema, browserDB } from './db';
-import { dataSync } from './sync';
 import { DBBaseFieldsSchema } from './types/db';
 
 export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]['table']> {
@@ -20,10 +19,6 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   get table() {
     return this.db[this._tableName] as Dexie.Table;
-  }
-
-  get yMap() {
-    return dataSync.getYMap(this._tableName);
   }
 
   // **************** Create *************** //
@@ -79,7 +74,6 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
        */
       createWithNewId?: boolean;
       idGenerator?: () => string;
-      withSync?: boolean;
     } = {},
   ): Promise<{
     added: number;
@@ -88,7 +82,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     skips: string[];
     success: boolean;
   }> {
-    const { idGenerator = nanoid, createWithNewId = false, withSync = true } = options;
+    const { idGenerator = nanoid, createWithNewId = false } = options;
     const validatedData: any[] = [];
     const errors = [];
     const skips: string[] = [];
@@ -141,15 +135,6 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     try {
       await this.table.bulkAdd(validatedData);
 
-      if (withSync) {
-        dataSync.transact(() => {
-          const pools = validatedData.map(async (item) => {
-            await this.updateYMapItem(item.id);
-          });
-          Promise.all(pools);
-        });
-      }
-
       return {
         added: validatedData.length,
         ids: validatedData.map((item) => item.id),
@@ -174,28 +159,16 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   // **************** Delete *************** //
 
   protected async _deleteWithSync(id: string) {
-    const result = await this.table.delete(id);
-    // sync delete data to yjs data map
-    this.yMap?.delete(id);
-    return result;
+    return await this.table.delete(id);
   }
 
   protected async _bulkDeleteWithSync(keys: string[]) {
     await this.table.bulkDelete(keys);
     // sync delete data to yjs data map
-
-    dataSync.transact(() => {
-      keys.forEach((id) => {
-        this.yMap?.delete(id);
-      });
-    });
   }
 
   protected async _clearWithSync() {
-    const result = await this.table.clear();
-    // sync clear data to yjs data map
-    this.yMap?.clear();
-    return result;
+    return await this.table.clear();
   }
 
   // **************** Update *************** //
@@ -235,18 +208,11 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   protected async _bulkPutWithSync(items: T[]) {
     await this.table.bulkPut(items);
-
-    await dataSync.transact(() => {
-      items.forEach((items) => {
-        this.updateYMapItem((items as any).id);
-      });
-    });
   }
 
   // **************** Helper *************** //
 
   private updateYMapItem = async (id: string) => {
-    const newData = await this.table.get(id);
-    this.yMap?.set(id, newData);
+    await this.table.get(id);
   };
 }

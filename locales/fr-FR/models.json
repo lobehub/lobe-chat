@@ -74,8 +74,14 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle MoE développé en interne par la société DeepSeek. Les performances de DeepSeek-V3 surpassent celles d'autres modèles open source tels que Qwen2.5-72B et Llama-3.1-405B, et se mesurent à la performance des modèles fermés de pointe au monde comme GPT-4o et Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1 : modèle d'inférence de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
+  },
   "DeepSeek-V3-Fast": {
     "description": "Fournisseur du modèle : plateforme sophnet. DeepSeek V3 Fast est la version ultra-rapide à TPS élevé de DeepSeek V3 0324, entièrement non quantifiée, avec des capacités de code et mathématiques renforcées, offrant une réactivité accrue !"
+  },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un nouveau modèle d'inférence hybride lancé par DeepSeek, prenant en charge deux modes d'inférence : réfléchi et non réfléchi, avec une efficacité de réflexion supérieure à celle de DeepSeek-R1-0528. Optimisé par post-entraînement, l'utilisation des outils Agent et les performances des tâches des agents ont été grandement améliorées."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre une vitesse de réponse exceptionnelle et un excellent rapport qualité-prix, offrant aux clients une flexibilité accrue pour différents scénarios. Prend en charge l'inférence et le fine-tuning avec une fenêtre contextuelle de 128k."
@@ -131,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, offrant de meilleures performances que ERNIE Speed, adapté comme modèle de base pour un ajustement fin, permettant de mieux traiter les problèmes de scénarios spécifiques, tout en offrant d'excellentes performances d'inférence."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev est un modèle multimodal de génération et d'édition d'images développé par Black Forest Labs, basé sur l'architecture Rectified Flow Transformer, avec une échelle de 12 milliards de paramètres. Il se concentre sur la génération, la reconstruction, l'amélioration ou l'édition d'images sous conditions contextuelles données. Ce modèle combine les avantages de génération contrôlée des modèles de diffusion et la capacité de modélisation contextuelle des Transformers, supportant une sortie d'images de haute qualité, applicable à la restauration, au remplissage et à la reconstruction visuelle de scènes."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev est un modèle open source multimodal de langage (Multimodal Language Model, MLLM) développé par Black Forest Labs, optimisé pour les tâches texte-image, intégrant la compréhension et la génération d'images et de textes. Basé sur des modèles de langage avancés tels que Mistral-7B, il utilise un encodeur visuel soigneusement conçu et un affinage par instructions en plusieurs étapes, permettant un traitement collaboratif texte-image et un raisonnement complexe."
@@ -170,6 +182,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Capacités avancées de raisonnement d'image adaptées aux applications d'agents de compréhension visuelle."
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B : modèle Transformer polyvalent, adapté aux tâches de dialogue et de génération."
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Modèle de texte optimisé pour les instructions de Llama 3.1, conçu pour des cas d'utilisation de dialogue multilingue, qui se distingue dans de nombreux modèles de chat open source et fermés sur des benchmarks industriels courants."
   },
@@ -187,6 +202,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 est le modèle de langage open source multilingue le plus avancé de la série Llama, offrant des performances comparables à celles d'un modèle de 405B à un coût très faible. Basé sur une architecture Transformer, il a été amélioré en utilité et en sécurité grâce à un ajustement supervisé (SFT) et à un apprentissage par renforcement avec retour humain (RLHF). Sa version optimisée pour les instructions est spécialement conçue pour les dialogues multilingues et surpasse de nombreux modèles de chat open source et fermés sur plusieurs benchmarks industriels. La date limite des connaissances est décembre 2023."
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick : modèle à grande échelle basé sur le Mixture-of-Experts, offrant une stratégie d'activation experte efficace pour des performances optimales en inférence."
   },
   "MiniMax-M1": {
     "description": "Modèle d'inférence entièrement développé en interne. Leader mondial : 80K chaînes de pensée x 1M d'entrées, des performances comparables aux meilleurs modèles internationaux."
@@ -256,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle de langage à experts mixtes (MoE) avec 671 milliards de paramètres, utilisant une attention potentielle multi-tête (MLA) et une architecture DeepSeekMoE, combinant une stratégie d'équilibrage de charge sans perte auxiliaire pour optimiser l'efficacité d'inférence et d'entraînement. Pré-entraîné sur 14,8 billions de tokens de haute qualité, et affiné par supervision et apprentissage par renforcement, DeepSeek-V3 surpasse d'autres modèles open source et se rapproche des modèles fermés de premier plan."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 est un modèle de base à architecture MoE doté de capacités exceptionnelles en codage et agents, avec 1 000 milliards de paramètres au total et 32 milliards activés. Il surpasse les autres modèles open source majeurs dans les tests de performance sur les connaissances générales, la programmation, les mathématiques et les agents."
@@ -376,6 +397,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B est un modèle MoE (modèle d'experts mixtes) qui introduit un « mode de raisonnement hybride », permettant aux utilisateurs de basculer sans interruption entre le « mode réflexif » et le « mode non réflexif ». Il prend en charge la compréhension et le raisonnement dans 119 langues et dialectes, et dispose de puissantes capacités d'appel d'outils. Sur plusieurs benchmarks, notamment en capacités globales, codage et mathématiques, multilinguisme, connaissances et raisonnement, il rivalise avec les principaux grands modèles du marché tels que DeepSeek R1, OpenAI o1, o3-mini, Grok 3 et Google Gemini 2.5 Pro."
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507 : modèle optimisé pour le raisonnement avancé et les instructions de dialogue, avec une architecture à experts mixtes pour maintenir l'efficacité de l'inférence à grande échelle."
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B est un modèle dense (Dense Model) qui introduit un « mode de raisonnement hybride », permettant aux utilisateurs de basculer sans interruption entre le « mode réflexif » et le « mode non réflexif ». Grâce à des améliorations de l'architecture du modèle, à l'augmentation des données d'entraînement et à des méthodes d'entraînement plus efficaces, ses performances globales sont comparables à celles de Qwen2.5-72B."
@@ -833,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle de langage à experts mixtes (MoE) avec 6710 milliards de paramètres, utilisant une attention potentielle multi-tête (MLA) et l'architecture DeepSeekMoE, combinée à une stratégie d'équilibrage de charge sans perte auxiliaire, optimisant ainsi l'efficacité d'inférence et d'entraînement. En pré-entraînant sur 14,8 billions de tokens de haute qualité, suivi d'un ajustement supervisé et d'apprentissage par renforcement, DeepSeek-V3 surpasse les autres modèles open source en termes de performance, se rapprochant des modèles fermés de premier plan."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B est un modèle avancé formé pour des dialogues de haute complexité."
   },
@@ -903,7 +930,7 @@
     "description": "DeepSeek R1 version complète, avec 671B de paramètres, prenant en charge la recherche en ligne en temps réel, offrant des capacités de compréhension et de génération plus puissantes."
   },
   "deepseek-reasoner": {
-    "description": "Modèle d'inférence proposé par DeepSeek. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
+    "description": "DeepSeek V3.1 en mode réflexion. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse finale."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 est un modèle de langage Mixture-of-Experts efficace, adapté aux besoins de traitement économique."
@@ -917,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 est un modèle MoE de 671 milliards de paramètres, se distinguant par ses capacités en programmation et en technique, ainsi que par sa compréhension du contexte et son traitement de longs textes."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 est un nouveau modèle d'inférence hybride lancé par DeepSeek, prenant en charge deux modes d'inférence : réfléchi et non réfléchi, avec une efficacité de réflexion supérieure à celle de DeepSeek-R1-0528. Optimisé par post-entraînement, l'utilisation des outils Agent et les performances des tâches des agents ont été grandement améliorées. Supporte une fenêtre contextuelle de 128k et une longueur de sortie maximale de 64k tokens."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle d'inférence hybride supportant un contexte long de 128K et un changement de mode efficace, offrant des performances et une rapidité exceptionnelles dans l'appel d'outils, la génération de code et les tâches de raisonnement complexes."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 améliore considérablement les capacités de raisonnement du modèle avec très peu de données annotées. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
@@ -1218,10 +1251,10 @@
     "description": "Gemini 2.5 Flash est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
   "gemini-2.5-flash-image-preview": {
-    "description": "Gemini 2.5 Flash Image Preview est le modèle multimodal natif le plus récent, le plus rapide et le plus performant de Google. Il vous permet de générer et d’éditer des images via des échanges conversationnels."
+    "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
   },
   "gemini-2.5-flash-image-preview:image": {
-    "description": "Gemini 2.5 Flash Image Preview est le dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d’éditer des images par le biais de conversations."
+    "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite est le modèle le plus petit et le plus rentable de Google, conçu pour une utilisation à grande échelle."
@@ -1363,6 +1396,12 @@
   },
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash est le modèle principal le plus avancé de Google, conçu pour des tâches avancées de raisonnement, de codage, de mathématiques et de sciences. Il intègre une capacité de « réflexion » intégrée, lui permettant de fournir des réponses avec une précision accrue et un traitement contextuel plus détaillé.\n\nRemarque : ce modèle existe en deux variantes : avec réflexion et sans réflexion. Le tarif de sortie varie considérablement selon que la capacité de réflexion est activée ou non. Si vous choisissez la variante standard (sans le suffixe « :thinking »), le modèle évitera explicitement de générer des jetons de réflexion.\n\nPour exploiter la capacité de réflexion et recevoir des jetons de réflexion, vous devez sélectionner la variante « :thinking », ce qui entraînera un tarif de sortie plus élevé pour la réflexion.\n\nDe plus, Gemini 2.5 Flash peut être configuré via le paramètre « nombre maximal de jetons pour le raisonnement », comme décrit dans la documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Modèle expérimental Gemini 2.5 Flash, supportant la génération d'images."
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Modèle expérimental Gemini 2.5 Flash, supportant la génération d'images."
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash est le modèle phare le plus avancé de Google, conçu pour des tâches de raisonnement avancé, de codage, de mathématiques et de sciences. Il comprend des capacités de 'pensée' intégrées, lui permettant de fournir des réponses avec une plus grande précision et un traitement contextuel détaillé.\n\nRemarque : ce modèle a deux variantes : pensée et non-pensée. La tarification de sortie varie considérablement en fonction de l'activation de la capacité de pensée. Si vous choisissez la variante standard (sans le suffixe ':thinking'), le modèle évitera explicitement de générer des jetons de pensée.\n\nPour tirer parti de la capacité de pensée et recevoir des jetons de pensée, vous devez choisir la variante ':thinking', ce qui entraînera une tarification de sortie de pensée plus élevée.\n\nDe plus, Gemini 2.5 Flash peut être configuré via le paramètre 'nombre maximal de jetons de raisonnement', comme décrit dans la documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
@@ -1535,6 +1574,9 @@
   "gpt-oss": {
     "description": "GPT-OSS 20B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, adapté pour fonctionner sur des GPU grand public haut de gamme ou des Mac Apple Silicon. Ce modèle excelle dans la génération de dialogues, la rédaction de code et les tâches de raisonnement, avec prise en charge des appels de fonctions et de l'utilisation d'outils."
   },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 : architecture Transformer quantifiée, offrant des performances solides même en ressources limitées."
+  },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, conçu comme un modèle phare. Il nécessite un environnement multi-GPU ou une station de travail haute performance, offrant des performances exceptionnelles en raisonnement complexe, génération de code et traitement multilingue, avec prise en charge avancée des appels de fonctions et de l'intégration d'outils."
   },
@@ -1561,6 +1603,9 @@
   },
   "grok-4": {
     "description": "Notre tout dernier modèle phare, le plus puissant, excelle dans le traitement du langage naturel, le calcul mathématique et le raisonnement — un véritable champion polyvalent."
+  },
+  "grok-code-fast-1": {
+    "description": "Nous sommes ravis de présenter grok-code-fast-1, un modèle d'inférence rapide et économique, excellent dans le codage des agents."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B est un modèle linguistique combinant créativité et intelligence, intégrant plusieurs modèles de pointe."

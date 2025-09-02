@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Diepdenkschakelaar"
     },
-    "title": "Modeluitbreidingsfunctie"
+    "title": "Modeluitbreidingsfunctie",
+    "urlContext": {
+      "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
+      "title": "Inhoud van webkoppeling extraheren"
+    }
   },
   "history": {
     "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
@@ -125,6 +129,7 @@
       "inputWriteCached": "Invoer cache schrijven",
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
+      "outputImage": "Afbeelding uitvoer",
       "outputText": "Tekstuitvoer",
       "outputTitle": "Uitvoerdetails",
       "reasoning": "Diep nadenken",

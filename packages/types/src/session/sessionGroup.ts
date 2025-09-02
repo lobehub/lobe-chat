@@ -5,8 +5,6 @@ export enum SessionDefaultGroup {
   Pinned = 'pinned',
 }
 
-export type SessionGroupId = SessionDefaultGroup | string;
-
 export interface SessionGroupItem {
   createdAt: Date;
   id: string;

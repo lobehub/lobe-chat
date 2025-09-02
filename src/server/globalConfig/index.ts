@@ -1,10 +1,10 @@
 import { authEnv } from '@/config/auth';
 import { fileEnv } from '@/config/file';
-import { knowledgeEnv } from '@/config/knowledge';
-import { langfuseEnv } from '@/config/langfuse';
 import { enableNextAuth } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
+import { knowledgeEnv } from '@/envs/knowledge';
+import { langfuseEnv } from '@/envs/langfuse';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 

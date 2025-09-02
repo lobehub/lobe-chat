@@ -4,7 +4,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import {
   MODEL_LIST_CONFIGS,
-  PROVIDER_DETECTION_CONFIG,
+  MODEL_OWNER_DETECTION_CONFIG,
   detectModelProvider,
   processModelList,
   processMultiProviderModelList,
@@ -98,7 +98,7 @@ const mockDefaultModelList: (Partial<ChatModelCard> & { id: string })[] = [
 ];
 
 // Mock the import
-vi.mock('@/config/aiModels', () => ({
+vi.mock('model-bank', () => ({
   LOBE_DEFAULT_MODEL_LIST: mockDefaultModelList,
 }));
 
@@ -394,7 +394,7 @@ describe('modelParse', () => {
           reasoning: true,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -481,7 +481,7 @@ describe('modelParse', () => {
           contextWindowTokens: 5000,
         };
 
-        const mockModule = await import('@/config/aiModels');
+        const mockModule = await import('model-bank');
         mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempModelEntry as any);
 
         const config = MODEL_LIST_CONFIGS.openai;
@@ -706,7 +706,7 @@ describe('modelParse', () => {
           reasoning: true,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -735,7 +735,7 @@ describe('modelParse', () => {
           reasoning: false,
         },
       };
-      const mockModule = await import('@/config/aiModels');
+      const mockModule = await import('model-bank');
       mockModule.LOBE_DEFAULT_MODEL_LIST.push(tempMockEntry as any);
 
       const modelList = [{ id: modelId }];
@@ -754,7 +754,7 @@ describe('modelParse', () => {
   describe('MODEL_LIST_CONFIGS and PROVIDER_DETECTION_CONFIG', () => {
     it('should have matching keys in both configuration objects', () => {
       const modelConfigKeys = Object.keys(MODEL_LIST_CONFIGS);
-      const providerDetectionKeys = Object.keys(PROVIDER_DETECTION_CONFIG);
+      const providerDetectionKeys = Object.keys(MODEL_OWNER_DETECTION_CONFIG);
       expect(modelConfigKeys.sort()).toEqual(providerDetectionKeys.sort());
     });
   });

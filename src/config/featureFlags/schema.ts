@@ -2,10 +2,6 @@
 import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
-  /**
-   * Enable WebRTC sync
-   */
-  webrtc_sync: z.boolean().optional(),
   check_updates: z.boolean().optional(),
   pin_list: z.boolean().optional(),
 
@@ -51,7 +47,6 @@ export const FeatureFlagsSchema = z.object({
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  webrtc_sync: false,
   pin_list: false,
 
   language_model_settings: true,
@@ -93,7 +88,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
   return {
-    enableWebrtc: config.webrtc_sync,
     isAgentEditable: config.edit_agent,
 
     showCreateSession: config.create_session,

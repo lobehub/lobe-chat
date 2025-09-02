@@ -10,4 +10,3 @@ export {
   systemAgentSelectors,
   userGeneralSettingsSelectors,
 } from './slices/settings/selectors';
-export { syncSettingsSelectors } from './slices/sync/selectors';

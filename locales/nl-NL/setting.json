@@ -237,6 +237,10 @@
       "title": "Berichtgeschiedenis beperken",
       "unlimited": "Onbeperkt aantal berichten in de geschiedenis"
     },
+    "enableStreaming": {
+      "desc": "Schakel streaming-uitvoer in om reacties in realtime weer te geven. Als dit is uitgeschakeld, wordt alleen de volledige reactie weergegeven.",
+      "title": "Streaming-uitvoer inschakelen"
+    },
     "historyCount": {
       "desc": "Aantal berichten dat bij elke aanvraag wordt meegenomen (inclusief de meest recente vraag. Elke vraag en antwoord tellen als 1)",
       "title": "Berichtaantal meenemen"

@@ -1,11 +1,11 @@
 import { GenerateContentResponse } from '@google/genai';
-import { nanoid } from '@lobechat/utils';
 
 import errorLocale from '@/locales/default/error';
 import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 
 import { ChatStreamCallbacks } from '../../types';
+import { nanoid } from '../uuid';
 import {
   StreamContext,
   StreamProtocolChunk,
@@ -57,8 +57,20 @@ const transformGoogleGenerativeAIStream = (
   if (candidate?.finishReason && usage) {
     // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
     const reasoningTokens = usage.thoughtsTokenCount;
-    const outputTextTokens = usage.candidatesTokenCount ?? 0;
-    const totalOutputTokens = outputTextTokens + (reasoningTokens ?? 0);
+
+    const candidatesDetails = usage.candidatesTokensDetails;
+    const candidatesTotal =
+      usage.candidatesTokenCount ??
+      candidatesDetails?.reduce((s: number, i: any) => s + (i?.tokenCount ?? 0), 0) ??
+      0;
+
+    const outputImageTokens =
+      candidatesDetails?.find((i: any) => i.modality === 'IMAGE')?.tokenCount ?? 0;
+    const outputTextTokens =
+      candidatesDetails?.find((i: any) => i.modality === 'TEXT')?.tokenCount ??
+      Math.max(0, candidatesTotal - outputImageTokens);
+
+    const totalOutputTokens = candidatesTotal + (reasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -69,6 +81,7 @@ const transformGoogleGenerativeAIStream = (
             ?.tokenCount,
           inputTextTokens: usage.promptTokensDetails?.find((i) => i.modality === 'TEXT')
             ?.tokenCount,
+          outputImageTokens,
           outputReasoningTokens: reasoningTokens,
           outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
@@ -154,9 +167,13 @@ const transformGoogleGenerativeAIStream = (
         if (candidate.finishReason) {
           const chunks: StreamProtocolChunk[] = [imageChunk];
           if (chunk.usageMetadata) {
+            // usageChunks already includes the 'stop' chunk as its first entry when usage exists,
+            // so append usageChunks to avoid sending a duplicate 'stop'.
             chunks.push(...usageChunks);
+          } else {
+            // No usage metadata, we need to send the stop chunk explicitly.
+            chunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
           }
-          chunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
           return chunks;
         }
 

@@ -3,7 +3,7 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError, CitationItem } from '@/types/message';
 
-import { AgentRuntimeErrorType } from '../../../error';
+import { AgentRuntimeErrorType } from '../../../types/error';
 import { convertResponseUsage } from '../../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,

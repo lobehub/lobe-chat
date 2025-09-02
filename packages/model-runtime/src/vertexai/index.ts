@@ -1,7 +1,7 @@
 import { GoogleGenAI, GoogleGenAIOptions } from '@google/genai';
 
-import { AgentRuntimeErrorType } from '../error';
 import { LobeGoogleAI } from '../google';
+import { AgentRuntimeErrorType } from '../types/error';
 import { AgentRuntimeError } from '../utils/createError';
 
 const DEFAULT_VERTEXAI_LOCATION = 'global';
