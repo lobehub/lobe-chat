@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Güncelleme Günlüğü",
+  "color": {
+    "neutral": {
+      "description": "Uygulamanın nötr tonlarını seçin",
+      "title": "Nötr Renk Ayarları"
+    },
+    "preview": "Önizleme",
+    "previewMessages": {
+      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
+      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
+    },
+    "primary": {
+      "description": "Uygulamanın ana rengini seçin",
+      "title": "Ana Renk Ayarları"
+    },
+    "title": "Renk Ayarları"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Geliştirici Seçenekleri"
   },
   "feedback": "Geri Bildirim",
+  "fontSize": {
+    "standard": "Standart",
+    "title": "Yazı Tipi Boyutu"
+  },
   "help": "Yardım",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "AI Sağlayıcıları",
   "support": "E-posta Desteği",
-  "theme": {
+  "themeMode": {
     "auto": "Sistemi Takip Et",
     "dark": "Koyu Mod",
-    "fontSize": {
-      "standard": "Standart",
-      "title": "Yazı Tipi Boyutu"
-    },
-    "light": "Açık Mod",
-    "neutralColor": {
-      "description": "Uygulamanın nötr tonunu seçin",
-      "title": "Nötr Renk Ayarı"
-    },
-    "preview": "Önizleme",
-    "previewMessages": {
-      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme anında güncellenecektir.",
-      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
-    },
-    "primaryColor": {
-      "description": "Uygulamanın ana rengini seçin",
-      "title": "Ana Renk Ayarı"
-    },
-    "sectionDescription": "Beğendiğiniz tema stilini seçin, seçiminizi değiştirmek için tıklayın",
-    "sectionTitle": "Tema",
-    "title": "Tema Ayarları"
+    "light": "Açık Mod"
   },
   "title": "Ayarlar",
   "version": "Mevcut Sürüm"

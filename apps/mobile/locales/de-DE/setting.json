@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Änderungsprotokoll",
+  "color": {
+    "neutral": {
+      "description": "Wählen Sie den neutralen Farbton der Anwendung",
+      "title": "Neutrale Farbanpassung"
+    },
+    "preview": "Vorschau",
+    "previewMessages": {
+      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem untenstehenden Farbwähler anpassen. Die Vorschau wird in Echtzeit aktualisiert, um die Wirkung anzuzeigen.",
+      "userHowToUse": "Wie verwendet man die Themenvorschau?"
+    },
+    "primary": {
+      "description": "Wählen Sie den Hauptfarbton der Anwendung",
+      "title": "Hauptfarbanpassung"
+    },
+    "title": "Farb-Einstellungen"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Entwickleroptionen"
   },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Standard",
+    "title": "Schriftgröße"
+  },
   "help": "Hilfe",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "KI-Anbieter",
   "support": "E-Mail-Support",
-  "theme": {
+  "themeMode": {
     "auto": "Systemeinstellung folgen",
     "dark": "Dunkelmodus",
-    "fontSize": {
-      "standard": "Standard",
-      "title": "Schriftgröße"
-    },
-    "light": "Hellmodus",
-    "neutralColor": {
-      "description": "Wählen Sie den neutralen Farbton der Anwendung",
-      "title": "Neutrale Farbeinstellungen"
-    },
-    "preview": "Vorschau",
-    "previewMessages": {
-      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem Farbwähler unten anpassen. Die Vorschau aktualisiert sich in Echtzeit, um die Wirkung zu zeigen.",
-      "userHowToUse": "Wie benutzt man die Themenvorschau?"
-    },
-    "primaryColor": {
-      "description": "Wählen Sie den Hauptfarbton der Anwendung",
-      "title": "Hauptfarbeinstellungen"
-    },
-    "sectionDescription": "Wählen Sie Ihren bevorzugten Themenstil und klicken Sie, um Ihre Auswahl zu wechseln",
-    "sectionTitle": "Thema",
-    "title": "Themeinstellungen"
+    "light": "Hellmodus"
   },
   "title": "Einstellungen",
   "version": "Aktuelle Version"

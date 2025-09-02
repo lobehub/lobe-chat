@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Registro aggiornamenti",
+  "color": {
+    "neutral": {
+      "description": "Seleziona la tonalità neutra dell'applicazione",
+      "title": "Configurazione dei colori neutri"
+    },
+    "preview": "Anteprima",
+    "previewMessages": {
+      "botHowToUse": "Puoi regolare il colore principale e i colori neutri tramite il selettore di colori sottostante; l'anteprima si aggiornerà in tempo reale per mostrare l'effetto.",
+      "userHowToUse": "Come utilizzare l'anteprima del tema?"
+    },
+    "primary": {
+      "description": "Seleziona la tonalità principale dell'applicazione",
+      "title": "Configurazione del colore principale"
+    },
+    "title": "Impostazioni colore"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Opzioni sviluppatore"
   },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Standard",
+    "title": "Dimensione del carattere"
+  },
   "help": "Guida all'uso",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Provider AI",
   "support": "Supporto via email",
-  "theme": {
-    "auto": "Segui sistema",
+  "themeMode": {
+    "auto": "Segui il sistema",
     "dark": "Modalità scura",
-    "fontSize": {
-      "standard": "Standard",
-      "title": "Dimensione carattere"
-    },
-    "light": "Modalità chiara",
-    "neutralColor": {
-      "description": "Seleziona la tonalità neutra dell'app",
-      "title": "Configurazione colore neutro"
-    },
-    "preview": "Anteprima",
-    "previewMessages": {
-      "botHowToUse": "Puoi regolare il colore principale e i colori neutri tramite il selettore sottostante; l'anteprima si aggiornerà in tempo reale per mostrare l'effetto.",
-      "userHowToUse": "Come usare l'anteprima del tema?"
-    },
-    "primaryColor": {
-      "description": "Seleziona il colore principale dell'app",
-      "title": "Configurazione colore principale"
-    },
-    "sectionDescription": "Scegli lo stile del tema che preferisci, clicca per applicare la tua scelta",
-    "sectionTitle": "Tema",
-    "title": "Impostazioni tema"
+    "light": "Modalità chiara"
   },
   "title": "Impostazioni",
   "version": "Versione attuale"

@@ -7,6 +7,7 @@ import { getDesignToken } from './getDesignToken';
 import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
 import { darkAlgorithm } from '../algorithm/dark';
 import { lightAlgorithm } from '../algorithm/light';
+import { useTranslation } from 'react-i18next';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -22,6 +23,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
+  const { t } = useTranslation(['setting']);
 
   // 检查是否已经在 ThemeProvider 内部（嵌套情况）
   const parentContext = useContext(ThemeContext);
@@ -67,6 +69,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
       return;
     }
     setStoreThemeMode(mode);
+  };
+
+  const getThemeModeDisplayName = () => {
+    if (themeMode === 'auto') {
+      return t('themeMode.auto', { ns: 'setting' });
+    }
+    return t(`themeMode.${themeMode}`, { ns: 'setting' });
   };
 
   // 切换主题（在 light 和 dark 之间切换）
@@ -125,6 +134,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   };
 
   const contextValue: ThemeContextValue = {
+    getThemeModeDisplayName,
     setThemeMode: setThemeModeHandler,
     theme,
     toggleTheme,

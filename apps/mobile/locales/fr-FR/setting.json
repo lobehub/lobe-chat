@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Journal des mises à jour",
+  "color": {
+    "neutral": {
+      "description": "Choisissez la teinte neutre de l'application",
+      "title": "Configuration des couleurs neutres"
+    },
+    "preview": "Aperçu",
+    "previewMessages": {
+      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres à l'aide du sélecteur de couleurs ci-dessous. L'aperçu se mettra à jour en temps réel pour afficher l'effet.",
+      "userHowToUse": "Comment utiliser l'aperçu du thème ?"
+    },
+    "primary": {
+      "description": "Choisissez la couleur principale de l'application",
+      "title": "Configuration de la couleur principale"
+    },
+    "title": "Paramètres des couleurs"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Options développeur"
   },
   "feedback": "Retour d'information",
+  "fontSize": {
+    "standard": "Standard",
+    "title": "Taille de la police"
+  },
   "help": "Aide à l'utilisation",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Fournisseurs d'IA",
   "support": "Support par e-mail",
-  "theme": {
+  "themeMode": {
     "auto": "Suivre le système",
     "dark": "Mode sombre",
-    "fontSize": {
-      "standard": "Standard",
-      "title": "Taille de la police"
-    },
-    "light": "Mode clair",
-    "neutralColor": {
-      "description": "Choisissez la teinte neutre de l'application",
-      "title": "Configuration des couleurs neutres"
-    },
-    "preview": "Aperçu",
-    "previewMessages": {
-      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres avec le sélecteur ci-dessous, l'aperçu se mettra à jour en temps réel.",
-      "userHowToUse": "Comment utiliser l'aperçu du thème ?"
-    },
-    "primaryColor": {
-      "description": "Choisissez la couleur principale de l'application",
-      "title": "Configuration de la couleur principale"
-    },
-    "sectionDescription": "Choisissez le style de thème que vous préférez, cliquez pour changer votre sélection",
-    "sectionTitle": "Thème",
-    "title": "Paramètres du thème"
+    "light": "Mode clair"
   },
   "title": "Paramètres",
   "version": "Version actuelle"

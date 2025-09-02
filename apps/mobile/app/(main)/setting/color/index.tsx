@@ -52,7 +52,7 @@ export default function ThemeSettingScreen() {
   return (
     <ScrollView style={styles.container}>
       <SettingGroup>
-        <SettingItem customContent={<Preview />} title={t('theme.preview', { ns: 'setting' })} />
+        <SettingItem customContent={<Preview />} title={t('color.preview', { ns: 'setting' })} />
         <SettingItem
           customContent={
             <ColorSwatches
@@ -66,7 +66,7 @@ export default function ThemeSettingScreen() {
               value={primaryColor ? primaryColors[primaryColor] : undefined}
             />
           }
-          title={t('theme.primaryColor.title', { ns: 'setting' })}
+          title={t('color.primary.title', { ns: 'setting' })}
         />
         <SettingItem
           customContent={
@@ -81,7 +81,7 @@ export default function ThemeSettingScreen() {
               value={neutralColor ? neutralColors[neutralColor] : undefined}
             />
           }
-          title={t('theme.neutralColor.title', { ns: 'setting' })}
+          title={t('color.neutral.title', { ns: 'setting' })}
         />
         <SettingItem
           customContent={
@@ -92,7 +92,7 @@ export default function ThemeSettingScreen() {
                 [FONT_SIZE_STANDARD]: {
                   label: (
                     <Text style={styles.fontSizeStandard}>
-                      {t('theme.fontSize.standard', { ns: 'setting' })}
+                      {t('fontSize.standard', { ns: 'setting' })}
                     </Text>
                   ),
                 },
@@ -104,7 +104,7 @@ export default function ThemeSettingScreen() {
               value={fontSize}
             />
           }
-          title={t('theme.fontSize.title', { ns: 'setting' })}
+          title={t('fontSize.title', { ns: 'setting' })}
         />
       </SettingGroup>
     </ScrollView>

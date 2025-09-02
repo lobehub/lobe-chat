@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Dziennik zmian",
+  "color": {
+    "neutral": {
+      "description": "Wybierz neutralne odcienie aplikacji",
+      "title": "Konfiguracja kolorów neutralnych"
+    },
+    "preview": "Podgląd",
+    "previewMessages": {
+      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą poniższego selektora kolorów, a podgląd będzie aktualizowany na żywo, aby pokazać efekt.",
+      "userHowToUse": "Jak korzystać z podglądu motywu?"
+    },
+    "primary": {
+      "description": "Wybierz główny kolor aplikacji",
+      "title": "Konfiguracja koloru głównego"
+    },
+    "title": "Ustawienia kolorów"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Opcje deweloperskie"
   },
   "feedback": "Opinie i sugestie",
+  "fontSize": {
+    "standard": "Standardowy",
+    "title": "Rozmiar czcionki"
+  },
   "help": "Pomoc",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Dostawcy AI",
   "support": "Wsparcie mailowe",
-  "theme": {
+  "themeMode": {
     "auto": "Dopasuj do systemu",
     "dark": "Tryb ciemny",
-    "fontSize": {
-      "standard": "Standardowy",
-      "title": "Rozmiar czcionki"
-    },
-    "light": "Tryb jasny",
-    "neutralColor": {
-      "description": "Wybierz neutralny odcień aplikacji",
-      "title": "Konfiguracja neutralnych kolorów"
-    },
-    "preview": "Podgląd",
-    "previewMessages": {
-      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą selektora kolorów poniżej, podgląd będzie aktualizowany na żywo.",
-      "userHowToUse": "Jak korzystać z podglądu motywu?"
-    },
-    "primaryColor": {
-      "description": "Wybierz główny kolor aplikacji",
-      "title": "Konfiguracja koloru głównego"
-    },
-    "sectionDescription": "Wybierz preferowany styl motywu i kliknij, aby zastosować swój wybór",
-    "sectionTitle": "Motyw",
-    "title": "Ustawienia motywu"
+    "light": "Tryb jasny"
   },
   "title": "Ustawienia",
   "version": "Aktualna wersja"

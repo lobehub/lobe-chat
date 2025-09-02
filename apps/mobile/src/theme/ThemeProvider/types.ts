@@ -15,6 +15,7 @@ export interface Theme {
 }
 
 export interface ThemeContextValue {
+  getThemeModeDisplayName: () => string;
   setThemeMode: (mode: ThemeMode) => void;
   theme: Theme;
   toggleTheme: () => void;

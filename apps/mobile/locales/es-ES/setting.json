@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Registro de cambios",
+  "color": {
+    "neutral": {
+      "description": "Selecciona el tono neutro de la aplicación",
+      "title": "Configuración de tonos neutros"
+    },
+    "preview": "Vista previa",
+    "previewMessages": {
+      "botHowToUse": "Puedes ajustar el color principal y los tonos neutros mediante el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "userHowToUse": "¿Cómo usar la vista previa del tema?"
+    },
+    "primary": {
+      "description": "Selecciona el color principal de la aplicación",
+      "title": "Configuración del color principal"
+    },
+    "title": "Configuración de color"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Opciones de desarrollador"
   },
   "feedback": "Comentarios",
+  "fontSize": {
+    "standard": "Estándar",
+    "title": "Tamaño de fuente"
+  },
   "help": "Ayuda",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Proveedores de IA",
   "support": "Soporte por correo electrónico",
-  "theme": {
+  "themeMode": {
     "auto": "Seguir sistema",
     "dark": "Modo oscuro",
-    "fontSize": {
-      "standard": "Estándar",
-      "title": "Tamaño de fuente"
-    },
-    "light": "Modo claro",
-    "neutralColor": {
-      "description": "Seleccione el tono neutro de la aplicación",
-      "title": "Configuración de color neutro"
-    },
-    "preview": "Vista previa",
-    "previewMessages": {
-      "botHowToUse": "Puede ajustar el color principal y el tono neutro con el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
-      "userHowToUse": "¿Cómo usar la vista previa del tema?"
-    },
-    "primaryColor": {
-      "description": "Seleccione el color principal de la aplicación",
-      "title": "Configuración de color principal"
-    },
-    "sectionDescription": "Seleccione el estilo de tema que prefiera y haga clic para cambiar su selección",
-    "sectionTitle": "Tema",
-    "title": "Configuración de tema"
+    "light": "Modo claro"
   },
   "title": "Configuración",
   "version": "Versión actual"

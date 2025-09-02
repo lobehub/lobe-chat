@@ -105,7 +105,7 @@ const Preview = memo(() => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {navbar}
       <View style={styles.chatArea}>{chatContent}</View>
       {inputArea}

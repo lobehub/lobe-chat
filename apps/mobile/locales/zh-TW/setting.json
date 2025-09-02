@@ -65,8 +65,28 @@
     }
   },
   "changelog": "更新日誌",
+  "color": {
+    "neutral": {
+      "description": "選擇應用的中性色調",
+      "title": "中性色配置"
+    },
+    "preview": "預覽",
+    "previewMessages": {
+      "botHowToUse": "你可以透過下面的顏色選擇器來調整主色和中性色，預覽會即時更新以顯示效果。",
+      "userHowToUse": "主題預覽如何使用？"
+    },
+    "primary": {
+      "description": "選擇應用的主色調",
+      "title": "主色配置"
+    },
+    "title": "色彩設定"
+  },
   "developer": "開發者選項",
   "feedback": "意見回饋",
+  "fontSize": {
+    "standard": "標準",
+    "title": "字體大小"
+  },
   "help": "使用說明",
   "locale": {
     "auto": {
@@ -92,30 +112,10 @@
   },
   "providers": "AI 服務商",
   "support": "郵件支援",
-  "theme": {
+  "themeMode": {
     "auto": "跟隨系統",
     "dark": "深色模式",
-    "fontSize": {
-      "standard": "標準",
-      "title": "字體大小"
-    },
-    "light": "淺色模式",
-    "neutralColor": {
-      "description": "選擇應用的中性色調",
-      "title": "中性色配置"
-    },
-    "preview": "預覽",
-    "previewMessages": {
-      "botHowToUse": "你可以透過下面的顏色選擇器來調整主色和中性色，預覽會即時更新以顯示效果。",
-      "userHowToUse": "主題預覽如何使用？"
-    },
-    "primaryColor": {
-      "description": "選擇應用的主色調",
-      "title": "主色配置"
-    },
-    "sectionDescription": "選擇您喜歡的主題風格，點擊切換您的選擇",
-    "sectionTitle": "主題",
-    "title": "主題設定"
+    "light": "淺色模式"
   },
   "title": "設定",
   "version": "當前版本"

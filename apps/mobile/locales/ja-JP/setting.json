@@ -65,6 +65,22 @@
     }
   },
   "changelog": "更新履歴",
+  "color": {
+    "neutral": {
+      "description": "アプリのニュートラルカラーを選択します",
+      "title": "ニュートラルカラー設定"
+    },
+    "preview": "プレビュー",
+    "previewMessages": {
+      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで効果を表示します。",
+      "userHowToUse": "テーマプレビューの使い方は？"
+    },
+    "primary": {
+      "description": "アプリのメインカラーを選択します",
+      "title": "メインカラー設定"
+    },
+    "title": "カラー設定"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "開発者オプション"
   },
   "feedback": "フィードバック",
+  "fontSize": {
+    "standard": "標準",
+    "title": "フォントサイズ"
+  },
   "help": "ヘルプ",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "AI プロバイダー",
   "support": "メールサポート",
-  "theme": {
+  "themeMode": {
     "auto": "システムに従う",
     "dark": "ダークモード",
-    "fontSize": {
-      "standard": "標準",
-      "title": "フォントサイズ"
-    },
-    "light": "ライトモード",
-    "neutralColor": {
-      "description": "アプリのニュートラルカラーを選択してください",
-      "title": "ニュートラルカラー設定"
-    },
-    "preview": "プレビュー",
-    "previewMessages": {
-      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで更新されます。",
-      "userHowToUse": "テーマプレビューの使い方"
-    },
-    "primaryColor": {
-      "description": "アプリのメインカラーを選択してください",
-      "title": "メインカラー設定"
-    },
-    "sectionDescription": "お好みのテーマスタイルを選択し、クリックして切り替えてください",
-    "sectionTitle": "テーマ",
-    "title": "テーマ設定"
+    "light": "ライトモード"
   },
   "title": "設定",
   "version": "現在のバージョン"

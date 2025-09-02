@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Nhật ký cập nhật",
+  "color": {
+    "neutral": {
+      "description": "Chọn tông màu trung tính cho ứng dụng",
+      "title": "Cấu hình màu trung tính"
+    },
+    "preview": "Xem trước",
+    "previewMessages": {
+      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính bằng bộ chọn màu bên dưới, bản xem trước sẽ cập nhật trực tiếp để hiển thị hiệu ứng.",
+      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
+    },
+    "primary": {
+      "description": "Chọn tông màu chủ đạo cho ứng dụng",
+      "title": "Cấu hình màu chủ đạo"
+    },
+    "title": "Cài đặt màu sắc"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Tùy chọn nhà phát triển"
   },
   "feedback": "Phản hồi ý kiến",
+  "fontSize": {
+    "standard": "Tiêu chuẩn",
+    "title": "Cỡ chữ"
+  },
   "help": "Hướng dẫn sử dụng",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Nhà cung cấp AI",
   "support": "Hỗ trợ qua email",
-  "theme": {
+  "themeMode": {
     "auto": "Theo hệ thống",
     "dark": "Chế độ tối",
-    "fontSize": {
-      "standard": "Tiêu chuẩn",
-      "title": "Cỡ chữ"
-    },
-    "light": "Chế độ sáng",
-    "neutralColor": {
-      "description": "Chọn tông màu trung tính cho ứng dụng",
-      "title": "Cấu hình màu trung tính"
-    },
-    "preview": "Xem trước",
-    "previewMessages": {
-      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính bằng bộ chọn màu bên dưới, bản xem trước sẽ cập nhật trực tiếp để hiển thị hiệu ứng.",
-      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
-    },
-    "primaryColor": {
-      "description": "Chọn tông màu chủ đạo cho ứng dụng",
-      "title": "Cấu hình màu chủ đạo"
-    },
-    "sectionDescription": "Chọn phong cách chủ đề bạn thích, nhấn để chuyển đổi lựa chọn của bạn",
-    "sectionTitle": "Chủ đề",
-    "title": "Cài đặt chủ đề"
+    "light": "Chế độ sáng"
   },
   "title": "Cài đặt",
   "version": "Phiên bản hiện tại"

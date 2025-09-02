@@ -65,6 +65,22 @@
     }
   },
   "changelog": "업데이트 로그",
+  "color": {
+    "neutral": {
+      "description": "애플리케이션의 중립 색조 선택",
+      "title": "중립 색상 설정"
+    },
+    "preview": "미리보기",
+    "previewMessages": {
+      "botHowToUse": "아래 색상 선택기를 사용하여 기본 색상과 중립 색상을 조정할 수 있으며, 미리보기는 실시간으로 변경 사항을 반영합니다.",
+      "userHowToUse": "테마 미리보기 사용 방법은?"
+    },
+    "primary": {
+      "description": "애플리케이션의 기본 색조 선택",
+      "title": "기본 색상 설정"
+    },
+    "title": "색상 설정"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "개발자 옵션"
   },
   "feedback": "의견 보내기",
+  "fontSize": {
+    "standard": "표준",
+    "title": "글꼴 크기"
+  },
   "help": "도움말",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "AI 서비스 제공자",
   "support": "이메일 지원",
-  "theme": {
-    "auto": "시스템 따라가기",
+  "themeMode": {
+    "auto": "시스템 설정 따름",
     "dark": "다크 모드",
-    "fontSize": {
-      "standard": "표준",
-      "title": "글꼴 크기"
-    },
-    "light": "라이트 모드",
-    "neutralColor": {
-      "description": "앱의 중립 색조 선택",
-      "title": "중립 색상 설정"
-    },
-    "preview": "미리보기",
-    "previewMessages": {
-      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중립 색상을 조정할 수 있으며, 미리보기에서 실시간으로 효과를 확인할 수 있습니다.",
-      "userHowToUse": "테마 미리보기 사용 방법"
-    },
-    "primaryColor": {
-      "description": "앱의 주 색상 선택",
-      "title": "주 색상 설정"
-    },
-    "sectionDescription": "원하는 테마 스타일을 선택하고 클릭하여 변경하세요",
-    "sectionTitle": "테마",
-    "title": "테마 설정"
+    "light": "라이트 모드"
   },
   "title": "설정",
   "version": "현재 버전"

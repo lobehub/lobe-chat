@@ -65,6 +65,22 @@
     }
   },
   "changelog": "更新日志",
+  "color": {
+    "neutral": {
+      "description": "选择应用的中性色调",
+      "title": "中性色配置"
+    },
+    "preview": "预览",
+    "previewMessages": {
+      "botHowToUse": "你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。",
+      "userHowToUse": "主题预览如何使用？"
+    },
+    "primary": {
+      "description": "选择应用的主色调",
+      "title": "主色配置"
+    },
+    "title": "色彩设置"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "开发者选项"
   },
   "feedback": "意见反馈",
+  "fontSize": {
+    "standard": "标准",
+    "title": "字体大小"
+  },
   "help": "使用帮助",
   "locale": {
     "auto": {
@@ -119,30 +139,11 @@
   },
   "providers": "AI 服务商",
   "support": "邮件支持",
-  "theme": {
+  "themeMode": {
     "auto": "跟随系统",
     "dark": "深色模式",
-    "fontSize": {
-      "standard": "标准",
-      "title": "字体大小"
-    },
     "light": "浅色模式",
-    "neutralColor": {
-      "description": "选择应用的中性色调",
-      "title": "中性色配置"
-    },
-    "preview": "预览",
-    "previewMessages": {
-      "botHowToUse": "你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。",
-      "userHowToUse": "主题预览如何使用？"
-    },
-    "primaryColor": {
-      "description": "选择应用的主色调",
-      "title": "主色配置"
-    },
-    "sectionDescription": "选择您喜欢的主题风格，点击切换您的选择",
-    "sectionTitle": "主题",
-    "title": "主题设置"
+    "title": "主题模式"
   },
   "title": "设置",
   "version": "当前版本"

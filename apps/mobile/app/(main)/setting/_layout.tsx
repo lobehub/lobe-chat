@@ -40,11 +40,18 @@ export default function SettingRoutesLayout() {
           headerTitle: t('developer.title', { ns: 'setting' }),
         }}
       />
-      {/* Theme settings screen */}
+      {/* Color settings screen */}
       <Stack.Screen
-        name="theme/index"
+        name="color/index"
         options={{
-          headerTitle: t('theme.title', { ns: 'setting' }),
+          headerTitle: t('color.title', { ns: 'setting' }),
+        }}
+      />
+      {/* Theme mode settings screen */}
+      <Stack.Screen
+        name="themeMode/index"
+        options={{
+          headerTitle: t('themeMode.title', { ns: 'setting' }),
         }}
       />
     </Stack>

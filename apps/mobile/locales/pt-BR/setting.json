@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Registro de atualizações",
+  "color": {
+    "neutral": {
+      "description": "Escolha o tom neutro do aplicativo",
+      "title": "Configuração de cor neutra"
+    },
+    "preview": "Pré-visualização",
+    "previewMessages": {
+      "botHowToUse": "Você pode ajustar a cor principal e as cores neutras usando o seletor de cores abaixo; a pré-visualização será atualizada em tempo real para mostrar o efeito.",
+      "userHowToUse": "Como usar a pré-visualização do tema?"
+    },
+    "primary": {
+      "description": "Escolha o tom principal do aplicativo",
+      "title": "Configuração de cor principal"
+    },
+    "title": "Configurações de cor"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Opções de desenvolvedor"
   },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Padrão",
+    "title": "Tamanho da fonte"
+  },
   "help": "Ajuda",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "Provedores de IA",
   "support": "Suporte por e-mail",
-  "theme": {
-    "auto": "Seguir sistema",
+  "themeMode": {
+    "auto": "Seguir o sistema",
     "dark": "Modo escuro",
-    "fontSize": {
-      "standard": "Padrão",
-      "title": "Tamanho da fonte"
-    },
-    "light": "Modo claro",
-    "neutralColor": {
-      "description": "Escolha o tom neutro do aplicativo",
-      "title": "Configuração de cor neutra"
-    },
-    "preview": "Pré-visualização",
-    "previewMessages": {
-      "botHowToUse": "Você pode ajustar a cor principal e a cor neutra usando o seletor de cores abaixo; a pré-visualização será atualizada em tempo real para mostrar o efeito.",
-      "userHowToUse": "Como usar a pré-visualização do tema?"
-    },
-    "primaryColor": {
-      "description": "Escolha a cor principal do aplicativo",
-      "title": "Configuração da cor principal"
-    },
-    "sectionDescription": "Escolha o estilo de tema que você gosta e clique para alternar sua seleção",
-    "sectionTitle": "Tema",
-    "title": "Configurações de tema"
+    "light": "Modo claro"
   },
   "title": "Configurações",
   "version": "Versão atual"

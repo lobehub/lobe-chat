@@ -65,6 +65,22 @@
     }
   },
   "changelog": "Wijzigingslog",
+  "color": {
+    "neutral": {
+      "description": "Kies de neutrale tinten voor de applicatie",
+      "title": "Neutrale kleurinstellingen"
+    },
+    "preview": "Voorbeeld",
+    "previewMessages": {
+      "botHowToUse": "Je kunt de hoofdkleur en neutrale kleuren aanpassen met de onderstaande kleurkiezer. De voorbeeldweergave wordt realtime bijgewerkt om het effect te tonen.",
+      "userHowToUse": "Hoe gebruik je de thema-voorbeeldweergave?"
+    },
+    "primary": {
+      "description": "Kies de hoofdkleur voor de applicatie",
+      "title": "Hoofdkleurinstellingen"
+    },
+    "title": "Kleurinstellingen"
+  },
   "developer": {
     "accessToken": {
       "expire": {
@@ -94,6 +110,10 @@
     "title": "Ontwikkelaarsopties"
   },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Standaard",
+    "title": "Lettergrootte"
+  },
   "help": "Hulp",
   "locale": {
     "auto": {
@@ -119,30 +139,10 @@
   },
   "providers": "AI-providers",
   "support": "E-mailondersteuning",
-  "theme": {
+  "themeMode": {
     "auto": "Volg systeem",
     "dark": "Donkere modus",
-    "fontSize": {
-      "standard": "Standaard",
-      "title": "Lettergrootte"
-    },
-    "light": "Lichte modus",
-    "neutralColor": {
-      "description": "Kies de neutrale tint van de applicatie",
-      "title": "Neutrale kleurinstelling"
-    },
-    "preview": "Voorbeeld",
-    "previewMessages": {
-      "botHowToUse": "U kunt de hoofdkleur en neutrale kleur aanpassen met de onderstaande kleurkiezer. De voorbeeldweergave wordt realtime bijgewerkt om het effect te tonen.",
-      "userHowToUse": "Hoe gebruik ik de thema-voorbeeldweergave?"
-    },
-    "primaryColor": {
-      "description": "Kies de hoofdkleur van de applicatie",
-      "title": "Hoofdkleurinstelling"
-    },
-    "sectionDescription": "Kies uw favoriete thema en klik om uw keuze te wijzigen",
-    "sectionTitle": "Thema",
-    "title": "Thema-instellingen"
+    "light": "Lichte modus"
   },
   "title": "Instellingen",
   "version": "Huidige versie"
