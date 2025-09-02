@@ -91,7 +91,7 @@ export const LobeNewAPIAI = (() => {
           }
         }
       } catch (error) {
-        // 如果获取 pricing 失败，继续使用基础信息
+        // If fetching pricing information fails, continue using the basic model information
         console.debug('Failed to fetch NewAPI pricing info:', error);
       }
 
