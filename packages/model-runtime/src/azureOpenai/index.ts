@@ -2,10 +2,8 @@ import debug from 'debug';
 import OpenAI, { AzureOpenAI } from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { systemToUserModels } from '@/const/models';
-
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
+import { systemToUserModels } from '../const/models';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
@@ -14,6 +12,7 @@ import {
   EmbeddingsPayload,
   ModelProvider,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';

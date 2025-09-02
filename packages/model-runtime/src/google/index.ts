@@ -9,10 +9,8 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
-import { imageUrlToBase64, safeParseJSON } from '@lobechat/utils';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   ChatCompletionTool,
   ChatMethodOptions,
@@ -20,11 +18,14 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { StreamingResponse } from '../utils/response';
+import { safeParseJSON } from '../utils/safeParseJSON';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { createGoogleImage } from './createImage';
@@ -134,7 +135,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
           !!thinkingBudget ||
-            (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
+          (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
             ? true
             : undefined,
         // https://ai.google.dev/gemini-api/docs/thinking#set-budget

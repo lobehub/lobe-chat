@@ -1,7 +1,6 @@
 import debug from 'debug';
 import { and, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '../type';
 import { FileService } from '@/server/services/file';
 import { Generation, GenerationAsset, GenerationBatch, GenerationConfig } from '@/types/generation';
 
@@ -11,6 +10,7 @@ import {
   NewGenerationBatch,
   generationBatches,
 } from '../schemas/generation';
+import { LobeChatDatabase } from '../type';
 import { GenerationModel } from './generation';
 
 const log = debug('lobe-image:generation-batch-model');
@@ -121,6 +121,13 @@ export class GenerationBatchModel {
           // Transform config
           (async () => {
             const config = batch.config as GenerationConfig;
+
+            // Handle single imageUrl
+            if (config.imageUrl) {
+              config.imageUrl = await this.fileService.getFullFileUrl(config.imageUrl);
+            }
+
+            // Handle imageUrls array
             if (Array.isArray(config.imageUrls)) {
               config.imageUrls = await Promise.all(
                 config.imageUrls.map((url) => this.fileService.getFullFileUrl(url)),

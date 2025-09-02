@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeErrorType } from '@/libs/model-runtime';
-
+import { AgentRuntimeErrorType } from '../../../types/error';
 import { FIRST_CHUNK_ERROR_KEY } from '../protocol';
 import { OpenAIStream } from './openai';
 

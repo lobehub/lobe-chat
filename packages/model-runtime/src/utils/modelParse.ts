@@ -1,4 +1,5 @@
 import type { ChatModelCard } from '@lobechat/types';
+import { AIBaseModelCard } from 'model-bank';
 
 import type { ModelProviderKey } from '../types';
 
@@ -25,15 +26,15 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
+  llama: {
+    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
+    reasoningKeywords: [],
+    visionKeywords: ['llava'],
+  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
     visionKeywords: ['vision', 'kimi-latest', 'kimi-thinking-preview'],
-  },
-  ollama: {
-    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
-    reasoningKeywords: [],
-    visionKeywords: ['llava'],
   },
   openai: {
     excludeKeywords: ['audio'],
@@ -81,13 +82,13 @@ export const MODEL_LIST_CONFIGS = {
   },
 } as const;
 
-// 模型提供商关键词配置
-export const PROVIDER_DETECTION_CONFIG = {
+// 模型所有者 (提供商) 关键词配置
+export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
+  llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
-  ollama: ['llama', 'llava'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
@@ -175,7 +176,12 @@ const findKnownModelByProvider = async (
     // 尝试动态导入对应的配置文件
     const modules = await import('model-bank');
 
-    const providerModels = modules[provider];
+    // 如果提供商配置文件不存在，跳过
+    if (!(provider in modules)) {
+      return null;
+    }
+
+    const providerModels = modules[provider as keyof typeof modules] as AIBaseModelCard[];
 
     // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
@@ -197,7 +203,7 @@ const findKnownModelByProvider = async (
 export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CONFIGS => {
   const lowerModelId = modelId.toLowerCase();
 
-  for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
+  for (const [provider, keywords] of Object.entries(MODEL_OWNER_DETECTION_CONFIG)) {
     const hasKeyword = isKeywordListMatch(lowerModelId, keywords);
 
     if (hasKeyword && provider in MODEL_LIST_CONFIGS) {

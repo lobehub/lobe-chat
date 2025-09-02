@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 // ref: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models
 const vertexaiChatModels: AIChatModelCard[] = [
@@ -126,8 +126,8 @@ const vertexaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 8192,
     description:
-      'Gemini 2.5 Flash Image Preview 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
-    displayName: 'Gemini 2.5 Flash Image Preview',
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    displayName: 'Nano Banana',
     enabled: true,
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,

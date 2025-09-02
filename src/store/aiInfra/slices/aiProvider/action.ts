@@ -1,17 +1,18 @@
+import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@lobechat/const';
+import { getModelPropertyWithFallback } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
-import { SWRResponse, mutate } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
-
-import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
-import { useClientDataSWR } from '@/libs/swr';
-import { aiProviderService } from '@/services/aiProvider';
-import { AiInfraStore } from '@/store/aiInfra/store';
 import {
   AIImageModelCard,
   EnabledAiModel,
   LobeDefaultAiModelListItem,
   ModelAbilities,
-} from '@/types/aiModel';
+} from 'model-bank';
+import { SWRResponse, mutate } from 'swr';
+import { StateCreator } from 'zustand/vanilla';
+
+import { useClientDataSWR } from '@/libs/swr';
+import { aiProviderService } from '@/services/aiProvider';
+import { AiInfraStore } from '@/store/aiInfra/store';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -24,7 +25,6 @@ import {
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
-import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 /**
  * Get models by provider ID and type, with proper formatting and deduplication

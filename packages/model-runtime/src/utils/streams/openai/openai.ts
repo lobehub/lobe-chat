@@ -3,8 +3,8 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError, CitationItem } from '@/types/message';
 
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../error';
 import { ChatStreamCallbacks } from '../../../types';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../types/error';
 import { convertUsage } from '../../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,

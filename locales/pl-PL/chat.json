@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Prześlij plik",
       "actionTooltip": "Prześlij",
-      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji"
+      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji",
+      "visionNotSupported": "Obecny model nie obsługuje rozpoznawania wizualnego, proszę przełączyć model i spróbować ponownie"
     },
     "preview": {
       "prepareTasks": "Przygotowywanie fragmentów...",

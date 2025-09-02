@@ -3,8 +3,8 @@ import urlJoin from 'url-join';
 
 import type { ChatModelCard } from '@/types/llm';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { convertIterableToStream } from '../utils/streams';
 

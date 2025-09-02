@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '../types/aiModel';
 
 const aihubmixModels: AIChatModelCard[] = [
   {
@@ -700,7 +700,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 8192,
     description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
-    displayName: 'Gemini 2.5 Flash Image Preview',
+    displayName: 'Nano Banana',
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {

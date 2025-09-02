@@ -1,4 +1,6 @@
-import { ClientSecretPayload, SECRET_XOR_KEY } from '@/const/auth';
+import { ClientSecretPayload } from '@lobechat/types';
+
+import { SECRET_XOR_KEY } from '@/const/auth';
 
 /**
  * 将 Base64 字符串转换为 Uint8Array

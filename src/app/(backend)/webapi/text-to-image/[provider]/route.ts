@@ -1,9 +1,8 @@
-import { ChatCompletionErrorPayload } from '@lobechat/model-runtime';
+import { ChatCompletionErrorPayload, TextToImagePayload } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { TextToImagePayload } from '@/libs/model-runtime/types';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
 

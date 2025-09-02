@@ -1,5 +1,5 @@
-import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';

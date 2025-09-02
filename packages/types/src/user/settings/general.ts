@@ -1,6 +1,6 @@
 import type { HighlighterProps, MermaidProps, NeutralColors, PrimaryColors } from '@lobehub/ui';
 
-import { ResponseAnimationStyle } from '@/types/llm';
+import type { ResponseAnimationStyle } from '../../aiProvider';
 
 export type AnimationMode = 'disabled' | 'agile' | 'elegant';
 

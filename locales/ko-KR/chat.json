@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "파일 업로드",
       "actionTooltip": "업로드",
-      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요."
+      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "visionNotSupported": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용해 주세요"
     },
     "preview": {
       "prepareTasks": "청크 준비 중...",

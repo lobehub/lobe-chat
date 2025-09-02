@@ -4,12 +4,11 @@ import {
   ChatCompletionErrorPayload,
   ModelRuntime,
 } from '@lobechat/model-runtime';
-import { ChatErrorType } from '@lobechat/types';
+import { ChatErrorType, ClientSecretPayload } from '@lobechat/types';
 import { getXorPayload } from '@lobechat/utils/server';
 import { NextRequest } from 'next/server';
 
 import {
-  ClientSecretPayload,
   LOBE_CHAT_AUTH_HEADER,
   LOBE_CHAT_OIDC_AUTH_HEADER,
   OAUTH_AUTHORIZED,

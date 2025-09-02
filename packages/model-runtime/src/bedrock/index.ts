@@ -5,7 +5,6 @@ import {
 } from '@aws-sdk/client-bedrock-runtime';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
@@ -14,6 +13,7 @@ import {
   EmbeddingsPayload,
   ModelProvider,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';

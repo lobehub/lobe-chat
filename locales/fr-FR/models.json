@@ -80,6 +80,9 @@
   "DeepSeek-V3-Fast": {
     "description": "Fournisseur du modèle : plateforme sophnet. DeepSeek V3 Fast est la version ultra-rapide à TPS élevé de DeepSeek V3 0324, entièrement non quantifiée, avec des capacités de code et mathématiques renforcées, offrant une réactivité accrue !"
   },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un nouveau modèle d'inférence hybride lancé par DeepSeek, prenant en charge deux modes d'inférence : réfléchi et non réfléchi, avec une efficacité de réflexion supérieure à celle de DeepSeek-R1-0528. Optimisé par post-entraînement, l'utilisation des outils Agent et les performances des tâches des agents ont été grandement améliorées."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre une vitesse de réponse exceptionnelle et un excellent rapport qualité-prix, offrant aux clients une flexibilité accrue pour différents scénarios. Prend en charge l'inférence et le fine-tuning avec une fenêtre contextuelle de 128k."
   },
@@ -134,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, offrant de meilleures performances que ERNIE Speed, adapté comme modèle de base pour un ajustement fin, permettant de mieux traiter les problèmes de scénarios spécifiques, tout en offrant d'excellentes performances d'inférence."
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev est un modèle multimodal de génération et d'édition d'images développé par Black Forest Labs, basé sur l'architecture Rectified Flow Transformer, avec une échelle de 12 milliards de paramètres. Il se concentre sur la génération, la reconstruction, l'amélioration ou l'édition d'images sous conditions contextuelles données. Ce modèle combine les avantages de génération contrôlée des modèles de diffusion et la capacité de modélisation contextuelle des Transformers, supportant une sortie d'images de haute qualité, applicable à la restauration, au remplissage et à la reconstruction visuelle de scènes."
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev est un modèle open source multimodal de langage (Multimodal Language Model, MLLM) développé par Black Forest Labs, optimisé pour les tâches texte-image, intégrant la compréhension et la génération d'images et de textes. Basé sur des modèles de langage avancés tels que Mistral-7B, il utilise un encodeur visuel soigneusement conçu et un affinage par instructions en plusieurs étapes, permettant un traitement collaboratif texte-image et un raisonnement complexe."
@@ -265,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle de langage à experts mixtes (MoE) avec 671 milliards de paramètres, utilisant une attention potentielle multi-tête (MLA) et une architecture DeepSeekMoE, combinant une stratégie d'équilibrage de charge sans perte auxiliaire pour optimiser l'efficacité d'inférence et d'entraînement. Pré-entraîné sur 14,8 billions de tokens de haute qualité, et affiné par supervision et apprentissage par renforcement, DeepSeek-V3 surpasse d'autres modèles open source et se rapproche des modèles fermés de premier plan."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 est un modèle de base à architecture MoE doté de capacités exceptionnelles en codage et agents, avec 1 000 milliards de paramètres au total et 32 milliards activés. Il surpasse les autres modèles open source majeurs dans les tests de performance sur les connaissances générales, la programmation, les mathématiques et les agents."
@@ -845,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 est un modèle de langage à experts mixtes (MoE) avec 6710 milliards de paramètres, utilisant une attention potentielle multi-tête (MLA) et l'architecture DeepSeekMoE, combinée à une stratégie d'équilibrage de charge sans perte auxiliaire, optimisant ainsi l'efficacité d'inférence et d'entraînement. En pré-entraînant sur 14,8 billions de tokens de haute qualité, suivi d'un ajustement supervisé et d'apprentissage par renforcement, DeepSeek-V3 surpasse les autres modèles open source en termes de performance, se rapprochant des modèles fermés de premier plan."
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B est un modèle avancé formé pour des dialogues de haute complexité."
   },
@@ -915,7 +930,7 @@
     "description": "DeepSeek R1 version complète, avec 671B de paramètres, prenant en charge la recherche en ligne en temps réel, offrant des capacités de compréhension et de génération plus puissantes."
   },
   "deepseek-reasoner": {
-    "description": "Modèle d'inférence proposé par DeepSeek. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
+    "description": "DeepSeek V3.1 en mode réflexion. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse finale."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 est un modèle de langage Mixture-of-Experts efficace, adapté aux besoins de traitement économique."
@@ -929,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 est un modèle MoE de 671 milliards de paramètres, se distinguant par ses capacités en programmation et en technique, ainsi que par sa compréhension du contexte et son traitement de longs textes."
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 est un nouveau modèle d'inférence hybride lancé par DeepSeek, prenant en charge deux modes d'inférence : réfléchi et non réfléchi, avec une efficacité de réflexion supérieure à celle de DeepSeek-R1-0528. Optimisé par post-entraînement, l'utilisation des outils Agent et les performances des tâches des agents ont été grandement améliorées. Supporte une fenêtre contextuelle de 128k et une longueur de sortie maximale de 64k tokens."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1 est un grand modèle d'inférence hybride supportant un contexte long de 128K et un changement de mode efficace, offrant des performances et une rapidité exceptionnelles dans l'appel d'outils, la génération de code et les tâches de raisonnement complexes."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 améliore considérablement les capacités de raisonnement du modèle avec très peu de données annotées. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
@@ -1230,10 +1251,10 @@
     "description": "Gemini 2.5 Flash est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
   "gemini-2.5-flash-image-preview": {
-    "description": "Gemini 2.5 Flash Image Preview est le modèle multimodal natif le plus récent, le plus rapide et le plus performant de Google. Il vous permet de générer et d’éditer des images via des échanges conversationnels."
+    "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
   },
   "gemini-2.5-flash-image-preview:image": {
-    "description": "Gemini 2.5 Flash Image Preview est le dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d’éditer des images par le biais de conversations."
+    "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite est le modèle le plus petit et le plus rentable de Google, conçu pour une utilisation à grande échelle."
@@ -2672,17 +2693,8 @@
   "thudm/glm-4-9b-chat": {
     "description": "Version open source de la dernière génération de modèles pré-entraînés de la série GLM-4 publiée par Zhizhu AI."
   },
-  "thudm/glm-4-9b:free": {
-    "description": "GLM-4-9B-0414 est un modèle de langage de 9 milliards de paramètres dans la série GLM-4 développé par THUDM. GLM-4-9B-0414 utilise les mêmes stratégies d'apprentissage par renforcement et d'alignement que son modèle correspondant de 32B, réalisant des performances élevées par rapport à sa taille, ce qui le rend adapté à des déploiements à ressources limitées nécessitant encore de solides capacités de compréhension et de génération de langage."
-  },
   "thudm/glm-z1-32b": {
     "description": "GLM-Z1-32B-0414 est une variante de raisonnement améliorée de GLM-4-32B, construite pour résoudre des problèmes de mathématiques profondes, de logique et orientés code. Il applique un apprentissage par renforcement étendu (spécifique à la tâche et basé sur des préférences par paires générales) pour améliorer les performances sur des tâches complexes à plusieurs étapes. Par rapport au modèle de base GLM-4-32B, Z1 améliore considérablement les capacités de raisonnement structuré et de domaine formel.\n\nCe modèle prend en charge l'exécution des étapes de 'pensée' via l'ingénierie des invites et offre une cohérence améliorée pour les sorties au format long. Il est optimisé pour les flux de travail d'agents et prend en charge un long contexte (via YaRN), des appels d'outils JSON et une configuration d'échantillonnage de granularité fine pour un raisonnement stable. Idéal pour les cas d'utilisation nécessitant une réflexion approfondie, un raisonnement à plusieurs étapes ou une déduction formelle."
-  },
-  "thudm/glm-z1-32b:free": {
-    "description": "GLM-Z1-32B-0414 est une variante de raisonnement améliorée de GLM-4-32B, construite pour résoudre des problèmes de mathématiques profondes, de logique et orientés code. Il applique un apprentissage par renforcement étendu (spécifique à la tâche et basé sur des préférences par paires générales) pour améliorer les performances sur des tâches complexes à plusieurs étapes. Par rapport au modèle de base GLM-4-32B, Z1 améliore considérablement les capacités de raisonnement structuré et de domaine formel.\n\nCe modèle prend en charge l'exécution des étapes de 'pensée' via l'ingénierie des invites et offre une cohérence améliorée pour les sorties au format long. Il est optimisé pour les flux de travail d'agents et prend en charge un long contexte (via YaRN), des appels d'outils JSON et une configuration d'échantillonnage de granularité fine pour un raisonnement stable. Idéal pour les cas d'utilisation nécessitant une réflexion approfondie, un raisonnement à plusieurs étapes ou une déduction formelle."
-  },
-  "thudm/glm-z1-9b:free": {
-    "description": "GLM-Z1-9B-0414 est un modèle de langage de 9 milliards de paramètres dans la série GLM-4 développé par THUDM. Il utilise des techniques initialement appliquées à des modèles GLM-Z1 plus grands, y compris un apprentissage par renforcement étendu, un alignement par classement par paires et une formation pour des tâches intensives en raisonnement telles que les mathématiques, le codage et la logique. Bien que de taille plus petite, il montre de solides performances sur des tâches de raisonnement général et surpasse de nombreux modèles open source à son niveau de poids."
   },
   "thudm/glm-z1-rumination-32b": {
     "description": "THUDM : GLM Z1 Rumination 32B est un modèle de raisonnement profond de 32 milliards de paramètres dans la série GLM-4-Z1, optimisé pour des tâches complexes et ouvertes nécessitant une réflexion prolongée. Il est construit sur la base de glm-4-32b-0414, ajoutant une phase d'apprentissage par renforcement supplémentaire et une stratégie d'alignement multi-étapes, introduisant une capacité de \"réflexion\" destinée à simuler un traitement cognitif étendu. Cela inclut un raisonnement itératif, une analyse multi-sauts et des flux de travail améliorés par des outils, tels que la recherche, la récupération et la synthèse consciente des citations.\n\nCe modèle excelle dans l'écriture de recherche, l'analyse comparative et les questions complexes. Il prend en charge les appels de fonction pour les primitives de recherche et de navigation (`search`, `click`, `open`, `finish`), permettant son utilisation dans des pipelines d'agents. Le comportement de réflexion est façonné par un contrôle cyclique multi-tours avec des récompenses basées sur des règles et un mécanisme de décision différée, et est étalonné sur des cadres de recherche approfondie tels que la pile d'alignement interne d'OpenAI. Cette variante est adaptée aux scénarios nécessitant de la profondeur plutôt que de la vitesse."

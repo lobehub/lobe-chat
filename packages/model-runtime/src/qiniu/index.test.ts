@@ -1,7 +1,6 @@
 // @vitest-environment node
-import { ModelProvider } from '@/libs/model-runtime';
-import { testProvider } from '@/libs/model-runtime/providerTestUtils';
-
+import { testProvider } from '../providerTestUtils';
+import { ModelProvider } from '../types';
 import { LobeQiniuAI } from './index';
 
 const provider = ModelProvider.Qiniu;
