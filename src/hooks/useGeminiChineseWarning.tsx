@@ -3,12 +3,16 @@ import { App, Checkbox } from 'antd';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const STORAGE_KEY = 'lobe-chat:warnings:gemini-chinese-dismissed';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
-const shouldShowChineseWarning = (model: string, prompt: string): boolean => {
-  const hasWarningBeenDismissed = localStorage.getItem(STORAGE_KEY) === 'true';
+const shouldShowChineseWarning = (
+  model: string,
+  prompt: string,
+  hasWarningBeenDismissed: boolean,
+): boolean => {
   return (
-    model === 'gemini-2.5-flash-image-preview' &&
+    model.includes('gemini-2.5-flash-image-preview') &&
     !hasWarningBeenDismissed &&
     Boolean(prompt) &&
     containsChinese(prompt)
@@ -25,13 +29,18 @@ export const useGeminiChineseWarning = () => {
   const { t } = useTranslation('chat');
   const { modal } = App.useApp();
 
+  const [hideGeminiChineseWarning, updateSystemStatus] = useGlobalStore((s) => [
+    systemStatusSelectors.systemStatus(s).hideGemini2_5FlashImagePreviewChineseWarning ?? false,
+    s.updateSystemStatus,
+  ]);
+
   const checkWarning = useCallback(
     async ({
       model,
       prompt,
       scenario = 'chat',
     }: UseGeminiChineseWarningOptions): Promise<boolean> => {
-      if (!shouldShowChineseWarning(model, prompt)) {
+      if (!shouldShowChineseWarning(model, prompt, hideGeminiChineseWarning)) {
         return true;
       }
 
@@ -67,11 +76,7 @@ export const useGeminiChineseWarning = () => {
           },
           onOk: () => {
             if (doNotShowAgain) {
-              try {
-                localStorage.setItem(STORAGE_KEY, 'true');
-              } catch (error) {
-                console.warn('Failed to save warning preference:', error);
-              }
+              updateSystemStatus({ hideGemini2_5FlashImagePreviewChineseWarning: true });
             }
             resolve(true);
           },
@@ -79,7 +84,7 @@ export const useGeminiChineseWarning = () => {
         });
       });
     },
-    [modal, t],
+    [modal, t, hideGeminiChineseWarning, updateSystemStatus],
   );
 
   return checkWarning;

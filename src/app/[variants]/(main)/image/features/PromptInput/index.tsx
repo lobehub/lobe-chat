@@ -60,7 +60,6 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
       loginRequired.redirect({ timeout: 2000 });
       return;
     }
-
     // Check for Chinese text warning with Gemini model
     const shouldContinue = await checkGeminiChineseWarning({
       model: currentModel,
