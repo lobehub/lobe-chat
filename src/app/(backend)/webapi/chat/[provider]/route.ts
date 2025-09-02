@@ -3,6 +3,7 @@ import {
   ChatMethodOptions,
   ChatCompletionErrorPayload,
   ModelRuntime,
+  mergeMultipleChatMethodOptions,
 } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
 
@@ -11,8 +12,6 @@ import { createTraceOptions, createUsageTracker, initModelRuntimeWithUserPayload
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
-
-import { mergeMultipleCompletionOptions } from './util';
 
 export const runtime = 'edge';
 
@@ -47,7 +46,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
 
     let completionOptions: ChatMethodOptions = {};
 
-    if (traceOptions.length > 0) completionOptions = mergeMultipleCompletionOptions(traceOptions);
+    if (traceOptions.length > 0) completionOptions = mergeMultipleChatMethodOptions(traceOptions);
 
     return await modelRuntime.chat(data, {
       user: jwtPayload.userId,

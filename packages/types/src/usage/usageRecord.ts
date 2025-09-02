@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { UsageRecordItem } from '@/database/schemas';
 
-import { ChatModelPricing } from '../aiModel';
+import { ChatModelPricing } from 'model-bank';
 import { MessageMetadata } from '../message';
 
 export interface RequestLog {

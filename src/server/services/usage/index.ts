@@ -4,7 +4,7 @@ import { UsageRecordModel } from '@/database/models/usage';
 import { NewUsageRecord } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { getDetailsToken } from '@/features/Conversation/Extras/Usage/UsageDetail/tokens';
-import { AiProviderModelListItem, LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem, LobeDefaultAiModelListItem } from 'model-bank';
 import debug from 'debug';
 
 const log = debug('lobe-usage:service');

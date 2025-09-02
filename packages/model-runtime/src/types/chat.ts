@@ -1,5 +1,6 @@
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
 import { ModelTokensUsage } from './usage';
+import { ModelSpeed } from '@/types/message';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
