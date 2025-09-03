@@ -62,7 +62,7 @@ Testing work follows the Rule-Aware Task Execution system above.
 
 - **Keys**: Add to `src/locales/default/namespace.ts`
 - **Dev**: Translate `locales/zh-CN/namespace.json` locale file only for preview
-- DON'T run `pnpm i18n` (user/CI handles it)
+- DON'T run `pnpm i18n`, let CI auto handle it
 
 ## Rules Index
 

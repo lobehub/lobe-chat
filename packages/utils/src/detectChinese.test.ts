@@ -24,4 +24,14 @@ describe('containsChinese', () => {
     expect(containsChinese('Japanese こんにちは and English')).toBe(false);
     expect(containsChinese('Korean 안녕하세요 and English')).toBe(false);
   });
+
+  it('should detect extended Chinese character ranges', () => {
+    // Test CJK Unified Ideographs Extension A (U+3400-U+4DBF)
+    expect(containsChinese('㐀㑇㒯')).toBe(true);
+    // Test CJK Compatibility Ideographs (U+F900-U+FAFF)
+    expect(containsChinese('豈更車')).toBe(true);
+    // Test traditional Chinese characters
+    expect(containsChinese('繁體中文')).toBe(true);
+    expect(containsChinese('學習語言')).toBe(true);
+  });
 });

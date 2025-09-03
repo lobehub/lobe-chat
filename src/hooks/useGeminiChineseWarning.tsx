@@ -26,7 +26,7 @@ interface UseGeminiChineseWarningOptions {
 }
 
 export const useGeminiChineseWarning = () => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('common');
   const { modal } = App.useApp();
 
   const [hideGeminiChineseWarning, updateSystemStatus] = useGlobalStore((s) => [

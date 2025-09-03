@@ -59,13 +59,6 @@ export default {
       title: '提取网页链接内容',
     },
   },
-  geminiImageChineseWarning: {
-    content: 'Nano Banana 使用中文有概率性生成图片失败。建议使用英文以获得更好的效果。',
-    continueGenerate: '继续生成',
-    continueSend: '继续发送',
-    doNotShowAgain: '不再提示',
-    title: '中文输入提示',
-  },
   history: {
     title: '助手将只记住最后{{count}}条消息',
   },
