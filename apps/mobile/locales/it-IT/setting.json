@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Inserisci la API Key di {name}",
+        "description": "Inserisci la API Key di {{name}}",
         "label": "API Key",
-        "placeholder": "Inserisci la API Key di {name}"
+        "placeholder": "Inserisci la API Key di {{name}}"
       },
       "proxyUrl": {
         "desc": "Deve includere http(s)://",

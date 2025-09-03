@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "يرجى إدخال مفتاح API الخاص بـ {name}",
+        "description": "يرجى إدخال مفتاح API الخاص بـ {{name}}",
         "label": "مفتاح API",
-        "placeholder": "يرجى إدخال مفتاح API الخاص بـ {name}"
+        "placeholder": "يرجى إدخال مفتاح API الخاص بـ {{name}}"
       },
       "proxyUrl": {
         "desc": "يجب أن يحتوي على http(s)://",

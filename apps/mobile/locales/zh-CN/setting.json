@@ -17,9 +17,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "请输入 {name} 的 API Key",
+        "description": "请输入 {{name}} 的 API Key",
         "label": "API Key",
-        "placeholder": "请输入 {name} 的 API Key"
+        "placeholder": "请输入 {{name}} 的 API Key"
       },
       "proxyUrl": {
         "desc": "必须包含 http(s)://",
