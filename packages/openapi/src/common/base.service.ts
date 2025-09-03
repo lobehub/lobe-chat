@@ -83,7 +83,7 @@ export abstract class BaseService implements IBaseService {
    * @param operation 操作名称
    * @param fallbackMessage 默认错误消息
    */
-  protected handleServiceError(error: unknown, operation: string, fallbackMessage?: string): never {
+  protected handleServiceError(error: unknown, operation: string): never {
     this.log('error', `${operation}失败`, { error });
 
     // 如果是已知的业务错误，直接抛出
@@ -100,8 +100,10 @@ export abstract class BaseService implements IBaseService {
       throw error;
     }
 
+    const errorMessage = `${operation}失败: ${error instanceof Error ? error.message : '未知错误'}`;
+
     // 其他错误统一包装为业务错误
-    throw this.createBusinessError(fallbackMessage || `${operation}失败`);
+    throw this.createBusinessError(errorMessage);
   }
 
   /**
@@ -115,19 +117,19 @@ export abstract class BaseService implements IBaseService {
 
     switch (level) {
       case 'info': {
-        console.info(logMessage, data);
+        console.info(logMessage, data || '');
         break;
       }
       case 'warn': {
-        console.warn(logMessage, data);
+        console.warn(logMessage, data || '');
         break;
       }
       case 'error': {
-        console.error(logMessage, data);
+        console.error(logMessage, data || '');
         break;
       }
       case 'debug': {
-        console.debug(logMessage, data);
+        console.debug(logMessage, data || '');
         break;
       }
     }

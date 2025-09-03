@@ -159,15 +159,11 @@ export const PERMISSION_ACTIONS = {
 
   RBAC_ROLE_DELETE: 'rbac:role_delete',
 
-  RBAC_ROLE_PERMISSION_ASSIGN: 'rbac:role_permission_assign',
-
-  RBAC_ROLE_PERMISSION_REVOKE: 'rbac:role_permission_revoke',
+  RBAC_ROLE_PERMISSION_ASSIGN: 'rbac:role_permission_update',
 
   RBAC_ROLE_READ: 'rbac:role_read',
 
   RBAC_ROLE_UPDATE: 'rbac:role_update',
-
-  RBAC_SYSTEM_INIT: 'rbac:system_init',
 
   RBAC_USER_PERMISSION_READ: 'rbac:user_permission_read',
 

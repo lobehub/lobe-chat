@@ -5,6 +5,14 @@ import { RoleItem, UserItem, UserRoleItem } from '@/database/schemas';
 // ==================== User Base Types ====================
 
 /**
+ * 获取用户列表请求参数（可选分页）
+ */
+export interface GetUsersRequest {
+  page?: number;
+  pageSize?: number;
+}
+
+/**
  * 扩展的用户信息类型，包含角色信息
  */
 export type UserWithRoles = UserItem & {
@@ -15,11 +23,21 @@ export type UserWithRoles = UserItem & {
 // ==================== User CRUD Types ====================
 
 /**
+ * 用户列表响应类型
+ */
+export interface UserListResponse {
+  page?: number;
+  pageSize?: number;
+  total: number;
+  users: UserWithRoles[];
+}
+
+/**
  * 创建用户请求参数
  */
 export interface CreateUserRequest {
   avatar?: string;
-  email?: string;
+  email: string;
   firstName?: string;
   fullName?: string;
   id?: string;
@@ -37,6 +55,7 @@ export const CreateUserRequestSchema = z.object({
   id: z.string().nullish(),
   lastName: z.string().nullish(),
   phone: z.string().nullish(),
+  roleIds: z.array(z.number().int().positive('角色ID必须是正整数')).nullish(),
   username: z.string().min(1, '用户名不能为空').nullish(),
 });
 
@@ -56,6 +75,9 @@ export interface UpdateUserRequest {
   username?: string;
 }
 
+/**
+ * 更新用户请求验证Schema
+ */
 export const UpdateUserRequestSchema = z.object({
   avatar: z.string().nullish(),
   email: z.string().email('邮箱格式不正确').nullish(),
@@ -106,12 +128,23 @@ export const UserSearchRequestSchema = z.object({
     }),
 });
 
-export interface UserListResponse {
-  totalCount: number;
-  users: UserWithRoles[];
-}
-
 // ==================== User Role Management Types ====================
+
+/**
+ * 获取用户列表请求验证Schema（可选分页）
+ */
+export const GetUsersRequestSchema = z.object({
+  page: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .nullish(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .nullish(),
+});
 
 /**
  * 单个添加角色的请求
@@ -177,10 +210,12 @@ export interface UserRoleDetail extends UserRoleItem {
 /**
  * 用户角色操作响应
  */
-export interface UserRolesResponse {
-  roles: RoleItem[];
-  user: UserItem;
-}
+export type UserRolesResponse = {
+  expiresAt?: Date | null;
+  roleDisplayName: string;
+  roleId: number;
+  roleName: string;
+}[];
 
 /**
  * 用户角色操作结果
