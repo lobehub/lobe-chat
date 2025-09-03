@@ -1,26 +1,30 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { INBOX_SESSION_ID, isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
-import { ChatMessage, ChatTopic, SendMessageParams, TraceNameMap } from '@lobechat/types';
+import {
+  ChatMessage,
+  ChatTopic,
+  MessageSemanticSearchChunk,
+  SendMessageParams,
+  TraceNameMap,
+} from '@lobechat/types';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
-import { INBOX_SESSION_ID } from '@/const/session';
-import { isDesktop } from '@/const/version';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { ChatStore } from '@/store/chat/store';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import type { ChatStore } from '@/store/chat/store';
 import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
+import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
 
