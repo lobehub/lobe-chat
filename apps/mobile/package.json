@@ -49,6 +49,7 @@
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-menu/menu": "^1.2.4",
+    "@react-native-picker/picker": "2.11.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/elements": "^2.3.8",
     "@shikijs/core": "^3.1.0",
@@ -156,6 +157,7 @@
     "prettier": "^3.6.2",
     "stylelint": "^15.11.0",
     "tsx": "^4.20.3",
+    "type-fest": "^4.41.0",
     "typescript": "^5.8.3"
   },
   "private": true

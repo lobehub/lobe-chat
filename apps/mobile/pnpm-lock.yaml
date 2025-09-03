@@ -29,6 +29,9 @@ importers:
       '@react-native-menu/menu':
         specifier: ^1.2.4
         version: 1.2.4(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@react-native-picker/picker':
+        specifier: 2.11.1
+        version: 2.11.1(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       '@react-navigation/bottom-tabs':
         specifier: ^7.2.0
         version: 7.4.7(@react-navigation/native@7.1.17(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native-screens@4.11.1(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
@@ -345,6 +348,9 @@ importers:
       tsx:
         specifier: ^4.20.3
         version: 4.20.5
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
@@ -1673,6 +1679,12 @@ packages:
 
   '@react-native-menu/menu@1.2.4':
     resolution: {integrity: sha512-63NU9NHd/KcBa7lhhV69xQmY3ORUxjMRmlzTY/qrY56GHnuKX+16dvUpKAuRSPK5kebBuRw5X4MFe2L9JHUlWA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+
+  '@react-native-picker/picker@2.11.1':
+    resolution: {integrity: sha512-ThklnkK4fV3yynnIIRBkxxjxR4IFbdMNJVF6tlLdOJ/zEFUEFUEdXY0KmH0iYzMwY8W4/InWsLiA7AkpAbnexA==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -8356,6 +8368,11 @@ snapshots:
       react-native: 0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0)
 
   '@react-native-menu/menu@1.2.4(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
+      react-native: 0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0)
+
+  '@react-native-picker/picker@2.11.1(react-native@0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)':
     dependencies:
       react: 19.0.0
       react-native: 0.79.6(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0)

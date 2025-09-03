@@ -137,6 +137,20 @@ export default {
     validationFailed: '验证失败',
     validationSuccess: '验证成功',
   },
+
+  providerModels: {
+    config: {
+      aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
+      checker: {
+        button: '测试连接',
+        desc: '测试 Api Key 与代理地址是否正确填写',
+        pass: '检查通过',
+        selectModel: '选择用于测试连接的模型',
+        title: '连通性检查',
+      },
+    },
+  },
+
   providers: 'AI 服务商',
   support: '邮件支持',
   themeMode: {

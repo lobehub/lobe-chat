@@ -1,11 +1,10 @@
+import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { generateModelDisplayName } from '@/utils/modelDisplayName';
 import { aiProviderService } from '@/services/aiProvider';
-import type { AiInfraStore } from '../../store';
+import { AiInfraStore } from '@/store/aiInfra/store';
+import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -17,7 +16,28 @@ import {
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
-import { LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
+
+/**
+ * Get models by provider ID and type, with proper formatting and deduplication
+ */
+export const getModelListByType = (enabledAiModels: any[], providerId: string, type: string) => {
+  const models = enabledAiModels
+    .filter((model) => model.providerId === providerId && model.type === type)
+    .map((model) => ({
+      abilities: (model.abilities || {}) as ModelAbilities,
+      contextWindowTokens: model.contextWindowTokens,
+      displayName: model.displayName ?? '',
+      id: model.id,
+      ...(model.type === 'image' && {
+        parameters:
+          (model as AIImageModelCard).parameters ||
+          getModelPropertyWithFallback(model.id, 'parameters'),
+      }),
+    }));
+
+  return uniqBy(models, 'id');
+};
 
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
@@ -45,39 +65,54 @@ export interface AiProviderAction {
 
   useFetchAiProviderItem: (id: string) => SWRResponse<AiProviderDetailItem | undefined>;
   useFetchAiProviderList: (params?: { suspense?: boolean }) => SWRResponse<AiProviderListItem[]>;
+  /**
+   * fetch provider keyVaults and user enabled model list
+   * @param isLoginOnInit
+   */
   useFetchAiProviderRuntimeState: (
     isLoginOnInit: boolean | undefined,
   ) => SWRResponse<AiProviderRuntimeStateWithBuiltinModels | undefined>;
 }
 
-export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProviderAction> = (
-  set,
-  get,
-) => ({
+export const createAiProviderSlice: StateCreator<
+  AiInfraStore,
+  [['zustand/devtools', never]],
+  [],
+  AiProviderAction
+> = (set, get) => ({
   createNewAiProvider: async (params) => {
     await aiProviderService.createAiProvider({ ...params, source: AiProviderSourceEnum.Custom });
     await get().refreshAiProviderList();
   },
   deleteAiProvider: async (id: string) => {
     await aiProviderService.deleteAiProvider(id);
+
     await get().refreshAiProviderList();
   },
   internal_toggleAiProviderConfigUpdating: (id, loading) => {
-    set((state) => {
-      if (loading)
-        return { aiProviderConfigUpdatingIds: [...state.aiProviderConfigUpdatingIds, id] };
+    set(
+      (state) => {
+        if (loading)
+          return { aiProviderConfigUpdatingIds: [...state.aiProviderConfigUpdatingIds, id] };
 
-      return {
-        aiProviderConfigUpdatingIds: state.aiProviderConfigUpdatingIds.filter((i) => i !== id),
-      };
-    }, false);
+        return {
+          aiProviderConfigUpdatingIds: state.aiProviderConfigUpdatingIds.filter((i) => i !== id),
+        };
+      },
+      false,
+      'toggleAiProviderLoading',
+    );
   },
   internal_toggleAiProviderLoading: (id, loading) => {
-    set((state) => {
-      if (loading) return { aiProviderLoadingIds: [...state.aiProviderLoadingIds, id] };
+    set(
+      (state) => {
+        if (loading) return { aiProviderLoadingIds: [...state.aiProviderLoadingIds, id] };
 
-      return { aiProviderLoadingIds: state.aiProviderLoadingIds.filter((i) => i !== id) };
-    }, false);
+        return { aiProviderLoadingIds: state.aiProviderLoadingIds.filter((i) => i !== id) };
+      },
+      false,
+      'toggleAiProviderLoading',
+    );
   },
   refreshAiProviderDetail: async () => {
     await mutate([AiProviderSwrKey.fetchAiProviderItem, get().activeAiProvider]);
@@ -99,6 +134,7 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     get().internal_toggleAiProviderLoading(id, true);
     await aiProviderService.toggleProviderEnabled(id, enabled);
     await get().refreshAiProviderList();
+
     get().internal_toggleAiProviderLoading(id, false);
   },
 
@@ -107,6 +143,7 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     await aiProviderService.updateAiProvider(id, value);
     await get().refreshAiProviderList();
     await get().refreshAiProviderDetail();
+
     get().internal_toggleAiProviderLoading(id, false);
   },
 
@@ -114,6 +151,7 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     get().internal_toggleAiProviderConfigUpdating(id, true);
     await aiProviderService.updateAiProviderConfig(id, value);
     await get().refreshAiProviderDetail();
+
     get().internal_toggleAiProviderConfigUpdating(id, false);
   },
 
@@ -121,7 +159,6 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     await aiProviderService.updateAiProviderOrder(items);
     await get().refreshAiProviderList();
   },
-
   useFetchAiProviderItem: (id) =>
     useSWR<AiProviderDetailItem | undefined>(
       [AiProviderSwrKey.fetchAiProviderItem, id],
@@ -129,11 +166,11 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
       {
         onSuccess: (data) => {
           if (!data) return;
-          set({ activeAiProvider: id, aiProviderDetail: data }, false);
+
+          set({ activeAiProvider: id, aiProviderDetail: data }, false, 'useFetchAiProviderItem');
         },
       },
     ),
-
   useFetchAiProviderList: () =>
     useSWR<AiProviderListItem[]>(
       AiProviderSwrKey.fetchAiProviderList,
@@ -142,10 +179,15 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
         fallbackData: [],
         onSuccess: (data) => {
           if (!get().initAiProviderList) {
-            set({ aiProviderList: data, initAiProviderList: true }, false);
+            set(
+              { aiProviderList: data, initAiProviderList: true },
+              false,
+              'useFetchAiProviderList/init',
+            );
             return;
           }
-          set({ aiProviderList: data }, false);
+
+          set({ aiProviderList: data }, false, 'useFetchAiProviderList/refresh');
         },
       },
     ),
@@ -154,116 +196,67 @@ export const createAiProviderSlice: StateCreator<AiInfraStore, [], [], AiProvide
     useSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
       [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin],
       async ([, isLogin]) => {
+        const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
+          await Promise.all([import('@/config/aiModels'), import('@/config/modelProviders')]);
+
         if (isLogin) {
-          const runtimeState = await aiProviderService.getAiProviderRuntimeState();
+          const data = await aiProviderService.getAiProviderRuntimeState();
           return {
-            ...runtimeState,
-            builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
+            ...data,
+            builtinAiModelList,
           };
         }
 
-        // 未登录状态：返回默认的模型和提供商配置
         const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
           (provider) => provider.enabled,
         ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' }));
-
-        const allModels = LOBE_DEFAULT_MODEL_LIST;
-
         return {
-          builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
-          enabledAiModels: allModels
-            .filter((m) => m.enabled)
-            .map((model) => ({
-              abilities: model.abilities,
-              contextWindowTokens: model.contextWindowTokens,
-              displayName: model.displayName,
-              enabled: model.enabled,
-              id: model.id,
-              providerId: model.providerId,
-              sort: 0,
-              type: model.type,
-            })),
+          builtinAiModelList,
+          enabledAiModels: builtinAiModelList.filter((m) => m.enabled),
           enabledAiProviders: enabledAiProviders,
-          enabledChatAiProviders: [],
-          enabledImageAiProviders: [],
+          enabledChatAiProviders: enabledAiProviders.filter((provider) => {
+            return builtinAiModelList.some(
+              (model) => model.providerId === provider.id && model.type === 'chat',
+            );
+          }),
+          enabledImageAiProviders: enabledAiProviders
+            .filter((provider) => {
+              return builtinAiModelList.some(
+                (model) => model.providerId === provider.id && model.type === 'image',
+              );
+            })
+            .map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
           runtimeConfig: {},
         };
       },
       {
-        onSuccess: async (data) => {
+        focusThrottleInterval: undefined,
+        onSuccess: (data) => {
           if (!data) return;
 
-          // 完整的数据处理逻辑（包含去重和displayName处理）
-          const getModelListByType = (providerId: string, type: string) => {
-            const models = data.enabledAiModels.filter(
-              (model) => model.providerId === providerId && model.type === type,
-            );
-
-            // 按模型ID去重，优先保留有displayName的版本
-            const uniqueModels = new Map();
-
-            models.forEach((model) => {
-              const existingModel = uniqueModels.get(model.id);
-
-              // 如果没有现有模型，或者当前模型有更好的displayName，则使用当前模型
-              if (
-                !existingModel ||
-                (!existingModel.displayName && model.displayName) ||
-                (model.displayName && model.displayName.length > 0)
-              ) {
-                // 生成友好的显示名称
-                const displayName = generateModelDisplayName(model.id, model.displayName);
-
-                uniqueModels.set(model.id, {
-                  abilities: model.abilities as ModelAbilities,
-                  contextWindowTokens: model.contextWindowTokens,
-                  displayName,
-                  id: model.id,
-                });
-              }
-            });
-
-            return Array.from(uniqueModels.values()).sort((a, b) =>
-              a.displayName.localeCompare(b.displayName),
-            );
-          };
-
-          // 基于 enabledAiProviders 构建分类的提供商列表
-          const enabledChatProviders = data.enabledAiProviders.filter((provider) => {
-            return data.enabledAiModels.some(
-              (model) => model.providerId === provider.id && model.type === 'chat',
-            );
-          });
-
-          const enabledImageProviders = data.enabledAiProviders.filter((provider) => {
-            return data.enabledAiModels.some(
-              (model) => model.providerId === provider.id && model.type === 'image',
-            );
-          });
-
-          // 组装最终数据结构
-          const enabledChatModelList = enabledChatProviders.map((provider) => ({
+          const enabledChatModelList = data.enabledChatAiProviders.map((provider) => ({
             ...provider,
-            children: getModelListByType(provider.id, 'chat'),
+            children: getModelListByType(data.enabledAiModels, provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
 
-          const enabledImageModelList = enabledImageProviders.map((provider) => ({
+          const enabledImageModelList = data.enabledImageAiProviders.map((provider) => ({
             ...provider,
-            children: getModelListByType(provider.id, 'image'),
+            children: getModelListByType(data.enabledAiModels, provider.id, 'image'),
             name: provider.name || provider.id,
           }));
 
           set(
             {
               aiProviderRuntimeConfig: data.runtimeConfig,
-              builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
+              builtinAiModelList: data.builtinAiModelList,
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,
               enabledImageModelList,
             },
             false,
+            'useFetchAiProviderRuntimeState',
           );
         },
       },
