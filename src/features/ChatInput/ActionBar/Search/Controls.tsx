@@ -93,9 +93,10 @@ const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
 
 const Controls = memo(() => {
   const { t } = useTranslation('chat');
-  const [model, provider] = useAgentStore((s) => [
+  const [model, provider, useModelBuiltinSearch] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
+    agentChatConfigSelectors.useModelBuiltinSearch(s),
   ]);
 
   const supportFC = useAiInfraStore(aiModelSelectors.isModelSupportToolUse(model, provider));
@@ -105,6 +106,8 @@ const Controls = memo(() => {
   const isModelHasBuiltinSearchConfig = useAiInfraStore(
     aiModelSelectors.isModelHasBuiltinSearchConfig(model, provider),
   );
+
+  const searchImpl = useAiInfraStore(aiModelSelectors.modelBuiltinSearchImpl(model, provider));
 
   const options: NetworkOption[] = [
     {
@@ -121,8 +124,12 @@ const Controls = memo(() => {
     },
   ];
 
-  const showDivider = isModelHasBuiltinSearchConfig || !supportFC;
   const showModelBuiltinSearch = isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig;
+
+  const showFCSearchModel =
+    !supportFC && (!searchImpl || (searchImpl !== 'internal' && !useModelBuiltinSearch));
+
+  const showDivider = showModelBuiltinSearch || showFCSearchModel;
 
   return (
     <Flexbox gap={4}>
@@ -131,7 +138,7 @@ const Controls = memo(() => {
       ))}
       {showDivider && <Divider style={{ margin: 0 }} />}
       {showModelBuiltinSearch && <ModelBuiltinSearch />}
-      {!supportFC && <FCSearchModel />}
+      {showFCSearchModel && <FCSearchModel />}
     </Flexbox>
   );
 });
