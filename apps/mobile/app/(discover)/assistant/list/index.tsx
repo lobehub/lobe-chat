@@ -11,12 +11,13 @@ import CategoryTabs from './components/CategoryTabs';
 import { CategoryTabsSkeleton, AssistantListSkeleton } from './components/SkeletonList';
 import useCategory from './hooks/useCategory';
 import { useStyles } from './styles';
+import { Header } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
 const AssistantList = () => {
   const { styles, token } = useStyles();
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'discover']);
   const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>(AssistantCategory.All);
@@ -133,6 +134,7 @@ const AssistantList = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
+      <Header showBack title={t('title', { ns: 'discover' })} />
       <View style={styles.filterContainer}>
         <View style={styles.searchContainer}>
           <Search color={token.colorTextPlaceholder} size={20} style={styles.searchIcon} />

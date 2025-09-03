@@ -5,6 +5,7 @@ import ColorScales from '@/components/ColorScales';
 import { useThemeToken, colorScales } from '@/theme';
 
 import ComponentPlayground, { type DemoItem } from '../Playground';
+import { Header } from '@/components';
 
 // 基础演示组件
 const BasicDemo = () => {
@@ -261,11 +262,14 @@ const demos: DemoItem[] = [
 
 export default function ColorScalesPlayground() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={COLORSCALES_README}
-      subtitle="基于 LobeUI 重写的 React Native 色板展示组件"
-      title="ColorScales 色板"
-    />
+    <>
+      <Header showBack title="ColorScales 色板" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={COLORSCALES_README}
+        subtitle="基于 LobeUI 重写的 React Native 色板展示组件"
+        title="ColorScales 色板"
+      />
+    </>
   );
 }

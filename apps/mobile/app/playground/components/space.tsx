@@ -8,6 +8,7 @@ import {
   AlignmentDemo,
   AdvancedDemo,
 } from '@/components/Space/demos';
+import { Header } from '@/components';
 
 const SPACE_README = `# Space 间距组件
 
@@ -80,11 +81,14 @@ const demos: DemoItem[] = [
 
 export default function SpacePlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={SPACE_README}
-      subtitle="设置组件之间的间距"
-      title="Space 间距"
-    />
+    <>
+      <Header showBack title="Space 间距" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={SPACE_README}
+        subtitle="设置组件之间的间距"
+        title="Space 间距"
+      />
+    </>
   );
 }

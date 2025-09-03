@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
-import { ColorSwatches } from '@/components';
+import { ColorSwatches, Header } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import {
   findCustomThemeName,
@@ -47,40 +47,43 @@ export default function ThemeSettingScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Preview />
-      <SettingGroup style={{ marginTop: 16 }}>
-        <SettingItem
-          customContent={
-            <ColorSwatches
-              colors={primaryColorSwatchesData}
-              gap={8}
-              onChange={(color: any) => {
-                const name = findCustomThemeName('primary', color) as PrimaryColors;
-                setPrimaryColor(name || '');
-              }}
-              size={32}
-              value={primaryColor ? primaryColors[primaryColor] : undefined}
-            />
-          }
-          title={t('color.primary.title', { ns: 'setting' })}
-        />
-        <SettingItem
-          customContent={
-            <ColorSwatches
-              colors={neutralColorSwatchesData}
-              gap={8}
-              onChange={(color: any) => {
-                const name = findCustomThemeName('neutral', color) as NeutralColors;
-                setNeutralColor(name || '');
-              }}
-              size={32}
-              value={neutralColor ? neutralColors[neutralColor] : undefined}
-            />
-          }
-          title={t('color.neutral.title', { ns: 'setting' })}
-        />
-      </SettingGroup>
-    </ScrollView>
+    <>
+      <Header showBack title={t('color.title', { ns: 'setting' })} />
+      <ScrollView style={styles.container}>
+        <Preview />
+        <SettingGroup style={{ marginTop: 16 }}>
+          <SettingItem
+            customContent={
+              <ColorSwatches
+                colors={primaryColorSwatchesData}
+                gap={8}
+                onChange={(color: any) => {
+                  const name = findCustomThemeName('primary', color) as PrimaryColors;
+                  setPrimaryColor(name || '');
+                }}
+                size={32}
+                value={primaryColor ? primaryColors[primaryColor] : undefined}
+              />
+            }
+            title={t('color.primary.title', { ns: 'setting' })}
+          />
+          <SettingItem
+            customContent={
+              <ColorSwatches
+                colors={neutralColorSwatchesData}
+                gap={8}
+                onChange={(color: any) => {
+                  const name = findCustomThemeName('neutral', color) as NeutralColors;
+                  setNeutralColor(name || '');
+                }}
+                size={32}
+                value={neutralColor ? neutralColors[neutralColor] : undefined}
+              />
+            }
+            title={t('color.neutral.title', { ns: 'setting' })}
+          />
+        </SettingGroup>
+      </ScrollView>
+    </>
   );
 }

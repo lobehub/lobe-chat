@@ -7,7 +7,7 @@ export const useThemedScreenOptions = () => {
 
   return {
     animation: 'slide_from_right' as StackAnimationTypes,
-    headerShown: true,
+    headerShown: false,
     headerStyle: {
       backgroundColor: token.colorBgLayout,
       borderBottomWidth: 0,

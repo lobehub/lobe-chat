@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, ScrollingDemo, CategoriesDemo } from '@/components/CapsuleTabs/demos';
+import { Header } from '@/components';
 
 const CAPSULETABS_README = `# CapsuleTabs 组件
 
@@ -63,11 +64,14 @@ const demos: DemoItem[] = [
 
 export default function CapsuleTabsPlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={CAPSULETABS_README}
-      subtitle="水平滚动的胶囊选项卡组件"
-      title="CapsuleTabs 胶囊选项卡"
-    />
+    <>
+      <Header showBack title="CapsuleTabs 胶囊选项卡" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={CAPSULETABS_README}
+        subtitle="水平滚动的胶囊选项卡组件"
+        title="CapsuleTabs 胶囊选项卡"
+      />
+    </>
   );
 }

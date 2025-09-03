@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, RangeDemo, ControlledDemo, MarksDemo } from '@/components/Slider/demos';
+import { Header } from '@/components';
 
 const SLIDER_README = `# Slider 滑动输入条组件
 
@@ -171,11 +172,14 @@ const demos: DemoItem[] = [
 
 export default function SliderPlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={SLIDER_README}
-      subtitle="React Native 版本的滑动输入条组件"
-      title="Slider 滑动输入条"
-    />
+    <>
+      <Header showBack title="Slider 滑动输入条" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={SLIDER_README}
+        subtitle="React Native 版本的滑动输入条组件"
+        title="Slider 滑动输入条"
+      />
+    </>
   );
 }

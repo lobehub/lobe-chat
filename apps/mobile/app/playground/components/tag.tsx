@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, ColorsDemo, UseCaseDemo, BorderDemo, PresetDemo } from '@/components/Tag/demos';
+import { Header } from '@/components';
 
 const TAG_README = `# Tag 标签组件
 
@@ -69,11 +70,14 @@ const demos: DemoItem[] = [
 
 export default function TagPlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={TAG_README}
-      subtitle="进行标记和分类的小标签"
-      title="Tag 标签"
-    />
+    <>
+      <Header showBack title="Tag 标签" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={TAG_README}
+        subtitle="进行标记和分类的小标签"
+        title="Tag 标签"
+      />
+    </>
   );
 }

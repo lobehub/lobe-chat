@@ -1,12 +1,13 @@
 import React from 'react';
 import { ScrollView, View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './style';
+import { Header } from '@/components';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error']);
@@ -49,7 +50,7 @@ export default function AccountScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: t('account.title', { ns: 'setting' }) }} />
+      <Header showBack title={t('account.title', { ns: 'setting' })} />
       <ScrollView style={styles.container}>
         {isAuthenticated && user && (
           <>

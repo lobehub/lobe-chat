@@ -1,13 +1,15 @@
 import { useRouter } from 'expo-router';
 import { ChevronRight, Search } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import Tag from '@/components/Tag';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
+import { Header } from '@/components';
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
@@ -179,7 +181,8 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
+      <Header showBack title="Playground" />
       <View style={styles.filterContainer}>
         <View style={styles.searchContainer}>
           <Search color={token.colorTextPlaceholder} size={20} style={styles.searchIcon} />

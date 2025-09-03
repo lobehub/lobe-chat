@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
+import { Header } from '@/components';
 
 export default function LocaleScreen() {
   const { styles } = useStyles();
@@ -23,22 +24,25 @@ export default function LocaleScreen() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-      <SettingGroup>
-        {localeOptions.map((option, index) => (
-          <SettingItem
-            description={
-              option.value === 'auto' ? t('locale.auto.description', { ns: 'setting' }) : ''
-            }
-            isLast={index === localeOptions.length - 1}
-            isSelected={localeMode === option.value}
-            key={option.value}
-            onPress={() => handleLocaleChange(option.value as LocaleMode)}
-            showCheckmark={true}
-            title={option.label}
-          />
-        ))}
-      </SettingGroup>
-    </ScrollView>
+    <>
+      <Header showBack title={t('locale.title', { ns: 'setting' })} />
+      <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
+        <SettingGroup>
+          {localeOptions.map((option, index) => (
+            <SettingItem
+              description={
+                option.value === 'auto' ? t('locale.auto.description', { ns: 'setting' }) : ''
+              }
+              isLast={index === localeOptions.length - 1}
+              isSelected={localeMode === option.value}
+              key={option.value}
+              onPress={() => handleLocaleChange(option.value as LocaleMode)}
+              showCheckmark={true}
+              title={option.label}
+            />
+          ))}
+        </SettingGroup>
+      </ScrollView>
+    </>
   );
 }

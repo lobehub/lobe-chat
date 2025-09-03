@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import BasicDemo from '@/components/ColorSwatches/demos/basic';
+import { Header } from '@/components';
 
 const COLORSWATCHES_README = `# ColorSwatches 颜色选择器组件
 
@@ -133,11 +134,14 @@ const demos: DemoItem[] = [
 
 export default function ColorSwatchesPlayground() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={COLORSWATCHES_README}
-      subtitle="基于 LobeUI 重写的 React Native 颜色选择器组件"
-      title="ColorSwatches 颜色选择器"
-    />
+    <>
+      <Header showBack title="ColorSwatches 颜色选择器" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={COLORSWATCHES_README}
+        subtitle="基于 LobeUI 重写的 React Native 颜色选择器组件"
+        title="ColorSwatches 颜色选择器"
+      />
+    </>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, SizesDemo, StatesDemo, BlockDemo } from '@/components/Button/demos';
+import { Header } from '@/components';
 
 const BUTTON_README = `# Button 按钮组件
 
@@ -92,11 +93,14 @@ const demos: DemoItem[] = [
 
 export default function ButtonPlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={BUTTON_README}
-      subtitle="React Native版本的按钮组件"
-      title="Button 按钮"
-    />
+    <>
+      <Header showBack title="Button 按钮" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={BUTTON_README}
+        subtitle="React Native版本的按钮组件"
+        title="Button 按钮"
+      />
+    </>
   );
 }

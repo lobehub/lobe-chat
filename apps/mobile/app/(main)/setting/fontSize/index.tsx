@@ -7,6 +7,7 @@ import { FONT_SIZE_STANDARD, FONT_SIZE_LARGE, FONT_SIZE_SMALL } from '@/const/co
 import { useSettingStore } from '@/store/setting';
 import { useStyles } from './styles';
 import Preview from './components/Preview';
+import { Header } from '@/components';
 
 export default function FontSizeSettingScreen() {
   const { t } = useTranslation(['setting']);
@@ -16,6 +17,7 @@ export default function FontSizeSettingScreen() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Header showBack title={t('fontSize.title', { ns: 'setting' })} />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
         style={styles.container}

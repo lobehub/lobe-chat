@@ -8,6 +8,7 @@ import {
   StaticDemo,
   TypesDemo,
 } from '@/components/Toast/demos';
+import { Header } from '@/components';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
@@ -100,11 +101,14 @@ export default function MyComponent() {
 
 export default function ToastPlayground() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={readmeContent}
-      subtitle="优雅的消息提示组件"
-      title="Toast 组件"
-    />
+    <>
+      <Header showBack title="Toast 组件" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={readmeContent}
+        subtitle="优雅的消息提示组件"
+        title="Toast 组件"
+      />
+    </>
   );
 }

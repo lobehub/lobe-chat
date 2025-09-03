@@ -8,6 +8,7 @@ export { default as CapsuleTabs } from './CapsuleTabs';
 export { default as ColorSwatches } from './ColorSwatches';
 export { default as FluentEmoji } from './FluentEmoji';
 export { default as GitHubAvatar } from './GithubAvatar';
+export { default as Header } from './Header';
 export { default as Highlighter } from './Highlighter';
 export { default as InstantSwitch } from './InstantSwitch';
 export { default as ListGroup } from './ListGroup';

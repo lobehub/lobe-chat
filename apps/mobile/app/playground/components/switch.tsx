@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo } from '@/components/Switch/demos';
+import { Header } from '@/components';
 
 const SWITCH_README = `# Switch 开关
 
@@ -32,11 +33,14 @@ const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基
 
 export default function SwitchPlaygroundPage() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={SWITCH_README}
-      subtitle="基于 React Native Switch 的主题封装"
-      title="Switch 开关"
-    />
+    <>
+      <Header showBack title="Switch 开关" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={SWITCH_README}
+        subtitle="基于 React Native Switch 的主题封装"
+        title="Switch 开关"
+      />
+    </>
   );
 }

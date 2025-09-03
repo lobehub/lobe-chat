@@ -2,6 +2,7 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, SizesDemo, BordersDemo, ErrorDemo } from '@/components/Avatar/demos';
+import { Header } from '@/components';
 
 const AVATAR_README = `# Avatar 头像组件
 
@@ -65,13 +66,16 @@ const demos: DemoItem[] = [
   { component: <ErrorDemo />, key: 'error', title: '错误处理' },
 ];
 
-export default function AvatarPlaygroundPage() {
+export default function AvatarPlayground() {
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={AVATAR_README}
-      subtitle="可定制的头像组件"
-      title="Avatar 头像"
-    />
+    <>
+      <Header showBack title="Avatar 头像" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={AVATAR_README}
+        subtitle="头像组件"
+        title="Avatar 头像"
+      />
+    </>
   );
 }
