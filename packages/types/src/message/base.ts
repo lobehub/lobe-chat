@@ -1,7 +1,7 @@
-import { ChatMessageError } from '@/types/message/chat';
-import { ChatImageItem } from '@/types/message/image';
-import { ChatToolPayload, MessageToolCall } from '@/types/message/tools';
-import { GroundingSearch } from '@/types/search';
+import { GroundingSearch } from '../search';
+import { ChatMessageError } from './chat';
+import { ChatImageItem } from './image';
+import { ChatToolPayload, MessageToolCall } from './tools';
 
 export interface CitationItem {
   id?: string;

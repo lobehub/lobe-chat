@@ -19,7 +19,7 @@ export class AiChatService {
 
   async getMessagesAndTopics(params: {
     current?: number;
-    isCreatNewTopic?: boolean;
+    includeTopic?: boolean;
     pageSize?: number;
     sessionId?: string;
     topicId?: string;
@@ -28,7 +28,7 @@ export class AiChatService {
       this.messageModel.query(params, {
         postProcessUrl: (path) => this.fileService.getFullFileUrl(path),
       }),
-      params.isCreatNewTopic ? this.topicModel.query({ sessionId: params.sessionId }) : undefined,
+      params.includeTopic ? this.topicModel.query({ sessionId: params.sessionId }) : undefined,
     ]);
 
     return { messages, topics };

@@ -199,7 +199,12 @@ export const generateAIChatV2: StateCreator<
       ragQuery,
       messages: originalMessages,
     } = params;
-    const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages } = get();
+    const {
+      internal_fetchAIChatMessage,
+      triggerToolCalls,
+      refreshMessages,
+      internal_updateMessageRAG,
+    } = get();
 
     // create a new array to avoid the original messages array change
     const messages = [...originalMessages];
@@ -239,8 +244,8 @@ export const generateAIChatV2: StateCreator<
       });
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
-      // TODO: fileChunks / ragQueryId 需要更新到 message 里
-      console.log(ragQueryId, fileChunks);
+
+      await internal_updateMessageRAG(assistantId, { ragQueryId, fileChunks });
     }
 
     // 3. place a search with the search working model if this model is not support tool use

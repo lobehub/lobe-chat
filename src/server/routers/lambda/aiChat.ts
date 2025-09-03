@@ -63,7 +63,7 @@ export const aiChatRouter = router({
 
       // retrieve latest messages and topic with
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
-        isCreatNewTopic,
+        includeTopic: isCreatNewTopic,
         sessionId: input.sessionId,
         topicId,
       });

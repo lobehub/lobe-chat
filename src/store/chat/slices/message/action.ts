@@ -22,6 +22,7 @@ import {
   ModelReasoning,
 } from '@/types/message';
 import { ChatImageItem } from '@/types/message/image';
+import { UpdateMessageRAGParams } from '@/types/message/rag';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { Action, setNamespace } from '@/utils/storeDebug';
@@ -60,10 +61,11 @@ export interface ChatMessageAction {
   ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-
+  replaceMessages: (messages: ChatMessage[]) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
+  internal_updateMessageRAG: (id: string, input: UpdateMessageRAGParams) => Promise<void>;
 
   /**
    * update message at the frontend
@@ -281,6 +283,25 @@ export const chatMessage: StateCreator<
     ),
   refreshMessages: async () => {
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
+  },
+  replaceMessages: (messages) => {
+    set(
+      {
+        messagesMap: {
+          ...get().messagesMap,
+          [messageMapKey(get().activeId, get().activeTopicId)]: messages,
+        },
+      },
+      false,
+      'replaceMessages',
+    );
+  },
+
+  internal_updateMessageRAG: async (id, data) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessageRAG(id, data);
+    await refreshMessages();
   },
 
   // the internal process method of the AI message
