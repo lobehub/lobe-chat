@@ -163,6 +163,64 @@ describe('OpenAIStream', () => {
     );
   });
 
+  it('should emit base64_image when markdown contains data:image in normal text delta', async () => {
+    const data = [
+      {
+        id: 'img-1',
+        choices: [
+          { index: 0, delta: { role: 'assistant', content: '这是一张图片： ' } },
+        ],
+      },
+      {
+        id: 'img-1',
+        choices: [
+          {
+            index: 0,
+            delta: {
+              content:
+                '![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA==)',
+            },
+          },
+        ],
+      },
+      { id: 'img-1', choices: [{ index: 0, delta: {}, finish_reason: 'stop' }] },
+    ];
+
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        data.forEach((c) => controller.enqueue(c));
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks: string[] = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: img-1',
+        'event: text',
+        `data: "这是一张图片： "\n`,
+        'id: img-1',
+        'event: text',
+        `data: "![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA==)"\n`,
+        'id: img-1',
+        'event: base64_image',
+        `data: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA=="\n`,
+        'id: img-1',
+        'event: stop',
+        `data: "stop"\n`,
+      ].map((i) => `${i}\n`),
+    );
+  });
+
   it('should handle content with tool_calls but is an empty object', async () => {
     // data: {"id":"chatcmpl-A7pokGUqSov0JuMkhiHhWU9GRtAgJ", "object":"chat.completion.chunk", "created":1726430846, "model":"gpt-4o-2024-05-13", "choices":[{"index":0, "delta":{"content":" today", "role":"", "tool_calls":[]}, "finish_reason":"", "logprobs":""}], "prompt_annotations":[{"prompt_index":0, "content_filter_results":null}]}
     const mockOpenAIStream = new ReadableStream({

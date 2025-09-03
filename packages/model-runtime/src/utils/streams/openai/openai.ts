@@ -329,6 +329,17 @@ const transformOpenAIStream = (
           }
         }
 
+        // 非思考模式下，额外解析 markdown 中的 base64 图片，按顺序输出 text -> base64_image
+        if (!streamContext?.thinkingInContent) {
+          const urls = extractBase64ImageUrlsFromMarkdown(thinkingContent);
+          if (urls.length > 0) {
+            return [
+              { data: thinkingContent, id: chunk.id, type: 'text' },
+              ...urls.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+            ];
+          }
+        }
+
         // 根据当前思考模式确定返回类型
         return {
           data: thinkingContent,
