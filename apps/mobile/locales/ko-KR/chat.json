@@ -2,7 +2,16 @@
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작할 수 있으며, [도우미 설정]({{url}})에서 제 정보를 더 완벽하게 설정할 수도 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**이며, {{systemRole}}입니다. 대화를 시작해 볼까요!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 볼까요!",
+  "agentRoleEdit": {
+    "cancel": "취소",
+    "confirm": "확인",
+    "edit": "편집",
+    "placeholder": "역할 프롬프트를 입력하세요",
+    "roleSetting": "역할 설정",
+    "title": "역할 설정"
+  },
   "confirmDelete": "삭제 확인",
+  "confirmRemoveSessionItemAlert": "이 도우미를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
   "copyFailed": "복사 실패",
   "defaultAgent": "맞춤 도우미",
   "defaultList": "기본 목록",

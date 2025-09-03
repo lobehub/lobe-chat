@@ -1,7 +1,5 @@
 import { Stack } from 'expo-router';
 
-import { NavigateBack } from '@/components';
-
 import { useThemedScreenOptions } from '@/const/navigation';
 
 export default function RoutesLayout() {
@@ -10,8 +8,7 @@ export default function RoutesLayout() {
     <Stack
       screenOptions={{
         ...themedScreenOptions,
-        headerLeft: () => <NavigateBack />,
-        headerTitle: 'Playground',
+        headerShown: false,
       }}
     />
   );

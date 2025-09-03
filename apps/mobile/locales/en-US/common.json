@@ -18,6 +18,7 @@
     "noMatch": "No matching assistant found",
     "search": "Search assistants..."
   },
+  "defaultSession": "Custom Assistant",
   "navigation": {
     "goToHomeScreen": "Go to Home"
   },

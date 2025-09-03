@@ -34,7 +34,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
     setThemeMode: setStoreThemeMode,
     primaryColor,
     neutralColor,
-    fontSize,
   } = useSettingStore();
 
   // 计算当前实际的主题模式
@@ -107,7 +106,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
     mergedThemeConfig = {
       algorithm: isDark ? darkAlgorithm : lightAlgorithm,
       token: {
-        fontSize,
         neutralColor,
         primaryColor,
         ...customTheme?.token,

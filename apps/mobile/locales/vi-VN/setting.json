@@ -49,7 +49,7 @@
       "copySuccess": "Sao chép thành công",
       "disableFailed": "Vô hiệu hóa mô hình thất bại",
       "emptyNoSearch": "Không tìm thấy mô hình nào, thử lấy từ máy chủ",
-      "emptyWithSearch": "Không có mô hình nào phù hợp với điều kiện tìm kiếm",
+      "emptyWithSearch": "Không có mô hình phù hợp với điều kiện tìm kiếm",
       "enableFailed": "Kích hoạt mô hình thất bại",
       "fetch": "Lấy mô hình",
       "fetchFailed": "Lấy mô hình thất bại, vui lòng thử lại",
@@ -65,9 +65,56 @@
     }
   },
   "changelog": "Nhật ký cập nhật",
-  "developer": "Tùy chọn nhà phát triển",
+  "color": {
+    "neutral": {
+      "description": "Chọn tông màu trung tính cho ứng dụng",
+      "title": "Cấu hình màu trung tính"
+    },
+    "preview": "Xem trước",
+    "previewMessages": {
+      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính bằng bộ chọn màu bên dưới, bản xem trước sẽ cập nhật trực tiếp để hiển thị hiệu ứng.",
+      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
+    },
+    "primary": {
+      "description": "Chọn tông màu chủ đạo cho ứng dụng",
+      "title": "Cấu hình màu chủ đạo"
+    },
+    "title": "Cài đặt màu sắc"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Đã làm cho token truy cập hết hạn ngay lập tức",
+        "title": "Token truy cập hết hạn"
+      },
+      "invalidate": {
+        "success": "Đã ghi token truy cập không hợp lệ",
+        "title": "Token truy cập không hợp lệ"
+      }
+    },
+    "clearAuthData": {
+      "success": "Đã xóa dữ liệu xác thực",
+      "title": "Xóa dữ liệu xác thực"
+    },
+    "failurePrefix": "Thao tác thất bại: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Đã làm cho token làm mới hết hạn ngay lập tức",
+        "title": "Token làm mới hết hạn"
+      },
+      "invalidate": {
+        "success": "Đã ghi token làm mới không hợp lệ",
+        "title": "Token làm mới không hợp lệ"
+      }
+    },
+    "title": "Tùy chọn nhà phát triển"
+  },
   "feedback": "Phản hồi ý kiến",
-  "help": "Trợ giúp sử dụng",
+  "fontSize": {
+    "standard": "Tiêu chuẩn",
+    "title": "Cỡ chữ"
+  },
+  "help": "Hướng dẫn sử dụng",
   "locale": {
     "auto": {
       "description": "Theo cài đặt ngôn ngữ hệ thống",
@@ -81,8 +128,8 @@
     "apiKeyPlaceholder": "Vui lòng nhập API Key OpenAI của bạn",
     "checkApiKey": "Vui lòng kiểm tra API Key có chính xác không",
     "checkProxyAddress": "Không thể kết nối đến máy chủ, vui lòng kiểm tra địa chỉ proxy có chính xác không",
-    "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy đã được cấu hình chính xác",
-    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác minh API Key và địa chỉ proxy đã nhập có chính xác hay không",
+    "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy được cấu hình chính xác",
+    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác thực API Key và địa chỉ proxy có được nhập đúng không",
     "pleaseEnterApiKey": "Vui lòng nhập API Key",
     "proxyAddress": "Địa chỉ proxy API",
     "proxyPlaceholder": "Phải bao gồm http(s)://",
@@ -92,30 +139,12 @@
   },
   "providers": "Nhà cung cấp AI",
   "support": "Hỗ trợ qua email",
-  "theme": {
+  "themeMode": {
     "auto": "Theo hệ thống",
     "dark": "Chế độ tối",
-    "fontSize": {
-      "standard": "Tiêu chuẩn",
-      "title": "Cỡ chữ"
-    },
     "light": "Chế độ sáng",
-    "neutralColor": {
-      "description": "Chọn tông màu trung tính cho ứng dụng",
-      "title": "Cấu hình màu trung tính"
-    },
-    "preview": "Xem trước",
-    "previewMessages": {
-      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính thông qua bộ chọn màu bên dưới, bản xem trước sẽ cập nhật ngay lập tức để hiển thị hiệu ứng.",
-      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
-    },
-    "primaryColor": {
-      "description": "Chọn tông màu chủ đạo cho ứng dụng",
-      "title": "Cấu hình màu chủ đạo"
-    },
-    "sectionDescription": "Chọn phong cách chủ đề bạn yêu thích, nhấp để chuyển đổi lựa chọn của bạn",
-    "sectionTitle": "Chủ đề",
-    "title": "Cài đặt chủ đề"
+    "title": "Chế độ chủ đề"
   },
-  "title": "Cài đặt"
+  "title": "Cài đặt",
+  "version": "Phiên bản hiện tại"
 }
