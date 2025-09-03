@@ -182,6 +182,13 @@
     "title": "喜欢我们的产品？"
   },
   "fullscreen": "全屏模式",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana 使用中文有概率性生成图片失败。建议使用英文以获得更好的效果。",
+    "continueGenerate": "继续生成",
+    "continueSend": "继续发送",
+    "doNotShowAgain": "不再提示",
+    "title": "中文输入提示"
+  },
   "historyRange": "历史范围",
   "import": "导入",
   "importData": "导入数据",
