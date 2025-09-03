@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { useStyles } from './styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ProviderCard from './(components)/ProviderCard';
 import ProviderListSkeleton from './(components)/ProviderListSkeleton';
@@ -71,7 +72,7 @@ const ProviderList = () => {
   );
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('providers', { ns: 'setting' })} />
       <View style={styles.container}>
         <SectionList
@@ -84,7 +85,7 @@ const ProviderList = () => {
           stickySectionHeadersEnabled={true}
         />
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
