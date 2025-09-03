@@ -28,7 +28,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   google: {
     functionCallKeywords: ['gemini'],
-    imageOutputKeywords:['-image-'],
+    imageOutputKeywords: ['-image-'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
@@ -285,6 +285,44 @@ const processDisplayName = (displayName: string): string => {
 };
 
 /**
+ * 获取模型提供商的本地配置
+ * @param provider 模型提供商
+ * @returns 模型提供商的本地配置
+ */
+const getProviderLocalConfig = async (provider?: ModelProviderKey): Promise<any[] | null> => {
+  let providerLocalConfig: any[] | null = null;
+  if (provider) {
+    try {
+      const modules = await import('model-bank');
+
+      providerLocalConfig = modules[provider];
+    } catch {
+      // 如果配置文件不存在或导入失败，保持为 null
+      providerLocalConfig = null;
+    }
+  }
+  return providerLocalConfig;
+};
+
+/**
+ * 获取模型本地配置
+ * @param providerLocalConfig 模型提供商的本地配置
+ * @param model 模型对象
+ * @returns 模型本地配置
+ */
+const getModelLocalEnableConfig = (
+  providerLocalConfig: any[],
+  model: { id: string },
+): any | null => {
+  // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
+  let providerLocalModelConfig = null;
+  if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+    providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
+  }
+  return providerLocalModelConfig;
+};
+
+/**
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
@@ -358,24 +396,33 @@ const processModelCard = (
     functionCall:
       model.functionCall ??
       knownModel?.abilities?.functionCall ??
-      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
+      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) &&
+        !isExcludedModel &&
+        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
         false),
     id: model.id,
     imageOutput:
       model.imageOutput ??
       knownModel?.abilities?.imageOutput ??
-      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) || false),
+      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) ||
+        false),
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     pricing: formatPricing(model?.pricing) ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??
-      (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
+      ((isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) &&
+        !isExcludedModel &&
+        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
+        false),
     releasedAt: processReleasedAt(model, knownModel),
     search:
       model.search ??
       knownModel?.abilities?.search ??
-      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
+      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) &&
+        !isExcludedModel &&
+        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
+        false),
     type: modelType,
     // current, only image model use the parameters field
     ...(modelType === 'image' && {
@@ -403,17 +450,7 @@ export const processModelList = async (
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // 如果提供了 provider，尝试获取该提供商的本地配置
-  let providerLocalConfig: any[] | null = null;
-  if (provider) {
-    try {
-      const modules = await import('model-bank');
-
-      providerLocalConfig = (modules as any)[provider];
-    } catch {
-      // 如果配置文件不存在或导入失败，保持为 null
-      providerLocalConfig = null;
-    }
-  }
+  const providerLocalConfig = await getProviderLocalConfig(provider as ModelProviderKey);
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -434,10 +471,10 @@ export const processModelList = async (
       const processedModel = processModelCard(model, config, knownModel);
 
       // 如果提供了 provider 且有本地配置，尝试从中获取模型的 enabled 状态
-      let providerLocalModelConfig = null;
-      if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
-        providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
-      }
+      const providerLocalModelConfig = getModelLocalEnableConfig(
+        providerLocalConfig as any[],
+        model,
+      );
 
       // 如果找到了本地配置中的模型，使用其 enabled 状态
       if (
@@ -466,17 +503,7 @@ export const processMultiProviderModelList = async (
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // 如果提供了 providerid，尝试获取该提供商的本地配置
-  let providerLocalConfig: any[] | null = null;
-  if (providerid) {
-    try {
-      const modules = await import('model-bank');
-
-      providerLocalConfig = modules[providerid];
-    } catch {
-      // 如果配置文件不存在或导入失败，保持为 null
-      providerLocalConfig = null;
-    }
-  }
+  const providerLocalConfig = await getProviderLocalConfig(providerid);
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -494,10 +521,10 @@ export const processMultiProviderModelList = async (
       }
 
       // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
-      let providerLocalModelConfig = null;
-      if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
-        providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
-      }
+      const providerLocalModelConfig = getModelLocalEnableConfig(
+        providerLocalConfig as any[],
+        model,
+      );
 
       const processedModel = processModelCard(model, config, knownModel);
 
