@@ -265,6 +265,20 @@ const processReleasedAt = (model: any, knownModel?: any): string | undefined => 
 };
 
 /**
+ * 处理模型显示名称
+ * @param displayName 原始显示名称
+ * @returns 处理后的显示名称
+ */
+const processDisplayName = (displayName: string): string => {
+  // 如果包含 "Gemini 2.5 Flash Image Preview"，替换对应部分为 "Nano Banana"
+  if (displayName.includes('Gemini 2.5 Flash Image Preview')) {
+    return displayName.replace('Gemini 2.5 Flash Image Preview', 'Nano Banana');
+  }
+
+  return displayName;
+};
+
+/**
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
@@ -331,9 +345,7 @@ const processModelCard = (
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
     description: model.description ?? knownModel?.description ?? '',
-    displayName: (model.displayName ?? knownModel?.displayName ?? model.id)
-      .replaceAll(/\s*[(（][^)）]*[)）]\s*/g, '')
-      .trim(), // 去除括号内容
+    displayName: processDisplayName(model.displayName ?? knownModel?.displayName ?? model.id),
     enabled: model?.enabled || false,
     functionCall:
       model.functionCall ??
