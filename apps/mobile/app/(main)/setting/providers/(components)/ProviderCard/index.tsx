@@ -55,16 +55,7 @@ const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
               size={24}
               type={'color'}
             />
-            <InstantSwitch
-              enabled={enabled}
-              onChange={handleSwitchChange}
-              size="small"
-              thumbColor={token.colorBgContainer}
-              trackColor={{
-                false: '#e9e9eb', // iOS风格关闭状态
-                true: '#34c759', // iOS风格开启状态
-              }}
-            />
+            <InstantSwitch enabled={enabled} onChange={handleSwitchChange} size="small" />
           </View>
         </TouchableOpacity>
 

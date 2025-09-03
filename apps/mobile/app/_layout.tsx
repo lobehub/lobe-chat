@@ -2,14 +2,17 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { ToastProvider } from '@/components';
 import i18n from '@/i18n';
 import { useAuth, useUserStore } from '@/store/user';
-import { ThemeProvider } from '@/theme';
+import { ThemeProvider, useTheme, useThemeToken } from '@/theme';
 import { authLogger } from '@/utils/logger';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -135,6 +138,26 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
+function ThemedSystemBars() {
+  const { theme } = useTheme();
+  const token = useThemeToken();
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+
+    NavigationBar.setBackgroundColorAsync(token.colorBgLayout).catch(() => {});
+    NavigationBar.setButtonStyleAsync(theme.isDark ? 'light' : 'dark').catch(() => {});
+  }, [theme.isDark, token.colorBgLayout]);
+
+  return (
+    <StatusBar
+      animated
+      backgroundColor={token.colorBgLayout}
+      style={theme.isDark ? 'light' : 'dark'}
+    />
+  );
+}
+
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -146,6 +169,7 @@ export default function RootLayout() {
                 <I18nextProvider i18n={i18n}>
                   <I18nReadyGate>
                     <ToastProvider>
+                      <ThemedSystemBars />
                       <Stack screenOptions={{ headerShown: false }}>
                         {/* 指定首页, 防止 expo 路由错乱 */}
                         <Stack.Screen name="index" options={{ animation: 'none' }} />

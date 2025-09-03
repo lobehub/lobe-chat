@@ -2,6 +2,9 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, RangeDemo, ControlledDemo, MarksDemo } from '@/components/Slider/demos';
+import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const SLIDER_README = `# Slider 滑动输入条组件
 
@@ -170,12 +173,16 @@ const demos: DemoItem[] = [
 ];
 
 export default function SliderPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={SLIDER_README}
-      subtitle="React Native 版本的滑动输入条组件"
-      title="Slider 滑动输入条"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title="Slider 滑动输入条" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={SLIDER_README}
+        subtitle="React Native 版本的滑动输入条组件"
+        title="Slider 滑动输入条"
+      />
+    </SafeAreaView>
   );
 }
