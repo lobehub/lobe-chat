@@ -23,6 +23,100 @@ import { LobeChatDatabase } from '../../type';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 
+/**
+ * Provider 级默认表（只在本地内置模型没给出 settings.searchImpl 和 settings.searchProvider 时使用）
+ * 注意：不在 DB 存储，纯读取时注入
+ */
+const PROVIDER_SEARCH_DEFAULTS: Record<
+  string,
+  { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string }
+> = {
+  ai360: { searchImpl: 'params' },
+  aihubmix: { searchImpl: 'params' },
+  anthropic: { searchImpl: 'params' },
+  baichuan: { searchImpl: 'params' },
+  default: { searchImpl: 'internal' },
+  google: { searchImpl: 'params', searchProvider: 'google' },
+  hunyuan: { searchImpl: 'params' },
+  jina: { searchImpl: 'internal' },
+  minimax: { searchImpl: 'params' },
+  // openai: 默认 params，但对 -search- 型号做 internal 特判
+  openai: { searchImpl: 'params' },
+  // perplexity: 默认 internal
+  perplexity: { searchImpl: 'internal' },
+  qwen: { searchImpl: 'params' },
+  spark: { searchImpl: 'params' }, // 某些模型（如 max-32k）若内置标了 internal，会优先使用内置
+  stepfun: { searchImpl: 'params' },
+  vertexai: { searchImpl: 'params', searchProvider: 'google' },
+  wenxin: { searchImpl: 'params' },
+  xai: { searchImpl: 'params' },
+  zhipu: { searchImpl: 'params' },
+};
+
+// 特殊模型配置 - 模型级别的特殊设置会覆盖服务商默认配置
+const MODEL_SEARCH_DEFAULTS: Record<
+  string,
+  Record<string, { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string }>
+> = {
+  openai: {
+    'gpt-4o-mini-search-preview': { searchImpl: 'internal' },
+    'gpt-4o-search-preview': { searchImpl: 'internal' },
+    // 可在此处添加其他特殊模型配置
+  },
+  spark: {
+    'max-32k': { searchImpl: 'internal' },
+  },
+  // 可在此处添加其他服务商的特殊模型配置
+};
+
+// 根据 providerId + modelId 推断默认 settings
+const inferProviderSearchDefaults = (
+  providerId: string | undefined,
+  modelId: string,
+): { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string } => {
+  const modelSpecificConfig = providerId ? MODEL_SEARCH_DEFAULTS[providerId]?.[modelId] : undefined;
+  if (modelSpecificConfig) {
+    return modelSpecificConfig;
+  }
+
+  return (providerId && PROVIDER_SEARCH_DEFAULTS[providerId]) || PROVIDER_SEARCH_DEFAULTS.default;
+};
+
+// 仅在读取时注入 settings; 根据 abilities.search 来添加或删去settings 中的 search 相关字段
+const injectSearchSettings = (providerId: string, item: any) => {
+  const abilities = item?.abilities || {};
+
+  // 模型未开启搜索能力：移除 settings 中的 search 相关字段，确保 UI 不显示启用模型内置搜索
+  if (abilities.search !== true) {
+    if (item?.settings?.searchImpl || item?.settings?.searchProvider) {
+      const next = { ...item } as any;
+      if (next.settings) {
+        delete next.settings.searchImpl;
+        delete next.settings.searchProvider;
+        if (Object.keys(next.settings).length === 0) {
+          next.settings = undefined;
+        }
+      }
+      return next;
+    }
+    return item;
+  }
+
+  // 内置（本地）模型如果已经带了任一字段，直接保留，不覆盖
+  if (item?.settings?.searchImpl || item?.settings?.searchProvider) return item;
+
+  // 否则按 providerId + modelId
+  const searchSettings = inferProviderSearchDefaults(providerId, item.id);
+
+  return {
+    ...item,
+    settings: {
+      ...item.settings,
+      ...searchSettings,
+    },
+  };
+};
+
 export class AiInfraRepos {
   private userId: string;
   private db: LobeChatDatabase;
@@ -107,6 +201,7 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
+            // 用户未修改本地模型
             if (!user)
               return {
                 ...item,
@@ -114,7 +209,7 @@ export class AiInfraRepos {
                 providerId: provider.id,
               };
 
-            return {
+            const mergedModel = {
               ...item,
               abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
               config: !isEmpty(user.config) ? user.config : item.config,
@@ -130,6 +225,7 @@ export class AiInfraRepos {
               sort: user.sort || undefined,
               type: item.type,
             };
+            return injectSearchSettings(provider.id, mergedModel); // 用户修改本地模型，检查搜索设置
           })
           .filter((item) => (filterEnabled ? item.enabled : true));
       },
@@ -137,13 +233,16 @@ export class AiInfraRepos {
     );
 
     const enabledProviderIds = new Set(enabledProviders.map((item) => item.id));
-
-    return [
-      ...builtinModelList.flat(),
-      ...allModels.filter((item) =>
+    // 用户数据库模型，检查搜索设置
+    const appendedUserModels = allModels
+      .filter((item) =>
         filterEnabled ? enabledProviderIds.has(item.providerId) && item.enabled : true,
-      ),
-    ].sort((a, b) => (a?.sort || -1) - (b?.sort || -1)) as EnabledAiModel[];
+      )
+      .map((item) => injectSearchSettings(item.providerId, item));
+
+    return [...builtinModelList.flat(), ...appendedUserModels].sort(
+      (a, b) => (a?.sort || -1) - (b?.sort || -1),
+    ) as EnabledAiModel[];
   };
 
   getAiProviderRuntimeState = async (
@@ -181,8 +280,10 @@ export class AiInfraRepos {
 
     const defaultModels: AiProviderModelListItem[] =
       (await this.fetchBuiltinModels(providerId)) || [];
+    // 这里不修改搜索设置不影响使用，但是为了get数据统一
+    const mergedModel = mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
 
-    return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
+    return mergedModel.map((m) => injectSearchSettings(providerId, m));
   };
 
   /**
