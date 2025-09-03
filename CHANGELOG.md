@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.121.0](https://github.com/lobehub/lobe-chat/compare/v1.120.7...v1.121.0)
+
+<sup>Released on **2025-09-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add nano banana Chinese prompt notify.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add nano banana Chinese prompt notify, closes [#9038](https://github.com/lobehub/lobe-chat/issues/9038) ([58e19f8](https://github.com/lobehub/lobe-chat/commit/58e19f8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.120.7](https://github.com/lobehub/lobe-chat/compare/v1.120.6...v1.120.7)
 
 <sup>Released on **2025-09-02**</sup>
