@@ -61,6 +61,10 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.marginXS,
     marginLeft: token.marginXXS,
   },
+  safeAreaView: {
+    backgroundColor: token.colorBgLayout,
+    flex: 1,
+  },
   tag: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,

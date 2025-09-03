@@ -2,6 +2,8 @@ import React from 'react';
 
 import { BasicDemo } from '@/components/Markdown/demos';
 import ComponentPlayground, { DemoItem } from '../Playground';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 
@@ -88,12 +90,15 @@ $$\\\\int_{-\\\\infty}^{\\\\infty} e^{-x^2} dx = \\\\sqrt{\\\\pi}$$
 更多详细信息请查看完整的README文档。`;
 
 export default function MarkdownPlayground() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={readmeContent}
-      subtitle="强大的 Markdown 渲染组件"
-      title="Markdown 组件"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={readmeContent}
+        subtitle="强大的 Markdown 渲染组件"
+        title="Markdown 组件"
+      />
+    </SafeAreaView>
   );
 }

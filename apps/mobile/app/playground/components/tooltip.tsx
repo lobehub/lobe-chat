@@ -3,6 +3,8 @@ import React from 'react';
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@/components/Tooltip/demos';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const TOOLTIP_README = `# Tooltip 组件
 
@@ -72,8 +74,9 @@ const demos: DemoItem[] = [
 ];
 
 export default function TooltipPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Tooltip 组件" />
       <ComponentPlayground
         demos={demos}
@@ -81,6 +84,6 @@ export default function TooltipPlaygroundPage() {
         subtitle="功能完整的提示框组件"
         title="Tooltip 组件"
       />
-    </>
+    </SafeAreaView>
   );
 }

@@ -9,6 +9,8 @@ import {
   AdvancedDemo,
 } from '@/components/Space/demos';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const SPACE_README = `# Space 间距组件
 
@@ -80,8 +82,9 @@ const demos: DemoItem[] = [
 ];
 
 export default function SpacePlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Space 间距" />
       <ComponentPlayground
         demos={demos}
@@ -89,6 +92,6 @@ export default function SpacePlaygroundPage() {
         subtitle="设置组件之间的间距"
         title="Space 间距"
       />
-    </>
+    </SafeAreaView>
   );
 }

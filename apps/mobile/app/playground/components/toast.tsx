@@ -8,6 +8,8 @@ import {
   StaticDemo,
   TypesDemo,
 } from '@/components/Toast/demos';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 import { Header } from '@/components';
 
 const demos: DemoItem[] = [
@@ -100,8 +102,9 @@ export default function MyComponent() {
 更多详细信息请查看完整的README文档。`;
 
 export default function ToastPlayground() {
+  const { styles } = useStyles();
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Toast 组件" />
       <ComponentPlayground
         demos={demos}
@@ -109,6 +112,6 @@ export default function ToastPlayground() {
         subtitle="优雅的消息提示组件"
         title="Toast 组件"
       />
-    </>
+    </SafeAreaView>
   );
 }

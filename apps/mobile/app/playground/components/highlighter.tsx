@@ -7,6 +7,8 @@ import {
   LanguagesHighlighterDemo,
 } from '@/components/Highlighter/demos';
 import ComponentPlayground, { DemoItem } from '../Playground';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const HIGHLIGHTER_README = `# Highlighter 组件
 
@@ -116,12 +118,15 @@ const demos: DemoItem[] = [
 ];
 
 export default function HighlighterPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={HIGHLIGHTER_README}
-      subtitle="基于 Shiki 的高性能代码高亮组件"
-      title="Highlighter 组件"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={HIGHLIGHTER_README}
+        subtitle="基于 Shiki 的高性能代码高亮组件"
+        title="Highlighter 组件"
+      />
+    </SafeAreaView>
   );
 }

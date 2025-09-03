@@ -3,6 +3,8 @@ import React from 'react';
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, SizesDemo, BordersDemo, ErrorDemo } from '@/components/Avatar/demos';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const AVATAR_README = `# Avatar 头像组件
 
@@ -67,8 +69,9 @@ const demos: DemoItem[] = [
 ];
 
 export default function AvatarPlayground() {
+  const { styles } = useStyles();
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Avatar 头像" />
       <ComponentPlayground
         demos={demos}
@@ -76,6 +79,6 @@ export default function AvatarPlayground() {
         subtitle="头像组件"
         title="Avatar 头像"
       />
-    </>
+    </SafeAreaView>
   );
 }

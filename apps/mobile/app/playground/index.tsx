@@ -181,7 +181,7 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Playground" />
       <View style={styles.filterContainer}>
         <View style={styles.searchContainer}>

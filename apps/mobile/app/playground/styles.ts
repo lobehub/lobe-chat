@@ -94,7 +94,7 @@ export const useStyles = createStyles((token) => ({
   headerContent: {
     flex: 1,
   },
-  safeArea: {
+  safeAreaView: {
     backgroundColor: token.colorBgLayout,
     flex: 1,
   },

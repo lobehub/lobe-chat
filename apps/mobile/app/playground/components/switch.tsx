@@ -3,6 +3,8 @@ import React from 'react';
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo } from '@/components/Switch/demos';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const SWITCH_README = `# Switch 开关
 
@@ -32,8 +34,9 @@ export default function Demo() {
 const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 
 export default function SwitchPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Switch 开关" />
       <ComponentPlayground
         demos={demos}
@@ -41,6 +44,6 @@ export default function SwitchPlaygroundPage() {
         subtitle="基于 React Native Switch 的主题封装"
         title="Switch 开关"
       />
-    </>
+    </SafeAreaView>
   );
 }
