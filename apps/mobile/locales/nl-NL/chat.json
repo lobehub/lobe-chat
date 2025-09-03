@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt direct met mij beginnen te praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}. Laten we beginnen met ons gesprek!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met ons gesprek!",
+  "agentRoleEdit": {
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "edit": "Bewerken",
+    "placeholder": "Voer de rolprompt in",
+    "roleSetting": "Rolinstelling",
+    "title": "Rolinstelling"
+  },
   "confirmDelete": "Bevestig verwijderen",
+  "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie alstublieft.",
   "copyFailed": "Kopiëren mislukt",
   "defaultAgent": "Aangepaste assistent",
   "defaultList": "Standaardlijst",

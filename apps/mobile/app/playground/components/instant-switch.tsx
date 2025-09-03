@@ -2,6 +2,8 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, SizesDemo, StatesDemo } from '@/components/InstantSwitch/demos';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const INSTANT_SWITCH_README = `# InstantSwitch 即时开关组件
 
@@ -40,7 +42,7 @@ import InstantSwitch from '@/components/InstantSwitch';
   onChange={handleChange}
   trackColor={{
     false: '#ff6b6b',
-    true: '#51cf66',
+    true: '#51cf66',    
   }}
   thumbColor="#ffffff"
   loadingColor="#339af0"
@@ -118,12 +120,15 @@ const demos: DemoItem[] = [
 ];
 
 export default function InstantSwitchPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={INSTANT_SWITCH_README}
-      subtitle="支持异步操作的即时开关组件"
-      title="InstantSwitch 即时开关"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={INSTANT_SWITCH_README}
+        subtitle="支持异步操作的即时开关组件"
+        title="InstantSwitch 即时开关"
+      />
+    </SafeAreaView>
   );
 }

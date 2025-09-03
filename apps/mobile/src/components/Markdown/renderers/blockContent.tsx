@@ -44,7 +44,7 @@ export const BlockContentRenderer = ({ node, ...args }: RendererArgs<BlockConten
     }
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
-      const _: never = node;
+      // const _: never = node;
       return null;
     }
   }

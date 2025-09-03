@@ -115,7 +115,7 @@ const Slider = memo<SliderProps>(
       if (sliderWidth.value > 0) {
         translateX.value = getThumbPosition(currentValue, sliderWidth.value);
       }
-    }, [currentValue, getThumbPosition, sliderWidth.value, translateX]);
+    }, [currentValue, getThumbPosition]);
 
     React.useEffect(() => {
       setActiveValueJS(currentValue);

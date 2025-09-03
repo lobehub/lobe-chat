@@ -9,8 +9,8 @@
       "verified": "Doğrulanmış"
     },
     "signOut": {
-      "confirm": "Oturumu kapatmak istediğinizden emin misiniz?",
-      "label": "Oturumu Kapat"
+      "confirm": "Çıkış yapmak istediğinizden emin misiniz?",
+      "label": "Çıkış Yap"
     },
     "title": "Hesap Ayarları"
   },
@@ -23,7 +23,7 @@
       },
       "proxyUrl": {
         "desc": "http(s):// içermelidir",
-        "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL girin",
+        "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL giriniz",
         "placeholder": "https://api.example.com/v1",
         "title": "API Vekil Adresi"
       },
@@ -49,9 +49,9 @@
       "copySuccess": "Kopyalama başarılı",
       "disableFailed": "Model devre dışı bırakılamadı",
       "emptyNoSearch": "Hiç model bulunamadı, sunucudan almaya çalışılıyor",
-      "emptyWithSearch": "Arama kriterlerine uyan model bulunamadı",
+      "emptyWithSearch": "Arama kriterlerine uygun model bulunamadı",
       "enableFailed": "Model etkinleştirilemedi",
-      "fetch": "Model al",
+      "fetch": "Model alınıyor",
       "fetchFailed": "Model alınamadı, lütfen tekrar deneyin",
       "fetchSuccess": "Model listesi başarıyla alındı!",
       "fetching": "Alınıyor...",
@@ -65,8 +65,55 @@
     }
   },
   "changelog": "Güncelleme Günlüğü",
-  "developer": "Geliştirici Seçenekleri",
+  "color": {
+    "neutral": {
+      "description": "Uygulamanın nötr tonlarını seçin",
+      "title": "Nötr Renk Ayarları"
+    },
+    "preview": "Önizleme",
+    "previewMessages": {
+      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
+      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
+    },
+    "primary": {
+      "description": "Uygulamanın ana rengini seçin",
+      "title": "Ana Renk Ayarları"
+    },
+    "title": "Renk Ayarları"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Erişim belirteci hemen süresi doldu",
+        "title": "Erişim Belirteci Süresi Doldu"
+      },
+      "invalidate": {
+        "success": "Geçersiz erişim belirteci yazıldı",
+        "title": "Geçersiz Erişim Belirteci"
+      }
+    },
+    "clearAuthData": {
+      "success": "Kimlik doğrulama verileri temizlendi",
+      "title": "Kimlik Doğrulama Verilerini Temizle"
+    },
+    "failurePrefix": "İşlem başarısız: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Yenileme belirteci hemen süresi doldu",
+        "title": "Yenileme Belirteci Süresi Doldu"
+      },
+      "invalidate": {
+        "success": "Geçersiz yenileme belirteci yazıldı",
+        "title": "Geçersiz Yenileme Belirteci"
+      }
+    },
+    "title": "Geliştirici Seçenekleri"
+  },
   "feedback": "Geri Bildirim",
+  "fontSize": {
+    "standard": "Standart",
+    "title": "Yazı Tipi Boyutu"
+  },
   "help": "Yardım",
   "locale": {
     "auto": {
@@ -78,44 +125,26 @@
   "openai": "OpenAI Ayarları",
   "openaiSettings": {
     "apiKey": "API Anahtarı",
-    "apiKeyPlaceholder": "Lütfen OpenAI API Anahtarınızı girin",
+    "apiKeyPlaceholder": "OpenAI API Anahtarınızı giriniz",
     "checkApiKey": "Lütfen API Anahtarının doğru olduğundan emin olun",
-    "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen proxy adresinin doğru olduğundan emin olun",
-    "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve proxy adresi doğru yapılandırıldı",
-    "connectivityHint": "Bağlantı testi yapıldıktan sonra API Anahtarı ve proxy adresinin doğru girilip girilmediği doğrulanacaktır",
-    "pleaseEnterApiKey": "Lütfen API Anahtarını girin",
-    "proxyAddress": "API Proxy Adresi",
+    "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen vekil adresini kontrol edin",
+    "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve vekil adresi doğru yapılandırıldı",
+    "connectivityHint": "Bağlantı testi sonrası API Anahtarı ve vekil adresinin doğruluğu kontrol edilecektir",
+    "pleaseEnterApiKey": "Lütfen API Anahtarını giriniz",
+    "proxyAddress": "API Vekil Adresi",
     "proxyPlaceholder": "http(s):// içermelidir",
     "testConnectivity": "Bağlantıyı Test Et",
-    "validationFailed": "Doğrulama Başarısız",
-    "validationSuccess": "Doğrulama Başarılı"
+    "validationFailed": "Doğrulama başarısız",
+    "validationSuccess": "Doğrulama başarılı"
   },
-  "providers": "Yapay Zeka Sağlayıcıları",
+  "providers": "AI Sağlayıcıları",
   "support": "E-posta Desteği",
-  "theme": {
+  "themeMode": {
     "auto": "Sistemi Takip Et",
-    "dark": "Karanlık Mod",
-    "fontSize": {
-      "standard": "Standart",
-      "title": "Yazı Tipi Boyutu"
-    },
+    "dark": "Koyu Mod",
     "light": "Açık Mod",
-    "neutralColor": {
-      "description": "Uygulamanın nötr tonunu seçin",
-      "title": "Nötr Renk Ayarları"
-    },
-    "preview": "Önizleme",
-    "previewMessages": {
-      "botHowToUse": "Ana renk ve nötr renkleri ayarlamak için aşağıdaki renk seçiciyi kullanabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
-      "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
-    },
-    "primaryColor": {
-      "description": "Uygulamanın ana rengini seçin",
-      "title": "Ana Renk Ayarları"
-    },
-    "sectionDescription": "Tercih ettiğiniz tema stilini seçin, seçiminizi değiştirmek için tıklayın",
-    "sectionTitle": "Tema",
-    "title": "Tema Ayarları"
+    "title": "Tema Modu"
   },
-  "title": "Ayarlar"
+  "title": "Ayarlar",
+  "version": "Mevcut Sürüm"
 }

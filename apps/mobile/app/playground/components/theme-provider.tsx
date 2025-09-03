@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CapsuleTabs } from '@/components/CapsuleTabs';
 import * as ThemeProviderDemos from '@/theme/ThemeProvider/demos';
@@ -161,7 +162,7 @@ export default function ThemeProviderPlayground() {
   const token = useThemeToken();
 
   return (
-    <SafeAreaView style={{ backgroundColor: token.colorBgLayout, flex: 1 }}>
+    <SafeAreaView edges={['bottom']} style={{ backgroundColor: token.colorBgLayout, flex: 1 }}>
       <ThemeProviderDemosSection />
     </SafeAreaView>
   );

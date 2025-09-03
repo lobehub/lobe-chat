@@ -18,6 +18,7 @@
     "noMatch": "Eşleşen asistan bulunamadı",
     "search": "Asistan ara..."
   },
+  "defaultSession": "Özel Asistan",
   "navigation": {
     "goToHomeScreen": "Ana sayfaya dön"
   },

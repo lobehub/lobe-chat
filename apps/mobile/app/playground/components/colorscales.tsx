@@ -5,6 +5,9 @@ import ColorScales from '@/components/ColorScales';
 import { useThemeToken, colorScales } from '@/theme';
 
 import ComponentPlayground, { type DemoItem } from '../Playground';
+import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 // 基础演示组件
 const BasicDemo = () => {
@@ -260,12 +263,16 @@ const demos: DemoItem[] = [
 ];
 
 export default function ColorScalesPlayground() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={COLORSCALES_README}
-      subtitle="基于 LobeUI 重写的 React Native 色板展示组件"
-      title="ColorScales 色板"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title="ColorScales 色板" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={COLORSCALES_README}
+        subtitle="基于 LobeUI 重写的 React Native 色板展示组件"
+        title="ColorScales 色板"
+      />
+    </SafeAreaView>
   );
 }

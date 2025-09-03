@@ -38,9 +38,6 @@ cp .env.example .env.local
 # 你的 OAuth 客户端 ID
 EXPO_PUBLIC_OAUTH_CLIENT_ID=your-client-id
 
-# 你的认证服务器地址
-EXPO_PUBLIC_OAUTH_ISSUER=https://your-auth-server.com
-
 # 回调地址（必须与认证服务器配置一致）
 EXPO_PUBLIC_OAUTH_REDIRECT_URI=lobechat://auth/callback
 ```
@@ -68,7 +65,7 @@ EXPO_PUBLIC_OAUTH_REDIRECT_URI=lobechat://auth/callback
 // 生产环境配置
 export const authConfig: AuthConfig = {
   clientId: process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID || 'lobehub-mobile',
-  issuer: process.env.EXPO_PUBLIC_OAUTH_ISSUER || 'https://auth.lobehub.com',
+  issuer: process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || 'https://lobechat.com',
   // ... 其他配置
 };
 
@@ -154,10 +151,6 @@ const customAuthService = new OAuthService({
 
 A: 检查 `.env.local` 中的 `EXPO_PUBLIC_OAUTH_REDIRECT_URI` 是否与认证服务器配置的重定向 URI 一致。
 
-#### Q: 如何更换认证服务器？
-
-A: 修改 `.env.local` 中的 `EXPO_PUBLIC_OAUTH_ISSUER` 和相关配置。
-
 #### Q: 如何添加自定义的认证参数？
 
 A: 修改 `config/auth.ts` 中的 `additionalParameters` 配置。
@@ -178,7 +171,6 @@ A: 修改 `config/auth.ts` 中的 `devAuthConfig` 配置。
 
 - [ ] 复制 `.env.example` 到 `.env.local`
 - [ ] 配置正确的 `EXPO_PUBLIC_OAUTH_CLIENT_ID`
-- [ ] 配置正确的 `EXPO_PUBLIC_OAUTH_ISSUER`
 - [ ] 配置正确的 `EXPO_PUBLIC_OAUTH_REDIRECT_URI`
 - [ ] 在认证服务器中配置相同的重定向 URI
 - [ ] 配置 `app.json` 中的 URL scheme

@@ -2,6 +2,9 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import BasicDemo from '@/components/ColorSwatches/demos/basic';
+import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const COLORSWATCHES_README = `# ColorSwatches 颜色选择器组件
 
@@ -132,12 +135,16 @@ const demos: DemoItem[] = [
 ];
 
 export default function ColorSwatchesPlayground() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={COLORSWATCHES_README}
-      subtitle="基于 LobeUI 重写的 React Native 颜色选择器组件"
-      title="ColorSwatches 颜色选择器"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title="ColorSwatches 颜色选择器" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={COLORSWATCHES_README}
+        subtitle="基于 LobeUI 重写的 React Native 颜色选择器组件"
+        title="ColorSwatches 颜色选择器"
+      />
+    </SafeAreaView>
   );
 }

@@ -18,6 +18,7 @@
     "noMatch": "일치하는 도우미를 찾을 수 없습니다.",
     "search": "도우미 검색..."
   },
+  "defaultSession": "맞춤형 도우미",
   "navigation": {
     "goToHomeScreen": "홈 화면으로 이동"
   },

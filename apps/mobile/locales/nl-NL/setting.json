@@ -47,13 +47,13 @@
     },
     "models": {
       "copySuccess": "Kopiëren geslaagd",
-      "disableFailed": "Het uitschakelen van het model is mislukt",
-      "emptyNoSearch": "Geen modellen gevonden, probeer op de server op te halen",
-      "emptyWithSearch": "Geen modellen die aan de zoekcriteria voldoen",
-      "enableFailed": "Het inschakelen van het model is mislukt",
-      "fetch": "Model ophalen",
-      "fetchFailed": "Het ophalen van modellen is mislukt, probeer het opnieuw",
-      "fetchSuccess": "Model lijst succesvol opgehaald!",
+      "disableFailed": "Uitschakelen van model mislukt",
+      "emptyNoSearch": "Geen modellen gevonden, probeer op te halen van de server",
+      "emptyWithSearch": "Geen modellen gevonden die aan de zoekcriteria voldoen",
+      "enableFailed": "Inschakelen van model mislukt",
+      "fetch": "Modellen ophalen",
+      "fetchFailed": "Modellen ophalen mislukt, probeer het opnieuw",
+      "fetchSuccess": "Modelijst succesvol opgehaald!",
       "fetching": "Bezig met ophalen...",
       "modelsAvailable": "In totaal {{count}} beschikbare modellen",
       "searchPlaceholder": "Zoek modellen...",
@@ -64,14 +64,61 @@
       "enabled": "Ingeschakeld"
     }
   },
-  "changelog": "Wijzigingslogboek",
-  "developer": "Ontwikkelaarsopties",
+  "changelog": "Wijzigingslog",
+  "color": {
+    "neutral": {
+      "description": "Kies de neutrale tinten voor de applicatie",
+      "title": "Neutrale kleurinstellingen"
+    },
+    "preview": "Voorbeeld",
+    "previewMessages": {
+      "botHowToUse": "Je kunt de hoofdkleur en neutrale kleuren aanpassen met de onderstaande kleurkiezer. De voorbeeldweergave wordt realtime bijgewerkt om het effect te tonen.",
+      "userHowToUse": "Hoe gebruik je de thema-voorbeeldweergave?"
+    },
+    "primary": {
+      "description": "Kies de hoofdkleur voor de applicatie",
+      "title": "Hoofdkleurinstellingen"
+    },
+    "title": "Kleurinstellingen"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Toegangstoken is onmiddellijk verlopen",
+        "title": "Toegangstoken verlopen"
+      },
+      "invalidate": {
+        "success": "Ongeldig toegangstoken is ingesteld",
+        "title": "Ongeldig toegangstoken"
+      }
+    },
+    "clearAuthData": {
+      "success": "Authenticatiegegevens zijn gewist",
+      "title": "Authenticatiegegevens wissen"
+    },
+    "failurePrefix": "Actie mislukt: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Verversingstoken is onmiddellijk verlopen",
+        "title": "Verversingstoken verlopen"
+      },
+      "invalidate": {
+        "success": "Ongeldig verversingstoken is ingesteld",
+        "title": "Ongeldig verversingstoken"
+      }
+    },
+    "title": "Ontwikkelaarsopties"
+  },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Standaard",
+    "title": "Lettergrootte"
+  },
   "help": "Hulp",
   "locale": {
     "auto": {
       "description": "Volg de systeemtaalinstellingen",
-      "title": "Systeem volgen"
+      "title": "Volg systeem"
     },
     "title": "Taalinstellingen"
   },
@@ -90,32 +137,14 @@
     "validationFailed": "Validatie mislukt",
     "validationSuccess": "Validatie geslaagd"
   },
-  "providers": "AI-dienstverleners",
+  "providers": "AI-providers",
   "support": "E-mailondersteuning",
-  "theme": {
-    "auto": "Systeem volgen",
+  "themeMode": {
+    "auto": "Volg systeem",
     "dark": "Donkere modus",
-    "fontSize": {
-      "standard": "Standaard",
-      "title": "Lettergrootte"
-    },
     "light": "Lichte modus",
-    "neutralColor": {
-      "description": "Kies de neutrale tint voor de applicatie",
-      "title": "Neutrale kleurinstelling"
-    },
-    "preview": "Voorbeeld",
-    "previewMessages": {
-      "botHowToUse": "Je kunt de hoofdkleur en neutrale kleur aanpassen met de onderstaande kleurkiezer. De preview wordt realtime bijgewerkt om het effect te tonen.",
-      "userHowToUse": "Hoe gebruik je de thema-preview?"
-    },
-    "primaryColor": {
-      "description": "Kies de hoofdkleur voor de applicatie",
-      "title": "Hoofdkleurinstelling"
-    },
-    "sectionDescription": "Kies uw favoriete thema en klik om uw keuze te wijzigen",
-    "sectionTitle": "Thema",
-    "title": "Thema-instellingen"
+    "title": "Themamodus"
   },
-  "title": "Instellingen"
+  "title": "Instellingen",
+  "version": "Huidige versie"
 }

@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir chatten oder unter [Assistenteneinstellungen]({{url}}) meine Informationen vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns das Gespräch beginnen!",
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lass uns das Gespräch beginnen!",
+  "agentRoleEdit": {
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "edit": "Bearbeiten",
+    "placeholder": "Bitte geben Sie die Rollen-Prompt ein",
+    "roleSetting": "Rollen-Einstellung",
+    "title": "Rollen-Einstellung"
+  },
   "confirmDelete": "Löschen bestätigen",
+  "confirmRemoveSessionItemAlert": "Der Assistent wird gelöscht und kann nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copyFailed": "Kopieren fehlgeschlagen",
   "defaultAgent": "Benutzerdefinierter Assistent",
   "defaultList": "Standardliste",

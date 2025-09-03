@@ -18,6 +18,7 @@
     "noMatch": "一致するアシスタントが見つかりません。",
     "search": "アシスタントを検索..."
   },
+  "defaultSession": "カスタムアシスタント",
   "navigation": {
     "goToHomeScreen": "ホーム画面に戻る"
   },

@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Avatar, Header } from '@/components';
 
-import { Avatar } from '@/components';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useStyles } from './styles';
@@ -15,13 +16,16 @@ export default function AgentDetail() {
   const { styles } = useStyles();
 
   return (
-    <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={[styles.container]}>
-      <View style={styles.avatarContainer}>
-        <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
-      </View>
-      <Text style={styles.title}>{title}</Text>
-      {description ? <Text style={styles.description}>{description}</Text> : null}
-      <AgentRoleEditSection />
-    </ScrollView>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title={title} />
+      <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={[styles.container]}>
+        <View style={styles.avatarContainer}>
+          <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
+        </View>
+        <Text style={styles.title}>{title}</Text>
+        {description ? <Text style={styles.description}>{description}</Text> : null}
+        <AgentRoleEditSection />
+      </ScrollView>
+    </SafeAreaView>
   );
 }

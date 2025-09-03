@@ -2,7 +2,16 @@
   "agentDefaultMessage": "سلام، من **{{name}}** هستم، می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
   "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
   "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
+  "agentRoleEdit": {
+    "cancel": "لغو",
+    "confirm": "تأیید",
+    "edit": "ویرایش",
+    "placeholder": "لطفاً عبارت راهنمای نقش را وارد کنید",
+    "roleSetting": "تنظیم نقش",
+    "title": "تنظیم نقش"
+  },
   "confirmDelete": "تأیید حذف",
+  "confirmRemoveSessionItemAlert": "در حال حذف این دستیار هستید، پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید",
   "copyFailed": "کپی کردن ناموفق بود",
   "defaultAgent": "دستیار سفارشی",
   "defaultList": "فهرست پیش‌فرض",

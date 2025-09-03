@@ -2,6 +2,8 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, SizesDemo, ComparisonDemo, TypeDemo } from '@/components/FluentEmoji/demos';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件
 
@@ -66,12 +68,15 @@ const demos: DemoItem[] = [
 ];
 
 export default function FluentEmojiPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={FLUENTEMOJI_README}
-      subtitle="微软 Fluent 风格的 3D 表情符号"
-      title="FluentEmoji 表情符号"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={FLUENTEMOJI_README}
+        subtitle="微软 Fluent 风格的 3D 表情符号"
+        title="FluentEmoji 表情符号"
+      />
+    </SafeAreaView>
   );
 }

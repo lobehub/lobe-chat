@@ -2,7 +2,16 @@
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في التحدث معي فورًا، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لتحديث معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، هيا نبدأ المحادثة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، هيا نبدأ المحادثة!",
+  "agentRoleEdit": {
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "edit": "تعديل",
+    "placeholder": "يرجى إدخال عبارة تلميح الدور",
+    "roleSetting": "إعداد الدور",
+    "title": "إعداد الدور"
+  },
   "confirmDelete": "تأكيد الحذف",
+  "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد ولن يمكن استعادته بعد الحذف، يرجى تأكيد العملية",
   "copyFailed": "فشل النسخ",
   "defaultAgent": "مساعد مخصص",
   "defaultList": "القائمة الافتراضية",

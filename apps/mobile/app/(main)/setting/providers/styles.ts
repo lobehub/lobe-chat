@@ -5,9 +5,7 @@ export const useStyles = createStyles((token) => ({
     marginRight: token.marginXS,
   },
   container: {
-    backgroundColor: token.colorBgContainer,
     flex: 1,
-    paddingBottom: token.padding, // 底部留白
   },
   content: {
     padding: token.padding,
@@ -62,15 +60,18 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSize,
     marginBottom: token.marginXS,
   },
+  safeAreaView: {
+    backgroundColor: token.colorBgLayout,
+    flex: 1,
+  },
   // Section样式 - 对标web端
   sectionHeader: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorBgLayout,
     paddingBottom: token.paddingXS,
     paddingHorizontal: token.padding,
     paddingTop: token.paddingLG,
   },
   sectionSeparator: {
-    backgroundColor: token.colorBgContainer,
     height: 16, // 增加section间距
   },
   sectionTitle: {

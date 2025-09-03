@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 
 import { useThemedScreenOptions } from '@/const/navigation';
-import { NavigateBack } from '@/components';
 
 export default function ChatRoutesLayout() {
   const themedScreenOptions = useThemedScreenOptions();
@@ -9,11 +8,10 @@ export default function ChatRoutesLayout() {
     <Stack
       screenOptions={{
         ...themedScreenOptions,
-        headerLeft: () => <NavigateBack />,
         headerShown: false,
       }}
     >
-      <Stack.Screen name="setting/index" options={{ headerShown: true }} />
+      <Stack.Screen name="setting/index" options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -9,8 +9,8 @@ alwaysApply: true
 This project uses i18next for internationalization with a custom workflow that generates translations from a single source file.
 
 ## Architecture
-- **Source**: `i18n/default/common.ts` - Contains all Chinese translations as the source
-- **Generated**: `locales/*/common.json` - Auto-generated translations for 18 languages
+- **Source**: `i18n/default` - Contains all Chinese translations as the source
+- **Generated**: `locales/* - Auto-generated translations for 18 languages
 - **Script**: `scripts/i18nWorkflow/` - Handles translation generation
 
 ## Supported Languages
@@ -19,7 +19,7 @@ This project uses i18next for internationalization with a custom workflow that g
 ## Adding New Translations
 
 ### Step 1: Add to Source File
-Add new translation keys to `i18n/default/common.ts`:
+Add new translation keys to suitable file in `i18n/default` like `chat.ts` and `common.ts`:
 
 ```typescript
 export default {
@@ -56,6 +56,8 @@ pnpm run i18n
 ```
 
 ## Translation Key Naming Convention
+
+use simpilifed naming keys 
 
 ### Structure
 - Use nested objects for related translations
@@ -98,10 +100,7 @@ settingsThemeLight: '浅色模式'
 chat: {
   history: '对话历史',
   messageCopied: '消息已复制',
-  copyFailed: '复制失败',
-  regenerateFailed: '重新生成失败，请稍后重试',
   confirmDelete: '确认删除',
-  deleteMessageConfirm: '确定要删除这条消息吗？',
   copy: '复制',
   retry: '重试',
   delete: '删除',
@@ -121,8 +120,6 @@ settings: {
     light: '浅色模式',
     dark: '深色模式',
     auto: '跟随系统',
-    sectionTitle: '主题',
-    sectionDescription: '选择您喜欢的主题风格，点击切换您的选择'
   },
   locale: {
     title: '语言设置',
@@ -131,15 +128,6 @@ settings: {
       description: '跟随系统语言设置'
     }
   },
-  openai: 'OpenAI 设置',
-  openaiSettings: {
-    apiKey: 'API Key',
-    apiKeyPlaceholder: '请输入你的 OpenAI API Key',
-    proxyAddress: 'API 代理地址',
-    proxyPlaceholder: '必须包含 http(s)://',
-    testConnectivity: '测试连通性',
-    connectivityHint: '测试连通性后，将会验证 API Key 与代理地址是否正确填写'
-  }
 }
 ```
 

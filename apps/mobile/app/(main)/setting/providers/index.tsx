@@ -1,3 +1,4 @@
+import React from 'react';
 import { SectionList, View, Text } from 'react-native';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
@@ -5,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { useStyles } from './styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ProviderCard from './(components)/ProviderCard';
 import ProviderListSkeleton from './(components)/ProviderListSkeleton';
+import { Header } from '@/components';
 
 const ProviderList = () => {
   const { styles } = useStyles();
@@ -25,15 +28,23 @@ const ProviderList = () => {
 
   // Loading状态
   if (isLoading) {
-    return <ProviderListSkeleton />;
+    return (
+      <>
+        <Header showBack title={t('providers', { ns: 'setting' })} />
+        <ProviderListSkeleton />
+      </>
+    );
   }
 
   // Error状态
   if (error) {
     return (
-      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
-        <Text style={styles.label}>{t('aiProviders.list.loadFailed', { ns: 'setting' })}</Text>
-      </View>
+      <>
+        <Header showBack title={t('providers', { ns: 'setting' })} />
+        <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+          <Text style={styles.label}>{t('aiProviders.list.loadFailed', { ns: 'setting' })}</Text>
+        </View>
+      </>
     );
   }
 
@@ -61,17 +72,20 @@ const ProviderList = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <SectionList
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProviderCard provider={item} />}
-        renderSectionHeader={renderSectionHeader}
-        sections={sections}
-        stickySectionHeadersEnabled={true}
-      />
-    </View>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title={t('providers', { ns: 'setting' })} />
+      <View style={styles.container}>
+        <SectionList
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ProviderCard provider={item} />}
+          renderSectionHeader={renderSectionHeader}
+          sections={sections}
+          stickySectionHeadersEnabled={true}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 

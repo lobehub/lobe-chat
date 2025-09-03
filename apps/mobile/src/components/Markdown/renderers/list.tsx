@@ -39,7 +39,7 @@ export const ListItemRenderer = ({ node, index, parent }: RendererArgs<ListItem>
     <View style={{ flexDirection: 'row' }}>
       <View style={{ marginRight: 5 }}>
         {list?.ordered ? (
-          <Text style={markerStyle as any}>{itemNumber}.</Text>
+          <Text style={[markerStyle as any, { color: styles.listMarkerColor }]}>{itemNumber}.</Text>
         ) : (
           <Text style={[markerStyle as any, { opacity: 0.5 }]}>-</Text>
         )}
