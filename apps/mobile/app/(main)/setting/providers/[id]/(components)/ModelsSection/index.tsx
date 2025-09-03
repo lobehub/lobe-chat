@@ -25,7 +25,6 @@ interface ModelCardProps {
 
 const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
   const toast = useToast();
   const { t } = useTranslation(['setting']);
 
@@ -61,11 +60,6 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
               handleToggle(enabled);
             }}
             size="small"
-            thumbColor={token.colorBgContainer}
-            trackColor={{
-              false: '#e9e9eb',
-              true: '#34c759',
-            }}
           />
         </View>
       </View>

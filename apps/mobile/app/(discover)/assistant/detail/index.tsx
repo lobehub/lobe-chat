@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DetailHeader from './components/Header';
 import SkeletonDetail from './components/SkeletonDetail';
-import { Tag, Button, Markdown } from '@/components';
+import { Tag, Button, Markdown, Header } from '@/components';
 import { useStyles } from './styles';
 import { ICON_SIZE } from '@/const/common';
 import { useDiscoverStore } from '@/store/discover';
@@ -82,7 +82,7 @@ const AssistantDetail = () => {
 
   // const handleShare = async () => {
   //   if (!agent) return;
-
+  //
   //   try {
   //     await Share.share({
   //       message: `${agent.meta.title} - ${agent.meta.description} #LobeChat`,
@@ -96,6 +96,7 @@ const AssistantDetail = () => {
   if (isLoading) {
     return (
       <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
+        <Header showBack />
         <ScrollView style={styles.scrollContainer}>
           <SkeletonDetail />
         </ScrollView>
@@ -106,6 +107,7 @@ const AssistantDetail = () => {
   if (error || !agent) {
     return (
       <SafeAreaView style={styles.errorContainer}>
+        <Header showBack />
         <Text style={styles.errorText}>
           {!identifier
             ? t('assistant.detail.notFoundIdentifier', { ns: 'discover' })
@@ -120,6 +122,7 @@ const AssistantDetail = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
+      <Header showBack title={agent.title} />
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           {/* Header with avatar on left, title/author/date on right */}
