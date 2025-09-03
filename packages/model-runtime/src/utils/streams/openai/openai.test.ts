@@ -2399,7 +2399,7 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: chatcmpl-test\n',
       'event: text\n',
-      `data: "这有一张图片： ![image](${base64})"\n\n`,
+      `data: "这有一张图片："\n\n`,
       'id: chatcmpl-test\n',
       'event: base64_image\n',
       `data: "${base64}"\n\n`,
@@ -2439,7 +2439,7 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: chatcmpl-multi\n',
       'event: text\n',
-      `data: "![img1](${base64_1}) and ![img2](${base64_2})"\n\n`,
+      `data: "and"\n\n`, // Remove all markdown base64 image segments
       'id: chatcmpl-multi\n',
       'event: base64_image\n',
       `data: "${base64_1}"\n\n`,
