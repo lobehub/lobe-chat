@@ -117,7 +117,6 @@ export const createRouterRuntime = ({
   return class UniformRuntime implements LobeRuntimeAI {
     private _runtimes: RuntimeItem[];
     private _options: ClientOptions & Record<string, any>;
-    private _modelCache = new Map<string, string[]>();
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -143,30 +142,21 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // Get runtime's models list, supporting both synchronous arrays and asynchronous functions with caching
-    private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
-      const cacheKey = runtimeItem.id;
-
-      // If it's a synchronous array, return directly without caching
+    // Get runtime's models list, supporting both synchronous arrays and asynchronous functions
+    private async getRouterMatchModels(runtimeItem: RuntimeItem): Promise<string[]> {
+      // If it's a synchronous array, return directly
       if (typeof runtimeItem.models !== 'function') {
         return runtimeItem.models || [];
       }
 
-      // Check cache
-      if (this._modelCache.has(cacheKey)) {
-        return this._modelCache.get(cacheKey)!;
-      }
-
-      // Get model list and cache result
-      const models = await runtimeItem.models();
-      this._modelCache.set(cacheKey, models);
-      return models;
+      // Get model list
+      return await runtimeItem.models();
     }
 
     // Check if it can match a specific model, otherwise default to using the last runtime
     async getRuntimeByModel(model: string) {
       for (const runtimeItem of this._runtimes) {
-        const models = await this.getModels(runtimeItem);
+        const models = await this.getRouterMatchModels(runtimeItem);
         if (models.includes(model)) {
           return runtimeItem.runtime;
         }
@@ -225,18 +215,6 @@ export const createRouterRuntime = ({
       const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToSpeech!(payload, options);
-    }
-
-    /**
-     * Clear model list cache, forcing reload on next access
-     * @param runtimeId - Optional, specify to clear cache for a specific runtime, omit to clear all caches
-     */
-    clearModelCache(runtimeId?: string) {
-      if (runtimeId) {
-        this._modelCache.delete(runtimeId);
-      } else {
-        this._modelCache.clear();
-      }
     }
   };
 };

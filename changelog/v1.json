@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix socks5 proxy not work problem, fix virtuaso minheight was null."]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.1"
+  },
+  {
+    "children": {
+      "features": ["Add nano banana Chinese prompt notify."]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.0"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-09-02",

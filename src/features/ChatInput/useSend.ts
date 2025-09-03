@@ -1,6 +1,7 @@
 import { useAnalytics } from '@lobehub/analytics/react';
 import { useCallback, useMemo } from 'react';
 
+import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -20,6 +21,7 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
   const { analytics } = useAnalytics();
+  const checkGeminiChineseWarning = useGeminiChineseWarning();
 
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
@@ -28,7 +30,7 @@ export const useSendMessage = () => {
 
   const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
 
-  const send = useCallback((params: UseSendMessageParams = {}) => {
+  const send = useCallback(async (params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (chatSelectors.isAIGenerating(store)) return;
 
@@ -45,6 +47,17 @@ export const useSendMessage = () => {
     // if there is no message and no image, then we should not send the message
     if (!store.inputMessage && fileList.length === 0) return;
 
+    // Check for Chinese text warning with Gemini model
+    const agentStore = getAgentStoreState();
+    const currentModel = agentSelectors.currentAgentModel(agentStore);
+    const shouldContinue = await checkGeminiChineseWarning({
+      model: currentModel,
+      prompt: store.inputMessage,
+      scenario: 'chat',
+    });
+
+    if (!shouldContinue) return;
+
     sendMessage({
       files: fileList,
       message: store.inputMessage,
@@ -56,7 +69,6 @@ export const useSendMessage = () => {
 
     // 获取分析数据
     const userStore = getUserStoreState();
-    const agentStore = getAgentStoreState();
 
     // 直接使用现有数据结构判断消息类型
     const hasImages = fileList.some((file) => file.file?.type?.startsWith('image'));
