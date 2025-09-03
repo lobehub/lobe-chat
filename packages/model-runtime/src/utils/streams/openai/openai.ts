@@ -20,6 +20,18 @@ import {
   generateToolCallId,
 } from '../protocol';
 
+// Extract base64 image from markdown image syntax, e.g. ![image](data:image/png;base64,....)
+const extractBase64ImageUrlsFromMarkdown = (text: string): string[] => {
+  if (!text) return [];
+  const urls: string[] = [];
+  const mdRegex = /!\[[^\]]*]\(\s*(data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+)\s*\)/g;
+  let m: RegExpExecArray | null;
+  while ((m = mdRegex.exec(text)) !== null) {
+    if (m[1]) urls.push(m[1]);
+  }
+  return urls;
+};
+
 const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   streamContext: StreamContext,
@@ -137,7 +149,17 @@ const transformOpenAIStream = (
           return { data: null, id: chunk.id, type: 'text' };
         }
 
-        return { data: item.delta.content, id: chunk.id, type: 'text' };
+
+        const text = item.delta.content as string;
+        const images = extractBase64ImageUrlsFromMarkdown(text);
+        if (images.length > 0) {
+          return [
+            { data: text, id: chunk.id, type: 'text' },
+            ...images.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+          ];
+        }
+
+        return { data: text, id: chunk.id, type: 'text' };
       }
 
       // OpenAI Search Preview 模型返回引用源
@@ -284,7 +306,7 @@ const transformOpenAIStream = (
           if (citations) {
             streamContext.returnedCitation = true;
 
-            return [
+            const baseChunks: StreamProtocolChunk[] = [
               {
                 data: {
                   citations: (citations as any[])
@@ -303,6 +325,7 @@ const transformOpenAIStream = (
                 type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
               },
             ];
+            return baseChunks;
           }
         }
 

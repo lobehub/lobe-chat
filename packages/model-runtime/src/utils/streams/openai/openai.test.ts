@@ -2311,4 +2311,86 @@ describe('OpenAIStream', () => {
 
     expect(chunks).toEqual(['id: 6\n', 'event: base64_image\n', `data: "${base64}"\n\n`]);
   });
+
+  it('should handle finish_reason with markdown image in content', async () => {
+    const base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAAgAElEQVR4nFy9a5okSY4jCFBU3SOr53HdvcZeYW/YVZnhZqpCYn+AVIuZ7PqqKyPczfQhQgIgSOH/+//9PxRVu7QzX5nvqveVP5mv+3rf+XPt985b2NIVgVgK1jr0da7zrAiegWPhPBABLi1GILhCEMkFnCuOFRFxHN/r/CbOym/om/h1X+d1H/v667rP9328r9g3VNblpoXsAwsnTtnWp0kQ40siih6NixuHlN9Rt7ehv1mbW2dkg1ef03J9zQQpQg5yc/XllveG4wa4arKtSr0NwSCdGEJVNeKlkDZMov695YaQ5NVK3fmjn4OrE9N/U04C0EqT/2HCBxrf9pJe1L2nPBjqhKEq1TEi1Q/OXiIq+IrqX2fUb+qF+2kF10k/4ScwIXidU6/T6vGkA/bSR/fZ7Ok8yOd0s+27CnP8PH3cijINdbAcAAAAASUVORK5CYII=';
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'chatcmpl-test',
+          choices: [
+            {
+              index: 0,
+              delta: { content: `这有一张图片： ![image](${base64})` },
+              finish_reason: 'stop',
+            },
+          ],
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chatcmpl-test\n',
+      'event: text\n',
+      `data: "这有一张图片： ![image](${base64})"\n\n`,
+      'id: chatcmpl-test\n',
+      'event: base64_image\n',
+      `data: "${base64}"\n\n`,
+    ]);
+  });
+
+  it('should handle finish_reason with multiple markdown images in content', async () => {
+    const base64_1 = 'data:image/png;base64,first';
+    const base64_2 = 'data:image/jpeg;base64,second';
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'chatcmpl-multi',
+          choices: [
+            {
+              index: 0,
+              delta: { content: `![img1](${base64_1}) and ![img2](${base64_2})` },
+              finish_reason: 'stop',
+            },
+          ],
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chatcmpl-multi\n',
+      'event: text\n',
+      `data: "![img1](${base64_1}) and ![img2](${base64_2})"\n\n`,
+      'id: chatcmpl-multi\n',
+      'event: base64_image\n',
+      `data: "${base64_1}"\n\n`,
+      'id: chatcmpl-multi\n',
+      'event: base64_image\n',
+      `data: "${base64_2}"\n\n`,
+    ]);
+  });
 });
