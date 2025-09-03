@@ -30,4 +30,8 @@ export const useStyles = createStyles((token) => ({
     color: token.colorText,
     fontSize: FONT_SIZE_STANDARD,
   },
+  safeAreaView: {
+    backgroundColor: token.colorBgLayout,
+    flex: 1,
+  },
 }));

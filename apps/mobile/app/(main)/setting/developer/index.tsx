@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
@@ -52,9 +53,9 @@ export default function DeveloperScreen() {
   };
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('developer.title', { ns: 'setting' })} />
-      <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
+      <View style={styles.container}>
         <SettingGroup>
           <SettingItem
             onPress={() =>
@@ -107,7 +108,7 @@ export default function DeveloperScreen() {
             title={t('developer.clearAuthData.title', { ns: 'setting' })}
           />
         </SettingGroup>
-      </ScrollView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 }

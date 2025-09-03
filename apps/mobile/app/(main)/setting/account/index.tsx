@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useAuth, useAuthActions } from '@/store/user';
@@ -8,6 +8,7 @@ import Button from '@/components/Button';
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './style';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error']);
@@ -49,9 +50,9 @@ export default function AccountScreen() {
   };
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('account.title', { ns: 'setting' })} />
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         {isAuthenticated && user && (
           <>
             {/* Avatar Section */}
@@ -80,7 +81,7 @@ export default function AccountScreen() {
             </View>
           </>
         )}
-      </ScrollView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ColorSwatches, Header } from '@/components';
 import { useSettingStore } from '@/store/setting';
@@ -47,9 +48,9 @@ export default function ThemeSettingScreen() {
   ];
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('color.title', { ns: 'setting' })} />
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <Preview />
         <SettingGroup style={{ marginTop: 16 }}>
           <SettingItem
@@ -83,7 +84,7 @@ export default function ThemeSettingScreen() {
             title={t('color.neutral.title', { ns: 'setting' })}
           />
         </SettingGroup>
-      </ScrollView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 }

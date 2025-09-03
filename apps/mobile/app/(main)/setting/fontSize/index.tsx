@@ -8,6 +8,7 @@ import { useSettingStore } from '@/store/setting';
 import { useStyles } from './styles';
 import Preview from './components/Preview';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function FontSizeSettingScreen() {
   const { t } = useTranslation(['setting']);
@@ -16,7 +17,7 @@ export default function FontSizeSettingScreen() {
   const { fontSize, setFontSize } = useSettingStore();
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('fontSize.title', { ns: 'setting' })} />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
@@ -44,6 +45,6 @@ export default function FontSizeSettingScreen() {
           value={fontSize}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

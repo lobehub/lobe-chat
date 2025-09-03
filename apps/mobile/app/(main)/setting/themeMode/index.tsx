@@ -1,11 +1,12 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
 import { useTheme as useAppTheme } from '@/theme';
 import { useStyles } from '../styles';
 import { SettingGroup, SettingItem } from '../(components)';
 import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ThemeModeSettingScreen() {
   const { t } = useTranslation(['setting']);
@@ -15,9 +16,9 @@ export default function ThemeModeSettingScreen() {
   const isFollowSystem = theme.mode === 'auto';
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('themeMode.title', { ns: 'setting' })} />
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <SettingGroup>
           <SettingItem
             onSwitchChange={(enabled) => setThemeMode(enabled ? 'auto' : 'light')}
@@ -42,7 +43,7 @@ export default function ThemeModeSettingScreen() {
             />
           </SettingGroup>
         )}
-      </ScrollView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 }

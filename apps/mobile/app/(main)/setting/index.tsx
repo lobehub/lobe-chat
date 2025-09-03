@@ -6,6 +6,7 @@ import { isDev } from '@/utils/env';
 import { useLocale } from '@/hooks/useLocale';
 import { version } from '../../../package.json';
 import { useStyles } from './styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from './(components)';
 import { useTheme } from '@/theme';
@@ -26,7 +27,7 @@ export default function SettingScreen() {
   const { styles } = useStyles();
 
   return (
-    <>
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={t('title', { ns: 'setting' })} />
       <ScrollView style={[styles.container]}>
         <SettingGroup>
@@ -75,6 +76,6 @@ export default function SettingScreen() {
           <SettingItem extra={version} title={t('version', { ns: 'setting' })} />
         </SettingGroup>
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 }

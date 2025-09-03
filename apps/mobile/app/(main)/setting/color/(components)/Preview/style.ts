@@ -13,15 +13,10 @@ export const useStyles = createStyles((token) => {
     },
 
     // 聊天内容区域
-    chatArea: {
-      backgroundColor: token.colorBgLayout,
-      flex: 1,
-      height: '100%',
-      overflow: 'scroll',
-    },
+    chatArea: {},
 
     chatContent: {
-      flex: 1,
+      backgroundColor: token.colorBgLayout,
       gap: token.marginSM,
       paddingHorizontal: token.paddingSM,
       paddingVertical: token.paddingSM,
@@ -32,7 +27,6 @@ export const useStyles = createStyles((token) => {
       borderColor: token.colorBorder,
       borderRadius: token.borderRadiusLG,
       borderWidth: 0.5,
-      width: '100%',
     },
 
     // 输入区域
