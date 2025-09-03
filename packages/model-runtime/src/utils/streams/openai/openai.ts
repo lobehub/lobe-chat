@@ -20,23 +20,26 @@ import {
   generateToolCallId,
 } from '../protocol';
 
-// Extract base64 image from markdown image syntax, e.g. ![image](data:image/png;base64,....)
-const extractBase64ImageUrlsFromMarkdown = (text: string): string[] => {
-  if (!text) return [];
+// Process markdown base64 images: extract URLs and clean text in one pass
+const processMarkdownBase64Images = (text: string): { cleanedText: string, urls: string[]; } => {
+  if (!text) return { cleanedText: text, urls: [] };
+  
   const urls: string[] = [];
   const mdRegex = /!\[[^\]]*]\(\s*(data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+)\s*\)/g;
+  let cleanedText = text;
   let m: RegExpExecArray | null;
+  
+  // Reset regex lastIndex to ensure we start from the beginning
+  mdRegex.lastIndex = 0;
+  
   while ((m = mdRegex.exec(text)) !== null) {
     if (m[1]) urls.push(m[1]);
   }
-  return urls;
-};
-
-// Remove markdown base64 image segments from text
-const stripMarkdownBase64Images = (text: string): string => {
-  if (!text) return text;
-  const mdRegex = /!\[[^\]]*]\(\s*data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+\s*\)/g;
-  return text.replaceAll(mdRegex, '').trim();
+  
+  // Remove all markdown base64 image segments
+  cleanedText = text.replaceAll(mdRegex, '').trim();
+  
+  return { cleanedText, urls };
 };
 
 const transformOpenAIStream = (
@@ -158,13 +161,12 @@ const transformOpenAIStream = (
 
 
         const text = item.delta.content as string;
-        const images = extractBase64ImageUrlsFromMarkdown(text);
+        const { urls: images, cleanedText: cleaned } = processMarkdownBase64Images(text);
         if (images.length > 0) {
-          const cleaned = stripMarkdownBase64Images(text);
           const arr: StreamProtocolChunk[] = [];
           if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
           arr.push(
-            ...images.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+            ...images.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
           );
           return arr;
         }
@@ -341,13 +343,12 @@ const transformOpenAIStream = (
 
         // 非思考模式下，额外解析 markdown 中的 base64 图片，按顺序输出 text -> base64_image
         if (!streamContext?.thinkingInContent) {
-          const urls = extractBase64ImageUrlsFromMarkdown(thinkingContent);
+          const { urls, cleanedText: cleaned } = processMarkdownBase64Images(thinkingContent);
           if (urls.length > 0) {
-            const cleaned = stripMarkdownBase64Images(thinkingContent);
             const arr: StreamProtocolChunk[] = [];
             if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
             arr.push(
-              ...urls.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+              ...urls.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
             );
             return arr;
           }
