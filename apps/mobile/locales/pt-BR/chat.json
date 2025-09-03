@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora mesmo ou ir para as [Configurações do Assistente]({{url}}) para aprimorar minhas informações.",
   "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos começar a conversar!",
   "agentDefaultMessageWithoutEdit": "Olá, eu sou **{{name}}**, vamos começar a conversar!",
+  "agentRoleEdit": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "edit": "Editar",
+    "placeholder": "Por favor, insira a palavra-chave do Prompt do papel",
+    "roleSetting": "Configuração do papel",
+    "title": "Configuração do papel"
+  },
   "confirmDelete": "Confirmar exclusão",
+  "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "copyFailed": "Falha ao copiar",
   "defaultAgent": "Assistente Personalizado",
   "defaultList": "Lista padrão",

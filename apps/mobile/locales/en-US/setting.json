@@ -46,12 +46,12 @@
       "loadFailed": "Failed to load provider list"
     },
     "models": {
-      "copySuccess": "Copy successful",
+      "copySuccess": "Copied successfully",
       "disableFailed": "Failed to disable model",
       "emptyNoSearch": "No models found, trying to fetch from server",
       "emptyWithSearch": "No models match the search criteria",
       "enableFailed": "Failed to enable model",
-      "fetch": "Fetch Models",
+      "fetch": "Fetching models",
       "fetchFailed": "Failed to fetch models, please try again",
       "fetchSuccess": "Model list fetched successfully!",
       "fetching": "Fetching...",
@@ -65,8 +65,55 @@
     }
   },
   "changelog": "Changelog",
-  "developer": "Developer Options",
+  "color": {
+    "neutral": {
+      "description": "Select the application's neutral tones",
+      "title": "Neutral Color Settings"
+    },
+    "preview": "Preview",
+    "previewMessages": {
+      "botHowToUse": "You can adjust the primary and neutral colors using the color picker below. The preview will update in real time to show the effect.",
+      "userHowToUse": "How to use the theme preview?"
+    },
+    "primary": {
+      "description": "Select the application's primary color",
+      "title": "Primary Color Settings"
+    },
+    "title": "Color Settings"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Access token has been expired immediately",
+        "title": "Access Token Expired"
+      },
+      "invalidate": {
+        "success": "Invalid access token has been written",
+        "title": "Invalid Access Token"
+      }
+    },
+    "clearAuthData": {
+      "success": "Authentication data cleared",
+      "title": "Clear Authentication Data"
+    },
+    "failurePrefix": "Operation failed: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Refresh token has been expired immediately",
+        "title": "Refresh Token Expired"
+      },
+      "invalidate": {
+        "success": "Invalid refresh token has been written",
+        "title": "Invalid Refresh Token"
+      }
+    },
+    "title": "Developer Options"
+  },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Standard",
+    "title": "Font Size"
+  },
   "help": "Help",
   "locale": {
     "auto": {
@@ -80,10 +127,10 @@
     "apiKey": "API Key",
     "apiKeyPlaceholder": "Please enter your OpenAI API Key",
     "checkApiKey": "Please check if the API Key is correct",
-    "checkProxyAddress": "Unable to connect to the server, please check if the proxy address is correct",
+    "checkProxyAddress": "Cannot connect to the server, please check if the proxy address is correct",
     "connectionSuccess": "Connection successful, API Key and proxy address are configured correctly",
-    "connectivityHint": "After testing connectivity, the API Key and proxy address will be verified for correctness",
-    "pleaseEnterApiKey": "Please enter the API Key",
+    "connectivityHint": "After testing connectivity, the API Key and proxy address will be validated",
+    "pleaseEnterApiKey": "Please enter API Key",
     "proxyAddress": "API Proxy Address",
     "proxyPlaceholder": "Must include http(s)://",
     "testConnectivity": "Test Connectivity",
@@ -92,30 +139,12 @@
   },
   "providers": "AI Providers",
   "support": "Email Support",
-  "theme": {
+  "themeMode": {
     "auto": "Follow System",
     "dark": "Dark Mode",
-    "fontSize": {
-      "standard": "Standard",
-      "title": "Font Size"
-    },
     "light": "Light Mode",
-    "neutralColor": {
-      "description": "Select the neutral tone for the application",
-      "title": "Neutral Color Settings"
-    },
-    "preview": "Preview",
-    "previewMessages": {
-      "botHowToUse": "You can adjust the primary and neutral colors using the color picker below. The preview will update in real-time to show the effect.",
-      "userHowToUse": "How to use the theme preview?"
-    },
-    "primaryColor": {
-      "description": "Select the primary color for the application",
-      "title": "Primary Color Settings"
-    },
-    "sectionDescription": "Choose your preferred theme style and click to switch your selection",
-    "sectionTitle": "Theme",
-    "title": "Theme Settings"
+    "title": "Theme Mode"
   },
-  "title": "Settings"
+  "title": "Settings",
+  "version": "Current Version"
 }

@@ -18,6 +18,7 @@
     "noMatch": "未找到符合條件的助理",
     "search": "搜尋助理..."
   },
+  "defaultSession": "自訂助理",
   "navigation": {
     "goToHomeScreen": "返回首頁"
   },

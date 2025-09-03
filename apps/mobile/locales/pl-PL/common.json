@@ -18,6 +18,7 @@
     "noMatch": "Nie znaleziono pasującego asystenta",
     "search": "Szukaj asystenta..."
   },
+  "defaultSession": "Niestandardowy asystent",
   "navigation": {
     "goToHomeScreen": "Powrót do ekranu głównego"
   },

@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
@@ -11,96 +12,103 @@ import {
   invalidateAccessToken,
   invalidateRefreshToken,
 } from './utils';
+import { Header } from '@/components';
 
 export default function DeveloperScreen() {
   const { styles } = useStyles();
   const { t } = useTranslation(['setting']);
 
-  // 占位：后续可接入全局调试开关或日志级别控制
-  const [enableVerboseLog, setEnableVerboseLog] = React.useState(false);
+  const confirmThenExecute = (
+    confirmMessage: string,
+    execute: () => Promise<void>,
+    successMessage: string,
+  ) => {
+    const confirmTitle = t('actions.confirm', { ns: 'common' });
+    const confirmText = t('actions.confirm', { ns: 'common' });
+    const cancelText = t('actions.cancel', { ns: 'common' });
+    const developerTitle = t('developer.title', { ns: 'setting' });
+    const failurePrefix = t('developer.failurePrefix', { ns: 'setting' });
 
-  const toggleVerboseLog = (value: boolean) => {
-    setEnableVerboseLog(value);
     Alert.alert(
-      t('title', { ns: 'setting' }),
-      `${t('developer', { ns: 'setting' })}: ${value ? 'ON' : 'OFF'}`,
+      confirmTitle,
+      confirmMessage,
+      [
+        { style: 'cancel', text: cancelText },
+        {
+          onPress: async () => {
+            try {
+              await execute();
+              Alert.alert(developerTitle, successMessage);
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : String(e);
+              Alert.alert(developerTitle, `${failurePrefix}${msg}`);
+            }
+          },
+          style: 'destructive',
+          text: confirmText,
+        },
+      ],
+      { cancelable: true },
     );
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-      <SettingGroup>
-        <SettingItem
-          onSwitchChange={toggleVerboseLog}
-          showSwitch
-          switchValue={enableVerboseLog}
-          title="Verbose Log"
-        />
-        <SettingItem
-          description="Open a placeholder action"
-          isLast
-          onPress={() => Alert.alert('Developer', 'Placeholder action')}
-          title="Placeholder"
-        />
-      </SettingGroup>
-      <SettingGroup>
-        <SettingItem
-          onPress={async () => {
-            try {
-              await expireAccessTokenNow();
-              Alert.alert('Developer', '已使访问令牌立即过期');
-            } catch (e) {
-              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title={t('developer.title', { ns: 'setting' })} />
+      <View style={styles.container}>
+        <SettingGroup>
+          <SettingItem
+            onPress={() =>
+              confirmThenExecute(
+                t('developer.accessToken.expire.title', { ns: 'setting' }),
+                expireAccessTokenNow,
+                t('developer.accessToken.expire.success', { ns: 'setting' }),
+              )
             }
-          }}
-          title="访问令牌过期"
-        />
-        <SettingItem
-          onPress={async () => {
-            try {
-              await expireRefreshTokenNow();
-              Alert.alert('Developer', '已使刷新令牌立即过期');
-            } catch (e) {
-              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            title={t('developer.accessToken.expire.title', { ns: 'setting' })}
+          />
+          <SettingItem
+            onPress={() =>
+              confirmThenExecute(
+                t('developer.refreshToken.expire.title', { ns: 'setting' }),
+                expireRefreshTokenNow,
+                t('developer.refreshToken.expire.success', { ns: 'setting' }),
+              )
             }
-          }}
-          title="刷新令牌过期"
-        />
-        <SettingItem
-          onPress={async () => {
-            try {
-              await invalidateAccessToken();
-              Alert.alert('Developer', '已写入无效的访问令牌');
-            } catch (e) {
-              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            title={t('developer.refreshToken.expire.title', { ns: 'setting' })}
+          />
+          <SettingItem
+            onPress={() =>
+              confirmThenExecute(
+                t('developer.accessToken.invalidate.title', { ns: 'setting' }),
+                invalidateAccessToken,
+                t('developer.accessToken.invalidate.success', { ns: 'setting' }),
+              )
             }
-          }}
-          title="无效访问令牌"
-        />
-        <SettingItem
-          onPress={async () => {
-            try {
-              await invalidateRefreshToken();
-              Alert.alert('Developer', '已写入无效的刷新令牌');
-            } catch (e) {
-              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            title={t('developer.accessToken.invalidate.title', { ns: 'setting' })}
+          />
+          <SettingItem
+            onPress={() =>
+              confirmThenExecute(
+                t('developer.refreshToken.invalidate.title', { ns: 'setting' }),
+                invalidateRefreshToken,
+                t('developer.refreshToken.invalidate.success', { ns: 'setting' }),
+              )
             }
-          }}
-          title="无效刷新令牌"
-        />
-        <SettingItem
-          isLast
-          onPress={async () => {
-            try {
-              await clearAuthData();
-              Alert.alert('Developer', '已清空认证数据');
-            } catch (e) {
-              Alert.alert('Developer', `操作失败: ${e instanceof Error ? e.message : e}`);
+            title={t('developer.refreshToken.invalidate.title', { ns: 'setting' })}
+          />
+          <SettingItem
+            onPress={() =>
+              confirmThenExecute(
+                t('developer.clearAuthData.title', { ns: 'setting' }),
+                clearAuthData,
+                t('developer.clearAuthData.success', { ns: 'setting' }),
+              )
             }
-          }}
-          title="清空认证数据"
-        />
-      </SettingGroup>
-    </ScrollView>
+            title={t('developer.clearAuthData.title', { ns: 'setting' })}
+          />
+        </SettingGroup>
+      </View>
+    </SafeAreaView>
   );
 }
