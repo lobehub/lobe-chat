@@ -7,6 +7,7 @@ import StatisticCard from '@/components/StatisticCard';
 
 import { UsageChartProps, GroupBy } from '../Client';
 import { UsageBarChart } from './components/UsageBarChart';
+import { formatNumber } from '@/utils/format';
 
 const groupByType = (
     data: UsageLog[],
@@ -37,9 +38,18 @@ const groupByType = (
         for (const item of log.records) {
             const value = type === 'spend' ? (item.spend || 0) : (item.totalTokens || 0);
             const key = groupBy === GroupBy.Model ? item.model : item.provider;
+            let displayValue = (todayCate.get(key) || 0) + value;
+            if (type === 'spend') {
+                const formattedNum = formatNumber(((todayCate.get(key) || 0) + value) / 1000_000, 2)
+                if (typeof formattedNum !== 'string') {
+                    displayValue = formattedNum
+                } else {
+                    displayValue = displayValue / 1000_000
+                }
+            }
             todayCate.set(
                 key,
-                (todayCate.get(key) || 0) + value,
+                displayValue,
             );
         }
         return {
