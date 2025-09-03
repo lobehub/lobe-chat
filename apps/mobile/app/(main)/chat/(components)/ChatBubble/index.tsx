@@ -8,6 +8,7 @@ import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
 import ToolTipActions from '../ToolTipActions';
 import { useStyles } from './style';
+import { useSettingStore } from '@/store/setting';
 
 interface ChatBubbleProps {
   isLoading?: boolean;
@@ -18,13 +19,14 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
   const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
   const { styles } = useStyles();
+  const { fontSize } = useSettingStore();
 
   const content = useMemo(() => {
     if (isLoading) {
       return <LoadingDots />;
     }
-    return <Markdown>{message.content}</Markdown>;
-  }, [isLoading, message.content]);
+    return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
+  }, [isLoading, message.content, fontSize]);
 
   return (
     <View

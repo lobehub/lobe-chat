@@ -21,7 +21,7 @@ export const useStyles = createStyles((token) => ({
     marginHorizontal: token.padding,
     marginVertical: token.marginXS,
     paddingHorizontal: token.paddingSM,
-    textAlignVertical: 'center',
+    paddingVertical: token.paddingXS,
   },
   sessionList: {
     flex: 1,

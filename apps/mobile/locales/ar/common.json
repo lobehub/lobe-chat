@@ -18,6 +18,7 @@
     "noMatch": "لم يتم العثور على مساعد مطابق",
     "search": "ابحث عن مساعد..."
   },
+  "defaultSession": "مساعد مخصص",
   "navigation": {
     "goToHomeScreen": "العودة إلى الصفحة الرئيسية"
   },

@@ -18,6 +18,7 @@
     "noMatch": "دستیار مطابقی یافت نشد",
     "search": "جستجوی دستیار..."
   },
+  "defaultSession": "دستیار سفارشی",
   "navigation": {
     "goToHomeScreen": "بازگشت به صفحه اصلی"
   },

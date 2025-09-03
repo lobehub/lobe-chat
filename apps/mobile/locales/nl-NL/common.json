@@ -18,6 +18,7 @@
     "noMatch": "Geen overeenkomende assistent gevonden",
     "search": "Zoek assistent..."
   },
+  "defaultSession": "Aangepaste assistent",
   "navigation": {
     "goToHomeScreen": "Ga naar startscherm"
   },

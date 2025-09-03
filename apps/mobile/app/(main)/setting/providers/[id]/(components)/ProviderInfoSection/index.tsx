@@ -56,15 +56,7 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
 
         {/* InstantSwitch control area */}
         <View style={styles.switchContainer}>
-          <InstantSwitch
-            enabled={isEnabled}
-            onChange={handleSwitchChange}
-            thumbColor={token.colorBgContainer}
-            trackColor={{
-              false: '#e9e9eb',
-              true: '#34c759',
-            }}
-          />
+          <InstantSwitch enabled={isEnabled} onChange={handleSwitchChange} />
         </View>
       </View>
 
