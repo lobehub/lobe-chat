@@ -47,15 +47,15 @@
     },
     "models": {
       "copySuccess": "Copiado con éxito",
-      "disableFailed": "Error al desactivar el modelo",
-      "emptyNoSearch": "No se encontraron modelos, intenta obtenerlos del servidor",
-      "emptyWithSearch": "No hay modelos que coincidan con los criterios de búsqueda",
-      "enableFailed": "Error al activar el modelo",
-      "fetch": "Obtener modelo",
-      "fetchFailed": "Error al obtener los modelos, por favor intenta de nuevo",
+      "disableFailed": "Error al deshabilitar el modelo",
+      "emptyNoSearch": "No se encontraron modelos, intente obtenerlos del servidor",
+      "emptyWithSearch": "No hay modelos que coincidan con la búsqueda",
+      "enableFailed": "Error al habilitar el modelo",
+      "fetch": "Obteniendo modelos",
+      "fetchFailed": "Error al obtener modelos, por favor intente de nuevo",
       "fetchSuccess": "¡Lista de modelos obtenida con éxito!",
       "fetching": "Obteniendo...",
-      "modelsAvailable": "Total de {{count}} modelos disponibles",
+      "modelsAvailable": "{{count}} modelos disponibles en total",
       "searchPlaceholder": "Buscar modelos...",
       "title": "Modelos"
     },
@@ -65,12 +65,59 @@
     }
   },
   "changelog": "Registro de cambios",
-  "developer": "Opciones de desarrollador",
+  "color": {
+    "neutral": {
+      "description": "Selecciona el tono neutro de la aplicación",
+      "title": "Configuración de tonos neutros"
+    },
+    "preview": "Vista previa",
+    "previewMessages": {
+      "botHowToUse": "Puedes ajustar el color principal y los tonos neutros mediante el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "userHowToUse": "¿Cómo usar la vista previa del tema?"
+    },
+    "primary": {
+      "description": "Selecciona el color principal de la aplicación",
+      "title": "Configuración del color principal"
+    },
+    "title": "Configuración de color"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "El token de acceso ha expirado inmediatamente",
+        "title": "Token de acceso expirado"
+      },
+      "invalidate": {
+        "success": "Token de acceso invalidado correctamente",
+        "title": "Token de acceso inválido"
+      }
+    },
+    "clearAuthData": {
+      "success": "Datos de autenticación borrados correctamente",
+      "title": "Borrar datos de autenticación"
+    },
+    "failurePrefix": "Operación fallida: ",
+    "refreshToken": {
+      "expire": {
+        "success": "El token de actualización ha expirado inmediatamente",
+        "title": "Token de actualización expirado"
+      },
+      "invalidate": {
+        "success": "Token de actualización invalidado correctamente",
+        "title": "Token de actualización inválido"
+      }
+    },
+    "title": "Opciones de desarrollador"
+  },
   "feedback": "Comentarios",
+  "fontSize": {
+    "standard": "Estándar",
+    "title": "Tamaño de fuente"
+  },
   "help": "Ayuda",
   "locale": {
     "auto": {
-      "description": "Seguir la configuración de idioma del sistema",
+      "description": "Seguir la configuración del idioma del sistema",
       "title": "Seguir sistema"
     },
     "title": "Configuración de idioma"
@@ -79,8 +126,8 @@
   "openaiSettings": {
     "apiKey": "Clave API",
     "apiKeyPlaceholder": "Por favor, introduzca su clave API de OpenAI",
-    "checkApiKey": "Por favor, verifique que la clave API es correcta",
-    "checkProxyAddress": "No se puede conectar al servidor, por favor verifique que la dirección del proxy es correcta",
+    "checkApiKey": "Por favor, verifique que la clave API sea correcta",
+    "checkProxyAddress": "No se puede conectar al servidor, por favor verifique que la dirección del proxy sea correcta",
     "connectionSuccess": "Conexión exitosa, la clave API y la dirección del proxy están configuradas correctamente",
     "connectivityHint": "Después de probar la conectividad, se verificará si la clave API y la dirección del proxy están correctamente configuradas",
     "pleaseEnterApiKey": "Por favor, introduzca la clave API",
@@ -92,30 +139,12 @@
   },
   "providers": "Proveedores de IA",
   "support": "Soporte por correo electrónico",
-  "theme": {
+  "themeMode": {
     "auto": "Seguir sistema",
     "dark": "Modo oscuro",
-    "fontSize": {
-      "standard": "Estándar",
-      "title": "Tamaño de fuente"
-    },
     "light": "Modo claro",
-    "neutralColor": {
-      "description": "Selecciona el tono neutro de la aplicación",
-      "title": "Configuración de color neutro"
-    },
-    "preview": "Vista previa",
-    "previewMessages": {
-      "botHowToUse": "Puedes ajustar el color principal y los colores neutros mediante el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
-      "userHowToUse": "¿Cómo usar la vista previa del tema?"
-    },
-    "primaryColor": {
-      "description": "Selecciona el color principal de la aplicación",
-      "title": "Configuración de color principal"
-    },
-    "sectionDescription": "Elija el estilo de tema que prefiera y haga clic para cambiar su selección",
-    "sectionTitle": "Tema",
-    "title": "Configuración de tema"
+    "title": "Modo de tema"
   },
-  "title": "Configuración"
+  "title": "Configuración",
+  "version": "Versión actual"
 }

@@ -2,7 +2,16 @@
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，让我们开始对话吧！",
+  "agentRoleEdit": {
+    "cancel": "取消",
+    "confirm": "确认",
+    "edit": "编辑",
+    "placeholder": "请输入角色 Prompt 提示词",
+    "roleSetting": "角色设定",
+    "title": "角色设定"
+  },
   "confirmDelete": "确认删除",
+  "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作",
   "copyFailed": "复制失败",
   "defaultAgent": "自定义助手",
   "defaultList": "默认列表",
@@ -27,14 +36,5 @@
   },
   "share": "分享",
   "stop": "停止",
-  "thinking": "思考中...",
-  "agentRoleEdit": {
-    "edit": "编辑",
-    "placeholder": "请输入角色 Prompt 提示词",
-    "roleSetting": "角色设定",
-    "cancel": "取消",
-    "confirm": "确认",
-    "title": "角色设定"
-  },
-  "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作"
+  "thinking": "思考中..."
 }

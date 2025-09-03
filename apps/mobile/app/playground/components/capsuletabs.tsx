@@ -2,6 +2,9 @@ import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
 import { BasicDemo, ScrollingDemo, CategoriesDemo } from '@/components/CapsuleTabs/demos';
+import { Header } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const CAPSULETABS_README = `# CapsuleTabs 组件
 
@@ -62,12 +65,16 @@ const demos: DemoItem[] = [
 ];
 
 export default function CapsuleTabsPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={CAPSULETABS_README}
-      subtitle="水平滚动的胶囊选项卡组件"
-      title="CapsuleTabs 胶囊选项卡"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <Header showBack title="CapsuleTabs 胶囊选项卡" />
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={CAPSULETABS_README}
+        subtitle="水平滚动的胶囊选项卡组件"
+        title="CapsuleTabs 胶囊选项卡"
+      />
+    </SafeAreaView>
   );
 }
