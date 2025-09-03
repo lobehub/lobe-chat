@@ -52,7 +52,6 @@
 
 ```env
 EXPO_PUBLIC_OAUTH_CLIENT_ID=your-client-id
-EXPO_PUBLIC_OAUTH_ISSUER=https://auth.lobehub.com
 EXPO_PUBLIC_OAUTH_REDIRECT_URI=lobe-chat-mobile://auth/callback
 ```
 
@@ -236,7 +235,7 @@ class CustomAuthService extends OAuthService {
 const authProviders = {
   lobehub: {
     clientId: 'lobehub-client-id',
-    issuer: 'https://auth.lobehub.com',
+    issuer: 'https://lobechat.com',
   },
   google: {
     clientId: 'google-client-id',

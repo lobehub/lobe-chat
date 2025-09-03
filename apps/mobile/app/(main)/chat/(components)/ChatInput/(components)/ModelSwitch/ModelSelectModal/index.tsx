@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { X, ArrowRight } from 'lucide-react-native';
 
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
@@ -187,7 +188,7 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
       presentationStyle="pageSheet"
       visible={visible}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['bottom']} style={styles.container}>
         {/* 标题栏 */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>选择模型</Text>

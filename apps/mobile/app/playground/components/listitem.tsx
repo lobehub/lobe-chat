@@ -2,6 +2,8 @@ import React from 'react';
 
 import { AdvancedDemo, AvatarsDemo, BasicDemo, NavigationDemo } from '@/components/ListItem/demos';
 import ComponentPlayground, { DemoItem } from '../Playground';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 // 读取README内容
 const readmeContent = `# ListItem组件
@@ -31,12 +33,15 @@ const demos: DemoItem[] = [
 ];
 
 export default function ListItemPlayground() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={readmeContent}
-      subtitle="功能丰富的列表项组件"
-      title="ListItem 组件"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={readmeContent}
+        subtitle="功能丰富的列表项组件"
+        title="ListItem 组件"
+      />
+    </SafeAreaView>
   );
 }

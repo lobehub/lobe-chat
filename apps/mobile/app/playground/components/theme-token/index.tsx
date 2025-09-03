@@ -1,6 +1,7 @@
 import { Palette, Sun, Moon } from 'lucide-react-native';
 import React, { useState, useCallback, memo } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import ThemeControls from 'app/playground/components/theme-token/(components)/ThemeControls';
@@ -57,7 +58,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
     }, []);
 
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView edges={['bottom']} style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <Palette color={token.colorText} size={24} />

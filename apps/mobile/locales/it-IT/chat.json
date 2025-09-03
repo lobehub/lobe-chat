@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni Assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a conversare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, iniziamo a conversare!",
+  "agentRoleEdit": {
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "edit": "Modifica",
+    "placeholder": "Inserisci il prompt del ruolo",
+    "roleSetting": "Impostazioni ruolo",
+    "title": "Impostazioni ruolo"
+  },
   "confirmDelete": "Conferma eliminazione",
+  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente; una volta eliminato, non potrà essere recuperato. Confermi l'operazione?",
   "copyFailed": "Copia non riuscita",
   "defaultAgent": "Assistente personalizzato",
   "defaultList": "Elenco predefinito",
