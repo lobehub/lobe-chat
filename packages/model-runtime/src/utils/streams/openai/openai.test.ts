@@ -163,7 +163,7 @@ describe('OpenAIStream', () => {
     );
   });
 
-  it('should emit base64_image when markdown contains data:image in normal text delta', async () => {
+  it('should emit base64_image and strip markdown data:image from text', async () => {
     const data = [
       {
         id: 'img-1',
@@ -208,9 +208,6 @@ describe('OpenAIStream', () => {
         'id: img-1',
         'event: text',
         `data: "这是一张图片： "\n`,
-        'id: img-1',
-        'event: text',
-        `data: "![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA==)"\n`,
         'id: img-1',
         'event: base64_image',
         `data: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA=="\n`,

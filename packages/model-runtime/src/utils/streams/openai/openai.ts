@@ -32,6 +32,13 @@ const extractBase64ImageUrlsFromMarkdown = (text: string): string[] => {
   return urls;
 };
 
+// Remove markdown base64 image segments from text
+const stripMarkdownBase64Images = (text: string): string => {
+  if (!text) return text;
+  const mdRegex = /!\[[^\]]*]\(\s*data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+\s*\)/g;
+  return text.replaceAll(mdRegex, '').trim();
+};
+
 const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   streamContext: StreamContext,
@@ -153,10 +160,13 @@ const transformOpenAIStream = (
         const text = item.delta.content as string;
         const images = extractBase64ImageUrlsFromMarkdown(text);
         if (images.length > 0) {
-          return [
-            { data: text, id: chunk.id, type: 'text' },
+          const cleaned = stripMarkdownBase64Images(text);
+          const arr: StreamProtocolChunk[] = [];
+          if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
+          arr.push(
             ...images.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
-          ];
+          );
+          return arr;
         }
 
         return { data: text, id: chunk.id, type: 'text' };
@@ -333,10 +343,13 @@ const transformOpenAIStream = (
         if (!streamContext?.thinkingInContent) {
           const urls = extractBase64ImageUrlsFromMarkdown(thinkingContent);
           if (urls.length > 0) {
-            return [
-              { data: thinkingContent, id: chunk.id, type: 'text' },
+            const cleaned = stripMarkdownBase64Images(thinkingContent);
+            const arr: StreamProtocolChunk[] = [];
+            if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
+            arr.push(
               ...urls.map((url) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
-            ];
+            );
+            return arr;
           }
         }
 
