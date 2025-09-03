@@ -78,6 +78,7 @@
     "expo-haptics": "~14.1.4",
     "expo-linking": "~7.1.7",
     "expo-localization": "~16.1.6",
+    "expo-navigation-bar": "~4.2.8",
     "expo-router": "~5.1.5",
     "expo-secure-store": "~14.2.4",
     "expo-splash-screen": "~0.30.10",

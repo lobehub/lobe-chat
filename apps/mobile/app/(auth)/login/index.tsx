@@ -18,7 +18,9 @@ const LoginPage = () => {
     try {
       await login();
       // Redirect to home page after successful login
-      router.replace('/chat');
+      setTimeout(() => {
+        router.replace('/chat');
+      }, 0);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Login failed';
       Alert.alert(t('error.title', { ns: 'error' }), errorMessage);
