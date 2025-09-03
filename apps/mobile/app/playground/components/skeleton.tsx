@@ -9,6 +9,8 @@ import {
   AnimatedDemo,
   CompoundDemo,
 } from '@/components/Skeleton/demos';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useStyles } from './style';
 
 const SKELETON_README = `# Skeleton 骨架屏组件
 
@@ -170,12 +172,15 @@ const demos: DemoItem[] = [
 ];
 
 export default function SkeletonPlaygroundPage() {
+  const { styles } = useStyles();
   return (
-    <ComponentPlayground
-      demos={demos}
-      readmeContent={SKELETON_README}
-      subtitle="React Native版本的骨架屏组件"
-      title="Skeleton 骨架屏"
-    />
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <ComponentPlayground
+        demos={demos}
+        readmeContent={SKELETON_README}
+        subtitle="React Native版本的骨架屏组件"
+        title="Skeleton 骨架屏"
+      />
+    </SafeAreaView>
   );
 }

@@ -18,6 +18,7 @@
     "noMatch": "Không tìm thấy trợ lý phù hợp",
     "search": "Tìm kiếm trợ lý..."
   },
+  "defaultSession": "Trợ lý tùy chỉnh",
   "navigation": {
     "goToHomeScreen": "Quay về trang chủ"
   },

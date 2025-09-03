@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Platform } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme, useThemeToken } from '@/theme';
 
 import type { RemarkStyles } from './context';
 
@@ -14,6 +14,7 @@ export type RemarkStyleOptions = {
 
 export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
   const token = useThemeToken();
+  const { theme } = useTheme();
 
   const heading = useCallback(() => {
     return (level: number) => {
@@ -92,11 +93,13 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     listItem: {
       flex: 1,
     },
+    listMarkerColor: theme.isDark ? token.cyan9A : token.cyan11A,
     paragraph: {
       color: token.colorText,
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
-      marginVertical: options.fontSize * options.marginMultiple * 0.25,
+      // marginVertical: options.fontSize * options.marginMultiple * 0.33,
+      marginVertical: 4,
     },
     strong: {
       color: token.colorTextHeading,
@@ -110,6 +113,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     td: tdth,
     text: {
+      fontSize: options.fontSize,
       // 从 父节点继承,否则一些样式带不下来
       // color: token.colorText
     },

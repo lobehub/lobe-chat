@@ -1,6 +1,7 @@
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useEffect } from 'react';
-import { ScrollView, SafeAreaView, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -9,10 +10,10 @@ import { useStyles } from './styles';
 import ProviderInfoSection from './(components)/ProviderInfoSection';
 import ModelsSection from './(components)/ModelsSection';
 import ConfigurationSection from './(components)/ConfigurationSection';
+import { Header } from '@/components';
 
 const ProviderDetailPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const navigation = useNavigation();
   const { styles } = useStyles();
   const { t } = useTranslation(['setting']);
 
@@ -22,24 +23,12 @@ const ProviderDetailPage = () => {
   // 获取provider配置状态
   const isConfigLoading = useAiInfraStore(aiProviderSelectors.isAiProviderConfigLoading(id!));
 
-  // 动态设置页面标题
-  useEffect(() => {
-    if (providerDetail?.name) {
-      navigation.setOptions({
-        headerTitle: providerDetail.name,
-        title: providerDetail.name,
-      });
-    } else if (id) {
-      navigation.setOptions({
-        headerTitle: id,
-        title: id,
-      });
-    }
-  }, [navigation, providerDetail?.name, id]);
+  const headerTitle = providerDetail?.name || id || '';
 
   if (isLoading || isConfigLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['bottom']} style={styles.container}>
+        <Header showBack title={headerTitle} />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>
             {t('aiProviders.detail.loading', { ns: 'setting' })}
@@ -51,7 +40,8 @@ const ProviderDetailPage = () => {
 
   if (error) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['bottom']} style={styles.container}>
+        <Header showBack title={headerTitle} />
         <View style={styles.loadingContainer}>
           <Text style={styles.errorText}>
             {t('aiProviders.detail.loadFailed', { ns: 'setting' })}
@@ -62,7 +52,8 @@ const ProviderDetailPage = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['bottom']} style={styles.container}>
+      <Header showBack title={headerTitle} />
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}

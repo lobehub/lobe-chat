@@ -2,7 +2,16 @@
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou aller dans les [paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}, commençons notre conversation !",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, commençons notre conversation !",
+  "agentRoleEdit": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "edit": "Modifier",
+    "placeholder": "Veuillez saisir le prompt du rôle",
+    "roleSetting": "Paramètres du rôle",
+    "title": "Paramètres du rôle"
+  },
   "confirmDelete": "Confirmer la suppression",
+  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet assistant. Cette action est irréversible. Veuillez confirmer votre opération.",
   "copyFailed": "Échec de la copie",
   "defaultAgent": "Assistant personnalisé",
   "defaultList": "Liste par défaut",

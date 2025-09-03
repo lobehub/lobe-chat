@@ -3,16 +3,16 @@
   "account": {
     "profile": {
       "email": "E-mail",
-      "name": "Nome de Usuário",
-      "status": "Status da Conta",
-      "unverified": "Não Verificado",
+      "name": "Nome de usuário",
+      "status": "Status da conta",
+      "unverified": "Não verificado",
       "verified": "Verificado"
     },
     "signOut": {
       "confirm": "Tem certeza de que deseja sair?",
       "label": "Sair"
     },
-    "title": "Configurações da Conta"
+    "title": "Configurações da conta"
   },
   "aiProviders": {
     "configuration": {
@@ -22,7 +22,7 @@
         "placeholder": "Por favor, insira a chave API do {{name}}"
       },
       "proxyUrl": {
-        "desc": "Deve incluir http(s)://",
+        "desc": "Deve conter http(s)://",
         "invalid": "Por favor, insira uma URL válida que comece com http:// ou https://",
         "placeholder": "https://api.exemplo.com/v1",
         "title": "Endereço do proxy da API"
@@ -51,11 +51,11 @@
       "emptyNoSearch": "Nenhum modelo encontrado, tente obter do servidor",
       "emptyWithSearch": "Nenhum modelo corresponde aos critérios de busca",
       "enableFailed": "Falha ao ativar o modelo",
-      "fetch": "Obter modelo",
+      "fetch": "Obtendo modelos",
       "fetchFailed": "Falha ao obter modelos, por favor tente novamente",
       "fetchSuccess": "Lista de modelos obtida com sucesso!",
       "fetching": "Obtendo...",
-      "modelsAvailable": "Total de {{count}} modelos disponíveis",
+      "modelsAvailable": "{{count}} modelos disponíveis no total",
       "searchPlaceholder": "Pesquisar modelos...",
       "title": "Modelos"
     },
@@ -64,58 +64,87 @@
       "enabled": "Ativado"
     }
   },
-  "changelog": "Registro de Atualizações",
-  "developer": "Opções de desenvolvedor",
+  "changelog": "Registro de atualizações",
+  "color": {
+    "neutral": {
+      "description": "Escolha o tom neutro do aplicativo",
+      "title": "Configuração de cor neutra"
+    },
+    "preview": "Pré-visualização",
+    "previewMessages": {
+      "botHowToUse": "Você pode ajustar a cor principal e as cores neutras usando o seletor de cores abaixo; a pré-visualização será atualizada em tempo real para mostrar o efeito.",
+      "userHowToUse": "Como usar a pré-visualização do tema?"
+    },
+    "primary": {
+      "description": "Escolha o tom principal do aplicativo",
+      "title": "Configuração de cor principal"
+    },
+    "title": "Configurações de cor"
+  },
+  "developer": {
+    "accessToken": {
+      "expire": {
+        "success": "Token de acesso expirado imediatamente",
+        "title": "Token de acesso expirado"
+      },
+      "invalidate": {
+        "success": "Token de acesso inválido registrado",
+        "title": "Token de acesso inválido"
+      }
+    },
+    "clearAuthData": {
+      "success": "Dados de autenticação limpos",
+      "title": "Limpar dados de autenticação"
+    },
+    "failurePrefix": "Operação falhou: ",
+    "refreshToken": {
+      "expire": {
+        "success": "Token de atualização expirado imediatamente",
+        "title": "Token de atualização expirado"
+      },
+      "invalidate": {
+        "success": "Token de atualização inválido registrado",
+        "title": "Token de atualização inválido"
+      }
+    },
+    "title": "Opções de desenvolvedor"
+  },
   "feedback": "Feedback",
+  "fontSize": {
+    "standard": "Padrão",
+    "title": "Tamanho da fonte"
+  },
   "help": "Ajuda",
   "locale": {
     "auto": {
       "description": "Seguir a configuração de idioma do sistema",
-      "title": "Automático"
+      "title": "Seguir sistema"
     },
-    "title": "Configuração de Idioma"
+    "title": "Configuração de idioma"
   },
   "openai": "Configurações OpenAI",
   "openaiSettings": {
     "apiKey": "Chave API",
-    "apiKeyPlaceholder": "Por favor, insira sua Chave API do OpenAI",
-    "checkApiKey": "Por favor, verifique se a Chave API está correta",
-    "checkProxyAddress": "Não foi possível conectar ao servidor, verifique se o endereço do proxy está correto",
-    "connectionSuccess": "Conexão bem-sucedida, Chave API e endereço do proxy configurados corretamente",
-    "connectivityHint": "Após testar a conectividade, será verificado se a Chave API e o endereço do proxy foram preenchidos corretamente",
-    "pleaseEnterApiKey": "Por favor, insira a Chave API",
-    "proxyAddress": "Endereço do Proxy API",
+    "apiKeyPlaceholder": "Por favor, insira sua chave API OpenAI",
+    "checkApiKey": "Por favor, verifique se a chave API está correta",
+    "checkProxyAddress": "Não foi possível conectar ao servidor, por favor verifique se o endereço do proxy está correto",
+    "connectionSuccess": "Conexão bem-sucedida, chave API e endereço do proxy configurados corretamente",
+    "connectivityHint": "Após testar a conectividade, será verificado se a chave API e o endereço do proxy foram preenchidos corretamente",
+    "pleaseEnterApiKey": "Por favor, insira a chave API",
+    "proxyAddress": "Endereço do proxy da API",
     "proxyPlaceholder": "Deve conter http(s)://",
-    "testConnectivity": "Testar Conectividade",
-    "validationFailed": "Validação Falhou",
-    "validationSuccess": "Validação Bem-sucedida"
+    "testConnectivity": "Testar conectividade",
+    "validationFailed": "Validação falhou",
+    "validationSuccess": "Validação bem-sucedida"
   },
   "providers": "Provedores de IA",
-  "support": "Suporte por E-mail",
-  "theme": {
-    "auto": "Automático",
-    "dark": "Modo Escuro",
-    "fontSize": {
-      "standard": "Padrão",
-      "title": "Tamanho da Fonte"
-    },
-    "light": "Modo Claro",
-    "neutralColor": {
-      "description": "Escolha o tom neutro para o aplicativo",
-      "title": "Configuração de Cor Neutra"
-    },
-    "preview": "Visualizar",
-    "previewMessages": {
-      "botHowToUse": "Você pode ajustar a cor principal e as cores neutras usando o seletor de cores abaixo. A pré-visualização será atualizada em tempo real para mostrar o efeito.",
-      "userHowToUse": "Como usar a pré-visualização do tema?"
-    },
-    "primaryColor": {
-      "description": "Escolha a cor principal para o aplicativo",
-      "title": "Configuração de Cor Primária"
-    },
-    "sectionDescription": "Escolha o estilo de tema que você prefere e clique para alternar sua seleção",
-    "sectionTitle": "Tema",
-    "title": "Configurações de Tema"
+  "support": "Suporte por e-mail",
+  "themeMode": {
+    "auto": "Seguir o sistema",
+    "dark": "Modo escuro",
+    "light": "Modo claro",
+    "title": "Modo de Tema"
   },
-  "title": "Configurações"
+  "title": "Configurações",
+  "version": "Versão atual"
 }
