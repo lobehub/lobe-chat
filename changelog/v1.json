@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "features": [
+        "Add nano banana Chinese prompt notify."
+      ],
+      "fixes": [
+        "Fix socks5 proxy not work problem, fix virtuaso minheight was null."
+      ]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.0"
+  },
+  {
+    "children": {
       "improvements": [
         "Add upload hint for non-visual model, adjust ControlsForm component to adapt to mobile phone display, Support new provider Nebius, update i18n, update i18n."
       ],
