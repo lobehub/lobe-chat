@@ -184,11 +184,11 @@
   },
   "fullscreen": "Modalità a schermo intero",
   "geminiImageChineseWarning": {
-    "content": "Nano Banana potrebbe generare immagini con errori se si utilizza il cinese. Si consiglia di usare l'inglese per ottenere risultati migliori.",
+    "content": "Nano Banana potrebbe non riuscire a generare immagini correttamente se si utilizza il cinese. Si consiglia di utilizzare l'inglese per ottenere risultati migliori.",
     "continueGenerate": "Continua a generare",
     "continueSend": "Continua a inviare",
     "doNotShowAgain": "Non mostrare più",
-    "title": "Avviso di input in cinese"
+    "title": "Avviso per input in cinese"
   },
   "historyRange": "Intervallo cronologico",
   "import": "Importa",
