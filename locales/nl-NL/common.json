@@ -182,6 +182,13 @@
     "title": "Houdt u van ons product?"
   },
   "fullscreen": "Volledig scherm",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana kan bij gebruik van Chinees mogelijk geen afbeeldingen genereren. Het wordt aanbevolen om Engels te gebruiken voor betere resultaten.",
+    "continueGenerate": "Doorgaan met genereren",
+    "continueSend": "Doorgaan met verzenden",
+    "doNotShowAgain": "Niet meer tonen",
+    "title": "Chinese invoer waarschuwing"
+  },
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importData": "Gegevens importeren",
