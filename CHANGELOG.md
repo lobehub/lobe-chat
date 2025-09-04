@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.122.2](https://github.com/lobehub/lobe-chat/compare/v1.122.1...v1.122.2)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **modelProvider**: Add lmstudio to provider whitelist to enable fetchOnClient toggle.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **modelProvider**: Add lmstudio to provider whitelist to enable fetchOnClient toggle, closes [#9067](https://github.com/lobehub/lobe-chat/issues/9067) ([e58864f](https://github.com/lobehub/lobe-chat/commit/e58864f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.122.1](https://github.com/lobehub/lobe-chat/compare/v1.122.0...v1.122.1)
 
 <sup>Released on **2025-09-04**</sup>
