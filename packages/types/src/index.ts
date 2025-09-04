@@ -14,6 +14,7 @@ export * from './message';
 export * from './meta';
 export * from './rag';
 export * from './serverConfig';
+export * from './session';
 export * from './topic';
 export * from './user';
 export * from './user/settings';
