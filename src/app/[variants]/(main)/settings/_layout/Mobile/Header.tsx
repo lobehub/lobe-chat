@@ -1,6 +1,5 @@
 'use client';
 
-import { Tag } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
 import { useSearchParams } from 'next/navigation';
 import { memo } from 'react';
@@ -45,11 +44,6 @@ const Header = memo(() => {
               <span style={{ lineHeight: 1.2 }}>
                 {isProvider ? providerName : t(`tab.${activeSettingsKey || 'provider'}`)}
               </span>
-              {activeSettingsKey === SettingsTabs.Sync && (
-                <Tag bordered={false} color={'warning'}>
-                  {t('tab.experiment')}
-                </Tag>
-              )}
             </Flexbox>
           }
         />

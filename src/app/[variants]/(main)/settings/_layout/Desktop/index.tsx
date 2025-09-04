@@ -1,9 +1,8 @@
 'use client';
 
 import { useResponsive, useTheme } from 'antd-style';
-import { useSearchParams } from 'next/navigation';
-import { useQueryState } from 'nuqs';
-import { memo, useEffect, useRef } from 'react';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
@@ -18,21 +17,16 @@ import SideBar from './SideBar';
 
 const Layout = memo<LayoutProps>((props) => {
   const { showLLM = true } = props;
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useQueryState('active', {
-    defaultValue: SettingsTabs.Common,
-  });
-  const category = <CategoryContent activeTab={activeTab} onMenuSelect={setActiveTab} />;
-  const ref = useRef<any>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
 
-  useEffect(() => {
-    const activeParam = searchParams.get('active');
-    if (activeParam && Object.values(SettingsTabs).includes(activeParam as SettingsTabs)) {
-      setActiveTab((activeParam as SettingsTabs) || SettingsTabs.Common);
-    }
-  }, [searchParams, setActiveTab]);
+  const [activeTab, setActiveTab] = useQueryState(
+    'active',
+    parseAsStringEnum(Object.values(SettingsTabs)).withDefault(SettingsTabs.Common),
+  );
+
+  const category = <CategoryContent activeTab={activeTab} onMenuSelect={setActiveTab} />;
 
   return (
     <Flexbox
