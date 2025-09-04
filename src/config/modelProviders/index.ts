@@ -136,6 +136,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   HuggingFaceProvider,
   CloudflareProvider,
   GithubProvider,
+  NewAPIProvider,
   BflProvider,
   NovitaProvider,
   PPIOProvider,
@@ -178,7 +179,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AkashChatProvider,
   QiniuProvider,
   NebiusProvider,
-  NewAPIProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
