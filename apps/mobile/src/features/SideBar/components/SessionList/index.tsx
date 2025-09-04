@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 
 import { useSessionStore } from '@/store/session';
 import { useStyles } from './style';
@@ -10,14 +10,14 @@ import SessionItem from './SessionItem';
 import { useAuth } from '@/store/user';
 import { SessionListSkeleton } from './components/SkeletonList';
 import * as ContextMenu from 'zeego/context-menu';
-import { Toast } from '@/components';
+import { Toast, TextInput } from '@/components';
 import { useGlobalStore } from '@/store/global';
 
 export default function SideBar() {
   const { t } = useTranslation('chat');
   const [searchText, setSearchText] = useState('');
   const { sessions } = useSessionStore();
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
   const { useFetchSessions, removeSession } = useSessionStore();
@@ -43,12 +43,8 @@ export default function SideBar() {
     <View style={styles.container}>
       {/* 搜索栏 */}
       <TextInput
-        multiline={false}
         onChangeText={setSearchText}
         placeholder={t('session.search.placeholder', { ns: 'chat' })}
-        placeholderTextColor={token.colorTextPlaceholder}
-        style={styles.searchInput}
-        underlineColorAndroid="transparent"
         value={searchText}
       />
 
