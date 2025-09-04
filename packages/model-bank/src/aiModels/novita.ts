@@ -426,6 +426,20 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 131_072,
+    description: 'Gemma 3 12B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
+    displayName: 'Gemma 3 12B',
+    id: 'google/gemma-3-12b-it',
+    maxOutput: 8192,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 32_768,
     description: 'Gemma 3 1B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
     displayName: 'Gemma 3 1B',
