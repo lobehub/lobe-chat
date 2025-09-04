@@ -1,32 +1,23 @@
 import type { NextAuthConfig } from 'next-auth';
 
-import { ssoProviders } from './sso-providers';
-import { LobeNextAuthDbAdapter } from './adapter';
-import { getAuthConfig } from '@/config/auth';
+import { authEnv } from '@/config/auth';
 
-const {
-  NEXT_AUTH_DEBUG,
-  NEXT_AUTH_SECRET,
-  NEXT_AUTH_SSO_SESSION_STRATEGY,
-  NEXT_AUTH_SSO_PROVIDERS,
-  NEXT_PUBLIC_ENABLE_NEXT_AUTH
-} = getAuthConfig();
+import { ssoProviders } from './sso-providers';
 
 export const initSSOProviders = () => {
-  return NEXT_PUBLIC_ENABLE_NEXT_AUTH
-    ? NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).map((provider) => {
-      const validProvider = ssoProviders.find((item) => item.id === provider.trim());
+  return authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
+    ? authEnv.NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).map((provider) => {
+        const validProvider = ssoProviders.find((item) => item.id === provider.trim());
 
-      if (validProvider) return validProvider.provider;
+        if (validProvider) return validProvider.provider;
 
-      throw new Error(`[NextAuth] provider ${provider} is not supported`);
-    })
+        throw new Error(`[NextAuth] provider ${provider} is not supported`);
+      })
     : [];
 };
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
-  adapter: LobeNextAuthDbAdapter(),
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
@@ -48,15 +39,12 @@ export default {
       return session;
     },
   },
-  debug: NEXT_AUTH_DEBUG,
+  debug: authEnv.NEXT_AUTH_DEBUG,
   pages: {
     error: '/next-auth/error',
     signIn: '/next-auth/signin',
   },
   providers: initSSOProviders(),
-  secret: NEXT_AUTH_SECRET,
-  session: {
-    strategy: NEXT_AUTH_SSO_SESSION_STRATEGY,
-  },
+  secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;

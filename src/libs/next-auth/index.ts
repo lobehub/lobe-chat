@@ -1,20 +1,33 @@
 import NextAuth from 'next-auth';
 
-import authConfig from './auth.config';
+import { getServerDBConfig } from '@/config/db';
+import { serverDB } from '@/database/server';
+
+import { LobeNextAuthDbAdapter } from './adapter';
+import config from './auth.config';
+
+const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
 /**
- * NextAuth initialization without Database adapter
+ * NextAuth initialization with Database adapter
  *
- * @note
- * We currently use `jwt` strategy for session management.
- * So you don't need to import `signIn` or `signOut` from
- * this module, just import from `next-auth` directly.
- *
- * Inside react component
  * @example
  * ```ts
- * import { signOut } from 'next-auth/react';
- * signOut();
+ * import NextAuthNode from '@/libs/next-auth';
+ * const { handlers } = NextAuthNode;
  * ```
+ *
+ * @note
+ * If you meet the edge runtime compatible problem,
+ * you can import from `@/libs/next-auth/edge` which is not initial with the database adapter.
+ *
+ * The difference and usage of the two different NextAuth modules is can be
+ * ref to: https://github.com/lobehub/lobe-chat/pull/2935
  */
-export default NextAuth(authConfig);
+export default NextAuth({
+  ...config,
+  adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
+  session: {
+    strategy: 'jwt',
+  },
+});

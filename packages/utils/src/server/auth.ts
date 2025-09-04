@@ -12,9 +12,9 @@ export const getUserAuth = async () => {
   }
 
   if (enableNextAuth) {
-    const { default: NextAuth } = await import('@/libs/next-auth');
+    const { default: NextAuthEdge } = await import('@/libs/next-auth/edge');
 
-    const session = await NextAuth.auth();
+    const session = await NextAuthEdge.auth();
 
     const userId = session?.user.id;
 
