@@ -2,7 +2,7 @@
 
 # Changelog
 
-## [Version 1.123.0](https://github.com/lobehub/lobe-chat/compare/v1.122.7...v1.123.0)
+## [Version 1.123.0](https://github.com/imoogleai/imoogle-ai/compare/v1.122.7...v1.123.0)
 
 <sup>Released on **2025-09-04**</sup>
 
@@ -17,7 +17,7 @@
 
 #### What's improved
 
-- **misc**: Add NewAPI as a router provider for multi-model aggregation, closes [#9041](https://github.com/lobehub/lobe-chat/issues/9041) [/github.com/lobehub/lobe-chat/pull/9041#pullrequestreview-3183464594](https://github.com//github.com/lobehub/lobe-chat/pull/9041/issues/pullrequestreview-3183464594) ([7e291c2](https://github.com/lobehub/lobe-chat/commit/7e291c2))
+- **misc**: Add NewAPI as a router provider for multi-model aggregation, closes [#9041](https://github.com/imoogleai/imoogle-ai/issues/9041) [/github.com/imoogleai/imoogle-ai/pull/9041#pullrequestreview-3183464594](https://github.com//github.com/imoogleai/imoogle-ai/pull/9041/issues/pullrequestreview-3183464594) ([7e291c2](https://github.com/imoogleai/imoogle-ai/commit/7e291c2))
 
 </details>
 
@@ -27,7 +27,7 @@
 
 </div>
 
-### [Version 1.122.7](https://github.com/lobehub/lobe-chat/compare/v1.122.6...v1.122.7)
+### [Version 1.122.7](https://github.com/imoogleai/imoogle-ai/compare/v1.122.6...v1.122.7)
 
 <sup>Released on **2025-09-04**</sup>
 

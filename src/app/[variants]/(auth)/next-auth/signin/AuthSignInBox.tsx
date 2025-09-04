@@ -116,7 +116,7 @@ export default memo(() => {
               <div>
                 <LobeChat size={48} />
               </div>
-              {t('signIn.start.title', { applicationName: 'LobeChat' })}
+              {t('signIn.start.title', { applicationName: 'Imoogle AI' })}
             </Text>
             <Text as={'p'} className={styles.description}>
               {t('signIn.start.subtitle')}

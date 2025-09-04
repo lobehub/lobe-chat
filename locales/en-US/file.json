@@ -40,7 +40,7 @@
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
-    "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
+    "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>Imoogle AI Cloud</3> directly.",
     "features": {
       "allKind": {
         "desc": "Supports mainstream file types, including common document formats like Word, PPT, Excel, PDF, TXT, as well as popular code files like JS and Python.",

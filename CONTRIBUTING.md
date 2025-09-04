@@ -1,8 +1,8 @@
-# Lobe Chat - Contributing Guide 🌟
+# Imoogle AI - Contributing Guide 🌟
 
-We're thrilled that you want to contribute to Lobe Chat, the future of communication! 😄
+We're thrilled that you want to contribute to Imoogle AI, the future of communication! 😄
 
-Lobe Chat is an open-source project, and we welcome your collaboration. Before you jump in, let's make sure you're all set to contribute effectively and have loads of fun along the way!
+Imoogle AI is an open-source project, and we welcome your collaboration. Before you jump in, let's make sure you're all set to contribute effectively and have loads of fun along the way!
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ Lobe Chat is an open-source project, and we welcome your collaboration. Before y
 📦 Clone your forked repository to your local machine using the `git clone` command:
 
 ```bash
-git clone https://github.com/YourUsername/lobe-chat.git
+git clone https://github.com/YourUsername/imoogle-ai.git
 ```
 
 ## Create a New Branch

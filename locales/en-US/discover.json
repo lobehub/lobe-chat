@@ -101,7 +101,7 @@
       "desc1": "Access the settings page for the assistant you want to submit through the settings in the upper right corner of the conversation window;",
       "desc2": "Click the 'Submit to Assistant Marketplace' button in the upper right corner.",
       "tag": "Method One",
-      "title": "Submit via LobeChat"
+      "title": "Submit via Imoogle AI"
     },
     "func2": {
       "button": "Go to GitHub Assistant Repository",
@@ -254,7 +254,7 @@
             "claude": "- Open the **Claude Desktop** app\n- Go to **Settings**, then select **Developer**\n- Click **Edit Configuration**\n- Open the **claude_desktop_config.json** file\n- Copy and paste the server configuration into the existing file, then save",
             "cline": "- Open VS Code with the Cline extension installed\n- Click the Cline icon in the sidebar\n- Select **MCP Servers** from the dropdown menu\n- In the **Remote Servers** tab, enter the server name and your MCP server URL\n- Click **Add Server** to connect",
             "cursor": "- Navigate to **Settings**, then select Cursor settings\n- Choose **MCP** on the left\n- Click **Add New Global MCP Server** at the top right\n- Copy and paste the server configuration into the existing file, then save",
-            "lobeChat": "- Open the **LobeChat Desktop** app\n- Go to **Settings** - **Default Assistant**\n- Then select **Plugin Settings** - **Custom Plugins**\n- Click **Quick Import JSON Configuration**\n- Copy and paste the server configuration into the text box, then install",
+            "lobeChat": "- Open the **Imoogle AI Desktop** app\n- Go to **Settings** - **Default Assistant**\n- Then select **Plugin Settings** - **Custom Plugins**\n- Click **Quick Import JSON Configuration**\n- Copy and paste the server configuration into the text box, then install",
             "openai": "- Open your **OpenAI app** or development environment\n- Configure MCP tools in the **Responses API**\n- Add MCP blocks to the **tools** array in API requests\n- Set **server_url** to your MCP server endpoint\n- Include required authentication headers (API key, token, etc.)\n- Use the `allowed_tools` parameter to restrict exposed tools\n- Set `require_approval` to control tool execution approval",
             "vscode": "- Open VS Code\n- Open the command palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- Type **MCP: Add Server** and select it\n- Choose to add to workspace or user settings\n- Copy and paste the server configuration"
           },
@@ -545,7 +545,7 @@
       "type": "Type"
     },
     "providerInfo": {
-      "apiTooltip": "LobeChat supports using a custom API key for this provider.",
+      "apiTooltip": "Imoogle AI supports using a custom API key for this provider.",
       "input": "Input Price",
       "inputTooltip": "Cost per million tokens",
       "latency": "Latency",

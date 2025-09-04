@@ -2,7 +2,7 @@
 
 [![][image-banner]][vercel-link]
 
-<h1>Lobe Chat</h1>
+<h1>Imoogle AI</h1>
 
 现代化设计的开源 ChatGPT/LLMs 聊天应用与开发框架<br/>
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
@@ -27,7 +27,7 @@
 [![][github-license-shield]][github-license-link]<br>
 [![][sponsor-shield]][sponsor-link]
 
-**分享 LobeChat 给你的好友**
+**分享 Imoogle AI 给你的好友**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
@@ -97,7 +97,7 @@
 我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享。
 同时通过 Bootstrapping 的方式，我们希望能够为开发者和用户提供一个更加开放、更加透明友好的产品生态。
 
-不论普通用户与专业开发者，LobeHub 旨在成为所有人的 AI Agent 实验场。LobeChat 目前正在积极开发中，有任何需求或者问题，欢迎提交 [issues][issues-link]
+不论普通用户与专业开发者，ImoogleAI 旨在成为所有人的 AI Agent 实验场。Imoogle AI 目前正在积极开发中，有任何需求或者问题，欢迎提交 [issues][issues-link]
 
 | [![][vercel-shield-badge]][vercel-link]   | 无需安装或注册！访问我们的网站，快速体验                                     |
 | :---------------------------------------- | :--------------------------------------------------------------------------- |
@@ -111,14 +111,14 @@
 
 <details><summary><kbd>Star History</kbd></summary>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
-    <img src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=imoogleai%2Fimoogle-ai&theme=dark&type=Date">
+    <img src="https://api.star-history.com/svg?repos=imoogleai%2Fimoogle-ai&type=Date">
   </picture>
 </details>
 
 ## ✨ 特性一览
 
-通过 LobeChat 的强大功能，体验为无缝连接、提升效率和无限创意而设计的全新 AI 体验。
+通过 Imoogle AI 的强大功能，体验为无缝连接、提升效率和无限创意而设计的全新 AI 体验。
 
 ### ✨ MCP 插件一键安装
 
@@ -150,7 +150,7 @@
 
 **巅峰性能，零干扰**
 
-获得完整的 LobeChat 体验，摆脱浏览器限制 —— 轻量级、专注且随时就绪。我们的桌面应用程序为你的 AI 交互提供专用环境，确保最佳性能和最小干扰。
+获得完整的 Imoogle AI 体验，摆脱浏览器限制 —— 轻量级、专注且随时就绪。我们的桌面应用程序为你的 AI 交互提供专用环境，确保最佳性能和最小干扰。
 
 体验更快的响应时间、更好的资源管理和与 AI 助手的更稳定连接。桌面应用专为要求 AI 工具最佳性能的用户设计。
 
@@ -197,7 +197,7 @@
 
 ### [支持白板 (Artifacts)][docs-feat-artifacts]
 
-体验集成于 LobeChat 的 Claude Artifacts 能力。这项革命性功能突破了 AI 人机交互的边界，让您能够实时创建和可视化各种格式的内容。
+体验集成于 Imoogle AI 的 Claude Artifacts 能力。这项革命性功能突破了 AI 人机交互的边界，让您能够实时创建和可视化各种格式的内容。
 
 以前所未有的灵活度进行创作与可视化：
 
