@@ -286,12 +286,12 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 40_960,
+    contextWindowTokens: 32_768,
     displayName: 'Qwen3 30B A3B FP8',
     id: 'qwen/qwen3-30b-a3b-fp8',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.09, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -413,7 +413,7 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 32_768,
     description: 'Gemma 3 27B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
     displayName: 'Gemma 3 27B',
     id: 'google/gemma-3-27b-it',
