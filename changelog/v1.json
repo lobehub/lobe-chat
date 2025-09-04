@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.1"
+  },
+  {
     "children": {
       "features": ["Refactor to speed up send message in server mode."]
     },
