@@ -28,7 +28,7 @@ vi.mock('@/libs/clerk-auth', () => ({
   },
 }));
 
-vi.mock('@/libs/next-auth', () => ({
+vi.mock('@/libs/next-auth/edge', () => ({
   default: {
     auth: vi.fn().mockResolvedValue({
       user: {
