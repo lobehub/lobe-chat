@@ -2,6 +2,21 @@
   {
     "children": {
       "features": [
+        "Refactor to speed up send message in server mode."
+      ],
+      "fixes": [
+        "Support base64 image from markdown image syntax."
+      ],
+      "improvements": [
+        "Update the price of the o3 model in OpenRouter."
+      ]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.0"
+  },
+  {
+    "children": {
+      "features": [
         "Add nano banana Chinese prompt notify."
       ],
       "fixes": [
