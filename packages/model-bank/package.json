@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
+    "./cometapi": "./src/aiModels/cometapi.ts",
     "./ai21": "./src/aiModels/ai21.ts",
     "./ai302": "./src/aiModels/ai302.ts",
     "./ai360": "./src/aiModels/ai360.ts",
