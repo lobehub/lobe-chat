@@ -20,6 +20,7 @@ export { default as Skeleton } from './Skeleton';
 export { default as Space } from './Space';
 export { default as Switch } from './Switch';
 export { default as Tag } from './Tag';
+export { default as TextInput } from './TextInput';
 export * from './Toast';
 export { default as Toast } from './Toast';
 export { default as Tooltip } from './Tooltip';
