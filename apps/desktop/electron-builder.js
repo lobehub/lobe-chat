@@ -89,7 +89,10 @@ const config = {
     target:
       // 降低构建时间，nightly 只打 arm64
       isNightly
-        ? [{ arch: ['arm64'], target: 'dmg' }]
+        ? [
+            { arch: ['x64', 'arm64'], target: 'dmg' },
+            { arch: ['x64', 'arm64'], target: 'zip' },
+          ]
         : [
             { arch: ['x64', 'arm64'], target: 'dmg' },
             { arch: ['x64', 'arm64'], target: 'zip' },
