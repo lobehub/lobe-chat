@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 1.123.0](https://github.com/lobehub/lobe-chat/compare/v1.122.7...v1.123.0)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Add NewAPI as a router provider for multi-model aggregation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add NewAPI as a router provider for multi-model aggregation, closes [#9041](https://github.com/lobehub/lobe-chat/issues/9041) [/github.com/lobehub/lobe-chat/pull/9041#pullrequestreview-3183464594](https://github.com//github.com/lobehub/lobe-chat/pull/9041/issues/pullrequestreview-3183464594) ([7e291c2](https://github.com/lobehub/lobe-chat/commit/7e291c2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.7](https://github.com/lobehub/lobe-chat/compare/v1.122.6...v1.122.7)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible, closes [#9088](https://github.com/lobehub/lobe-chat/issues/9088) ([411f88e](https://github.com/lobehub/lobe-chat/commit/411f88e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.122.6](https://github.com/lobehub/lobe-chat/compare/v1.122.5...v1.122.6)
 
 <sup>Released on **2025-09-04**</sup>

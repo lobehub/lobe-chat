@@ -14,6 +14,7 @@ export { LobeMistralAI } from './mistral';
 export { ModelRuntime } from './ModelRuntime';
 export { LobeMoonshotAI } from './moonshot';
 export { LobeNebiusAI } from './nebius';
+export { LobeNewAPIAI } from './newapi';
 export { LobeOllamaAI } from './ollama';
 export { LobeOpenAI } from './openai';
 export { LobeOpenRouterAI } from './openrouter';
