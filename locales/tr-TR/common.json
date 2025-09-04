@@ -182,6 +182,13 @@
     "title": "Ürünümüzü Beğendiniz mi?"
   },
   "fullscreen": "Tam Ekran Modu",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana, Çince kullanıldığında resim oluşturma işlemi bazen başarısız olabilir. Daha iyi sonuçlar için İngilizce kullanmanız önerilir.",
+    "continueGenerate": "Oluşturmaya devam et",
+    "continueSend": "Göndermeye devam et",
+    "doNotShowAgain": "Bir daha gösterme",
+    "title": "Çince Giriş Uyarısı"
+  },
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe aktar",
   "importData": "Veri İçe Aktar",
