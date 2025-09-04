@@ -1,5 +1,19 @@
 [
   {
+    "children": {
+      "features": ["Add NewAPI as a router provider for multi-model aggregation."]
+    },
+    "date": "2025-09-04",
+    "version": "1.123.0"
+  },
+  {
+    "children": {
+      "improvements": ["Make LobeNextAuthDBAdapter Edge Compatible."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.7"
+  },
+  {
     "children": {},
     "date": "2025-09-04",
     "version": "1.122.6"
