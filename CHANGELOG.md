@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.122.3](https://github.com/lobehub/lobe-chat/compare/v1.122.2...v1.122.3)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support base64 image from markdown image syntax.
+
+#### 💄 Styles
+
+- **misc**: Update the price of the o3 model in OpenRouter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support base64 image from markdown image syntax, closes [#9054](https://github.com/lobehub/lobe-chat/issues/9054) ([d013a16](https://github.com/lobehub/lobe-chat/commit/d013a16))
+
+#### Styles
+
+- **misc**: Update the price of the o3 model in OpenRouter, closes [#9075](https://github.com/lobehub/lobe-chat/issues/9075) ([43ef47c](https://github.com/lobehub/lobe-chat/commit/43ef47c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.122.2](https://github.com/lobehub/lobe-chat/compare/v1.122.1...v1.122.2)
 
 <sup>Released on **2025-09-04**</sup>
