@@ -1,7 +1,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import { isEmpty } from 'lodash';
 
-import { PERMISSION_ACTIONS } from '@/const/rbac';
+import { ALL_SCOPE, PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { agents, aiProviders, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -168,9 +168,11 @@ export abstract class BaseService implements IBaseService {
    * @param target 目标资源的条件信息，如果没有传入，则默认查询范围为当前用户，如果传入 ALL，则返回默认全量查询
    * @returns 资源所属用户 ID
    */
-  protected async getResourceBelongTo(target?: TTarget | 'ALL'): Promise<string | undefined> {
+  protected async getResourceBelongTo(
+    target?: TTarget | typeof ALL_SCOPE,
+  ): Promise<string | undefined> {
     // 查询全量数据，则直接返回undefined
-    if (target === 'ALL') {
+    if (target === ALL_SCOPE) {
       return;
     }
 
@@ -245,7 +247,7 @@ export abstract class BaseService implements IBaseService {
    */
   protected async resolveOperationPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
-    resourceInfo?: TTarget | 'ALL',
+    resourceInfo?: TTarget | typeof ALL_SCOPE,
   ): Promise<{
     condition?: { userId?: string };
     isPermitted: boolean;

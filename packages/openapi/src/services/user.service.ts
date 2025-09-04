@@ -1,5 +1,6 @@
 import { and, count, eq, ilike, inArray, ne, or } from 'drizzle-orm';
 
+import { ALL_SCOPE } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { messages, roles, userRoles, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -79,7 +80,7 @@ export class UserService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveOperationPermission('USER_READ', 'ALL');
+      const permissionResult = await this.resolveOperationPermission('USER_READ', ALL_SCOPE);
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户列表');
@@ -502,6 +503,42 @@ export class UserService extends BaseService {
       }));
     } catch (error) {
       return this.handleServiceError(error, '获取用户角色');
+    }
+  }
+
+  /**
+   * 清空用户的角色列表
+   */
+  async clearUserRoles(userId: string): ServiceResult<{ removed: number; userId: string }> {
+    this.log('info', '清空用户角色', { userId });
+
+    try {
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('RBAC_USER_ROLE_UPDATE', {
+        targetUserId: userId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限清空用户角色');
+      }
+
+      // 检查用户是否存在
+      const exist = await this.db.query.users.findFirst({ where: eq(users.id, userId) });
+      if (!exist) {
+        throw this.createNotFoundError(`用户 ${userId} 不存在`);
+      }
+
+      // 统计并删除
+      const beforeCount = await this.db
+        .select({ count: count() })
+        .from(userRoles)
+        .where(eq(userRoles.userId, userId));
+
+      await this.db.delete(userRoles).where(eq(userRoles.userId, userId));
+
+      return { removed: beforeCount[0]?.count || 0, userId };
+    } catch (error) {
+      return this.handleServiceError(error, '清空用户角色');
     }
   }
 }

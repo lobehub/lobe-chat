@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 import {
   PermissionItem,
@@ -206,6 +206,39 @@ export class RoleService extends BaseService {
       });
     } catch (error) {
       this.handleServiceError(error, '更新角色');
+    }
+  }
+
+  /**
+   * Clear a role's permission mappings
+   */
+  async clearRolePermissions(roleId: number): ServiceResult<{ removed: number; roleId: number }> {
+    this.log('info', '清空角色权限', { roleId });
+
+    // 权限检查
+    const permissionResult = await this.resolveOperationPermission('RBAC_ROLE_UPDATE');
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权清空角色权限');
+    }
+
+    try {
+      // 检查角色是否存在
+      const existingRole = await this.db.query.roles.findFirst({ where: eq(roles.id, roleId) });
+      if (!existingRole) {
+        throw this.createNotFoundError(`角色 ID "${roleId}" 不存在`);
+      }
+
+      // 统计并删除
+      const before = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(rolePermissions)
+        .where(eq(rolePermissions.roleId, roleId));
+
+      await this.db.delete(rolePermissions).where(eq(rolePermissions.roleId, roleId));
+
+      return { removed: Number(before[0]?.count || 0), roleId };
+    } catch (error) {
+      this.handleServiceError(error, '清空角色权限');
     }
   }
 }

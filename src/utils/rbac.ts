@@ -1,4 +1,9 @@
-import { PERMISSION_ACTIONS, PERMISSION_SCOPE, RBAC_PERMISSIONS } from '@/const/rbac';
+import {
+  PERMISSION_ACTIONS,
+  type PermissionScope,
+  RBAC_PERMISSIONS,
+  getAllowedScopesForAction,
+} from '@/const/rbac';
 
 /**
  * 获取指定权限的所有scope权限值数组
@@ -7,10 +12,15 @@ import { PERMISSION_ACTIONS, PERMISSION_SCOPE, RBAC_PERMISSIONS } from '@/const/
  * @returns 权限值数组
  */
 export function getAllScopePermissions(key: keyof typeof PERMISSION_ACTIONS): string[] {
-  return PERMISSION_SCOPE.map((scope) => {
-    const permissionKey = `${key}_${scope}` as keyof typeof RBAC_PERMISSIONS;
-    return RBAC_PERMISSIONS[permissionKey];
-  });
+  // 获取允许的scope，有些资源只有all/workspace权限级别的scope
+  const allowed = getAllowedScopesForAction(key);
+
+  return allowed
+    .map((scope) => {
+      const permissionKey = `${key}_${scope}` as keyof typeof RBAC_PERMISSIONS;
+      return RBAC_PERMISSIONS[permissionKey];
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -22,10 +32,17 @@ export function getAllScopePermissions(key: keyof typeof PERMISSION_ACTIONS): st
  */
 export function getScopePermissions(
   key: keyof typeof PERMISSION_ACTIONS,
-  scopes: (typeof PERMISSION_SCOPE)[number][],
+  scopes: PermissionScope[],
 ): string[] {
-  return scopes.map((scope) => {
-    const permissionKey = `${key}_${scope}` as keyof typeof RBAC_PERMISSIONS;
-    return RBAC_PERMISSIONS[permissionKey];
-  });
+  // 获取允许的scope，有些资源只有all/workspace权限级别的scope
+  const allowed = new Set(getAllowedScopesForAction(key));
+
+  // 过滤掉不允许的scope
+  return scopes
+    .filter((scope) => allowed.has(scope))
+    .map((scope) => {
+      const permissionKey = `${key}_${scope}` as keyof typeof RBAC_PERMISSIONS;
+      return RBAC_PERMISSIONS[permissionKey];
+    })
+    .filter(Boolean);
 }

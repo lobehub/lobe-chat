@@ -34,12 +34,9 @@ export class MessageTranslateService extends BaseService {
     }
 
     // 权限检查 - 读取翻译信息
-    const translateReadPermission = await this.resolveOperationPermission(
-      'MESSAGE_TRANSLATE_READ',
-      {
-        targetMessageId: messageId,
-      },
-    );
+    const translateReadPermission = await this.resolveOperationPermission('TRANSLATION_READ', {
+      targetMessageId: messageId,
+    });
     if (!translateReadPermission.isPermitted) {
       throw this.createAuthorizationError(
         translateReadPermission.message || '无权访问此消息的翻译',
@@ -226,6 +223,40 @@ export class MessageTranslateService extends BaseService {
       };
     } catch (error) {
       this.handleServiceError(error, '获取消息内容和 sessionId');
+    }
+  }
+
+  /**
+   * 删除指定消息的翻译信息
+   * @param messageId 消息ID
+   * @returns 删除结果
+   */
+  async deleteTranslateByMessageId(
+    messageId: string,
+  ): ServiceResult<{ deleted: boolean; messageId: string }> {
+    // 权限检查 - 删除翻译，翻译的归属是跟着消息走的，因此检查消息的权限即可
+    const translateDeletePermission = await this.resolveOperationPermission('TRANSLATION_DELETE', {
+      targetMessageId: messageId,
+    });
+    if (!translateDeletePermission.isPermitted) {
+      throw this.createAuthorizationError(translateDeletePermission.message || '无权删除翻译');
+    }
+
+    try {
+      // 检查翻译消息是否存在
+      const originalTranslation = await this.db.query.messageTranslates.findFirst({
+        where: eq(messageTranslates.id, messageId),
+      });
+
+      if (!originalTranslation) {
+        throw this.createNotFoundError('翻译消息不存在');
+      }
+
+      await this.db.delete(messageTranslates).where(eq(messageTranslates.id, messageId));
+
+      return { deleted: true, messageId };
+    } catch (error) {
+      this.handleServiceError(error, '删除翻译信息');
     }
   }
 }

@@ -73,4 +73,23 @@ export class MessageTranslateController extends BaseController {
       return this.handleError(c, error);
     }
   }
+
+  /**
+   * 删除消息的翻译信息
+   * DELETE /api/v1/message-translates/:messageId
+   */
+  async handleDeleteTranslate(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const { messageId } = this.getParams<{ messageId: string }>(c);
+
+      const db = await this.getDatabase();
+      const translateService = new MessageTranslateService(db, userId);
+      const result = await translateService.deleteTranslateByMessageId(messageId);
+
+      return this.success(c, result, '删除翻译信息成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
 }

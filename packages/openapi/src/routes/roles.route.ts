@@ -74,6 +74,25 @@ RolesRoutes.get(
 );
 
 /**
+ * Clear role permissions mapping
+ * DELETE /api/v1/roles/:id/permissions 清空角色的权限列表
+ */
+RolesRoutes.delete(
+  '/:id/permissions',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_ROLE_UPDATE', ['ALL', 'WORKSPACE']),
+    'You do not have permission to clear role permissions',
+  ),
+  zValidator('param', RoleIdParamSchema),
+  async (c) => {
+    const roleController = new RoleController();
+
+    return roleController.clearRolePermissions(c);
+  },
+);
+
+/**
  * Update role information
  * PUT /api/v1/roles/:id 更新角色信息
  * Requires role update permission (admin only)

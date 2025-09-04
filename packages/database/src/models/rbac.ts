@@ -98,7 +98,7 @@ export class RbacModel {
       .where(
         and(
           eq(userRoles.userId, targetUserId),
-          eq(permissions.code, permissionCode),
+          inArray(permissions.code, [permissionCode]),
           eq(roles.isActive, true),
           eq(permissions.isActive, true),
           // Check if role assignment is not expired
@@ -149,26 +149,10 @@ export class RbacModel {
   hasAllPermissions = async (permissionCodes: string[], userId?: string): Promise<boolean> => {
     if (permissionCodes.length === 0) return true;
 
-    const targetUserId = userId || this.userId;
-
-    const result = await this.db
-      .select({ count: sql<number>`count(DISTINCT ${permissions.code})` })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          inArray(permissions.code, permissionCodes),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      );
-
-    return (result[0]?.count || 0) === permissionCodes.length;
+    const checks = await Promise.all(
+      permissionCodes.map((code) => this.hasPermission(code, userId)),
+    );
+    return checks.every(Boolean);
   };
 
   /**

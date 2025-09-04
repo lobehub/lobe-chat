@@ -161,6 +161,24 @@ export class UserController extends BaseController {
   }
 
   /**
+   * 清空用户角色
+   * DELETE /api/v1/users/:id/roles
+   */
+  async clearUserRoles(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<{ id: string }>(c);
+
+      const db = await this.getDatabase();
+      const userService = new UserService(db, this.getUserId(c));
+      const result = await userService.clearUserRoles(id);
+
+      return this.success(c, result, '已清空用户角色');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * 获取用户角色信息
    * GET /api/v1/users/:id/roles
    * @param c Hono Context

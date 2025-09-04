@@ -146,4 +146,23 @@ UserRoutes.patch(
   },
 );
 
+/**
+ * 清空用户的角色列表
+ * DELETE /api/v1/users/:id/roles
+ * 需要用户角色更新权限
+ */
+UserRoutes.delete(
+  '/:id/roles',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('RBAC_USER_ROLE_UPDATE'),
+    '您没有权限清空该用户的角色',
+  ),
+  zValidator('param', UserIdParamSchema),
+  async (c) => {
+    const userController = new UserController();
+    return await userController.clearUserRoles(c);
+  },
+);
+
 export default UserRoutes;

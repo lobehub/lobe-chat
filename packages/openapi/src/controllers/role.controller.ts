@@ -72,6 +72,24 @@ export class RoleController extends BaseController {
   }
 
   /**
+   * Clear role permissions mapping
+   * DELETE /api/v1/roles/:id/permissions
+   */
+  async clearRolePermissions(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<{ id: number }>(c);
+      const roleId = id;
+      const db = await this.getDatabase();
+      const roleService = new RoleService(db, this.getUserId(c));
+      const result = await roleService.clearRolePermissions(roleId);
+
+      return this.success(c, result, '角色权限已清空');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * Update role information by ID
    * PUT /api/v1/roles/:id
    * @param c Hono Context

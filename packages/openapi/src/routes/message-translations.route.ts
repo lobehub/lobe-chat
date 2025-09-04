@@ -44,7 +44,7 @@ MessageTranslatesRoutes.get(
     'You do not have permission to read message translations',
   ),
   requireAnyPermission(
-    getAllScopePermissions('MESSAGE_TRANSLATE_READ'),
+    getAllScopePermissions('TRANSLATION_READ'),
     'You do not have permission to read message translations',
   ),
   zValidator('param', MessageTranslateQueryRequestSchema),
@@ -63,7 +63,7 @@ MessageTranslatesRoutes.put(
     'You do not have permission to update translation configuration',
   ),
   requireAnyPermission(
-    getAllScopePermissions('MESSAGE_TRANSLATE_UPDATE'),
+    getAllScopePermissions('TRANSLATION_UPDATE'),
     'You do not have permission to update message translations',
   ),
   zValidator('param', MessageTranslateQueryRequestSchema),
@@ -71,6 +71,25 @@ MessageTranslatesRoutes.put(
   (c) => {
     const controller = new MessageTranslateController();
     return controller.handleUpdateTranslateInfo(c);
+  },
+);
+
+// DELETE /api/v1/message-translates/:messageId - 删除消息翻译信息
+MessageTranslatesRoutes.delete(
+  '/:messageId',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_UPDATE'),
+    'You do not have permission to delete translation',
+  ),
+  requireAnyPermission(
+    getAllScopePermissions('TRANSLATION_DELETE'),
+    'You do not have permission to delete translation',
+  ),
+  zValidator('param', MessageTranslateQueryRequestSchema),
+  (c) => {
+    const controller = new MessageTranslateController();
+    return controller.handleDeleteTranslate(c);
   },
 );
 
