@@ -249,7 +249,9 @@ export const generateAIChatV2: StateCreator<
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
 
-      await internal_updateMessageRAG(assistantId, { ragQueryId, fileChunks });
+      if (fileChunks.length > 0) {
+        await internal_updateMessageRAG(assistantId, { ragQueryId, fileChunks });
+      }
     }
 
     // 3. place a search with the search working model if this model is not support tool use
