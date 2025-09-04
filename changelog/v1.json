@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Refactor to speed up send message in server mode."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix socks5 proxy not work problem, fix virtuaso minheight was null."]
     },
     "date": "2025-09-03",

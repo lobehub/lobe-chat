@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.122.0](https://github.com/lobehub/lobe-chat/compare/v1.121.1...v1.122.0)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor to speed up send message in server mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor to speed up send message in server mode, closes [#9046](https://github.com/lobehub/lobe-chat/issues/9046) ([4813b6d](https://github.com/lobehub/lobe-chat/commit/4813b6d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.121.1](https://github.com/lobehub/lobe-chat/compare/v1.121.0...v1.121.1)
 
 <sup>Released on **2025-09-03**</sup>
