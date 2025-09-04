@@ -182,6 +182,13 @@
     "title": "Está gostando do nosso produto?"
   },
   "fullscreen": "Modo de Tela Cheia",
+  "geminiImageChineseWarning": {
+    "content": "O Nano Banana pode falhar ao gerar imagens ao usar o chinês. Recomendamos usar inglês para obter melhores resultados.",
+    "continueGenerate": "Continuar gerando",
+    "continueSend": "Continuar enviando",
+    "doNotShowAgain": "Não mostrar novamente",
+    "title": "Aviso sobre entrada em chinês"
+  },
   "historyRange": "Intervalo de histórico",
   "import": "Importar",
   "importData": "Importar dados",
