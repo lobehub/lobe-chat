@@ -27,7 +27,7 @@ jobs:
       matrix:
         include:
           - platform: linux/amd64
-            os: ubuntu-latest
+            os: ubuntu-latest-4-cores
           - platform: linux/arm64
             os: ubuntu-24.04-arm
     runs-on: ${{ matrix.os }}
