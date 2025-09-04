@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -10,7 +10,7 @@ import { UserGuide, UserPreference } from '@/types/user';
 import { getTestDBInstance } from '../../../core/dbForTest';
 import { SessionModel } from '../../../models/session';
 import { UserModel, UserNotFoundError } from '../../../models/user';
-import { UserSettingsItem, userSettings, users } from '../../../schemas';
+import { UserSettingsItem, nextauthAccounts, userSettings, users } from '../../../schemas';
 
 let serverDB = await getTestDBInstance();
 
@@ -405,6 +405,80 @@ describe('UserModel', () => {
             tts: {},
           },
         });
+      });
+    });
+  });
+
+  describe('getUserSSOProviders', () => {
+    it('should get user SSO providers from nextauth accounts', async () => {
+      // Insert a user and associated OAuth account
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(nextauthAccounts).values({
+        userId,
+        type: 'oauth',
+        provider: 'github',
+        providerAccountId: '123456',
+        expires_at: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+        scope: 'user:email',
+      } as any);
+
+      const result = await userModel.getUserSSOProviders();
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        provider: 'github',
+        providerAccountId: '123456',
+        type: 'oauth',
+        userId,
+        scope: 'user:email',
+      });
+      expect(result[0].expiresAt).toBeDefined();
+    });
+
+    it('should return empty array when no SSO providers exist', async () => {
+      await serverDB.insert(users).values({ id: userId });
+
+      const result = await userModel.getUserSSOProviders();
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('static methods', () => {
+    describe('makeSureUserExist', () => {
+      it('should create user if not exists', async () => {
+        const newUserId = 'new-user-123';
+
+        // Ensure user doesn't exist
+        const existingUser = await serverDB.query.users.findFirst({
+          where: eq(users.id, newUserId),
+        });
+        expect(existingUser).toBeUndefined();
+
+        // Call makeSureUserExist
+        await UserModel.makeSureUserExist(serverDB, newUserId);
+
+        // Verify user was created
+        const createdUser = await serverDB.query.users.findFirst({
+          where: eq(users.id, newUserId),
+        });
+        expect(createdUser).toBeDefined();
+        expect(createdUser?.id).toBe(newUserId);
+      });
+
+      it('should not create duplicate user if already exists', async () => {
+        // Create user first
+        await serverDB.insert(users).values({ id: userId });
+
+        // Call makeSureUserExist again
+        await UserModel.makeSureUserExist(serverDB, userId);
+
+        // Verify there's still only one user with this ID
+        const userCount = await serverDB
+          .select({ count: count() })
+          .from(users)
+          .where(eq(users.id, userId));
+
+        expect(userCount[0].count).toBe(1);
       });
     });
   });
