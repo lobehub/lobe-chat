@@ -1,6 +1,6 @@
 'use client';
 
-import { useQueryState } from 'nuqs';
+import { parseAsString, useQueryState } from 'nuqs';
 
 import { isCustomBranding } from '@/const/version';
 
@@ -10,7 +10,7 @@ import ProviderDetailPage from '../detail';
 import Footer from './Footer';
 
 const Page = (props: { mobile?: boolean }) => {
-  const [Provider, setProvider] = useQueryState('provider');
+  const [Provider, setProvider] = useQueryState('provider', parseAsString.withDefault('all'));
   const { mobile } = props;
   const ProviderLayout = mobile ? MobileLayout : DesktopLayout;
   return (

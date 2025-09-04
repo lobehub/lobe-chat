@@ -1,7 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { WalletCards } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -15,12 +15,6 @@ const All = memo((props: { onClick: (activeTab: string) => void }) => {
   const { styles, cx } = useStyles();
   const searchParams = useSearchParams();
   const activeKey = searchParams.get('provider');
-
-  useEffect(() => {
-    if (!activeKey) {
-      onClick(PROVIDER_ALL_PATH);
-    }
-  });
 
   return (
     <div
