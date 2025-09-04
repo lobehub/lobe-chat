@@ -172,7 +172,16 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
       };
 
       controller.enqueue(chunk);
-
+      if (data.usage) {
+        controller.enqueue({
+          choices: [],
+          created: data.created,
+          id: data.id,
+          model: data.model,
+          object: 'chat.completion.chunk',
+          usage: data.usage,
+        } as unknown as OpenAI.ChatCompletionChunk);
+      }
       controller.enqueue({
         choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
@@ -188,7 +197,6 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
         model: data.model,
         object: 'chat.completion.chunk',
         system_fingerprint: data.system_fingerprint,
-        ...(data.usage ? { usage: data.usage } : {}),
       } as OpenAI.ChatCompletionChunk);
       controller.close();
     },
