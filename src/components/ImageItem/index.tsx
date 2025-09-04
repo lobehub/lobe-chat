@@ -71,13 +71,13 @@ const ImageItem = memo<ImageItemProps>(
         alt={alt || ''}
         alwaysShowActions={alwaysShowClose}
         className={className}
+        classNames={{ wrapper: cx(styles.image, editable && styles.editableImage) }}
         height={isSafari ? 'auto' : '100%'}
         isLoading={loading}
         preview={preview}
         size={IMAGE_SIZE as any}
         src={url}
         style={{ height: isSafari ? 'auto' : '100%', width: '100%', ...style }}
-        wrapperClassName={cx(styles.image, editable && styles.editableImage)}
       />
     );
   },
