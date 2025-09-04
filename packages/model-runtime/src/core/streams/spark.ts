@@ -66,6 +66,7 @@ export function transformSparkResponseToStream(data: OpenAI.ChatCompletion) {
         model: data.model,
         object: 'chat.completion.chunk',
         system_fingerprint: data.system_fingerprint,
+        ...(data.usage ? { usage: data.usage } : {}),
       } as OpenAI.ChatCompletionChunk);
       controller.close();
     },
