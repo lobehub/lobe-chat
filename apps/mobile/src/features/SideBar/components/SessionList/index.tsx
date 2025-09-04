@@ -43,10 +43,12 @@ export default function SideBar() {
     <View style={styles.container}>
       {/* 搜索栏 */}
       <TextInput
+        multiline={false}
         onChangeText={setSearchText}
         placeholder={t('session.search.placeholder', { ns: 'chat' })}
         placeholderTextColor={token.colorTextPlaceholder}
         style={styles.searchInput}
+        underlineColorAndroid="transparent"
         value={searchText}
       />
 
