@@ -2,7 +2,7 @@ import { isDesktop } from '@/const/version';
 import { LobeBuiltinTool } from '@/types/tool';
 
 import { ArtifactsManifest } from './artifacts';
-import { DalleManifest } from './dalle';
+import { ImageGeneratorManifest } from './image-generator';
 import { LocalSystemManifest } from './local-system';
 import { WebBrowsingManifest } from './web-browsing';
 
@@ -13,8 +13,8 @@ export const builtinTools: LobeBuiltinTool[] = [
     type: 'builtin',
   },
   {
-    identifier: DalleManifest.identifier,
-    manifest: DalleManifest,
+    identifier: ImageGeneratorManifest.identifier,
+    manifest: ImageGeneratorManifest,
     type: 'builtin',
   },
   {

@@ -37,6 +37,7 @@ import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
+import { LobePollinationsAI } from './pollinations';
 import { LobePPIOAI } from './ppio';
 import { LobeQiniuAI } from './qiniu';
 import { LobeQwenAI } from './qwen';
@@ -99,6 +100,7 @@ export const providerRuntimeMap = {
   openai: LobeOpenAI,
   openrouter: LobeOpenRouterAI,
   perplexity: LobePerplexityAI,
+  pollinations: LobePollinationsAI,
   ppio: LobePPIOAI,
   qiniu: LobeQiniuAI,
   qwen: LobeQwenAI,
