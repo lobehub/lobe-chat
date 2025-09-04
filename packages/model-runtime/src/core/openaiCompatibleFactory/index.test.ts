@@ -403,8 +403,9 @@ describe('LobeOpenAICompatibleFactory', () => {
 
           'id: output_speed\n',
           'event: speed\n',
-          'data: {"tps":5000,"ttft":0}\n\n',
+          'data: {"tps":5000,"ttft":1}\n\n',
 
+          'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
@@ -472,8 +473,9 @@ describe('LobeOpenAICompatibleFactory', () => {
 
           'id: output_speed\n',
           'event: speed\n',
-          'data: {"tps":5000,"ttft":0}\n\n',
+          'data: {"tps":1666.6666666666667,"ttft":1}\n\n',
 
+          'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
