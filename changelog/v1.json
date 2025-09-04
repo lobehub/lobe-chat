@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Make LobeNextAuthDBAdapter Edge Compatible."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.7"
+  },
+  {
     "children": {},
     "date": "2025-09-04",
     "version": "1.122.6"
