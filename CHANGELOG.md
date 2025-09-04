@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version&nbsp;1.122.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.122.0...v1.122.1)
+<sup>Released on **2025-09-04**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible.
+
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Make LobeNextAuthDBAdapter Edge Compatible, closes [#8188](https://github.com/jaworldwideorg/OneJA-Bot/issues/8188) ([f456e91](https://github.com/jaworldwideorg/OneJA-Bot/commit/f456e91))
+
+
+
+#### Styles
+
+* **misc**: Update i18n, closes [#9062](https://github.com/jaworldwideorg/OneJA-Bot/issues/9062) ([970ece0](https://github.com/jaworldwideorg/OneJA-Bot/commit/970ece0))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.122.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.121.0...v1.122.0)
 <sup>Released on **2025-09-04**</sup>
 
