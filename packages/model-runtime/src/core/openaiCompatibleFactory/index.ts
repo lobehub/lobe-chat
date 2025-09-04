@@ -124,6 +124,29 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
   return new ReadableStream({
     start(controller) {
       const choices = data.choices || [];
+      const first = choices[0];
+      // 兼容：非流式里 DeepSeek 等会把“深度思考”放在 message.reasoning_content
+      const message: any = first?.message ?? {};
+      const reasoningText =
+        typeof message.reasoning_content === 'string' && message.reasoning_content.length > 0
+          ? message.reasoning_content
+          : null;
+      if (reasoningText) {
+        controller.enqueue({
+          choices: [
+            {
+              delta: { content: null, reasoning_content: reasoningText, role: 'assistant' },
+              finish_reason: null,
+              index: first?.index ?? 0,
+              logprobs: first?.logprobs ?? null,
+            },
+          ],
+          created: data.created,
+          id: data.id,
+          model: data.model,
+          object: 'chat.completion.chunk',
+        } as unknown as OpenAI.ChatCompletionChunk);
+      }
       const chunk: OpenAI.ChatCompletionChunk = {
         choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
