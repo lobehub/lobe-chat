@@ -182,6 +182,13 @@
     "title": "Yêu thích sản phẩm của chúng tôi?"
   },
   "fullscreen": "Chế độ toàn màn hình",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana khi sử dụng tiếng Trung có khả năng không tạo được hình ảnh. Khuyến nghị sử dụng tiếng Anh để có kết quả tốt hơn.",
+    "continueGenerate": "Tiếp tục tạo",
+    "continueSend": "Tiếp tục gửi",
+    "doNotShowAgain": "Không hiển thị lại",
+    "title": "Thông báo nhập tiếng Trung"
+  },
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập khẩu",
   "importData": "Nhập dữ liệu",

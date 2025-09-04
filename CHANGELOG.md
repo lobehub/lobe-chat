@@ -2,6 +2,148 @@
 
 # Changelog
 
+### [Version 1.122.6](https://github.com/lobehub/lobe-chat/compare/v1.122.5...v1.122.6)
+
+<sup>Released on **2025-09-04**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.5](https://github.com/lobehub/lobe-chat/compare/v1.122.4...v1.122.5)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible, closes [#8188](https://github.com/lobehub/lobe-chat/issues/8188) ([f456e91](https://github.com/lobehub/lobe-chat/commit/f456e91))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.4](https://github.com/lobehub/lobe-chat/compare/v1.122.3...v1.122.4)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9062](https://github.com/lobehub/lobe-chat/issues/9062) ([970ece0](https://github.com/lobehub/lobe-chat/commit/970ece0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.3](https://github.com/lobehub/lobe-chat/compare/v1.122.2...v1.122.3)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support base64 image from markdown image syntax.
+
+#### 💄 Styles
+
+- **misc**: Update the price of the o3 model in OpenRouter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support base64 image from markdown image syntax, closes [#9054](https://github.com/lobehub/lobe-chat/issues/9054) ([d013a16](https://github.com/lobehub/lobe-chat/commit/d013a16))
+
+#### Styles
+
+- **misc**: Update the price of the o3 model in OpenRouter, closes [#9075](https://github.com/lobehub/lobe-chat/issues/9075) ([43ef47c](https://github.com/lobehub/lobe-chat/commit/43ef47c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.2](https://github.com/lobehub/lobe-chat/compare/v1.122.1...v1.122.2)
+
+<sup>Released on **2025-09-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **modelProvider**: Add lmstudio to provider whitelist to enable fetchOnClient toggle.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **modelProvider**: Add lmstudio to provider whitelist to enable fetchOnClient toggle, closes [#9067](https://github.com/lobehub/lobe-chat/issues/9067) ([e58864f](https://github.com/lobehub/lobe-chat/commit/e58864f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.122.1](https://github.com/lobehub/lobe-chat/compare/v1.122.0...v1.122.1)
+
+<sup>Released on **2025-09-04**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.122.0](https://github.com/lobehub/lobe-chat/compare/v1.121.1...v1.122.0)
 
 <sup>Released on **2025-09-04**</sup>

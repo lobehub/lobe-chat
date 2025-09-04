@@ -9,7 +9,7 @@ import { keyVaultsConfigSelectors } from './keyVaults';
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;
 
-const providerWhitelist = new Set(['ollama']);
+const providerWhitelist = new Set(['ollama', 'lmstudio']);
 /**
  * @description The conditions to enable client fetch
  * 1. If no baseUrl and apikey input, force on Server.

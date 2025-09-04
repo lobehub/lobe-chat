@@ -1,5 +1,42 @@
 [
   {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.6"
+  },
+  {
+    "children": {
+      "improvements": ["Make LobeNextAuthDBAdapter Edge Compatible."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.4"
+  },
+  {
+    "children": {
+      "fixes": ["Support base64 image from markdown image syntax."],
+      "improvements": ["Update the price of the o3 model in OpenRouter."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.3"
+  },
+  {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.2"
+  },
+  {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.1"
+  },
+  {
     "children": {
       "features": ["Refactor to speed up send message in server mode."]
     },
