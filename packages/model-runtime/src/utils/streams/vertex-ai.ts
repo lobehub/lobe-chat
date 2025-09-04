@@ -1,9 +1,9 @@
 import { GenerateContentResponse } from '@google/genai';
 
-import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
-import { nanoid } from '@/utils/uuid';
 
+import { ModelTokensUsage } from '../../types';
+import { nanoid } from '../uuid';
 import { type GoogleAIStreamOptions } from './google-ai';
 import {
   StreamContext,

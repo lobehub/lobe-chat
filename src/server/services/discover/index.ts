@@ -732,7 +732,7 @@ export class DiscoverService {
   private _getProviderList = async (): Promise<DiscoverProviderItem[]> => {
     log('_getProviderList: fetching provider list');
     const [{ LOBE_DEFAULT_MODEL_LIST }, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
-      import('@/config/aiModels'),
+      import('model-bank'),
       import('@/config/modelProviders'),
     ]);
     const result = DEFAULT_MODEL_PROVIDER_LIST.map((item) => {
@@ -758,7 +758,7 @@ export class DiscoverService {
   }): Promise<DiscoverProviderDetail | undefined> => {
     log('getProviderDetail: params=%O', params);
     const { identifier, locale, withReadme } = params;
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
     const all = await this._getProviderList();
     let provider = all.find((item) => item.identifier === identifier);
     if (!provider) {
@@ -894,7 +894,7 @@ export class DiscoverService {
 
   private _getRawModelList = async (): Promise<DiscoverModelItem[]> => {
     log('_getRawModelList: fetching raw model list');
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
     const result = LOBE_DEFAULT_MODEL_LIST.map((item) => {
       const identifier = (item.id.split('/').at(-1) || item.id).toLowerCase();
       const providers = uniq(
@@ -987,7 +987,7 @@ export class DiscoverService {
   getModelCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
     log('getModelCategories: params=%O', params);
     const { q } = params;
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
     let list = LOBE_DEFAULT_MODEL_LIST;
     if (q) {
       const originalCount = list.length;
@@ -1022,7 +1022,7 @@ export class DiscoverService {
   }): Promise<DiscoverModelDetail | undefined> => {
     log('getModelDetail: params=%O', params);
     const [{ LOBE_DEFAULT_MODEL_LIST }, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
-      import('@/config/aiModels'),
+      import('model-bank'),
       import('@/config/modelProviders'),
     ]);
     const { identifier } = params;

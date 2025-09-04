@@ -5,7 +5,7 @@ import { SearXNGClient } from './client';
 import { hetongxue } from './fixtures/searXNG';
 import { SearXNGImpl } from './index';
 
-vi.mock('@/config/tools', () => ({
+vi.mock('@/envs/tools', () => ({
   toolsEnv: {
     SEARXNG_URL: 'https://demo.com',
   },

@@ -6,6 +6,7 @@ import {
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
 } from '@/const/settings';
+import type { UserStore } from '@/store/user';
 import { HotkeyId } from '@/types/hotkey';
 import {
   GlobalLLMProviderKey,
@@ -14,8 +15,6 @@ import {
   UserSettings,
 } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
-
-import { UserStore } from '../../../store';
 
 export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSettings, s.settings);
 

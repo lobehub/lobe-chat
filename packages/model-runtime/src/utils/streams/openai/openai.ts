@@ -3,8 +3,8 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError, CitationItem } from '@/types/message';
 
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../error';
 import { ChatStreamCallbacks } from '../../../types';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../types/error';
 import { convertUsage } from '../../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,
@@ -19,6 +19,28 @@ import {
   createTokenSpeedCalculator,
   generateToolCallId,
 } from '../protocol';
+
+// Process markdown base64 images: extract URLs and clean text in one pass
+const processMarkdownBase64Images = (text: string): { cleanedText: string, urls: string[]; } => {
+  if (!text) return { cleanedText: text, urls: [] };
+  
+  const urls: string[] = [];
+  const mdRegex = /!\[[^\]]*]\(\s*(data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+)\s*\)/g;
+  let cleanedText = text;
+  let m: RegExpExecArray | null;
+  
+  // Reset regex lastIndex to ensure we start from the beginning
+  mdRegex.lastIndex = 0;
+  
+  while ((m = mdRegex.exec(text)) !== null) {
+    if (m[1]) urls.push(m[1]);
+  }
+  
+  // Remove all markdown base64 image segments
+  cleanedText = text.replaceAll(mdRegex, '').trim();
+  
+  return { cleanedText, urls };
+};
 
 const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
@@ -96,6 +118,36 @@ const transformOpenAIStream = (
       }
     }
 
+    // Handle image preview chunks (e.g. Gemini 2.5 flash image preview)
+    // Example shape:
+    // choices[0].delta.images = [{ type: 'image_url', image_url: { url: 'data:image/png;base64,...' }, index: 0 }]
+    if (
+      (item as any).delta &&
+      Array.isArray((item as any).delta.images) &&
+      (item as any).delta.images.length > 0
+    ) {
+      const images = (item as any).delta.images as any[];
+
+      return images
+        .map((img) => {
+          // support multiple possible shapes for the url
+          const url =
+            img?.image_url?.url ||
+            img?.image_url?.image_url?.url ||
+            img?.url ||
+            (typeof img === 'string' ? img : undefined);
+
+          if (!url) return null;
+
+          return {
+            data: url,
+            id: chunk.id,
+            type: 'base64_image',
+          } as StreamProtocolChunk;
+        })
+        .filter(Boolean) as StreamProtocolChunk[];
+    }
+
     // 给定结束原因
     if (item.finish_reason) {
       // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
@@ -107,7 +159,19 @@ const transformOpenAIStream = (
           return { data: null, id: chunk.id, type: 'text' };
         }
 
-        return { data: item.delta.content, id: chunk.id, type: 'text' };
+
+        const text = item.delta.content as string;
+        const { urls: images, cleanedText: cleaned } = processMarkdownBase64Images(text);
+        if (images.length > 0) {
+          const arr: StreamProtocolChunk[] = [];
+          if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
+          arr.push(
+            ...images.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+          );
+          return arr;
+        }
+
+        return { data: text, id: chunk.id, type: 'text' };
       }
 
       // OpenAI Search Preview 模型返回引用源
@@ -188,6 +252,18 @@ const transformOpenAIStream = (
       let reasoning_content = (() => {
         if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
         if ('reasoning' in item.delta) return item.delta.reasoning;
+        // Handle content array format with thinking blocks (e.g. mistral AI Magistral model)
+        if ('content' in item.delta && Array.isArray(item.delta.content)) {
+          return item.delta.content
+            .filter((block: any) => block.type === 'thinking' && Array.isArray(block.thinking))
+            .map((block: any) =>
+              block.thinking
+                .filter((thinkItem: any) => thinkItem.type === 'text' && thinkItem.text)
+                .map((thinkItem: any) => thinkItem.text)
+                .join(''),
+            )
+            .join('');
+        }
         return null;
       })();
 
@@ -221,6 +297,12 @@ const transformOpenAIStream = (
           streamContext.thinkingInContent = false;
         }
 
+        // 如果 content 是空字符串但 chunk 带有 usage，则优先返回 usage（例如 Gemini image-preview 最终会在单独的 chunk 中返回 usage）
+        if (content === '' && chunk.usage) {
+          const usage = chunk.usage;
+          return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+        }
+
         // 判断是否有 citations 内容，更新 returnedCitation 状态
         if (!streamContext?.returnedCitation) {
           const citations =
@@ -236,7 +318,7 @@ const transformOpenAIStream = (
           if (citations) {
             streamContext.returnedCitation = true;
 
-            return [
+            const baseChunks: StreamProtocolChunk[] = [
               {
                 data: {
                   citations: (citations as any[])
@@ -255,6 +337,20 @@ const transformOpenAIStream = (
                 type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
               },
             ];
+            return baseChunks;
+          }
+        }
+
+        // 非思考模式下，额外解析 markdown 中的 base64 图片，按顺序输出 text -> base64_image
+        if (!streamContext?.thinkingInContent) {
+          const { urls, cleanedText: cleaned } = processMarkdownBase64Images(thinkingContent);
+          if (urls.length > 0) {
+            const arr: StreamProtocolChunk[] = [];
+            if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
+            arr.push(
+              ...urls.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+            );
+            return arr;
           }
         }
 

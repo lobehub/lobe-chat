@@ -1,13 +1,12 @@
 'use client';
 
+import { RAGEvalDataSetItem } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
-
-import { RAGEvalDataSetItem } from '@/types/eval';
 
 import Item from './Item';
 

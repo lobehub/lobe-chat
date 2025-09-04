@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 
-import { ILobeAgentRuntimeErrorType } from '../error';
 import { ChatStreamPayload } from './chat';
+import { ILobeAgentRuntimeErrorType } from './error';
 
 export interface AgentInitErrorPayload {
   error: object;
@@ -32,6 +32,7 @@ export enum ModelProvider {
   Ai302 = 'ai302',
   Ai360 = 'ai360',
   AiHubMix = 'aihubmix',
+  AkashChat = 'akashchat',
   Anthropic = 'anthropic',
   Azure = 'azure',
   AzureAI = 'azureai',
@@ -58,6 +59,7 @@ export enum ModelProvider {
   Mistral = 'mistral',
   ModelScope = 'modelscope',
   Moonshot = 'moonshot',
+  Nebius = 'nebius',
   Novita = 'novita',
   Nvidia = 'nvidia',
   Ollama = 'ollama',

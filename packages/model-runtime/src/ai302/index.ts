@@ -1,5 +1,5 @@
-import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
@@ -40,7 +40,7 @@ export const Lobe302AI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: Ai302ModelCard[] = modelsPage.data;
 
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'ai302');
   },
   provider: ModelProvider.Ai302,
 });

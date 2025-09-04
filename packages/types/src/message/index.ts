@@ -1,8 +1,9 @@
-import { UploadFileItem } from '@/types/files';
+import { UploadFileItem } from '../files';
 
 export * from './base';
 export * from './chat';
 export * from './image';
+export * from './rag';
 export * from './tools';
 
 export interface SendMessageParams {

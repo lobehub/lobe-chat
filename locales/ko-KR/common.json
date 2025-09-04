@@ -182,6 +182,13 @@
     "title": "우리 제품을 좋아하십니까?"
   },
   "fullscreen": "전체 화면",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana는 중국어 사용 시 이미지 생성에 실패할 가능성이 있습니다. 더 나은 결과를 위해 영어 사용을 권장합니다.",
+    "continueGenerate": "계속 생성",
+    "continueSend": "계속 전송",
+    "doNotShowAgain": "다시 표시하지 않음",
+    "title": "중국어 입력 안내"
+  },
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importData": "데이터 가져오기",

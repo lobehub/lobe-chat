@@ -4,16 +4,11 @@
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
-import { CreateImagePayload, CreateImageResponse } from '@/libs/model-runtime/types/image';
-import {
-  CreateImageOptions,
-  CustomClientOptions,
-} from '@/libs/model-runtime/utils/openaiCompatibleFactory';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { LobeOpenAI } from '../openai';
+import { CreateImagePayload, CreateImageResponse, ILobeAgentRuntimeErrorType } from '../types';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
@@ -24,6 +19,8 @@ import {
   TextToImagePayload,
   TextToSpeechPayload,
 } from '../types';
+import { CreateImageOptions, CustomClientOptions } from '../utils/openaiCompatibleFactory';
+import { postProcessModelList } from '../utils/postProcessModelList';
 import { baseRuntimeMap } from './baseRuntimeMap';
 
 export interface RuntimeItem {
@@ -114,12 +111,12 @@ export const createRouterRuntime = ({
   id,
   routers,
   apiKey: DEFAULT_API_LEY,
+  models,
   ...params
 }: CreateRouterRuntimeOptions) => {
   return class UniformRuntime implements LobeRuntimeAI {
     private _runtimes: RuntimeItem[];
     private _options: ClientOptions & Record<string, any>;
-    private _modelCache = new Map<string, string[]>();
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -145,30 +142,21 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 获取 runtime 的 models 列表，支持同步数组和异步函数，带缓存机制
-    private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
-      const cacheKey = runtimeItem.id;
-
-      // 如果是同步数组，直接返回不需要缓存
+    // Get runtime's models list, supporting both synchronous arrays and asynchronous functions
+    private async getRouterMatchModels(runtimeItem: RuntimeItem): Promise<string[]> {
+      // If it's a synchronous array, return directly
       if (typeof runtimeItem.models !== 'function') {
         return runtimeItem.models || [];
       }
 
-      // 检查缓存
-      if (this._modelCache.has(cacheKey)) {
-        return this._modelCache.get(cacheKey)!;
-      }
-
-      // 获取模型列表并缓存结果
-      const models = await runtimeItem.models();
-      this._modelCache.set(cacheKey, models);
-      return models;
+      // Get model list
+      return await runtimeItem.models();
     }
 
-    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
+    // Check if it can match a specific model, otherwise default to using the last runtime
     async getRuntimeByModel(model: string) {
       for (const runtimeItem of this._runtimes) {
-        const models = await this.getModels(runtimeItem);
+        const models = await this.getRouterMatchModels(runtimeItem);
         if (models.includes(model)) {
           return runtimeItem.runtime;
         }
@@ -194,6 +182,11 @@ export const createRouterRuntime = ({
       }
     }
 
+    async createImage(payload: CreateImagePayload) {
+      const runtime = await this.getRuntimeByModel(payload.model);
+      return runtime.createImage!(payload);
+    }
+
     async textToImage(payload: TextToImagePayload) {
       const runtime = await this.getRuntimeByModel(payload.model);
 
@@ -201,7 +194,15 @@ export const createRouterRuntime = ({
     }
 
     async models() {
-      return this._runtimes[0].runtime.models?.();
+      if (models && typeof models === 'function') {
+        // If it's function-style configuration, use the last runtime's client to call the function
+        const lastRuntime = this._runtimes.at(-1)?.runtime;
+        if (lastRuntime && 'client' in lastRuntime) {
+          const modelList = await models({ client: (lastRuntime as any).client });
+          return await postProcessModelList(modelList);
+        }
+      }
+      return this._runtimes.at(-1)?.runtime.models?.();
     }
 
     async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
@@ -214,18 +215,6 @@ export const createRouterRuntime = ({
       const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToSpeech!(payload, options);
-    }
-
-    /**
-     * 清除模型列表缓存，强制下次获取时重新加载
-     * @param runtimeId - 可选，指定清除特定 runtime 的缓存，不传则清除所有缓存
-     */
-    clearModelCache(runtimeId?: string) {
-      if (runtimeId) {
-        this._modelCache.delete(runtimeId);
-      } else {
-        this._modelCache.clear();
-      }
     }
   };
 };

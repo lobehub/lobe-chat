@@ -1,6 +1,7 @@
 import createDebug from 'debug';
 
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
+import { type TaskResult, asyncifyPolling } from '../utils/asyncifyPolling';
 import { AgentRuntimeError } from '../utils/createError';
 import { CreateImageOptions } from '../utils/openaiCompatibleFactory';
 
@@ -18,39 +19,13 @@ interface QwenImageTaskResponse {
   request_id: string;
 }
 
-const QwenText2ImageModels = [
-  'wan2.2-t2i',
-  'wanx2.1-t2i',
-  'wanx2.0-t2i',
-  'wanx-v1',
-  'flux',
-  'stable-diffusion',
-];
-
-const getModelType = (model: string): string => {
-  // 可以添加其他模型类型的判断
-  // if (QwenImage2ImageModels.some(prefix => model.startsWith(prefix))) {
-  //   return 'image2image';
-  // }
-
-  if (QwenText2ImageModels.some((prefix) => model.startsWith(prefix))) {
-    return 'text2image';
-  }
-
-  throw new Error(`Unsupported model: ${model}`);
-};
-
 /**
  * Create an image generation task with Qwen API
  */
 async function createImageTask(payload: CreateImagePayload, apiKey: string): Promise<string> {
   const { model, params } = payload;
   // I can only say that the design of Alibaba Cloud's API is really bad; each model has a different endpoint path.
-  const modelType = getModelType(model);
-  const endpoint = `https://dashscope.aliyuncs.com/api/v1/services/aigc/${modelType}/image-synthesis`;
-  if (!endpoint) {
-    throw new Error(`No endpoint configured for model type: ${modelType}`);
-  }
+  const endpoint = `https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`;
   log('Creating image task with model: %s, endpoint: %s', model, endpoint);
 
   const response = await fetch(endpoint, {
@@ -139,93 +114,47 @@ export async function createQwenImage(
     // 1. Create image generation task
     const taskId = await createImageTask(payload, apiKey);
 
-    // 2. Poll task status until completion
-    let taskStatus: QwenImageTaskResponse | null = null;
-    let retries = 0;
-    let consecutiveFailures = 0;
-    const maxConsecutiveFailures = 3; // Allow up to 3 consecutive query failures
-    // Using Infinity for maxRetries is safe because:
-    // 1. Vercel runtime has execution time limits
-    // 2. Qwen's API will eventually return FAILED status for timed-out tasks
-    // 3. Our exponential backoff ensures reasonable retry intervals
-    const maxRetries = Infinity;
-    const initialRetryInterval = 500; // 500ms initial interval
-    const maxRetryInterval = 5000; // 5 seconds max interval
-    const backoffMultiplier = 1.5; // exponential backoff multiplier
+    // 2. Poll task status until completion using asyncifyPolling
+    const result = await asyncifyPolling<QwenImageTaskResponse, CreateImageResponse>({
+      checkStatus: (taskStatus: QwenImageTaskResponse): TaskResult<CreateImageResponse> => {
+        log('Task %s status: %s', taskId, taskStatus.output.task_status);
 
-    while (retries < maxRetries) {
-      try {
-        taskStatus = await queryTaskStatus(taskId, apiKey);
-        consecutiveFailures = 0; // Reset consecutive failures on success
-      } catch (error) {
-        consecutiveFailures++;
-        log(
-          'Failed to query task status (attempt %d/%d, consecutive failures: %d/%d): %O',
-          retries + 1,
-          maxRetries,
-          consecutiveFailures,
-          maxConsecutiveFailures,
-          error,
-        );
+        if (taskStatus.output.task_status === 'SUCCEEDED') {
+          if (!taskStatus.output.results || taskStatus.output.results.length === 0) {
+            return {
+              error: new Error('Task succeeded but no images generated'),
+              status: 'failed',
+            };
+          }
 
-        // If we've failed too many times in a row, give up
-        if (consecutiveFailures >= maxConsecutiveFailures) {
-          throw new Error(
-            `Failed to query task status after ${consecutiveFailures} consecutive attempts: ${error}`,
-          );
+          const imageUrl = taskStatus.output.results[0].url;
+          log('Image generated successfully: %s', imageUrl);
+
+          return {
+            data: { imageUrl },
+            status: 'success',
+          };
         }
 
-        // Wait before retrying
-        const currentRetryInterval = Math.min(
-          initialRetryInterval * Math.pow(backoffMultiplier, retries),
-          maxRetryInterval,
-        );
-        await new Promise((resolve) => {
-          setTimeout(resolve, currentRetryInterval);
-        });
-        retries++;
-        continue; // Skip the rest of the loop and retry
-      }
-
-      // At this point, taskStatus should not be null since we just got it successfully
-      log(
-        'Task %s status: %s (attempt %d/%d)',
-        taskId,
-        taskStatus!.output.task_status,
-        retries + 1,
-        maxRetries,
-      );
-
-      if (taskStatus!.output.task_status === 'SUCCEEDED') {
-        if (!taskStatus!.output.results || taskStatus!.output.results.length === 0) {
-          throw new Error('Task succeeded but no images generated');
+        if (taskStatus.output.task_status === 'FAILED') {
+          const errorMessage = taskStatus.output.error_message || 'Image generation task failed';
+          return {
+            error: new Error(`Qwen image generation failed: ${errorMessage}`),
+            status: 'failed',
+          };
         }
 
-        // Return the first generated image
-        const imageUrl = taskStatus!.output.results[0].url;
-        log('Image generated successfully: %s', imageUrl);
+        // Continue polling for pending/running status or other unknown statuses
+        return { status: 'pending' };
+      },
+      logger: {
+        debug: (message: any, ...args: any[]) => log(message, ...args),
+        error: (message: any, ...args: any[]) => log(message, ...args),
+      },
+      pollingQuery: () => queryTaskStatus(taskId, apiKey),
+    });
 
-        return { imageUrl };
-      } else if (taskStatus!.output.task_status === 'FAILED') {
-        throw new Error(taskStatus!.output.error_message || 'Image generation task failed');
-      }
-
-      // Calculate dynamic retry interval with exponential backoff
-      const currentRetryInterval = Math.min(
-        initialRetryInterval * Math.pow(backoffMultiplier, retries),
-        maxRetryInterval,
-      );
-
-      log('Waiting %dms before next retry', currentRetryInterval);
-
-      // Wait before retrying
-      await new Promise((resolve) => {
-        setTimeout(resolve, currentRetryInterval);
-      });
-      retries++;
-    }
-
-    throw new Error(`Image generation timeout after ${maxRetries} attempts`);
+    return result;
   } catch (error) {
     log('Error in createQwenImage: %O', error);
 

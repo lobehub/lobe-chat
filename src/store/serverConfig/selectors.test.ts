@@ -17,7 +17,6 @@ describe('featureFlagsSelectors', () => {
     const result = featureFlagsSelectors(store.getState());
 
     expect(result).toEqual({
-      enableWebrtc: false,
       isAgentEditable: false,
       showApiKeyManage: false,
       enablePlugins: true,
@@ -25,6 +24,7 @@ describe('featureFlagsSelectors', () => {
       showChangelog: true,
       enableRAGEval: false,
       showDalle: true,
+      showAiImage: true,
       enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,

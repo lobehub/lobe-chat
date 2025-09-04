@@ -1,8 +1,6 @@
-import { Tag } from '@lobehub/ui';
-import { Bot, Brain, Cloudy, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
+import { Bot, Brain, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { CellProps } from '@/components/Cell';
@@ -13,7 +11,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 export const useCategory = () => {
   const router = useRouter();
   const { t } = useTranslation('setting');
-  const { enableWebrtc, showLLM } = useServerConfigStore(featureFlagsSelectors);
+  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
 
   const items: CellProps[] = [
     {
@@ -25,18 +23,6 @@ export const useCategory = () => {
       icon: Sparkles,
       key: SettingsTabs.SystemAgent,
       label: t('tab.system-agent'),
-    },
-    enableWebrtc && {
-      icon: Cloudy,
-      key: SettingsTabs.Sync,
-      label: (
-        <Flexbox align={'center'} gap={8} horizontal>
-          {t('tab.sync')}
-          <Tag bordered={false} color={'warning'}>
-            {t('tab.experiment')}
-          </Tag>
-        </Flexbox>
-      ),
     },
     showLLM &&
       (isDeprecatedEdition

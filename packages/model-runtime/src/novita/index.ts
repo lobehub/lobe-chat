@@ -1,9 +1,15 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { NovitaModelCard } from './type';
+
+const formatPrice = (price?: number) => {
+  if (price === undefined || price === null) return undefined;
+  // Convert Novita price to desired unit: e.g. 5700 -> 0.57
+  if (typeof price !== 'number') return undefined;
+  if (price === -1) return undefined;
+  return Number((price / 10_000).toPrecision(5));
+};
 
 export const LobeNovitaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.novita.ai/v3/openai',
@@ -16,39 +22,32 @@ export const LobeNovitaAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_NOVITA_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const reasoningKeywords = ['deepseek-r1'];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: NovitaModelCard[] = modelsPage.data;
 
-    // 解析模型能力
-    const baseModels = await processMultiProviderModelList(modelList);
+    const formattedModels = modelList.map((m) => {
+      const mm = m as any;
+      const features: string[] = Array.isArray(mm.features) ? mm.features : [];
 
-    // 合并 Novita 获取的模型信息
-    return baseModels
-      .map((baseModel) => {
-        const model = modelList.find((m) => m.id === baseModel.id);
+      return {
+        contextWindowTokens: mm.context_size ?? mm.max_output_tokens ?? undefined,
+        created: mm.created,
+        description: mm.description ?? '',
+        displayName: mm.display_name ?? mm.title ?? mm.id,
+        functionCall: features.includes('function-calling') || false,
+        id: mm.id,
+        maxOutput: typeof mm.max_output_tokens === 'number' ? mm.max_output_tokens : undefined,
+        pricing: {
+          input: formatPrice(mm.input_token_price_per_m),
+          output: formatPrice(mm.output_token_price_per_m),
+        },
+        reasoning: features.includes('reasoning') || false,
+        type: mm.model_type ?? undefined,
+        vision: features.includes('vision') || false,
+      } as any;
+    });
 
-        if (!model) return baseModel;
-
-        return {
-          ...baseModel,
-          contextWindowTokens: model.context_size,
-          description: model.description,
-          displayName: model.title,
-          functionCall:
-            baseModel.functionCall ||
-            model.description.toLowerCase().includes('function calling') ||
-            false,
-          reasoning:
-            baseModel.reasoning ||
-            model.description.toLowerCase().includes('reasoning task') ||
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            false,
-          vision: baseModel.vision || model.description.toLowerCase().includes('vision') || false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    return await processMultiProviderModelList(formattedModels, 'novita');
   },
   provider: ModelProvider.Novita,
 });

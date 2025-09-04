@@ -1,9 +1,10 @@
+import { ClientSecretPayload } from '@lobechat/types';
 import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
-import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
 import { createAsyncCallerFactory } from '@/libs/trpc/async';

@@ -9,6 +9,7 @@ const V0: ModelProviderCard = {
   modelsUrl: 'https://vercel.com/docs/v0/api#models',
   name: 'Vercel (v0)',
   settings: {
+    disableBrowserRequest: true, // CORS error
     sdkType: 'openai',
   },
   url: 'https://v0.dev',

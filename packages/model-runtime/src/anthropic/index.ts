@@ -1,24 +1,24 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 
-import type { ChatModelCard } from '@/types/llm';
-
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
+import { AgentRuntimeErrorType } from '../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 import { handleAnthropicError } from './handleAnthropicError';
 
 export interface AnthropicModelCard {
+  created_at: string;
   display_name: string;
   id: string;
 }
@@ -120,7 +120,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       enabledSearch,
     } = payload;
 
-    const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
+    const { anthropic: anthropicModels } = await import('model-bank');
     const modelConfig = anthropicModels.find((m) => m.id === model);
     const defaultMaxOutput = modelConfig?.maxOutput;
 
@@ -218,8 +218,6 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   }
 
   async models() {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
     const url = `${this.baseURL}/v1/models`;
     const response = await fetch(url, {
       headers: {
@@ -232,30 +230,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const modelList: AnthropicModelCard[] = json['data'];
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          displayName: model.display_name,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            model.id.toLowerCase().includes('claude-3') ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          reasoning: knownModel?.abilities?.reasoning || false,
-          vision:
-            (model.id.toLowerCase().includes('claude-3') &&
-              !model.id.toLowerCase().includes('claude-3-5-haiku')) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    const standardModelList = modelList.map((model) => ({
+      created: model.created_at,
+      displayName: model.display_name,
+      id: model.id,
+    }));
+    return processModelList(standardModelList, MODEL_LIST_CONFIGS.anthropic, 'anthropic');
   }
 
   private handleError(error: any): ChatCompletionErrorPayload {

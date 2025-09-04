@@ -1,5 +1,373 @@
 [
   {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.6"
+  },
+  {
+    "children": {
+      "improvements": ["Make LobeNextAuthDBAdapter Edge Compatible."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.4"
+  },
+  {
+    "children": {
+      "fixes": ["Support base64 image from markdown image syntax."],
+      "improvements": ["Update the price of the o3 model in OpenRouter."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.3"
+  },
+  {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.2"
+  },
+  {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.1"
+  },
+  {
+    "children": {
+      "features": ["Refactor to speed up send message in server mode."]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix socks5 proxy not work problem, fix virtuaso minheight was null."]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.1"
+  },
+  {
+    "children": {
+      "features": ["Add nano banana Chinese prompt notify."]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-02",
+    "version": "1.120.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add upload hint for non-visual model."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.6"
+  },
+  {
+    "children": {},
+    "date": "2025-09-01",
+    "version": "1.120.5"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust ControlsForm component to adapt to mobile phone display."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.4"
+  },
+  {
+    "children": {
+      "improvements": ["Support new provider Nebius."]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.3"
+  },
+  {
+    "children": {
+      "improvements": ["Remove base path."]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.1"
+  },
+  {
+    "children": {
+      "improvements": ["Remove webrtc sync feature flag."],
+      "features": ["Rename Gemini 2.5 flash image to Nano Banana."]
+    },
+    "date": "2025-08-30",
+    "version": "1.120.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-30",
+    "version": "1.119.2"
+  },
+  {
+    "children": {
+      "fixes": ["Update enableStreaming name."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.1"
+  },
+  {
+    "children": {
+      "features": ["Added support for Azure OpenAI Image Generation."]
+    },
+    "date": "2025-08-30",
+    "version": "1.119.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update DeepSeek V3.1 & Gemini 2.5 Flash Image Preview models."]
+    },
+    "date": "2025-08-30",
+    "version": "1.118.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-30",
+    "version": "1.118.7"
+  },
+  {
+    "children": {
+      "improvements": ["Support non-stream mode."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix clerk scrollBox style, ModelFetcher support getting prices."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix chat session part switch theme issue."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.4"
+  },
+  {
+    "children": {
+      "fixes": ["Correct totalOutputTokens calculation for XAI provider."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add Grok Code Fast 1 model."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.2"
+  },
+  {
+    "children": {
+      "fixes": ["Add Content-Security-Policy env."],
+      "improvements": ["Support Gemini URL context tool."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.1"
+  },
+  {
+    "children": {
+      "features": ["Add new provider AkashChat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.118.0"
+  },
+  {
+    "children": {
+      "improvements": ["Move chat item into chat."]
+    },
+    "date": "2025-08-29",
+    "version": "1.117.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Ai image support Gemini 2.5 Flash Image, Support Gemini 2.5 Flash Image Preview in OpenRouter."
+      ],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-29",
+    "version": "1.117.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support html preview."]
+    },
+    "date": "2025-08-28",
+    "version": "1.116.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop route error."]
+    },
+    "date": "2025-08-28",
+    "version": "1.116.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-28",
+    "version": "1.116.2"
+  },
+  {
+    "children": {},
+    "date": "2025-08-27",
+    "version": "1.116.1"
+  },
+  {
+    "children": {
+      "features": ["Add gemini 2.5 flash image for vertex ai."]
+    },
+    "date": "2025-08-27",
+    "version": "1.116.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-26",
+    "version": "1.115.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-22",
+    "version": "1.114.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update mistral model vision ability."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.5"
+  },
+  {
+    "children": {
+      "improvements": ["Move database to packages."]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.4"
+  },
+  {
+    "children": {},
+    "date": "2025-08-21",
+    "version": "1.114.3"
+  },
+  {
+    "children": {
+      "fixes": ["Can't load custom provider config."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.2"
+  },
+  {
+    "children": {
+      "improvements": ["Move chain into @lobechat/prompts."]
+    },
+    "date": "2025-08-21",
+    "version": "1.114.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-19",
+    "version": "1.114.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Support Grok thinking models in AiHubMix, The 'stream_options' parameter is only allowed when 'stream' is enabled."
+      ]
+    },
+    "date": "2025-08-19",
+    "version": "1.113.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-18",
+    "version": "1.113.2"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-17",
+    "version": "1.113.0"
+  },
+  {
+    "children": {
+      "fixes": ["Improve mcp tracing with user config."]
+    },
+    "date": "2025-08-17",
+    "version": "1.112.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor prompts folder to the @lobechat/prompts pacakge."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor const folder to a new package."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.3"
+  },
+  {
+    "children": {
+      "improvements": ["重构 ArgsInput 组件."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Imagen 4 GA models, style improve auth sign in box loading."]
+    },
+    "date": "2025-08-16",
+    "version": "1.112.1"
+  },
+  {
+    "children": {},
+    "date": "2025-08-15",
+    "version": "1.112.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-14",
+    "version": "1.111.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update Mistral AI models & Optimize many model providers fetching."]
+    },
+    "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
     "children": {
       "improvements": ["Adjust near bottom size on thinking scroll."]
     },

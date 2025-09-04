@@ -2,11 +2,13 @@ import { LobeAi21AI } from './ai21';
 import { Lobe302AI } from './ai302';
 import { LobeAi360AI } from './ai360';
 import { LobeAiHubMixAI } from './aihubmix';
+import { LobeAkashChatAI } from './akashchat';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI } from './bedrock';
+import { LobeBflAI } from './bfl';
 import { LobeCloudflareAI } from './cloudflare';
 import { LobeCohereAI } from './cohere';
 import { LobeDeepSeekAI } from './deepseek';
@@ -27,6 +29,7 @@ import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeModelScopeAI } from './modelscope';
 import { LobeMoonshotAI } from './moonshot';
+import { LobeNebiusAI } from './nebius';
 import { LobeNovitaAI } from './novita';
 import { LobeNvidiaAI } from './nvidia';
 import { LobeOllamaAI } from './ollama';
@@ -60,11 +63,13 @@ export const providerRuntimeMap = {
   ai302: Lobe302AI,
   ai360: LobeAi360AI,
   aihubmix: LobeAiHubMixAI,
+  akashchat: LobeAkashChatAI,
   anthropic: LobeAnthropicAI,
   azure: LobeAzureOpenAI,
   azureai: LobeAzureAI,
   baichuan: LobeBaichuanAI,
   bedrock: LobeBedrockAI,
+  bfl: LobeBflAI,
   cloudflare: LobeCloudflareAI,
   cohere: LobeCohereAI,
   deepseek: LobeDeepSeekAI,
@@ -85,6 +90,7 @@ export const providerRuntimeMap = {
   mistral: LobeMistralAI,
   modelscope: LobeModelScopeAI,
   moonshot: LobeMoonshotAI,
+  nebius: LobeNebiusAI,
   novita: LobeNovitaAI,
   nvidia: LobeNvidiaAI,
   ollama: LobeOllamaAI,

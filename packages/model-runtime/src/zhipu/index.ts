@@ -134,7 +134,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
       displayName: model.modelName,
       id: model.modelCode,
     }));
-    return processModelList(standardModelList, MODEL_LIST_CONFIGS.zhipu);
+    return processModelList(standardModelList, MODEL_LIST_CONFIGS.zhipu, 'zhipu');
   },
   provider: ModelProvider.ZhiPu,
 });

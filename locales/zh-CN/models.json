@@ -74,8 +74,14 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "DeepSeek-V3-1": {
+    "description": "DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。"
+  },
   "DeepSeek-V3-Fast": {
     "description": "模型供应商为：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS极速版，满血非量化，代码与数学能力更强，响应更快！"
+  },
+  "DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
@@ -131,8 +137,14 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，效果比ERNIE Speed更优，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
   },
+  "FLUX-1.1-pro": {
+    "description": "FLUX.1.1 Pro"
+  },
   "FLUX.1-Kontext-dev": {
     "description": "FLUX.1-Kontext-dev 是由 Black Forest Labs 开发的一款基于 Rectified Flow Transformer 架构 的多模态图像生成与编辑模型，拥有 12B（120 亿）参数规模，专注于在给定上下文条件下生成、重构、增强或编辑图像。该模型结合了扩散模型的可控生成优势与 Transformer 的上下文建模能力，支持高质量图像输出，广泛适用于图像修复、图像补全、视觉场景重构等任务。"
+  },
+  "FLUX.1-Kontext-pro": {
+    "description": "FLUX.1 Kontext [pro]"
   },
   "FLUX.1-dev": {
     "description": "FLUX.1-dev 是由 Black Forest Labs 开发的一款开源 多模态语言模型（Multimodal Language Model, MLLM），专为图文任务优化，融合了图像和文本的理解与生成能力。它建立在先进的大语言模型（如 Mistral-7B）基础上，通过精心设计的视觉编码器与多阶段指令微调，实现了图文协同处理与复杂任务推理的能力。"
@@ -170,6 +182,9 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "适用于视觉理解代理应用的高级图像推理能力。"
   },
+  "Meta-Llama-3-3-70B-Instruct": {
+    "description": "Llama 3.3 70B：通用性强的 Transformer 模型，适用于对话和生成任务。"
+  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。"
   },
@@ -187,6 +202,9 @@
   },
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
+  },
+  "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8": {
+    "description": "Llama 4 Maverick：基于 Mixture-of-Experts 的大规模模型，提供高效的专家激活策略以在推理中表现优异。"
   },
   "MiniMax-M1": {
     "description": "全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。"
@@ -256,6 +274,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
   },
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
@@ -332,11 +353,20 @@
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
     "description": "Qwen3-30B-A3B-Instruct-2507 是 Qwen3-30B-A3B 非思考模式的更新版本。这是一个拥有 305 亿总参数和 33 亿激活参数的混合专家（MoE）模型。该模型在多个方面进行了关键增强，包括显著提升了指令遵循、逻辑推理、文本理解、数学、科学、编码和工具使用等通用能力。同时，它在多语言的长尾知识覆盖范围上取得了实质性进展，并能更好地与用户在主观和开放式任务中的偏好对齐，从而能够生成更有帮助的回复和更高质量的文本。此外，该模型的长文本理解能力也增强到了 256K。此模型仅支持非思考模式，其输出中不会生成 `<think></think>` 标签。"
   },
+  "Qwen/Qwen3-30B-A3B-Thinking-2507": {
+    "description": "Qwen3-30B-A3B-Thinking-2507 是由阿里巴巴通义千问团队发布的 Qwen3 系列的最新思考模型。作为一个拥有 305 亿总参数和 33 亿激活参数的混合专家（MoE）模型，它专注于提升复杂任务的处理能力。该模型在逻辑推理、数学、科学、编程和需要人类专业知识的学术基准测试上表现出显著的性能提升。同时，它在指令遵循、工具使用、文本生成和与人类偏好对齐等通用能力方面也得到了显著增强。模型原生支持 256K 的长上下文理解能力，并可扩展至 100 万 tokens。此版本专为“思考模式”设计，旨在通过详尽的逐步推理来解决高度复杂的任务，其 Agent 智能体能力也表现出色。"
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
   },
   "Qwen/Qwen3-8B": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+    "description": "Qwen3-Coder-30B-A3B-Instruct 是由阿里巴巴通义千问团队开发的 Qwen3 系列中的代码模型。作为一个经过精简优化的模型，它在保持高性能和高效率的同时，专注于提升代码处理能力。该模型在代理式编程（Agentic Coding）、自动化浏览器操作和工具调用等复杂任务上，于开源模型中表现出显著的性能优势。它原生支持 256K tokens 的长上下文，并可扩展至 1M tokens，从而能够更好地进行代码库级别的理解和处理。此外，该模型为 Qwen Code、CLINE 等平台提供了强大的代理编码支持，并设计了专门的函数调用格式。"
+  },
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct 是由阿里巴巴发布的、迄今为止最具代理（Agentic）能力的代码模型。它是一个拥有 4800 亿总参数和 350 亿激活参数的混合专家（MoE）模型，在效率和性能之间取得了平衡。该模型原生支持 256K（约 26 万） tokens 的上下文长度，并可通过 YaRN 等外推方法扩展至 100 万 tokens，使其能够处理大规模代码库和复杂的编程任务。Qwen3-Coder 专为代理式编码工作流设计，不仅能生成代码，还能与开发工具和环境自主交互，以解决复杂的编程问题。在多个编码和代理任务的基准测试中，该模型在开源模型中取得了顶尖水平，其性能可与 Claude Sonnet 4 等领先模型相媲美。"
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，对比当前最优的开源模型，Qwen2-72B 在自然语言理解、知识、代码、数学及多语言等多项能力上均显著超越当前领先的模型。"
@@ -367,6 +397,9 @@
   },
   "Qwen3-235B": {
     "description": "Qwen3-235B-A22B，MoE（混合专家模型）模型,引入了“混合推理模式”，支持用户在“思考模式”和“非思考模式”之间无缝切换，支持119种语言和方言理解与推理，并具备强大的工具调用能力，在综合能力、代码与数学、多语言能力、知识与推理等多项基准测试中，都能与DeepSeek R1、OpenAI o1、o3-mini、Grok 3和谷歌Gemini 2.5 Pro等目前市场上的主流大模型竞争。"
+  },
+  "Qwen3-235B-A22B-Instruct-2507-FP8": {
+    "description": "Qwen3 235B A22B Instruct 2507：面向高级推理与对话指令优化的模型，混合专家架构以在大规模参数下保持推理效率。"
   },
   "Qwen3-32B": {
     "description": "Qwen3-32B，稠密模型（Dense Model）,引入了“混合推理模式”，支持用户在“思考模式”和“非思考模式”之间无缝切换，由于模型架构改进、训练数据增加以及更有效的训练方法，整体性能与Qwen2.5-72B表现相当。"
@@ -824,6 +857,9 @@
   "deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
   },
+  "deepseek-ai/DeepSeek-V3.1": {
+    "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。"
   },
@@ -894,7 +930,7 @@
     "description": "DeepSeek R1 满血版，拥有 671B 参数，支持实时联网搜索，具有更强大的理解和生成能力。"
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+    "description": "DeepSeek V3.1 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 是高效的 Mixture-of-Experts 语言模型，适用于经济高效的处理需求。"
@@ -908,11 +944,17 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 为671B 参数 MoE 模型，在编程与技术能力、上下文理解与长文本处理等方面优势突出。"
   },
+  "deepseek-v3.1": {
+    "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。支持 128k 上下文窗口，输出长度支持最大 64k tokens。"
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。"
   },
   "deepseek/deepseek-chat-v3-0324:free": {
     "description": "DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。"
+  },
+  "deepseek/deepseek-chat-v3.1": {
+    "description": "DeepSeek-V3.1是一款支持128K长上下文和高效模式切换的大型混合推理模型，它在工具调用、代码生成和复杂推理任务上实现了卓越的性能与速度。"
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。"
@@ -1103,11 +1145,26 @@
   "flux-dev": {
     "description": "FLUX.1 [dev] 是一款面向非商业应用的开源权重、精炼模型。FLUX.1 [dev] 在保持了与FLUX专业版相近的图像质量和指令遵循能力的同时，具备更高的运行效率。相较于同尺寸的标准模型，它在资源利用上更为高效。"
   },
+  "flux-kontext-max": {
+    "description": "最先进的上下文图像生成和编辑——结合文本和图像以获得精确、连贯的结果。"
+  },
+  "flux-kontext-pro": {
+    "description": "最先进的上下文图像生成和编辑——结合文本和图像以获得精确、连贯的结果。"
+  },
   "flux-kontext/dev": {
     "description": "专注于图像编辑任务的FLUX.1模型，支持文本和图像输入。"
   },
   "flux-merged": {
     "description": "FLUX.1-merged 模型结合了 \"DEV\" 在开发阶段探索的深度特性和 \"Schnell\" 所代表的高速执行优势。通过这一举措，FLUX.1-merged 不仅提升了模型的性能界限，还拓宽了其应用范围。"
+  },
+  "flux-pro": {
+    "description": "顶级商用AI图像生成模型——无与伦比的图像质量和多样化输出表现。"
+  },
+  "flux-pro-1.1": {
+    "description": "升级版专业级AI图像生成模型——提供卓越的图像质量和精确的提示词遵循能力。"
+  },
+  "flux-pro-1.1-ultra": {
+    "description": "超高分辨率AI图像生成——支持4兆像素输出，10秒内生成超清图像。"
   },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] 能够处理文本和参考图像作为输入，无缝实现目标性的局部编辑和复杂的整体场景变换。"
@@ -1192,6 +1249,12 @@
   },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-flash-image-preview": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
+  },
+  "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。"
@@ -1295,6 +1358,9 @@
   "glm-4.5-x": {
     "description": "GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。"
   },
+  "glm-4.5v": {
+    "description": "智谱新一代基于 MOE 架构的视觉推理模型，以106B的总参数量和12B激活参数量，在各类基准测试中达到全球同级别开源多模态模型 SOTA，涵盖图像、视频、文档理解及 GUI 任务等常见任务。"
+  },
   "glm-4v": {
     "description": "GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。"
   },
@@ -1330,6 +1396,12 @@
   },
   "google/gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 最先进的主力模型，专为高级推理、编码、数学和科学任务而设计。它包含内置的“思考”能力，使其能够提供具有更高准确性和细致上下文处理的响应。\n\n注意：此模型有两个变体：思考和非思考。输出定价根据思考能力是否激活而有显著差异。如果您选择标准变体（不带“:thinking”后缀），模型将明确避免生成思考令牌。\n\n要利用思考能力并接收思考令牌，您必须选择“:thinking”变体，这将产生更高的思考输出定价。\n\n此外，Gemini 2.5 Flash 可通过“推理最大令牌数”参数进行配置，如文档中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
+  },
+  "google/gemini-2.5-flash-image-preview": {
+    "description": "Gemini 2.5 Flash 实验模型，支持图像生成"
+  },
+  "google/gemini-2.5-flash-image-preview:free": {
+    "description": "Gemini 2.5 Flash 实验模型，支持图像生成"
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash 是 Google 最先进的主力模型，专为高级推理、编码、数学和科学任务而设计。它包含内置的“思考”能力，使其能够提供具有更高准确性和细致上下文处理的响应。\n\n注意：此模型有两个变体：思考和非思考。输出定价根据思考能力是否激活而有显著差异。如果您选择标准变体（不带“:thinking”后缀），模型将明确避免生成思考令牌。\n\n要利用思考能力并接收思考令牌，您必须选择“:thinking”变体，这将产生更高的思考输出定价。\n\n此外，Gemini 2.5 Flash 可通过“推理最大令牌数”参数进行配置，如文档中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
@@ -1434,7 +1506,7 @@
     "description": "GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。"
   },
   "gpt-4.5-preview": {
-    "description": "GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。"
+    "description": "GPT-4.5-preview 是最新的通用模型，具有深厚的世界知识和对用户意图的更好理解，擅长创意任务和代理规划。该模型的知识截止2023年10月。"
   },
   "gpt-4o": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
@@ -1502,6 +1574,9 @@
   "gpt-oss": {
     "description": "GPT-OSS 20B 是 OpenAI 发布的开源大语言模型，采用 MXFP4 量化技术，适合在高端消费级GPU或Apple Silicon Mac上运行。该模型在对话生成、代码编写和推理任务方面表现出色，支持函数调用和工具使用。"
   },
+  "gpt-oss-120b": {
+    "description": "GPT-OSS-120B MXFP4 量化的 Transformer 结构，在资源受限时仍能保持强劲性能。"
+  },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B 是 OpenAI 发布的大型开源语言模型，采用 MXFP4 量化技术，为旗舰级模型。需要多GPU或高性能工作站环境运行，在复杂推理、代码生成和多语言处理方面具备卓越性能，支持高级函数调用和工具集成。"
   },
@@ -1528,6 +1603,9 @@
   },
   "grok-4": {
     "description": "我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。"
+  },
+  "grok-code-fast-1": {
+    "description": "我们很高兴推出 grok-code-fast-1，这是一款快速且经济高效的推理模型，在代理编码方面表现出色。"
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。"
@@ -1637,8 +1715,17 @@
   "image-01-live": {
     "description": "图像生成模型，画面表现细腻，支持文生图并进行画风设置"
   },
+  "imagen-4.0-fast-generate-001": {
+    "description": "Imagen 4th generation text-to-image model series Fast version"
+  },
+  "imagen-4.0-generate-001": {
+    "description": "Imagen 4th generation text-to-image model series"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series"
+  },
+  "imagen-4.0-ultra-generate-001": {
+    "description": "Imagen 4th generation text-to-image model series Ultra version"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series Ultra version"
@@ -1677,6 +1764,9 @@
     "description": "Kimi-K2 是一款Moonshot AI推出的具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
   "kimi-k2-0711-preview": {
+    "description": "kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
+  },
+  "kimi-k2-turbo-preview": {
     "description": "kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
   "kimi-latest": {
@@ -1762,6 +1852,9 @@
   },
   "llava:34b": {
     "description": "LLaVA 是结合视觉编码器和 Vicuna 的多模态模型，用于强大的视觉和语言理解。"
+  },
+  "magistral-medium-latest": {
+    "description": "Magistral Medium 1.1 是 Mistral AI 于2025年7月发布的前沿级推理模型。"
   },
   "mathstral": {
     "description": "MathΣtral 专为科学研究和数学推理设计，提供有效的计算能力和结果解释。"
@@ -2094,7 +2187,7 @@
     "description": "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。"
   },
   "o1-preview": {
-    "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
+    "description": "专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深度上下文理解和自主工作流程的应用。"
   },
   "o1-pro": {
     "description": "o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。"
@@ -2213,8 +2306,14 @@
   "qwen-coder-turbo-latest": {
     "description": "通义千问代码模型。"
   },
+  "qwen-flash": {
+    "description": "通义千问系列速度最快、成本极低的模型，适合简单任务。"
+  },
   "qwen-image": {
-    "description": "Qwen团队带来的强大生图模型，具有令人印象深刻的中文文字生成能力和多样图片视觉风格。"
+    "description": "Qwen-Image 是一款通用图像生成模型，支持多种艺术风格，尤其擅长复杂文本渲染，特别是中英文文本渲染。模型支持多行布局、段落级文本生成以及细粒度细节刻画，可实现复杂的图文混合布局设计。"
+  },
+  "qwen-image-edit": {
+    "description": "Qwen 团队发布的专业图像编辑模型，支持语义编辑和外观编辑，能够精确编辑中英文文字，实现风格转换、对象旋转等高质量图像编辑。"
   },
   "qwen-long": {
     "description": "通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。"
@@ -2241,7 +2340,7 @@
     "description": "通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。"
   },
   "qwen-turbo": {
-    "description": "通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
+    "description": "通义千问 Turbo 后续不再更新，建议替换为通义千问 Flash 。通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
   },
   "qwen-vl-chat-v1": {
     "description": "通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。"
@@ -2558,8 +2657,14 @@
   "step-2x-large": {
     "description": "阶跃星辰新一代生图模型,该模型专注于图像生成任务,能够根据用户提供的文本描述,生成高质量的图像。新模型生成图片质感更真实，中英文文字生成能力更强。"
   },
+  "step-3": {
+    "description": "该模型拥有强大的视觉感知和复杂推理能力。可准确完成跨领域的复杂知识理解、数学与视觉信息的交叉分析，以及日常生活中的各类视觉分析问题。"
+  },
   "step-r1-v-mini": {
     "description": "该模型是拥有强大的图像理解能力的推理大模型，能够处理图像和文字信息，经过深度思考后输出文本生成文本内容。该模型在视觉推理领域表现突出，同时拥有第一梯队的数学、代码、文本推理能力。上下文长度为100k。"
+  },
+  "stepfun-ai/step3": {
+    "description": "Step3 是由阶跃星辰（StepFun）发布的前沿多模态推理模型，它基于拥有 321B 总参数和 38B 激活参数的专家混合（MoE）架构构建。该模型采用端到端设计，旨在最小化解码成本，同时在视觉语言推理方面提供顶级性能。通过多矩阵分解注意力（MFA）和注意力-FFN 解耦（AFD）的协同设计，Step3 在旗舰级和低端加速器上都能保持卓越的效率。在预训练阶段，Step3 处理了超过 20T 的文本 token 和 4T 的图文混合 token，覆盖十多种语言。该模型在数学、代码及多模态等多个基准测试中均达到了开源模型的领先水平。"
   },
   "taichu_llm": {
     "description": "基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力"
@@ -2588,17 +2693,8 @@
   "thudm/glm-4-9b-chat": {
     "description": "智谱AI发布的GLM-4系列最新一代预训练模型的开源版本。"
   },
-  "thudm/glm-4-9b:free": {
-    "description": "GLM-4-9B-0414 是 THUDM 开发的 GLM-4 系列中的 90 亿参数语言模型。GLM-4-9B-0414 使用与其较大的 32B 对应模型相同的强化学习和对齐策略进行训练，相对于其规模实现了高性能，使其适用于仍需要强大语言理解和生成能力的资源受限部署。"
-  },
   "thudm/glm-z1-32b": {
     "description": "GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。"
-  },
-  "thudm/glm-z1-32b:free": {
-    "description": "GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。"
-  },
-  "thudm/glm-z1-9b:free": {
-    "description": "GLM-Z1-9B-0414 是由 THUDM 开发的 GLM-4 系列中的 9B 参数语言模型。它采用了最初应用于更大 GLM-Z1 模型的技术，包括扩展强化学习、成对排名对齐以及对数学、代码和逻辑等推理密集型任务的训练。尽管其规模较小，但它在通用推理任务上表现出强大的性能，并在其权重级别中优于许多开源模型。"
   },
   "thudm/glm-z1-rumination-32b": {
     "description": "GLM Z1 Rumination 32B 是 GLM-4-Z1 系列中的 32B 参数深度推理模型，针对需要长时间思考的复杂、开放式任务进行了优化。它建立在 glm-4-32b-0414 的基础上，增加了额外的强化学习阶段和多阶段对齐策略，引入了旨在模拟扩展认知处理的“反思”能力。这包括迭代推理、多跳分析和工具增强的工作流程，例如搜索、检索和引文感知合成。\n\n该模型在研究式写作、比较分析和复杂问答方面表现出色。它支持用于搜索和导航原语（`search`、`click`、`open`、`finish`）的函数调用，从而可以在代理式管道中使用。反思行为由具有基于规则的奖励塑造和延迟决策机制的多轮循环控制，并以 OpenAI 内部对齐堆栈等深度研究框架为基准。此变体适用于需要深度而非速度的场景。"
@@ -2707,5 +2803,8 @@
   },
   "zai-org/GLM-4.5-Air": {
     "description": "GLM-4.5-Air 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。"
+  },
+  "zai-org/GLM-4.5V": {
+    "description": "GLM-4.5V 是由智谱 AI（Zhipu AI）发布的最新一代视觉语言模型（VLM）该模型基于拥有 106B 总参数和 12B 激活参数的旗舰文本模型 GLM-4.5-Air 构建，采用了混合专家（MoE）架构，旨在以更低的推理成本实现卓越性能 GLM-4.5V 在技术上延续了 GLM-4.1V-Thinking 的路线，并引入了三维旋转位置编码（3D-RoPE）等创新，显著增强了对三维空间关系的感知与推理能力。通过在预训练、监督微调和强化学习阶段的优化，该模型具备了处理图像、视频、长文档等多种视觉内容的能力，在 41 个公开的多模态基准测试中达到了同级别开源模型的顶尖水平此外，模型还新增了“思考模式”开关，允许用户在快速响应和深度推理之间灵活选择，以平衡效率与效果。"
   }
 }

@@ -1,0 +1,223 @@
+{
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1716982944425,
+      "tag": "0000_init",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1717153686544,
+      "tag": "0001_add_client_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717587734458,
+      "tag": "0002_amusing_puma",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718460779230,
+      "tag": "0003_naive_echo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1721724512422,
+      "tag": "0004_add_next_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1722944166657,
+      "tag": "0005_pgvector",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1724089032064,
+      "tag": "0006_add_knowledge_base",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1724254147447,
+      "tag": "0007_fix_embedding_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1725366565650,
+      "tag": "0008_add_rag_evals",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1729699958471,
+      "tag": "0009_remove_unused_user_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1730900133049,
+      "tag": "0010_add_accessed_at_and_clean_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1731138670427,
+      "tag": "0011_add_topic_history_summary",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1731858381716,
+      "tag": "0012_add_thread",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1735834653361,
+      "tag": "0013_add_ai_infra",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1737609172353,
+      "tag": "0014_add_message_reasoning",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1739901891891,
+      "tag": "0015_add_message_search_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1741844738677,
+      "tag": "0016_add_message_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1742269437903,
+      "tag": "0017_add_user_id_to_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1742616026643,
+      "tag": "0018_add_client_id_for_entities",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1742806552131,
+      "tag": "0019_add_hotkey_user_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1744458287757,
+      "tag": "0020_add_oidc",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1744602998656,
+      "tag": "0021_add_agent_opening_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1746724476380,
+      "tag": "0022_add_documents",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1748925630721,
+      "tag": "0023_remove_param_and_doubao",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1749301573666,
+      "tag": "0024_add_rbac_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1749309388370,
+      "tag": "0025_add_provider_config",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1752212281564,
+      "tag": "0026_add_autovacuum_tuning",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1752413805765,
+      "tag": "0027_ai_image",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1752567402506,
+      "tag": "0028_oauth_handoffs",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1753201379817,
+      "tag": "0029_add_apikey_manage",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1756298669289,
+      "tag": "0030_add_group_chat",
+      "breakpoints": true
+    }
+  ],
+  "version": "6"
+}

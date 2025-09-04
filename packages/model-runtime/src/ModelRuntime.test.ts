@@ -1,17 +1,17 @@
 // @vitest-environment node
 import { TraceNameMap } from '@lobechat/types';
+import { ClientSecretPayload } from '@lobechat/types';
 import { Langfuse } from 'langfuse';
 import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as langfuseCfg from '@/config/langfuse';
-import { ClientSecretPayload } from '@/const/auth';
-import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '@/libs/model-runtime';
-import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
-import { CreateImagePayload } from '@/libs/model-runtime/types/image';
+import * as langfuseCfg from '@/envs/langfuse';
 import { createTraceOptions } from '@/server/modules/ModelRuntime';
 
+import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '.';
 import { AgentChatOptions } from './ModelRuntime';
+import { providerRuntimeMap } from './runtimeMap';
+import { CreateImagePayload } from './types/image';
 
 const specialProviders = [
   { id: 'openai', payload: { apiKey: 'user-openai-key', baseURL: 'user-endpoint' } },
