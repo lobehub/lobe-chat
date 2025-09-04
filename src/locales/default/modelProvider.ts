@@ -159,13 +159,13 @@ export default {
   newapi: {
     apiKey: {
       desc: 'New API 平台提供的 API 密钥',
-      placeholder: 'New API API Key',
-      required: 'API Key 是必需的',
-      title: 'API Key',
+      placeholder: 'New API API 密钥',
+      required: 'API 密钥是必需的',
+      title: 'API 密钥',
     },
     apiUrl: {
       desc: 'New API 服务的 API 地址，大部分时候需要带 /v1',
-      title: 'API URL',
+      title: 'API 地址',
     },
     enabled: {
       title: '启用 New API',

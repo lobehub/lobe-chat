@@ -54,27 +54,23 @@ const getProviderFromOwnedBy = (ownedBy: string): string => {
   return 'openai';
 };
 
-export const LobeNewAPIAI = (() => {
-  // 实例级别的路由映射，避免全局变量污染
-  let modelRouteMap: Map<string, string> = new Map();
+// 全局的模型路由映射，在 models 函数执行后被填充
+let globalModelRouteMap: Map<string, string> = new Map();
 
-  // 存储基础 URL（不包含 /v1）
-  let baseURL: string = '';
+export const LobeNewAPIAI = createRouterRuntime({
+  debug: {
+    chatCompletion: () => process.env.DEBUG_NEWAPI_CHAT_COMPLETION === '1',
+  },
+  defaultHeaders: {
+    'X-Client': 'LobeHub',
+  },
+  id: ModelProvider.NewAPI,
+  models: async ({ client: openAIClient }) => {
+    // 每次调用 models 时清空并重建路由映射
+    globalModelRouteMap.clear();
 
-  return createRouterRuntime({
-    debug: {
-      chatCompletion: () => process.env.DEBUG_NEWAPI_CHAT_COMPLETION === '1',
-    },
-    defaultHeaders: {
-      'X-Client': 'LobeHub',
-    },
-    id: ModelProvider.NewAPI,
-    models: async ({ client: openAIClient }) => {
-      // 每次调用 models 时清空并重建路由映射
-      modelRouteMap.clear();
-
-      // 保存基础 URL（移除末尾的 /v1）供 routers 使用
-      baseURL = openAIClient.baseURL.replace(/\/v1\/?$/, '');
+    // 获取基础 URL（移除末尾的 /v1）
+    const baseURL = openAIClient.baseURL.replace(/\/v1\/?$/, '');
 
       const modelsPage = (await openAIClient.models.list()) as any;
       const modelList: NewAPIModelCard[] = modelsPage.data || [];
@@ -171,8 +167,8 @@ export const LobeNewAPIAI = (() => {
 
         // 将检测到的 provider 信息附加到模型上，供路由使用
         enhancedModel._detectedProvider = detectedProvider;
-        // 同时更新路由映射表
-        modelRouteMap.set(model.id, detectedProvider);
+        // 同时更新全局路由映射表
+        globalModelRouteMap.set(model.id, detectedProvider);
 
         return enhancedModel;
       });
@@ -190,55 +186,60 @@ export const LobeNewAPIAI = (() => {
         return model;
       });
     },
-    routers: [
+    // 使用动态 routers 配置，在构造时获取用户的 baseURL
+    routers: (options) => {
+      // 使用全局的模型路由映射
+      const userBaseURL = options.baseURL?.replace(/\/v1\/?$/, '') || '';
+      
+      return [
       {
         apiType: 'anthropic',
         models: () =>
           Promise.resolve(
-            Array.from(modelRouteMap.entries())
+            Array.from(globalModelRouteMap.entries())
               .filter(([, provider]) => provider === 'anthropic')
               .map(([modelId]) => modelId),
           ),
         options: {
           // Anthropic 在 NewAPI 中使用 /v1 路径，会自动转换为 /v1/messages
-          baseURL: urlJoin(baseURL, '/v1'),
+          baseURL: urlJoin(userBaseURL, '/v1'),
         },
       },
       {
         apiType: 'google',
         models: () =>
           Promise.resolve(
-            Array.from(modelRouteMap.entries())
+            Array.from(globalModelRouteMap.entries())
               .filter(([, provider]) => provider === 'google')
               .map(([modelId]) => modelId),
           ),
         options: {
           // Gemini 在 NewAPI 中使用 /v1beta 路径
-          baseURL: urlJoin(baseURL, '/v1beta'),
+          baseURL: urlJoin(userBaseURL, '/v1beta'),
         },
       },
       {
         apiType: 'xai',
         models: () =>
           Promise.resolve(
-            Array.from(modelRouteMap.entries())
+            Array.from(globalModelRouteMap.entries())
               .filter(([, provider]) => provider === 'xai')
               .map(([modelId]) => modelId),
           ),
         options: {
           // xAI 使用标准 OpenAI 格式，走 /v1 路径
-          baseURL: urlJoin(baseURL, '/v1'),
+          baseURL: urlJoin(userBaseURL, '/v1'),
         },
       },
       {
         apiType: 'openai',
         options: {
-          baseURL: urlJoin(baseURL, '/v1'),
+          baseURL: urlJoin(userBaseURL, '/v1'),
           chatCompletion: {
             handlePayload,
           },
         },
       },
-    ],
-  });
-})();
+      ];
+    },
+});
