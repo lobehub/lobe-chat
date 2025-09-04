@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Subir archivo",
       "actionTooltip": "Subir",
-      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función",
+      "visionNotSupported": "El modelo actual no admite reconocimiento visual, por favor cambie de modelo para usar esta función"
     },
     "preview": {
       "prepareTasks": "Preparando fragmentos...",

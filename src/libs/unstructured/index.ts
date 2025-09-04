@@ -4,7 +4,7 @@ import { UnstructuredClient } from 'unstructured-client';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
 import { PartitionResponse } from 'unstructured-client/src/sdk/models/operations';
 
-import { knowledgeEnv } from '@/config/knowledge';
+import { knowledgeEnv } from '@/envs/knowledge';
 
 export enum ChunkingStrategy {
   Basic = 'basic',

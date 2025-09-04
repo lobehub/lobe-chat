@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Tải lên tệp",
       "actionTooltip": "Tải lên",
-      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng"
+      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng",
+      "visionNotSupported": "Mô hình hiện tại không hỗ trợ nhận dạng hình ảnh, vui lòng chuyển sang mô hình khác để sử dụng"
     },
     "preview": {
       "prepareTasks": "Chuẩn bị phân đoạn...",

@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Upload File",
       "actionTooltip": "Upload",
-      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature.",
+      "visionNotSupported": "The current model does not support visual recognition. Please switch to a different model to use this feature."
     },
     "preview": {
       "prepareTasks": "Preparing chunks...",

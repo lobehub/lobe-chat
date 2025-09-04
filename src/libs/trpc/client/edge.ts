@@ -3,7 +3,6 @@ import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
 import type { EdgeRouter } from '@/server/routers/edge';
-import { withBasePath } from '@/utils/basePath';
 import { fetchWithDesktopRemoteRPC } from '@/utils/electron/desktopRemoteRPCFetch';
 
 export const edgeClient = createTRPCClient<EdgeRouter>({
@@ -21,7 +20,7 @@ export const edgeClient = createTRPCClient<EdgeRouter>({
       },
       maxURLLength: 2083,
       transformer: superjson,
-      url: withBasePath('/trpc/edge'),
+      url: '/trpc/edge',
     }),
   ],
 });

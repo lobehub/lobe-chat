@@ -7,10 +7,27 @@ import { useUserStore } from '@/store/user';
 
 import InputArea from './TextArea';
 
+let sendMessageMock: () => Promise<void>;
+
+// Mock the useSendMessage hook to return our mock function
+vi.mock('@/features/ChatInput/useSend', () => ({
+  useSendMessage: () => ({
+    send: sendMessageMock,
+    canSend: true,
+  }),
+}));
+
+// Mock the Chinese warning hook to always allow sending
+vi.mock('@/hooks/useGeminiChineseWarning', () => ({
+  useGeminiChineseWarning: () => () => Promise.resolve(true),
+}));
+
 let onSendMock: () => void;
 
 beforeEach(() => {
   onSendMock = vi.fn();
+  sendMessageMock = vi.fn().mockResolvedValue(undefined);
+  vi.clearAllMocks();
 });
 
 describe('<InputArea />', () => {
@@ -194,9 +211,8 @@ describe('<InputArea />', () => {
 
   describe('message sending behavior', () => {
     it('does not send message when loading or shift key is pressed', () => {
-      const sendMessageMock = vi.fn();
       act(() => {
-        useChatStore.setState({ chatLoadingIds: ['123'], sendMessage: sendMessageMock });
+        useChatStore.setState({ chatLoadingIds: ['123'] });
       });
 
       render(<InputArea onSend={onSendMock} />);
@@ -206,13 +222,11 @@ describe('<InputArea />', () => {
       expect(sendMessageMock).not.toHaveBeenCalled();
     });
 
-    it('sends message on Enter press when not loading and no shift key', () => {
-      const sendMessageMock = vi.fn();
+    it('sends message on Enter press when not loading and no shift key', async () => {
       act(() => {
         useChatStore.setState({
           chatLoadingIds: [],
           inputMessage: 'abc',
-          sendMessage: sendMessageMock,
         });
       });
 
@@ -221,17 +235,18 @@ describe('<InputArea />', () => {
       fireEvent.change(textArea, { target: { value: 'Test message' } });
 
       fireEvent.keyDown(textArea, { code: 'Enter', key: 'Enter' });
-      expect(sendMessageMock).toHaveBeenCalled();
+
+      await vi.waitFor(() => {
+        expect(sendMessageMock).toHaveBeenCalled();
+      });
     });
 
     describe('metaKey behavior for sending messages', () => {
-      it('windows: sends message on ctrl + enter when useCmdEnterToSend is true', () => {
-        const sendMessageMock = vi.fn();
+      it('windows: sends message on ctrl + enter when useCmdEnterToSend is true', async () => {
         act(() => {
           useChatStore.setState({
             chatLoadingIds: [],
             inputMessage: '123',
-            sendMessage: sendMessageMock,
           });
           useUserStore.getState().updatePreference({ useCmdEnterToSend: true });
         });
@@ -240,17 +255,18 @@ describe('<InputArea />', () => {
         const textArea = screen.getByRole('textbox');
 
         fireEvent.keyDown(textArea, { code: 'Enter', ctrlKey: true, key: 'Enter' });
-        expect(sendMessageMock).toHaveBeenCalled();
+
+        await vi.waitFor(() => {
+          expect(sendMessageMock).toHaveBeenCalled();
+        });
       });
 
       it('windows: inserts a new line on ctrl + enter when useCmdEnterToSend is false', () => {
-        const sendMessageMock = vi.fn();
         const updateInputMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
             chatLoadingIds: [],
             inputMessage: 'Test',
-            sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
           });
           useUserStore.getState().updatePreference({ useCmdEnterToSend: false });
@@ -264,17 +280,15 @@ describe('<InputArea />', () => {
         expect(sendMessageMock).not.toHaveBeenCalled(); // sendMessage should not be called
       });
 
-      it('macOS: sends message on cmd + enter when useCmdEnterToSend is true', () => {
+      it('macOS: sends message on cmd + enter when useCmdEnterToSend is true', async () => {
         vi.stubGlobal('navigator', {
           userAgent:
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         });
-        const sendMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
             chatLoadingIds: [],
             inputMessage: '123',
-            sendMessage: sendMessageMock,
           });
           useUserStore.getState().updatePreference({ useCmdEnterToSend: true });
         });
@@ -283,7 +297,10 @@ describe('<InputArea />', () => {
         const textArea = screen.getByRole('textbox');
 
         fireEvent.keyDown(textArea, { code: 'Enter', key: 'Enter', metaKey: true });
-        expect(sendMessageMock).toHaveBeenCalled();
+
+        await vi.waitFor(() => {
+          expect(sendMessageMock).toHaveBeenCalled();
+        });
         vi.restoreAllMocks();
       });
 
@@ -292,13 +309,11 @@ describe('<InputArea />', () => {
           userAgent:
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         });
-        const sendMessageMock = vi.fn();
         const updateInputMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
             chatLoadingIds: [],
             inputMessage: 'Test',
-            sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
           });
           useUserStore.getState().updatePreference({ useCmdEnterToSend: false });

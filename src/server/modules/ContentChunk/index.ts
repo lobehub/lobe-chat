@@ -1,7 +1,7 @@
 import { Strategy } from 'unstructured-client/sdk/models/shared';
 
-import { knowledgeEnv } from '@/config/knowledge';
 import type { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
+import { knowledgeEnv } from '@/envs/knowledge';
 import { ChunkingLoader } from '@/libs/langchain';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
 

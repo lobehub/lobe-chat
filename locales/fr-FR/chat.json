@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Télécharger un fichier",
       "actionTooltip": "Télécharger",
-      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser"
+      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser",
+      "visionNotSupported": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser"
     },
     "preview": {
       "prepareTasks": "Préparation des morceaux...",

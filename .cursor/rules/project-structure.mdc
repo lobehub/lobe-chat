@@ -19,12 +19,15 @@ lobe-chat/
 │   ├── development/                # Development docs
 │   ├── self-hosting/               # Self-hosting docs
 │   └── usage/                      # Usage guides
-├── locales/                        # Internationalization files
-│   ├── en-US/                      # English
-│   └── zh-CN/                      # Simplified Chinese
+├── locales/                        # Internationalization files (multiple locales)
+│   ├── en-US/                      # English (example)
+│   └── zh-CN/                      # Simplified Chinese (example)
 ├── packages/                       # Monorepo packages directory
 │   ├── const/                      # Constants definition package
 │   ├── database/                   # Database related package
+│   ├── electron-client-ipc/        # Electron renderer ↔ main IPC client
+│   ├── electron-server-ipc/        # Electron main process IPC server
+│   ├── model-bank/                 # Built-in model presets/catalog exports
 │   ├── model-runtime/              # AI model runtime package
 │   ├── types/                      # TypeScript type definitions
 │   ├── utils/                      # Utility functions package
@@ -37,7 +40,6 @@ lobe-chat/
 │   └── screenshots/                # Application screenshots
 ├── scripts/                        # Build and tool scripts
 ├── src/                            # Main application source code (see below)
-├── tests/                          # Test configuration
 ├── .cursor/                        # Cursor AI configuration
 ├── docker-compose/                 # Docker configuration
 ├── package.json                    # Project dependencies
@@ -60,6 +62,7 @@ src/
 │   │   ├── oidc/                   # OpenID Connect endpoints
 │   │   ├── trpc/                   # tRPC API routes
 │   │   │   ├── async/              # Async tRPC endpoints
+│   │   │   ├── desktop/            # Desktop runtime endpoints
 │   │   │   ├── edge/               # Edge runtime endpoints
 │   │   │   ├── lambda/             # Lambda runtime endpoints
 │   │   │   └── tools/              # Tools-specific endpoints
@@ -86,7 +89,7 @@ src/
 │   ├── Error/                      # Error handling components
 │   └── Loading/                    # Loading state components
 ├── config/                         # Application configuration
-│   ├── aiModels/                   # AI model configurations
+│   ├── featureFlags/               # Feature flags & experiments
 │   └── modelProviders/             # Model provider configurations
 ├── features/                       # Feature components (UI Layer)
 │   ├── AgentSetting/               # Agent configuration and management
@@ -109,7 +112,10 @@ src/
 │   ├── modules/                    # Server modules
 │   ├── routers/                    # tRPC routers
 │   └── services/                   # Server services
-├── services/                       # Client service layer
+├── services/                       # Service layer (per-domain, client/server split)
+│   ├── user/                       # User services
+│   │   ├── client.ts               # Client DB (PGLite) implementation
+│   │   └── server.ts               # Server DB implementation (via tRPC)
 │   ├── aiModel/                    # AI model services
 │   ├── session/                    # Session services
 │   └── message/                    # Message services
@@ -162,43 +168,15 @@ packages/
 └── web-crawler/                    # Web crawling functionality
 ```
 
-## Architecture Layers
+## Architecture Map
 
-### 1. **Presentation Layer**
-
-- Business-specific feature components and reusable UI components
-- Global layout providers and responsive design wrappers
-
-### 2. **State Management Layer**
-
-- Zustand-based client state with domain-specific slices
-- Actions and selectors for predictable state updates
-
-### 3. **Client Service Layer**
-
-- Environment-adaptive services (local Model vs remote tRPC)
-- Dual implementation pattern for multi-runtime compatibility
-
-### 4. **API Interface Layer**
-
-- Type-safe tRPC routers organized by runtime environment
-- Request routing and validation
-
-### 5. **Server Service Layer**
-
-- Platform-agnostic business logic with implementation abstractions
-- Reusable, testable service composition
-
-### 6. **Data Access Layer**
-
-- **Repository**: Complex queries, joins, and transaction management
-- **Model**: Basic CRUD operations and single-table queries
-- **Schema**: Drizzle ORM definitions and migration management
-
-### 7. **Integration & Extensions**
-
-- **External**: Third-party service integrations and library wrappers
-- **Built-in**: AI runtime, tool system, file processing, and web crawling
+- Presentation: `src/features`, `src/components`, `src/layout` — UI composition, global providers
+- State: `src/store` — Zustand slices, selectors, middleware
+- Client Services: `src/services/<domain>/{client|server}.ts` — client: PGLite; server: tRPC bridge
+- API Routers: `src/app/(backend)/webapi` (REST), `src/app/(backend)/trpc/{edge|lambda|async|desktop|tools}`; Lambda router triggers Async router for long-running tasks (e.g., image)
+- Server Services: `src/server/services` (business logic), `src/server/modules` (infra adapters)
+- Data Access: `packages/database/src/{schemas,models,repositories}` — Schema (Drizzle), Model (CRUD), Repository (complex queries)
+- Integrations: `src/libs` — analytics, auth, trpc, logging, runtime helpers
 
 ## Data Flow Architecture
 
@@ -225,3 +203,37 @@ _\*Depends on cloud sync configuration_
 
 - **Type Safety**: End-to-end type safety via tRPC and Drizzle ORM
 - **Local/Remote Dual Mode**: PGLite enables user data ownership and local control
+
+## Quick Map
+
+- App Routes: `src/app` — UI routes (App Router) and backend routes under `(backend)`
+- Web API: `src/app/(backend)/webapi` — REST-like endpoints
+- tRPC Routers: `src/server/routers` — typed RPC endpoints by runtime
+- Client Services: `src/services` — environment-adaptive client-side business logic
+- Server Services: `src/server/services` — platform-agnostic business logic
+- Database: `packages/database` — schemas/models/repositories/migrations
+- State: `src/store` — Zustand stores and slices
+- Integrations: `src/libs` — analytics/auth/trpc/logging/runtime helpers
+- Tools: `src/tools` — built-in tool system
+
+## Common Tasks
+
+- Add Web API route: `src/app/(backend)/webapi/<module>/route.ts`
+- Add tRPC endpoint: `src/server/routers/{edge|lambda|desktop}/...`
+- Add client/server service: `src/services/<domain>/{client|server}.ts` (client: PGLite; server: tRPC)
+- Add server service: `src/server/services/<domain>`
+- Add a new model/provider: `src/config/modelProviders/<provider>.ts` + `packages/model-bank/src/aiModels/<provider>.ts` + `packages/model-runtime/src/<provider>/index.ts`
+- Add DB schema/model/repository: `packages/database/src/{schemas|models|repositories}`
+- Add Zustand slice: `src/store/<domain>/slices`
+
+## Env Modes
+
+- `NEXT_PUBLIC_CLIENT_DB`: selects client DB mode (e.g., `pglite`) vs server-backed
+- `NEXT_PUBLIC_IS_DESKTOP_APP`: enables desktop-specific routes and behavior
+- `NEXT_PUBLIC_SERVICE_MODE`: controls service routing preference (client/server)
+
+## Boundaries
+
+- Keep client logic in `src/services`; server-only logic stays in `src/server/services`
+- Don’t mix Web API (`webapi/`) with tRPC (`src/server/routers/`)
+- Place business UI under `src/features`, global reusable UI under `src/components`

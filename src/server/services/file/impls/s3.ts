@@ -4,6 +4,7 @@ import { fileEnv } from '@/config/file';
 import { S3 } from '@/server/modules/S3';
 
 import { FileServiceImpl } from './type';
+import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
 /**
  * 基于S3的文件服务实现
@@ -46,16 +47,19 @@ export class S3StaticFileImpl implements FileServiceImpl {
   async getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string> {
     if (!url) return '';
 
+    // Handle legacy data compatibility using shared utility
+    const key = extractKeyFromUrlOrReturnOriginal(url, this.getKeyFromFullUrl.bind(this));
+
     // If bucket is not set public read, the preview address needs to be regenerated each time
     if (!fileEnv.S3_SET_ACL) {
-      return await this.createPreSignedUrlForPreview(url, expiresIn);
+      return await this.createPreSignedUrlForPreview(key, expiresIn);
     }
 
     if (fileEnv.S3_ENABLE_PATH_STYLE) {
-      return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, fileEnv.S3_BUCKET!, url);
+      return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, fileEnv.S3_BUCKET!, key);
     }
 
-    return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, url);
+    return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, key);
   }
 
   getKeyFromFullUrl(url: string): string {

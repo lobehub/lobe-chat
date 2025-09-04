@@ -92,6 +92,9 @@
   "moonshot": {
     "description": "Moonshot est une plateforme open source lancée par Beijing Dark Side Technology Co., Ltd., offrant divers modèles de traitement du langage naturel, avec des applications dans des domaines variés, y compris mais sans s'y limiter, la création de contenu, la recherche académique, les recommandations intelligentes, le diagnostic médical, etc., prenant en charge le traitement de longs textes et des tâches de génération complexes."
   },
+  "nebius": {
+    "description": "Nebius fournit une infrastructure haute performance aux innovateurs en IA du monde entier en construisant de vastes clusters GPU et une plateforme cloud intégrée verticalement."
+  },
   "novita": {
     "description": "Novita AI est une plateforme offrant des services API pour divers grands modèles de langage et la génération d'images IA, flexible, fiable et rentable. Elle prend en charge les derniers modèles open source tels que Llama3, Mistral, et fournit des solutions API complètes, conviviales et évolutives pour le développement d'applications IA, adaptées à la croissance rapide des startups IA."
   },

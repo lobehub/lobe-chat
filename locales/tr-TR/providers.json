@@ -92,6 +92,9 @@
   "moonshot": {
     "description": "Moonshot, Beijing Yuezhi Anmian Technology Co., Ltd. tarafından sunulan açık kaynaklı bir platformdur. İçerik oluşturma, akademik araştırma, akıllı öneri, tıbbi teşhis gibi geniş bir uygulama alanına sahip çeşitli doğal dil işleme modelleri sunmaktadır. Uzun metin işleme ve karmaşık üretim görevlerini desteklemektedir."
   },
+  "nebius": {
+    "description": "Nebius, büyük ölçekli GPU kümeleri ve dikey entegre bulut platformları oluşturarak, dünya çapındaki yapay zeka yenilikçilerine yüksek performanslı altyapı sağlar."
+  },
   "novita": {
     "description": "Novita AI, çeşitli büyük dil modelleri ve yapay zeka görüntü üretimi API hizmetleri sunan bir platformdur. Esnek, güvenilir ve maliyet etkin bir yapıya sahiptir. Llama3, Mistral gibi en son açık kaynak modelleri desteklemekte ve üretken yapay zeka uygulama geliştirme için kapsamlı, kullanıcı dostu ve otomatik ölçeklenebilir API çözümleri sunmaktadır. Bu, yapay zeka girişimlerinin hızlı gelişimi için uygundur."
   },

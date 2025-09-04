@@ -2,7 +2,7 @@
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { toolsEnv } from '@/config/tools';
+import { toolsEnv } from '@/envs/tools';
 import { SearXNGClient } from '@/server/services/search/impls/searxng/client';
 import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 

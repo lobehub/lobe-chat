@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Carica file",
       "actionTooltip": "Carica",
-      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione"
+      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione",
+      "visionNotSupported": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione"
     },
     "preview": {
       "prepareTasks": "Preparazione dei blocchi...",

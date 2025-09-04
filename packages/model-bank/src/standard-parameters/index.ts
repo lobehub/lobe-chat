@@ -45,8 +45,8 @@ export const DEFAULT_DIMENSION_CONSTRAINTS = {
 } as const;
 
 export const CHAT_MODEL_IMAGE_GENERATION_PARAMS: ModelParamsSchema = {
-  imageUrl: {
-    default: null,
+  imageUrls: {
+    default: [],
   },
   prompt: { default: '' },
 };

@@ -1,7 +1,7 @@
 import { createServerAnalytics } from '@lobehub/analytics/server';
 
-import { analyticsEnv } from '@/config/analytics';
 import { BUSINESS_LINE } from '@/const/analytics';
+import { analyticsEnv } from '@/envs/analytics';
 import { isDev } from '@/utils/env';
 
 export const serverAnalytics = createServerAnalytics({

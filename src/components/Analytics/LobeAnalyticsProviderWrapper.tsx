@@ -1,7 +1,7 @@
 import { ReactNode, memo } from 'react';
 
 import { LobeAnalyticsProvider } from '@/components/Analytics/LobeAnalyticsProvider';
-import { analyticsEnv } from '@/config/analytics';
+import { analyticsEnv } from '@/envs/analytics';
 import { isDev } from '@/utils/env';
 
 type Props = {

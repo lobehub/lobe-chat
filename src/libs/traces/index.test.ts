@@ -3,7 +3,7 @@ import { Langfuse } from 'langfuse';
 import { CreateLangfuseTraceBody } from 'langfuse-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import * as server from '@/config/langfuse';
+import * as server from '@/envs/langfuse';
 
 import { TraceClient } from './index';
 

@@ -65,6 +65,56 @@ describe('S3StaticFileImpl', () => {
       );
       config.S3_ENABLE_PATH_STYLE = false;
     });
+
+    // Legacy bug compatibility tests - https://github.com/lobehub/lobe-chat/issues/8994
+    describe('legacy bug compatibility', () => {
+      it('should handle full URL input by extracting key (S3_SET_ACL=false)', async () => {
+        config.S3_SET_ACL = false;
+        const fullUrl = 'https://s3.example.com/bucket/path/to/file.jpg?X-Amz-Signature=expired';
+        
+        // Mock getKeyFromFullUrl to return the extracted key
+        vi.spyOn(fileService, 'getKeyFromFullUrl').mockReturnValue('path/to/file.jpg');
+        
+        const result = await fileService.getFullFileUrl(fullUrl);
+        
+        expect(fileService.getKeyFromFullUrl).toHaveBeenCalledWith(fullUrl);
+        expect(result).toBe('https://presigned.example.com/test.jpg');
+        config.S3_SET_ACL = true;
+      });
+
+      it('should handle full URL input by extracting key (S3_SET_ACL=true)', async () => {
+        const fullUrl = 'https://s3.example.com/bucket/path/to/file.jpg';
+        
+        vi.spyOn(fileService, 'getKeyFromFullUrl').mockReturnValue('path/to/file.jpg');
+        
+        const result = await fileService.getFullFileUrl(fullUrl);
+        
+        expect(fileService.getKeyFromFullUrl).toHaveBeenCalledWith(fullUrl);
+        expect(result).toBe('https://example.com/path/to/file.jpg');
+      });
+
+      it('should handle normal key input without extraction', async () => {
+        const key = 'path/to/file.jpg';
+        
+        const spy = vi.spyOn(fileService, 'getKeyFromFullUrl');
+        
+        const result = await fileService.getFullFileUrl(key);
+        
+        expect(spy).not.toHaveBeenCalled();
+        expect(result).toBe('https://example.com/path/to/file.jpg');
+      });
+
+      it('should handle http:// URLs for legacy compatibility', async () => {
+        const httpUrl = 'http://s3.example.com/bucket/path/to/file.jpg';
+        
+        vi.spyOn(fileService, 'getKeyFromFullUrl').mockReturnValue('path/to/file.jpg');
+        
+        const result = await fileService.getFullFileUrl(httpUrl);
+        
+        expect(fileService.getKeyFromFullUrl).toHaveBeenCalledWith(httpUrl);
+        expect(result).toBe('https://example.com/path/to/file.jpg');
+      });
+    });
   });
 
   describe('getFileContent', () => {

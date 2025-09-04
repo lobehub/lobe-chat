@@ -18,7 +18,6 @@
     "javascriptreact",
     "typescript",
     "typescriptreact",
-    "markdown",
     // support mdx
     "mdx"
   ],
@@ -59,9 +58,9 @@
     "**/src/**/route.ts": "${dirname(1)}/${dirname} • route",
     "**/src/**/index.tsx": "${dirname} • component",
 
-    "**/src/database/repositories/*/index.ts": "${dirname} • db repository",
-    "**/src/database/models/*.ts": "${filename} • db model",
-    "**/src/database/schemas/*.ts": "${filename} • db schema",
+    "**/packages/database/src/repositories/*/index.ts": "${dirname} • db repository",
+    "**/packages/database/src/models/*.ts": "${filename} • db model",
+    "**/packages/database/src/schemas/*.ts": "${filename} • db schema",
 
     "**/src/services/*.ts": "${filename} • service",
     "**/src/services/*/client.ts": "${dirname} • client service",
@@ -81,7 +80,7 @@
     "**/src/store/*/slices/*/reducer.ts": "${dirname(2)}/${dirname} • reducer",
 
     "**/src/config/modelProviders/*.ts": "${filename} • provider",
-    "**/packages/model-bank/src/aiModels/aiModels/*.ts": "${filename} • model",
+    "**/packages/model-bank/src/aiModels/*.ts": "${filename} • model",
     "**/packages/model-runtime/src/*/index.ts": "${dirname} • runtime",
 
     "**/src/server/services/*/index.ts": "${dirname} • server/service",

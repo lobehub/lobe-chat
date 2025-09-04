@@ -8,9 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { loginRequired } from '@/components/Error/loginRequiredNotification';
+import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
 import { useImageStore } from '@/store/image';
 import { createImageSelectors } from '@/store/image/selectors';
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
+import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
 
@@ -49,13 +51,23 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
   const { value, setValue } = useGenerationConfigParam('prompt');
   const isCreating = useImageStore(createImageSelectors.isCreating);
   const createImage = useImageStore((s) => s.createImage);
+  const currentModel = useImageStore(imageGenerationConfigSelectors.model);
   const isLogin = useUserStore(authSelectors.isLogin);
+  const checkGeminiChineseWarning = useGeminiChineseWarning();
 
   const handleGenerate = async () => {
     if (!isLogin) {
       loginRequired.redirect({ timeout: 2000 });
       return;
     }
+    // Check for Chinese text warning with Gemini model
+    const shouldContinue = await checkGeminiChineseWarning({
+      model: currentModel,
+      prompt: value,
+      scenario: 'image',
+    });
+
+    if (!shouldContinue) return;
 
     await createImage();
   };

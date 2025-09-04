@@ -3,7 +3,7 @@ import { AIChatModelCard } from '../types/aiModel';
 // https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 2_000_000,
     description:
       '根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。',
     displayName: 'Auto (best for prompt)',
@@ -184,7 +184,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 40_960,
+    contextWindowTokens: 131_072,
     description:
       'Qwen3-235B-A22B 是由 Qwen 开发的 235B 参数专家混合 (MoE) 模型，每次前向传递激活 22B 参数。它支持在用于复杂推理、数学和代码任务的“思考”模式与用于一般对话效率的“非思考”模式之间无缝切换。该模型展示了强大的推理能力、多语言支持（100 多种语言和方言）、高级指令遵循和代理工具调用能力。它原生处理 32K 令牌上下文窗口，并使用基于 YaRN 的扩展扩展到 131K 令牌。',
     displayName: 'Qwen3 235B A22B (Free)',
@@ -241,37 +241,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 32_000,
-    description:
-      'GLM-Z1-9B-0414 是由 THUDM 开发的 GLM-4 系列中的 9B 参数语言模型。它采用了最初应用于更大 GLM-Z1 模型的技术，包括扩展强化学习、成对排名对齐以及对数学、代码和逻辑等推理密集型任务的训练。尽管其规模较小，但它在通用推理任务上表现出强大的性能，并在其权重级别中优于许多开源模型。',
-    displayName: 'GLM Z1 9B (Free)',
-    id: 'thudm/glm-z1-9b:free',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_000,
-    description:
-      'GLM-4-9B-0414 是 THUDM 开发的 GLM-4 系列中的 90 亿参数语言模型。GLM-4-9B-0414 使用与其较大的 32B 对应模型相同的强化学习和对齐策略进行训练，相对于其规模实现了高性能，使其适用于仍需要强大语言理解和生成能力的资源受限部署。',
-    displayName: 'GLM 4 9B (Free)',
-    id: 'thudm/glm-4-9b:free',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
     contextWindowTokens: 32_768,
-    description:
-      'GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。',
-    displayName: 'GLM Z1 32B (Free)',
-    id: 'thudm/glm-z1-32b:free',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_000,
     description:
       'GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。',
     displayName: 'GLM Z1 32B',
@@ -288,7 +258,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 32_000,
     description:
       'GLM-4-32B-0414 是一个 32B 双语（中英）开放权重语言模型，针对代码生成、函数调用和代理式任务进行了优化。它在 15T 高质量和重推理数据上进行了预训练，并使用人类偏好对齐、拒绝采样和强化学习进一步完善。该模型在复杂推理、工件生成和结构化输出任务方面表现出色，在多个基准测试中达到了与 GPT-4o 和 DeepSeek-V3-0324 相当的性能。',
     displayName: 'GLM 4 32B (Free)',
@@ -715,7 +685,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 163_840,
     description:
       'DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。',
     displayName: 'DeepSeek V3 0324',
@@ -1018,7 +988,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.3 70B Instruct',
@@ -1035,7 +1005,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 65_536,
     description:
       'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.3 70B Instruct (Free)',
@@ -1050,7 +1020,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
     displayName: 'Llama 3.1 8B (Free)',
     id: 'meta-llama/llama-3.1-8b-instruct:free',

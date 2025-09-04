@@ -96,7 +96,7 @@ describe('createRouterRuntime', () => {
       });
 
       const runtime = new Runtime();
-      const models = await runtime['getModels']({
+      const models = await runtime['getRouterMatchModels']({
         id: 'test',
         models: ['model-1', 'model-2'],
         runtime: mockRuntime,
@@ -105,7 +105,7 @@ describe('createRouterRuntime', () => {
       expect(models).toEqual(['model-1', 'model-2']);
     });
 
-    it('should call and cache asynchronous models function', async () => {
+    it('should call asynchronous models function', async () => {
       const mockRuntime = {
         chat: vi.fn(),
       } as unknown as LobeRuntimeAI;
@@ -131,14 +131,9 @@ describe('createRouterRuntime', () => {
         runtime: mockRuntime,
       };
 
-      // First call
-      const models1 = await runtime['getModels'](runtimeItem);
-      expect(models1).toEqual(['async-model-1', 'async-model-2']);
-      expect(mockModelsFunction).toHaveBeenCalledTimes(1);
-
-      // Second call should use cache
-      const models2 = await runtime['getModels'](runtimeItem);
-      expect(models2).toEqual(['async-model-1', 'async-model-2']);
+      // Call the function
+      const models = await runtime['getRouterMatchModels'](runtimeItem);
+      expect(models).toEqual(['async-model-1', 'async-model-2']);
       expect(mockModelsFunction).toHaveBeenCalledTimes(1);
     });
 
@@ -159,7 +154,7 @@ describe('createRouterRuntime', () => {
       });
 
       const runtime = new Runtime();
-      const models = await runtime['getModels']({
+      const models = await runtime['getRouterMatchModels']({
         id: 'test',
         runtime: mockRuntime,
       });
@@ -453,86 +448,6 @@ describe('createRouterRuntime', () => {
       const result = await runtime.textToSpeech(payload, options);
       expect(result).toBe('speech-response');
       expect(mockTextToSpeech).toHaveBeenCalledWith(payload, options);
-    });
-  });
-
-  describe('clearModelCache method', () => {
-    it('should clear specific runtime cache when runtimeId provided', async () => {
-      const mockModelsFunction = vi.fn().mockResolvedValue(['model-1']);
-
-      const Runtime = createRouterRuntime({
-        id: 'test-runtime',
-        routers: [
-          {
-            apiType: 'openai',
-            options: {},
-            runtime: vi.fn() as any,
-            models: mockModelsFunction,
-          },
-        ],
-      });
-
-      const runtime = new Runtime();
-      const runtimeItem = {
-        id: 'test-id',
-        models: mockModelsFunction,
-        runtime: {} as any,
-      };
-
-      // Build cache
-      await runtime['getModels'](runtimeItem);
-      expect(mockModelsFunction).toHaveBeenCalledTimes(1);
-
-      // Clear specific cache
-      runtime.clearModelCache('test-id');
-
-      // Should call function again
-      await runtime['getModels'](runtimeItem);
-      expect(mockModelsFunction).toHaveBeenCalledTimes(2);
-    });
-
-    it('should clear all cache when no runtimeId provided', async () => {
-      const mockModelsFunction1 = vi.fn().mockResolvedValue(['model-1']);
-      const mockModelsFunction2 = vi.fn().mockResolvedValue(['model-2']);
-
-      const Runtime = createRouterRuntime({
-        id: 'test-runtime',
-        routers: [
-          {
-            apiType: 'openai',
-            options: {},
-            runtime: vi.fn() as any,
-            models: mockModelsFunction1,
-          },
-        ],
-      });
-
-      const runtime = new Runtime();
-      const runtimeItem1 = {
-        id: 'test-id-1',
-        models: mockModelsFunction1,
-        runtime: {} as any,
-      };
-      const runtimeItem2 = {
-        id: 'test-id-2',
-        models: mockModelsFunction2,
-        runtime: {} as any,
-      };
-
-      // Build cache for both items
-      await runtime['getModels'](runtimeItem1);
-      await runtime['getModels'](runtimeItem2);
-      expect(mockModelsFunction1).toHaveBeenCalledTimes(1);
-      expect(mockModelsFunction2).toHaveBeenCalledTimes(1);
-
-      // Clear all cache
-      runtime.clearModelCache();
-
-      // Should call functions again
-      await runtime['getModels'](runtimeItem1);
-      await runtime['getModels'](runtimeItem2);
-      expect(mockModelsFunction1).toHaveBeenCalledTimes(2);
-      expect(mockModelsFunction2).toHaveBeenCalledTimes(2);
     });
   });
 });
