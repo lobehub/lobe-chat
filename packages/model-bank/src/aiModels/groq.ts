@@ -7,19 +7,19 @@ const groqChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
     description:
-      'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
-    displayName: 'Compound Beta',
+      'Compound 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound',
     enabled: true,
-    id: 'compound-beta',
+    id: 'groq/compound',
     maxOutput: 8192,
     type: 'chat',
   },
   {
     contextWindowTokens: 131_072,
     description:
-      'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
-    displayName: 'Compound Beta Mini',
-    id: 'compound-beta-mini',
+      'Compound-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound Mini',
+    id: 'groq/compound-mini',
     maxOutput: 8192,
     type: 'chat',
   },
