@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { POST as UniverseRoute } from '../[provider]/route';
-import { POST, preferredRegion, runtime } from './route';
+import { POST, preferredRegion } from './route';
 
 // 模拟 '../[provider]/route'
 vi.mock('../[provider]/route', () => ({
@@ -10,10 +10,6 @@ vi.mock('../[provider]/route', () => ({
 }));
 
 describe('Configuration tests', () => {
-  it('should have runtime set to "edge"', () => {
-    expect(runtime).toBe('edge');
-  });
-
   it('should contain specific regions in preferredRegion', () => {
     expect(preferredRegion).not.contain(['hkg1']);
   });

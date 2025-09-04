@@ -1,7 +1,5 @@
 import { POST as UniverseRoute } from '../[provider]/route';
 
-export const runtime = 'edge';
-
 export const preferredRegion = [
   'bom1',
   'cle1',
