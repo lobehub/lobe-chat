@@ -17,7 +17,7 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
       next(op).subscribe({
         complete: () => observer.complete(),
         error: async (err) => {
-          const showError = (op.context?.showError as boolean) ?? true;
+          const showError = (op.context?.showNotification as boolean) ?? true;
 
           if (showError) {
             const status = err.data?.httpStatus as number;
