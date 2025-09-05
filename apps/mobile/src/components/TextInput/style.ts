@@ -2,17 +2,22 @@ import { createStyles } from '@/theme';
 import { Platform } from 'react-native';
 
 export const useStyles = createStyles((token) => ({
-  input: {
+  container: {
+    alignItems: 'center',
     backgroundColor: token.colorBgContainer,
     borderRadius: token.borderRadius,
-    color: token.colorText,
-    fontSize: token.fontSizeLG,
+    flexDirection: 'row',
     height: token.controlHeightLG,
-
-    lineHeight: undefined,
     marginHorizontal: token.padding,
     marginVertical: token.marginXS,
-
+    paddingHorizontal: token.paddingSM,
+  },
+  input: {
+    color: token.colorText,
+    flex: 1,
+    fontFamily: token.fontFamily,
+    fontSize: token.fontSizeLG,
+    lineHeight: undefined,
     ...(Platform.OS === 'android' && {
       includeFontPadding: false,
       // 垂直居中
@@ -21,6 +26,8 @@ export const useStyles = createStyles((token) => ({
       // 移除额外的字体内边距
       textAlignVertical: 'center',
     }),
-    paddingHorizontal: token.paddingSM,
+  },
+  prefixContainer: {
+    marginRight: token.marginXS,
   },
 }));
