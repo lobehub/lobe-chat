@@ -6,9 +6,6 @@ import { getServerDBConfig } from '@/config/db';
 import { LobeNextAuthDbAdapter } from './adapter';
 import { ssoProviders } from './sso-providers';
 
-import { LobeNextAuthDbAdapter } from './adapter';
-import { ssoProviders } from './sso-providers';
-
 const {
   NEXT_AUTH_DEBUG,
   NEXT_AUTH_SECRET,
