@@ -3,7 +3,7 @@
 export const LOBE_CHAT_CLOUD = 'Imoogle AI Cloud';
 
 export const BRANDING_NAME = 'Imoogle AI';
-export const BRANDING_LOGO_URL = '';
+export const BRANDING_LOGO_URL = 'https://imoogleai.s3.us-east-1.amazonaws.com/ImoogleAI%20Logo%20%281%29.svg';
 
 export const ORG_NAME = 'Imoogle';
 

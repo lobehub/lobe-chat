@@ -359,8 +359,8 @@ export default {
       version: '版本',
     },
     official: {
-      badge: 'LobeHub 官方插件',
-      description: '此插件由 LobeHub 官方开发和维护，经过严格的安全审核，可放心使用。',
+      badge: 'Imoogle 官方插件',
+      description: '此插件由 Imoogle 官方开发和维护，经过严格的安全审核，可放心使用。',
       loadingMessage: '正在获取插件详情...',
       loadingTitle: '加载中',
       title: '安装官方插件',

@@ -14,7 +14,7 @@ import { createInteractionPolicy } from './interaction-policy';
 
 const logProvider = debug('lobe-oidc:provider'); // <--- 添加 provider 日志实例
 
-export const API_AUDIENCE = 'urn:lobehub:chat'; // <-- 把这里换成你自己的 API 标识符
+export const API_AUDIENCE = 'urn:imoogle:chat'; // ImoogleAI API identifier
 
 /**
  * 获取 Cookie 密钥，使用 KEY_VAULTS_SECRET
