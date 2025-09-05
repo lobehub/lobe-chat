@@ -1025,7 +1025,7 @@ describe('FileModel', () => {
     it('should handle unknown file category', async () => {
       // This tests the default case in switch statement (line 312-313)
       const unknownCategory = 'unknown' as FilesTabs;
-      
+
       // We need to access the private method indirectly by testing the query method
       // that uses getFileTypePrefix internally
       const params = {
@@ -1033,7 +1033,7 @@ describe('FileModel', () => {
         current: 1,
         pageSize: 10,
       };
-      
+
       // This should not throw an error and should handle the unknown category gracefully
       const result = await fileModel.query(params);
       expect(result).toBeDefined();
@@ -1054,7 +1054,7 @@ describe('FileModel', () => {
       };
 
       const { id: fileId } = await fileModel.create(testFile, true);
-      
+
       // Create many chunks for this file to trigger batch processing
       // Note: This is a simplified test since we can't easily create 3000+ chunks
       // But it will still exercise the batch deletion code path
@@ -1069,7 +1069,7 @@ describe('FileModel', () => {
       // Insert chunks (this might need to be done through proper API)
       // For testing purposes, we'll delete the file which should trigger the batch deletion
       await fileModel.delete(fileId, true);
-      
+
       // Verify the file is deleted
       const deletedFile = await serverDB.query.files.findFirst({
         where: eq(files.id, fileId),

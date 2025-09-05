@@ -104,6 +104,9 @@ vertex-ai-key.json
 
 CLAUDE.local.md
 
+# MCP tools
+.serena/**
+
 # Misc
 ./packages/lobe-ui
 *.ppt*

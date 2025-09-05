@@ -32,6 +32,7 @@
   "blog": "제품 블로그",
   "branching": "하위 주제 만들기",
   "branchingDisable": "「하위 주제」 기능은 서버 버전에서만 사용할 수 있습니다. 이 기능이 필요하시면 서버 배포 모드로 전환하거나 LobeChat Cloud를 사용하세요.",
+  "branchingRequiresSavedTopic": "현재 주제가 저장되지 않았습니다. 저장한 후에 하위 주제 기능을 사용할 수 있습니다.",
   "cancel": "취소",
   "changelog": "변경 로그",
   "clientDB": {

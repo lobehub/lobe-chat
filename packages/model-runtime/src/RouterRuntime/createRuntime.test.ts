@@ -450,4 +450,64 @@ describe('createRouterRuntime', () => {
       expect(mockTextToSpeech).toHaveBeenCalledWith(payload, options);
     });
   });
+
+  describe('dynamic routers configuration', () => {
+    it('should support function-based routers configuration', () => {
+      class MockRuntime implements LobeRuntimeAI {
+        chat = vi.fn();
+        textToImage = vi.fn();
+        models = vi.fn();
+        embeddings = vi.fn();
+        textToSpeech = vi.fn();
+      }
+
+      const dynamicRoutersFunction = (options: any) => [
+        {
+          apiType: 'openai' as const,
+          options: {
+            baseURL: `${options.baseURL || 'https://api.openai.com'}/v1`,
+          },
+          runtime: MockRuntime as any,
+          models: ['gpt-4'],
+        },
+        {
+          apiType: 'anthropic' as const,
+          options: {
+            baseURL: `${options.baseURL || 'https://api.anthropic.com'}/v1`,
+          },
+          runtime: MockRuntime as any,
+          models: ['claude-3'],
+        },
+      ];
+
+      const Runtime = createRouterRuntime({
+        id: 'test-runtime',
+        routers: dynamicRoutersFunction,
+      });
+
+      const userOptions = {
+        apiKey: 'test-key',
+        baseURL: 'https://yourapi.cn',
+      };
+
+      const runtime = new Runtime(userOptions);
+
+      expect(runtime).toBeDefined();
+      expect(runtime['_runtimes']).toHaveLength(2);
+      expect(runtime['_runtimes'][0].id).toBe('openai');
+      expect(runtime['_runtimes'][1].id).toBe('anthropic');
+    });
+
+    it('should throw error when dynamic routers function returns empty array', () => {
+      const emptyRoutersFunction = () => [];
+
+      expect(() => {
+        const Runtime = createRouterRuntime({
+          id: 'test-runtime',
+          routers: emptyRoutersFunction,
+        });
+        new Runtime();
+      }).toThrow('empty providers');
+    });
+  });
 });
