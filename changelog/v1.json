@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove edge runtime."]
+    },
+    "date": "2025-09-05",
+    "version": "1.123.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix mobile header title to loog not ellipsis."]
     },
     "date": "2025-09-05",
