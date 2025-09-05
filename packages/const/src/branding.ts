@@ -8,12 +8,15 @@ export const BRANDING_LOGO_URL = '';
 export const ORG_NAME = 'Imoogle';
 
 export const BRANDING_URL = {
-  help: undefined,
-  privacy: undefined,
-  terms: undefined,
+  help: 'https://imoogleai.xyz/help',
+  privacy: 'https://imoogleai.xyz/privacy',
+  terms: 'https://imoogleai.xyz/terms',
 };
 
 export const SOCIAL_URL = {
+  discord: 'https://discord.gg/AYFPHvv2jT',
+  github: 'https://github.com/imoogleai/lobe-chat',
+  medium: 'https://medium.com/@imoogleai',
   x: 'https://x.com/imoogleai',
   youtube: 'https://www.youtube.com/@imoogleai',
 };

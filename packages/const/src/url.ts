@@ -30,15 +30,15 @@ export const MANUAL_UPGRADE_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/ups
 
 export const BLOG = urlJoin(OFFICIAL_SITE, 'blog');
 
-// Dummy constants for compatibility (functionality removed)
-export const GITHUB = '';
-export const GITHUB_ISSUES = '';
-export const FEEDBACK = '';
-export const AGENTS_INDEX_GITHUB = '';
-export const AGENTS_INDEX_GITHUB_ISSUE = '';
-export const MORE_MODEL_PROVIDER_REQUEST_URL = '';
-export const MORE_FILE_PREVIEW_REQUEST_URL = '';
-export const WIKI = '';
+// ImoogleAI GitHub and support URLs
+export const GITHUB = 'https://github.com/imoogleai/lobe-chat';
+export const GITHUB_ISSUES = `${GITHUB}/issues/new/choose`;
+export const FEEDBACK = `${GITHUB}/issues/new?assignees=&labels=%F0%9F%A4%AF+bug&projects=&template=BUG_REPORT.yml`;
+export const AGENTS_INDEX_GITHUB = 'https://github.com/imoogleai/lobe-chat-agents';
+export const AGENTS_INDEX_GITHUB_ISSUE = `${AGENTS_INDEX_GITHUB}/issues/new`;
+export const MORE_MODEL_PROVIDER_REQUEST_URL = `${GITHUB}/issues/new?assignees=&labels=%E2%9C%A8+enhancement&projects=&template=REQUEST_MODEL.yml`;
+export const MORE_FILE_PREVIEW_REQUEST_URL = `${GITHUB}/issues/new?assignees=&labels=%E2%9C%A8+enhancement&projects=&template=REQUEST_FEATURE.yml`;
+export const WIKI = `${GITHUB}/wiki`;
 
 export const ABOUT = OFFICIAL_SITE;
 export const PRIVACY_URL = urlJoin(OFFICIAL_SITE, '/privacy');

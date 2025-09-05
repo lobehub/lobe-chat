@@ -34,7 +34,7 @@ const NotSupport: ComponentType<{
         <Flexbox align={'center'} gap={12}>
           <FluentEmoji emoji={'👀'} size={64} />
           <Flexbox style={{ textAlign: 'center' }}>
-            {t('preview.unsupportedFile')}
+            {t('preview.unsupportedFileAndContact')}
           </Flexbox>
           <Button
             loading={loading}
