@@ -49,6 +49,7 @@ export interface SystemStatus {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
   filePanelWidth: number;
+  hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
   hidePWAInstaller?: boolean;
   hideThreadLimitAlert?: boolean;
   imagePanelWidth: number;
@@ -107,6 +108,7 @@ export interface GlobalState {
 export const INITIAL_STATUS = {
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   filePanelWidth: 320,
+  hideGemini2_5FlashImagePreviewChineseWarning: false,
   hidePWAInstaller: false,
   hideThreadLimitAlert: false,
   imagePanelWidth: 320,

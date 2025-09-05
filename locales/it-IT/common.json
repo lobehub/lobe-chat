@@ -32,6 +32,7 @@
   "blog": "Blog sui prodotti",
   "branching": "Crea un sottotema",
   "branchingDisable": "La funzione «sottotema» è disponibile solo nella versione server. Se desideri utilizzare questa funzione, passa alla modalità di distribuzione server o utilizza LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "L'argomento corrente non è salvato, è necessario salvarlo prima di poter utilizzare la funzione di sottoargomento",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "clientDB": {
@@ -182,6 +183,13 @@
     "title": "Ti piace il nostro prodotto?"
   },
   "fullscreen": "Modalità a schermo intero",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana potrebbe non riuscire a generare immagini correttamente se si utilizza il cinese. Si consiglia di utilizzare l'inglese per ottenere risultati migliori.",
+    "continueGenerate": "Continua a generare",
+    "continueSend": "Continua a inviare",
+    "doNotShowAgain": "Non mostrare più",
+    "title": "Avviso per input in cinese"
+  },
   "historyRange": "Intervallo cronologico",
   "import": "Importa",
   "importData": "Importa dati",

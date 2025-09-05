@@ -60,6 +60,7 @@ export enum ModelProvider {
   ModelScope = 'modelscope',
   Moonshot = 'moonshot',
   Nebius = 'nebius',
+  NewAPI = 'newapi',
   Novita = 'novita',
   Nvidia = 'nvidia',
   Ollama = 'ollama',

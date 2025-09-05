@@ -32,6 +32,7 @@
   "blog": "Blog sản phẩm",
   "branching": "Tạo chủ đề con",
   "branchingDisable": "Chức năng «Chủ đề con» chỉ có sẵn trong phiên bản máy chủ. Nếu bạn cần chức năng này, hãy chuyển sang chế độ triển khai máy chủ hoặc sử dụng LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Chủ đề hiện tại chưa được lưu, vui lòng lưu trước khi sử dụng chức năng chủ đề con",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "clientDB": {
@@ -182,6 +183,13 @@
     "title": "Yêu thích sản phẩm của chúng tôi?"
   },
   "fullscreen": "Chế độ toàn màn hình",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana khi sử dụng tiếng Trung có khả năng không tạo được hình ảnh. Khuyến nghị sử dụng tiếng Anh để có kết quả tốt hơn.",
+    "continueGenerate": "Tiếp tục tạo",
+    "continueSend": "Tiếp tục gửi",
+    "doNotShowAgain": "Không hiển thị lại",
+    "title": "Thông báo nhập tiếng Trung"
+  },
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập khẩu",
   "importData": "Nhập dữ liệu",

@@ -32,6 +32,7 @@
   "blog": "Ürün Blogu",
   "branching": "Alt konu oluştur",
   "branchingDisable": "«Alt konu» özelliği yalnızca sunucu sürümünde mevcuttur. Bu özelliği kullanmak için lütfen sunucu dağıtım moduna geçin veya LobeChat Cloud'u kullanın.",
+  "branchingRequiresSavedTopic": "Geçerli konu kaydedilmedi, alt konu özelliğini kullanmak için önce kaydedilmelidir",
   "cancel": "İptal",
   "changelog": "Changelog",
   "clientDB": {
@@ -182,6 +183,13 @@
     "title": "Ürünümüzü Beğendiniz mi?"
   },
   "fullscreen": "Tam Ekran Modu",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana, Çince kullanıldığında resim oluşturma işlemi bazen başarısız olabilir. Daha iyi sonuçlar için İngilizce kullanmanız önerilir.",
+    "continueGenerate": "Oluşturmaya devam et",
+    "continueSend": "Göndermeye devam et",
+    "doNotShowAgain": "Bir daha gösterme",
+    "title": "Çince Giriş Uyarısı"
+  },
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe aktar",
   "importData": "Veri İçe Aktar",

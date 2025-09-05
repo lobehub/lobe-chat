@@ -163,6 +163,61 @@ describe('OpenAIStream', () => {
     );
   });
 
+  it('should emit base64_image and strip markdown data:image from text', async () => {
+    const data = [
+      {
+        id: 'img-1',
+        choices: [
+          { index: 0, delta: { role: 'assistant', content: '这是一张图片： ' } },
+        ],
+      },
+      {
+        id: 'img-1',
+        choices: [
+          {
+            index: 0,
+            delta: {
+              content:
+                '![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA==)',
+            },
+          },
+        ],
+      },
+      { id: 'img-1', choices: [{ index: 0, delta: {}, finish_reason: 'stop' }] },
+    ];
+
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        data.forEach((c) => controller.enqueue(c));
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks: string[] = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: img-1',
+        'event: text',
+        `data: "这是一张图片： "\n`,
+        'id: img-1',
+        'event: base64_image',
+        `data: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAB3D1E1AA=="\n`,
+        'id: img-1',
+        'event: stop',
+        `data: "stop"\n`,
+      ].map((i) => `${i}\n`),
+    );
+  });
+
   it('should handle content with tool_calls but is an empty object', async () => {
     // data: {"id":"chatcmpl-A7pokGUqSov0JuMkhiHhWU9GRtAgJ", "object":"chat.completion.chunk", "created":1726430846, "model":"gpt-4o-2024-05-13", "choices":[{"index":0, "delta":{"content":" today", "role":"", "tool_calls":[]}, "finish_reason":"", "logprobs":""}], "prompt_annotations":[{"prompt_index":0, "content_filter_results":null}]}
     const mockOpenAIStream = new ReadableStream({
@@ -2310,5 +2365,87 @@ describe('OpenAIStream', () => {
     }
 
     expect(chunks).toEqual(['id: 6\n', 'event: base64_image\n', `data: "${base64}"\n\n`]);
+  });
+
+  it('should handle finish_reason with markdown image in content', async () => {
+    const base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAAgAElEQVR4nFy9a5okSY4jCFBU3SOr53HdvcZeYW/YVZnhZqpCYn+AVIuZ7PqqKyPczfQhQgIgSOH/+//9PxRVu7QzX5nvqveVP5mv+3rf+XPt985b2NIVgVgK1jr0da7zrAiegWPhPBABLi1GILhCEMkFnCuOFRFxHN/r/CbOym/om/h1X+d1H/v667rP9328r9g3VNblpoXsAwsnTtnWp0kQ40siih6NixuHlN9Rt7ehv1mbW2dkg1ef03J9zQQpQg5yc/XllveG4wa4arKtSr0NwSCdGEJVNeKlkDZMov695YaQ5NVK3fmjn4OrE9N/U04C0EqT/2HCBxrf9pJe1L2nPBjqhKEq1TEi1Q/OXiIq+IrqX2fUb+qF+2kF10k/4ScwIXidU6/T6vGkA/bSR/fZ7Ok8yOd0s+27CnP8PH3cijINdbAcAAAAASUVORK5CYII=';
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'chatcmpl-test',
+          choices: [
+            {
+              index: 0,
+              delta: { content: `这有一张图片： ![image](${base64})` },
+              finish_reason: 'stop',
+            },
+          ],
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chatcmpl-test\n',
+      'event: text\n',
+      `data: "这有一张图片："\n\n`,
+      'id: chatcmpl-test\n',
+      'event: base64_image\n',
+      `data: "${base64}"\n\n`,
+    ]);
+  });
+
+  it('should handle finish_reason with multiple markdown images in content', async () => {
+    const base64_1 = 'data:image/png;base64,first';
+    const base64_2 = 'data:image/jpeg;base64,second';
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'chatcmpl-multi',
+          choices: [
+            {
+              index: 0,
+              delta: { content: `![img1](${base64_1}) and ![img2](${base64_2})` },
+              finish_reason: 'stop',
+            },
+          ],
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chatcmpl-multi\n',
+      'event: text\n',
+      `data: "and"\n\n`, // Remove all markdown base64 image segments
+      'id: chatcmpl-multi\n',
+      'event: base64_image\n',
+      `data: "${base64_1}"\n\n`,
+      'id: chatcmpl-multi\n',
+      'event: base64_image\n',
+      `data: "${base64_2}"\n\n`,
+    ]);
   });
 });
