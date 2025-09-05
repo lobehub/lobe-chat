@@ -46,6 +46,7 @@
       "loadFailed": "Error al cargar la lista de proveedores"
     },
     "models": {
+      "allLoaded": "Todos los modelos mostrados",
       "copySuccess": "Copiado con éxito",
       "disableFailed": "Error al deshabilitar el modelo",
       "emptyNoSearch": "No se encontraron modelos, intente obtenerlos del servidor",
@@ -55,6 +56,8 @@
       "fetchFailed": "Error al obtener modelos, por favor intente de nuevo",
       "fetchSuccess": "¡Lista de modelos obtenida con éxito!",
       "fetching": "Obteniendo...",
+      "loading": "Cargando...",
+      "loadingMore": "Cargando más...",
       "modelsAvailable": "{{count}} modelos disponibles en total",
       "searchPlaceholder": "Buscar modelos...",
       "title": "Modelos"
@@ -136,6 +139,18 @@
     "testConnectivity": "Probar conectividad",
     "validationFailed": "Validación fallida",
     "validationSuccess": "Validación exitosa"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Su clave secreta y la dirección del proxy se cifrarán utilizando el algoritmo <1>AES-GCM</1>",
+      "checker": {
+        "button": "Probar conexión",
+        "desc": "Verificar si la clave API y la dirección del proxy están correctamente configuradas",
+        "pass": "Verificación exitosa",
+        "selectModel": "Seleccione el modelo para probar la conexión",
+        "title": "Comprobación de conectividad"
+      }
+    }
   },
   "providers": "Proveedores de IA",
   "support": "Soporte por correo electrónico",
