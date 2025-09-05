@@ -32,6 +32,7 @@
   "blog": "Blog sản phẩm",
   "branching": "Tạo chủ đề con",
   "branchingDisable": "Chức năng «Chủ đề con» chỉ có sẵn trong phiên bản máy chủ. Nếu bạn cần chức năng này, hãy chuyển sang chế độ triển khai máy chủ hoặc sử dụng LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Chủ đề hiện tại chưa được lưu, vui lòng lưu trước khi sử dụng chức năng chủ đề con",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "clientDB": {

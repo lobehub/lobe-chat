@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Not use branch topic when this topic is not save."]
+    },
+    "date": "2025-09-05",
+    "version": "1.123.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-05",
+    "version": "1.123.1"
+  },
+  {
+    "children": {
       "features": ["Add NewAPI as a router provider for multi-model aggregation."]
     },
     "date": "2025-09-04",
