@@ -249,7 +249,11 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
       {isServerMode && (
         <View style={styles.aesGcmContainer}>
           <View style={styles.aesGcmContent}>
-            <Lock color={token.colorTextSecondary} size={14} style={{ opacity: 0.66 }} />
+            <Lock
+              color={token.colorTextSecondary}
+              size={14}
+              style={{ marginRight: 1.5, opacity: 0.66 }}
+            />
             <Text style={styles.aesGcmText}>
               <Trans i18nKey="providerModels.config.aesGcm" ns="setting">
                 您的秘钥与代理地址等将使用

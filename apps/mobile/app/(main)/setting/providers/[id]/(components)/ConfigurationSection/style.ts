@@ -9,9 +9,10 @@ export const useStyles = createStyles((token) => ({
   },
 
   aesGcmContent: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    flex: 1,
     flexDirection: 'row',
-    gap: token.marginXS,
+    maxWidth: '100%',
   },
 
   aesGcmLink: {
@@ -21,6 +22,8 @@ export const useStyles = createStyles((token) => ({
 
   aesGcmText: {
     color: token.colorTextSecondary,
+    flex: 1,
+    flexShrink: 1,
     fontSize: token.fontSizeSM,
     opacity: 0.66,
     textAlign: 'center',
@@ -61,6 +64,7 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgContainer,
     borderRadius: token.borderRadiusLG,
+    marginVertical: token.marginXS,
     padding: token.padding,
   },
 
