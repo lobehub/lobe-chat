@@ -139,6 +139,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'textinput': {
+        router.push('/playground/components/textinput');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }

@@ -4,26 +4,34 @@ import {
   TextInputProps as RNTextInputProps,
   StyleProp,
   TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 import { useStyles } from './style';
 
 export interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
-  style?: StyleProp<TextStyle>;
+  contentStyle?: StyleProp<TextStyle>;
+  prefix?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
   const { styles, token } = useStyles();
-  const { style, placeholderTextColor, underlineColorAndroid, ...rest } = props;
+  const { style, contentStyle, placeholderTextColor, underlineColorAndroid, prefix, ...rest } =
+    props;
 
   return (
-    <RNTextInput
-      ref={ref}
-      {...rest}
-      placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
-      style={[styles.input, style]}
-      underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
-    />
+    <View style={[styles.container, style]}>
+      {prefix && <View style={styles.prefixContainer}>{prefix}</View>}
+      <RNTextInput
+        ref={ref}
+        {...rest}
+        placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
+        style={[styles.input, contentStyle]}
+        underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
+      />
+    </View>
   );
 });
 
