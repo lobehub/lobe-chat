@@ -391,7 +391,14 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
     headers: options.headers as Record<string, string>,
     method: options.method,
     onerror: (error) => {
-      if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === 'AbortError') {
+      if (
+        error === MESSAGE_CANCEL_FLAT ||
+        (error as TypeError)?.name === 'AbortError' ||
+        (error as Error).message?.includes('Fetch request has been canceled') ||
+        (error as Error).message?.includes('canceled') ||
+        (error as Error).message?.includes('Fetch request has been canceled') ||
+        (error as Error).message?.includes('Expo.FetchRequestCanceledException')
+      ) {
         finishedType = 'abort';
         options?.onAbort?.(output);
         textController.stopAnimation();

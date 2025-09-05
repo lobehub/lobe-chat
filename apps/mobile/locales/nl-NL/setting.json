@@ -46,6 +46,7 @@
       "loadFailed": "Lijst met providers laden mislukt"
     },
     "models": {
+      "allLoaded": "Alle modellen zijn geladen",
       "copySuccess": "Kopiëren geslaagd",
       "disableFailed": "Uitschakelen van model mislukt",
       "emptyNoSearch": "Geen modellen gevonden, probeer op te halen van de server",
@@ -55,6 +56,8 @@
       "fetchFailed": "Modellen ophalen mislukt, probeer het opnieuw",
       "fetchSuccess": "Modelijst succesvol opgehaald!",
       "fetching": "Bezig met ophalen...",
+      "loading": "Bezig met laden...",
+      "loadingMore": "Meer laden...",
       "modelsAvailable": "In totaal {{count}} beschikbare modellen",
       "searchPlaceholder": "Zoek modellen...",
       "title": "Modellen"
@@ -136,6 +139,18 @@
     "testConnectivity": "Test connectiviteit",
     "validationFailed": "Validatie mislukt",
     "validationSuccess": "Validatie geslaagd"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Uw sleutel en proxy-adres worden versleuteld met de <1>AES-GCM</1> encryptie-algoritme",
+      "checker": {
+        "button": "Verbinding testen",
+        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
+        "pass": "Controle geslaagd",
+        "selectModel": "Selecteer een model om de verbinding te testen",
+        "title": "Connectiviteitstest"
+      }
+    }
   },
   "providers": "AI-providers",
   "support": "E-mailondersteuning",
