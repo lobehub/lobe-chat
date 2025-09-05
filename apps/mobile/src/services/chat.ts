@@ -1,7 +1,7 @@
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { TracePayload, TraceTagMap } from '@/const/trace';
+import { TracePayload } from '@/const/trace';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -17,6 +17,7 @@ import { createTraceHeader } from '@/utils/trace';
 import { API_ENDPOINTS } from './_url';
 import { createHeaderWithAuth } from './_auth/header';
 import { ModelProvider } from '@/libs/model-runtime/types/type';
+import { TraceTagMap } from '@/types/trace';
 
 const isCanUseVision = (model: string, provider: string) => {
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
