@@ -1,14 +1,22 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
 import ProviderMenu from '../ProviderMenu';
 
-const Layout = ({ children }: PropsWithChildren) => {
-  const pathname = usePathname();
+interface LayoutProps extends PropsWithChildren {
+  onProviderSelect: (providerKey: string) => void;
+}
 
-  return pathname === '/settings/provider' ? <ProviderMenu mobile /> : children;
+const Layout = ({ children, onProviderSelect }: LayoutProps) => {
+  const searchParams = useSearchParams();
+  const provider = searchParams.get('provider');
+  return provider === 'all' || !provider ? (
+    <ProviderMenu mobile={true} onProviderSelect={onProviderSelect} />
+  ) : (
+    children
+  );
 };
 
 export default Layout;

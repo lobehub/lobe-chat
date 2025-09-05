@@ -10,7 +10,6 @@ import {
   Settings2,
   Sparkles,
 } from 'lucide-react';
-import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -30,29 +29,17 @@ export const useCategory = () => {
         {
           icon: <Icon icon={Settings2} />,
           key: SettingsTabs.Common,
-          label: (
-            <Link href={'/settings/common'} onClick={(e) => e.preventDefault()}>
-              {t('tab.common')}
-            </Link>
-          ),
+          label: t('tab.common'),
         },
         {
           icon: <Icon icon={Bot} />,
           key: SettingsTabs.Agent,
-          label: (
-            <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
-              {t('tab.agent')}
-            </Link>
-          ),
+          label: t('tab.agent'),
         },
         !mobile && {
           icon: <Icon icon={KeyboardIcon} />,
           key: SettingsTabs.Hotkey,
-          label: (
-            <Link href={'/settings/hotkey'} onClick={(e) => e.preventDefault()}>
-              {t('tab.hotkey')}
-            </Link>
-          ),
+          label: t('tab.hotkey'),
         },
         {
           type: 'divider',
@@ -63,39 +50,23 @@ export const useCategory = () => {
             ? {
                 icon: <Icon icon={Brain} />,
                 key: SettingsTabs.LLM,
-                label: (
-                  <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
-                    {t('tab.llm')}
-                  </Link>
-                ),
+                label: t('tab.llm'),
               }
             : {
                 icon: <Icon icon={Brain} />,
                 key: SettingsTabs.Provider,
-                label: (
-                  <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
-                    {t('tab.provider')}
-                  </Link>
-                ),
+                label: t('tab.provider'),
               }),
 
         enableSTT && {
           icon: <Icon icon={Mic2} />,
           key: SettingsTabs.TTS,
-          label: (
-            <Link href={'/settings/tts'} onClick={(e) => e.preventDefault()}>
-              {t('tab.tts')}
-            </Link>
-          ),
+          label: t('tab.tts'),
         },
         {
           icon: <Icon icon={Sparkles} />,
           key: SettingsTabs.SystemAgent,
-          label: (
-            <Link href={'/settings/system-agent'} onClick={(e) => e.preventDefault()}>
-              {t('tab.system-agent')}
-            </Link>
-          ),
+          label: t('tab.system-agent'),
         },
         {
           type: 'divider',
@@ -103,29 +74,17 @@ export const useCategory = () => {
         isDesktop && {
           icon: <Icon icon={EthernetPort} />,
           key: SettingsTabs.Proxy,
-          label: (
-            <Link href={'/settings/proxy'} onClick={(e) => e.preventDefault()}>
-              {t('tab.proxy')}
-            </Link>
-          ),
+          label: t('tab.proxy'),
         },
         {
           icon: <Icon icon={Database} />,
           key: SettingsTabs.Storage,
-          label: (
-            <Link href={'/settings/storage'} onClick={(e) => e.preventDefault()}>
-              {t('tab.storage')}
-            </Link>
-          ),
+          label: t('tab.storage'),
         },
         !hideDocs && {
           icon: <Icon icon={Info} />,
           key: SettingsTabs.About,
-          label: (
-            <Link href={'/settings/about'} onClick={(e) => e.preventDefault()}>
-              {t('tab.about')}
-            </Link>
-          ),
+          label: t('tab.about'),
         },
       ].filter(Boolean) as MenuProps['items'],
     [t, showLLM],
