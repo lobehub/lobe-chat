@@ -20,6 +20,8 @@
     "paths": {
       "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
       "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
+      "@/libs/model-bank": ["./packages/model-bank/src/index.ts"],
+      "@/libs/model-bank/*": ["./packages/model-bank/src/*"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
       "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
