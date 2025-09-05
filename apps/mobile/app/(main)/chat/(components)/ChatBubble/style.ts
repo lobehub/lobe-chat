@@ -2,16 +2,30 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   aiBubble: {
-    width: '100%',
+    flex: 1,
+    marginVertical: -token.marginXS,
   },
   aiBubbleContainer: {
     flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  aiContentContainer: {
+    flex: 1,
+    maxWidth: '80%',
   },
   aiMessageContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: token.marginXS,
     width: '100%',
   },
   aiMessageText: {
     color: token.colorText,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: token.paddingXXS,
   },
   bubble: {
     borderRadius: token.borderRadius,
@@ -19,8 +33,7 @@ export const useStyles = createStyles((token) => ({
   },
   bubbleContainer: {
     alignItems: 'flex-start',
-    flexDirection: 'row',
-    gap: token.marginXS,
+    flexDirection: 'column',
     marginVertical: token.marginXS,
   },
   codeBlockContainer: {
@@ -35,15 +48,44 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSize,
     lineHeight: token.lineHeightSM,
   },
+  // Error state styles (using warning colors to match web)
+  errorBubble: {
+    backgroundColor: token.colorWarningBg,
+    borderColor: token.colorWarningBorder,
+    borderWidth: 1,
+    marginVertical: token.marginXS,
+  },
+
+  loadingDotsContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: token.marginXS,
+    paddingVertical: token.paddingSM,
+  },
+
   messageText: {
     fontSize: token.fontSizeLG,
     lineHeight: token.lineHeight,
   },
+
   userBubble: {
     backgroundColor: token.colorBgContainer,
   },
+
   userBubbleContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+
+  userContentContainer: {
+    maxWidth: '80%',
+  },
+
+  userMessageContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: token.marginXS,
+    justifyContent: 'flex-end',
+    width: '100%',
   },
 }));
