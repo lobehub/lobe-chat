@@ -154,7 +154,28 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      # 上传构建产物 (electron-builder 已自动重命名 macOS latest-mac.yml)
+      # 处理 macOS latest-mac.yml 重命名 (避免多架构覆盖)
+      - name: Rename macOS latest-mac.yml for multi-architecture support
+        if: runner.os == 'macOS'
+        run: |
+          cd apps/desktop/release
+          if [ -f "latest-mac.yml" ]; then
+            # 根据运行环境检测架构
+            if [[ "${{ matrix.os }}" == *"arm64"* || "${{ matrix.os }}" == "macos-latest" ]]; then
+              ARCH_SUFFIX="arm"
+            else
+              ARCH_SUFFIX="intel"  
+            fi
+            
+            mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
+            echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml"
+            ls -la latest-mac-*.yml
+          else
+            echo "⚠️ latest-mac.yml not found, skipping rename"
+            ls -la latest*.yml || echo "No latest*.yml files found"
+          fi
+
+      # 上传构建产物 (工作流处理重命名，不依赖 electron-builder 钩子)
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
