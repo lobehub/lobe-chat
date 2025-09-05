@@ -1,35 +1,45 @@
 [
   {
     "children": {
-      "fixes": ["Fix mobile header title to loog not ellipsis."]
+      "fixes": [
+        "Fix mobile header title to loog not ellipsis."
+      ]
     },
     "date": "2025-09-05",
     "version": "1.123.3"
   },
   {
     "children": {
-      "fixes": ["Not use branch topic when this topic is not save."]
+      "fixes": [
+        "Not use branch topic when this topic is not save."
+      ]
     },
     "date": "2025-09-05",
     "version": "1.123.2"
   },
   {
     "children": {
-      "improvements": ["Update i18n."]
+      "improvements": [
+        "Update i18n."
+      ]
     },
     "date": "2025-09-05",
     "version": "1.123.1"
   },
   {
     "children": {
-      "features": ["Add NewAPI as a router provider for multi-model aggregation."]
+      "features": [
+        "Add NewAPI as a router provider for multi-model aggregation."
+      ]
     },
     "date": "2025-09-04",
     "version": "1.123.0"
   },
   {
     "children": {
-      "improvements": ["Make LobeNextAuthDBAdapter Edge Compatible."]
+      "improvements": [
+        "Make LobeNextAuthDBAdapter Edge Compatible."
+      ]
     },
     "date": "2025-09-04",
     "version": "1.122.7"
@@ -59,6 +69,23 @@
   },
   {
     "children": {
+      "fixes": [
+        "Support base64 image from markdown image syntax."
+      ],
+      "improvements": [
+        "Update the price of the o3 model in OpenRouter."
+      ]
+    },
+    "date": "2025-09-04",
+    "version": "1.122.3"
+  },
+  {
+    "children": {},
+    "date": "2025-09-04",
+    "version": "1.122.2"
+  },
+  {
+    "children": {
       "improvements": [
         "Update i18n."
       ]
@@ -83,6 +110,15 @@
   },
   {
     "children": {
+      "fixes": [
+        "Fix socks5 proxy not work problem, fix virtuaso minheight was null."
+      ]
+    },
+    "date": "2025-09-03",
+    "version": "1.121.1"
+  },
+  {
+    "children": {
       "features": [
         "Add nano banana Chinese prompt notify."
       ],
@@ -92,6 +128,65 @@
     },
     "date": "2025-09-03",
     "version": "1.121.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-09-02",
+    "version": "1.120.7"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add upload hint for non-visual model."
+      ]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.6"
+  },
+  {
+    "children": {},
+    "date": "2025-09-01",
+    "version": "1.120.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Adjust ControlsForm component to adapt to mobile phone display."
+      ]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support new provider Nebius."
+      ]
+    },
+    "date": "2025-09-01",
+    "version": "1.120.3"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Remove base path."
+      ]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-08-31",
+    "version": "1.120.1"
   },
   {
     "children": {
@@ -107,6 +202,11 @@
     },
     "date": "2025-09-02",
     "version": "1.120.0"
+  },
+  {
+    "children": {},
+    "date": "2025-08-30",
+    "version": "1.119.2"
   },
   {
     "children": {
@@ -326,6 +426,24 @@
     "version": "1.116.0"
   },
   {
+    "children": {
+      "improvements": [
+        "Update mistral model vision ability."
+      ]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Move database to packages."
+      ]
+    },
+    "date": "2025-08-22",
+    "version": "1.114.4"
+  },
+  {
     "children": {},
     "date": "2025-08-21",
     "version": "1.114.3"
@@ -451,6 +569,351 @@
       ]
     },
     "date": "2025-08-13",
+    "version": "1.111.11"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Adjust near bottom size on thinking scroll."
+      ]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.10"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve Gemini error display with promptFeedback."
+      ]
+    },
+    "date": "2025-08-12",
+    "version": "1.111.9"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support new GPT-5 Verbosity params."
+      ]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.8"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Refactor model-runtime to a seperated package."
+      ]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.7"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Solve the cache problem caused by the same dom id when sharing pictures."
+      ]
+    },
+    "date": "2025-08-11",
+    "version": "1.111.6"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add mask effect to thinking scroll, update i18n."
+      ]
+    },
+    "date": "2025-08-10",
+    "version": "1.111.5"
+  },
+  {
+    "children": {},
+    "date": "2025-08-09",
+    "version": "1.111.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve thinking auto scroll style, Support session switch shortcut key, update i18n."
+      ]
+    },
+    "date": "2025-08-09",
+    "version": "1.111.3"
+  },
+  {
+    "children": {},
+    "date": "2025-08-08",
+    "version": "1.111.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add descriptions for the FLUX.1 Krea and Qwen Image."
+      ]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add GPT-5 series models."
+      ]
+    },
+    "date": "2025-08-08",
+    "version": "1.111.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Missing languages it-IT, pl-PL, nl-NL."
+      ]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.7"
+  },
+  {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Optimize Gemini error message display & Filter empty messages."
+      ]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Refactor trace type."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Fix provider setting page hydration error."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.3"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix fail to fetch aihubmix model on client mode."
+      ],
+      "improvements": [
+        "Add context menu for desktop, support different model tabs."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix remote avatar broken in desktop again."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Support mcp plugin install from web."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix ollama model output without thinking."
+      ],
+      "improvements": [
+        "Add Claude Opus 4.1 model, update i18n."
+      ]
+    },
+    "date": "2025-08-06",
+    "version": "1.109.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Support gpt-oss in ollama provider."
+      ]
+    },
+    "date": "2025-08-05",
+    "version": "1.109.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Provider config checker uses outdated API key."
+      ]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix remote avatar broken in desktop."
+      ],
+      "improvements": [
+        "Update mask style."
+      ]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Support 302ai provider."
+      ]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Break line for Gemini Artifacts."
+      ]
+    },
+    "date": "2025-08-05",
+    "version": "1.107.6"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update models."
+      ]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.5"
+  },
+  {
+    "children": {
+      "fixes": [
+        "When s3 files not exist , global files should delete."
+      ]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Aihubmix provider request headers."
+      ]
+    },
+    "date": "2025-08-03",
+    "version": "1.107.3"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Move types to separate package."
+      ]
+    },
+    "date": "2025-08-02",
+    "version": "1.107.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Support aihubmix provider."
+      ]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support SenseNova V6.5 models."
+      ]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.8"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update Aliyun Bailian models."
+      ]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.7"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix oidc oauth callback pages 404."
+      ]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.6"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Improve mcp plugin calling and display."
+      ]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.5"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix mcp calling missing array content."
+      ],
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Moonshot assistant messages must not be empty."
+      ],
+      "improvements": [
+        "Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.3"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update Mistral AI models & Optimize many model providers fetching."
+      ]
+    },
+    "date": "2025-08-13",
     "version": "1.106.2"
   },
   {
@@ -476,6 +939,42 @@
     },
     "date": "2025-08-11",
     "version": "1.106.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Open new topic by tap Just Chat again."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.6"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Reorder AppTheme and Locale to fix modal i18n."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.5"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Revert jose to ^5 to fix auth issue on desktop."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix subscription plan tag display."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.3"
   },
   {
     "children": {
@@ -519,6 +1018,42 @@
   {
     "children": {
       "improvements": [
+        "Fix setting window layout when in desktop was disappear."
+      ]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Fix setting window layout size, update i18n."
+      ]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add Gemini 2.5 Flash-Lite GA model."
+      ]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.3"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix update hotkey invalid when input mod in desktop."
+      ]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.2"
+  },
+  {
+    "children": {
+      "improvements": [
         "Add more OpenAI SDK Text2Image providers, support more Text2Image from Qwen, update i18n."
       ]
     },
@@ -555,6 +1090,87 @@
   {
     "children": {
       "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-07-23",
+    "version": "1.103.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add Qwen image generation capabilities."
+      ]
+    },
+    "date": "2025-07-22",
+    "version": "1.103.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update tray icon."
+      ]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Remove debug logging from ModelRuntime and async caller."
+      ]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.3"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add notification for desktop."
+      ]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Modal list header sticky style."
+      ]
+    },
+    "date": "2025-07-21",
+    "version": "1.102.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add image generation capabilities using Google AI Imagen API."
+      ]
+    },
+    "date": "2025-07-21",
+    "version": "1.102.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Fix lobehub provider /chat in desktop."
+      ]
+    },
+    "date": "2025-07-21",
+    "version": "1.101.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Try fix authorization code exchange & pin next-auto to beta.29."
+      ]
+    },
+    "date": "2025-07-19",
+    "version": "1.101.1"
+  },
+  {
+    "children": {
+      "improvements": [
         "Add notification for desktop, fix lobehub provider /chat in desktop, modal list header sticky style, update i18n, Update tray icon."
       ],
       "features": [
@@ -566,6 +1182,15 @@
     },
     "date": "2025-07-23",
     "version": "1.101.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix webapi proxy with clerk."
+      ]
+    },
+    "date": "2025-07-18",
+    "version": "1.100.2"
   },
   {
     "children": {
@@ -587,6 +1212,33 @@
     },
     "date": "2025-07-18",
     "version": "1.100.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Desktop local db can't upload image."
+      ]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.6"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix page error when url is not defined in web search plugin."
+      ]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.5"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix apikey issue on server log."
+      ]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.4"
   },
   {
     "children": {
@@ -622,6 +1274,15 @@
   },
   {
     "children": {
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-07-14",
+    "version": "1.98.2"
+  },
+  {
+    "children": {
       "fixes": [
         "Chat model list should not show image model, some ai image generation feedback issues."
       ]
@@ -637,6 +1298,54 @@
     },
     "date": "2025-07-15",
     "version": "1.98.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support Hunyuan A13B thinking model."
+      ]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.17"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update i18n."
+      ]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.16"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Add vision support to Grok 4."
+      ]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.15"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Revert \"💄 style: Open new topic by tap Just Chat again\"."
+      ],
+      "improvements": [
+        "Add Kimi K2 model."
+      ]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.14"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Support new Doubao thinking models, update i18n."
+      ]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.13"
   },
   {
     "children": {
