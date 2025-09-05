@@ -32,6 +32,7 @@
   "blog": "Blog des produits",
   "branching": "Créer un sous-sujet",
   "branchingDisable": "La fonction « sous-sujet » n'est disponible que dans la version serveur. Si vous avez besoin de cette fonctionnalité, veuillez passer en mode de déploiement serveur ou utiliser LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Le sujet actuel n'est pas enregistré, veuillez enregistrer avant d'utiliser la fonction de sous-sujet",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "clientDB": {
