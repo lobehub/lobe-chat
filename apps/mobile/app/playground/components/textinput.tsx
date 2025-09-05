@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, PrefixDemo } from '@/components/TextInput/demos';
+import { BasicDemo, PrefixDemo, SuffixDemo, CompoundDemo } from '@/components/TextInput/demos';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
 import { Header } from '@/components';
@@ -9,15 +9,19 @@ import { Header } from '@/components';
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <PrefixDemo />, key: 'prefix', title: '带前缀' },
+  { component: <SuffixDemo />, key: 'suffix', title: '带后缀' },
+  { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
 ];
 
 const readmeContent = `# TextInput组件
 
-一个增强的React Native文本输入组件，支持前缀图标和自定义样式。
+一个增强的React Native文本输入组件，支持前缀、后缀和复合组件。
 
 ## 特性
 
 - ✅ **前缀支持** - 支持添加前缀图标或文本
+- ✅ **后缀支持** - 支持添加后缀图标或按钮
+- ✅ **复合组件** - 提供Search和Password专用组件
 - ✅ **统一样式** - 基于设计系统的一致性样式
 - ✅ **灵活布局** - 使用View包装实现灵活布局
 - ✅ **TypeScript** - 完整的TypeScript类型支持
@@ -44,15 +48,35 @@ import { Text } from 'react-native';
   placeholder="请输入用户名" 
   prefix={<Text>@</Text>}
 />
+\`\`\`
+
+### 3. 带后缀的输入框
+
+\`\`\`jsx
+import { TouchableOpacity } from 'react-native';
 
 <TextInput 
-  placeholder="请输入密码" 
-  prefix={<Text>🔒</Text>}
-  secureTextEntry
+  placeholder="输入邮箱前缀" 
+  suffix={<Text>@gmail.com</Text>}
+/>
+
+<TextInput 
+  placeholder="输入消息" 
+  suffix={<TouchableOpacity><SendIcon /></TouchableOpacity>}
 />
 \`\`\`
 
-### 3. 自定义样式
+### 4. 复合组件
+
+\`\`\`jsx
+// 搜索输入框
+<TextInput.Search placeholder="搜索内容..." />
+
+// 密码输入框（自动切换显示/隐藏）
+<TextInput.Password placeholder="请输入密码" />
+\`\`\`
+
+### 5. 自定义样式
 
 \`\`\`jsx
 <TextInput
@@ -69,9 +93,18 @@ import { Text } from 'react-native';
 | 属性 | 类型 | 描述 |
 |------|------|------|
 | \`prefix\` | \`React.ReactNode\` | 前缀内容 |
+| \`suffix\` | \`React.ReactNode\` | 后缀内容 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
 | \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
 | ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性 |
+
+### 复合组件
+
+#### TextInput.Search
+搜索输入框，自动添加搜索图标前缀，returnKeyType设为search
+
+#### TextInput.Password  
+密码输入框，自动添加眼睛图标后缀，支持切换显示/隐藏密码
 
 ## 设计原则
 

@@ -145,25 +145,10 @@ export const useStyles = createStyles((token) => ({
     fontWeight: '500',
   },
 
-  // 搜索容器
-  searchContainer: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    borderColor: token.colorBorder,
-    borderRadius: token.borderRadiusLG,
-    borderWidth: 1,
-    flexDirection: 'row',
-    marginBottom: token.margin,
-    paddingHorizontal: token.paddingSM,
-  },
-
   // 搜索输入框
   searchInput: {
-    color: token.colorText,
-    flex: 1,
-    fontSize: token.fontSize,
-    marginLeft: token.marginXS,
-    paddingVertical: 10,
+    marginBottom: token.margin,
+    paddingHorizontal: token.paddingSM,
   },
 
   // 分组头部

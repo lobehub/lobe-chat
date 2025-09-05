@@ -1,9 +1,10 @@
 import { ArrowUp } from 'lucide-react-native';
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { TextInput } from '@/components';
 import IconBtn from './(components)/IconBtn';
 import { ICON_SIZE } from '@/const/common';
 import { useChat } from '@/hooks/useChat';
@@ -63,7 +64,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
           onChangeText={handleInputChange}
           onSubmitEditing={handleSubmit}
           placeholder={t('placeholder', { ns: 'chat' })}
-          placeholderTextColor={token.colorTextPlaceholder}
           scrollEnabled={true}
           spellCheck={false}
           style={styles.input}

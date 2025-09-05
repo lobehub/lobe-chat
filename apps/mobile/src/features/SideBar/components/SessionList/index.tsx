@@ -42,7 +42,7 @@ export default function SideBar() {
   return (
     <View style={styles.container}>
       {/* 搜索栏 */}
-      <TextInput
+      <TextInput.Search
         onChangeText={setSearchText}
         placeholder={t('session.search.placeholder', { ns: 'chat' })}
         style={styles.searchInput}

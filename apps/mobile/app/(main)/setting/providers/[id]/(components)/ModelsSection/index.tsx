@@ -1,15 +1,14 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, FlatList } from 'react-native';
-import { RefreshCcw, Search } from 'lucide-react-native';
+import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
+import { RefreshCcw } from 'lucide-react-native';
+import { TextInput, Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useTranslation } from 'react-i18next';
 
-import { useThemeToken } from '@/theme';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderModelListItem } from '@/types/aiModel';
-import { Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 
 import { useStyles } from './style';
 import ModelListSkeleton from '../ModelListSkeleton';
@@ -69,7 +68,6 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
 
 const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
   const toast = useToast();
   const { t } = useTranslation(['setting']);
 
@@ -214,16 +212,12 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
           </View>
         </View>
 
-        <View style={styles.searchContainer}>
-          <Search color={token.colorTextSecondary} size={16} />
-          <TextInput
-            onChangeText={setSearchKeyword}
-            placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
-            placeholderTextColor={token.colorTextTertiary}
-            style={styles.searchInput}
-            value={searchKeyword}
-          />
-        </View>
+        <TextInput.Search
+          onChangeText={setSearchKeyword}
+          placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
+          style={styles.searchInput}
+          value={searchKeyword}
+        />
       </View>
 
       {isLoading ? (

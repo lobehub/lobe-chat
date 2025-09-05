@@ -51,10 +51,6 @@ export const useStyles = createStyles((token) => ({
     flex: 1,
   },
   searchContainer: {
-    alignItems: 'center',
-    backgroundColor: token.colorFillTertiary,
-    borderRadius: token.borderRadiusLG,
-    flexDirection: 'row',
     marginBottom: token.paddingSM,
     paddingHorizontal: token.paddingSM,
   },

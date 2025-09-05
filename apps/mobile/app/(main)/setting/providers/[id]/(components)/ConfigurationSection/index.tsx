@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { TextInput } from '@/components';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { useDebounceFn } from 'ahooks';
 import { useTranslation } from 'react-i18next';
@@ -125,9 +126,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               name: provider.name || provider.id,
               ns: 'setting',
             })}
-            placeholderTextColor={token.colorTextTertiary}
             secureTextEntry={!showApiKey}
-            style={styles.textInput}
             value={apiKey}
           />
           <TouchableOpacity onPress={toggleApiKeyVisibility} style={styles.eyeButton}>
@@ -166,8 +165,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
                   proxyUrlConfig.placeholder) ||
                 t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
               }
-              placeholderTextColor={token.colorTextTertiary}
-              style={styles.textInput}
               value={proxyUrl}
             />
           </View>

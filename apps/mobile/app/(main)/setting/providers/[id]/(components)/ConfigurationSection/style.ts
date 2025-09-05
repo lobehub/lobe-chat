@@ -63,15 +63,6 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.margin,
   },
 
-  // 文本输入框
-  textInput: {
-    color: token.colorText,
-    flex: 1,
-    fontSize: token.fontSize,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingSM,
-  },
-
   // 更新状态指示器
   updatingIndicator: {
     color: token.colorTextTertiary,
