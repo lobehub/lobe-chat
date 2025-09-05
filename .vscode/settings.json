@@ -18,7 +18,6 @@
     "javascriptreact",
     "typescript",
     "typescriptreact",
-    "markdown",
     // support mdx
     "mdx"
   ],

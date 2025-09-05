@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Datei hochladen",
       "actionTooltip": "Hochladen",
-      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen."
+      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen.",
+      "visionNotSupported": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen."
     },
     "preview": {
       "prepareTasks": "Vorbereitung der Teile...",

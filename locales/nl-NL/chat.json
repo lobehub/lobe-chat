@@ -273,7 +273,8 @@
     "clientMode": {
       "actionFiletip": "Bestand uploaden",
       "actionTooltip": "Uploaden",
-      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+      "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
     },
     "preview": {
       "prepareTasks": "Voorbereiden van blokken...",

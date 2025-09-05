@@ -208,7 +208,9 @@ export class AiInfraRepos {
       const providerModels = modules[providerId];
 
       // use the serverModelLists as the defined server model list
-      const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
+      // fallback to empty array for custom provider
+      const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels || [];
+
       return (presetList as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
         ...m,
         enabled: m.enabled || false,

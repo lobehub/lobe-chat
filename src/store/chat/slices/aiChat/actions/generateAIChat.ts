@@ -152,7 +152,13 @@ export const generateAIChat: StateCreator<
   },
 
   sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
+    const {
+      internal_coreProcessMessage,
+      activeTopicId,
+      activeId,
+      activeThreadId,
+      sendMessageInServer,
+    } = get();
     if (!activeId) return;
 
     const fileIdList = files?.map((f) => f.id);
@@ -161,6 +167,10 @@ export const generateAIChat: StateCreator<
 
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
+
+    // router to server mode send message
+    if (isServerMode)
+      return sendMessageInServer({ message, files, onlyAddUserMessage, isWelcomeQuestion });
 
     set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
 
