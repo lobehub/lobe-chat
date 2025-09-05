@@ -52,7 +52,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   );
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom + 8 }, style]}>
+    <View style={[styles.container, { paddingBottom: insets.bottom }, style]}>
       <View style={styles.inputArea}>
         <TextInput
           autoCapitalize="none"
