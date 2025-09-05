@@ -1,15 +1,13 @@
 import { useRouter } from 'expo-router';
 import { ChevronRight, Search } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
-import Tag from '@/components/Tag';
+import { Tag, TextInput, Header, CapsuleTabs, CapsuleTabItem } from '@/components';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
-import { Header } from '@/components';
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
@@ -189,16 +187,13 @@ export default function ComponentPlaygroundIndex() {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Playground" />
       <View style={styles.filterContainer}>
-        <View style={styles.searchContainer}>
-          <Search color={token.colorTextPlaceholder} size={20} style={styles.searchIcon} />
-          <TextInput
-            onChangeText={setSearchText}
-            placeholder="搜索组件..."
-            placeholderTextColor={token.colorTextPlaceholder}
-            style={styles.searchInput}
-            value={searchText}
-          />
-        </View>
+        <TextInput
+          onChangeText={setSearchText}
+          placeholder="搜索组件..."
+          prefix={<Search color={token.colorTextPlaceholder} size={20} />}
+          style={styles.searchContainer}
+          value={searchText}
+        />
 
         <View style={styles.filterTabs}>
           <CapsuleTabs
