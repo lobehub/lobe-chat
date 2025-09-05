@@ -153,6 +153,28 @@
     "searchProviders": "서비스 제공자 검색...",
     "sort": "사용자 정의 정렬"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "New API 플랫폼에서 제공하는 API 키",
+      "placeholder": "New API API 키",
+      "required": "API 키는 필수입니다",
+      "title": "API 키"
+    },
+    "apiUrl": {
+      "desc": "New API 서비스의 API 주소, 대부분 /v1을 포함해야 합니다",
+      "title": "API 주소"
+    },
+    "enabled": {
+      "title": "New API 활성화"
+    },
+    "models": {
+      "batchSelect": "모델 일괄 선택 ({{count}}개)",
+      "fetch": "모델 목록 가져오기",
+      "selected": "선택된 모델",
+      "title": "사용 가능한 모델"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}}개 모델 선택됨",
+      "title": "일괄 선택"
+    },
     "config": {
       "aesGcm": "귀하의 비밀 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
       "apiKey": {

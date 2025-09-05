@@ -95,6 +95,9 @@
   "nebius": {
     "description": "Nebius 透過構建大規模GPU叢集及垂直整合的雲端平台，為全球AI創新者提供高效能基礎設施。"
   },
+  "newapi": {
+    "description": "開源的多個 AI 服務聚合統一轉發平台"
+  },
   "novita": {
     "description": "Novita AI 是一個提供多種大語言模型與 AI 圖像生成的 API 服務的平台，靈活、可靠且具有成本效益。它支持 Llama3、Mistral 等最新的開源模型，並為生成式 AI 應用開發提供了全面、用戶友好且自動擴展的 API 解決方案，適合 AI 初創公司的快速發展。"
   },

@@ -2112,6 +2112,47 @@ describe('MessageModel', () => {
     });
   });
 
+  describe('updateMessageRAG', () => {
+    it('should insert message query chunks for RAG', async () => {
+      // prepare message and query
+      const messageId = 'rag-msg-1';
+      const queryId = uuid();
+      const chunk1 = uuid();
+      const chunk2 = uuid();
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(messages).values({ id: messageId, role: 'user', userId, content: 'c' });
+        await trx.insert(chunks).values([
+          { id: chunk1, text: 'a' },
+          { id: chunk2, text: 'b' },
+        ]);
+        await trx
+          .insert(messageQueries)
+          .values({ id: queryId, messageId, userId, userQuery: 'q', rewriteQuery: 'rq' });
+      });
+
+      await messageModel.updateMessageRAG(messageId, {
+        ragQueryId: queryId,
+        fileChunks: [
+          { id: chunk1, similarity: 0.9 },
+          { id: chunk2, similarity: 0.8 },
+        ],
+      });
+
+      const rows = await serverDB
+        .select()
+        .from(messageQueryChunks)
+        .where(eq(messageQueryChunks.messageId, messageId));
+
+      expect(rows).toHaveLength(2);
+      const s1 = rows.find((r) => r.chunkId === chunk1)!;
+      const s2 = rows.find((r) => r.chunkId === chunk2)!;
+      expect(s1.queryId).toBe(queryId);
+      expect(s1.similarity).toBe('0.90000');
+      expect(s2.similarity).toBe('0.80000');
+    });
+  });
+
   describe('deleteMessageQuery', () => {
     it('should delete a message query by ID', async () => {
       // 创建测试数据

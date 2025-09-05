@@ -84,6 +84,10 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updatePluginError.mutate({ id, value: error as any });
   };
 
+  updateMessageRAG: IMessageService['updateMessageRAG'] = async (id, data) => {
+    return lambdaClient.message.updateMessageRAG.mutate({ id, value: data });
+  };
+
   removeMessage: IMessageService['removeMessage'] = async (id) => {
     return lambdaClient.message.removeMessage.mutate({ id });
   };

@@ -32,6 +32,7 @@
   "blog": "Blog de Produtos",
   "branching": "Criar subtópico",
   "branchingDisable": "A funcionalidade de \"subtópico\" está disponível apenas na versão do servidor. Se precisar dessa funcionalidade, mude para o modo de implantação no servidor ou use o LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "O tópico atual não foi salvo. Salve-o para poder usar a funcionalidade de subtópicos.",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "clientDB": {
@@ -182,6 +183,13 @@
     "title": "Está gostando do nosso produto?"
   },
   "fullscreen": "Modo de Tela Cheia",
+  "geminiImageChineseWarning": {
+    "content": "O Nano Banana pode falhar ao gerar imagens ao usar o chinês. Recomendamos usar inglês para obter melhores resultados.",
+    "continueGenerate": "Continuar gerando",
+    "continueSend": "Continuar enviando",
+    "doNotShowAgain": "Não mostrar novamente",
+    "title": "Aviso sobre entrada em chinês"
+  },
   "historyRange": "Intervalo de histórico",
   "import": "Importar",
   "importData": "Importar dados",

@@ -1,24 +1,10 @@
-import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
-
-import { ErrorType } from '../fetch';
 import { MetaData } from '../meta';
 import { MessageSemanticSearchChunk } from '../rag';
 import { GroundingSearch } from '../search';
-import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
+import type { ChatMessageError, MessageMetadata, MessageRoleType, ModelReasoning } from './base';
 import { ChatImageItem } from './image';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
-
-/**
- * 聊天消息错误对象
- */
-export interface ChatMessageError {
-  body?: any;
-  message: string;
-  type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
-}
 
 export interface ChatTranslate extends Translate {
   content?: string;

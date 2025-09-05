@@ -31,7 +31,16 @@ const ChatHeaderTitle = memo(() => {
     <ChatHeader.Title
       desc={
         <Flexbox align={'center'} gap={4} horizontal onClick={() => toggleConfig()}>
-          <span>{topic?.title || t('title', { ns: 'topic' })}</span>
+          <span
+            style={{
+              maxWidth: '60vw',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {topic?.title || t('title', { ns: 'topic' })}
+          </span>
           <ActionIcon
             active
             icon={ChevronDown}

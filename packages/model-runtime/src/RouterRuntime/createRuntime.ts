@@ -104,7 +104,7 @@ interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
       options: ConstructorOptions<T>,
     ) => ChatStreamPayload;
   };
-  routers: RouterInstance[];
+  routers: RouterInstance[] | ((options: ClientOptions & Record<string, any>) => RouterInstance[]);
 }
 
 export const createRouterRuntime = ({
@@ -125,11 +125,14 @@ export const createRouterRuntime = ({
         baseURL: options.baseURL?.trim(),
       };
 
-      if (routers.length === 0) {
+      // 支持动态 routers 配置
+      const resolvedRouters = typeof routers === 'function' ? routers(_options) : routers;
+      
+      if (resolvedRouters.length === 0) {
         throw new Error('empty providers');
       }
 
-      this._runtimes = routers.map((router) => {
+      this._runtimes = resolvedRouters.map((router) => {
         const providerAI = router.runtime ?? baseRuntimeMap[router.apiType] ?? LobeOpenAI;
 
         const finalOptions = { ...params, ...options, ...router.options };

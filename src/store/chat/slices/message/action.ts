@@ -22,6 +22,7 @@ import {
   ModelReasoning,
 } from '@/types/message';
 import { ChatImageItem } from '@/types/message/image';
+import { UpdateMessageRAGParams } from '@/types/message/rag';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { Action, setNamespace } from '@/utils/storeDebug';
@@ -39,6 +40,7 @@ const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 export interface ChatMessageAction {
   // create
   addAIMessage: () => Promise<void>;
+  addUserMessage: (params: { message: string; fileList?: string[] }) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -59,10 +61,11 @@ export interface ChatMessageAction {
   ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-
+  replaceMessages: (messages: ChatMessage[]) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
+  internal_updateMessageRAG: (id: string, input: UpdateMessageRAGParams) => Promise<void>;
 
   /**
    * update message at the frontend
@@ -213,6 +216,21 @@ export const chatMessage: StateCreator<
 
     updateInputMessage('');
   },
+  addUserMessage: async ({ message, fileList }) => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    if (!activeId) return;
+
+    await internal_createMessage({
+      content: message,
+      files: fileList,
+      role: 'user',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
 
@@ -265,6 +283,25 @@ export const chatMessage: StateCreator<
     ),
   refreshMessages: async () => {
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
+  },
+  replaceMessages: (messages) => {
+    set(
+      {
+        messagesMap: {
+          ...get().messagesMap,
+          [messageMapKey(get().activeId, get().activeTopicId)]: messages,
+        },
+      },
+      false,
+      'replaceMessages',
+    );
+  },
+
+  internal_updateMessageRAG: async (id, data) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessageRAG(id, data);
+    await refreshMessages();
   },
 
   // the internal process method of the AI message
