@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '../types/aiModel';
+
 // https://ai.burncloud.com/v1
 
 const burncloudChatModels: AIChatModelCard[] = [
@@ -21,8 +22,7 @@ const burncloudChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'Claude 3.7 Sonnet提供强大的语言理解和生成能力，在各种任务中表现出色。',
+    description: 'Claude 3.7 Sonnet提供强大的语言理解和生成能力，在各种任务中表现出色。',
     displayName: 'Claude 3.7 Sonnet',
     enabled: true,
     id: 'claude-3-7-sonnet-20250219',
@@ -35,8 +35,7 @@ const burncloudChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'Claude 3.5 Sonnet是一个强大的多模态模型，支持图像理解和处理。',
+    description: 'Claude 3.5 Sonnet是一个强大的多模态模型，支持图像理解和处理。',
     displayName: 'Claude 3.5 Sonnet',
     enabled: true,
     id: 'claude-3-5-sonnet-20241022',
@@ -49,8 +48,7 @@ const burncloudChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GPT-4o是OpenAI最新的多模态模型，具有出色的推理能力和视觉理解能力。',
+    description: 'GPT-4o是OpenAI最新的多模态模型，具有出色的推理能力和视觉理解能力。',
     displayName: 'GPT-4o',
     enabled: true,
     id: 'gpt-4o',
@@ -63,8 +61,7 @@ const burncloudChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GPT-4o mini是OpenAI的轻量级多模态模型，提供高性价比的AI服务。',
+    description: 'GPT-4o mini是OpenAI的轻量级多模态模型，提供高性价比的AI服务。',
     displayName: 'GPT-4o mini',
     enabled: true,
     id: 'gpt-4o-mini',
@@ -76,8 +73,7 @@ const burncloudChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576,
-    description:
-      'Gemini 2.5 Pro是Google最新的多模态大语言模型，支持长文本和多种输入形式。',
+    description: 'Gemini 2.5 Pro是Google最新的多模态大语言模型，支持长文本和多种输入形式。',
     displayName: 'Gemini 2.5 Pro',
     enabled: true,
     id: 'gemini-2.5-pro-preview-05-06',
@@ -111,4 +107,4 @@ const burncloudChatModels: AIChatModelCard[] = [
 
 export const allModels = [...burncloudChatModels];
 
-export default allModels; 
+export default allModels;
