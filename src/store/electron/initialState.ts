@@ -17,6 +17,7 @@ export const defaultProxySettings: NetworkProxySettings = {
 
 export interface ElectronState {
   appState: ElectronAppState;
+  autoUpdateNotificationEnabled: boolean;
   dataSyncConfig: DataSyncConfig;
   desktopHotkeys: Record<string, string>;
   isAppStateInit?: boolean;
@@ -30,6 +31,7 @@ export interface ElectronState {
 
 export const initialState: ElectronState = {
   appState: {},
+  autoUpdateNotificationEnabled: true,
   dataSyncConfig: { storageMode: 'local' },
   desktopHotkeys: {},
   isAppStateInit: false,

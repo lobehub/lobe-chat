@@ -11,8 +11,8 @@ import { BRANDING_NAME } from '@/const/branding';
 import { CHANGELOG_URL, MANUAL_UPGRADE_URL, OFFICIAL_SITE } from '@/const/url';
 import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { useNewVersion } from '@/features/User/UserPanel/useNewVersion';
+import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
-import { useUserStore } from '@/store/user';
 
 const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -26,13 +26,23 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation(['common', 'electron']);
   const { styles } = useStyles();
 
-  const [autoUpdateNotificationEnabled, updateGeneralConfig] = useUserStore((s) => [
-    s.settings.general?.autoUpdateNotificationEnabled ?? true,
-    s.updateGeneralConfig,
+  // Use electron store for auto update notification setting
+  const [
+    autoUpdateNotificationEnabled,
+    setAutoUpdateNotificationEnabled,
+    useFetchAutoUpdateNotificationSetting,
+  ] = useElectronStore((s) => [
+    s.autoUpdateNotificationEnabled,
+    s.setAutoUpdateNotificationEnabled,
+    s.useFetchAutoUpdateNotificationSetting,
   ]);
 
-  const handleAutoUpdateNotificationToggle = (checked: boolean) => {
-    updateGeneralConfig({ autoUpdateNotificationEnabled: checked });
+  // Fetch auto update notification setting (using SWR)
+  const { isLoading } = useFetchAutoUpdateNotificationSetting();
+
+  const handleAutoUpdateNotificationToggle = async (checked: boolean) => {
+    if (!isDesktop) return;
+    await setAutoUpdateNotificationEnabled(checked);
   };
 
   return (
@@ -108,6 +118,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
             </Flexbox>
             <Switch
               checked={autoUpdateNotificationEnabled}
+              loading={isLoading}
               onChange={handleAutoUpdateNotificationToggle}
               size="small"
             />

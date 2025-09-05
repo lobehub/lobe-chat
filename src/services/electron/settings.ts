@@ -6,6 +6,20 @@ import {
 
 class DesktopSettingsService {
   /**
+   * 获取自动更新通知设置
+   */
+  getAutoUpdateNotificationEnabled = async (): Promise<boolean> => {
+    return dispatch('getAutoUpdateNotificationEnabled');
+  };
+
+  /**
+   * 设置自动更新通知
+   */
+  setAutoUpdateNotificationEnabled = async (enabled: boolean): Promise<void> => {
+    return dispatch('setAutoUpdateNotificationEnabled', enabled);
+  };
+
+  /**
    * 获取远程服务器配置
    */
   getProxySettings = async () => {
