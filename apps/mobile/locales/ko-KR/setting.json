@@ -46,6 +46,7 @@
       "loadFailed": "서비스 제공자 목록 로드 실패"
     },
     "models": {
+      "allLoaded": "모든 모델이 표시되었습니다",
       "copySuccess": "복사 성공",
       "disableFailed": "모델 비활성화 실패",
       "emptyNoSearch": "모델을 찾을 수 없습니다. 서버에서 가져오기를 시도하세요",
@@ -55,6 +56,8 @@
       "fetchFailed": "모델 가져오기 실패, 다시 시도하세요",
       "fetchSuccess": "모델 목록 가져오기 성공!",
       "fetching": "가져오는 중...",
+      "loading": "로딩 중...",
+      "loadingMore": "더 불러오는 중...",
       "modelsAvailable": "총 {{count}}개의 사용 가능한 모델",
       "searchPlaceholder": "모델 검색...",
       "title": "모델"
@@ -136,6 +139,18 @@
     "testConnectivity": "연결 테스트",
     "validationFailed": "검증 실패",
     "validationSuccess": "검증 성공"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "귀하의 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘으로 암호화됩니다",
+      "checker": {
+        "button": "연결 테스트",
+        "desc": "Api Key와 프록시 주소가 올바르게 입력되었는지 테스트합니다",
+        "pass": "검사 통과",
+        "selectModel": "연결 테스트에 사용할 모델 선택",
+        "title": "연결성 검사"
+      }
+    }
   },
   "providers": "AI 서비스 제공자",
   "support": "이메일 지원",

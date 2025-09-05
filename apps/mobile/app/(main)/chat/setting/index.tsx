@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { Avatar, Header } from '@/components';
 
 import { useSessionStore } from '@/store/session';
@@ -16,16 +16,19 @@ export default function AgentDetail() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+    <KeyboardAwareScrollView
+      bottomOffset={40}
+      extraKeyboardSpace={60}
+      showsVerticalScrollIndicator={false}
+      style={styles.container}
+    >
       <Header showBack title={title} />
-      <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={[styles.container]}>
-        <View style={styles.avatarContainer}>
-          <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
-        </View>
-        <Text style={styles.title}>{title}</Text>
-        {description ? <Text style={styles.description}>{description}</Text> : null}
-        <AgentRoleEditSection />
-      </ScrollView>
-    </SafeAreaView>
+      <View style={styles.avatarContainer}>
+        <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
+      </View>
+      <Text style={styles.title}>{title}</Text>
+      {description ? <Text style={styles.description}>{description}</Text> : null}
+      <AgentRoleEditSection />
+    </KeyboardAwareScrollView>
   );
 }

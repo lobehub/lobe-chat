@@ -46,6 +46,7 @@
       "loadFailed": "Tải danh sách nhà cung cấp dịch vụ thất bại"
     },
     "models": {
+      "allLoaded": "Đã hiển thị tất cả các mô hình",
       "copySuccess": "Sao chép thành công",
       "disableFailed": "Vô hiệu hóa mô hình thất bại",
       "emptyNoSearch": "Không tìm thấy mô hình nào, thử lấy từ máy chủ",
@@ -55,6 +56,8 @@
       "fetchFailed": "Lấy mô hình thất bại, vui lòng thử lại",
       "fetchSuccess": "Lấy danh sách mô hình thành công!",
       "fetching": "Đang lấy...",
+      "loading": "Đang tải...",
+      "loadingMore": "Đang tải thêm...",
       "modelsAvailable": "Tổng cộng {{count}} mô hình khả dụng",
       "searchPlaceholder": "Tìm kiếm mô hình...",
       "title": "Mô hình"
@@ -136,6 +139,18 @@
     "testConnectivity": "Kiểm tra kết nối",
     "validationFailed": "Xác thực thất bại",
     "validationSuccess": "Xác thực thành công"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Khóa bí mật và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
+      "checker": {
+        "button": "Kiểm tra kết nối",
+        "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã nhập đúng chưa",
+        "pass": "Kiểm tra thành công",
+        "selectModel": "Chọn mô hình để kiểm tra kết nối",
+        "title": "Kiểm tra kết nối"
+      }
+    }
   },
   "providers": "Nhà cung cấp AI",
   "support": "Hỗ trợ qua email",

@@ -14,9 +14,11 @@ import type { ChatStoreState } from '../../initialState';
 const getMeta = (message: ChatMessage) => {
   switch (message.role) {
     case 'user': {
+      const userState = useUserStore.getState();
       return {
-        // avatar: userProfileSelectors.userAvatar(useUserStore.getState()) || DEFAULT_USER_AVATAR,
-        avatar: useUserStore.getState().user?.avatar || DEFAULT_USER_AVATAR,
+        avatar: userState.user?.avatar || DEFAULT_USER_AVATAR,
+        backgroundColor: 'transparent',
+        title: userState.user?.name || userState.user?.username || 'User',
       };
     }
 
