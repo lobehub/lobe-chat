@@ -28,16 +28,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 10
+          bun-version: ${{ secrets.BUN_VERSION }}
 
       - name: Install deps
-        run: pnpm install
+        run: bun i
 
       - name: Lint
-        run: pnpm run lint
+        run: bun run lint
 
   version:
     name: Determine version
@@ -91,14 +91,14 @@ jobs:
         with:
           node-version: 22
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 10
+          bun-version: ${{ secrets.BUN_VERSION }}
 
-      # node-linker=hoisted 模式将可以确保 asar 压缩可用
+      # bun install 默认行为应该能确保 asar 压缩可用
       - name: Install deps
-        run: pnpm install --node-linker=hoisted
+        run: bun i
 
       - name: Install deps on Desktop
         run: npm run install-isolated --prefix=./apps/desktop

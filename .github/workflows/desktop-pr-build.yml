@@ -32,18 +32,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 10
+          bun-version: ${{ secrets.BUN_VERSION }}
 
       - name: Install deps
-        run: pnpm install
+        run: bun i
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Lint
-        run: pnpm run lint
+        run: bun run lint
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
