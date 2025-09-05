@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.123.2](https://github.com/lobehub/lobe-chat/compare/v1.123.1...v1.123.2)
+
+<sup>Released on **2025-09-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Not use branch topic when this topic is not save.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Not use branch topic when this topic is not save, closes [#9083](https://github.com/lobehub/lobe-chat/issues/9083) ([f534d19](https://github.com/lobehub/lobe-chat/commit/f534d19))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.123.1](https://github.com/lobehub/lobe-chat/compare/v1.123.0...v1.123.1)
 
 <sup>Released on **2025-09-05**</sup>
