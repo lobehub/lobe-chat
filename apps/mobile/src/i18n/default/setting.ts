@@ -46,6 +46,7 @@ export default {
       loadFailed: '服务商列表加载失败',
     },
     models: {
+      allLoaded: '已显示全部模型',
       copySuccess: '复制成功',
       disableFailed: '禁用模型失败',
       emptyNoSearch: '没有找到任何模型，尝试从服务器获取',
@@ -55,6 +56,8 @@ export default {
       fetchFailed: '获取模型失败，请重试',
       fetchSuccess: '模型列表获取成功！',
       fetching: '正在获取...',
+      loading: '正在加载...',
+      loadingMore: '正在加载更多...',
       modelsAvailable: '共 {{count}} 个可用模型',
       searchPlaceholder: '搜索模型...',
       title: '模型',

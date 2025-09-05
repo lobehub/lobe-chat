@@ -46,6 +46,7 @@
       "loadFailed": "Caricamento lista provider fallito"
     },
     "models": {
+      "allLoaded": "Tutti i modelli sono stati caricati",
       "copySuccess": "Copia riuscita",
       "disableFailed": "Disabilitazione modello fallita",
       "emptyNoSearch": "Nessun modello trovato, prova a recuperare dal server",
@@ -55,6 +56,8 @@
       "fetchFailed": "Recupero modelli fallito, riprova",
       "fetchSuccess": "Lista modelli recuperata con successo!",
       "fetching": "Recupero in corso...",
+      "loading": "Caricamento in corso...",
+      "loadingMore": "Caricamento di altri modelli...",
       "modelsAvailable": "{{count}} modelli disponibili in totale",
       "searchPlaceholder": "Cerca modelli...",
       "title": "Modelli"
@@ -136,6 +139,18 @@
     "testConnectivity": "Testa connettività",
     "validationFailed": "Validazione fallita",
     "validationSuccess": "Validazione riuscita"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "La tua chiave segreta e l'indirizzo del proxy saranno crittografati utilizzando l'algoritmo <1>AES-GCM</1>",
+      "checker": {
+        "button": "Testa connessione",
+        "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
+        "pass": "Controllo superato",
+        "selectModel": "Seleziona il modello da utilizzare per il test di connessione",
+        "title": "Verifica connettività"
+      }
+    }
   },
   "providers": "Provider AI",
   "support": "Supporto via email",
