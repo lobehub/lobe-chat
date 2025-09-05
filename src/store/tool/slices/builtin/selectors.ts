@@ -1,4 +1,4 @@
-import { DalleManifest } from '@/tools/dalle';
+import { ImageGeneratorManifest } from '@/tools/image-generator';
 import { LobeToolMeta } from '@/types/tool/tool';
 
 import type { ToolStoreState } from '../../initialState';
@@ -9,10 +9,10 @@ const metaList =
     s.builtinTools
       .filter(
         (item) =>
-          !item.hidden && (!showDalle ? item.identifier !== DalleManifest.identifier : true),
+          !item.hidden && (!showDalle ? item.identifier !== ImageGeneratorManifest.identifier : true),
       )
       .map((t) => ({
-        author: 'LobeHub',
+        author: 'Imoogle',
         identifier: t.identifier,
         meta: t.manifest.meta,
         type: 'builtin',

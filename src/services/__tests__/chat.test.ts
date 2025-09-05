@@ -34,7 +34,7 @@ import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { UserStore } from '@/store/user';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
-import { DalleManifest } from '@/tools/dalle';
+import { ImageGeneratorManifest } from '@/tools/image-generator';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';

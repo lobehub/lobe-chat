@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DalleManifest } from '@/tools/dalle';
+import { ImageGeneratorManifest } from '@/tools/image-generator';
 import { BuiltinToolsRenders } from '@/tools/renders';
 
 import BuiltinType from './index';
@@ -10,7 +10,7 @@ import BuiltinType from './index';
 vi.mock('@/tools/renders', () => ({
   BuiltinToolsRenders: {
     dalle3: vi.fn(() => <div>Test Renderer</div>),
-    [DalleManifest.identifier]: vi.fn(() => <div>{DalleManifest.identifier}</div>),
+    [ImageGeneratorManifest.identifier]: vi.fn(() => <div>{ImageGeneratorManifest.identifier}</div>),
   },
 }));
 
