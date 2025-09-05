@@ -115,21 +115,6 @@ export const useStyles = createStyles((token) => ({
     marginTop: token.marginXXS,
   },
 
-  // 眼睛按钮
-  eyeButton: {
-    padding: token.paddingSM,
-  },
-
-  // 输入框容器
-  inputContainer: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    borderColor: token.colorBorder,
-    borderRadius: token.borderRadiusLG,
-    borderWidth: 1,
-    flexDirection: 'row',
-  },
-
   // 输入框容器错误状态
   inputContainerError: {
     borderColor: token.colorError,
@@ -299,9 +284,6 @@ export const useStyles = createStyles((token) => ({
 
   // 文本输入框
   textInput: {
-    color: token.colorText,
-    flex: 1,
-    fontSize: token.fontSize,
     paddingHorizontal: token.paddingSM,
     paddingVertical: token.paddingSM,
   },

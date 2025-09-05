@@ -14,7 +14,7 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeLG,
   },
   searchInput: {
-    marginHorizontal: token.padding,
+    marginHorizontal: token.margin,
     marginVertical: token.marginXS,
   },
   sessionList: {

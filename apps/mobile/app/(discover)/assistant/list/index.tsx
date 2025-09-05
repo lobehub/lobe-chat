@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'ahooks';
 import { AssistantCategory } from '@/types/discover';
-import { Search } from 'lucide-react-native';
 import { useDiscoverStore } from '@/store/discover';
 import AgentCard from './components/AgentCard';
 import CategoryTabs from './components/CategoryTabs';
@@ -136,17 +135,12 @@ const AssistantList = () => {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
       <Header showBack title={t('title', { ns: 'discover' })} />
       <View style={styles.filterContainer}>
-        <View style={styles.searchContainer}>
-          <Search color={token.colorTextPlaceholder} size={20} style={styles.searchIcon} />
-          <TextInput
-            onChangeText={setSearchText}
-            onSubmitEditing={handleSearchSubmit}
-            placeholder={t('assistant.search', { ns: 'common' })}
-            returnKeyType="search"
-            textAlignVertical="center"
-            value={searchText}
-          />
-        </View>
+        <TextInput.Search
+          onChangeText={setSearchText}
+          onSubmitEditing={handleSearchSubmit}
+          placeholder={t('assistant.search', { ns: 'common' })}
+          style={styles.searchContainer}
+        />
 
         {isCategoryLoading ? (
           <CategoryTabsSkeleton />

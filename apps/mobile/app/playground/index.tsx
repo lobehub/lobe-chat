@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { ChevronRight, Search } from 'lucide-react-native';
+import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -187,10 +187,9 @@ export default function ComponentPlaygroundIndex() {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Playground" />
       <View style={styles.filterContainer}>
-        <TextInput
+        <TextInput.Search
           onChangeText={setSearchText}
           placeholder="搜索组件..."
-          prefix={<Search color={token.colorTextPlaceholder} size={20} />}
           style={styles.searchContainer}
           value={searchText}
         />

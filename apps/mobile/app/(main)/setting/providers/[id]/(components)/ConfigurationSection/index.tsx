@@ -1,16 +1,9 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  Linking,
-  ActivityIndicator,
-} from 'react-native';
-import { Eye, EyeOff, Lock } from 'lucide-react-native';
+import { View, Text, Alert, Linking, ActivityIndicator } from 'react-native';
+import { Lock } from 'lucide-react-native';
 
 import { useTranslation, Trans } from 'react-i18next';
+import { TextInput } from '@/components';
 
 import { useThemeToken } from '@/theme';
 import { AiProviderDetailItem } from '@/types/aiProvider';
@@ -40,7 +33,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   // Form state
   const [apiKey, setApiKey] = useState('');
   const [proxyUrl, setProxyUrl] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
 
@@ -102,10 +94,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
     updateField('baseURL', proxyUrl);
   }, [updateField, proxyUrl]);
 
-  const toggleApiKeyVisibility = () => {
-    setShowApiKey(!showApiKey);
-  };
-
   // 从 provider.settings 中获取配置
   const {
     showApiKey: shouldShowApiKey = true,
@@ -136,41 +124,21 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               ns: 'setting',
             })}
           </Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-              editable={!isChecking}
-              onBlur={handleApiKeyBlur}
-              onChangeText={handleApiKeyChange}
-              placeholder={t('aiProviders.configuration.apiKey.placeholder', {
-                name: provider.name || provider.id,
-                ns: 'setting',
-              })}
-              placeholderTextColor={token.colorTextTertiary}
-              secureTextEntry={!showApiKey}
-              style={[styles.textInput, isChecking && styles.textInputDisabled]}
-              value={apiKey}
-            />
-            <TouchableOpacity
-              disabled={isChecking}
-              onPress={toggleApiKeyVisibility}
-              style={styles.eyeButton}
-            >
-              {showApiKey ? (
-                <EyeOff
-                  color={isChecking ? token.colorTextDisabled : token.colorTextSecondary}
-                  size={18}
-                />
-              ) : (
-                <Eye
-                  color={isChecking ? token.colorTextDisabled : token.colorTextSecondary}
-                  size={18}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
+          <TextInput.Password
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            editable={!isChecking}
+            onBlur={handleApiKeyBlur}
+            onChangeText={handleApiKeyChange}
+            placeholder={t('aiProviders.configuration.apiKey.placeholder', {
+              name: provider.name || provider.id,
+              ns: 'setting',
+            })}
+            placeholderTextColor={token.colorTextTertiary}
+            style={[styles.textInput, isChecking && styles.textInputDisabled]}
+            value={apiKey}
+          />
         </View>
       )}
 
@@ -185,9 +153,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
             {(proxyUrlConfig && typeof proxyUrlConfig === 'object' && proxyUrlConfig.desc) ||
               t('aiProviders.configuration.proxyUrl.desc', { ns: 'setting' })}
           </Text>
-          <View
-            style={[styles.inputContainer, !isValidUrl(proxyUrl) && styles.inputContainerError]}
-          >
+          <View style={[!isValidUrl(proxyUrl) && styles.inputContainerError]}>
             <TextInput
               autoCapitalize="none"
               autoComplete="off"
@@ -202,7 +168,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
                   proxyUrlConfig.placeholder) ||
                 t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
               }
-              placeholderTextColor={token.colorTextTertiary}
               style={[styles.textInput, isChecking && styles.textInputDisabled]}
               value={proxyUrl}
             />

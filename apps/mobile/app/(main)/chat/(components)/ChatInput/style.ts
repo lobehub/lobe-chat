@@ -37,13 +37,8 @@ export const useStyles = createStyles((token) => ({
     gap: 4,
   },
   input: {
-    borderRadius: token.borderRadius,
-    color: token.colorText,
     flex: 1,
-    fontSize: token.fontSizeLG,
-    lineHeight: 24,
     maxHeight: 96,
-    paddingVertical: token.paddingXS,
   },
   inputArea: {
     alignItems: 'center',

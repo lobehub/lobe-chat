@@ -82,7 +82,7 @@ export const SearchBarSkeleton = () => {
         paddingHorizontal: 12,
       }}
     >
-      <Search color={token.colorTextPlaceholder} size={20} />
+      <Search color={token.colorTextPlaceholder} size={token.fontSizeLG} />
     </View>
   );
 };

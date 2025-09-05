@@ -1,31 +1,39 @@
 import { createStyles } from '@/theme';
 import { Platform } from 'react-native';
 
-export const useStyles = createStyles((token) => ({
+interface UseStylesProps {
+  multiline?: boolean;
+}
+
+export const useStyles = createStyles((token, { multiline = false }: UseStylesProps) => ({
   container: {
     alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorFillTertiary,
     borderRadius: token.borderRadius,
+    display: 'flex',
     flexDirection: 'row',
-    height: token.controlHeightLG,
     paddingHorizontal: token.paddingSM,
+    paddingVertical: token.paddingXS,
   },
   input: {
     color: token.colorText,
     flex: 1,
     fontFamily: token.fontFamily,
     fontSize: token.fontSizeLG,
-    lineHeight: undefined,
+    height: multiline ? undefined : token.controlHeight,
+    lineHeight: multiline ? token.lineHeightLG : undefined,
+    textAlignVertical: multiline ? 'top' : 'center',
     ...(Platform.OS === 'android' && {
       includeFontPadding: false,
       // 垂直居中
       paddingTop: token.paddingXXS,
       paddingVertical: 0,
-      // 移除额外的字体内边距
-      textAlignVertical: 'center',
     }),
   },
   prefixContainer: {
     marginRight: token.marginXS,
+  },
+  suffixContainer: {
+    marginLeft: token.marginXS,
   },
 }));
