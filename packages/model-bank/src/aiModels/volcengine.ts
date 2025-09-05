@@ -111,7 +111,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-seed-1-6-thinking-250615',
+      deploymentName: 'doubao-seed-1-6-thinking-250715',
     },
     contextWindowTokens: 256_000,
     description:
@@ -119,7 +119,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6 Thinking',
     enabled: true,
     id: 'doubao-seed-1.6-thinking',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
@@ -169,7 +169,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6',
     enabled: true,
     id: 'doubao-seed-1.6',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
@@ -215,7 +215,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-seed-1-6-flash-250615',
+      deploymentName: 'doubao-seed-1-6-flash-250828',
     },
     contextWindowTokens: 256_000,
     description:
@@ -223,7 +223,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6 Flash',
     enabled: true,
     id: 'doubao-seed-1.6-flash',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
