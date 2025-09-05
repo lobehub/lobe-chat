@@ -10,7 +10,6 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

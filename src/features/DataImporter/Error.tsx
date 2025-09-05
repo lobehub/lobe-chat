@@ -7,7 +7,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
-import { GITHUB_ISSUES } from '@/const/url';
 import { githubService } from '@/services/github';
 import { ErrorShape } from '@/types/importer';
 

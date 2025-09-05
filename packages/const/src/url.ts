@@ -25,11 +25,20 @@ export const DATABASE_SELF_HOSTING_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/serve
 // use this for the link
 export const DOCUMENTS_REFER_URL = `${DOCUMENTS}?utm_source=${UTM_SOURCE}`;
 
-export const WIKI = urlJoin(GITHUB, 'wiki');
 export const WIKI_PLUGIN_GUIDE = urlJoin(USAGE_DOCUMENTS, '/plugins/development');
 export const MANUAL_UPGRADE_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/upstream-sync');
 
 export const BLOG = urlJoin(OFFICIAL_SITE, 'blog');
+
+// Dummy constants for compatibility (functionality removed)
+export const GITHUB = '';
+export const GITHUB_ISSUES = '';
+export const FEEDBACK = '';
+export const AGENTS_INDEX_GITHUB = '';
+export const AGENTS_INDEX_GITHUB_ISSUE = '';
+export const MORE_MODEL_PROVIDER_REQUEST_URL = '';
+export const MORE_FILE_PREVIEW_REQUEST_URL = '';
+export const WIKI = '';
 
 export const ABOUT = OFFICIAL_SITE;
 export const PRIVACY_URL = urlJoin(OFFICIAL_SITE, '/privacy');
