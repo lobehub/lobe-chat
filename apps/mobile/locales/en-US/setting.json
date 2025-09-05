@@ -46,6 +46,7 @@
       "loadFailed": "Failed to load provider list"
     },
     "models": {
+      "allLoaded": "All models displayed",
       "copySuccess": "Copied successfully",
       "disableFailed": "Failed to disable model",
       "emptyNoSearch": "No models found, trying to fetch from server",
@@ -55,6 +56,8 @@
       "fetchFailed": "Failed to fetch models, please try again",
       "fetchSuccess": "Model list fetched successfully!",
       "fetching": "Fetching...",
+      "loading": "Loading...",
+      "loadingMore": "Loading more...",
       "modelsAvailable": "{{count}} models available",
       "searchPlaceholder": "Search models...",
       "title": "Models"
@@ -136,6 +139,18 @@
     "testConnectivity": "Test Connectivity",
     "validationFailed": "Validation Failed",
     "validationSuccess": "Validation Successful"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Your secret key and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
+      "checker": {
+        "button": "Test Connection",
+        "desc": "Verify if the API Key and proxy address are correctly entered",
+        "pass": "Check passed",
+        "selectModel": "Select a model to test the connection",
+        "title": "Connectivity Check"
+      }
+    }
   },
   "providers": "AI Providers",
   "support": "Email Support",

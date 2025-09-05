@@ -1,14 +1,24 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Eye, EyeOff } from 'lucide-react-native';
-import { useDebounceFn } from 'ahooks';
-import { useTranslation } from 'react-i18next';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
+import { Eye, EyeOff, Lock } from 'lucide-react-native';
+
+import { useTranslation, Trans } from 'react-i18next';
 
 import { useThemeToken } from '@/theme';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { useAiInfraStore } from '@/store/aiInfra';
+import { AES_GCM_URL } from '@/const/url';
 
 import { useStyles } from './style';
+import Checker from './Checker';
 
 interface ConfigurationSectionProps {
   provider: AiProviderDetailItem;
@@ -32,6 +42,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const [proxyUrl, setProxyUrl] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   // Initialize form values from store
   useEffect(() => {
@@ -39,10 +50,11 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
       setApiKey(providerData.keyVaults.apiKey || '');
       setProxyUrl(providerData.keyVaults.baseURL || '');
     }
+    // Response API state will be handled separately
   }, [providerData]);
 
-  // Debounced update function
-  const { run: debouncedUpdate } = useDebounceFn(
+  // Update function for onBlur events
+  const updateField = useCallback(
     async (field: string, value: string) => {
       setIsUpdating(true);
       try {
@@ -65,38 +77,46 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
         setIsUpdating(false);
       }
     },
-    { wait: 500 },
+    [providerData?.keyVaults, provider.id, updateAiProviderConfig, t],
   );
 
-  const handleApiKeyChange = useCallback(
-    (value: string) => {
-      setApiKey(value);
-      debouncedUpdate('apiKey', value);
-    },
-    [debouncedUpdate],
-  );
+  const handleApiKeyChange = useCallback((value: string) => {
+    setApiKey(value);
+  }, []);
 
-  const handleProxyUrlChange = useCallback(
-    (value: string) => {
-      setProxyUrl(value);
+  const handleApiKeyBlur = useCallback(() => {
+    updateField('apiKey', apiKey);
+  }, [updateField, apiKey]);
 
-      // Simple URL validation
-      if (value && !/^https?:\/\/.+/.test(value)) {
-        // Don't update invalid URLs, but still update the local state
-        return;
-      }
+  const handleProxyUrlChange = useCallback((value: string) => {
+    setProxyUrl(value);
+  }, []);
 
-      debouncedUpdate('baseURL', value);
-    },
-    [debouncedUpdate],
-  );
+  const handleProxyUrlBlur = useCallback(() => {
+    // Simple URL validation
+    if (proxyUrl && !/^https?:\/\/.+/.test(proxyUrl)) {
+      // Don't update invalid URLs
+      return;
+    }
+
+    updateField('baseURL', proxyUrl);
+  }, [updateField, proxyUrl]);
 
   const toggleApiKeyVisibility = () => {
     setShowApiKey(!showApiKey);
   };
 
-  const proxyUrlConfig = provider.settings?.proxyUrl;
+  // 从 provider.settings 中获取配置
+  const {
+    showApiKey: shouldShowApiKey = true,
+    proxyUrl: proxyUrlConfig,
+    showChecker = true,
+  } = provider.settings || {};
+
   const showProxyUrl = proxyUrlConfig || provider.source === 'custom';
+
+  // RN 端假设总是服务器模式
+  const isServerMode = true;
 
   return (
     <View style={styles.container}>
@@ -105,40 +125,54 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
       </Text>
 
       {/* API Key Field */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>
-          {t('aiProviders.configuration.apiKey.label', { ns: 'setting' })}
-        </Text>
-        <Text style={styles.inputDescription}>
-          {t('aiProviders.configuration.apiKey.description', {
-            name: provider.name || provider.id,
-            ns: 'setting',
-          })}
-        </Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            onChangeText={handleApiKeyChange}
-            placeholder={t('aiProviders.configuration.apiKey.placeholder', {
+      {shouldShowApiKey && (
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>
+            {t('aiProviders.configuration.apiKey.label', { ns: 'setting' })}
+          </Text>
+          <Text style={styles.inputDescription}>
+            {t('aiProviders.configuration.apiKey.description', {
               name: provider.name || provider.id,
               ns: 'setting',
             })}
-            placeholderTextColor={token.colorTextTertiary}
-            secureTextEntry={!showApiKey}
-            style={styles.textInput}
-            value={apiKey}
-          />
-          <TouchableOpacity onPress={toggleApiKeyVisibility} style={styles.eyeButton}>
-            {showApiKey ? (
-              <EyeOff color={token.colorTextSecondary} size={18} />
-            ) : (
-              <Eye color={token.colorTextSecondary} size={18} />
-            )}
-          </TouchableOpacity>
+          </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
+              editable={!isChecking}
+              onBlur={handleApiKeyBlur}
+              onChangeText={handleApiKeyChange}
+              placeholder={t('aiProviders.configuration.apiKey.placeholder', {
+                name: provider.name || provider.id,
+                ns: 'setting',
+              })}
+              placeholderTextColor={token.colorTextTertiary}
+              secureTextEntry={!showApiKey}
+              style={[styles.textInput, isChecking && styles.textInputDisabled]}
+              value={apiKey}
+            />
+            <TouchableOpacity
+              disabled={isChecking}
+              onPress={toggleApiKeyVisibility}
+              style={styles.eyeButton}
+            >
+              {showApiKey ? (
+                <EyeOff
+                  color={isChecking ? token.colorTextDisabled : token.colorTextSecondary}
+                  size={18}
+                />
+              ) : (
+                <Eye
+                  color={isChecking ? token.colorTextDisabled : token.colorTextSecondary}
+                  size={18}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
 
       {/* API Proxy URL Field */}
       {showProxyUrl && (
@@ -158,7 +192,9 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect={false}
+              editable={!isChecking}
               keyboardType="url"
+              onBlur={handleProxyUrlBlur}
               onChangeText={handleProxyUrlChange}
               placeholder={
                 (proxyUrlConfig &&
@@ -167,15 +203,67 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
                 t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
               }
               placeholderTextColor={token.colorTextTertiary}
-              style={styles.textInput}
+              style={[styles.textInput, isChecking && styles.textInputDisabled]}
               value={proxyUrl}
             />
+            {isChecking && (
+              <View style={styles.loadingIndicator}>
+                <ActivityIndicator color={token.colorTextSecondary} size="small" />
+              </View>
+            )}
           </View>
           {!isValidUrl(proxyUrl) && (
             <Text style={styles.errorText}>
               {t('aiProviders.configuration.proxyUrl.invalid', { ns: 'setting' })}
             </Text>
           )}
+        </View>
+      )}
+
+      {/* Connectivity Checker */}
+      {showChecker && (
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>{t('providerModels.config.checker.title')}</Text>
+          <Text style={styles.inputDescription}>{t('providerModels.config.checker.desc')}</Text>
+          <Checker
+            model={provider.checkModel!}
+            onAfterCheck={async () => {
+              setIsChecking(false);
+            }}
+            onBeforeCheck={async () => {
+              setIsChecking(true);
+              // 连接检查前保存当前配置
+              await updateAiProviderConfig(provider.id, {
+                keyVaults: {
+                  apiKey,
+                  baseURL: proxyUrl,
+                },
+              });
+            }}
+            provider={provider.id}
+          />
+        </View>
+      )}
+
+      {/* AES-GCM Encryption Notice */}
+      {isServerMode && (
+        <View style={styles.aesGcmContainer}>
+          <View style={styles.aesGcmContent}>
+            <Lock
+              color={token.colorTextSecondary}
+              size={14}
+              style={{ marginRight: 1.5, opacity: 0.66 }}
+            />
+            <Text style={styles.aesGcmText}>
+              <Trans i18nKey="providerModels.config.aesGcm" ns="setting">
+                您的秘钥与代理地址等将使用
+                <Text onPress={() => Linking.openURL(AES_GCM_URL)} style={styles.aesGcmLink}>
+                  AES-GCM
+                </Text>
+                加密算法进行加密
+              </Trans>
+            </Text>
+          </View>
         </View>
       )}
 

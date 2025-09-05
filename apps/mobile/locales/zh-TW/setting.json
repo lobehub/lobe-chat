@@ -46,6 +46,7 @@
       "loadFailed": "服務商列表加載失敗"
     },
     "models": {
+      "allLoaded": "已顯示全部模型",
       "copySuccess": "複製成功",
       "disableFailed": "停用模型失敗",
       "emptyNoSearch": "沒有找到任何模型，嘗試從伺服器獲取",
@@ -55,6 +56,8 @@
       "fetchFailed": "獲取模型失敗，請重試",
       "fetchSuccess": "模型列表獲取成功！",
       "fetching": "正在獲取...",
+      "loading": "正在載入...",
+      "loadingMore": "正在載入更多...",
       "modelsAvailable": "共 {{count}} 個可用模型",
       "searchPlaceholder": "搜尋模型...",
       "title": "模型"
@@ -109,6 +112,18 @@
     "testConnectivity": "測試連通性",
     "validationFailed": "驗證失敗",
     "validationSuccess": "驗證成功"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "您的密鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
+      "checker": {
+        "button": "測試連線",
+        "desc": "測試 Api Key 與代理地址是否正確填寫",
+        "pass": "檢查通過",
+        "selectModel": "選擇用於測試連線的模型",
+        "title": "連通性檢查"
+      }
+    }
   },
   "providers": "AI 服務商",
   "support": "郵件支援",

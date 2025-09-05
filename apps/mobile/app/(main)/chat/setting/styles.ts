@@ -2,6 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   avatarContainer: {
+    alignItems: 'center',
     marginBottom: token.marginSM,
     marginTop: token.marginLG,
   },

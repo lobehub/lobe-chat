@@ -46,6 +46,7 @@
       "loadFailed": "Nie udało się załadować listy dostawców"
     },
     "models": {
+      "allLoaded": "Wszystkie modele zostały wyświetlone",
       "copySuccess": "Skopiowano pomyślnie",
       "disableFailed": "Nie udało się wyłączyć modelu",
       "emptyNoSearch": "Nie znaleziono żadnych modeli, spróbuj pobrać z serwera",
@@ -55,6 +56,8 @@
       "fetchFailed": "Nie udało się pobrać modeli, spróbuj ponownie",
       "fetchSuccess": "Lista modeli została pomyślnie pobrana!",
       "fetching": "Pobieranie...",
+      "loading": "Ładowanie...",
+      "loadingMore": "Ładowanie więcej...",
       "modelsAvailable": "Dostępnych modeli: {{count}}",
       "searchPlaceholder": "Szukaj modeli...",
       "title": "Modele"
@@ -136,6 +139,18 @@
     "testConnectivity": "Testuj łączność",
     "validationFailed": "Weryfikacja nie powiodła się",
     "validationSuccess": "Weryfikacja powiodła się"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Twój klucz i adres proxy będą szyfrowane za pomocą algorytmu <1>AES-GCM</1>",
+      "checker": {
+        "button": "Testuj połączenie",
+        "desc": "Sprawdź, czy klucz API i adres proxy są poprawnie wprowadzone",
+        "pass": "Sprawdzenie zakończone pomyślnie",
+        "selectModel": "Wybierz model do testu połączenia",
+        "title": "Sprawdzenie łączności"
+      }
+    }
   },
   "providers": "Dostawcy AI",
   "support": "Wsparcie mailowe",

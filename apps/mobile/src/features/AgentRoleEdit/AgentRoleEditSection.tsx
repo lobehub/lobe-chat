@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text, TextInput } from 'react-native';
 import { Edit3 } from 'lucide-react-native';
@@ -24,6 +24,8 @@ export const AgentRoleEditSection: React.FC = () => {
   const [loading, setLoading] = useState(false);
   // 当 systemRole 为空时，默认进入编辑状态
   const [isEditing, setIsEditing] = useState(!systemRole);
+
+  const textInputRef = useRef<TextInput>(null);
 
   const handleSave = useCallback(async () => {
     // 如果内容没有变化，且有内容时才退出编辑状态
@@ -59,6 +61,10 @@ export const AgentRoleEditSection: React.FC = () => {
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
+    // 延迟聚焦，确保组件已渲染
+    setTimeout(() => {
+      textInputRef.current?.focus();
+    }, 100);
   }, []);
 
   // 监听 systemRole 变化，同步更新编辑值
@@ -132,10 +138,14 @@ export const AgentRoleEditSection: React.FC = () => {
       <View style={styles.editContainer}>
         <TextInput
           autoFocus
+          enablesReturnKeyAutomatically={false}
           multiline
           onChangeText={setEditValue}
           placeholder={t('agentRoleEdit.placeholder', { ns: 'chat' })}
           placeholderTextColor={token.colorTextPlaceholder}
+          ref={textInputRef}
+          returnKeyType="default"
+          scrollEnabled={true}
           style={styles.textInput}
           textAlignVertical="top"
           value={editValue}

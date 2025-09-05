@@ -46,6 +46,7 @@
       "loadFailed": "Sağlayıcı listesi yüklenemedi"
     },
     "models": {
+      "allLoaded": "Tüm modeller gösterildi",
       "copySuccess": "Kopyalama başarılı",
       "disableFailed": "Model devre dışı bırakılamadı",
       "emptyNoSearch": "Hiç model bulunamadı, sunucudan almaya çalışılıyor",
@@ -55,6 +56,8 @@
       "fetchFailed": "Model alınamadı, lütfen tekrar deneyin",
       "fetchSuccess": "Model listesi başarıyla alındı!",
       "fetching": "Alınıyor...",
+      "loading": "Yükleniyor...",
+      "loadingMore": "Daha fazla yükleniyor...",
       "modelsAvailable": "Toplam {{count}} kullanılabilir model",
       "searchPlaceholder": "Model ara...",
       "title": "Modeller"
@@ -136,6 +139,18 @@
     "testConnectivity": "Bağlantıyı Test Et",
     "validationFailed": "Doğrulama başarısız",
     "validationSuccess": "Doğrulama başarılı"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Anahtarınız ve proxy adresiniz <1>AES-GCM</1> şifreleme algoritması ile şifrelenecektir",
+      "checker": {
+        "button": "Bağlantıyı Test Et",
+        "desc": "Api Anahtarı ve proxy adresinin doğru girilip girilmediğini test edin",
+        "pass": "Kontrol başarılı",
+        "selectModel": "Bağlantıyı test etmek için model seçin",
+        "title": "Bağlantı Kontrolü"
+      }
+    }
   },
   "providers": "AI Sağlayıcıları",
   "support": "E-posta Desteği",
