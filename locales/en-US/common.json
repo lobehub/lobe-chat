@@ -32,6 +32,7 @@
   "blog": "Product Blog",
   "branching": "Create Subtopic",
   "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Current topic is not saved, please save it first to use subtopic feature",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "clientDB": {
