@@ -2,6 +2,71 @@
 
 # Changelog
 
+## [Version&nbsp;1.123.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.122.1...v1.123.0)
+<sup>Released on **2025-09-05**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Make LobeNextAuthDBAdapter Edge Compatible.
+
+
+#### ✨ Features
+
+- **misc**: Add NewAPI as a router provider for multi-model aggregation.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile header title to loog not ellipsis, not use branch topic when this topic is not save.
+
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Make LobeNextAuthDBAdapter Edge Compatible, closes [#9088](https://github.com/jaworldwideorg/OneJA-Bot/issues/9088) ([411f88e](https://github.com/jaworldwideorg/OneJA-Bot/commit/411f88e))
+
+
+
+#### What's improved
+
+* **misc**: Add NewAPI as a router provider for multi-model aggregation, closes [#9041](https://github.com/jaworldwideorg/OneJA-Bot/issues/9041) [/github.com/lobehub/lobe-chat/pull/9041#pullrequestreview-3183464594](https://github.com//github.com/lobehub/lobe-chat/pull/9041/issues/pullrequestreview-3183464594) ([7e291c2](https://github.com/jaworldwideorg/OneJA-Bot/commit/7e291c2))
+
+
+
+#### What's fixed
+
+* **misc**: Fix mobile header title to loog not ellipsis, closes [#9109](https://github.com/jaworldwideorg/OneJA-Bot/issues/9109) ([9b8435b](https://github.com/jaworldwideorg/OneJA-Bot/commit/9b8435b))
+* **misc**: Not use branch topic when this topic is not save, closes [#9083](https://github.com/jaworldwideorg/OneJA-Bot/issues/9083) ([f534d19](https://github.com/jaworldwideorg/OneJA-Bot/commit/f534d19))
+
+
+
+#### Styles
+
+* **misc**: Update i18n, closes [#9095](https://github.com/jaworldwideorg/OneJA-Bot/issues/9095) ([1080ff3](https://github.com/jaworldwideorg/OneJA-Bot/commit/1080ff3))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.123.3](https://github.com/lobehub/lobe-chat/compare/v1.123.2...v1.123.3)
 
 <sup>Released on **2025-09-05**</sup>
