@@ -95,6 +95,9 @@
   "nebius": {
     "description": "Nebius cung cấp cơ sở hạ tầng hiệu suất cao cho các nhà đổi mới AI toàn cầu thông qua việc xây dựng cụm GPU quy mô lớn và nền tảng đám mây tích hợp dọc."
   },
+  "newapi": {
+    "description": "Nền tảng tổng hợp và chuyển tiếp nhiều dịch vụ AI mã nguồn mở"
+  },
   "novita": {
     "description": "Novita AI là một nền tảng cung cấp dịch vụ API cho nhiều mô hình ngôn ngữ lớn và tạo hình ảnh AI, linh hoạt, đáng tin cậy và hiệu quả về chi phí. Nó hỗ trợ các mô hình mã nguồn mở mới nhất như Llama3, Mistral, và cung cấp giải pháp API toàn diện, thân thiện với người dùng và tự động mở rộng cho phát triển ứng dụng AI, phù hợp cho sự phát triển nhanh chóng của các công ty khởi nghiệp AI."
   },
