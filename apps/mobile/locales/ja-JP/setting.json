@@ -46,6 +46,7 @@
       "loadFailed": "プロバイダーリストの読み込みに失敗しました"
     },
     "models": {
+      "allLoaded": "すべてのモデルを表示しました",
       "copySuccess": "コピーに成功しました",
       "disableFailed": "モデルの無効化に失敗しました",
       "emptyNoSearch": "モデルが見つかりません。サーバーから取得を試みています",
@@ -55,6 +56,8 @@
       "fetchFailed": "モデルの取得に失敗しました。再試行してください",
       "fetchSuccess": "モデルリストの取得に成功しました！",
       "fetching": "取得中...",
+      "loading": "読み込み中...",
+      "loadingMore": "さらに読み込み中...",
       "modelsAvailable": "利用可能なモデル数: {{count}}",
       "searchPlaceholder": "モデルを検索...",
       "title": "モデル"
@@ -136,6 +139,18 @@
     "testConnectivity": "接続テスト",
     "validationFailed": "検証失敗",
     "validationSuccess": "検証成功"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "あなたの秘密鍵やプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムで暗号化されます",
+      "checker": {
+        "button": "接続テスト",
+        "desc": "APIキーとプロキシアドレスが正しく入力されているかをテストします",
+        "pass": "チェックに合格しました",
+        "selectModel": "接続テストに使用するモデルを選択してください",
+        "title": "接続性チェック"
+      }
+    }
   },
   "providers": "AI プロバイダー",
   "support": "メールサポート",

@@ -30,8 +30,10 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
     const isLastMessage = index === totalLength - 1;
     const isAssistant = item.role === 'assistant';
     const isLoadingContent = item.content === LOADING_FLAT;
+    const hasError = !!item.error?.type;
 
-    const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent;
+    // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
+    const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
 
     return <ChatBubble isLoading={shouldShowLoading} message={item} />;
   },

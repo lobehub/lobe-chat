@@ -46,6 +46,7 @@
       "loadFailed": "Laden der Anbieterliste fehlgeschlagen"
     },
     "models": {
+      "allLoaded": "Alle Modelle angezeigt",
       "copySuccess": "Kopieren erfolgreich",
       "disableFailed": "Modell deaktivieren fehlgeschlagen",
       "emptyNoSearch": "Keine Modelle gefunden, versuche vom Server zu laden",
@@ -55,6 +56,8 @@
       "fetchFailed": "Modelle abrufen fehlgeschlagen, bitte erneut versuchen",
       "fetchSuccess": "Modellliste erfolgreich abgerufen!",
       "fetching": "Wird abgerufen...",
+      "loading": "Wird geladen...",
+      "loadingMore": "Mehr wird geladen...",
       "modelsAvailable": "Insgesamt {{count}} verfügbare Modelle",
       "searchPlaceholder": "Modelle suchen...",
       "title": "Modelle"
@@ -136,6 +139,18 @@
     "testConnectivity": "Verbindung testen",
     "validationFailed": "Validierung fehlgeschlagen",
     "validationSuccess": "Validierung erfolgreich"
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Verschlüsselungsalgorithmus verschlüsselt",
+      "checker": {
+        "button": "Verbindung testen",
+        "desc": "Überprüfen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
+        "pass": "Überprüfung bestanden",
+        "selectModel": "Modell zur Verbindungstest auswählen",
+        "title": "Konnektivitätsprüfung"
+      }
+    }
   },
   "providers": "KI-Anbieter",
   "support": "E-Mail-Support",
