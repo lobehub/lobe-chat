@@ -147,7 +147,6 @@
   "defaultAgent": "Default Assistant",
   "defaultSession": "Default Assistant",
   "delete": "Delete",
-  "document": "User Manual",
   "download": "Download",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
@@ -162,25 +161,6 @@
   },
   "feedback": "Feedback",
   "follow": "Follow us on {{name}}",
-  "footer": {
-    "action": {
-      "feedback": "Share Your Valuable Feedback",
-      "star": "Star on GitHub"
-    },
-    "and": "and",
-    "feedback": {
-      "action": "Share Feedback",
-      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make Imoogle AI even better.",
-      "title": "Share Your Valuable Feedback on GitHub"
-    },
-    "later": "Later",
-    "star": {
-      "action": "Star It",
-      "desc": "If you love our product and want to support us, could you go to GitHub and give us a star? This small gesture means a lot to us and motivates us to continue providing you with great experiences.",
-      "title": "Star Us on GitHub"
-    },
-    "title": "Like Our Product?"
-  },
   "fullscreen": "Full Screen Mode",
   "geminiImageChineseWarning": {
     "content": "Nano Banana may occasionally fail to generate images when using Chinese. It is recommended to use English for better results.",
@@ -362,10 +342,7 @@
     "community": "Community Edition",
     "data": "Data Storage",
     "defaultNickname": "Community User",
-    "discord": "Community Support",
-    "docs": "Documentation",
     "email": "Email Support",
-    "feedback": "Feedback and Suggestions",
     "help": "Help Center",
     "moveGuide": "The settings button has been moved here",
     "plans": "Subscription Plans",
