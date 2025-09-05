@@ -153,6 +153,28 @@
     "searchProviders": "Търсене на доставчици...",
     "sort": "Персонализирано сортиране"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "API ключът, предоставен от платформата New API",
+      "placeholder": "API ключ на New API",
+      "required": "API ключът е задължителен",
+      "title": "API ключ"
+    },
+    "apiUrl": {
+      "desc": "API адресът на услугата New API, обикновено трябва да включва /v1",
+      "title": "API адрес"
+    },
+    "enabled": {
+      "title": "Активиране на New API"
+    },
+    "models": {
+      "batchSelect": "Избор на множество модели ({{count}} броя)",
+      "fetch": "Вземане на списък с модели",
+      "selected": "Избрани модели",
+      "title": "Налични модели"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Тестване дали адресът на прокси е попълнен правилно",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "Избрани {{count}} модела",
+      "title": "Множествен избор"
+    },
     "config": {
       "aesGcm": "Вашият ключ и адреса на прокси ще бъдат криптирани с <1>AES-GCM</1> алгоритъм",
       "apiKey": {

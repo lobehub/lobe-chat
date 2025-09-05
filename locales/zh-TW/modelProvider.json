@@ -153,6 +153,28 @@
     "searchProviders": "搜索服務商...",
     "sort": "自定義排序"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "New API 平台提供的 API 密鑰",
+      "placeholder": "New API API 密鑰",
+      "required": "API 密鑰是必需的",
+      "title": "API 密鑰"
+    },
+    "apiUrl": {
+      "desc": "New API 服務的 API 位址，大部分時候需要帶 /v1",
+      "title": "API 位址"
+    },
+    "enabled": {
+      "title": "啟用 New API"
+    },
+    "models": {
+      "batchSelect": "批次選擇模型 ({{count}} 個)",
+      "fetch": "取得模型列表",
+      "selected": "已選擇的模型",
+      "title": "可用模型"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "已選擇 {{count}} 個模型",
+      "title": "批次選擇"
+    },
     "config": {
       "aesGcm": "您的秘鑰與代理地址等將使用 <1>AES-GCM</1> 加密算法進行加密",
       "apiKey": {

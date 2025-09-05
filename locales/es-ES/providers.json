@@ -95,6 +95,9 @@
   "nebius": {
     "description": "Nebius proporciona infraestructura de alto rendimiento a innovadores de IA en todo el mundo mediante la construcción de grandes clústeres de GPU y una plataforma en la nube integrada verticalmente."
   },
+  "newapi": {
+    "description": "Plataforma de reenvío unificado y agregación de múltiples servicios de IA de código abierto"
+  },
   "novita": {
     "description": "Novita AI es una plataforma que ofrece servicios API para múltiples modelos de lenguaje de gran tamaño y generación de imágenes de IA, siendo flexible, confiable y rentable. Soporta los últimos modelos de código abierto como Llama3 y Mistral, proporcionando soluciones API completas, amigables para el usuario y autoescalables para el desarrollo de aplicaciones de IA, adecuadas para el rápido crecimiento de startups de IA."
   },

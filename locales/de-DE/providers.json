@@ -95,6 +95,9 @@
   "nebius": {
     "description": "Nebius bietet globalen KI-Innovatoren durch den Aufbau großflächiger GPU-Cluster und einer vertikal integrierten Cloud-Plattform leistungsstarke Infrastruktur."
   },
+  "newapi": {
+    "description": "Open-Source-Plattform zur einheitlichen Weiterleitung mehrerer KI-Dienste"
+  },
   "novita": {
     "description": "Novita AI ist eine Plattform, die eine Vielzahl von großen Sprachmodellen und API-Diensten für die KI-Bilderzeugung anbietet, die flexibel, zuverlässig und kosteneffektiv ist. Sie unterstützt die neuesten Open-Source-Modelle wie Llama3 und Mistral und bietet umfassende, benutzerfreundliche und automatisch skalierbare API-Lösungen für die Entwicklung generativer KI-Anwendungen, die für das schnelle Wachstum von KI-Startups geeignet sind."
   },
