@@ -8,8 +8,6 @@ export const useStyles = createStyles((token) => ({
     borderRadius: token.borderRadius,
     flexDirection: 'row',
     height: token.controlHeightLG,
-    marginHorizontal: token.padding,
-    marginVertical: token.marginXS,
     paddingHorizontal: token.paddingSM,
   },
   input: {
