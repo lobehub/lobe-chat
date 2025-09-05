@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
@@ -150,6 +151,20 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.marginXS,
   },
 
+  // 加载指示器
+  loadingIndicator: {
+    position: 'absolute',
+    right: token.paddingSM,
+    top: '50%',
+    transform: [{ translateY: -8 }], // 居中对齐
+  },
+
+  // Modal styles
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: token.colorBgMask,
+  },
+
   modalContent: {
     backgroundColor: token.colorBgElevated,
     borderTopLeftRadius: token.borderRadiusLG,
@@ -171,10 +186,10 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     borderRadius: token.borderRadius,
     flexDirection: 'row',
+    height: 56, // Fixed height for FlatList optimization
     justifyContent: 'space-between',
     marginTop: token.marginXS,
     paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingSM,
   },
 
   modalItemContent: {
@@ -202,7 +217,6 @@ export const useStyles = createStyles((token) => ({
     paddingHorizontal: token.padding,
   },
 
-  // Modal styles
   modalOverlay: {
     backgroundColor: token.colorBgMask,
     flex: 1,
@@ -213,6 +227,12 @@ export const useStyles = createStyles((token) => ({
     color: token.colorText,
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
+  },
+
+  modalWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    pointerEvents: 'box-none',
   },
 
   modelSelector: {

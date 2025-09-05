@@ -1,7 +1,15 @@
-import React, { useState, useCallback, useEffect, memo, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Linking } from 'react-native';
+import React, { useState, useCallback, useEffect, memo } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
 import { Eye, EyeOff, Lock } from 'lucide-react-native';
-import { useDebounceFn } from 'ahooks';
+
 import { useTranslation, Trans } from 'react-i18next';
 
 import { useThemeToken } from '@/theme';
@@ -36,9 +44,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
 
-  // 标记是否正在进行连接测试
-  const isCheckingConnection = useRef(false);
-
   // Initialize form values from store
   useEffect(() => {
     if (providerData?.keyVaults) {
@@ -48,12 +53,9 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
     // Response API state will be handled separately
   }, [providerData]);
 
-  // Debounced update function
-  const { run: debouncedUpdate } = useDebounceFn(
+  // Update function for onBlur events
+  const updateField = useCallback(
     async (field: string, value: string) => {
-      // 测试链接时已经触发一次了 updateAiProviderConfig，不应该重复更新
-      if (isCheckingConnection.current) return;
-
       setIsUpdating(true);
       try {
         const updateData = {
@@ -75,31 +77,30 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
         setIsUpdating(false);
       }
     },
-    { wait: 500 },
+    [providerData?.keyVaults, provider.id, updateAiProviderConfig, t],
   );
 
-  const handleApiKeyChange = useCallback(
-    (value: string) => {
-      setApiKey(value);
-      debouncedUpdate('apiKey', value);
-    },
-    [debouncedUpdate],
-  );
+  const handleApiKeyChange = useCallback((value: string) => {
+    setApiKey(value);
+  }, []);
 
-  const handleProxyUrlChange = useCallback(
-    (value: string) => {
-      setProxyUrl(value);
+  const handleApiKeyBlur = useCallback(() => {
+    updateField('apiKey', apiKey);
+  }, [updateField, apiKey]);
 
-      // Simple URL validation
-      if (value && !/^https?:\/\/.+/.test(value)) {
-        // Don't update invalid URLs, but still update the local state
-        return;
-      }
+  const handleProxyUrlChange = useCallback((value: string) => {
+    setProxyUrl(value);
+  }, []);
 
-      debouncedUpdate('baseURL', value);
-    },
-    [debouncedUpdate],
-  );
+  const handleProxyUrlBlur = useCallback(() => {
+    // Simple URL validation
+    if (proxyUrl && !/^https?:\/\/.+/.test(proxyUrl)) {
+      // Don't update invalid URLs
+      return;
+    }
+
+    updateField('baseURL', proxyUrl);
+  }, [updateField, proxyUrl]);
 
   const toggleApiKeyVisibility = () => {
     setShowApiKey(!showApiKey);
@@ -141,6 +142,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               autoComplete="off"
               autoCorrect={false}
               editable={!isChecking}
+              onBlur={handleApiKeyBlur}
               onChangeText={handleApiKeyChange}
               placeholder={t('aiProviders.configuration.apiKey.placeholder', {
                 name: provider.name || provider.id,
@@ -192,6 +194,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               autoCorrect={false}
               editable={!isChecking}
               keyboardType="url"
+              onBlur={handleProxyUrlBlur}
               onChangeText={handleProxyUrlChange}
               placeholder={
                 (proxyUrlConfig &&
@@ -203,6 +206,11 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               style={[styles.textInput, isChecking && styles.textInputDisabled]}
               value={proxyUrl}
             />
+            {isChecking && (
+              <View style={styles.loadingIndicator}>
+                <ActivityIndicator color={token.colorTextSecondary} size="small" />
+              </View>
+            )}
           </View>
           {!isValidUrl(proxyUrl) && (
             <Text style={styles.errorText}>
@@ -220,13 +228,9 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
           <Checker
             model={provider.checkModel!}
             onAfterCheck={async () => {
-              // 重置连接测试状态，允许后续的 debouncedUpdate 更新
-              isCheckingConnection.current = false;
               setIsChecking(false);
             }}
             onBeforeCheck={async () => {
-              // 设置连接测试状态，阻止 debouncedUpdate 的重复请求
-              isCheckingConnection.current = true;
               setIsChecking(true);
               // 连接检查前保存当前配置
               await updateAiProviderConfig(provider.id, {
