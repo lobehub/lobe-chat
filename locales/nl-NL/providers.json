@@ -95,6 +95,9 @@
   "nebius": {
     "description": "Nebius biedt wereldwijde AI-innovators hoogwaardige infrastructuur door het bouwen van grootschalige GPU-clusters en een verticaal geïntegreerd cloudplatform."
   },
+  "newapi": {
+    "description": "Open source platform voor het samenvoegen en uniform doorsturen van meerdere AI-diensten"
+  },
   "novita": {
     "description": "Novita AI is een platform dat API-diensten biedt voor verschillende grote taalmodellen en AI-beeldgeneratie, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open-source modellen zoals Llama3 en Mistral, en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor de ontwikkeling van generatieve AI-toepassingen, geschikt voor de snelle groei van AI-startups."
   },

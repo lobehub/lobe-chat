@@ -153,6 +153,28 @@
     "searchProviders": "Hizmet sağlayıcıları ara...",
     "sort": "Özel Sıralama"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "New API platformu tarafından sağlanan API anahtarı",
+      "placeholder": "New API API anahtarı",
+      "required": "API anahtarı gereklidir",
+      "title": "API Anahtarı"
+    },
+    "apiUrl": {
+      "desc": "New API servisinin API adresi, çoğu zaman /v1 ile başlamalıdır",
+      "title": "API Adresi"
+    },
+    "enabled": {
+      "title": "New API'yi Etkinleştir"
+    },
+    "models": {
+      "batchSelect": "Toplu model seçimi ({{count}} adet)",
+      "fetch": "Model listesi alınıyor",
+      "selected": "Seçilen modeller",
+      "title": "Kullanılabilir Modeller"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Proxy adresinin doğru girilip girilmediğini test edin",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}} model seçildi",
+      "title": "Toplu Seçim"
+    },
     "config": {
       "aesGcm": "Anahtarınız ve proxy adresi gibi bilgiler <1>AES-GCM</1> şifreleme algoritması ile şifrelenecektir",
       "apiKey": {

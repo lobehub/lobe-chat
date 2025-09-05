@@ -153,6 +153,28 @@
     "searchProviders": "Rechercher des fournisseurs...",
     "sort": "Tri personnalisé"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "Clé API fournie par la plateforme New API",
+      "placeholder": "Clé API New API",
+      "required": "La clé API est obligatoire",
+      "title": "Clé API"
+    },
+    "apiUrl": {
+      "desc": "Adresse API du service New API, généralement avec /v1",
+      "title": "Adresse API"
+    },
+    "enabled": {
+      "title": "Activer New API"
+    },
+    "models": {
+      "batchSelect": "Sélection multiple de modèles ({{count}})",
+      "fetch": "Récupérer la liste des modèles",
+      "selected": "Modèles sélectionnés",
+      "title": "Modèles disponibles"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Vérifiez si l'adresse du proxy est correctement saisie",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}} modèles sélectionnés",
+      "title": "Sélection multiple"
+    },
     "config": {
       "aesGcm": "Votre clé et votre adresse de proxy seront chiffrées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
       "apiKey": {
