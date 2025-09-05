@@ -1,5 +1,7 @@
 const dotenv = require('dotenv');
 const os = require('node:os');
+const fs = require('node:fs');
+const path = require('node:path');
 
 dotenv.config();
 
@@ -127,6 +129,29 @@ const config = {
   win: {
     executableName: 'LobeHub',
   },
+};
+
+// 构建后处理：重命名 macOS latest-mac.yml 文件以避免覆盖
+config.afterSign = async (context) => {
+  // 只在 macOS 平台处理（包括 nightly 和 非 nightly 版本）
+  if (context.electronPlatformName === 'darwin') {
+    const releaseDir = path.join(__dirname, 'release');
+    const latestMacFile = path.join(releaseDir, 'latest-mac.yml');
+
+    if (fs.existsSync(latestMacFile)) {
+      // 根据架构重命名文件
+      const platformSuffix = arch === 'arm64' ? 'arm' : 'intel';
+      const newFileName = `latest-mac-${platformSuffix}.yml`;
+      const newFilePath = path.join(releaseDir, newFileName);
+
+      fs.renameSync(latestMacFile, newFilePath);
+      console.log(
+        `✅ Renamed latest-mac.yml to ${newFileName} for ${arch} architecture (${isNightly ? 'nightly' : 'release'} mode)`,
+      );
+    } else {
+      console.log('⚠️ latest-mac.yml not found, skipping rename');
+    }
+  }
 };
 
 module.exports = config;
