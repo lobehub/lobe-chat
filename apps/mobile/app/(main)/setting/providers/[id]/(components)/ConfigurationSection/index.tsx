@@ -1,11 +1,9 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { TextInput } from '@/components';
-import { Eye, EyeOff } from 'lucide-react-native';
 import { useDebounceFn } from 'ahooks';
 import { useTranslation } from 'react-i18next';
 
-import { useThemeToken } from '@/theme';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { useAiInfraStore } from '@/store/aiInfra';
 
@@ -21,7 +19,6 @@ const isValidUrl = (url: string) => {
 
 const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
   const { t } = useTranslation('setting');
 
   // Store hooks
@@ -31,7 +28,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   // Form state
   const [apiKey, setApiKey] = useState('');
   const [proxyUrl, setProxyUrl] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Initialize form values from store
@@ -92,10 +88,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
     [debouncedUpdate],
   );
 
-  const toggleApiKeyVisibility = () => {
-    setShowApiKey(!showApiKey);
-  };
-
   const proxyUrlConfig = provider.settings?.proxyUrl;
   const showProxyUrl = proxyUrlConfig || provider.source === 'custom';
 
@@ -116,27 +108,17 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
             ns: 'setting',
           })}
         </Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            onChangeText={handleApiKeyChange}
-            placeholder={t('aiProviders.configuration.apiKey.placeholder', {
-              name: provider.name || provider.id,
-              ns: 'setting',
-            })}
-            secureTextEntry={!showApiKey}
-            value={apiKey}
-          />
-          <TouchableOpacity onPress={toggleApiKeyVisibility} style={styles.eyeButton}>
-            {showApiKey ? (
-              <EyeOff color={token.colorTextSecondary} size={18} />
-            ) : (
-              <Eye color={token.colorTextSecondary} size={18} />
-            )}
-          </TouchableOpacity>
-        </View>
+        <TextInput.Password
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect={false}
+          onChangeText={handleApiKeyChange}
+          placeholder={t('aiProviders.configuration.apiKey.placeholder', {
+            name: provider.name || provider.id,
+            ns: 'setting',
+          })}
+          value={apiKey}
+        />
       </View>
 
       {/* API Proxy URL Field */}
