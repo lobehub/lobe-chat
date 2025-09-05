@@ -32,6 +32,7 @@
   "blog": "Ürün Blogu",
   "branching": "Alt konu oluştur",
   "branchingDisable": "«Alt konu» özelliği yalnızca sunucu sürümünde mevcuttur. Bu özelliği kullanmak için lütfen sunucu dağıtım moduna geçin veya LobeChat Cloud'u kullanın.",
+  "branchingRequiresSavedTopic": "Geçerli konu kaydedilmedi, alt konu özelliğini kullanmak için önce kaydedilmelidir",
   "cancel": "İptal",
   "changelog": "Changelog",
   "clientDB": {
