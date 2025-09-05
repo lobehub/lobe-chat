@@ -1,7 +1,8 @@
 import { memo, useCallback, useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
 import { useGlobalStore } from '@/store/global';
 import Hydration from '@/features/Hydration';
@@ -33,15 +34,13 @@ export default function ChatWithDrawer() {
         containerStyle: any;
         onDrawerToggle: () => void;
       }>(({ onDrawerToggle, containerStyle }) => (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-          style={containerStyle}
-        >
+        <View style={containerStyle}>
           <ChatHeader onDrawerToggle={onDrawerToggle} />
           <ChatList />
-          <ChatInput />
-        </KeyboardAvoidingView>
+          <KeyboardStickyView>
+            <ChatInput />
+          </KeyboardStickyView>
+        </View>
       )),
     [],
   );

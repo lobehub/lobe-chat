@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { Platform } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 
@@ -161,31 +162,33 @@ function ThemedSystemBars() {
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <AuthProvider>
-          <QueryProvider>
-            <ActionSheetProvider>
-              <PortalProvider>
-                <I18nextProvider i18n={i18n}>
-                  <I18nReadyGate>
-                    <ToastProvider>
-                      <ThemedSystemBars />
-                      <Stack screenOptions={{ headerShown: false }}>
-                        {/* 指定首页, 防止 expo 路由错乱 */}
-                        <Stack.Screen name="index" options={{ animation: 'none' }} />
-                        {/* main page should not have animation */}
-                        <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-                        {/* auth page should not have animation  */}
-                        <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
-                      </Stack>
-                    </ToastProvider>
-                  </I18nReadyGate>
-                </I18nextProvider>
-              </PortalProvider>
-            </ActionSheetProvider>
-          </QueryProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <KeyboardProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <QueryProvider>
+              <ActionSheetProvider>
+                <PortalProvider>
+                  <I18nextProvider i18n={i18n}>
+                    <I18nReadyGate>
+                      <ToastProvider>
+                        <ThemedSystemBars />
+                        <Stack screenOptions={{ headerShown: false }}>
+                          {/* 指定首页, 防止 expo 路由错乱 */}
+                          <Stack.Screen name="index" options={{ animation: 'none' }} />
+                          {/* main page should not have animation */}
+                          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                          {/* auth page should not have animation  */}
+                          <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                        </Stack>
+                      </ToastProvider>
+                    </I18nReadyGate>
+                  </I18nextProvider>
+                </PortalProvider>
+              </ActionSheetProvider>
+            </QueryProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </KeyboardProvider>
     </GestureHandlerRootView>
   );
 }
