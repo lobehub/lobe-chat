@@ -32,6 +32,7 @@
   "blog": "Blog produktowy",
   "branching": "Utwórz podtemat",
   "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Aktualny temat nie został zapisany, zapisz go, aby móc korzystać z funkcji podtematów",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
   "clientDB": {
