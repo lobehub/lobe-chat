@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build --turbopack",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
@@ -217,7 +217,7 @@
     "model-bank": "workspace:*",
     "modern-screenshot": "^4.6.5",
     "nanoid": "^5.1.5",
-    "next": "~15.3.5",
+    "next": "^15.5.2",
     "next-auth": "5.0.0-beta.29",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.8.16",
