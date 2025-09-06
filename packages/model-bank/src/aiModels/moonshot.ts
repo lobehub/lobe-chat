@@ -6,11 +6,31 @@ const moonshotChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
+    contextWindowTokens: 262_144,
+    description:
+      'kimi-k2-0905-preview 模型上下文长度为 256k，具备更强的 Agentic Coding 能力、更突出的前端代码的美观度和实用性、以及更好的上下文理解能力。',
+    displayName: 'Kimi K2 0905',
+    enabled: true,
+    id: 'kimi-k2-0905-preview',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_072,
     description:
       'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2',
-    enabled: true,
+    displayName: 'Kimi K2 0711',
     id: 'kimi-k2-0711-preview',
     pricing: {
       currency: 'CNY',
@@ -27,10 +47,10 @@ const moonshotChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 262_144,
     description:
       'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2 Turbo',
+    displayName: 'Kimi K2 0905 Turbo',
     id: 'kimi-k2-turbo-preview',
     pricing: {
       currency: 'CNY',
@@ -40,7 +60,7 @@ const moonshotChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-07-11',
+    releasedAt: '2025-09-05',
     type: 'chat',
   },
   {

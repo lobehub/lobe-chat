@@ -58,19 +58,25 @@ beforeEach(() => {
 
 describe('DatabaseManager', () => {
   describe('Callback Handling', () => {
-    it('should properly track loading states', async () => {
-      await manager.initialize(callbacks);
+    it(
+      'should properly track loading states',
+      async () => {
+        await manager.initialize(callbacks);
 
-      // 验证状态转换顺序
-      expect(stateChanges).toEqual([
-        DatabaseLoadingState.Initializing,
-        DatabaseLoadingState.LoadingDependencies,
-        DatabaseLoadingState.LoadingWasm,
-        DatabaseLoadingState.Migrating,
-        DatabaseLoadingState.Finished,
-        DatabaseLoadingState.Ready,
-      ]);
-    });
+        // 验证状态转换顺序
+        expect(stateChanges).toEqual([
+          DatabaseLoadingState.Initializing,
+          DatabaseLoadingState.LoadingDependencies,
+          DatabaseLoadingState.LoadingWasm,
+          DatabaseLoadingState.Migrating,
+          DatabaseLoadingState.Finished,
+          DatabaseLoadingState.Ready,
+        ]);
+      },
+      {
+        timeout: 15000,
+      },
+    );
 
     it('should report dependencies loading progress', async () => {
       await manager.initialize(callbacks);

@@ -70,10 +70,12 @@
   "input": {
     "addAi": "AI 메시지 추가",
     "addUser": "사용자 메시지 추가",
+    "disclaimer": "AI도 실수를 할 수 있으니 중요한 정보는 꼭 확인하세요",
+    "errorMsg": "메시지 전송에 실패했습니다. 네트워크를 확인한 후 다시 시도해 주세요: {{errorMsg}}",
     "more": "더 많은",
     "send": "전송",
-    "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
-    "sendWithEnter": "Enter 키로 전송",
+    "sendWithCmdEnter": "<key/> 키를 눌러 전송",
+    "sendWithEnter": "<key/> 키를 눌러 전송",
     "stop": "중지",
     "warp": "줄바꿈"
   },
@@ -231,6 +233,10 @@
     "divider": "하위 주제",
     "threadMessageCount": "{{messageCount}}개의 메시지",
     "title": "하위 주제"
+  },
+  "toggleWideScreen": {
+    "off": "와이드 스크린 모드 끄기",
+    "on": "와이드 스크린 모드 켜기"
   },
   "tokenDetails": {
     "chats": "채팅 메시지",

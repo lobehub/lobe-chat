@@ -1,5 +1,6 @@
-import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
-import { UserHotkeyConfig } from '@/types/user/settings';
+import { UserHotkeyConfig } from '@lobechat/types';
+
+import { HOTKEYS_REGISTRATION } from '../hotkeys';
 
 export const DEFAULT_HOTKEY_CONFIG: UserHotkeyConfig = HOTKEYS_REGISTRATION.reduce(
   (acc: UserHotkeyConfig, item) => {

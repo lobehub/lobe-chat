@@ -1,10 +1,11 @@
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   DiscoverAssistantDetail,
   DiscoverModelDetail,
   DiscoverPluginDetail,
   DiscoverProviderDetail,
-} from '@/types/discover';
+} from '@lobechat/types';
+
+import { DEFAULT_AGENT_CONFIG } from './settings';
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
 

@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Agregar un mensaje de IA",
     "addUser": "Agregar un mensaje de usuario",
+    "disclaimer": "La IA también puede cometer errores, por favor verifique la información importante",
+    "errorMsg": "Error al enviar el mensaje, por favor revise la conexión y vuelva a intentarlo: {{errorMsg}}",
     "more": "más",
     "send": "Enviar",
-    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
-    "sendWithEnter": "Enviar con Enter",
+    "sendWithCmdEnter": "Presiona <key/> para enviar",
+    "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
     "warp": "Salto de línea"
   },
@@ -231,6 +233,10 @@
     "divider": "Subtema",
     "threadMessageCount": "{{messageCount}} mensajes",
     "title": "Subtema"
+  },
+  "toggleWideScreen": {
+    "off": "Desactivar modo de pantalla ancha",
+    "on": "Activar modo de pantalla ancha"
   },
   "tokenDetails": {
     "chats": "Mensajes de chat",

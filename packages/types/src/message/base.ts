@@ -16,7 +16,7 @@ export interface ChatMessageError {
   type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
 
-export interface CitationItem {
+export interface ChatCitationItem {
   id?: string;
   onlyUrl?: boolean;
   title?: string;

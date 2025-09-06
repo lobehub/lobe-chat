@@ -1,7 +1,6 @@
 import { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 
-// modelInfo https://www.volcengine.com/docs/82379/1330310
-// pricing https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement
+// https://www.volcengine.com/docs/82379/1330310
 
 const doubaoChatModels: AIChatModelCard[] = [
   {
@@ -42,7 +41,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Kimi-K2 是一款Moonshot AI推出的具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
     displayName: 'Kimi K2',
-    enabled: true,
     id: 'kimi-k2',
     maxOutput: 16_384,
     pricing: {
@@ -61,7 +59,59 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-seed-1-6-thinking-250615',
+      deploymentName: 'doubao-seed-1-6-vision-250815',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-1.6-vision 视觉深度思考模型，在教育、图像审核、巡检与安防和AI 搜索问答等场景下展现出更强的通用多模态理解和推理能力。支持 256k 上下文窗口，输出长度支持最大 64k tokens。',
+    displayName: 'Doubao Seed 1.6 Vision',
+    id: 'doubao-seed-1.6-vision',
+    maxOutput: 32_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.8,
+              '[32_000, 128_000]': 2.4,
+              '[128_000, infinity]': 4.8,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 8,
+              '[32_000, 128_000]': 16,
+              '[128_000, infinity]': 24,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-seed-1-6-thinking-250715',
     },
     contextWindowTokens: 256_000,
     description:
@@ -69,12 +119,37 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6 Thinking',
     enabled: true,
     id: 'doubao-seed-1.6-thinking',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.8,
+              '[32_000, 128_000]': 1.2,
+              '[128_000, infinity]': 2.4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 8,
+              '[32_000, 128_000]': 16,
+              '[128_000, infinity]': 24,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -94,12 +169,38 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6',
     enabled: true,
     id: 'doubao-seed-1.6',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.8,
+              '[32_000, 128_000]': 1.2,
+              '[128_000, infinity]': 2.4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]_[0, 8192]': 2,
+              '[0, 32_000]_[8192, infinity]': 8,
+              '[32_000, 128_000]_[0, infinity]': 16,
+              '[128_000, infinity]_[0, infinity]': 24,
+            },
+            pricingParams: ['textInputRange', 'textOutputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -114,7 +215,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-seed-1-6-flash-250615',
+      deploymentName: 'doubao-seed-1-6-flash-250828',
     },
     contextWindowTokens: 256_000,
     description:
@@ -122,12 +223,37 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'Doubao Seed 1.6 Flash',
     enabled: true,
     id: 'doubao-seed-1.6-flash',
-    maxOutput: 16_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.15,
+              '[32_000, 128_000]': 0.3,
+              '[128_000, infinity]': 0.6,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 1.5,
+              '[32_000, 128_000]': 3,
+              '[128_000, infinity]': 6,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -235,7 +361,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['thinking'],
     },
     type: 'chat',
   },

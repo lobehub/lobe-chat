@@ -1,10 +1,9 @@
 // @vitest-environment node
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@lobechat/model-runtime';
 import { OpenAI } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeOpenAI, LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
-import * as debugStreamModule from '@/libs/model-runtime/utils/debugStream';
-
+import * as debugStreamModule from '../utils/debugStream';
 import { LobeZhipuAI } from './index';
 
 const bizErrorType = 'ProviderBizError';

@@ -186,6 +186,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AIHUBMIX: z.boolean(),
       AIHUBMIX_API_KEY: z.string().optional(),
+
+      ENABLED_NEWAPI: z.boolean(),
+      NEWAPI_API_KEY: z.string().optional(),
+      NEWAPI_PROXY_URL: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -367,6 +371,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
       AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
+
+      ENABLED_NEWAPI: !!process.env.NEWAPI_API_KEY,
+      NEWAPI_API_KEY: process.env.NEWAPI_API_KEY,
+      NEWAPI_PROXY_URL: process.env.NEWAPI_PROXY_URL,
 
       ENABLED_NEBIUS: !!process.env.NEBIUS_API_KEY,
       NEBIUS_API_KEY: process.env.NEBIUS_API_KEY,

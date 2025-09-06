@@ -7,9 +7,12 @@ import {
   ChatTopic,
   MessageSemanticSearchChunk,
   SendMessageParams,
+  SendMessageServerResponse,
   TraceNameMap,
 } from '@lobechat/types';
+import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
+import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
@@ -18,6 +21,7 @@ import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
 import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
@@ -33,6 +37,11 @@ export interface AIGenerateV2Action {
    * Sends a new message to the AI chat system
    */
   sendMessageInServer: (params: SendMessageParams) => Promise<void>;
+  /**
+   * Cancels sendMessageInServer operation for a specific topic/session
+   */
+  cancelSendMessageInServer: (topicId?: string) => void;
+  clearSendMessageError: () => void;
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
     messages: ChatMessage[];
@@ -57,6 +66,19 @@ export interface AIGenerateV2Action {
     inPortalThread?: boolean;
     traceId?: string;
   }) => Promise<void>;
+  /**
+   * Toggle sendMessageInServer operation state
+   */
+  internal_toggleSendMessageOperation: (
+    key: string | { sessionId: string; topicId?: string | null },
+    loading: boolean,
+    cancelReason?: string,
+  ) => AbortController | undefined;
+  internal_updateSendMessageOperation: (
+    key: string | { sessionId: string; topicId?: string | null },
+    value: Partial<MainSendMessageOperation> | null,
+    actionName?: any,
+  ) => void;
 }
 
 export const generateAIChatV2: StateCreator<
@@ -66,7 +88,8 @@ export const generateAIChatV2: StateCreator<
   AIGenerateV2Action
 > = (set, get) => ({
   sendMessageInServer: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime } = get();
+    const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime, mainInputEditor } =
+      get();
     if (!activeId) return;
 
     const fileIdList = files?.map((f) => f.id);
@@ -95,44 +118,78 @@ export const generateAIChatV2: StateCreator<
       topicId: activeTopicId,
       threadId: activeThreadId,
     });
-
     get().internal_toggleMessageLoading(true, tempId);
-    set({ isCreatingMessage: true }, false, 'creatingMessage/start');
 
-    const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+    const operationKey = messageMapKey(activeId, activeTopicId);
 
-    const data = await aiChatService.sendMessageInServer({
-      newUserMessage: {
-        content: message,
-        files: fileIdList,
-      },
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: activeThreadId,
-      newTopic: !activeTopicId
-        ? {
-            topicMessageIds: messages.map((m) => m.id),
-            title: t('defaultTitle', { ns: 'topic' }),
-          }
-        : undefined,
-      sessionId: activeId === INBOX_SESSION_ID ? undefined : activeId,
-      newAssistantMessage: { model, provider: provider! },
-    });
+    // Start tracking sendMessageInServer operation with AbortController
+    const abortController = get().internal_toggleSendMessageOperation(operationKey, true)!;
 
-    // refresh the total data
-    get().internal_refreshAiChat({
-      messages: data.messages,
-      topics: data.topics,
-      sessionId: activeId,
-      topicId: data.topicId,
-    });
-    get().internal_dispatchMessage({ type: 'deleteMessage', id: tempId });
+    const jsonState = mainInputEditor?.getJSONState();
+    get().internal_updateSendMessageOperation(
+      operationKey,
+      { inputSendErrorMsg: undefined, inputEditorTempState: jsonState },
+      'creatingMessage/start',
+    );
 
-    if (!activeTopicId) {
-      await get().switchTopic(data.topicId!, true);
+    let data: SendMessageServerResponse | undefined;
+    try {
+      const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+      data = await aiChatService.sendMessageInServer(
+        {
+          newUserMessage: {
+            content: message,
+            files: fileIdList,
+          },
+          // if there is activeTopicId，then add topicId to message
+          topicId: activeTopicId,
+          threadId: activeThreadId,
+          newTopic: !activeTopicId
+            ? {
+                topicMessageIds: messages.map((m) => m.id),
+                title: t('defaultTitle', { ns: 'topic' }),
+              }
+            : undefined,
+          sessionId: activeId === INBOX_SESSION_ID ? undefined : activeId,
+          newAssistantMessage: { model, provider: provider! },
+        },
+        abortController,
+      );
+      // refresh the total data
+      get().internal_refreshAiChat({
+        messages: data.messages,
+        topics: data.topics,
+        sessionId: activeId,
+        topicId: data.topicId,
+      });
+
+      if (!activeTopicId) {
+        await get().switchTopic(data.topicId!, true);
+      }
+    } catch (e) {
+      if (e instanceof TRPCClientError) {
+        const isAbort = e.message.includes('aborted') || e.name === 'AbortError';
+        // Check if error is due to cancellation
+        if (!isAbort) {
+          get().internal_updateSendMessageOperation(operationKey, { inputSendErrorMsg: e.message });
+          get().mainInputEditor?.setJSONState(jsonState);
+        }
+      }
+    } finally {
+      // Stop tracking sendMessageInServer operation
+      get().internal_toggleSendMessageOperation(operationKey, false);
     }
 
+    // remove temporally message
+    get().internal_dispatchMessage({ type: 'deleteMessage', id: tempId });
     get().internal_toggleMessageLoading(false, tempId);
+    get().internal_updateSendMessageOperation(
+      operationKey,
+      { inputEditorTempState: null },
+      'creatingMessage/finished',
+    );
+
+    if (!data) return;
 
     //  update assistant update to make it rerank
     getSessionStoreState().triggerSessionUpdate(get().activeId);
@@ -143,6 +200,7 @@ export const generateAIChatV2: StateCreator<
       .activeBaseChats(get())
       .filter((item) => item.id !== data.assistantMessageId);
 
+    if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
     try {
       await internal_execAgentRuntime({
         messages: baseMessages,
@@ -152,7 +210,6 @@ export const generateAIChatV2: StateCreator<
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
       });
-      set({ isCreatingMessage: false }, false, 'creatingMessage/stop');
 
       const summaryTitle = async () => {
         // check activeTopic and then auto update topic title
@@ -161,9 +218,9 @@ export const generateAIChatV2: StateCreator<
           return;
         }
 
-        if (!activeTopicId) return;
+        if (!data.topicId) return;
 
-        const topic = topicSelectors.getTopicById(activeTopicId)(get());
+        const topic = topicSelectors.getTopicById(data.topicId)(get());
 
         if (topic && !topic.title) {
           const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
@@ -181,10 +238,39 @@ export const generateAIChatV2: StateCreator<
       await Promise.all([summaryTitle(), addFilesToAgent()]);
     } catch (e) {
       console.error(e);
-      set({ isCreatingMessage: false }, false, 'creatingMessage/stop');
+    } finally {
+      if (data.topicId) get().internal_updateTopicLoading(data.topicId, false);
     }
   },
 
+  cancelSendMessageInServer: (topicId?: string) => {
+    const { activeId, activeTopicId } = get();
+
+    // Determine which operation to cancel
+    const targetTopicId = topicId ?? activeTopicId;
+    const operationKey = messageMapKey(activeId, targetTopicId);
+
+    // Cancel the specific operation
+    get().internal_toggleSendMessageOperation(
+      operationKey,
+      false,
+      'User cancelled sendMessageInServer operation',
+    );
+
+    // Only clear creating message state if it's the active session
+    if (operationKey === messageMapKey(activeId, activeTopicId)) {
+      const editorTempState = get().mainSendMessageOperations[operationKey]?.inputEditorTempState;
+
+      if (editorTempState) get().mainInputEditor?.setJSONState(editorTempState);
+    }
+  },
+  clearSendMessageError: () => {
+    get().internal_updateSendMessageOperation(
+      { sessionId: get().activeId, topicId: get().activeTopicId },
+      null,
+      'clearSendMessageError',
+    );
+  },
   internal_refreshAiChat: ({ topics, messages, sessionId, topicId }) => {
     set(
       {
@@ -405,6 +491,60 @@ export const generateAIChatV2: StateCreator<
       const historyMessages = originalMessages.slice(0, -historyCount + 1);
 
       await get().internal_summaryHistory(historyMessages);
+    }
+  },
+
+  internal_updateSendMessageOperation: (key, value, actionName) => {
+    const operationKey = typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
+
+    set(
+      produce((draft) => {
+        if (!draft.mainSendMessageOperations[operationKey])
+          draft.mainSendMessageOperations[operationKey] = value;
+        else {
+          if (value === null) {
+            delete draft.mainSendMessageOperations[operationKey];
+          } else {
+            draft.mainSendMessageOperations[operationKey] = {
+              ...draft.mainSendMessageOperations[operationKey],
+              ...value,
+            };
+          }
+        }
+      }),
+      false,
+      actionName ?? n('updateSendMessageOperation', { operationKey, value }),
+    );
+  },
+  internal_toggleSendMessageOperation: (key, loading: boolean, cancelReason?: string) => {
+    if (loading) {
+      const abortController = new AbortController();
+
+      get().internal_updateSendMessageOperation(
+        key,
+        { isLoading: true, abortController },
+        n('toggleSendMessageOperation(start)', { key }),
+      );
+
+      return abortController;
+    } else {
+      const operationKey =
+        typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
+
+      const operation = get().mainSendMessageOperations[operationKey];
+
+      // If cancelReason is provided, abort the operation first
+      if (cancelReason && operation?.isLoading) {
+        operation.abortController?.abort(cancelReason);
+      }
+
+      get().internal_updateSendMessageOperation(
+        key,
+        { isLoading: false, abortController: null },
+        n('toggleSendMessageOperation(stop)', { key, cancelReason }),
+      );
+
+      return undefined;
     }
   },
 });
