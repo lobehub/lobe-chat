@@ -17,6 +17,6 @@
     "@lobechat/utils": "workspace:*",
     "debug": "^4.4.1",
     "model-bank": "workspace:*",
-    "openai": "^4.104.0"
+    "openai": "^5.0.0"
   }
 }
