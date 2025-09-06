@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { TRPCClientError } from '@trpc/client';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -10,7 +11,6 @@ import {
 } from '@/const/settings';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
-//
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -18,6 +18,8 @@ import { UploadFileItem } from '@/types/files/upload';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../../../store';
+import { messageMapKey } from '../../../../utils/messageMapKey';
+import { generateAIChatV2 } from '../generateAIChatV2';
 
 vi.stubGlobal(
   'fetch',
@@ -115,7 +117,10 @@ const mockState = {
   refreshTopic: vi.fn(),
   internal_execAgentRuntime: vi.fn(),
   saveToTopic: vi.fn(),
-};
+  switchTopic: vi.fn(),
+  internal_shouldUseRAG: () => false,
+  internal_retrieveChunks: vi.fn(),
+} as any;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -136,11 +141,11 @@ afterEach(() => {
 describe('generateAIChatV2 actions', () => {
   describe('sendMessageInServer', () => {
     it('should not send message if there is no active session', async () => {
-      useChatStore.setState({ activeId: undefined });
       const { result } = renderHook(() => useChatStore());
       const message = 'Test message';
 
       await act(async () => {
+        useChatStore.setState({ activeId: undefined });
         await result.current.sendMessage({ message });
       });
 
@@ -441,6 +446,346 @@ describe('generateAIChatV2 actions', () => {
 
       // 验证消息列表是否刷新
       expect(mockState.refreshMessages).toHaveBeenCalled();
+    });
+  });
+
+  describe('错误处理测试', () => {
+    it('当 sendMessageInServer 抛出普通错误时应该设置错误消息', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const errorMessage = 'Network error';
+      const mockError = new TRPCClientError(errorMessage);
+      (mockError as any).data = { code: 'BAD_REQUEST' };
+
+      vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(mockError);
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      const operationKey = messageMapKey('session-id', 'topic-id');
+      expect(result.current.mainSendMessageOperations[operationKey]?.inputSendErrorMsg).toBe(
+        errorMessage,
+      );
+    });
+
+    it('当收到取消信号时不应该设置错误消息', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const abortError = new Error('AbortError');
+      abortError.name = 'AbortError';
+
+      vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(abortError);
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      const operationKey = messageMapKey('session-id', 'topic-id');
+      expect(
+        result.current.mainSendMessageOperations[operationKey]?.inputSendErrorMsg,
+      ).toBeUndefined();
+    });
+  });
+
+  describe('主题切换测试', () => {
+    it('当没有活跃主题时应该自动切换到新创建的主题', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSwitchTopic = vi.fn();
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined,
+          switchTopic: mockSwitchTopic,
+        });
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      expect(mockSwitchTopic).toHaveBeenCalledWith('topic-id', true);
+    });
+
+    it('当存在活跃主题时不需要切换主题', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSwitchTopic = vi.fn();
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          switchTopic: mockSwitchTopic,
+        });
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      expect(mockSwitchTopic).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('取消发送消息测试', () => {
+    it('应该正确取消当前活跃的发送操作', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbort = vi.fn();
+      const mockSetJSONState = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+              inputEditorTempState: { content: 'saved content' },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+      expect(
+        result.current.mainSendMessageOperations[messageMapKey('session-1', 'topic-1')]?.isLoading,
+      ).toBe(false);
+    });
+
+    it('当指定主题ID时应该取消对应主题的操作', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-2')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer('topic-2');
+      });
+
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+    });
+
+    it('当操作不存在时应该安全地处理不抛出错误', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({ mainSendMessageOperations: {} });
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.cancelSendMessageInServer('non-existing-topic');
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('清除发送错误测试', () => {
+    it('应该正确清除当前主题的错误状态', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: false,
+              inputSendErrorMsg: 'Some error',
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.clearSendMessageError();
+      });
+
+      expect(
+        result.current.mainSendMessageOperations[messageMapKey('session-1', 'topic-1')],
+      ).toBeUndefined();
+    });
+
+    it('当没有错误操作时应该安全处理', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({ mainSendMessageOperations: {} });
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.clearSendMessageError();
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('操作状态管理测试', () => {
+    it('应该正确创建新的发送操作', () => {
+      const { result } = renderHook(() => useChatStore());
+      let abortController: AbortController | undefined;
+
+      act(() => {
+        abortController = result.current.internal_toggleSendMessageOperation('test-key', true);
+      });
+
+      expect(abortController!).toBeInstanceOf(AbortController);
+      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(true);
+      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBe(
+        abortController,
+      );
+    });
+
+    it('应该正确停止发送操作', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = { abort: vi.fn() } as any;
+
+      let abortController: AbortController | undefined;
+      act(() => {
+        result.current.internal_updateSendMessageOperation('test-key', {
+          isLoading: true,
+          abortController: mockAbortController,
+        });
+
+        abortController = result.current.internal_toggleSendMessageOperation('test-key', false);
+      });
+
+      expect(abortController).toBeUndefined();
+      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(false);
+      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBeNull();
+    });
+
+    it('应该正确处理取消原因并调用abort方法', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = { abort: vi.fn() } as any;
+
+      result.current.internal_updateSendMessageOperation('test-key', {
+        isLoading: true,
+        abortController: mockAbortController,
+      });
+
+      result.current.internal_toggleSendMessageOperation('test-key', false, 'Test cancel reason');
+
+      expect(mockAbortController.abort).toHaveBeenCalledWith('Test cancel reason');
+    });
+
+    it('应该支持多个并行操作', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let abortController1, abortController2;
+      act(() => {
+        abortController1 = result.current.internal_toggleSendMessageOperation('pkey1', true);
+        abortController2 = result.current.internal_toggleSendMessageOperation('pkey2', true);
+      });
+
+      expect(result.current.mainSendMessageOperations['pkey1']?.isLoading).toBe(true);
+      expect(result.current.mainSendMessageOperations['pkey2']?.isLoading).toBe(true);
+      expect(abortController1).not.toBe(abortController2);
+    });
+  });
+
+  describe('发送操作状态更新测试', () => {
+    it('应该正确更新操作状态', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = new AbortController();
+
+      act(() => {
+        result.current.internal_updateSendMessageOperation('abc', {
+          isLoading: true,
+          abortController: mockAbortController,
+          inputSendErrorMsg: 'test error',
+        });
+      });
+
+      expect(result.current.mainSendMessageOperations['abc']).toEqual({
+        isLoading: true,
+        abortController: mockAbortController,
+        inputSendErrorMsg: 'test error',
+      });
+    });
+
+    it('应该支持部分更新操作状态', () => {
+      const { result } = renderHook(() => useChatStore());
+      const initialController = new AbortController();
+
+      act(() => {
+        result.current.internal_updateSendMessageOperation('test-key', {
+          isLoading: true,
+          abortController: initialController,
+        });
+
+        // 只更新错误消息
+        result.current.internal_updateSendMessageOperation('test-key', {
+          inputSendErrorMsg: 'new error',
+        });
+      });
+
+      expect(result.current.mainSendMessageOperations['test-key']).toEqual({
+        isLoading: true,
+        abortController: initialController,
+        inputSendErrorMsg: 'new error',
+      });
+    });
+  });
+
+  describe('编辑器状态恢复测试', () => {
+    it('取消操作时应该恢复编辑器内容', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSetJSONState = vi.fn();
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+              inputEditorTempState: { content: 'saved content' },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockSetJSONState).toHaveBeenCalledWith({ content: 'saved content' });
+    });
+
+    it('当没有保存的编辑器状态时不应该恢复', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSetJSONState = vi.fn();
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockSetJSONState).not.toHaveBeenCalled();
     });
   });
 });
