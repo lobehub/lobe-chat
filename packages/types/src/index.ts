@@ -18,6 +18,7 @@ export * from './rag';
 export * from './search';
 export * from './serverConfig';
 export * from './session';
+export * from './tool';
 export * from './topic';
 export * from './user';
 export * from './user/settings';
