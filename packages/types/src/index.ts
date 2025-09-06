@@ -6,6 +6,7 @@ export * from './asyncTask';
 export * from './auth';
 export * from './chunk';
 export * from './clientDB';
+export * from './discover';
 export * from './eval';
 export * from './fetch';
 export * from './hotkey';
