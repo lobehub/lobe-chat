@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.124.2](https://github.com/lobehub/lobe-chat/compare/v1.124.1...v1.124.2)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ChatInput send command switch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ChatInput send command switch, closes [#9131](https://github.com/lobehub/lobe-chat/issues/9131) ([4d5246a](https://github.com/lobehub/lobe-chat/commit/4d5246a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.124.1](https://github.com/lobehub/lobe-chat/compare/v1.124.0...v1.124.1)
 
 <sup>Released on **2025-09-06**</sup>
