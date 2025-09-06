@@ -22,5 +22,6 @@ export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload
 export * from './openai/chat';
+export * from './openai/plugin';
 export * from './trace';
 export * from './zustand';
