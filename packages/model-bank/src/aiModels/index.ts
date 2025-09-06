@@ -12,6 +12,7 @@ import { default as bedrock } from './bedrock';
 import { default as bfl } from './bfl';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
+import { default as cometapi } from './cometapi';
 import { default as deepseek } from './deepseek';
 import { default as fal } from './fal';
 import { default as fireworksai } from './fireworksai';
@@ -94,6 +95,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   bfl,
   cloudflare,
   cohere,
+  cometapi,
   deepseek,
   fal,
   fireworksai,
@@ -157,6 +159,7 @@ export { default as bedrock } from './bedrock';
 export { default as bfl } from './bfl';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
+export { default as cometapi } from './cometapi';
 export { default as deepseek } from './deepseek';
 export { default as fal, fluxSchnellParamsSchema } from './fal';
 export { default as fireworksai } from './fireworksai';
