@@ -1,7 +1,7 @@
 {
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni Assistente]({{url}}) per completare le mie informazioni.",
-  "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a conversare!",
-  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, iniziamo a conversare!",
+  "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo la conversazione!",
+  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, iniziamo la conversazione!",
   "agentRoleEdit": {
     "cancel": "Annulla",
     "confirm": "Conferma",
@@ -11,15 +11,15 @@
     "title": "Impostazioni ruolo"
   },
   "confirmDelete": "Conferma eliminazione",
-  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente; una volta eliminato, non potrà essere recuperato. Confermi l'operazione?",
+  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente, l'operazione è irreversibile. Confermi?",
   "copyFailed": "Copia non riuscita",
   "defaultAgent": "Assistente personalizzato",
-  "defaultList": "Elenco predefinito",
+  "defaultList": "Lista predefinita",
   "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
   "history": "Cronologia conversazioni",
   "inbox": {
-    "desc": "Attiva il cluster cerebrale, stimola scintille di pensiero. Il tuo assistente intelligente, qui per parlare di tutto con te",
-    "title": "Parliamo un po'"
+    "desc": "Attiva il cluster cerebrale, stimola la scintilla del pensiero. Il tuo assistente intelligente è qui per parlare di tutto con te.",
+    "title": "Parliamo liberamente"
   },
   "messageCopied": "Messaggio copiato",
   "newChat": "Nuova conversazione",
@@ -28,11 +28,11 @@
   "send": "Invia",
   "session": {
     "createFirst": "Crea la tua prima sessione di chat",
-    "empty": "Nessuna sessione disponibile",
+    "empty": "Nessuna sessione",
     "search": {
       "placeholder": "Cerca sessioni"
     },
-    "title": "Chat casuale"
+    "title": "Parliamo liberamente"
   },
   "share": "Condividi",
   "stop": "Interrompi",

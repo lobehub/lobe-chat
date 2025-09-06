@@ -2,7 +2,7 @@
   "defaultTitle": "Varsayılan Konu",
   "empty": "Henüz konu yok",
   "guide": {
-    "desc": "Sol taraftaki gönderme düğmesine tıklayarak mevcut sohbeti geçmiş konu olarak kaydedebilir ve yeni bir sohbet başlatabilirsiniz",
+    "desc": "Sol taraftaki düğmeye tıklayarak mevcut sohbeti geçmiş konulara kaydedebilir ve yeni bir sohbet başlatabilirsiniz",
     "title": "Konu Listesi"
   },
   "loading": "Yükleniyor...",

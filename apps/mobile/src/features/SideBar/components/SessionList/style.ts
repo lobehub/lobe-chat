@@ -14,14 +14,8 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeLG,
   },
   searchInput: {
-    backgroundColor: token.colorBgContainer,
-    borderRadius: token.borderRadius,
-    color: token.colorText,
-    height: 40,
-    marginHorizontal: token.padding,
+    marginHorizontal: token.margin,
     marginVertical: token.marginXS,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
   },
   sessionList: {
     flex: 1,

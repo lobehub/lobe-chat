@@ -22,7 +22,7 @@
         "placeholder": "Voer de API-sleutel van {{name}} in"
       },
       "proxyUrl": {
-        "desc": "Moet http(s):// bevatten",
+        "desc": "Moet beginnen met http(s)://",
         "invalid": "Voer een geldige URL in die begint met http:// of https://",
         "placeholder": "https://api.example.com/v1",
         "title": "API-proxyadres"
@@ -46,10 +46,10 @@
       "loadFailed": "Lijst met providers laden mislukt"
     },
     "models": {
-      "allLoaded": "Alle modellen zijn geladen",
+      "allLoaded": "Alle modellen zijn weergegeven",
       "copySuccess": "Kopiëren geslaagd",
       "disableFailed": "Uitschakelen van model mislukt",
-      "emptyNoSearch": "Geen modellen gevonden, probeer op te halen van de server",
+      "emptyNoSearch": "Geen modellen gevonden, probeer ze van de server op te halen",
       "emptyWithSearch": "Geen modellen gevonden die aan de zoekcriteria voldoen",
       "enableFailed": "Inschakelen van model mislukt",
       "fetch": "Modellen ophalen",
@@ -67,10 +67,10 @@
       "enabled": "Ingeschakeld"
     }
   },
-  "changelog": "Wijzigingslog",
+  "changelog": "Wijzigingslogboek",
   "color": {
     "neutral": {
-      "description": "Kies de neutrale tinten voor de applicatie",
+      "description": "Kies de neutrale tint voor de applicatie",
       "title": "Neutrale kleurinstellingen"
     },
     "preview": "Voorbeeld",
@@ -120,7 +120,7 @@
   "help": "Hulp",
   "locale": {
     "auto": {
-      "description": "Volg de systeemtaalinstellingen",
+      "description": "Volg de systeemtaalinstelling",
       "title": "Volg systeem"
     },
     "title": "Taalinstellingen"
@@ -128,27 +128,27 @@
   "openai": "OpenAI-instellingen",
   "openaiSettings": {
     "apiKey": "API-sleutel",
-    "apiKeyPlaceholder": "Voer uw OpenAI API-sleutel in",
+    "apiKeyPlaceholder": "Voer je OpenAI API-sleutel in",
     "checkApiKey": "Controleer of de API-sleutel correct is",
     "checkProxyAddress": "Kan geen verbinding maken met de server, controleer of het proxyadres correct is",
     "connectionSuccess": "Verbinding geslaagd, API-sleutel en proxyadres correct geconfigureerd",
     "connectivityHint": "Na het testen van de connectiviteit wordt gecontroleerd of de API-sleutel en het proxyadres correct zijn ingevuld",
     "pleaseEnterApiKey": "Voer de API-sleutel in",
     "proxyAddress": "API-proxyadres",
-    "proxyPlaceholder": "Moet http(s):// bevatten",
-    "testConnectivity": "Test connectiviteit",
+    "proxyPlaceholder": "Moet beginnen met http(s)://",
+    "testConnectivity": "Connectiviteit testen",
     "validationFailed": "Validatie mislukt",
     "validationSuccess": "Validatie geslaagd"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Uw sleutel en proxy-adres worden versleuteld met de <1>AES-GCM</1> encryptie-algoritme",
+      "aesGcm": "Je sleutel en proxyadres worden versleuteld met het <1>AES-GCM</1> algoritme",
       "checker": {
         "button": "Verbinding testen",
-        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
+        "desc": "Test of de API-sleutel en het proxyadres correct zijn ingevuld",
         "pass": "Controle geslaagd",
-        "selectModel": "Selecteer een model om de verbinding te testen",
-        "title": "Connectiviteitstest"
+        "selectModel": "Selecteer model voor verbindingscontrole",
+        "title": "Connectiviteitscontrole"
       }
     }
   },

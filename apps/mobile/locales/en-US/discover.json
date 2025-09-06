@@ -5,7 +5,7 @@
       "addFailed": "Failed to Add Assistant",
       "addFailedMessage": "Failed to add assistant, please try again later",
       "assistantSettings": "Assistant Settings",
-      "loadFailed": "Failed to Retrieve Assistant Details, Please Try Again Later",
+      "loadFailed": "Failed to Load Assistant Details, please try again later",
       "notFoundIdentifier": "Assistant Identifier Not Found",
       "share": "Share",
       "shareFailed": "Share Failed"

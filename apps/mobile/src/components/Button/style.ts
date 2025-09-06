@@ -85,25 +85,25 @@ export const useStyles = createStyles(
         case 'small': {
           return {
             fontSize: token.fontSizeSM,
-            minHeight: 24,
-            paddingHorizontal: token.paddingXS,
-            paddingVertical: token.paddingXXS,
+            height: token.controlHeightSM,
+            paddingHorizontal: token.paddingContentHorizontalSM,
+            paddingVertical: token.paddingContentVerticalSM,
           };
         }
         case 'large': {
           return {
             fontSize: token.fontSizeLG,
-            minHeight: 40,
-            paddingHorizontal: token.paddingLG,
-            paddingVertical: token.paddingSM,
+            height: token.controlHeightLG,
+            paddingHorizontal: token.paddingContentHorizontalLG,
+            paddingVertical: token.paddingContentVerticalLG,
           };
         }
         default: {
           return {
             fontSize: token.fontSize,
-            minHeight: 32,
-            paddingHorizontal: token.paddingSM,
-            paddingVertical: token.paddingXS,
+            height: token.controlHeight,
+            paddingHorizontal: token.paddingContentHorizontal,
+            paddingVertical: token.paddingContentVertical,
           };
         }
       }
@@ -121,7 +121,7 @@ export const useStyles = createStyles(
         borderWidth: type === 'text' || type === 'link' ? 0 : 1,
         flexDirection: 'row' as const,
         justifyContent: 'center' as const,
-        minHeight: sizeStyles.minHeight,
+        minHeight: sizeStyles.height,
         opacity: disabled ? 0.6 : 1,
         paddingHorizontal: sizeStyles.paddingHorizontal,
         paddingVertical: sizeStyles.paddingVertical,
