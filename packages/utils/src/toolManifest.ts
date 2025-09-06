@@ -1,9 +1,8 @@
+import { ChatCompletionTool , OpenAIPluginManifest } from '@lobechat/types';
 import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
 import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-import { ChatCompletionTool } from '@/types/openai/chat';
-import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { genToolCallingName } from '@/utils/toolCall';
 
 const fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {

@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@lobechat/const": "workspace:*",
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "workspace:*",
+    "dayjs": "^1.11.18"
   },
   "devDependencies": {
     "vitest-canvas-mock": "^0.3.3"
