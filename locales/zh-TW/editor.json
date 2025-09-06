@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "收合",
+      "on": "展開"
+    },
+    "typobar": {
+      "off": "隱藏格式工具列",
+      "on": "顯示格式工具列"
+    }
+  },
+  "file": {
+    "error": "錯誤：{{message}}",
+    "uploading": "正在上傳檔案..."
+  },
+  "image": {
+    "broken": "圖片損毀"
+  },
+  "link": {
+    "edit": "編輯連結",
+    "open": "開啟連結",
+    "placeholder": "輸入連結 URL",
+    "unlink": "取消連結"
+  },
+  "table": {
+    "delete": "刪除表格",
+    "deleteColumn": "刪除列",
+    "deleteRow": "刪除行",
+    "insertColumnLeft": "在左側插入 {{count}} 列",
+    "insertColumnRight": "在右側插入 {{count}} 列",
+    "insertRowAbove": "在上方插入 {{count}} 行",
+    "insertRowBelow": "在下方插入 {{count}} 行"
+  },
+  "typobar": {
+    "blockquote": "引用",
+    "bold": "粗體",
+    "bulletList": "無序清單",
+    "code": "行內程式碼",
+    "codeblock": "程式碼區塊",
+    "italic": "斜體",
+    "link": "連結",
+    "numberList": "有序清單",
+    "strikethrough": "刪除線",
+    "table": "插入表格",
+    "underline": "底線"
+  }
+}

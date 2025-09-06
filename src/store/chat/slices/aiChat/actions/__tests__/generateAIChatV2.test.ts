@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { TRPCClientError } from '@trpc/client';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -10,7 +11,6 @@ import {
 } from '@/const/settings';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
-//
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -18,6 +18,8 @@ import { UploadFileItem } from '@/types/files/upload';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../../../store';
+import { messageMapKey } from '../../../../utils/messageMapKey';
+import { generateAIChatV2 } from '../generateAIChatV2';
 
 vi.stubGlobal(
   'fetch',
@@ -115,7 +117,10 @@ const mockState = {
   refreshTopic: vi.fn(),
   internal_execAgentRuntime: vi.fn(),
   saveToTopic: vi.fn(),
-};
+  switchTopic: vi.fn(),
+  internal_shouldUseRAG: () => false,
+  internal_retrieveChunks: vi.fn(),
+} as any;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -136,11 +141,11 @@ afterEach(() => {
 describe('generateAIChatV2 actions', () => {
   describe('sendMessageInServer', () => {
     it('should not send message if there is no active session', async () => {
-      useChatStore.setState({ activeId: undefined });
       const { result } = renderHook(() => useChatStore());
       const message = 'Test message';
 
       await act(async () => {
+        useChatStore.setState({ activeId: undefined });
         await result.current.sendMessage({ message });
       });
 
@@ -187,18 +192,21 @@ describe('generateAIChatV2 actions', () => {
         await result.current.sendMessage({ message, files });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: message,
+            files: files.map((f) => f.id),
+          },
+          sessionId: mockState.activeId,
+          topicId: mockState.activeTopicId,
         },
-        newUserMessage: {
-          content: message,
-          files: files.map((f) => f.id),
-        },
-        sessionId: mockState.activeId,
-        topicId: mockState.activeTopicId,
-      });
+        expect.anything(),
+      );
       expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
     });
 
@@ -249,7 +257,7 @@ describe('generateAIChatV2 actions', () => {
       expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
     });
 
-    it('当 isWelcomeQuestion 为 true 时,正确地传递给 internal_execAgentRuntime', async () => {
+    it('should pass isWelcomeQuestion correctly to internal_execAgentRuntime when isWelcomeQuestion is true', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
@@ -263,49 +271,55 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('当只有文件而没有消息内容时,正确发送消息', async () => {
+    it('should send message correctly when only files are provided without message content', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
         await result.current.sendMessage({ message: '', files: [{ id: 'file-1' }] as any });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: '',
+            files: ['file-1'],
+          },
+          sessionId: 'session-id',
+          topicId: 'topic-id',
         },
-        newUserMessage: {
-          content: '',
-          files: ['file-1'],
-        },
-        sessionId: 'session-id',
-        topicId: 'topic-id',
-      });
+        expect.anything(),
+      );
     });
 
-    it('当同时有文件和消息内容时,正确发送消息并关联文件', async () => {
+    it('should send message correctly when both files and message content are provided', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
         await result.current.sendMessage({ message: 'test', files: [{ id: 'file-1' }] as any });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: 'test',
+            files: ['file-1'],
+          },
+          sessionId: 'session-id',
+          topicId: 'topic-id',
         },
-        newUserMessage: {
-          content: 'test',
-          files: ['file-1'],
-        },
-        sessionId: 'session-id',
-        topicId: 'topic-id',
-      });
+        expect.anything(),
+      );
     });
 
-    it('当 createMessage 抛出错误时,正确处理错误而不影响整个应用', async () => {
+    it('should handle errors correctly when createMessage throws error without affecting the app', async () => {
       const { result } = renderHook(() => useChatStore());
       vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(
         new Error('create message error'),
@@ -432,6 +446,346 @@ describe('generateAIChatV2 actions', () => {
 
       // 验证消息列表是否刷新
       expect(mockState.refreshMessages).toHaveBeenCalled();
+    });
+  });
+
+  describe('Error handling tests', () => {
+    it('should set error message when sendMessageInServer throws a regular error', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const errorMessage = 'Network error';
+      const mockError = new TRPCClientError(errorMessage);
+      (mockError as any).data = { code: 'BAD_REQUEST' };
+
+      vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(mockError);
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      const operationKey = messageMapKey('session-id', 'topic-id');
+      expect(result.current.mainSendMessageOperations[operationKey]?.inputSendErrorMsg).toBe(
+        errorMessage,
+      );
+    });
+
+    it('should not set error message when receiving a cancel signal', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const abortError = new Error('AbortError');
+      abortError.name = 'AbortError';
+
+      vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(abortError);
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      const operationKey = messageMapKey('session-id', 'topic-id');
+      expect(
+        result.current.mainSendMessageOperations[operationKey]?.inputSendErrorMsg,
+      ).toBeUndefined();
+    });
+  });
+
+  describe('Topic switching tests', () => {
+    it('should automatically switch to newly created topic when no active topic exists', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSwitchTopic = vi.fn();
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined,
+          switchTopic: mockSwitchTopic,
+        });
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      expect(mockSwitchTopic).toHaveBeenCalledWith('topic-id', true);
+    });
+
+    it('should not need to switch topic when active topic exists', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSwitchTopic = vi.fn();
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          switchTopic: mockSwitchTopic,
+        });
+        await result.current.sendMessage({ message: 'test' });
+      });
+
+      expect(mockSwitchTopic).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Cancel send message tests', () => {
+    it('should correctly cancel the current active send operation', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbort = vi.fn();
+      const mockSetJSONState = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+              inputEditorTempState: { content: 'saved content' },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+      expect(
+        result.current.mainSendMessageOperations[messageMapKey('session-1', 'topic-1')]?.isLoading,
+      ).toBe(false);
+    });
+
+    it('should cancel the operation for the corresponding topic when topic ID is specified', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-2')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer('topic-2');
+      });
+
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+    });
+
+    it('should handle safely without throwing error when operation does not exist', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({ mainSendMessageOperations: {} });
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.cancelSendMessageInServer('non-existing-topic');
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('Clear send error tests', () => {
+    it('should correctly clear error state for current topic', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: false,
+              inputSendErrorMsg: 'Some error',
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.clearSendMessageError();
+      });
+
+      expect(
+        result.current.mainSendMessageOperations[messageMapKey('session-1', 'topic-1')],
+      ).toBeUndefined();
+    });
+
+    it('should handle safely when no error operation exists', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({ mainSendMessageOperations: {} });
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.clearSendMessageError();
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('Operation state management tests', () => {
+    it('should correctly create new send operation', () => {
+      const { result } = renderHook(() => useChatStore());
+      let abortController: AbortController | undefined;
+
+      act(() => {
+        abortController = result.current.internal_toggleSendMessageOperation('test-key', true);
+      });
+
+      expect(abortController!).toBeInstanceOf(AbortController);
+      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(true);
+      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBe(
+        abortController,
+      );
+    });
+
+    it('should correctly stop send operation', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = { abort: vi.fn() } as any;
+
+      let abortController: AbortController | undefined;
+      act(() => {
+        result.current.internal_updateSendMessageOperation('test-key', {
+          isLoading: true,
+          abortController: mockAbortController,
+        });
+
+        abortController = result.current.internal_toggleSendMessageOperation('test-key', false);
+      });
+
+      expect(abortController).toBeUndefined();
+      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(false);
+      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBeNull();
+    });
+
+    it('should correctly handle cancel reason and call abort method', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = { abort: vi.fn() } as any;
+
+      result.current.internal_updateSendMessageOperation('test-key', {
+        isLoading: true,
+        abortController: mockAbortController,
+      });
+
+      result.current.internal_toggleSendMessageOperation('test-key', false, 'Test cancel reason');
+
+      expect(mockAbortController.abort).toHaveBeenCalledWith('Test cancel reason');
+    });
+
+    it('should support multiple parallel operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let abortController1, abortController2;
+      act(() => {
+        abortController1 = result.current.internal_toggleSendMessageOperation('pkey1', true);
+        abortController2 = result.current.internal_toggleSendMessageOperation('pkey2', true);
+      });
+
+      expect(result.current.mainSendMessageOperations['pkey1']?.isLoading).toBe(true);
+      expect(result.current.mainSendMessageOperations['pkey2']?.isLoading).toBe(true);
+      expect(abortController1).not.toBe(abortController2);
+    });
+  });
+
+  describe('Send operation state update tests', () => {
+    it('should correctly update operation state', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockAbortController = new AbortController();
+
+      act(() => {
+        result.current.internal_updateSendMessageOperation('abc', {
+          isLoading: true,
+          abortController: mockAbortController,
+          inputSendErrorMsg: 'test error',
+        });
+      });
+
+      expect(result.current.mainSendMessageOperations['abc']).toEqual({
+        isLoading: true,
+        abortController: mockAbortController,
+        inputSendErrorMsg: 'test error',
+      });
+    });
+
+    it('should support partial update of operation state', () => {
+      const { result } = renderHook(() => useChatStore());
+      const initialController = new AbortController();
+
+      act(() => {
+        result.current.internal_updateSendMessageOperation('test-key', {
+          isLoading: true,
+          abortController: initialController,
+        });
+
+        // Only update error message
+        result.current.internal_updateSendMessageOperation('test-key', {
+          inputSendErrorMsg: 'new error',
+        });
+      });
+
+      expect(result.current.mainSendMessageOperations['test-key']).toEqual({
+        isLoading: true,
+        abortController: initialController,
+        inputSendErrorMsg: 'new error',
+      });
+    });
+  });
+
+  describe('Editor state recovery tests', () => {
+    it('should restore editor content when cancelling operation', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSetJSONState = vi.fn();
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+              inputEditorTempState: { content: 'saved content' },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+      });
+
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockSetJSONState).toHaveBeenCalledWith({ content: 'saved content' });
+    });
+
+    it('should not restore when no saved editor state exists', () => {
+      const { result } = renderHook(() => useChatStore());
+      const mockSetJSONState = vi.fn();
+      const mockAbort = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-1',
+          activeTopicId: 'topic-1',
+          mainSendMessageOperations: {
+            [messageMapKey('session-1', 'topic-1')]: {
+              isLoading: true,
+              abortController: { abort: mockAbort, signal: {} as any },
+            },
+          },
+          mainInputEditor: { setJSONState: mockSetJSONState } as any,
+        });
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(mockSetJSONState).not.toHaveBeenCalled();
     });
   });
 });

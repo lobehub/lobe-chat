@@ -5,5 +5,6 @@ export * from './layoutTokens';
 export * from './message';
 export * from './session';
 export * from './settings';
+export * from './trace';
 export * from './user';
 export * from './version';

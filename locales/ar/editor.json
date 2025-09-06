@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "طي",
+      "on": "توسيع"
+    },
+    "typobar": {
+      "off": "إخفاء شريط أدوات التنسيق",
+      "on": "إظهار شريط أدوات التنسيق"
+    }
+  },
+  "file": {
+    "error": "خطأ: {{message}}",
+    "uploading": "جاري رفع الملف..."
+  },
+  "image": {
+    "broken": "الصورة تالفة"
+  },
+  "link": {
+    "edit": "تعديل الرابط",
+    "open": "فتح الرابط",
+    "placeholder": "أدخل عنوان URL للرابط",
+    "unlink": "إزالة الرابط"
+  },
+  "table": {
+    "delete": "حذف الجدول",
+    "deleteColumn": "حذف العمود",
+    "deleteRow": "حذف الصف",
+    "insertColumnLeft": "إدراج {{count}} عمودًا إلى اليسار",
+    "insertColumnRight": "إدراج {{count}} عمودًا إلى اليمين",
+    "insertRowAbove": "إدراج {{count}} صفًا في الأعلى",
+    "insertRowBelow": "إدراج {{count}} صفًا في الأسفل"
+  },
+  "typobar": {
+    "blockquote": "اقتباس",
+    "bold": "غامق",
+    "bulletList": "قائمة نقطية",
+    "code": "كود مضمن",
+    "codeblock": "كتلة كود",
+    "italic": "مائل",
+    "link": "رابط",
+    "numberList": "قائمة مرقمة",
+    "strikethrough": "شطب",
+    "table": "إدراج جدول",
+    "underline": "تسطير"
+  }
+}

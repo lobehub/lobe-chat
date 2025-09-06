@@ -1,6 +1,7 @@
 import { ActionIconGroup, type ActionIconGroupEvent, type ActionIconGroupProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { useSearchParams } from 'next/navigation';
 import { memo, use, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -38,6 +39,8 @@ interface ActionsProps {
 const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
   const { t } = useTranslation('common');
+  const searchParams = useSearchParams();
+  const topic = searchParams.get('topic');
   const [
     deleteMessage,
     regenerateMessage,
@@ -84,6 +87,10 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
           break;
         }
         case 'branching': {
+          if (!topic) {
+            message.warning(t('branchingRequiresSavedTopic'));
+            break;
+          }
           openThreadCreator(id);
           break;
         }

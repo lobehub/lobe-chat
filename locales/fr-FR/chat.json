@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Ajouter un message AI",
     "addUser": "Ajouter un message utilisateur",
+    "disclaimer": "L'IA peut également faire des erreurs, veuillez vérifier les informations importantes",
+    "errorMsg": "Échec de l'envoi du message, veuillez vérifier votre connexion réseau et réessayer : {{errorMsg}}",
     "more": "Plus",
     "send": "Envoyer",
-    "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
-    "sendWithEnter": "Envoyer avec Entrée",
+    "sendWithCmdEnter": "Appuyez sur <key/> pour envoyer",
+    "sendWithEnter": "Appuyez sur <key/> pour envoyer",
     "stop": "Arrêter",
     "warp": "Saut de ligne"
   },
@@ -231,6 +233,10 @@
     "divider": "Sous-sujet",
     "threadMessageCount": "{{messageCount}} messages",
     "title": "Sous-sujet"
+  },
+  "toggleWideScreen": {
+    "off": "Désactiver le mode écran large",
+    "on": "Activer le mode écran large"
   },
   "tokenDetails": {
     "chats": "Messages de discussion",

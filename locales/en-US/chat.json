@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Add an AI message",
     "addUser": "Add a user message",
+    "disclaimer": "AI may also make mistakes, please verify important information",
+    "errorMsg": "Message sending failed, please check your network and try again: {{errorMsg}}",
     "more": "more",
     "send": "Send",
-    "sendWithCmdEnter": "Press {{meta}} + Enter to send",
-    "sendWithEnter": "Press Enter to send",
+    "sendWithCmdEnter": "Press <key/> to send",
+    "sendWithEnter": "Press <key/> to send",
     "stop": "Stop",
     "warp": "New Line"
   },
@@ -231,6 +233,10 @@
     "divider": "Subtopic",
     "threadMessageCount": "{{messageCount}} messages",
     "title": "Subtopic"
+  },
+  "toggleWideScreen": {
+    "off": "Turn off widescreen mode",
+    "on": "Turn on widescreen mode"
   },
   "tokenDetails": {
     "chats": "Chat Messages",

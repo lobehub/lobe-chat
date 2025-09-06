@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Daralt",
+      "on": "Genişlet"
+    },
+    "typobar": {
+      "off": "Biçim araç çubuğunu gizle",
+      "on": "Biçim araç çubuğunu göster"
+    }
+  },
+  "file": {
+    "error": "Hata: {{message}}",
+    "uploading": "Dosya yükleniyor..."
+  },
+  "image": {
+    "broken": "Resim bozuk"
+  },
+  "link": {
+    "edit": "Bağlantıyı düzenle",
+    "open": "Bağlantıyı aç",
+    "placeholder": "Bağlantı URL'si girin",
+    "unlink": "Bağlantıyı kaldır"
+  },
+  "table": {
+    "delete": "Tabloyu sil",
+    "deleteColumn": "Sütunu sil",
+    "deleteRow": "Satırı sil",
+    "insertColumnLeft": "Sol tarafa {{count}} sütun ekle",
+    "insertColumnRight": "Sağ tarafa {{count}} sütun ekle",
+    "insertRowAbove": "Üst tarafa {{count}} satır ekle",
+    "insertRowBelow": "Alt tarafa {{count}} satır ekle"
+  },
+  "typobar": {
+    "blockquote": "Alıntı",
+    "bold": "Kalın",
+    "bulletList": "Sırasız liste",
+    "code": "Satır içi kod",
+    "codeblock": "Kod bloğu",
+    "italic": "İtalik",
+    "link": "Bağlantı",
+    "numberList": "Numaralı liste",
+    "strikethrough": "Üstü çizili",
+    "table": "Tablo ekle",
+    "underline": "Altı çizili"
+  }
+}

@@ -7,11 +7,11 @@ export default defineConfig({
       /* eslint-disable sort-keys-fix/sort-keys-fix */
       '@/types': resolve(__dirname, '../types/src'),
       '@/const': resolve(__dirname, '../const/src'),
-      '@/libs/model-runtime': resolve(__dirname, '../model-runtime/src'),
       '@': resolve(__dirname, '../../src'),
       /* eslint-enable */
     },
     coverage: {
+      all: false,
       reporter: ['text', 'json', 'lcov', 'text-summary'],
     },
     environment: 'happy-dom',
