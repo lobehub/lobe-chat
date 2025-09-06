@@ -54,7 +54,7 @@
       "enableFailed": "Nie udało się włączyć modelu",
       "fetch": "Pobieranie modeli",
       "fetchFailed": "Nie udało się pobrać modeli, spróbuj ponownie",
-      "fetchSuccess": "Lista modeli została pomyślnie pobrana!",
+      "fetchSuccess": "Lista modeli została pobrana pomyślnie!",
       "fetching": "Pobieranie...",
       "loading": "Ładowanie...",
       "loadingMore": "Ładowanie więcej...",
@@ -70,12 +70,12 @@
   "changelog": "Dziennik zmian",
   "color": {
     "neutral": {
-      "description": "Wybierz neutralne odcienie aplikacji",
-      "title": "Konfiguracja kolorów neutralnych"
+      "description": "Wybierz neutralny odcień aplikacji",
+      "title": "Konfiguracja neutralnych kolorów"
     },
     "preview": "Podgląd",
     "previewMessages": {
-      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą poniższego selektora kolorów, a podgląd będzie aktualizowany na żywo, aby pokazać efekt.",
+      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą poniższego selektora kolorów, podgląd będzie aktualizowany na żywo, aby pokazać efekt.",
       "userHowToUse": "Jak korzystać z podglądu motywu?"
     },
     "primary": {
@@ -88,26 +88,26 @@
     "accessToken": {
       "expire": {
         "success": "Token dostępu wygasł natychmiast",
-        "title": "Wygasł token dostępu"
+        "title": "Wygasanie tokenu dostępu"
       },
       "invalidate": {
         "success": "Token dostępu został unieważniony",
-        "title": "Unieważniony token dostępu"
+        "title": "Unieważnienie tokenu dostępu"
       }
     },
     "clearAuthData": {
       "success": "Dane uwierzytelniające zostały wyczyszczone",
-      "title": "Wyczyść dane uwierzytelniające"
+      "title": "Wyczyszczenie danych uwierzytelniających"
     },
     "failurePrefix": "Operacja nie powiodła się: ",
     "refreshToken": {
       "expire": {
         "success": "Token odświeżania wygasł natychmiast",
-        "title": "Wygasł token odświeżania"
+        "title": "Wygasanie tokenu odświeżania"
       },
       "invalidate": {
         "success": "Token odświeżania został unieważniony",
-        "title": "Unieważniony token odświeżania"
+        "title": "Unieważnienie tokenu odświeżania"
       }
     },
     "title": "Opcje deweloperskie"
@@ -121,7 +121,7 @@
   "locale": {
     "auto": {
       "description": "Dopasuj do języka systemowego",
-      "title": "Automatycznie"
+      "title": "Dopasuj do systemu"
     },
     "title": "Ustawienia języka"
   },

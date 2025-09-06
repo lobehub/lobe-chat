@@ -70,7 +70,7 @@
   "changelog": "Changelog",
   "color": {
     "neutral": {
-      "description": "Select the application's neutral tones",
+      "description": "Select the neutral tone for the app",
       "title": "Neutral Color Settings"
     },
     "preview": "Preview",
@@ -79,7 +79,7 @@
       "userHowToUse": "How to use the theme preview?"
     },
     "primary": {
-      "description": "Select the application's primary color",
+      "description": "Select the primary color for the app",
       "title": "Primary Color Settings"
     },
     "title": "Color Settings"
@@ -130,10 +130,10 @@
     "apiKey": "API Key",
     "apiKeyPlaceholder": "Please enter your OpenAI API Key",
     "checkApiKey": "Please check if the API Key is correct",
-    "checkProxyAddress": "Cannot connect to the server, please check if the proxy address is correct",
+    "checkProxyAddress": "Cannot connect to server, please check if the proxy address is correct",
     "connectionSuccess": "Connection successful, API Key and proxy address are configured correctly",
-    "connectivityHint": "After testing connectivity, the API Key and proxy address will be validated",
-    "pleaseEnterApiKey": "Please enter API Key",
+    "connectivityHint": "After testing connectivity, the API Key and proxy address will be verified for correctness",
+    "pleaseEnterApiKey": "Please enter the API Key",
     "proxyAddress": "API Proxy Address",
     "proxyPlaceholder": "Must include http(s)://",
     "testConnectivity": "Test Connectivity",
@@ -142,12 +142,12 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Your secret key and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
+      "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> algorithm",
       "checker": {
         "button": "Test Connection",
-        "desc": "Verify if the API Key and proxy address are correctly entered",
-        "pass": "Check passed",
-        "selectModel": "Select a model to test the connection",
+        "desc": "Test if the API Key and proxy address are correctly entered",
+        "pass": "Check Passed",
+        "selectModel": "Select model for connection test",
         "title": "Connectivity Check"
       }
     }

@@ -10,8 +10,8 @@ import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderListItem } from '@/types/aiProvider';
 import { useStyles } from './styles';
 
-import ProviderCard from './(components)/ProviderCard';
-import ProviderListSkeleton from './(components)/ProviderListSkeleton';
+import ProviderCard from '@/features/setting/providers/ProviderCard';
+import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
 import { Header } from '@/components';
 
 // 定义FlashList数据项类型

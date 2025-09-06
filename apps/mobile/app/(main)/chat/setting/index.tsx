@@ -8,6 +8,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useStyles } from './styles';
 import { AVATAR_SIZE_LARGE } from '@/const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AgentDetail() {
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
@@ -16,19 +17,21 @@ export default function AgentDetail() {
   const { styles } = useStyles();
 
   return (
-    <KeyboardAwareScrollView
-      bottomOffset={40}
-      extraKeyboardSpace={60}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-    >
+    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title={title} />
-      <View style={styles.avatarContainer}>
-        <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
-      </View>
-      <Text style={styles.title}>{title}</Text>
-      {description ? <Text style={styles.description}>{description}</Text> : null}
-      <AgentRoleEditSection />
-    </KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        bottomOffset={40}
+        extraKeyboardSpace={60}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+      >
+        <View style={styles.avatarContainer}>
+          <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
+        </View>
+        <Text style={styles.title}>{title}</Text>
+        {description ? <Text style={styles.description}>{description}</Text> : null}
+        <AgentRoleEditSection />
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 }

@@ -4,8 +4,8 @@
       "replaceBtn": "Đổi một nhóm",
       "title": "Gợi ý trợ lý mới:"
     },
-    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn bây giờ?<br />Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn <plus /> để tạo trợ lý tùy chỉnh",
-    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn bây giờ?",
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn ngay bây giờ?<br />Nếu bạn cần trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn <plus /> để tạo trợ lý tùy chỉnh",
+    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn ngay bây giờ?",
     "qa": {
       "q01": "LobeHub là gì?",
       "q02": "{{appName}} là gì?",
@@ -16,30 +16,30 @@
       "q07": "{{appName}} có miễn phí không?",
       "q08": "Có phiên bản dịch vụ đám mây không?",
       "q09": "Có hỗ trợ mô hình ngôn ngữ cục bộ không?",
-      "q10": "Có hỗ trợ nhận dạng và tạo hình ảnh không?",
+      "q10": "Có hỗ trợ nhận diện và tạo hình ảnh không?",
       "q11": "Có hỗ trợ tổng hợp giọng nói và nhận dạng giọng nói không?",
       "q12": "Có hỗ trợ hệ thống plugin không?",
       "q13": "Có chợ riêng để lấy GPTs không?",
       "q14": "Có hỗ trợ nhiều nhà cung cấp dịch vụ AI không?",
       "q15": "Nếu tôi gặp vấn đề khi sử dụng thì nên làm gì?"
-    },
-    "questions": {
-      "moreBtn": "Tìm hiểu thêm",
-      "title": "Mọi người đều hỏi:"
-    },
-    "welcome": {
-      "afternoon": "Chào buổi chiều",
-      "morning": "Chào buổi sáng",
-      "night": "Chào buổi tối",
-      "noon": "Chào buổi trưa"
     }
   },
   "header": "Chào mừng bạn sử dụng",
   "pickAgent": "Hoặc chọn từ mẫu trợ lý dưới đây",
+  "questions": {
+    "moreBtn": "Tìm hiểu thêm",
+    "title": "Mọi người đang hỏi:"
+  },
   "skip": "Bỏ qua tạo",
   "slogan": {
-    "desc1": "Kích hoạt cụm não bộ, khơi nguồn ý tưởng. Trợ lý thông minh của bạn luôn bên cạnh.",
-    "desc2": "Tạo trợ lý đầu tiên của bạn, hãy bắt đầu nào~",
+    "desc1": "Kích hoạt bộ não tập thể, khơi nguồn ý tưởng. Trợ lý thông minh của bạn luôn bên cạnh.",
+    "desc2": "Tạo trợ lý đầu tiên của bạn, cùng bắt đầu nhé~",
     "title": "Hãy cho mình một bộ não thông minh hơn"
+  },
+  "welcome": {
+    "afternoon": "Chào buổi chiều",
+    "morning": "Chào buổi sáng",
+    "night": "Chào buổi tối",
+    "noon": "Chào buổi trưa"
   }
 }

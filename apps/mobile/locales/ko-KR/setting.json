@@ -57,7 +57,7 @@
       "fetchSuccess": "모델 목록 가져오기 성공!",
       "fetching": "가져오는 중...",
       "loading": "로딩 중...",
-      "loadingMore": "더 불러오는 중...",
+      "loadingMore": "추가 로딩 중...",
       "modelsAvailable": "총 {{count}}개의 사용 가능한 모델",
       "searchPlaceholder": "모델 검색...",
       "title": "모델"
@@ -70,17 +70,17 @@
   "changelog": "업데이트 로그",
   "color": {
     "neutral": {
-      "description": "애플리케이션의 중립 색조 선택",
+      "description": "앱의 중립 색조 선택",
       "title": "중립 색상 설정"
     },
     "preview": "미리보기",
     "previewMessages": {
-      "botHowToUse": "아래 색상 선택기를 사용하여 기본 색상과 중립 색상을 조정할 수 있으며, 미리보기는 실시간으로 변경 사항을 반영합니다.",
-      "userHowToUse": "테마 미리보기 사용 방법은?"
+      "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중립 색상을 조정할 수 있으며, 미리보기에서 실시간으로 효과를 확인할 수 있습니다.",
+      "userHowToUse": "테마 미리보기 사용 방법"
     },
     "primary": {
-      "description": "애플리케이션의 기본 색조 선택",
-      "title": "기본 색상 설정"
+      "description": "앱의 주 색조 선택",
+      "title": "주 색상 설정"
     },
     "title": "색상 설정"
   },
@@ -91,7 +91,7 @@
         "title": "액세스 토큰 만료"
       },
       "invalidate": {
-        "success": "무효 액세스 토큰이 기록되었습니다",
+        "success": "무효한 액세스 토큰이 기록되었습니다",
         "title": "무효 액세스 토큰"
       }
     },
@@ -106,13 +106,13 @@
         "title": "리프레시 토큰 만료"
       },
       "invalidate": {
-        "success": "무효 리프레시 토큰이 기록되었습니다",
+        "success": "무효한 리프레시 토큰이 기록되었습니다",
         "title": "무효 리프레시 토큰"
       }
     },
     "title": "개발자 옵션"
   },
-  "feedback": "의견 보내기",
+  "feedback": "피드백",
   "fontSize": {
     "standard": "표준",
     "title": "글꼴 크기"
@@ -121,7 +121,7 @@
   "locale": {
     "auto": {
       "description": "시스템 언어 설정을 따름",
-      "title": "시스템 따라가기"
+      "title": "시스템 따름"
     },
     "title": "언어 설정"
   },
@@ -131,8 +131,8 @@
     "apiKeyPlaceholder": "OpenAI API 키를 입력하세요",
     "checkApiKey": "API 키가 올바른지 확인하세요",
     "checkProxyAddress": "서버에 연결할 수 없습니다. 프록시 주소가 올바른지 확인하세요",
-    "connectionSuccess": "연결 성공, API 키와 프록시 주소가 올바르게 설정되었습니다",
-    "connectivityHint": "연결 테스트 후 API 키와 프록시 주소가 올바른지 검증합니다",
+    "connectionSuccess": "연결 성공, API 키 및 프록시 주소가 올바르게 설정되었습니다",
+    "connectivityHint": "연결 테스트 후 API 키와 프록시 주소가 올바르게 입력되었는지 검증합니다",
     "pleaseEnterApiKey": "API 키를 입력하세요",
     "proxyAddress": "API 프록시 주소",
     "proxyPlaceholder": "http(s)://를 포함해야 합니다",
@@ -142,10 +142,10 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "귀하의 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘으로 암호화됩니다",
+      "aesGcm": "귀하의 키와 프록시 주소 등은 <1>AES-GCM</1> 알고리즘으로 암호화됩니다",
       "checker": {
         "button": "연결 테스트",
-        "desc": "Api Key와 프록시 주소가 올바르게 입력되었는지 테스트합니다",
+        "desc": "API 키와 프록시 주소가 올바르게 입력되었는지 테스트합니다",
         "pass": "검사 통과",
         "selectModel": "연결 테스트에 사용할 모델 선택",
         "title": "연결성 검사"
@@ -155,7 +155,7 @@
   "providers": "AI 서비스 제공자",
   "support": "이메일 지원",
   "themeMode": {
-    "auto": "시스템 설정 따름",
+    "auto": "시스템 따름",
     "dark": "다크 모드",
     "light": "라이트 모드",
     "title": "테마 모드"

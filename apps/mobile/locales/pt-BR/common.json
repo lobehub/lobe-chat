@@ -18,7 +18,7 @@
     "noMatch": "Nenhum assistente correspondente encontrado",
     "search": "Pesquisar assistente..."
   },
-  "defaultSession": "Assistente Personalizado",
+  "defaultSession": "Assistente personalizado",
   "navigation": {
     "goToHomeScreen": "Voltar para a tela inicial"
   },
