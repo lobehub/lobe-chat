@@ -13,7 +13,7 @@ export const useStyles = createStyles((token) => ({
     height: token.marginSM,
   },
   sectionTitle: {
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: token.fontWeightStrong,
   },
 }));

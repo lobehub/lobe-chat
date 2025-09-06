@@ -35,7 +35,7 @@ export const useStyles = createStyles((token) => ({
 
   footerCompleteText: {
     color: token.colorTextTertiary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontStyle: 'italic',
   },
 
@@ -49,7 +49,7 @@ export const useStyles = createStyles((token) => ({
 
   footerText: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginLeft: token.marginXS,
   },
 
@@ -108,7 +108,7 @@ export const useStyles = createStyles((token) => ({
 
   modelIdText: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: '500',
   },
 
@@ -145,7 +145,7 @@ export const useStyles = createStyles((token) => ({
 
   modelsCount: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 
   // Models相关样式（从ModelsSection迁移）

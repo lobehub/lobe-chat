@@ -66,7 +66,7 @@ export const useStyles = createStyles((token) => ({
   // 获取按钮文字
   fetchButtonText: {
     color: token.colorTextLightSolid,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: token.fontWeightStrong,
     marginLeft: token.marginXXS,
   },
@@ -106,7 +106,7 @@ export const useStyles = createStyles((token) => ({
   // 模型数量
   modelCount: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 
   // 模型ID标签
@@ -119,7 +119,7 @@ export const useStyles = createStyles((token) => ({
   // 模型ID文字
   modelIdText: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: '500',
   },
 
@@ -133,7 +133,7 @@ export const useStyles = createStyles((token) => ({
   // 模型元信息
   modelMeta: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     lineHeight: 16,
   },
 

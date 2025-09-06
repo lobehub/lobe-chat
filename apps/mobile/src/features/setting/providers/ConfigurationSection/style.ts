@@ -22,7 +22,7 @@ export const useStyles = createStyles((token) => ({
   aesGcmText: {
     color: token.colorTextQuaternary,
     flexShrink: 1,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     textAlign: 'left',
   },
 
@@ -83,7 +83,7 @@ export const useStyles = createStyles((token) => ({
   errorDetailsText: {
     color: token.colorTextSecondary,
     fontFamily: 'monospace',
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 
   errorHeader: {
@@ -102,13 +102,13 @@ export const useStyles = createStyles((token) => ({
   errorMessage: {
     color: token.colorError,
     flex: 1,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 
   // 错误文字
   errorText: {
     color: token.colorError,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginTop: token.marginXXS,
   },
 
@@ -120,7 +120,7 @@ export const useStyles = createStyles((token) => ({
   // 输入描述文字
   inputDescription: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginBottom: token.marginSM,
   },
 
@@ -275,7 +275,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   statusText: {
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 
   // 文本输入框
@@ -289,7 +289,7 @@ export const useStyles = createStyles((token) => ({
   // 更新状态指示器
   updatingIndicator: {
     color: token.colorTextTertiary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginTop: token.marginXS,
     textAlign: 'center',
   },

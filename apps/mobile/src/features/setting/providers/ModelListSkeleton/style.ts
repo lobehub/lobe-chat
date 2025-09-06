@@ -11,7 +11,7 @@ export const useStyles = createStyles((token) => ({
     paddingVertical: token.paddingXS,
   },
   sectionHeaderText: {
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: token.fontWeightStrong,
   },
 }));

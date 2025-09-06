@@ -40,7 +40,7 @@ export const useStyles = createStyles((token) => ({
   // 副标题
   subtitle: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginTop: 2,
   },
 
