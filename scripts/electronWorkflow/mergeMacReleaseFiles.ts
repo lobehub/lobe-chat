@@ -35,26 +35,26 @@ if (!/^v?\d+\.\d+\.\d+/.test(RELEASE_TAG)) {
 /**
  * 检测 latest-mac.yml 文件的平台类型
  */
-function detectPlatform(yamlContent: LatestMacYml): 'intel' | 'arm' | 'both' | 'none' {
-  const hasIntel = yamlContent.files.some((file) => file.url.includes('-x64.dmg'));
-  const hasArm = yamlContent.files.some((file) => file.url.includes('-arm64.dmg'));
+function detectPlatform(yamlContent: LatestMacYml): 'x64' | 'arm64' | 'both' | 'none' {
+  const hasX64 = yamlContent.files.some((file) => file.url.includes('-x64.dmg'));
+  const hasArm64 = yamlContent.files.some((file) => file.url.includes('-arm64.dmg'));
 
-  if (hasIntel && hasArm) return 'both';
-  if (hasIntel && !hasArm) return 'intel';
-  if (!hasIntel && hasArm) return 'arm';
+  if (hasX64 && hasArm64) return 'both';
+  if (hasX64 && !hasArm64) return 'x64';
+  if (!hasX64 && hasArm64) return 'arm64';
   return 'none';
 }
 
 /**
  * 合并两个 latest-mac.yml 文件
- * @param intelContent Intel 平台的 YAML 内容
- * @param armContent ARM 平台的 YAML 内容
+ * @param x64Content x64 平台的 YAML 内容
+ * @param arm64Content ARM64 平台的 YAML 内容
  */
-function mergeYamlFiles(intelContent: LatestMacYml, armContent: LatestMacYml): string {
-  // 以 Intel 为基础（保持兼容性）
+function mergeYamlFiles(x64Content: LatestMacYml, arm64Content: LatestMacYml): string {
+  // 以 x64 为基础（保持兼容性）
   const merged: LatestMacYml = {
-    ...intelContent,
-    files: [...intelContent.files, ...armContent.files],
+    ...x64Content,
+    files: [...x64Content.files, ...arm64Content.files],
   };
 
   // 使用 yaml 库生成，保持 sha512 在同一行
@@ -123,7 +123,7 @@ async function main(): Promise<void> {
     const macFiles: Array<{
       content: string;
       filename: string;
-      platform: 'intel' | 'arm';
+      platform: 'x64' | 'arm64';
       yaml: LatestMacYml;
     }> = [];
 
@@ -137,7 +137,7 @@ async function main(): Promise<void> {
         const yamlContent = parse(content) as LatestMacYml;
         const platform = detectPlatform(yamlContent);
 
-        if (platform === 'intel' || platform === 'arm') {
+        if (platform === 'x64' || platform === 'arm64') {
           macFiles.push({ content, filename: fileName, platform, yaml: yamlContent });
           console.log(`🔍 Detected ${platform} platform in ${fileName}`);
         } else if (platform === 'both') {
@@ -154,32 +154,32 @@ async function main(): Promise<void> {
     }
 
     // 4. 检查是否有两个不同平台的文件
-    const intelFiles = macFiles.filter((f) => f.platform === 'intel');
-    const armFiles = macFiles.filter((f) => f.platform === 'arm');
+    const x64Files = macFiles.filter((f) => f.platform === 'x64');
+    const arm64Files = macFiles.filter((f) => f.platform === 'arm64');
 
-    if (intelFiles.length === 0 && armFiles.length === 0) {
+    if (x64Files.length === 0 && arm64Files.length === 0) {
       console.log('⚠️  No valid platform files found');
       return;
     }
 
-    if (intelFiles.length === 0) {
-      console.log('⚠️  No Intel files found, using ARM only');
-      writeLocalFile(path.join(RELEASE_DIR, FILE_NAME), armFiles[0].content);
+    if (x64Files.length === 0) {
+      console.log('⚠️  No x64 files found, using ARM64 only');
+      writeLocalFile(path.join(RELEASE_DIR, FILE_NAME), arm64Files[0].content);
       return;
     }
 
-    if (armFiles.length === 0) {
-      console.log('⚠️  No ARM files found, using Intel only');
-      writeLocalFile(path.join(RELEASE_DIR, FILE_NAME), intelFiles[0].content);
+    if (arm64Files.length === 0) {
+      console.log('⚠️  No ARM64 files found, using x64 only');
+      writeLocalFile(path.join(RELEASE_DIR, FILE_NAME), x64Files[0].content);
       return;
     }
 
-    // 5. 合并 Intel 和 ARM 文件
-    const intelFile = intelFiles[0];
-    const armFile = armFiles[0];
+    // 5. 合并 x64 和 ARM64 文件
+    const x64File = x64Files[0];
+    const arm64File = arm64Files[0];
 
-    console.log(`🔄 Merging ${intelFile.filename} (Intel) and ${armFile.filename} (ARM)...`);
-    const mergedContent = mergeYamlFiles(intelFile.yaml, armFile.yaml);
+    console.log(`🔄 Merging ${x64File.filename} (x64) and ${arm64File.filename} (ARM64)...`);
+    const mergedContent = mergeYamlFiles(x64File.yaml, arm64File.yaml);
 
     // 6. 保存合并后的文件
     const mergedFilePath = path.join(RELEASE_DIR, FILE_NAME);
@@ -190,7 +190,7 @@ async function main(): Promise<void> {
     const finalPlatform = detectPlatform(mergedYaml);
 
     if (finalPlatform === 'both') {
-      console.log('✅ Successfully merged both Intel and ARM platforms');
+      console.log('✅ Successfully merged both x64 and ARM64 platforms');
       console.log(`📊 Final file contains ${mergedYaml.files.length} files`);
     } else {
       console.warn(`⚠️  Merge result unexpected: ${finalPlatform}`);

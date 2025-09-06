@@ -179,15 +179,16 @@ jobs:
         run: |
           cd apps/desktop/release
           if [ -f "latest-mac.yml" ]; then
-            # 根据运行环境检测架构
-            if [[ "${{ matrix.os }}" == *"arm64"* || "${{ matrix.os }}" == "macos-latest" ]]; then
-              ARCH_SUFFIX="arm"
+            # 使用系统架构检测，与 electron-builder 输出保持一致
+            SYSTEM_ARCH=$(uname -m)
+            if [[ "$SYSTEM_ARCH" == "arm64" ]]; then
+              ARCH_SUFFIX="arm64"
             else
-              ARCH_SUFFIX="intel"  
+              ARCH_SUFFIX="x64"
             fi
             
             mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
-            echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml"
+            echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml (detected: $SYSTEM_ARCH)"
             ls -la latest-mac-*.yml
           else
             echo "⚠️ latest-mac.yml not found, skipping rename"
