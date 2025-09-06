@@ -14,20 +14,9 @@ export const useStyles = createStyles((token) => {
       flexDirection: 'row',
       gap: token.marginSM,
     },
-    searchContainer: {
-      backgroundColor: token.colorBgContainer,
-      borderRadius: token.borderRadius,
-      marginVertical: token.marginLG,
-      paddingHorizontal: token.paddingMD,
-    },
+
     searchInput: {
-      backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorder,
-      borderRadius: token.borderRadius,
-      borderWidth: 1,
-      color: token.colorText,
-      fontSize: token.fontSize,
-      height: 40,
+      marginVertical: token.marginLG,
       paddingHorizontal: token.paddingMD,
     },
     searchInputPlaceholder: {

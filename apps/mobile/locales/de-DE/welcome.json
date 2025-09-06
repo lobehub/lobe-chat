@@ -18,28 +18,28 @@
       "q09": "Wird ein lokales Sprachmodell unterstützt?",
       "q10": "Unterstützt es Bilderkennung und -erzeugung?",
       "q11": "Unterstützt es Sprachsynthese und Spracherkennung?",
-      "q12": "Gibt es ein Plugin-System?",
+      "q12": "Gibt es ein Pluginsystem?",
       "q13": "Gibt es einen eigenen Marktplatz für GPTs?",
       "q14": "Unterstützt es mehrere KI-Dienstanbieter?",
       "q15": "Was soll ich tun, wenn ich bei der Nutzung auf Probleme stoße?"
-    },
-    "questions": {
-      "moreBtn": "Mehr erfahren",
-      "title": "Häufig gestellte Fragen:"
-    },
-    "welcome": {
-      "afternoon": "Guten Nachmittag",
-      "morning": "Guten Morgen",
-      "night": "Guten Abend",
-      "noon": "Guten Tag"
     }
   },
   "header": "Willkommen",
   "pickAgent": "Oder wählen Sie aus den folgenden Assistentenvorlagen",
+  "questions": {
+    "moreBtn": "Mehr erfahren",
+    "title": "Das fragen alle:"
+  },
   "skip": "Erstellung überspringen",
   "slogan": {
     "desc1": "Aktivieren Sie ein Gehirnnetzwerk und entfachen Sie Funken des Denkens. Ihr intelligenter Assistent ist immer für Sie da.",
     "desc2": "Erstellen Sie Ihren ersten Assistenten, lassen Sie uns anfangen~",
     "title": "Geben Sie sich ein klügeres Gehirn"
+  },
+  "welcome": {
+    "afternoon": "Guten Nachmittag",
+    "morning": "Guten Morgen",
+    "night": "Guten Abend",
+    "noon": "Guten Tag"
   }
 }

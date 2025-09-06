@@ -1,10 +1,10 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { Text, View, ActivityIndicator, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
-import { RefreshCcw, Search } from 'lucide-react-native';
+import { RefreshCcw } from 'lucide-react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
 
@@ -13,12 +13,20 @@ import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { AiProviderModelListItem } from '@/types/aiModel';
-import { Button, InstantSwitch, ModelInfoTags, Tag, useToast, Header } from '@/components';
+import {
+  Button,
+  InstantSwitch,
+  ModelInfoTags,
+  Tag,
+  useToast,
+  Header,
+  TextInput,
+} from '@/components';
 import { useThemeToken } from '@/theme';
 
 import { useStyles } from './styles';
-import ProviderInfoSection from './(components)/ProviderInfoSection';
-import ConfigurationSection from './(components)/ConfigurationSection';
+import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';
+import ConfigurationSection from '@/features/setting/providers/ConfigurationSection';
 
 // 定义FlashList数据项类型
 type FlashListItem =
@@ -365,16 +373,13 @@ const ProviderDetailPage = () => {
                 </View>
               </View>
 
-              <View style={styles.modelsSearch}>
-                <Search color={token.colorTextSecondary} size={16} />
-                <TextInput
-                  onChangeText={setSearchKeyword}
-                  placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
-                  placeholderTextColor={token.colorTextTertiary}
-                  style={styles.modelsSearchInput}
-                  value={searchKeyword}
-                />
-              </View>
+              <TextInput.Search
+                onChangeText={setSearchKeyword}
+                placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
+                style={styles.modelsSearchInput}
+                value={searchKeyword}
+                variant="outlined"
+              />
             </View>
           );
         }

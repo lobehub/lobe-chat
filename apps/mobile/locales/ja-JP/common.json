@@ -14,13 +14,13 @@
   "and": "と",
   "assistant": {
     "fetchError": "アシスタントリストの取得に失敗しました。後でもう一度お試しください。",
-    "noData": "アシスタントデータがありません。",
-    "noMatch": "一致するアシスタントが見つかりません。",
+    "noData": "アシスタントデータがありません",
+    "noMatch": "一致するアシスタントが見つかりません",
     "search": "アシスタントを検索..."
   },
   "defaultSession": "カスタムアシスタント",
   "navigation": {
-    "goToHomeScreen": "ホーム画面に戻る"
+    "goToHomeScreen": "ホームに戻る"
   },
   "or": "または",
   "search": {

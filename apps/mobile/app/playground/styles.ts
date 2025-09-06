@@ -99,10 +99,6 @@ export const useStyles = createStyles((token) => ({
     flex: 1,
   },
   searchContainer: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: token.borderRadiusSM,
-    flexDirection: 'row',
     marginBottom: token.marginSM,
     paddingHorizontal: token.paddingSM,
   },

@@ -1,45 +1,45 @@
 {
   "guide": {
     "agents": {
-      "replaceBtn": "Try Another",
-      "title": "Recommended Assistants:"
+      "replaceBtn": "Switch Batch",
+      "title": "New Assistant Recommendations:"
     },
-    "defaultMessage": "I'm your personal AI assistant {{appName}}. How can I help you today?<br />If you need a more professional or customized assistant, click <plus /> to create a custom assistant",
-    "defaultMessageWithoutCreate": "I'm your personal AI assistant {{appName}}. How can I help you today?",
+    "defaultMessage": "I am your personal intelligent assistant {{appName}}. How can I assist you today?<br />If you need a more professional or customized assistant, you can click <plus /> to create a custom assistant.",
+    "defaultMessageWithoutCreate": "I am your personal intelligent assistant {{appName}}. How can I assist you today?",
     "qa": {
       "q01": "What is LobeHub?",
       "q02": "What is {{appName}}?",
       "q03": "Does {{appName}} have community support?",
       "q04": "What features does {{appName}} support?",
       "q05": "How to deploy and use {{appName}}?",
-      "q06": "How is {{appName}} priced?",
+      "q06": "What is the pricing for {{appName}}?",
       "q07": "Is {{appName}} free?",
       "q08": "Is there a cloud service version?",
       "q09": "Does it support local language models?",
       "q10": "Does it support image recognition and generation?",
       "q11": "Does it support speech synthesis and speech recognition?",
-      "q12": "Does it support plugin system?",
+      "q12": "Does it support a plugin system?",
       "q13": "Is there a marketplace to get GPTs?",
       "q14": "Does it support multiple AI service providers?",
-      "q15": "What should I do if I encounter problems during use?"
-    },
-    "questions": {
-      "moreBtn": "Learn More",
-      "title": "Everyone's Asking:"
-    },
-    "welcome": {
-      "afternoon": "Good Afternoon",
-      "morning": "Good Morning",
-      "night": "Good Evening",
-      "noon": "Good Noon"
+      "q15": "What should I do if I encounter problems while using it?"
     }
   },
   "header": "Welcome",
   "pickAgent": "Or choose from the assistant templates below",
+  "questions": {
+    "moreBtn": "Learn More",
+    "title": "Frequently Asked Questions:"
+  },
   "skip": "Skip Creation",
   "slogan": {
-    "desc1": "Activate your brain cluster and spark your thoughts. Your intelligent assistant is always here.",
+    "desc1": "Activate your brain cluster and spark your creativity. Your intelligent assistant is always here.",
     "desc2": "Create your first assistant, let's get started~",
-    "title": "Give yourself a smarter brain"
+    "title": "Give Yourself a Smarter Brain"
+  },
+  "welcome": {
+    "afternoon": "Good Afternoon",
+    "morning": "Good Morning",
+    "night": "Good Evening",
+    "noon": "Good Noon"
   }
 }
