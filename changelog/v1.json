@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix ChatInput send command switch."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.2"
+  },
+  {
+    "children": {
       "fixes": ["Enhance NewAPI with environment variables and fix routers compatibility."],
       "improvements": ["Update doubao-seed-1.6-vision models."]
     },
