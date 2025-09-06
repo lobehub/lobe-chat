@@ -8,6 +8,7 @@ import {
   SearchDemo,
   PasswordDemo,
   CompoundDemo,
+  VariantDemo,
 } from '@/components/TextInput/demos';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
@@ -20,6 +21,7 @@ const demos: DemoItem[] = [
   { component: <SearchDemo />, key: 'search', title: '搜索输入框' },
   { component: <PasswordDemo />, key: 'password', title: '密码输入框' },
   { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
+  { component: <VariantDemo />, key: 'variant', title: '外观变体' },
 ];
 
 const readmeContent = `# TextInput组件
@@ -85,7 +87,19 @@ import { TouchableOpacity } from 'react-native';
 <TextInput.Password placeholder="请输入密码" />
 \`\`\`
 
-### 5. 自定义样式
+### 5. 外观变体
+
+\`\`\`jsx
+// 默认（filled）
+<TextInput placeholder="请输入内容" />
+
+// 无底色（borderless）
+<TextInput variant="borderless" placeholder="请输入内容" />
+<TextInput.Search variant="borderless" placeholder="搜索内容..." />
+<TextInput.Password variant="borderless" placeholder="请输入密码" />
+\`\`\`
+
+### 6. 自定义样式
 
 \`\`\`jsx
 <TextInput
@@ -101,6 +115,7 @@ import { TouchableOpacity } from 'react-native';
 
 | 属性 | 类型 | 描述 |
 |------|------|------|
+| \`variant\` | \`'filled' | 'borderless'\` | 外观变体（默认 filled） |
 | \`prefix\` | \`React.ReactNode\` | 前缀内容 |
 | \`suffix\` | \`React.ReactNode\` | 后缀内容 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |

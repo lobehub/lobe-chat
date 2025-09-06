@@ -70,6 +70,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
           textAlignVertical="top"
           textBreakStrategy="highQuality"
           value={input}
+          variant="borderless"
         />
       </View>
       <View style={styles.footer}>
