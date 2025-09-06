@@ -187,18 +187,21 @@ describe('generateAIChatV2 actions', () => {
         await result.current.sendMessage({ message, files });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: message,
+            files: files.map((f) => f.id),
+          },
+          sessionId: mockState.activeId,
+          topicId: mockState.activeTopicId,
         },
-        newUserMessage: {
-          content: message,
-          files: files.map((f) => f.id),
-        },
-        sessionId: mockState.activeId,
-        topicId: mockState.activeTopicId,
-      });
+        expect.anything(),
+      );
       expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
     });
 
@@ -270,18 +273,21 @@ describe('generateAIChatV2 actions', () => {
         await result.current.sendMessage({ message: '', files: [{ id: 'file-1' }] as any });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: '',
+            files: ['file-1'],
+          },
+          sessionId: 'session-id',
+          topicId: 'topic-id',
         },
-        newUserMessage: {
-          content: '',
-          files: ['file-1'],
-        },
-        sessionId: 'session-id',
-        topicId: 'topic-id',
-      });
+        expect.anything(),
+      );
     });
 
     it('当同时有文件和消息内容时,正确发送消息并关联文件', async () => {
@@ -291,18 +297,21 @@ describe('generateAIChatV2 actions', () => {
         await result.current.sendMessage({ message: 'test', files: [{ id: 'file-1' }] as any });
       });
 
-      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith({
-        newAssistantMessage: {
-          model: DEFAULT_MODEL,
-          provider: DEFAULT_PROVIDER,
+      expect(aiChatService.sendMessageInServer).toHaveBeenCalledWith(
+        {
+          newAssistantMessage: {
+            model: DEFAULT_MODEL,
+            provider: DEFAULT_PROVIDER,
+          },
+          newUserMessage: {
+            content: 'test',
+            files: ['file-1'],
+          },
+          sessionId: 'session-id',
+          topicId: 'topic-id',
         },
-        newUserMessage: {
-          content: 'test',
-          files: ['file-1'],
-        },
-        sessionId: 'session-id',
-        topicId: 'topic-id',
-      });
+        expect.anything(),
+      );
     });
 
     it('当 createMessage 抛出错误时,正确处理错误而不影响整个应用', async () => {

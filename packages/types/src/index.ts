@@ -8,6 +8,7 @@ export * from './chunk';
 export * from './clientDB';
 export * from './eval';
 export * from './fetch';
+export * from './hotkey';
 export * from './knowledgeBase';
 export * from './llm';
 export * from './message';

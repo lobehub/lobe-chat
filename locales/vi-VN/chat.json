@@ -72,8 +72,8 @@
     "addUser": "Thêm một tin nhắn người dùng",
     "more": "Thêm",
     "send": "Gửi",
-    "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
-    "sendWithEnter": "Nhấn Enter để gửi",
+    "sendWithCmdEnter": "Nhấn <key/> để gửi",
+    "sendWithEnter": "Nhấn <key/> để gửi",
     "stop": "Dừng",
     "warp": "Xuống dòng"
   },
@@ -231,6 +231,10 @@
     "divider": "Chủ đề con",
     "threadMessageCount": "{{messageCount}} tin nhắn",
     "title": "Chủ đề con"
+  },
+  "toggleWideScreen": {
+    "off": "Tắt chế độ màn hình rộng",
+    "on": "Bật chế độ màn hình rộng"
   },
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",
