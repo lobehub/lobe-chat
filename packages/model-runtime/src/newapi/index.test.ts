@@ -62,7 +62,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
   describe('HandlePayload Function Branch Coverage - Direct Testing', () => {
     // Create a mock Set for testing
     let testResponsesAPIModels: Set<string>;
-    
+
     const testHandlePayload = (payload: ChatStreamPayload) => {
       // This replicates the exact handlePayload logic from the source
       if (
@@ -85,7 +85,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       };
 
       const result = testHandlePayload(payload);
-      
+
       expect(result).toEqual({ ...payload, apiMode: 'responses' });
     });
 
@@ -99,7 +99,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       };
 
       const result = testHandlePayload(payload);
-      
+
       expect(result).toEqual({ ...payload, apiMode: 'responses' });
     });
 
@@ -113,7 +113,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       };
 
       const result = testHandlePayload(payload);
-      
+
       expect(result).toEqual({ ...payload, apiMode: 'responses' });
     });
 
@@ -127,7 +127,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       };
 
       const result = testHandlePayload(payload);
-      
+
       expect(result).toEqual({ ...payload, apiMode: 'responses' });
     });
 
@@ -141,7 +141,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       };
 
       const result = testHandlePayload(payload);
-      
+
       expect(result).toEqual(payload);
     });
   });
@@ -207,7 +207,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
 
   describe('Models Function Branch Coverage - Logical Testing', () => {
     // Test the complex models function logic by replicating its branching behavior
-    
+
     describe('Data Handling Branches', () => {
       it('should handle undefined data from models.list (Branch 3.1: data = undefined)', () => {
         const data = undefined;
@@ -293,63 +293,63 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       it('should use model_price when > 0 (Branch 3.8: model_price && model_price > 0 = true)', () => {
         const pricing = { model_price: 15, model_ratio: 10 };
         let inputPrice;
-        
+
         if (pricing.model_price && pricing.model_price > 0) {
           inputPrice = pricing.model_price * 2;
         } else if (pricing.model_ratio) {
           inputPrice = pricing.model_ratio * 2;
         }
-        
+
         expect(inputPrice).toBe(30); // model_price * 2
       });
 
       it('should fallback to model_ratio when model_price = 0 (Branch 3.8: model_price > 0 = false, Branch 3.9: model_ratio = true)', () => {
         const pricing = { model_price: 0, model_ratio: 12 };
         let inputPrice;
-        
+
         if (pricing.model_price && pricing.model_price > 0) {
           inputPrice = pricing.model_price * 2;
         } else if (pricing.model_ratio) {
           inputPrice = pricing.model_ratio * 2;
         }
-        
+
         expect(inputPrice).toBe(24); // model_ratio * 2
       });
 
       it('should handle missing model_ratio (Branch 3.9: model_ratio = undefined)', () => {
         const pricing: Partial<NewAPIPricing> = { quota_type: 0 }; // No model_price and no model_ratio
         let inputPrice: number | undefined;
-        
+
         if (pricing.model_price && pricing.model_price > 0) {
           inputPrice = pricing.model_price * 2;
         } else if (pricing.model_ratio) {
           inputPrice = pricing.model_ratio * 2;
         }
-        
+
         expect(inputPrice).toBeUndefined();
       });
 
       it('should calculate output price when inputPrice is defined (Branch 3.10: inputPrice !== undefined = true)', () => {
         const inputPrice = 20;
         const completionRatio = 1.5;
-        
+
         let outputPrice;
         if (inputPrice !== undefined) {
           outputPrice = inputPrice * (completionRatio || 1);
         }
-        
+
         expect(outputPrice).toBe(30);
       });
 
       it('should use default completion_ratio when not provided', () => {
         const inputPrice = 16;
         const completionRatio = undefined;
-        
+
         let outputPrice;
         if (inputPrice !== undefined) {
           outputPrice = inputPrice * (completionRatio || 1);
         }
-        
+
         expect(outputPrice).toBe(16); // input * 1 (default)
       });
     });
@@ -358,74 +358,77 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       it('should use supported_endpoint_types with anthropic (Branch 3.11: length > 0 = true, Branch 3.12: includes anthropic = true)', () => {
         const model = { supported_endpoint_types: ['anthropic'] };
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           if (model.supported_endpoint_types.includes('anthropic')) {
             detectedProvider = 'anthropic';
           }
         }
-        
+
         expect(detectedProvider).toBe('anthropic');
       });
 
       it('should use supported_endpoint_types with gemini (Branch 3.13: includes gemini = true)', () => {
         const model = { supported_endpoint_types: ['gemini'] };
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           if (model.supported_endpoint_types.includes('gemini')) {
             detectedProvider = 'google';
           }
         }
-        
+
         expect(detectedProvider).toBe('google');
       });
 
       it('should use supported_endpoint_types with xai (Branch 3.14: includes xai = true)', () => {
         const model = { supported_endpoint_types: ['xai'] };
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           if (model.supported_endpoint_types.includes('xai')) {
             detectedProvider = 'xai';
           }
         }
-        
+
         expect(detectedProvider).toBe('xai');
       });
 
       it('should fallback to owned_by when supported_endpoint_types is empty (Branch 3.11: length > 0 = false, Branch 3.15: owned_by = true)', () => {
-        const model: Partial<NewAPIModelCard> = { supported_endpoint_types: [], owned_by: 'anthropic' };
+        const model: Partial<NewAPIModelCard> = {
+          supported_endpoint_types: [],
+          owned_by: 'anthropic',
+        };
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           // Skip - empty array
         } else if (model.owned_by) {
           detectedProvider = 'anthropic'; // Simplified for test
         }
-        
+
         expect(detectedProvider).toBe('anthropic');
       });
 
       it('should fallback to owned_by when no supported_endpoint_types (Branch 3.15: owned_by = true)', () => {
         const model: Partial<NewAPIModelCard> = { owned_by: 'google' };
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           // Skip - no supported_endpoint_types
         } else if (model.owned_by) {
           detectedProvider = 'google'; // Simplified for test
         }
-        
+
         expect(detectedProvider).toBe('google');
       });
 
       it('should use detectModelProvider fallback when no owned_by (Branch 3.15: owned_by = false, Branch 3.17)', () => {
         const model: Partial<NewAPIModelCard> = { id: 'claude-3-sonnet', owned_by: '' };
         mockDetectModelProvider.mockReturnValue('anthropic');
-        
+
         let detectedProvider = 'openai';
-        
+
         if (model.supported_endpoint_types && model.supported_endpoint_types.length > 0) {
           // Skip - no supported_endpoint_types
         } else if (model.owned_by) {
@@ -433,7 +436,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
         } else {
           detectedProvider = mockDetectModelProvider(model.id || '');
         }
-        
+
         expect(detectedProvider).toBe('anthropic');
         expect(mockDetectModelProvider).toHaveBeenCalledWith('claude-3-sonnet');
       });
@@ -444,11 +447,11 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
           displayName: 'Test Model',
           _detectedProvider: 'openai',
         };
-        
+
         if (model._detectedProvider) {
           delete model._detectedProvider;
         }
-        
+
         expect(model).not.toHaveProperty('_detectedProvider');
       });
 
@@ -457,27 +460,31 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
           id: 'test-model',
           displayName: 'Test Model',
         };
-        
+
         const hadDetectedProvider = '_detectedProvider' in model;
-        
+
         if (model._detectedProvider) {
           delete model._detectedProvider;
         }
-        
+
         expect(hadDetectedProvider).toBe(false);
       });
     });
 
     describe('URL Processing Branch Coverage', () => {
-      it('should remove trailing /v1 from baseURL', () => {
+      it('should remove trailing API version paths from baseURL', () => {
         const testURLs = [
           { input: 'https://api.newapi.com/v1', expected: 'https://api.newapi.com' },
           { input: 'https://api.newapi.com/v1/', expected: 'https://api.newapi.com' },
+          { input: 'https://api.newapi.com/v1beta', expected: 'https://api.newapi.com' },
+          { input: 'https://api.newapi.com/v1beta/', expected: 'https://api.newapi.com' },
+          { input: 'https://api.newapi.com/v2', expected: 'https://api.newapi.com' },
+          { input: 'https://api.newapi.com/v1alpha', expected: 'https://api.newapi.com' },
           { input: 'https://api.newapi.com', expected: 'https://api.newapi.com' },
         ];
 
         testURLs.forEach(({ input, expected }) => {
-          const result = input.replace(/\/v1\/?$/, '');
+          const result = input.replace(/\/v\d+[a-z]*\/?$/, '');
           expect(result).toBe(expected);
         });
       });
@@ -538,7 +545,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
         { model_name: 'openai-gpt4', quota_type: 1, model_price: 30 }, // Should be skipped
       ];
 
-      const pricingMap = new Map(pricingData.map(p => [p.model_name, p]));
+      const pricingMap = new Map(pricingData.map((p) => [p.model_name, p]));
 
       const enrichedModels = models.map((model) => {
         let enhancedModel: any = { ...model };
@@ -601,7 +608,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       // Test the dynamic routers configuration
       const testOptions = {
         apiKey: 'test-key',
-        baseURL: 'https://yourapi.cn/v1'
+        baseURL: 'https://yourapi.cn/v1',
       };
 
       // Create instance to test dynamic routers
@@ -611,7 +618,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       // The dynamic routers should be configured with user's baseURL
       // This is tested indirectly through successful instantiation
       // since the routers function processes the options.baseURL
-      const expectedBaseURL = testOptions.baseURL.replace(/\/v1\/?$/, '');
+      const expectedBaseURL = testOptions.baseURL.replace(/\/v\d+[a-z]*\/?$/, '');
       expect(expectedBaseURL).toBe('https://yourapi.cn');
     });
   });
