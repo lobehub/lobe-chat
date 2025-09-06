@@ -1,12 +1,12 @@
 {
-  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**. Bạn có thể bắt đầu trò chuyện với tôi ngay hoặc đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
-  "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu cuộc trò chuyện nhé!",
-  "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**. Hãy bắt đầu cuộc trò chuyện nhé!",
+  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay hoặc đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
+  "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}, hãy bắt đầu cuộc trò chuyện nhé!",
+  "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, hãy bắt đầu cuộc trò chuyện nhé!",
   "agentRoleEdit": {
     "cancel": "Hủy",
     "confirm": "Xác nhận",
     "edit": "Chỉnh sửa",
-    "placeholder": "Vui lòng nhập từ khóa Prompt cho vai trò",
+    "placeholder": "Vui lòng nhập lời nhắc vai trò",
     "roleSetting": "Cài đặt vai trò",
     "title": "Cài đặt vai trò"
   },
@@ -18,8 +18,8 @@
   "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
   "history": "Lịch sử trò chuyện",
   "inbox": {
-    "desc": "Tại đây, bạn có thể xem và quản lý tin nhắn cùng thông báo của mình.",
-    "title": "Hộp thư đến"
+    "desc": "Kích hoạt cụm não bộ, khơi nguồn ý tưởng. Trợ lý thông minh của bạn, luôn sẵn sàng trò chuyện mọi điều.",
+    "title": "Trò chuyện tự do"
   },
   "messageCopied": "Đã sao chép tin nhắn",
   "newChat": "Cuộc trò chuyện mới",
@@ -32,7 +32,7 @@
     "search": {
       "placeholder": "Tìm kiếm cuộc trò chuyện"
     },
-    "title": "Trò chuyện thoải mái"
+    "title": "Trò chuyện tự do"
   },
   "share": "Chia sẻ",
   "stop": "Dừng",

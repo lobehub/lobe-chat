@@ -8,7 +8,7 @@ export const useStyles = createStyles((token) => ({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 44,
+    height: token.controlHeightLG,
     justifyContent: 'space-between',
     paddingHorizontal: token.padding,
   },
