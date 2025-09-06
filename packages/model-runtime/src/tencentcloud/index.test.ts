@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider } from '@lobechat/model-runtime';
 
 import { testProvider } from '../providerTestUtils';
 import { LobeTencentCloudAI } from './index';

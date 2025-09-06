@@ -1,7 +1,7 @@
 // @vitest-environment node
-import { ModelProvider } from '@/libs/model-runtime';
-import { testProvider } from '@/libs/model-runtime/providerTestUtils';
+import { ModelProvider } from '@lobechat/model-runtime';
 
+import { testProvider } from '../providerTestUtils';
 import { LobeGiteeAI } from './index';
 
 testProvider({

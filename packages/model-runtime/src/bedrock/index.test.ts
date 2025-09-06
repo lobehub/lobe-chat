@@ -1,8 +1,7 @@
 // @vitest-environment node
 import { InvokeModelWithResponseStreamCommand } from '@aws-sdk/client-bedrock-runtime';
+import { AgentRuntimeErrorType, ModelProvider } from '@lobechat/model-runtime';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { AgentRuntimeErrorType, ModelProvider } from '@/libs/model-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeBedrockAI } from './index';
