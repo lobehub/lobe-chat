@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Revert V1 Mobile."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.4"
+  },
+  {
+    "children": {
       "improvements": ["Refactor to remove edge runtime and add more tests."]
     },
     "date": "2025-09-06",
