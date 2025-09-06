@@ -1,7 +1,7 @@
+import { isDesktop } from '@lobechat/const';
 import { ProxyTRPCRequestParams, dispatch, streamInvoke } from '@lobechat/electron-client-ipc';
 import debug from 'debug';
 
-import { isDesktop } from '@/const/version';
 import { getElectronStoreState } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
 import { getRequestBody, headersToRecord } from '@/utils/fetch';
