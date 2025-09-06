@@ -18,6 +18,7 @@ export interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
   prefix?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   suffix?: React.ReactNode;
+  variant?: 'filled' | 'borderless';
 }
 
 const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
@@ -29,9 +30,10 @@ const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => 
     prefix,
     suffix,
     multiline = false,
+    variant = 'filled',
     ...rest
   } = props;
-  const { styles, token } = useStyles({ multiline });
+  const { styles, token } = useStyles({ multiline, variant });
 
   return (
     <View style={[styles.container, style]}>
