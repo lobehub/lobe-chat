@@ -343,7 +343,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
                 callbacks: streamOptions.callbacks,
                 inputStartAt,
               })
-            : OpenAIStream(stream, { ...streamOptions, inputStartAt }),
+            : OpenAIStream(stream, { ...streamOptions, enableStreaming: false, inputStartAt }),
           {
             headers: options?.headers,
           },

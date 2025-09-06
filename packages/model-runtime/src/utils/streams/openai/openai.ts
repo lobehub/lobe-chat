@@ -21,24 +21,24 @@ import {
 } from '../protocol';
 
 // Process markdown base64 images: extract URLs and clean text in one pass
-const processMarkdownBase64Images = (text: string): { cleanedText: string, urls: string[]; } => {
+const processMarkdownBase64Images = (text: string): { cleanedText: string; urls: string[] } => {
   if (!text) return { cleanedText: text, urls: [] };
-  
+
   const urls: string[] = [];
   const mdRegex = /!\[[^\]]*]\(\s*(data:image\/[\d+.A-Za-z-]+;base64,[^\s)]+)\s*\)/g;
   let cleanedText = text;
   let m: RegExpExecArray | null;
-  
+
   // Reset regex lastIndex to ensure we start from the beginning
   mdRegex.lastIndex = 0;
-  
+
   while ((m = mdRegex.exec(text)) !== null) {
     if (m[1]) urls.push(m[1]);
   }
-  
+
   // Remove all markdown base64 image segments
   cleanedText = text.replaceAll(mdRegex, '').trim();
-  
+
   return { cleanedText, urls };
 };
 
@@ -159,14 +159,17 @@ const transformOpenAIStream = (
           return { data: null, id: chunk.id, type: 'text' };
         }
 
-
         const text = item.delta.content as string;
         const { urls: images, cleanedText: cleaned } = processMarkdownBase64Images(text);
         if (images.length > 0) {
           const arr: StreamProtocolChunk[] = [];
           if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
           arr.push(
-            ...images.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+            ...images.map((url: string) => ({
+              data: url,
+              id: chunk.id,
+              type: 'base64_image' as const,
+            })),
           );
           return arr;
         }
@@ -348,7 +351,11 @@ const transformOpenAIStream = (
             const arr: StreamProtocolChunk[] = [];
             if (cleaned) arr.push({ data: cleaned, id: chunk.id, type: 'text' });
             arr.push(
-              ...urls.map((url: string) => ({ data: url, id: chunk.id, type: 'base64_image' as const })),
+              ...urls.map((url: string) => ({
+                data: url,
+                id: chunk.id,
+                type: 'base64_image' as const,
+              })),
             );
             return arr;
           }
@@ -408,13 +415,20 @@ export interface OpenAIStreamOptions {
     name: string;
   }) => ILobeAgentRuntimeErrorType | undefined;
   callbacks?: ChatStreamCallbacks;
+  enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
   provider?: string;
 }
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  { callbacks, provider, bizErrorTypeTransformer, inputStartAt }: OpenAIStreamOptions = {},
+  {
+    callbacks,
+    provider,
+    bizErrorTypeTransformer,
+    inputStartAt,
+    enableStreaming = true,
+  }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
@@ -430,7 +444,13 @@ export const OpenAIStream = (
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
       .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
-      .pipeThrough(createTokenSpeedCalculator(transformWithProvider, { inputStartAt, streamStack }))
+      .pipeThrough(
+        createTokenSpeedCalculator(transformWithProvider, {
+          enableStreaming: enableStreaming,
+          inputStartAt,
+          streamStack,
+        }),
+      )
       .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
       .pipeThrough(createCallbacksTransformer(callbacks))
   );

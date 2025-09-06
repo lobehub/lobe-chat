@@ -203,18 +203,23 @@ const transformGoogleGenerativeAIStream = (
 
 export interface GoogleAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
+  enableStreaming?: boolean; // // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
 }
 
 export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<GenerateContentResponse>,
-  { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
+  { callbacks, inputStartAt, enableStreaming = true }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, { inputStartAt, streamStack }),
+      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, {
+        enableStreaming: enableStreaming,
+        inputStartAt,
+        streamStack,
+      }),
     )
     .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
