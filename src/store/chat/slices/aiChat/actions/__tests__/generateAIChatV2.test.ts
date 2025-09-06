@@ -257,7 +257,7 @@ describe('generateAIChatV2 actions', () => {
       expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
     });
 
-    it('当 isWelcomeQuestion 为 true 时,正确地传递给 internal_execAgentRuntime', async () => {
+    it('should pass isWelcomeQuestion correctly to internal_execAgentRuntime when isWelcomeQuestion is true', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
@@ -271,7 +271,7 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('当只有文件而没有消息内容时,正确发送消息', async () => {
+    it('should send message correctly when only files are provided without message content', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
@@ -295,7 +295,7 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('当同时有文件和消息内容时,正确发送消息并关联文件', async () => {
+    it('should send message correctly when both files and message content are provided', async () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
@@ -319,7 +319,7 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('当 createMessage 抛出错误时,正确处理错误而不影响整个应用', async () => {
+    it('should handle errors correctly when createMessage throws error without affecting the app', async () => {
       const { result } = renderHook(() => useChatStore());
       vi.spyOn(aiChatService, 'sendMessageInServer').mockRejectedValue(
         new Error('create message error'),
@@ -449,8 +449,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('错误处理测试', () => {
-    it('当 sendMessageInServer 抛出普通错误时应该设置错误消息', async () => {
+  describe('Error handling tests', () => {
+    it('should set error message when sendMessageInServer throws a regular error', async () => {
       const { result } = renderHook(() => useChatStore());
       const errorMessage = 'Network error';
       const mockError = new TRPCClientError(errorMessage);
@@ -468,7 +468,7 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('当收到取消信号时不应该设置错误消息', async () => {
+    it('should not set error message when receiving a cancel signal', async () => {
       const { result } = renderHook(() => useChatStore());
       const abortError = new Error('AbortError');
       abortError.name = 'AbortError';
@@ -486,8 +486,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('主题切换测试', () => {
-    it('当没有活跃主题时应该自动切换到新创建的主题', async () => {
+  describe('Topic switching tests', () => {
+    it('should automatically switch to newly created topic when no active topic exists', async () => {
       const { result } = renderHook(() => useChatStore());
       const mockSwitchTopic = vi.fn();
 
@@ -503,7 +503,7 @@ describe('generateAIChatV2 actions', () => {
       expect(mockSwitchTopic).toHaveBeenCalledWith('topic-id', true);
     });
 
-    it('当存在活跃主题时不需要切换主题', async () => {
+    it('should not need to switch topic when active topic exists', async () => {
       const { result } = renderHook(() => useChatStore());
       const mockSwitchTopic = vi.fn();
 
@@ -519,8 +519,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('取消发送消息测试', () => {
-    it('应该正确取消当前活跃的发送操作', () => {
+  describe('Cancel send message tests', () => {
+    it('should correctly cancel the current active send operation', () => {
       const { result } = renderHook(() => useChatStore());
       const mockAbort = vi.fn();
       const mockSetJSONState = vi.fn();
@@ -550,7 +550,7 @@ describe('generateAIChatV2 actions', () => {
       ).toBe(false);
     });
 
-    it('当指定主题ID时应该取消对应主题的操作', () => {
+    it('should cancel the operation for the corresponding topic when topic ID is specified', () => {
       const { result } = renderHook(() => useChatStore());
       const mockAbort = vi.fn();
 
@@ -573,7 +573,7 @@ describe('generateAIChatV2 actions', () => {
       expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
     });
 
-    it('当操作不存在时应该安全地处理不抛出错误', () => {
+    it('should handle safely without throwing error when operation does not exist', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
@@ -588,8 +588,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('清除发送错误测试', () => {
-    it('应该正确清除当前主题的错误状态', () => {
+  describe('Clear send error tests', () => {
+    it('should correctly clear error state for current topic', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
@@ -614,7 +614,7 @@ describe('generateAIChatV2 actions', () => {
       ).toBeUndefined();
     });
 
-    it('当没有错误操作时应该安全处理', () => {
+    it('should handle safely when no error operation exists', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
@@ -629,8 +629,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('操作状态管理测试', () => {
-    it('应该正确创建新的发送操作', () => {
+  describe('Operation state management tests', () => {
+    it('should correctly create new send operation', () => {
       const { result } = renderHook(() => useChatStore());
       let abortController: AbortController | undefined;
 
@@ -645,7 +645,7 @@ describe('generateAIChatV2 actions', () => {
       );
     });
 
-    it('应该正确停止发送操作', () => {
+    it('should correctly stop send operation', () => {
       const { result } = renderHook(() => useChatStore());
       const mockAbortController = { abort: vi.fn() } as any;
 
@@ -664,7 +664,7 @@ describe('generateAIChatV2 actions', () => {
       expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBeNull();
     });
 
-    it('应该正确处理取消原因并调用abort方法', () => {
+    it('should correctly handle cancel reason and call abort method', () => {
       const { result } = renderHook(() => useChatStore());
       const mockAbortController = { abort: vi.fn() } as any;
 
@@ -678,7 +678,7 @@ describe('generateAIChatV2 actions', () => {
       expect(mockAbortController.abort).toHaveBeenCalledWith('Test cancel reason');
     });
 
-    it('应该支持多个并行操作', () => {
+    it('should support multiple parallel operations', () => {
       const { result } = renderHook(() => useChatStore());
 
       let abortController1, abortController2;
@@ -693,8 +693,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('发送操作状态更新测试', () => {
-    it('应该正确更新操作状态', () => {
+  describe('Send operation state update tests', () => {
+    it('should correctly update operation state', () => {
       const { result } = renderHook(() => useChatStore());
       const mockAbortController = new AbortController();
 
@@ -713,7 +713,7 @@ describe('generateAIChatV2 actions', () => {
       });
     });
 
-    it('应该支持部分更新操作状态', () => {
+    it('should support partial update of operation state', () => {
       const { result } = renderHook(() => useChatStore());
       const initialController = new AbortController();
 
@@ -723,7 +723,7 @@ describe('generateAIChatV2 actions', () => {
           abortController: initialController,
         });
 
-        // 只更新错误消息
+        // Only update error message
         result.current.internal_updateSendMessageOperation('test-key', {
           inputSendErrorMsg: 'new error',
         });
@@ -737,8 +737,8 @@ describe('generateAIChatV2 actions', () => {
     });
   });
 
-  describe('编辑器状态恢复测试', () => {
-    it('取消操作时应该恢复编辑器内容', () => {
+  describe('Editor state recovery tests', () => {
+    it('should restore editor content when cancelling operation', () => {
       const { result } = renderHook(() => useChatStore());
       const mockSetJSONState = vi.fn();
       const mockAbort = vi.fn();
@@ -765,7 +765,7 @@ describe('generateAIChatV2 actions', () => {
       expect(mockSetJSONState).toHaveBeenCalledWith({ content: 'saved content' });
     });
 
-    it('当没有保存的编辑器状态时不应该恢复', () => {
+    it('should not restore when no saved editor state exists', () => {
       const { result } = renderHook(() => useChatStore());
       const mockSetJSONState = vi.fn();
       const mockAbort = vi.fn();
