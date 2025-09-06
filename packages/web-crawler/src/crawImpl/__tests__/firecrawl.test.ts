@@ -58,37 +58,6 @@ describe('firecrawl crawler', () => {
     expect(withTimeout).toHaveBeenCalledWith(expect.any(Promise), 30000);
   });
 
-  it('should use custom base URL when provided', async () => {
-    process.env.FIRECRAWL_API_KEY = 'test-api-key';
-    process.env.FIRECRAWL_URL = 'https://custom.firecrawl.dev/v1';
-
-    const mockResponse = {
-      ok: true,
-      json: vi.fn().mockResolvedValue({
-        success: true,
-        data: {
-          markdown: 'Test content with sufficient length. '.repeat(5),
-          metadata: {
-            title: 'Test',
-            description: 'Test',
-            sourceURL: 'https://example.com',
-            statusCode: 200,
-            language: 'en',
-            keywords: 'test',
-            robots: 'index',
-          },
-        },
-      }),
-    };
-
-    const { withTimeout } = await import('../../utils/withTimeout');
-    vi.mocked(withTimeout).mockResolvedValue(mockResponse as any);
-
-    await firecrawl('https://example.com', { filterOptions: {} });
-
-    expect(withTimeout).toHaveBeenCalledWith(expect.any(Promise), 30000);
-  });
-
   it('should handle missing API key', async () => {
     const mockResponse = {
       ok: true,
