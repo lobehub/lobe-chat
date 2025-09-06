@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal, MessagesSquare } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE } from '@/const/common';
+import { AVATAR_SIZE, ICON_SIZE } from '@/const/common';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -30,13 +30,13 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
   const displayTitle = isInbox ? t('inbox.title', { ns: 'chat' }) : title;
 
   return (
-    <View style={[styles.header, { height: 44 }]}>
+    <View style={[styles.header]}>
       <TouchableOpacity onPress={onDrawerToggle} style={styles.actionButton}>
         <AlignJustify color={token.colorText} size={ICON_SIZE} />
       </TouchableOpacity>
       <View style={styles.headerContent}>
         <View style={styles.headerInfo}>
-          <Avatar avatar={avatar} size={42} />
+          <Avatar avatar={avatar} size={AVATAR_SIZE} />
           <View style={styles.headerText}>
             <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerTitle}>
               {displayTitle}

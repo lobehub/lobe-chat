@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
 import { Markdown } from '@/components';
-import Avatar from '@/components/Avatar';
 import { ChatMessage } from '@/types/message';
 
 import LoadingDots from '../LoadingDots';
@@ -40,19 +39,19 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
   }, [hasError, message.error, isLoading, message.content]);
 
-  // 渲染头像
-  const renderAvatar = () => {
-    if (!message.meta) return null;
+  // 不渲染头像，因为移动端设备宽度比较小
+  // const renderAvatar = () => {
+  //   if (!message.meta) return null;
 
-    return (
-      <Avatar
-        avatar={message.meta.avatar}
-        backgroundColor={message.meta.backgroundColor}
-        size={32}
-        title={message.meta.title}
-      />
-    );
-  };
+  //   return (
+  //     <Avatar
+  //       avatar={message.meta.avatar}
+  //       backgroundColor={message.meta.backgroundColor}
+  //       size={AVATAR_SIZE}
+  //       title={message.meta.title}
+  //     />
+  //   );
+  // };
 
   return (
     <View
@@ -63,30 +62,20 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     >
       {isAssistant ? (
         <View style={styles.aiMessageContainer}>
-          {/* 助手头像 - 左侧 */}
-          <View style={styles.avatarContainer}>{renderAvatar()}</View>
-          <View style={styles.aiContentContainer}>
-            <ToolTipActions message={message}>
-              <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
-                {content}
-              </View>
-            </ToolTipActions>
-            {!isLoading && (message.content || hasError) && <MessageActions message={message} />}
-          </View>
-          <View style={{ backgroundColor: 'transparent', height: 32, width: 32 }} />
+          <ToolTipActions message={message}>
+            <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
+              {content}
+            </View>
+          </ToolTipActions>
+          {!isLoading && (message.content || hasError) && <MessageActions message={message} />}
         </View>
       ) : (
         <View style={styles.userMessageContainer}>
-          <View style={{ backgroundColor: 'transparent', height: 32, width: 32 }} />
-          <View style={styles.userContentContainer}>
-            <ToolTipActions message={message}>
-              <View style={[styles.bubble, styles.userBubble, hasError && styles.errorBubble]}>
-                {content}
-              </View>
-            </ToolTipActions>
-          </View>
-          {/* 用户头像 - 右侧 */}
-          <View style={styles.avatarContainer}>{renderAvatar()}</View>
+          <ToolTipActions message={message}>
+            <View style={[styles.bubble, styles.userBubble, hasError && styles.errorBubble]}>
+              {content}
+            </View>
+          </ToolTipActions>
         </View>
       )}
     </View>
