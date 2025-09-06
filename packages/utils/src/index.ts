@@ -7,4 +7,5 @@ export * from './object';
 export * from './parseModels';
 export * from './pricing';
 export * from './safeParseJSON';
+export * from './sleep';
 export * from './uuid';
