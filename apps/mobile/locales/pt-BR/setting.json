@@ -79,8 +79,8 @@
       "userHowToUse": "Como usar a pré-visualização do tema?"
     },
     "primary": {
-      "description": "Escolha o tom principal do aplicativo",
-      "title": "Configuração de cor principal"
+      "description": "Escolha a cor principal do aplicativo",
+      "title": "Configuração da cor principal"
     },
     "title": "Configurações de cor"
   },
@@ -88,7 +88,7 @@
     "accessToken": {
       "expire": {
         "success": "Token de acesso expirado imediatamente",
-        "title": "Token de acesso expirado"
+        "title": "Expiração do token de acesso"
       },
       "invalidate": {
         "success": "Token de acesso inválido registrado",
@@ -103,7 +103,7 @@
     "refreshToken": {
       "expire": {
         "success": "Token de atualização expirado imediatamente",
-        "title": "Token de atualização expirado"
+        "title": "Expiração do token de atualização"
       },
       "invalidate": {
         "success": "Token de atualização inválido registrado",
@@ -142,10 +142,10 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Sua chave secreta e o endereço do proxy serão criptografados usando o algoritmo <1>AES-GCM</1>",
+      "aesGcm": "Sua chave e o endereço do proxy serão criptografados usando o algoritmo <1>AES-GCM</1>",
       "checker": {
         "button": "Testar conexão",
-        "desc": "Verifique se a Api Key e o endereço do proxy foram preenchidos corretamente",
+        "desc": "Testar se a chave API e o endereço do proxy foram preenchidos corretamente",
         "pass": "Verificação aprovada",
         "selectModel": "Selecione o modelo para testar a conexão",
         "title": "Verificação de conectividade"
@@ -155,10 +155,10 @@
   "providers": "Provedores de IA",
   "support": "Suporte por e-mail",
   "themeMode": {
-    "auto": "Seguir o sistema",
+    "auto": "Seguir sistema",
     "dark": "Modo escuro",
     "light": "Modo claro",
-    "title": "Modo de Tema"
+    "title": "Modo do tema"
   },
   "title": "Configurações",
   "version": "Versão atual"

@@ -7,6 +7,9 @@ const FONT_CN = `"PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Micro
 const FONT_EMOJI = `"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"`;
 const FONT_CODE = `"SF Mono", "Menlo", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace`;
 
+// 优先使用系统默认字体
+const FONT_SYSTEM = 'System';
+
 export const defaultPresetColors: PresetColorType = primaryColors;
 
 /**
@@ -41,9 +44,9 @@ const seedToken: SeedToken = {
   colorWhite: '#fff',
 
   controlHeight: 32,
-  // 字体
-  fontFamily: [FONT_EN, FONT_CN, FONT_EMOJI].join(','),
-  fontFamilyCode: [FONT_CODE, FONT_CN, FONT_EMOJI].join(','),
+  // 优先使用系统默认字体
+  fontFamily: [FONT_SYSTEM, FONT_EN, FONT_CN, FONT_EMOJI].join(','),
+  fontFamilyCode: [FONT_CODE, FONT_CN, FONT_SYSTEM, FONT_EMOJI].join(','),
 
   fontSize: 14,
 

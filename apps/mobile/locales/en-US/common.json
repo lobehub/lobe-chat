@@ -13,14 +13,14 @@
   },
   "and": "and",
   "assistant": {
-    "fetchError": "Failed to retrieve assistant list, please try again later",
+    "fetchError": "Failed to fetch assistant list, please try again later",
     "noData": "No assistant data available",
     "noMatch": "No matching assistant found",
     "search": "Search assistants..."
   },
   "defaultSession": "Custom Assistant",
   "navigation": {
-    "goToHomeScreen": "Go to Home"
+    "goToHomeScreen": "Return to Home"
   },
   "or": "or",
   "search": {

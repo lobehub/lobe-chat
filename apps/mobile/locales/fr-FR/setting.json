@@ -57,7 +57,7 @@
       "fetchSuccess": "Liste des modèles récupérée avec succès !",
       "fetching": "Récupération en cours...",
       "loading": "Chargement en cours...",
-      "loadingMore": "Chargement de plus en plus...",
+      "loadingMore": "Chargement de plus...",
       "modelsAvailable": "{{count}} modèles disponibles au total",
       "searchPlaceholder": "Rechercher un modèle...",
       "title": "Modèles"
@@ -75,7 +75,7 @@
     },
     "preview": "Aperçu",
     "previewMessages": {
-      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres à l'aide du sélecteur de couleurs ci-dessous. L'aperçu se mettra à jour en temps réel pour afficher l'effet.",
+      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres avec le sélecteur ci-dessous, l'aperçu se mettra à jour en temps réel pour montrer l'effet.",
       "userHowToUse": "Comment utiliser l'aperçu du thème ?"
     },
     "primary": {
@@ -87,7 +87,7 @@
   "developer": {
     "accessToken": {
       "expire": {
-        "success": "Le jeton d'accès a expiré immédiatement",
+        "success": "Le jeton d'accès a été immédiatement expiré",
         "title": "Expiration du jeton d'accès"
       },
       "invalidate": {
@@ -96,13 +96,13 @@
       }
     },
     "clearAuthData": {
-      "success": "Données d'authentification effacées",
+      "success": "Les données d'authentification ont été effacées",
       "title": "Effacer les données d'authentification"
     },
     "failurePrefix": "Échec de l'opération : ",
     "refreshToken": {
       "expire": {
-        "success": "Le jeton de rafraîchissement a expiré immédiatement",
+        "success": "Le jeton de rafraîchissement a été immédiatement expiré",
         "title": "Expiration du jeton de rafraîchissement"
       },
       "invalidate": {
@@ -142,13 +142,13 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Votre clé secrète et l'adresse du proxy seront chiffrées avec l'algorithme <1>AES-GCM</1>",
+      "aesGcm": "Votre clé et l'adresse du proxy seront chiffrées avec l'algorithme <1>AES-GCM</1>",
       "checker": {
         "button": "Tester la connexion",
-        "desc": "Vérifiez si la clé API et l'adresse du proxy sont correctement renseignées",
+        "desc": "Tester si la clé API et l'adresse du proxy sont correctement saisies",
         "pass": "Vérification réussie",
-        "selectModel": "Sélectionnez le modèle pour tester la connexion",
-        "title": "Test de connectivité"
+        "selectModel": "Sélectionner un modèle pour tester la connexion",
+        "title": "Vérification de la connectivité"
       }
     }
   },
@@ -158,7 +158,7 @@
     "auto": "Suivre le système",
     "dark": "Mode sombre",
     "light": "Mode clair",
-    "title": "Mode Thème"
+    "title": "Mode du thème"
   },
   "title": "Paramètres",
   "version": "Version actuelle"
