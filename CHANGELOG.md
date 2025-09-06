@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.124.3](https://github.com/lobehub/lobe-chat/compare/v1.124.2...v1.124.3)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to remove edge runtime and add more tests.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to remove edge runtime and add more tests, closes [#9133](https://github.com/lobehub/lobe-chat/issues/9133) ([6f87034](https://github.com/lobehub/lobe-chat/commit/6f87034))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.124.2](https://github.com/lobehub/lobe-chat/compare/v1.124.1...v1.124.2)
 
 <sup>Released on **2025-09-06**</sup>
