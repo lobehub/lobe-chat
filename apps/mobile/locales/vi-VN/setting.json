@@ -1,5 +1,5 @@
 {
-  "about": "Về LobeHub",
+  "about": "Giới thiệu về LobeHub",
   "account": {
     "profile": {
       "email": "Email",
@@ -46,7 +46,7 @@
       "loadFailed": "Tải danh sách nhà cung cấp dịch vụ thất bại"
     },
     "models": {
-      "allLoaded": "Đã hiển thị tất cả các mô hình",
+      "allLoaded": "Đã hiển thị tất cả mô hình",
       "copySuccess": "Sao chép thành công",
       "disableFailed": "Vô hiệu hóa mô hình thất bại",
       "emptyNoSearch": "Không tìm thấy mô hình nào, thử lấy từ máy chủ",
@@ -117,7 +117,7 @@
     "standard": "Tiêu chuẩn",
     "title": "Cỡ chữ"
   },
-  "help": "Hướng dẫn sử dụng",
+  "help": "Trợ giúp sử dụng",
   "locale": {
     "auto": {
       "description": "Theo cài đặt ngôn ngữ hệ thống",
@@ -132,7 +132,7 @@
     "checkApiKey": "Vui lòng kiểm tra API Key có chính xác không",
     "checkProxyAddress": "Không thể kết nối đến máy chủ, vui lòng kiểm tra địa chỉ proxy có chính xác không",
     "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy được cấu hình chính xác",
-    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác thực API Key và địa chỉ proxy có được nhập đúng không",
+    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác thực API Key và địa chỉ proxy có được nhập đúng hay không",
     "pleaseEnterApiKey": "Vui lòng nhập API Key",
     "proxyAddress": "Địa chỉ proxy API",
     "proxyPlaceholder": "Phải bao gồm http(s)://",
@@ -145,7 +145,7 @@
       "aesGcm": "Khóa bí mật và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
       "checker": {
         "button": "Kiểm tra kết nối",
-        "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã nhập đúng chưa",
+        "desc": "Kiểm tra API Key và địa chỉ proxy có được nhập đúng không",
         "pass": "Kiểm tra thành công",
         "selectModel": "Chọn mô hình để kiểm tra kết nối",
         "title": "Kiểm tra kết nối"
@@ -158,7 +158,7 @@
     "auto": "Theo hệ thống",
     "dark": "Chế độ tối",
     "light": "Chế độ sáng",
-    "title": "Chế độ chủ đề"
+    "title": "Chế độ giao diện"
   },
   "title": "Cài đặt",
   "version": "Phiên bản hiện tại"

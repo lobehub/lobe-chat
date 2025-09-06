@@ -1,28 +1,28 @@
 {
-  "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilir veya [Asistan Ayarları]({{url}}) bölümüne giderek bilgilerimi güncelleyebilirsin.",
+  "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilir veya [Asistan Ayarları]({{url}}) bölümüne giderek bilgilerimi güncelleyebilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, ben **{{name}}**, {{systemRole}}. Haydi sohbetimize başlayalım!",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Haydi sohbetimize başlayalım!",
   "agentRoleEdit": {
     "cancel": "İptal",
     "confirm": "Onayla",
     "edit": "Düzenle",
-    "placeholder": "Lütfen rol prompt ifadesini girin",
-    "roleSetting": "Rol Ayarı",
-    "title": "Rol Ayarı"
+    "placeholder": "Lütfen rol Prompt ifadesini girin",
+    "roleSetting": "Rol Ayarları",
+    "title": "Rol Ayarları"
   },
   "confirmDelete": "Silme işlemini onayla",
-  "confirmRemoveSessionItemAlert": "Bu asistan silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
+  "confirmRemoveSessionItemAlert": "Bu asistan silinecek ve geri alınamayacak, lütfen işleminizi onaylayın",
   "copyFailed": "Kopyalama başarısız oldu",
   "defaultAgent": "Özel Asistan",
   "defaultList": "Varsayılan Liste",
   "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
-  "history": "Sohbet geçmişi",
+  "history": "Sohbet Geçmişi",
   "inbox": {
-    "desc": "Beyin kümesini aç, düşünce kıvılcımlarını ateşle. Akıllı asistanın, burada seninle her şeyi konuşmak için hazır.",
+    "desc": "Beyin kümesini açın, düşünce kıvılcımlarını ateşleyin. Akıllı asistanınız burada sizinle her şeyi konuşmak için.",
     "title": "Rastgele Sohbet"
   },
   "messageCopied": "Mesaj kopyalandı",
-  "newChat": "Yeni sohbet",
+  "newChat": "Yeni Sohbet",
   "placeholder": "Mesajınızı yazın...",
   "regenerateFailed": "Yeniden oluşturma başarısız oldu, lütfen daha sonra tekrar deneyin",
   "send": "Gönder",
@@ -32,7 +32,7 @@
     "search": {
       "placeholder": "Oturumları ara"
     },
-    "title": "Rastgele sohbet"
+    "title": "Rastgele Sohbet"
   },
   "share": "Paylaş",
   "stop": "Durdur",

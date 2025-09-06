@@ -50,7 +50,7 @@ export const useStyles = createStyles((token) => ({
 
   hint: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginTop: token.marginXS,
   },
 

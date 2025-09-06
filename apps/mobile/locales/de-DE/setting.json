@@ -43,14 +43,14 @@
     "list": {
       "disabled": "Deaktiviert",
       "enabled": "Aktiviert",
-      "loadFailed": "Laden der Anbieterliste fehlgeschlagen"
+      "loadFailed": "Laden der Anbieter-Liste fehlgeschlagen"
     },
     "models": {
-      "allLoaded": "Alle Modelle angezeigt",
+      "allLoaded": "Alle Modelle werden angezeigt",
       "copySuccess": "Kopieren erfolgreich",
       "disableFailed": "Modell deaktivieren fehlgeschlagen",
       "emptyNoSearch": "Keine Modelle gefunden, versuche vom Server zu laden",
-      "emptyWithSearch": "Keine Modelle entsprechen den Suchkriterien",
+      "emptyWithSearch": "Keine Modelle entsprechen der Suche",
       "enableFailed": "Modell aktivieren fehlgeschlagen",
       "fetch": "Modelle abrufen",
       "fetchFailed": "Modelle abrufen fehlgeschlagen, bitte erneut versuchen",
@@ -71,28 +71,28 @@
   "color": {
     "neutral": {
       "description": "Wählen Sie den neutralen Farbton der Anwendung",
-      "title": "Neutrale Farbanpassung"
+      "title": "Neutrale Farbkonfiguration"
     },
     "preview": "Vorschau",
     "previewMessages": {
-      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem untenstehenden Farbwähler anpassen. Die Vorschau wird in Echtzeit aktualisiert, um die Wirkung anzuzeigen.",
-      "userHowToUse": "Wie verwendet man die Themenvorschau?"
+      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem Farbwähler unten anpassen, die Vorschau aktualisiert sich in Echtzeit.",
+      "userHowToUse": "Wie benutzt man die Themenvorschau?"
     },
     "primary": {
       "description": "Wählen Sie den Hauptfarbton der Anwendung",
-      "title": "Hauptfarbanpassung"
+      "title": "Hauptfarbkonfiguration"
     },
     "title": "Farb-Einstellungen"
   },
   "developer": {
     "accessToken": {
       "expire": {
-        "success": "Zugriffstoken wurde sofort ungültig gemacht",
+        "success": "Der Zugriffstoken ist sofort abgelaufen",
         "title": "Zugriffstoken abgelaufen"
       },
       "invalidate": {
-        "success": "Ungültiges Zugriffstoken wurde eingetragen",
-        "title": "Ungültiges Zugriffstoken"
+        "success": "Der Zugriffstoken wurde ungültig gemacht",
+        "title": "Ungültiger Zugriffstoken"
       }
     },
     "clearAuthData": {
@@ -102,12 +102,12 @@
     "failurePrefix": "Vorgang fehlgeschlagen: ",
     "refreshToken": {
       "expire": {
-        "success": "Refresh-Token wurde sofort ungültig gemacht",
+        "success": "Der Refresh-Token ist sofort abgelaufen",
         "title": "Refresh-Token abgelaufen"
       },
       "invalidate": {
-        "success": "Ungültiges Refresh-Token wurde eingetragen",
-        "title": "Ungültiges Refresh-Token"
+        "success": "Der Refresh-Token wurde ungültig gemacht",
+        "title": "Ungültiger Refresh-Token"
       }
     },
     "title": "Entwickleroptionen"
@@ -133,7 +133,7 @@
     "checkProxyAddress": "Verbindung zum Server fehlgeschlagen, bitte überprüfen Sie die Proxy-Adresse",
     "connectionSuccess": "Verbindung erfolgreich, API-Schlüssel und Proxy-Adresse sind korrekt konfiguriert",
     "connectivityHint": "Nach dem Verbindungstest wird überprüft, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
-    "pleaseEnterApiKey": "Bitte API-Schlüssel eingeben",
+    "pleaseEnterApiKey": "Bitte geben Sie den API-Schlüssel ein",
     "proxyAddress": "API-Proxy-Adresse",
     "proxyPlaceholder": "Muss http(s):// enthalten",
     "testConnectivity": "Verbindung testen",
@@ -142,13 +142,13 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Verschlüsselungsalgorithmus verschlüsselt",
+      "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Algorithmus verschlüsselt",
       "checker": {
         "button": "Verbindung testen",
-        "desc": "Überprüfen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
+        "desc": "Testet, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
         "pass": "Überprüfung bestanden",
-        "selectModel": "Modell zur Verbindungstest auswählen",
-        "title": "Konnektivitätsprüfung"
+        "selectModel": "Modell für Verbindungstest auswählen",
+        "title": "Verbindungstest"
       }
     }
   },
