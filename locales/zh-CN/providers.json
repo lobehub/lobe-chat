@@ -32,6 +32,9 @@
   "bfl": {
     "description": "领先的前沿人工智能研究实验室，构建明日的视觉基础设施。"
   },
+  "burncloud": {
+    "description": "BurnCloud是一个高性能AI服务平台，提供Claude系列、GPT系列、Gemini、DeepSeek等多种行业领先大模型的API服务，具有稳定可靠、响应迅速的特点。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
   },

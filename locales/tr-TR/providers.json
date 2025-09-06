@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Önde gelen bir ileri düzey yapay zeka araştırma laboratuvarı; yarının görsel altyapısını inşa ediyor."
   },
+  "burncloud": {
+    "description": "BurnCloud, Claude serisi, GPT serisi, Gemini ve DeepSeek dahil olmak üzere sektörün önde gelen büyük modellerine API erişimi sağlayan yüksek performanslı bir yapay zeka hizmet platformudur. İleri düzey yapay zeka yeteneklerinin sorunsuz entegrasyonu için istikrarlı güvenilirlik ve hızlı yanıt süreleri ile öne çıkmaktadır."
+  },
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },

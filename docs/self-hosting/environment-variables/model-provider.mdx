@@ -502,6 +502,29 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example：`xxxxxx...xxxxxx`
 
+## BURNCLOUD
+
+### `BURNCLOUD_API_KEY`
+
+- Type: Required
+- Description: This is the API key you can obtain from BURNCLOUD AI service
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+### `BURNCLOUD_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+claude-sonnet-4-20250514,+claude-3-7-sonnet-20250219,+claude-3-5-sonnet-20241022,+deepseek-r1,+deepseek-v3`
+
+### `BURNCLOUD_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the BURNCLOUD API proxy, you can use this configuration item to override the default BURNCLOUD API request base URL
+- Default: `https://ai.burncloud.com/v1`
+- Example: `https://ai.burncloud.com/v1`
+
 ## TAICHU
 
 ### `TAICHU_API_KEY`

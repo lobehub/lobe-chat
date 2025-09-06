@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Ein führendes, an vorderster Front tätiges KI-Forschungslabor, das die visuelle Infrastruktur von morgen gestaltet."
   },
+  "burncloud": {
+    "description": "BurnCloud ist eine Hochleistungs-KI-Serviceplattform, die API-Zugang zu einer breiten Palette führender großer Modelle bietet, darunter Claude-Serie, GPT-Serie, Gemini und DeepSeek. Sie zeichnet sich durch stabile Zuverlässigkeit und schnelle Reaktionszeiten für eine nahtlose Integration fortschrittlicher KI-Fähigkeiten aus."
+  },
   "cloudflare": {
     "description": "Führen Sie von serverlosen GPUs betriebene Machine-Learning-Modelle im globalen Netzwerk von Cloudflare aus."
   },

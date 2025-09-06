@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Laboratório líder de pesquisa de ponta em inteligência artificial, construindo a infraestrutura visual do amanhã."
   },
+  "burncloud": {
+    "description": "BurnCloud é uma plataforma de serviços de IA de alto desempenho que fornece acesso via API a uma ampla gama de grandes modelos líderes do setor, incluindo as séries Claude, GPT, Gemini e DeepSeek. Destaca-se por sua confiabilidade estável e tempos de resposta rápidos para integração perfeita de capacidades avançadas de inteligência artificial."
+  },
   "cloudflare": {
     "description": "Execute modelos de aprendizado de máquina impulsionados por GPU sem servidor na rede global da Cloudflare."
   },
