@@ -6,6 +6,7 @@ import { PKCEUtils } from './pkce';
 import type { AuthConfig, AuthService, Token, User, PKCE } from '@/_types/user';
 import { authLogger } from '@/utils/logger';
 import { AUTH_ENDPOINTS } from '@/config/auth';
+import { getUserStoredLocale } from '@/i18n';
 
 // 为 Web 浏览器配置预热
 WebBrowser.maybeCompleteAuthSession();
@@ -94,13 +95,20 @@ export class OAuthService implements AuthService {
       });
 
       // 构建授权 URL
+      // 计算 ui_locales（OIDC 标准参数，用于服务端渲染多语言）
+      // 例如：'zh-CN zh' 或 'en-US en'，按优先级排列
+      const currentLocale = await getUserStoredLocale();
+
       const authUrl = PKCEUtils.buildAuthorizationUrl(
         this.config.issuer,
         this.config.clientId,
         this.getRedirectUri(),
         this.config.scopes,
         this.currentPKCE,
-        this.config.additionalParameters,
+        {
+          ...this.config.additionalParameters,
+          ui_locales: currentLocale,
+        },
       );
       authLogger.info('Authorization URL built', authUrl);
 
