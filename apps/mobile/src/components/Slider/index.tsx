@@ -112,10 +112,11 @@ const Slider = memo<SliderProps>(
 
     // Initialize thumb position
     React.useEffect(() => {
-      if (sliderWidth.value > 0) {
-        translateX.value = getThumbPosition(currentValue, sliderWidth.value);
-      }
-    }, [currentValue, getThumbPosition]);
+      if (sliderWidth.value > 0 && // 受控模式下：拖动过程中不强制同步 translateX，避免视觉抖动
+        !isThumbActive) {
+          translateX.value = getThumbPosition(currentValue, sliderWidth.value);
+        }
+    }, [currentValue, getThumbPosition, isThumbActive]);
 
     React.useEffect(() => {
       setActiveValueJS(currentValue);
@@ -154,15 +155,14 @@ const Slider = memo<SliderProps>(
           Math.min(sliderWidth.value, startX.value + event.translationX),
         );
 
-        // 计算应该对齐到的步长/刻度值
-        const newValue = getValueFromPosition(newPosition, sliderWidth.value);
-        // 根据步长/刻度值重新计算精确的位置
-        const snappedPosition = getThumbPosition(newValue, sliderWidth.value);
+        // 拖动过程中，拇指与轨道连续跟随手势，视觉更顺滑
+        translateX.value = newPosition;
 
-        translateX.value = snappedPosition;
-        runOnJS(handleValueChange)(newValue);
+        // 计算对应的值（按步长/刻度取整），仅在实际变化时再触发回调
+        const newValue = getValueFromPosition(newPosition, sliderWidth.value);
         if (lastEmittedActiveValue.value !== newValue) {
           lastEmittedActiveValue.value = newValue;
+          runOnJS(handleValueChange)(newValue);
           runOnJS(setActiveValueJS)(newValue);
         }
       })
