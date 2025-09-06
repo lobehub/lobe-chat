@@ -38,6 +38,7 @@ tmp/
 .env
 .env.local
 .env*.local
+.env.development
 venv/
 .venv/
 
