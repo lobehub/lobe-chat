@@ -1,6 +1,5 @@
+import { SECRET_XOR_KEY } from '@lobechat/const';
 import { describe, expect, it } from 'vitest';
-
-import { SECRET_XOR_KEY } from '@/const/auth';
 
 import { obfuscatePayloadWithXOR } from './xor-obfuscation';
 

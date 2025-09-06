@@ -1,6 +1,4 @@
-import { enableClerk, enableNextAuth } from '@/const/auth';
-import { DESKTOP_USER_ID } from '@/const/desktop';
-import { isDesktop } from '@/const/version';
+import { DESKTOP_USER_ID, enableClerk, enableNextAuth, isDesktop } from '@lobechat/const';
 
 export const getUserAuth = async () => {
   if (enableClerk) {
