@@ -1,4 +1,4 @@
-import { SECRET_XOR_KEY } from '@lobechat/const';
+import { SECRET_XOR_KEY } from '@/const/auth';
 
 /**
  * 将字符串转换为 Uint8Array (UTF-8 编码)
