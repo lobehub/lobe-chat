@@ -9,6 +9,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -28,6 +29,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -38,6 +40,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3-70b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -57,6 +60,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -67,6 +71,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -86,6 +91,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     },
     "reasoning": false,
     "releasedAt": "2024-07-24",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -96,6 +102,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-70b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -115,6 +122,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     },
     "reasoning": false,
     "releasedAt": "2024-07-24",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -125,6 +133,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-405b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -144,6 +153,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     },
     "reasoning": false,
     "releasedAt": "2024-07-24",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -155,6 +165,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "google/gemma-2-9b-it",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -174,6 +185,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-07-18",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -184,6 +196,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "jondurbin/airoboros-l2-70b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -203,6 +216,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-07-17",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -213,6 +227,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "nousresearch/hermes-2-pro-llama-3-8b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -232,6 +247,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-06-27",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -242,6 +258,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -261,6 +278,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-06-27",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -271,6 +289,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "cognitivecomputations/dolphin-mixtral-8x22b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -290,6 +309,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-06-27",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -300,6 +320,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "sao10k/l3-70b-euryale-v2.1",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -319,6 +340,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-06-18",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -329,6 +351,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "sophosympatheia/midnight-rose-70b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -348,6 +371,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-06-17",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -358,6 +382,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -377,6 +402,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -387,6 +413,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "nousresearch/nous-hermes-llama2-13b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -406,6 +433,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -416,6 +444,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "Nous-Hermes-2-Mixtral-8x7B-DPO",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -435,6 +464,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -445,6 +475,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "lzlv_70b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -464,6 +495,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-25",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -474,6 +506,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "teknium/openhermes-2.5-mistral-7b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -493,6 +526,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-24",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
@@ -503,6 +537,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "enabled": false,
     "functionCall": false,
     "id": "microsoft/wizardlm-2-8x22b",
+    "imageOutput": false,
     "maxOutput": undefined,
     "pricing": {
       "units": [
@@ -522,6 +557,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     },
     "reasoning": false,
     "releasedAt": "2024-04-24",
+    "search": false,
     "type": "chat",
     "vision": false,
   },
