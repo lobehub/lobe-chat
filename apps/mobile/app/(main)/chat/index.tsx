@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
 import { useGlobalStore } from '@/store/global';
@@ -14,7 +14,6 @@ import SessionList from '@/features/SideBar';
 import { useStyles } from './styles';
 
 export default function ChatWithDrawer() {
-  const insets = useSafeAreaInsets();
   const { styles } = useStyles();
 
   const [drawerOpen, setDrawerOpen, toggleDrawer] = useGlobalStore((s) => [
@@ -46,7 +45,7 @@ export default function ChatWithDrawer() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
       {/* 左侧Session抽屉 */}
@@ -68,6 +67,6 @@ export default function ChatWithDrawer() {
           <ChatContent containerStyle={styles.chatContainer} onDrawerToggle={toggleDrawer} />
         </TopicDrawer>
       </Drawer>
-    </View>
+    </SafeAreaView>
   );
 }

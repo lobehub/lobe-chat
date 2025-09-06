@@ -2,7 +2,6 @@ import { ArrowUp } from 'lucide-react-native';
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextInput } from '@/components';
 import IconBtn from './components/IconBtn';
@@ -26,7 +25,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   const { t } = useTranslation(['chat']);
   const { input, handleInputChange, handleSubmit, isLoading, canSend, stopGenerating } = useChat();
   useInitAgentConfig(); // 关键：触发agent配置加载
-  const insets = useSafeAreaInsets();
   const token = useThemeToken();
   const { styles } = useStyles();
 
@@ -53,7 +51,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   );
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }, style]}>
+    <View style={[styles.container, style]}>
       <View style={styles.inputArea}>
         <TextInput
           autoCapitalize="none"
