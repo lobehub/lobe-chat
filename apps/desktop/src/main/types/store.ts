@@ -1,6 +1,7 @@
 import { DataSyncConfig, NetworkProxySettings } from '@lobechat/electron-client-ipc';
 
 export interface ElectronMainStore {
+  autoUpdateNotificationEnabled: boolean;
   dataSyncConfig: DataSyncConfig;
   encryptedTokens: {
     accessToken?: string;
