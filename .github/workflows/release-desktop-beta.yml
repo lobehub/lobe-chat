@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          package-manager-cache: false
 
       - name: Install bun
         uses: oven-sh/setup-bun@v2
@@ -55,6 +56,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
       - name: Set version
@@ -209,6 +211,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          package-manager-cache: false
 
       - name: Install bun
         uses: oven-sh/setup-bun@v2
