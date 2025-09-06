@@ -71,6 +71,7 @@ export const useStyles = createStyles((token) => ({
   userBubbleContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    maxWidth: '90%',
   },
 
   userMessageContainer: {
