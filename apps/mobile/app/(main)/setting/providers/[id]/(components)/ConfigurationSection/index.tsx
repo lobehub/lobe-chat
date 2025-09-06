@@ -5,7 +5,6 @@ import { Lock } from 'lucide-react-native';
 import { useTranslation, Trans } from 'react-i18next';
 import { TextInput } from '@/components';
 
-import { useThemeToken } from '@/theme';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { AES_GCM_URL } from '@/const/url';
@@ -22,8 +21,7 @@ const isValidUrl = (url: string) => {
 };
 
 const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
-  const { styles } = useStyles();
-  const token = useThemeToken();
+  const { styles, token } = useStyles();
   const { t } = useTranslation('setting');
 
   // Store hooks
@@ -135,7 +133,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               name: provider.name || provider.id,
               ns: 'setting',
             })}
-            placeholderTextColor={token.colorTextTertiary}
             style={[styles.textInput, isChecking && styles.textInputDisabled]}
             value={apiKey}
           />
