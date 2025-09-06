@@ -4,6 +4,19 @@ const modelscopeChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'kimi-k2-0905-preview 模型上下文长度为 256k，具备更强的 Agentic Coding 能力、更突出的前端代码的美观度和实用性、以及更好的上下文理解能力。',
+    displayName: 'Kimi K2 0905',
+    enabled: true,
+    id: 'moonshotai/Kimi-K2-Instruct-0905',
+    releasedAt: '2025-09-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -53,7 +66,6 @@ const modelscopeChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'Qwen3-235B-A22B是通义千问3代超大规模模型，提供顶级的AI能力。',
     displayName: 'Qwen3-235B-A22B',
-    enabled: true,
     id: 'Qwen/Qwen3-235B-A22B',
     type: 'chat',
   },
@@ -64,7 +76,6 @@ const modelscopeChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'Qwen3-32B是通义千问3代模型，具有强大的推理和对话能力。',
     displayName: 'Qwen3-32B',
-    enabled: true,
     id: 'Qwen/Qwen3-32B',
     type: 'chat',
   },
