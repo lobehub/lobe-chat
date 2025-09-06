@@ -228,15 +228,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install required dependencies only
-        run: |
-          # 创建临时目录并安装依赖
-          mkdir -p temp-deps
-          cd temp-deps
-          npm init -y
-          npm install fs-extra yaml tsx
-          # 确保回到项目根目录
-          cd ${{ github.workspace }}
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
 
       # 下载所有平台的构建产物
       - name: Download artifacts
@@ -250,10 +245,9 @@ jobs:
       - name: List downloaded artifacts
         run: ls -R release
 
-      # 合并 macOS YAML 文件 (确保在项目根目录执行)
+      # 合并 macOS YAML 文件 (使用 bun 运行 JavaScript)
       - name: Merge latest-mac.yml files
-        working-directory: ${{ github.workspace }}
-        run: NODE_PATH="${PWD}/temp-deps/node_modules" "${PWD}/temp-deps/node_modules/.bin/tsx" scripts/electronWorkflow/mergeMacReleaseFiles.ts ${{ needs.version.outputs.version }}
+        run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js ${{ needs.version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ needs.version.outputs.version }}
