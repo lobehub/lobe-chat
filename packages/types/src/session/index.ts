@@ -1,5 +1,5 @@
-import { LobeSessions, SessionGroupId } from './agentSession';
-import { LobeSessionGroups } from './sessionGroup';
+import { LobeSessions } from './agentSession';
+import { LobeSessionGroups, SessionGroupId } from './sessionGroup';
 
 export * from './agentSession';
 export * from './sessionGroup';

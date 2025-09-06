@@ -131,11 +131,13 @@ table async_tasks {
 
 table chat_groups {
   id text [pk, not null]
+  slug varchar(100) [unique]
   title text
   description text
   config jsonb
   client_id text
   user_id text [not null]
+  group_id text
   pinned boolean [default: false]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
@@ -405,6 +407,8 @@ table messages {
   parent_id text
   quota_id text
   agent_id text
+  group_id text
+  target_id text
   group_id text
   target_id text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
@@ -874,6 +878,7 @@ table topics {
   favorite boolean [default: false]
   session_id text
   group_id text
+  group_id text
   user_id text [not null]
   client_id text
   history_summary text
@@ -944,6 +949,14 @@ ref: agents_knowledge_bases.agent_id > agents.id
 ref: agents_to_sessions.session_id > sessions.id
 
 ref: agents_to_sessions.agent_id > agents.id
+
+ref: chat_groups_agents.chat_group_id > chat_groups.id
+
+ref: chat_groups_agents.agent_id > agents.id
+
+ref: chat_groups_agents.user_id - users.id
+
+ref: chat_groups.user_id - users.id
 
 ref: chat_groups_agents.chat_group_id > chat_groups.id
 

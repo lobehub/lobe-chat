@@ -6,6 +6,130 @@
     },
     "defaultMessage": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?<br />Si vous avez besoin d'un assistant plus professionnel ou personnalisé, vous pouvez cliquer sur <plus /> pour créer un assistant sur mesure.",
     "defaultMessageWithoutCreate": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?",
+    "groupActivities": {
+      "a01": {
+        "description": "Génération créative collaborative et résolution de problèmes à partir de multiples perspectives",
+        "emoji": "🧠",
+        "prompt": "Commençons un brainstorming pour le projet. Peux-tu nous aider à générer des idées créatives et des solutions ?",
+        "title": "Brainstorming"
+      },
+      "a02": {
+        "description": "Jeu de déduction sociale où les joueurs identifient les loups-garous grâce à la stratégie et aux discussions",
+        "emoji": "🐺",
+        "prompt": "Jouons au jeu des Loups‑Garous ! Peux-tu nous aider à définir les règles et animer cette partie de déduction sociale ?",
+        "title": "Loups‑Garous"
+      },
+      "a03": {
+        "description": "Simulation de débats des Nations Unies et de négociations diplomatiques sur des enjeux mondiaux",
+        "emoji": "🌍",
+        "prompt": "Simulons un débat à l'ONU. Peux-tu nous aider à organiser une négociation diplomatique sur un enjeu mondial ?",
+        "title": "Simulation de l'ONU"
+      },
+      "a04": {
+        "description": "Réunion de feedback collaboratif sur des concepts de design, prototypes ou créations",
+        "emoji": "🎨",
+        "prompt": "Nous devons revoir des travaux de design. Peux-tu nous aider à fournir des retours constructifs sur des concepts et prototypes ?",
+        "title": "Revue de design"
+      },
+      "a05": {
+        "description": "Discussions techniques et revue par les pairs des changements et implémentations de code",
+        "emoji": "💻",
+        "prompt": "Examinons du code ensemble. Peux-tu nous aider à analyser ce code et à repérer des améliorations ?",
+        "title": "Revue de code"
+      },
+      "a06": {
+        "description": "Technique d'estimation agile utilisant des cartes pour évaluer les tâches et la charge de travail d'un projet",
+        "emoji": "🃏",
+        "prompt": "Nous faisons une planification Poker pour le projet. Peux-tu nous aider à estimer la charge de ces tâches avec cette technique agile ?",
+        "title": "Planning Poker"
+      },
+      "a07": {
+        "description": "Discussions et débats structurés sur divers sujets et actualités",
+        "emoji": "⚖️",
+        "prompt": "Faisons un débat structuré. Peux-tu nous aider à organiser une discussion argumentée sur ce sujet ?",
+        "title": "Club de débat"
+      },
+      "a08": {
+        "description": "Séances d'apprentissage collaboratif pour discuter de concepts et résoudre des problèmes ensemble",
+        "emoji": "📚",
+        "prompt": "Formons un groupe d'étude. Peux-tu nous aider à comprendre ces concepts et à résoudre les problèmes ensemble ?",
+        "title": "Groupe d'étude"
+      },
+      "a09": {
+        "description": "Discussions et analyses littéraires de livres, histoires et œuvres littéraires",
+        "emoji": "📖",
+        "prompt": "Démarrons une discussion du club de lecture. Peux-tu nous aider à analyser ce livre et à explorer ses thèmes ensemble ?",
+        "title": "Club de lecture"
+      },
+      "a10": {
+        "description": "Jeux et activités interactives amusants pour renforcer la cohésion d'équipe et s'amuser",
+        "emoji": "🎲",
+        "prompt": "C'est la soirée jeux ! Peux-tu nous aider à organiser des jeux interactifs amusants pour renforcer les liens d'équipe ?",
+        "title": "Soirée jeux"
+      },
+      "a11": {
+        "description": "Regarder et discuter ensemble de films, documentaires et médias visuels",
+        "emoji": "🎬",
+        "prompt": "Lançons la discussion du ciné-club. Peux-tu nous aider à analyser ce film et à en débattre les thèmes ensemble ?",
+        "title": "Ciné-club"
+      },
+      "a12": {
+        "description": "Pratiquer l'expression orale et apprendre une nouvelle langue avec des locuteurs natifs",
+        "emoji": "🗣️",
+        "prompt": "Pratiquons une nouvelle langue ensemble. Peux-tu nous aider à apprendre et à pratiquer la langue parlée ?",
+        "title": "Pratique linguistique"
+      },
+      "a13": {
+        "description": "Apprendre et partager des techniques culinaires, recettes et traditions gastronomiques",
+        "emoji": "👨‍🍳",
+        "prompt": "Allons en atelier cuisine ! Peux-tu nous aider à apprendre de nouvelles recettes et techniques culinaires ?",
+        "title": "Cours de cuisine"
+      },
+      "a14": {
+        "description": "Discuter des technologies émergentes, de l'innovation et des tendances sectorielles",
+        "emoji": "🚀",
+        "prompt": "Faisons un échange sur la tech ! Peux-tu nous aider à discuter des technologies émergentes et des tendances du secteur ?",
+        "title": "Échange technologique"
+      },
+      "a15": {
+        "description": "Séances de création musicale collaborative, de partage et d'appréciation",
+        "emoji": "🎵",
+        "prompt": "Faisons une improvisation musicale ! Peux-tu nous aider à créer et apprécier de la musique ensemble ?",
+        "title": "Improvisation musicale"
+      },
+      "a16": {
+        "description": "Analyser les marchés, discuter de stratégies d'investissement et partager des analyses financières",
+        "emoji": "📈",
+        "prompt": "Analysons le marché ensemble. Peux-tu nous aider à discuter de stratégies d'investissement et à partager des analyses financières ?",
+        "title": "Club d'investissement"
+      },
+      "a17": {
+        "description": "Fixer des objectifs de fitness en groupe, partager des entraînements et s'encourager mutuellement",
+        "emoji": "💪",
+        "prompt": "Lançons un défi fitness ! Peux-tu nous aider à fixer des objectifs et à nous motiver mutuellement pour rester en forme ?",
+        "title": "Défi fitness"
+      },
+      "a18": {
+        "description": "Planifier des voyages, partager des expériences et découvrir de nouvelles destinations",
+        "emoji": "✈️",
+        "prompt": "Planifions un voyage ensemble ! Peux-tu nous aider à rechercher des destinations et à organiser l'itinéraire ?",
+        "title": "Planification de voyage"
+      },
+      "a19": {
+        "description": "Créer, critiquer et apprécier diverses formes d'art visuel et numérique",
+        "emoji": "🖼️",
+        "prompt": "Organisons un atelier d'art ! Peux-tu nous aider à créer, critiquer et apprécier différentes formes d'art ?",
+        "title": "Atelier d'art"
+      },
+      "a20": {
+        "description": "Explorer des concepts scientifiques, réaliser des expériences et partager les découvertes",
+        "emoji": "🔬",
+        "prompt": "Explorons la science ensemble ! Peux-tu nous aider à mener des expériences et à partager nos découvertes ?",
+        "title": "Exposition scientifique"
+      },
+      "title": "Recommandations d'utilisation du chat de groupe"
+    },
+    "groupMessage": "Bienvenue dans le chat de groupe ! Collaborez avec plusieurs assistants IA dans un espace de conversation partagé.",
     "qa": {
       "q01": "Qu'est-ce que LobeHub ?",
       "q02": "Qu'est-ce que {{appName}} ?",

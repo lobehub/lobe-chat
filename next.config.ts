@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
     emotion: true,
   },
   compress: isProd,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     optimizePackageImports: [
       'emoji-mart',

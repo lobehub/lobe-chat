@@ -18,6 +18,11 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
   avatarProps?: AvatarProps;
   belowMessage?: ReactNode;
   /**
+   * @description Whether the chat item is disabled
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * @description Whether the chat item is in editing mode
    */
   editing?: boolean;
@@ -64,6 +69,11 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
   primary?: boolean;
   renderMessage?: (content: ReactNode) => ReactNode;
   /**
+   * @description Whether to hide the avatar
+   * @default false
+   */
+  showAvatar?: boolean;
+  /**
    * @description Whether to show the title of the chat item
    */
   showTitle?: boolean;
@@ -72,6 +82,7 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @description The timestamp of the chat item
    */
   time?: number;
+  titleAddon?: ReactNode;
   /**
    * @description The type of the chat item
    * @default 'bubble'

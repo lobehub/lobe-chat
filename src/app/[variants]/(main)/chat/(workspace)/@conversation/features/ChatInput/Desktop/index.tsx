@@ -10,11 +10,13 @@ import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 
-import { useSend } from '../useSend';
+import { useSend, useSendGroupMessage } from '../useSend';
 import MessageFromUrl from './MessageFromUrl';
 
 const leftActions: ActionKeys[] = [
@@ -34,6 +36,10 @@ const rightActions: ActionKeys[] = ['saveTopic'];
 const Desktop = memo(() => {
   const { t } = useTranslation('chat');
   const { send, generating, disabled, stop } = useSend();
+  const { send: sendGroupMessage } = useSendGroupMessage();
+
+  const isSessionGroup = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+
   const [useCmdEnterToSend, updatePreference] = useUserStore((s) => [
     preferenceSelectors.useCmdEnterToSend(s),
     s.updatePreference,
@@ -56,7 +62,11 @@ const Desktop = memo(() => {
         useChatStore.setState({ inputMessage: content });
       }}
       onSend={() => {
-        send();
+        if (isSessionGroup) {
+          sendGroupMessage();
+        } else {
+          send();
+        }
       }}
       rightActions={rightActions}
       sendButtonProps={{ disabled, generating, onStop: stop }}

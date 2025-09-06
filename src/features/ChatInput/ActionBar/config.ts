@@ -1,6 +1,7 @@
 import Clear from './Clear';
 import History from './History';
 import Knowledge from './Knowledge';
+import Mention from './Mention';
 import Model from './Model';
 import Params from './Params';
 import STT from './STT';
@@ -17,6 +18,7 @@ export const actionMap = {
   history: History,
   knowledgeBase: Knowledge,
   mainToken: MainToken,
+  mention: Mention,
   model: Model,
   params: Params,
   portalToken: PortalToken,

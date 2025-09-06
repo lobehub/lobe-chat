@@ -6,6 +6,130 @@
     },
     "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?<br />Daha profesyonel veya özel bir asistan istiyorsanız, özel asistan oluşturmak için <plus /> butonuna tıklayabilirsiniz.",
     "defaultMessageWithoutCreate": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?",
+    "groupActivities": {
+      "a01": {
+        "description": "Çok perspektifli, işbirlikçi fikir üretme ve yaratıcı problem çözme",
+        "emoji": "🧠",
+        "prompt": "Projeye yönelik bir beyin fırtınası başlatalım. Bize yaratıcı fikirler ve çözümler üretmede yardımcı olabilir misin?",
+        "title": "Beyin Fırtınası"
+      },
+      "a02": {
+        "description": "Oyuncuların strateji ve tartışma ile kurt adamları bulduğu sosyal çıkarım oyunu",
+        "emoji": "🐺",
+        "prompt": "Kurt Adam oyunu oynayalım! Kuralları belirlememize ve bu sosyal çıkarım oyununu yönetmemize yardımcı olur musun?",
+        "title": "Kurt Adam Oyunu"
+      },
+      "a03": {
+        "description": "Birleşmiş Milletler tartışmalarını ve küresel konularla ilgili diplomatik müzakereleri canlandırma",
+        "emoji": "🌍",
+        "prompt": "Bir BM tartışmasını canlandıralım. Küresel bir konuda diplomatik bir müzakere düzenlememize yardımcı olur musun?",
+        "title": "Model Birleşmiş Milletler"
+      },
+      "a04": {
+        "description": "Tasarım konseptleri, prototipler veya yaratıcı çalışmalar için işbirlikçi geri bildirim oturumu",
+        "emoji": "🎨",
+        "prompt": "Bazı tasarımları gözden geçirmemiz gerekiyor. Tasarım konseptleri ve prototipler hakkında yapıcı geri bildirim vermemize yardımcı olabilir misin?",
+        "title": "Tasarım İncelemesi"
+      },
+      "a05": {
+        "description": "Kod değişiklikleri ve uygulamalar hakkında teknik tartışma ve eş değerlendirmesi",
+        "emoji": "💻",
+        "prompt": "Hadi birlikte bazı kodları inceleyelim. Bu kodları analiz edip iyileştirme alanlarını belirlememize yardımcı olur musun?",
+        "title": "Kod İncelemesi"
+      },
+      "a06": {
+        "description": "Kartlarla proje görevleri ve iş yükünü tahmin etmeye yönelik çevik tahmin tekniği",
+        "emoji": "🃏",
+        "prompt": "Proje için planlama pokeri yapıyoruz. Bu görevlerin iş yükünü çevik tekniklerle tahmin etmemize yardımcı olur musun?",
+        "title": "Planlama Pokeri"
+      },
+      "a07": {
+        "description": "Çeşitli konu ve güncel olaylar hakkında yapılandırılmış tartışma ve münazara",
+        "emoji": "⚖️",
+        "prompt": "Hadi yapılandırılmış bir tartışma yapalım. Bu konuda mantıklı ve gerekçeli bir tartışma düzenlememize yardımcı olur musun?",
+        "title": "Münazara Kulübü"
+      },
+      "a08": {
+        "description": "İşbirlikçi öğrenme oturumu; kavramları tartışma ve birlikte problem çözme",
+        "emoji": "📚",
+        "prompt": "Bir çalışma grubu oluşturalım. Bu kavramları anlamamıza ve birlikte sorunları çözmemize yardımcı olur musun?",
+        "title": "Çalışma Grubu"
+      },
+      "a09": {
+        "description": "Kitaplar, hikâyeler ve edebi eserler üzerine edebî tartışma ve analiz",
+        "emoji": "📖",
+        "prompt": "Okuma kulübü tartışmasına başlayalım. Bu kitabı analiz etmemize ve temalarını birlikte tartışmamıza yardımcı olur musun?",
+        "title": "Okuma Kulübü"
+      },
+      "a10": {
+        "description": "Takım bağları kurmak ve eğlenmek için eğlenceli etkileşimli oyunlar ve aktiviteler",
+        "emoji": "🎲",
+        "prompt": "Oyun gecesi başlıyor! Takım bağları kurmak için bazı eğlenceli etkileşimli oyunlar düzenlememize yardımcı olur musun?",
+        "title": "Oyun Gecesi"
+      },
+      "a11": {
+        "description": "Filmler, belgeseller ve görsel medyayı birlikte izleyip tartışma",
+        "emoji": "🎬",
+        "prompt": "Film kulübü tartışmasına başlayalım. Bu filmi analiz etmemize ve temalarını birlikte tartışmamıza yardımcı olur musun?",
+        "title": "Film Kulübü"
+      },
+      "a12": {
+        "description": "Anadili konuşanlarla birlikte konuşma pratiği ve yeni bir dil öğrenme",
+        "emoji": "🗣️",
+        "prompt": "Haydi yeni bir dil pratiği yapalım. Bu dili öğrenmemize ve konuşma pratiği yapmamıza yardımcı olur musun?",
+        "title": "Dil Pratiği"
+      },
+      "a13": {
+        "description": "Yemek pişirme teknikleri, tarifler ve mutfak geleneklerini öğrenme ve paylaşma",
+        "emoji": "👨‍🍳",
+        "prompt": "Hadi bir yemek dersi yapalım! Yeni tarifler ve pişirme teknikleri öğrenmemize yardımcı olur musun?",
+        "title": "Yemek Dersi"
+      },
+      "a14": {
+        "description": "Yeni teknolojiler, inovasyonlar ve sektörel trendleri tartışma",
+        "emoji": "🚀",
+        "prompt": "Hadi teknoloji sohbeti yapalım! Yeni teknolojiler ve sektörel trendler hakkında tartışmamıza yardımcı olur musun?",
+        "title": "Teknoloji Sohbeti"
+      },
+      "a15": {
+        "description": "İşbirlikçi müzik yaratımı, paylaşımı ve dinleme oturumu",
+        "emoji": "🎵",
+        "prompt": "Hadi müzik doğaçlaması yapalım! Birlikte müzik yaratmamıza ve dinlememize yardımcı olur musun?",
+        "title": "Müzik Doğaçlaması"
+      },
+      "a16": {
+        "description": "Piyasayı analiz etme, yatırım stratejilerini tartışma ve finansal öngörü paylaşma",
+        "emoji": "📈",
+        "prompt": "Hadi piyasayı birlikte analiz edelim. Yatırım stratejilerini tartışmamıza ve finansal içgörüler paylaşmamıza yardımcı olur musun?",
+        "title": "Yatırım Kulübü"
+      },
+      "a17": {
+        "description": "Grup fitness hedefleri belirleme, egzersiz yöntemlerini paylaşma ve birbirini motive etme",
+        "emoji": "💪",
+        "prompt": "Hadi bir fitness meydan okuması başlatalım! Hedef belirlememize ve birbirimizi sağlıklı kalmak için motive etmemize yardımcı olur musun?",
+        "title": "Fitness Meydan Okuması"
+      },
+      "a18": {
+        "description": "Seyahat planlama, seyahat deneyimlerini paylaşma ve yeni destinasyonlar keşfetme",
+        "emoji": "✈️",
+        "prompt": "Hadi birlikte bir gezi planlayalım! Gideceğimiz yerleri araştırmamıza ve seyahat rotası hazırlamamıza yardımcı olur musun?",
+        "title": "Seyahat Planlaması"
+      },
+      "a19": {
+        "description": "Çeşitli görsel ve dijital sanat formlarını yaratma, eleştirme ve takdir etme",
+        "emoji": "🖼️",
+        "prompt": "Hadi bir sanat atölyesi düzenleyelim! Çeşitli sanat biçimlerini yaratmamıza, eleştirip takdir etmemize yardımcı olur musun?",
+        "title": "Sanat Atölyesi"
+      },
+      "a20": {
+        "description": "Bilimsel kavramları keşfetme, deneyler yapma ve bulguları paylaşma",
+        "emoji": "🔬",
+        "prompt": "Hadi bilimi keşfedelim! Deneyler yapmamıza ve bulgularımızı paylaşmamıza yardımcı olur musun?",
+        "title": "Bilim Sergisi"
+      },
+      "title": "Grup Sohbeti Kullanım Önerileri"
+    },
+    "groupMessage": "Grup sohbetine hoş geldiniz! Paylaşılan bir konuşma alanında birden fazla yapay zeka asistanıyla işbirliği yapın。",
     "qa": {
       "q01": "LobeHub nedir?",
       "q02": "{{appName}} nedir?",
