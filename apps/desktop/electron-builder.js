@@ -1,7 +1,5 @@
 const dotenv = require('dotenv');
 const os = require('node:os');
-const fs = require('node:fs');
-const path = require('node:path');
 
 dotenv.config();
 
@@ -130,7 +128,5 @@ const config = {
     executableName: 'LobeHub',
   },
 };
-
-// macOS latest-mac.yml 重命名现在由 GitHub Actions 工作流处理，而不是 electron-builder 钩子
 
 module.exports = config;
