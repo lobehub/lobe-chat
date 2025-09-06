@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.124.0](https://github.com/lobehub/lobe-chat/compare/v1.123.4...v1.124.0)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### ✨ Features
+
+- **misc**: ChatInput support rich text and support parallel send.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: ChatInput support rich text and support parallel send, closes [#8964](https://github.com/lobehub/lobe-chat/issues/8964) ([38d9d98](https://github.com/lobehub/lobe-chat/commit/38d9d98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.123.4](https://github.com/lobehub/lobe-chat/compare/v1.123.3...v1.123.4)
 
 <sup>Released on **2025-09-05**</sup>
