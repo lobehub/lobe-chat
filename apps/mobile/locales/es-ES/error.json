@@ -10,6 +10,24 @@
     "timeout": "Tiempo de espera agotado",
     "unauthorized": "No autorizado"
   },
+  "login": {
+    "accessDenied": "El proveedor de identidad denegó el acceso.",
+    "cancelled": "Inicio de sesión cancelado.",
+    "invalidGrant": "La sesión de inicio de sesión ha expirado o es inválida, por favor intente de nuevo.",
+    "invalidIdToken": "No se pudo leer la información del usuario desde el ID Token.",
+    "invalidRequest": "Solicitud de inicio de sesión incorrecta.",
+    "invalidState": "La verificación del estado falló, por favor intente de nuevo.",
+    "missingCodeOrState": "Falta el código de autorización o el estado.",
+    "missingPkce": "Faltan parámetros PKCE.",
+    "networkError": "Error de red durante el inicio de sesión, por favor verifique la conexión.",
+    "noIdToken": "No se obtuvo el ID Token después del inicio de sesión.",
+    "serverError": "Error del servidor en el servicio de inicio de sesión, por favor intente más tarde.",
+    "temporarilyUnavailable": "El servicio de inicio de sesión no está disponible temporalmente, por favor intente más tarde.",
+    "tokenEndpointNonJson": "El endpoint de token devolvió una respuesta no válida.",
+    "tokenExchangeFailed": "Fallo al intercambiar el código de autorización por un token.",
+    "unknown": "Error en el inicio de sesión, por favor intente de nuevo.",
+    "unsupportedResponseType": "Tipo de respuesta no soportado."
+  },
   "page": {
     "notFoundMessage": "La página no existe.",
     "notFoundTitle": "¡Vaya!"

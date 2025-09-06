@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { useStyles } from './styles';
 import { setLoginMounted } from '@/navigation/loginState';
+import { getLoginErrorKey } from '@/utils/error';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);
@@ -28,8 +29,9 @@ const LoginPage = () => {
         router.replace('/chat');
       }, 0);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      Alert.alert(t('error.title', { ns: 'error' }), errorMessage);
+      const key = getLoginErrorKey(error);
+      const message = t(key, { ns: 'error' });
+      Alert.alert(t('error.title', { ns: 'error' }), message);
     }
   };
 

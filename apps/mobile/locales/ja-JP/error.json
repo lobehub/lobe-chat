@@ -10,6 +10,24 @@
     "timeout": "リクエストタイムアウト",
     "unauthorized": "認証されていません"
   },
+  "login": {
+    "accessDenied": "IDプロバイダーによってアクセスが拒否されました。",
+    "cancelled": "ログインがキャンセルされました。",
+    "invalidGrant": "ログインセッションが期限切れまたは無効です。再試行してください。",
+    "invalidIdToken": "IDトークンからユーザー情報を読み取れません。",
+    "invalidRequest": "ログインリクエストが正しくありません。",
+    "invalidState": "stateの検証に失敗しました。再試行してください。",
+    "missingCodeOrState": "認可コードまたはstateが不足しています。",
+    "missingPkce": "PKCEパラメーターが不足しています。",
+    "networkError": "ログイン中にネットワークエラーが発生しました。ネットワーク接続を確認してください。",
+    "noIdToken": "ログイン後にIDトークンが取得できませんでした。",
+    "serverError": "ログインサービスでサーバーエラーが発生しました。後でもう一度お試しください。",
+    "temporarilyUnavailable": "ログインサービスは一時的に利用できません。後でもう一度お試しください。",
+    "tokenEndpointNonJson": "トークンエンドポイントが不正なレスポンスを返しました。",
+    "tokenExchangeFailed": "認可コードのトークン交換に失敗しました。",
+    "unknown": "ログインに失敗しました。再試行してください。",
+    "unsupportedResponseType": "サポートされていないレスポンスタイプです。"
+  },
   "page": {
     "notFoundMessage": "このページは存在しません。",
     "notFoundTitle": "おっと！"

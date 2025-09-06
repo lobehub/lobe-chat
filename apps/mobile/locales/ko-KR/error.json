@@ -10,6 +10,24 @@
     "timeout": "요청 시간 초과",
     "unauthorized": "권한 없음"
   },
+  "login": {
+    "accessDenied": "신원 제공자가 접근을 거부했습니다.",
+    "cancelled": "로그인이 취소되었습니다.",
+    "invalidGrant": "로그인 세션이 만료되었거나 유효하지 않습니다. 다시 시도하세요.",
+    "invalidIdToken": "ID 토큰에서 사용자 정보를 읽을 수 없습니다.",
+    "invalidRequest": "로그인 요청이 올바르지 않습니다.",
+    "invalidState": "state 검증에 실패했습니다. 다시 시도하세요.",
+    "missingCodeOrState": "권한 코드 또는 state가 누락되었습니다.",
+    "missingPkce": "PKCE 매개변수가 누락되었습니다.",
+    "networkError": "로그인 중 네트워크 오류가 발생했습니다. 네트워크 연결을 확인하세요.",
+    "noIdToken": "로그인 후 ID 토큰을 받지 못했습니다.",
+    "serverError": "로그인 서비스에서 서버 오류가 발생했습니다. 잠시 후 다시 시도하세요.",
+    "temporarilyUnavailable": "로그인 서비스가 일시적으로 사용 불가합니다. 잠시 후 다시 시도하세요.",
+    "tokenEndpointNonJson": "토큰 엔드포인트가 올바르지 않은 응답을 반환했습니다.",
+    "tokenExchangeFailed": "권한 코드를 토큰으로 교환하는 데 실패했습니다.",
+    "unknown": "로그인에 실패했습니다. 다시 시도하세요.",
+    "unsupportedResponseType": "지원하지 않는 응답 유형입니다."
+  },
   "page": {
     "notFoundMessage": "해당 페이지가 존재하지 않습니다.",
     "notFoundTitle": "앗!"

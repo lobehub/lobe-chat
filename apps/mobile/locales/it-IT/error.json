@@ -10,6 +10,24 @@
     "timeout": "Timeout della richiesta",
     "unauthorized": "Non autorizzato"
   },
+  "login": {
+    "accessDenied": "Il provider di identità ha negato l'accesso.",
+    "cancelled": "Accesso annullato.",
+    "invalidGrant": "La sessione di accesso è scaduta o non valida, riprova.",
+    "invalidIdToken": "Impossibile leggere le informazioni utente dal token ID.",
+    "invalidRequest": "Richiesta di accesso non valida.",
+    "invalidState": "Verifica dello stato fallita, riprova.",
+    "missingCodeOrState": "Manca il codice di autorizzazione o lo stato.",
+    "missingPkce": "Mancano i parametri PKCE.",
+    "networkError": "Errore di rete durante l'accesso, controlla la connessione.",
+    "noIdToken": "Token ID non ottenuto dopo l'accesso.",
+    "serverError": "Errore del server nel servizio di accesso, riprova più tardi.",
+    "temporarilyUnavailable": "Servizio di accesso temporaneamente non disponibile, riprova più tardi.",
+    "tokenEndpointNonJson": "La risposta dell'endpoint token non è in formato JSON valido.",
+    "tokenExchangeFailed": "Scambio del codice di autorizzazione con il token fallito.",
+    "unknown": "Accesso fallito, riprova.",
+    "unsupportedResponseType": "Tipo di risposta non supportato."
+  },
   "page": {
     "notFoundMessage": "Questa pagina non esiste.",
     "notFoundTitle": "Oops!"

@@ -10,6 +10,24 @@
     "timeout": "Verzoek verlopen",
     "unauthorized": "Niet geautoriseerd"
   },
+  "login": {
+    "accessDenied": "Toegangsprovider heeft toegang geweigerd.",
+    "cancelled": "Inloggen geannuleerd.",
+    "invalidGrant": "De inlogsessie is verlopen of ongeldig, probeer het opnieuw.",
+    "invalidIdToken": "Kan gebruikersinformatie niet lezen uit het ID-token.",
+    "invalidRequest": "Ongeldig inlogverzoek.",
+    "invalidState": "State-validatie mislukt, probeer het opnieuw.",
+    "missingCodeOrState": "Autorisatiecode of state ontbreekt.",
+    "missingPkce": "PKCE-parameter ontbreekt.",
+    "networkError": "Netwerkfout tijdens het inloggen, controleer uw netwerkverbinding.",
+    "noIdToken": "Geen ID-token ontvangen na inloggen.",
+    "serverError": "Serverfout bij inlogservice, probeer het later opnieuw.",
+    "temporarilyUnavailable": "Inlogservice tijdelijk niet beschikbaar, probeer het later opnieuw.",
+    "tokenEndpointNonJson": "Tokenendpoint gaf een ongeldige respons terug.",
+    "tokenExchangeFailed": "Wisselen van autorisatiecode naar token mislukt.",
+    "unknown": "Inloggen mislukt, probeer het opnieuw.",
+    "unsupportedResponseType": "Niet-ondersteund responstype."
+  },
   "page": {
     "notFoundMessage": "Deze pagina bestaat niet.",
     "notFoundTitle": "Oeps!"

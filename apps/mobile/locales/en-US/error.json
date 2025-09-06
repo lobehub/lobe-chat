@@ -10,6 +10,24 @@
     "timeout": "Request Timed Out",
     "unauthorized": "Unauthorized"
   },
+  "login": {
+    "accessDenied": "Access denied by the identity provider.",
+    "cancelled": "Login cancelled.",
+    "invalidGrant": "Login session has expired or is invalid, please try again.",
+    "invalidIdToken": "Unable to read user information from the ID Token.",
+    "invalidRequest": "Invalid login request.",
+    "invalidState": "State validation failed, please try again.",
+    "missingCodeOrState": "Missing authorization code or state.",
+    "missingPkce": "Missing PKCE parameters.",
+    "networkError": "Network error during login, please check your connection.",
+    "noIdToken": "ID Token not received after login.",
+    "serverError": "Server error occurred during login, please try again later.",
+    "temporarilyUnavailable": "Login service is temporarily unavailable, please try again later.",
+    "tokenEndpointNonJson": "Token endpoint returned an invalid response.",
+    "tokenExchangeFailed": "Failed to exchange authorization code for token.",
+    "unknown": "Login failed, please try again.",
+    "unsupportedResponseType": "Unsupported response type."
+  },
   "page": {
     "notFoundMessage": "This page does not exist.",
     "notFoundTitle": "Oops!"

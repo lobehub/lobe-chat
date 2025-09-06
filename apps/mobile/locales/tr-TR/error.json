@@ -10,6 +10,24 @@
     "timeout": "İstek Zaman Aşımına Uğradı",
     "unauthorized": "Yetkisiz"
   },
+  "login": {
+    "accessDenied": "Kimlik sağlayıcı erişimi reddetti.",
+    "cancelled": "Giriş işlemi iptal edildi.",
+    "invalidGrant": "Giriş oturumu süresi doldu veya geçersiz, lütfen tekrar deneyin.",
+    "invalidIdToken": "ID Token'dan kullanıcı bilgileri okunamadı.",
+    "invalidRequest": "Giriş isteği hatalı.",
+    "invalidState": "state doğrulaması başarısız oldu, lütfen tekrar deneyin.",
+    "missingCodeOrState": "Yetkilendirme kodu veya state eksik.",
+    "missingPkce": "PKCE parametresi eksik.",
+    "networkError": "Giriş sırasında ağ hatası oluştu, lütfen ağ bağlantınızı kontrol edin.",
+    "noIdToken": "Giriş sonrası ID Token alınamadı.",
+    "serverError": "Giriş servisi sunucu hatası verdi, lütfen daha sonra tekrar deneyin.",
+    "temporarilyUnavailable": "Giriş servisi geçici olarak kullanılamıyor, lütfen daha sonra tekrar deneyin.",
+    "tokenEndpointNonJson": "Token uç noktası geçersiz yanıt döndürdü.",
+    "tokenExchangeFailed": "Yetkilendirme kodu token ile değiş tokuş edilemedi.",
+    "unknown": "Giriş başarısız oldu, lütfen tekrar deneyin.",
+    "unsupportedResponseType": "Desteklenmeyen yanıt türü."
+  },
   "page": {
     "notFoundMessage": "Bu sayfa mevcut değil.",
     "notFoundTitle": "Ayy!"

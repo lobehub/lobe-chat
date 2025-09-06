@@ -10,6 +10,24 @@
     "timeout": "Zeitüberschreitung der Anfrage",
     "unauthorized": "Nicht autorisiert"
   },
+  "login": {
+    "accessDenied": "Der Identitätsanbieter hat den Zugriff verweigert.",
+    "cancelled": "Anmeldung wurde abgebrochen.",
+    "invalidGrant": "Die Anmeldesitzung ist abgelaufen oder ungültig, bitte erneut versuchen.",
+    "invalidIdToken": "Benutzerinformationen konnten nicht aus dem ID-Token gelesen werden.",
+    "invalidRequest": "Ungültige Anmeldeanforderung.",
+    "invalidState": "State-Überprüfung fehlgeschlagen, bitte erneut versuchen.",
+    "missingCodeOrState": "Autorisierungscode oder State fehlt.",
+    "missingPkce": "PKCE-Parameter fehlen.",
+    "networkError": "Netzwerkfehler während der Anmeldung, bitte Netzwerkverbindung überprüfen.",
+    "noIdToken": "Nach der Anmeldung wurde kein ID-Token empfangen.",
+    "serverError": "Serverfehler beim Anmeldedienst, bitte später erneut versuchen.",
+    "temporarilyUnavailable": "Anmeldedienst vorübergehend nicht verfügbar, bitte später erneut versuchen.",
+    "tokenEndpointNonJson": "Token-Endpunkt hat eine ungültige Antwort zurückgegeben.",
+    "tokenExchangeFailed": "Austausch des Autorisierungscodes gegen Token fehlgeschlagen.",
+    "unknown": "Anmeldung fehlgeschlagen, bitte erneut versuchen.",
+    "unsupportedResponseType": "Nicht unterstützter Antworttyp."
+  },
   "page": {
     "notFoundMessage": "Diese Seite existiert nicht.",
     "notFoundTitle": "Hoppla!"

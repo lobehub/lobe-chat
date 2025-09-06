@@ -10,6 +10,24 @@
     "timeout": "Délai d'attente dépassé",
     "unauthorized": "Non autorisé"
   },
+  "login": {
+    "accessDenied": "Le fournisseur d'identité a refusé l'accès.",
+    "cancelled": "Connexion annulée.",
+    "invalidGrant": "La session de connexion a expiré ou est invalide, veuillez réessayer.",
+    "invalidIdToken": "Impossible de lire les informations utilisateur depuis le jeton d'identification.",
+    "invalidRequest": "Requête de connexion incorrecte.",
+    "invalidState": "Échec de la vérification de l'état, veuillez réessayer.",
+    "missingCodeOrState": "Code d'autorisation ou état manquant.",
+    "missingPkce": "Paramètre PKCE manquant.",
+    "networkError": "Erreur réseau lors de la connexion, veuillez vérifier votre connexion.",
+    "noIdToken": "Aucun jeton d'identification reçu après la connexion.",
+    "serverError": "Erreur serveur du service de connexion, veuillez réessayer plus tard.",
+    "temporarilyUnavailable": "Service de connexion temporairement indisponible, veuillez réessayer plus tard.",
+    "tokenEndpointNonJson": "La réponse de l'endpoint de jeton n'est pas au format JSON.",
+    "tokenExchangeFailed": "Échec de l'échange du code d'autorisation contre un jeton.",
+    "unknown": "Échec de la connexion, veuillez réessayer.",
+    "unsupportedResponseType": "Type de réponse non pris en charge."
+  },
   "page": {
     "notFoundMessage": "Cette page n'existe pas.",
     "notFoundTitle": "Oups !"

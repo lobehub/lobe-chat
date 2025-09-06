@@ -10,6 +10,24 @@
     "timeout": "Tempo de requisição esgotado",
     "unauthorized": "Não autorizado"
   },
+  "login": {
+    "accessDenied": "O provedor de identidade negou o acesso.",
+    "cancelled": "Login cancelado.",
+    "invalidGrant": "A sessão de login expirou ou é inválida, por favor tente novamente.",
+    "invalidIdToken": "Não foi possível ler as informações do usuário a partir do ID Token.",
+    "invalidRequest": "Solicitação de login incorreta.",
+    "invalidState": "Falha na verificação do estado, por favor tente novamente.",
+    "missingCodeOrState": "Código de autorização ou estado ausente.",
+    "missingPkce": "Parâmetro PKCE ausente.",
+    "networkError": "Erro de rede durante o login, por favor verifique a conexão.",
+    "noIdToken": "ID Token não obtido após o login.",
+    "serverError": "Erro no servidor do serviço de login, por favor tente novamente mais tarde.",
+    "temporarilyUnavailable": "Serviço de login temporariamente indisponível, por favor tente novamente mais tarde.",
+    "tokenEndpointNonJson": "O endpoint do token retornou uma resposta inválida.",
+    "tokenExchangeFailed": "Falha ao trocar o código de autorização pelo token.",
+    "unknown": "Falha no login, por favor tente novamente.",
+    "unsupportedResponseType": "Tipo de resposta não suportado."
+  },
   "page": {
     "notFoundMessage": "Esta página não existe.",
     "notFoundTitle": "Ops!"

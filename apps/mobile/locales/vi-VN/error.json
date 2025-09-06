@@ -10,6 +10,24 @@
     "timeout": "Yêu cầu hết thời gian chờ",
     "unauthorized": "Chưa được ủy quyền"
   },
+  "login": {
+    "accessDenied": "Nhà cung cấp xác thực đã từ chối truy cập.",
+    "cancelled": "Đăng nhập đã bị hủy.",
+    "invalidGrant": "Phiên đăng nhập đã hết hạn hoặc không hợp lệ, vui lòng thử lại.",
+    "invalidIdToken": "Không thể đọc thông tin người dùng từ ID Token.",
+    "invalidRequest": "Yêu cầu đăng nhập không hợp lệ.",
+    "invalidState": "Kiểm tra state thất bại, vui lòng thử lại.",
+    "missingCodeOrState": "Thiếu mã ủy quyền hoặc state.",
+    "missingPkce": "Thiếu tham số PKCE.",
+    "networkError": "Lỗi mạng trong quá trình đăng nhập, vui lòng kiểm tra kết nối mạng.",
+    "noIdToken": "Không nhận được ID Token sau khi đăng nhập.",
+    "serverError": "Dịch vụ đăng nhập gặp lỗi máy chủ, vui lòng thử lại sau.",
+    "temporarilyUnavailable": "Dịch vụ đăng nhập tạm thời không khả dụng, vui lòng thử lại sau.",
+    "tokenEndpointNonJson": "Giao diện token trả về phản hồi không hợp lệ.",
+    "tokenExchangeFailed": "Đổi mã ủy quyền lấy token thất bại.",
+    "unknown": "Đăng nhập thất bại, vui lòng thử lại.",
+    "unsupportedResponseType": "Loại phản hồi không được hỗ trợ."
+  },
   "page": {
     "notFoundMessage": "Trang này không tồn tại.",
     "notFoundTitle": "Ôi không!"

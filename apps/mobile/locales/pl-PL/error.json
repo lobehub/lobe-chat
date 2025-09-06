@@ -10,6 +10,24 @@
     "timeout": "Przekroczono limit czasu żądania",
     "unauthorized": "Brak autoryzacji"
   },
+  "login": {
+    "accessDenied": "Dostęp został odmówiony przez dostawcę tożsamości.",
+    "cancelled": "Logowanie zostało anulowane.",
+    "invalidGrant": "Sesja logowania wygasła lub jest nieprawidłowa, spróbuj ponownie.",
+    "invalidIdToken": "Nie można odczytać informacji o użytkowniku z tokenu ID.",
+    "invalidRequest": "Nieprawidłowe żądanie logowania.",
+    "invalidState": "Weryfikacja stanu nie powiodła się, spróbuj ponownie.",
+    "missingCodeOrState": "Brak kodu autoryzacji lub stanu.",
+    "missingPkce": "Brak parametrów PKCE.",
+    "networkError": "Błąd sieci podczas logowania, sprawdź połączenie internetowe.",
+    "noIdToken": "Po zalogowaniu nie otrzymano tokenu ID.",
+    "serverError": "Błąd serwera usługi logowania, spróbuj ponownie później.",
+    "temporarilyUnavailable": "Usługa logowania jest tymczasowo niedostępna, spróbuj ponownie później.",
+    "tokenEndpointNonJson": "Punkt końcowy tokenu zwrócił nieprawidłową odpowiedź.",
+    "tokenExchangeFailed": "Wymiana kodu autoryzacji na token nie powiodła się.",
+    "unknown": "Logowanie nie powiodło się, spróbuj ponownie.",
+    "unsupportedResponseType": "Nieobsługiwany typ odpowiedzi."
+  },
   "page": {
     "notFoundMessage": "Ta strona nie istnieje.",
     "notFoundTitle": "Ups!"

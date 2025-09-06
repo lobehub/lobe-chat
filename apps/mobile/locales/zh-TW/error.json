@@ -10,6 +10,24 @@
     "timeout": "請求逾時",
     "unauthorized": "未經授權"
   },
+  "login": {
+    "accessDenied": "身份提供者拒絕了存取權限。",
+    "cancelled": "已取消登入。",
+    "invalidGrant": "登入會話已過期或無效，請重試。",
+    "invalidIdToken": "無法從 ID Token 讀取使用者資訊。",
+    "invalidRequest": "登入請求不正確。",
+    "invalidState": "state 驗證失敗，請重試。",
+    "missingCodeOrState": "缺少授權碼或 state。",
+    "missingPkce": "缺少 PKCE 參數。",
+    "networkError": "登入過程中發生網路錯誤，請檢查網路連線。",
+    "noIdToken": "登入後未取得 ID Token。",
+    "serverError": "登入服務發生伺服器錯誤，請稍後重試。",
+    "temporarilyUnavailable": "登入服務暫時無法使用，請稍後重試。",
+    "tokenEndpointNonJson": "令牌介面回傳了非法回應。",
+    "tokenExchangeFailed": "交換授權碼為令牌失敗。",
+    "unknown": "登入失敗，請重試。",
+    "unsupportedResponseType": "不支援的回應類型。"
+  },
   "page": {
     "notFoundMessage": "該頁面不存在。",
     "notFoundTitle": "哎呀！"
