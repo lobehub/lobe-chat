@@ -32,18 +32,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          version: 10
 
       - name: Install deps
-        run: bun i
+        run: pnpm install
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Lint
-        run: bun run lint
+        run: pnpm run lint
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
@@ -93,7 +93,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-13, windows-2025, ubuntu-latest]
+        os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v5
         with:
@@ -172,27 +172,6 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
 
-      # 处理 macOS latest-mac.yml 重命名 (避免多架构覆盖)
-      - name: Rename macOS latest-mac.yml for multi-architecture support
-        if: runner.os == 'macOS'
-        run: |
-          cd apps/desktop/release
-          if [ -f "latest-mac.yml" ]; then
-            # 根据运行环境检测架构
-            if [[ "${{ matrix.os }}" == *"arm64"* || "${{ matrix.os }}" == "macos-latest" ]]; then
-              ARCH_SUFFIX="arm"
-            else
-              ARCH_SUFFIX="intel"  
-            fi
-            
-            mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
-            echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml"
-            ls -la latest-mac-*.yml
-          else
-            echo "⚠️ latest-mac.yml not found, skipping rename"
-            ls -la latest*.yml || echo "No latest*.yml files found"
-          fi
-
       # 上传构建产物
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -210,62 +189,8 @@ jobs:
             apps/desktop/release/*.tar.gz*
           retention-days: 5
 
-  # 合并 macOS 多架构 latest-mac.yml 文件
-  merge-mac-files:
-    needs: [build, version]
-    name: Merge macOS Release Files for PR
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install required dependencies only
-        run: |
-          # 创建临时目录并安装依赖
-          mkdir -p temp-deps
-          cd temp-deps
-          npm init -y
-          npm install fs-extra yaml tsx
-          # 确保回到项目根目录
-          cd ${{ github.workspace }}
-
-      # 下载所有平台的构建产物
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: release-*
-          merge-multiple: true
-
-      # 列出下载的构建产物
-      - name: List downloaded artifacts
-        run: ls -R release
-
-      # 合并 macOS YAML 文件 (确保在项目根目录执行)
-      - name: Merge latest-mac.yml files
-        working-directory: ${{ github.workspace }}
-        run: NODE_PATH="${PWD}/temp-deps/node_modules" "${PWD}/temp-deps/node_modules/.bin/tsx" scripts/electronWorkflow/mergeMacReleaseFiles.ts ${{ needs.version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ needs.version.outputs.version }}
-
-      # 上传合并后的构建产物
-      - name: Upload artifacts with merged macOS files
-        uses: actions/upload-artifact@v4
-        with:
-          name: merged-release-pr
-          path: release/
-          retention-days: 1
-
   publish-pr:
-    needs: [merge-mac-files, version]
+    needs: [build, version]
     name: Publish PR Build
     runs-on: ubuntu-latest
     # Grant write permissions for creating release and commenting on PR
@@ -279,15 +204,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 下载合并后的构建产物
-      - name: Download merged artifacts
+      # 下载所有平台的构建产物
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: merged-release-pr
           path: release
+          pattern: release-*
+          merge-multiple: true
 
       # 列出所有构建产物
-      - name: List final artifacts
+      - name: List artifacts
         run: ls -R release
 
       # 生成PR发布描述
