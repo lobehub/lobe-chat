@@ -1,12 +1,15 @@
 const dotenv = require('dotenv');
+const os = require('node:os');
 
 dotenv.config();
 
 const packageJSON = require('./package.json');
 
 const channel = process.env.UPDATE_CHANNEL;
+const arch = os.arch();
 
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
+console.log(`🏗️ Building for architecture: ${arch}`);
 
 const isNightly = channel === 'nightly';
 const isBeta = packageJSON.name.includes('beta');
@@ -87,12 +90,13 @@ const config = {
     hardenedRuntime: true,
     notarize: true,
     target:
-      // 降低构建时间，nightly 只打 arm64
+      // 降低构建时间，nightly 只打 dmg
+      // 根据当前机器架构只构建对应架构的包
       isNightly
-        ? [{ arch: ['arm64'], target: 'dmg' }]
+        ? [{ arch: [arch === 'arm64' ? 'arm64' : 'x64'], target: 'dmg' }]
         : [
-            { arch: ['x64', 'arm64'], target: 'dmg' },
-            { arch: ['x64', 'arm64'], target: 'zip' },
+            { arch: [arch === 'arm64' ? 'arm64' : 'x64'], target: 'dmg' },
+            { arch: [arch === 'arm64' ? 'arm64' : 'x64'], target: 'zip' },
           ],
   },
   npmRebuild: true,
