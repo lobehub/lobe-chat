@@ -1,9 +1,8 @@
 import { parseToolCalls } from '@lobechat/model-runtime';
-import { ChatErrorType } from '@lobechat/types';
+import { ChatErrorType, ResponseAnimation, ResponseAnimationStyle } from '@lobechat/types';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { ResponseAnimation, ResponseAnimationStyle } from '@lobechat/types';
 import {
   ChatMessageError,
   MessageToolCall,
