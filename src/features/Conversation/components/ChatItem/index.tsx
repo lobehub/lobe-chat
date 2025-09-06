@@ -5,6 +5,7 @@ import isEqual from 'fast-deep-equal';
 import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import remarkCjkFriendly from 'remark-cjk-friendly';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { isDesktop } from '@/const/version';
@@ -202,7 +203,8 @@ const Item = memo<ChatListItemProps>(
         customRender: markdownCustomRender,
         enableCustomFootnotes: item?.role === 'assistant',
         rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
-        remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
+        remarkPlugins:
+          item?.role === 'user' ? [remarkCjkFriendly] : [remarkCjkFriendly, ...remarkPlugins],
         showFootnotes:
           item?.role === 'user'
             ? undefined
