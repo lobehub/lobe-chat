@@ -10,11 +10,11 @@
     }
   },
   "appLoading": {
-    "appIdle": "Ready to start",
-    "appInitializing": "Application is starting...",
+    "appIdle": "ImoogleAI ready",
+    "appInitializing": "ImoogleAI is starting...",
     "failed": "Sorry, the application initialization failed. Please check the details for troubleshooting.",
     "finished": "Database initialization completed",
-    "goToChat": "Loading chat page...",
+    "goToChat": "Starting ImoogleAI...",
     "initAuth": "Initializing authentication service...",
     "initUser": "Initializing user status...",
     "initializing": "Initializing PGlite database...",
@@ -255,7 +255,7 @@
   },
   "layoutInitializing": "Initializing layout...",
   "legal": "Legal Disclaimer",
-  "loading": "Loading...",
+  "loading": "ImoogleAI loading...",
   "mail": {
     "business": "Business Cooperation",
     "support": "Email Support"

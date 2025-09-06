@@ -11,11 +11,11 @@ export default {
     },
   },
   appLoading: {
-    appIdle: '准备启动',
-    appInitializing: '应用启动中...',
+    appIdle: 'ImoogleAI 准备就绪',
+    appInitializing: 'ImoogleAI 启动中...',
     failed: '很抱歉，应用初始化失败，请查看详情进行排查',
     finished: '数据库初始化完成',
-    goToChat: '对话页面加载中...',
+    goToChat: '启动 ImoogleAI...',
     initAuth: '鉴权服务初始化...',
     initUser: '用户状态初始化...',
     initializing: 'PGlite 数据库初始化...',
@@ -278,7 +278,7 @@ export default {
   },
   layoutInitializing: '正在加载布局...',
   legal: '法律声明',
-  loading: '加载中...',
+  loading: 'ImoogleAI 加载中...',
   mail: {
     business: '商务合作',
     support: '邮件支持',
