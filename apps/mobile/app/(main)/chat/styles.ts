@@ -2,11 +2,6 @@ import { createStyles, getAlphaColor } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   chatContainer: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
-  container: {
-    backgroundColor: token.colorBgLayout,
     flex: 1,
   },
   drawerOverlay: {
@@ -15,5 +10,9 @@ export const useStyles = createStyles((token) => ({
   drawerStyle: {
     backgroundColor: token.colorBgLayout,
     width: '80%',
+  },
+  safeAreaView: {
+    backgroundColor: token.colorBgLayout,
+    flex: 1,
   },
 }));

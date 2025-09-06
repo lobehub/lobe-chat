@@ -17,13 +17,13 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "{{name}} API Anahtarını girin",
+        "description": "{{name}} API Anahtarınızı girin",
         "label": "API Anahtarı",
-        "placeholder": "{{name}} API Anahtarını girin"
+        "placeholder": "{{name}} API Anahtarınızı girin"
       },
       "proxyUrl": {
         "desc": "http(s):// içermelidir",
-        "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL giriniz",
+        "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL girin",
         "placeholder": "https://api.example.com/v1",
         "title": "API Vekil Adresi"
       },
@@ -70,24 +70,24 @@
   "changelog": "Güncelleme Günlüğü",
   "color": {
     "neutral": {
-      "description": "Uygulamanın nötr tonlarını seçin",
-      "title": "Nötr Renk Ayarları"
+      "description": "Uygulamanın nötr tonunu seçin",
+      "title": "Nötr Renk Ayarı"
     },
     "preview": "Önizleme",
     "previewMessages": {
-      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme gerçek zamanlı olarak güncellenir ve sonucu gösterir.",
+      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme gerçek zamanlı olarak güncellenecektir.",
       "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
     },
     "primary": {
       "description": "Uygulamanın ana rengini seçin",
-      "title": "Ana Renk Ayarları"
+      "title": "Ana Renk Ayarı"
     },
     "title": "Renk Ayarları"
   },
   "developer": {
     "accessToken": {
       "expire": {
-        "success": "Erişim belirteci hemen süresi doldu",
+        "success": "Erişim belirteci hemen geçersiz kılındı",
         "title": "Erişim Belirteci Süresi Doldu"
       },
       "invalidate": {
@@ -102,7 +102,7 @@
     "failurePrefix": "İşlem başarısız: ",
     "refreshToken": {
       "expire": {
-        "success": "Yenileme belirteci hemen süresi doldu",
+        "success": "Yenileme belirteci hemen geçersiz kılındı",
         "title": "Yenileme Belirteci Süresi Doldu"
       },
       "invalidate": {
@@ -128,12 +128,12 @@
   "openai": "OpenAI Ayarları",
   "openaiSettings": {
     "apiKey": "API Anahtarı",
-    "apiKeyPlaceholder": "OpenAI API Anahtarınızı giriniz",
+    "apiKeyPlaceholder": "OpenAI API Anahtarınızı girin",
     "checkApiKey": "Lütfen API Anahtarının doğru olduğundan emin olun",
     "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen vekil adresini kontrol edin",
     "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve vekil adresi doğru yapılandırıldı",
     "connectivityHint": "Bağlantı testi sonrası API Anahtarı ve vekil adresinin doğruluğu kontrol edilecektir",
-    "pleaseEnterApiKey": "Lütfen API Anahtarını giriniz",
+    "pleaseEnterApiKey": "Lütfen API Anahtarını girin",
     "proxyAddress": "API Vekil Adresi",
     "proxyPlaceholder": "http(s):// içermelidir",
     "testConnectivity": "Bağlantıyı Test Et",
@@ -142,12 +142,12 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Anahtarınız ve proxy adresiniz <1>AES-GCM</1> şifreleme algoritması ile şifrelenecektir",
+      "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> algoritması ile şifrelenecektir",
       "checker": {
         "button": "Bağlantıyı Test Et",
-        "desc": "Api Anahtarı ve proxy adresinin doğru girilip girilmediğini test edin",
+        "desc": "API Anahtarı ve vekil adresinin doğruluğunu test edin",
         "pass": "Kontrol başarılı",
-        "selectModel": "Bağlantıyı test etmek için model seçin",
+        "selectModel": "Bağlantı testi için model seçin",
         "title": "Bağlantı Kontrolü"
       }
     }

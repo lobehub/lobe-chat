@@ -1,5 +1,5 @@
 {
-  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작할 수 있으며, [도우미 설정]({{url}})에서 제 정보를 더 완벽하게 설정할 수도 있습니다.",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작할 수 있으며, [도우미 설정]({{url}})에서 제 정보를 더 완벽하게 설정할 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**이며, {{systemRole}}입니다. 대화를 시작해 볼까요!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 볼까요!",
   "agentRoleEdit": {
@@ -13,18 +13,18 @@
   "confirmDelete": "삭제 확인",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
   "copyFailed": "복사 실패",
-  "defaultAgent": "맞춤 도우미",
+  "defaultAgent": "사용자 지정 도우미",
   "defaultList": "기본 목록",
   "deleteMessageConfirm": "이 메시지를 삭제하시겠습니까?",
   "history": "대화 기록",
   "inbox": {
-    "desc": "두뇌 집단을 활성화하여 사고의 불꽃을 일으키세요. 당신의 지능형 도우미가 여기서 모든 대화를 함께합니다.",
-    "title": "편하게 이야기해요"
+    "desc": "두뇌 클러스터를 활성화하여 사고의 불꽃을 일으키세요. 당신의 지능형 도우미가 여기서 모든 대화를 나눕니다.",
+    "title": "편하게 대화하기"
   },
   "messageCopied": "메시지가 복사되었습니다",
   "newChat": "새 대화",
   "placeholder": "메시지를 입력하세요...",
-  "regenerateFailed": "재생성 실패, 나중에 다시 시도하세요",
+  "regenerateFailed": "재생성에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   "send": "전송",
   "session": {
     "createFirst": "첫 번째 채팅 세션을 생성하세요",
