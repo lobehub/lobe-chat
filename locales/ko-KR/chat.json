@@ -70,6 +70,8 @@
   "input": {
     "addAi": "AI 메시지 추가",
     "addUser": "사용자 메시지 추가",
+    "disclaimer": "AI도 실수를 할 수 있으니 중요한 정보는 꼭 확인하세요",
+    "errorMsg": "메시지 전송에 실패했습니다. 네트워크를 확인한 후 다시 시도해 주세요: {{errorMsg}}",
     "more": "더 많은",
     "send": "전송",
     "sendWithCmdEnter": "<key/> 키를 눌러 전송",

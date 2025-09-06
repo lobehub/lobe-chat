@@ -71,6 +71,7 @@ export default {
   input: {
     addAi: '添加一条 AI 消息',
     addUser: '添加一条用户消息',
+    disclaimer: 'AI 也可能会犯错，请检查重要信息',
     errorMsg: '消息发送失败，请检查网络后重试: {{errorMsg}}',
     more: '更多',
     send: '发送',

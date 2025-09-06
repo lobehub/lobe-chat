@@ -260,7 +260,8 @@ export const generateAIChatV2: StateCreator<
     // Only clear creating message state if it's the active session
     if (operationKey === messageMapKey(activeId, activeTopicId)) {
       const editorTempState = get().mainSendMessageOperations[operationKey]?.inputEditorTempState;
-      get().mainInputEditor?.setJSONState(editorTempState);
+
+      if (editorTempState) get().mainInputEditor?.setJSONState(editorTempState);
     }
   },
   clearSendMessageError: () => {

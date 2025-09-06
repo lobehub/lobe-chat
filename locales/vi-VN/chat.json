@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Thêm một tin nhắn AI",
     "addUser": "Thêm một tin nhắn người dùng",
+    "disclaimer": "AI cũng có thể mắc lỗi, vui lòng kiểm tra kỹ thông tin quan trọng",
+    "errorMsg": "Gửi tin nhắn thất bại, vui lòng kiểm tra mạng và thử lại: {{errorMsg}}",
     "more": "Thêm",
     "send": "Gửi",
     "sendWithCmdEnter": "Nhấn <key/> để gửi",

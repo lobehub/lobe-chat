@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Voeg een AI-bericht toe",
     "addUser": "Voeg een gebruikersbericht toe",
+    "disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
+    "errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
     "more": "Meer",
     "send": "Verzenden",
     "sendWithCmdEnter": "Druk op <key/> om te verzenden",

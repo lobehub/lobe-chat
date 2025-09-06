@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Add an AI message",
     "addUser": "Add a user message",
+    "disclaimer": "AI may also make mistakes, please verify important information",
+    "errorMsg": "Message sending failed, please check your network and try again: {{errorMsg}}",
     "more": "more",
     "send": "Send",
     "sendWithCmdEnter": "Press <key/> to send",

@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Dodaj wiadomość AI",
     "addUser": "Dodaj wiadomość użytkownika",
+    "disclaimer": "AI również może popełniać błędy, proszę sprawdzić ważne informacje",
+    "errorMsg": "Wysyłanie wiadomości nie powiodło się, sprawdź połączenie sieciowe i spróbuj ponownie: {{errorMsg}}",
     "more": "więcej",
     "send": "Wyślij",
     "sendWithCmdEnter": "Naciśnij <key/>, aby wysłać",
