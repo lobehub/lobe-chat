@@ -6,14 +6,13 @@ import { extractBearerToken, getUserAuth } from '../auth';
 let mockEnableClerk = false;
 let mockEnableNextAuth = false;
 
-vi.mock('@lobechat/const', () => ({
+vi.mock('@/const/auth', () => ({
   get enableClerk() {
     return mockEnableClerk;
   },
   get enableNextAuth() {
     return mockEnableNextAuth;
   },
-  isDesktop: false,
 }));
 
 vi.mock('@/libs/clerk-auth', () => ({
