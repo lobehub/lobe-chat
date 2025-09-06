@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Agregar un mensaje de IA",
     "addUser": "Agregar un mensaje de usuario",
+    "disclaimer": "La IA también puede cometer errores, por favor verifique la información importante",
+    "errorMsg": "Error al enviar el mensaje, por favor revise la conexión y vuelva a intentarlo: {{errorMsg}}",
     "more": "más",
     "send": "Enviar",
     "sendWithCmdEnter": "Presiona <key/> para enviar",

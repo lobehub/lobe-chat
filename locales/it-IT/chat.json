@@ -70,6 +70,8 @@
   "input": {
     "addAi": "Aggiungi un messaggio AI",
     "addUser": "Aggiungi un messaggio utente",
+    "disclaimer": "L'IA può anche commettere errori, si prega di verificare le informazioni importanti",
+    "errorMsg": "Invio del messaggio fallito, controlla la rete e riprova: {{errorMsg}}",
     "more": "Ulteriori",
     "send": "Invia",
     "sendWithCmdEnter": "Premi <key/> per inviare",

@@ -1,9 +1,11 @@
 'use client';
 
 import { ChatInput, ChatInputActionBar } from '@lobehub/editor/react';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { useTranslation } from 'react-i18next';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatInputStore } from '@/features/ChatInput/store';
 import { useChatStore } from '@/store/chat';
@@ -12,7 +14,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import ActionBar from '../ActionBar';
 import InputEditor from '../InputEditor';
 import SendArea from '../SendArea';
-import ShortcutHint from '../SendArea/ShortcutHint';
 import TypoBar from '../TypoBar';
 import FilePreview from './FilePreview';
 
@@ -28,6 +29,9 @@ const useStyles = createStyles(({ css, token }) => ({
       }
     }
   `,
+  footnote: css`
+    font-size: 10px;
+  `,
   fullscreen: css`
     position: absolute;
     z-index: 100;
@@ -42,6 +46,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => {
+  const { t } = useTranslation('chat');
   const [slashMenuRef, expand, showTypoBar, editor, leftActions] = useChatInputStore((s) => [
     s.slashMenuRef,
     s.expand,
@@ -65,7 +70,8 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
       {!expand && fileNode}
       <Flexbox
         className={cx(styles.container, expand && styles.fullscreen)}
-        paddingBlock={showFootnote ? 0 : '0 12px'}
+        gap={8}
+        paddingBlock={showFootnote ? '0 8px' : '0 12px'}
         paddingInline={12}
       >
         <ChatInput
@@ -85,7 +91,13 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
           {expand && fileNode}
           <InputEditor />
         </ChatInput>
-        {showFootnote && !expand && <ShortcutHint />}
+        {showFootnote && !expand && (
+          <Center style={{ pointerEvents: 'none', zIndex: 100 }}>
+            <Text className={styles.footnote} type={'secondary'}>
+              {t('input.disclaimer')}
+            </Text>
+          </Center>
+        )}
       </Flexbox>
     </>
   );
