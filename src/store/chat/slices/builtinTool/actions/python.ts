@@ -1,3 +1,4 @@
+import { PythonFileItem, PythonInterpreterParams, PythonResponse } from '@lobechat/types';
 import { produce } from 'immer';
 import pMap from 'p-map';
 import { SWRResponse } from 'swr';
@@ -10,7 +11,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
 import { PythonToolIdentifier } from '@/tools/python';
-import { PythonFileItem, PythonInterpreterParams, PythonResponse } from '@/types/tool/python';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('python');
