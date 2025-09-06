@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor to remove edge runtime and add more tests."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix ChatInput send command switch."]
     },
     "date": "2025-09-06",
