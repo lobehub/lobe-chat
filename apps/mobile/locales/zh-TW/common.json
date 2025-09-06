@@ -1,28 +1,28 @@
 {
   "actions": {
-    "add": "新增",
+    "add": "添加",
     "cancel": "取消",
     "confirm": "確認",
     "continue": "繼續",
     "copy": "複製",
     "delete": "刪除",
     "edit": "編輯",
-    "regenerate": "重新產生",
+    "regenerate": "重新生成",
     "retry": "重試",
-    "save": "儲存"
+    "save": "保存"
   },
   "and": "和",
   "assistant": {
-    "fetchError": "取得助理列表失敗，請稍後再試",
+    "fetchError": "取得助理列表失敗，請稍後重試",
     "noData": "暫無助理資料",
-    "noMatch": "未找到符合條件的助理",
+    "noMatch": "未找到符合的助理",
     "search": "搜尋助理..."
   },
   "defaultSession": "自訂助理",
   "navigation": {
     "goToHomeScreen": "返回首頁"
   },
-  "or": "或是",
+  "or": "或者",
   "search": {
     "placeholder": "搜尋"
   },

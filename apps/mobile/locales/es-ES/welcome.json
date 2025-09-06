@@ -22,24 +22,24 @@
       "q13": "¿Tiene su propio mercado para obtener GPTs?",
       "q14": "¿Soporta múltiples proveedores de servicios de IA?",
       "q15": "¿Qué debo hacer si encuentro problemas al usarlo?"
-    },
-    "questions": {
-      "moreBtn": "Saber más",
-      "title": "Preguntas frecuentes:"
-    },
-    "welcome": {
-      "afternoon": "Buenas tardes",
-      "morning": "Buenos días",
-      "night": "Buenas noches",
-      "noon": "Buen mediodía"
     }
   },
   "header": "Bienvenido",
   "pickAgent": "O elija de las plantillas de asistentes a continuación",
+  "questions": {
+    "moreBtn": "Saber más",
+    "title": "Preguntas frecuentes:"
+  },
   "skip": "Omitir creación",
   "slogan": {
     "desc1": "Activa un enjambre de cerebros, enciende chispas de pensamiento. Tu asistente inteligente, siempre contigo.",
     "desc2": "Crea tu primer asistente, ¡comencemos!",
     "title": "Dale a tu mente un cerebro más inteligente"
+  },
+  "welcome": {
+    "afternoon": "Buenas tardes",
+    "morning": "Buenos días",
+    "night": "Buenas noches",
+    "noon": "Buenas tardes"
   }
 }

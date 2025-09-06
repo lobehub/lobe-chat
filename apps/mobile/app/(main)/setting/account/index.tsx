@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
@@ -35,7 +36,7 @@ export default function AccountScreen() {
             try {
               await logout();
               // Ensure we leave the authenticated stack immediately after logout
-              router.replace('/login');
+              safeReplaceLogin(router);
             } catch (error) {
               const errorMessage = error instanceof Error ? error.message : 'Logout failed';
               Alert.alert(t('error.title', { ns: 'error' }), errorMessage);

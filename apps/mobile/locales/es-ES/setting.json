@@ -49,7 +49,7 @@
       "allLoaded": "Todos los modelos mostrados",
       "copySuccess": "Copiado con éxito",
       "disableFailed": "Error al deshabilitar el modelo",
-      "emptyNoSearch": "No se encontraron modelos, intente obtenerlos del servidor",
+      "emptyNoSearch": "No se encontraron modelos, intentando obtener del servidor",
       "emptyWithSearch": "No hay modelos que coincidan con la búsqueda",
       "enableFailed": "Error al habilitar el modelo",
       "fetch": "Obteniendo modelos",
@@ -70,19 +70,19 @@
   "changelog": "Registro de cambios",
   "color": {
     "neutral": {
-      "description": "Selecciona el tono neutro de la aplicación",
+      "description": "Seleccione el tono neutro de la aplicación",
       "title": "Configuración de tonos neutros"
     },
     "preview": "Vista previa",
     "previewMessages": {
-      "botHowToUse": "Puedes ajustar el color principal y los tonos neutros mediante el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "botHowToUse": "Puede ajustar el color principal y los tonos neutros con el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
       "userHowToUse": "¿Cómo usar la vista previa del tema?"
     },
     "primary": {
-      "description": "Selecciona el color principal de la aplicación",
+      "description": "Seleccione el tono principal de la aplicación",
       "title": "Configuración del color principal"
     },
-    "title": "Configuración de color"
+    "title": "Configuración de colores"
   },
   "developer": {
     "accessToken": {
@@ -91,12 +91,12 @@
         "title": "Token de acceso expirado"
       },
       "invalidate": {
-        "success": "Token de acceso invalidado correctamente",
+        "success": "Se ha invalidado el token de acceso",
         "title": "Token de acceso inválido"
       }
     },
     "clearAuthData": {
-      "success": "Datos de autenticación borrados correctamente",
+      "success": "Datos de autenticación borrados",
       "title": "Borrar datos de autenticación"
     },
     "failurePrefix": "Operación fallida: ",
@@ -106,7 +106,7 @@
         "title": "Token de actualización expirado"
       },
       "invalidate": {
-        "success": "Token de actualización invalidado correctamente",
+        "success": "Se ha invalidado el token de actualización",
         "title": "Token de actualización inválido"
       }
     },
@@ -120,7 +120,7 @@
   "help": "Ayuda",
   "locale": {
     "auto": {
-      "description": "Seguir la configuración del idioma del sistema",
+      "description": "Seguir la configuración de idioma del sistema",
       "title": "Seguir sistema"
     },
     "title": "Configuración de idioma"
@@ -142,18 +142,18 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Su clave secreta y la dirección del proxy se cifrarán utilizando el algoritmo <1>AES-GCM</1>",
+      "aesGcm": "Su clave y la dirección del proxy serán cifradas usando el algoritmo <1>AES-GCM</1>",
       "checker": {
         "button": "Probar conexión",
         "desc": "Verificar si la clave API y la dirección del proxy están correctamente configuradas",
         "pass": "Verificación exitosa",
         "selectModel": "Seleccione el modelo para probar la conexión",
-        "title": "Comprobación de conectividad"
+        "title": "Verificación de conectividad"
       }
     }
   },
   "providers": "Proveedores de IA",
-  "support": "Soporte por correo electrónico",
+  "support": "Soporte por correo",
   "themeMode": {
     "auto": "Seguir sistema",
     "dark": "Modo oscuro",
