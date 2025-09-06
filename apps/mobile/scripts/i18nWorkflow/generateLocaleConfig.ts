@@ -82,8 +82,6 @@ export const getLocaleNamespaces = (locale: string): string[] => {
 `;
 
     writeFileSync(outputPath, configContent, 'utf8');
-    console.log(`✅ 语言包配置已生成到: ${outputPath}`);
-    console.log(`📊 支持的语言: ${localeDirs.join(', ')}`);
   } catch (error) {
     console.error('❌ 生成语言包配置失败:', error);
   }

@@ -1,5 +1,5 @@
 {
-  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start chatting with me right away, or visit [Assistant Settings]({{url}}) to update my information.",
+  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start chatting with me right away, or go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**, {{systemRole}}. Let's start our conversation!",
   "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. Let's start our conversation!",
   "agentRoleEdit": {
@@ -10,18 +10,18 @@
     "roleSetting": "Role Settings",
     "title": "Role Settings"
   },
-  "confirmDelete": "Confirm Delete",
-  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. This action cannot be undone. Please confirm your operation.",
-  "copyFailed": "Copy Failed",
+  "confirmDelete": "Confirm Deletion",
+  "confirmRemoveSessionItemAlert": "This assistant will be deleted and cannot be recovered. Please confirm your action.",
+  "copyFailed": "Copy failed",
   "defaultAgent": "Custom Assistant",
   "defaultList": "Default List",
   "deleteMessageConfirm": "Are you sure you want to delete this message?",
   "history": "Chat History",
   "inbox": {
-    "desc": "Activate the brain cluster and spark your creativity. Your intelligent assistant is here to chat about anything with you.",
+    "desc": "Activate the brain cluster and spark your thoughts. Your intelligent assistant is here to chat about anything.",
     "title": "Casual Chat"
   },
-  "messageCopied": "Message Copied",
+  "messageCopied": "Message copied",
   "newChat": "New Chat",
   "placeholder": "Type your message...",
   "regenerateFailed": "Regeneration failed, please try again later",
@@ -32,7 +32,7 @@
     "search": {
       "placeholder": "Search sessions"
     },
-    "title": "Just Chat"
+    "title": "Casual Chat"
   },
   "share": "Share",
   "stop": "Stop",

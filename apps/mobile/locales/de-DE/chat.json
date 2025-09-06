@@ -6,28 +6,28 @@
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
     "edit": "Bearbeiten",
-    "placeholder": "Bitte geben Sie die Rollen-Prompt ein",
+    "placeholder": "Bitte gib den Rollen-Prompt ein",
     "roleSetting": "Rollen-Einstellung",
     "title": "Rollen-Einstellung"
   },
   "confirmDelete": "Löschen bestätigen",
-  "confirmRemoveSessionItemAlert": "Der Assistent wird gelöscht und kann nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+  "confirmRemoveSessionItemAlert": "Dieser Assistent wird gelöscht und kann nicht wiederhergestellt werden. Bitte bestätige deine Aktion.",
   "copyFailed": "Kopieren fehlgeschlagen",
   "defaultAgent": "Benutzerdefinierter Assistent",
   "defaultList": "Standardliste",
   "deleteMessageConfirm": "Möchten Sie diese Nachricht wirklich löschen?",
   "history": "Chatverlauf",
   "inbox": {
-    "desc": "Aktiviere das Gehirnnetzwerk und entfalte kreative Gedanken. Dein intelligenter Assistent, der hier ist, um mit dir über alles zu sprechen.",
+    "desc": "Aktiviere das Gehirnnetzwerk und entfalte kreative Gedanken. Dein intelligenter Assistent ist hier, um mit dir über alles zu sprechen.",
     "title": "Einfach plaudern"
   },
   "messageCopied": "Nachricht kopiert",
-  "newChat": "Neuer Chat",
-  "placeholder": "Geben Sie Ihre Nachricht ein...",
-  "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuchen Sie es später erneut",
+  "newChat": "Neues Gespräch",
+  "placeholder": "Gib deine Nachricht ein...",
+  "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuche es später erneut",
   "send": "Senden",
   "session": {
-    "createFirst": "Erstellen Sie Ihre erste Chat-Sitzung",
+    "createFirst": "Erstelle deine erste Chat-Sitzung",
     "empty": "Keine Sitzungen vorhanden",
     "search": {
       "placeholder": "Sitzungen durchsuchen"

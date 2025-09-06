@@ -1,7 +1,7 @@
 {
-  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou aller dans les [paramètres de l'assistant]({{url}}) pour compléter mes informations.",
-  "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}, commençons notre conversation !",
-  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, commençons notre conversation !",
+  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou aller dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
+  "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}, commençons la conversation !",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, commençons la conversation !",
   "agentRoleEdit": {
     "cancel": "Annuler",
     "confirm": "Confirmer",
@@ -11,15 +11,15 @@
     "title": "Paramètres du rôle"
   },
   "confirmDelete": "Confirmer la suppression",
-  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet assistant. Cette action est irréversible. Veuillez confirmer votre opération.",
+  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet assistant. Cette action est irréversible, veuillez confirmer votre choix.",
   "copyFailed": "Échec de la copie",
   "defaultAgent": "Assistant personnalisé",
   "defaultList": "Liste par défaut",
   "deleteMessageConfirm": "Voulez-vous vraiment supprimer ce message ?",
   "history": "Historique des conversations",
   "inbox": {
-    "desc": "Activez le réseau cérébral pour stimuler les étincelles de pensée. Votre assistant intelligent est ici pour tout discuter avec vous.",
-    "title": "Discutons librement"
+    "desc": "Activez le cluster cérébral pour stimuler les idées. Votre assistant intelligent est ici pour tout discuter avec vous.",
+    "title": "Discuter librement"
   },
   "messageCopied": "Message copié",
   "newChat": "Nouvelle conversation",

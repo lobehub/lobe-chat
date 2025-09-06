@@ -1,7 +1,7 @@
 {
   "assistant": {
     "detail": {
-      "addAndChat": "アシスタントを追加してチャットする",
+      "addAndChat": "アシスタントを追加してチャット",
       "addFailed": "アシスタントの追加に失敗しました",
       "addFailedMessage": "アシスタントの追加に失敗しました。後でもう一度お試しください",
       "assistantSettings": "アシスタント設定",

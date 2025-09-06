@@ -14,7 +14,7 @@
   "and": "und",
   "assistant": {
     "fetchError": "Fehler beim Abrufen der Assistentenliste, bitte versuchen Sie es später erneut",
-    "noData": "Keine Assistentendaten verfügbar",
+    "noData": "Keine Assistentendaten vorhanden",
     "noMatch": "Kein passender Assistent gefunden",
     "search": "Assistent suchen..."
   },

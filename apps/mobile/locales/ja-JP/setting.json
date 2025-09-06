@@ -50,7 +50,7 @@
       "copySuccess": "コピーに成功しました",
       "disableFailed": "モデルの無効化に失敗しました",
       "emptyNoSearch": "モデルが見つかりません。サーバーから取得を試みています",
-      "emptyWithSearch": "検索条件に合うモデルがありません",
+      "emptyWithSearch": "検索条件に一致するモデルがありません",
       "enableFailed": "モデルの有効化に失敗しました",
       "fetch": "モデルを取得中",
       "fetchFailed": "モデルの取得に失敗しました。再試行してください",
@@ -70,16 +70,16 @@
   "changelog": "更新履歴",
   "color": {
     "neutral": {
-      "description": "アプリのニュートラルカラーを選択します",
+      "description": "アプリのニュートラルカラーを選択してください",
       "title": "ニュートラルカラー設定"
     },
     "preview": "プレビュー",
     "previewMessages": {
-      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで効果を表示します。",
-      "userHowToUse": "テーマプレビューの使い方は？"
+      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで更新されます。",
+      "userHowToUse": "テーマプレビューの使い方"
     },
     "primary": {
-      "description": "アプリのメインカラーを選択します",
+      "description": "アプリのメインカラーを選択してください",
       "title": "メインカラー設定"
     },
     "title": "カラー設定"
@@ -87,12 +87,12 @@
   "developer": {
     "accessToken": {
       "expire": {
-        "success": "アクセストークンを即時期限切れにしました",
-        "title": "アクセストークン期限切れ"
+        "success": "アクセス トークンを即時に期限切れにしました",
+        "title": "アクセス トークンの期限切れ"
       },
       "invalidate": {
-        "success": "無効なアクセストークンを設定しました",
-        "title": "無効なアクセストークン"
+        "success": "無効なアクセス トークンを書き込みました",
+        "title": "無効なアクセス トークン"
       }
     },
     "clearAuthData": {
@@ -102,12 +102,12 @@
     "failurePrefix": "操作失敗: ",
     "refreshToken": {
       "expire": {
-        "success": "リフレッシュトークンを即時期限切れにしました",
-        "title": "リフレッシュトークン期限切れ"
+        "success": "リフレッシュ トークンを即時に期限切れにしました",
+        "title": "リフレッシュ トークンの期限切れ"
       },
       "invalidate": {
-        "success": "無効なリフレッシュトークンを設定しました",
-        "title": "無効なリフレッシュトークン"
+        "success": "無効なリフレッシュ トークンを書き込みました",
+        "title": "無効なリフレッシュ トークン"
       }
     },
     "title": "開発者オプション"
@@ -117,7 +117,7 @@
     "standard": "標準",
     "title": "フォントサイズ"
   },
-  "help": "ヘルプ",
+  "help": "使い方ヘルプ",
   "locale": {
     "auto": {
       "description": "システム言語設定に従う",
@@ -130,7 +130,7 @@
     "apiKey": "API キー",
     "apiKeyPlaceholder": "OpenAI の API キーを入力してください",
     "checkApiKey": "API キーが正しいか確認してください",
-    "checkProxyAddress": "サーバーに接続できません。プロキシアドレスを確認してください",
+    "checkProxyAddress": "サーバーに接続できません。プロキシアドレスが正しいか確認してください",
     "connectionSuccess": "接続成功。API キーとプロキシアドレスの設定が正しいです",
     "connectivityHint": "接続テスト後、API キーとプロキシアドレスの正確さを検証します",
     "pleaseEnterApiKey": "API キーを入力してください",
@@ -142,11 +142,11 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "あなたの秘密鍵やプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムで暗号化されます",
+      "aesGcm": "秘密鍵やプロキシアドレスなどは <1>AES-GCM</1> アルゴリズムで暗号化されます",
       "checker": {
         "button": "接続テスト",
-        "desc": "APIキーとプロキシアドレスが正しく入力されているかをテストします",
-        "pass": "チェックに合格しました",
+        "desc": "API キーとプロキシアドレスが正しく入力されているかテストします",
+        "pass": "チェック合格",
         "selectModel": "接続テストに使用するモデルを選択してください",
         "title": "接続性チェック"
       }

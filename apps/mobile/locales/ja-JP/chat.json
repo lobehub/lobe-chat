@@ -1,5 +1,5 @@
 {
-  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることができますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
+  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることも、[アシスタント設定]({{url}}) に移動して私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}**、{{systemRole}} です。さあ、会話を始めましょう！",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は **{{name}}** です。さあ、会話を始めましょう！",
   "agentRoleEdit": {
@@ -11,20 +11,20 @@
     "title": "役割設定"
   },
   "confirmDelete": "削除を確認",
-  "confirmRemoveSessionItemAlert": "このアシスタントを削除すると復元できません。操作を確認してください。",
+  "confirmRemoveSessionItemAlert": "このアシスタントを削除しようとしています。削除すると復元できません。操作を確認してください。",
   "copyFailed": "コピーに失敗しました",
   "defaultAgent": "カスタムアシスタント",
   "defaultList": "デフォルトリスト",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
   "inbox": {
-    "desc": "ブレインクラスターを起動し、思考の火花を刺激します。あなたのスマートアシスタントがここであらゆることを話し合います。",
+    "desc": "ブレインクラスタを起動し、思考の火花を刺激します。あなたのスマートアシスタントがここであらゆることを話し合います。",
     "title": "気軽におしゃべり"
   },
   "messageCopied": "メッセージがコピーされました",
-  "newChat": "新しいチャット",
+  "newChat": "新しい会話",
   "placeholder": "メッセージを入力してください...",
-  "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください",
+  "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください。",
   "send": "送信",
   "session": {
     "createFirst": "最初のチャットセッションを作成してください",

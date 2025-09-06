@@ -6,7 +6,7 @@
     "description": "302.AI é uma plataforma de aplicativos de IA paga sob demanda, oferecendo a API de IA e aplicativos online de IA mais completos do mercado."
   },
   "ai360": {
-    "description": "360 AI é uma plataforma de modelos e serviços de IA lançada pela empresa 360, oferecendo diversos modelos avançados de processamento de linguagem natural, incluindo 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Esses modelos combinam grande escala de parâmetros e capacidades multimodais, amplamente aplicados em geração de texto, compreensão semântica, sistemas de diálogo e geração de código. Com uma estratégia de preços flexível, 360 AI atende a diversas necessidades dos usuários, suporta integração para desenvolvedores e impulsiona a inovação e desenvolvimento de aplicações inteligentes."
+    "description": "360 AI é uma plataforma de modelos e serviços de IA lançada pela empresa 360, oferecendo diversos modelos avançados de processamento de linguagem natural, incluindo 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Esses modelos combinam grande escala de parâmetros e capacidades multimodais, sendo amplamente aplicados em geração de texto, compreensão semântica, sistemas de diálogo e geração de código. Com uma estratégia de preços flexível, 360 AI atende a diversas necessidades dos usuários, suporta integração por desenvolvedores e impulsiona a inovação e desenvolvimento de aplicações inteligentes."
   },
   "aihubmix": {
     "description": "AiHubMix oferece acesso a diversos modelos de IA por meio de uma interface API unificada."
@@ -24,7 +24,7 @@
     "description": "Baichuan Intelligence é uma empresa focada no desenvolvimento de grandes modelos de inteligência artificial, cujos modelos apresentam desempenho excepcional em tarefas chinesas como enciclopédia de conhecimento, processamento de textos longos e criação de conteúdo, superando modelos estrangeiros principais. Baichuan também possui capacidades multimodais líderes do setor, com excelente desempenho em várias avaliações autorizadas. Seus modelos incluem Baichuan 4, Baichuan 3 Turbo e Baichuan 3 Turbo 128k, otimizados para diferentes cenários de aplicação, oferecendo soluções de alta relação custo-benefício."
   },
   "bedrock": {
-    "description": "Bedrock é um serviço da Amazon AWS focado em fornecer modelos avançados de linguagem e visão para empresas. Sua família de modelos inclui a série Claude da Anthropic, a série Llama 3.1 da Meta, entre outras opções que vão desde modelos leves até de alto desempenho, suportando tarefas como geração de texto, diálogo e processamento de imagens, adequados para aplicações empresariais de diferentes escalas e necessidades."
+    "description": "Bedrock é um serviço da Amazon AWS focado em fornecer modelos avançados de linguagem e visão para empresas. Sua família de modelos inclui a série Claude da Anthropic, a série Llama 3.1 da Meta, entre outros, abrangendo opções desde leves até de alto desempenho, suportando geração de texto, diálogo, processamento de imagens e outras tarefas, adequados para aplicações empresariais de diferentes escalas e necessidades."
   },
   "cloudflare": {
     "description": "Executa modelos de aprendizado de máquina impulsionados por GPU sem servidor na rede global da Cloudflare."
@@ -33,7 +33,7 @@
     "description": "Cohere oferece modelos multilíngues de ponta, funcionalidades avançadas de busca e um espaço de trabalho de IA personalizado para empresas modernas — tudo integrado em uma plataforma segura."
   },
   "deepseek": {
-    "description": "DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V3, supera em várias avaliações modelos open source como Qwen2.5-72B e Llama-3.1-405B, alinhando desempenho com modelos proprietários líderes como GPT-4o e Claude-3.5-Sonnet."
+    "description": "DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente DeepSeek-V3 supera em várias avaliações modelos open source como Qwen2.5-72B e Llama-3.1-405B, com desempenho alinhado aos principais modelos proprietários como GPT-4o e Claude-3.5-Sonnet."
   },
   "fal": {
     "description": "Plataforma de mídia generativa voltada para desenvolvedores."
@@ -45,7 +45,7 @@
     "description": "A API Serverless da Gitee AI oferece aos desenvolvedores de IA um serviço de inferência de grandes modelos pronto para uso."
   },
   "github": {
-    "description": "Com os modelos do GitHub, desenvolvedores podem se tornar engenheiros de IA e construir usando modelos líderes do setor."
+    "description": "Com os modelos do GitHub, desenvolvedores podem se tornar engenheiros de IA e construir usando os principais modelos de IA do setor."
   },
   "google": {
     "description": "A série Gemini do Google é seu modelo de IA mais avançado e versátil, desenvolvido pelo Google DeepMind, projetado para multimodalidade, suportando compreensão e processamento integrados de texto, código, imagem, áudio e vídeo. Adequado para diversos ambientes, desde data centers até dispositivos móveis, aumentando significativamente a eficiência e a aplicabilidade dos modelos de IA."
@@ -72,10 +72,10 @@
     "description": "Jina AI, fundada em 2020, é uma empresa líder em IA para busca. Nossa plataforma base de busca inclui modelos vetoriais, reordenadores e pequenos modelos de linguagem, ajudando empresas a construir aplicações confiáveis e de alta qualidade em IA generativa e busca multimodal."
   },
   "lmstudio": {
-    "description": "LM Studio é um aplicativo desktop para desenvolver e experimentar grandes modelos de linguagem (LLMs) diretamente no seu computador."
+    "description": "LM Studio é um aplicativo desktop para desenvolver e experimentar LLMs em seu computador."
   },
   "minimax": {
-    "description": "MiniMax, fundada em 2021, é uma empresa de tecnologia de inteligência artificial geral dedicada a co-criar inteligência com os usuários. Desenvolveu internamente grandes modelos universais multimodais, incluindo modelos de texto MoE com trilhões de parâmetros, modelos de voz e modelos de imagem, além de lançar aplicações como o AI Conch."
+    "description": "MiniMax, fundada em 2021, é uma empresa de tecnologia de inteligência artificial geral dedicada a co-criar inteligência com os usuários. Desenvolveu independentemente grandes modelos universais multimodais, incluindo modelos de texto MoE com trilhões de parâmetros, modelos de voz e modelos de imagem. Também lançou aplicações como o AI Conch."
   },
   "mistral": {
     "description": "Mistral oferece modelos avançados universais, profissionais e de pesquisa, amplamente aplicados em raciocínio complexo, tarefas multilíngues, geração de código, entre outros. Por meio de interfaces de chamadas de função, os usuários podem integrar funcionalidades personalizadas para aplicações específicas."
@@ -93,31 +93,31 @@
     "description": "NVIDIA NIM™ oferece contêineres para microserviços de inferência acelerada por GPU autogerenciados, suportando implantação de modelos de IA pré-treinados e personalizados na nuvem, data centers, PCs e estações de trabalho RTX™ AI."
   },
   "ollama": {
-    "description": "Ollama oferece modelos que abrangem geração de código, operações matemáticas, processamento multilíngue e interação por diálogo, suportando necessidades diversificadas de implantação empresarial e local."
+    "description": "Ollama oferece modelos que abrangem geração de código, cálculos matemáticos, processamento multilíngue e interação por diálogo, suportando necessidades diversificadas de implantação empresarial e local."
   },
   "openai": {
-    "description": "OpenAI é uma instituição líder mundial em pesquisa de inteligência artificial, cujos modelos como a série GPT impulsionaram a vanguarda do processamento de linguagem natural. OpenAI se dedica a transformar múltiplos setores por meio de soluções inovadoras e eficientes de IA. Seus produtos apresentam desempenho e custo-benefício notáveis, amplamente utilizados em pesquisa, negócios e aplicações inovadoras."
+    "description": "OpenAI é uma instituição líder mundial em pesquisa de inteligência artificial, cujos modelos como a série GPT impulsionaram a vanguarda do processamento de linguagem natural. OpenAI se dedica a transformar múltiplos setores por meio de soluções inovadoras e eficientes de IA. Seus produtos apresentam desempenho notável e custo-benefício, amplamente utilizados em pesquisa, negócios e aplicações inovadoras."
   },
   "openrouter": {
-    "description": "OpenRouter é uma plataforma de serviços que oferece interfaces para diversos grandes modelos de ponta, suportando OpenAI, Anthropic, LLaMA e outros, adequada para variadas necessidades de desenvolvimento e aplicação. Usuários podem escolher flexivelmente os melhores modelos e preços conforme suas demandas, promovendo uma melhor experiência em IA."
+    "description": "OpenRouter é uma plataforma de serviços que oferece interfaces para diversos modelos avançados, suportando OpenAI, Anthropic, LLaMA e outros, adequada para variadas necessidades de desenvolvimento e aplicação. Usuários podem escolher flexivelmente os melhores modelos e preços conforme suas demandas, promovendo uma melhor experiência em IA."
   },
   "perplexity": {
     "description": "Perplexity é um fornecedor líder de modelos de geração de diálogo, oferecendo diversos modelos avançados Llama 3.1, suportando aplicações online e offline, especialmente adequados para tarefas complexas de processamento de linguagem natural."
   },
   "ppio": {
-    "description": "PPIO oferece serviços de API de modelos open source estáveis e custo-efetivos, suportando toda a série DeepSeek, Llama, Qwen e outros grandes modelos líderes do setor."
+    "description": "PPIO oferece serviços API estáveis e custo-efetivos para modelos open source, suportando toda a série DeepSeek, Llama, Qwen e outros grandes modelos líderes do setor."
   },
   "qiniu": {
-    "description": "Qiniu, um veterano fornecedor de serviços em nuvem, oferece serviços de inferência de IA em tempo real e em lote, estáveis e com alta relação custo-benefício, fáceis de usar."
+    "description": "Qiniu, um veterano fornecedor de serviços em nuvem, oferece serviços de inferência de IA em tempo real e em lote, estáveis e com excelente custo-benefício, fáceis de usar."
   },
   "qwen": {
-    "description": "Tongyi Qianwen é um grande modelo de linguagem desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Pode responder a diversas perguntas, criar conteúdos textuais, expressar opiniões, escrever códigos, entre outras funções, atuando em múltiplos domínios."
+    "description": "Tongyi Qianwen é um grande modelo de linguagem desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Pode responder a diversas perguntas, criar conteúdos textuais, expressar opiniões, escrever código, entre outras funções, atuando em múltiplos domínios."
   },
   "sambanova": {
     "description": "SambaNova Cloud permite que desenvolvedores utilizem facilmente os melhores modelos open source e desfrutem da inferência mais rápida."
   },
   "search1api": {
-    "description": "Search1API oferece acesso a modelos da série DeepSeek que podem se conectar à internet conforme necessário, incluindo versões padrão e rápidas, suportando seleção de modelos com diferentes escalas de parâmetros."
+    "description": "Search1API oferece acesso a modelos da série DeepSeek que podem ser conectados à internet conforme necessário, incluindo versões padrão e rápidas, suportando seleção de modelos com diferentes escalas de parâmetros."
   },
   "sensenova": {
     "description": "SenseNova, apoiada pela poderosa infraestrutura da SenseTime, oferece serviços completos de grandes modelos eficientes e fáceis de usar."
@@ -165,9 +165,9 @@
     "description": "Xorbits Inference (Xinference) é uma plataforma open source para simplificar a execução e integração de diversos modelos de IA. Com Xinference, você pode executar inferência de qualquer LLM open source, modelos de embedding e multimodais em ambientes na nuvem ou locais, criando aplicações de IA poderosas."
   },
   "zeroone": {
-    "description": "ZeroOne busca impulsionar a revolução tecnológica AI 2.0 centrada no ser humano, visando criar enorme valor econômico e social por meio de grandes modelos de linguagem e estabelecer novos ecossistemas e modelos de negócios de IA."
+    "description": "ZeroOne Everything dedica-se a impulsionar a revolução tecnológica AI 2.0 centrada no ser humano, visando criar enorme valor econômico e social por meio de grandes modelos de linguagem e estabelecer novos ecossistemas e modelos de negócios de IA."
   },
   "zhipu": {
-    "description": "Zhipu AI oferece uma plataforma aberta de modelos multimodais e de linguagem, suportando uma ampla gama de cenários de aplicação de IA, incluindo processamento de texto, compreensão de imagens e assistência à programação."
+    "description": "Zhipu AI oferece uma plataforma aberta para modelos multimodais e de linguagem, suportando uma ampla gama de cenários de aplicação de IA, incluindo processamento de texto, compreensão de imagens e assistência à programação."
   }
 }

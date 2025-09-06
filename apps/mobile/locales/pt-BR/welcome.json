@@ -1,11 +1,11 @@
 {
   "guide": {
     "agents": {
-      "replaceBtn": "Trocar lote",
-      "title": "Novas recomendações de assistentes:"
+      "replaceBtn": "Trocar",
+      "title": "Recomendações de novos assistentes:"
     },
-    "defaultMessage": "Sou seu assistente inteligente pessoal {{appName}}, como posso ajudar você agora?<br />Se precisar de assistentes mais especializados ou personalizados, clique em <plus /> para criar um assistente personalizado",
-    "defaultMessageWithoutCreate": "Sou seu assistente inteligente pessoal {{appName}}, como posso ajudar você agora?",
+    "defaultMessage": "Sou seu assistente inteligente pessoal {{appName}}, como posso ajudar você hoje?<br />Se desejar um assistente mais profissional ou personalizado, clique em <plus /> para criar um assistente personalizado",
+    "defaultMessageWithoutCreate": "Sou seu assistente inteligente pessoal {{appName}}, como posso ajudar você hoje?",
     "qa": {
       "q01": "O que é LobeHub?",
       "q02": "O que é {{appName}}?",
@@ -22,24 +22,24 @@
       "q13": "Possui um mercado próprio para obter GPTs?",
       "q14": "Suporta múltiplos provedores de serviços de IA?",
       "q15": "O que devo fazer se encontrar problemas ao usar?"
-    },
-    "questions": {
-      "moreBtn": "Saiba mais",
-      "title": "Perguntas frequentes:"
-    },
-    "welcome": {
-      "afternoon": "Boa tarde",
-      "morning": "Bom dia",
-      "night": "Boa noite",
-      "noon": "Boa tarde"
     }
   },
   "header": "Bem-vindo",
   "pickAgent": "Ou escolha um modelo de assistente abaixo",
+  "questions": {
+    "moreBtn": "Saiba mais",
+    "title": "Perguntas frequentes:"
+  },
   "skip": "Pular criação",
   "slogan": {
-    "desc1": "Ative um cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, sempre presente.",
+    "desc1": "Ative um cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, sempre ao seu lado.",
     "desc2": "Crie seu primeiro assistente, vamos começar~",
     "title": "Dê a si mesmo um cérebro mais inteligente"
+  },
+  "welcome": {
+    "afternoon": "Boa tarde",
+    "morning": "Bom dia",
+    "night": "Boa noite",
+    "noon": "Boa tarde"
   }
 }

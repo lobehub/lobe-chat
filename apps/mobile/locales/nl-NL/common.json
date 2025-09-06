@@ -16,7 +16,7 @@
     "fetchError": "Fout bij het ophalen van de assistentenlijst, probeer het later opnieuw",
     "noData": "Geen assistentgegevens beschikbaar",
     "noMatch": "Geen overeenkomende assistent gevonden",
-    "search": "Zoek assistent..."
+    "search": "Assistent zoeken..."
   },
   "defaultSession": "Aangepaste assistent",
   "navigation": {

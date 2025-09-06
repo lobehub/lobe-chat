@@ -1,28 +1,28 @@
 {
-  "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora mesmo ou ir para as [Configurações do Assistente]({{url}}) para aprimorar minhas informações.",
+  "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora mesmo ou ir para as [Configurações do Assistente]({{url}}) para completar minhas informações.",
   "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos começar a conversar!",
   "agentDefaultMessageWithoutEdit": "Olá, eu sou **{{name}}**, vamos começar a conversar!",
   "agentRoleEdit": {
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "edit": "Editar",
-    "placeholder": "Por favor, insira a palavra-chave do Prompt do papel",
-    "roleSetting": "Configuração do papel",
-    "title": "Configuração do papel"
+    "placeholder": "Por favor, insira o prompt do papel",
+    "roleSetting": "Configuração do Papel",
+    "title": "Configuração do Papel"
   },
   "confirmDelete": "Confirmar exclusão",
   "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "copyFailed": "Falha ao copiar",
   "defaultAgent": "Assistente Personalizado",
-  "defaultList": "Lista padrão",
+  "defaultList": "Lista Padrão",
   "deleteMessageConfirm": "Tem certeza de que deseja excluir esta mensagem?",
-  "history": "Histórico de conversas",
+  "history": "Histórico de Conversas",
   "inbox": {
-    "desc": "Ative o cluster cerebral e estimule faíscas de pensamento. Seu assistente inteligente está aqui para conversar sobre tudo com você.",
-    "title": "Converse à vontade"
+    "desc": "Ative o cluster cerebral para estimular faíscas de pensamento. Seu assistente inteligente está aqui para conversar sobre tudo com você.",
+    "title": "Conversa Casual"
   },
   "messageCopied": "Mensagem copiada",
-  "newChat": "Nova conversa",
+  "newChat": "Nova Conversa",
   "placeholder": "Digite sua mensagem...",
   "regenerateFailed": "Falha ao regenerar, por favor tente novamente mais tarde",
   "send": "Enviar",
@@ -32,7 +32,7 @@
     "search": {
       "placeholder": "Pesquisar sessões"
     },
-    "title": "Conversa casual"
+    "title": "Conversa Casual"
   },
   "share": "Compartilhar",
   "stop": "Parar",
