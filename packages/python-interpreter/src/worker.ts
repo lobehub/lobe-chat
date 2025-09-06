@@ -207,4 +207,5 @@ class PythonWorker {
 
 Comlink.expose(PythonWorker);
 
+export { PythonWorker };
 export type PythonWorkerType = typeof PythonWorker;
