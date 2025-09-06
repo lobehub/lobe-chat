@@ -4,21 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // 配置
-const RELEASE_TAG = process.env.RELEASE_TAG || process.argv[2];
 const FILE_NAME = 'latest-mac.yml';
 const RELEASE_DIR = path.resolve('release');
-
-// 验证环境变量和输入
-if (!RELEASE_TAG) {
-  console.error('❌ RELEASE_TAG environment variable or argument is required');
-  process.exit(1);
-}
-
-// 验证 release tag 格式
-if (!/^v?\d+\.\d+\.\d+/.test(RELEASE_TAG)) {
-  console.error(`❌ Invalid RELEASE_TAG format: ${RELEASE_TAG}. Expected format: v1.2.3`);
-  process.exit(1);
-}
 
 /**
  * 检测 latest-mac.yml 文件的平台类型
@@ -92,7 +79,7 @@ function writeLocalFile(filePath, content) {
  */
 async function main() {
   try {
-    console.log(`🚀 Starting macOS Release file merge for ${RELEASE_TAG}`);
+    console.log('🚀 Starting macOS Release file merge');
     console.log(`📁 Working directory: ${RELEASE_DIR}`);
 
     // 1. 检查 release 目录下的所有文件

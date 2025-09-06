@@ -110,7 +110,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
-          cache: 'pnpm'
+          package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
       - name: Install dependencies
@@ -250,10 +250,7 @@ jobs:
 
       # 合并 macOS YAML 文件 (使用 bun 运行 JavaScript)
       - name: Merge latest-mac.yml files
-        run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js ${{ needs.version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ needs.version.outputs.version }}
+        run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
 
       # 上传合并后的构建产物
       - name: Upload artifacts with merged macOS files
