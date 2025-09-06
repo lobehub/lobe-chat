@@ -3,43 +3,43 @@
     "description": "AI21 Labs buduje modele bazowe i systemy sztucznej inteligencji dla przedsiębiorstw, przyspieszając zastosowanie generatywnej sztucznej inteligencji w produkcji."
   },
   "ai302": {
-    "description": "302.AI to platforma aplikacji AI działająca w modelu pay-as-you-go, oferująca najszerszy na rynku zestaw API AI oraz aplikacji online AI."
+    "description": "302.AI to platforma aplikacji AI działająca w modelu pay-as-you-go, oferująca najszerszy wybór API AI i aplikacji online na rynku."
   },
   "ai360": {
     "description": "360 AI to platforma modeli i usług AI firmy 360, oferująca zaawansowane modele przetwarzania języka naturalnego, takie jak 360GPT2 Pro, 360GPT Pro, 360GPT Turbo oraz 360GPT Turbo Responsibility 8K. Modele te łączą duże parametry i zdolności multimodalne, szeroko stosowane w generowaniu tekstu, rozumieniu semantycznym, systemach dialogowych i generowaniu kodu. Dzięki elastycznej polityce cenowej 360 AI spełnia różnorodne potrzeby użytkowników, wspiera integrację deweloperów i napędza innowacje oraz rozwój inteligentnych aplikacji."
   },
   "aihubmix": {
-    "description": "AiHubMix zapewnia dostęp do różnych modeli AI poprzez zunifikowane API."
+    "description": "AiHubMix zapewnia dostęp do różnych modeli AI za pośrednictwem zunifikowanego interfejsu API."
   },
   "anthropic": {
-    "description": "Anthropic to firma specjalizująca się w badaniach i rozwoju sztucznej inteligencji, oferująca zaawansowane modele językowe, takie jak Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus i Claude 3 Haiku. Modele te osiągają optymalną równowagę między inteligencją, szybkością i kosztami, nadając się do zastosowań od obciążeń korporacyjnych po szybkie odpowiedzi. Claude 3.5 Sonnet, jako najnowszy model, wyróżnia się doskonałymi wynikami w wielu testach, zachowując wysoką opłacalność."
+    "description": "Anthropic to firma specjalizująca się w badaniach i rozwoju sztucznej inteligencji, oferująca zaawansowane modele językowe, takie jak Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus i Claude 3 Haiku. Modele te osiągają optymalną równowagę między inteligencją, szybkością i kosztami, nadając się do zastosowań od obciążeń korporacyjnych po szybkie odpowiedzi. Claude 3.5 Sonnet, jako najnowszy model, wyróżnia się doskonałymi wynikami w wielu testach przy zachowaniu wysokiej opłacalności."
   },
   "azure": {
-    "description": "Azure oferuje zaawansowane modele AI, w tym GPT-3.5 oraz najnowszą serię GPT-4, wspierając różnorodne typy danych i złożone zadania, koncentrując się na bezpiecznych, niezawodnych i zrównoważonych rozwiązaniach AI."
+    "description": "Azure oferuje zaawansowane modele AI, w tym GPT-3.5 i najnowszą serię GPT-4, wspierające różnorodne typy danych i złożone zadania, koncentrując się na bezpiecznych, niezawodnych i zrównoważonych rozwiązaniach AI."
   },
   "azureai": {
-    "description": "Azure oferuje zaawansowane modele AI, w tym GPT-3.5 oraz najnowszą serię GPT-4, wspierając różnorodne typy danych i złożone zadania, koncentrując się na bezpiecznych, niezawodnych i zrównoważonych rozwiązaniach AI."
+    "description": "Azure oferuje zaawansowane modele AI, w tym GPT-3.5 i najnowszą serię GPT-4, wspierające różnorodne typy danych i złożone zadania, koncentrując się na bezpiecznych, niezawodnych i zrównoważonych rozwiązaniach AI."
   },
   "baichuan": {
-    "description": "Baichuan Intelligence to firma specjalizująca się w rozwoju dużych modeli AI, której modele wyróżniają się doskonałymi wynikami w zadaniach związanych z chińską wiedzą encyklopedyczną, przetwarzaniem długich tekstów i twórczością, przewyższając główne modele zagraniczne. Baichuan posiada również wiodące zdolności multimodalne, osiągając znakomite wyniki w wielu autorytatywnych testach. Modele takie jak Baichuan 4, Baichuan 3 Turbo i Baichuan 3 Turbo 128k są zoptymalizowane pod kątem różnych zastosowań, oferując rozwiązania o wysokiej opłacalności."
+    "description": "Baichuan Intelligence to firma specjalizująca się w rozwoju dużych modeli AI, której modele wyróżniają się doskonałymi wynikami w zadaniach związanych z chińską wiedzą encyklopedyczną, przetwarzaniem długich tekstów i twórczością, przewyższając główne modele zagraniczne. Baichuan posiada również wiodące zdolności multimodalne, osiągając znakomite wyniki w wielu renomowanych testach. Modele takie jak Baichuan 4, Baichuan 3 Turbo i Baichuan 3 Turbo 128k są zoptymalizowane pod kątem różnych zastosowań, oferując rozwiązania o wysokiej opłacalności."
   },
   "bedrock": {
-    "description": "Bedrock to usługa Amazon AWS, koncentrująca się na dostarczaniu przedsiębiorstwom zaawansowanych modeli językowych i wizualnych AI. Rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując różnorodne opcje od lekkich po wysokowydajne, wspierając generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, dostosowane do różnych rozmiarów i potrzeb biznesowych."
+    "description": "Bedrock to usługa Amazon AWS, koncentrująca się na dostarczaniu przedsiębiorstwom zaawansowanych modeli językowych i wizualnych AI. Rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując szeroki wybór od lekkich po wysokowydajne modele, wspierające generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, dostosowane do różnych rozmiarów i potrzeb biznesowych."
   },
   "cloudflare": {
     "description": "Uruchamianie modeli uczenia maszynowego napędzanych przez bezserwerowe GPU na globalnej sieci Cloudflare."
   },
   "cohere": {
-    "description": "Cohere oferuje najnowocześniejsze modele wielojęzyczne, zaawansowane funkcje wyszukiwania oraz przestrzeń roboczą AI dostosowaną do nowoczesnych przedsiębiorstw — wszystko zintegrowane na bezpiecznej platformie."
+    "description": "Cohere oferuje najnowocześniejsze modele wielojęzyczne, zaawansowane funkcje wyszukiwania oraz przestrzeń AI dostosowaną do potrzeb nowoczesnych przedsiębiorstw — wszystko zintegrowane na bezpiecznej platformie."
   },
   "deepseek": {
-    "description": "DeepSeek to firma specjalizująca się w badaniach i zastosowaniach technologii sztucznej inteligencji, której najnowszy model DeepSeek-V3 przewyższa w wielu testach modele open source takie jak Qwen2.5-72B i Llama-3.1-405B, osiągając wydajność porównywalną z wiodącymi modelami zamkniętymi GPT-4o i Claude-3.5-Sonnet."
+    "description": "DeepSeek to firma specjalizująca się w badaniach i zastosowaniach sztucznej inteligencji, której najnowszy model DeepSeek-V3 przewyższa w wielu testach modele open source takie jak Qwen2.5-72B i Llama-3.1-405B, osiągając wydajność porównywalną z wiodącymi zamkniętymi modelami GPT-4o i Claude-3.5-Sonnet."
   },
   "fal": {
     "description": "Platforma generatywnych mediów skierowana do deweloperów."
   },
   "fireworksai": {
-    "description": "Fireworks AI to wiodący dostawca zaawansowanych modeli językowych, specjalizujący się w wywoływaniu funkcji i przetwarzaniu multimodalnym. Najnowszy model Firefunction V2 oparty na Llama-3 jest zoptymalizowany pod kątem wywoływania funkcji, dialogów i podążania za instrukcjami. Model wizualno-językowy FireLLaVA-13B obsługuje mieszane wejścia obrazów i tekstu. Inne godne uwagi modele to serie Llama i Mixtral, oferujące efektywne wsparcie wielojęzyczne i generowanie."
+    "description": "Fireworks AI to wiodący dostawca zaawansowanych modeli językowych, specjalizujący się w wywoływaniu funkcji i przetwarzaniu multimodalnym. Najnowszy model Firefunction V2 oparty na Llama-3 jest zoptymalizowany pod kątem wywoływania funkcji, dialogów i podążania za instrukcjami. Model wizualno-językowy FireLLaVA-13B obsługuje mieszane wejścia obrazowo-tekstowe. Inne godne uwagi modele to serie Llama i Mixtral, oferujące efektywne wsparcie wielojęzyczne i generowanie."
   },
   "giteeai": {
     "description": "Serverless API Gitee AI zapewnia deweloperom AI gotowe do użycia usługi API do inferencji dużych modeli."
@@ -57,7 +57,7 @@
     "description": "Higress to natywny dla chmury brama API, stworzona wewnętrznie w Alibaba, aby rozwiązać problemy z przeładowaniem Tengine wpływającym na długie połączenia oraz niedostateczną zdolność równoważenia obciążenia gRPC/Dubbo."
   },
   "huggingface": {
-    "description": "HuggingFace Inference API oferuje szybki i bezpłatny dostęp do tysięcy modeli do różnych zadań. Niezależnie od tego, czy prototypujesz nową aplikację, czy eksplorujesz możliwości uczenia maszynowego, to API umożliwia natychmiastowy dostęp do wysokowydajnych modeli z wielu dziedzin."
+    "description": "HuggingFace Inference API oferuje szybki i bezpłatny dostęp do tysięcy modeli do różnych zadań. Niezależnie od tego, czy prototypujesz nową aplikację, czy eksplorujesz możliwości uczenia maszynowego, ten API umożliwia natychmiastowy dostęp do wysokowydajnych modeli z wielu dziedzin."
   },
   "hunyuan": {
     "description": "Duży model językowy opracowany przez Tencent, posiadający silne zdolności twórcze w języku chińskim, logiczne rozumowanie w złożonych kontekstach oraz niezawodne wykonywanie zadań."
@@ -75,7 +75,7 @@
     "description": "LM Studio to aplikacja desktopowa do tworzenia i eksperymentowania z dużymi modelami językowymi (LLM) na Twoim komputerze."
   },
   "minimax": {
-    "description": "MiniMax to założona w 2021 roku firma zajmująca się ogólną sztuczną inteligencją, dążąca do współtworzenia inteligencji z użytkownikami. MiniMax opracował różne multimodalne modele ogólne, w tym tekstowy model MoE o bilionach parametrów, model głosowy oraz model obrazowy. Firma wprowadziła również aplikacje takie jak HaiLuo AI."
+    "description": "MiniMax to założona w 2021 roku firma zajmująca się ogólną sztuczną inteligencją, dążąca do współtworzenia inteligencji z użytkownikami. MiniMax opracował różne multimodalne modele ogólne, w tym tekstowy model MoE o bilionie parametrów, modele głosowe i obrazowe. Firma wprowadziła także aplikacje takie jak HaiLuo AI."
   },
   "mistral": {
     "description": "Mistral oferuje zaawansowane modele ogólne, specjalistyczne i badawcze, szeroko stosowane w złożonym rozumowaniu, zadaniach wielojęzycznych i generowaniu kodu. Dzięki interfejsowi wywoływania funkcji użytkownicy mogą integrować niestandardowe funkcje i realizować specyficzne zastosowania."
@@ -84,13 +84,13 @@
     "description": "ModelScope to platforma model-as-a-service uruchomiona przez Alibaba Cloud, oferująca bogate modele AI i usługi inferencyjne."
   },
   "moonshot": {
-    "description": "Moonshot to platforma open source stworzona przez Beijing Moon's Dark Side Technology Co., Ltd., oferująca różnorodne modele przetwarzania języka naturalnego, stosowane w wielu dziedzinach, w tym tworzeniu treści, badaniach naukowych, inteligentnych rekomendacjach i diagnostyce medycznej, wspierająca przetwarzanie długich tekstów i złożone zadania generatywne."
+    "description": "Moonshot to otwarta platforma stworzona przez Beijing Moon's Dark Side Technology Co., Ltd., oferująca różnorodne modele przetwarzania języka naturalnego, stosowane w wielu dziedzinach, w tym tworzeniu treści, badaniach naukowych, inteligentnych rekomendacjach i diagnostyce medycznej, wspierająca przetwarzanie długich tekstów i złożone zadania generatywne."
   },
   "novita": {
     "description": "Novita AI to platforma API oferująca różne duże modele językowe i generowanie obrazów AI, elastyczna, niezawodna i opłacalna. Wspiera najnowsze modele open source, takie jak Llama3 i Mistral, oraz zapewnia kompleksowe, przyjazne dla użytkownika i automatycznie skalowalne rozwiązania API dla rozwoju aplikacji generatywnej AI, idealne dla szybkiego rozwoju startupów AI."
   },
   "nvidia": {
-    "description": "NVIDIA NIM™ oferuje kontenery do samodzielnego hostowania mikrousług inferencyjnych przyspieszanych GPU, wspierając wdrażanie modeli AI w chmurze, centrach danych, komputerach osobistych RTX™ AI i stacjach roboczych."
+    "description": "NVIDIA NIM™ oferuje kontenery do samodzielnego hostowania mikrousług inferencyjnych z akceleracją GPU, wspierając wdrażanie modeli AI w chmurze, centrach danych, komputerach osobistych RTX™ AI i stacjach roboczych."
   },
   "ollama": {
     "description": "Modele Ollama obejmują szeroki zakres zastosowań, takich jak generowanie kodu, obliczenia matematyczne, obsługa wielu języków i interakcje dialogowe, wspierając różnorodne potrzeby wdrożeń korporacyjnych i lokalnych."
@@ -105,7 +105,7 @@
     "description": "Perplexity to wiodący dostawca modeli generujących dialogi, oferujący zaawansowane modele Llama 3.1, wspierające aplikacje online i offline, szczególnie odpowiednie do złożonych zadań przetwarzania języka naturalnego."
   },
   "ppio": {
-    "description": "PPIO Paiou Cloud oferuje stabilne i opłacalne usługi API dla modeli open source, wspierając pełną serię DeepSeek, Llama, Qwen i inne wiodące modele branżowe."
+    "description": "PPIO (Paiou Cloud) oferuje stabilne i opłacalne usługi API dla modeli open source, wspierając pełną serię DeepSeek, Llama, Qwen i inne wiodące modele branżowe."
   },
   "qiniu": {
     "description": "Qiniu, jako doświadczony dostawca usług chmurowych, oferuje opłacalne i stabilne usługi inferencji AI w czasie rzeczywistym i wsadowej, łatwe w użyciu."
@@ -117,7 +117,7 @@
     "description": "SambaNova Cloud umożliwia deweloperom łatwe korzystanie z najlepszych modeli open source oraz cieszenie się najszybszą prędkością inferencji."
   },
   "search1api": {
-    "description": "Search1API zapewnia dostęp do modeli serii DeepSeek, które można samodzielnie łączyć z siecią według potrzeb, w tym wersji standardowej i szybkiej, wspierając wybór modeli o różnych rozmiarach parametrów."
+    "description": "Search1API zapewnia dostęp do modeli serii DeepSeek, które można łączyć z siecią według potrzeb, w tym wersji standardowej i szybkiej, wspierając wybór modeli o różnych rozmiarach parametrów."
   },
   "sensenova": {
     "description": "SenseNova, opierając się na potężnej infrastrukturze SenseTime, oferuje wydajne i łatwe w użyciu kompleksowe usługi dużych modeli."
@@ -135,13 +135,13 @@
     "description": "Nowej generacji multimodalny duży model opracowany przez Instytut Automatyki Chińskiej Akademii Nauk i Wuhan AI Institute, wspierający wielokrotne rundy pytań i odpowiedzi, tworzenie tekstów, generowanie obrazów, rozumienie 3D, analizę sygnałów i inne kompleksowe zadania, oferujący silniejsze zdolności poznawcze, rozumienia i twórczości oraz nowatorskie doświadczenia interaktywne."
   },
   "tencentcloud": {
-    "description": "Atomic Power Knowledge Engine (LLM Knowledge Engine Atomic Power) to pełny łańcuch zdolności zapytań oparty na Knowledge Engine, skierowany do przedsiębiorstw i deweloperów, oferujący elastyczne możliwości budowy i rozwoju aplikacji modelowych. Możesz tworzyć własne usługi modelowe, korzystając z wielu atomowych zdolności, takich jak analiza dokumentów, dzielenie, embedding i wielokrotne przepisywanie, dostosowując AI do potrzeb firmy."
+    "description": "Atomic Power Knowledge Engine (LLM Knowledge Engine Atomic Power) to pełny łańcuch zdolności zapytań oparty na Knowledge Engine, skierowany do przedsiębiorstw i deweloperów, oferujący elastyczne możliwości budowy i rozwoju aplikacji modelowych. Możesz tworzyć własne usługi modelowe, korzystając z funkcji takich jak analiza dokumentów, dzielenie, embedding i wielokrotne przepisywanie, dostosowując AI do potrzeb firmy."
   },
   "togetherai": {
-    "description": "Together AI dąży do osiągnięcia wiodącej wydajności dzięki innowacyjnym modelom AI, oferując szerokie możliwości dostosowywania, w tym szybkie skalowanie i intuicyjne procesy wdrażania, spełniając różnorodne potrzeby przedsiębiorstw."
+    "description": "Together AI dąży do osiągnięcia wiodącej wydajności dzięki innowacyjnym modelom AI, oferując szerokie możliwości dostosowywania, szybkie skalowanie i intuicyjne procesy wdrożeniowe, spełniając różnorodne potrzeby przedsiębiorstw."
   },
   "upstage": {
-    "description": "Upstage koncentruje się na tworzeniu modeli AI dla różnych potrzeb biznesowych, w tym Solar LLM i Document AI, dążąc do realizacji sztucznej ogólnej inteligencji (AGI) w pracy. Umożliwia tworzenie prostych agentów dialogowych za pomocą Chat API oraz wspiera wywoływanie funkcji, tłumaczenia, embedding i zastosowania specjalistyczne."
+    "description": "Upstage koncentruje się na tworzeniu modeli AI dla różnych potrzeb biznesowych, w tym Solar LLM i Document AI, dążąc do realizacji sztucznej ogólnej inteligencji (AGI). Umożliwia tworzenie prostych agentów dialogowych za pomocą Chat API oraz wspiera wywoływanie funkcji, tłumaczenia, embedding i zastosowania specjalistyczne."
   },
   "v0": {
     "description": "v0 to asystent programowania w parach, który generuje kod i interfejs użytkownika (UI) dla Twojego projektu na podstawie opisu pomysłów w języku naturalnym."
@@ -156,16 +156,16 @@
     "description": "Platforma rozwoju usług dużych modeli firmy ByteDance, oferująca funkcjonalne, bezpieczne i konkurencyjne cenowo usługi wywoływania modeli, a także kompleksowe funkcje od danych modelu, dostrajania, inferencji po ocenę, zapewniając pełne wsparcie dla rozwoju i wdrażania aplikacji AI."
   },
   "wenxin": {
-    "description": "Platforma klasy korporacyjnej do kompleksowego rozwoju i usług dużych modeli oraz natywnych aplikacji AI, oferująca najbardziej wszechstronne i łatwe w użyciu narzędzia do tworzenia generatywnych modeli sztucznej inteligencji i pełnego procesu rozwoju aplikacji."
+    "description": "Platforma klasy korporacyjnej do kompleksowego rozwoju i usług dużych modeli oraz natywnych aplikacji AI, oferująca najbardziej wszechstronne i łatwe w użyciu narzędzia do tworzenia generatywnych modeli sztucznej inteligencji i aplikacji."
   },
   "xai": {
     "description": "xAI to firma poświęcona budowie sztucznej inteligencji przyspieszającej odkrycia naukowe ludzkości. Naszą misją jest wspieranie wspólnego zrozumienia wszechświata."
   },
   "xinference": {
-    "description": "Xorbits Inference (Xinference) to platforma open source upraszczająca uruchamianie i integrację różnych modeli AI. Dzięki Xinference możesz uruchamiać inferencję dowolnych otwartych modeli LLM, modeli embedding i multimodalnych w chmurze lub lokalnie oraz tworzyć potężne aplikacje AI."
+    "description": "Xorbits Inference (Xinference) to platforma open source upraszczająca uruchamianie i integrację różnych modeli AI. Dzięki Xinference możesz uruchamiać inferencję dowolnych otwartych modeli LLM, embedding i multimodalnych w chmurze lub lokalnie oraz tworzyć potężne aplikacje AI."
   },
   "zeroone": {
-    "description": "ZeroOne dąży do napędzania rewolucji AI 2.0 zorientowanej na człowieka, mając na celu tworzenie ogromnej wartości ekonomicznej i społecznej poprzez duże modele językowe oraz rozwijanie nowego ekosystemu i modeli biznesowych AI."
+    "description": "ZeroOne dąży do rewolucji AI 2.0 zorientowanej na człowieka, mającej na celu tworzenie ogromnej wartości ekonomicznej i społecznej poprzez duże modele językowe oraz rozwijanie nowego ekosystemu i modeli biznesowych AI."
   },
   "zhipu": {
     "description": "Zhipu AI oferuje otwartą platformę multimodalnych i językowych modeli, wspierając szerokie zastosowania AI, w tym przetwarzanie tekstu, rozumienie obrazów i wsparcie programistyczne."

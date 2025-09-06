@@ -21,11 +21,11 @@
       "q12": "Czy jest system wtyczek?",
       "q13": "Czy istnieje własny rynek do pozyskiwania GPT?",
       "q14": "Czy obsługiwanych jest wielu dostawców usług AI?",
-      "q15": "Co zrobić, gdy napotkam problemy podczas korzystania?"
+      "q15": "Co zrobić, gdy napotkam problemy podczas użytkowania?"
     },
     "questions": {
       "moreBtn": "Dowiedz się więcej",
-      "title": "Wszyscy pytają:"
+      "title": "Najczęściej zadawane pytania:"
     },
     "welcome": {
       "afternoon": "Dzień dobry po południu",

@@ -2,8 +2,8 @@
   "assistant": {
     "detail": {
       "addAndChat": "Assistent toevoegen en chatten",
-      "addFailed": "Toevoegen van assistent mislukt",
-      "addFailedMessage": "Toevoegen van assistent mislukt, probeer het later opnieuw",
+      "addFailed": "Assistent toevoegen mislukt",
+      "addFailedMessage": "Het toevoegen van de assistent is mislukt, probeer het later opnieuw",
       "assistantSettings": "Assistentinstellingen",
       "loadFailed": "Het ophalen van assistentdetails is mislukt, probeer het later opnieuw",
       "notFoundIdentifier": "Assistentidentificatie niet gevonden",

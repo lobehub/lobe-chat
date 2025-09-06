@@ -22,24 +22,24 @@
       "q13": "GPT'leri edinmek için kendi pazarı var mı?",
       "q14": "Çoklu yapay zeka hizmet sağlayıcıları destekleniyor mu?",
       "q15": "Kullanım sırasında sorun yaşarsam ne yapmalıyım?"
-    },
-    "questions": {
-      "moreBtn": "Daha Fazla Bilgi",
-      "title": "Herkesin Sorduğu Sorular:"
-    },
-    "welcome": {
-      "afternoon": "İyi Öğleden Sonralar",
-      "morning": "Günaydın",
-      "night": "İyi Akşamlar",
-      "noon": "İyi Günler"
     }
   },
   "header": "Hoş geldiniz",
   "pickAgent": "Ya da aşağıdaki asistan şablonlarından seçin",
+  "questions": {
+    "moreBtn": "Daha fazla öğren",
+    "title": "Herkesin sorduğu sorular:"
+  },
   "skip": "Oluşturmadan geç",
   "slogan": {
     "desc1": "Beyin kümesini aç, düşünce kıvılcımlarını ateşle. Akıllı asistanınız her zaman yanınızda.",
     "desc2": "İlk asistanınızı oluşturun, haydi başlayalım~",
     "title": "Kendinize daha akıllı bir beyin hediye edin"
+  },
+  "welcome": {
+    "afternoon": "İyi öğleden sonralar",
+    "morning": "Günaydın",
+    "night": "İyi akşamlar",
+    "noon": "İyi günler"
   }
 }

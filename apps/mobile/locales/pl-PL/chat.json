@@ -1,25 +1,25 @@
 {
-  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [Ustawienia asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**, zacznijmy rozmowę!",
   "agentRoleEdit": {
     "cancel": "Anuluj",
     "confirm": "Potwierdź",
     "edit": "Edytuj",
-    "placeholder": "Wprowadź podpowiedź roli Prompt",
+    "placeholder": "Wprowadź prompt roli",
     "roleSetting": "Ustawienia roli",
     "title": "Ustawienia roli"
   },
   "confirmDelete": "Potwierdź usunięcie",
-  "confirmRemoveSessionItemAlert": "Asystent zostanie usunięty i nie będzie można go odzyskać. Proszę potwierdzić swoją operację.",
+  "confirmRemoveSessionItemAlert": "Asystent zostanie usunięty i nie będzie można go odzyskać, potwierdź swoją operację",
   "copyFailed": "Kopiowanie nie powiodło się",
   "defaultAgent": "Niestandardowy asystent",
   "defaultList": "Domyślna lista",
   "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
   "history": "Historia rozmów",
   "inbox": {
-    "desc": "Włącz klaster mózgów, aby rozbudzić iskrę myśli. Twój inteligentny asystent, tutaj, aby rozmawiać o wszystkim.",
-    "title": "Porozmawiajmy swobodnie"
+    "desc": "Włącz klaster mózgów, aby pobudzić iskrę myśli. Twój inteligentny asystent, tutaj, aby rozmawiać o wszystkim",
+    "title": "Rozmowa na luzie"
   },
   "messageCopied": "Wiadomość skopiowana",
   "newChat": "Nowa rozmowa",
@@ -32,9 +32,9 @@
     "search": {
       "placeholder": "Szukaj sesji"
     },
-    "title": "Rozmowy na luzie"
+    "title": "Rozmowa na luzie"
   },
   "share": "Udostępnij",
   "stop": "Zatrzymaj",
-  "thinking": "Myślenie..."
+  "thinking": "Myślę..."
 }

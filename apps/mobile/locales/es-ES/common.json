@@ -13,7 +13,7 @@
   },
   "and": "y",
   "assistant": {
-    "fetchError": "Error al obtener la lista de asistentes, por favor intente más tarde",
+    "fetchError": "Error al obtener la lista de asistentes, por favor inténtelo de nuevo más tarde",
     "noData": "No hay datos de asistentes disponibles",
     "noMatch": "No se encontró ningún asistente que coincida",
     "search": "Buscar asistente..."

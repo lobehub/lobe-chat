@@ -6,33 +6,33 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "edit": "Editar",
-    "placeholder": "Por favor, ingrese el prompt del rol",
+    "placeholder": "Por favor, ingresa el prompt del rol",
     "roleSetting": "Configuración del rol",
     "title": "Configuración del rol"
   },
   "confirmDelete": "Confirmar eliminación",
-  "confirmRemoveSessionItemAlert": "Está a punto de eliminar este asistente. Una vez eliminado, no podrá recuperarse. Por favor, confirme su acción.",
+  "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente, una vez eliminado no se podrá recuperar. Por favor, confirma tu acción.",
   "copyFailed": "Error al copiar",
   "defaultAgent": "Asistente personalizado",
   "defaultList": "Lista predeterminada",
-  "deleteMessageConfirm": "¿Está seguro de que desea eliminar este mensaje?",
+  "deleteMessageConfirm": "¿Estás seguro de que deseas eliminar este mensaje?",
   "history": "Historial de conversaciones",
   "inbox": {
-    "desc": "Activa el clúster cerebral y enciende la chispa del pensamiento. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
+    "desc": "Activa el clúster cerebral para estimular la chispa del pensamiento. Tu asistente inteligente está aquí para conversar sobre todo contigo.",
     "title": "Charlemos"
   },
   "messageCopied": "Mensaje copiado",
   "newChat": "Nueva conversación",
-  "placeholder": "Escriba su mensaje...",
-  "regenerateFailed": "Error al regenerar, por favor intente más tarde",
+  "placeholder": "Escribe tu mensaje...",
+  "regenerateFailed": "Error al regenerar, por favor intenta más tarde",
   "send": "Enviar",
   "session": {
-    "createFirst": "Cree su primera sesión de chat",
+    "createFirst": "Crea tu primera sesión de chat",
     "empty": "No hay sesiones",
     "search": {
       "placeholder": "Buscar sesiones"
     },
-    "title": "Charlar libremente"
+    "title": "Charlemos"
   },
   "share": "Compartir",
   "stop": "Detener",

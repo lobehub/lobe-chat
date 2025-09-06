@@ -151,6 +151,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['slider', 'range', 'input', 'gesture', 'form'],
   },
   {
+    category: 'form',
+    description: '增强的文本输入组件，支持前缀图标和统一样式设计',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'TextInput',
+    path: 'textinput',
+    tags: ['textinput', 'input', 'form', 'prefix', 'text'],
+  },
+  {
     category: 'display',
     description: '基于 LobeUI 重写的色板展示组件，支持完整的颜色级别、透明色和复制功能',
     hasDemos: true,

@@ -11,7 +11,7 @@ import { getDetectedLocale } from './resource';
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 
 // 获取用户存储的语言设置
-const getUserStoredLocale = async (): Promise<string> => {
+export const getUserStoredLocale = async (): Promise<string> => {
   try {
     // 直接从 AsyncStorage 读取语言设置
     const stored = await AsyncStorage.getItem(LOCALE_STORAGE_KEY);

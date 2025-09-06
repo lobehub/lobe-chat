@@ -3,22 +3,6 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => {
   return {
     // 页面布局样式
-    header: {
-      alignItems: 'center',
-      borderBottomWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: token.paddingLG,
-    },
-    headerLeft: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: token.marginSM,
-    },
-    headerTitle: {
-      fontSize: token.fontSizeLG,
-      fontWeight: '600',
-    },
     safeArea: {
       backgroundColor: token.colorBgLayout,
       flex: 1,

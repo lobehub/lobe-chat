@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View, Text, TextInput } from 'react-native';
 import { Edit3 } from 'lucide-react-native';
 
-import Button from '@/components/Button';
-import MarkdownRender from '@/components/Markdown';
+import { Button, Markdown } from '@/components';
 import { useAgentStore, agentSelectors } from '@/store/agent';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useSessionStore } from '@/store/session';
@@ -87,18 +86,15 @@ export const AgentRoleEditSection: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>{t('agentRoleEdit.roleSetting', { ns: 'chat' })}</Text>
-          <Button onPress={handleEdit} size="small" type="primary">
-            <View style={styles.editButtonContent}>
-              <Text style={styles.editButtonText}>{t('agentRoleEdit.edit', { ns: 'chat' })}</Text>
-              <Edit3 color={token.colorTextLightSolid} size={16} />
-            </View>
+          <Button icon={<Edit3 />} onPress={handleEdit} size="small" type="primary">
+            {t('agentRoleEdit.edit', { ns: 'chat' })}
           </Button>
         </View>
 
         <View style={styles.previewContainer}>
           {systemRole ? (
             <View style={styles.markdownWrapper}>
-              <MarkdownRender>{systemRole}</MarkdownRender>
+              <Markdown>{systemRole}</Markdown>
             </View>
           ) : (
             <Text style={styles.emptyText}>{t('agentRoleEdit.placeholder', { ns: 'chat' })}</Text>
