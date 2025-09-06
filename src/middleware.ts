@@ -145,17 +145,26 @@ const defaultMiddleware = (request: NextRequest) => {
   // build rewrite response first
   const rewrite = NextResponse.rewrite(url, { status: 200 });
 
-  // If locale explicitly provided via query (?hl=), persist it in cookie
+  // If locale explicitly provided via query (?hl=), persist it in cookie when user has no prior preference
   if (explicitlyLocale) {
-    rewrite.cookies.set(LOBE_LOCALE_COOKIE, explicitlyLocale, {
-      // 90 days is a balanced persistence for locale preference
-maxAge: 60 * 60 * 24 * 90,
-      
-      path: '/',
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
-    logDefault('Persisted explicit locale to cookie: %s', explicitlyLocale);
+    const existingLocale = request.cookies.get(LOBE_LOCALE_COOKIE)?.value as Locales | undefined;
+    if (!existingLocale) {
+      rewrite.cookies.set(LOBE_LOCALE_COOKIE, explicitlyLocale, {
+        // 90 days is a balanced persistence for locale preference
+        maxAge: 60 * 60 * 24 * 90,
+
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      });
+      logDefault('Persisted explicit locale to cookie (no prior cookie): %s', explicitlyLocale);
+    } else {
+      logDefault(
+        'Locale cookie exists (%s), skip overwrite with %s',
+        existingLocale,
+        explicitlyLocale,
+      );
+    }
   }
 
   return rewrite;
