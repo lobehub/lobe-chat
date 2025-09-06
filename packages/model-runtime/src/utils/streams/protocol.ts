@@ -340,7 +340,7 @@ export const createTokenSpeedCalculator = (
   {
     inputStartAt,
     streamStack,
-    enableStreaming = true, // // 选择 TPS 计算方式（非流式时传 false）
+    enableStreaming = true, // 选择 TPS 计算方式（非流式时传 false）
   }: { enableStreaming?: boolean; inputStartAt?: number; streamStack?: StreamContext } = {},
 ) => {
   let outputStartAt: number | undefined;

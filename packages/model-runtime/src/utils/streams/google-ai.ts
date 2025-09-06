@@ -203,7 +203,7 @@ const transformGoogleGenerativeAIStream = (
 
 export interface GoogleAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
-  enableStreaming?: boolean; // // 选择 TPS 计算方式（非流式时传 false）
+  enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
 }
 
