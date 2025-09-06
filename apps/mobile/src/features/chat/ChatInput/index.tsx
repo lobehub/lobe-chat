@@ -5,16 +5,16 @@ import { View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextInput } from '@/components';
-import IconBtn from './(components)/IconBtn';
+import IconBtn from './components/IconBtn';
 import { ICON_SIZE } from '@/const/common';
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useThemeToken } from '@/theme';
-import ModelSwitch from './(components)/ModelSwitch';
+import ModelSwitch from './components/ModelSwitch';
 
 import StopLoadingIcon from '../StopLoadingIcon';
 import { useStyles } from './style';
-import NewChatBtn from './(components)/NewChatBtn';
+import NewChatBtn from './components/NewChatBtn';
 
 const PADDING_SIZE = 16;
 

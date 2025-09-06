@@ -7,9 +7,9 @@ import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useGlobalStore } from '@/store/global';
 import Hydration from '@/features/Hydration';
 import TopicDrawer from '@/features/TopicDrawer';
-import ChatHeader from './(components)/ChatHeader';
-import ChatInput from './(components)/ChatInput';
-import ChatList from './(components)/ChatList';
+import ChatHeader from '@/features/chat/ChatHeader';
+import ChatInput from '@/features/chat/ChatInput';
+import ChatList from '@/features/chat/ChatList';
 import SessionList from '@/features/SideBar';
 import { useStyles } from './styles';
 
