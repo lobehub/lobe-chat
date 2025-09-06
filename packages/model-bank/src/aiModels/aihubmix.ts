@@ -552,18 +552,52 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
-      'DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
-    displayName: 'DeepSeek V3.1',
-    enabled: true,
+      'DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
+    displayName: 'DeepSeek V3.1 (non-Think)',
     id: 'DeepSeek-V3.1',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
+    displayName: 'DeepSeek V3.1 (Think)',
+    id: 'DeepSeek-V3.1-Think',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek V3.1 Fast 是 DeepSeek V3.1版本的高TPS极速版。 混合思考模式：通过更改聊天模板，一个模型可以同时支持思考模式和非思考模式。 更智能的工具调用：通过后训练优化，模型在工具使用和代理任务中的表现显著提升。',
+    displayName: 'DeepSeek V3.1 (Fast)',
+    id: 'DeepSeek-V3.1-Fast',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.096, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.288, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

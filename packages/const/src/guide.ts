@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { BRANDING_EMAIL } from '@/const/branding';
+import { BRANDING_EMAIL } from './branding';
 import {
   BLOG,
   DOCKER_IMAGE,
@@ -9,7 +9,12 @@ import {
   OFFICIAL_URL,
   SELF_HOSTING_DOCUMENTS,
   USAGE_DOCUMENTS,
+
 } from '@/const/url';
+
+  WIKI,
+} from './url';
+
 
 export const INBOX_GUIDE_SYSTEMROLE = `# Role: Imoogle AI Support Assistant
 

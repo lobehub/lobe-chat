@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Collapse",
+      "on": "Expand"
+    },
+    "typobar": {
+      "off": "Hide formatting toolbar",
+      "on": "Show formatting toolbar"
+    }
+  },
+  "file": {
+    "error": "Error: {{message}}",
+    "uploading": "Uploading file..."
+  },
+  "image": {
+    "broken": "Image is corrupted"
+  },
+  "link": {
+    "edit": "Edit link",
+    "open": "Open link",
+    "placeholder": "Enter link URL",
+    "unlink": "Unlink"
+  },
+  "table": {
+    "delete": "Delete table",
+    "deleteColumn": "Delete column",
+    "deleteRow": "Delete row",
+    "insertColumnLeft": "Insert {{count}} column(s) to the left",
+    "insertColumnRight": "Insert {{count}} column(s) to the right",
+    "insertRowAbove": "Insert {{count}} row(s) above",
+    "insertRowBelow": "Insert {{count}} row(s) below"
+  },
+  "typobar": {
+    "blockquote": "Blockquote",
+    "bold": "Bold",
+    "bulletList": "Bulleted list",
+    "code": "Inline code",
+    "codeblock": "Code block",
+    "italic": "Italic",
+    "link": "Link",
+    "numberList": "Numbered list",
+    "strikethrough": "Strikethrough",
+    "table": "Insert table",
+    "underline": "Underline"
+  }
+}

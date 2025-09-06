@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Thu gọn",
+      "on": "Mở rộng"
+    },
+    "typobar": {
+      "off": "Ẩn thanh công cụ định dạng",
+      "on": "Hiển thị thanh công cụ định dạng"
+    }
+  },
+  "file": {
+    "error": "Lỗi: {{message}}",
+    "uploading": "Đang tải tệp lên..."
+  },
+  "image": {
+    "broken": "Hình ảnh bị hỏng"
+  },
+  "link": {
+    "edit": "Chỉnh sửa liên kết",
+    "open": "Mở liên kết",
+    "placeholder": "Nhập URL liên kết",
+    "unlink": "Gỡ liên kết"
+  },
+  "table": {
+    "delete": "Xóa bảng",
+    "deleteColumn": "Xóa cột",
+    "deleteRow": "Xóa hàng",
+    "insertColumnLeft": "Chèn {{count}} cột vào bên trái",
+    "insertColumnRight": "Chèn {{count}} cột vào bên phải",
+    "insertRowAbove": "Chèn {{count}} hàng vào phía trên",
+    "insertRowBelow": "Chèn {{count}} hàng vào phía dưới"
+  },
+  "typobar": {
+    "blockquote": "Trích dẫn",
+    "bold": "Đậm",
+    "bulletList": "Danh sách gạch đầu dòng",
+    "code": "Mã nội tuyến",
+    "codeblock": "Khối mã",
+    "italic": "Nghiêng",
+    "link": "Liên kết",
+    "numberList": "Danh sách có thứ tự",
+    "strikethrough": "Gạch ngang",
+    "table": "Chèn bảng",
+    "underline": "Gạch chân"
+  }
+}

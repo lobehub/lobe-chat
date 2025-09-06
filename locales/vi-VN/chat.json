@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Thêm một tin nhắn AI",
     "addUser": "Thêm một tin nhắn người dùng",
+    "disclaimer": "AI cũng có thể mắc lỗi, vui lòng kiểm tra kỹ thông tin quan trọng",
+    "errorMsg": "Gửi tin nhắn thất bại, vui lòng kiểm tra mạng và thử lại: {{errorMsg}}",
     "more": "Thêm",
     "send": "Gửi",
-    "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
-    "sendWithEnter": "Nhấn Enter để gửi",
+    "sendWithCmdEnter": "Nhấn <key/> để gửi",
+    "sendWithEnter": "Nhấn <key/> để gửi",
     "stop": "Dừng",
     "warp": "Xuống dòng"
   },
@@ -231,6 +233,10 @@
     "divider": "Chủ đề con",
     "threadMessageCount": "{{messageCount}} tin nhắn",
     "title": "Chủ đề con"
+  },
+  "toggleWideScreen": {
+    "off": "Tắt chế độ màn hình rộng",
+    "on": "Bật chế độ màn hình rộng"
   },
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",

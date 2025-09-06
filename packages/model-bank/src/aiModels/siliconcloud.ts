@@ -51,6 +51,26 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Seed-OSS 是由字节跳动 Seed 团队开发的一系列开源大型语言模型，专为强大的长上下文处理、推理、智能体（agent）和通用能力而设计。该系列中的 Seed-OSS-36B-Instruct 是一个拥有 360 亿参数的指令微调模型，它原生支持超长上下文长度，使其能够一次性处理海量文档或复杂的代码库。该模型在推理、代码生成和智能体任务（如工具使用）方面进行了特别优化，同时保持了平衡且出色的通用能力。此模型的一大特色是“思考预算”（Thinking Budget）功能，允许用户根据需要灵活调整推理长度，从而在实际应用中有效提升推理效率。',
+    displayName: 'Seed OSS 36B Instruct',
+    id: 'ByteDance-Seed/Seed-OSS-36B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-20',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 65_536,

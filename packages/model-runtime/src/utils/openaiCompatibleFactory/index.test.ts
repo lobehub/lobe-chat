@@ -1,21 +1,23 @@
 // @vitest-environment node
-import OpenAI from 'openai';
-import type { Stream } from 'openai/streaming';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import {
   AgentRuntimeErrorType,
   ChatStreamCallbacks,
   ChatStreamPayload,
   LobeOpenAICompatibleRuntime,
   ModelProvider,
-} from '@/libs/model-runtime';
-import officalOpenAIModels from '@/libs/model-runtime/openai/fixtures/openai-models.json';
-import { sleep } from '@/utils/sleep';
+} from '@lobechat/model-runtime';
+import OpenAI from 'openai';
+import type { Stream } from 'openai/streaming';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../debugStream';
 import * as openaiHelpers from '../openaiHelpers';
 import { createOpenAICompatibleRuntime } from './index';
+
+const sleep = async (ms: number) =>
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 const provider = 'groq';
 const defaultBaseURL = 'https://api.groq.com/openai/v1';

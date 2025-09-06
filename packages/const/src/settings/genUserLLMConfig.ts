@@ -1,8 +1,7 @@
 import { ModelProvider } from '@lobechat/model-runtime';
-import { UserModelProviderConfig } from '@lobechat/types';
+import { ModelProviderCard, UserModelProviderConfig } from '@lobechat/types';
 
 import * as ProviderCards from '@/config/modelProviders';
-import { ModelProviderCard } from '@/types/llm';
 
 export const genUserLLMConfig = (specificConfig: Record<any, any>): UserModelProviderConfig => {
   return Object.keys(ModelProvider).reduce((config, providerKey) => {
