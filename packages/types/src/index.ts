@@ -14,6 +14,7 @@ export * from './llm';
 export * from './message';
 export * from './meta';
 export * from './rag';
+export * from './search';
 export * from './serverConfig';
 export * from './session';
 export * from './topic';
