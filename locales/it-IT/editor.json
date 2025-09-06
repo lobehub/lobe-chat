@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Comprimi",
+      "on": "Espandi"
+    },
+    "typobar": {
+      "off": "Nascondi barra degli strumenti di formattazione",
+      "on": "Mostra barra degli strumenti di formattazione"
+    }
+  },
+  "file": {
+    "error": "Errore: {{message}}",
+    "uploading": "Caricamento file in corso..."
+  },
+  "image": {
+    "broken": "Immagine danneggiata"
+  },
+  "link": {
+    "edit": "Modifica link",
+    "open": "Apri link",
+    "placeholder": "Inserisci URL del link",
+    "unlink": "Rimuovi link"
+  },
+  "table": {
+    "delete": "Elimina tabella",
+    "deleteColumn": "Elimina colonna",
+    "deleteRow": "Elimina riga",
+    "insertColumnLeft": "Inserisci {{count}} colonne a sinistra",
+    "insertColumnRight": "Inserisci {{count}} colonne a destra",
+    "insertRowAbove": "Inserisci {{count}} righe sopra",
+    "insertRowBelow": "Inserisci {{count}} righe sotto"
+  },
+  "typobar": {
+    "blockquote": "Citazione",
+    "bold": "Grassetto",
+    "bulletList": "Elenco puntato",
+    "code": "Codice in linea",
+    "codeblock": "Blocco di codice",
+    "italic": "Corsivo",
+    "link": "Collegamento",
+    "numberList": "Elenco numerato",
+    "strikethrough": "Testo barrato",
+    "table": "Inserisci tabella",
+    "underline": "Sottolineato"
+  }
+}

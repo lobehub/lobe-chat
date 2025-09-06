@@ -674,4 +674,24 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 
 上述示例表示先禁用所有模型，再启用 `flux-pro-1.1` 和 `flux-kontext-pro`（显示名为 `FLUX.1 Kontext [pro]`）。
 
+## NewAPI
+
+### `NEWAPI_API_KEY`
+
+- 类型：可选
+- 描述：这是你的 NewAPI 服务实例的 API 密钥。NewAPI 是一个多供应商模型聚合服务，提供对各种 AI 模型 API 的统一访问。
+- 默认值：-
+- 示例：`sk-xxxxxx...xxxxxx`
+
+### `NEWAPI_PROXY_URL`
+
+- 类型：可选
+- 描述：你的 NewAPI 服务器实例的基础 URL。这应该指向你部署的 NewAPI 服务端点。
+- 默认值：-
+- 示例：`https://your-newapi-server.com`
+
+<Callout type={'info'}>
+  NewAPI 是一个多供应商模型聚合服务，支持基于供应商检测的自动模型路由。它提供成本管理功能，并为访问包括 OpenAI、Anthropic、Google 等多个供应商的模型提供单一端点。了解更多关于 NewAPI 的信息请访问 [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api)。
+</Callout>
+
 [model-list]: /zh/docs/self-hosting/advanced/model-list

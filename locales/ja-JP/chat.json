@@ -70,10 +70,12 @@
   "input": {
     "addAi": "AIメッセージを追加",
     "addUser": "ユーザーメッセージを追加",
+    "disclaimer": "AIも誤りを犯すことがありますので、重要な情報はご確認ください",
+    "errorMsg": "メッセージの送信に失敗しました。ネットワークを確認してから再試行してください: {{errorMsg}}",
     "more": "もっと",
     "send": "送信",
-    "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
-    "sendWithEnter": "Enter キーで送信",
+    "sendWithCmdEnter": "<key/> キーを押して送信",
+    "sendWithEnter": "<key/> キーを押して送信",
     "stop": "停止",
     "warp": "改行"
   },
@@ -231,6 +233,10 @@
     "divider": "サブトピック",
     "threadMessageCount": "{{messageCount}} 件のメッセージ",
     "title": "サブトピック"
+  },
+  "toggleWideScreen": {
+    "off": "ワイドスクリーンモードをオフにする",
+    "on": "ワイドスクリーンモードをオンにする"
   },
   "tokenDetails": {
     "chats": "チャットメッセージ",

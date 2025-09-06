@@ -1,6 +1,5 @@
+import { ModelProviderCard } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
-
-import { ModelProviderCard } from '@/types/index';
 
 import { genUserLLMConfig } from './genUserLLMConfig';
 
