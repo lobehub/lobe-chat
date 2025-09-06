@@ -16,9 +16,10 @@ import { useThemeToken } from '@/theme';
 export interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
   contentStyle?: StyleProp<TextStyle>;
   prefix?: React.ReactNode;
+  size?: 'large' | 'middle' | 'small';
   style?: StyleProp<ViewStyle>;
   suffix?: React.ReactNode;
-  variant?: 'filled' | 'borderless';
+  variant?: 'filled' | 'borderless' | 'outlined';
 }
 
 const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
@@ -31,9 +32,10 @@ const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => 
     suffix,
     multiline = false,
     variant = 'filled',
+    size = 'middle',
     ...rest
   } = props;
-  const { styles, token } = useStyles({ multiline, variant });
+  const { styles, token } = useStyles({ multiline, size, variant });
 
   return (
     <View style={[styles.container, style]}>
@@ -56,12 +58,15 @@ const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => 
 
 const TextInputSearch = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
   const token = useThemeToken();
+  const size = props.size ?? 'middle';
+  const iconSize =
+    size === 'small' ? token.fontSizeSM : size === 'large' ? token.fontSizeLG : token.fontSize;
 
   return (
     <TextInput
       ref={ref}
       {...props}
-      prefix={<Search color={token.colorTextPlaceholder} size={token.fontSizeLG} />}
+      prefix={<Search color={token.colorTextPlaceholder} size={iconSize} />}
       returnKeyType="search"
     />
   );
@@ -73,6 +78,9 @@ const TextInputPassword = React.forwardRef<
 >((props, ref) => {
   const token = useThemeToken();
   const [isSecure, setIsSecure] = React.useState(true);
+  const size = props.size ?? 'middle';
+  const iconSize =
+    size === 'small' ? token.fontSizeSM : size === 'large' ? token.fontSizeLG : token.fontSize;
 
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
@@ -86,9 +94,9 @@ const TextInputPassword = React.forwardRef<
       suffix={
         <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
           {isSecure ? (
-            <EyeOff color={token.colorTextPlaceholder} size={token.fontSizeLG} />
+            <EyeOff color={token.colorTextPlaceholder} size={iconSize} />
           ) : (
-            <Eye color={token.colorTextPlaceholder} size={token.fontSizeLG} />
+            <Eye color={token.colorTextPlaceholder} size={iconSize} />
           )}
         </TouchableOpacity>
       }

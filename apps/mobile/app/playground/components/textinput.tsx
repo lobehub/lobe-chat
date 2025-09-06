@@ -9,6 +9,7 @@ import {
   PasswordDemo,
   CompoundDemo,
   VariantDemo,
+  SizesDemo,
 } from '@/components/TextInput/demos';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
@@ -22,6 +23,7 @@ const demos: DemoItem[] = [
   { component: <PasswordDemo />, key: 'password', title: '密码输入框' },
   { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
   { component: <VariantDemo />, key: 'variant', title: '外观变体' },
+  { component: <SizesDemo />, key: 'sizes', title: '尺寸大小' },
 ];
 
 const readmeContent = `# TextInput组件
@@ -97,9 +99,33 @@ import { TouchableOpacity } from 'react-native';
 <TextInput variant="borderless" placeholder="请输入内容" />
 <TextInput.Search variant="borderless" placeholder="搜索内容..." />
 <TextInput.Password variant="borderless" placeholder="请输入密码" />
+
+// 描边（outlined）
+<TextInput variant="outlined" placeholder="请输入内容" />
+<TextInput.Search variant="outlined" placeholder="搜索内容..." />
+<TextInput.Password variant="outlined" placeholder="请输入密码" />
 \`\`\`
 
-### 6. 自定义样式
+### 6. 尺寸大小
+
+\`\`\`jsx
+// 小号
+<TextInput size="small" placeholder="Small" />
+<TextInput.Search size="small" placeholder="Small Search" />
+<TextInput.Password size="small" placeholder="Small Password" />
+
+// 中号（默认）
+<TextInput size="middle" placeholder="Middle" />
+<TextInput.Search size="middle" placeholder="Middle Search" />
+<TextInput.Password size="middle" placeholder="Middle Password" />
+
+// 大号
+<TextInput size="large" placeholder="Large" />
+<TextInput.Search size="large" placeholder="Large Search" />
+<TextInput.Password size="large" placeholder="Large Password" />
+\`\`\`
+
+### 7. 自定义样式
 
 \`\`\`jsx
 <TextInput
@@ -115,7 +141,8 @@ import { TouchableOpacity } from 'react-native';
 
 | 属性 | 类型 | 描述 |
 |------|------|------|
-| \`variant\` | \`'filled' | 'borderless'\` | 外观变体（默认 filled） |
+| \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
+| \`size\` | \`'large' | 'middle' | 'small'\` | 尺寸大小（默认 middle） |
 | \`prefix\` | \`React.ReactNode\` | 前缀内容 |
 | \`suffix\` | \`React.ReactNode\` | 后缀内容 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |

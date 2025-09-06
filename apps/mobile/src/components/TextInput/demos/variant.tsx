@@ -34,6 +34,12 @@ const VariantDemo = () => {
       <TextInput.Search placeholder="搜索内容..." />
       <TextInput.Password placeholder="请输入密码" />
 
+      <Text style={styles.sectionTitle}>Outlined（描边）</Text>
+      <Text style={styles.description}>带边框描边，适合需要更明确边界的输入框</Text>
+      <TextInput placeholder="请输入内容" variant="outlined" />
+      <TextInput.Search placeholder="搜索内容..." variant="outlined" />
+      <TextInput.Password placeholder="请输入密码" variant="outlined" />
+
       <Text style={styles.sectionTitle}>Borderless（无底色）</Text>
       <Text style={styles.description}>无背景与圆角，常用于列表或紧凑布局</Text>
       <TextInput placeholder="请输入内容" variant="borderless" />

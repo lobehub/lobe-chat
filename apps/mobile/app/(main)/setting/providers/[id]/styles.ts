@@ -156,22 +156,8 @@ export const useStyles = createStyles((token) => ({
     padding: token.padding,
   },
 
-  modelsSearch: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    borderColor: token.colorBorder,
-    borderRadius: token.borderRadiusLG,
-    borderWidth: 1,
-    flexDirection: 'row',
-    paddingHorizontal: token.paddingSM,
-  },
-
   modelsSearchInput: {
-    color: token.colorText,
-    flex: 1,
-    fontSize: token.fontSize,
-    marginLeft: token.marginXS,
-    paddingVertical: 10,
+    // paddingVertical: 10,
   },
 
   modelsTitle: {

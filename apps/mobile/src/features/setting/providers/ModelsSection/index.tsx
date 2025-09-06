@@ -217,6 +217,7 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
           placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
           style={styles.searchInput}
           value={searchKeyword}
+          variant="outlined"
         />
       </View>
 

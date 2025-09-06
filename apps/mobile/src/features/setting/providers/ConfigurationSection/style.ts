@@ -4,14 +4,13 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => ({
   // AES-GCM 相关样式
   aesGcmContainer: {
-    alignItems: 'center',
-    paddingVertical: token.paddingSM,
+    alignItems: 'flex-start',
   },
 
   aesGcmContent: {
-    alignItems: 'flex-start',
     flex: 1,
     flexDirection: 'row',
+    gap: token.marginXXS,
     maxWidth: '100%',
   },
 
@@ -21,12 +20,10 @@ export const useStyles = createStyles((token) => ({
   },
 
   aesGcmText: {
-    color: token.colorTextSecondary,
-    flex: 1,
+    color: token.colorTextQuaternary,
     flexShrink: 1,
     fontSize: token.fontSizeSM,
-    opacity: 0.66,
-    textAlign: 'center',
+    textAlign: 'left',
   },
 
   // Checker 相关样式
@@ -226,13 +223,12 @@ export const useStyles = createStyles((token) => ({
 
   modelSelector: {
     alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
     borderColor: token.colorBorder,
     borderRadius: token.borderRadius,
     borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
-    height: 40,
+    height: token.controlHeightLG,
     justifyContent: 'space-between',
     paddingHorizontal: token.paddingSM,
   },
@@ -283,10 +279,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   // 文本输入框
-  textInput: {
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingSM,
-  },
+  textInput: {},
 
   textInputDisabled: {
     color: token.colorTextDisabled,
