@@ -29,13 +29,12 @@ function detectPlatform(yamlContent) {
  * @returns {string} 合并后的 YAML 字符串
  */
 function mergeYamlFiles(x64Content, arm64Content) {
-  // 以 x64 为基础（保持兼容性）
+  // 以 ARM64 为基础（Apple Silicon 优先）
   const merged = {
-    ...x64Content,
-    files: [...x64Content.files, ...arm64Content.files],
+    ...arm64Content,
+    files: [...arm64Content.files, ...x64Content.files],
   };
 
-  // 使用 bun 内置 YAML 生成
   return YAML.stringify(merged);
 }
 
