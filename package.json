@@ -256,6 +256,7 @@
     "react-virtuoso": "^4.13.0",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^15.0.1",
+    "remark-cjk-friendly": "^1.2.0",
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
     "request-filtering-agent": "^2.0.1",
