@@ -182,8 +182,8 @@ const isPublicRoute = createRouteMatcher([
   '/login',
   '/signup',
   // oauth
-  // Make oauth consent pages public so we can set locale cookies via ?hl=
-  '/oauth(.*)',
+  // Make only the consent view public (GET page), not other oauth paths
+  '/oauth/consent/(.*)',
   '/oidc/handoff',
   '/oidc/token',
 ]);
@@ -192,7 +192,6 @@ const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
   '/files(.*)',
   '/onboard(.*)',
-  '/oauth(.*)',
   // ↓ cloud ↓
 ]);
 
