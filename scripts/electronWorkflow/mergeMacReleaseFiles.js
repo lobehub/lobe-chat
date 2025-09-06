@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-process-exit, unicorn/prefer-top-level-await */
-import { YAML } from 'bun';
 import fs from 'node:fs';
 import path from 'node:path';
+import YAML from 'yaml';
 
 // 配置
 const FILE_NAME = 'latest-mac.yml';

@@ -230,6 +230,16 @@ jobs:
       - name: List downloaded artifacts
         run: ls -R release
 
+      # 仅为该步骤在脚本目录安装 yaml 单包，避免安装整个 monorepo 依赖
+      - name: Install yaml only for merge step
+        run: |
+          cd scripts/electronWorkflow
+          # 在脚本目录创建最小 package.json，防止 bun 向上寻找根 package.json
+          if [ ! -f package.json ]; then
+            echo '{"name":"merge-mac-release","private":true}' > package.json
+          fi
+          bun add --no-save yaml@2.8.1
+
       # 合并 macOS YAML 文件 (使用 bun 运行 JavaScript)
       - name: Merge latest-mac.yml files
         run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
