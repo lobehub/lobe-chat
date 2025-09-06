@@ -177,9 +177,9 @@ export default function RootLayout() {
                           {/* 指定首页, 防止 expo 路由错乱 */}
                           <Stack.Screen name="index" options={{ animation: 'none' }} />
                           {/* main page should not have animation */}
-                          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                          <Stack.Screen name="chat" options={{ animation: 'none' }} />
                           {/* auth page should not have animation  */}
-                          <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                          <Stack.Screen name="auth" options={{ animation: 'none' }} />
                         </Stack>
                       </ToastProvider>
                     </I18nReadyGate>
