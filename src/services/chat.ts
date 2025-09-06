@@ -33,7 +33,7 @@ import {
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
-import { ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
+import { ChatImageItem, ChatMessage, ChatVideoItem, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
@@ -68,6 +68,10 @@ const isCanUseVision = (model: string, provider: string) => {
     return modelProviderSelectors.isModelEnabledVision(model)(getUserStoreState());
   }
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
+};
+
+const isCanUseVideo = (model: string, provider: string) => {
+  return aiModelSelectors.isModelSupportVideo(model, provider)(getAiInfraStoreState());
 };
 
 /**
@@ -563,12 +567,18 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getUserContent = async (m: ChatMessage) => {
-      // only if message doesn't have images and files, then return the plain content
-      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
+      // only if message doesn't have images, videos and files, then return the plain content
+      if (
+        (!m.imageList || m.imageList.length === 0) &&
+        (!m.videoList || m.videoList.length === 0) &&
+        (!m.fileList || m.fileList.length === 0)
+      )
         return m.content;
 
       const imageList = m.imageList || [];
+      const videoList = m.videoList || [];
       const imageContentParts = await this.processImageList({ imageList, model, provider });
+      const videoContentParts = await this.processVideoList({ model, provider, videoList });
 
       const filesContext = isServerMode
         ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
@@ -576,6 +586,7 @@ class ChatService {
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageContentParts,
+        ...videoContentParts,
       ] as UserMessageContentPart[];
     };
 
@@ -593,17 +604,27 @@ class ChatService {
           { text: m.content, type: 'text' },
         ] as UserMessageContentPart[];
       }
-      // only if message doesn't have images and files, then return the plain content
+      // only if message doesn't have images, videos and files, then return the plain content
 
-      if (m.imageList && m.imageList.length > 0) {
-        const imageContentParts = await this.processImageList({
-          imageList: m.imageList,
-          model,
-          provider,
-        });
+      if ((m.imageList && m.imageList.length > 0) || (m.videoList && m.videoList.length > 0)) {
+        const imageContentParts = m.imageList
+          ? await this.processImageList({
+              imageList: m.imageList,
+              model,
+              provider,
+            })
+          : [];
+        const videoContentParts = m.videoList
+          ? await this.processVideoList({
+              model,
+              provider,
+              videoList: m.videoList,
+            })
+          : [];
         return [
           !!m.content ? { text: m.content, type: 'text' } : undefined,
           ...imageContentParts,
+          ...videoContentParts,
         ].filter(Boolean) as UserMessageContentPart[];
       }
 
@@ -726,6 +747,43 @@ class ChatService {
         }
 
         return { image_url: { detail: 'auto', url: processedUrl }, type: 'image_url' } as const;
+      }),
+    );
+  };
+
+  /**
+   * Process videoList: convert local URLs to base64 and format as UserMessageContentPart
+   */
+  private processVideoList = async ({
+    model,
+    provider,
+    videoList,
+  }: {
+    model: string;
+    provider: string;
+    videoList: ChatVideoItem[];
+  }) => {
+    console.log(model, provider, isCanUseVideo(model, provider));
+    if (!isCanUseVideo(model, provider)) {
+      return [];
+    }
+
+    return Promise.all(
+      videoList.map(async (video) => {
+        const { type } = parseDataUri(video.url);
+
+        let processedUrl = video.url;
+        if (type === 'url' && isLocalUrl(video.url)) {
+          // For local video URLs, we need to convert to base64
+          // Note: This might need optimization for large video files
+          const response = await fetch(video.url);
+          const arrayBuffer = await response.arrayBuffer();
+          const base64 = Buffer.from(arrayBuffer).toString('base64');
+          const mimeType = response.headers.get('content-type') || 'video/mp4';
+          processedUrl = `data:${mimeType};base64,${base64}`;
+        }
+
+        return { type: 'video_url', video_url: { url: processedUrl } } as const;
       }),
     );
   };
