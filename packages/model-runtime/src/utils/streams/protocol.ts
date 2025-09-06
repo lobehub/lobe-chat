@@ -1,4 +1,4 @@
-import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
+import { ChatCitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
 
 import { parseToolCalls } from '../../helpers';
 import { ChatStreamCallbacks } from '../../types';
@@ -23,7 +23,7 @@ export interface StreamContext {
    * relevant to that specific portion of the generated content.
    * This array accumulates all citation items received during the streaming response.
    */
-  returnedCitationArray?: CitationItem[];
+  returnedCitationArray?: ChatCitationItem[];
   /**
    * O series models need a condition to separate part
    */
