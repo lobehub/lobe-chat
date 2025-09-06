@@ -7,7 +7,7 @@ export const safeReplaceLogin = (router?: { replace: (path: string) => void }) =
   if (isOnLoginPath()) return false;
   try {
     const r = router ?? globalRouter;
-    r.replace('/login');
+    r.replace('/auth/login');
     return true;
   } catch {
     return false;

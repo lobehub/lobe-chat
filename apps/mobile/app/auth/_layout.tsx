@@ -10,6 +10,12 @@ const AuthLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="callback"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

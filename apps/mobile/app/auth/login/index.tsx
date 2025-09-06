@@ -24,10 +24,8 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       await login();
-      // Redirect to home page after successful login
-      setTimeout(() => {
-        router.replace('/chat');
-      }, 0);
+      // 立即导航到对话页，避免展示 404 页面
+      setTimeout(() => router.replace('/chat'), 0);
     } catch (error) {
       const key = getLoginErrorKey(error);
       const message = t(key, { ns: 'error' });
