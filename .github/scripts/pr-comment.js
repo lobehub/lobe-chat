@@ -36,19 +36,10 @@ module.exports = async ({ github, context, releaseUrl, version, tag }) => {
       // Generate combined download table
       let assetTable = '| Platform | File | Size |\n| --- | --- | --- |\n';
 
-      // Add macOS assets with architecture detection
+      // Add macOS assets
       macAssets.forEach((asset) => {
         const sizeInMB = (asset.size / (1024 * 1024)).toFixed(2);
-
-        // Detect architecture from filename
-        let architecture = '';
-        if (asset.name.includes('arm64')) {
-          architecture = ' (Apple Silicon)';
-        } else if (asset.name.includes('x64') || asset.name.includes('-mac.')) {
-          architecture = ' (Intel)';
-        }
-
-        assetTable += `| macOS${architecture} | [${asset.name}](${asset.browser_download_url}) | ${sizeInMB} MB |\n`;
+        assetTable += `| macOS | [${asset.name}](${asset.browser_download_url}) | ${sizeInMB} MB |\n`;
       });
 
       // Add Windows assets
