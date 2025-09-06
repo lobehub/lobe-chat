@@ -1,15 +1,15 @@
 // @vitest-environment node
-import OpenAI from 'openai';
-import type { Stream } from 'openai/streaming';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import {
   AgentRuntimeErrorType,
   ChatStreamCallbacks,
   ChatStreamPayload,
   LobeOpenAICompatibleRuntime,
   ModelProvider,
-} from '@/libs/model-runtime';
+} from '@lobechat/model-runtime';
+import OpenAI from 'openai';
+import type { Stream } from 'openai/streaming';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import officalOpenAIModels from '@/libs/model-runtime/openai/fixtures/openai-models.json';
 import { sleep } from '@/utils/sleep';
 
