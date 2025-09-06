@@ -8,6 +8,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   aesGcmContent: {
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
     gap: token.marginXXS,

@@ -219,7 +219,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
                 <Text onPress={() => Linking.openURL(AES_GCM_URL)} style={styles.aesGcmLink}>
                   AES-GCM
                 </Text>
-                加密算法加密
+                算法进行加密
               </Trans>
             </Text>
           </View>

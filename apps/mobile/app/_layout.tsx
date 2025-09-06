@@ -22,6 +22,7 @@ import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
 import '../polyfills';
 import { I18nReadyGate } from '@/i18n/ReadyGate';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete
 SplashScreen.preventAutoHideAsync();
@@ -107,7 +108,7 @@ function AuthProvider({ children }: PropsWithChildren) {
           hasRedirectedRef.current = true;
           // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
           setTimeout(() => {
-            router.replace('/login');
+            safeReplaceLogin(router);
           }, 0);
         }
       } catch (checkError) {

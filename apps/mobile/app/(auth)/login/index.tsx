@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Alert, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useAuth, useAuthActions } from '@/store/user';
 import Button from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { useStyles } from './styles';
+import { setLoginMounted } from '@/navigation/loginState';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);
@@ -13,6 +14,11 @@ const LoginPage = () => {
   const router = useRouter();
 
   const { styles } = useStyles();
+
+  useEffect(() => {
+    setLoginMounted(true);
+    return () => setLoginMounted(false);
+  }, []);
 
   const handleLogin = async () => {
     try {
