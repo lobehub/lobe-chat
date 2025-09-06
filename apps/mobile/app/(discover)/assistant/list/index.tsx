@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { FlatList, Text, View, TextInput, ActivityIndicator } from 'react-native';
+import { FlatList, Text, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'ahooks';
 import { AssistantCategory } from '@/types/discover';
-import { Search } from 'lucide-react-native';
 import { useDiscoverStore } from '@/store/discover';
 import AgentCard from './components/AgentCard';
 import CategoryTabs from './components/CategoryTabs';
 import { CategoryTabsSkeleton, AssistantListSkeleton } from './components/SkeletonList';
 import useCategory from './hooks/useCategory';
 import { useStyles } from './styles';
-import { Header } from '@/components';
+import { Header, TextInput } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
@@ -136,19 +135,12 @@ const AssistantList = () => {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
       <Header showBack title={t('title', { ns: 'discover' })} />
       <View style={styles.filterContainer}>
-        <View style={styles.searchContainer}>
-          <Search color={token.colorTextPlaceholder} size={20} style={styles.searchIcon} />
-          <TextInput
-            onChangeText={setSearchText}
-            onSubmitEditing={handleSearchSubmit}
-            placeholder={t('assistant.search', { ns: 'common' })}
-            placeholderTextColor={token.colorTextPlaceholder}
-            returnKeyType="search"
-            style={[styles.searchInput, { marginLeft: token.marginXS }]}
-            textAlignVertical="center"
-            value={searchText}
-          />
-        </View>
+        <TextInput.Search
+          onChangeText={setSearchText}
+          onSubmitEditing={handleSearchSubmit}
+          placeholder={t('assistant.search', { ns: 'common' })}
+          style={styles.searchContainer}
+        />
 
         {isCategoryLoading ? (
           <CategoryTabsSkeleton />

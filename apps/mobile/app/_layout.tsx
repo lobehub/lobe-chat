@@ -22,6 +22,7 @@ import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
 import '../polyfills';
 import { I18nReadyGate } from '@/i18n/ReadyGate';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete
 SplashScreen.preventAutoHideAsync();
@@ -107,7 +108,7 @@ function AuthProvider({ children }: PropsWithChildren) {
           hasRedirectedRef.current = true;
           // 使用 setTimeout 确保在 Root Layout 挂载完成后进行导航
           setTimeout(() => {
-            router.replace('/login');
+            safeReplaceLogin(router);
           }, 0);
         }
       } catch (checkError) {
@@ -176,9 +177,9 @@ export default function RootLayout() {
                           {/* 指定首页, 防止 expo 路由错乱 */}
                           <Stack.Screen name="index" options={{ animation: 'none' }} />
                           {/* main page should not have animation */}
-                          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                          <Stack.Screen name="chat" options={{ animation: 'none' }} />
                           {/* auth page should not have animation  */}
-                          <Stack.Screen name="(auth)" options={{ animation: 'none' }} />
+                          <Stack.Screen name="auth" options={{ animation: 'none' }} />
                         </Stack>
                       </ToastProvider>
                     </I18nReadyGate>
