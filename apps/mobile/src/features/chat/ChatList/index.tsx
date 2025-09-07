@@ -41,7 +41,7 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
 
 ChatMessageItem.displayName = 'ChatMessageItem';
 
-export default function ChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
+export default function ChatListChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
   const internalRef = useRef<FlatList<ChatMessage>>(null);
 
   // 触发消息加载
@@ -93,7 +93,7 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
   }
 
   return (
-    <View style={[{ flex: 1 }, style]}>
+    <View style={[styles.chatContainer, style]}>
       <FlatList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}
@@ -107,7 +107,6 @@ export default function ChatList({ style, onScroll, scrollViewRef }: ChatListPro
         removeClippedSubviews={true}
         renderItem={renderItem}
         scrollEventThrottle={16}
-        style={styles.chatContainer}
         windowSize={10}
       />
       <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} />
