@@ -1,6 +1,5 @@
-import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { useGlobalStore } from '@/store/global';
 import Hydration from '@/features/Hydration';
@@ -22,13 +21,16 @@ export default function ChatWithDrawer() {
       <Hydration />
       <SideBar>
         <TopicDrawer>
-          <View style={styles.chatContainer}>
+          <KeyboardAvoidingView
+            behavior="padding"
+            enabled
+            keyboardVerticalOffset={60}
+            style={{ flex: 1 }}
+          >
             <ChatHeader onDrawerToggle={toggleDrawer} />
             <ChatList />
-            <KeyboardStickyView>
-              <ChatInput />
-            </KeyboardStickyView>
-          </View>
+            <ChatInput />
+          </KeyboardAvoidingView>
         </TopicDrawer>
       </SideBar>
     </SafeAreaView>
