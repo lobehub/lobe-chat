@@ -1,4 +1,5 @@
 import { createStyles } from '@/theme';
+import { CHAT_INPUT_HEIGHT } from '@/const/common';
 
 export const useStyles = createStyles((token) => ({
   container: {
@@ -6,6 +7,7 @@ export const useStyles = createStyles((token) => ({
     borderColor: token.colorBorder,
     borderRadius: token.borderRadius * 4,
     borderWidth: 0.5,
+    height: CHAT_INPUT_HEIGHT,
     marginHorizontal: token.marginXXS,
     paddingHorizontal: token.padding,
     paddingVertical: token.paddingSM,
