@@ -25,7 +25,7 @@ const ErrorContent: React.FC<ErrorContentProps> = ({ error }) => {
         alignItems: 'flex-start',
         flexDirection: 'row',
         gap: token.marginXS,
-        paddingVertical: token.paddingSM,
+        padding: token.paddingXS,
       }}
     >
       <AlertTriangle color={token.colorWarning} size={16} style={{ marginTop: 2 }} />
