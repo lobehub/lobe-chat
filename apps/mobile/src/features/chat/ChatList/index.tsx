@@ -4,6 +4,7 @@ import {
   ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  LayoutChangeEvent,
   View,
   ViewStyle,
 } from 'react-native';
@@ -51,6 +52,27 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
 
+  // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
+  const isDraggingRef = useRef(false);
+  const isMomentumRef = useRef(false);
+  const isAutoScrollingRef = useRef(false);
+
+  // Track last measurements to compute atBottom across events
+  const layoutHeightRef = useRef(0);
+  const contentHeightRef = useRef(0);
+  const scrollYRef = useRef(0);
+
+  const BOTTOM_TOLERANCE = 32; // px threshold to consider we're at bottom
+
+  const computeAtBottom = useCallback(() => {
+    const layoutH = layoutHeightRef.current;
+    const contentH = contentHeightRef.current;
+    const offsetY = scrollYRef.current;
+
+    if (contentH <= layoutH) return true; // content fits; considered bottom
+    return offsetY + layoutH >= contentH - BOTTOM_TOLERANCE;
+  }, []);
+
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
       <ChatMessageItem index={index} item={item} key={item.id} totalLength={messages.length} />
@@ -60,16 +82,65 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
 
-  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
-    setAtBottom(isAtBottom);
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+      layoutHeightRef.current = layoutMeasurement.height;
+      contentHeightRef.current = contentSize.height;
+      scrollYRef.current = contentOffset.y;
+
+      const nextAtBottom = computeAtBottom();
+      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+    },
+    [computeAtBottom],
+  );
+
+  const handleScrollBeginDrag = useCallback(() => {
+    isDraggingRef.current = true;
     setIsScrolling(true);
   }, []);
 
-  const handleMomentumScrollEnd = useCallback(() => {
-    setIsScrolling(false);
+  const handleScrollEndDrag = useCallback(() => {
+    isDraggingRef.current = false;
+    // If no momentum started, scrolling stops here
+    if (!isMomentumRef.current) {
+      setIsScrolling(false);
+    }
   }, []);
+
+  const handleMomentumScrollBegin = useCallback(() => {
+    isMomentumRef.current = true;
+    // Ignore programmatic auto-scroll when setting isScrolling
+    if (!isAutoScrollingRef.current) {
+      setIsScrolling(true);
+    }
+  }, []);
+
+  const handleMomentumScrollEnd = useCallback(() => {
+    isMomentumRef.current = false;
+    isAutoScrollingRef.current = false;
+    if (!isDraggingRef.current) {
+      setIsScrolling(false);
+    }
+  }, []);
+
+  const handleContentSizeChange = useCallback(
+    (w: number, h: number) => {
+      contentHeightRef.current = h;
+      const nextAtBottom = computeAtBottom();
+      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+    },
+    [computeAtBottom],
+  );
+
+  const handleLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      layoutHeightRef.current = e.nativeEvent.layout.height;
+      const nextAtBottom = computeAtBottom();
+      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+    },
+    [computeAtBottom],
+  );
 
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
 
@@ -89,8 +160,13 @@ export default function ChatListChatList({ style }: ChatListProps) {
         initialNumToRender={10}
         keyExtractor={keyExtractor}
         maxToRenderPerBatch={10}
+        onContentSizeChange={handleContentSizeChange}
+        onLayout={handleLayout}
+        onMomentumScrollBegin={handleMomentumScrollBegin}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         onScroll={handleScroll}
+        onScrollBeginDrag={handleScrollBeginDrag}
+        onScrollEndDrag={handleScrollEndDrag}
         ref={listRef}
         removeClippedSubviews={true}
         renderItem={renderItem}
@@ -102,6 +178,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
         isScrolling={isScrolling}
         onScrollToBottom={() => {
           const flatList = listRef.current;
+          isAutoScrollingRef.current = true;
           flatList?.scrollToEnd({ animated: true });
         }}
       />
