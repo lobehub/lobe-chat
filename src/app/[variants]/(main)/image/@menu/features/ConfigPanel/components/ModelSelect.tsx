@@ -45,6 +45,8 @@ const ModelSelect = memo(() => {
 
   const enabledImageModelList = useAiInfraStore(aiProviderSelectors.enabledImageModelList);
 
+  console.log('ModelSelect', { enabledImageModelList });
+
   const options = useMemo<SelectProps['options']>(() => {
     const getImageModels = (provider: EnabledProviderWithModels) => {
       const modelOptions = provider.children.map((model) => ({

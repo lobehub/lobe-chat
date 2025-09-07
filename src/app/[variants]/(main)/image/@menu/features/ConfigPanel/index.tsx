@@ -6,6 +6,8 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BrandTextLoading from '@/components/Loading/BrandTextLoading';
+import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
@@ -38,9 +40,15 @@ const isSupportedParamSelector = imageGenerationConfigSelectors.isSupportedParam
 const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
   const theme = useTheme();
+
+  // 初始化图像配置
+  useFetchAiImageConfig();
+
+  // All hooks must be called before any early returns
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
+  const isInit = useImageStore((s) => s.isInit);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
   const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
@@ -103,8 +111,7 @@ const ConfigPanel = memo(() => {
         backgroundColor: theme.colorBgContainer,
         borderTop: `1px solid ${theme.colorBorder}`,
         // Use negative margin to extend background to container edges
-marginLeft: -12,
-        
+        marginLeft: -12,
         marginRight: -12,
         marginTop: 20,
         // Add back internal padding
@@ -114,6 +121,11 @@ marginLeft: -12,
     }),
     [isScrollable, theme.colorBgContainer, theme.colorBorder],
   );
+
+  // 如果未初始化，显示加载状态
+  if (!isInit) {
+    return <BrandTextLoading />;
+  }
 
   return (
     <Flexbox

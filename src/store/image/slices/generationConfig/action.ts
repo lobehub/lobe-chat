@@ -9,6 +9,7 @@ import {
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { useGlobalStore } from '@/store/global';
 
 import type { ImageStore } from '../../store';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';
@@ -34,6 +35,9 @@ export interface GenerationConfigAction {
   setHeight(height: number): void;
   toggleAspectRatioLock(): void;
   setAspectRatio(aspectRatio: string): void;
+
+  // 初始化相关方法
+  initializeImageConfig(): void;
 }
 
 /**
@@ -47,10 +51,48 @@ export function getModelAndDefaults(model: string, provider: string) {
     .find((providerItem) => providerItem.id === provider)
     ?.children.find((modelItem) => modelItem.id === model) as unknown as AIImageModelCard;
 
+  if (!activeModel) {
+    throw new Error(
+      `Model "${model}" from provider "${provider}" not found in enabled image model list`,
+    );
+  }
+
   const parametersSchema = activeModel.parameters as ModelParamsSchema;
   const defaultValues = extractDefaultValues(parametersSchema);
 
   return { defaultValues, activeModel, parametersSchema };
+}
+
+/**
+ * @internal
+ * This function is exported only for testing purposes.
+ * Do not use this function directly in application code.
+ */
+function prepareModelConfigState(model: string, provider: string) {
+  const { defaultValues, parametersSchema } = getModelAndDefaults(model, provider);
+
+  let initialActiveRatio: string | null = null;
+
+  // 如果模型没有原生比例或尺寸参数，但有宽高，则启用虚拟比例控制
+  if (
+    !parametersSchema?.aspectRatio &&
+    !parametersSchema?.size &&
+    parametersSchema?.width &&
+    parametersSchema?.height
+  ) {
+    const { width, height } = defaultValues;
+    if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
+      initialActiveRatio = `${width}:${height}`;
+    } else {
+      initialActiveRatio = '1:1';
+    }
+  }
+
+  return {
+    defaultValues,
+    parametersSchema,
+    initialActiveRatio,
+  };
 }
 
 export const createGenerationConfigSlice: StateCreator<
@@ -237,38 +279,29 @@ export const createGenerationConfigSlice: StateCreator<
   },
 
   setModelAndProviderOnSelect: (model, provider) => {
-    const { defaultValues, activeModel } = getModelAndDefaults(model, provider);
-    const parametersSchema = activeModel.parameters;
-
-    let initialActiveRatio: string | null = null;
-
-    // 如果模型没有原生比例或尺寸参数，但有宽高，则启用虚拟比例控制
-    if (
-      !parametersSchema?.aspectRatio &&
-      !parametersSchema?.size &&
-      parametersSchema?.width &&
-      parametersSchema?.height
-    ) {
-      const { width, height } = defaultValues;
-      if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-        initialActiveRatio = `${width}:${height}`;
-      } else {
-        initialActiveRatio = '1:1';
-      }
-    }
+    const { defaultValues, parametersSchema, initialActiveRatio } = prepareModelConfigState(
+      model,
+      provider,
+    );
 
     set(
       {
         model,
         provider,
         parameters: defaultValues,
-        parametersSchema: parametersSchema,
+        parametersSchema,
         isAspectRatioLocked: false,
         activeAspectRatio: initialActiveRatio,
       },
       false,
       `setModelAndProviderOnSelect/${model}/${provider}`,
     );
+
+    // 保存用户选择到全局 status 中
+    useGlobalStore.getState().updateSystemStatus({
+      lastSelectedImageModel: model,
+      lastSelectedImageProvider: provider,
+    });
   },
 
   setImageNum: (imageNum) => {
@@ -291,5 +324,40 @@ export const createGenerationConfigSlice: StateCreator<
 
   reuseSeed: (seed: number) => {
     set((state) => ({ parameters: { ...state.parameters, seed } }), false, `reuseSeed/${seed}`);
+  },
+
+  initializeImageConfig: () => {
+    const globalStatus = useGlobalStore.getState().status;
+    const { lastSelectedImageModel, lastSelectedImageProvider } = globalStatus;
+
+    if (lastSelectedImageModel && lastSelectedImageProvider) {
+      try {
+        const { defaultValues, parametersSchema, initialActiveRatio } = prepareModelConfigState(
+          lastSelectedImageModel,
+          lastSelectedImageProvider,
+        );
+
+        set(
+          {
+            model: lastSelectedImageModel,
+            provider: lastSelectedImageProvider,
+            parameters: defaultValues,
+            parametersSchema,
+            isAspectRatioLocked: false,
+            activeAspectRatio: initialActiveRatio,
+            isInit: true,
+          },
+          false,
+          `initializeImageConfig/${lastSelectedImageModel}/${lastSelectedImageProvider}`,
+        );
+      } catch (error) {
+        console.warn('Failed to initialize from remembered model, using defaults:', error);
+        // 如果恢复失败，使用默认值并标记为已初始化
+        set({ isInit: true }, false, 'initializeImageConfig/fallback');
+      }
+    } else {
+      // 没有记忆的模型，直接标记为已初始化（使用默认值）
+      set({ isInit: true }, false, 'initializeImageConfig/default');
+    }
   },
 });
