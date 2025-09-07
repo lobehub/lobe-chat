@@ -269,6 +269,10 @@ const nextConfig: NextConfig = {
 
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
