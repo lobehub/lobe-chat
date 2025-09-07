@@ -15,6 +15,5 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     gap: token.marginXXS,
     justifyContent: 'flex-start',
-    paddingHorizontal: token.paddingContentHorizontalSM,
   },
 }));

@@ -2,7 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   chatContainer: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorBgLayout,
     flex: 1,
     paddingHorizontal: token.padding,
     paddingVertical: token.padding,

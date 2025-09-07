@@ -12,7 +12,7 @@ export const useStyles = createStyles((token) => ({
   },
   description: {
     color: token.colorTextSecondary,
-    fontSize: token.fontSizeLG,
+    fontSize: token.fontSize,
     lineHeight: token.lineHeightLG,
     marginBottom: token.marginSM,
     paddingHorizontal: token.paddingLG,
@@ -89,7 +89,7 @@ export const useStyles = createStyles((token) => ({
   },
   title: {
     color: token.colorTextHeading,
-    fontSize: token.fontSizeHeading3,
+    fontSize: token.fontSizeHeading4,
     fontWeight: token.fontWeightStrong,
     marginBottom: token.marginXS,
     marginTop: token.marginXXS,
