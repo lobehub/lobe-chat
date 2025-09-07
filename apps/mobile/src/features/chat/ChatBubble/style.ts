@@ -3,7 +3,6 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => ({
   aiBubble: {
     flex: 1,
-    marginVertical: -token.marginXS,
   },
   aiBubbleContainer: {
     flexDirection: 'row',
@@ -32,6 +31,7 @@ export const useStyles = createStyles((token) => ({
   bubbleContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+    marginHorizontal: token.margin,
     marginVertical: token.marginXS,
   },
   codeBlockContainer: {
@@ -62,7 +62,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   messageActions: {
-    marginTop: token.marginXS,
+    marginTop: token.marginXXS,
   },
 
   messageText: {
