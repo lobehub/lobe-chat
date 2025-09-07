@@ -4,19 +4,6 @@ const modelscopeChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-    },
-    contextWindowTokens: 262_144,
-    description:
-      'kimi-k2-0905-preview 模型上下文长度为 256k，具备更强的 Agentic Coding 能力、更突出的前端代码的美观度和实用性、以及更好的上下文理解能力。',
-    displayName: 'Kimi K2 0905',
-    enabled: true,
-    id: 'moonshotai/Kimi-K2-Instruct-0905',
-    releasedAt: '2025-09-05',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,

@@ -73,6 +73,7 @@ const groqChatModels: AIChatModelCard[] = [
     displayName: 'Kimi K2 0905',
     enabled: true,
     id: 'moonshotai/kimi-k2-instruct-0905',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
