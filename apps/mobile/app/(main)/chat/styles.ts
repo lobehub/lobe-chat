@@ -1,7 +1,7 @@
 import { createStyles, getAlphaColor } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  chatContainer: {
+  chatList: {
     flex: 1,
   },
   drawerOverlay: {
