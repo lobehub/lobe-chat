@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -11,7 +11,7 @@ import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-// import ScrollToBottom from '../ScrollToBottom';
+import ScrollToBottom from '../ScrollToBottom';
 import MessageSkeletonList from '../MessageSkeletonList';
 import WelcomeMessage from '../WelcomeMessage';
 import { useStyles } from './style';
@@ -41,11 +41,7 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
 
 ChatMessageItem.displayName = 'ChatMessageItem';
 
-export default function ChatList({
-  style,
-  //  onScroll,
-  scrollViewRef,
-}: ChatListProps) {
+export default function ChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
   const internalRef = useRef<FlatList<ChatMessage>>(null);
 
   // 触发消息加载
@@ -54,7 +50,7 @@ export default function ChatList({
   const { messages } = useChat();
   const { styles } = useStyles();
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
-  // const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
@@ -65,31 +61,21 @@ export default function ChatList({
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
 
-  // const handleScroll = useCallback(
-  //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-  //     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-  //     const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
-  //     setShowScrollToBottom(!isAtBottom);
-  //     onScroll?.(event);
-  //   },
-  //   [onScroll],
-  // );
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+      const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
+      setShowScrollToBottom(!isAtBottom);
+      onScroll?.(event);
+    },
+    [onScroll],
+  );
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
 
-  // const handleScroll = useCallback(
-  //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-  //     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-  //     const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
-  //     setShowScrollToBottom(!isAtBottom);
-  //     onScroll?.(event);
-  //   },
-  //   [onScroll],
-  // );
-
-  // const handleScrollToBottom = useCallback(() => {
-  //   const ref = scrollViewRef?.current || internalRef.current;
-  //   ref?.scrollToEnd({ animated: true });
-  // }, [scrollViewRef]);
+  const handleScrollToBottom = useCallback(() => {
+    const ref = scrollViewRef?.current || internalRef.current;
+    ref?.scrollToEnd({ animated: true });
+  }, [scrollViewRef]);
 
   const handleContentSizeChange = useCallback(() => {
     const ref = scrollViewRef?.current || internalRef.current;
@@ -116,7 +102,7 @@ export default function ChatList({
         maxToRenderPerBatch={10}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleContentSizeChange}
-        // onScroll={handleScroll}
+        onScroll={handleScroll}
         ref={scrollViewRef || internalRef}
         removeClippedSubviews={true}
         renderItem={renderItem}
@@ -124,7 +110,7 @@ export default function ChatList({
         style={styles.chatContainer}
         windowSize={10}
       />
-      {/* <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} /> */}
+      <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} />
     </View>
   );
 }
