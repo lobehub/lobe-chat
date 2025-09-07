@@ -73,10 +73,10 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
       </View>
       <View style={styles.footer}>
         <View style={styles.leftActions}>
-          <NewChatBtn />
           <ModelSwitch />
         </View>
         <View style={styles.rightActions}>
+          <NewChatBtn />
           <SenderBtn />
         </View>
       </View>

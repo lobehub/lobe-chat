@@ -12,12 +12,12 @@ export const useStyles = createStyles((token) => ({
   },
   bubble: {
     borderRadius: token.borderRadius,
-    paddingHorizontal: token.paddingSM,
+    padding: token.paddingXXS,
   },
   bubbleContainer: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: token.marginXS,
-    marginVertical: token.marginXS,
+    paddingHorizontal: token.paddingSM,
   },
 }));

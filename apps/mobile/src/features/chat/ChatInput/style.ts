@@ -39,8 +39,12 @@ export const useStyles = createStyles((token) => ({
   leftActions: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: token.marginXS,
   },
 
-  rightActions: {},
+  rightActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: token.marginXS,
+  },
 }));
