@@ -2,7 +2,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Check, Copy, RefreshCw, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { useToast } from '@/components';
 import { ICON_SIZE_TINY } from '@/const/common';
@@ -14,9 +14,10 @@ import { useStyles } from './style';
 
 interface MessageActionsProps {
   message: ChatMessage;
+  style?: StyleProp<ViewStyle>;
 }
 
-const MessageActions: React.FC<MessageActionsProps> = ({ message }) => {
+const MessageActions: React.FC<MessageActionsProps> = ({ message, style }) => {
   const { t } = useTranslation(['chat', 'common']);
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
@@ -68,7 +69,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <TouchableOpacity
         activeOpacity={0.7}
         disabled={isCopied}

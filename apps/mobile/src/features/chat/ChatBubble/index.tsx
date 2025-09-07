@@ -39,20 +39,6 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
   }, [hasError, message.error, isLoading, message.content]);
 
-  // 不渲染头像，因为移动端设备宽度比较小
-  // const renderAvatar = () => {
-  //   if (!message.meta) return null;
-
-  //   return (
-  //     <Avatar
-  //       avatar={message.meta.avatar}
-  //       backgroundColor={message.meta.backgroundColor}
-  //       size={AVATAR_SIZE}
-  //       title={message.meta.title}
-  //     />
-  //   );
-  // };
-
   return (
     <View
       style={[
@@ -62,20 +48,26 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     >
       {isAssistant ? (
         <View style={styles.aiMessageContainer}>
-          <ToolTipActions message={message}>
-            <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
-              {content}
-            </View>
-          </ToolTipActions>
-          {!isLoading && (message.content || hasError) && <MessageActions message={message} />}
+          <View style={styles.aiContentContainer}>
+            <ToolTipActions message={message}>
+              <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
+                {content}
+              </View>
+            </ToolTipActions>
+            {!isLoading && (message.content || hasError) && (
+              <MessageActions message={message} style={styles.messageActions} />
+            )}
+          </View>
         </View>
       ) : (
         <View style={styles.userMessageContainer}>
-          <ToolTipActions message={message}>
-            <View style={[styles.bubble, styles.userBubble, hasError && styles.errorBubble]}>
-              {content}
-            </View>
-          </ToolTipActions>
+          <View style={styles.userContentContainer}>
+            <ToolTipActions message={message}>
+              <View style={[styles.bubble, styles.userBubble, hasError && styles.errorBubble]}>
+                {content}
+              </View>
+            </ToolTipActions>
+          </View>
         </View>
       )}
     </View>
