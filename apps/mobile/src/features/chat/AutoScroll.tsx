@@ -8,7 +8,7 @@ import BackBottom from './BackBottom';
 interface AutoScrollProps {
   atBottom: boolean;
   isScrolling: boolean;
-  onScrollToBottom: () => void;
+  onScrollToBottom: (type: 'auto' | 'click') => void;
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBottom }) => {
   const trackVisibility = useChatStore(chatSelectors.isAIGenerating);
@@ -16,12 +16,16 @@ const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBot
   const reasoningStr = useChatStore(chatSelectors.mainAILatestMessageReasoningContent);
 
   useEffect(() => {
+    console.log('atBottom', atBottom);
+    console.log('trackVisibility', trackVisibility);
+    console.log('isScrolling', isScrolling);
     if (atBottom && trackVisibility && !isScrolling) {
-      onScrollToBottom?.();
+      console.log('scroll to bottom');
+      onScrollToBottom?.('auto');
     }
-  }, [atBottom, trackVisibility, str, reasoningStr]);
+  }, [atBottom, trackVisibility, isScrolling, str, reasoningStr]);
 
-  return <BackBottom onScrollToBottom={onScrollToBottom} visible={!atBottom} />;
+  return <BackBottom onScrollToBottom={() => onScrollToBottom?.('click')} visible={!atBottom} />;
 });
 
 export default AutoScroll;
