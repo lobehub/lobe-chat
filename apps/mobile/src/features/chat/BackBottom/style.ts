@@ -5,7 +5,7 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgContainer,
     borderRadius: token.borderRadiusLG * 3,
     padding: token.paddingXS,
-    ...token.boxShadow,
+    ...token.boxShadowCard,
   },
   scrollToBottomWrapper: {
     alignItems: 'center',

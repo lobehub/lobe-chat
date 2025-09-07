@@ -42,7 +42,6 @@ ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
   const listRef = useRef<FlatList<ChatMessage>>(null);
-
   // 触发消息加载
   useFetchMessages();
 
@@ -51,26 +50,43 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
+  const atBottomRef = useRef(true);
 
   // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
   const isDraggingRef = useRef(false);
   const isMomentumRef = useRef(false);
-  const isAutoScrollingRef = useRef(false);
+  // Remove programmatic-scroll flag; treat any animated movement as scrolling
 
   // Track last measurements to compute atBottom across events
   const layoutHeightRef = useRef(0);
   const contentHeightRef = useRef(0);
   const scrollYRef = useRef(0);
 
-  const BOTTOM_TOLERANCE = 32; // px threshold to consider we're at bottom
+  // Minimal tolerance for rounding/bounce
+  const AT_BOTTOM_EPSILON = 2;
 
   const computeAtBottom = useCallback(() => {
-    const layoutH = layoutHeightRef.current;
-    const contentH = contentHeightRef.current;
-    const offsetY = scrollYRef.current;
+    const layoutH = layoutHeightRef.current || 0;
+    const contentH = contentHeightRef.current || 0;
+    // Guard and clamp offset to avoid bounce/overscroll affecting result
+    let offsetY = scrollYRef.current || 0;
+    const maxOffset = Math.max(0, contentH - layoutH);
+    if (offsetY < 0) offsetY = 0;
+    if (offsetY > maxOffset) offsetY = maxOffset;
 
-    if (contentH <= layoutH) return true; // content fits; considered bottom
-    return offsetY + layoutH >= contentH - BOTTOM_TOLERANCE;
+    // If content fits entirely in the viewport, we're at bottom
+    if (contentH <= layoutH) return true;
+
+    // Distance from viewport bottom to content bottom
+    const distance = contentH - (offsetY + layoutH);
+    return distance <= AT_BOTTOM_EPSILON;
+  }, []);
+
+  const updateAtBottom = useCallback((next: boolean) => {
+    if (atBottomRef.current !== next) {
+      atBottomRef.current = next;
+      setAtBottom(next);
+    }
   }, []);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
@@ -89,10 +105,15 @@ export default function ChatListChatList({ style }: ChatListProps) {
       contentHeightRef.current = contentSize.height;
       scrollYRef.current = contentOffset.y;
 
-      const nextAtBottom = computeAtBottom();
-      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+      const nearBottom = computeAtBottom();
+      if (nearBottom) {
+        updateAtBottom(true);
+      } else if (isDraggingRef.current || isMomentumRef.current) {
+        // Only mark as not-at-bottom when the user is actively scrolling away
+        updateAtBottom(false);
+      }
     },
-    [computeAtBottom],
+    [computeAtBottom, updateAtBottom],
   );
 
   const handleScrollBeginDrag = useCallback(() => {
@@ -110,15 +131,11 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const handleMomentumScrollBegin = useCallback(() => {
     isMomentumRef.current = true;
-    // Ignore programmatic auto-scroll when setting isScrolling
-    if (!isAutoScrollingRef.current) {
-      setIsScrolling(true);
-    }
+    setIsScrolling(true);
   }, []);
 
   const handleMomentumScrollEnd = useCallback(() => {
     isMomentumRef.current = false;
-    isAutoScrollingRef.current = false;
     if (!isDraggingRef.current) {
       setIsScrolling(false);
     }
@@ -127,19 +144,24 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const handleContentSizeChange = useCallback(
     (w: number, h: number) => {
       contentHeightRef.current = h;
-      const nextAtBottom = computeAtBottom();
-      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+      // If pinned at bottom, keep following by scrolling to end on growth
+      if (atBottomRef.current) {
+        updateAtBottom(true);
+      } else {
+        const nextAtBottom = computeAtBottom();
+        updateAtBottom(nextAtBottom);
+      }
     },
-    [computeAtBottom],
+    [computeAtBottom, updateAtBottom],
   );
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
       layoutHeightRef.current = e.nativeEvent.layout.height;
       const nextAtBottom = computeAtBottom();
-      setAtBottom((prev) => (prev !== nextAtBottom ? nextAtBottom : prev));
+      updateAtBottom(nextAtBottom);
     },
-    [computeAtBottom],
+    [computeAtBottom, updateAtBottom],
   );
 
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
@@ -176,10 +198,18 @@ export default function ChatListChatList({ style }: ChatListProps) {
       <AutoScroll
         atBottom={atBottom}
         isScrolling={isScrolling}
-        onScrollToBottom={() => {
+        onScrollToBottom={(type) => {
           const flatList = listRef.current;
-          isAutoScrollingRef.current = true;
-          flatList?.scrollToEnd({ animated: true });
+          switch (type) {
+            case 'auto': {
+              flatList?.scrollToEnd({ animated: false });
+              break;
+            }
+            case 'click': {
+              flatList?.scrollToEnd({ animated: true });
+              break;
+            }
+          }
         }}
       />
     </View>
