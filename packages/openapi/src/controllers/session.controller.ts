@@ -3,9 +3,9 @@ import { Context } from 'hono';
 import { BaseController } from '../common/base.controller';
 import { SessionService } from '../services/session.service';
 import {
+  BatchUpdateSessionsRequest,
   CreateSessionRequest,
-  GetSessionsRequest,
-  NewBatchUpdateSessionsRequest,
+  QuerySessionsRequest,
   SessionsGroupsRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
@@ -21,16 +21,16 @@ export class SessionController extends BaseController {
    * @param c Hono Context
    * @returns 会话列表响应
    */
-  async getSessions(c: Context): Promise<Response> {
+  async querySessions(c: Context): Promise<Response> {
     try {
-      const request = this.getQuery<GetSessionsRequest>(c);
+      const request = this.getQuery<QuerySessionsRequest>(c);
       const currentUserId = this.getUserId(c)!;
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, currentUserId);
 
       // 默认列表查询
-      const sessions = await sessionService.getSessions(request);
+      const sessions = await sessionService.querySessions(request);
       return this.success(c, sessions, '获取会话列表成功');
     } catch (error) {
       return this.handleError(c, error);
@@ -172,21 +172,13 @@ export class SessionController extends BaseController {
    */
   async batchUpdateSessions(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<NewBatchUpdateSessionsRequest>(c);
+      const sessions = await this.getBody<BatchUpdateSessionsRequest>(c);
       const currentUserId = this.getUserId(c)!;
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, currentUserId);
 
-      // 转换新格式到旧格式以兼容现有服务
-      const oldFormatBody = {
-        sessions: body.map((item) => ({
-          id: item.id,
-          ...item.data,
-        })),
-      };
-
-      const result = await sessionService.batchUpdateSessions(oldFormatBody);
+      const result = await sessionService.batchUpdateSessions(sessions);
 
       return this.success(c, result, '批量更新会话成功');
     } catch (error) {

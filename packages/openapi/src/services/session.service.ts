@@ -1,19 +1,20 @@
 import { and, count, desc, eq, ilike, inArray } from 'drizzle-orm';
 
 import { SessionModel } from '@/database/models/session';
-import { agents, agentsToSessions, messages, sessions } from '@/database/schemas';
+import { agents, agentsToSessions, messages, sessionGroups, sessions } from '@/database/schemas';
 import { users } from '@/database/schemas/user';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
-  BatchGetSessionsResponse,
   BatchUpdateSessionsRequest,
   CloneSessionRequest,
   CreateSessionRequest,
-  GetSessionsRequest,
+  QuerySessionsRequest,
   SessionDetailResponse,
+  SessionListResponse,
   SessionsGroupsRequest,
   SessionsGroupsResponse,
   UpdateSessionRequest,
@@ -31,12 +32,27 @@ export class SessionService extends BaseService {
   }
 
   /**
+   * 验证 groupId 是否存在
+   * @param groupId 会话组 ID
+   * @private
+   */
+  private async validateGroupId(groupId: string): Promise<void> {
+    const group = await this.db.query.sessionGroups.findFirst({
+      where: eq(sessionGroups.id, groupId),
+    });
+
+    if (!group) {
+      throw this.createNotFoundError(`会话组 ${groupId} 不存在`);
+    }
+  }
+
+  /**
    * 批量查询指定的会话
    * @param request 批量查询请求参数
    * @returns 批量查询结果
    */
-  async getSessions(request: GetSessionsRequest): ServiceResult<BatchGetSessionsResponse> {
-    const { sessionIds, query, userId, pageSize, page, agentId } = request;
+  async querySessions(request: QuerySessionsRequest): ServiceResult<SessionListResponse> {
+    const { sessionIds, keyword, userId, agentId } = request;
 
     this.log('info', '获取会话列表', request);
 
@@ -57,8 +73,9 @@ export class SessionService extends BaseService {
         conditions.push(inArray(sessions.userId, permissionResult.condition.userIds));
       }
 
-      if (query) {
-        conditions.push(ilike(sessions.title, `%${query}%`));
+      // 支持 keyword 参数进行模糊搜索
+      if (keyword) {
+        conditions.push(ilike(sessions.title, `%${keyword.trim()}%`));
       }
 
       if (userId) {
@@ -77,21 +94,23 @@ export class SessionService extends BaseService {
       }
 
       // 统一查询路径与并发计数/列表
-      const size = pageSize ?? 10;
-      const offsetValue = page ? (page - 1) * size : 0;
+      const { limit, offset } = processPaginationConditions(request);
       const whereExpr = conditions.length ? and(...conditions) : undefined;
 
-      const listQuery = this.db
+      // 构建列表查询基础
+      const baseListQuery = this.db
         .select({ agent: agents, session: sessions, user: users })
         .from(sessions)
         .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
         .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
         .innerJoin(users, eq(sessions.userId, users.id))
         .where(whereExpr)
-        .limit(size)
-        .offset(offsetValue)
         .orderBy(desc(sessions.updatedAt));
 
+      // 分页参数
+      const listQuery = limit && offset ? baseListQuery.limit(limit).offset(offset) : baseListQuery;
+
+      // 构建计数查询
       const countQuery = this.db
         .select({ count: count() })
         .from(sessions)
@@ -196,6 +215,11 @@ export class SessionService extends BaseService {
           }
         }
 
+        // 如果指定了 groupId，验证会话组是否存在
+        if (request.groupId) {
+          await this.validateGroupId(request.groupId);
+        }
+
         const { config, meta, agentId, ...sessionData } = request;
 
         // 创建 Session
@@ -263,6 +287,11 @@ export class SessionService extends BaseService {
       }
 
       await this.db.transaction(async (tx) => {
+        // 如果提供了 groupId 且不是 'default'，验证会话组是否存在
+        if (groupId && groupId !== 'default') {
+          await this.validateGroupId(groupId);
+        }
+
         // 更新会话基本信息
         await this.sessionModel.update(id, {
           ...updateData,
@@ -280,13 +309,13 @@ export class SessionService extends BaseService {
             throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
           }
 
+          // 先删除会话的现有 Agent 关联
+          await tx.delete(agentsToSessions).where(eq(agentsToSessions.sessionId, id));
+
+          // 然后插入新的 Agent 关联
           await tx
             .insert(agentsToSessions)
-            .values({ agentId, sessionId: id, userId: this.userId! })
-            .onConflictDoUpdate({
-              set: { agentId, userId: this.userId! },
-              target: agentsToSessions.sessionId,
-            });
+            .values({ agentId, sessionId: id, userId: this.userId! });
         }
       });
 
@@ -431,7 +460,6 @@ export class SessionService extends BaseService {
 
         group.sessions.push({
           ...item.session,
-          agent: item.agent,
           user: item.user,
         });
 
@@ -457,14 +485,12 @@ export class SessionService extends BaseService {
    * @param request 批量更新请求参数
    * @returns 批量更新结果
    */
-  async batchUpdateSessions(request: BatchUpdateSessionsRequest): ServiceResult<{
+  async batchUpdateSessions(sessionsToUpdate: BatchUpdateSessionsRequest): ServiceResult<{
     errors: Array<{ error: string; id: string }>;
     failed: number;
     success: boolean;
     updated: number;
   }> {
-    const { sessions: sessionsToUpdate } = request;
-
     this.log('info', '批量更新会话', { sessions: sessionsToUpdate });
 
     try {
@@ -497,7 +523,26 @@ export class SessionService extends BaseService {
             }
 
             // 执行更新
-            const { id, groupId, ...updateData } = sessionData;
+            const { id, groupId, agentId, ...updateData } = sessionData;
+
+            // 如果提供了 groupId 且不是 'default'，验证会话组是否存在
+            if (groupId && groupId !== 'default') {
+              try {
+                await this.validateGroupId(groupId);
+              } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : '未知错误';
+                errors.push({ error: `无效的会话组: ${errorMessage}`, id: sessionData.id });
+                failed++;
+                continue;
+              }
+            }
+
+            if (agentId) {
+              await tx
+                .update(agentsToSessions)
+                .set({ agentId })
+                .where(eq(agentsToSessions.sessionId, id));
+            }
 
             if (Object.keys(updateData).length > 0) {
               await tx

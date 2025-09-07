@@ -7,9 +7,9 @@ import { SessionController } from '../controllers/session.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
+  BatchUpdateSessionsRequestSchema,
   CreateSessionRequestSchema,
-  GetSessionsRequestSchema,
-  NewBatchUpdateSessionsRequestSchema,
+  QuerySessionsRequestSchema,
   SessionIdParamSchema,
   SessionsGroupsRequestSchema,
   UpdateSessionRequestSchema,
@@ -29,10 +29,10 @@ SessionRoutes.get(
   '/',
   requireAuth,
   requireAnyPermission(getAllScopePermissions('SESSION_READ'), '您没有权限查看会话列表'),
-  zValidator('query', GetSessionsRequestSchema),
+  zValidator('query', QuerySessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
-    return await controller.getSessions(c);
+    return await controller.querySessions(c);
   },
 );
 
@@ -93,7 +93,7 @@ SessionRoutes.patch(
   '/',
   requireAuth,
   requireAnyPermission(getAllScopePermissions('SESSION_UPDATE'), '您没有权限批量更新会话'),
-  zValidator('json', NewBatchUpdateSessionsRequestSchema),
+  zValidator('json', BatchUpdateSessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.batchUpdateSessions(c);

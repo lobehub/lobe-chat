@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { AgentItem, SessionItem, UserItem } from '@/database/schemas';
 
+import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from '.';
+
 // ==================== Session CRUD Types ====================
 
 /**
@@ -71,48 +73,25 @@ export interface CloneSessionRequest {
 // ==================== Session Query Types ====================
 
 /**
- * 搜索会话请求参数
- */
-export interface SearchSessionsRequest {
-  keyword: string;
-  page?: number;
-  pageSize?: number;
-}
-
-/**
  * 获取会话列表请求参数 (统一查询接口)
  */
-export interface GetSessionsRequest {
+export interface QuerySessionsRequest extends IPaginationQuery {
   agentId?: string;
   ids?: string[];
-  keyword?: string;
-  page?: number;
-  pageSize?: number;
-  query?: string;
   sessionIds?: string[];
   userId?: string;
 }
 
-export const GetSessionsRequestSchema = z.object({
-  agentId: z.string().nullish(),
-  ids: z
-    .string()
-    .nullish()
-    .transform((val) => (val ? val.split(',') : [])),
-  keyword: z.string().nullish(),
-  page: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1))
-    .nullish(),
-  pageSize: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
-  query: z.string().nullish(),
-  userId: z.string().nullish(),
-});
+export const QuerySessionsRequestSchema = z
+  .object({
+    agentId: z.string().nullish(),
+    ids: z
+      .string()
+      .nullish()
+      .transform((val) => (val ? val.split(',') : [])),
+    userId: z.string().nullish(),
+  })
+  .extend(PaginationQuerySchema.shape);
 
 // ==================== Session Groups Types ====================
 
@@ -125,12 +104,6 @@ export interface SessionsGroupsRequest {
 
 export const SessionsGroupsRequestSchema = z.object({
   groupBy: z.literal('agent'),
-  keyword: z.string().nullish(),
-  limit: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
 });
 
 /**
@@ -147,28 +120,19 @@ export interface SessionsGroupsResponse {
 /**
  * 批量更新会话请求参数
  */
-export interface BatchUpdateSessionsRequest {
-  sessions: Array<{
-    avatar?: string;
-    backgroundColor?: string;
-    description?: string;
-    groupId?: string;
-    id: string;
-    pinned?: boolean;
-    title?: string;
-    userId?: string;
-  }>;
-}
-
-/**
- * 批量更新请求参数格式
- */
-export type NewBatchUpdateSessionsRequest = Array<{
-  data: Omit<UpdateSessionRequest, 'id'>;
+export type BatchUpdateSessionsRequest = Array<{
+  agentId?: string;
+  avatar?: string;
+  backgroundColor?: string;
+  description?: string;
+  groupId?: string;
   id: string;
+  pinned?: boolean;
+  title?: string;
+  userId?: string;
 }>;
 
-export const NewBatchUpdateSessionsRequestSchema = z
+export const BatchUpdateSessionsRequestSchema = z
   .array(
     z.object({
       data: UpdateSessionRequestSchema,
@@ -183,7 +147,7 @@ export const NewBatchUpdateSessionsRequestSchema = z
  * 会话列表项类型
  */
 export interface SessionListItem extends SessionItem {
-  agent: AgentItem;
+  agent?: AgentItem;
   user: UserItem;
 }
 
@@ -225,6 +189,13 @@ export type BatchGetSessionsResponse = {
   sessions: SessionListItem[];
   total: number;
 };
+
+/**
+ * 会话列表响应类型
+ */
+export type SessionListResponse = PaginationQueryResponse<{
+  sessions: SessionListItem[];
+}>;
 
 // ==================== Common Schemas ====================
 
