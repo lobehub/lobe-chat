@@ -11,17 +11,15 @@ import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import ScrollToBottom from '../ScrollToBottom';
 import MessageSkeletonList from '../MessageSkeletonList';
 import WelcomeMessage from '../WelcomeMessage';
 import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
 import ChatBubble from '../ChatBubble';
+import AutoScroll from '../AutoScroll';
 
 interface ChatListProps {
-  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  scrollViewRef?: React.RefObject<FlatList<ChatMessage>>;
   style?: ViewStyle;
 }
 
@@ -41,8 +39,8 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
 
 ChatMessageItem.displayName = 'ChatMessageItem';
 
-export default function ChatListChatList({ style, onScroll, scrollViewRef }: ChatListProps) {
-  const internalRef = useRef<FlatList<ChatMessage>>(null);
+export default function ChatListChatList({ style }: ChatListProps) {
+  const listRef = useRef<FlatList<ChatMessage>>(null);
 
   // 触发消息加载
   useFetchMessages();
@@ -50,7 +48,8 @@ export default function ChatListChatList({ style, onScroll, scrollViewRef }: Cha
   const { messages } = useChat();
   const { styles } = useStyles();
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
-  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [atBottom, setAtBottom] = useState(true);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
@@ -61,28 +60,18 @@ export default function ChatListChatList({ style, onScroll, scrollViewRef }: Cha
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
 
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-      const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
-      setShowScrollToBottom(!isAtBottom);
-      onScroll?.(event);
-    },
-    [onScroll],
-  );
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 32;
+    setAtBottom(isAtBottom);
+    setIsScrolling(true);
+  }, []);
+
+  const handleMomentumScrollEnd = useCallback(() => {
+    setIsScrolling(false);
+  }, []);
+
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
-
-  const handleScrollToBottom = useCallback(() => {
-    const ref = scrollViewRef?.current || internalRef.current;
-    ref?.scrollToEnd({ animated: true });
-  }, [scrollViewRef]);
-
-  const handleContentSizeChange = useCallback(() => {
-    const ref = scrollViewRef?.current || internalRef.current;
-    if (ref && messages.length > 0) {
-      ref.scrollToEnd({ animated: true });
-    }
-  }, [scrollViewRef, messages.length]);
 
   if (!isCurrentChatLoaded) {
     return (
@@ -100,16 +89,22 @@ export default function ChatListChatList({ style, onScroll, scrollViewRef }: Cha
         initialNumToRender={10}
         keyExtractor={keyExtractor}
         maxToRenderPerBatch={10}
-        onContentSizeChange={handleContentSizeChange}
-        onLayout={handleContentSizeChange}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
         onScroll={handleScroll}
-        ref={scrollViewRef || internalRef}
+        ref={listRef}
         removeClippedSubviews={true}
         renderItem={renderItem}
         scrollEventThrottle={16}
         windowSize={10}
       />
-      <ScrollToBottom onPress={handleScrollToBottom} visible={showScrollToBottom} />
+      <AutoScroll
+        atBottom={atBottom}
+        isScrolling={isScrolling}
+        onScrollToBottom={() => {
+          const flatList = listRef.current;
+          flatList?.scrollToEnd({ animated: true });
+        }}
+      />
     </View>
   );
 }

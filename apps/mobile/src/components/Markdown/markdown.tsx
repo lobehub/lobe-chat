@@ -43,7 +43,7 @@ export const Markdown = ({
   children,
   customRenderers,
   customStyles,
-  fontSize = 16,
+  fontSize = 14,
   headerMultiple = 1,
   lineHeight = 1.8,
   marginMultiple = 2,
