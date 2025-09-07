@@ -4,22 +4,12 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,
-
-    borderTopLeftRadius: token.borderRadiusLG * 4,
-
-    // 24
-    borderTopRightRadius: token.borderRadiusLG * 4,
-    borderWidth: 1,
-    elevation: 8,
-
+    borderRadius: token.borderRadius * 4,
+    borderWidth: 0.5,
+    marginHorizontal: token.marginXXS,
     paddingHorizontal: token.padding,
-
     paddingVertical: token.paddingSM,
-    // 24
-    shadowColor: token.colorText,
-    shadowOffset: { height: -4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    // ...token.boxShadowCard,
   },
   extraBtn: {
     flexShrink: 0,
