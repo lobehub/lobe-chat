@@ -1,4 +1,4 @@
-import { and, count, eq, ilike, inArray, ne, or } from 'drizzle-orm';
+import { and, count, desc, eq, ilike, inArray, ne, or } from 'drizzle-orm';
 
 import { ALL_SCOPE } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
@@ -7,6 +7,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
   CreateUserRequest,
@@ -75,7 +76,7 @@ export class UserService extends BaseService {
    * 获取系统中所有用户列表(分页)
    * @returns 用户列表（包含角色信息和消息数量）
    */
-  async getUsers(request: UserListRequest): ServiceResult<UserListResponse> {
+  async queryUsers(request: UserListRequest): ServiceResult<UserListResponse> {
     this.log('info', '获取系统中所有用户列表');
 
     try {
@@ -86,26 +87,26 @@ export class UserService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户列表');
       }
 
-      const { keyword, page, pageSize } = request;
-
       // 构建查询条件
       const conditions = [];
 
-      if (keyword) {
-        conditions.push(ilike(users.fullName, `%${keyword}%`));
+      if (request.keyword) {
+        conditions.push(ilike(users.fullName, `%${request.keyword}%`));
       }
 
-      const offset = (page - 1) * pageSize;
-
       // 获取用户基本信息
-      const userQuery = this.db
-        .select({ user: users })
-        .from(users)
-        .where(and(...conditions))
-        .limit(pageSize)
-        .offset(offset);
+      const query = this.db.query.users.findMany({
+        ...processPaginationConditions(request),
+        orderBy: desc(users.createdAt),
+        where: and(...conditions),
+      });
 
-      const userList = await userQuery;
+      const countQuery = this.db
+        .select({ count: count() })
+        .from(users)
+        .where(and(...conditions));
+
+      const [userList, countResult] = await Promise.all([query, countQuery]);
 
       // 为每个用户获取角色和消息数量
       const usersWithRoles = await Promise.all(
@@ -114,32 +115,25 @@ export class UserService extends BaseService {
             .select({ roles: roles })
             .from(userRoles)
             .innerJoin(roles, eq(userRoles.roleId, roles.id))
-            .where(eq(userRoles.userId, userRow.user.id));
+            .where(eq(userRoles.userId, userRow.id));
 
           const messageCountResult = await this.db
             .select({ count: count(messages.id) })
             .from(messages)
-            .where(eq(messages.userId, userRow.user.id));
+            .where(eq(messages.userId, userRow.id));
 
           return {
-            ...userRow.user,
+            ...userRow,
             messageCount: messageCountResult[0]?.count || 0,
             roles: userRoleResults.map((r) => r.roles),
           };
         }),
       );
 
-      const totalRequested = this.db
-        .select({ count: count() })
-        .from(users)
-        .where(and(...conditions));
-
-      const totalCount = await totalRequested;
-
       this.log('info', '成功获取所有用户信息及其角色、sessions和消息数量');
 
       return {
-        total: totalCount[0].count,
+        total: countResult[0]?.count ?? 0,
         users: usersWithRoles,
       };
     } catch (error) {

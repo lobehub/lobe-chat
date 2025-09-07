@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import { RoleItem, UserItem, UserRoleItem } from '@/database/schemas';
 
+import { IPaginationQuery, PaginationQueryResponse } from '.';
+
 // ==================== User Base Types ====================
 
 /**
@@ -21,16 +23,6 @@ export type UserWithRoles = UserItem & {
 };
 
 // ==================== User CRUD Types ====================
-
-/**
- * 用户列表响应类型
- */
-export interface UserListResponse {
-  page?: number;
-  pageSize?: number;
-  total: number;
-  users: UserWithRoles[];
-}
 
 /**
  * 创建用户请求参数
@@ -93,58 +85,15 @@ export const UpdateUserRequestSchema = z.object({
 
 // ==================== User Search Types ====================
 
-export interface UserListRequest {
-  keyword?: string;
-  page: number;
-  pageSize: number;
-}
+export { PaginationQuerySchema as UserSearchRequestSchema } from '.';
 
-export const UserSearchRequestSchema = z.object({
-  keyword: z
-    .string()
-    .nullish()
-    .transform((val) => {
-      if (!val) return ''; // 允许为空，转换为空字符串
-      return val.trim();
-    })
-    .refine((val) => val.length <= 100, '搜索关键词长度不能超过100个字符'),
-  page: z
-    .string()
-    .nullish()
-    .transform((val) => {
-      if (!val) return 1; // 默认值
-      const num = parseInt(val, 10);
-      if (isNaN(num) || num <= 0) return 1;
-      return num;
-    }),
-  pageSize: z
-    .string()
-    .nullish()
-    .transform((val) => {
-      if (!val) return 10; // 默认值
-      const num = parseInt(val, 10);
-      if (isNaN(num) || num <= 0) return 10;
-      return Math.min(num, 100); // 最大限制100
-    }),
-});
+export type UserListRequest = IPaginationQuery;
+
+export type UserListResponse = PaginationQueryResponse<{
+  users: UserWithRoles[];
+}>;
 
 // ==================== User Role Management Types ====================
-
-/**
- * 获取用户列表请求验证Schema（可选分页）
- */
-export const GetUsersRequestSchema = z.object({
-  page: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1))
-    .nullish(),
-  pageSize: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(1).max(100))
-    .nullish(),
-});
 
 /**
  * 单个添加角色的请求

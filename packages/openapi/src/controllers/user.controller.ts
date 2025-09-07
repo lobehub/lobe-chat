@@ -37,7 +37,7 @@ export class UserController extends BaseController {
    * @param c Hono Context
    * @returns 用户列表响应
    */
-  async getUsers(c: Context): Promise<Response> {
+  async queryUsers(c: Context): Promise<Response> {
     try {
       const request = this.getQuery<UserListRequest>(c);
 
@@ -45,7 +45,7 @@ export class UserController extends BaseController {
       const db = await this.getDatabase();
       const userService = new UserService(db, this.getUserId(c));
 
-      const userList = await userService.getUsers(request);
+      const userList = await userService.queryUsers(request);
 
       return this.success(c, userList, '获取用户列表成功');
     } catch (error) {

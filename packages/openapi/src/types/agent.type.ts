@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { AgentItem } from '@/database/schemas';
 
+import { IPaginationQuery, PaginationQueryResponse } from '.';
+
 // ==================== Agent CRUD Types ====================
 
 /**
@@ -18,6 +20,13 @@ export interface CreateAgentRequest {
   systemRole?: string;
   title: string;
 }
+
+export type GetAgentsRequest = IPaginationQuery;
+
+/**
+ * 获取 Agent 列表查询参数
+ */
+export { PaginationQuerySchema as GetAgentsRequestSchema } from '.';
 
 export const CreateAgentRequestSchema = z.object({
   avatar: z.string().nullish(),
@@ -51,13 +60,11 @@ export const CreateAgentRequestSchema = z.object({
 /**
  * 更新 Agent 请求参数
  */
-export interface UpdateAgentRequest extends CreateAgentRequest {
+export type UpdateAgentRequest = CreateAgentRequest & {
   id: string;
-}
+};
 
-export const UpdateAgentRequestSchema = CreateAgentRequestSchema.extend({
-  id: z.string().min(1, 'Agent ID 不能为空'),
-});
+export const UpdateAgentRequestSchema = CreateAgentRequestSchema;
 
 /**
  * 删除 Agent 请求参数
@@ -156,7 +163,9 @@ export interface AgentSessionRelation {
 /**
  * Agent 列表响应类型
  */
-export type AgentListResponse = AgentItem[];
+export type AgentListResponse = PaginationQueryResponse<{
+  agents: AgentItem[];
+}>;
 
 /**
  * Agent 详情响应类型，包含完整的配置信息

@@ -9,6 +9,7 @@ import { requireAnyPermission } from '../middleware/permission-check';
 import {
   AgentIdParamSchema,
   CreateAgentRequestSchema,
+  GetAgentsRequestSchema,
   UpdateAgentRequestSchema,
 } from '../types/agent.type';
 
@@ -16,7 +17,7 @@ import {
 const AgentRoutes = new Hono();
 
 /**
- * 获取系统中所有的 Agent 列表
+ * 获取系统中的 Agent 列表
  * GET /api/v1/agents
  * 需要 Agent 读取权限
  */
@@ -27,9 +28,10 @@ AgentRoutes.get(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view the Agent list',
   ),
+  zValidator('query', GetAgentsRequestSchema),
   async (c) => {
     const controller = new AgentController();
-    return await controller.getAllAgents(c);
+    return await controller.queryAgents(c);
   },
 );
 

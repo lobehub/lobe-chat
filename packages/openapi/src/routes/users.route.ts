@@ -27,7 +27,7 @@ UserRoutes.get('/me', requireAuth, async (c) => {
 });
 
 /**
- * 获取系统中所有用户列表 (支持搜索)
+ * 获取系统中的用户列表 (支持搜索)
  * GET /api/v1/users?keyword=xxx&page=1&pageSize=10
  * 需要用户管理权限
  */
@@ -41,7 +41,7 @@ UserRoutes.get(
   zValidator('query', UserSearchRequestSchema),
   async (c) => {
     const userController = new UserController();
-    return await userController.getUsers(c);
+    return await userController.queryUsers(c);
   },
 );
 

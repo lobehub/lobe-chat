@@ -1,24 +1,19 @@
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, count, desc, eq, ilike } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
-import { NewAgent, agents, agentsToSessions, sessions } from '@/database/schemas';
+import { NewAgent, agents, agentsToSessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
   AgentDeleteRequest,
   AgentDetailResponse,
   AgentListResponse,
-  AgentSessionBatchLinkRequest,
-  AgentSessionLinkRequest,
-  AgentSessionRelation,
-  BatchDeleteAgentsRequest,
-  BatchOperationResult,
-  BatchUpdateAgentsRequest,
   CreateAgentRequest,
-  CreateSessionForAgentRequest,
+  GetAgentsRequest,
   UpdateAgentRequest,
 } from '../types/agent.type';
 
@@ -32,19 +27,35 @@ export class AgentService extends BaseService {
 
   /**
    * 获取用户的 Agent 列表
+   * @param page 页码，从1开始
+   * @param pageSize 每页数量，最大100
    * @returns 用户的 Agent 列表
    */
-  async getAllAgents(): ServiceResult<AgentListResponse> {
-    this.log('info', '获取系统中全部的 Agent 列表');
+  async queryAgents(request: GetAgentsRequest): ServiceResult<AgentListResponse> {
+    this.log('info', '获取系统中全部的 Agent 列表', { request });
+
+    const { keyword } = request;
 
     try {
-      const agentsList = await this.db.query.agents.findMany({
+      const query = this.db.query.agents.findMany({
+        ...processPaginationConditions(request),
         orderBy: desc(agents.createdAt),
+        where: keyword ? ilike(agents.title, `%${keyword}%`) : undefined,
       });
+
+      const countQuery = this.db
+        .select({ count: count() })
+        .from(agents)
+        .where(keyword ? ilike(agents.title, `%${keyword}%`) : undefined);
+
+      const [agentsList, totalResult] = await Promise.all([query, countQuery]);
 
       this.log('info', `查询到系统中 ${agentsList.length} 个 Agent`);
 
-      return agentsList;
+      return {
+        agents: agentsList,
+        total: totalResult[0]?.count ?? 0,
+      };
     } catch (error) {
       this.handleServiceError(error, '获取 Agent 列表');
     }
@@ -177,7 +188,7 @@ export class AgentService extends BaseService {
       });
 
       if (!targetAgent) {
-        throw this.createBusinessError(`Agent ID "${request.agentId}" 不存在`);
+        throw this.createBusinessError(`Agent ID ${request.agentId} 不存在`);
       }
 
       // 如果指定了迁移目标，进行会话迁移
@@ -187,7 +198,7 @@ export class AgentService extends BaseService {
         });
 
         if (!migrateTarget) {
-          throw this.createBusinessError(`迁移目标 Agent ID "${request.migrateSessionTo}" 不存在`);
+          throw this.createBusinessError(`迁移目标 Agent ID ${request.migrateSessionTo} 不存在`);
         }
 
         // 实现会话迁移逻辑
@@ -266,505 +277,6 @@ export class AgentService extends BaseService {
       this.log('info', '会话迁移成功', { fromAgentId, toAgentId });
     } catch (error) {
       this.handleServiceError(error, '会话迁移');
-    }
-  }
-
-  /**
-   * 为 Agent 创建新的 Session
-   * @param request 创建请求参数
-   * @returns 新创建的 Session ID
-   */
-  async createSessionForAgent(request: CreateSessionForAgentRequest): ServiceResult<string> {
-    this.log('info', '为 Agent 创建 Session', { agentId: request.agentId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
-        targetAgentId: request.agentId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(
-          permissionResult.message || '无权为此 Agent 创建 Session',
-        );
-      }
-
-      return await this.db.transaction(async (tx) => {
-        // 验证 Agent 存在
-        const agent = await tx.query.agents.findFirst({
-          where: and(eq(agents.id, request.agentId)),
-        });
-
-        if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在`);
-        }
-
-        // 创建新的 Session
-        const sessionId = idGenerator('sessions');
-        const [newSession] = await tx
-          .insert(sessions)
-          .values({
-            accessedAt: new Date(),
-            avatar: request.avatar || agent.avatar,
-            backgroundColor: request.backgroundColor || agent.backgroundColor,
-            createdAt: new Date(),
-            description: request.description,
-            id: sessionId,
-            slug: randomSlug(),
-            title: request.title || `${agent.title} 的对话`,
-            type: 'agent',
-            updatedAt: new Date(),
-            userId: this.userId!,
-          })
-          .returning();
-
-        // 创建 Agent-Session 关联
-        await tx.insert(agentsToSessions).values({
-          agentId: request.agentId,
-          sessionId: newSession.id,
-          userId: this.userId!,
-        });
-
-        this.log('info', 'Agent Session 创建成功', {
-          agentId: request.agentId,
-          sessionId: newSession.id,
-        });
-
-        return newSession.id;
-      });
-    } catch (error) {
-      this.handleServiceError(error, '为 Agent 创建 Session');
-    }
-  }
-
-  /**
-   * 获取 Agent 关联的所有 Session
-   * @param agentId Agent ID
-   * @returns Agent 关联的 Session 列表
-   */
-  async getAgentSessions(agentId: string): ServiceResult<AgentSessionRelation[]> {
-    this.log('info', '获取 Agent 关联的 Session', { agentId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_READ', {
-        targetAgentId: agentId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(
-          permissionResult.message || '无权访问此 Agent 的 Session',
-        );
-      }
-
-      // 验证 Agent 存在
-      const agent = await this.db.query.agents.findFirst({
-        where: and(eq(agents.id, agentId)),
-      });
-
-      if (!agent) {
-        throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
-      }
-
-      // 查询关联的 Session
-      const relations = (await this.db.query.agentsToSessions.findMany({
-        where: and(
-          eq(agentsToSessions.agentId, agentId),
-          permissionResult.condition?.userId
-            ? eq(agentsToSessions.userId, permissionResult.condition.userId)
-            : undefined,
-        ),
-        with: {
-          session: {
-            columns: {
-              avatar: true,
-              description: true,
-              id: true,
-              title: true,
-              updatedAt: true,
-            },
-          },
-        },
-      })) as AgentSessionRelation[];
-
-      const result = relations.map((rel) => ({
-        agentId: rel.agentId,
-        session: rel.session,
-        sessionId: rel.sessionId,
-      }));
-
-      this.log('info', `查询到 Agent ${agentId} 关联的 ${result.length} 个 Session`);
-
-      return result;
-    } catch (error) {
-      this.handleServiceError(error, '获取 Agent 关联的 Session');
-    }
-  }
-
-  /**
-   * 关联 Agent 和 Session
-   * @param agentId Agent ID
-   * @param request 关联请求参数
-   */
-  async linkAgentSession(agentId: string, request: AgentSessionLinkRequest): ServiceResult<void> {
-    this.log('info', '关联 Agent 和 Session', { agentId, sessionId: request.sessionId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
-        targetAgentId: agentId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权关联此 Agent');
-      }
-
-      await this.db.transaction(async (tx) => {
-        const [agent, session] = await Promise.all([
-          tx.query.agents.findFirst({
-            where: and(eq(agents.id, agentId)),
-          }),
-          tx.query.sessions.findFirst({
-            where: and(eq(sessions.id, request.sessionId)),
-          }),
-        ]);
-
-        if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
-        }
-
-        if (!session) {
-          throw this.createNotFoundError(`Session ID "${request.sessionId}" 不存在`);
-        }
-
-        // 检查是否已经关联
-        const existingRelation = await tx.query.agentsToSessions.findFirst({
-          where:
-            eq(agentsToSessions.agentId, agentId) &&
-            eq(agentsToSessions.sessionId, request.sessionId),
-        });
-
-        if (existingRelation) {
-          throw this.createBusinessError('Agent 和 Session 已经关联');
-        }
-
-        // 创建关联
-        await tx.insert(agentsToSessions).values({
-          agentId,
-          sessionId: request.sessionId,
-          userId: this.userId!,
-        });
-
-        this.log('info', 'Agent Session 关联成功', { agentId, sessionId: request.sessionId });
-      });
-    } catch (error) {
-      this.handleServiceError(error, '关联 Agent 和 Session');
-    }
-  }
-
-  /**
-   * 取消 Agent 和 Session 的关联
-   * @param agentId Agent ID
-   * @param sessionId Session ID
-   */
-  async unlinkAgentSession(agentId: string, sessionId: string): ServiceResult<void> {
-    this.log('info', '取消 Agent 和 Session 关联', { agentId, sessionId });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
-        targetAgentId: agentId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权取消此 Agent 的关联');
-      }
-
-      await this.db.transaction(async (tx) => {
-        // 验证关联关系存在
-        const relation = await tx.query.agentsToSessions.findFirst({
-          where: and(
-            eq(agentsToSessions.agentId, agentId),
-            eq(agentsToSessions.sessionId, sessionId),
-            permissionResult.condition?.userId
-              ? eq(agentsToSessions.userId, permissionResult.condition.userId)
-              : undefined,
-          ),
-        });
-
-        if (!relation) {
-          throw this.createNotFoundError('Agent 和 Session 的关联关系不存在');
-        }
-
-        // 删除关联
-        await tx
-          .delete(agentsToSessions)
-          .where(
-            and(
-              eq(agentsToSessions.agentId, agentId),
-              eq(agentsToSessions.sessionId, sessionId),
-              permissionResult.condition?.userId
-                ? eq(agentsToSessions.userId, permissionResult.condition.userId)
-                : undefined,
-            ),
-          );
-
-        this.log('info', 'Agent Session 关联取消成功', { agentId, sessionId });
-      });
-    } catch (error) {
-      this.handleServiceError(error, '取消 Agent Session 关联');
-    }
-  }
-
-  /**
-   * 批量关联 Agent 和多个 Session
-   * @param agentId Agent ID
-   * @param request 批量关联请求参数
-   */
-  async batchLinkAgentSessions(
-    agentId: string,
-    request: AgentSessionBatchLinkRequest,
-  ): ServiceResult<void> {
-    this.log('info', '批量关联 Agent 和 Session', {
-      agentId,
-      sessionCount: request.sessionIds.length,
-    });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveOperationPermission('AGENT_UPDATE', {
-        targetAgentId: agentId,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权批量关联此 Agent');
-      }
-
-      await this.db.transaction(async (tx) => {
-        // 验证 Agent 存在
-        const agent = await tx.query.agents.findFirst({
-          where: and(eq(agents.id, agentId)),
-        });
-
-        if (!agent) {
-          throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
-        }
-
-        // 验证所有 Session 都存在
-        const validSessions = await tx.query.sessions.findMany({
-          columns: { id: true },
-          where: and(inArray(sessions.id, request.sessionIds)),
-        });
-
-        const validSessionIds = new Set(validSessions.map((s) => s.id));
-        const invalidSessionIds = request.sessionIds.filter((id) => !validSessionIds.has(id));
-
-        if (invalidSessionIds.length > 0) {
-          throw this.createNotFoundError(`以下 Session 不存在: ${invalidSessionIds.join(', ')}`);
-        }
-
-        // 检查已存在的关联
-        const existingRelations = await tx.query.agentsToSessions.findMany({
-          columns: { sessionId: true },
-          where: and(
-            eq(agentsToSessions.agentId, agentId),
-            inArray(agentsToSessions.sessionId, request.sessionIds),
-          ),
-        });
-
-        const existingSessionIds = existingRelations.map((r) => r.sessionId);
-        const newSessionIds = request.sessionIds.filter((id) => !existingSessionIds.includes(id));
-
-        if (newSessionIds.length === 0) {
-          throw this.createBusinessError('所有指定的 Session 都已经与该 Agent 关联');
-        }
-
-        // 批量创建关联
-        const relationData = newSessionIds.map((sessionId) => ({
-          agentId,
-          sessionId,
-          userId: this.userId!,
-        }));
-
-        await tx.insert(agentsToSessions).values(relationData);
-
-        this.log('info', 'Agent Session 批量关联成功', {
-          agentId,
-          newRelations: newSessionIds.length,
-          skippedExisting: existingSessionIds.length,
-        });
-      });
-    } catch (error) {
-      this.handleServiceError(error, '批量关联 Agent 和 Session');
-    }
-  }
-
-  /**
-   * 批量删除 Agent
-   * @param request 批量删除请求参数
-   * @returns 批量操作结果
-   */
-  async batchDeleteAgents(request: BatchDeleteAgentsRequest): ServiceResult<BatchOperationResult> {
-    this.log('info', '批量删除 Agent', {
-      agentCount: request.agentIds.length,
-      migrateSessionTo: request.migrateSessionTo,
-    });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveBatchQueryPermission('AGENT_DELETE', {
-        targetAgentIds: request.agentIds,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权批量删除 Agent');
-      }
-
-      const result: BatchOperationResult = {
-        errors: [],
-        failed: 0,
-        success: 0,
-        total: request.agentIds.length,
-      };
-
-      return await this.db.transaction(async (tx) => {
-        // 验证迁移目标 Agent（如果指定）
-        if (request.migrateSessionTo) {
-          const migrateTarget = await tx.query.agents.findFirst({
-            where: and(eq(agents.id, request.migrateSessionTo)),
-          });
-
-          if (!migrateTarget) {
-            throw this.createNotFoundError(
-              `迁移目标 Agent ID "${request.migrateSessionTo}" 不存在`,
-            );
-          }
-        }
-
-        // 批量处理每个 Agent
-        for (const agentId of request.agentIds) {
-          try {
-            // 检查 Agent 是否存在
-            const agent = await tx.query.agents.findFirst({
-              where: and(eq(agents.id, agentId)),
-            });
-
-            if (!agent) {
-              result.failed++;
-              result.errors?.push({
-                error: `Agent ID "${agentId}" 不存在`,
-                id: agentId,
-              });
-              continue;
-            }
-
-            // 如果需要迁移会话
-            if (request.migrateSessionTo) {
-              await this.migrateAgentSessions(agentId, request.migrateSessionTo);
-            }
-
-            // 删除 Agent（批量权限检查已经验证了权限，直接删除）
-            await tx.delete(agents).where(eq(agents.id, agentId));
-
-            result.success++;
-            this.log('info', 'Agent 删除成功', { agentId });
-          } catch (error) {
-            result.failed++;
-            result.errors?.push({
-              error: error instanceof Error ? error.message : '删除失败',
-              id: agentId,
-            });
-            this.log('error', 'Agent 删除失败', { agentId, error });
-          }
-        }
-
-        this.log('info', '批量删除 Agent 完成', {
-          failed: result.failed,
-          success: result.success,
-          total: result.total,
-        });
-
-        return result;
-      });
-    } catch (error) {
-      this.handleServiceError(error, '批量删除 Agent');
-    }
-  }
-
-  /**
-   * 批量更新 Agent
-   * @param request 批量更新请求参数
-   * @returns 批量操作结果
-   */
-  async batchUpdateAgents(request: BatchUpdateAgentsRequest): ServiceResult<BatchOperationResult> {
-    this.log('info', '批量更新 Agent', { agentCount: request.agentIds.length });
-
-    try {
-      // 权限校验
-      const permissionResult = await this.resolveBatchQueryPermission('AGENT_UPDATE', {
-        targetAgentIds: request.agentIds,
-      });
-
-      if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权批量更新 Agent');
-      }
-
-      const result: BatchOperationResult = {
-        errors: [],
-        failed: 0,
-        success: 0,
-        total: request.agentIds.length,
-      };
-
-      return await this.db.transaction(async (tx) => {
-        // 批量处理每个 Agent
-        for (const agentId of request.agentIds) {
-          try {
-            // 检查 Agent 是否存在
-            const agent = await tx.query.agents.findFirst({
-              where: and(eq(agents.id, agentId)),
-            });
-
-            if (!agent) {
-              result.failed++;
-              result.errors?.push({
-                error: `Agent ID "${agentId}" 不存在`,
-                id: agentId,
-              });
-              continue;
-            }
-
-            // 准备更新数据
-            const updateData = {
-              ...request.updateData,
-              updatedAt: new Date(),
-            };
-
-            // 更新 Agent（批量权限检查已经验证了权限，直接更新）
-            await tx.update(agents).set(updateData).where(eq(agents.id, agentId));
-
-            result.success++;
-            this.log('info', 'Agent 更新成功', { agentId });
-          } catch (error) {
-            result.failed++;
-            result.errors?.push({
-              error: error instanceof Error ? error.message : '更新失败',
-              id: agentId,
-            });
-            this.log('error', 'Agent 更新失败', { agentId, error });
-          }
-        }
-
-        this.log('info', '批量更新 Agent 完成', {
-          failed: result.failed,
-          success: result.success,
-          total: result.total,
-        });
-
-        return result;
-      });
-    } catch (error) {
-      this.handleServiceError(error, '批量更新 Agent');
     }
   }
 }
