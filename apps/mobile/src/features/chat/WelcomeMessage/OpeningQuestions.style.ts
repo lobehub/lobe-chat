@@ -2,7 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
-    paddingHorizontal: token.paddingLG,
+    paddingHorizontal: token.paddingSM,
     paddingVertical: 0,
   },
 
