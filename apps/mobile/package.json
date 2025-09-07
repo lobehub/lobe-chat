@@ -59,7 +59,6 @@
     "@shopify/flash-list": "^2.0.3",
     "@tanstack/react-query": "^5.83.0",
     "@trpc/client": "next",
-    "@lobechat/types": "workspace:*",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "@trpc/tanstack-react-query": "next",
