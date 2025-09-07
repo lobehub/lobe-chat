@@ -22,7 +22,7 @@ export interface UsageRecordItem {
   /**
    * 调用类型
    **/
-  callType: string;
+  type: string;
   /**
    * 用户 ID
    **/
@@ -50,7 +50,7 @@ export interface UsageRecordItem {
 }
 
 export const RequestLogSchema = z.object({
-  callType: z.enum(['chat', 'history_summary']),
+  type: z.enum(['chat', 'history_summary']),
   metadata: z.any().optional(),
   model: z.string(),
   provider: z.string(),

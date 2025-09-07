@@ -53,7 +53,7 @@ export class UsageRecordService {
             model: data.model,
             provider: data.provider,
             spend: spend, // Default to 0 if spend is not provided
-            callType: 'chat', // Assuming this is a chat log, adjust as necessary
+            type: 'chat', // Assuming this is a chat log, adjust as necessary
             ttft: data?.speed?.ttft || 0, // Total time from first token to last token
             tps: data?.speed?.tps || 0, // Total processing speed
             inputStartAt: data?.speed?.inputStartAt ? new Date(data?.speed?.inputStartAt) : undefined,

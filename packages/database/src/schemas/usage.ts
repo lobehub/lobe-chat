@@ -9,19 +9,22 @@ export const usageRecords = pgTable(
     {
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         // Model 信息
-        model: text('model').notNull(),
-        provider: text('provider').notNull(),
+        model: varchar('model', { length: 256 }).notNull(),
+        provider: varchar('provider', { length: 256 }).notNull(),
         // Pricing 信息
         spend: doublePrecision('spend').notNull().default(0.0),
         // 调用信息，谁用哪个API调用了
         // API 调用信息
-        callType: varchar('call_type', { length: 256 }).notNull(),
-        // User Identify
+        type: varchar('type', { length: 256 }).notNull(),
+        // User Identity
         userId: text('user_id')
             .references(() => users.id, { onDelete: 'cascade' })
             .notNull(),
-        orgId: text('org_id'),
-        teamId: text('team_id'),
+
+        // 团队版功能预留
+        // orgId: text('org_id'),
+        // teamId: text('team_id'),
+
         // 性能信息
         ttft: real(),
         tps: real(),
