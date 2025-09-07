@@ -9,6 +9,9 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
+  aiContentContainer: {
+    flex: 1,
+  },
   aiMessageContainer: {
     alignItems: 'flex-start',
     flexDirection: 'row',
@@ -25,7 +28,6 @@ export const useStyles = createStyles((token) => ({
   },
   bubble: {
     borderRadius: token.borderRadius,
-    paddingHorizontal: token.paddingSM,
   },
   bubbleContainer: {
     alignItems: 'flex-start',
@@ -59,18 +61,26 @@ export const useStyles = createStyles((token) => ({
     paddingVertical: token.paddingSM,
   },
 
+  messageActions: {
+    marginTop: token.marginXS,
+  },
+
   messageText: {
     fontSize: token.fontSizeLG,
     lineHeight: token.lineHeight,
   },
 
   userBubble: {
-    backgroundColor: token.colorFillTertiary,
+    backgroundColor: token.colorBgContainer,
+    paddingHorizontal: token.paddingSM,
   },
 
   userBubbleContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+
+  userContentContainer: {
     maxWidth: '90%',
   },
 
@@ -79,5 +89,6 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     gap: token.marginXS,
     justifyContent: 'flex-end',
+    width: '100%',
   },
 }));
