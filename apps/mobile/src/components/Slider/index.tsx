@@ -112,10 +112,12 @@ const Slider = memo<SliderProps>(
 
     // Initialize thumb position
     React.useEffect(() => {
-      if (sliderWidth.value > 0 && // 受控模式下：拖动过程中不强制同步 translateX，避免视觉抖动
-        !isThumbActive) {
-          translateX.value = getThumbPosition(currentValue, sliderWidth.value);
-        }
+      if (
+        sliderWidth.value > 0 && // 受控模式下：拖动过程中不强制同步 translateX，避免视觉抖动
+        !isThumbActive
+      ) {
+        translateX.value = getThumbPosition(currentValue, sliderWidth.value);
+      }
     }, [currentValue, getThumbPosition, isThumbActive]);
 
     React.useEffect(() => {
@@ -142,9 +144,16 @@ const Slider = memo<SliderProps>(
 
     const startX = useSharedValue(0);
 
+    // Tap 手势用于拦截点击，防止事件透传到父级可点击容器
+    const tapGesture = Gesture.Tap().enabled(true);
+
     const panGesture = Gesture.Pan()
       .enabled(!disabled)
-      .onStart(() => {
+      // 让手势更快进入活跃态，提升“跟手”体验
+      .minDistance(0)
+      .hitSlop({ horizontal: 12, vertical: 12 })
+      .shouldCancelWhenOutside(false)
+      .onBegin(() => {
         isDragging.value = true;
         startX.value = translateX.value;
         runOnJS(setIsThumbActive)(true);
@@ -178,10 +187,12 @@ const Slider = memo<SliderProps>(
           runOnJS(setActiveValueJS)(newValue);
         }
         runOnJS(setIsThumbActive)(false);
-      });
+      })
+      // 与 Tap 同时识别，避免等待冲突导致的触发延迟
+      .simultaneousWithExternalGesture(tapGesture);
 
-    // Tap 手势用于拦截点击，防止事件透传到父级可点击容器
-    const tapGesture = Gesture.Tap().enabled(true);
+    // 同步允许 Tap 与 Pan 同时识别，避免相互等待
+    tapGesture.simultaneousWithExternalGesture(panGesture);
 
     const thumbAnimatedStyle = useAnimatedStyle(() => {
       return {
