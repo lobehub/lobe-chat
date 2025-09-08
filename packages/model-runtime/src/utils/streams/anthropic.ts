@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
 
-import { CitationItem, ModelTokensUsage } from '@/types/message';
+import { ChatCitationItem, ModelTokensUsage } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -180,7 +180,7 @@ export const transformAnthropicStream = (
             context.returnedCitationArray.push({
               title: citations.title,
               url: citations.url,
-            } as CitationItem);
+            } as ChatCitationItem);
           }
 
           return { data: null, id: context.id, type: 'text' };

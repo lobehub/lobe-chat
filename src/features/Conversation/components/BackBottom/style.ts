@@ -8,7 +8,7 @@ export const useStyles = createStyles(({ token, css, stylish, cx, responsive }) 
       pointer-events: none;
 
       position: absolute;
-      z-index: 1000;
+      z-index: 50;
       inset-block-end: 16px;
       inset-inline-end: 16px;
       transform: translateY(16px);

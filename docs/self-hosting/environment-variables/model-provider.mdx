@@ -675,4 +675,22 @@ The above example disables all models first, then enables `flux/schnell` and `fl
 
 The above example disables all models first, then enables `flux-pro-1.1` and `flux-kontext-pro` (displayed as `FLUX.1 Kontext [pro]`).
 
+## NewAPI
+
+### `NEWAPI_API_KEY`
+
+- Type: Optional
+- Description: This is the API key for your NewAPI service instance. NewAPI is a multi-provider model aggregation service that provides unified access to various AI model APIs.
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `NEWAPI_PROXY_URL`
+
+- Type: Optional
+- Description: The base URL for your NewAPI server instance. This should point to your deployed NewAPI service endpoint.
+- Default: -
+- Example: `https://your-newapi-server.com/`
+
+NewAPI is a multi-provider model aggregation service that supports automatic model routing based on provider detection. It offers cost management features and provides a single endpoint for accessing models from multiple providers including OpenAI, Anthropic, Google, and more. Learn more about NewAPI at [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api).
+
 [model-list]: /docs/self-hosting/advanced/model-list

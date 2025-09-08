@@ -1,6 +1,5 @@
 // @vitest-environment node
-import { testProvider } from '@/libs/model-runtime/providerTestUtils';
-
+import { testProvider } from '../providerTestUtils';
 import { LobeTogetherAI } from './index';
 
 testProvider({

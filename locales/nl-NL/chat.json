@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Voeg een AI-bericht toe",
     "addUser": "Voeg een gebruikersbericht toe",
+    "disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
+    "errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
     "more": "Meer",
     "send": "Verzenden",
-    "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
-    "sendWithEnter": "Verzenden met Enter",
+    "sendWithCmdEnter": "Druk op <key/> om te verzenden",
+    "sendWithEnter": "Druk op <key/> om te verzenden",
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
@@ -231,6 +233,10 @@
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
     "title": "Subonderwerp"
+  },
+  "toggleWideScreen": {
+    "off": "Schakel breedbeeldmodus uit",
+    "on": "Schakel breedbeeldmodus in"
   },
   "tokenDetails": {
     "chats": "Chats",

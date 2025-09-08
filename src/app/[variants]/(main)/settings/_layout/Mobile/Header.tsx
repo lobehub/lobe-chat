@@ -26,10 +26,14 @@ const Header = memo(() => {
   const isSessionActive = useSessionStore((s) => !!s.activeId);
   const isProvider = activeSettingsKey ? true : false;
   const providerName = useProviderName(activeSettingsKey || '');
+  const isProviderList = activeSettingsKey === 'provider';
+  const isProviderDetail = isProvider && !isProviderList;
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
       router.push('/chat');
+    } else if (isProviderDetail) {
+      router.push('/settings/provider');
     } else {
       router.push(enableAuth ? '/me/settings' : '/me');
     }

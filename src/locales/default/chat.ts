@@ -71,10 +71,12 @@ export default {
   input: {
     addAi: '添加一条 AI 消息',
     addUser: '添加一条用户消息',
+    disclaimer: 'AI 也可能会犯错，请检查重要信息',
+    errorMsg: '消息发送失败，请检查网络后重试: {{errorMsg}}',
     more: '更多',
     send: '发送',
-    sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
-    sendWithEnter: '按 Enter 键发送',
+    sendWithCmdEnter: '按 <key/> 键发送',
+    sendWithEnter: '按 <key/> 键发送',
     stop: '停止',
     warp: '换行',
   },
@@ -235,6 +237,10 @@ export default {
     divider: '子话题',
     threadMessageCount: '{{messageCount}} 条消息',
     title: '子话题',
+  },
+  toggleWideScreen: {
+    off: '关闭宽屏模式',
+    on: '开启宽屏模式',
   },
   tokenDetails: {
     chats: '会话消息',

@@ -22,6 +22,9 @@ const standaloneConfig: NextConfig = {
 
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
+  compiler: {
+    emotion: true,
+  },
   compress: isProd,
   experimental: {
     optimizePackageImports: [
@@ -30,6 +33,7 @@ const nextConfig: NextConfig = {
       '@emoji-mart/data',
       '@icons-pack/react-simple-icons',
       '@lobehub/ui',
+      '@lobehub/icons',
       'gpt-tokenizer',
     ],
     // oidc provider depend on constructor.name
