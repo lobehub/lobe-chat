@@ -64,8 +64,8 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
             activeOpacity={0.7}
             key={`${provider.id}-empty`}
             onPress={() => {
-              // TODO: 导航到设置页面（移动端暂不实现）
-              console.log('Navigate to provider settings:', provider.id);
+              onClose();
+              router.push(`/setting/providers/${provider.id}`);
             }}
             style={styles.emptyModelItem}
           >
@@ -153,7 +153,6 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              // TODO: 导航到设置页面
               router.push('/setting/providers');
               onClose();
               console.log('Navigate to provider settings');
