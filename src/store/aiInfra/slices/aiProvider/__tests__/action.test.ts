@@ -214,4 +214,188 @@ describe('getModelListByType', () => {
       });
     });
   });
+
+  describe('async parameter handling', () => {
+    it('should handle async parameter fetching for multiple models', async () => {
+      const imageModelsWithoutParameters: EnabledAiModel[] = [
+        {
+          id: 'stable-diffusion',
+          providerId: 'stability',
+          type: 'image',
+          abilities: {} as ModelAbilities,
+          displayName: 'Stable Diffusion',
+          enabled: true,
+        },
+        {
+          id: 'flux-schnell',
+          providerId: 'fal',
+          type: 'image',
+          abilities: {} as ModelAbilities,
+          displayName: 'FLUX Schnell',
+          enabled: true,
+        },
+      ];
+
+      // Mock getModelPropertyWithFallback for the specific model
+      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValue({
+        prompt: { default: '' },
+        width: { default: 512, min: 256, max: 2048 },
+        height: { default: 512, min: 256, max: 2048 },
+      });
+
+      const result = await getModelListByType(imageModelsWithoutParameters, 'stability', 'image');
+
+      expect(result).toHaveLength(1);
+      expect(result[0].parameters).toEqual({
+        prompt: { default: '' },
+        width: { default: 512, min: 256, max: 2048 },
+        height: { default: 512, min: 256, max: 2048 },
+      });
+
+      // Verify the mock was called for the correct model
+      expect(runtimeModule.getModelPropertyWithFallback).toHaveBeenCalledWith(
+        'stable-diffusion',
+        'parameters',
+      );
+    });
+
+    it('should handle failed parameter fallback gracefully', async () => {
+      const imageModelWithoutParameters: EnabledAiModel[] = [
+        {
+          id: 'failing-model',
+          providerId: 'test-provider',
+          type: 'image',
+          abilities: {} as ModelAbilities,
+          displayName: 'Failing Model',
+          enabled: true,
+        },
+      ];
+
+      // Mock getModelPropertyWithFallback to resolve with undefined/empty object
+      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValueOnce(undefined);
+
+      // Should handle gracefully when fallback returns undefined
+      const result = await getModelListByType(
+        imageModelWithoutParameters,
+        'test-provider',
+        'image',
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('failing-model');
+      // parameters should be undefined when fallback returns undefined
+      expect(result[0].parameters).toBeUndefined();
+    });
+  });
+
+  describe('concurrent processing', () => {
+    it('should handle concurrent model processing correctly', async () => {
+      const manyModels: EnabledAiModel[] = Array.from({ length: 10 }, (_, i) => ({
+        id: `model-${i}`,
+        providerId: 'test-provider',
+        type: 'chat',
+        abilities: { functionCall: i % 2 === 0 } as ModelAbilities,
+        contextWindowTokens: 4096 + i * 1000,
+        displayName: `Model ${i}`,
+        enabled: true,
+      }));
+
+      const result = await getModelListByType(manyModels, 'test-provider', 'chat');
+
+      expect(result).toHaveLength(10);
+      expect(result.map((m) => m.id)).toEqual(manyModels.map((m) => m.id));
+
+      // Verify all models were processed correctly
+      result.forEach((model, index) => {
+        expect(model.abilities.functionCall).toBe(index % 2 === 0);
+        expect(model.contextWindowTokens).toBe(4096 + index * 1000);
+      });
+    });
+
+    it('should maintain order of models in concurrent processing', async () => {
+      const orderedModels: EnabledAiModel[] = [
+        {
+          id: 'first-model',
+          providerId: 'test',
+          type: 'chat',
+          abilities: {} as ModelAbilities,
+          displayName: 'First Model',
+          enabled: true,
+        },
+        {
+          id: 'second-model',
+          providerId: 'test',
+          type: 'chat',
+          abilities: {} as ModelAbilities,
+          displayName: 'Second Model',
+          enabled: true,
+        },
+        {
+          id: 'third-model',
+          providerId: 'test',
+          type: 'chat',
+          abilities: {} as ModelAbilities,
+          displayName: 'Third Model',
+          enabled: true,
+        },
+      ];
+
+      const result = await getModelListByType(orderedModels, 'test', 'chat');
+
+      expect(result.map((m) => m.id)).toEqual(['first-model', 'second-model', 'third-model']);
+    });
+  });
+
+  describe('model property handling', () => {
+    it('should preserve all required model properties', async () => {
+      const complexModel: EnabledAiModel[] = [
+        {
+          id: 'complex-model',
+          providerId: 'test',
+          type: 'chat',
+          abilities: {
+            functionCall: true,
+            files: true,
+            vision: false,
+          } as ModelAbilities,
+          contextWindowTokens: 128000,
+          displayName: 'Complex Model with All Properties',
+          enabled: true,
+        },
+      ];
+
+      const result = await getModelListByType(complexModel, 'test', 'chat');
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        id: 'complex-model',
+        displayName: 'Complex Model with All Properties',
+        abilities: {
+          functionCall: true,
+          files: true,
+          vision: false,
+        },
+        contextWindowTokens: 128000,
+      });
+    });
+
+    it('should handle undefined contextWindowTokens gracefully', async () => {
+      const modelWithoutTokens: EnabledAiModel[] = [
+        {
+          id: 'no-tokens-model',
+          providerId: 'test',
+          type: 'chat',
+          abilities: {} as ModelAbilities,
+          displayName: 'Model Without Tokens',
+          enabled: true,
+          // contextWindowTokens is undefined
+        },
+      ];
+
+      const result = await getModelListByType(modelWithoutTokens, 'test', 'chat');
+
+      expect(result).toHaveLength(1);
+      expect(result[0].contextWindowTokens).toBeUndefined();
+    });
+  });
 });

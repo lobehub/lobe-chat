@@ -344,4 +344,383 @@ describe('GenerationConfigAction', () => {
       expect(result.current.parameters?.seed).toBe(largeSeed);
     });
   });
+
+  describe('setWidth', () => {
+    it('should update width parameter without aspect ratio lock', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any,
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: false,
+      });
+
+      act(() => {
+        result.current.setWidth(1024);
+      });
+
+      expect(result.current.parameters).toMatchObject({
+        width: 1024,
+        height: 512,
+      });
+    });
+
+    it('should update both width and height when aspect ratio is locked', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any,
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: true,
+        activeAspectRatio: '1:1',
+      });
+
+      act(() => {
+        result.current.setWidth(1024);
+      });
+
+      expect(result.current.parameters).toMatchObject({
+        width: 1024,
+        height: 1024,
+      });
+    });
+
+    it('should clamp height to min/max bounds when aspect ratio is locked', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any,
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 1024 }, // Lower max limit
+        },
+        isAspectRatioLocked: true,
+        activeAspectRatio: '1:1',
+      });
+
+      act(() => {
+        result.current.setWidth(2048);
+      });
+
+      expect(result.current.parameters).toMatchObject({
+        width: 2048,
+        height: 1024, // Clamped to max
+      });
+    });
+  });
+
+  describe('setHeight', () => {
+    it('should update height parameter without aspect ratio lock', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any,
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: false,
+      });
+
+      act(() => {
+        result.current.setHeight(1024);
+      });
+
+      expect(result.current.parameters).toMatchObject({
+        width: 512,
+        height: 1024,
+      });
+    });
+
+    it('should update both width and height when aspect ratio is locked', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any,
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: true,
+        activeAspectRatio: '2:1',
+      });
+
+      act(() => {
+        result.current.setHeight(512);
+      });
+
+      expect(result.current.parameters).toMatchObject({
+        width: 1024,
+        height: 512,
+      });
+    });
+  });
+
+  describe('toggleAspectRatioLock', () => {
+    it('should toggle aspect ratio lock state', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isAspectRatioLocked: false,
+      });
+
+      act(() => {
+        result.current.toggleAspectRatioLock();
+      });
+
+      expect(result.current.isAspectRatioLocked).toBe(true);
+
+      act(() => {
+        result.current.toggleAspectRatioLock();
+      });
+
+      expect(result.current.isAspectRatioLocked).toBe(false);
+    });
+
+    it('should adjust dimensions when locking aspect ratio with mismatched current ratio', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 1024, height: 512, prompt: '' } as any, // 2:1 ratio
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: false,
+        activeAspectRatio: '1:1', // Target 1:1 ratio
+      });
+
+      act(() => {
+        result.current.toggleAspectRatioLock();
+      });
+
+      expect(result.current.isAspectRatioLocked).toBe(true);
+      // Should adjust to match 1:1 ratio
+      expect(result.current.parameters).toMatchObject({
+        width: 1024,
+        height: 1024,
+      });
+    });
+
+    it('should not adjust dimensions if current ratio already matches target', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' } as any, // Already 1:1
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+        isAspectRatioLocked: false,
+        activeAspectRatio: '1:1',
+      });
+
+      act(() => {
+        result.current.toggleAspectRatioLock();
+      });
+
+      expect(result.current.isAspectRatioLocked).toBe(true);
+      // Should not change dimensions
+      expect(result.current.parameters).toMatchObject({
+        width: 512,
+        height: 512,
+      });
+    });
+  });
+
+  describe('setAspectRatio', () => {
+    it('should update active aspect ratio', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' },
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+      });
+
+      act(() => {
+        result.current.setAspectRatio('16:9');
+      });
+
+      expect(result.current.activeAspectRatio).toBe('16:9');
+    });
+
+    it('should update dimensions for models with width/height parameters', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { width: 512, height: 512, prompt: '' },
+        parametersSchema: {
+          prompt: { default: '' },
+          width: { default: 512, min: 256, max: 2048 },
+          height: { default: 512, min: 256, max: 2048 },
+        },
+      });
+
+      act(() => {
+        result.current.setAspectRatio('16:9');
+      });
+
+      expect(result.current.parameters?.width).toBeGreaterThan(result.current.parameters?.height!);
+      // Should maintain 16:9 aspect ratio approximately
+      const ratio =
+        (result.current.parameters as any)!.width / (result.current.parameters as any)!.height;
+      expect(ratio).toBeCloseTo(16 / 9, 1);
+    });
+
+    it('should update aspectRatio parameter for models with native aspectRatio support', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        parameters: { aspectRatio: '1:1', prompt: '' },
+        parametersSchema: {
+          prompt: { default: '' },
+          aspectRatio: { default: '1:1', enum: ['1:1', '16:9', '4:3'] },
+        },
+      });
+
+      act(() => {
+        result.current.setAspectRatio('16:9');
+      });
+
+      expect(result.current.parameters?.aspectRatio).toBe('16:9');
+      expect(result.current.activeAspectRatio).toBe('16:9');
+    });
+
+    it('should not throw error when parameters or schema are not available', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      // Set state with undefined parameters and schema
+      useImageStore.setState({
+        parameters: undefined,
+        parametersSchema: undefined,
+      });
+
+      // Should not throw error when calling setAspectRatio with null parameters/schema
+      expect(() => {
+        act(() => {
+          result.current.setAspectRatio('16:9');
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('initializeImageConfig', () => {
+    beforeEach(() => {
+      // Mock external stores
+      vi.doMock('@/store/global', () => ({
+        useGlobalStore: {
+          getState: () => ({
+            status: {
+              lastSelectedImageModel: 'flux/schnell',
+              lastSelectedImageProvider: 'fal',
+            },
+          }),
+        },
+      }));
+
+      vi.doMock('@/store/user', () => ({
+        useUserStore: {
+          getState: () => ({ user: { id: 'test' } }),
+        },
+      }));
+    });
+
+    it('should initialize with remembered model and provider when user is logged in', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isInit: false,
+        model: '',
+        provider: '',
+      });
+
+      act(() => {
+        result.current.initializeImageConfig(true, 'flux/schnell', 'fal');
+      });
+
+      expect(result.current.model).toBe('flux/schnell');
+      expect(result.current.provider).toBe('fal');
+      expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
+      expect(result.current.isInit).toBe(true);
+    });
+
+    it('should mark as initialized when user is not logged in', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isInit: false,
+        model: '',
+        provider: '',
+      });
+
+      act(() => {
+        result.current.initializeImageConfig(false);
+      });
+
+      expect(result.current.isInit).toBe(true);
+      // Should not set specific model/provider
+      expect(result.current.model).toBe('');
+      expect(result.current.provider).toBe('');
+    });
+
+    it('should mark as initialized when no remembered model/provider', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isInit: false,
+      });
+
+      act(() => {
+        result.current.initializeImageConfig(true, undefined, undefined);
+      });
+
+      expect(result.current.isInit).toBe(true);
+    });
+
+    it('should handle initialization errors gracefully', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isInit: false,
+      });
+
+      // Force an error by using invalid model/provider
+      act(() => {
+        result.current.initializeImageConfig(true, 'invalid-model', 'invalid-provider');
+      });
+
+      expect(result.current.isInit).toBe(true);
+    });
+
+    it('should use store state when no parameters provided', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      useImageStore.setState({
+        isInit: false,
+      });
+
+      act(() => {
+        result.current.initializeImageConfig();
+      });
+
+      expect(result.current.isInit).toBe(true);
+    });
+  });
 });
