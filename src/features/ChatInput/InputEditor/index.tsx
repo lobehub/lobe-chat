@@ -3,6 +3,7 @@ import { HotkeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
   INSERT_TABLE_COMMAND,
+  ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
   ReactLinkPlugin,
@@ -103,6 +104,7 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       plugins={[
         ReactListPlugin,
         ReactLinkPlugin,
+        ReactCodePlugin,
         ReactCodeblockPlugin,
         ReactHRPlugin,
         ReactTablePlugin,
