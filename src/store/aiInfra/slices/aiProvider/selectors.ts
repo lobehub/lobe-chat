@@ -14,8 +14,6 @@ const enabledImageModelList = (s: AIProviderStoreState) => s.enabledImageModelLi
 
 const isAiProviderListInited = (s: AIProviderStoreState) => !!s.initAiProviderList;
 
-const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;
-
 const isProviderEnabled = (id: string) => (s: AIProviderStoreState) =>
   enabledAiProviderList(s).some((i) => i.id === id);
 
@@ -114,6 +112,8 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
 
   return false;
 };
+
+const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;
 
 export const aiProviderSelectors = {
   activeProviderConfig,

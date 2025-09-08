@@ -14,6 +14,7 @@ import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 import type { ImageStore } from '../../store';
+import { calculateInitialAspectRatio } from '../../utils/aspectRatio';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';
 
 export interface GenerationConfigAction {
@@ -39,7 +40,11 @@ export interface GenerationConfigAction {
   setAspectRatio(aspectRatio: string): void;
 
   // 初始化相关方法
-  initializeImageConfig(): void;
+  initializeImageConfig(
+    isLogin?: boolean,
+    lastSelectedImageModel?: string,
+    lastSelectedImageProvider?: string,
+  ): void;
 }
 
 /**
@@ -49,13 +54,20 @@ export interface GenerationConfigAction {
  */
 export function getModelAndDefaults(model: string, provider: string) {
   const enabledImageModelList = aiProviderSelectors.enabledImageModelList(getAiInfraStoreState());
-  const activeModel = enabledImageModelList
-    .find((providerItem) => providerItem.id === provider)
-    ?.children.find((modelItem) => modelItem.id === model) as unknown as AIImageModelCard;
 
+  const providerItem = enabledImageModelList.find((providerItem) => providerItem.id === provider);
+  if (!providerItem) {
+    throw new Error(
+      `Provider "${provider}" not found in enabled image provider list. Available providers: ${enabledImageModelList.map((p) => p.id).join(', ')}`,
+    );
+  }
+
+  const activeModel = providerItem.children.find(
+    (modelItem) => modelItem.id === model,
+  ) as unknown as AIImageModelCard;
   if (!activeModel) {
     throw new Error(
-      `Model "${model}" from provider "${provider}" not found in enabled image model list`,
+      `Model "${model}" not found in provider "${provider}". Available models: ${providerItem.children.map((m) => m.id).join(', ')}`,
     );
   }
 
@@ -72,23 +84,7 @@ export function getModelAndDefaults(model: string, provider: string) {
  */
 function prepareModelConfigState(model: string, provider: string) {
   const { defaultValues, parametersSchema } = getModelAndDefaults(model, provider);
-
-  let initialActiveRatio: string | null = null;
-
-  // 如果模型没有原生比例或尺寸参数，但有宽高，则启用虚拟比例控制
-  if (
-    !parametersSchema?.aspectRatio &&
-    !parametersSchema?.size &&
-    parametersSchema?.width &&
-    parametersSchema?.height
-  ) {
-    const { width, height } = defaultValues;
-    if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-      initialActiveRatio = `${width}:${height}`;
-    } else {
-      initialActiveRatio = '1:1';
-    }
-  }
+  const initialActiveRatio = calculateInitialAspectRatio(parametersSchema, defaultValues);
 
   return {
     defaultValues,
@@ -328,22 +324,30 @@ export const createGenerationConfigSlice: StateCreator<
     set((state) => ({ parameters: { ...state.parameters, seed } }), false, `reuseSeed/${seed}`);
   },
 
-  initializeImageConfig: () => {
-    const globalStatus = useGlobalStore.getState().status;
-    const isLogin = authSelectors.isLogin(useUserStore.getState());
-    const { lastSelectedImageModel, lastSelectedImageProvider } = globalStatus;
+  initializeImageConfig: (isLogin, lastSelectedImageModel, lastSelectedImageProvider) => {
+    // If no parameters are passed, get from store (backward compatibility)
+    let actualIsLogin = isLogin;
+    let actualLastSelectedImageModel = lastSelectedImageModel;
+    let actualLastSelectedImageProvider = lastSelectedImageProvider;
 
-    if (isLogin && lastSelectedImageModel && lastSelectedImageProvider) {
+    if (typeof isLogin === 'undefined') {
+      const globalStatus = useGlobalStore.getState().status;
+      actualIsLogin = authSelectors.isLogin(useUserStore.getState());
+      actualLastSelectedImageModel = globalStatus.lastSelectedImageModel;
+      actualLastSelectedImageProvider = globalStatus.lastSelectedImageProvider;
+    }
+
+    if (actualIsLogin && actualLastSelectedImageModel && actualLastSelectedImageProvider) {
       try {
         const { defaultValues, parametersSchema, initialActiveRatio } = prepareModelConfigState(
-          lastSelectedImageModel,
-          lastSelectedImageProvider,
+          actualLastSelectedImageModel,
+          actualLastSelectedImageProvider,
         );
 
         set(
           {
-            model: lastSelectedImageModel,
-            provider: lastSelectedImageProvider,
+            model: actualLastSelectedImageModel,
+            provider: actualLastSelectedImageProvider,
             parameters: defaultValues,
             parametersSchema,
             isAspectRatioLocked: false,
@@ -351,15 +355,14 @@ export const createGenerationConfigSlice: StateCreator<
             isInit: true,
           },
           false,
-          `initializeImageConfig/${lastSelectedImageModel}/${lastSelectedImageProvider}`,
+          `initializeImageConfig/${actualLastSelectedImageModel}/${actualLastSelectedImageProvider}`,
         );
-      } catch (error) {
-        console.warn('Failed to initialize from remembered model, using defaults:', error);
-        // 如果恢复失败，使用默认值并标记为已初始化
+      } catch {
+        // If restoration fails, simply mark as initialized to use default configuration
         set({ isInit: true }, false, 'initializeImageConfig/fallback');
       }
     } else {
-      // 没有记忆的模型，直接标记为已初始化（使用默认值）
+      // No remembered model, directly mark as initialized (use default values)
       set({ isInit: true }, false, 'initializeImageConfig/default');
     }
   },

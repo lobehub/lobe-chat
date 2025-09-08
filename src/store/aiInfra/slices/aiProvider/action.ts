@@ -230,9 +230,9 @@ export const createAiProviderSlice: StateCreator<
     ),
 
   useFetchAiProviderRuntimeState: (isLogin) => {
-    const isLoaded = authSelectors.isLoaded(useUserStore.getState());
+    const isAuthLoaded = authSelectors.isLoaded(useUserStore.getState());
     return useClientDataSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
-      isLoaded && !isDeprecatedEdition
+      isAuthLoaded && !isDeprecatedEdition
         ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin]
         : null,
       async ([, isLogin]) => {

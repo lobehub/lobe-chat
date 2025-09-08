@@ -6,13 +6,13 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
 import DimensionControlGroup from './components/DimensionControlGroup';
+import ImageConfigSkeleton from './components/ImageConfigSkeleton';
 import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
@@ -41,7 +41,7 @@ const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
   const theme = useTheme();
 
-  // 初始化图像配置
+  // Initialize image configuration
   useFetchAiImageConfig();
 
   // All hooks must be called before any early returns
@@ -122,9 +122,9 @@ const ConfigPanel = memo(() => {
     [isScrollable, theme.colorBgContainer, theme.colorBorder],
   );
 
-  // 如果未初始化，显示加载状态
+  // Show loading state if not initialized
   if (!isInit) {
-    return <BrandTextLoading />;
+    return <ImageConfigSkeleton />;
   }
 
   return (
