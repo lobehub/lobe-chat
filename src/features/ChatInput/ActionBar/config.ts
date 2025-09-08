@@ -1,5 +1,6 @@
 import Clear from './Clear';
 import History from './History';
+import InputTranslate from './InputTranslate';
 import Knowledge from './Knowledge';
 import Model from './Model';
 import Params from './Params';
@@ -15,6 +16,7 @@ export const actionMap = {
   clear: Clear,
   fileUpload: Upload,
   history: History,
+  inputTranslate: InputTranslate,
   knowledgeBase: Knowledge,
   mainToken: MainToken,
   model: Model,
