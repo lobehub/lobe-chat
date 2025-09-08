@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { X, ArrowRight } from 'lucide-react-native';
+import { X, ArrowRight, BoltIcon } from 'lucide-react-native';
 
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
@@ -12,6 +12,7 @@ import ProviderItemRender from '../ProviderItemRender';
 import { useStyles } from './styles';
 import { useRouter } from 'expo-router';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
+import { useTranslation } from 'react-i18next';
 
 // 生成菜单键，与Web端保持一致
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
@@ -27,6 +28,7 @@ interface ModelSelectModalProps {
  */
 const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
   const { currentModel, currentProvider, updateAgentConfig } = useCurrentAgent();
+  const { t } = useTranslation();
   const enabledModels = useEnabledChatModels();
   const { isLoading: infraLoading, hasError: infraError } = useAiInfraInit();
   const token = useThemeToken();
@@ -70,7 +72,11 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
             style={styles.emptyModelItem}
           >
             <View style={styles.emptyContent}>
-              <Text style={styles.emptyText}>暂无模型</Text>
+              <Text style={styles.emptyText}>
+                {t('ModelSwitchPanel.emptyModel', {
+                  ns: 'components',
+                })}
+              </Text>
               <ArrowRight color={token.colorTextTertiary} size={16} />
             </View>
           </TouchableOpacity>,
@@ -115,6 +121,14 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
               provider={provider.id}
               source={provider.source}
             />
+            <BoltIcon
+              color={token.colorText}
+              onPress={() => {
+                onClose();
+                router.push(`/setting/providers/${provider.id}`);
+              }}
+              size={20}
+            />
           </View>
 
           {/* 模型列表 */}
@@ -131,7 +145,7 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
     if (infraLoading) {
       return (
         <View style={styles.statusContainer}>
-          <Text style={styles.loadingText}>加载中...</Text>
+          <Text style={styles.loadingText}>{t('status.loading', { ns: 'common' })}</Text>
         </View>
       );
     }
@@ -140,8 +154,12 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
     if (infraError) {
       return (
         <View style={styles.statusContainer}>
-          <Text style={styles.errorText}>加载失败</Text>
-          <Text style={styles.subText}>请检查网络连接或重试</Text>
+          <Text style={styles.errorText}>{t('status.error', { ns: 'common' })}</Text>
+          <Text style={styles.subText}>
+            {t('status.networkRetryTip', {
+              ns: 'common',
+            })}
+          </Text>
         </View>
       );
     }
@@ -160,11 +178,14 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
             style={styles.emptyProviderItem}
           >
             <View style={styles.emptyContent}>
-              <Text style={styles.emptyText}>暂无提供商</Text>
+              <Text style={styles.emptyText}>
+                {t('ModelSwitchPanel.emptyProvider', {
+                  ns: 'components',
+                })}
+              </Text>
               <ArrowRight color={token.colorTextTertiary} size={16} />
             </View>
           </TouchableOpacity>
-          <Text style={styles.subText}>请添加AI提供商配置</Text>
         </View>
       );
     }
@@ -190,7 +211,11 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
       <SafeAreaView edges={['bottom']} style={styles.container}>
         {/* 标题栏 */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>选择模型</Text>
+          <Text style={styles.headerTitle}>
+            {t('ModelSwitchPanel.chooseModel', {
+              ns: 'components',
+            })}
+          </Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <X color={token.colorTextSecondary} size={20} />
           </TouchableOpacity>
