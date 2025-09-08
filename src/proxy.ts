@@ -193,6 +193,7 @@ const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
   '/knowledge(.*)',
   '/onboard(.*)',
+  '/oauth(.*)',
   // ↓ cloud ↓
 ]);
 
