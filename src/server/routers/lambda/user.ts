@@ -46,7 +46,6 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
-    // Access server config directly instead of using a React hook
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
     const { enablePwaAppBanner } = serverFeatureFlags();

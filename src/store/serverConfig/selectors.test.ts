@@ -25,7 +25,6 @@ describe('featureFlagsSelectors', () => {
       enableRAGEval: false,
       showDalle: true,
       showAiImage: true,
-
       enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,
