@@ -39,7 +39,7 @@ cp .env.example .env.local
 EXPO_PUBLIC_OAUTH_CLIENT_ID=your-client-id
 
 # 回调地址（必须与认证服务器配置一致）
-EXPO_PUBLIC_OAUTH_REDIRECT_URI=lobechat://auth/callback
+EXPO_PUBLIC_OAUTH_REDIRECT_URI=com.lobehub.app://auth/callback
 ```
 
 ### 3. 配置说明
