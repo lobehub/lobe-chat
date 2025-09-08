@@ -1,0 +1,10 @@
+{
+  "ModelSwitchPanel": {
+    "chooseModel": "Model Seçin",
+    "emptyModel": "Etkinleştirilmiş model yok, lütfen ayarlardan etkinleştirin",
+    "emptyProvider": "Etkinleştirilmiş sağlayıcı yok, lütfen ayarlardan etkinleştirin",
+    "goToSettings": "Ayarlar'a Git",
+    "provider": "Sağlayıcı",
+    "title": "Model"
+  }
+}

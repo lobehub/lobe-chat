@@ -1,0 +1,10 @@
+{
+  "ModelSwitchPanel": {
+    "chooseModel": "Choisir un modèle",
+    "emptyModel": "Aucun modèle activé, veuillez activer un modèle dans les paramètres",
+    "emptyProvider": "Aucun fournisseur activé, veuillez activer un fournisseur dans les paramètres",
+    "goToSettings": "Aller aux paramètres",
+    "provider": "Fournisseur",
+    "title": "Modèle"
+  }
+}

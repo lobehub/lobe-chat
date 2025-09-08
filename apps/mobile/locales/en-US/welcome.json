@@ -22,24 +22,24 @@
       "q13": "Is there a marketplace to get GPTs?",
       "q14": "Does it support multiple AI service providers?",
       "q15": "What should I do if I encounter problems while using it?"
+    },
+    "questions": {
+      "moreBtn": "Learn More",
+      "title": "Frequently Asked Questions:"
+    },
+    "welcome": {
+      "afternoon": "Good Afternoon",
+      "morning": "Good Morning",
+      "night": "Good Evening",
+      "noon": "Good Noon"
     }
   },
   "header": "Welcome",
   "pickAgent": "Or choose from the assistant templates below",
-  "questions": {
-    "moreBtn": "Learn More",
-    "title": "Frequently Asked Questions:"
-  },
   "skip": "Skip Creation",
   "slogan": {
     "desc1": "Activate your brain cluster and spark your creativity. Your intelligent assistant is always here.",
     "desc2": "Create your first assistant, let's get started~",
     "title": "Give Yourself a Smarter Brain"
-  },
-  "welcome": {
-    "afternoon": "Good Afternoon",
-    "morning": "Good Morning",
-    "night": "Good Evening",
-    "noon": "Good Noon"
   }
 }
