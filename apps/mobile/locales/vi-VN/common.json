@@ -30,6 +30,7 @@
     "error": "Lỗi",
     "info": "Thông tin",
     "loading": "Đang tải...",
+    "networkRetryTip": "Vui lòng kiểm tra kết nối mạng hoặc thử lại",
     "success": "Thành công",
     "warning": "Cảnh báo"
   }

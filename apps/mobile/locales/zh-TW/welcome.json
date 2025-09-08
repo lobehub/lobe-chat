@@ -22,24 +22,24 @@
       "q13": "是否有自己的市場來取得 GPTs？",
       "q14": "是否支援多種 AI 服務提供者？",
       "q15": "我在使用時遇到問題應該怎麼辦？"
+    },
+    "questions": {
+      "moreBtn": "了解更多",
+      "title": "大家都在問："
+    },
+    "welcome": {
+      "afternoon": "下午好",
+      "morning": "早安",
+      "night": "晚上好",
+      "noon": "中午好"
     }
   },
   "header": "歡迎使用",
   "pickAgent": "或從下列助理範本選擇",
-  "questions": {
-    "moreBtn": "了解更多",
-    "title": "大家都在問："
-  },
   "skip": "跳過建立",
   "slogan": {
     "desc1": "開啟大腦集群，激發思維火花。你的智能助理，一直都在。",
     "desc2": "建立你的第一個助理，讓我們開始吧～",
     "title": "給自己一個更聰明的大腦"
-  },
-  "welcome": {
-    "afternoon": "下午好",
-    "morning": "早安",
-    "night": "晚上好",
-    "noon": "中午好"
   }
 }

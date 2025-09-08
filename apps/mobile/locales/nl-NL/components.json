@@ -1,0 +1,10 @@
+{
+  "ModelSwitchPanel": {
+    "chooseModel": "Model kiezen",
+    "emptyModel": "Geen ingeschakeld model, ga naar instellingen om in te schakelen",
+    "emptyProvider": "Geen ingeschakelde provider, ga naar instellingen om in te schakelen",
+    "goToSettings": "Ga naar instellingen",
+    "provider": "Provider",
+    "title": "Model"
+  }
+}
