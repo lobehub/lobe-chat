@@ -278,11 +278,22 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               // 如果有数据已经输出，优雅地关闭流而不是抛出错误
               if (hasData) {
                 console.log('Stream cancelled gracefully, preserving existing output');
+                // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
+                controller.enqueue({
+                  __lobe_error: {
+                    body: { name: 'Stream cancelled', reason: 'aborted' },
+                    message: 'Stream cancelled',
+                    name: 'Stream cancelled',
+                    type: AgentRuntimeErrorType.StreamChunkError,
+                  },
+                });
                 controller.close();
                 return;
               } else {
-                // 如果还没有数据输出，则抛出取消错误
-                throw new Error('Stream cancelled');
+                // 如果还没有数据输出，直接关闭流，由下游 SSE 在 flush 阶段补发错误事件
+                console.log('Stream cancelled before any output');
+                controller.close();
+                return;
               }
             }
 
@@ -297,17 +308,52 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             // 如果有数据已经输出，优雅地关闭流
             if (hasData) {
               console.log('Stream reading cancelled gracefully, preserving existing output');
+              // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
+              controller.enqueue({
+                __lobe_error: {
+                  body: { name: 'Stream cancelled', reason: 'aborted' },
+                  message: 'Stream cancelled',
+                  name: 'Stream cancelled',
+                  type: AgentRuntimeErrorType.StreamChunkError,
+                },
+              });
               controller.close();
               return;
             } else {
               console.log('Stream reading cancelled before any output');
-              controller.error(new Error('Stream cancelled'));
+              // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
+              controller.enqueue({
+                __lobe_error: {
+                  body: {
+                    message: err.message,
+                    name: 'AbortError',
+                    stack: err.stack,
+                  },
+                  message: err.message || 'Request was cancelled',
+                  name: 'AbortError',
+                  type: AgentRuntimeErrorType.StreamChunkError,
+                },
+              });
+              controller.close();
               return;
             }
           } else {
             // 处理其他流解析错误
             console.error('Stream parsing error:', err);
-            controller.error(err);
+            // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
+            controller.enqueue({
+              __lobe_error: {
+                body: {
+                  message: err.message,
+                  name: 'Stream parsing error',
+                  stack: err.stack,
+                },
+                message: err.message || 'Stream parsing error',
+                name: 'Stream parsing error',
+                type: AgentRuntimeErrorType.StreamChunkError,
+              },
+            });
+            controller.close();
             return;
           }
         }

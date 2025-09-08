@@ -29,6 +29,14 @@ const transformGoogleGenerativeAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
+  // Handle injected internal error marker to pass through detailed error info
+  if ((chunk as any)?.__lobe_error) {
+    return {
+      data: (chunk as any).__lobe_error,
+      id: context?.id || 'error',
+      type: 'error',
+    };
+  }
   // Handle promptFeedback with blockReason (e.g., PROHIBITED_CONTENT)
   if ('promptFeedback' in chunk && (chunk as any).promptFeedback?.blockReason) {
     const blockReason = (chunk as any).promptFeedback.blockReason;
