@@ -9,6 +9,8 @@
       "on": "Hiển thị thanh công cụ định dạng"
     }
   },
+  "cancel": "Hủy",
+  "confirm": "Xác nhận",
   "file": {
     "error": "Lỗi: {{message}}",
     "uploading": "Đang tải tệp lên..."
@@ -21,6 +23,9 @@
     "open": "Mở liên kết",
     "placeholder": "Nhập URL liên kết",
     "unlink": "Gỡ liên kết"
+  },
+  "math": {
+    "placeholder": "Vui lòng nhập công thức TeX"
   },
   "table": {
     "delete": "Xóa bảng",
@@ -42,6 +47,8 @@
     "numberList": "Danh sách có thứ tự",
     "strikethrough": "Gạch ngang",
     "table": "Chèn bảng",
+    "taskList": "Danh sách công việc",
+    "tex": "Công thức TeX",
     "underline": "Gạch chân"
   }
 }

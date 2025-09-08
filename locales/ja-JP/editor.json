@@ -9,6 +9,8 @@
       "on": "書式ツールバーを表示"
     }
   },
+  "cancel": "キャンセル",
+  "confirm": "確認",
   "file": {
     "error": "エラー：{{message}}",
     "uploading": "ファイルをアップロードしています..."
@@ -21,6 +23,9 @@
     "open": "リンクを開く",
     "placeholder": "リンクの URL を入力",
     "unlink": "リンクを解除"
+  },
+  "math": {
+    "placeholder": "TeX 公式を入力してください"
   },
   "table": {
     "delete": "表を削除",
@@ -42,6 +47,8 @@
     "numberList": "番号付きリスト",
     "strikethrough": "取り消し線",
     "table": "表を挿入",
+    "taskList": "タスクリスト",
+    "tex": "TeX 公式",
     "underline": "下線"
   }
 }
