@@ -1,8 +1,4 @@
-import {
-  QueryRewriteSystemAgent,
-  SystemAgentItem,
-  UserSystemAgentConfig,
-} from '@/types/user/settings';
+import { QueryRewriteSystemAgent, SystemAgentItem, UserSystemAgentConfig } from '@lobechat/types';
 
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
 

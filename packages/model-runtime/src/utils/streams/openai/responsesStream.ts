@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { ChatMessageError, CitationItem } from '@/types/message';
+import { ChatCitationItem, ChatMessageError } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../../types/error';
 import { convertResponseUsage } from '../../usageConverter';
@@ -126,7 +126,7 @@ const transformOpenAIStream = (
           streamContext.returnedCitationArray.push({
             title: citations.title,
             url: citations.url,
-          } as CitationItem);
+          } as ChatCitationItem);
         }
 
         return { data: null, id: chunk.item_id, type: 'text' };

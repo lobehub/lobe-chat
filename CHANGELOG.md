@@ -2,64 +2,157 @@
 
 # Changelog
 
-## [Version&nbsp;1.123.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.122.1...v1.123.0)
-<sup>Released on **2025-09-05**</sup>
+### [Version 1.124.4](https://github.com/lobehub/lobe-chat/compare/v1.124.3...v1.124.4)
 
-
-#### ♻ Code Refactoring
-
-- **misc**: Make LobeNextAuthDBAdapter Edge Compatible.
-
-
-#### ✨ Features
-
-- **misc**: Add NewAPI as a router provider for multi-model aggregation.
-
+<sup>Released on **2025-09-06**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix mobile header title to loog not ellipsis, not use branch topic when this topic is not save.
-
-
-#### 💄 Styles
-
-- **misc**: Update i18n.
-
+- **misc**: Revert V1 Mobile.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Make LobeNextAuthDBAdapter Edge Compatible, closes [#9088](https://github.com/jaworldwideorg/OneJA-Bot/issues/9088) ([411f88e](https://github.com/jaworldwideorg/OneJA-Bot/commit/411f88e))
-
-
-
-#### What's improved
-
-* **misc**: Add NewAPI as a router provider for multi-model aggregation, closes [#9041](https://github.com/jaworldwideorg/OneJA-Bot/issues/9041) [/github.com/lobehub/lobe-chat/pull/9041#pullrequestreview-3183464594](https://github.com//github.com/lobehub/lobe-chat/pull/9041/issues/pullrequestreview-3183464594) ([7e291c2](https://github.com/jaworldwideorg/OneJA-Bot/commit/7e291c2))
-
-
-
 #### What's fixed
 
-* **misc**: Fix mobile header title to loog not ellipsis, closes [#9109](https://github.com/jaworldwideorg/OneJA-Bot/issues/9109) ([9b8435b](https://github.com/jaworldwideorg/OneJA-Bot/commit/9b8435b))
-* **misc**: Not use branch topic when this topic is not save, closes [#9083](https://github.com/jaworldwideorg/OneJA-Bot/issues/9083) ([f534d19](https://github.com/jaworldwideorg/OneJA-Bot/commit/f534d19))
-
-
-
-#### Styles
-
-* **misc**: Update i18n, closes [#9095](https://github.com/jaworldwideorg/OneJA-Bot/issues/9095) ([1080ff3](https://github.com/jaworldwideorg/OneJA-Bot/commit/1080ff3))
+- **misc**: Revert V1 Mobile, closes [#9143](https://github.com/lobehub/lobe-chat/issues/9143) ([b385602](https://github.com/lobehub/lobe-chat/commit/b385602))
 
 </details>
 
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.124.3](https://github.com/lobehub/lobe-chat/compare/v1.124.2...v1.124.3)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to remove edge runtime and add more tests.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to remove edge runtime and add more tests, closes [#9133](https://github.com/lobehub/lobe-chat/issues/9133) ([6f87034](https://github.com/lobehub/lobe-chat/commit/6f87034))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.124.2](https://github.com/lobehub/lobe-chat/compare/v1.124.1...v1.124.2)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ChatInput send command switch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ChatInput send command switch, closes [#9131](https://github.com/lobehub/lobe-chat/issues/9131) ([4d5246a](https://github.com/lobehub/lobe-chat/commit/4d5246a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.124.1](https://github.com/lobehub/lobe-chat/compare/v1.124.0...v1.124.1)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Enhance NewAPI with environment variables and fix routers compatibility.
+
+#### 💄 Styles
+
+- **misc**: Update doubao-seed-1.6-vision models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Enhance NewAPI with environment variables and fix routers compatibility, closes [#9110](https://github.com/lobehub/lobe-chat/issues/9110) ([a66856d](https://github.com/lobehub/lobe-chat/commit/a66856d))
+
+#### Styles
+
+- **misc**: Update doubao-seed-1.6-vision models, closes [#9052](https://github.com/lobehub/lobe-chat/issues/9052) ([df2d001](https://github.com/lobehub/lobe-chat/commit/df2d001))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.124.0](https://github.com/lobehub/lobe-chat/compare/v1.123.4...v1.124.0)
+
+<sup>Released on **2025-09-06**</sup>
+
+#### ✨ Features
+
+- **misc**: ChatInput support rich text and support parallel send.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: ChatInput support rich text and support parallel send, closes [#8964](https://github.com/lobehub/lobe-chat/issues/8964) ([38d9d98](https://github.com/lobehub/lobe-chat/commit/38d9d98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.123.4](https://github.com/lobehub/lobe-chat/compare/v1.123.3...v1.123.4)
+
+<sup>Released on **2025-09-05**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove edge runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove edge runtime, closes [#9085](https://github.com/lobehub/lobe-chat/issues/9085) ([d3544f9](https://github.com/lobehub/lobe-chat/commit/d3544f9))
+
+</details>
 
 <div align="right">
 

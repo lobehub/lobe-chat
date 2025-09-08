@@ -28,9 +28,7 @@ const portalWidth = (s: GlobalState) => s.status.portalWidth || 400;
 const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const imageTopicPanelWidth = (s: GlobalState) => s.status.imageTopicPanelWidth;
-const inputHeight = (s: GlobalState) => s.status.inputHeight;
-const threadInputHeight = (s: GlobalState) => s.status.threadInputHeight;
-
+const wideScreen = (s: GlobalState) => s.status.wideScreen;
 const isPgliteNotEnabled = (s: GlobalState) =>
   isUsePgliteDB && !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
 
@@ -69,7 +67,6 @@ export const systemStatusSelectors = {
   imagePanelWidth,
   imageTopicPanelWidth,
   inZenMode,
-  inputHeight,
   isDBInited,
   isPgliteInited,
   isPgliteNotEnabled,
@@ -90,5 +87,5 @@ export const systemStatusSelectors = {
   showSystemRole,
   systemStatus,
   themeMode,
-  threadInputHeight,
+  wideScreen,
 };

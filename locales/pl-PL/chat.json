@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Dodaj wiadomość AI",
     "addUser": "Dodaj wiadomość użytkownika",
+    "disclaimer": "AI również może popełniać błędy, proszę sprawdzić ważne informacje",
+    "errorMsg": "Wysyłanie wiadomości nie powiodło się, sprawdź połączenie sieciowe i spróbuj ponownie: {{errorMsg}}",
     "more": "więcej",
     "send": "Wyślij",
-    "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
-    "sendWithEnter": "Wyślij za pomocą klawisza Enter",
+    "sendWithCmdEnter": "Naciśnij <key/>, aby wysłać",
+    "sendWithEnter": "Naciśnij <key/>, aby wysłać",
     "stop": "Zatrzymaj",
     "warp": "Złamanie wiersza"
   },
@@ -231,6 +233,10 @@
     "divider": "Podwątek",
     "threadMessageCount": "{{messageCount}} wiadomości",
     "title": "Podwątek"
+  },
+  "toggleWideScreen": {
+    "off": "Wyłącz tryb szerokiego ekranu",
+    "on": "Włącz tryb szerokiego ekranu"
   },
   "tokenDetails": {
     "chats": "Rozmowy",

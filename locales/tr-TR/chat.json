@@ -70,10 +70,12 @@
   "input": {
     "addAi": "Bir AI mesajı ekleyin",
     "addUser": "Bir kullanıcı mesajı ekleyin",
+    "disclaimer": "Yapay zeka da hata yapabilir, lütfen önemli bilgileri kontrol edin",
+    "errorMsg": "Mesaj gönderilemedi, lütfen ağı kontrol edip tekrar deneyin: {{errorMsg}}",
     "more": "Daha fazla",
     "send": "Gönder",
-    "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
-    "sendWithEnter": "Enter tuşuna basarak gönder",
+    "sendWithCmdEnter": "<key/> tuşuna basarak gönder",
+    "sendWithEnter": "<key/> tuşuna basarak gönder",
     "stop": "Dur",
     "warp": "Satır atla"
   },
@@ -231,6 +233,10 @@
     "divider": "Alt konu",
     "threadMessageCount": "{{messageCount}} mesaj",
     "title": "Alt konu"
+  },
+  "toggleWideScreen": {
+    "off": "Geniş ekran modunu kapat",
+    "on": "Geniş ekran modunu aç"
   },
   "tokenDetails": {
     "chats": "Sohbetler",
