@@ -30,6 +30,7 @@
     "error": "Fout",
     "info": "Informatie",
     "loading": "Bezig met laden...",
+    "networkRetryTip": "Controleer uw netwerkverbinding of probeer het opnieuw",
     "success": "Succes",
     "warning": "Waarschuwing"
   }
