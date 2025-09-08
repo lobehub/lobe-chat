@@ -268,6 +268,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
+    // capture provider for error payloads inside the stream closure
+    const provider = this.provider;
     return new ReadableStream({
       async start(controller) {
         let hasData = false;
@@ -281,7 +283,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
                 // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
                 controller.enqueue({
                   __lobe_error: {
-                    body: { name: 'Stream cancelled', reason: 'aborted' },
+                    body: { name: 'Stream cancelled', provider, reason: 'aborted' },
                     message: 'Stream cancelled',
                     name: 'Stream cancelled',
                     type: AgentRuntimeErrorType.StreamChunkError,
@@ -311,7 +313,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
               controller.enqueue({
                 __lobe_error: {
-                  body: { name: 'Stream cancelled', reason: 'aborted' },
+                  body: { name: 'Stream cancelled', provider, reason: 'aborted' },
                   message: 'Stream cancelled',
                   name: 'Stream cancelled',
                   type: AgentRuntimeErrorType.StreamChunkError,
@@ -327,6 +329,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
                   body: {
                     message: err.message,
                     name: 'AbortError',
+                    provider,
                     stack: err.stack,
                   },
                   message: err.message || 'Request was cancelled',
@@ -340,17 +343,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           } else {
             // 处理其他流解析错误
             console.error('Stream parsing error:', err);
+            // 尝试解析 Google 错误并提取 code/message/status
+            const { error: parsedError, errorType } = parseGoogleErrorMessage(
+              err?.message || String(err),
+            );
+
             // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
             controller.enqueue({
               __lobe_error: {
-                body: {
-                  message: err.message,
-                  name: 'Stream parsing error',
-                  stack: err.stack,
-                },
-                message: err.message || 'Stream parsing error',
+                body: { ...parsedError, provider },
+                message: parsedError?.message || err.message || 'Stream parsing error',
                 name: 'Stream parsing error',
-                type: AgentRuntimeErrorType.StreamChunkError,
+                type: errorType ?? AgentRuntimeErrorType.StreamChunkError,
               },
             });
             controller.close();
