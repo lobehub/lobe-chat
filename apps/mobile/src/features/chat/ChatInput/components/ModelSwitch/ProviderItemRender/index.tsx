@@ -4,6 +4,7 @@ import { ProviderIcon } from '@lobehub/icons-rn';
 
 import { AiProviderSourceType } from '@/types/aiProvider';
 import { useStyles } from './styles';
+import { useThemeToken } from '@/theme';
 
 interface ProviderItemRenderProps {
   logo?: string;
@@ -18,6 +19,7 @@ interface ProviderItemRenderProps {
  */
 const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name, source, logo }) => {
   const { styles } = useStyles();
+  const token = useThemeToken();
 
   return (
     <View style={styles.container}>
@@ -29,7 +31,7 @@ const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name, sour
           style={[styles.icon, styles.customIcon]}
         />
       ) : (
-        <ProviderIcon provider={provider} size={20} type="mono" />
+        <ProviderIcon color={token.colorText} provider={provider} size={20} type="color" />
       )}
 
       {/* 提供商名称 */}
