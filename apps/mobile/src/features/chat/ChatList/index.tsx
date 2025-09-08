@@ -1,10 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
+  LayoutChangeEvent,
   ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  LayoutChangeEvent,
   View,
   ViewStyle,
 } from 'react-native';
@@ -19,6 +19,8 @@ import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
 import ChatBubble from '../ChatBubble';
 import AutoScroll from '../AutoScroll';
+import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
+import { runOnJS } from 'react-native-reanimated';
 
 interface ChatListProps {
   style?: ViewStyle;
@@ -51,6 +53,30 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const atBottomRef = useRef(true);
+  const isAtBottomRefWhenKeyboardStartShow = useRef(true);
+
+  const updateBottomRef = useCallback(() => {
+    isAtBottomRefWhenKeyboardStartShow.current = atBottomRef.current;
+  }, []);
+
+  useKeyboardHandler(
+    {
+      onStart: (e) => {
+        'worklet';
+        if (e.progress === 1) {
+          runOnJS(updateBottomRef)();
+        }
+      },
+    },
+    [],
+  );
+  const { isVisible } = useKeyboardState();
+
+  useEffect(() => {
+    if (isVisible && isAtBottomRefWhenKeyboardStartShow.current) {
+      listRef.current?.scrollToEnd({ animated: true });
+    }
+  }, [isVisible]);
 
   // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
   const isDraggingRef = useRef(false);

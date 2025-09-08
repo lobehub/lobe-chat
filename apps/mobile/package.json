@@ -45,7 +45,7 @@
     "@csark0812/zustand-expo-devtools": "^2.0.2",
     "@expo/react-native-action-sheet": "^4.1.1",
     "@gorhom/portal": "^1.0.14",
-    "@lobehub/icons-rn": "^1.2.1",
+    "@lobehub/icons-rn": "^1.4.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-menu/menu": "^1.2.4",
