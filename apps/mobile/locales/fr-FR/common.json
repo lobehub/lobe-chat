@@ -30,6 +30,7 @@
     "error": "Erreur",
     "info": "Information",
     "loading": "Chargement...",
+    "networkRetryTip": "Veuillez vérifier votre connexion réseau ou réessayer",
     "success": "Succès",
     "warning": "Avertissement"
   }

@@ -7,11 +7,13 @@ import setting from './setting';
 import topic from './topic';
 import welcome from './welcome';
 import providers from './providers';
+import components from './components';
 
 const resources = {
   auth,
   chat,
   common,
+  components,
   discover,
   error,
   providers,

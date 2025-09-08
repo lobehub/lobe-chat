@@ -30,6 +30,7 @@ export default {
     error: '错误',
     info: '信息',
     loading: '加载中...',
+    networkRetryTip: '请检查网络连接或重试',
     success: '成功',
     warning: '警告',
   },
