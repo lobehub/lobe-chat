@@ -10,6 +10,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
+import { authSelectors } from '@/store/user/selectors';
 
 import type { ImageStore } from '../../store';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';
@@ -328,9 +330,10 @@ export const createGenerationConfigSlice: StateCreator<
 
   initializeImageConfig: () => {
     const globalStatus = useGlobalStore.getState().status;
+    const isLogin = authSelectors.isLogin(useUserStore.getState());
     const { lastSelectedImageModel, lastSelectedImageProvider } = globalStatus;
 
-    if (lastSelectedImageModel && lastSelectedImageProvider) {
+    if (isLogin && lastSelectedImageModel && lastSelectedImageProvider) {
       try {
         const { defaultValues, parametersSchema, initialActiveRatio } = prepareModelConfigState(
           lastSelectedImageModel,
