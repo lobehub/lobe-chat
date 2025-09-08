@@ -30,6 +30,7 @@
     "error": "Hata",
     "info": "Bilgi",
     "loading": "Yükleniyor...",
+    "networkRetryTip": "Lütfen ağ bağlantınızı kontrol edin veya tekrar deneyin",
     "success": "Başarılı",
     "warning": "Uyarı"
   }

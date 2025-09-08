@@ -30,6 +30,7 @@
     "error": "錯誤",
     "info": "資訊",
     "loading": "載入中...",
+    "networkRetryTip": "請檢查網路連線或重試",
     "success": "成功",
     "warning": "警告"
   }

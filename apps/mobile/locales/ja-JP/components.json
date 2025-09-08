@@ -1,0 +1,10 @@
+{
+  "ModelSwitchPanel": {
+    "chooseModel": "モデルを選択",
+    "emptyModel": "有効なモデルがありません。設定で有効にしてください。",
+    "emptyProvider": "有効なプロバイダーがありません。設定で有効にしてください。",
+    "goToSettings": "設定へ移動",
+    "provider": "プロバイダー",
+    "title": "モデル"
+  }
+}
