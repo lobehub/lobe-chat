@@ -115,6 +115,9 @@ export const useStyles = createStyles((token) => ({
     marginBottom: token.marginLG,
   },
   providerHeader: {
+    flexDirection: 'row',
+    itemsAlign: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: token.padding,
     paddingVertical: token.paddingXS,
   },
