@@ -78,9 +78,9 @@ export function getModelAndDefaults(model: string, provider: string) {
 }
 
 /**
- * @internal
- * This function is exported only for testing purposes.
- * Do not use this function directly in application code.
+ * @internal Helper
+ * Internal utility to derive initial config for a given provider/model.
+ * Not exported; tests should cover through public actions.
  */
 function prepareModelConfigState(model: string, provider: string) {
   const { defaultValues, parametersSchema } = getModelAndDefaults(model, provider);
@@ -295,11 +295,14 @@ export const createGenerationConfigSlice: StateCreator<
       `setModelAndProviderOnSelect/${model}/${provider}`,
     );
 
-    // 保存用户选择到全局 status 中
-    useGlobalStore.getState().updateSystemStatus({
-      lastSelectedImageModel: model,
-      lastSelectedImageProvider: provider,
-    });
+    // 仅在登录用户下记忆上次选择，保持与恢复策略一致
+    const isLogin = authSelectors.isLogin(useUserStore.getState());
+    if (isLogin) {
+      useGlobalStore.getState().updateSystemStatus({
+        lastSelectedImageModel: model,
+        lastSelectedImageProvider: provider,
+      });
+    }
   },
 
   setImageNum: (imageNum) => {

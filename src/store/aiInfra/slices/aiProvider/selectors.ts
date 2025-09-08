@@ -12,8 +12,6 @@ const disabledAiProviderList = (s: AIProviderStoreState) =>
 
 const enabledImageModelList = (s: AIProviderStoreState) => s.enabledImageModelList || [];
 
-const isAiProviderListInited = (s: AIProviderStoreState) => !!s.initAiProviderList;
-
 const isProviderEnabled = (id: string) => (s: AIProviderStoreState) =>
   enabledAiProviderList(s).some((i) => i.id === id);
 
@@ -123,7 +121,6 @@ export const aiProviderSelectors = {
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
-  isAiProviderListInited,
   isInitAiProviderRuntimeState,
   isProviderConfigUpdating,
   isProviderEnableResponseApi,

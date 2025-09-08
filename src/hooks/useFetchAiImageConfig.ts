@@ -25,9 +25,11 @@ export const useFetchAiImageConfig = () => {
     [isStatusInit, isAuthLoaded, isInitAiProviderRuntimeState],
   );
 
-  // Get necessary initialization parameters
   const isLogin = useUserStore(authSelectors.isLogin);
-  const { lastSelectedImageModel, lastSelectedImageProvider } = useGlobalStore((s) => s.status);
+  const { lastSelectedImageModel, lastSelectedImageProvider } = useGlobalStore((s) => ({
+    lastSelectedImageModel: s.status.lastSelectedImageModel,
+    lastSelectedImageProvider: s.status.lastSelectedImageProvider,
+  }));
 
   const isInit = useImageStore((s) => s.isInit);
   const initializeImageConfig = useImageStore((s) => s.initializeImageConfig);
