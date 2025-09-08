@@ -29,15 +29,16 @@ const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const imageTopicPanelWidth = (s: GlobalState) => s.status.imageTopicPanelWidth;
 const wideScreen = (s: GlobalState) => s.status.wideScreen;
+const isStatusInit = (s: GlobalState) => !!s.isStatusInit;
 const isPgliteNotEnabled = (s: GlobalState) =>
-  isUsePgliteDB && !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
+  isUsePgliteDB && !isServerMode && isStatusInit(s) && !s.status.isEnablePglite;
 
 /**
  * 当且仅当 client db 模式，且 pglite 未初始化完成时返回 true
  */
 const isPgliteNotInited = (s: GlobalState) =>
   isUsePgliteDB &&
-  s.isStatusInit &&
+  isStatusInit(s) &&
   s.status.isEnablePglite &&
   s.initClientDBStage !== DatabaseLoadingState.Ready;
 
@@ -45,7 +46,7 @@ const isPgliteNotInited = (s: GlobalState) =>
  * 当且仅当 client db 模式，且 pglite 初始化完成时返回 true
  */
 const isPgliteInited = (s: GlobalState): boolean =>
-  (s.isStatusInit &&
+  (isStatusInit(s) &&
     s.status.isEnablePglite &&
     s.initClientDBStage === DatabaseLoadingState.Ready) ||
   false;
@@ -72,6 +73,7 @@ export const systemStatusSelectors = {
   isPgliteNotEnabled,
   isPgliteNotInited,
   isShowCredit,
+  isStatusInit,
   language,
   mobileShowPortal,
   mobileShowTopic,
