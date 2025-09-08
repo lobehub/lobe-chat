@@ -4,11 +4,11 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useGlobalStore } from '@/store/global';
 import Hydration from '@/features/Hydration';
 import TopicDrawer from '@/features/TopicDrawer';
-import ChatHeader from '@/features/chat/ChatHeader';
 import ChatInput from '@/features/chat/ChatInput';
 import ChatList from '@/features/chat/ChatList';
 import SideBar from '@/features/SideBar';
 import { useStyles } from './styles';
+import ChatHeader from '@/features/chat/ChatHeader';
 
 export default function ChatWithDrawer() {
   const { styles } = useStyles();
@@ -20,14 +20,14 @@ export default function ChatWithDrawer() {
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
       <SideBar>
+        <ChatHeader onDrawerToggle={toggleDrawer} />
         <TopicDrawer>
           <KeyboardAvoidingView
             behavior="padding"
             enabled
-            keyboardVerticalOffset={60}
+            keyboardVerticalOffset={110}
             style={{ flex: 1 }}
           >
-            <ChatHeader onDrawerToggle={toggleDrawer} />
             <ChatList />
             <ChatInput />
           </KeyboardAvoidingView>
