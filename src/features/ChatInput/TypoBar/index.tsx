@@ -13,7 +13,9 @@ import {
   LinkIcon,
   ListIcon,
   ListOrderedIcon,
+  ListTodoIcon,
   MessageSquareQuote,
+  SigmaIcon,
   SquareDashedBottomCodeIcon,
   StrikethroughIcon,
 } from 'lucide-react';
@@ -80,6 +82,15 @@ const TypoBar = memo(() => {
                 onClick: editorState.numberList,
               },
               {
+                icon: ListTodoIcon,
+                key: 'tasklist',
+                label: t('typobar.taskList'),
+                onClick: editorState.checkList,
+              },
+              {
+                type: 'divider',
+              },
+              {
                 active: editorState.isBlockquote,
                 icon: MessageSquareQuote,
                 key: 'blockquote',
@@ -94,6 +105,12 @@ const TypoBar = memo(() => {
               },
               {
                 type: 'divider',
+              },
+              {
+                icon: SigmaIcon,
+                key: 'math',
+                label: t('typobar.tex'),
+                onClick: editorState.insertMath,
               },
               {
                 active: editorState.isCode,

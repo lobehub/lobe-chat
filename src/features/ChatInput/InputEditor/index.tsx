@@ -3,13 +3,15 @@ import { HotkeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
   INSERT_TABLE_COMMAND,
+  ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
   ReactLinkPlugin,
   ReactListPlugin,
+  ReactMathPlugin,
   ReactTablePlugin,
 } from '@lobehub/editor';
-import { Editor, SlashMenu, useEditorState } from '@lobehub/editor/react';
+import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
 import { Table2Icon } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
@@ -21,11 +23,12 @@ import { preferenceSelectors } from '@/store/user/selectors';
 import { useChatInputStore, useStoreApi } from '../store';
 
 const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
-  const [editor, slashMenuRef, send, updateMarkdownContent] = useChatInputStore((s) => [
+  const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
     s.editor,
     s.slashMenuRef,
     s.handleSendButton,
     s.updateMarkdownContent,
+    s.expand,
   ]);
 
   const storeApi = useStoreApi();
@@ -101,9 +104,17 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       plugins={[
         ReactListPlugin,
         ReactLinkPlugin,
+        ReactCodePlugin,
         ReactCodeblockPlugin,
         ReactHRPlugin,
         ReactTablePlugin,
+        Editor.withProps(ReactMathPlugin, {
+          renderComp: expand
+            ? undefined
+            : (props) => (
+                <FloatMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
+              ),
+        }),
       ]}
       slashOption={{
         items: [
@@ -116,9 +127,13 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
             },
           },
         ],
-        renderComp: (props) => {
-          return <SlashMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />;
-        },
+        renderComp: expand
+          ? undefined
+          : (props) => {
+              return (
+                <SlashMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
+              );
+            },
       }}
       style={{
         minHeight: defaultRows > 1 ? defaultRows * 23 : undefined,
