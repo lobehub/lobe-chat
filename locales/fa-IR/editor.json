@@ -9,6 +9,8 @@
       "on": "نمایش نوار ابزار قالب‌بندی"
     }
   },
+  "cancel": "لغو",
+  "confirm": "تأیید",
   "file": {
     "error": "خطا: {{message}}",
     "uploading": "در حال بارگذاری فایل..."
@@ -21,6 +23,9 @@
     "open": "باز کردن پیوند",
     "placeholder": "آدرس URL پیوند را وارد کنید",
     "unlink": "حذف پیوند"
+  },
+  "math": {
+    "placeholder": "لطفاً فرمول TeX را وارد کنید"
   },
   "table": {
     "delete": "حذف جدول",
@@ -42,6 +47,8 @@
     "numberList": "فهرست شماره‌دار",
     "strikethrough": "خط خورده",
     "table": "درج جدول",
+    "taskList": "فهرست وظایف",
+    "tex": "فرمول TeX",
     "underline": "زیرخط"
   }
 }

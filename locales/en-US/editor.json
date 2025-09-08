@@ -9,6 +9,8 @@
       "on": "Show formatting toolbar"
     }
   },
+  "cancel": "Cancel",
+  "confirm": "Confirm",
   "file": {
     "error": "Error: {{message}}",
     "uploading": "Uploading file..."
@@ -21,6 +23,9 @@
     "open": "Open link",
     "placeholder": "Enter link URL",
     "unlink": "Unlink"
+  },
+  "math": {
+    "placeholder": "Please enter a TeX formula"
   },
   "table": {
     "delete": "Delete table",
@@ -42,6 +47,8 @@
     "numberList": "Numbered list",
     "strikethrough": "Strikethrough",
     "table": "Insert table",
+    "taskList": "Task List",
+    "tex": "TeX Formula",
     "underline": "Underline"
   }
 }
