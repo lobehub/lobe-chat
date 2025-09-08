@@ -14,6 +14,7 @@ export const useStyles = createStyles((token) => ({
     height: HEADER_HEIGHT,
     justifyContent: 'space-between',
     paddingHorizontal: token.paddingSM,
+    zIndex: 10,
   },
   headerActions: {
     alignItems: 'center',
