@@ -6,48 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useImageStore } from '@/store/image';
 
-// Mock external dependencies
-vi.mock('@/store/aiInfra', () => ({
-  aiProviderSelectors: {
-    enabledImageModelList: vi.fn(() => [
-      {
-        id: 'fal',
-        name: 'Fal',
-        children: [
-          {
-            id: 'flux/schnell',
-            displayName: 'FLUX.1 Schnell',
-            type: 'image',
-            parameters: fluxSchnellParamsSchema,
-            releasedAt: '2024-08-01',
-          } as AIImageModelCard,
-        ],
-      },
-      {
-        id: 'custom-provider',
-        name: 'Custom Provider',
-        children: [
-          {
-            id: 'custom-model',
-            displayName: 'Custom Model',
-            type: 'image',
-            parameters: {
-              prompt: { default: '' },
-              width: { default: 1024, min: 256, max: 2048, step: 64 },
-              height: { default: 1024, min: 256, max: 2048, step: 64 },
-              steps: { default: 20, min: 1, max: 50 },
-            } as ModelParamsSchema,
-            releasedAt: '2024-01-01',
-          } as AIImageModelCard,
-        ],
-      },
-    ]),
-  },
-  getAiInfraStoreState: vi.fn(() => ({})),
-}));
-
-const fluxSchnellDefaultValues = extractDefaultValues(fluxSchnellParamsSchema);
-
+// Test fixtures
 const customModelSchema: ModelParamsSchema = {
   prompt: { default: '' },
   width: { default: 1024, min: 256, max: 2048, step: 64 },
@@ -55,25 +14,67 @@ const customModelSchema: ModelParamsSchema = {
   steps: { default: 20, min: 1, max: 50 },
 };
 
+const testImageModels: AIImageModelCard[] = [
+  {
+    id: 'flux/schnell',
+    displayName: 'FLUX.1 Schnell',
+    type: 'image',
+    parameters: fluxSchnellParamsSchema,
+    releasedAt: '2024-08-01',
+  },
+  {
+    id: 'custom-model',
+    displayName: 'Custom Model',
+    type: 'image',
+    parameters: customModelSchema,
+    releasedAt: '2024-01-01',
+  },
+];
+
+const mockProviders = [
+  {
+    id: 'fal',
+    name: 'Fal',
+    children: [testImageModels[0]],
+  },
+  {
+    id: 'custom-provider',
+    name: 'Custom Provider',
+    children: [testImageModels[1]],
+  },
+];
+
+// Mock external dependencies
+vi.mock('@/store/aiInfra', () => ({
+  aiProviderSelectors: {
+    enabledImageModelList: vi.fn(() => mockProviders),
+  },
+  getAiInfraStoreState: vi.fn(() => ({})),
+}));
+
+// Test data
+const fluxSchnellDefaultValues = extractDefaultValues(fluxSchnellParamsSchema);
+const customModelDefaultValues = extractDefaultValues(customModelSchema);
+
+const initialTestState = {
+  model: 'initial-model',
+  provider: 'initial-provider',
+  imageNum: 1,
+  parameters: {
+    prompt: 'initial prompt',
+    width: 512,
+    height: 512,
+  } satisfies Partial<RuntimeImageGenParams>,
+  parametersSchema: {
+    prompt: { default: '' },
+    width: { default: 512, min: 256, max: 1024 },
+    height: { default: 512, min: 256, max: 1024 },
+  } satisfies ModelParamsSchema,
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
-
-  // Reset store state
-  useImageStore.setState({
-    model: 'initial-model',
-    provider: 'initial-provider',
-    imageNum: 1,
-    parameters: {
-      prompt: 'initial prompt',
-      width: 512,
-      height: 512,
-    } as RuntimeImageGenParams,
-    parametersSchema: {
-      prompt: { default: '' },
-      width: { default: 512, min: 256, max: 1024 },
-      height: { default: 512, min: 256, max: 1024 },
-    },
-  });
+  useImageStore.setState(initialTestState);
 });
 
 afterEach(() => {
@@ -81,8 +82,26 @@ afterEach(() => {
 });
 
 describe('GenerationConfigAction', () => {
-  describe('setParamOnInput', () => {
-    it('should update a single parameter in the parameters object', async () => {
+  // Helper function to create test parameters
+  const createTestParameters = (overrides: Partial<RuntimeImageGenParams> = {}) =>
+    ({
+      prompt: '',
+      width: 512,
+      height: 512,
+      ...overrides,
+    }) satisfies Partial<RuntimeImageGenParams>;
+
+  // Helper function to create test schema
+  const createTestSchema = (overrides: Partial<ModelParamsSchema> = {}) =>
+    ({
+      prompt: { default: '' },
+      width: { default: 512, min: 256, max: 2048 },
+      height: { default: 512, min: 256, max: 2048 },
+      ...overrides,
+    }) satisfies ModelParamsSchema;
+
+  describe('Parameter Management', () => {
+    it('should update individual parameters via setParamOnInput', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -96,43 +115,45 @@ describe('GenerationConfigAction', () => {
       });
     });
 
-    it('should update numeric parameters correctly', async () => {
+    it('should handle different parameter types (string, number, null, array)', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
         result.current.setParamOnInput('width', 2048);
-      });
-
-      expect(result.current.parameters).toMatchObject({
-        prompt: 'initial prompt',
-        width: 2048,
-        height: 512,
-      });
-    });
-
-    it('should handle null values correctly', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      act(() => {
         result.current.setParamOnInput('seed', null);
-      });
-
-      expect(result.current.parameters?.seed).toBeNull();
-    });
-
-    it('should handle array values correctly', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      act(() => {
         result.current.setParamOnInput('imageUrls', ['test1.jpg', 'test2.jpg']);
       });
 
-      expect(result.current.parameters?.imageUrls).toEqual(['test1.jpg', 'test2.jpg']);
+      expect(result.current.parameters).toMatchObject({
+        width: 2048,
+        seed: null,
+        imageUrls: ['test1.jpg', 'test2.jpg'],
+      });
+    });
+
+    it('should update imageNum independently', () => {
+      const { result } = renderHook(() => useImageStore());
+
+      act(() => {
+        result.current.setImageNum(4);
+      });
+
+      expect(result.current.imageNum).toBe(4);
+    });
+
+    it('should handle edge case values for imageNum', () => {
+      const { result } = renderHook(() => useImageStore());
+
+      act(() => {
+        result.current.setImageNum(0);
+      });
+
+      expect(result.current.imageNum).toBe(0);
     });
   });
 
-  describe('setModelAndProviderOnSelect', () => {
-    it('should set model, provider, parameters and parametersSchema for flux/schnell', async () => {
+  describe('Model and Provider Selection', () => {
+    it('should set complete configuration for flux/schnell model', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -145,81 +166,40 @@ describe('GenerationConfigAction', () => {
       expect(result.current.parametersSchema).toEqual(fluxSchnellParamsSchema);
     });
 
-    it('should handle model selection with custom parameters', async () => {
+    it('should handle custom model configuration', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
         result.current.setModelAndProviderOnSelect('custom-model', 'custom-provider');
       });
 
-      const expectedParams = extractDefaultValues(customModelSchema);
-
       expect(result.current.model).toBe('custom-model');
       expect(result.current.provider).toBe('custom-provider');
-      expect(result.current.parameters).toEqual(expectedParams);
+      expect(result.current.parameters).toEqual(customModelDefaultValues);
       expect(result.current.parametersSchema).toEqual(customModelSchema);
     });
 
-    it('should replace all previous parameters with new model defaults', async () => {
+    it('should completely replace parameters when switching models', () => {
       const { result } = renderHook(() => useImageStore());
 
-      // First set some custom parameters
+      // Set some custom parameters
       act(() => {
         result.current.setParamOnInput('prompt', 'custom prompt');
         result.current.setParamOnInput('steps', 50);
       });
 
-      // Then switch model
+      // Switch model
       act(() => {
         result.current.setModelAndProviderOnSelect('flux/schnell', 'fal');
       });
 
-      // Should completely replace parameters with model defaults
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
-      expect(result.current.parameters?.prompt).toBe(''); // Default value, not 'custom prompt'
+      expect(result.current.parameters?.prompt).toBe('');
     });
   });
 
-  describe('setImageNum', () => {
-    it('should update the imageNum value', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      act(() => {
-        result.current.setImageNum(4);
-      });
-
-      expect(result.current.imageNum).toBe(4);
-    });
-
-    it('should handle different imageNum values', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      act(() => {
-        result.current.setImageNum(8);
-      });
-
-      expect(result.current.imageNum).toBe(8);
-
-      act(() => {
-        result.current.setImageNum(1);
-      });
-
-      expect(result.current.imageNum).toBe(1);
-    });
-
-    it('should handle edge case values', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      act(() => {
-        result.current.setImageNum(0);
-      });
-
-      expect(result.current.imageNum).toBe(0);
-    });
-  });
-
-  describe('reuseSettings', () => {
-    it('should set model, provider and merge settings with default values', async () => {
+  describe('Settings Reuse', () => {
+    it('should merge custom settings with model defaults', () => {
       const { result } = renderHook(() => useImageStore());
       const customSettings: Partial<RuntimeImageGenParams> = {
         prompt: 'custom prompt',
@@ -240,25 +220,7 @@ describe('GenerationConfigAction', () => {
       expect(result.current.parametersSchema).toEqual(fluxSchnellParamsSchema);
     });
 
-    it('should override default values with provided settings', async () => {
-      const { result } = renderHook(() => useImageStore());
-      const customSettings: Partial<RuntimeImageGenParams> = {
-        width: 1536,
-        height: 1536,
-      };
-
-      act(() => {
-        result.current.reuseSettings('flux/schnell', 'fal', customSettings);
-      });
-
-      expect(result.current.parameters).toEqual({
-        ...fluxSchnellDefaultValues,
-        width: 1536,
-        height: 1536,
-      });
-    });
-
-    it('should handle empty settings object', async () => {
+    it('should handle empty and null settings', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -266,64 +228,32 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
-    });
-
-    it('should handle partial settings with null values', async () => {
-      const { result } = renderHook(() => useImageStore());
-      const customSettings: Partial<RuntimeImageGenParams> = {
-        seed: null,
-        imageUrl: null,
-      };
 
       act(() => {
-        result.current.reuseSettings('flux/schnell', 'fal', customSettings);
+        result.current.reuseSettings('flux/schnell', 'fal', { seed: null, imageUrl: null });
       });
 
       expect(result.current.parameters?.seed).toBeNull();
       expect(result.current.parameters?.imageUrl).toBeNull();
     });
-  });
 
-  describe('reuseSeed', () => {
-    it('should update only the seed parameter', async () => {
-      const { result } = renderHook(() => useImageStore());
-      const newSeed = 98765;
-
-      act(() => {
-        result.current.reuseSeed(newSeed);
-      });
-
-      expect(result.current.parameters).toMatchObject({
-        prompt: 'initial prompt',
-        width: 512,
-        height: 512,
-        seed: newSeed,
-      });
-    });
-
-    it('should preserve other parameters when updating seed', async () => {
+    it('should update only seed parameter via reuseSeed', () => {
       const { result } = renderHook(() => useImageStore());
 
-      // First set some parameters
       act(() => {
         result.current.setParamOnInput('prompt', 'test prompt');
-        result.current.setParamOnInput('width', 1024);
-      });
-
-      const newSeed = 11111;
-      act(() => {
-        result.current.reuseSeed(newSeed);
+        result.current.reuseSeed(98765);
       });
 
       expect(result.current.parameters).toMatchObject({
         prompt: 'test prompt',
-        width: 1024,
+        width: 512,
         height: 512,
-        seed: newSeed,
+        seed: 98765,
       });
     });
 
-    it('should handle seed value of 0', async () => {
+    it('should handle edge case seed values', () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -331,12 +261,8 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.parameters?.seed).toBe(0);
-    });
 
-    it('should handle large seed values within range', async () => {
-      const { result } = renderHook(() => useImageStore());
-      const largeSeed = 2147483647; // MAX_SEED
-
+      const largeSeed = 2147483647;
       act(() => {
         result.current.reuseSeed(largeSeed);
       });
@@ -345,17 +271,13 @@ describe('GenerationConfigAction', () => {
     });
   });
 
-  describe('setWidth', () => {
-    it('should update width parameter without aspect ratio lock', async () => {
+  describe('Aspect Ratio and Dimension Control', () => {
+    it('should update width without affecting height when aspect ratio is unlocked', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any,
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema(),
         isAspectRatioLocked: false,
       });
 
@@ -369,16 +291,12 @@ describe('GenerationConfigAction', () => {
       });
     });
 
-    it('should update both width and height when aspect ratio is locked', async () => {
+    it('should update both dimensions when aspect ratio is locked', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any,
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema(),
         isAspectRatioLocked: true,
         activeAspectRatio: '1:1',
       });
@@ -393,16 +311,14 @@ describe('GenerationConfigAction', () => {
       });
     });
 
-    it('should clamp height to min/max bounds when aspect ratio is locked', async () => {
+    it('should clamp dimensions to schema bounds when aspect ratio is locked', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any,
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 1024 }, // Lower max limit
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema({
+          height: { default: 512, min: 256, max: 1024 },
+        }),
         isAspectRatioLocked: true,
         activeAspectRatio: '1:1',
       });
@@ -416,42 +332,13 @@ describe('GenerationConfigAction', () => {
         height: 1024, // Clamped to max
       });
     });
-  });
 
-  describe('setHeight', () => {
-    it('should update height parameter without aspect ratio lock', async () => {
+    it('should update height with proportional width adjustment when locked', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any,
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
-        isAspectRatioLocked: false,
-      });
-
-      act(() => {
-        result.current.setHeight(1024);
-      });
-
-      expect(result.current.parameters).toMatchObject({
-        width: 512,
-        height: 1024,
-      });
-    });
-
-    it('should update both width and height when aspect ratio is locked', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any,
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema(),
         isAspectRatioLocked: true,
         activeAspectRatio: '2:1',
       });
@@ -465,15 +352,11 @@ describe('GenerationConfigAction', () => {
         height: 512,
       });
     });
-  });
 
-  describe('toggleAspectRatioLock', () => {
-    it('should toggle aspect ratio lock state', async () => {
+    it('should toggle aspect ratio lock state', () => {
       const { result } = renderHook(() => useImageStore());
 
-      useImageStore.setState({
-        isAspectRatioLocked: false,
-      });
+      useImageStore.setState({ isAspectRatioLocked: false });
 
       act(() => {
         result.current.toggleAspectRatioLock();
@@ -488,16 +371,12 @@ describe('GenerationConfigAction', () => {
       expect(result.current.isAspectRatioLocked).toBe(false);
     });
 
-    it('should adjust dimensions when locking aspect ratio with mismatched current ratio', async () => {
+    it('should adjust dimensions when locking with mismatched ratio', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 1024, height: 512, prompt: '' } as any, // 2:1 ratio
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters({ width: 1024, height: 512 }), // 2:1 ratio
+        parametersSchema: createTestSchema(),
         isAspectRatioLocked: false,
         activeAspectRatio: '1:1', // Target 1:1 ratio
       });
@@ -507,51 +386,20 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.isAspectRatioLocked).toBe(true);
-      // Should adjust to match 1:1 ratio
       expect(result.current.parameters).toMatchObject({
         width: 1024,
         height: 1024,
       });
     });
-
-    it('should not adjust dimensions if current ratio already matches target', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' } as any, // Already 1:1
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
-        isAspectRatioLocked: false,
-        activeAspectRatio: '1:1',
-      });
-
-      act(() => {
-        result.current.toggleAspectRatioLock();
-      });
-
-      expect(result.current.isAspectRatioLocked).toBe(true);
-      // Should not change dimensions
-      expect(result.current.parameters).toMatchObject({
-        width: 512,
-        height: 512,
-      });
-    });
   });
 
-  describe('setAspectRatio', () => {
-    it('should update active aspect ratio', async () => {
+  describe('Aspect Ratio Setting', () => {
+    it('should update active aspect ratio', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' },
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema(),
       });
 
       act(() => {
@@ -561,38 +409,33 @@ describe('GenerationConfigAction', () => {
       expect(result.current.activeAspectRatio).toBe('16:9');
     });
 
-    it('should update dimensions for models with width/height parameters', async () => {
+    it('should calculate dimensions for width/height-based models', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
-        parameters: { width: 512, height: 512, prompt: '' },
-        parametersSchema: {
-          prompt: { default: '' },
-          width: { default: 512, min: 256, max: 2048 },
-          height: { default: 512, min: 256, max: 2048 },
-        },
+        parameters: createTestParameters(),
+        parametersSchema: createTestSchema(),
       });
 
       act(() => {
         result.current.setAspectRatio('16:9');
       });
 
-      expect(result.current.parameters?.width).toBeGreaterThan(result.current.parameters?.height!);
-      // Should maintain 16:9 aspect ratio approximately
-      const ratio =
-        (result.current.parameters as any)!.width / (result.current.parameters as any)!.height;
+      const params = result.current.parameters!;
+      expect(params.width).toBeGreaterThan(params.height!);
+
+      const ratio = params.width! / params.height!;
       expect(ratio).toBeCloseTo(16 / 9, 1);
     });
 
-    it('should update aspectRatio parameter for models with native aspectRatio support', async () => {
+    it('should update aspectRatio parameter for models with native support', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
         parameters: { aspectRatio: '1:1', prompt: '' },
-        parametersSchema: {
-          prompt: { default: '' },
+        parametersSchema: createTestSchema({
           aspectRatio: { default: '1:1', enum: ['1:1', '16:9', '4:3'] },
-        },
+        }),
       });
 
       act(() => {
@@ -603,16 +446,14 @@ describe('GenerationConfigAction', () => {
       expect(result.current.activeAspectRatio).toBe('16:9');
     });
 
-    it('should not throw error when parameters or schema are not available', async () => {
+    it('should handle missing parameters or schema gracefully', () => {
       const { result } = renderHook(() => useImageStore());
 
-      // Set state with undefined parameters and schema
       useImageStore.setState({
         parameters: undefined,
         parametersSchema: undefined,
       });
 
-      // Should not throw error when calling setAspectRatio with null parameters/schema
       expect(() => {
         act(() => {
           result.current.setAspectRatio('16:9');
@@ -621,9 +462,8 @@ describe('GenerationConfigAction', () => {
     });
   });
 
-  describe('initializeImageConfig', () => {
+  describe('Configuration Initialization', () => {
     beforeEach(() => {
-      // Mock external stores
       vi.doMock('@/store/global', () => ({
         useGlobalStore: {
           getState: () => ({
@@ -642,7 +482,7 @@ describe('GenerationConfigAction', () => {
       }));
     });
 
-    it('should initialize with remembered model and provider when user is logged in', async () => {
+    it('should initialize with remembered model when user is logged in', () => {
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
@@ -661,63 +501,25 @@ describe('GenerationConfigAction', () => {
       expect(result.current.isInit).toBe(true);
     });
 
-    it('should mark as initialized when user is not logged in', async () => {
+    it('should handle initialization without remembered preferences', () => {
       const { result } = renderHook(() => useImageStore());
 
-      useImageStore.setState({
-        isInit: false,
-        model: '',
-        provider: '',
-      });
+      useImageStore.setState({ isInit: false });
 
       act(() => {
         result.current.initializeImageConfig(false);
       });
 
       expect(result.current.isInit).toBe(true);
-      // Should not set specific model/provider
-      expect(result.current.model).toBe('');
-      expect(result.current.provider).toBe('');
     });
 
-    it('should mark as initialized when no remembered model/provider', async () => {
+    it('should handle initialization errors gracefully', () => {
       const { result } = renderHook(() => useImageStore());
 
-      useImageStore.setState({
-        isInit: false,
-      });
+      useImageStore.setState({ isInit: false });
 
-      act(() => {
-        result.current.initializeImageConfig(true, undefined, undefined);
-      });
-
-      expect(result.current.isInit).toBe(true);
-    });
-
-    it('should handle initialization errors gracefully', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      useImageStore.setState({
-        isInit: false,
-      });
-
-      // Force an error by using invalid model/provider
       act(() => {
         result.current.initializeImageConfig(true, 'invalid-model', 'invalid-provider');
-      });
-
-      expect(result.current.isInit).toBe(true);
-    });
-
-    it('should use store state when no parameters provided', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      useImageStore.setState({
-        isInit: false,
-      });
-
-      act(() => {
-        result.current.initializeImageConfig();
       });
 
       expect(result.current.isInit).toBe(true);

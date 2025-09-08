@@ -3,213 +3,146 @@ import { describe, expect, it } from 'vitest';
 
 import { calculateInitialAspectRatio, supportsVirtualAspectRatio } from './aspectRatio';
 
+// Test data fixtures
+const createBaseSchema = (overrides: Partial<ModelParamsSchema> = {}): ModelParamsSchema => ({
+  prompt: { default: '' },
+  ...overrides,
+});
+
+const createDimensionSchema = (overrides: Partial<ModelParamsSchema> = {}): ModelParamsSchema =>
+  createBaseSchema({
+    width: { default: 512, min: 256, max: 2048 },
+    height: { default: 512, min: 256, max: 2048 },
+    ...overrides,
+  });
+
+const createDefaultValues = (values: Record<string, any> = {}) => ({
+  prompt: '',
+  ...values,
+});
+
 describe('aspectRatio utils', () => {
   describe('calculateInitialAspectRatio', () => {
-    it('should return null for models with native aspectRatio parameter', () => {
-      const schema: ModelParamsSchema = {
+    it('should return null when native aspect controls are present', () => {
+      // Models with native aspectRatio parameter
+      const aspectRatioSchema = createBaseSchema({
         aspectRatio: { default: '1:1', enum: ['1:1', '16:9', '4:3'] },
-        prompt: { default: '' },
-      };
-      const defaultValues = { aspectRatio: '1:1', prompt: '' };
+      });
+      const aspectRatioValues = createDefaultValues({ aspectRatio: '1:1' });
 
-      const result = calculateInitialAspectRatio(schema, defaultValues);
+      expect(calculateInitialAspectRatio(aspectRatioSchema, aspectRatioValues)).toBeNull();
 
-      expect(result).toBeNull();
-    });
-
-    it('should return null for models with native size parameter', () => {
-      const schema: ModelParamsSchema = {
+      // Models with native size parameter
+      const sizeSchema = createBaseSchema({
         size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
-        prompt: { default: '' },
-      };
-      const defaultValues = { size: '1024x1024', prompt: '' };
+      });
+      const sizeValues = createDefaultValues({ size: '1024x1024' });
 
-      const result = calculateInitialAspectRatio(schema, defaultValues);
-
-      expect(result).toBeNull();
+      expect(calculateInitialAspectRatio(sizeSchema, sizeValues)).toBeNull();
     });
 
     it('should return null when width or height parameters are missing', () => {
-      const schemaWithoutWidth: ModelParamsSchema = {
+      const schemaWithoutWidth = createBaseSchema({
         height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-      const defaultValuesWithoutWidth = { height: 512, prompt: '' };
+      });
+      const valuesWithoutWidth = createDefaultValues({ height: 512 });
 
-      const result = calculateInitialAspectRatio(schemaWithoutWidth, defaultValuesWithoutWidth);
+      expect(calculateInitialAspectRatio(schemaWithoutWidth, valuesWithoutWidth)).toBeNull();
 
-      expect(result).toBeNull();
-
-      const schemaWithoutHeight: ModelParamsSchema = {
+      const schemaWithoutHeight = createBaseSchema({
         width: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-      const defaultValuesWithoutHeight = { width: 512, prompt: '' };
+      });
+      const valuesWithoutHeight = createDefaultValues({ width: 512 });
 
-      const result2 = calculateInitialAspectRatio(schemaWithoutHeight, defaultValuesWithoutHeight);
-
-      expect(result2).toBeNull();
+      expect(calculateInitialAspectRatio(schemaWithoutHeight, valuesWithoutHeight)).toBeNull();
     });
 
     it('should calculate aspect ratio from width and height values', () => {
-      const schema: ModelParamsSchema = {
+      const schema = createDimensionSchema({
         width: { default: 1024, min: 256, max: 2048 },
         height: { default: 768, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-      const defaultValues = { width: 1024, height: 768, prompt: '' };
+      });
+      const values = createDefaultValues({ width: 1024, height: 768 });
 
-      const result = calculateInitialAspectRatio(schema, defaultValues);
-
-      expect(result).toBe('1024:768');
+      expect(calculateInitialAspectRatio(schema, values)).toBe('1024:768');
     });
 
-    it('should return 1:1 for square dimensions', () => {
-      const schema: ModelParamsSchema = {
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-      const defaultValues = { width: 512, height: 512, prompt: '' };
+    it('should handle square dimensions correctly', () => {
+      const schema = createDimensionSchema();
+      const values = createDefaultValues({ width: 512, height: 512 });
 
-      const result = calculateInitialAspectRatio(schema, defaultValues);
-
-      expect(result).toBe('512:512');
+      expect(calculateInitialAspectRatio(schema, values)).toBe('512:512');
     });
 
-    it('should return default fallback ratio when width/height values are invalid', () => {
-      const schema: ModelParamsSchema = {
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
+    it('should return fallback ratio for invalid dimension values', () => {
+      const schema = createDimensionSchema();
 
-      // Test with NaN values
-      const invalidValues = { width: NaN, height: NaN, prompt: '' };
-      const result = calculateInitialAspectRatio(schema, invalidValues);
-      expect(result).toBe('1:1');
+      // Invalid values should fallback to 1:1
+      const testCases = [
+        { width: NaN, height: NaN },
+        { width: 0, height: 512 },
+        { width: -512, height: 512 },
+        { height: 512 }, // missing width
+        { width: 512 }, // missing height
+      ];
 
-      // Test with zero values
-      const zeroValues = { width: 0, height: 512, prompt: '' };
-      const result2 = calculateInitialAspectRatio(schema, zeroValues);
-      expect(result2).toBe('1:1');
-
-      // Test with negative values
-      const negativeValues = { width: -512, height: 512, prompt: '' };
-      const result3 = calculateInitialAspectRatio(schema, negativeValues);
-      expect(result3).toBe('1:1');
-    });
-
-    it('should handle missing width or height in default values', () => {
-      const schema: ModelParamsSchema = {
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-
-      const valuesWithoutWidth = { height: 512, prompt: '' };
-      const result = calculateInitialAspectRatio(schema, valuesWithoutWidth);
-      expect(result).toBe('1:1');
-
-      const valuesWithoutHeight = { width: 512, prompt: '' };
-      const result2 = calculateInitialAspectRatio(schema, valuesWithoutHeight);
-      expect(result2).toBe('1:1');
+      testCases.forEach((testCase) => {
+        const values = createDefaultValues(testCase);
+        expect(calculateInitialAspectRatio(schema, values)).toBe('1:1');
+      });
     });
   });
 
   describe('supportsVirtualAspectRatio', () => {
-    it('should return true for models with width and height but no native aspect ratio controls', () => {
-      const schema: ModelParamsSchema = {
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
+    it('should return true for models with width/height but no native aspect controls', () => {
+      const schema = createDimensionSchema();
 
-      const result = supportsVirtualAspectRatio(schema);
-
-      expect(result).toBe(true);
+      expect(supportsVirtualAspectRatio(schema)).toBe(true);
     });
 
-    it('should return false for models with native aspectRatio parameter', () => {
-      const schema: ModelParamsSchema = {
+    it('should return false when native aspect controls are present', () => {
+      // Schema with native aspectRatio parameter
+      const aspectRatioSchema = createDimensionSchema({
         aspectRatio: { default: '1:1', enum: ['1:1', '16:9', '4:3'] },
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
+      });
 
-      const result = supportsVirtualAspectRatio(schema);
+      expect(supportsVirtualAspectRatio(aspectRatioSchema)).toBe(false);
 
-      expect(result).toBe(false);
-    });
-
-    it('should return false for models with native size parameter', () => {
-      const schema: ModelParamsSchema = {
+      // Schema with native size parameter
+      const sizeSchema = createDimensionSchema({
         size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
+      });
 
-      const result = supportsVirtualAspectRatio(schema);
+      expect(supportsVirtualAspectRatio(sizeSchema)).toBe(false);
 
-      expect(result).toBe(false);
-    });
-
-    it('should return false when width parameter is missing', () => {
-      const schema: ModelParamsSchema = {
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-
-      const result = supportsVirtualAspectRatio(schema);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when height parameter is missing', () => {
-      const schema: ModelParamsSchema = {
-        width: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
-
-      const result = supportsVirtualAspectRatio(schema);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when both width and height parameters are missing', () => {
-      const schema: ModelParamsSchema = {
-        prompt: { default: '' },
-      };
-
-      const result = supportsVirtualAspectRatio(schema);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false for models with both aspectRatio and size parameters', () => {
-      const schema: ModelParamsSchema = {
+      // Schema with both aspectRatio and size parameters
+      const bothSchema = createDimensionSchema({
         aspectRatio: { default: '1:1', enum: ['1:1', '16:9', '4:3'] },
         size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-        prompt: { default: '' },
-      };
+      });
 
-      const result = supportsVirtualAspectRatio(schema);
-
-      expect(result).toBe(false);
+      expect(supportsVirtualAspectRatio(bothSchema)).toBe(false);
     });
 
-    it('should handle empty schema', () => {
-      const schema: ModelParamsSchema = {
-        prompt: { default: '' },
-      };
+    it('should return false when required dimension parameters are missing', () => {
+      // Missing width parameter
+      const schemaWithoutWidth = createBaseSchema({
+        height: { default: 512, min: 256, max: 2048 },
+      });
 
-      const result = supportsVirtualAspectRatio(schema);
+      expect(supportsVirtualAspectRatio(schemaWithoutWidth)).toBe(false);
 
-      expect(result).toBe(false);
+      // Missing height parameter
+      const schemaWithoutHeight = createBaseSchema({
+        width: { default: 512, min: 256, max: 2048 },
+      });
+
+      expect(supportsVirtualAspectRatio(schemaWithoutHeight)).toBe(false);
+
+      // Missing both width and height parameters
+      const emptySchema = createBaseSchema();
+
+      expect(supportsVirtualAspectRatio(emptySchema)).toBe(false);
     });
   });
 });
