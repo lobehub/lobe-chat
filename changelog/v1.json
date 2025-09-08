@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-08",
+    "version": "1.126.0"
+  },
+  {
     "children": {
       "features": ["Add Math and TaskList to Editor."]
     },
