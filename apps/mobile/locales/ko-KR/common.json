@@ -30,6 +30,7 @@
     "error": "오류",
     "info": "정보",
     "loading": "로딩 중...",
+    "networkRetryTip": "네트워크 연결을 확인하거나 다시 시도해 주세요",
     "success": "성공",
     "warning": "경고"
   }
