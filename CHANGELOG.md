@@ -2,6 +2,73 @@
 
 # Changelog
 
+## [Version&nbsp;1.124.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.123.0...v1.124.0)
+<sup>Released on **2025-09-08**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to remove edge runtime and add more tests, remove edge runtime.
+
+
+#### ✨ Features
+
+- **misc**: ChatInput support rich text and support parallel send.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Enhance NewAPI with environment variables and fix routers compatibility, fix ChatInput send command switch, revert V1 Mobile.
+
+
+#### 💄 Styles
+
+- **misc**: Update doubao-seed-1.6-vision models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor to remove edge runtime and add more tests, closes [#9133](https://github.com/jaworldwideorg/OneJA-Bot/issues/9133) ([6f87034](https://github.com/jaworldwideorg/OneJA-Bot/commit/6f87034))
+* **misc**: Remove edge runtime, closes [#9085](https://github.com/jaworldwideorg/OneJA-Bot/issues/9085) ([d3544f9](https://github.com/jaworldwideorg/OneJA-Bot/commit/d3544f9))
+
+
+
+#### What's improved
+
+* **misc**: ChatInput support rich text and support parallel send, closes [#8964](https://github.com/jaworldwideorg/OneJA-Bot/issues/8964) ([38d9d98](https://github.com/jaworldwideorg/OneJA-Bot/commit/38d9d98))
+
+
+
+#### What's fixed
+
+* **misc**: Enhance NewAPI with environment variables and fix routers compatibility, closes [#9110](https://github.com/jaworldwideorg/OneJA-Bot/issues/9110) ([a66856d](https://github.com/jaworldwideorg/OneJA-Bot/commit/a66856d))
+* **misc**: Fix ChatInput send command switch, closes [#9131](https://github.com/jaworldwideorg/OneJA-Bot/issues/9131) ([4d5246a](https://github.com/jaworldwideorg/OneJA-Bot/commit/4d5246a))
+* **misc**: Revert V1 Mobile, closes [#9143](https://github.com/jaworldwideorg/OneJA-Bot/issues/9143) ([b385602](https://github.com/jaworldwideorg/OneJA-Bot/commit/b385602))
+
+
+
+#### Styles
+
+* **misc**: Update doubao-seed-1.6-vision models, closes [#9052](https://github.com/jaworldwideorg/OneJA-Bot/issues/9052) ([df2d001](https://github.com/jaworldwideorg/OneJA-Bot/commit/df2d001))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.124.4](https://github.com/lobehub/lobe-chat/compare/v1.124.3...v1.124.4)
 
 <sup>Released on **2025-09-06**</sup>
