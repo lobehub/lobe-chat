@@ -16,7 +16,7 @@ config.resolver.nodeModulesPaths = [
 
 config.resolver.extraNodeModules = {
   ...config.resolver.extraNodeModules,
-  '@types': path.resolve(__dirname, '../../packages/types/src'),
+  '@lobechat/types': path.resolve(__dirname, '../../packages/types/src'),
 };
 
 // Handle devlop package ESM exports
