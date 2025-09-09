@@ -1,7 +1,7 @@
 export const imageToBase64 = ({
   size,
   img,
-  type = 'image/webp',
+  type = 'image/png',
 }: {
   img: HTMLImageElement;
   size: number;
@@ -44,15 +44,8 @@ export const imageUrlToBase64 = async (
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
 
-    const base64 =
-      typeof btoa === 'function'
-        ? btoa(
-            new Uint8Array(arrayBuffer).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          )
-        : Buffer.from(arrayBuffer).toString('base64');
+    // Use binary-safe base64 encoding
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
 
     return { base64, mimeType: blob.type };
   } catch (error) {

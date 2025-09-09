@@ -1,4 +1,4 @@
-const compressImage = ({ img, type = 'image/webp' }: { img: HTMLImageElement; type?: string }) => {
+const compressImage = ({ img, type = 'image/png' }: { img: HTMLImageElement; type?: string }) => {
   // 设置最大宽高
   const maxWidth = 2160;
   const maxHeight = 2160;
