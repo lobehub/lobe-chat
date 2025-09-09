@@ -1,5 +1,7 @@
 apiVersion: 1
 
+prune: true
+
 datasources:
   - name: Tempo
     type: tempo
@@ -12,9 +14,3 @@ datasources:
     editable: false
     apiVersion: 1
     uid: tempo
-    jsonData:
-      httpMethod: GET
-      serviceMap:
-        datasourceUid: prometheus
-      streamingEnabled:
-        search: true

@@ -1,5 +1,7 @@
 apiVersion: 1
 
+prune: true
+
 datasources:
   - name: Prometheus
     type: prometheus
@@ -11,5 +13,3 @@ datasources:
     isDefault: false
     version: 1
     editable: false
-    jsonData:
-      httpMethod: GET
