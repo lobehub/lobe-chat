@@ -3,6 +3,19 @@ import { AIChatModelCard } from '../types/aiModel';
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 4096,
+    displayName: 'Qwen MT Plus',
+    id: 'qwen/qwen-mt-plus',
+    maxOutput: 2048,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
     abilities: {
       functionCall: true,
     },
@@ -46,8 +59,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-coder-480b-a35b-instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -79,6 +92,23 @@ const novitaChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 16_000,
+    displayName: 'GLM-4.5V',
+    id: 'zai-org/glm-4.5v',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -770,7 +800,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     displayName: 'Qwen2.5 VL 72B Instruct',
-    enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
     pricing: {
       units: [

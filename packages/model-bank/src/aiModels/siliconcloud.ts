@@ -50,6 +50,25 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-mini-2.0 是一款基于 MoE 架构的小尺寸高性能大语言模型。它拥有 16B 总参数，但每个 token 仅激活 1.4B（non-embedding 789M），从而实现了极高的生成速度。得益于高效的 MoE 设计与大规模高质量训练数据，尽管激活参数仅为 1.4B，Ling-mini-2.0 依然在下游任务中展现出可媲美 10B 以下 dense LLM 及更大规模 MoE 模型的顶尖性能',
+    displayName: 'Ling Mini 2.0',
+    id: 'inclusionAI/Ling-mini-2.0',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 256_000,
