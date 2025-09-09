@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix Assistant List error message."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.1"
+  },
+  {
     "children": {},
     "date": "2025-09-08",
     "version": "1.126.0"
