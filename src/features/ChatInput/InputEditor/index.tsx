@@ -1,5 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { HotkeyEnum } from '@lobechat/types';
+import { HotkeyEnum, KeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
   INSERT_TABLE_COMMAND,
@@ -12,13 +12,15 @@ import {
   ReactTablePlugin,
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
+import { Hotkey, combineKeys } from '@lobehub/ui';
 import { Table2Icon } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
+import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
 
@@ -32,14 +34,17 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
   ]);
 
   const storeApi = useStoreApi();
-
   const state = useEditorState(editor);
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
   const { enableScope, disableScope } = useHotkeysContext();
   const { t } = useTranslation(['editor', 'chat']);
 
   const isChineseInput = useRef(false);
 
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
+  const wrapperShortcut = useCmdEnterToSend
+    ? KeyEnum.Enter
+    : combineKeys([KeyEnum.Mod, KeyEnum.Enter]);
 
   useEffect(() => {
     const fn = (e: BeforeUnloadEvent) => {
@@ -91,16 +96,44 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       }}
       onInit={(editor) => storeApi.setState({ editor })}
       onPressEnter={({ event: e }) => {
-        if (e.altKey || e.shiftKey || isChineseInput.current) return;
+        if (e.shiftKey || isChineseInput.current) return;
+        // when user like alt + enter to add ai message
+        if (e.altKey && hotkey === combineKeys([KeyEnum.Alt, KeyEnum.Enter])) return true;
         const commandKey = isCommandPressed(e);
         // when user like cmd + enter to send message
         if (useCmdEnterToSend) {
-          if (commandKey) send();
+          if (commandKey) {
+            send();
+            return true;
+          }
         } else {
-          if (!commandKey) send();
+          if (!commandKey) {
+            send();
+            return true;
+          }
         }
       }}
-      placeholder={t('sendPlaceholder', { ns: 'chat' })}
+      placeholder={
+        <Flexbox align={'center'} gap={4} horizontal>
+          {t('sendPlaceholder', { ns: 'chat' }).replace('...', ', ')}
+          <Trans
+            as={'div'}
+            components={{
+              key: (
+                <Hotkey
+                  keys={wrapperShortcut}
+                  style={{ color: 'inherit' }}
+                  styles={{ kbdStyle: { color: 'inhert' } }}
+                  variant={'borderless'}
+                />
+              ),
+            }}
+            i18nKey={'input.warpWithKey'}
+            ns={'chat'}
+          />
+          {'...'}
+        </Flexbox>
+      }
       plugins={[
         ReactListPlugin,
         ReactLinkPlugin,

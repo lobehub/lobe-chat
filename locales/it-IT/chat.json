@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Premi <key/> per inviare",
     "sendWithEnter": "Premi <key/> per inviare",
     "stop": "Ferma",
-    "warp": "A capo"
+    "warp": "A capo",
+    "warpWithKey": "Vai a capo premendo il tasto <key/>"
   },
   "intentUnderstanding": {
     "title": "Stiamo comprendendo e analizzando la tua intenzione..."

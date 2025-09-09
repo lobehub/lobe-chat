@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Drücken Sie <key/>, um zu senden",
     "sendWithEnter": "Drücken Sie <key/>, um zu senden",
     "stop": "Stoppen",
-    "warp": "Zeilenumbruch"
+    "warp": "Zeilenumbruch",
+    "warpWithKey": "Mit der Taste <key/> umbrechen"
   },
   "intentUnderstanding": {
     "title": "Verstehe und analysiere gerade Ihre Absicht..."

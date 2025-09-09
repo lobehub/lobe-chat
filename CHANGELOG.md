@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.126.2](https://github.com/lobehub/lobe-chat/compare/v1.126.1...v1.126.2)
+
+<sup>Released on **2025-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix editor key handling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix editor key handling, closes [#9189](https://github.com/lobehub/lobe-chat/issues/9189) ([8be822b](https://github.com/lobehub/lobe-chat/commit/8be822b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.126.1](https://github.com/lobehub/lobe-chat/compare/v1.126.0...v1.126.1)
 
 <sup>Released on **2025-09-09**</sup>

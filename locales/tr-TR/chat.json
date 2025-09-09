@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "<key/> tuşuna basarak gönder",
     "sendWithEnter": "<key/> tuşuna basarak gönder",
     "stop": "Dur",
-    "warp": "Satır atla"
+    "warp": "Satır atla",
+    "warpWithKey": "<key/> tuşuna basarak satır sonu yap"
   },
   "intentUnderstanding": {
     "title": "Niyetinizi anlama ve analiz etme aşamasındayız..."
