@@ -9,6 +9,8 @@
       "on": "顯示格式工具列"
     }
   },
+  "cancel": "取消",
+  "confirm": "確認",
   "file": {
     "error": "錯誤：{{message}}",
     "uploading": "正在上傳檔案..."
@@ -21,6 +23,9 @@
     "open": "開啟連結",
     "placeholder": "輸入連結 URL",
     "unlink": "取消連結"
+  },
+  "math": {
+    "placeholder": "請輸入 TeX 公式"
   },
   "table": {
     "delete": "刪除表格",
@@ -42,6 +47,8 @@
     "numberList": "有序清單",
     "strikethrough": "刪除線",
     "table": "插入表格",
+    "taskList": "任務列表",
+    "tex": "TeX 公式",
     "underline": "底線"
   }
 }
