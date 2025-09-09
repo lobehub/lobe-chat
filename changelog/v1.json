@@ -1,6 +1,46 @@
 [
   {
     "children": {
+      "fixes": ["Fix Assistant List error message."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.1"
+  },
+  {
+    "children": {},
+    "date": "2025-09-08",
+    "version": "1.126.0"
+  },
+  {
+    "children": {
+      "features": ["Add Math and TaskList to Editor."]
+    },
+    "date": "2025-09-08",
+    "version": "1.125.0"
+  },
+  {
+    "children": {
+      "fixes": ["Revert V1 Mobile."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to remove edge runtime and add more tests."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ChatInput send command switch."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.2"
+  },
+  {
+    "children": {
       "fixes": ["Enhance NewAPI with environment variables and fix routers compatibility."],
       "improvements": ["Update doubao-seed-1.6-vision models."]
     },

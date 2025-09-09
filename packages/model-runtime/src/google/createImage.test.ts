@@ -2,8 +2,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CreateImagePayload } from '@/libs/model-runtime/types/image';
-
+import { CreateImagePayload } from '../types/image';
 import * as imageToBase64Module from '../utils/imageToBase64';
 import { createGoogleImage } from './createImage';
 

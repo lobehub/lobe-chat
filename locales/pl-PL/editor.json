@@ -9,6 +9,8 @@
       "on": "Pokaż pasek narzędzi formatowania"
     }
   },
+  "cancel": "Anuluj",
+  "confirm": "Potwierdź",
   "file": {
     "error": "Błąd: {{message}}",
     "uploading": "Przesyłanie pliku..."
@@ -21,6 +23,9 @@
     "open": "Otwórz link",
     "placeholder": "Wpisz adres URL linku",
     "unlink": "Usuń link"
+  },
+  "math": {
+    "placeholder": "Wprowadź formułę TeX"
   },
   "table": {
     "delete": "Usuń tabelę",
@@ -42,6 +47,8 @@
     "numberList": "Lista numerowana",
     "strikethrough": "Przekreślenie",
     "table": "Wstaw tabelę",
+    "taskList": "Lista zadań",
+    "tex": "Formuła TeX",
     "underline": "Podkreślenie"
   }
 }

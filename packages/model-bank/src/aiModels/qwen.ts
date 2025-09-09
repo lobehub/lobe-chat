@@ -604,6 +604,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     config: {
       deploymentName: 'qwen3-max-preview',
@@ -661,6 +662,9 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-05',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {

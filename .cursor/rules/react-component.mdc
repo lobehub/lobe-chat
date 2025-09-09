@@ -9,6 +9,7 @@ alwaysApply: false
 - 如果要写复杂样式的话用 antd-style ，简单的话可以用 style 属性直接写内联样式
 - 如果需要 flex 布局或者居中布局应该使用 react-layout-kit 的 Flexbox 和 Center 组件
 - 选择组件时优先顺序应该是 src/components > 安装的组件 package > lobe-ui > antd
+- 使用 selector 访问 zustand store 的数据，而不是直接从 store 获取
 
 ## antd-style token system
 

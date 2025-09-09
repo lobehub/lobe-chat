@@ -1,20 +1,19 @@
+import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID, MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { parseToolCalls } from '@lobechat/model-runtime';
-import { ChatErrorType } from '@lobechat/types';
-
-import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { ResponseAnimation, ResponseAnimationStyle } from '@lobechat/types';
 import {
+  ChatErrorType,
+  ChatImageChunk,
   ChatMessageError,
+  GroundingSearch,
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
   ModelSpeed,
   ModelTokensUsage,
-} from '@/types/message';
-import { ChatImageChunk } from '@/types/message/image';
-import { GroundingSearch } from '@/types/search';
+  ResponseAnimation,
+  ResponseAnimationStyle,
+} from '@lobechat/types';
 
 import { nanoid } from '../uuid';
 import { fetchEventSource } from './fetchEventSource';
