@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Presiona <key/> para enviar",
     "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
-    "warp": "Salto de línea"
+    "warp": "Salto de línea",
+    "warpWithKey": "Presione la tecla <key/> para hacer un salto de línea"
   },
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
