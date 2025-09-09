@@ -12,7 +12,6 @@ export const clientEncodeAsync = (str: string): Promise<number> =>
     const worker = getWorker();
 
     if (!worker) {
-      // 如果 WebWorker 不可用，回退到字符串计算
       resolve(str.length);
       return;
     }
