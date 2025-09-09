@@ -8,6 +8,8 @@ import { ChatStreamPayload } from '@/types/openai/chat';
 
 import * as debugStreamModule from '../utils/debugStream';
 import * as imageToBase64Module from '../utils/imageToBase64';
+import { LOBE_ERROR_KEY } from '../utils/streams/google-ai';
+import { AgentRuntimeErrorType } from '../types/error';
 import { LobeGoogleAI } from './index';
 
 const provider = 'google';
@@ -822,6 +824,162 @@ describe('LobeGoogleAI', () => {
         expect(converted).toEqual({
           role: 'user',
           parts: [{ text: '' }],
+        });
+      });
+    });
+
+    describe('createEnhancedStream', () => {
+      it('should handle stream cancellation with data gracefully', async () => {
+        const mockStream = (async function* () {
+          yield { text: 'Hello' };
+          yield { text: ' world' };
+        })();
+
+        const abortController = new AbortController();
+        const enhancedStream = instance['createEnhancedStream'](mockStream, abortController.signal);
+
+        const reader = enhancedStream.getReader();
+        const chunks: any[] = [];
+
+        // Read first chunk
+        const chunk1 = await reader.read();
+        chunks.push(chunk1.value);
+
+        // Cancel the stream
+        abortController.abort();
+
+        // Read next chunk (should be error chunk)
+        const chunk2 = await reader.read();
+        chunks.push(chunk2.value);
+
+        // Stream should be closed
+        const chunk3 = await reader.read();
+        expect(chunk3.done).toBe(true);
+
+        expect(chunks[0]).toEqual({ text: 'Hello' });
+        expect(chunks[1][LOBE_ERROR_KEY]).toEqual({
+          body: { name: 'Stream cancelled', provider, reason: 'aborted' },
+          message: 'Stream cancelled',
+          name: 'Stream cancelled',
+          type: AgentRuntimeErrorType.StreamChunkError,
+        });
+      });
+
+      it('should handle stream cancellation without data', async () => {
+        const mockStream = (async function* () {
+          // Empty stream
+        })();
+
+        const abortController = new AbortController();
+        const enhancedStream = instance['createEnhancedStream'](mockStream, abortController.signal);
+
+        const reader = enhancedStream.getReader();
+
+        // Cancel immediately
+        abortController.abort();
+
+        // Should be closed without any chunks
+        const chunk = await reader.read();
+        expect(chunk.done).toBe(true);
+      });
+
+      it('should handle AbortError with data', async () => {
+        const mockStream = (async function* () {
+          yield { text: 'Hello' };
+          throw new Error('aborted');
+        })();
+
+        const abortController = new AbortController();
+        const enhancedStream = instance['createEnhancedStream'](mockStream, abortController.signal);
+
+        const reader = enhancedStream.getReader();
+        const chunks: any[] = [];
+
+        // Read first chunk
+        const chunk1 = await reader.read();
+        chunks.push(chunk1.value);
+
+        // Read error chunk
+        const chunk2 = await reader.read();
+        chunks.push(chunk2.value);
+
+        // Stream should be closed
+        const chunk3 = await reader.read();
+        expect(chunk3.done).toBe(true);
+
+        expect(chunks[0]).toEqual({ text: 'Hello' });
+        // Implementation injects a 'Stream cancelled' marker when an abort occurs after data has been emitted
+        expect(chunks[1][LOBE_ERROR_KEY]).toEqual({
+          body: { name: 'Stream cancelled', provider, reason: 'aborted' },
+          message: 'Stream cancelled',
+          name: 'Stream cancelled',
+          type: AgentRuntimeErrorType.StreamChunkError,
+        });
+      });
+
+      it('should handle AbortError without data', async () => {
+        const mockStream = (async function* () {
+          throw new Error('aborted');
+        })();
+
+        const abortController = new AbortController();
+        const enhancedStream = instance['createEnhancedStream'](mockStream, abortController.signal);
+
+        const reader = enhancedStream.getReader();
+        const chunks: any[] = [];
+
+        // Read error chunk
+        const chunk1 = await reader.read();
+        chunks.push(chunk1.value);
+
+        // Stream should be closed
+        const chunk2 = await reader.read();
+        expect(chunk2.done).toBe(true);
+
+        expect(chunks[0][LOBE_ERROR_KEY]).toEqual({
+          body: {
+            message: 'aborted',
+            name: 'AbortError',
+            provider,
+            stack: expect.any(String),
+          },
+          message: 'aborted',
+          name: 'AbortError',
+          type: AgentRuntimeErrorType.StreamChunkError,
+        });
+      });
+
+      it('should handle other stream parsing errors', async () => {
+        const mockStream = (async function* () {
+          yield { text: 'Hello' };
+          throw new Error('Network error');
+        })();
+
+        const abortController = new AbortController();
+        const enhancedStream = instance['createEnhancedStream'](mockStream, abortController.signal);
+
+        const reader = enhancedStream.getReader();
+        const chunks: any[] = [];
+
+        // Read first chunk
+        const chunk1 = await reader.read();
+        chunks.push(chunk1.value);
+
+        // Read error chunk
+        const chunk2 = await reader.read();
+        chunks.push(chunk2.value);
+
+        // Stream should be closed
+        const chunk3 = await reader.read();
+        expect(chunk3.done).toBe(true);
+
+        expect(chunks[0]).toEqual({ text: 'Hello' });
+        // The injected error body should include the parsed error fields plus provider
+        expect(chunks[1][LOBE_ERROR_KEY]).toEqual({
+          body: { message: 'Network error', provider },
+          message: 'Network error',
+          name: 'Stream parsing error',
+          type: AgentRuntimeErrorType.ProviderBizError,
         });
       });
     });

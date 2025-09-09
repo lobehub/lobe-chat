@@ -10,6 +10,8 @@ import {
   ThinkingConfig,
 } from '@google/genai';
 
+import { LOBE_ERROR_KEY } from '../utils/streams/google-ai';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import {
   ChatCompletionTool,
@@ -282,7 +284,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
                 console.log('Stream cancelled gracefully, preserving existing output');
                 // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
                 controller.enqueue({
-                  __lobe_error: {
+                  [LOBE_ERROR_KEY]: {
                     body: { name: 'Stream cancelled', provider, reason: 'aborted' },
                     message: 'Stream cancelled',
                     name: 'Stream cancelled',
@@ -312,7 +314,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               console.log('Stream reading cancelled gracefully, preserving existing output');
               // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
               controller.enqueue({
-                __lobe_error: {
+                [LOBE_ERROR_KEY]: {
                   body: { name: 'Stream cancelled', provider, reason: 'aborted' },
                   message: 'Stream cancelled',
                   name: 'Stream cancelled',
@@ -325,7 +327,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               console.log('Stream reading cancelled before any output');
               // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
               controller.enqueue({
-                __lobe_error: {
+                [LOBE_ERROR_KEY]: {
                   body: {
                     message: err.message,
                     name: 'AbortError',
@@ -350,7 +352,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
             // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
             controller.enqueue({
-              __lobe_error: {
+              [LOBE_ERROR_KEY]: {
                 body: { ...parsedError, provider },
                 message: parsedError?.message || err.message || 'Stream parsing error',
                 name: 'Stream parsing error',
