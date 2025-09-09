@@ -69,6 +69,9 @@ describe('SparkAIStream', () => {
       'id: test-id\n',
       'event: reasoning\n',
       'data: " World"\n\n',
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
   });
 
@@ -179,6 +182,9 @@ describe('SparkAIStream', () => {
       'id: cha000b0bf9@dx193d1ffa61cb894532\n',
       'event: tool_calls\n',
       `data: [{\"function\":{\"arguments\":\"{\\\"city\\\":\\\"Shanghai\\\"}\",\"name\":\"realtime-weather____fetchCurrentWeather\"},\"id\":\"call_1\",\"index\":0,\"type\":\"function\"}]\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
 
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -244,6 +250,9 @@ describe('SparkAIStream', () => {
       'id: test-id\n',
       'event: text\n',
       'data: " World"\n\n',
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
 
     expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
@@ -267,6 +276,10 @@ describe('SparkAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([]);
+    expect(chunks).toEqual([
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
+    ]);
   });
 });

@@ -111,6 +111,9 @@ describe('LobeWenxinAI', () => {
           'id: as-bhrxwy5fq1',
           'event: text',
           'data: "20"\n',
+          'id: stream_end',
+          'event: error',
+          'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n',
         ].map((line) => `${line}\n`),
       );
 

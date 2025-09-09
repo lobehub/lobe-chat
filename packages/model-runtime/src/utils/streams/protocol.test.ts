@@ -262,7 +262,19 @@ describe('createSSEProtocolTransformer', () => {
     const input = { id: '1', data: 'hello' };
     const results = await processChunk(transformer, input);
 
-    expect(results).toEqual([`id: 1\n`, `event: text\n`, `data: ${JSON.stringify('hello')}\n\n`]);
+    expect(results).toEqual([
+      `id: 1\n`,
+      `event: text\n`,
+      `data: ${JSON.stringify('hello')}\n\n`,
+      `id: stream_end\n`,
+      `event: error\n`,
+      `data: ${JSON.stringify({
+        body: { name: 'Stream parsing error', reason: 'unexpected_end' },
+        message: 'Stream ended unexpectedly',
+        name: 'Stream parsing error',
+        type: 'StreamChunkError',
+      })}\n\n`,
+    ]);
   });
 
   it('should not emit flush error if a terminal event was received', async () => {

@@ -893,6 +893,9 @@ describe('AnthropicStream', () => {
         'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
         'event: data',
         'data: {"type":"content_block_delta","index":0,"delta":{"type":"abc","abc":"123"}}\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: error',
+        `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n`,
       ].map((item) => `${item}\n`),
     );
   });

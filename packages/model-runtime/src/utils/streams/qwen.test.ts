@@ -132,6 +132,9 @@ describe('QwenAIStream', () => {
       'id: 2\n',
       'event: tool_calls\n',
       `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
 
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -154,7 +157,11 @@ describe('QwenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([]);
+    expect(chunks).toEqual([
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
+    ]);
   });
 
   it('should handle chunk with no choices', async () => {
@@ -179,7 +186,14 @@ describe('QwenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(['id: 1\n', 'event: data\n', 'data: {"choices":[],"id":"1"}\n\n']);
+    expect(chunks).toEqual([
+      'id: 1\n',
+      'event: data\n',
+      'data: {"choices":[],"id":"1"}\n\n',
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
+    ]);
   });
 
   it('should handle vision model stream', async () => {
@@ -239,6 +253,9 @@ describe('QwenAIStream', () => {
       'id: 3\n',
       'event: text\n',
       'data: "![image](https://hello.mock/test.png)"\n\n',
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
   });
 
@@ -269,7 +286,14 @@ describe('QwenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(['id: 3\n', 'event: data\n', `data: {"content":null}\n\n`]);
+    expect(chunks).toEqual([
+      'id: 3\n',
+      'event: data\n',
+      `data: {"content":null}\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
+    ]);
   });
 
   it('should handle other delta data', async () => {
@@ -303,6 +327,9 @@ describe('QwenAIStream', () => {
       'id: 4\n',
       'event: data\n',
       `data: {"delta":{"custom_field":"custom_value"},"id":"4","index":0}\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
   });
 
@@ -348,6 +375,9 @@ describe('QwenAIStream', () => {
       'id: 5\n',
       'event: tool_calls\n',
       `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
     ]);
   });
 });

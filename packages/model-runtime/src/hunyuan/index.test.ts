@@ -138,6 +138,9 @@ describe('LobeHunyuanAI', () => {
           'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
           'event: text',
           'data: "找到"\n',
+          'id: stream_end',
+          'event: error',
+          'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n',
         ].map((line) => `${line}\n`),
       );
 

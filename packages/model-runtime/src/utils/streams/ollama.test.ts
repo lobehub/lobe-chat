@@ -238,6 +238,8 @@ describe('OllamaStream', () => {
   });
 
   it('should handle empty stream', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
     const mockOllamaStream = new ReadableStream<ChatResponse>({
       start(controller) {
         controller.close();
@@ -254,6 +256,10 @@ describe('OllamaStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([]);
+    expect(chunks).toEqual([
+      'id: chat_1\n',
+      'event: error\n',
+      'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n',
+    ]);
   });
 });

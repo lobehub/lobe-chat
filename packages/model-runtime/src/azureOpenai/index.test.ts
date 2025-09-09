@@ -203,6 +203,9 @@ describe('LobeAzureOpenAI', () => {
             'id: chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
             'event: text',
             'data: "！"\n',
+            'id: stream_end',
+            'event: error',
+            'data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n',
           ].map((item) => `${item}\n`),
         );
       });

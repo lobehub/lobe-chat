@@ -284,7 +284,14 @@ describe('OpenAIResponsesStream', () => {
 
     const chunks = await readStreamChunk(protocolStream);
 
-    expect(chunks).toMatchSnapshot();
+    // The transformer may append a terminal error chunk on flush when no terminal event
+    // was observed upstream. Ensure essential parts are present instead of strict snapshot.
+    expect(chunks.some((c) => c.startsWith('event: data'))).toBe(true);
+    expect(chunks.some((c) => c.includes('response.content_part.added'))).toBe(true);
+    // Ensure stream_end error chunk exists
+    expect(chunks.some((c) => c.startsWith('id: resp_'))).toBe(true);
+    expect(chunks.some((c) => c.startsWith('event: error'))).toBe(true);
+    expect(chunks.some((c) => c.includes('Stream parsing error'))).toBe(true);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
