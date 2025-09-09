@@ -254,6 +254,9 @@ const OpenAI: ModelProviderCard = {
   modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.openai.com/v1',
+    },
     responseAnimation: 'smooth',
     showModelFetcher: true,
     supportResponsesApi: true,
