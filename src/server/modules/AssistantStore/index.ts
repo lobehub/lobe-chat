@@ -74,10 +74,10 @@ export class AssistantStore {
         return [];
       }
 
-      console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
+      console.error(`[AgentIndexFetchError] failed to fetch agent index, error detail:`);
       console.error(e);
       if (res!) {
-        console.error(await res.text());
+        console.error(`status code: ${res?.status}`, await res.text());
       }
 
       throw e;
