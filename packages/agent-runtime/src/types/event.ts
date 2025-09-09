@@ -1,0 +1,81 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import type { AgentState, ToolsCalling } from './state';
+
+export interface AgentEventInit {
+  type: 'init';
+}
+
+export interface AgentEventLlmStart {
+  type: 'llm_start';
+  payload: unknown;
+}
+
+export interface AgentEventLlmStream {
+  type: 'llm_stream';
+  chunk: unknown;
+}
+
+export interface AgentEventLlmResult {
+  type: 'llm_result';
+  result: unknown;
+}
+
+export interface AgentEventToolPending {
+  type: 'tool_pending';
+  toolCalls: ToolsCalling[];
+}
+
+export interface AgentEventToolResult {
+  type: 'tool_result';
+  id: string;
+  result: any;
+}
+
+export interface AgentEventHumanApproveRequired {
+  type: 'human_approve_required';
+  pendingToolsCalling: ToolsCalling[];
+  sessionId: string;
+}
+
+export interface AgentEventHumanPromptRequired {
+  type: 'human_prompt_required';
+  metadata?: Record<string, unknown>;
+  prompt: string;
+  sessionId: string;
+}
+
+export interface AgentEventHumanSelectRequired {
+  type: 'human_select_required';
+  metadata?: Record<string, unknown>;
+  multi?: boolean;
+  options: { label: string; value: string }[];
+  prompt?: string;
+  sessionId: string;
+}
+
+export interface AgentEventDone {
+  type: 'done';
+  finalState: AgentState;
+  reason: string;
+}
+
+export interface AgentEventError {
+  type: 'error';
+  error: any;
+}
+
+/**
+ * Events emitted by the AgentRuntime during execution
+ */
+export type AgentEvent =
+  | AgentEventInit
+  | AgentEventLlmStart
+  | AgentEventLlmStream
+  | AgentEventLlmResult
+  | AgentEventToolPending
+  | AgentEventToolResult
+  | AgentEventHumanApproveRequired
+  | AgentEventHumanPromptRequired
+  | AgentEventHumanSelectRequired
+  | AgentEventDone
+  | AgentEventError;
