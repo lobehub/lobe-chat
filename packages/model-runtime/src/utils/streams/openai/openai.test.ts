@@ -96,7 +96,11 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([]);
+    expect(chunks).toEqual([
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
+    ]);
   });
 
   it('should handle delta content null', async () => {
@@ -126,7 +130,14 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(['id: 3\n', 'event: data\n', `data: {"content":null}\n\n`]);
+    expect(chunks).toEqual([
+      'id: 3\n',
+      'event: data\n',
+      `data: {"content":null}\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
+    ]);
   });
 
   it('should handle content with finish_reason', async () => {
@@ -158,9 +169,14 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(
-      ['id: 123', 'event: text', `data: "Introduce yourself."\n`].map((i) => `${i}\n`),
-    );
+    expect(chunks).toEqual([
+      'id: 123\n',
+      'event: text\n',
+      `data: "Introduce yourself."\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
+    ]);
   });
 
   it('should emit base64_image and strip markdown data:image from text', async () => {
@@ -258,9 +274,14 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(
-      ['id: 456', 'event: text', `data: "Some contents"\n`].map((i) => `${i}\n`),
-    );
+    expect(chunks).toEqual([
+      'id: 456\n',
+      'event: text\n',
+      `data: "Some contents"\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
+    ]);
   });
 
   it('should handle other delta data', async () => {
@@ -294,6 +315,9 @@ describe('OpenAIStream', () => {
       'id: 4\n',
       'event: data\n',
       `data: {"delta":{"custom_field":"custom_value"},"id":"4","index":0}\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
     ]);
   });
 
@@ -645,6 +669,9 @@ describe('OpenAIStream', () => {
         'id: 2\n',
         'event: tool_calls\n',
         `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        'id: stream_end\n',
+        'event: error\n',
+        `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
       ]);
 
       expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -692,6 +719,9 @@ describe('OpenAIStream', () => {
         'id: 5\n',
         'event: tool_calls\n',
         `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        'id: stream_end\n',
+        'event: error\n',
+        `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
       ]);
     });
 
@@ -2364,7 +2394,14 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(['id: 6\n', 'event: base64_image\n', `data: "${base64}"\n\n`]);
+    expect(chunks).toEqual([
+      'id: 6\n',
+      'event: base64_image\n',
+      `data: "${base64}"\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
+    ]);
   });
 
   it('should handle finish_reason with markdown image in content', async () => {
@@ -2403,6 +2440,9 @@ describe('OpenAIStream', () => {
       'id: chatcmpl-test\n',
       'event: base64_image\n',
       `data: "${base64}"\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
     ]);
   });
 
@@ -2446,6 +2486,9 @@ describe('OpenAIStream', () => {
       'id: chatcmpl-multi\n',
       'event: base64_image\n',
       `data: "${base64_2}"\n\n`,
+      'id: stream_end\n',
+      'event: error\n',
+      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
     ]);
   });
 });
