@@ -95,9 +95,15 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
         const commandKey = isCommandPressed(e);
         // when user like cmd + enter to send message
         if (useCmdEnterToSend) {
-          if (commandKey) send();
+          if (commandKey) {
+            send();
+            return true;
+          }
         } else {
-          if (!commandKey) send();
+          if (!commandKey) {
+            send();
+            return true;
+          }
         }
       }}
       placeholder={t('sendPlaceholder', { ns: 'chat' })}
