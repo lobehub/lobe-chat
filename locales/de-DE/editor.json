@@ -9,6 +9,8 @@
       "on": "Formatierungsleiste anzeigen"
     }
   },
+  "cancel": "Abbrechen",
+  "confirm": "Bestätigen",
   "file": {
     "error": "Fehler: {{message}}",
     "uploading": "Datei wird hochgeladen..."
@@ -21,6 +23,9 @@
     "open": "Link öffnen",
     "placeholder": "Link-URL eingeben",
     "unlink": "Link entfernen"
+  },
+  "math": {
+    "placeholder": "Bitte TeX-Formel eingeben"
   },
   "table": {
     "delete": "Tabelle löschen",
@@ -42,6 +47,8 @@
     "numberList": "Nummerierte Liste",
     "strikethrough": "Durchgestrichen",
     "table": "Tabelle einfügen",
+    "taskList": "Aufgabenliste",
+    "tex": "TeX-Formel",
     "underline": "Unterstrichen"
   }
 }

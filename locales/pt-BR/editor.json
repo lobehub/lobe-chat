@@ -9,6 +9,8 @@
       "on": "Mostrar barra de formatação"
     }
   },
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
   "file": {
     "error": "Erro: {{message}}",
     "uploading": "Enviando arquivo..."
@@ -21,6 +23,9 @@
     "open": "Abrir link",
     "placeholder": "Digite a URL do link",
     "unlink": "Remover link"
+  },
+  "math": {
+    "placeholder": "Por favor, insira a fórmula TeX"
   },
   "table": {
     "delete": "Excluir tabela",
@@ -42,6 +47,8 @@
     "numberList": "Lista numerada",
     "strikethrough": "Tachado",
     "table": "Inserir tabela",
+    "taskList": "Lista de Tarefas",
+    "tex": "Fórmula TeX",
     "underline": "Sublinhado"
   }
 }
