@@ -16,11 +16,7 @@ const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBot
   const reasoningStr = useChatStore(chatSelectors.mainAILatestMessageReasoningContent);
 
   useEffect(() => {
-    console.log('atBottom', atBottom);
-    console.log('trackVisibility', trackVisibility);
-    console.log('isScrolling', isScrolling);
     if (atBottom && trackVisibility && !isScrolling) {
-      console.log('scroll to bottom');
       onScrollToBottom?.('auto');
     }
   }, [atBottom, trackVisibility, isScrolling, str, reasoningStr]);

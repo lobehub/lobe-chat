@@ -115,6 +115,7 @@
   "feedback": "Feedback",
   "fontSize": {
     "standard": "Standaard",
+    "text": "Let op, deze instelling beïnvloedt alleen de weergave van de lettergrootte van de berichtinhoud",
     "title": "Lettergrootte"
   },
   "help": "Hulp",

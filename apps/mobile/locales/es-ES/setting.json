@@ -115,6 +115,7 @@
   "feedback": "Comentarios",
   "fontSize": {
     "standard": "Estándar",
+    "text": "Atención, esta configuración solo afecta el tamaño de la fuente del contenido del mensaje",
     "title": "Tamaño de fuente"
   },
   "help": "Ayuda",

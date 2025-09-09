@@ -115,6 +115,7 @@
   "feedback": "Opinie i sugestie",
   "fontSize": {
     "standard": "Standardowy",
+    "text": "Uwaga, ta konfiguracja wpływa wyłącznie na rozmiar czcionki wyświetlanej w treści wiadomości",
     "title": "Rozmiar czcionki"
   },
   "help": "Pomoc",
