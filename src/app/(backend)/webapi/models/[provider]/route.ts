@@ -4,11 +4,12 @@ import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
+import { filterEnabledModels } from '@/server/utils/modelValidation';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 const noNeedAPIKey = (provider: string) => [ModelProvider.OpenRouter].includes(provider as any);
 
-export const GET = checkAuth(async (req, { params, jwtPayload }) => {
+export const GET = checkAuth(async (_req, { params, jwtPayload }) => {
   const { provider } = await params;
 
   try {
@@ -21,7 +22,10 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
 
     const list = await agentRuntime.models();
 
-    return NextResponse.json(list);
+    // Filter out disabled models based on server configuration
+    const filteredList = await filterEnabledModels(list, provider, 'id');
+
+    return NextResponse.json(filteredList);
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

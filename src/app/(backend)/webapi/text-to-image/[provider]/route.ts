@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
+import { validateModelAccess } from '@/server/utils/modelValidation';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 export const preferredRegion = [
@@ -54,6 +55,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
     // ============  2. create chat completion   ============ //
 
     const data = (await req.json()) as TextToImagePayload;
+
+    // ============  3. validate model access   ============ //
+    if (data.model) {
+      await validateModelAccess(data.model, provider);
+    }
 
     const images = await agentRuntime.textToImage(data);
 

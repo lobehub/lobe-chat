@@ -7,6 +7,7 @@ import { ChatErrorType } from '@lobechat/types';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { createTraceOptions, initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
+import { validateModelAccess } from '@/server/utils/modelValidation';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
@@ -28,6 +29,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     // ============  2. create chat completion   ============ //
 
     const data = (await req.json()) as ChatStreamPayload;
+
+    // ============  3. validate model access   ============ //
+    if (data.model) {
+      await validateModelAccess(data.model, provider);
+    }
 
     const tracePayload = getTracePayload(req);
 
