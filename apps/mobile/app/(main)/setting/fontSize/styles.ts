@@ -5,6 +5,7 @@ export const useStyles = createStyles((token) => ({
   bottomBarWrapper: {
     backgroundColor: token.colorBgContainer,
     bottom: 0,
+    height: 148,
     left: 0,
     paddingHorizontal: token.paddingLG,
     paddingVertical: token.paddingXL,

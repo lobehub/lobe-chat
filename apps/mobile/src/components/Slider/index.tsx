@@ -151,11 +151,19 @@ const Slider = memo<SliderProps>(
       .enabled(!disabled)
       // 让手势更快进入活跃态，提升“跟手”体验
       .minDistance(0)
-      .hitSlop({ horizontal: 12, vertical: 12 })
+      // 扩大可拖动热区，提升可用性
+      .hitSlop({ horizontal: 24, vertical: 24 })
       .shouldCancelWhenOutside(false)
-      .onBegin(() => {
+      // 初始触摸时即刻将拇指定位到触点位置，允许从轨道任意位置开始拖动
+      .onStart((event) => {
         isDragging.value = true;
-        startX.value = translateX.value;
+        const clamped = Math.max(0, Math.min(sliderWidth.value, event.x));
+        translateX.value = clamped;
+        startX.value = clamped;
+        const newValue = getValueFromPosition(clamped, sliderWidth.value);
+        lastEmittedActiveValue.value = newValue;
+        runOnJS(handleValueChange)(newValue);
+        runOnJS(setActiveValueJS)(newValue);
         runOnJS(setIsThumbActive)(true);
       })
       .onUpdate((event) => {
@@ -276,15 +284,13 @@ const Slider = memo<SliderProps>(
 
     return (
       <View style={[styles.container, style]}>
-        <GestureDetector gesture={tapGesture}>
+        <GestureDetector gesture={Gesture.Simultaneous(tapGesture, panGesture)}>
           <View onLayout={onLayout} style={styles.track}>
             <Animated.View style={[styles.activeTrack, activeTrackAnimatedStyle]} />
             {marksNodes}
-            <GestureDetector gesture={panGesture}>
-              <Animated.View
-                style={[styles.thumb, isThumbActive && styles.thumbActive, thumbAnimatedStyle]}
-              />
-            </GestureDetector>
+            <Animated.View
+              style={[styles.thumb, isThumbActive && styles.thumbActive, thumbAnimatedStyle]}
+            />
           </View>
         </GestureDetector>
       </View>
