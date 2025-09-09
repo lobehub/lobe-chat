@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix editor key handling."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix Assistant List error message."]
     },
     "date": "2025-09-09",
