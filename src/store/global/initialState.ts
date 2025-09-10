@@ -47,6 +47,7 @@ export enum ProfileTabs {
 }
 
 export interface SystemStatus {
+  expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
   filePanelWidth: number;
@@ -114,6 +115,7 @@ export interface GlobalState {
 }
 
 export const INITIAL_STATUS = {
+  expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   filePanelWidth: 320,
   hideGemini2_5FlashImagePreviewChineseWarning: false,

@@ -24,7 +24,7 @@ import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
 
-const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
+const InputEditor = memo<{ defaultRows?: number }>(() => {
   const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
     s.editor,
     s.slashMenuRef,
@@ -114,13 +114,14 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
         }
       }}
       placeholder={
-        <Flexbox align={'center'} gap={4} horizontal>
+        <Flexbox align={'center'} as={'span'} gap={4} horizontal>
           {t('sendPlaceholder', { ns: 'chat' }).replace('...', ', ')}
           <Trans
-            as={'div'}
+            as={'span'}
             components={{
               key: (
                 <Hotkey
+                  as={'span'}
                   keys={wrapperShortcut}
                   style={{ color: 'inherit' }}
                   styles={{ kbdStyle: { color: 'inhert' } }}
@@ -167,9 +168,6 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
                 <SlashMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
               );
             },
-      }}
-      style={{
-        minHeight: defaultRows > 1 ? defaultRows * 23 : undefined,
       }}
       type={'text'}
       variant={'chat'}

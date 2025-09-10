@@ -12,6 +12,7 @@ export interface GlobalWorkspacePaneAction {
   switchBackToChat: (sessionId?: string) => void;
   toggleAgentSystemRoleExpand: (agentId: string, expanded?: boolean) => void;
   toggleChatSideBar: (visible?: boolean) => void;
+  toggleExpandInputActionbar: (expand?: boolean) => void;
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobilePortal: (visible?: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
@@ -50,6 +51,12 @@ export const globalWorkspaceSlice: StateCreator<
       typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;
 
     get().updateSystemStatus({ showChatSideBar }, n('toggleAgentPanel', newValue));
+  },
+  toggleExpandInputActionbar: (newValue) => {
+    const expandInputActionbar =
+      typeof newValue === 'boolean' ? newValue : !get().status.expandInputActionbar;
+
+    get().updateSystemStatus({ expandInputActionbar }, n('toggleExpandInputActionbar', newValue));
   },
   toggleExpandSessionGroup: (id, expand) => {
     const { status } = get();
