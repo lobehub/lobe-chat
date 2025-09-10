@@ -9,14 +9,22 @@ import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
 import { Header } from '@/components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { sleep } from '@/utils/sleep';
 
 export default function LocaleScreen() {
   const { styles } = useStyles();
   const { localeMode, changeLocale } = useLocale();
   const { t } = useTranslation(['setting']);
+  const [pendingLocale, setPendingLocale] = React.useState<LocaleMode | null>(null);
 
   const handleLocaleChange = async (locale: LocaleMode) => {
-    await changeLocale(locale);
+    if (pendingLocale || localeMode === locale) return;
+    try {
+      setPendingLocale(locale);
+      await Promise.all([changeLocale(locale), sleep(300)]);
+    } finally {
+      setPendingLocale(null);
+    }
   };
 
   const localeOptions = [
@@ -37,6 +45,7 @@ export default function LocaleScreen() {
               isLast={index === localeOptions.length - 1}
               isSelected={localeMode === option.value}
               key={option.value}
+              loading={pendingLocale === (option.value as LocaleMode)}
               onPress={() => handleLocaleChange(option.value as LocaleMode)}
               showCheckmark={true}
               title={option.label}
