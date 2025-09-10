@@ -44,6 +44,9 @@ export default function FontSizeSettingScreen() {
           step={1}
           value={fontSize}
         />
+        <View style={styles.fontSizeContainer}>
+          <Text style={styles.fontSizeText}>{t('fontSize.text', { ns: 'setting' })}</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
