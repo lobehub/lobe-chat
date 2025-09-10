@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import type { AgentEvent } from './event';
+import type { Cost, CostLimit, Usage } from './usage';
 
 /**
  * Agent's serializable state.
@@ -32,6 +33,23 @@ export interface AgentState {
    * If set, execution will stop with error when exceeded.
    */
   maxSteps?: number;
+
+  // --- Usage and Cost Tracking ---
+  /**
+   * Accumulated usage statistics for this session.
+   * Tracks tokens, API calls, tool usage, etc.
+   */
+  usage: Usage;
+  /**
+   * Current calculated cost for this session.
+   * Updated after each billable operation.
+   */
+  cost: Cost;
+  /**
+   * Optional cost limits configuration.
+   * If set, execution will stop when limits are exceeded.
+   */
+  costLimit?: CostLimit;
 
   // --- HIL ---
   /**

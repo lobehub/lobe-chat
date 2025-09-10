@@ -53,10 +53,24 @@ export interface AgentEventHumanSelectRequired {
   sessionId: string;
 }
 
+/**
+ * Standardized finish reasons
+ */
+export type FinishReason =
+  | 'completed' // Normal completion
+  | 'user_requested' // User requested to end
+  | 'max_steps_exceeded' // Reached maximum steps limit
+  | 'cost_limit_exceeded' // Reached cost limit
+  | 'timeout' // Execution timeout
+  | 'agent_decision' // Agent decided to finish
+  | 'error_recovery' // Finished due to unrecoverable error
+  | 'system_shutdown'; // System is shutting down
+
 export interface AgentEventDone {
   type: 'done';
   finalState: AgentState;
-  reason: string;
+  reason: FinishReason;
+  reasonDetail?: string;
 }
 
 export interface AgentEventError {

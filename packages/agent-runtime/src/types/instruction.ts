@@ -1,4 +1,6 @@
+import type { FinishReason } from './event';
 import { AgentState, ToolRegistry, ToolsCalling } from './state';
+import type { Cost, CostCalculationContext, Usage } from './usage';
 
 /**
  * Runtime execution context passed to Agent runner
@@ -30,6 +32,26 @@ export interface RuntimeContext {
  * It contains all the decision-making logic and is completely stateless.
  */
 export interface Agent {
+  /**
+   * Calculate cost from usage statistics
+   * @param context - Cost calculation context with usage and limits
+   * @returns Updated cost information
+   */
+  calculateCost?(context: CostCalculationContext): Cost;
+
+  /**
+   * Calculate usage statistics from operation results
+   * @param operationType - Type of operation that was performed
+   * @param operationResult - Result data from the operation
+   * @param previousUsage - Previous usage statistics
+   * @returns Updated usage statistics
+   */
+  calculateUsage?(
+    operationType: 'llm' | 'tool' | 'human_interaction',
+    operationResult: any,
+    previousUsage: Usage,
+  ): Usage;
+
   /** Optional custom executors mapping to extend runtime behaviors */
   executors?: Partial<Record<AgentInstruction['type'], any>>;
 
@@ -78,7 +100,8 @@ export interface AgentInstructionRequestHumanApprove {
 }
 
 export interface AgentInstructionFinish {
-  reason: string;
+  reason: FinishReason;
+  reasonDetail?: string;
   type: 'finish';
 }
 

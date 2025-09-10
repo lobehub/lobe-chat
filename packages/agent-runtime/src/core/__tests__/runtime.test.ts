@@ -4,9 +4,13 @@ import {
   Agent,
   AgentEventError,
   AgentState,
+  Cost,
+  CostCalculationContext,
+  CostLimit,
   RuntimeConfig,
   RuntimeContext,
   ToolsCalling,
+  Usage,
 } from '../../types';
 import { AgentRuntime } from '../runtime';
 
@@ -27,11 +31,11 @@ class MockAgent implements Agent {
             pendingToolsCalling: llmPayload.result.tool_calls,
           };
         }
-        return { type: 'finish' as const, reason: 'Done' };
+        return { type: 'finish' as const, reason: 'completed' as const, reasonDetail: 'Done' };
       case 'tool_result':
         return { type: 'call_llm' as const, payload: { messages: state.messages } };
       default:
-        return { type: 'finish' as const, reason: 'Done' };
+        return { type: 'finish' as const, reason: 'completed' as const, reasonDetail: 'Done' };
     }
   }
 }
@@ -444,7 +448,8 @@ describe('AgentRuntime', () => {
         agent.runner = vi.fn().mockImplementation(() =>
           Promise.resolve({
             type: 'finish',
-            reason: 'Task completed',
+            reason: 'completed',
+            reasonDetail: 'Task completed',
           }),
         );
 
@@ -459,7 +464,8 @@ describe('AgentRuntime', () => {
           finalState: expect.objectContaining({
             status: 'done',
           }),
-          reason: 'Task completed',
+          reason: 'completed',
+          reasonDetail: 'Task completed',
         });
 
         expect(result.newState.status).toBe('done');
@@ -570,7 +576,8 @@ describe('AgentRuntime', () => {
         finalState: expect.objectContaining({
           status: 'done',
         }),
-        reason: 'Maximum steps exceeded: 3',
+        reason: 'max_steps_exceeded',
+        reasonDetail: 'Maximum steps exceeded: 3',
       });
     });
 
@@ -722,6 +729,218 @@ describe('AgentRuntime', () => {
     });
   });
 
+  describe('Usage and Cost Tracking', () => {
+    it('should initialize with zero usage and cost', () => {
+      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+
+      expect(state.usage).toMatchObject({
+        llm: {
+          tokens: { input: 0, output: 0, total: 0 },
+          apiCalls: 0,
+          processingTimeMs: 0,
+        },
+        tools: {
+          totalCalls: 0,
+          byTool: {},
+          totalTimeMs: 0,
+        },
+        humanInteraction: {
+          approvalRequests: 0,
+          promptRequests: 0,
+          selectRequests: 0,
+          totalWaitingTimeMs: 0,
+        },
+      });
+
+      expect(state.cost).toMatchObject({
+        llm: {
+          byModel: {},
+          total: 0,
+          currency: 'USD',
+        },
+        tools: {
+          byTool: {},
+          total: 0,
+          currency: 'USD',
+        },
+        total: 0,
+        currency: 'USD',
+        calculatedAt: expect.any(String),
+      });
+    });
+
+    it('should track usage and cost through agent methods', async () => {
+      // Create agent with cost calculation methods
+      class CostTrackingAgent implements Agent {
+        tools = {
+          test_tool: async () => ({ result: 'success' }),
+        };
+
+        async runner(context: RuntimeContext, state: AgentState) {
+          switch (context.phase) {
+            case 'user_input':
+              return { type: 'call_llm' as const, payload: { messages: state.messages } };
+            default:
+              return {
+                type: 'finish' as const,
+                reason: 'completed' as const,
+                reasonDetail: 'Done',
+              };
+          }
+        }
+
+        calculateUsage(
+          operationType: 'llm' | 'tool' | 'human_interaction',
+          operationResult: any,
+          previousUsage: Usage,
+        ): Usage {
+          const newUsage = structuredClone(previousUsage);
+
+          if (operationType === 'llm') {
+            newUsage.llm.tokens.input += 100;
+            newUsage.llm.tokens.output += 50;
+            newUsage.llm.tokens.total += 150;
+            newUsage.llm.apiCalls += 1;
+            newUsage.llm.processingTimeMs += 1000;
+          }
+
+          return newUsage;
+        }
+
+        calculateCost(context: CostCalculationContext): Cost {
+          const newCost = structuredClone(context.previousCost || (context.usage as any));
+
+          // Simple cost calculation: $0.01 per 1000 tokens
+          const tokenCost = (context.usage.llm.tokens.total / 1000) * 0.01;
+          newCost.llm.total = tokenCost;
+          newCost.total = tokenCost;
+          newCost.calculatedAt = new Date().toISOString();
+
+          return newCost;
+        }
+      }
+
+      const agent = new CostTrackingAgent();
+      const runtime = new AgentRuntime(agent, {
+        modelRuntime: async function* () {
+          yield { content: 'test response' };
+        },
+      });
+
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'test-session',
+        messages: [{ role: 'user', content: 'Hello' }],
+      });
+
+      const result = await runtime.step(state, createTestContext('user_input'));
+
+      // Should have updated usage
+      expect(result.newState.usage.llm.tokens.total).toBe(150);
+      expect(result.newState.usage.llm.apiCalls).toBe(1);
+
+      // Should have calculated cost
+      expect(result.newState.cost.total).toBe(0.0015); // 150 tokens * $0.01/1000
+    });
+
+    it('should respect cost limits with stop action', async () => {
+      class CostTrackingAgent implements Agent {
+        async runner(context: RuntimeContext, state: AgentState) {
+          return { type: 'call_llm' as const, payload: { messages: state.messages } };
+        }
+
+        calculateUsage(operationType: string, operationResult: any, previousUsage: Usage): Usage {
+          const newUsage = structuredClone(previousUsage);
+          newUsage.llm.tokens.total += 1000; // High token usage
+          return newUsage;
+        }
+
+        calculateCost(context: CostCalculationContext): Cost {
+          const newCost = structuredClone(context.previousCost || ({} as Cost));
+          newCost.total = 10.0; // High cost that exceeds limit
+          newCost.currency = 'USD';
+          newCost.calculatedAt = new Date().toISOString();
+          return newCost;
+        }
+      }
+
+      const agent = new CostTrackingAgent();
+      const runtime = new AgentRuntime(agent, {
+        modelRuntime: async function* () {
+          yield { content: 'expensive response' };
+        },
+      });
+
+      const costLimit: CostLimit = {
+        maxTotalCost: 5.0,
+        currency: 'USD',
+        onExceeded: 'stop',
+      };
+
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'test-session',
+        messages: [{ role: 'user', content: 'Hello' }],
+        costLimit,
+      });
+
+      const result = await runtime.step(state, createTestContext('user_input'));
+
+      expect(result.newState.status).toBe('done');
+      expect(result.events[0]).toMatchObject({
+        type: 'done',
+        reason: 'cost_limit_exceeded',
+        reasonDetail: expect.stringContaining('Cost limit exceeded'),
+      });
+    });
+
+    it('should handle cost limit with interrupt action', async () => {
+      class CostTrackingAgent implements Agent {
+        async runner(context: RuntimeContext, state: AgentState) {
+          return { type: 'call_llm' as const, payload: { messages: state.messages } };
+        }
+
+        calculateCost(context: CostCalculationContext): Cost {
+          return {
+            llm: { byModel: {}, total: 15.0, currency: 'USD' },
+            tools: { byTool: {}, total: 0, currency: 'USD' },
+            total: 15.0,
+            currency: 'USD',
+            calculatedAt: new Date().toISOString(),
+          };
+        }
+      }
+
+      const agent = new CostTrackingAgent();
+      const runtime = new AgentRuntime(agent, {
+        modelRuntime: async function* () {
+          yield { content: 'expensive response' };
+        },
+      });
+
+      const costLimit: CostLimit = {
+        maxTotalCost: 10.0,
+        currency: 'USD',
+        onExceeded: 'interrupt',
+      };
+
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'test-session',
+        messages: [{ role: 'user', content: 'Hello' }],
+        costLimit,
+      });
+
+      const result = await runtime.step(state, createTestContext('user_input'));
+
+      expect(result.newState.status).toBe('interrupted');
+      expect(result.events[0]).toMatchObject({
+        type: 'interrupted',
+        reason: expect.stringContaining('Cost limit exceeded'),
+        metadata: expect.objectContaining({
+          costExceeded: true,
+        }),
+      });
+    });
+  });
+
   describe('Integration Tests', () => {
     it('should complete a full conversation flow', async () => {
       const agent = new MockAgent();
@@ -745,11 +964,11 @@ describe('AgentRuntime', () => {
                 pendingToolsCalling: llmPayload.result.tool_calls,
               });
             }
-            return Promise.resolve({ type: 'finish', reason: 'Done' });
+            return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
           case 'tool_result':
             return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
           default:
-            return Promise.resolve({ type: 'finish', reason: 'Done' });
+            return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
         }
       });
 

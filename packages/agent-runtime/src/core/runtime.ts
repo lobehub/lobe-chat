@@ -3,11 +3,13 @@ import type {
   AgentEvent,
   AgentInstruction,
   AgentState,
+  Cost,
   InstructionExecutor,
   RuntimeConfig,
   RuntimeContext,
   ToolRegistry,
   ToolsCalling,
+  Usage,
 } from '../types';
 
 /**
@@ -57,7 +59,8 @@ export class AgentRuntime {
         newState.status = 'done';
         const finishEvent = {
           finalState: newState,
-          reason: `Maximum steps exceeded: ${newState.maxSteps}`,
+          reason: 'max_steps_exceeded' as const,
+          reasonDetail: `Maximum steps exceeded: ${newState.maxSteps}`,
           type: 'done' as const,
         };
         newState.events = [...newState.events, finishEvent];
@@ -138,19 +141,20 @@ export class AgentRuntime {
     newState.status = 'interrupted';
     newState.lastModified = interruptedAt;
     newState.interruption = {
-      reason,
-      interruptedAt,
       canResume,
+      interruptedAt,
       // Store the current step for potential resumption
-      interruptedInstruction: undefined, // Could be enhanced to store current instruction
+interruptedInstruction: undefined,
+
+      reason, // Could be enhanced to store current instruction
     };
 
     const interruptEvent: AgentEvent = {
-      type: 'interrupted',
-      reason,
-      interruptedAt,
       canResume,
+      interruptedAt,
       metadata,
+      reason,
+      type: 'interrupted',
     };
 
     newState.events = [...newState.events, interruptEvent];
@@ -190,10 +194,10 @@ export class AgentRuntime {
     newState.interruption = undefined;
 
     const resumeEvent: AgentEvent = {
-      type: 'resumed',
       reason,
       resumedAt,
       resumedFromStep,
+      type: 'resumed',
     };
 
     newState.events = [...newState.events, resumeEvent];
@@ -224,14 +228,54 @@ export class AgentRuntime {
   static createInitialState(partialState: Partial<AgentState> & { sessionId: string }): AgentState {
     const now = new Date().toISOString();
 
+    // Default usage statistics
+    const defaultUsage: Usage = {
+      humanInteraction: {
+        approvalRequests: 0,
+        promptRequests: 0,
+        selectRequests: 0,
+        totalWaitingTimeMs: 0,
+      },
+      llm: {
+        apiCalls: 0,
+        processingTimeMs: 0,
+        tokens: { input: 0, output: 0, total: 0 },
+      },
+      tools: {
+        byTool: {},
+        totalCalls: 0,
+        totalTimeMs: 0,
+      },
+    };
+
+    // Default cost structure
+    const defaultCost: Cost = {
+      calculatedAt: now,
+      currency: 'USD',
+      llm: {
+        byModel: {},
+        currency: 'USD',
+        total: 0,
+      },
+      tools: {
+        byTool: {},
+        currency: 'USD',
+        total: 0,
+      },
+      total: 0,
+    };
+
     return {
+
+      cost: defaultCost,
       // Default values
-      createdAt: now,
+createdAt: now,
       events: [],
       lastModified: now,
       messages: [],
       status: 'idle',
       stepCount: 0,
+      usage: defaultUsage,
       // User provided values override defaults
       ...partialState,
     };
@@ -278,6 +322,28 @@ export class AgentRuntime {
           type: 'llm_result',
         });
 
+        // Update usage and cost if agent provides calculation methods
+        if (this.agent.calculateUsage) {
+          newState.usage = this.agent.calculateUsage(
+            'llm',
+            { content: assistantContent, tool_calls: toolCalls },
+            newState.usage,
+          );
+        }
+
+        if (this.agent.calculateCost) {
+          newState.cost = this.agent.calculateCost({
+            costLimit: newState.costLimit,
+            previousCost: newState.cost,
+            usage: newState.usage,
+          });
+        }
+
+        // Check cost limits
+        if (newState.costLimit && newState.cost.total > newState.costLimit.maxTotalCost) {
+          return this.handleCostLimitExceeded(newState);
+        }
+
         // Provide next context based on LLM result
         const nextContext: RuntimeContext = {
           payload: {
@@ -320,6 +386,28 @@ export class AgentRuntime {
       });
 
       events.push({ id: toolCall.id, result, type: 'tool_result' });
+
+      // Update usage and cost if agent provides calculation methods
+      if (this.agent.calculateUsage) {
+        newState.usage = this.agent.calculateUsage(
+          'tool',
+          { executionTime: 0, result, toolCall }, // Could track actual execution time
+          newState.usage,
+        );
+      }
+
+      if (this.agent.calculateCost) {
+        newState.cost = this.agent.calculateCost({
+          costLimit: newState.costLimit,
+          previousCost: newState.cost,
+          usage: newState.usage,
+        });
+      }
+
+      // Check cost limits
+      if (newState.costLimit && newState.cost.total > newState.costLimit.maxTotalCost) {
+        return this.handleCostLimitExceeded(newState);
+      }
 
       // Provide next context for tool result
       const nextContext: RuntimeContext = {
@@ -419,18 +507,92 @@ export class AgentRuntime {
   /** Create finish executor */
   private createFinishExecutor(): InstructionExecutor {
     return async (instruction, state) => {
-      const { reason } = instruction as Extract<AgentInstruction, { type: 'finish' }>;
+      const { reason, reasonDetail } = instruction as Extract<AgentInstruction, { type: 'finish' }>;
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
       newState.status = 'done';
 
-      const events: AgentEvent[] = [{ finalState: newState, reason, type: 'done' }];
+      const events: AgentEvent[] = [
+        {
+          finalState: newState,
+          reason,
+          reasonDetail,
+          type: 'done',
+        },
+      ];
       return { events, newState };
     };
   }
 
   // ============ Helper Methods ============
+
+  /**
+   * Handle cost limit exceeded scenario
+   */
+  private handleCostLimitExceeded(state: AgentState): {
+    events: AgentEvent[];
+    newState: AgentState;
+    nextContext?: RuntimeContext;
+  } {
+    const newState = structuredClone(state);
+    const costLimit = newState.costLimit!;
+
+    switch (costLimit.onExceeded) {
+      case 'stop': {
+        newState.status = 'done';
+        const finishEvent = {
+          finalState: newState,
+          reason: 'cost_limit_exceeded' as const,
+          reasonDetail: `Cost limit exceeded: ${newState.cost.total} ${newState.cost.currency} > ${costLimit.maxTotalCost} ${costLimit.currency}`,
+          type: 'done' as const,
+        };
+        newState.events = [...newState.events, finishEvent];
+        return {
+          events: [finishEvent],
+          newState,
+          nextContext: undefined,
+        };
+      }
+
+      case 'interrupt': {
+        return {
+          ...this.interrupt(
+            newState,
+            `Cost limit exceeded: ${newState.cost.total} ${newState.cost.currency}`,
+            true,
+            {
+              costExceeded: true,
+              currentCost: newState.cost.total,
+              limitCost: costLimit.maxTotalCost,
+            },
+          ),
+          nextContext: undefined,
+        };
+      }
+
+      case 'warn':
+      default: {
+        // Continue execution but emit warning event
+        const warningEvent = {
+          error: new Error(
+            `Warning: Cost limit exceeded: ${newState.cost.total} ${newState.cost.currency}`,
+          ),
+          type: 'error' as const,
+        };
+        newState.events = [...newState.events, warningEvent];
+        return {
+          events: [warningEvent],
+          newState,
+          nextContext: {
+            payload: { error: warningEvent.error, isCostWarning: true },
+            phase: 'error' as const,
+            session: this.createSessionContext(newState),
+          },
+        };
+      }
+    }
+  }
 
   /**
    * Create session context metadata - reusable helper
