@@ -4,7 +4,6 @@
   "private": true,
   "main": "./src/index.ts",
   "scripts": {
-    "build": "tsc",
     "simple": "tsx examples/tools-calling.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
