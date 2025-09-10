@@ -8,7 +8,7 @@ import type { AgentEvent } from './event';
 export interface AgentState {
   sessionId: string;
   // --- State Machine ---
-  status: 'idle' | 'running' | 'waiting_for_human_input' | 'done' | 'error';
+  status: 'idle' | 'running' | 'waiting_for_human_input' | 'done' | 'error' | 'interrupted';
 
   // --- Core Context ---
   messages: any[];
@@ -47,10 +47,27 @@ export interface AgentState {
     prompt?: string;
   };
 
+  // --- Interruption Handling ---
+  /**
+   * When status is 'interrupted', this stores the interruption context
+   * for potential resumption or cleanup.
+   */
+  interruption?: {
+    /** Reason for interruption */
+    reason: string;
+    /** Timestamp when interruption occurred */
+    interruptedAt: string;
+    /** The instruction that was being executed when interrupted */
+    interruptedInstruction?: any;
+    /** Whether the interruption can be resumed */
+    canResume: boolean;
+  };
+
   // --- Metadata ---
   createdAt: string;
   error?: any;
   lastModified: string;
+
   // --- Extensible metadata ---
   metadata?: Record<string, any>;
 }

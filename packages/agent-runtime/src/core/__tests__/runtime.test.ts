@@ -601,6 +601,127 @@ describe('AgentRuntime', () => {
     });
   });
 
+  describe('Interruption Handling', () => {
+    it('should interrupt execution with reason and metadata', () => {
+      const agent = new MockAgent();
+      const runtime = new AgentRuntime(agent);
+
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'test-session',
+        stepCount: 3,
+      });
+
+      const result = runtime.interrupt(state, 'User requested stop', true, {
+        userAction: 'stop_button',
+      });
+
+      expect(result.newState.status).toBe('interrupted');
+      expect(result.newState.interruption).toMatchObject({
+        reason: 'User requested stop',
+        canResume: true,
+        interruptedAt: expect.any(String),
+      });
+
+      expect(result.events[0]).toMatchObject({
+        type: 'interrupted',
+        reason: 'User requested stop',
+        canResume: true,
+        metadata: { userAction: 'stop_button' },
+        interruptedAt: expect.any(String),
+      });
+    });
+
+    it('should resume from interrupted state', async () => {
+      const agent = new MockAgent();
+      const runtime = new AgentRuntime(agent, {
+        modelRuntime: async function* () {
+          yield { content: 'resumed response' };
+        },
+      });
+
+      // Create interrupted state
+      let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const interruptResult = runtime.interrupt(state, 'Test interruption');
+
+      // Resume execution
+      const resumeResult = await runtime.resume(interruptResult.newState, 'Test resume');
+
+      expect(resumeResult.newState.status).toBe('running');
+      expect(resumeResult.newState.interruption).toBeUndefined();
+
+      expect(resumeResult.events[0]).toMatchObject({
+        type: 'resumed',
+        reason: 'Test resume',
+        resumedFromStep: 0,
+        resumedAt: expect.any(String),
+      });
+    });
+
+    it('should not allow resume if canResume is false', async () => {
+      const agent = new MockAgent();
+      const runtime = new AgentRuntime(agent);
+
+      let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const interruptResult = runtime.interrupt(state, 'Fatal error', false);
+
+      await expect(runtime.resume(interruptResult.newState)).rejects.toThrow(
+        'Cannot resume: interruption is not resumable',
+      );
+    });
+
+    it('should not allow resume from non-interrupted state', async () => {
+      const agent = new MockAgent();
+      const runtime = new AgentRuntime(agent);
+
+      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+
+      await expect(runtime.resume(state)).rejects.toThrow(
+        'Cannot resume: state is not interrupted',
+      );
+    });
+
+    it('should resume with specific context', async () => {
+      const agent = new MockAgent();
+      const runtime = new AgentRuntime(agent, {
+        modelRuntime: async function* () {
+          yield { content: 'context-specific response' };
+        },
+      });
+
+      let state = AgentRuntime.createInitialState({
+        sessionId: 'test-session',
+        messages: [{ role: 'user', content: 'Hello' }],
+      });
+      const interruptResult = runtime.interrupt(state, 'Test interruption');
+
+      const resumeContext: RuntimeContext = {
+        phase: 'user_input',
+        payload: { message: { role: 'user', content: 'Hello' } },
+        session: {
+          sessionId: 'test-session',
+          messageCount: 1,
+          eventCount: 2, // init + interrupt
+          status: 'interrupted',
+          stepCount: 0,
+        },
+      };
+
+      const resumeResult = await runtime.resume(
+        interruptResult.newState,
+        'Resume with context',
+        resumeContext,
+      );
+
+      expect(resumeResult.events.length).toBeGreaterThanOrEqual(2); // resume + llm events (start, stream, result)
+      expect(resumeResult.events[0].type).toBe('resumed');
+      expect(resumeResult.newState.status).toBe('running');
+
+      // Should contain LLM execution events
+      expect(resumeResult.events.map((e) => e.type)).toContain('llm_start');
+      expect(resumeResult.events.map((e) => e.type)).toContain('llm_result');
+    });
+  });
+
   describe('Integration Tests', () => {
     it('should complete a full conversation flow', async () => {
       const agent = new MockAgent();

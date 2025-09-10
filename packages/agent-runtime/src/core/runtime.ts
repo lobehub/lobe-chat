@@ -120,6 +120,103 @@ export class AgentRuntime {
   }
 
   /**
+   * Interrupt the current execution
+   * @param state - Current agent state
+   * @param reason - Reason for interruption
+   * @param canResume - Whether the interruption can be resumed later
+   * @param metadata - Additional metadata about the interruption
+   */
+  interrupt(
+    state: AgentState,
+    reason: string,
+    canResume: boolean = true,
+    metadata?: Record<string, unknown>,
+  ): { events: AgentEvent[]; newState: AgentState } {
+    const newState = structuredClone(state);
+    const interruptedAt = new Date().toISOString();
+
+    newState.status = 'interrupted';
+    newState.lastModified = interruptedAt;
+    newState.interruption = {
+      reason,
+      interruptedAt,
+      canResume,
+      // Store the current step for potential resumption
+      interruptedInstruction: undefined, // Could be enhanced to store current instruction
+    };
+
+    const interruptEvent: AgentEvent = {
+      type: 'interrupted',
+      reason,
+      interruptedAt,
+      canResume,
+      metadata,
+    };
+
+    newState.events = [...newState.events, interruptEvent];
+
+    return {
+      events: [interruptEvent],
+      newState,
+    };
+  }
+
+  /**
+   * Resume execution from an interrupted state
+   * @param state - Interrupted agent state
+   * @param reason - Reason for resumption
+   * @param context - Optional context to resume with
+   */
+  async resume(
+    state: AgentState,
+    reason: string = 'User resumed execution',
+    context?: RuntimeContext,
+  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: RuntimeContext }> {
+    if (state.status !== 'interrupted') {
+      throw new Error('Cannot resume: state is not interrupted');
+    }
+
+    if (state.interruption && !state.interruption.canResume) {
+      throw new Error('Cannot resume: interruption is not resumable');
+    }
+
+    const newState = structuredClone(state);
+    const resumedAt = new Date().toISOString();
+    const resumedFromStep = state.stepCount;
+
+    // Clear interruption context and set status back to running
+    newState.status = 'running';
+    newState.lastModified = resumedAt;
+    newState.interruption = undefined;
+
+    const resumeEvent: AgentEvent = {
+      type: 'resumed',
+      reason,
+      resumedAt,
+      resumedFromStep,
+    };
+
+    newState.events = [...newState.events, resumeEvent];
+
+    // If context is provided, continue with that context
+    if (context) {
+      const result = await this.step(newState, context);
+      return {
+        events: [resumeEvent, ...result.events],
+        newState: result.newState,
+        nextContext: result.nextContext,
+      };
+    }
+
+    // Otherwise, just return the resumed state
+    return {
+      events: [resumeEvent],
+      newState,
+      nextContext: this.createInitialContext(newState),
+    };
+  }
+
+  /**
    * Create a new agent state with flexible initialization
    * @param partialState - Partial state to override defaults
    * @returns Complete AgentState with defaults filled in

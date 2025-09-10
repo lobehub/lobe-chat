@@ -64,18 +64,44 @@ export interface AgentEventError {
   error: any;
 }
 
+export interface AgentEventInterrupted {
+  type: 'interrupted';
+  reason: string;
+  interruptedAt: string;
+  interruptedInstruction?: any;
+  canResume: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AgentEventResumed {
+  type: 'resumed';
+  reason: string;
+  resumedAt: string;
+  resumedFromStep: number;
+  metadata?: Record<string, unknown>;
+}
+
 /**
  * Events emitted by the AgentRuntime during execution
  */
 export type AgentEvent =
+  // Initialization
   | AgentEventInit
+  // LLM streaming output
   | AgentEventLlmStart
   | AgentEventLlmStream
   | AgentEventLlmResult
+  // Tool invocation
   | AgentEventToolPending
   | AgentEventToolResult
+  // Normal completion
+  | AgentEventDone
+  // Error thrown
+  | AgentEventError
+  // Human-in-the-loop (HIL)
   | AgentEventHumanApproveRequired
   | AgentEventHumanPromptRequired
   | AgentEventHumanSelectRequired
-  | AgentEventDone
-  | AgentEventError;
+  // Interruption and resumption
+  | AgentEventInterrupted
+  | AgentEventResumed;
