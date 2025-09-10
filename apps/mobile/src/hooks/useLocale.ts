@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LANGUAGE_OPTIONS, LocaleMode, getDetectedLocale } from '@/i18n/resource';
+import { ensureLanguageResources } from '@/i18n';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 
@@ -47,10 +48,12 @@ export const useLocale = () => {
         if (locale === 'auto') {
           // 跟随系统设置
           const detectedLanguage = getDetectedLocale();
+          await ensureLanguageResources(detectedLanguage);
           await i18n.changeLanguage(detectedLanguage);
           await saveLocaleMode('auto');
         } else {
           // 使用指定语言
+          await ensureLanguageResources(locale);
           await i18n.changeLanguage(locale);
           await saveLocaleMode(locale);
         }

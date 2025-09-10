@@ -115,6 +115,7 @@
   "feedback": "Phản hồi ý kiến",
   "fontSize": {
     "standard": "Tiêu chuẩn",
+    "text": "Lưu ý, cấu hình này chỉ ảnh hưởng đến kích thước phông chữ hiển thị của nội dung tin nhắn",
     "title": "Cỡ chữ"
   },
   "help": "Trợ giúp sử dụng",

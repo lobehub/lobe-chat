@@ -14,9 +14,16 @@ export default function LocaleScreen() {
   const { styles } = useStyles();
   const { localeMode, changeLocale } = useLocale();
   const { t } = useTranslation(['setting']);
+  const [pendingLocale, setPendingLocale] = React.useState<LocaleMode | null>(null);
 
   const handleLocaleChange = async (locale: LocaleMode) => {
-    await changeLocale(locale);
+    if (pendingLocale || localeMode === locale) return;
+    try {
+      setPendingLocale(locale);
+      await changeLocale(locale);
+    } finally {
+      setPendingLocale(null);
+    }
   };
 
   const localeOptions = [
@@ -37,6 +44,7 @@ export default function LocaleScreen() {
               isLast={index === localeOptions.length - 1}
               isSelected={localeMode === option.value}
               key={option.value}
+              loading={pendingLocale === (option.value as LocaleMode)}
               onPress={() => handleLocaleChange(option.value as LocaleMode)}
               showCheckmark={true}
               title={option.label}

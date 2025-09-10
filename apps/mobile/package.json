@@ -132,6 +132,7 @@
     "shiki": "^3.1.0",
     "superjson": "^2.2.2",
     "swr": "^2.3.4",
+    "tokenx": "^1.1.0",
     "ts-md5": "^1.3.1",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
