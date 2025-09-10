@@ -2,6 +2,64 @@
 
 # Changelog
 
+## [Version&nbsp;1.125.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.124.0...v1.125.0)
+<sup>Released on **2025-09-10**</sup>
+
+
+#### ✨ Features
+
+- **image**: Implement model selection memory functionality.
+- **misc**: Add Math and TaskList to Editor, Seedream 4.0.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Assistant List error message, Fix editor key handling.
+
+
+#### 💄 Styles
+
+- **misc**: Add CometAPI model provider and chat models, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **image**: Implement model selection memory functionality, closes [#9160](https://github.com/jaworldwideorg/OneJA-Bot/issues/9160) ([b00e6d7](https://github.com/jaworldwideorg/OneJA-Bot/commit/b00e6d7))
+* **misc**: Add Math and TaskList to Editor, closes [#9165](https://github.com/jaworldwideorg/OneJA-Bot/issues/9165) ([9e0621f](https://github.com/jaworldwideorg/OneJA-Bot/commit/9e0621f))
+* **misc**: Seedream 4.0, closes [#9198](https://github.com/jaworldwideorg/OneJA-Bot/issues/9198) ([26a743f](https://github.com/jaworldwideorg/OneJA-Bot/commit/26a743f))
+
+
+
+#### What's fixed
+
+* **misc**: Fix Assistant List error message, closes [#9178](https://github.com/jaworldwideorg/OneJA-Bot/issues/9178) ([3519cb2](https://github.com/jaworldwideorg/OneJA-Bot/commit/3519cb2))
+* **misc**: Fix editor key handling, closes [#9189](https://github.com/jaworldwideorg/OneJA-Bot/issues/9189) ([8be822b](https://github.com/jaworldwideorg/OneJA-Bot/commit/8be822b))
+
+
+
+#### Styles
+
+* **misc**: Add CometAPI model provider and chat models, closes [#9065](https://github.com/jaworldwideorg/OneJA-Bot/issues/9065) ([575e334](https://github.com/jaworldwideorg/OneJA-Bot/commit/575e334))
+* **misc**: Update i18n, closes [#9146](https://github.com/jaworldwideorg/OneJA-Bot/issues/9146) ([e6fc02e](https://github.com/jaworldwideorg/OneJA-Bot/commit/e6fc02e))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.126.3](https://github.com/lobehub/lobe-chat/compare/v1.126.2...v1.126.3)
 
 <sup>Released on **2025-09-10**</sup>
