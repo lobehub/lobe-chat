@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  FlatList,
+  InteractionManager,
   LayoutChangeEvent,
-  ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
   View,
   ViewStyle,
 } from 'react-native';
+import { FlashList, type ListRenderItem, type FlashListRef } from '@shopify/flash-list';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
@@ -18,9 +18,9 @@ import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
 import ChatBubble from '../ChatBubble';
-import AutoScroll from '../AutoScroll';
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
+import AutoScroll from '@/features/chat/AutoScroll';
 
 interface ChatListProps {
   style?: ViewStyle;
@@ -43,7 +43,7 @@ const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLeng
 ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
-  const listRef = useRef<FlatList<ChatMessage>>(null);
+  const listRef = useRef<FlashListRef<ChatMessage>>(null);
   // 触发消息加载
   useFetchMessages();
 
@@ -117,7 +117,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
-      <ChatMessageItem index={index} item={item} key={item.id} totalLength={messages.length} />
+      <ChatMessageItem index={index} item={item} totalLength={messages.length} />
     ),
     [messages.length],
   );
@@ -168,17 +168,19 @@ export default function ChatListChatList({ style }: ChatListProps) {
   }, []);
 
   const handleContentSizeChange = useCallback(
-    (w: number, h: number) => {
+    (_w: number, h: number) => {
       contentHeightRef.current = h;
-      // If pinned at bottom, keep following by scrolling to end on growth
-      if (atBottomRef.current) {
+      if (atBottomRef.current && !isScrolling) {
+        InteractionManager.runAfterInteractions(() => {
+          listRef.current?.scrollToEnd({ animated: true });
+        });
         updateAtBottom(true);
       } else {
         const nextAtBottom = computeAtBottom();
         updateAtBottom(nextAtBottom);
       }
     },
-    [computeAtBottom, updateAtBottom],
+    [computeAtBottom, updateAtBottom, isScrolling],
   );
 
   const handleLayout = useCallback(
@@ -202,12 +204,13 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   return (
     <View style={[styles.chatContainer, style]}>
-      <FlatList
+      <FlashList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}
-        initialNumToRender={10}
+        getItemType={(chatMessage) => {
+          return chatMessage.role;
+        }}
         keyExtractor={keyExtractor}
-        maxToRenderPerBatch={10}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleLayout}
         onMomentumScrollBegin={handleMomentumScrollBegin}
@@ -216,14 +219,10 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
         ref={listRef}
-        removeClippedSubviews={true}
         renderItem={renderItem}
-        scrollEventThrottle={16}
-        windowSize={10}
       />
       <AutoScroll
         atBottom={atBottom}
-        isScrolling={isScrolling}
         onScrollToBottom={(type) => {
           const flatList = listRef.current;
           switch (type) {
