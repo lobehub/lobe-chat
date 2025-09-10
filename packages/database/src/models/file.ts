@@ -353,16 +353,31 @@ export class FileModel {
         const batchChunkIds = chunkIds.slice(startIdx, startIdx + BATCH_SIZE);
         if (batchChunkIds.length === 0) continue;
 
-        // 按正确的删除顺序处理每个批次
+        // 按正确的删除顺序处理每个批次，失败不阻止流程
         const batchPromise = (async () => {
           // 1. 删除 embeddings (最顶层，有外键依赖)
-          await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+          try {
+            await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete embeddings:', e);
+          }
 
           // 2. 删除 documentChunks 关联 (如果存在)
-          await trx.delete(documentChunks).where(inArray(documentChunks.chunkId, batchChunkIds));
+          try {
+            await trx.delete(documentChunks).where(inArray(documentChunks.chunkId, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete documentChunks:', e);
+          }
 
           // 3. 删除 chunks (核心数据)
-          await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+          try {
+            await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete chunks:', e);
+          }
         })();
 
         batchPromises.push(batchPromise);
@@ -373,7 +388,12 @@ export class FileModel {
     }
 
     // 4. 最后删除 fileChunks 关联表记录
-    await trx.delete(fileChunks).where(inArray(fileChunks.fileId, fileIds));
+    try {
+      await trx.delete(fileChunks).where(inArray(fileChunks.fileId, fileIds));
+    } catch (e) {
+      // 静默处理，不阻止删除流程
+      console.warn('Failed to delete fileChunks:', e);
+    }
 
     return chunkIds;
   };
