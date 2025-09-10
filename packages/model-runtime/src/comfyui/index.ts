@@ -58,27 +58,37 @@ export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
   }
 
   /**
-   * Create image using tRPC to Framework services
+   * Create image using internal API endpoint
+   * Always uses full URL for consistency across environments
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     log('🎨 Creating image with model: %s', payload.model);
 
     try {
-      // Use tRPC caller to invoke Framework services (Edge Runtime compatible)
-      const { createCallerFactory } = await import('@/libs/trpc/lambda');
-      const { lambdaRouter } = await import('@/server/routers/lambda');
+      // Always use full URL from APP_URL environment variable
+      // This ensures consistency across server and client environments
+      const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3010}`;
 
-      // The tRPC router handles authentication through keyVaults middleware
-      const createCaller = createCallerFactory(lambdaRouter);
-      const caller = createCaller({});
-
-      // Call Framework services through tRPC
-      const result = await caller.comfyui.createImage({
-        model: payload.model,
-        options: this.options,
-        params: payload.params,
+      const response = await fetch(`${appUrl}/webapi/text-to-image/comfyui`, {
+        body: JSON.stringify({
+          model: payload.model,
+          options: this.options,
+          params: payload.params,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          ...this.getAuthHeaders(),
+        },
+        method: 'POST',
       });
 
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`ComfyUI API error: ${response.status} - ${error}`);
+      }
+
+      const result = await response.json();
+      log('✅ ComfyUI image created successfully');
       return result;
     } catch (error) {
       log('❌ ComfyUI createImage error: %O', error);
