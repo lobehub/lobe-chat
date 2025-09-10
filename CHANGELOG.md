@@ -2,66 +2,125 @@
 
 # Changelog
 
-## [Version&nbsp;1.124.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.123.0...v1.124.0)
-<sup>Released on **2025-09-08**</sup>
+### [Version 1.126.3](https://github.com/lobehub/lobe-chat/compare/v1.126.2...v1.126.3)
 
-
-#### ♻ Code Refactoring
-
-- **misc**: Refactor to remove edge runtime and add more tests, remove edge runtime.
-
-
-#### ✨ Features
-
-- **misc**: ChatInput support rich text and support parallel send.
-
-
-#### 🐛 Bug Fixes
-
-- **misc**: Enhance NewAPI with environment variables and fix routers compatibility, fix ChatInput send command switch, revert V1 Mobile.
-
+<sup>Released on **2025-09-10**</sup>
 
 #### 💄 Styles
 
-- **misc**: Update doubao-seed-1.6-vision models.
-
+- **misc**: Add CometAPI model provider and chat models, update i18n.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Refactor to remove edge runtime and add more tests, closes [#9133](https://github.com/jaworldwideorg/OneJA-Bot/issues/9133) ([6f87034](https://github.com/jaworldwideorg/OneJA-Bot/commit/6f87034))
-* **misc**: Remove edge runtime, closes [#9085](https://github.com/jaworldwideorg/OneJA-Bot/issues/9085) ([d3544f9](https://github.com/jaworldwideorg/OneJA-Bot/commit/d3544f9))
-
-
-
-#### What's improved
-
-* **misc**: ChatInput support rich text and support parallel send, closes [#8964](https://github.com/jaworldwideorg/OneJA-Bot/issues/8964) ([38d9d98](https://github.com/jaworldwideorg/OneJA-Bot/commit/38d9d98))
-
-
-
-#### What's fixed
-
-* **misc**: Enhance NewAPI with environment variables and fix routers compatibility, closes [#9110](https://github.com/jaworldwideorg/OneJA-Bot/issues/9110) ([a66856d](https://github.com/jaworldwideorg/OneJA-Bot/commit/a66856d))
-* **misc**: Fix ChatInput send command switch, closes [#9131](https://github.com/jaworldwideorg/OneJA-Bot/issues/9131) ([4d5246a](https://github.com/jaworldwideorg/OneJA-Bot/commit/4d5246a))
-* **misc**: Revert V1 Mobile, closes [#9143](https://github.com/jaworldwideorg/OneJA-Bot/issues/9143) ([b385602](https://github.com/jaworldwideorg/OneJA-Bot/commit/b385602))
-
-
-
 #### Styles
 
-* **misc**: Update doubao-seed-1.6-vision models, closes [#9052](https://github.com/jaworldwideorg/OneJA-Bot/issues/9052) ([df2d001](https://github.com/jaworldwideorg/OneJA-Bot/commit/df2d001))
+- **misc**: Add CometAPI model provider and chat models, closes [#9065](https://github.com/lobehub/lobe-chat/issues/9065) ([575e334](https://github.com/lobehub/lobe-chat/commit/575e334))
+- **misc**: Update i18n, closes [#9146](https://github.com/lobehub/lobe-chat/issues/9146) ([e6fc02e](https://github.com/lobehub/lobe-chat/commit/e6fc02e))
 
 </details>
 
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.126.2](https://github.com/lobehub/lobe-chat/compare/v1.126.1...v1.126.2)
+
+<sup>Released on **2025-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix editor key handling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix editor key handling, closes [#9189](https://github.com/lobehub/lobe-chat/issues/9189) ([8be822b](https://github.com/lobehub/lobe-chat/commit/8be822b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.126.1](https://github.com/lobehub/lobe-chat/compare/v1.126.0...v1.126.1)
+
+<sup>Released on **2025-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Assistant List error message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Assistant List error message, closes [#9178](https://github.com/lobehub/lobe-chat/issues/9178) ([3519cb2](https://github.com/lobehub/lobe-chat/commit/3519cb2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.126.0](https://github.com/lobehub/lobe-chat/compare/v1.125.0...v1.126.0)
+
+<sup>Released on **2025-09-08**</sup>
+
+#### ✨ Features
+
+- **image**: Implement model selection memory functionality.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **image**: Implement model selection memory functionality, closes [#9160](https://github.com/lobehub/lobe-chat/issues/9160) ([b00e6d7](https://github.com/lobehub/lobe-chat/commit/b00e6d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.125.0](https://github.com/lobehub/lobe-chat/compare/v1.124.4...v1.125.0)
+
+<sup>Released on **2025-09-08**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Math and TaskList to Editor.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Math and TaskList to Editor, closes [#9165](https://github.com/lobehub/lobe-chat/issues/9165) ([9e0621f](https://github.com/lobehub/lobe-chat/commit/9e0621f))
+
+</details>
 
 <div align="right">
 

@@ -9,6 +9,8 @@
       "on": "Biçim araç çubuğunu göster"
     }
   },
+  "cancel": "İptal",
+  "confirm": "Onayla",
   "file": {
     "error": "Hata: {{message}}",
     "uploading": "Dosya yükleniyor..."
@@ -21,6 +23,9 @@
     "open": "Bağlantıyı aç",
     "placeholder": "Bağlantı URL'si girin",
     "unlink": "Bağlantıyı kaldır"
+  },
+  "math": {
+    "placeholder": "Lütfen TeX formülünü girin"
   },
   "table": {
     "delete": "Tabloyu sil",
@@ -42,6 +47,8 @@
     "numberList": "Numaralı liste",
     "strikethrough": "Üstü çizili",
     "table": "Tablo ekle",
+    "taskList": "Görev Listesi",
+    "tex": "TeX Formülü",
     "underline": "Altı çizili"
   }
 }

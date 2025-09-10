@@ -53,6 +53,9 @@
   "Baichuan4-Turbo": {
     "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
   },
+  "ByteDance-Seed/Seed-OSS-36B-Instruct": {
+    "description": "Seed-OSS 是由字節跳動 Seed 團隊開發的一系列開源大型語言模型，專為強大的長上下文處理、推理、智能體（agent）和通用能力而設計。該系列中的 Seed-OSS-36B-Instruct 是一個擁有 360 億參數的指令微調模型，它原生支援超長上下文長度，使其能夠一次性處理海量文件或複雜的程式碼庫。該模型在推理、程式碼生成和智能體任務（如工具使用）方面進行了特別優化，同時保持了平衡且出色的通用能力。此模型的一大特色是「思考預算」（Thinking Budget）功能，允許用戶根據需要靈活調整推理長度，從而在實際應用中有效提升推理效率。"
+  },
   "DeepSeek-R1": {
     "description": "最先進的高效 LLM，擅長推理、數學和程式設計。"
   },
@@ -81,7 +84,13 @@
     "description": "模型供應商為：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS極速版，滿血非量化，代碼與數學能力更強，響應更快！"
   },
   "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經過後訓練優化，Agent 工具使用與智能體任務表現大幅提升。"
+    "description": "DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經 Post-Training 優化，Agent 工具使用與智能體任務表現大幅提升。"
+  },
+  "DeepSeek-V3.1-Fast": {
+    "description": "DeepSeek V3.1 Fast 是 DeepSeek V3.1 版本的高 TPS 極速版。混合思考模式：透過更改聊天模板，一個模型可以同時支援思考模式和非思考模式。更智能的工具調用：透過後訓練優化，模型在工具使用和代理任務中的表現顯著提升。"
+  },
+  "DeepSeek-V3.1-Think": {
+    "description": "DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經 Post-Training 優化，Agent 工具使用與智能體任務表現大幅提升。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
@@ -809,12 +818,6 @@
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024 是一個小型且高效的更新版本，於 2024 年 12 月發布。它在 RAG、工具使用、代理等需要複雜推理和多步處理的任務中表現出色。"
   },
-  "compound-beta": {
-    "description": "Compound-beta 是一個複合 AI 系統，由 GroqCloud 中已經支持的多個開放可用的模型提供支持，可以智能地、有選擇地使用工具來回答用戶查詢。"
-  },
-  "compound-beta-mini": {
-    "description": "Compound-beta-mini 是一個複合 AI 系統，由 GroqCloud 中已經支持的公開可用模型提供支持，可以智能地、有選擇地使用工具來回答用戶查詢。"
-  },
   "computer-use-preview": {
     "description": "computer-use-preview 模型是專為「電腦使用工具」設計的專用模型，經過訓練以理解並執行電腦相關任務。"
   },
@@ -1054,6 +1057,9 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking 模型思考能力大幅強化，相較 Doubao-1.5-thinking-pro，在 Coding、Math、邏輯推理等基礎能力上進一步提升，支援視覺理解。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
+  },
+  "doubao-seed-1.6-vision": {
+    "description": "Doubao-Seed-1.6-vision 視覺深度思考模型，在教育、圖像審核、巡檢與安防和 AI 搜尋問答等場景下展現出更強的通用多模態理解和推理能力。支援 256k 上下文視窗，輸出長度支援最大 64k tokens。"
   },
   "doubao-seedream-3-0-t2i-250415": {
     "description": "Doubao 圖片生成模型由字節跳動 Seed 團隊研發，支持文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文本提示詞生成圖片。"
@@ -1400,9 +1406,6 @@
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash 實驗模型，支援圖像生成"
   },
-  "google/gemini-2.5-flash-image-preview:free": {
-    "description": "Gemini 2.5 Flash 實驗模型，支援圖像生成"
-  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高級推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生更高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可通過「推理最大令牌數」參數進行配置，如文檔中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
@@ -1441,6 +1444,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令處理能力，適合輕量級應用。"
+  },
+  "google/gemma-3-12b-it": {
+    "description": "Gemma 3 12B 是谷歌的一款開源語言模型，以其在效率和性能方面樹立了新的標準。"
   },
   "google/gemma-3-1b-it": {
     "description": "Gemma 3 1B 是谷歌的一款開源語言模型，以其在效率和性能方面樹立了新的標準。"
@@ -1607,6 +1613,12 @@
   "grok-code-fast-1": {
     "description": "我們很高興推出 grok-code-fast-1，這是一款快速且經濟高效的推理模型，在代理編碼方面表現出色。"
   },
+  "groq/compound": {
+    "description": "Compound 是一個複合 AI 系統，由 GroqCloud 中已經支援的多個開放可用的模型提供支援，可以智能地、有選擇地使用工具來回答用戶查詢。"
+  },
+  "groq/compound-mini": {
+    "description": "Compound-mini 是一個複合 AI 系統，由 GroqCloud 中已經支援的公開可用模型提供支援，可以智能地、有選擇地使用工具來回答用戶查詢。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
   },
@@ -1662,7 +1674,7 @@
     "description": "大幅提升高難度數學、邏輯和程式碼能力，優化模型輸出穩定性，提升模型長文能力。"
   },
   "hunyuan-t1-latest": {
-    "description": "業界首個超大規模 Hybrid-Transformer-Mamba 推理模型，擴展推理能力，超強解碼速度，進一步對齊人類偏好。"
+    "description": "大幅提升主模型慢思考模型的高難數學、複雜推理、高難程式碼、指令遵循、文本創作品質等能力。"
   },
   "hunyuan-t1-vision": {
     "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
@@ -1765,6 +1777,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 是一款具備超強程式碼和 Agent 能力的 MoE 架構基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學、Agent 等主要類別的基準性能測試中，K2 模型的性能超越其他主流開源模型。"
+  },
+  "kimi-k2-0905-preview": {
+    "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 是一款具備超強程式碼與 Agent 能力的 MoE 架構的基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學與 Agent 等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
@@ -2165,8 +2180,17 @@
   "moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 是一款具備超強程式碼和 Agent 能力的 MoE 架構基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學、Agent 等主要類別的基準性能測試中，K2 模型的性能超過其他主流開源模型。"
   },
+  "moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
+  },
+  "moonshotai/kimi-k2-0905": {
+    "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2 是一款具備超強程式碼與代理能力的 MoE 架構基礎模型，總參數量達 1T，啟用參數 32B。在通用知識推理、程式設計、數學、代理等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
+  },
+  "moonshotai/kimi-k2-instruct-0905": {
+    "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
@@ -2548,6 +2572,9 @@
   },
   "qwen3-coder-plus": {
     "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
+  },
+  "qwen3-max-preview": {
+    "description": "通義千問3系列 Max 模型 Preview 版本，相較 2.5 系列整體通用能力有大幅度提升，中英文通用文本理解能力、複雜指令遵循能力、主觀開放任務能力、多語言能力、工具調用能力均顯著增強；模型知識幻覺更少。"
   },
   "qwq": {
     "description": "QwQ 是一個實驗研究模型，專注於提高 AI 推理能力。"

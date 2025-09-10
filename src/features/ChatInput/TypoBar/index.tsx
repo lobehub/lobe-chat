@@ -13,9 +13,12 @@ import {
   LinkIcon,
   ListIcon,
   ListOrderedIcon,
+  ListTodoIcon,
   MessageSquareQuote,
+  SigmaIcon,
   SquareDashedBottomCodeIcon,
   StrikethroughIcon,
+  UnderlineIcon,
 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,14 +51,13 @@ const TypoBar = memo(() => {
                 label: t('typobar.italic'),
                 onClick: editorState.italic,
               },
-              // TODO: 目前 markdown 不支持 <u>
-              // {
-              //   active: editorState.isUnderline,
-              //   icon: UnderlineIcon,
-              //   key: 'underline',
-              //   label: t('typobar.underline'),
-              //   onClick: editorState.underline,
-              // },
+              {
+                active: editorState.isUnderline,
+                icon: UnderlineIcon,
+                key: 'underline',
+                label: t('typobar.underline'),
+                onClick: editorState.underline,
+              },
               {
                 active: editorState.isStrikethrough,
                 icon: StrikethroughIcon,
@@ -80,6 +82,15 @@ const TypoBar = memo(() => {
                 onClick: editorState.numberList,
               },
               {
+                icon: ListTodoIcon,
+                key: 'tasklist',
+                label: t('typobar.taskList'),
+                onClick: editorState.checkList,
+              },
+              {
+                type: 'divider',
+              },
+              {
                 active: editorState.isBlockquote,
                 icon: MessageSquareQuote,
                 key: 'blockquote',
@@ -94,6 +105,12 @@ const TypoBar = memo(() => {
               },
               {
                 type: 'divider',
+              },
+              {
+                icon: SigmaIcon,
+                key: 'math',
+                label: t('typobar.tex'),
+                onClick: editorState.insertMath,
               },
               {
                 active: editorState.isCode,

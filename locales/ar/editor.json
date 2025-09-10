@@ -9,6 +9,8 @@
       "on": "إظهار شريط أدوات التنسيق"
     }
   },
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
   "file": {
     "error": "خطأ: {{message}}",
     "uploading": "جاري رفع الملف..."
@@ -21,6 +23,9 @@
     "open": "فتح الرابط",
     "placeholder": "أدخل عنوان URL للرابط",
     "unlink": "إزالة الرابط"
+  },
+  "math": {
+    "placeholder": "يرجى إدخال معادلة TeX"
   },
   "table": {
     "delete": "حذف الجدول",
@@ -42,6 +47,8 @@
     "numberList": "قائمة مرقمة",
     "strikethrough": "شطب",
     "table": "إدراج جدول",
+    "taskList": "قائمة المهام",
+    "tex": "معادلة TeX",
     "underline": "تسطير"
   }
 }
