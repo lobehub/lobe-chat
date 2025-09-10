@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Pressione <key/> para enviar",
     "sendWithEnter": "Pressione <key/> para enviar",
     "stop": "Parar",
-    "warp": "Quebrar linha"
+    "warp": "Quebrar linha",
+    "warpWithKey": "Quebrar linha pressionando <key/> tecla"
   },
   "intentUnderstanding": {
     "title": "Entendendo e analisando sua intenção..."

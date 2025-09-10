@@ -18,6 +18,7 @@ import {
   SigmaIcon,
   SquareDashedBottomCodeIcon,
   StrikethroughIcon,
+  UnderlineIcon,
 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,14 +51,13 @@ const TypoBar = memo(() => {
                 label: t('typobar.italic'),
                 onClick: editorState.italic,
               },
-              // TODO: 目前 markdown 不支持 <u>
-              // {
-              //   active: editorState.isUnderline,
-              //   icon: UnderlineIcon,
-              //   key: 'underline',
-              //   label: t('typobar.underline'),
-              //   onClick: editorState.underline,
-              // },
+              {
+                active: editorState.isUnderline,
+                icon: UnderlineIcon,
+                key: 'underline',
+                label: t('typobar.underline'),
+                onClick: editorState.underline,
+              },
               {
                 active: editorState.isStrikethrough,
                 icon: StrikethroughIcon,

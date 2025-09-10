@@ -53,6 +53,9 @@
   "Baichuan4-Turbo": {
     "description": "모델 능력이 국내 1위이며, 지식 백과, 긴 텍스트, 생성 창작 등 중국어 작업에서 해외 주류 모델을 초월합니다. 또한 업계 선도적인 다중 모달 능력을 갖추고 있으며, 여러 권위 있는 평가 기준에서 우수한 성과를 보입니다."
   },
+  "ByteDance-Seed/Seed-OSS-36B-Instruct": {
+    "description": "Seed-OSS는 바이트댄스 Seed 팀이 개발한 일련의 오픈 소스 대형 언어 모델로, 강력한 장기 문맥 처리, 추론, 에이전트(agent) 및 범용 능력을 위해 설계되었습니다. 이 시리즈 중 Seed-OSS-36B-Instruct는 360억 개의 파라미터를 가진 지시 미세 조정 모델로, 초장기 문맥 길이를 본래 지원하여 대량의 문서나 복잡한 코드베이스를 한 번에 처리할 수 있습니다. 이 모델은 추론, 코드 생성 및 에이전트 작업(예: 도구 사용)에 특별히 최적화되어 있으며, 균형 잡히고 뛰어난 범용 능력을 유지합니다. 이 모델의 주요 특징 중 하나는 '사고 예산(Thinking Budget)' 기능으로, 사용자가 필요에 따라 추론 길이를 유연하게 조절할 수 있어 실제 응용에서 추론 효율을 효과적으로 향상시킵니다."
+  },
   "DeepSeek-R1": {
     "description": "최첨단 효율적인 LLM으로, 추론, 수학 및 프로그래밍에 능숙합니다."
   },
@@ -81,7 +84,13 @@
     "description": "모델 공급자는 sophnet 플랫폼입니다. DeepSeek V3 Fast는 DeepSeek V3 0324 버전의 고TPS 초고속 버전으로, 완전 비양자화되어 코드와 수학 능력이 더욱 강력하며 반응 속도가 훨씬 빠릅니다!"
   },
   "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 뛰어납니다. 사후 학습(Post-Training) 최적화를 거쳐 에이전트 도구 사용과 지능형 작업 성능이 크게 향상되었습니다."
+    "description": "DeepSeek-V3.1-비사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
+  },
+  "DeepSeek-V3.1-Fast": {
+    "description": "DeepSeek V3.1 Fast는 DeepSeek V3.1 버전의 고속 TPS 버전입니다. 하이브리드 사고 모드: 채팅 템플릿 변경을 통해 하나의 모델이 사고 모드와 비사고 모드를 동시에 지원할 수 있습니다. 더 스마트한 도구 호출: 사후 학습 최적화를 통해 모델의 도구 사용 및 에이전트 작업 성능이 현저히 향상되었습니다."
+  },
+  "DeepSeek-V3.1-Think": {
+    "description": "DeepSeek-V3.1-사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite는 탁월한 응답 속도와 뛰어난 가성비를 자랑하며, 고객의 다양한 시나리오에 더 유연한 선택을 제공합니다. 128k 컨텍스트 윈도우 추론 및 미세 조정을 지원합니다."
@@ -809,12 +818,6 @@
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024는 소형이면서도 효율적인 업데이트 버전으로, 2024년 12월에 출시되었습니다. RAG, 도구 사용, 에이전트 등 복잡한 추론과 다단계 처리가 필요한 작업에서 뛰어난 성능을 발휘합니다."
   },
-  "compound-beta": {
-    "description": "Compound-beta는 GroqCloud에서 지원하는 여러 개방형 모델로 구성된 복합 AI 시스템으로, 사용자의 쿼리에 답변하기 위해 도구를 지능적으로 선택적으로 사용할 수 있습니다."
-  },
-  "compound-beta-mini": {
-    "description": "Compound-beta-mini는 GroqCloud에서 지원하는 공개 가능한 모델로 구성된 복합 AI 시스템으로, 사용자의 쿼리에 답변하기 위해 도구를 지능적으로 선택적으로 사용할 수 있습니다."
-  },
   "computer-use-preview": {
     "description": "computer-use-preview 모델은 '컴퓨터 사용 도구'를 위해 특별히 설계된 전용 모델로, 컴퓨터 관련 작업을 이해하고 수행하도록 훈련되었습니다."
   },
@@ -1054,6 +1057,9 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking 모델은 사고 능력이 크게 강화되어 Doubao-1.5-thinking-pro에 비해 코딩, 수학, 논리 추론 등 기본 능력이 더욱 향상되었으며, 시각 이해도 지원합니다. 256k 컨텍스트 창을 지원하며, 출력 길이는 최대 16k 토큰까지 가능합니다."
+  },
+  "doubao-seed-1.6-vision": {
+    "description": "Doubao-Seed-1.6-vision 시각 심층 사고 모델로, 교육, 이미지 검토, 점검 및 보안, AI 검색 질의응답 등 다양한 시나리오에서 더욱 강력한 범용 다중 모달 이해 및 추론 능력을 보여줍니다. 256k 문맥 창을 지원하며, 출력 길이는 최대 64k 토큰까지 지원합니다."
   },
   "doubao-seedream-3-0-t2i-250415": {
     "description": "Doubao 이미지 생성 모델은 바이트댄스 Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
@@ -1400,9 +1406,6 @@
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash 실험 모델로, 이미지 생성을 지원합니다."
   },
-  "google/gemini-2.5-flash-image-preview:free": {
-    "description": "Gemini 2.5 Flash 실험 모델로, 이미지 생성을 지원합니다."
-  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1441,6 +1444,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B)는 기본적인 지시 처리 능력을 제공하며, 경량 애플리케이션에 적합합니다."
+  },
+  "google/gemma-3-12b-it": {
+    "description": "Gemma 3 12B는 구글의 오픈 소스 언어 모델로, 효율성과 성능 면에서 새로운 기준을 세웠습니다."
   },
   "google/gemma-3-1b-it": {
     "description": "Gemma 3 1B는 구글의 오픈소스 언어 모델로, 효율성과 성능 면에서 새로운 기준을 세웠습니다."
@@ -1607,6 +1613,12 @@
   "grok-code-fast-1": {
     "description": "우리는 에이전트 코딩에 탁월한 빠르고 경제적인 추론 모델인 grok-code-fast-1을 출시하게 되어 기쁩니다."
   },
+  "groq/compound": {
+    "description": "Compound는 GroqCloud에서 지원하는 여러 공개 모델로 구성된 복합 AI 시스템으로, 사용자의 질의에 대해 도구를 지능적이고 선택적으로 사용하여 응답할 수 있습니다."
+  },
+  "groq/compound-mini": {
+    "description": "Compound-mini는 GroqCloud에서 지원하는 공개 모델로 구성된 복합 AI 시스템으로, 사용자의 질의에 대해 도구를 지능적이고 선택적으로 사용하여 응답할 수 있습니다."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B는 여러 최상위 모델을 통합한 창의성과 지능이 결합된 언어 모델입니다."
   },
@@ -1662,7 +1674,7 @@
     "description": "고난도 수학, 논리, 코딩 능력을 대폭 향상시키고 모델 출력 안정성을 최적화했으며, 장문 처리 능력을 강화했습니다."
   },
   "hunyuan-t1-latest": {
-    "description": "업계 최초의 초대형 Hybrid-Transformer-Mamba 추론 모델로, 추론 능력을 확장하고, 뛰어난 디코딩 속도를 자랑하며, 인간의 선호에 더욱 부합합니다."
+    "description": "주요 모델의 느린 사고 모델의 고난도 수학, 복잡한 추론, 고난도 코드, 지시 준수, 텍스트 창작 품질 등 능력을 대폭 향상시켰습니다."
   },
   "hunyuan-t1-vision": {
     "description": "혼원 다중모달 이해 심층 사고 모델로, 다중모달 원천 사고 체인을 지원하며 다양한 이미지 추론 시나리오에 능숙합니다. 이과 문제에서 빠른 사고 모델 대비 전반적인 성능 향상을 보입니다."
@@ -1765,6 +1777,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2는 강력한 코드 및 에이전트 기능을 갖춘 MoE 아키텍처 기반 모델로, 총 파라미터 1조, 활성화 파라미터 320억을 보유하고 있습니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈소스 모델을 능가하는 성능을 보여줍니다."
+  },
+  "kimi-k2-0905-preview": {
+    "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2는 강력한 코드 처리 및 에이전트(Agent) 기능을 갖춘 MoE(혼합 전문가) 아키텍처 기반 모델로, 총 파라미터 수는 1T(1조), 활성화 파라미터는 32B(320억)입니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야의 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈 소스 모델들을 능가합니다."
@@ -2165,8 +2180,17 @@
   "moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2는 초강력 코드 및 에이전트 능력을 갖춘 MoE 아키텍처 기반 모델로, 총 파라미터 1조, 활성화 파라미터 320억입니다. 범용 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야 벤치마크에서 K2 모델은 다른 주류 오픈 소스 모델을 능가하는 성능을 보입니다."
   },
+  "moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
+  },
+  "moonshotai/kimi-k2-0905": {
+    "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2는 강력한 코드 및 에이전트 기능을 갖춘 MoE 아키텍처 기반 모델로, 총 파라미터 1조, 활성화 파라미터 320억입니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야의 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈소스 모델을 능가하는 성능을 보입니다."
+  },
+  "moonshotai/kimi-k2-instruct-0905": {
+    "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
@@ -2548,6 +2572,9 @@
   },
   "qwen3-coder-plus": {
     "description": "통의천문 코드 모델입니다. 최신 Qwen3-Coder 시리즈 모델은 Qwen3 기반의 코드 생성 모델로, 강력한 코딩 에이전트 능력을 보유하고 있으며 도구 호출과 환경 상호작용에 능숙하여 자율 프로그래밍이 가능하며, 뛰어난 코드 능력과 함께 범용 능력도 겸비하고 있습니다."
+  },
+  "qwen3-max-preview": {
+    "description": "통의천문3 시리즈 Max 모델 프리뷰 버전으로, 2.5 시리즈에 비해 전반적인 범용 능력이 크게 향상되었으며, 중영문 범용 텍스트 이해 능력, 복잡한 지시 준수 능력, 주관적 개방형 작업 능력, 다국어 능력, 도구 호출 능력이 모두 크게 강화되었습니다. 모델의 지식 환각도 감소하였습니다."
   },
   "qwq": {
     "description": "QwQ는 AI 추론 능력을 향상시키는 데 중점을 둔 실험 연구 모델입니다."

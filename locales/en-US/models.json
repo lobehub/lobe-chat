@@ -53,6 +53,9 @@
   "Baichuan4-Turbo": {
     "description": "The leading model in the country, surpassing mainstream foreign models in Chinese tasks such as knowledge encyclopedias, long texts, and creative generation. It also possesses industry-leading multimodal capabilities, excelling in multiple authoritative evaluation benchmarks."
   },
+  "ByteDance-Seed/Seed-OSS-36B-Instruct": {
+    "description": "Seed-OSS is a series of open-source large language models developed by ByteDance's Seed team, designed specifically for powerful long-context processing, reasoning, agents, and general capabilities. The Seed-OSS-36B-Instruct in this series is an instruction-tuned model with 36 billion parameters, natively supporting ultra-long context lengths, enabling it to handle massive documents or complex codebases in a single pass. This model is specially optimized for reasoning, code generation, and agent tasks (such as tool usage), while maintaining balanced and excellent general capabilities. A key feature of this model is the \"Thinking Budget\" function, which allows users to flexibly adjust the reasoning length as needed, effectively improving reasoning efficiency in practical applications."
+  },
   "DeepSeek-R1": {
     "description": "A state-of-the-art efficient LLM, skilled in reasoning, mathematics, and programming."
   },
@@ -81,7 +84,13 @@
     "description": "Model provider: sophnet platform. DeepSeek V3 Fast is the high-TPS ultra-fast version of DeepSeek V3 0324, fully powered without quantization, featuring enhanced coding and mathematical capabilities for faster response!"
   },
   "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting two reasoning modes: thinking and non-thinking. It offers higher thinking efficiency compared to DeepSeek-R1-0528. With post-training optimization, the use of Agent tools and agent task performance have been significantly enhanced."
+    "description": "DeepSeek-V3.1 - Non-Thinking Mode; DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting both thinking and non-thinking reasoning modes, with higher thinking efficiency compared to DeepSeek-R1-0528. Post-training optimization significantly enhances agent tool usage and agent task performance."
+  },
+  "DeepSeek-V3.1-Fast": {
+    "description": "DeepSeek V3.1 Fast is the high-TPS, ultra-fast version of DeepSeek V3.1. Hybrid Thinking Mode: By changing the chat template, a single model can support both thinking and non-thinking modes simultaneously. Smarter Tool Invocation: Post-training optimization significantly improves the model's performance in tool usage and agent tasks."
+  },
+  "DeepSeek-V3.1-Think": {
+    "description": "DeepSeek-V3.1 - Thinking Mode; DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting both thinking and non-thinking reasoning modes, with higher thinking efficiency compared to DeepSeek-R1-0528. Post-training optimization significantly enhances agent tool usage and agent task performance."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."
@@ -809,12 +818,6 @@
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024 is a compact and efficient updated version, released in December 2024. It excels in tasks requiring complex reasoning and multi-step processing, such as RAG, tool usage, and agent tasks."
   },
-  "compound-beta": {
-    "description": "Compound-beta is a composite AI system supported by multiple publicly available models in GroqCloud, intelligently and selectively using tools to answer user queries."
-  },
-  "compound-beta-mini": {
-    "description": "Compound-beta-mini is a composite AI system supported by publicly available models in GroqCloud, intelligently and selectively using tools to answer user queries."
-  },
   "computer-use-preview": {
     "description": "The computer-use-preview model is a dedicated model designed for \"computer usage tools,\" trained to understand and execute computer-related tasks."
   },
@@ -1054,6 +1057,9 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking features greatly enhanced thinking capabilities. Compared to Doubao-1.5-thinking-pro, it further improves foundational skills such as coding, math, and logical reasoning, and supports visual understanding. It supports a 256k context window and output lengths up to 16k tokens."
+  },
+  "doubao-seed-1.6-vision": {
+    "description": "Doubao-Seed-1.6-vision is a visual deep thinking model that demonstrates stronger general multimodal understanding and reasoning capabilities in scenarios such as education, image review, inspection and security, and AI search Q&A. It supports a 256k context window and an output length of up to 64k tokens."
   },
   "doubao-seedream-3-0-t2i-250415": {
     "description": "Doubao image generation model developed by ByteDance Seed team supports both text and image inputs, providing a highly controllable and high-quality image generation experience based on text prompts."
@@ -1400,9 +1406,6 @@
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash experimental model, supporting image generation."
   },
-  "google/gemini-2.5-flash-image-preview:free": {
-    "description": "Gemini 2.5 Flash experimental model, supporting image generation."
-  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1441,6 +1444,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) provides basic instruction processing capabilities, suitable for lightweight applications."
+  },
+  "google/gemma-3-12b-it": {
+    "description": "Gemma 3 12B is an open-source language model from Google that sets new standards in efficiency and performance."
   },
   "google/gemma-3-1b-it": {
     "description": "Gemma 3 1B is an open-source language model from Google that sets new standards in efficiency and performance."
@@ -1607,6 +1613,12 @@
   "grok-code-fast-1": {
     "description": "We are excited to introduce grok-code-fast-1, a fast and cost-effective inference model that excels in agent coding."
   },
+  "groq/compound": {
+    "description": "Compound is a composite AI system supported by multiple openly available models already supported in GroqCloud, capable of intelligently and selectively using tools to answer user queries."
+  },
+  "groq/compound-mini": {
+    "description": "Compound-mini is a composite AI system supported by publicly available models already supported in GroqCloud, capable of intelligently and selectively using tools to answer user queries."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is a language model that combines creativity and intelligence by merging multiple top models."
   },
@@ -1662,7 +1674,7 @@
     "description": "Significantly improves high-difficulty mathematics, logic, and coding capabilities, optimizes model output stability, and enhances long-text processing ability."
   },
   "hunyuan-t1-latest": {
-    "description": "The industry's first ultra-large-scale Hybrid-Transformer-Mamba inference model, enhancing reasoning capabilities with exceptional decoding speed, further aligning with human preferences."
+    "description": "Significantly enhances the main model's slow-thinking capabilities in advanced mathematics, complex reasoning, difficult coding, instruction adherence, and text creation quality."
   },
   "hunyuan-t1-vision": {
     "description": "Hunyuan is a multimodal deep thinking model supporting native multimodal chain-of-thought reasoning, excelling in various image reasoning scenarios and significantly outperforming fast-thinking models on science problems."
@@ -1765,6 +1777,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 is a MoE architecture base model with powerful coding and agent capabilities, totaling 1 trillion parameters with 32 billion active parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
+  },
+  "kimi-k2-0905-preview": {
+    "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
   },
   "kimi-k2-turbo-preview": {
     "description": "Kimi-K2 is a Mixture-of-Experts (MoE) foundation model with exceptional coding and agent capabilities, featuring 1T total parameters and 32B activated parameters. In benchmark evaluations across core categories — general knowledge reasoning, programming, mathematics, and agent tasks — the K2 model outperforms other leading open-source models."
@@ -2165,8 +2180,17 @@
   "moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
   },
+  "moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
+  },
+  "moonshotai/kimi-k2-0905": {
+    "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2 is a MoE architecture base model with powerful coding and Agent capabilities, featuring a total of 1 trillion parameters and 32 billion active parameters. In benchmark tests across key categories such as general knowledge reasoning, programming, mathematics, and Agent tasks, the K2 model outperforms other mainstream open-source models."
+  },
+  "moonshotai/kimi-k2-instruct-0905": {
+    "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is an upgraded version of Nous Hermes 2, featuring the latest internally developed datasets."
@@ -2548,6 +2572,9 @@
   },
   "qwen3-coder-plus": {
     "description": "Tongyi Qianwen code model. The latest Qwen3-Coder series models are code generation models based on Qwen3, equipped with powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding skills alongside general capabilities."
+  },
+  "qwen3-max-preview": {
+    "description": "The Qwen 3 series Max model preview version shows a significant overall improvement compared to the 2.5 series in general capabilities, including Chinese and English text understanding, complex instruction adherence, subjective open tasks, multilingual capabilities, and tool invocation. The model also exhibits fewer knowledge hallucinations."
   },
   "qwq": {
     "description": "QwQ is an experimental research model focused on improving AI reasoning capabilities."
