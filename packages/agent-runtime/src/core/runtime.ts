@@ -144,7 +144,7 @@ export class AgentRuntime {
       canResume,
       interruptedAt,
       // Store the current step for potential resumption
-interruptedInstruction: undefined,
+      interruptedInstruction: undefined,
 
       reason, // Could be enhanced to store current instruction
     };
@@ -266,10 +266,9 @@ interruptedInstruction: undefined,
     };
 
     return {
-
       cost: defaultCost,
       // Default values
-createdAt: now,
+      createdAt: now,
       events: [],
       lastModified: now,
       messages: [],
@@ -295,8 +294,12 @@ createdAt: now,
 
       events.push({ payload, type: 'llm_start' });
 
-      if (!this.config.modelRuntime) {
-        throw new Error('LLM provider is required for call_llm instruction');
+      // Use Agent's modelRuntime first, fallback to config
+      const modelRuntime = this.agent.modelRuntime;
+      if (!modelRuntime) {
+        throw new Error(
+          'Model Runtime is required for call_llm instruction. Provide it via Agent.modelRuntime or RuntimeConfig.modelRuntime',
+        );
       }
 
       let assistantContent = '';
@@ -304,7 +307,7 @@ createdAt: now,
 
       try {
         // Stream LLM response
-        for await (const chunk of this.config.modelRuntime(payload)) {
+        for await (const chunk of modelRuntime(payload)) {
           events.push({ chunk, type: 'llm_stream' });
 
           // Accumulate content and tool calls from chunks
@@ -571,7 +574,6 @@ createdAt: now,
         };
       }
 
-      case 'warn':
       default: {
         // Continue execution but emit warning event
         const warningEvent = {

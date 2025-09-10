@@ -56,6 +56,13 @@ export interface Agent {
   executors?: Partial<Record<AgentInstruction['type'], any>>;
 
   /**
+   * Model runtime function for LLM calls - Agent owns its model integration
+   * @param payload - LLM call payload (messages, tools, etc.)
+   * @returns Async iterable of streaming response chunks
+   */
+  modelRuntime?: (payload: unknown) => AsyncIterable<any>;
+
+  /**
    * The core runner method. Based on the current execution context and state,
    * it decides what the next action should be.
    * @param context - Current runtime context with phase and payload

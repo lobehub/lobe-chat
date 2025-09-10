@@ -18,6 +18,7 @@ import { AgentRuntime } from '../runtime';
 class MockAgent implements Agent {
   tools = {};
   executors = {};
+  modelRuntime?: (payload: unknown) => AsyncIterable<any>;
 
   async runner(context: RuntimeContext, state: AgentState) {
     switch (context.phase) {
@@ -187,7 +188,7 @@ describe('AgentRuntime', () => {
 
         expect(result.events[0].type).toBe('error');
         expect((result.events[0] as AgentEventError).error.message).toContain(
-          'LLM provider is required',
+          'Model Runtime is required',
         );
       });
 
@@ -200,11 +201,9 @@ describe('AgentRuntime', () => {
           yield { content: '!' };
         }
 
-        const config: RuntimeConfig = {
-          modelRuntime: mockModelRuntime,
-        };
+        agent.modelRuntime = mockModelRuntime;
 
-        const runtime = new AgentRuntime(agent, config);
+        const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({
           sessionId: 'test-session',
           messages: [{ role: 'user', content: 'Hello' }],
@@ -250,11 +249,9 @@ describe('AgentRuntime', () => {
           };
         }
 
-        const config: RuntimeConfig = {
-          modelRuntime: mockModelRuntime,
-        };
+        agent.modelRuntime = mockModelRuntime;
 
-        const runtime = new AgentRuntime(agent, config);
+        const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({
           sessionId: 'test-session',
           messages: [{ role: 'user', content: 'Hello' }],
@@ -541,11 +538,10 @@ describe('AgentRuntime', () => {
     it('should respect maxSteps limit', async () => {
       const agent = new MockAgent();
       // Add a mock modelRuntime to avoid LLM provider error
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'test response' };
-        },
-      });
+      agent.modelRuntime = async function* () {
+        yield { content: 'test response' };
+      };
+      const runtime = new AgentRuntime(agent);
 
       const state = AgentRuntime.createInitialState({
         sessionId: 'test-session',
@@ -640,11 +636,10 @@ describe('AgentRuntime', () => {
 
     it('should resume from interrupted state', async () => {
       const agent = new MockAgent();
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'resumed response' };
-        },
-      });
+      agent.modelRuntime = async function* () {
+        yield { content: 'resumed response' };
+      };
+      const runtime = new AgentRuntime(agent);
 
       // Create interrupted state
       let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
@@ -689,11 +684,10 @@ describe('AgentRuntime', () => {
 
     it('should resume with specific context', async () => {
       const agent = new MockAgent();
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'context-specific response' };
-        },
-      });
+      agent.modelRuntime = async function* () {
+        yield { content: 'context-specific response' };
+      };
+      const runtime = new AgentRuntime(agent);
 
       let state = AgentRuntime.createInitialState({
         sessionId: 'test-session',
@@ -818,14 +812,13 @@ describe('AgentRuntime', () => {
 
           return newCost;
         }
+        modelRuntime = async function* () {
+          yield { content: 'test response' };
+        };
       }
 
       const agent = new CostTrackingAgent();
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'test response' };
-        },
-      });
+      const runtime = new AgentRuntime(agent);
 
       const state = AgentRuntime.createInitialState({
         sessionId: 'test-session',
@@ -861,14 +854,13 @@ describe('AgentRuntime', () => {
           newCost.calculatedAt = new Date().toISOString();
           return newCost;
         }
+        modelRuntime = async function* () {
+          yield { content: 'test response' };
+        };
       }
 
       const agent = new CostTrackingAgent();
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'expensive response' };
-        },
-      });
+      const runtime = new AgentRuntime(agent);
 
       const costLimit: CostLimit = {
         maxTotalCost: 5.0,
@@ -907,14 +899,13 @@ describe('AgentRuntime', () => {
             calculatedAt: new Date().toISOString(),
           };
         }
+        modelRuntime = async function* () {
+          yield { content: 'test response' };
+        };
       }
 
       const agent = new CostTrackingAgent();
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: async function* () {
-          yield { content: 'expensive response' };
-        },
-      });
+      const runtime = new AgentRuntime(agent);
 
       const costLimit: CostLimit = {
         maxTotalCost: 10.0,
@@ -994,9 +985,8 @@ describe('AgentRuntime', () => {
         }
       }
 
-      const runtime = new AgentRuntime(agent, {
-        modelRuntime: mockModelRuntime,
-      });
+      agent.modelRuntime = mockModelRuntime;
+      const runtime = new AgentRuntime(agent);
 
       // Step 1: User asks question
       let state = AgentRuntime.createInitialState({

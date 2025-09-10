@@ -15,6 +15,4 @@ export type InstructionExecutor = (
 export interface RuntimeConfig {
   /** Custom executors for specific instruction types */
   executors?: Partial<Record<AgentInstruction['type'], InstructionExecutor>>;
-  /** LLM provider function for call_llm instructions */
-  modelRuntime?: (payload: unknown) => AsyncIterable<any>;
 }
