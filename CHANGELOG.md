@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.126.3](https://github.com/lobehub/lobe-chat/compare/v1.126.2...v1.126.3)
+
+<sup>Released on **2025-09-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add CometAPI model provider and chat models, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add CometAPI model provider and chat models, closes [#9065](https://github.com/lobehub/lobe-chat/issues/9065) ([575e334](https://github.com/lobehub/lobe-chat/commit/575e334))
+- **misc**: Update i18n, closes [#9146](https://github.com/lobehub/lobe-chat/issues/9146) ([e6fc02e](https://github.com/lobehub/lobe-chat/commit/e6fc02e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.126.2](https://github.com/lobehub/lobe-chat/compare/v1.126.1...v1.126.2)
 
 <sup>Released on **2025-09-09**</sup>
