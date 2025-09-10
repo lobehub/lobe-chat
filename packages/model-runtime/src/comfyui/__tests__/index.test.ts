@@ -10,44 +10,21 @@ vi.mock('debug', () => ({
   default: vi.fn(() => vi.fn()),
 }));
 
-// Mock Framework services
-const mockImageService = {
-  createImage: vi.fn(),
-};
-
-const mockServices = {
-  ComfyUIClientService: vi.fn().mockImplementation(() => ({})),
-  ModelResolverService: vi.fn().mockImplementation(() => ({})),
-  WorkflowBuilderService: vi.fn().mockImplementation(() => ({})),
-  ImageService: vi.fn().mockImplementation(() => mockImageService),
-};
-
-// Mock dynamic imports
-vi.mock('@/server/services/comfyui/core/comfyUIClientService', () => ({
-  ComfyUIClientService: mockServices.ComfyUIClientService,
-}));
-
-vi.mock('@/server/services/comfyui/core/modelResolverService', () => ({
-  ModelResolverService: mockServices.ModelResolverService,
-}));
-
-vi.mock('@/server/services/comfyui/core/workflowBuilderService', () => ({
-  WorkflowBuilderService: mockServices.WorkflowBuilderService,
-}));
-
-vi.mock('@/server/services/comfyui/core/imageService', () => ({
-  ImageService: mockServices.ImageService,
-}));
-
 describe('LobeComfyUI Runtime', () => {
   let runtime: LobeComfyUI;
+  let mockFetch: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Mock global fetch
+    mockFetch = vi.fn();
+    vi.stubGlobal('fetch', mockFetch);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe('constructor', () => {
@@ -196,7 +173,7 @@ describe('LobeComfyUI Runtime', () => {
       });
     });
 
-    it('should integrate Framework services and create image successfully', async () => {
+    it('should call WebAPI endpoint with correct URL and payload', async () => {
       const mockPayload: CreateImagePayload = {
         model: 'flux1-dev.safetensors',
         params: {
@@ -209,57 +186,58 @@ describe('LobeComfyUI Runtime', () => {
       };
 
       const mockResponse = {
-        images: [
-          {
-            url: 'https://test.comfyui.com/image/output.png',
-            width: 1024,
-            height: 1024,
-          },
-        ],
+        imageUrl: 'https://test.comfyui.com/image/output.png',
+        width: 1024,
+        height: 1024,
       };
 
-      mockImageService.createImage.mockResolvedValue(mockResponse);
+      // Mock successful response
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      });
+
+      // Set APP_URL environment variable
+      const originalAppUrl = process.env.APP_URL;
+      process.env.APP_URL = 'http://localhost:3010';
 
       const result = await runtime.createImage(mockPayload);
 
+      // Verify fetch was called with correct parameters
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3010/webapi/text-to-image/comfyui', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer test-key',
+        },
+        body: JSON.stringify({
+          model: 'flux1-dev.safetensors',
+          options: {
+            baseURL: 'https://test.comfyui.com',
+            authType: 'bearer',
+            apiKey: 'test-key',
+          },
+          params: {
+            prompt: 'a beautiful landscape',
+            width: 1024,
+            height: 1024,
+            steps: 20,
+            cfg: 7,
+          },
+        }),
+      });
+
       expect(result).toEqual(mockResponse);
 
-      // Verify Framework services were initialized correctly
-      expect(mockServices.ComfyUIClientService).toHaveBeenCalledWith({
-        baseURL: 'https://test.comfyui.com',
-        authType: 'bearer',
-        apiKey: 'test-key',
-      });
-
-      expect(mockServices.ModelResolverService).toHaveBeenCalledWith(
-        expect.any(Object), // clientService instance
-      );
-
-      expect(mockServices.WorkflowBuilderService).toHaveBeenCalledWith({
-        clientService: expect.any(Object),
-        modelResolverService: expect.any(Object),
-      });
-
-      expect(mockServices.ImageService).toHaveBeenCalledWith(
-        expect.any(Object), // clientService
-        expect.any(Object), // modelResolverService
-        expect.any(Object), // workflowBuilderService
-      );
-
-      // Verify imageService.createImage was called with correct payload
-      expect(mockImageService.createImage).toHaveBeenCalledWith({
-        model: 'flux1-dev.safetensors',
-        params: {
-          prompt: 'a beautiful landscape',
-          width: 1024,
-          height: 1024,
-          steps: 20,
-          cfg: 7,
-        },
-      });
+      // Restore environment
+      if (originalAppUrl === undefined) {
+        delete process.env.APP_URL;
+      } else {
+        process.env.APP_URL = originalAppUrl;
+      }
     });
 
-    it('should handle Framework service errors correctly', async () => {
+    it('should use default APP_URL when environment variable is not set', async () => {
       const mockPayload: CreateImagePayload = {
         model: 'flux1-dev.safetensors',
         params: {
@@ -267,46 +245,247 @@ describe('LobeComfyUI Runtime', () => {
         },
       };
 
-      const mockError = new Error('Framework service failed');
-      mockImageService.createImage.mockRejectedValue(mockError);
-
-      await expect(runtime.createImage(mockPayload)).rejects.toThrow('Framework service failed');
-
-      expect(mockImageService.createImage).toHaveBeenCalledWith({
-        model: 'flux1-dev.safetensors',
-        params: {
-          prompt: 'test prompt',
-        },
+      // Mock successful response
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ imageUrl: 'test.png' }),
       });
-    });
 
-    it('should pass all configuration options to Framework services', async () => {
-      const complexOptions: ComfyUIKeyVault = {
-        baseURL: 'https://complex.comfyui.com:8188',
-        authType: 'custom',
-        customHeaders: {
-          'X-API-Key': 'complex-key',
-          'X-Custom-Header': 'custom-value',
-        },
-      };
-
-      runtime = new LobeComfyUI(complexOptions);
-
-      const mockPayload: CreateImagePayload = {
-        model: 'sd3.5-large.safetensors',
-        params: {
-          prompt: 'complex image generation',
-          width: 1152,
-          height: 896,
-        },
-      };
-
-      mockImageService.createImage.mockResolvedValue({ images: [] });
+      // Ensure APP_URL is not set
+      const originalAppUrl = process.env.APP_URL;
+      const originalPort = process.env.PORT;
+      delete process.env.APP_URL;
+      process.env.PORT = '3000';
 
       await runtime.createImage(mockPayload);
 
-      // Verify complex options are passed to Framework services
-      expect(mockServices.ComfyUIClientService).toHaveBeenCalledWith(complexOptions);
+      // Should use default localhost:3000
+      expect(mockFetch).toHaveBeenCalledWith(
+        'http://localhost:3000/webapi/text-to-image/comfyui',
+        expect.any(Object),
+      );
+
+      // Restore environment
+      if (originalAppUrl !== undefined) {
+        process.env.APP_URL = originalAppUrl;
+      }
+      if (originalPort === undefined) {
+        delete process.env.PORT;
+      } else {
+        process.env.PORT = originalPort;
+      }
+    });
+
+    it('should use default port 3010 when PORT is not set', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'flux1-dev.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      // Mock successful response
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ imageUrl: 'test.png' }),
+      });
+
+      // Ensure both APP_URL and PORT are not set
+      const originalAppUrl = process.env.APP_URL;
+      const originalPort = process.env.PORT;
+      delete process.env.APP_URL;
+      delete process.env.PORT;
+
+      await runtime.createImage(mockPayload);
+
+      // Should use default localhost:3010
+      expect(mockFetch).toHaveBeenCalledWith(
+        'http://localhost:3010/webapi/text-to-image/comfyui',
+        expect.any(Object),
+      );
+
+      // Restore environment
+      if (originalAppUrl !== undefined) {
+        process.env.APP_URL = originalAppUrl;
+      }
+      if (originalPort !== undefined) {
+        process.env.PORT = originalPort;
+      }
+    });
+
+    it('should include auth headers when configured', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'test-model.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      // Test with basic auth
+      runtime = new LobeComfyUI({
+        baseURL: 'https://test.comfyui.com',
+        authType: 'basic',
+        username: 'testuser',
+        password: 'testpass',
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ imageUrl: 'test.png' }),
+      });
+
+      await runtime.createImage(mockPayload);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testuser:testpass')}`,
+          }),
+        }),
+      );
+    });
+
+    it('should not include auth headers when auth is disabled', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'test-model.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      // Test with no auth
+      runtime = new LobeComfyUI({
+        baseURL: 'https://test.comfyui.com',
+        authType: 'none',
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ imageUrl: 'test.png' }),
+      });
+
+      await runtime.createImage(mockPayload);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+      );
+    });
+
+    it('should throw error when fetch response is not ok', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'flux1-dev.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      // Mock error response
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: vi.fn().mockResolvedValue('Internal server error'),
+      });
+
+      await expect(runtime.createImage(mockPayload)).rejects.toThrow(
+        'ComfyUI API error: 500 - Internal server error',
+      );
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw error when fetch throws', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'flux1-dev.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      const networkError = new Error('Network connection failed');
+      mockFetch.mockRejectedValue(networkError);
+
+      await expect(runtime.createImage(mockPayload)).rejects.toThrow('Network connection failed');
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle complex payload with all parameters', async () => {
+      const complexPayload: CreateImagePayload = {
+        model: 'sd3.5-large.safetensors',
+        params: {
+          prompt: 'complex image generation with multiple parameters',
+          width: 1152,
+          height: 896,
+          steps: 25,
+          cfg: 8.5,
+          seed: 12345,
+        },
+      };
+
+      const mockResponse = {
+        imageUrl: 'https://test.comfyui.com/complex-image.png',
+        width: 1152,
+        height: 896,
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      });
+
+      const result = await runtime.createImage(complexPayload);
+
+      expect(result).toEqual(mockResponse);
+
+      // Verify that complex payload was passed correctly
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: JSON.stringify({
+            model: 'sd3.5-large.safetensors',
+            options: {
+              baseURL: 'https://test.comfyui.com',
+              authType: 'bearer',
+              apiKey: 'test-key',
+            },
+            params: {
+              prompt: 'complex image generation with multiple parameters',
+              width: 1152,
+              height: 896,
+              steps: 25,
+              cfg: 8.5,
+              seed: 12345,
+            },
+          }),
+        }),
+      );
+    });
+
+    it('should handle WebAPI error responses with JSON body', async () => {
+      const mockPayload: CreateImagePayload = {
+        model: 'flux1-dev.safetensors',
+        params: {
+          prompt: 'test prompt',
+        },
+      };
+
+      // Mock error response with JSON body
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 400,
+        text: vi.fn().mockResolvedValue('{"error":"Invalid model specified"}'),
+      });
+
+      await expect(runtime.createImage(mockPayload)).rejects.toThrow(
+        'ComfyUI API error: 400 - {"error":"Invalid model specified"}',
+      );
     });
   });
 
