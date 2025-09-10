@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  InteractionManager,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -17,9 +18,9 @@ import { useStyles } from './style';
 import { ChatMessage } from '@/types/message';
 import { LOADING_FLAT } from '@/const/message';
 import ChatBubble from '../ChatBubble';
-import AutoScroll from '../AutoScroll';
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
+import AutoScroll from '@/features/chat/AutoScroll';
 
 interface ChatListProps {
   style?: ViewStyle;
@@ -169,15 +170,17 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const handleContentSizeChange = useCallback(
     (_w: number, h: number) => {
       contentHeightRef.current = h;
-      // If pinned at bottom, keep following by scrolling to end on growth
-      if (atBottomRef.current) {
+      if (atBottomRef.current && !isScrolling) {
+        InteractionManager.runAfterInteractions(() => {
+          listRef.current?.scrollToEnd({ animated: true });
+        });
         updateAtBottom(true);
       } else {
         const nextAtBottom = computeAtBottom();
         updateAtBottom(nextAtBottom);
       }
     },
-    [computeAtBottom, updateAtBottom],
+    [computeAtBottom, updateAtBottom, isScrolling],
   );
 
   const handleLayout = useCallback(
@@ -204,6 +207,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}
+        getItemType={(chatMessage) => {
+          return chatMessage.role;
+        }}
         keyExtractor={keyExtractor}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleLayout}
@@ -214,11 +220,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScrollEndDrag={handleScrollEndDrag}
         ref={listRef}
         renderItem={renderItem}
-        scrollEventThrottle={16}
       />
       <AutoScroll
         atBottom={atBottom}
-        isScrolling={isScrolling}
         onScrollToBottom={(type) => {
           const flatList = listRef.current;
           switch (type) {
