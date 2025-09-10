@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Seedream 4.0."],
+      "improvements": ["Add hotkey tooltip to typobar actions."]
+    },
+    "date": "2025-09-10",
+    "version": "1.127.0"
+  },
+  {
+    "children": {
       "improvements": ["Add CometAPI model provider and chat models, update i18n."]
     },
     "date": "2025-09-10",
