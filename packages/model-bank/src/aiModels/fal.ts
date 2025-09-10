@@ -148,6 +148,24 @@ const falImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-04',
     type: 'image',
   },
+  {
+    description:
+      'Seedream 4.0 图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。基于文本提示词生成图片。',
+    displayName: 'Seedream 4.0',
+    enabled: true,
+    id: 'bytedance/seedream/v4',
+    parameters: {
+      height: { default: 1024, max: 4096, min: 1024, step: 1 },
+      imageUrls: { default: [], maxCount: 10, maxFileSize: 10 * 1024 * 1024 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 4096, min: 1024, step: 1 },
+    },
+    releasedAt: '2025-09-09',
+    type: 'image',
+  },
 ];
 
 export const allModels = [...falImageModels];
