@@ -345,7 +345,7 @@
     "deny": "Deny",
     "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
     "learnMore": "Learn More",
-    "title": "Help LobeChat be better"
+    "title": "Help ImoogleAI be better"
   },
   "temp": "Temporary",
   "terms": "Terms of Service",
@@ -362,7 +362,7 @@
     "cloud": "Launch {{name}}",
     "community": "Community Edition",
     "data": "Data Storage",
-    "defaultNickname": "Community User",
+    "defaultNickname": "Imoogle User",
     "discord": "Community Support",
     "docs": "Documentation",
     "email": "Email Support",
