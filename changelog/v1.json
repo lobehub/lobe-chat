@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add CometAPI model provider and chat models, update i18n."]
+    },
+    "date": "2025-09-10",
+    "version": "1.126.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix editor key handling."]
     },
     "date": "2025-09-09",

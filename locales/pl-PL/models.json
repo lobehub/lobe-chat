@@ -53,6 +53,9 @@
   "Baichuan4-Turbo": {
     "description": "Model o najlepszych możliwościach w kraju, przewyższający zagraniczne modele w zadaniach związanych z wiedzą encyklopedyczną, długimi tekstami i twórczością w języku chińskim. Posiada również wiodące w branży możliwości multimodalne, osiągając doskonałe wyniki w wielu autorytatywnych testach."
   },
+  "ByteDance-Seed/Seed-OSS-36B-Instruct": {
+    "description": "Seed-OSS to seria otwartych modeli językowych dużej skali opracowanych przez zespół Seed ByteDance, zaprojektowanych specjalnie do zaawansowanego przetwarzania długich kontekstów, wnioskowania, agentów i zdolności ogólnych. Model Seed-OSS-36B-Instruct z tej serii to model dostrojony instrukcyjnie z 36 miliardami parametrów, natywnie obsługujący bardzo długie konteksty, co pozwala na jednorazowe przetwarzanie ogromnych dokumentów lub złożonych baz kodu. Model jest szczególnie zoptymalizowany pod kątem wnioskowania, generowania kodu i zadań agentów (np. użycia narzędzi), zachowując jednocześnie zrównoważone i doskonałe zdolności ogólne. Jedną z kluczowych cech tego modelu jest funkcja „budżetu myślenia” (Thinking Budget), która pozwala użytkownikom elastycznie dostosowywać długość wnioskowania, skutecznie zwiększając efektywność w praktycznych zastosowaniach."
+  },
   "DeepSeek-R1": {
     "description": "Najnowocześniejszy, wydajny LLM, specjalizujący się w wnioskowaniu, matematyce i programowaniu."
   },
@@ -81,7 +84,13 @@
     "description": "Dostawca modelu: platforma sophnet. DeepSeek V3 Fast to szybka wersja o wysokim TPS modelu DeepSeek V3 0324, w pełni nienkwantyzowana, z ulepszonym kodem i zdolnościami matematycznymi, zapewniająca szybszą reakcję!"
   },
   "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 to nowy hybrydowy model wnioskowania opracowany przez DeepSeek, obsługujący dwa tryby wnioskowania: myślenia i bezmyślny, z wyższą efektywnością myślenia niż DeepSeek-R1-0528. Dzięki optymalizacji po treningu, wykorzystanie narzędzi agenta i wydajność zadań inteligentnych agentów zostały znacznie poprawione."
+    "description": "DeepSeek-V3.1 tryb bez myślenia; DeepSeek-V3.1 to nowy hybrydowy model wnioskowania od DeepSeek, obsługujący dwa tryby: myślenia i bez myślenia, z wyższą efektywnością myślenia niż DeepSeek-R1-0528. Po optymalizacji post-treningowej znacznie poprawiono użycie narzędzi agenta oraz wydajność zadań agentów."
+  },
+  "DeepSeek-V3.1-Fast": {
+    "description": "DeepSeek V3.1 Fast to szybka wersja DeepSeek V3.1 o wysokim TPS. Hybrydowy tryb myślenia: poprzez zmianę szablonu rozmowy jeden model może obsługiwać jednocześnie tryb myślenia i bez myślenia. Inteligentniejsze wywoływanie narzędzi: dzięki optymalizacji po treningu model znacząco poprawił wydajność w użyciu narzędzi i zadaniach agentów."
+  },
+  "DeepSeek-V3.1-Think": {
+    "description": "DeepSeek-V3.1 tryb myślenia; DeepSeek-V3.1 to nowy hybrydowy model wnioskowania od DeepSeek, obsługujący dwa tryby: myślenia i bez myślenia, z wyższą efektywnością myślenia niż DeepSeek-R1-0528. Po optymalizacji post-treningowej znacznie poprawiono użycie narzędzi agenta oraz wydajność zadań agentów."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite oferuje niezwykle szybkie reakcje i lepszy stosunek jakości do ceny, zapewniając klientom elastyczne opcje dla różnych scenariuszy. Obsługuje wnioskowanie i dostrajanie z kontekstem do 128k."
@@ -809,12 +818,6 @@
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024 to mała i wydajna zaktualizowana wersja, wydana w grudniu 2024 roku. Doskonale sprawdza się w zadaniach wymagających złożonego rozumowania i wieloetapowego przetwarzania, takich jak RAG, korzystanie z narzędzi i agenci."
   },
-  "compound-beta": {
-    "description": "Compound-beta to złożony system AI wspierany przez wiele otwartych modeli dostępnych w GroqCloud, który inteligentnie i selektywnie wykorzystuje narzędzia do odpowiadania na zapytania użytkowników."
-  },
-  "compound-beta-mini": {
-    "description": "Compound-beta-mini to złożony system AI wspierany przez publicznie dostępne modele w GroqCloud, który inteligentnie i selektywnie wykorzystuje narzędzia do odpowiadania na zapytania użytkowników."
-  },
   "computer-use-preview": {
     "description": "Model computer-use-preview to dedykowany model zaprojektowany specjalnie do „narzędzi użycia komputera”, wytrenowany do rozumienia i wykonywania zadań związanych z komputerem."
   },
@@ -1054,6 +1057,9 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Model Doubao-Seed-1.6-thinking ma znacznie wzmocnione zdolności myślenia, w porównaniu do Doubao-1.5-thinking-pro osiąga dalsze ulepszenia w podstawowych umiejętnościach takich jak kodowanie, matematyka i rozumowanie logiczne, wspiera również rozumienie wizualne. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
+  },
+  "doubao-seed-1.6-vision": {
+    "description": "Doubao-Seed-1.6-vision to wizualny model głębokiego myślenia, który wykazuje silniejsze zdolności ogólnego rozumienia multimodalnego i wnioskowania w scenariuszach edukacyjnych, przeglądu obrazów, inspekcji i bezpieczeństwa oraz AI w wyszukiwaniu i odpowiadaniu na pytania. Obsługuje okno kontekstowe do 256k oraz maksymalną długość wyjścia do 64k tokenów."
   },
   "doubao-seedream-3-0-t2i-250415": {
     "description": "Model generowania obrazów Doubao opracowany przez zespół Seed ByteDance, obsługujący wejścia tekstowe i obrazowe, oferujący wysoką kontrolę i jakość generowanych obrazów. Generuje obrazy na podstawie tekstowych wskazówek."
@@ -1400,9 +1406,6 @@
   "google/gemini-2.5-flash-image-preview": {
     "description": "Eksperymentalny model Gemini 2.5 Flash, wspierający generowanie obrazów."
   },
-  "google/gemini-2.5-flash-image-preview:free": {
-    "description": "Eksperymentalny model Gemini 2.5 Flash, wspierający generowanie obrazów."
-  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash to najnowocześniejszy model główny Google, zaprojektowany z myślą o zaawansowanym wnioskowaniu, kodowaniu, matematyce i zadaniach naukowych. Zawiera wbudowaną zdolność 'myślenia', co pozwala mu na dostarczanie odpowiedzi z wyższą dokładnością i szczegółowym przetwarzaniem kontekstu.\n\nUwaga: ten model ma dwa warianty: myślenie i niemyslenie. Ceny wyjściowe różnią się znacznie w zależności od tego, czy zdolność myślenia jest aktywowana. Jeśli wybierzesz standardowy wariant (bez sufiksu ':thinking'), model wyraźnie unika generowania tokenów myślenia.\n\nAby skorzystać z zdolności myślenia i otrzymać tokeny myślenia, musisz wybrać wariant ':thinking', co spowoduje wyższe ceny wyjściowe za myślenie.\n\nPonadto Gemini 2.5 Flash można konfigurować za pomocą parametru 'maksymalna liczba tokenów do wnioskowania', jak opisano w dokumentacji (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1441,6 +1444,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) oferuje podstawowe możliwości przetwarzania poleceń, idealne do lekkich aplikacji."
+  },
+  "google/gemma-3-12b-it": {
+    "description": "Gemma 3 12B to otwarty model językowy Google, ustanawiający nowe standardy w zakresie efektywności i wydajności."
   },
   "google/gemma-3-1b-it": {
     "description": "Gemma 3 1B to otwarty model językowy Google, ustanawiający nowe standardy w zakresie efektywności i wydajności."
@@ -1607,6 +1613,12 @@
   "grok-code-fast-1": {
     "description": "Z radością przedstawiamy grok-code-fast-1, szybki i ekonomiczny model inferencyjny, który doskonale sprawdza się w kodowaniu agentów."
   },
+  "groq/compound": {
+    "description": "Compound to złożony system AI wspierany przez wiele dostępnych publicznie modeli w GroqCloud, który inteligentnie i selektywnie wykorzystuje narzędzia do odpowiadania na zapytania użytkowników."
+  },
+  "groq/compound-mini": {
+    "description": "Compound-mini to złożony system AI wspierany przez dostępne publicznie modele w GroqCloud, który inteligentnie i selektywnie wykorzystuje narzędzia do odpowiadania na zapytania użytkowników."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
   },
@@ -1662,7 +1674,7 @@
     "description": "Znacząca poprawa zdolności w zakresie zaawansowanej matematyki, logiki i kodowania, optymalizacja stabilności wyjścia modelu oraz zwiększenie zdolności do pracy z długimi tekstami."
   },
   "hunyuan-t1-latest": {
-    "description": "Pierwszy na świecie ultra-duży model wnioskowania Hybrid-Transformer-Mamba, rozszerzający zdolności wnioskowania, z niezwykle szybkim dekodowaniem, lepiej dostosowany do ludzkich preferencji."
+    "description": "Znacząco poprawia zdolności głównego modelu wolnego myślenia w zakresie zaawansowanej matematyki, złożonego wnioskowania, trudnego kodowania, przestrzegania instrukcji oraz jakości tworzenia tekstów."
   },
   "hunyuan-t1-vision": {
     "description": "Model głębokiego myślenia multimodalnego Hunyuan, obsługujący natywne łańcuchy myślowe multimodalne, doskonały w różnych scenariuszach wnioskowania obrazowego, z wyraźną przewagą nad modelami szybkiego myślenia w rozwiązywaniu problemów ścisłych."
@@ -1765,6 +1777,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 to podstawowy model architektury MoE o potężnych zdolnościach kodowania i agenta, z łączną liczbą parametrów 1T i 32B aktywowanych parametrów. W testach wydajności na benchmarkach obejmujących ogólne rozumowanie, programowanie, matematykę i agentów model K2 przewyższa inne popularne modele open source."
+  },
+  "kimi-k2-0905-preview": {
+    "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 to bazowy model z architekturą MoE, dysponujący wyjątkowymi możliwościami w zakresie kodowania i agentów, z łączną liczbą parametrów 1T oraz 32B parametrów aktywacyjnych. W standardowych testach wydajności (benchmarkach) dla głównych kategorii takich jak wnioskowanie z wiedzy ogólnej, programowanie, matematyka i agenty, model K2 przewyższa inne popularne otwarte modele."
@@ -2165,8 +2180,17 @@
   "moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 to podstawowy model architektury MoE o potężnych zdolnościach kodowania i agenta, z łączną liczbą parametrów 1 biliona i 32 miliardami aktywowanych parametrów. W testach wydajności w zakresie ogólnej wiedzy, programowania, matematyki i zadań agenta model K2 przewyższa inne popularne otwarte modele."
   },
+  "moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
+  },
+  "moonshotai/kimi-k2-0905": {
+    "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2 to podstawowy model architektury MoE o wyjątkowych zdolnościach w zakresie kodowania i agentów, z łączną liczbą parametrów 1T i 32B aktywnych parametrów. W testach wydajnościowych obejmujących ogólną wiedzę, programowanie, matematykę i agentów, model K2 przewyższa inne popularne modele open source."
+  },
+  "moonshotai/kimi-k2-instruct-0905": {
+    "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B to ulepszona wersja Nous Hermes 2, zawierająca najnowsze wewnętrznie opracowane zbiory danych."
@@ -2548,6 +2572,9 @@
   },
   "qwen3-coder-plus": {
     "description": "Model kodowania Tongyi Qianwen. Najnowsza seria modeli Qwen3-Coder oparta na Qwen3 to modele generujące kod, posiadające potężne zdolności agenta kodującego, biegłe w wywoływaniu narzędzi i interakcji ze środowiskiem, umożliwiające autonomiczne programowanie, łącząc doskonałe umiejętności kodowania z uniwersalnymi zdolnościami."
+  },
+  "qwen3-max-preview": {
+    "description": "Preview modelu Max z serii Qwen 3, który w porównaniu do serii 2.5 znacząco poprawia ogólne zdolności, w tym rozumienie tekstu w języku chińskim i angielskim, przestrzeganie złożonych instrukcji, zdolności do zadań otwartych i subiektywnych, wielojęzyczność oraz wywoływanie narzędzi; model generuje mniej halucynacji wiedzy."
   },
   "qwq": {
     "description": "QwQ to eksperymentalny model badawczy, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
