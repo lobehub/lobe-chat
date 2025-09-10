@@ -9,7 +9,6 @@ import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
 import { Header } from '@/components';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { sleep } from '@/utils/sleep';
 
 export default function LocaleScreen() {
   const { styles } = useStyles();
@@ -21,7 +20,7 @@ export default function LocaleScreen() {
     if (pendingLocale || localeMode === locale) return;
     try {
       setPendingLocale(locale);
-      await Promise.all([changeLocale(locale), sleep(300)]);
+      await changeLocale(locale);
     } finally {
       setPendingLocale(null);
     }
