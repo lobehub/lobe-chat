@@ -115,6 +115,7 @@
   "feedback": "Retour d'information",
   "fontSize": {
     "standard": "Standard",
+    "text": "Attention, cette configuration n'affecte que la taille d'affichage de la police du contenu des messages",
     "title": "Taille de la police"
   },
   "help": "Aide à l'utilisation",
