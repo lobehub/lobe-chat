@@ -781,6 +781,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'doubao-seedream-3-0-t2i-250415',
     parameters: {
+      cfg: { default: 2.5, max: 10, min: 1, step: 0.1 },
       prompt: {
         default: '',
       },
@@ -813,6 +814,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'doubao-seededit-3-0-i2i-250628',
     parameters: {
+      cfg: { default: 5.5, max: 10, min: 1, step: 0.1 },
       imageUrl: { default: null, maxFileSize: 10 * 1024 * 1024 },
       prompt: {
         default: '',

@@ -25,10 +25,11 @@ export async function createVolcengineImage(
     baseURL: options.baseURL || 'https://ark.cn-beijing.volces.com/api/v3',
   });
 
-  // Parameter mapping: imageUrls/imageUrl -> image
+  // Parameter mapping: imageUrls/imageUrl -> image, cfg -> guidance_scale
   const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
     ['imageUrls', 'image'],
     ['imageUrl', 'image'],
+    ['cfg', 'guidance_scale'],
   ]);
 
   const userInput: Record<string, any> = Object.fromEntries(
