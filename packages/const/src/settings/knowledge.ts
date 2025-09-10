@@ -1,4 +1,4 @@
-import { FilesConfig, FilesConfigItem } from '@/types/user/settings/filesConfig';
+import { FilesConfig, FilesConfigItem } from '@lobechat/types';
 
 import {
   DEFAULT_EMBEDDING_MODEL,

@@ -164,7 +164,7 @@ export default {
       title: 'API 密钥',
     },
     apiUrl: {
-      desc: 'New API 服务的 API 地址，大部分时候需要带 /v1',
+      desc: 'New API 服务的 API 地址，大部分时候不要带 /v1',
       title: 'API 地址',
     },
     enabled: {

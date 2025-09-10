@@ -7,19 +7,19 @@ const groqChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
     description:
-      'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
-    displayName: 'Compound Beta',
+      'Compound 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound',
     enabled: true,
-    id: 'compound-beta',
+    id: 'groq/compound',
     maxOutput: 8192,
     type: 'chat',
   },
   {
     contextWindowTokens: 131_072,
     description:
-      'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
-    displayName: 'Compound Beta Mini',
-    id: 'compound-beta-mini',
+      'Compound-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound Mini',
+    id: 'groq/compound-mini',
     maxOutput: 8192,
     type: 'chat',
   },
@@ -67,11 +67,29 @@ const groqChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
+    contextWindowTokens: 262_144,
+    description:
+      'kimi-k2-0905-preview 模型上下文长度为 256k，具备更强的 Agentic Coding 能力、更突出的前端代码的美观度和实用性、以及更好的上下文理解能力。',
+    displayName: 'Kimi K2 0905',
+    enabled: true,
+    id: 'moonshotai/kimi-k2-instruct-0905',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_072,
     description:
       'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2 Instruct',
-    enabled: true,
+    displayName: 'Kimi K2 0711',
     id: 'moonshotai/kimi-k2-instruct',
     maxOutput: 16_384,
     pricing: {

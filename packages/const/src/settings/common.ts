@@ -1,4 +1,4 @@
-import { UserGeneralConfig } from '@/types/user/settings';
+import { UserGeneralConfig } from '@lobechat/types';
 
 export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   animationMode: 'agile',
