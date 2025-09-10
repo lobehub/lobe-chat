@@ -5,6 +5,7 @@ export const useStyles = createStyles((token) => ({
   bottomBarWrapper: {
     backgroundColor: token.colorBgContainer,
     bottom: 0,
+    height: 160,
     left: 0,
     paddingHorizontal: token.paddingLG,
     paddingVertical: token.paddingXL,
@@ -18,6 +19,12 @@ export const useStyles = createStyles((token) => ({
     padding: token.paddingContentHorizontal,
     width: '100%',
   },
+  fontSizeContainer: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginTop: token.marginLG,
+  },
   fontSizeLarge: {
     color: token.colorText,
     fontSize: FONT_SIZE_LARGE,
@@ -29,6 +36,10 @@ export const useStyles = createStyles((token) => ({
   fontSizeStandard: {
     color: token.colorText,
     fontSize: FONT_SIZE_STANDARD,
+  },
+  fontSizeText: {
+    color: token.colorTextDescription,
+    fontSize: token.fontSize,
   },
   safeAreaView: {
     backgroundColor: token.colorBgLayout,
