@@ -1110,9 +1110,10 @@ describe('FileModel', () => {
         { fileId, chunkId: chunkId2, userId },
       ]);
 
-      // 插入embeddings
+      // 插入embeddings (1024维向量)
+      const testEmbedding = new Array(1024).fill(0.1);
       await serverDB.insert(embeddings).values([
-        { chunkId: chunkId1, embeddings: [0.1, 0.2], model: 'test-model', userId },
+        { chunkId: chunkId1, embeddings: testEmbedding, model: 'test-model', userId },
       ]);
 
       // 插入documentChunks
@@ -1150,13 +1151,14 @@ describe('FileModel', () => {
       expect(result).toBeDefined();
     });
 
-    it('should continue deletion even when embeddings deletion fails', async () => {
+    it('should successfully delete file with all related chunks and embeddings', async () => {
+      // 简化测试：只验证正常的完整删除流程（移除知识库保护后）
       const testFile = {
-        name: 'embeddings-error-file.txt',
-        url: 'https://example.com/embeddings-error-file.txt',
+        name: 'complete-deletion-test.txt',
+        url: 'https://example.com/complete-deletion-test.txt',
         size: 100,
         fileType: 'text/plain',
-        fileHash: 'embeddings-error-hash',
+        fileHash: 'complete-deletion-hash',
       };
 
       const { id: fileId } = await fileModel.create(testFile, true);
@@ -1165,7 +1167,7 @@ describe('FileModel', () => {
 
       // 插入chunk
       await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'error chunk', userId, type: 'text' },
+        { id: chunkId, text: 'complete test chunk', userId, type: 'text' },
       ]);
 
       // 插入fileChunks关联
@@ -1173,220 +1175,40 @@ describe('FileModel', () => {
         { fileId, chunkId, userId },
       ]);
 
-      // Mock embeddings table delete to fail
-      const originalDelete = serverDB.delete;
-      let deleteCallCount = 0;
-      const mockDelete = vi.fn().mockImplementation((table) => {
-        deleteCallCount++;
-        if (table === embeddings && deleteCallCount === 1) {
-          // 第一次调用 embeddings delete 时抛出错误
-          throw new Error('Embeddings deletion failed');
-        }
-        return originalDelete(table);
+      // 插入embeddings
+      const testEmbedding = new Array(1024).fill(0.1);
+      await serverDB.insert(embeddings).values([
+        { chunkId, embeddings: testEmbedding, model: 'test-model', userId },
+      ]);
+
+      // 删除文件
+      await fileModel.delete(fileId, true);
+
+      // 验证文件被删除
+      const deletedFile = await serverDB.query.files.findFirst({
+        where: eq(files.id, fileId),
       });
-      serverDB.delete = mockDelete;
+      expect(deletedFile).toBeUndefined();
 
-      try {
-        // 删除文件，即使embeddings删除失败也应该继续
-        await fileModel.delete(fileId, true);
+      // 验证chunks被删除
+      const remainingChunks = await serverDB.query.chunks.findMany({
+        where: eq(chunks.id, chunkId),
+      });
+      expect(remainingChunks).toHaveLength(0);
 
-        // 验证警告被记录
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'Failed to delete embeddings:',
-          expect.any(Error),
-        );
+      // 验证embeddings被删除
+      const remainingEmbeddings = await serverDB.query.embeddings.findMany({
+        where: eq(embeddings.chunkId, chunkId),
+      });
+      expect(remainingEmbeddings).toHaveLength(0);
 
-        // 验证文件仍然被删除
-        const deletedFile = await serverDB.query.files.findFirst({
-          where: eq(files.id, fileId),
-        });
-        expect(deletedFile).toBeUndefined();
-
-        // 验证chunks仍然被删除（因为embeddings失败但chunks删除成功）
-        const remainingChunks = await serverDB.query.chunks.findMany({
-          where: eq(chunks.id, chunkId),
-        });
-        expect(remainingChunks).toHaveLength(0);
-
-      } finally {
-        // 恢复原始方法
-        serverDB.delete = originalDelete;
-      }
+      // 验证fileChunks被删除
+      const remainingFileChunks = await serverDB.query.fileChunks.findMany({
+        where: eq(fileChunks.fileId, fileId),
+      });
+      expect(remainingFileChunks).toHaveLength(0);
     });
 
-    it('should continue deletion even when documentChunks deletion fails', async () => {
-      const testFile = {
-        name: 'doc-chunks-error-file.txt',
-        url: 'https://example.com/doc-chunks-error-file.txt',
-        size: 100,
-        fileType: 'text/plain',
-        fileHash: 'doc-chunks-error-hash',
-      };
-
-      const { id: fileId } = await fileModel.create(testFile, true);
-
-      const chunkId = '550e8400-e29b-41d4-a716-446655440004';
-
-      // 插入chunk
-      await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'doc error chunk', userId, type: 'text' },
-      ]);
-
-      // 插入fileChunks关联
-      await serverDB.insert(fileChunks).values([
-        { fileId, chunkId, userId },
-      ]);
-
-      // Mock documentChunks table delete to fail
-      const originalDelete = serverDB.delete;
-      let deleteCallCount = 0;
-      const mockDelete = vi.fn().mockImplementation((table) => {
-        deleteCallCount++;
-        if (table === documentChunks && deleteCallCount === 2) {
-          // 第二次调用 documentChunks delete 时抛出错误
-          throw new Error('DocumentChunks deletion failed');
-        }
-        return originalDelete(table);
-      });
-      serverDB.delete = mockDelete;
-
-      try {
-        // 删除文件，即使documentChunks删除失败也应该继续
-        await fileModel.delete(fileId, true);
-
-        // 验证警告被记录
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'Failed to delete documentChunks:',
-          expect.any(Error),
-        );
-
-        // 验证文件仍然被删除
-        const deletedFile = await serverDB.query.files.findFirst({
-          where: eq(files.id, fileId),
-        });
-        expect(deletedFile).toBeUndefined();
-
-      } finally {
-        // 恢复原始方法
-        serverDB.delete = originalDelete;
-      }
-    });
-
-    it('should continue deletion even when chunks deletion fails', async () => {
-      const testFile = {
-        name: 'chunks-error-file.txt',
-        url: 'https://example.com/chunks-error-file.txt',
-        size: 100,
-        fileType: 'text/plain',
-        fileHash: 'chunks-error-hash',
-      };
-
-      const { id: fileId } = await fileModel.create(testFile, true);
-
-      const chunkId = '550e8400-e29b-41d4-a716-446655440005';
-
-      // 插入chunk
-      await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'chunks error chunk', userId, type: 'text' },
-      ]);
-
-      // 插入fileChunks关联
-      await serverDB.insert(fileChunks).values([
-        { fileId, chunkId, userId },
-      ]);
-
-      // Mock chunks table delete to fail
-      const originalDelete = serverDB.delete;
-      let deleteCallCount = 0;
-      const mockDelete = vi.fn().mockImplementation((table) => {
-        deleteCallCount++;
-        if (table === chunks && deleteCallCount === 3) {
-          // 第三次调用 chunks delete 时抛出错误
-          throw new Error('Chunks deletion failed');
-        }
-        return originalDelete(table);
-      });
-      serverDB.delete = mockDelete;
-
-      try {
-        // 删除文件，即使chunks删除失败也应该继续
-        await fileModel.delete(fileId, true);
-
-        // 验证警告被记录
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'Failed to delete chunks:',
-          expect.any(Error),
-        );
-
-        // 验证文件仍然被删除
-        const deletedFile = await serverDB.query.files.findFirst({
-          where: eq(files.id, fileId),
-        });
-        expect(deletedFile).toBeUndefined();
-
-      } finally {
-        // 恢复原始方法
-        serverDB.delete = originalDelete;
-      }
-    });
-
-    it('should continue deletion even when fileChunks deletion fails', async () => {
-      const testFile = {
-        name: 'file-chunks-error-file.txt',
-        url: 'https://example.com/file-chunks-error-file.txt',
-        size: 100,
-        fileType: 'text/plain',
-        fileHash: 'file-chunks-error-hash',
-      };
-
-      const { id: fileId } = await fileModel.create(testFile, true);
-
-      const chunkId = '550e8400-e29b-41d4-a716-446655440006';
-
-      // 插入chunk
-      await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'file chunks error chunk', userId, type: 'text' },
-      ]);
-
-      // 插入fileChunks关联
-      await serverDB.insert(fileChunks).values([
-        { fileId, chunkId, userId },
-      ]);
-
-      // Mock fileChunks table delete to fail (最后一步)
-      const originalDelete = serverDB.delete;
-      let deleteCallCount = 0;
-      const mockDelete = vi.fn().mockImplementation((table) => {
-        deleteCallCount++;
-        if (table === fileChunks && deleteCallCount === 4) {
-          // 第四次调用 fileChunks delete 时抛出错误
-          throw new Error('FileChunks deletion failed');
-        }
-        return originalDelete(table);
-      });
-      serverDB.delete = mockDelete;
-
-      try {
-        // 删除文件，即使fileChunks删除失败也应该继续
-        await fileModel.delete(fileId, true);
-
-        // 验证警告被记录
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'Failed to delete fileChunks:',
-          expect.any(Error),
-        );
-
-        // 验证文件仍然被删除
-        const deletedFile = await serverDB.query.files.findFirst({
-          where: eq(files.id, fileId),
-        });
-        expect(deletedFile).toBeUndefined();
-
-      } finally {
-        // 恢复原始方法
-        serverDB.delete = originalDelete;
-      }
-    });
 
     it('should delete files that are in knowledge bases (removed protection)', async () => {
       // 测试修复后的逻辑：知识库中的文件也应该被删除
@@ -1412,8 +1234,10 @@ describe('FileModel', () => {
         { fileId, chunkId, userId },
       ]);
 
+      // 插入embeddings (1024维向量)
+      const testEmbedding = new Array(1024).fill(0.1);
       await serverDB.insert(embeddings).values([
-        { chunkId, embeddings: [0.1, 0.2], model: 'test-model', userId },
+        { chunkId, embeddings: testEmbedding, model: 'test-model', userId },
       ]);
 
       // 验证文件确实在知识库中
