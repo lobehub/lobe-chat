@@ -115,6 +115,7 @@
   "feedback": "Feedback",
   "fontSize": {
     "standard": "Standard",
+    "text": "Hinweis: Diese Einstellung beeinflusst nur die Anzeigegröße der Schrift im Nachrichteninhalt.",
     "title": "Schriftgröße"
   },
   "help": "Hilfe",

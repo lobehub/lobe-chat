@@ -115,6 +115,7 @@
   "feedback": "Geri Bildirim",
   "fontSize": {
     "standard": "Standart",
+    "text": "Dikkat, bu ayar yalnızca mesaj içeriğinin yazı tipi boyutunu etkiler",
     "title": "Yazı Tipi Boyutu"
   },
   "help": "Yardım",

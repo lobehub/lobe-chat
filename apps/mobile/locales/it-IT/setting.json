@@ -115,6 +115,7 @@
   "feedback": "Feedback",
   "fontSize": {
     "standard": "Standard",
+    "text": "Attenzione, questa configurazione influisce solo sulla dimensione del carattere del contenuto del messaggio",
     "title": "Dimensione carattere"
   },
   "help": "Guida all'uso",

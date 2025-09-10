@@ -3,7 +3,7 @@ import { createStyles } from '@/theme';
 export const TRACK_HEIGHT = 4;
 export const BORDER_WIDTH = 2;
 
-export const DOT_SIZE = 8 + 2 * BORDER_WIDTH;
+export const DOT_SIZE = 12 + 2 * BORDER_WIDTH;
 
 export const useStyles = createStyles((token, { disabled }: { disabled: boolean }) => ({
   activeTrack: {
@@ -45,7 +45,7 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
   markLabel: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: token.margin,
+    marginTop: token.marginLG,
     minHeight: token.fontSizeLG,
   },
   markLabelText: {
@@ -55,15 +55,15 @@ export const useStyles = createStyles((token, { disabled }: { disabled: boolean 
   thumb: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgElevated,
     borderColor: disabled ? token.colorTextDisabled : token.colorPrimaryBorder,
-    borderRadius: token.controlHeightLG / 4,
+    borderRadius: token.sizeXXL / 4,
     borderWidth: BORDER_WIDTH,
-    height: token.controlHeightLG / 2,
-    marginLeft: -token.controlHeightLG / 4,
-    marginTop: -token.controlHeightLG / 4 + BORDER_WIDTH,
+    height: token.sizeXXL / 2,
+    marginLeft: -token.sizeXXL / 4,
+    marginTop: -token.sizeXXL / 4 + BORDER_WIDTH,
     position: 'absolute',
     ...token.boxShadowSecondary,
     top: 0,
-    width: token.controlHeightLG / 2,
+    width: token.sizeXXL / 2,
   },
 
   thumbActive: {
