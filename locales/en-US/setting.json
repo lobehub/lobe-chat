@@ -385,9 +385,9 @@
   },
   "settingTTS": {
     "openai": {
-      "sttModel": "OpenAI Speech-to-Text Model",
-      "title": "OpenAI",
-      "ttsModel": "OpenAI Text-to-Speech Model"
+      "sttModel": "Imoogle Speech-to-Text Model",
+      "title": "ImoogleAI",
+      "ttsModel": "Imoogle Text-to-Speech Model"
     },
     "showAllLocaleVoice": {
       "desc": "If closed, only voices in the current language will be displayed",
@@ -410,7 +410,7 @@
     "title": "Speech Service",
     "tts": "Text-to-Speech Settings",
     "ttsService": {
-      "desc": "If using OpenAI text-to-speech service, make sure the OpenAI model service is enabled",
+      "desc": "If using Imoogle text-to-speech service, make sure the Imoogle model service is enabled",
       "title": "Text-to-Speech Service"
     },
     "voice": {
