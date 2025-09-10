@@ -69,7 +69,7 @@ describe('systemStatusSelectors', () => {
       expect(systemStatusSelectors.sessionWidth(s)).toBe(300);
       expect(systemStatusSelectors.portalWidth(s)).toBe(500);
       expect(systemStatusSelectors.filePanelWidth(s)).toBe(400);
-      expect(systemStatusSelectors.wideScreen(s)).toBe(true);
+      expect(systemStatusSelectors.wideScreen(s)).toBe(false);
     });
 
     it('should handle zen mode effects', () => {

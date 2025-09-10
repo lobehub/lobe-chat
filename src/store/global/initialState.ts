@@ -135,7 +135,7 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
-  wideScreen: true,
+  wideScreen: false,
   zenMode: false,
 } satisfies SystemStatus;
 

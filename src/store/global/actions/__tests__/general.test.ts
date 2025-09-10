@@ -69,11 +69,11 @@ describe('generalActionSlice', () => {
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
-        result.current.updateSystemStatus({ wideScreen: false });
+        result.current.updateSystemStatus({ wideScreen: true });
       });
 
       expect(saveToLocalStorageSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ wideScreen: false }),
+        expect.objectContaining({ wideScreen: true }),
       );
     });
 

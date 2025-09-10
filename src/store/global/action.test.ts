@@ -252,14 +252,14 @@ describe('createPreferenceSlice', () => {
   describe('updatePreference', () => {
     it('should update status', () => {
       const { result } = renderHook(() => useGlobalStore());
-      const status = { wideScreen: false };
+      const status = { wideScreen: true };
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
         result.current.updateSystemStatus(status);
       });
 
-      expect(result.current.status.wideScreen).toEqual(false);
+      expect(result.current.status.wideScreen).toEqual(true);
     });
   });
 
