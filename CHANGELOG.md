@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.127.0](https://github.com/lobehub/lobe-chat/compare/v1.126.3...v1.127.0)
+
+<sup>Released on **2025-09-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Seedream 4.0.
+
+#### 💄 Styles
+
+- **misc**: Add hotkey tooltip to typobar actions.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Seedream 4.0, closes [#9198](https://github.com/lobehub/lobe-chat/issues/9198) ([26a743f](https://github.com/lobehub/lobe-chat/commit/26a743f))
+
+#### Styles
+
+- **misc**: Add hotkey tooltip to typobar actions, closes [#9203](https://github.com/lobehub/lobe-chat/issues/9203) ([e372875](https://github.com/lobehub/lobe-chat/commit/e372875))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.126.3](https://github.com/lobehub/lobe-chat/compare/v1.126.2...v1.126.3)
 
 <sup>Released on **2025-09-10**</sup>
