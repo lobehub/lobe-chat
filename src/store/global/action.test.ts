@@ -394,7 +394,7 @@ describe('createPreferenceSlice', () => {
     it('should update with data', async () => {
       const { result } = renderHook(() => useGlobalStore());
       vi.spyOn(useGlobalStore.getState().statusStorage, 'getFromLocalStorage').mockReturnValueOnce({
-        wideScreen: false,
+        noWideScreen: false,
       } as any);
 
       const { result: hooks } = renderHook(() => result.current.useInitSystemStatus(), {
@@ -402,7 +402,7 @@ describe('createPreferenceSlice', () => {
       });
 
       await waitFor(() => {
-        expect(hooks.current.data).toEqual({ wideScreen: false });
+        expect(hooks.current.data).toEqual({ noWideScreen: false });
       });
 
       expect(result.current.status.noWideScreen).toEqual(false);
