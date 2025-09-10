@@ -63,9 +63,12 @@ export class LobeFalAI implements LobeRuntimeAI {
       defaultInput['acceleration'] = 'high';
     }
 
-    let endpoint = `fal-ai/${model}`;
-    if (model === 'bytedance/seedream/v4') {
-      endpoint += (params.imageUrls?.length ?? 0) > 0 ? '/edit' : '/text-to-image';
+    let endpoint = model;
+    const hasImageUrls = (params.imageUrls?.length ?? 0) > 0;
+    if (model === 'fal-ai/bytedance/seedream/v4') {
+      endpoint += hasImageUrls ? '/edit' : '/text-to-image';
+    } else if (model === 'fal-ai/nano-banana' && hasImageUrls) {
+      endpoint += '/edit';
     }
 
     const finalInput = {
