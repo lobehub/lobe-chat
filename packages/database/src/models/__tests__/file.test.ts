@@ -1058,15 +1058,8 @@ describe('FileModel', () => {
       // Create many chunks for this file to trigger batch processing
       // Note: This is a simplified test since we can't easily create 3000+ chunks
       // But it will still exercise the batch deletion code path
-      const chunkData = Array.from({ length: 10 }, (_, i) => ({
-        id: `chunk-${i}`,
-        text: `chunk content ${i}`,
-        index: i,
-        type: 'text' as const,
-        userId,
-      }));
 
-      // Insert chunks (this might need to be done through proper API)
+      // Insert chunks (this might need to be done through proper API)  
       // For testing purposes, we'll delete the file which should trigger the batch deletion
       await fileModel.delete(fileId, true);
 
@@ -1102,8 +1095,8 @@ describe('FileModel', () => {
       const { id: fileId } = await fileModel.create(testFile, true);
 
       // 创建一些测试数据来模拟chunks关联
-      const chunkId1 = 'test-chunk-1';
-      const chunkId2 = 'test-chunk-2';
+      const chunkId1 = '550e8400-e29b-41d4-a716-446655440001';
+      const chunkId2 = '550e8400-e29b-41d4-a716-446655440002';
 
       // 插入chunks
       await serverDB.insert(chunks).values([
@@ -1168,7 +1161,7 @@ describe('FileModel', () => {
 
       const { id: fileId } = await fileModel.create(testFile, true);
 
-      const chunkId = 'error-chunk-1';
+      const chunkId = '550e8400-e29b-41d4-a716-446655440003';
 
       // 插入chunk
       await serverDB.insert(chunks).values([
@@ -1232,7 +1225,7 @@ describe('FileModel', () => {
 
       const { id: fileId } = await fileModel.create(testFile, true);
 
-      const chunkId = 'doc-error-chunk-1';
+      const chunkId = '550e8400-e29b-41d4-a716-446655440004';
 
       // 插入chunk
       await serverDB.insert(chunks).values([
@@ -1290,7 +1283,7 @@ describe('FileModel', () => {
 
       const { id: fileId } = await fileModel.create(testFile, true);
 
-      const chunkId = 'chunks-error-chunk-1';
+      const chunkId = '550e8400-e29b-41d4-a716-446655440005';
 
       // 插入chunk
       await serverDB.insert(chunks).values([
@@ -1348,7 +1341,7 @@ describe('FileModel', () => {
 
       const { id: fileId } = await fileModel.create(testFile, true);
 
-      const chunkId = 'file-chunks-error-chunk-1';
+      const chunkId = '550e8400-e29b-41d4-a716-446655440006';
 
       // 插入chunk
       await serverDB.insert(chunks).values([
@@ -1408,7 +1401,7 @@ describe('FileModel', () => {
 
       const { id: fileId } = await fileModel.create(testFile, true);
 
-      const chunkId = 'kb-chunk-1';
+      const chunkId = '550e8400-e29b-41d4-a716-446655440007';
 
       // 插入chunk和关联数据
       await serverDB.insert(chunks).values([
