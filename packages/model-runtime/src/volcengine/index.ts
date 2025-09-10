@@ -1,6 +1,7 @@
 import { ModelProvider } from '../types';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
+import { createVolcengineImage } from './createImage';
 
 const THINKING_MODELS = [
   'thinking-vision-pro',
@@ -31,6 +32,7 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
       } as any;
     },
   },
+  createImage: createVolcengineImage,
   debug: {
     chatCompletion: () => process.env.DEBUG_VOLCENGINE_CHAT_COMPLETION === '1',
   },

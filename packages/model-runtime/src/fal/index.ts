@@ -32,6 +32,7 @@ export class LobeFalAI implements LobeRuntimeAI {
       ['steps', 'num_inference_steps'],
       ['cfg', 'guidance_scale'],
       ['imageUrl', 'image_url'],
+      ['imageUrls', 'image_urls'],
     ]);
 
     const defaultInput: Record<string, unknown> = {
@@ -39,10 +40,13 @@ export class LobeFalAI implements LobeRuntimeAI {
       num_images: 1,
     };
     const userInput: Record<string, unknown> = Object.fromEntries(
-      (Object.entries(params) as [keyof typeof params, any][]).map(([key, value]) => [
-        paramsMap.get(key) ?? key,
-        value,
-      ]),
+      (Object.entries(params) as [keyof typeof params, any][])
+        .filter(([, value]) => {
+          const isEmptyValue =
+            value === null || value === undefined || (Array.isArray(value) && value.length === 0);
+          return !isEmptyValue;
+        })
+        .map(([key, value]) => [paramsMap.get(key) ?? key, value]),
     );
 
     if ('width' in userInput && 'height' in userInput) {
@@ -57,31 +61,36 @@ export class LobeFalAI implements LobeRuntimeAI {
     const modelsAcceleratedByDefault = new Set<string>(['flux/krea']);
     if (modelsAcceleratedByDefault.has(model)) {
       defaultInput['acceleration'] = 'high';
-      log('Applied default acceleration=high for model: %s', model);
     }
 
-    const endpoint = `fal-ai/${model}`;
-    log('Calling fal.subscribe with endpoint: %s and input: %O', endpoint, {
+    // Ensure model has fal-ai/ prefix
+    let endpoint = model.startsWith('fal-ai/') ? model : `fal-ai/${model}`;
+    const hasImageUrls = (params.imageUrls?.length ?? 0) > 0;
+    if (endpoint === 'fal-ai/bytedance/seedream/v4') {
+      endpoint += hasImageUrls ? '/edit' : '/text-to-image';
+    } else if (endpoint === 'fal-ai/nano-banana' && hasImageUrls) {
+      endpoint += '/edit';
+    }
+
+    const finalInput = {
       ...defaultInput,
       ...userInput,
-    });
+    };
 
+    log('Calling fal.subscribe with endpoint: %s and input: %O', endpoint, finalInput);
     try {
       const { data } = await fal.subscribe(endpoint, {
-        input: {
-          ...defaultInput,
-          ...userInput,
-        },
+        input: finalInput,
       });
       const image = (data as FluxDevOutput).images[0];
-      log('Received image data: %O', image);
 
       return {
         imageUrl: image.url,
         ...pick(image, ['width', 'height']),
       };
     } catch (error) {
-      if (error instanceof Error && 'status' in error && (error as any).status === 401) {
+      // https://docs.fal.ai/model-apis/errors/
+      if (error instanceof Error && 'status' in error && error.status === 401) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey, {
           error,
         });
