@@ -357,8 +357,8 @@
       "version": "Version"
     },
     "official": {
-      "badge": "LobeHub Official Plugin",
-      "description": "This plugin is developed and maintained by LobeHub official team, has undergone strict security review, safe to use.",
+      "badge": "ImoogleAI Official Plugin",
+      "description": "This plugin is developed and maintained by Imoogle team, has undergone strict security review, safe to use.",
       "loadingMessage": "Fetching plugin details...",
       "loadingTitle": "Loading",
       "title": "Install Official Plugin"
@@ -461,7 +461,7 @@
     "tabs": {
       "installed": "Installed",
       "mcp": "MCP Plugins",
-      "old": "LobeChat Plugins"
+      "old": "ImoogleAI Plugins"
     },
     "title": "Plugin Store"
   },
