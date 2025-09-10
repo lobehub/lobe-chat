@@ -181,7 +181,13 @@ export const generateAIChatV2: StateCreator<
     }
 
     // remove temporally message
-    get().internal_dispatchMessage({ type: 'deleteMessage', id: tempId });
+    if (data?.isCreatNewTopic) {
+      get().internal_dispatchMessage(
+        { type: 'deleteMessage', id: tempId },
+        { topicId: activeTopicId, sessionId: activeId },
+      );
+    }
+
     get().internal_toggleMessageLoading(false, tempId);
     get().internal_updateSendMessageOperation(
       operationKey,
