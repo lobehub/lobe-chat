@@ -8,7 +8,7 @@ describe('handleOpenAIError', () => {
   describe('OpenAI APIError handling', () => {
     it('should handle OpenAI APIError with error object', () => {
       const apiError = new OpenAI.APIError(
-        'Test error',
+        472,
         { error: { message: 'API error', type: 'invalid_request' } },
         'test-message',
         { status: 400 } as any,
@@ -24,7 +24,7 @@ describe('handleOpenAIError', () => {
 
     it('should handle OpenAI APIError with cause', () => {
       const cause = { message: 'Network error', code: 'ECONNRESET' };
-      const apiError = new OpenAI.APIError('Test error', null, 'test-message', {
+      const apiError = new OpenAI.APIError(472, null as any, 'test-message', {
         status: 500,
       } as any);
       (apiError as any).cause = cause;
@@ -39,7 +39,7 @@ describe('handleOpenAIError', () => {
 
     it('should handle OpenAI APIError without error or cause', () => {
       const headers = { 'content-type': 'application/json' };
-      const apiError = new OpenAI.APIError('Test error', null, 'test-message', {
+      const apiError = new OpenAI.APIError(472, null as any, 'test-message', {
         status: 401,
         headers,
       } as any);
@@ -49,7 +49,7 @@ describe('handleOpenAIError', () => {
       expect(result.errorResult).toEqual({
         headers: { headers, status: 401 },
         stack: apiError.stack,
-        status: apiError.message,
+        status: 472,
       });
       expect(result.RuntimeError).toBeUndefined();
     });
@@ -57,7 +57,7 @@ describe('handleOpenAIError', () => {
     it('should handle OpenAI APIError with both error and cause', () => {
       const errorObject = { message: 'API error', type: 'rate_limit' };
       const cause = { message: 'Rate limit exceeded' };
-      const apiError = new OpenAI.APIError('Test error', { error: errorObject }, 'test-message', {
+      const apiError = new OpenAI.APIError(472, { error: errorObject }, 'test-message', {
         status: 429,
       } as any);
       (apiError as any).cause = cause;

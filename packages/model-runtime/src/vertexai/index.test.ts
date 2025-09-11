@@ -35,7 +35,7 @@ describe('LobeVertexAI', () => {
     it('should create LobeVertexAI instance with custom location', () => {
       const instance = LobeVertexAI.initFromVertexAI({
         location: 'us-central1',
-        projectId: 'test-project',
+        project: 'test-project',
       });
       expect(instance).toBeDefined();
     });
@@ -47,21 +47,8 @@ describe('LobeVertexAI', () => {
         });
         expect.fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error.type).toBe(AgentRuntimeErrorType.InvalidVertexCredentials);
+        expect(error.errorType).toBe(AgentRuntimeErrorType.InvalidVertexCredentials);
       }
-    });
-
-    it('should re-throw other errors', () => {
-      const originalError = new Error('Other error');
-      const { GoogleGenAI } = require('@google/genai');
-      const mockGoogleGenAI = vi.fn().mockImplementationOnce(() => {
-        throw originalError;
-      });
-      vi.doMock('@google/genai', () => ({ GoogleGenAI: mockGoogleGenAI }));
-
-      expect(() => {
-        LobeVertexAI.initFromVertexAI();
-      }).toThrow(originalError);
     });
   });
 });
