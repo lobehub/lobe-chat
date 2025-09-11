@@ -181,7 +181,13 @@ export const generateAIChatV2: StateCreator<
     }
 
     // remove temporally message
-    get().internal_dispatchMessage({ type: 'deleteMessage', id: tempId });
+    if (data?.isCreatNewTopic) {
+      get().internal_dispatchMessage(
+        { type: 'deleteMessage', id: tempId },
+        { topicId: activeTopicId, sessionId: activeId },
+      );
+    }
+
     get().internal_toggleMessageLoading(false, tempId);
     get().internal_updateSendMessageOperation(
       operationKey,
@@ -201,6 +207,26 @@ export const generateAIChatV2: StateCreator<
       .filter((item) => item.id !== data.assistantMessageId);
 
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
+
+    const summaryTitle = async () => {
+      // check activeTopic and then auto update topic title
+      if (data.isCreatNewTopic) {
+        await get().summaryTopicTitle(data.topicId, data.messages);
+        return;
+      }
+
+      if (!data.topicId) return;
+
+      const topic = topicSelectors.getTopicById(data.topicId)(get());
+
+      if (topic && !topic.title) {
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
+        await get().summaryTopicTitle(topic.id, chats);
+      }
+    };
+
+    summaryTitle().catch(console.error);
+
     try {
       await internal_execAgentRuntime({
         messages: baseMessages,
@@ -211,31 +237,12 @@ export const generateAIChatV2: StateCreator<
         threadId: activeThreadId,
       });
 
-      const summaryTitle = async () => {
-        // check activeTopic and then auto update topic title
-        if (data.isCreatNewTopic) {
-          await get().summaryTopicTitle(data.topicId, data.messages);
-          return;
-        }
-
-        if (!data.topicId) return;
-
-        const topic = topicSelectors.getTopicById(data.topicId)(get());
-
-        if (topic && !topic.title) {
-          const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
-          await get().summaryTopicTitle(topic.id, chats);
-        }
-      };
       //
       // // if there is relative files, then add files to agent
       // // only available in server mode
       const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
-      const addFilesToAgent = async () => {
-        await getAgentStoreState().addFilesToAgent(userFiles, false);
-      };
 
-      await Promise.all([summaryTitle(), addFilesToAgent()]);
+      await getAgentStoreState().addFilesToAgent(userFiles, false);
     } catch (e) {
       console.error(e);
     } finally {

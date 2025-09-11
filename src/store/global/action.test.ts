@@ -252,14 +252,13 @@ describe('createPreferenceSlice', () => {
   describe('updatePreference', () => {
     it('should update status', () => {
       const { result } = renderHook(() => useGlobalStore());
-      const status = { wideScreen: false };
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
-        result.current.updateSystemStatus(status);
+        result.current.updateSystemStatus({ noWideScreen: false });
       });
 
-      expect(result.current.status.wideScreen).toEqual(false);
+      expect(result.current.status.noWideScreen).toEqual(false);
     });
   });
 
@@ -395,7 +394,7 @@ describe('createPreferenceSlice', () => {
     it('should update with data', async () => {
       const { result } = renderHook(() => useGlobalStore());
       vi.spyOn(useGlobalStore.getState().statusStorage, 'getFromLocalStorage').mockReturnValueOnce({
-        wideScreen: false,
+        noWideScreen: false,
       } as any);
 
       const { result: hooks } = renderHook(() => result.current.useInitSystemStatus(), {
@@ -403,10 +402,10 @@ describe('createPreferenceSlice', () => {
       });
 
       await waitFor(() => {
-        expect(hooks.current.data).toEqual({ wideScreen: false });
+        expect(hooks.current.data).toEqual({ noWideScreen: false });
       });
 
-      expect(result.current.status.wideScreen).toEqual(false);
+      expect(result.current.status.noWideScreen).toEqual(false);
     });
   });
 

@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 Haiku와 비교할 때, Claude 3.5 Haiku는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 Opus를 초월했습니다."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku는 빠른 응답을 제공하며, 경량 작업에 적합합니다."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리 및 대리 작업에 특히 강합니다."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 비주얼 처리 및 에이전트 작업에 특히 강합니다."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet은 Anthropic의 최신 모델로, 매우 복잡한 작업을 처리하는 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력에서 뛰어난 성과를 보입니다."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 컴팩트한 모델로, 거의 즉각적인 응답을 목표로 합니다. 빠르고 정확한 방향성 성능을 갖추고 있습니다."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1은 Anthropic의 최신 고난도 작업 처리용 최강 모델입니다. 성능, 지능, 유창성, 이해력 면에서 탁월한 성과를 보입니다."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 사고 모델로, 추론 과정을 보여주는 고급 버전입니다."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4는 Anthropic이 매우 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력 면에서 뛰어난 성과를 보입니다."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet은 거의 즉각적인 응답 또는 점진적인 사고 과정을 생성할 수 있으며, 사용자는 이러한 과정을 명확하게 볼 수 있습니다. API 사용자는 모델의 사고 시간을 세밀하게 제어할 수 있습니다."
+    "description": "Claude Sonnet 4는 거의 즉각적인 응답 또는 확장된 단계별 사고를 생성할 수 있으며, 사용자가 이 과정을 명확히 볼 수 있습니다."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Claude Sonnet 4 사고 모델은 거의 즉각적인 응답 또는 확장된 단계별 사고를 생성할 수 있으며, 사용자가 이 과정을 명확히 볼 수 있습니다."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4는 강력한 AI 프로그래밍 도우미로, 다양한 프로그래밍 언어에 대한 스마트 Q&A 및 코드 완성을 지원하여 개발 효율성을 높입니다."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision 시각 심층 사고 모델로, 교육, 이미지 검토, 점검 및 보안, AI 검색 질의응답 등 다양한 시나리오에서 더욱 강력한 범용 다중 모달 이해 및 추론 능력을 보여줍니다. 256k 문맥 창을 지원하며, 출력 길이는 최대 64k 토큰까지 지원합니다."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Doubao 이미지 생성 모델은 ByteDance Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 명령어를 통해 이미지를 편집할 수 있으며, 생성되는 이미지의 크기는 512~1536 픽셀 사이입니다."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Doubao 이미지 생성 모델은 바이트댄스 Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
+    "description": "Seedream 3.0 이미지 생성 모델은 ByteDance Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Seedream 4.0 이미지 생성 모델은 ByteDance Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
   },
   "doubao-vision-lite-32k": {
     "description": "Doubao-vision 모델은 Doubao에서 출시한 다중 모달 대형 모델로, 강력한 이미지 이해 및 추론 능력과 정밀한 명령 이해 능력을 갖추고 있습니다. 이미지 텍스트 정보 추출 및 이미지 기반 추론 작업에서 뛰어난 성능을 보여, 더 복잡하고 광범위한 시각 질문 응답 작업에 적용할 수 있습니다."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K에 비해 모델의 효과와 성능이 더 우수합니다."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Seedream 4.0 이미지 생성 모델은 ByteDance Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "이미지 편집 작업에 특화된 FLUX.1 모델로, 텍스트와 이미지 입력을 지원합니다."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro]는 텍스트와 참조 이미지를 입력으로 받아 목표 지향적인 부분 편집과 복잡한 전체 장면 변환을 원활하게 수행할 수 있습니다."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev]는 미학적 선호를 가진 이미지 생성 모델로, 보다 사실적이고 자연스러운 이미지를 생성하는 것을 목표로 합니다."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 이미지 생성 모델로, 빠른 고품질 이미지 생성을 중점으로 합니다."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Google에서 제공하는 고품질 이미지 생성 모델입니다."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana는 Google의 최신이자 가장 빠르고 효율적인 네이티브 멀티모달 모델로, 대화를 통해 이미지 생성 및 편집을 할 수 있습니다."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Qwen 팀이 개발한 강력한 원본 이미지 모델로, 인상적인 중국어 텍스트 생성 능력과 다양한 이미지 시각 스타일을 갖추고 있습니다."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Qwen 팀이 출시한 전문 이미지 편집 모델로, 의미 기반 편집과 외관 편집을 지원하며, 중영문 텍스트를 정밀하게 편집하고 스타일 변환, 객체 회전 등 고품질 이미지 편집을 구현할 수 있습니다."
+  },
   "flux-1-schnell": {
     "description": "Black Forest Labs가 개발한 120억 파라미터 텍스트-이미지 생성 모델로, 잠재적 적대적 확산 증류 기술을 사용하여 1~4단계 내에 고품질 이미지를 생성할 수 있습니다. 이 모델은 폐쇄형 대체품과 견줄 만한 성능을 보이며, Apache-2.0 라이선스 하에 개인, 연구 및 상업적 용도로 공개되어 있습니다."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "최첨단 맥락 기반 이미지 생성 및 편집 — 텍스트와 이미지를 결합하여 정확하고 일관된 결과를 제공합니다."
-  },
-  "flux-kontext/dev": {
-    "description": "이미지 편집 작업에 특화된 FLUX.1 모델로, 텍스트와 이미지 입력을 지원합니다."
   },
   "flux-merged": {
     "description": "FLUX.1-merged 모델은 개발 단계에서 탐색된 \"DEV\"의 심층 특성과 \"Schnell\"이 대표하는 고속 실행 장점을 결합했습니다. 이를 통해 FLUX.1-merged는 모델 성능 한계를 높이고 적용 범위를 확장했습니다."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "초고해상도 AI 이미지 생성 — 최대 4메가픽셀 출력 지원, 10초 이내에 초고화질 이미지를 생성합니다."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro]는 텍스트와 참조 이미지를 입력으로 처리하여 목표 지향적인 부분 편집과 복잡한 전체 장면 변환을 원활하게 수행할 수 있습니다."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell]은 현재 공개된 가장 진보된 소단계 모델로, 동종 경쟁 모델을 능가할 뿐만 아니라 Midjourney v6.0, DALL·E 3 (HD) 같은 강력한 비증류 모델보다도 우수합니다. 이 모델은 사전 학습 단계의 모든 출력 다양성을 유지하도록 특별히 미세 조정되었으며, 시각 품질, 명령 준수, 크기/비율 변화, 글꼴 처리 및 출력 다양성 등에서 현존 최고 모델 대비 현저한 향상을 이루어 사용자에게 더욱 풍부하고 다양한 창의적 이미지 생성 경험을 제공합니다."
   },
   "flux.1-schnell": {
     "description": "120억 파라미터의 수정 흐름 변환기로, 텍스트 설명에 따라 이미지를 생성할 수 있습니다."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev]는 미적 선호를 반영한 이미지 생성 모델로, 보다 사실적이고 자연스러운 이미지를 생성하는 것을 목표로 합니다."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 이미지 생성 모델로, 빠르게 고품질 이미지를 생성하는 데 중점을 둡니다."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "저희의 최신이자 가장 강력한 플래그십 모델로, 자연어 처리, 수학 계산 및 추론에서 뛰어난 성능을 자랑합니다 — 완벽한 만능형 선수입니다."
   },
+  "grok-4-0709": {
+    "description": "xAI의 Grok 4로, 강력한 추론 능력을 갖추고 있습니다."
+  },
   "grok-code-fast-1": {
     "description": "우리는 에이전트 코딩에 탁월한 빠르고 경제적인 추론 모델인 grok-code-fast-1을 출시하게 되어 기쁩니다."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4세대 텍스트-이미지 모델 시리즈 울트라 버전"
-  },
-  "imagen4/preview": {
-    "description": "Google에서 제공하는 고품질 이미지 생성 모델입니다."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3는 다재다능한 강력한 모델로, 여러 분야에서 뛰어난 성능을 발휘합니다. 수학, 과학, 프로그래밍 및 시각적 추론 작업에서 새로운 기준을 세웠습니다. 기술 작문 및 지시 준수에도 능숙합니다. 사용자는 이를 통해 텍스트, 코드 및 이미지를 분석하고, 다단계 복잡한 문제를 해결할 수 있습니다."
   },
+  "o3-2025-04-16": {
+    "description": "o3는 OpenAI의 새로운 추론 모델로, 이미지와 텍스트 입력을 지원하며 텍스트를 출력합니다. 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다."
+  },
   "o3-deep-research": {
     "description": "o3-deep-research는 복잡한 다단계 연구 작업을 처리하도록 설계된 당사의 최첨단 심층 연구 모델입니다. 인터넷에서 정보를 검색하고 종합할 수 있으며, MCP 커넥터를 통해 귀하의 자체 데이터를 액세스하고 활용할 수도 있습니다."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "o3-pro 모델은 더 많은 계산을 사용하여 더 깊이 사고하고 항상 더 나은 답변을 제공하며, Responses API에서만 사용 가능합니다."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro는 OpenAI의 새로운 추론 모델로, 이미지와 텍스트 입력을 지원하며 텍스트를 출력합니다. 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다."
+  },
   "o4-mini": {
     "description": "o4-mini는 최신 소형 o 시리즈 모델로, 빠르고 효율적인 추론을 위해 최적화되어 있으며, 코딩 및 시각적 작업에서 매우 높은 효율성과 성능을 자랑합니다."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini는 OpenAI의 추론 모델로, 이미지와 텍스트 입력을 지원하며 텍스트를 출력합니다. 광범위한 일반 지식이 필요한 복잡한 작업에 적합하며, 20만 토큰의 컨텍스트를 갖추고 있습니다."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research는 더 빠르고 경제적인 심층 연구 모델로, 복잡한 다단계 연구 작업에 매우 적합합니다. 인터넷에서 정보를 검색하고 종합할 수 있으며, MCP 커넥터를 통해 귀하의 자체 데이터를 액세스하고 활용할 수도 있습니다."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image는 범용 이미지 생성 모델로, 다양한 예술적 스타일을 지원하며 특히 복잡한 텍스트 렌더링, 그중에서도 중국어와 영어 텍스트 렌더링에 뛰어납니다. 모델은 다중 행 레이아웃, 문단 단위 텍스트 생성 및 세밀한 디테일 묘사를 지원하여 복잡한 이미지-텍스트 혼합 레이아웃 디자인을 구현할 수 있습니다."
-  },
-  "qwen-image-edit": {
-    "description": "Qwen 팀이 발표한 전문 이미지 편집 모델로, 의미 편집과 외관 편집을 지원하며 중국어 및 영어 텍스트를 정밀하게 편집하고 스타일 변환, 객체 회전 등 고품질 이미지 편집을 구현합니다."
   },
   "qwen-long": {
     "description": "통의천문 초대규모 언어 모델로, 긴 텍스트 컨텍스트를 지원하며, 긴 문서 및 다수의 문서에 기반한 대화 기능을 제공합니다."

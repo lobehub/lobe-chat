@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku is het snelste volgende generatie model van Anthropic. In vergelijking met Claude 3 Haiku heeft Claude 3.5 Haiku verbeteringen in alle vaardigheden en overtreft het de grootste modellen van de vorige generatie, Claude 3 Opus, in veel intellectuele benchmarktests."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku biedt snelle reacties en is geschikt voor lichte taken."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en is sneller dan Sonnet, terwijl het dezelfde prijs behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet is het nieuwste en krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het blinkt uit in prestaties, intelligentie, vloeiendheid en begrip."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, ontworpen voor bijna onmiddellijke reacties. Het heeft snelle en nauwkeurige gerichte prestaties."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 is het nieuwste en krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het blinkt uit in prestaties, intelligentie, vloeiendheid en begrip."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 denkmodel, een geavanceerde versie die het redeneerproces kan tonen."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het presteert uitstekend op het gebied van prestaties, intelligentie, vloeiendheid en begrip."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet kan bijna onmiddellijke reacties of verlengde, geleidelijke overpeinzingen genereren, waarbij gebruikers deze processen duidelijk kunnen zien. API-gebruikers kunnen ook gedetailleerde controle uitoefenen over de denktijd van het model."
+    "description": "Claude Sonnet 4 kan bijna onmiddellijke reacties genereren of uitgebreide stapsgewijze overwegingen, waarbij gebruikers deze processen duidelijk kunnen volgen."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Claude Sonnet 4 denkmodel kan bijna onmiddellijke reacties genereren of uitgebreide stapsgewijze overwegingen, waarbij gebruikers deze processen duidelijk kunnen volgen."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 is een krachtige AI-programmeerassistent die slimme vraag- en antwoordmogelijkheden en code-aanvulling ondersteunt voor verschillende programmeertalen, waardoor de ontwikkelingssnelheid wordt verhoogd."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision is een visueel diepdenkend model dat sterkere algemene multimodale begrip- en redeneervermogen toont in scenario's zoals onderwijs, beeldcontrole, inspectie en beveiliging, en AI-zoekvragen. Het ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 64k tokens."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Doubao beeldgeneratiemodel ontwikkeld door het Seed-team van ByteDance, ondersteunt tekst- en beeldinvoer en biedt een hoog controleerbare, hoogwaardige beeldgeneratie-ervaring. Ondersteunt het bewerken van afbeeldingen via tekstinstructies, met afbeeldingsafmetingen tussen 512 en 1536 pixels."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Het Doubao beeldgeneratiemodel is ontwikkeld door het Seed-team van ByteDance en ondersteunt zowel tekst- als beeldinvoer, en biedt een hoog controleerbare en hoogwaardige beeldgeneratie-ervaring. Het genereert beelden op basis van tekstprompts."
+    "description": "Seedream 3.0 beeldgeneratiemodel ontwikkeld door het Seed-team van ByteDance, ondersteunt tekst- en beeldinvoer en biedt een hoog controleerbare, hoogwaardige beeldgeneratie-ervaring. Genereert afbeeldingen op basis van tekstprompts."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Seedream 4.0 beeldgeneratiemodel ontwikkeld door het Seed-team van ByteDance, ondersteunt tekst- en beeldinvoer en biedt een hoog controleerbare, hoogwaardige beeldgeneratie-ervaring. Genereert afbeeldingen op basis van tekstprompts."
   },
   "doubao-vision-lite-32k": {
     "description": "Het Doubao-vision model is een multimodaal groot model van Doubao met krachtige beeldbegrip- en redeneercapaciteiten, evenals nauwkeurige instructiebegrip. Het model presteert sterk bij het extraheren van beeld- en tekstinformatie en bij beeldgebaseerde redeneertaken, en is toepasbaar op complexere en bredere visuele vraag-en-antwoord scenario's."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "In vergelijking met ERNIE-X1-32K biedt dit model betere prestaties en effectiviteit."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Seedream 4.0 beeldgeneratiemodel ontwikkeld door het Seed-team van ByteDance, ondersteunt tekst- en beeldinvoer en biedt een hoog controleerbare, hoogwaardige beeldgeneratie-ervaring. Genereert afbeeldingen op basis van tekstprompts."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "FLUX.1-model gericht op beeldbewerkingsopdrachten, ondersteunt tekst- en beeldinvoer."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] kan tekst en referentiebeelden als invoer verwerken en maakt naadloze doelgerichte lokale bewerkingen en complexe algehele scèneveranderingen mogelijk."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev] is een beeldgeneratiemodel met een esthetische voorkeur, gericht op het creëren van realistischere en natuurlijkere beelden."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell] is een beeldgeneratiemodel met 12 miljard parameters, gericht op het snel genereren van hoogwaardige beelden."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Hoogwaardig beeldgeneratiemodel aangeboden door Google."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana is het nieuwste, snelste en meest efficiënte native multimodale model van Google, waarmee u beelden kunt genereren en bewerken via gesprekken."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Krachtig ruwe beeldmodel van het Qwen-team, met indrukwekkende Chinese tekstgeneratiecapaciteiten en diverse visuele stijlen."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Professioneel beeldbewerkingsmodel uitgebracht door het Qwen-team, ondersteunt semantische en visuele bewerkingen, kan nauwkeurig Chinese en Engelse tekst bewerken, en biedt hoogwaardige beeldbewerkingen zoals stijltransformatie en objectrotatie."
+  },
   "flux-1-schnell": {
     "description": "Een tekst-naar-beeldmodel met 12 miljard parameters ontwikkeld door Black Forest Labs, gebruikmakend van latente adversariële diffusie-distillatie technologie, dat hoogwaardige beelden kan genereren binnen 1 tot 4 stappen. Dit model presteert vergelijkbaar met gesloten bron alternatieven en wordt uitgebracht onder de Apache-2.0 licentie, geschikt voor persoonlijk, wetenschappelijk en commercieel gebruik."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "Geavanceerde contextuele beeldgeneratie en -bewerking — tekst en afbeeldingen combineren voor nauwkeurige, samenhangende resultaten."
-  },
-  "flux-kontext/dev": {
-    "description": "FLUX.1-model gericht op beeldbewerkingsopdrachten, ondersteunt tekst- en beeldinvoer."
   },
   "flux-merged": {
     "description": "Het FLUX.1-merged model combineert de diepgaande kenmerken verkend tijdens de ontwikkelingsfase van \"DEV\" met de hoge uitvoeringssnelheid van \"Schnell\". Deze combinatie verhoogt niet alleen de prestatiegrenzen van het model, maar breidt ook het toepassingsgebied uit."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "Ultrahoge resolutie AI-beeldgeneratie — ondersteunt output tot 4 megapixels en genereert binnen 10 seconden Ultra‑HD-afbeeldingen."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro] kan tekst en referentieafbeeldingen als invoer verwerken, waardoor doelgerichte lokale bewerkingen en complexe algehele scèneveranderingen naadloos mogelijk zijn."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell] is momenteel het meest geavanceerde open-source model met weinig stappen, dat niet alleen concurrenten overtreft, maar ook krachtige niet-gedistilleerde modellen zoals Midjourney v6.0 en DALL·E 3 (HD). Het model is speciaal fijn afgesteld om de volledige outputdiversiteit van de pre-trainingsfase te behouden. Vergeleken met de meest geavanceerde modellen op de markt verbetert FLUX.1 [schnell] aanzienlijk de visuele kwaliteit, instructienaleving, schaal/verhouding aanpassing, lettertypeverwerking en outputdiversiteit, wat gebruikers een rijkere en gevarieerdere creatieve beeldgeneratie-ervaring biedt."
   },
   "flux.1-schnell": {
     "description": "Een Rectified Flow Transformer met 12 miljard parameters, in staat om beelden te genereren op basis van tekstbeschrijvingen."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] is een beeldgeneratiemodel met een esthetische voorkeur, gericht op het creëren van realistischere en natuurlijkere beelden."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell] is een beeldgeneratiemodel met 12 miljard parameters, gericht op het snel genereren van beelden van hoge kwaliteit."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "Ons nieuwste en krachtigste vlaggenschipmodel, uitmuntend in natuurlijke taalverwerking, wiskundige berekeningen en redeneren — een perfecte allrounder."
   },
+  "grok-4-0709": {
+    "description": "Grok 4 van xAI, met krachtige redeneervaardigheden."
+  },
   "grok-code-fast-1": {
     "description": "We zijn verheugd om grok-code-fast-1 te introduceren, een snel en kostenefficiënt inferentiemodel dat uitblinkt in agentcodering."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4e generatie tekst-naar-beeld modelserie Ultra versie"
-  },
-  "imagen4/preview": {
-    "description": "Hoogwaardig beeldgeneratiemodel geleverd door Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
   },
+  "o3-2025-04-16": {
+    "description": "o3 is het nieuwe redenermodel van OpenAI, ondersteunt tekst- en beeldinvoer en genereert tekst, geschikt voor complexe taken die brede algemene kennis vereisen."
+  },
   "o3-deep-research": {
     "description": "o3-deep-research is ons meest geavanceerde diepgaand onderzoeksmodel, speciaal ontworpen voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "Het o3-pro model gebruikt meer rekenkracht om dieper na te denken en altijd betere antwoorden te bieden, alleen te gebruiken onder de Responses API."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro is het nieuwe redenermodel van OpenAI, ondersteunt tekst- en beeldinvoer en genereert tekst, geschikt voor complexe taken die brede algemene kennis vereisen."
+  },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini is een redenermodel van OpenAI, ondersteunt tekst- en beeldinvoer en genereert tekst, geschikt voor complexe taken die brede algemene kennis vereisen. Dit model heeft een context van 200K tokens."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research is ons snellere en betaalbaardere diepgaand onderzoeksmodel — perfect voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image is een veelzijdig beeldgeneratiemodel dat meerdere kunststijlen ondersteunt en uitblinkt in het renderen van complexe tekst, met name het weergeven van Chinese en Engelse tekst. Het model ondersteunt meerregelige lay-outs, tekstgeneratie op paragraafniveau en fijne detaillering, en maakt complexe gemengde tekst-beeldlay-outs mogelijk."
-  },
-  "qwen-image-edit": {
-    "description": "Het Qwen-team heeft een professioneel model voor beeldbewerking uitgebracht dat semantische bewerkingen en visuele aanpassingen ondersteunt. Het kan Chinese en Engelse tekst nauwkeurig bewerken en realiseert hoogwaardige beeldbewerking, zoals stijltransformaties en het roteren van objecten."
   },
   "qwen-long": {
     "description": "Qwen is een grootschalig taalmodel dat lange tekstcontexten ondersteunt, evenals dialoogfunctionaliteit op basis van lange documenten en meerdere documenten."

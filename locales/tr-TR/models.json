@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku, Anthropic'in en hızlı bir sonraki nesil modelidir. Claude 3 Haiku ile karşılaştırıldığında, Claude 3.5 Haiku, tüm becerilerde gelişim göstermiştir ve birçok zeka standart testinde bir önceki neslin en büyük modeli olan Claude 3 Opus'u geride bırakmıştır."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku hızlı yanıtlar sunar ve hafif görevler için uygundur."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir performans sunar, aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak, geniş bir değerlendirme yelpazesinde mükemmel performans sergilemekte, orta seviye modellerimizin hız ve maliyet avantajlarını sunmaktadır."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet, Anthropic'in en yeni ve en güçlü modeli olup, yüksek karmaşıklıktaki görevleri işler. Performans, zeka, akıcılık ve anlama yeteneğinde üstünlük gösterir."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku, Anthropic'in en hızlı ve en kompakt modelidir, neredeyse anlık yanıtlar sağlamak için tasarlanmıştır. Hızlı ve doğru yönlendirme performansına sahiptir."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1, Anthropic'in en karmaşık görevleri işlemek için geliştirdiği en güçlü modelidir. Performans, zeka, akıcılık ve anlama yeteneği açısından olağanüstü bir performans sergiler."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 düşünme modeli, akıl yürütme sürecini gösterebilen gelişmiş bir versiyondur."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4, Anthropic'in son derece karmaşık görevleri işlemek için geliştirdiği en güçlü modeldir. Performans, zeka, akıcılık ve anlama açısından mükemmel bir şekilde öne çıkmaktadır."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet, neredeyse anlık yanıtlar veya uzatılmış aşamalı düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir. API kullanıcıları, modelin düşünme süresini ayrıntılı bir şekilde kontrol edebilir."
+    "description": "Claude Sonnet 4, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Claude Sonnet 4 düşünme modeli, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4, çeşitli programlama dillerinde akıllı soru-cevap ve kod tamamlama desteği sunan güçlü bir AI programlama asistanıdır, geliştirme verimliliğini artırır."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision görsel derin düşünme modeli, eğitim, görüntü denetimi, denetim ve güvenlik ile AI arama ve soru-cevap gibi senaryolarda daha güçlü genel çok modlu anlama ve akıl yürütme yetenekleri sergiler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 64k token olabilir."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Doubao resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin komutlarıyla görüntü düzenlemeyi destekler ve oluşturulan görüntülerin kenar uzunluğu 512 ile 1536 piksel arasındadır."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Doubao görüntü oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve görüntü girişlerini destekler ve yüksek kontrol edilebilirlik ile yüksek kaliteli görüntü üretimi sunar. Metin istemlerine dayalı görüntü oluşturur."
+    "description": "Seedream 3.0 resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin istemlerine dayalı olarak resim oluşturur."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Seedream 4.0 resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin istemlerine dayalı olarak resim oluşturur."
   },
   "doubao-vision-lite-32k": {
     "description": "Doubao-vision modeli, Doubao tarafından geliştirilen çok modlu büyük bir modeldir. Güçlü görüntü anlama ve çıkarım yeteneklerine ve hassas komut anlama becerisine sahiptir. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı çıkarım görevlerinde güçlü performans sergiler ve daha karmaşık, geniş kapsamlı görsel soru-cevap görevlerinde kullanılabilir."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Seedream 4.0 resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin istemlerine dayalı olarak resim oluşturur."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "Görüntü düzenleme görevlerine odaklanan FLUX.1 modeli, metin ve resim girişini destekler."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro], metin ve referans görüntüleri giriş olarak işleyebilir; hedefe yönelik yerel düzenlemeler ve karmaşık genel sahne dönüşümlerini sorunsuzca gerçekleştirir."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev], estetik tercihlere sahip bir görüntü oluşturma modelidir ve daha gerçekçi, doğal görüntüler üretmeyi hedefler."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir görüntü oluşturma modelidir ve hızlı yüksek kaliteli görüntü üretimine odaklanır."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Google tarafından sunulan yüksek kaliteli görüntü oluşturma modeli."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; diyalog yoluyla görüntü oluşturma ve düzenleme imkanı sunar."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Qwen ekibinin güçlü ham görüntü modeli, etkileyici Çince metin oluşturma yeteneği ve çeşitli görsel stil seçenekleri sunar."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Qwen ekibi tarafından geliştirilen profesyonel görüntü düzenleme modeli; anlamsal ve görünüm düzenlemeyi destekler, Çince ve İngilizce metinleri hassas şekilde düzenleyebilir, stil dönüşümü, nesne döndürme gibi yüksek kaliteli düzenlemeler yapabilir."
+  },
   "flux-1-schnell": {
     "description": "Black Forest Labs tarafından geliştirilen 12 milyar parametreli metinden görüntüye modeldir. Latent adversarial diffusion distillation teknolojisi kullanır ve 1 ila 4 adımda yüksek kaliteli görüntüler oluşturabilir. Performansı kapalı kaynak alternatiflerle karşılaştırılabilir ve Apache-2.0 lisansı altında kişisel, akademik ve ticari kullanıma uygundur."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "Metin ve görüntüleri birleştirerek hassas ve tutarlı sonuçlar elde etmek için en gelişmiş bağlamsal görüntü oluşturma ve düzenleme."
-  },
-  "flux-kontext/dev": {
-    "description": "Metin ve görsel girdileri destekleyen, görüntü düzenleme görevlerine odaklanan FLUX.1 modeli."
   },
   "flux-merged": {
     "description": "FLUX.1-merged modeli, geliştirme aşamasında \"DEV\" tarafından keşfedilen derin özellikler ile \"Schnell\" in yüksek hızlı yürütme avantajlarını birleştirir. Bu sayede model performans sınırlarını artırır ve uygulama alanlarını genişletir."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "Ultra yüksek çözünürlüklü yapay zeka ile görüntü üretimi — 4 megapiksel çıktı desteği; 10 saniye içinde ultra net görseller oluşturur."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro], metin ve referans görüntüleri girdi olarak işleyebilir, hedefe yönelik yerel düzenlemeler ve karmaşık genel sahne dönüşümlerini sorunsuz bir şekilde gerçekleştirebilir."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell], şu anda açık kaynaklı en gelişmiş az adımlı modeldir; benzer rakiplerini aşmakla kalmaz, Midjourney v6.0 ve DALL·E 3 (HD) gibi güçlü damıtılmamış modellerden bile üstündür. Model, ön eğitim aşamasındaki tüm çıktı çeşitliliğini koruyacak şekilde özel olarak ince ayar yapılmıştır. Piyasadaki en gelişmiş modellere kıyasla görsel kalite, talimat uyumu, boyut/oran değişiklikleri, yazı tipi işleme ve çıktı çeşitliliği gibi alanlarda belirgin iyileştirmeler sunar ve kullanıcılara daha zengin ve çeşitli yaratıcı görüntü üretim deneyimi sağlar."
   },
   "flux.1-schnell": {
     "description": "120 milyar parametreli düzeltilmiş akış dönüştürücüsüdür ve metin açıklamalarına göre görüntü oluşturabilir."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev], estetik tercihlere sahip bir görüntü oluşturma modeli olup, daha gerçekçi ve doğal görüntüler üretmeyi hedefler."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip, hızlı ve yüksek kaliteli görüntü üretimine odaklanan bir görüntü oluşturma modeli."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "En yeni ve en güçlü amiral gemisi modelimiz, doğal dil işleme, matematiksel hesaplama ve akıl yürütme alanlarında üstün performans sergiliyor — mükemmel bir çok yönlü oyuncu."
   },
+  "grok-4-0709": {
+    "description": "xAI'nin Grok 4 modeli, güçlü akıl yürütme yeteneklerine sahiptir."
+  },
   "grok-code-fast-1": {
     "description": "Hızlı ve ekonomik bir çıkarım modeli olan grok-code-fast-1'i sunmaktan mutluluk duyuyoruz; ajan kodlamasında mükemmel performans sergiler."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
-  },
-  "imagen4/preview": {
-    "description": "Google tarafından sunulan yüksek kaliteli görüntü oluşturma modeli."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3, çok çeşitli alanlarda mükemmel performans gösteren çok yönlü güçlü bir modeldir. Matematik, bilim, programlama ve görsel çıkarım görevlerinde yeni standartlar belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık sorunları çözebilir."
   },
+  "o3-2025-04-16": {
+    "description": "o3, OpenAI'nin yeni akıl yürütme modeli olup, metin ve görsel girişleri destekler ve metin çıktısı verir; geniş kapsamlı genel bilgi gerektiren karmaşık görevler için uygundur."
+  },
   "o3-deep-research": {
     "description": "o3-derin-arama, karmaşık çok adımlı araştırma görevlerini işlemek için özel olarak tasarlanmış en gelişmiş derin araştırma modelimizdir. İnternetten bilgi arayıp sentezleyebilir ve MCP bağlayıcısı aracılığıyla kendi verilerinize erişip bunları kullanabilir."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "o3-pro modeli, daha derin düşünmek ve her zaman daha iyi yanıtlar sunmak için daha fazla hesaplama kullanır, yalnızca Responses API altında kullanılabilir."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro, OpenAI'nin yeni akıl yürütme modeli olup, metin ve görsel girişleri destekler ve metin çıktısı verir; geniş kapsamlı genel bilgi gerektiren karmaşık görevler için uygundur."
+  },
   "o4-mini": {
     "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini, OpenAI'nin akıl yürütme modeli olup, metin ve görsel girişleri destekler ve metin çıktısı verir; geniş kapsamlı genel bilgi gerektiren karmaşık görevler için uygundur. Model 200K bağlam uzunluğuna sahiptir."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-derin-arama, daha hızlı ve uygun maliyetli derin araştırma modelimizdir — karmaşık çok adımlı araştırma görevleri için idealdir. İnternetten bilgi arayıp sentezleyebilir ve MCP bağlayıcısı aracılığıyla kendi verilerinize erişip bunları kullanabilir."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image, çeşitli sanat stillerini destekleyen genel amaçlı bir görsel oluşturma modelidir; karmaşık metin renderleme konusunda, özellikle Çince ve İngilizce metinlerin renderlenmesinde uzmandır. Model çok satırlı düzenleri, paragraf düzeyinde metin üretimini ve ince ayrıntıların işlenmesini destekler; karmaşık görsel-metin karışık düzen tasarımlarının oluşturulmasına olanak tanır."
-  },
-  "qwen-image-edit": {
-    "description": "Qwen ekibi tarafından yayımlanan profesyonel görüntü düzenleme modeli, anlamsal düzenleme ve görünüm düzenlemeyi destekler; Çince ve İngilizce metinleri hassas şekilde düzenleyebilir ve stil dönüşümü, nesne döndürme gibi yüksek kaliteli görüntü düzenlemeleri gerçekleştirir."
   },
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
