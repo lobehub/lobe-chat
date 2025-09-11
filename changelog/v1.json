@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Delete files should delete chunks、embedings、fileChunk."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix not remove message with server mode."],
       "improvements": ["Update i18n."]
     },
