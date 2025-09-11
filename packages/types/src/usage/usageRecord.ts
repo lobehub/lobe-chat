@@ -1,0 +1,67 @@
+import { z } from 'zod';
+
+import { MessageMetadata } from '../message';
+
+export interface UsageRecordItem {
+  /**
+   * 记录 ID
+   **/
+  id: number;
+  /**
+   * 模型id
+   */
+  model: string;
+  /**
+   * 提供商
+   */
+  provider: string;
+  /**
+   * 花费
+   **/
+  spend: number;
+  /**
+   * 调用类型
+   **/
+  type: string;
+  /**
+   * 用户 ID
+   **/
+  userId: string;
+  /**
+   * 性能信息
+   **/
+  ttft?: number | null;
+  tps?: number | null;
+  inputStartAt?: Date | null;
+  outputStartAt?: Date | null;
+  outputFinishAt?: Date | null;
+  /**
+   * 使用信息
+   **/
+  totalInputTokens?: number | null;
+  totalOutputTokens?: number | null;
+  totalTokens?: number | null;
+  /**
+   * 元数据
+   **/
+  metadata?: MessageMetadata | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const RequestLogSchema = z.object({
+  type: z.enum(['chat', 'history_summary']),
+  metadata: z.any().optional(),
+  model: z.string(),
+  provider: z.string(),
+  spend: z.number(),
+});
+
+export type UsageLog = {
+  date: number;
+  day: string;
+  records: UsageRecordItem[];
+  totalRequests: number;
+  totalSpend: number;
+  totalTokens: number;
+};

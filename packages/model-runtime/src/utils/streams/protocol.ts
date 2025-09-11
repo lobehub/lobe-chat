@@ -186,6 +186,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
   let aggregatedText = '';
   let aggregatedThinking: string | undefined = undefined;
   let usage: ModelTokensUsage | undefined;
+  let speed: ModelSpeed | undefined;
   let grounding: any;
   let toolsCalling: any;
 
@@ -200,6 +201,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
         thinking: aggregatedThinking,
         toolsCalling,
         usage,
+        speed,
       };
 
       if (callbacks.onCompletion) {
@@ -250,6 +252,11 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
           case 'usage': {
             usage = data;
             await callbacks.onUsage?.(data);
+            break;
+          }
+
+          case 'speed': {
+            speed = data;
             break;
           }
 
@@ -372,10 +379,14 @@ export const createTokenSpeedCalculator = (
         (outputThinking ?? false)
           ? totalOutputTokens
           : Math.max(0, totalOutputTokens - reasoningTokens);
+      const outputFinishAt = Date.now();
       result.push({
         data: {
-          tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,
+          tps: (outputTokens / (outputFinishAt - outputStartAt)) * 1000,
           ttft: outputStartAt - inputStartAt,
+          inputStartAt,
+          outputStartAt,
+          outputFinishAt,
         } as ModelSpeed,
         id: TOKEN_SPEED_CHUNK_ID,
         type: 'speed',
