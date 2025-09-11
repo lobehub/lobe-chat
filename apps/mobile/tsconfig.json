@@ -10,7 +10,8 @@
       "@/const/*": ["./src/const/*", "../../packages/const/src/*"],
       "@/test/*": ["./test/*"],
       "@/*": ["./src/*"]
-    }
+    },
+    "moduleSuffixes": [".native", ".ios", ".android", ".web", ""]
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "global.d.ts"],
   "exclude": ["node_modules", "scripts/**"]

@@ -1,7 +1,7 @@
 import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import React, { ReactNode } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { Switch } from '@/components';
 
 import { ICON_SIZE_SMALL } from '@/const/common';
@@ -15,6 +15,7 @@ interface SettingItemProps {
   href?: Href;
   isLast?: boolean;
   isSelected?: boolean;
+  loading?: boolean;
   onPress?: () => void;
   onSwitchChange?: (value: boolean) => void;
   showCheckmark?: boolean;
@@ -37,6 +38,7 @@ export const SettingItem = ({
   showNewBadge,
   isSelected = false,
   showCheckmark = false,
+  loading = false,
   customContent,
 }: SettingItemProps) => {
   const { styles, token } = useStyles();
@@ -50,12 +52,19 @@ export const SettingItem = ({
       <>
         {extra && <Text style={styles.settingItemExtra}>{extra}</Text>}
         {showNewBadge && <View style={styles.badge} />}
-        {showCheckmark && isSelected && (
+        {loading && (
+          <View style={styles.checkmark}>
+            <ActivityIndicator size="small" />
+          </View>
+        )}
+        {!loading && showCheckmark && isSelected && (
           <Text style={styles.checkmark}>
             <Check color={token.colorText} size={ICON_SIZE_SMALL} />
           </Text>
         )}
-        {(onPress || href) && !showCheckmark && <Text style={styles.settingItemArrow}>›</Text>}
+        {(onPress || href) && !showCheckmark && !loading && (
+          <Text style={styles.settingItemArrow}>›</Text>
+        )}
       </>
     );
   };

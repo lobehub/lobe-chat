@@ -20,12 +20,12 @@ export default function ChatWithDrawer() {
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
       <SideBar>
-        <ChatHeader onDrawerToggle={toggleDrawer} />
         <TopicDrawer>
+          <ChatHeader onDrawerToggle={toggleDrawer} />
           <KeyboardAvoidingView
             behavior="padding"
             enabled
-            keyboardVerticalOffset={110}
+            keyboardVerticalOffset={60}
             style={{ flex: 1 }}
           >
             <ChatList />

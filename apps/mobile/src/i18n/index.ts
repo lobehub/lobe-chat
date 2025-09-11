@@ -5,7 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import { DEFAULT_LANG } from '@/const/locale';
 import { isDev } from '@/utils/env';
 
-import { loadAllResources, getSupportedLocales } from './generatedConfig';
+import { loadLocaleResources, getSupportedLocales } from './generatedConfig';
 import { getDetectedLocale } from './resource';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
@@ -51,7 +51,15 @@ const languageDetector = {
 // 初始化 i18n
 const initI18n = async () => {
   try {
-    const resources = await loadAllResources();
+    // 仅加载当前语言（并带上默认语言作为兜底）
+    const current = await getUserStoredLocale();
+    const currentResources = await loadLocaleResources(current);
+    const resources = {
+      [current]: currentResources,
+      ...(current !== DEFAULT_LANG
+        ? { [DEFAULT_LANG]: await loadLocaleResources(DEFAULT_LANG) }
+        : {}),
+    } as Record<string, Record<string, any>>;
 
     await i18n
       .use(languageDetector)
@@ -82,5 +90,23 @@ const initI18n = async () => {
 
 // 立即初始化
 initI18n();
+
+export const ensureLanguageResources = async (lng: string) => {
+  try {
+    const namespaces = ['common', 'auth', 'chat', 'discover', 'error', 'setting'];
+
+    // 如果任一命名空间未加载，则加载整包
+    const needsLoad = namespaces.some((ns) => !i18n.hasResourceBundle(lng, ns));
+    if (!needsLoad) return;
+
+    const bundles = await loadLocaleResources(lng);
+    for (const [ns, res] of Object.entries(bundles)) {
+      // deep merge + overwrite，确保更新生效
+      i18n.addResourceBundle(lng, ns, res as any, true, true);
+    }
+  } catch (error) {
+    console.error('Failed to ensure language resources:', error);
+  }
+};
 
 export { default } from 'i18next';
