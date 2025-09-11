@@ -86,7 +86,7 @@ const xaiChatModels: AIChatModelCard[] = [
     description:
       '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3 (Fast mode)',
-    id: 'grok-3-fast',
+    id: 'grok-3-fast', // legacy
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
@@ -136,7 +136,7 @@ const xaiChatModels: AIChatModelCard[] = [
     description:
       '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
     displayName: 'Grok 3 Mini (Fast mode)',
-    id: 'grok-3-mini-fast',
+    id: 'grok-3-mini-fast', // legacy
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -181,7 +181,7 @@ const xaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
     displayName: 'Grok 2 Vision 1212',
-    id: 'grok-2-vision-1212',
+    id: 'grok-2-vision-1212', // legacy
     pricing: {
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
