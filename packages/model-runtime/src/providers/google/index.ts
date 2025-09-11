@@ -10,7 +10,7 @@ import {
   ThinkingConfig,
 } from '@google/genai';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../../core/streams';
 import {
   ChatCompletionTool,

@@ -1,6 +1,5 @@
-import OpenAI from 'openai';
-
 import { AIBaseModelCard } from 'model-bank';
+import OpenAI from 'openai';
 
 import {
   ChatMethodOptions,
@@ -13,8 +12,8 @@ import {
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
-} from './types';
-import { CreateImagePayload, CreateImageResponse } from './types/image';
+} from '../types';
+import { CreateImagePayload, CreateImageResponse } from '../types/image';
 
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {

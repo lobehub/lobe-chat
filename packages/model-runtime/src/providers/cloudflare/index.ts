@@ -1,6 +1,6 @@
 import { ChatModelCard } from '@/types/llm';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { createCallbacksTransformer } from '../../core/streams';
 import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';

@@ -2,8 +2,8 @@ import debug from 'debug';
 import OpenAI, { AzureOpenAI } from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { LobeRuntimeAI } from '../../BaseAI';
 import { systemToUserModels } from '../../const/models';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { transformResponseToStream } from '../../core/openaiCompatibleFactory';
 import { OpenAIStream } from '../../core/streams';
 import {

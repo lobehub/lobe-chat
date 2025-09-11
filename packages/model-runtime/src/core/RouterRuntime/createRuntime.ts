@@ -6,7 +6,6 @@ import { Stream } from 'openai/streaming';
 
 import type { ChatModelCard } from '@/types/llm';
 
-import { LobeRuntimeAI } from '../../BaseAI';
 import { LobeOpenAI } from '../../providers/openai';
 import { CreateImagePayload, CreateImageResponse, ILobeAgentRuntimeErrorType } from '../../types';
 import {
@@ -20,6 +19,7 @@ import {
   TextToSpeechPayload,
 } from '../../types';
 import { postProcessModelList } from '../../utils/postProcessModelList';
+import { LobeRuntimeAI } from '../BaseAI';
 import { CreateImageOptions, CustomClientOptions } from '../openaiCompatibleFactory';
 import { baseRuntimeMap } from './baseRuntimeMap';
 

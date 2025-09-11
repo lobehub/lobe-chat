@@ -1,4 +1,4 @@
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../BaseAI';
 
 export interface RuntimeItem {
   id: string;

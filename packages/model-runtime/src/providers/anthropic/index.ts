@@ -1,6 +1,6 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { AnthropicStream } from '../../core/streams';
 import {
   type ChatCompletionErrorPayload,

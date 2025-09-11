@@ -3,7 +3,7 @@ import { ClientOptions } from 'openai';
 
 import { ChatModelCard } from '@/types/index';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { OllamaStream, convertIterableToStream, createModelPullStream } from '../../core/streams';
 import {
   ChatMethodOptions,

@@ -7,7 +7,6 @@ import { Stream } from 'openai/streaming';
 
 import type { ChatModelCard } from '@/types/llm';
 
-import { LobeRuntimeAI } from '../../BaseAI';
 import {
   ChatCompletionErrorPayload,
   ChatCompletionTool,
@@ -32,6 +31,7 @@ import { handleOpenAIError } from '../../utils/handleOpenAIError';
 import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../../utils/openaiHelpers';
 import { postProcessModelList } from '../../utils/postProcessModelList';
 import { StreamingResponse } from '../../utils/response';
+import { LobeRuntimeAI } from '../BaseAI';
 import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
 import { createOpenAICompatibleImage } from './createImage';
 

@@ -4,7 +4,7 @@ import {
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,

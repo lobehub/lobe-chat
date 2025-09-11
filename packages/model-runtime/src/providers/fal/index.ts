@@ -4,7 +4,7 @@ import { pick } from 'lodash-es';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 import { ClientOptions } from 'openai';
 
-import { LobeRuntimeAI } from '../../BaseAI';
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';

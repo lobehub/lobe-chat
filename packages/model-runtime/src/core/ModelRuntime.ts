@@ -2,7 +2,6 @@ import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/types/index';
 
-import { LobeRuntimeAI } from '../BaseAI';
 import { LobeBedrockAIParams } from '../providers/bedrock';
 import { LobeCloudflareParams } from '../providers/cloudflare';
 import { LobeOpenAI } from '../providers/openai';
@@ -18,6 +17,7 @@ import {
   TextToSpeechPayload,
 } from '../types';
 import { CreateImagePayload } from '../types/image';
+import { LobeRuntimeAI } from './BaseAI';
 
 export interface AgentChatOptions {
   enableTrace?: boolean;
