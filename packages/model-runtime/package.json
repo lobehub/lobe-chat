@@ -4,7 +4,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./vertexai": "./src/vertexai/index.ts"
+    "./vertexai": "./src/providers/vertexai/index.ts"
   },
   "scripts": {
     "test": "vitest",

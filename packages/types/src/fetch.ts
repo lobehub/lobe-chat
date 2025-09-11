@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
+import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 
 export const ChatErrorType = {
   // ******* 业务错误语义 ******* //
