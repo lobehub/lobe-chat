@@ -1,15 +1,14 @@
 // @vitest-environment node
-import OpenAI from 'openai';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import {
   ChatStreamCallbacks,
   LobeMoonshotAI,
   LobeOpenAICompatibleRuntime,
   ModelProvider,
-} from '@/libs/model-runtime';
-import { testProvider } from '@/libs/model-runtime/providerTestUtils';
+} from '@lobechat/model-runtime';
+import OpenAI from 'openai';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { testProvider } from '../providerTestUtils';
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeTaichuAI } from './index';
 

@@ -1,8 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CreateImagePayload } from '@/libs/model-runtime/types/image';
-
+import { CreateImagePayload } from '../types/image';
 import { createBflImage } from './createImage';
 import { BflStatusResponse } from './types';
 

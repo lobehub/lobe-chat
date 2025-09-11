@@ -646,9 +646,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Optional
 - Description: Used to control the FAL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
 - Default: `-`
-- Example: `-all,+flux/schnell,+flux-pro/kontext=FLUX.1 Kontext [pro]`
+- Example: `-all,+fal-ai/flux/schnell,+fal-ai/flux-pro/kontext=FLUX.1 Kontext [pro]`
 
-The above example disables all models first, then enables `flux/schnell` and `flux-pro/kontext` (displayed as `FLUX.1 Kontext [pro]`).
+The above example disables all models first, then enables `fal-ai/flux/schnell` and `fal-ai/flux-pro/kontext` (displayed as `FLUX.1 Kontext [pro]`).
 
 ## BFL
 
@@ -674,5 +674,23 @@ The above example disables all models first, then enables `flux/schnell` and `fl
 - Example: `-all,+flux-pro-1.1,+flux-kontext-pro=FLUX.1 Kontext [pro]`
 
 The above example disables all models first, then enables `flux-pro-1.1` and `flux-kontext-pro` (displayed as `FLUX.1 Kontext [pro]`).
+
+## NewAPI
+
+### `NEWAPI_API_KEY`
+
+- Type: Optional
+- Description: This is the API key for your NewAPI service instance. NewAPI is a multi-provider model aggregation service that provides unified access to various AI model APIs.
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `NEWAPI_PROXY_URL`
+
+- Type: Optional
+- Description: The base URL for your NewAPI server instance. This should point to your deployed NewAPI service endpoint.
+- Default: -
+- Example: `https://your-newapi-server.com/`
+
+NewAPI is a multi-provider model aggregation service that supports automatic model routing based on provider detection. It offers cost management features and provides a single endpoint for accessing models from multiple providers including OpenAI, Anthropic, Google, and more. Learn more about NewAPI at [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api).
 
 [model-list]: /docs/self-hosting/advanced/model-list

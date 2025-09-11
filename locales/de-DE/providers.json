@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere bringt Ihnen die fortschrittlichsten mehrsprachigen Modelle, leistungsstarke Suchfunktionen und einen maßgeschneiderten KI-Arbeitsbereich für moderne Unternehmen – alles integriert in einer sicheren Plattform."
   },
+  "cometapi": {
+    "description": "CometAPI ist eine Serviceplattform, die verschiedene fortschrittliche Schnittstellen für große Modelle anbietet und OpenAI, Anthropic, Google und weitere unterstützt. Sie eignet sich für vielfältige Entwicklungs- und Anwendungsanforderungen. Nutzer können je nach Bedarf das optimale Modell und den besten Preis flexibel auswählen, um das KI-Erlebnis zu verbessern."
+  },
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
   },
@@ -94,6 +97,9 @@
   },
   "nebius": {
     "description": "Nebius bietet globalen KI-Innovatoren durch den Aufbau großflächiger GPU-Cluster und einer vertikal integrierten Cloud-Plattform leistungsstarke Infrastruktur."
+  },
+  "newapi": {
+    "description": "Open-Source-Plattform zur einheitlichen Weiterleitung mehrerer KI-Dienste"
   },
   "novita": {
     "description": "Novita AI ist eine Plattform, die eine Vielzahl von großen Sprachmodellen und API-Diensten für die KI-Bilderzeugung anbietet, die flexibel, zuverlässig und kosteneffektiv ist. Sie unterstützt die neuesten Open-Source-Modelle wie Llama3 und Mistral und bietet umfassende, benutzerfreundliche und automatisch skalierbare API-Lösungen für die Entwicklung generativer KI-Anwendungen, die für das schnelle Wachstum von KI-Startups geeignet sind."

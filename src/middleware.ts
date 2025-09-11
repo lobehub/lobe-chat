@@ -10,7 +10,7 @@ import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
-import NextAuthEdge from '@/libs/next-auth/edge';
+import NextAuth from '@/libs/next-auth';
 import { Locales } from '@/locales/resources';
 
 import { oidcEnv } from './envs/oidc';
@@ -170,7 +170,7 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 // Initialize an Edge compatible NextAuth middleware
-const nextAuthMiddleware = NextAuthEdge.auth(async (req) => {
+const nextAuthMiddleware = NextAuth.auth((req) => {
   logNextAuth('NextAuth middleware processing request: %s %s', req.method, req.url);
 
   const response = defaultMiddleware(req);

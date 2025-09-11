@@ -32,6 +32,7 @@
   "blog": "製品ブログ",
   "branching": "サブトピックを作成",
   "branchingDisable": "「サブトピック」機能はサーバー版のみで利用可能です。この機能が必要な場合は、サーバー展開モードに切り替えるか、LobeChat Cloudを使用してください。",
+  "branchingRequiresSavedTopic": "現在のトピックが保存されていません。保存後にサブトピック機能を使用できます。",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "clientDB": {

@@ -1,4 +1,4 @@
-import { MetaData } from '@/types/meta';
+import { MetaData } from '../meta';
 
 export type LobeToolType = 'builtin' | 'customPlugin' | 'plugin';
 

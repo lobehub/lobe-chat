@@ -1,9 +1,8 @@
 // @vitest-environment node
+import { LobeOpenAICompatibleRuntime } from '@lobechat/model-runtime';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
-import { testProvider } from '@/libs/model-runtime/providerTestUtils';
-
+import { testProvider } from '../providerTestUtils';
 import { LobeGroq } from './index';
 
 testProvider({

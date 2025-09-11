@@ -13,6 +13,7 @@ import BedrockProvider from './bedrock';
 import BflProvider from './bfl';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
+import CometAPIProvider from './cometapi';
 import DeepSeekProvider from './deepseek';
 import FalProvider from './fal';
 import FireworksAIProvider from './fireworksai';
@@ -32,6 +33,7 @@ import MistralProvider from './mistral';
 import ModelScopeProvider from './modelscope';
 import MoonshotProvider from './moonshot';
 import NebiusProvider from './nebius';
+import NewAPIProvider from './newapi';
 import NovitaProvider from './novita';
 import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
@@ -135,6 +137,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   HuggingFaceProvider,
   CloudflareProvider,
   GithubProvider,
+  NewAPIProvider,
   BflProvider,
   NovitaProvider,
   PPIOProvider,
@@ -177,6 +180,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AkashChatProvider,
   QiniuProvider,
   NebiusProvider,
+  CometAPIProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -201,6 +205,7 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as BflProviderCard } from './bfl';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
+export { default as CometAPIProviderCard } from './cometapi';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FalProviderCard } from './fal';
 export { default as FireworksAIProviderCard } from './fireworksai';
@@ -221,6 +226,7 @@ export { default as MistralProviderCard } from './mistral';
 export { default as ModelScopeProviderCard } from './modelscope';
 export { default as MoonshotProviderCard } from './moonshot';
 export { default as NebiusProviderCard } from './nebius';
+export { default as NewAPIProviderCard } from './newapi';
 export { default as NovitaProviderCard } from './novita';
 export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';

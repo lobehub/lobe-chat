@@ -153,6 +153,28 @@
     "searchProviders": "サービスプロバイダーを検索...",
     "sort": "カスタムソート"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "New APIプラットフォームが提供するAPIキー",
+      "placeholder": "New APIのAPIキー",
+      "required": "APIキーは必須です",
+      "title": "APIキー"
+    },
+    "apiUrl": {
+      "desc": "New APIサービスのAPIアドレス。多くの場合、/v1を含める必要があります",
+      "title": "APIアドレス"
+    },
+    "enabled": {
+      "title": "New APIを有効にする"
+    },
+    "models": {
+      "batchSelect": "モデルを一括選択 ({{count}} 件)",
+      "fetch": "モデルリストを取得",
+      "selected": "選択済みモデル",
+      "title": "利用可能なモデル"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}} 件のモデルを選択済み",
+      "title": "一括選択"
+    },
     "config": {
       "aesGcm": "あなたのキーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
       "apiKey": {

@@ -38,6 +38,7 @@ tmp/
 .env
 .env.local
 .env*.local
+.env.development
 venv/
 .venv/
 
@@ -103,6 +104,9 @@ vertex-ai-key.json
 .mcp.json
 
 CLAUDE.local.md
+
+# MCP tools
+.serena/**
 
 # Misc
 ./packages/lobe-ui
