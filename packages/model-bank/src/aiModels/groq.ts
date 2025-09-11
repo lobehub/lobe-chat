@@ -84,25 +84,6 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2 0711',
-    id: 'moonshotai/kimi-k2-instruct',
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-07-11',
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout (17Bx16E)',
     enabled: true,

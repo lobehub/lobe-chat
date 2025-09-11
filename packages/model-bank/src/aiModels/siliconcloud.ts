@@ -245,7 +245,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 262_144,
     description:
       'Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。',
     displayName: 'Kimi K2 0905',
@@ -264,7 +264,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 262_144,
     description:
       'Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。',
     displayName: 'Kimi K2 0905 (Pro)',

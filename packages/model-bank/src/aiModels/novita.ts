@@ -54,7 +54,7 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 262_144,
+    contextWindowTokens: 65_536,
     displayName: 'Qwen3 Coder 480B A35B Instruct',
     id: 'qwen/qwen3-coder-480b-a35b-instruct',
     pricing: {
@@ -102,9 +102,10 @@ const novitaChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 16_000,
+    contextWindowTokens: 65_536,
     displayName: 'GLM-4.5V',
     id: 'zai-org/glm-4.5v',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -121,6 +122,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'GLM-4.5',
     id: 'zai-org/glm-4.5',
+    maxOutput: 98_304,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -133,9 +135,10 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 262_144,
+    contextWindowTokens: 131_072,
     displayName: 'Qwen3 235B A22B Instruct 2507',
     id: 'qwen/qwen3-235b-a22b-instruct-2507',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -747,6 +750,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'Qwen2.5 72B Instruct',
     id: 'qwen/qwen-2.5-72b-instruct',
+    maxOutput: 8192,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.38, strategy: 'fixed', unit: 'millionTokens' },
