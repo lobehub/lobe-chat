@@ -53,6 +53,9 @@
   "Baichuan4-Turbo": {
     "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
   },
+  "ByteDance-Seed/Seed-OSS-36B-Instruct": {
+    "description": "Seed-OSS, ByteDance Seed ekibi tarafından geliştirilen, güçlü uzun bağlam işleme, akıl yürütme, ajan (agent) ve genel yetenekler için tasarlanmış bir dizi açık kaynaklı büyük dil modelidir. Bu serideki Seed-OSS-36B-Instruct, 36 milyar parametreye sahip bir talimat ince ayar modelidir ve doğal olarak çok uzun bağlam uzunluğunu destekleyerek, büyük belgeleri veya karmaşık kod tabanlarını tek seferde işleyebilmesini sağlar. Model, akıl yürütme, kod üretimi ve araç kullanımı gibi ajan görevlerinde özel olarak optimize edilmiştir ve dengeli, üstün genel yetenekler sunar. Modelin önemli bir özelliği olan “Düşünme Bütçesi” fonksiyonu, kullanıcıların ihtiyaçlarına göre akıl yürütme uzunluğunu esnek şekilde ayarlamasına olanak tanır ve böylece gerçek uygulamalarda akıl yürütme verimliliğini artırır."
+  },
   "DeepSeek-R1": {
     "description": "En gelişmiş verimli LLM, akıl yürütme, matematik ve programlama konularında uzmandır."
   },
@@ -81,7 +84,13 @@
     "description": "Model sağlayıcısı: sophnet platformu. DeepSeek V3 Fast, DeepSeek V3 0324 sürümünün yüksek TPS hızlı versiyonudur, tam performanslı ve kuantize edilmemiştir, kodlama ve matematik yetenekleri daha güçlüdür, yanıt süresi daha hızlıdır!"
   },
   "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1, DeepSeek'in tamamen yeni hibrit çıkarım modeli olup, düşünme ve düşünmeme olmak üzere iki çıkarım modunu destekler ve DeepSeek-R1-0528'e kıyasla düşünme verimliliği daha yüksektir. Post-Training optimizasyonu sayesinde, Agent araç kullanımı ve akıllı görev performansı önemli ölçüde artırılmıştır."
+    "description": "DeepSeek-V3.1-Düşünme modu dışı; DeepSeek-V3.1, DeepSeek tarafından yeni sunulan hibrit akıl yürütme modelidir ve düşünme ile düşünmeme olmak üzere iki akıl yürütme modunu destekler. DeepSeek-R1-0528 modeline kıyasla düşünme verimliliği daha yüksektir. Sonrası eğitim optimizasyonları sayesinde, ajan araç kullanımı ve akıllı ajan görevlerinde performans önemli ölçüde artmıştır."
+  },
+  "DeepSeek-V3.1-Fast": {
+    "description": "DeepSeek V3.1 Fast, DeepSeek V3.1 sürümünün yüksek TPS hızlı versiyonudur. Hibrit düşünme modu: Sohbet şablonunu değiştirerek, tek bir model hem düşünme hem de düşünmeme modlarını destekleyebilir. Daha akıllı araç çağrısı: Sonrası eğitim optimizasyonları sayesinde model, araç kullanımı ve ajan görevlerindeki performansını belirgin şekilde artırmıştır."
+  },
+  "DeepSeek-V3.1-Think": {
+    "description": "DeepSeek-V3.1-Düşünme modu; DeepSeek-V3.1, DeepSeek tarafından yeni sunulan hibrit akıl yürütme modelidir ve düşünme ile düşünmeme olmak üzere iki akıl yürütme modunu destekler. DeepSeek-R1-0528 modeline kıyasla düşünme verimliliği daha yüksektir. Sonrası eğitim optimizasyonları sayesinde, ajan araç kullanımı ve akıllı ajan görevlerinde performans önemli ölçüde artmıştır."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
@@ -809,12 +818,6 @@
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024, 2024 yılının Aralık ayında piyasaya sürülen küçük ve verimli bir güncellenmiş versiyondur. RAG, araç kullanımı, ajan gibi karmaşık akıl yürütme ve çok adımlı işlemler gerektiren görevlerde mükemmel performans sergilemektedir."
   },
-  "compound-beta": {
-    "description": "Compound-beta, GroqCloud'da desteklenen birden fazla açık kullanılabilir modelden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
-  },
-  "compound-beta-mini": {
-    "description": "Compound-beta-mini, GroqCloud'da desteklenen açık kullanılabilir modellerden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
-  },
   "computer-use-preview": {
     "description": "computer-use-preview modeli, \"Bilgisayar Kullanım Araçları\" için özel olarak tasarlanmış ve bilgisayarla ilgili görevleri anlama ve yerine getirme konusunda eğitilmiş özel bir modeldir."
   },
@@ -1054,6 +1057,9 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir, Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir, görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+  },
+  "doubao-seed-1.6-vision": {
+    "description": "Doubao-Seed-1.6-vision görsel derin düşünme modeli, eğitim, görüntü denetimi, denetim ve güvenlik ile AI arama ve soru-cevap gibi senaryolarda daha güçlü genel çok modlu anlama ve akıl yürütme yetenekleri sergiler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 64k token olabilir."
   },
   "doubao-seedream-3-0-t2i-250415": {
     "description": "Doubao görüntü oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve görüntü girişlerini destekler ve yüksek kontrol edilebilirlik ile yüksek kaliteli görüntü üretimi sunar. Metin istemlerine dayalı görüntü oluşturur."
@@ -1400,9 +1406,6 @@
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash deneysel modeli, görüntü oluşturmayı destekler."
   },
-  "google/gemini-2.5-flash-image-preview:free": {
-    "description": "Gemini 2.5 Flash deneysel modeli, görüntü oluşturmayı destekler."
-  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash, Google'ın en gelişmiş ana modelidir ve ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. Daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar sunabilen yerleşik 'düşünme' yeteneğine sahiptir.\n\nNot: Bu modelin iki varyantı vardır: düşünme ve düşünmeme. Çıktı fiyatlandırması, düşünme yeteneğinin etkin olup olmamasına göre önemli ölçüde farklılık gösterir. Standart varyantı (':thinking' eki olmadan) seçerseniz, model açıkça düşünme tokenleri üretmekten kaçınacaktır.\n\nDüşünme yeteneğinden yararlanmak ve düşünme tokenleri almak için, ':thinking' varyantını seçmelisiniz; bu, daha yüksek düşünme çıktı fiyatlandırması ile sonuçlanacaktır.\n\nAyrıca, Gemini 2.5 Flash, belgede belirtildiği gibi 'akıl yürütme maksimum token sayısı' parametresi ile yapılandırılabilir (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
@@ -1441,6 +1444,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B), temel talimat işleme yetenekleri sunar ve hafif uygulamalar için uygundur."
+  },
+  "google/gemma-3-12b-it": {
+    "description": "Gemma 3 12B, Google tarafından geliştirilen açık kaynaklı bir dil modelidir ve verimlilik ile performansta yeni standartlar belirlemiştir."
   },
   "google/gemma-3-1b-it": {
     "description": "Gemma 3 1B, Google tarafından geliştirilen açık kaynaklı bir dil modelidir ve verimlilik ile performansta yeni standartlar belirlemiştir."
@@ -1607,6 +1613,12 @@
   "grok-code-fast-1": {
     "description": "Hızlı ve ekonomik bir çıkarım modeli olan grok-code-fast-1'i sunmaktan mutluluk duyuyoruz; ajan kodlamasında mükemmel performans sergiler."
   },
+  "groq/compound": {
+    "description": "Compound, GroqCloud’da desteklenen birden fazla açık erişimli model tarafından desteklenen birleşik bir yapay zeka sistemidir ve kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici şekilde kullanabilir."
+  },
+  "groq/compound-mini": {
+    "description": "Compound-mini, GroqCloud’da desteklenen açık erişimli modeller tarafından desteklenen birleşik bir yapay zeka sistemidir ve kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici şekilde kullanabilir."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
   },
@@ -1662,7 +1674,7 @@
     "description": "Zorlu matematik, mantık ve kodlama yeteneklerinde büyük iyileştirmeler sağlar, model çıktı kararlılığını optimize eder ve uzun metin işleme kapasitesini artırır."
   },
   "hunyuan-t1-latest": {
-    "description": "Sektördeki ilk ultra büyük ölçekli Hybrid-Transformer-Mamba çıkarım modeli, çıkarım yeteneklerini genişletir, yüksek çözümleme hızı sunar ve insan tercihleri ile daha iyi hizalanır."
+    "description": "Ana modelin yavaş düşünme modelinin yüksek zorlukta matematik, karmaşık akıl yürütme, zor kodlama, talimat uyumu ve metin oluşturma kalitesi gibi yeteneklerinde büyük gelişmeler sağlar."
   },
   "hunyuan-t1-vision": {
     "description": "Hunyuan çok modlu anlayış derin düşünme modeli, çok modlu doğal uzun düşünce zincirini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileşme sağlar."
@@ -1765,6 +1777,9 @@
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2, son derece güçlü kodlama ve Agent yeteneklerine sahip MoE mimarili temel bir modeldir. Toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik, Agent gibi ana kategorilerde yapılan kıyaslama testlerinde K2 modeli, diğer önde gelen açık kaynak modelleri geride bırakmıştır."
+  },
+  "kimi-k2-0905-preview": {
+    "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2, son derece güçlü kod yazma ve Agent yeteneklerine sahip MoE mimarisine dayanan bir temel modeldir; toplam parametre sayısı 1T, aktif (etkin) parametre sayısı 32B. Genel bilgi çıkarımı, programlama, matematik ve Agent gibi ana kategorilerde yapılan karşılaştırmalı performans testlerinde K2 modelinin performansı diğer önde gelen açık kaynak modellerinin üzerindedir."
@@ -2165,8 +2180,17 @@
   "moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
   },
+  "moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
+  },
+  "moonshotai/kimi-k2-0905": {
+    "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2, güçlü kodlama ve Ajan yeteneklerine sahip MoE mimarili temel bir modeldir, toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik ve Ajan gibi ana kategorilerde yapılan kıyaslama testlerinde, K2 modeli diğer önde gelen açık kaynak modellerini geride bırakmaktadır."
+  },
+  "moonshotai/kimi-k2-instruct-0905": {
+    "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B, Nous Hermes 2'nin güncellenmiş versiyonudur ve en son iç geliştirme veri setlerini içermektedir."
@@ -2548,6 +2572,9 @@
   },
   "qwen3-coder-plus": {
     "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
+  },
+  "qwen3-max-preview": {
+    "description": "Tongyi Qianwen 3 serisi Max modelinin önizleme sürümüdür. 2.5 serisine kıyasla genel yeteneklerde büyük gelişmeler göstermiştir; Çince ve İngilizce genel metin anlama, karmaşık talimat uyumu, öznel açık görevler, çok dilli yetenekler ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi yanılgıları daha azdır."
   },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
