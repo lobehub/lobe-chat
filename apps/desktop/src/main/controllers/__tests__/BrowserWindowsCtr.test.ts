@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
-import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
+import { InterceptRouteParams } from '@imoogleai/electron-client-ipc';
 
 import type { App } from '@/core/App';
 import type { IpcClientEventSender } from '@/types/ipcClientEvent';

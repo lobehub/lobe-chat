@@ -1,4 +1,4 @@
-import { LobeAgentSession, LobeSessionType } from '@lobechat/types';
+import { LobeAgentSession, LobeSessionType } from '@imoogleai/types';
 
 import { DEFAULT_AGENT_META } from './meta';
 import { DEFAULT_AGENT_CONFIG } from './settings';

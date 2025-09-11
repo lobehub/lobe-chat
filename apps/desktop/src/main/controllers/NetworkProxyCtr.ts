@@ -1,4 +1,4 @@
-import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { NetworkProxySettings } from '@imoogleai/electron-client-ipc';
 import { merge } from 'lodash';
 import { isEqual } from 'lodash-es';
 

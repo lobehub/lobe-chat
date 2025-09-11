@@ -1,5 +1,5 @@
 {
-  "name": "@lobechat/prompts",
+  "name": "@imoogleai/prompts",
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -8,6 +8,6 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@lobechat/types": "workspace:*"
+    "@imoogleai/types": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { DeleteFilesResponse } from '@lobechat/electron-server-ipc';
+import { DeleteFilesResponse } from '@imoogleai/electron-server-ipc';
 import * as fs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import path, { join } from 'node:path';

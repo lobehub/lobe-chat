@@ -1,4 +1,4 @@
-import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { NetworkProxySettings } from '@imoogleai/electron-client-ipc';
 import { SocksProxies, socksDispatcher } from 'fetch-socks';
 import { Agent, ProxyAgent, getGlobalDispatcher, setGlobalDispatcher } from 'undici';
 

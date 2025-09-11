@@ -1,5 +1,5 @@
 {
-  "name": "model-bank",
+  "name": "@imoogleai/model-bank",
   "version": "1.0.0",
   "private": true,
   "exports": {
@@ -25,7 +25,7 @@
     "./github": "./src/aiModels/github.ts",
     "./google": "./src/aiModels/google.ts",
     "./groq": "./src/aiModels/groq.ts",
-    "./lobehub": "./src/aiModels/lobehub.ts",
+    "./imoogleai": "./src/aiModels/imoogleai.ts",
     "./higress": "./src/aiModels/higress.ts",
     "./huggingface": "./src/aiModels/huggingface.ts",
     "./hunyuan": "./src/aiModels/hunyuan.ts",

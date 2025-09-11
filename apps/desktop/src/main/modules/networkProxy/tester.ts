@@ -1,4 +1,4 @@
-import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { NetworkProxySettings } from '@imoogleai/electron-client-ipc';
 import { fetch, getGlobalDispatcher, setGlobalDispatcher } from 'undici';
 
 import { createLogger } from '@/utils/logger';

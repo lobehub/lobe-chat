@@ -2,7 +2,7 @@
 
 [![][image-banner]][vercel-link]
 
-# Lobe Chat
+# imoogleai
 
 An open-source, modern design ChatGPT/LLMs UI/framework.<br/>
 Supports speech synthesis, multi-modal, and extensible ([function call][docs-function-call]) plugin system.<br/>
@@ -27,7 +27,7 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 [![][github-license-shield]][github-license-link]<br>
 [![][sponsor-shield]][sponsor-link]
 
-**Share LobeChat Repository**
+**Share imoogleai Repository**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
@@ -96,11 +96,11 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC.
 By adopting the Bootstrapping approach, we aim to provide developers and users with a more open, transparent, and user-friendly product ecosystem.
 
-Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+Whether for users or professional developers, imoogleai will be your AI Agent playground. Please be aware that imoogleai is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
 
 | [![][vercel-shield-badge]][vercel-link]   | No installation or registration necessary! Visit our website to experience it firsthand.                           |
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
+| [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of imoogleai. |
 
 > \[!IMPORTANT]
 >
@@ -111,14 +111,14 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 <details>
   <summary><kbd>Star History</kbd></summary>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
-    <img width="100%" src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=imoogleai%2Fimoogle-chat&theme=dark&type=Date">
+    <img width="100%" src="https://api.star-history.com/svg?repos=imoogleai%2Fimoogle-chat&type=Date">
   </picture>
 </details>
 
 ## ✨ Features
 
-Transform your AI experience with LobeChat's powerful features designed for seamless connectivity, enhanced productivity, and unlimited creativity.
+Transform your AI experience with imoogleai's powerful features designed for seamless connectivity, enhanced productivity, and unlimited creativity.
 
 ![][image-feat-mcp]
 
@@ -126,7 +126,7 @@ Transform your AI experience with LobeChat's powerful features designed for seam
 
 **Seamlessly Connect Your AI to the World**
 
-Unlock the full potential of your AI by enabling smooth, secure, and dynamic interactions with external tools, data sources, and services. LobeChat's MCP (Model Context Protocol) plugin system breaks down the barriers between your AI and the digital ecosystem, allowing for unprecedented connectivity and functionality.
+Unlock the full potential of your AI by enabling smooth, secure, and dynamic interactions with external tools, data sources, and services. imoogleai's MCP (Model Context Protocol) plugin system breaks down the barriers between your AI and the digital ecosystem, allowing for unprecedented connectivity and functionality.
 
 Transform your conversations into powerful workflows by connecting to databases, APIs, file systems, and more. Experience the freedom of AI that truly understands and interacts with your world.
 
@@ -138,7 +138,7 @@ Transform your conversations into powerful workflows by connecting to databases,
 
 **Discover, Connect, Extend**
 
-Browse a growing library of MCP plugins to expand your AI's capabilities and streamline your workflows effortlessly. Visit [lobehub.com/mcp](https://lobehub.com/mcp) to explore the MCP Marketplace, which offers a curated collection of integrations that enhance your AI's ability to work with various tools and services.
+Browse a growing library of MCP plugins to expand your AI's capabilities and streamline your workflows effortlessly. Visit [chat.imoogleai.xyz/mcp](https://chat.imoogleai.xyz/mcp) to explore the MCP Marketplace, which offers a curated collection of integrations that enhance your AI's ability to work with various tools and services.
 
 From productivity tools to development environments, discover new ways to extend your AI's reach and effectiveness. Connect with the community and find the perfect plugins for your specific needs.
 
@@ -150,7 +150,7 @@ From productivity tools to development environments, discover new ways to extend
 
 **Peak Performance, Zero Distractions**
 
-Get the full LobeChat experience without browser limitations—comprehensive, focused, and always ready to go. Our desktop application provides a dedicated environment for your AI interactions, ensuring optimal performance and minimal distractions.
+Get the full imoogleai experience without browser limitations—comprehensive, focused, and always ready to go. Our desktop application provides a dedicated environment for your AI interactions, ensuring optimal performance and minimal distractions.
 
 Experience faster response times, better resource management, and a more stable connection to your AI assistant. The desktop app is designed for users who demand the best performance from their AI tools.
 
@@ -197,7 +197,7 @@ This groundbreaking feature transforms linear conversations into dynamic, tree-l
 
 ### [Artifacts Support][docs-feat-artifacts]
 
-Experience the power of Claude Artifacts, now integrated into LobeChat. This revolutionary feature expands the boundaries of AI-human interaction, enabling real-time creation and visualization of diverse content formats.
+Experience the power of Claude Artifacts, now integrated into imoogleai. This revolutionary feature expands the boundaries of AI-human interaction, enabling real-time creation and visualization of diverse content formats.
 
 Create and visualize with unprecedented flexibility:
 
@@ -211,13 +211,13 @@ Create and visualize with unprecedented flexibility:
 
 ### [File Upload /Knowledge Base][docs-feat-knowledgebase]
 
-LobeChat supports file upload and knowledge base functionality. You can upload various types of files including documents, images, audio, and video, as well as create knowledge bases, making it convenient for users to manage and search for files. Additionally, you can utilize files and knowledge base features during conversations, enabling a richer dialogue experience.
+imoogleai supports file upload and knowledge base functionality. You can upload various types of files including documents, images, audio, and video, as well as create knowledge bases, making it convenient for users to manage and search for files. Additionally, you can utilize files and knowledge base features during conversations, enabling a richer dialogue experience.
 
 <https://github.com/user-attachments/assets/faa8cf67-e743-4590-8bf6-ebf6ccc34175>
 
 > \[!TIP]
 >
-> Learn more on [📘 LobeChat Knowledge Base Launch — From Now On, Every Step Counts](https://lobehub.com/blog/knowledge-base)
+> Learn more on [📘 imoogleai Knowledge Base Launch — From Now On, Every Step Counts](https://chat.imoogleai.xyz/blog/knowledge-base)
 
 <div align="right">
 
@@ -229,9 +229,9 @@ LobeChat supports file upload and knowledge base functionality. You can upload v
 
 ### [Multi-Model Service Provider Support][docs-feat-provider]
 
-In the continuous development of LobeChat, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to offer users a more diverse and rich selection of conversations.
+In the continuous development of imoogleai, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to offer users a more diverse and rich selection of conversations.
 
-In this way, LobeChat can more flexibly adapt to the needs of different users, while also providing developers with a wider range of choices.
+In this way, imoogleai can more flexibly adapt to the needs of different users, while also providing developers with a wider range of choices.
 
 #### Supported Model Service Providers
 
@@ -239,59 +239,59 @@ We have implemented support for the following model service providers:
 
 <!-- PROVIDER LIST -->
 
-- **[OpenAI](https://lobechat.com/discover/provider/openai)**: OpenAI is a global leader in artificial intelligence research, with models like the GPT series pushing the frontiers of natural language processing. OpenAI is committed to transforming multiple industries through innovative and efficient AI solutions. Their products demonstrate significant performance and cost-effectiveness, widely used in research, business, and innovative applications.
-- **[Ollama](https://lobechat.com/discover/provider/ollama)**: Ollama provides models that cover a wide range of fields, including code generation, mathematical operations, multilingual processing, and conversational interaction, catering to diverse enterprise-level and localized deployment needs.
-- **[Anthropic](https://lobechat.com/discover/provider/anthropic)**: Anthropic is a company focused on AI research and development, offering a range of advanced language models such as Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus, and Claude 3 Haiku. These models achieve an ideal balance between intelligence, speed, and cost, suitable for various applications from enterprise workloads to rapid-response scenarios. Claude 3.5 Sonnet, as their latest model, has excelled in multiple evaluations while maintaining a high cost-performance ratio.
-- **[Bedrock](https://lobechat.com/discover/provider/bedrock)**: Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs.
-- **[Google](https://lobechat.com/discover/provider/google)**: Google's Gemini series represents its most advanced, versatile AI models, developed by Google DeepMind, designed for multimodal capabilities, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for various environments from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models.
-- **[DeepSeek](https://lobechat.com/discover/provider/deepseek)**: DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following.
-- **[Moonshot](https://lobechat.com/discover/provider/moonshot)**: Moonshot is an open-source platform launched by Beijing Dark Side Technology Co., Ltd., providing various natural language processing models with a wide range of applications, including but not limited to content creation, academic research, intelligent recommendations, and medical diagnosis, supporting long text processing and complex generation tasks.
-- **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter is a service platform providing access to various cutting-edge large model interfaces, supporting OpenAI, Anthropic, LLaMA, and more, suitable for diverse development and application needs. Users can flexibly choose the optimal model and pricing based on their requirements, enhancing the AI experience.
-- **[HuggingFace](https://lobechat.com/discover/provider/huggingface)**: The HuggingFace Inference API provides a fast and free way for you to explore thousands of models for various tasks. Whether you are prototyping for a new application or experimenting with the capabilities of machine learning, this API gives you instant access to high-performance models across multiple domains.
-- **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: Run serverless GPU-powered machine learning models on Cloudflare's global network.
+- **[OpenAI](https://chat.imoogleai.xyz/discover/provider/openai)**: OpenAI is a global leader in artificial intelligence research, with models like the GPT series pushing the frontiers of natural language processing. OpenAI is committed to transforming multiple industries through innovative and efficient AI solutions. Their products demonstrate significant performance and cost-effectiveness, widely used in research, business, and innovative applications.
+- **[Ollama](https://chat.imoogleai.xyz/discover/provider/ollama)**: Ollama provides models that cover a wide range of fields, including code generation, mathematical operations, multilingual processing, and conversational interaction, catering to diverse enterprise-level and localized deployment needs.
+- **[Anthropic](https://chat.imoogleai.xyz/discover/provider/anthropic)**: Anthropic is a company focused on AI research and development, offering a range of advanced language models such as Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus, and Claude 3 Haiku. These models achieve an ideal balance between intelligence, speed, and cost, suitable for various applications from enterprise workloads to rapid-response scenarios. Claude 3.5 Sonnet, as their latest model, has excelled in multiple evaluations while maintaining a high cost-performance ratio.
+- **[Bedrock](https://chat.imoogleai.xyz/discover/provider/bedrock)**: Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs.
+- **[Google](https://chat.imoogleai.xyz/discover/provider/google)**: Google's Gemini series represents its most advanced, versatile AI models, developed by Google DeepMind, designed for multimodal capabilities, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for various environments from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models.
+- **[DeepSeek](https://chat.imoogleai.xyz/discover/provider/deepseek)**: DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following.
+- **[Moonshot](https://chat.imoogleai.xyz/discover/provider/moonshot)**: Moonshot is an open-source platform launched by Beijing Dark Side Technology Co., Ltd., providing various natural language processing models with a wide range of applications, including but not limited to content creation, academic research, intelligent recommendations, and medical diagnosis, supporting long text processing and complex generation tasks.
+- **[OpenRouter](https://chat.imoogleai.xyz/discover/provider/openrouter)**: OpenRouter is a service platform providing access to various cutting-edge large model interfaces, supporting OpenAI, Anthropic, LLaMA, and more, suitable for diverse development and application needs. Users can flexibly choose the optimal model and pricing based on their requirements, enhancing the AI experience.
+- **[HuggingFace](https://chat.imoogleai.xyz/discover/provider/huggingface)**: The HuggingFace Inference API provides a fast and free way for you to explore thousands of models for various tasks. Whether you are prototyping for a new application or experimenting with the capabilities of machine learning, this API gives you instant access to high-performance models across multiple domains.
+- **[Cloudflare Workers AI](https://chat.imoogleai.xyz/discover/provider/cloudflare)**: Run serverless GPU-powered machine learning models on Cloudflare's global network.
 
 <details><summary><kbd>See more providers (+32)</kbd></summary>
 
-- **[GitHub](https://lobechat.com/discover/provider/github)**: With GitHub Models, developers can become AI engineers and leverage the industry's leading AI models.
-- **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups.
-- **[PPIO](https://lobechat.com/discover/provider/ppio)**: PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc.
-- **[302.AI](https://lobechat.com/discover/provider/ai302)**: 302.AI is an on-demand AI application platform offering the most comprehensive AI APIs and online AI applications available on the market.
-- **[Together AI](https://lobechat.com/discover/provider/togetherai)**: Together AI is dedicated to achieving leading performance through innovative AI models, offering extensive customization capabilities, including rapid scaling support and intuitive deployment processes to meet various enterprise needs.
-- **[Fireworks AI](https://lobechat.com/discover/provider/fireworksai)**: Fireworks AI is a leading provider of advanced language model services, focusing on functional calling and multimodal processing. Its latest model, Firefunction V2, is based on Llama-3, optimized for function calling, conversation, and instruction following. The visual language model FireLLaVA-13B supports mixed input of images and text. Other notable models include the Llama series and Mixtral series, providing efficient multilingual instruction following and generation support.
-- **[Groq](https://lobechat.com/discover/provider/groq)**: Groq's LPU inference engine has excelled in the latest independent large language model (LLM) benchmarks, redefining the standards for AI solutions with its remarkable speed and efficiency. Groq represents instant inference speed, demonstrating strong performance in cloud-based deployments.
-- **[Perplexity](https://lobechat.com/discover/provider/perplexity)**: Perplexity is a leading provider of conversational generation models, offering various advanced Llama 3.1 models that support both online and offline applications, particularly suited for complex natural language processing tasks.
-- **[Mistral](https://lobechat.com/discover/provider/mistral)**: Mistral provides advanced general, specialized, and research models widely used in complex reasoning, multilingual tasks, and code generation. Through functional calling interfaces, users can integrate custom functionalities for specific applications.
-- **[ModelScope](https://lobechat.com/discover/provider/modelscope)**: ModelScope is a model-as-a-service platform launched by Alibaba Cloud, offering a wide range of AI models and inference services.
-- **[Ai21Labs](https://lobechat.com/discover/provider/ai21)**: AI21 Labs builds foundational models and AI systems for enterprises, accelerating the application of generative AI in production.
-- **[Upstage](https://lobechat.com/discover/provider/upstage)**: Upstage focuses on developing AI models for various business needs, including Solar LLM and document AI, aiming to achieve artificial general intelligence (AGI) for work. It allows for the creation of simple conversational agents through Chat API and supports functional calling, translation, embedding, and domain-specific applications.
-- **[xAI (Grok)](https://lobechat.com/discover/provider/xai)**: xAI is a company dedicated to building artificial intelligence to accelerate human scientific discovery. Our mission is to advance our collective understanding of the universe.
-- **[Aliyun Bailian](https://lobechat.com/discover/provider/qwen)**: Tongyi Qianwen is a large-scale language model independently developed by Alibaba Cloud, featuring strong natural language understanding and generation capabilities. It can answer various questions, create written content, express opinions, and write code, playing a role in multiple fields.
-- **[Wenxin](https://lobechat.com/discover/provider/wenxin)**: An enterprise-level one-stop platform for large model and AI-native application development and services, providing the most comprehensive and user-friendly toolchain for the entire process of generative artificial intelligence model development and application development.
-- **[Hunyuan](https://lobechat.com/discover/provider/hunyuan)**: A large language model developed by Tencent, equipped with powerful Chinese creative capabilities, logical reasoning abilities in complex contexts, and reliable task execution skills.
-- **[ZhiPu](https://lobechat.com/discover/provider/zhipu)**: Zhipu AI offers an open platform for multimodal and language models, supporting a wide range of AI application scenarios, including text processing, image understanding, and programming assistance.
-- **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconFlow is dedicated to accelerating AGI for the benefit of humanity, enhancing large-scale AI efficiency through an easy-to-use and cost-effective GenAI stack.
-- **[01.AI](https://lobechat.com/discover/provider/zeroone)**: 01.AI focuses on AI 2.0 era technologies, vigorously promoting the innovation and application of 'human + artificial intelligence', using powerful models and advanced AI technologies to enhance human productivity and achieve technological empowerment.
-- **[Spark](https://lobechat.com/discover/provider/spark)**: iFlytek's Spark model provides powerful AI capabilities across multiple domains and languages, utilizing advanced natural language processing technology to build innovative applications suitable for smart hardware, smart healthcare, smart finance, and other vertical scenarios.
-- **[SenseNova](https://lobechat.com/discover/provider/sensenova)**: SenseNova, backed by SenseTime's robust infrastructure, offers efficient and user-friendly full-stack large model services.
-- **[Stepfun](https://lobechat.com/discover/provider/stepfun)**: StepFun's large model possesses industry-leading multimodal and complex reasoning capabilities, supporting ultra-long text understanding and powerful autonomous scheduling search engine functions.
-- **[Baichuan](https://lobechat.com/discover/provider/baichuan)**: Baichuan Intelligence is a company focused on the research and development of large AI models, with its models excelling in domestic knowledge encyclopedias, long text processing, and generative creation tasks in Chinese, surpassing mainstream foreign models. Baichuan Intelligence also possesses industry-leading multimodal capabilities, performing excellently in multiple authoritative evaluations. Its models include Baichuan 4, Baichuan 3 Turbo, and Baichuan 3 Turbo 128k, each optimized for different application scenarios, providing cost-effective solutions.
-- **[Minimax](https://lobechat.com/discover/provider/minimax)**: MiniMax is a general artificial intelligence technology company established in 2021, dedicated to co-creating intelligence with users. MiniMax has independently developed general large models of different modalities, including trillion-parameter MoE text models, voice models, and image models, and has launched applications such as Conch AI.
-- **[InternLM](https://lobechat.com/discover/provider/internlm)**: An open-source organization dedicated to the research and development of large model toolchains. It provides an efficient and user-friendly open-source platform for all AI developers, making cutting-edge large models and algorithm technologies easily accessible.
-- **[Higress](https://lobechat.com/discover/provider/higress)**: Higress is a cloud-native API gateway that was developed internally at Alibaba to address the issues of Tengine reload affecting long-lived connections and the insufficient load balancing capabilities for gRPC/Dubbo.
-- **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI's Serverless API provides AI developers with an out of the box large model inference API service.
-- **[Taichu](https://lobechat.com/discover/provider/taichu)**: The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q\&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience.
-- **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI is an AI model and service platform launched by 360 Company, offering various advanced natural language processing models, including 360GPT2 Pro, 360GPT Pro, 360GPT Turbo, and 360GPT Turbo Responsibility 8K. These models combine large-scale parameters and multimodal capabilities, widely applied in text generation, semantic understanding, dialogue systems, and code generation. With flexible pricing strategies, 360 AI meets diverse user needs, supports developer integration, and promotes the innovation and development of intelligent applications.
-- **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes.
-- **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
-- **[Qiniu](https://lobechat.com/discover/provider/qiniu)**: Qiniu, as a long-established cloud service provider, delivers cost-effective and reliable AI inference services for both real-time and batch processing, with a simple and user-friendly experience.
+- **[GitHub](https://chat.imoogleai.xyz/discover/provider/github)**: With GitHub Models, developers can become AI engineers and leverage the industry's leading AI models.
+- **[Novita](https://chat.imoogleai.xyz/discover/provider/novita)**: Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups.
+- **[PPIO](https://chat.imoogleai.xyz/discover/provider/ppio)**: PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc.
+- **[302.AI](https://chat.imoogleai.xyz/discover/provider/ai302)**: 302.AI is an on-demand AI application platform offering the most comprehensive AI APIs and online AI applications available on the market.
+- **[Together AI](https://chat.imoogleai.xyz/discover/provider/togetherai)**: Together AI is dedicated to achieving leading performance through innovative AI models, offering extensive customization capabilities, including rapid scaling support and intuitive deployment processes to meet various enterprise needs.
+- **[Fireworks AI](https://chat.imoogleai.xyz/discover/provider/fireworksai)**: Fireworks AI is a leading provider of advanced language model services, focusing on functional calling and multimodal processing. Its latest model, Firefunction V2, is based on Llama-3, optimized for function calling, conversation, and instruction following. The visual language model FireLLaVA-13B supports mixed input of images and text. Other notable models include the Llama series and Mixtral series, providing efficient multilingual instruction following and generation support.
+- **[Groq](https://chat.imoogleai.xyz/discover/provider/groq)**: Groq's LPU inference engine has excelled in the latest independent large language model (LLM) benchmarks, redefining the standards for AI solutions with its remarkable speed and efficiency. Groq represents instant inference speed, demonstrating strong performance in cloud-based deployments.
+- **[Perplexity](https://chat.imoogleai.xyz/discover/provider/perplexity)**: Perplexity is a leading provider of conversational generation models, offering various advanced Llama 3.1 models that support both online and offline applications, particularly suited for complex natural language processing tasks.
+- **[Mistral](https://chat.imoogleai.xyz/discover/provider/mistral)**: Mistral provides advanced general, specialized, and research models widely used in complex reasoning, multilingual tasks, and code generation. Through functional calling interfaces, users can integrate custom functionalities for specific applications.
+- **[ModelScope](https://chat.imoogleai.xyz/discover/provider/modelscope)**: ModelScope is a model-as-a-service platform launched by Alibaba Cloud, offering a wide range of AI models and inference services.
+- **[Ai21Labs](https://chat.imoogleai.xyz/discover/provider/ai21)**: AI21 Labs builds foundational models and AI systems for enterprises, accelerating the application of generative AI in production.
+- **[Upstage](https://chat.imoogleai.xyz/discover/provider/upstage)**: Upstage focuses on developing AI models for various business needs, including Solar LLM and document AI, aiming to achieve artificial general intelligence (AGI) for work. It allows for the creation of simple conversational agents through Chat API and supports functional calling, translation, embedding, and domain-specific applications.
+- **[xAI (Grok)](https://chat.imoogleai.xyz/discover/provider/xai)**: xAI is a company dedicated to building artificial intelligence to accelerate human scientific discovery. Our mission is to advance our collective understanding of the universe.
+- **[Aliyun Bailian](https://chat.imoogleai.xyz/discover/provider/qwen)**: Tongyi Qianwen is a large-scale language model independently developed by Alibaba Cloud, featuring strong natural language understanding and generation capabilities. It can answer various questions, create written content, express opinions, and write code, playing a role in multiple fields.
+- **[Wenxin](https://chat.imoogleai.xyz/discover/provider/wenxin)**: An enterprise-level one-stop platform for large model and AI-native application development and services, providing the most comprehensive and user-friendly toolchain for the entire process of generative artificial intelligence model development and application development.
+- **[Hunyuan](https://chat.imoogleai.xyz/discover/provider/hunyuan)**: A large language model developed by Tencent, equipped with powerful Chinese creative capabilities, logical reasoning abilities in complex contexts, and reliable task execution skills.
+- **[ZhiPu](https://chat.imoogleai.xyz/discover/provider/zhipu)**: Zhipu AI offers an open platform for multimodal and language models, supporting a wide range of AI application scenarios, including text processing, image understanding, and programming assistance.
+- **[SiliconCloud](https://chat.imoogleai.xyz/discover/provider/siliconcloud)**: SiliconFlow is dedicated to accelerating AGI for the benefit of humanity, enhancing large-scale AI efficiency through an easy-to-use and cost-effective GenAI stack.
+- **[01.AI](https://chat.imoogleai.xyz/discover/provider/zeroone)**: 01.AI focuses on AI 2.0 era technologies, vigorously promoting the innovation and application of 'human + artificial intelligence', using powerful models and advanced AI technologies to enhance human productivity and achieve technological empowerment.
+- **[Spark](https://chat.imoogleai.xyz/discover/provider/spark)**: iFlytek's Spark model provides powerful AI capabilities across multiple domains and languages, utilizing advanced natural language processing technology to build innovative applications suitable for smart hardware, smart healthcare, smart finance, and other vertical scenarios.
+- **[SenseNova](https://chat.imoogleai.xyz/discover/provider/sensenova)**: SenseNova, backed by SenseTime's robust infrastructure, offers efficient and user-friendly full-stack large model services.
+- **[Stepfun](https://chat.imoogleai.xyz/discover/provider/stepfun)**: StepFun's large model possesses industry-leading multimodal and complex reasoning capabilities, supporting ultra-long text understanding and powerful autonomous scheduling search engine functions.
+- **[Baichuan](https://chat.imoogleai.xyz/discover/provider/baichuan)**: Baichuan Intelligence is a company focused on the research and development of large AI models, with its models excelling in domestic knowledge encyclopedias, long text processing, and generative creation tasks in Chinese, surpassing mainstream foreign models. Baichuan Intelligence also possesses industry-leading multimodal capabilities, performing excellently in multiple authoritative evaluations. Its models include Baichuan 4, Baichuan 3 Turbo, and Baichuan 3 Turbo 128k, each optimized for different application scenarios, providing cost-effective solutions.
+- **[Minimax](https://chat.imoogleai.xyz/discover/provider/minimax)**: MiniMax is a general artificial intelligence technology company established in 2021, dedicated to co-creating intelligence with users. MiniMax has independently developed general large models of different modalities, including trillion-parameter MoE text models, voice models, and image models, and has launched applications such as Conch AI.
+- **[InternLM](https://chat.imoogleai.xyz/discover/provider/internlm)**: An open-source organization dedicated to the research and development of large model toolchains. It provides an efficient and user-friendly open-source platform for all AI developers, making cutting-edge large models and algorithm technologies easily accessible.
+- **[Higress](https://chat.imoogleai.xyz/discover/provider/higress)**: Higress is a cloud-native API gateway that was developed internally at Alibaba to address the issues of Tengine reload affecting long-lived connections and the insufficient load balancing capabilities for gRPC/Dubbo.
+- **[Gitee AI](https://chat.imoogleai.xyz/discover/provider/giteeai)**: Gitee AI's Serverless API provides AI developers with an out of the box large model inference API service.
+- **[Taichu](https://chat.imoogleai.xyz/discover/provider/taichu)**: The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q\&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience.
+- **[360 AI](https://chat.imoogleai.xyz/discover/provider/ai360)**: 360 AI is an AI model and service platform launched by 360 Company, offering various advanced natural language processing models, including 360GPT2 Pro, 360GPT Pro, 360GPT Turbo, and 360GPT Turbo Responsibility 8K. These models combine large-scale parameters and multimodal capabilities, widely applied in text generation, semantic understanding, dialogue systems, and code generation. With flexible pricing strategies, 360 AI meets diverse user needs, supports developer integration, and promotes the innovation and development of intelligent applications.
+- **[Search1API](https://chat.imoogleai.xyz/discover/provider/search1api)**: Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes.
+- **[InfiniAI](https://chat.imoogleai.xyz/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
+- **[Qiniu](https://chat.imoogleai.xyz/discover/provider/qiniu)**: Qiniu, as a long-established cloud service provider, delivers cost-effective and reliable AI inference services for both real-time and batch processing, with a simple and user-friendly experience.
 
 </details>
 
-> 📊 Total providers: [<kbd>**42**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: [<kbd>**42**</kbd>](https://chat.imoogleai.xyz/discover/providers)
 
  <!-- PROVIDER LIST -->
 
-At the same time, we are also planning to support more model service providers. If you would like LobeChat to support your favorite service provider, feel free to join our [💬 community discussion](https://github.com/lobehub/lobe-chat/discussions/1284).
+At the same time, we are also planning to support more model service providers. If you would like imoogleai to support your favorite service provider, feel free to join our [💬 community discussion](https://github.com/imoogleai/imoogle-chat/discussions/1284).
 
 <div align="right">
 
@@ -303,11 +303,11 @@ At the same time, we are also planning to support more model service providers. 
 
 ### [Local Large Language Model (LLM) Support][docs-feat-local]
 
-To meet the specific needs of users, LobeChat also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to flexibly use their own or third-party models.
+To meet the specific needs of users, imoogleai also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to flexibly use their own or third-party models.
 
 > \[!TIP]
 >
-> Learn more about [📘 Using Ollama in LobeChat][docs-usage-ollama] by checking it out.
+> Learn more about [📘 Using Ollama in imoogleai][docs-usage-ollama] by checking it out.
 
 <div align="right">
 
@@ -319,7 +319,7 @@ To meet the specific needs of users, LobeChat also supports the use of local mod
 
 ### [Model Visual Recognition][docs-feat-vision]
 
-LobeChat now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
+imoogleai now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
 a multimodal intelligence that can perceive visuals. Users can easily upload or drag and drop images into the dialogue box,
 and the agent will be able to recognize the content of the images and engage in intelligent conversation based on this,
 creating smarter and more diversified chat scenarios.
@@ -337,11 +337,11 @@ Whether it's sharing images in daily use or interpreting images within specific 
 
 ### [TTS & STT Voice Conversation][docs-feat-tts]
 
-LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
+imoogleai supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
 allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
 
 Moreover, TTS offers an excellent solution for those who prefer auditory learning or desire to receive information while busy.
-In LobeChat, we have meticulously selected a range of high-quality voice options (OpenAI Audio, Microsoft Edge Speech) to meet the needs of users from different regions and cultural backgrounds.
+In imoogleai, we have meticulously selected a range of high-quality voice options (OpenAI Audio, Microsoft Edge Speech) to meet the needs of users from different regions and cultural backgrounds.
 Users can choose the voice that suits their personal preferences or specific scenarios, resulting in a personalized communication experience.
 
 <div align="right">
@@ -354,7 +354,7 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 ### [Text to Image Generation][docs-feat-t2i]
 
-With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
+With support for the latest text-to-image generation technology, imoogleai now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
 
 This enables a more private and immersive creative process, allowing for the seamless integration of visual storytelling into your personal dialogue with the agent.
 
@@ -368,11 +368,11 @@ This enables a more private and immersive creative process, allowing for the sea
 
 ### [Plugin System (Function Calling)][docs-feat-plugin]
 
-The plugin ecosystem of LobeChat is an important extension of its core functionality, greatly enhancing the practicality and flexibility of the LobeChat assistant.
+The plugin ecosystem of imoogleai is an important extension of its core functionality, greatly enhancing the practicality and flexibility of the imoogleai assistant.
 
-<video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
+<video controls src="https://github.com/imoogleai/imoogle-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
-By utilizing plugins, LobeChat assistants can obtain and process real-time information, such as searching for web information and providing users with instant and relevant news.
+By utilizing plugins, imoogleai assistants can obtain and process real-time information, such as searching for web information and providing users with instant and relevant news.
 
 In addition, these plugins are not limited to news aggregation, but can also extend to other practical functions, such as quickly searching documents, generating images, obtaining data from various platforms like Bilibili, Steam, and interacting with various third-party services.
 
@@ -384,12 +384,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 | Recent Submits                                                                                                               | Description                                                                                                             |
 | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-07-21**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
-| [Web](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                              | Smart web search that reads and analyzes pages to deliver comprehensive answers from Google results.<br/>`web` `search` |
-| [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
-| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>               | Searches Google through their official CSE API.<br/>`web` `search`                                                      |
+| [PortfolioMeta](https://chat.imoogleai.xyz/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-07-21**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
+| [Web](https://chat.imoogleai.xyz/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                              | Smart web search that reads and analyzes pages to deliver comprehensive answers from Google results.<br/>`web` `search` |
+| [Bing_websearch](https://chat.imoogleai.xyz/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
+| [Google CSE](https://chat.imoogleai.xyz/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>               | Searches Google through their official CSE API.<br/>`web` `search`                                                      |
 
-> 📊 Total plugins: [<kbd>**42**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**42**</kbd>](https://chat.imoogleai.xyz/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -403,14 +403,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 ### [Agent Market (GPTs)][docs-feat-agent]
 
-In LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
+In imoogleai Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
 Our marketplace is not just a showcase platform but also a collaborative space. Here, everyone can contribute their wisdom and share the agents they have developed.
 
 > \[!TIP]
 >
 > By [🤖/🏪 Submit Agents][submit-agents-link], you can easily submit your agent creations to our platform.
-> Importantly, LobeChat has established a sophisticated automated internationalization (i18n) workflow,
+> Importantly, imoogleai has established a sophisticated automated internationalization (i18n) workflow,
 > capable of seamlessly translating your agent into multiple language versions.
 > This means that no matter what language your users speak, they can experience your agent without barriers.
 
@@ -423,12 +423,12 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                                 | Description                                                                                                                                                                                                              |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Turtle Soup Host](https://lobechat.com/discover/assistant/lateral-thinking-puzzle)<br/><sup>By **[CSY2022](https://github.com/CSY2022)** on **2025-06-19**</sup>              | A turtle soup host needs to provide the scenario, the complete story (truth of the event), and the key point (the condition for guessing correctly).<br/>`turtle-soup` `reasoning` `interaction` `puzzle` `role-playing` |
-| [Gourmet Reviewer🍟](https://lobechat.com/discover/assistant/food-reviewer)<br/><sup>By **[renhai-lab](https://github.com/renhai-lab)** on **2025-06-17**</sup>                | Food critique expert<br/>`gourmet` `review` `writing`                                                                                                                                                                    |
-| [Academic Writing Assistant](https://lobechat.com/discover/assistant/academic-writing-assistant)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2025-06-17**</sup> | Expert in academic research paper writing and formal documentation<br/>`academic-writing` `research` `formal-style`                                                                                                      |
-| [Minecraft Senior Developer](https://lobechat.com/discover/assistant/java-development)<br/><sup>By **[iamyuuk](https://github.com/iamyuuk)** on **2025-06-17**</sup>           | Expert in advanced Java development and Minecraft mod and server plugin development<br/>`development` `programming` `minecraft` `java`                                                                                   |
+| [Turtle Soup Host](https://chat.imoogleai.xyz/discover/assistant/lateral-thinking-puzzle)<br/><sup>By **[CSY2022](https://github.com/CSY2022)** on **2025-06-19**</sup>              | A turtle soup host needs to provide the scenario, the complete story (truth of the event), and the key point (the condition for guessing correctly).<br/>`turtle-soup` `reasoning` `interaction` `puzzle` `role-playing` |
+| [Gourmet Reviewer🍟](https://chat.imoogleai.xyz/discover/assistant/food-reviewer)<br/><sup>By **[renhai-lab](https://github.com/renhai-lab)** on **2025-06-17**</sup>                | Food critique expert<br/>`gourmet` `review` `writing`                                                                                                                                                                    |
+| [Academic Writing Assistant](https://chat.imoogleai.xyz/discover/assistant/academic-writing-assistant)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2025-06-17**</sup> | Expert in academic research paper writing and formal documentation<br/>`academic-writing` `research` `formal-style`                                                                                                      |
+| [Minecraft Senior Developer](https://chat.imoogleai.xyz/discover/assistant/java-development)<br/><sup>By **[iamyuuk](https://github.com/iamyuuk)** on **2025-06-17**</sup>           | Expert in advanced Java development and Minecraft mod and server plugin development<br/>`development` `programming` `minecraft` `java`                                                                                   |
 
-> 📊 Total agents: [<kbd>**505**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**505**</kbd> ](https://chat.imoogleai.xyz/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -442,12 +442,12 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ### [Support Local / Remote Database][docs-feat-database]
 
-LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
+imoogleai supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
 
-- **Local database**: suitable for users who want more control over their data and privacy protection. LobeChat uses CRDT (Conflict-Free Replicated Data Type) technology to achieve multi-device synchronization. This is an experimental feature aimed at providing a seamless data synchronization experience.
-- **Server-side database**: suitable for users who want a more convenient user experience. LobeChat supports PostgreSQL as a server-side database. For detailed documentation on how to configure the server-side database, please visit [Configure Server-side Database](https://lobehub.com/docs/self-hosting/advanced/server-database).
+- **Local database**: suitable for users who want more control over their data and privacy protection. imoogleai uses CRDT (Conflict-Free Replicated Data Type) technology to achieve multi-device synchronization. This is an experimental feature aimed at providing a seamless data synchronization experience.
+- **Server-side database**: suitable for users who want a more convenient user experience. imoogleai supports PostgreSQL as a server-side database. For detailed documentation on how to configure the server-side database, please visit [Configure Server-side Database](https://chat.imoogleai.xyz/docs/self-hosting/advanced/server-database).
 
-Regardless of which database you choose, LobeChat can provide you with an excellent user experience.
+Regardless of which database you choose, imoogleai can provide you with an excellent user experience.
 
 <div align="right">
 
@@ -459,13 +459,13 @@ Regardless of which database you choose, LobeChat can provide you with an excell
 
 ### [Support Multi-User Management][docs-feat-auth]
 
-LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
+imoogleai supports multi-user management and provides two main user authentication and management solutions to meet different needs:
 
-- **next-auth**: LobeChat integrates `next-auth`, a flexible and powerful identity verification library that supports multiple authentication methods, including OAuth, email login, credential login, etc. With `next-auth`, you can easily implement user registration, login, session management, social login, and other functions to ensure the security and privacy of user data.
+- **next-auth**: imoogleai integrates `next-auth`, a flexible and powerful identity verification library that supports multiple authentication methods, including OAuth, email login, credential login, etc. With `next-auth`, you can easily implement user registration, login, session management, social login, and other functions to ensure the security and privacy of user data.
 
-- [**Clerk**](https://go.clerk.com/exgqLG0): For users who need more advanced user management features, LobeChat also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
+- [**Clerk**](https://go.clerk.com/exgqLG0): For users who need more advanced user management features, imoogleai also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
 
-Regardless of which user management solution you choose, LobeChat can provide you with an excellent user experience and powerful functional support.
+Regardless of which user management solution you choose, imoogleai can provide you with an excellent user experience and powerful functional support.
 
 <div align="right">
 
@@ -481,16 +481,16 @@ We deeply understand the importance of providing a seamless experience for users
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
 a modern web technology that elevates web applications to an experience close to that of native apps.
 
-Through PWA, LobeChat can offer a highly optimized user experience on both desktop and mobile devices while maintaining high-performance characteristics.
+Through PWA, imoogleai can offer a highly optimized user experience on both desktop and mobile devices while maintaining high-performance characteristics.
 Visually and in terms of feel, we have also meticulously designed the interface to ensure it is indistinguishable from native apps,
 providing smooth animations, responsive layouts, and adapting to different device screen resolutions.
 
 > \[!NOTE]
 >
-> If you are unfamiliar with the installation process of PWA, you can add LobeChat as your desktop application (also applicable to mobile devices) by following these steps:
+> If you are unfamiliar with the installation process of PWA, you can add imoogleai as your desktop application (also applicable to mobile devices) by following these steps:
 >
 > - Launch the Chrome or Edge browser on your computer.
-> - Visit the LobeChat webpage.
+> - Visit the imoogleai webpage.
 > - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon.
 > - Follow the instructions on the screen to complete the PWA Installation.
 
@@ -516,15 +516,15 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ### [Custom Themes][docs-feat-theme]
 
-As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
+As a design-engineering-oriented application, imoogleai places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
 Beyond switching theme modes, a range of color customization options allow users to adjust the application's theme colors according to their preferences.
-Whether it's a desire for a sober dark blue, a lively peach pink, or a professional gray-white, users can find their style of color choices in LobeChat.
+Whether it's a desire for a sober dark blue, a lively peach pink, or a professional gray-white, users can find their style of color choices in imoogleai.
 
 > \[!TIP]
 >
 > The default configuration can intelligently recognize the user's system color mode and automatically switch themes to ensure a consistent visual experience with the operating system.
-> For users who like to manually control details, LobeChat also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
+> For users who like to manually control details, imoogleai also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
 
 <div align="right">
 
@@ -534,7 +534,7 @@ Whether it's a desire for a sober dark blue, a lively peach pink, or a professio
 
 ### `*` What's more
 
-Beside these features, LobeChat also have much better basic technique underground:
+Beside these features, imoogleai also have much better basic technique underground:
 
 - [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
@@ -542,7 +542,7 @@ Beside these features, LobeChat also have much better basic technique undergroun
 - [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
 
-> ✨ more features will be added when LobeChat evolve.
+> ✨ more features will be added when imoogleai evolve.
 
 ---
 
@@ -575,11 +575,11 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 ## 🛳 Self Hosting
 
-LobeChat provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
+imoogleai provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
 > \[!TIP]
 >
-> Learn more about [📘 Build your own LobeChat][docs-self-hosting] by checking it out.
+> Learn more about [📘 Build your own imoogleai][docs-self-hosting] by checking it out.
 
 ### `A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud
 
@@ -618,21 +618,21 @@ If you have deployed your own project following the one-click deployment steps i
 [![][docker-size-shield]][docker-size-link]
 [![][docker-pulls-shield]][docker-pulls-link]
 
-We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
+We provide a Docker image for deploying the imoogleai service on your own private device. Use the following command to start the imoogleai service:
 
 1. create a folder to for storage files
 
 ```fish
-$ mkdir lobe-chat-db && cd lobe-chat-db
+$ mkdir imoogleai-db && cd imoogleai-db
 ```
 
-2. init the LobeChat infrastructure
+2. init the imoogleai infrastructure
 
 ```fish
-bash <(curl -fsSL https://lobe.li/setup.sh)
+bash <(curl -fsSL https://chat.imoogleai.xyz/setup.sh)
 ```
 
-3. Start the LobeChat service
+3. Start the imoogleai service
 
 ```fish
 docker compose up -d
@@ -669,10 +669,10 @@ This project provides some additional configuration items set with environment v
 
 | NPM                               | Repository                              | Description                                                                                           | Version                                   |
 | --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub. | [![][lobe-lint-shield]][lobe-lint-link]   |
+| [@imoogleai/ui][lobe-ui-link]       | [imoogleai/imoogle-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@imoogleai/icons][lobe-icons-link] | [imoogleai/imoogle-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@imoogleai/tts][lobe-tts-link]     | [imoogleai/imoogle-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@imoogleai/lint][lobe-lint-link]   | [imoogleai/imoogle-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for imoogleai. | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
@@ -682,20 +682,20 @@ This project provides some additional configuration items set with environment v
 
 ## 🧩 Plugins
 
-Plugins provide a means to extend the [Function Calling][docs-function-call] capabilities of LobeChat. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide][docs-plugin-dev] in the Wiki.
+Plugins provide a means to extend the [Function Calling][docs-function-call] capabilities of imoogleai. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide][docs-plugin-dev] in the Wiki.
 
-- [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
-- [chat-plugin-template][chat-plugin-template]: This is the plugin template for LobeChat plugin development.
-- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
-- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that provides a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
+- [imoogle-chat-plugins][lobe-chat-plugins]: This is the plugin index for imoogleai. It accesses index.json from this repository to display a list of available plugins for imoogleai to the user.
+- [chat-plugin-template][chat-plugin-template]: This is the plugin template for imoogleai plugin development.
+- [@imoogleai/chat-plugin-sdk][chat-plugin-sdk]: The imoogleai Plugin SDK assists you in creating exceptional chat plugins for imoogleai.
+- [@imoogleai/chat-plugins-gateway][chat-plugins-gateway]: The imoogleai Plugins Gateway is a backend service that provides a gateway for imoogleai plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
 > \[!NOTE]
 >
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
-> - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
-> - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
-> - [x] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
+> - [x] [**Plugin Phase 1**](https://github.com/imoogleai/imoogle-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
+> - [x] [**Plugin Phase 2**](https://github.com/imoogleai/imoogle-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
+> - [x] [**Plugin Phase 3**](https://github.com/imoogleai/imoogle-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
 
 <div align="right">
 
@@ -712,8 +712,8 @@ You can use GitHub Codespaces for online development:
 Or clone it for local development:
 
 ```fish
-$ git clone https://github.com/lobehub/lobe-chat.git
-$ cd lobe-chat
+$ git clone https://github.com/imoogleai/imoogle-chat.git
+$ cd imoogle-chat
 $ pnpm install
 $ pnpm dev
 ```
@@ -734,7 +734,7 @@ Contributions of all types are more than welcome; if you are interested in contr
 >
 > We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
 >
-> Help us make LobeChat better. Welcome to provide product design feedback, user experience discussions directly to us.
+> Help us make imoogleai better. Welcome to provide product design feedback, user experience discussions directly to us.
 >
 > **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
 
@@ -742,11 +742,11 @@ Contributions of all types are more than welcome; if you are interested in contr
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
 
-<a href="https://github.com/lobehub/lobe-chat/graphs/contributors" target="_blank">
+<a href="https://github.com/imoogleai/imoogle-chat/graphs/contributors" target="_blank">
   <table>
     <tr>
       <th colspan="2">
-        <br><img src="https://contrib.rocks/image?repo=lobehub/lobe-chat"><br><br>
+        <br><img src="https://contrib.rocks/image?repo=imoogleai/imoogle-chat"><br><br>
       </th>
     </tr>
     <tr>
@@ -784,10 +784,10 @@ Contributions of all types are more than welcome; if you are interested in contr
 
 Every bit counts and your one-time donation sparkles in our galaxy of support! You're a shooting star, making a swift and bright impact on our journey. Thank you for believing in us – your generosity guides us toward our mission, one brilliant flash at a time.
 
-<a href="https://opencollective.com/lobehub" target="_blank">
+<a href="https://opencollective.com/imoogleai" target="_blank">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/lobehub/.github/blob/main/static/sponsor-dark.png?raw=true">
-    <img  src="https://github.com/lobehub/.github/blob/main/static/sponsor-light.png?raw=true">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/imoogleai/.github/blob/main/static/sponsor-dark.png?raw=true">
+    <img  src="https://github.com/imoogleai/.github/blob/main/static/sponsor-light.png?raw=true">
   </picture>
 </a>
 
@@ -799,10 +799,10 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 ## 🔗 More Products
 
-- **[🅰️ Lobe SD Theme][lobe-theme]:** Modern theme for Stable Diffusion WebUI, exquisite interface design, highly customizable UI, and efficiency-boosting features.
-- **[⛵️ Lobe Midjourney WebUI][lobe-midjourney-webui]:** WebUI for Midjourney, leverages AI to quickly generate a wide array of rich and diverse images from text prompts, sparking creativity and enhancing conversations.
-- **[🌏 Lobe i18n][lobe-i18n] :** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
-- **[💌 Lobe Commit][lobe-commit]:** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
+- **[🅰️ imoogleai SD Theme][lobe-theme]:** Modern theme for Stable Diffusion WebUI, exquisite interface design, highly customizable UI, and efficiency-boosting features.
+- **[⛵️ imoogleai Midjourney WebUI][lobe-midjourney-webui]:** WebUI for Midjourney, leverages AI to quickly generate a wide array of rich and diverse images from text prompts, sparking creativity and enhancing conversations.
+- **[🌏 imoogleai i18n][lobe-i18n] :** imoogleai i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
+- **[💌 imoogleai Commit][lobe-commit]:** imoogleai Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
 
 <div align="right">
 
@@ -818,92 +818,92 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 </details>
 
-Copyright © 2025 [LobeHub][profile-link]. <br />
+Copyright © 2025 [imoogleai][profile-link]. <br />
 This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[blog]: https://lobehub.com/blog
-[changelog]: https://lobehub.com/changelog
-[chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
-[chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
-[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-[codecov-link]: https://codecov.io/gh/lobehub/lobe-chat
-[codecov-shield]: https://img.shields.io/codecov/c/github/lobehub/lobe-chat?labelColor=black&style=flat-square&logo=codecov&logoColor=white
-[codespaces-link]: https://codespaces.new/lobehub/lobe-chat
+[blog]: https://chat.imoogleai.xyz/blog
+[changelog]: https://chat.imoogleai.xyz/changelog
+[chat-desktop]: https://raw.githubusercontent.com/imoogleai/imoogle-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
+[chat-desktop-report]: https://imoogleai.github.io/imoogle-chat/lighthouse/chat/desktop/chat_preview_imoogleai_com_chat.html
+[chat-mobile]: https://raw.githubusercontent.com/imoogleai/imoogle-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
+[chat-mobile-report]: https://imoogleai.github.io/imoogle-chat/lighthouse/chat/mobile/chat_preview_imoogleai_com_chat.html
+[chat-plugin-sdk]: https://github.com/imoogleai/chat-plugin-sdk
+[chat-plugin-template]: https://github.com/imoogleai/chat-plugin-template
+[chat-plugins-gateway]: https://github.com/imoogleai/chat-plugins-gateway
+[codecov-link]: https://codecov.io/gh/imoogleai/imoogle-chat
+[codecov-shield]: https://img.shields.io/codecov/c/github/imoogleai/imoogle-chat?labelColor=black&style=flat-square&logo=codecov&logoColor=white
+[codespaces-link]: https://codespaces.new/imoogleai/imoogle-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
-[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=imoogle-chat&repository-name=imoogle-chat
 [deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
-[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=LobeChat%E7%A4%BE%E5%8C%BA%E7%89%88
+[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=imoogleai%E7%A4%BE%E5%8C%BA%E7%89%88
 [deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
 [deploy-on-repocloud-link]: https://repocloud.io/details/?app_id=248
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
-[deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=lobe-chat-db
+[deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=imoogle-chat-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
-[docs]: https://lobehub.com/docs/usage/start
-[docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://lobehub.com/docs/self-hosting/server-database/docker-compose
-[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
-[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
-[docs-feat-artifacts]: https://lobehub.com/docs/usage/features/artifacts
-[docs-feat-auth]: https://lobehub.com/docs/usage/features/auth
-[docs-feat-branch]: https://lobehub.com/docs/usage/features/branching-conversations
-[docs-feat-cot]: https://lobehub.com/docs/usage/features/cot
-[docs-feat-database]: https://lobehub.com/docs/usage/features/database
-[docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
-[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
-[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
-[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
-[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
-[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
-[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
-[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
-[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
-[docs-function-call]: https://lobehub.com/blog/openai-function-call
-[docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
-[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
-[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
-[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
-[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
-[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
-[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
-[github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-action-test-link]: https://github.com/actions/workflows/lobehub/lobe-chat/test.yml
-[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
-[github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
-[github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
-[github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
-[github-issues-link]: https://github.com/lobehub/lobe-chat/issues
-[github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
-[github-license-link]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
+[docker-pulls-link]: https://hub.docker.com/r/imoogleai/imoogle-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/imoogleai/imoogle-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/imoogleai/imoogle-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/imoogleai/imoogle-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/imoogleai/imoogle-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/imoogleai/imoogle-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
+[docs]: https://chat.imoogleai.xyz/docs/usage/start
+[docs-dev-guide]: https://github.com/imoogleai/imoogle-chat/wiki/index
+[docs-docker]: https://chat.imoogleai.xyz/docs/self-hosting/server-database/docker-compose
+[docs-env-var]: https://chat.imoogleai.xyz/docs/self-hosting/environment-variables
+[docs-feat-agent]: https://chat.imoogleai.xyz/docs/usage/features/agent-market
+[docs-feat-artifacts]: https://chat.imoogleai.xyz/docs/usage/features/artifacts
+[docs-feat-auth]: https://chat.imoogleai.xyz/docs/usage/features/auth
+[docs-feat-branch]: https://chat.imoogleai.xyz/docs/usage/features/branching-conversations
+[docs-feat-cot]: https://chat.imoogleai.xyz/docs/usage/features/cot
+[docs-feat-database]: https://chat.imoogleai.xyz/docs/usage/features/database
+[docs-feat-knowledgebase]: https://chat.imoogleai.xyz/blog/knowledge-base
+[docs-feat-local]: https://chat.imoogleai.xyz/docs/usage/features/local-llm
+[docs-feat-mobile]: https://chat.imoogleai.xyz/docs/usage/features/mobile
+[docs-feat-plugin]: https://chat.imoogleai.xyz/docs/usage/features/plugin-system
+[docs-feat-provider]: https://chat.imoogleai.xyz/docs/usage/features/multi-ai-providers
+[docs-feat-pwa]: https://chat.imoogleai.xyz/docs/usage/features/pwa
+[docs-feat-t2i]: https://chat.imoogleai.xyz/docs/usage/features/text-to-image
+[docs-feat-theme]: https://chat.imoogleai.xyz/docs/usage/features/theme
+[docs-feat-tts]: https://chat.imoogleai.xyz/docs/usage/features/tts
+[docs-feat-vision]: https://chat.imoogleai.xyz/docs/usage/features/vision
+[docs-function-call]: https://chat.imoogleai.xyz/blog/openai-function-call
+[docs-lighthouse]: https://github.com/imoogleai/imoogle-chat/wiki/Lighthouse
+[docs-plugin-dev]: https://chat.imoogleai.xyz/docs/usage/plugins/development
+[docs-self-hosting]: https://chat.imoogleai.xyz/docs/self-hosting/start
+[docs-upstream-sync]: https://chat.imoogleai.xyz/docs/self-hosting/advanced/upstream-sync
+[docs-usage-ollama]: https://chat.imoogleai.xyz/docs/usage/providers/ollama
+[docs-usage-plugin]: https://chat.imoogleai.xyz/docs/usage/plugins/basic
+[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Fimoogleai%2Fimoogle-chat
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimoogleai%2Fimoogle-chat.svg?type=large
+[github-action-release-link]: https://github.com/actions/workflows/imoogleai/imoogle-chat/release.yml
+[github-action-release-shield]: https_//img.shields.io/github/actions/workflow/status/imoogleai/imoogle-chat/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-test-link]: https://github.com/actions/workflows/imoogleai/imoogle-chat/test.yml
+[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/imoogleai/imoogle-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-contributors-link]: https://github.com/imoogleai/imoogle-chat/graphs/contributors
+[github-contributors-shield]: https://img.shields.io/github/contributors/imoogleai/imoogle-chat?color=c4f042&labelColor=black&style=flat-square
+[github-forks-link]: https://github.com/imoogleai/imoogle-chat/network/members
+[github-forks-shield]: https://img.shields.io/github/forks/imoogleai/imoogle-chat?color=8ae8ff&labelColor=black&style=flat-square
+[github-issues-link]: https://github.com/imoogleai/imoogle-chat/issues
+[github-issues-shield]: https://img.shields.io/github/issues/imoogleai/imoogle-chat?color=ff80eb&labelColor=black&style=flat-square
+[github-license-link]: https://github.com/imoogleai/imoogle-chat/blob/main/LICENSE
 [github-license-shield]: https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
-[github-project-link]: https://github.com/lobehub/lobe-chat/projects
-[github-release-link]: https://github.com/lobehub/lobe-chat/releases
-[github-release-shield]: https://img.shields.io/github/v/release/lobehub/lobe-chat?color=369eff&labelColor=black&logo=github&style=flat-square
-[github-releasedate-link]: https://github.com/lobehub/lobe-chat/releases
-[github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
-[github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
-[github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-project-link]: https://github.com/imoogleai/imoogle-chat/projects
+[github-release-link]: https://github.com/imoogleai/imoogle-chat/releases
+[github-release-shield]: https://img.shields.io/github/v/release/imoogleai/imoogle-chat?color=369eff&labelColor=black&logo=github&style=flat-square
+[github-releasedate-link]: https://github.com/imoogleai/imoogle-chat/releases
+[github-releasedate-shield]: https://img.shields.io/github/release-date/imoogleai/imoogle-chat?labelColor=black&style=flat-square
+[github-stars-link]: https://github.com/imoogleai/imoogle-chat/network/stargazers
+[github-stars-shield]: https://img.shields.io/github/stars/imoogleai/imoogle-chat?color=ffcb47&labelColor=black&style=flat-square
 [github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
 [github-trending-url]: https://trendshift.io/repositories/2256
 [image-banner]: https://github.com/user-attachments/assets/6f293c7f-47b4-47eb-9202-fe68a942d35b
@@ -929,48 +929,48 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-web-search]: https://github.com/user-attachments/assets/cfdc48ac-b5f8-4a00-acee-db8f2eba09ad
 [image-overview]: https://github.com/user-attachments/assets/dbfaa84a-2c82-4dd9-815c-5be616f264a4
 [image-star]: https://github.com/user-attachments/assets/c3b482e7-cef5-4e94-bef9-226900ecfaab
-[issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
-[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
-[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
-[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
-[lobe-icons-github]: https://github.com/lobehub/lobe-icons
-[lobe-icons-link]: https://www.npmjs.com/package/@lobehub/icons
-[lobe-icons-shield]: https://img.shields.io/npm/v/@lobehub/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-lint-github]: https://github.com/lobehub/lobe-lint
-[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
-[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/lobehub/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/lobehub/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[official-site]: https://lobehub.com
-[pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
+[issues-link]: https://img.shields.io/github/issues/imoogleai/imoogle-chat.svg?style=flat
+[lobe-chat-plugins]: https://github.com/imoogleai/imoogle-chat-plugins
+[lobe-commit]: https://github.com/imoogleai/imoogle-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/imoogleai/imoogle-commit/tree/master/packages/lobe-i18n
+[lobe-icons-github]: https://github.com/imoogleai/imoogle-icons
+[lobe-icons-link]: https://www.npmjs.com/package/@imoogleai/icons
+[lobe-icons-shield]: https://img.shields.io/npm/v/@imoogleai/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-lint-github]: https://github.com/imoogleai/imoogle-lint
+[lobe-lint-link]: https://www.npmjs.com/package/@imoogleai/lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@imoogleai/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-midjourney-webui]: https://github.com/imoogleai/imoogle-midjourney-webui
+[lobe-theme]: https://github.com/imoogleai/sd-webui-lobe-theme
+[lobe-tts-github]: https://github.com/imoogleai/imoogle-tts
+[lobe-tts-link]: https://www.npmjs.com/package/@imoogleai/tts
+[lobe-tts-shield]: https://img.shields.io/npm/v/@imoogleai/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-ui-github]: https://github.com/imoogleai/imoogle-ui
+[lobe-ui-link]: https://www.npmjs.com/package/@imoogleai/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@imoogleai/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[official-site]: https://chat.imoogleai.xyz
+[pr-welcome-link]: https://github.com/imoogleai/imoogle-chat/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
-[profile-link]: https://github.com/lobehub
+[profile-link]: https://github.com/imoogleai
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/imoogleai/imoogle-chat%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
-[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
-[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat
 [share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
-[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat
 [share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
-[share-whatsapp-link]: https://api.whatsapp.com/send?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat%20%23chatbot%20%23chatGPT%20%23openAI
+[share-whatsapp-link]: https://api.whatsapp.com/send?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat%20%23chatbot%20%23chatGPT%20%23openAI
 [share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
-[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20imoogleai%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Fimoogleai%2Fimoogle-chat
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
-[sponsor-link]: https://opencollective.com/lobehub 'Become ❤️ LobeHub Sponsor'
-[sponsor-shield]: https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square
-[submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
+[sponsor-link]: https://opencollective.com/imoogleai 'Become ❤️ imoogleai Sponsor'
+[sponsor-shield]: https://img.shields.io/badge/-Sponsor%20imoogleai-f04f88?logo=opencollective&logoColor=white&style=flat-square
+[submit-agents-link]: https://github.com/imoogleai/imoogle-chat-agents
 [submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
-[submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
+[submit-plugin-link]: https://github.com/imoogleai/imoogle-chat-plugins
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
-[vercel-link]: https://chat-preview.lobehub.com
+[vercel-link]: https://chat.imoogleai.xyz
 [vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
-[vercel-shield-badge]: https://img.shields.io/badge/TRY%20LOBECHAT-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge
+[vercel-shield-badge]: https://img.shields.io/badge/TRY%20imoogleai-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge

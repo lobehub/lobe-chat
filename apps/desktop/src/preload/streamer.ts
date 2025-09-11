@@ -1,4 +1,4 @@
-import type { ProxyTRPCRequestParams } from '@lobechat/electron-client-ipc';
+import type { ProxyTRPCRequestParams } from '@imoogleai/electron-client-ipc';
 import { ipcRenderer } from 'electron';
 import { v4 as uuid } from 'uuid';
 

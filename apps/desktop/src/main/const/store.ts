@@ -1,7 +1,7 @@
 /**
  * 应用设置存储相关常量
  */
-import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { NetworkProxySettings } from '@imoogleai/electron-client-ipc';
 
 import { appStorageDir } from '@/const/dir';
 import { DEFAULT_SHORTCUTS_CONFIG } from '@/shortcuts';

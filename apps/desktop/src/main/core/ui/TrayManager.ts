@@ -1,4 +1,4 @@
-import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
+import { MainBroadcastEventKey, MainBroadcastParams } from '@imoogleai/electron-client-ipc';
 import { nativeTheme } from 'electron';
 
 import { name } from '@/../../package.json';

@@ -1,14 +1,14 @@
 {
-  "name": "lobehub-desktop-dev",
+  "name": "imoogleai-desktop-dev",
   "version": "0.0.0",
   "private": true,
-  "description": "LobeHub Desktop Application",
-  "homepage": "https://lobehub.com",
+  "description": "imoogleai Desktop Application",
+  "homepage": "https://chat.imoogleai.xyz",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lobehub/lobe-chat.git"
+    "url": "https://github.com/imoogleai/imoogle-chat.git"
   },
-  "author": "LobeHub",
+  "author": "imoogleai",
   "main": "./dist/main/index.js",
   "scripts": {
     "build": "npm run typecheck && electron-vite build",
@@ -41,9 +41,9 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron-toolkit/utils": "^4.0.0",
-    "@lobechat/electron-client-ipc": "workspace:*",
-    "@lobechat/electron-server-ipc": "workspace:*",
-    "@lobechat/file-loaders": "workspace:*",
+    "@imoogleai/electron-client-ipc": "workspace:*",
+    "@imoogleai/electron-server-ipc": "workspace:*",
+    "@imoogleai/file-loaders": "workspace:*",
     "@lobehub/i18n-cli": "^1.20.3",
     "@types/lodash": "^4.17.0",
     "@types/resolve": "^1.20.6",

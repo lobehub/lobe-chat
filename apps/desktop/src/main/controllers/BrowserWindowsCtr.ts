@@ -1,4 +1,4 @@
-import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
+import { InterceptRouteParams } from '@imoogleai/electron-client-ipc';
 import { extractSubPath, findMatchingRoute } from '~common/routes';
 
 import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';

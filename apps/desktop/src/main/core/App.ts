@@ -1,4 +1,4 @@
-import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
+import { ElectronIPCEventHandler, ElectronIPCServer } from '@imoogleai/electron-server-ipc';
 import { Session, app, ipcMain, protocol } from 'electron';
 import { macOS, windows } from 'electron-is';
 import os from 'node:os';

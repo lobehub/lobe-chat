@@ -1,5 +1,5 @@
 {
-  "name": "@lobechat/utils",
+  "name": "@imoogleai/utils",
   "version": "1.0.0",
   "private": true,
   "exports": {
@@ -12,8 +12,8 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/types": "workspace:*",
+    "@imoogleai/const": "workspace:*",
+    "@imoogleai/types": "workspace:*",
     "dayjs": "^1.11.18"
   },
   "devDependencies": {

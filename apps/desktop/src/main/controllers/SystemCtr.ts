@@ -1,4 +1,4 @@
-import { ElectronAppState, ThemeMode } from '@lobechat/electron-client-ipc';
+import { ElectronAppState, ThemeMode } from '@imoogleai/electron-client-ipc';
 import { app, nativeTheme, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';

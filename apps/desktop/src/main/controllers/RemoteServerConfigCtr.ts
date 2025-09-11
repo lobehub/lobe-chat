@@ -1,4 +1,4 @@
-import { DataSyncConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig } from '@imoogleai/electron-client-ipc';
 import { safeStorage } from 'electron';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';

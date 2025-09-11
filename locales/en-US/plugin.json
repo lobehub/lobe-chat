@@ -340,7 +340,7 @@
         "title": "Unverified Third-Party Plugin",
         "warning": "This plugin comes from an unverified third-party marketplace. Please confirm you trust the source before installation."
       },
-      "verified": "Verified"
+      "verified": "Imoogle"
     },
     "messages": {
       "connectionTestFailed": "Connection test failed",
@@ -357,7 +357,7 @@
       "version": "Version"
     },
     "official": {
-      "badge": "ImoogleAI Official Plugin",
+      "badge": "Imoogle Official Plugin",
       "description": "This plugin is developed and maintained by Imoogle team, has undergone strict security review, safe to use.",
       "loadingMessage": "Fetching plugin details...",
       "loadingTitle": "Loading",

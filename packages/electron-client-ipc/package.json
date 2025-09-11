@@ -1,5 +1,5 @@
 {
-  "name": "@lobechat/electron-client-ipc",
+  "name": "@imoogleai/electron-client-ipc",
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",

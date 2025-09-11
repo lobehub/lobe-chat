@@ -131,65 +131,14 @@ export const useMenu = () => {
       ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
-    showCloudPromotion && {
-      icon: <Icon icon={Cloudy} />,
-      key: 'cloud',
+    {
+      icon: <Icon icon={Mail} />,
+      key: 'email',
       label: (
-        <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} target={'_blank'}>
-          {t('userPanel.cloud', { name: LOBE_CHAT_CLOUD })}
+        <Link href={mailTo(BRANDING_EMAIL.support)} target={'_blank'}>
+          {t('userPanel.email')}
         </Link>
       ),
-    },
-    {
-      icon: <Icon icon={FileClockIcon} />,
-      key: 'changelog',
-      label: <Link href={isDesktop ? CHANGELOG : '/changelog/modal'}>{t('changelog')}</Link>,
-    },
-    {
-      children: [
-        {
-          icon: <Icon icon={Book} />,
-          key: 'docs',
-          label: (
-            <Link href={DOCUMENTS_REFER_URL} target={'_blank'}>
-              {t('userPanel.docs')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={Feather} />,
-          key: 'feedback',
-          label: (
-            <Link href={GITHUB_ISSUES} target={'_blank'}>
-              {t('userPanel.feedback')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={DiscordIcon} />,
-          key: 'discord',
-          label: (
-            <Link href={SOCIAL_URL.discord} target={'_blank'}>
-              {t('userPanel.discord')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={Mail} />,
-          key: 'email',
-          label: (
-            <Link href={mailTo(BRANDING_EMAIL.support)} target={'_blank'}>
-              {t('userPanel.email')}
-            </Link>
-          ),
-        },
-      ],
-      icon: <Icon icon={LifeBuoy} />,
-      key: 'help',
-      label: t('userPanel.help'),
-    },
-    {
-      type: 'divider',
     },
   ].filter(Boolean) as ItemType[];
 

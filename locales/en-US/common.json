@@ -31,7 +31,7 @@
   "batchDelete": "Batch Delete",
   "blog": "Product Blog",
   "branching": "Create Subtopic",
-  "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
+  "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use imoogleai Cloud.",
   "branchingRequiresSavedTopic": "Current topic is not saved, please save it first to use subtopic feature",
   "cancel": "Cancel",
   "changelog": "Changelog",
@@ -171,7 +171,7 @@
     "and": "and",
     "feedback": {
       "action": "Share Feedback",
-      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make LobeChat even better.",
+      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make imoogleai even better.",
       "title": "Share Your Valuable Feedback on GitHub"
     },
     "later": "Later",
@@ -343,9 +343,9 @@
   "telemetry": {
     "allow": "Allow",
     "deny": "Deny",
-    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "desc": "We would like to anonymously collect usage information to help us improve imoogleai and provide you with a better product experience. You can disable this at any time in Settings - About.",
     "learnMore": "Learn More",
-    "title": "Help ImoogleAI be better"
+    "title": "Help imoogleai be better"
   },
   "temp": "Temporary",
   "terms": "Terms of Service",
