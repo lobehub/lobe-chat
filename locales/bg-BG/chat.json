@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Натиснете <key/> за изпращане",
     "sendWithEnter": "Натиснете <key/> за изпращане",
     "stop": "Спри",
-    "warp": "Нов ред"
+    "warp": "Нов ред",
+    "warpWithKey": "Натиснете <key/> за нов ред"
   },
   "intentUnderstanding": {
     "title": "Разбирам и анализирам вашето намерение..."
