@@ -35,7 +35,7 @@ describe('featureFlagsSelectors', () => {
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
-      canEnablePWAGuide: true,
+      enablePwaAppBanner: true,
       showProvider: true,
       showMarket: true,
       showPinList: false,
