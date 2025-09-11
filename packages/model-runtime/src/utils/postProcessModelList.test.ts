@@ -163,8 +163,7 @@ describe('postProcessModelList', () => {
         functionCall: true,
         vision: true,
         reasoning: false,
-        maxTokens: 2048,
-        pricing: { input: 0.001, output: 0.002 },
+        maxOutput: 2048,
       },
     ];
 
@@ -180,8 +179,7 @@ describe('postProcessModelList', () => {
       functionCall: true,
       vision: true,
       reasoning: false,
-      maxTokens: 2048,
-      pricing: { input: 0.001, output: 0.002 },
+      maxOutput: 2048,
       type: 'image',
       parameters: {
         max_tokens: 1000,
