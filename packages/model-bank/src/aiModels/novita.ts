@@ -3,6 +3,39 @@ import { AIChatModelCard } from '../types/aiModel';
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'Qwen3 Next 80B A3B Thinking',
+    id: 'qwen/qwen3-next-80b-a3b-thinking',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'Qwen3 Next 80B A3B Instruct',
+    id: 'qwen/qwen3-next-80b-a3b-instruct',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 4096,
     displayName: 'Qwen MT Plus',
     id: 'qwen/qwen-mt-plus',
