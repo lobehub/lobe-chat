@@ -2,6 +2,61 @@
 
 # Changelog
 
+### [Version&nbsp;1.125.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.125.0...v1.125.1)
+<sup>Released on **2025-09-11**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor model runtime folder structure and add more tests.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Delete files should delete chunks、embedings、fileChunk, fix not remove message with server mode.
+
+
+#### 💄 Styles
+
+- **misc**: Add hotkey tooltip to typobar actions, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor model runtime folder structure and add more tests, closes [#9210](https://github.com/jaworldwideorg/OneJA-Bot/issues/9210) ([7fe17e4](https://github.com/jaworldwideorg/OneJA-Bot/commit/7fe17e4))
+
+
+
+#### What's fixed
+
+* **misc**: Delete files should delete chunks、embedings、fileChunk, closes [#9196](https://github.com/jaworldwideorg/OneJA-Bot/issues/9196) ([4ee1d29](https://github.com/jaworldwideorg/OneJA-Bot/commit/4ee1d29))
+* **misc**: Fix not remove message with server mode, closes [#9207](https://github.com/jaworldwideorg/OneJA-Bot/issues/9207) ([790af5f](https://github.com/jaworldwideorg/OneJA-Bot/commit/790af5f))
+
+
+
+#### Styles
+
+* **misc**: Add hotkey tooltip to typobar actions, closes [#9203](https://github.com/jaworldwideorg/OneJA-Bot/issues/9203) ([e372875](https://github.com/jaworldwideorg/OneJA-Bot/commit/e372875))
+* **misc**: Update i18n, closes [#9208](https://github.com/jaworldwideorg/OneJA-Bot/issues/9208) ([987fbf2](https://github.com/jaworldwideorg/OneJA-Bot/commit/987fbf2))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.127.3](https://github.com/lobehub/lobe-chat/compare/v1.127.2...v1.127.3)
 
 <sup>Released on **2025-09-11**</sup>
