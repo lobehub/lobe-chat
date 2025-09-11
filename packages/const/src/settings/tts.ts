@@ -2,7 +2,7 @@ import { UserTTSConfig } from '@lobechat/types';
 
 export const DEFAULT_TTS_CONFIG: UserTTSConfig = {
   openAI: {
-    sttModel: 'imoogle-nov',
+    sttModel: 'whisper-1',
     ttsModel: 'tts-1',
   },
   sttAutoStop: true,
