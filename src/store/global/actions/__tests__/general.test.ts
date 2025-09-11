@@ -34,7 +34,7 @@ describe('generalActionSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
-        result.current.updateSystemStatus({ wideScreen: false });
+        result.current.updateSystemStatus({ noWideScreen: false });
       });
 
       expect(result.current.status).toEqual(initialState.status);
@@ -45,10 +45,10 @@ describe('generalActionSlice', () => {
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
-        result.current.updateSystemStatus({ wideScreen: false });
+        result.current.updateSystemStatus({ noWideScreen: false });
       });
 
-      expect(result.current.status.wideScreen).toBe(false);
+      expect(result.current.status.noWideScreen).toBe(false);
     });
 
     it('should not update if new status equals current status', () => {
@@ -57,7 +57,7 @@ describe('generalActionSlice', () => {
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
-        result.current.updateSystemStatus({ wideScreen: initialState.status.wideScreen });
+        result.current.updateSystemStatus({ noWideScreen: initialState.status.noWideScreen });
       });
 
       expect(saveToLocalStorageSpy).not.toHaveBeenCalled();
@@ -69,11 +69,11 @@ describe('generalActionSlice', () => {
 
       act(() => {
         useGlobalStore.setState({ isStatusInit: true });
-        result.current.updateSystemStatus({ wideScreen: false });
+        result.current.updateSystemStatus({ noWideScreen: false });
       });
 
       expect(saveToLocalStorageSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ wideScreen: false }),
+        expect.objectContaining({ noWideScreen: false }),
       );
     });
 
