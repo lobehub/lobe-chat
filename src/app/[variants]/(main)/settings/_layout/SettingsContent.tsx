@@ -85,6 +85,7 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
     alignItems: 'center',
     display: activeTab === tabName ? 'flex' : 'none',
     flexDirection: 'column',
+    gap: 64,
     height: '100%',
     paddingBlock:
       [SettingsTabs.Agent, SettingsTabs.Provider].includes(tabName as any) || mobile ? 0 : 24,

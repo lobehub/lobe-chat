@@ -1,13 +1,12 @@
 'use client';
 
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { useSearchParams } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
-import { useProviderName } from '@/hooks/useProviderName';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -16,24 +15,21 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
-
   const router = useQueryRoute();
   const showMobileWorkspace = useShowMobileWorkspace();
 
-  const searchParams = useSearchParams();
+  const [activeSettingsKey, setActiveSettingsKey] = useQueryState('active');
+  const [providerName, setProviderName] = useQueryState('provider');
 
-  const activeSettingsKey = searchParams.get('provider') as SettingsTabs;
   const isSessionActive = useSessionStore((s) => !!s.activeId);
-  const isProvider = activeSettingsKey ? true : false;
-  const providerName = useProviderName(activeSettingsKey || '');
-  const isProviderList = activeSettingsKey === 'provider';
-  const isProviderDetail = isProvider && !isProviderList;
+  const isProvider = providerName ? true : false;
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
       router.push('/chat');
-    } else if (isProviderDetail) {
-      router.push('/settings/provider');
+    } else if (activeSettingsKey === 'provider' && providerName !== null) {
+      setProviderName(null);
+      setActiveSettingsKey('provider');
     } else {
       router.push(enableAuth ? '/me/settings' : '/me');
     }
@@ -46,7 +42,7 @@ const Header = memo(() => {
           title={
             <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}>
-                {isProvider ? providerName : t(`tab.${activeSettingsKey || 'provider'}`)}
+                {isProvider ? providerName : t(`tab.${activeSettingsKey as SettingsTabs}`)}
               </span>
             </Flexbox>
           }
