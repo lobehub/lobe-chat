@@ -11,6 +11,7 @@ import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
+import CfgSliderInput from './components/CfgSliderInput';
 import DimensionControlGroup from './components/DimensionControlGroup';
 import ImageConfigSkeleton from './components/ImageConfigSkeleton';
 import ImageNum from './components/ImageNum';
@@ -53,6 +54,7 @@ const ConfigPanel = memo(() => {
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
   const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
   const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
+  const isSupportCfg = useImageStore(isSupportedParamSelector('cfg'));
   const isSupportImageUrls = useImageStore(isSupportedParamSelector('imageUrls'));
 
   const { showDimensionControl } = useDimensionControl();
@@ -75,6 +77,7 @@ const ConfigPanel = memo(() => {
     isSupportSize,
     isSupportSeed,
     isSupportSteps,
+    isSupportCfg,
     isSupportImageUrls,
     showDimensionControl,
   ]);
@@ -161,6 +164,12 @@ const ConfigPanel = memo(() => {
       {isSupportSteps && (
         <ConfigItemLayout label={t('config.steps.label')}>
           <StepsSliderInput />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportCfg && (
+        <ConfigItemLayout label={t('config.cfg.label')}>
+          <CfgSliderInput />
         </ConfigItemLayout>
       )}
 

@@ -5,6 +5,9 @@
       "lock": "Bloquear relación de aspecto",
       "unlock": "Desbloquear relación de aspecto"
     },
+    "cfg": {
+      "label": "Intensidad de guía"
+    },
     "header": {
       "desc": "Descripción simple, crea al instante",
       "title": "Pintura"
