@@ -5,6 +5,9 @@
       "lock": "Lock Aspect Ratio",
       "unlock": "Unlock Aspect Ratio"
     },
+    "cfg": {
+      "label": "Guidance Intensity"
+    },
     "header": {
       "desc": "Brief description, create instantly",
       "title": "Painting"

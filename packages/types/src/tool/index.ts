@@ -24,4 +24,5 @@ export interface LobeTool {
 export type LobeToolRenderType = LobePluginType | 'builtin';
 
 export * from './builtin';
+export * from './plugin';
 export * from './python';

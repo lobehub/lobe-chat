@@ -9,6 +9,8 @@
       "on": "Toon opmaakwerkbalk"
     }
   },
+  "cancel": "Annuleren",
+  "confirm": "Bevestigen",
   "file": {
     "error": "Fout: {{message}}",
     "uploading": "Bestand wordt geüpload..."
@@ -21,6 +23,9 @@
     "open": "Link openen",
     "placeholder": "Voer de URL van de link in",
     "unlink": "Link verwijderen"
+  },
+  "math": {
+    "placeholder": "Voer TeX-formule in"
   },
   "table": {
     "delete": "Tabel verwijderen",
@@ -42,6 +47,8 @@
     "numberList": "Genummerde lijst",
     "strikethrough": "Doorhalen",
     "table": "Tabel invoegen",
+    "taskList": "Takenlijst",
+    "tex": "TeX-formule",
     "underline": "Onderstrepen"
   }
 }

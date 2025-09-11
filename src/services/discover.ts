@@ -55,12 +55,15 @@ class DiscoverService {
 
   getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
     const locale = globalHelpers.getCurrentLanguage();
-    return lambdaClient.market.getAssistantList.query({
-      ...params,
-      locale,
-      page: params.page ? Number(params.page) : 1,
-      pageSize: params.pageSize ? Number(params.pageSize) : 20,
-    });
+    return lambdaClient.market.getAssistantList.query(
+      {
+        ...params,
+        locale,
+        page: params.page ? Number(params.page) : 1,
+        pageSize: params.pageSize ? Number(params.pageSize) : 20,
+      },
+      { context: { showNotification: false } },
+    );
   };
 
   // ============================== MCP Market ==============================

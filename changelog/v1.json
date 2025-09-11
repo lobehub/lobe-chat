@@ -1,6 +1,83 @@
 [
   {
     "children": {
+      "fixes": ["Delete files should delete chunks、embedings、fileChunk."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix not remove message with server mode."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.1"
+  },
+  {
+    "children": {
+      "features": ["Seedream 4.0."],
+      "improvements": ["Add hotkey tooltip to typobar actions."]
+    },
+    "date": "2025-09-10",
+    "version": "1.127.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add CometAPI model provider and chat models, update i18n."]
+    },
+    "date": "2025-09-10",
+    "version": "1.126.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix editor key handling."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Assistant List error message."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.1"
+  },
+  {
+    "children": {},
+    "date": "2025-09-08",
+    "version": "1.126.0"
+  },
+  {
+    "children": {
+      "features": ["Add Math and TaskList to Editor."]
+    },
+    "date": "2025-09-08",
+    "version": "1.125.0"
+  },
+  {
+    "children": {
+      "fixes": ["Revert V1 Mobile."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to remove edge runtime and add more tests."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ChatInput send command switch."]
+    },
+    "date": "2025-09-06",
+    "version": "1.124.2"
+  },
+  {
+    "children": {
       "fixes": ["Enhance NewAPI with environment variables and fix routers compatibility."],
       "improvements": ["Update doubao-seed-1.6-vision models."]
     },

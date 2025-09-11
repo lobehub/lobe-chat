@@ -4,6 +4,8 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "model-bank": "workspace:*"
+    "model-bank": "workspace:*",
+    "query-string": "^9.2.2",
+    "url-join": "^5.0.0"
   }
 }

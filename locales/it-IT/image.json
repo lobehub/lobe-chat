@@ -5,6 +5,9 @@
       "lock": "Blocca rapporto d'aspetto",
       "unlock": "Sblocca rapporto d'aspetto"
     },
+    "cfg": {
+      "label": "Intensità guida"
+    },
     "header": {
       "desc": "Descrizione semplice, crea subito",
       "title": "Pittura"
