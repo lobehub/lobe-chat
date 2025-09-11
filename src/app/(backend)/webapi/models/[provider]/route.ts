@@ -6,8 +6,6 @@ import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
 
-export const runtime = 'edge';
-
 const noNeedAPIKey = (provider: string) => [ModelProvider.OpenRouter].includes(provider as any);
 
 export const GET = checkAuth(async (req, { params, jwtPayload }) => {

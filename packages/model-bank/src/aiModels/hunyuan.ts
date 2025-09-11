@@ -26,9 +26,9 @@ const hunyuanChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
-    contextWindowTokens: 92_000,
+    contextWindowTokens: 96_000,
     description:
-      '业内首个超大规模 Hybrid-Transformer-Mamba 推理模型，扩展推理能力，超强解码速度，进一步对齐人类偏好。',
+      '大幅提升主模型慢思考模型的高难数学、复杂推理、高难代码、指令遵循、文本创作质量等能力。',
     displayName: 'Hunyuan T1',
     enabled: true,
     id: 'hunyuan-t1-latest',
@@ -40,7 +40,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-05-21',
+    releasedAt: '2025-08-22',
     settings: {
       searchImpl: 'params',
     },

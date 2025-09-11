@@ -18,6 +18,7 @@
     "./burncloud": "./src/aiModels/burncloud.ts",
     "./cloudflare": "./src/aiModels/cloudflare.ts",
     "./cohere": "./src/aiModels/cohere.ts",
+    "./cometapi": "./src/aiModels/cometapi.ts",
     "./deepseek": "./src/aiModels/deepseek.ts",
     "./fal": "./src/aiModels/fal.ts",
     "./fireworksai": "./src/aiModels/fireworksai.ts",

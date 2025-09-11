@@ -1,6 +1,5 @@
-import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
+import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
+import type { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ErrorType } from '../fetch';
 import { GroundingSearch } from '../search';
@@ -16,7 +15,7 @@ export interface ChatMessageError {
   type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
 
-export interface CitationItem {
+export interface ChatCitationItem {
   id?: string;
   onlyUrl?: boolean;
   title?: string;

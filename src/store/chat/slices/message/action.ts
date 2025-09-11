@@ -71,7 +71,10 @@ export interface ChatMessageAction {
    * update message at the frontend
    * this method will not update messages to database
    */
-  internal_dispatchMessage: (payload: MessageDispatch) => void;
+  internal_dispatchMessage: (
+    payload: MessageDispatch,
+    context?: { topicId?: string | null; sessionId: string },
+  ) => void;
 
   /**
    * update the message content with optimistic update
@@ -305,14 +308,15 @@ export const chatMessage: StateCreator<
   },
 
   // the internal process method of the AI message
-  internal_dispatchMessage: (payload) => {
-    const { activeId } = get();
+  internal_dispatchMessage: (payload, context) => {
+    const activeId = typeof context !== 'undefined' ? context.sessionId : get().activeId;
+    const topicId = typeof context !== 'undefined' ? context.topicId : get().activeTopicId;
 
-    if (!activeId) return;
+    const messagesKey = messageMapKey(activeId, topicId);
 
-    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
+    const messages = messagesReducer(chatSelectors.getBaseChatsByKey(messagesKey)(get()), payload);
 
-    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+    const nextMap = { ...get().messagesMap, [messagesKey]: messages };
 
     if (isEqual(nextMap, get().messagesMap)) return;
 

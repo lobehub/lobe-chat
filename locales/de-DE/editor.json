@@ -1,0 +1,54 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Einklappen",
+      "on": "Ausklappen"
+    },
+    "typobar": {
+      "off": "Formatierungsleiste ausblenden",
+      "on": "Formatierungsleiste anzeigen"
+    }
+  },
+  "cancel": "Abbrechen",
+  "confirm": "Bestätigen",
+  "file": {
+    "error": "Fehler: {{message}}",
+    "uploading": "Datei wird hochgeladen..."
+  },
+  "image": {
+    "broken": "Bild beschädigt"
+  },
+  "link": {
+    "edit": "Link bearbeiten",
+    "open": "Link öffnen",
+    "placeholder": "Link-URL eingeben",
+    "unlink": "Link entfernen"
+  },
+  "math": {
+    "placeholder": "Bitte TeX-Formel eingeben"
+  },
+  "table": {
+    "delete": "Tabelle löschen",
+    "deleteColumn": "Spalte löschen",
+    "deleteRow": "Zeile löschen",
+    "insertColumnLeft": "Links {{count}} Spalten einfügen",
+    "insertColumnRight": "Rechts {{count}} Spalten einfügen",
+    "insertRowAbove": "Oben {{count}} Zeilen einfügen",
+    "insertRowBelow": "Unten {{count}} Zeilen einfügen"
+  },
+  "typobar": {
+    "blockquote": "Zitat",
+    "bold": "Fett",
+    "bulletList": "Ungeordnete Liste",
+    "code": "Inline-Code",
+    "codeblock": "Codeblock",
+    "italic": "Kursiv",
+    "link": "Link",
+    "numberList": "Nummerierte Liste",
+    "strikethrough": "Durchgestrichen",
+    "table": "Tabelle einfügen",
+    "taskList": "Aufgabenliste",
+    "tex": "TeX-Formel",
+    "underline": "Unterstrichen"
+  }
+}

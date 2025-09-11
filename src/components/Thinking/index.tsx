@@ -1,3 +1,4 @@
+import { ChatCitationItem } from '@lobechat/types';
 import { ActionIcon, CopyButton, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -6,8 +7,6 @@ import { rgba } from 'polished';
 import { CSSProperties, RefObject, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-
-import { CitationItem } from '@/types/message';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -74,7 +73,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface ThinkingProps {
-  citations?: CitationItem[];
+  citations?: ChatCitationItem[];
   content?: string;
   duration?: number;
   style?: CSSProperties;
