@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku is Anthropic's fastest next-generation model. Compared to Claude 3 Haiku, Claude 3.5 Haiku has improved in various skills and has surpassed the previous generation's largest model, Claude 3 Opus, in many intelligence benchmark tests."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku offers fast responses, ideal for lightweight tasks."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offers capabilities that surpass Opus and faster speeds than Sonnet, while maintaining the same price as Sonnet. Sonnet excels particularly in programming, data science, visual processing, and agent tasks."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet is Anthropic's latest model, offering a balance of speed and performance. It excels in a wide range of tasks, including programming, data science, visual processing, and agent tasks."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet is Anthropic's latest and most powerful model for handling highly complex tasks. It excels in performance, intelligence, fluency, and comprehension."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku is Anthropic's fastest and most compact model, designed for near-instantaneous responses. It features rapid and accurate directional performance."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 is Anthropic's latest and most powerful model designed for handling highly complex tasks. It demonstrates outstanding performance in intelligence, fluency, and comprehension."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 Thinking model, an advanced version capable of demonstrating its reasoning process."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 is Anthropic's most powerful model for handling highly complex tasks. It excels in performance, intelligence, fluency, and comprehension."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet can generate near-instant responses or extended, step-by-step reasoning, allowing users to clearly observe these processes. API users can also have fine control over the time the model takes to think."
+    "description": "Claude Sonnet 4 can generate near-instant responses or extended step-by-step reasoning, allowing users to clearly observe these processes."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Claude Sonnet 4 Thinking model can produce near-instant responses or extended step-by-step reasoning, enabling users to clearly see these processes."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 is a powerful AI programming assistant that supports intelligent Q&A and code completion in various programming languages, enhancing development efficiency."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision is a visual deep thinking model that demonstrates stronger general multimodal understanding and reasoning capabilities in scenarios such as education, image review, inspection and security, and AI search Q&A. It supports a 256k context window and an output length of up to 64k tokens."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Doubao image generation model developed by ByteDance Seed team supports both text and image inputs, providing a highly controllable and high-quality image generation experience. Supports image editing via text instructions, generating images with dimensions between 512 and 1536 pixels."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Doubao image generation model developed by ByteDance Seed team supports both text and image inputs, providing a highly controllable and high-quality image generation experience based on text prompts."
+    "description": "Seedream 3.0 image generation model developed by ByteDance Seed team supports text and image inputs, delivering a highly controllable and high-quality image generation experience. Generates images based on text prompts."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Seedream 4.0 image generation model developed by ByteDance Seed team supports text and image inputs, offering a highly controllable and high-quality image generation experience. Generates images based on text prompts."
   },
   "doubao-vision-lite-32k": {
     "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities along with precise instruction comprehension. It demonstrates strong performance in image-text information extraction and image-based reasoning tasks, applicable to more complex and diverse visual question answering scenarios."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "The model performs better in terms of effectiveness and performance compared to ERNIE-X1-32K."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Seedream 4.0 image generation model developed by ByteDance Seed team supports text and image inputs, providing a highly controllable and high-quality image generation experience. Generates images based on text prompts."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "FLUX.1 model focused on image editing tasks, supporting both text and image inputs."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] can process text and reference images as inputs, seamlessly enabling targeted local edits and complex overall scene transformations."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev] is an image generation model with an aesthetic preference, aiming to produce more realistic and natural images."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell] is a 12-billion-parameter image generation model focused on fast generation of high-quality images."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "High-quality image generation model provided by Google."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana is Google's latest, fastest, and most efficient native multimodal model, allowing you to generate and edit images through conversation."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Powerful raw image model from the Qwen team, featuring impressive Chinese text generation capabilities and diverse visual styles."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Professional image editing model released by the Qwen team, supporting semantic and appearance editing, precise editing of Chinese and English text, style transfer, object rotation, and other high-quality image edits."
+  },
   "flux-1-schnell": {
     "description": "Developed by Black Forest Labs, this 12-billion-parameter text-to-image model uses latent adversarial diffusion distillation technology to generate high-quality images within 1 to 4 steps. Its performance rivals closed-source alternatives and is released under the Apache-2.0 license, suitable for personal, research, and commercial use."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "State-of-the-art contextual image generation and editing — combining text and images for precise, coherent results."
-  },
-  "flux-kontext/dev": {
-    "description": "FLUX.1 model focused on image editing tasks, supporting both text and image inputs."
   },
   "flux-merged": {
     "description": "The FLUX.1-merged model combines the deep features explored during the development phase of “DEV” with the high-speed execution advantages represented by “Schnell.” This integration not only pushes the model's performance boundaries but also broadens its application scope."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "Ultra-high-resolution AI image generation — supports up to 4-megapixel output, producing ultra-high-definition images in under 10 seconds."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro] can process text and reference images as input, seamlessly enabling targeted local edits and complex overall scene transformations."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell], currently the most advanced open-source few-step model, surpasses competitors and even powerful non-distilled models like Midjourney v6.0 and DALL·E 3 (HD). Finely tuned to retain the full output diversity from pretraining, FLUX.1 [schnell] significantly enhances visual quality, instruction compliance, size/aspect ratio variation, font handling, and output diversity compared to state-of-the-art models on the market, offering users a richer and more diverse creative image generation experience."
   },
   "flux.1-schnell": {
     "description": "A 12-billion-parameter rectified flow transformer capable of generating images based on text descriptions."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] is an image generation model with an aesthetic preference, aimed at producing more realistic and natural images."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell] is an image generation model with 12 billion parameters, specializing in fast generation of high-quality images."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offers stable and tunable performance, making it an ideal choice for complex task solutions."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "Our latest and most powerful flagship model, excelling in natural language processing, mathematical computation, and reasoning — a perfect all-rounder."
   },
+  "grok-4-0709": {
+    "description": "xAI's Grok 4, featuring strong reasoning capabilities."
+  },
   "grok-code-fast-1": {
     "description": "We are excited to introduce grok-code-fast-1, a fast and cost-effective inference model that excels in agent coding."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series Ultra version"
-  },
-  "imagen4/preview": {
-    "description": "A high-quality image generation model provided by Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3 is a versatile and powerful model that excels across multiple domains. It sets new benchmarks for tasks in mathematics, science, programming, and visual reasoning. It is also skilled in technical writing and instruction following, allowing users to analyze text, code, and images to solve complex multi-step problems."
   },
+  "o3-2025-04-16": {
+    "description": "o3 is OpenAI's new reasoning model, supporting text and image inputs with text outputs, suitable for complex tasks requiring broad general knowledge."
+  },
   "o3-deep-research": {
     "description": "o3-deep-research is our most advanced deep research model, specifically designed to handle complex multi-step research tasks. It can search and synthesize information from the internet, as well as access and utilize your proprietary data through the MCP connector."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "The o3-pro model employs greater computational power for deeper thinking and consistently provides better answers. It is only supported under the Responses API."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro is OpenAI's new reasoning model, supporting text and image inputs with text outputs, designed for complex tasks requiring extensive general knowledge."
+  },
   "o4-mini": {
     "description": "o4-mini is our latest small model in the o series. It is optimized for fast and efficient inference, demonstrating high efficiency and performance in coding and visual tasks."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini is OpenAI's reasoning model supporting text and image inputs with text outputs, suitable for complex tasks requiring broad general knowledge. This model features a 200K token context window."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research is our faster and more affordable deep research model—ideal for tackling complex multi-step research tasks. It can search and synthesize information from the internet, as well as access and utilize your proprietary data through the MCP connector."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image is a general-purpose image generation model that supports a wide range of artistic styles and is particularly adept at rendering complex text, especially Chinese and English. The model supports multi-line layouts, paragraph-level text generation, and fine-grained detail rendering, enabling complex mixed text-and-image layout designs."
-  },
-  "qwen-image-edit": {
-    "description": "A professional image-editing model released by the Qwen team, supporting semantic editing and appearance editing. It can precisely edit Chinese and English text and perform high-quality image edits such as style transfer and object rotation."
   },
   "qwen-long": {
     "description": "Qwen is a large-scale language model that supports long text contexts and dialogue capabilities based on long documents and multiple documents."

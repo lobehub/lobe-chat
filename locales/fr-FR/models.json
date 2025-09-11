@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku est le modèle de prochaine génération le plus rapide d'Anthropic. Par rapport à Claude 3 Haiku, Claude 3.5 Haiku a amélioré ses compétences dans tous les domaines et a surpassé le plus grand modèle de la génération précédente, Claude 3 Opus, dans de nombreux tests de référence intellectuels."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku offre des réponses rapides, idéal pour les tâches légères."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse plus rapide que Sonnet, tout en maintenant le même prix que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet est le modèle le plus puissant d'Anthropic pour traiter des tâches très complexes. Il excelle en performance, intelligence, fluidité et compréhension."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, conçu pour des réponses quasi instantanées. Il présente des performances directionnelles rapides et précises."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il se distingue par ses performances, son intelligence, sa fluidité et sa capacité de compréhension exceptionnelles."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 est un modèle de réflexion capable de démontrer un raisonnement avancé."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il excelle en performance, intelligence, fluidité et compréhension."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet peut générer des réponses presque instantanées ou des réflexions prolongées, permettant aux utilisateurs de voir clairement ces processus. Les utilisateurs de l'API peuvent également contrôler avec précision le temps de réflexion du modèle."
+    "description": "Claude Sonnet 4 peut générer des réponses quasi instantanées ou des réflexions prolongées étape par étape, visibles clairement par l'utilisateur."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Le modèle de réflexion Claude Sonnet 4 produit des réponses quasi instantanées ou des raisonnements prolongés étape par étape, clairement visibles par l'utilisateur."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision est un modèle de réflexion profonde visuelle, démontrant une compréhension multimodale générale et des capacités de raisonnement renforcées dans des scénarios tels que l'éducation, la modération d'images, l'inspection, la sécurité et la recherche de questions-réponses AI. Il supporte une fenêtre contextuelle de 256k et une longueur de sortie maximale de 64k tokens."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Le modèle de génération d'images Doubao, développé par l'équipe Seed de ByteDance, prend en charge les entrées texte et image, offrant une expérience de génération d'images de haute qualité et très contrôlable. Il permet d'éditer des images via des instructions textuelles, avec des dimensions d'image entre 512 et 1536 pixels."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Le modèle de génération d'images Doubao développé par l'équipe Seed de ByteDance supporte les entrées texte et image, offrant une expérience de génération d'images hautement contrôlable et de haute qualité. Il génère des images à partir d'invites textuelles."
+    "description": "Le modèle de génération d'images Seedream 3.0, développé par l'équipe Seed de ByteDance, prend en charge les entrées texte et image, offrant une expérience de génération d'images de haute qualité et très contrôlable. Il génère des images à partir d'invites textuelles."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Le modèle de génération d'images Seedream 4.0, développé par l'équipe Seed de ByteDance, prend en charge les entrées texte et image, offrant une expérience de génération d'images de haute qualité et très contrôlable. Il génère des images à partir d'invites textuelles."
   },
   "doubao-vision-lite-32k": {
     "description": "Le modèle Doubao-vision est un grand modèle multimodal développé par Doubao, doté de puissantes capacités de compréhension et de raisonnement d'images, ainsi que d'une compréhension précise des instructions. Il excelle dans l'extraction d'informations texte-image et les tâches de raisonnement basées sur l'image, pouvant être appliqué à des tâches de questions-réponses visuelles plus complexes et étendues."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "Par rapport à ERNIE-X1-32K, le modèle offre de meilleures performances et résultats."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Le modèle de génération d'images Seedream 4.0, développé par l'équipe Seed de ByteDance, prend en charge les entrées texte et image, offrant une expérience de génération d'images de haute qualité et très contrôlable. Il génère des images à partir d'invites textuelles."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "Modèle FLUX.1 dédié aux tâches d'édition d'images, prenant en charge les entrées texte et image."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] peut traiter du texte et des images de référence en entrée, permettant des éditions locales ciblées et des transformations complexes de scènes globales de manière fluide."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev] est un modèle de génération d'images avec une préférence esthétique, visant à produire des images plus réalistes et naturelles."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell] est un modèle de génération d'images de 12 milliards de paramètres, spécialisé dans la génération rapide d'images de haute qualité."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Modèle de génération d'images de haute qualité fourni par Google."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana est le modèle multimodal natif le plus récent, rapide et efficace de Google, permettant de générer et d'éditer des images par conversation."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Modèle puissant de génération d'images brutes de l'équipe Qwen, avec une capacité impressionnante de génération de texte en chinois et une grande diversité de styles visuels."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Modèle professionnel d'édition d'images publié par l'équipe Qwen, supportant l'édition sémantique et esthétique, capable d'éditer précisément les textes en chinois et en anglais, et réalisant des transformations de style, rotations d'objets et autres éditions d'images de haute qualité."
+  },
   "flux-1-schnell": {
     "description": "Modèle de génération d'images à partir de texte de 12 milliards de paramètres développé par Black Forest Labs, utilisant la distillation par diffusion antagoniste latente, capable de générer des images de haute qualité en 1 à 4 étapes. Ses performances rivalisent avec des alternatives propriétaires et il est publié sous licence Apache-2.0, adapté à un usage personnel, scientifique et commercial."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "Génération et édition d'images contextuelles de pointe — alliant texte et image pour des résultats précis et cohérents."
-  },
-  "flux-kontext/dev": {
-    "description": "Modèle FLUX.1 spécialisé dans les tâches d'édition d'images, prenant en charge les entrées texte et image."
   },
   "flux-merged": {
     "description": "Le modèle FLUX.1-merged combine les caractéristiques approfondies explorées durant la phase de développement « DEV » et les avantages d'exécution rapide représentés par « Schnell ». Cette fusion améliore non seulement les performances du modèle mais étend également son champ d'application."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "Génération d'images IA en ultra haute résolution — prise en charge d'une sortie jusqu'à 4 mégapixels, création d'images ultra-nettes en moins de 10 secondes."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro] peut traiter du texte et des images de référence en entrée, réalisant de manière fluide des modifications locales ciblées ainsi que des transformations complexes de scènes globales."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell], actuellement le modèle open source le plus avancé à faible nombre d'étapes, dépasse non seulement ses concurrents mais aussi des modèles puissants non affinés tels que Midjourney v6.0 et DALL·E 3 (HD). Ce modèle est spécialement affiné pour conserver toute la diversité de sortie de la phase de pré-entraînement. Par rapport aux modèles les plus avancés du marché, FLUX.1 [schnell] améliore significativement la qualité visuelle, l'adhérence aux instructions, la gestion des dimensions/proportions, le traitement des polices et la diversité des sorties, offrant une expérience de génération d'images créatives plus riche et variée."
   },
   "flux.1-schnell": {
     "description": "Transformateur de flux rectifié de 12 milliards de paramètres capable de générer des images à partir de descriptions textuelles."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] est un modèle de génération d'images avec une préférence esthétique, visant à produire des images plus réalistes et naturelles."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell] est un modèle de génération d'images de 12 milliards de paramètres, axé sur la génération rapide d'images de haute qualité."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajustement) offre des performances stables et ajustables, ce qui en fait un choix idéal pour des solutions de tâches complexes."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "Notre tout dernier modèle phare, le plus puissant, excelle dans le traitement du langage naturel, le calcul mathématique et le raisonnement — un véritable champion polyvalent."
   },
+  "grok-4-0709": {
+    "description": "Grok 4 de xAI, doté de puissantes capacités de raisonnement."
+  },
   "grok-code-fast-1": {
     "description": "Nous sommes ravis de présenter grok-code-fast-1, un modèle d'inférence rapide et économique, excellent dans le codage des agents."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Série de modèles de génération d'images à partir de texte Imagen 4e génération version Ultra"
-  },
-  "imagen4/preview": {
-    "description": "Modèle de génération d'images de haute qualité fourni par Google."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 fournit des solutions de dialogue intelligent dans divers scénarios."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3 est un modèle polyvalent et puissant, performant dans de nombreux domaines. Il établit de nouvelles normes pour les tâches de mathématiques, de sciences, de programmation et de raisonnement visuel. Il excelle également dans la rédaction technique et le respect des instructions. Les utilisateurs peuvent l'utiliser pour analyser des textes, du code et des images, et résoudre des problèmes complexes en plusieurs étapes."
   },
+  "o3-2025-04-16": {
+    "description": "o3 est le nouveau modèle de raisonnement d'OpenAI, supportant les entrées texte et image et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues."
+  },
   "o3-deep-research": {
     "description": "o3-deep-research est notre modèle de recherche approfondie le plus avancé, conçu spécialement pour gérer des tâches de recherche complexes en plusieurs étapes. Il peut rechercher et synthétiser des informations sur Internet, ainsi qu'accéder et exploiter vos propres données via le connecteur MCP."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "Le modèle o3-pro utilise davantage de calculs pour réfléchir plus profondément et fournir constamment de meilleures réponses, uniquement disponible via l'API Responses."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro est le nouveau modèle de raisonnement d'OpenAI, supportant les entrées texte et image et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues."
+  },
   "o4-mini": {
     "description": "o4-mini est notre dernier modèle de la série o de petite taille. Il est optimisé pour une inférence rapide et efficace, offrant une grande efficacité et performance dans les tâches de codage et visuelles."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini est un modèle de raisonnement d'OpenAI, supportant les entrées texte et image et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues. Ce modèle dispose d'un contexte de 200 000 tokens."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research est notre modèle de recherche approfondie plus rapide et plus abordable — idéal pour traiter des tâches de recherche complexes en plusieurs étapes. Il peut rechercher et synthétiser des informations sur Internet, ainsi qu'accéder et exploiter vos propres données via le connecteur MCP."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image est un modèle polyvalent de génération d'images, prenant en charge de nombreux styles artistiques et excelling particulièrement dans le rendu de textes complexes, notamment en chinois et en anglais. Le modèle gère les mises en page multi‑lignes, la génération de texte au niveau des paragraphes et le rendu de détails fins, permettant de créer des compositions complexes mêlant texte et image."
-  },
-  "qwen-image-edit": {
-    "description": "Un modèle professionnel d'édition d'images publié par l'équipe Qwen, prenant en charge l'édition sémantique et l'édition de l'apparence, capable d'éditer avec précision les textes en chinois et en anglais, et permettant la conversion de styles, la rotation d'objets et d'autres opérations d'édition d'images de haute qualité."
   },
   "qwen-long": {
     "description": "Qwen est un modèle de langage à grande échelle, prenant en charge un contexte de texte long, ainsi que des fonctionnalités de dialogue basées sur des documents longs et multiples."

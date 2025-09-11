@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.5 Haiku đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku cung cấp phản hồi nhanh, phù hợp cho các tác vụ nhẹ."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội so với Opus và tốc độ nhanh hơn Sonnet, đồng thời giữ nguyên mức giá như Sonnet. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet là mô hình AI mạnh nhất của Anthropic, với hiệu suất vượt trội so với các mô hình đối thủ và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá rộng rãi, đồng thời có tốc độ và chi phí tương đương với các mô hình tầm trung của chúng tôi."
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet là mô hình mạnh mẽ nhất mới nhất của Anthropic dành cho các tác vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku là mô hình nhanh nhất và gọn nhẹ nhất của Anthropic, được thiết kế để đạt được phản hồi gần như ngay lập tức. Nó có hiệu suất định hướng nhanh và chính xác."
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 là mô hình mạnh mẽ nhất mới nhất của Anthropic dành cho xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Mô hình suy nghĩ Claude Opus 4.1, phiên bản nâng cao có thể trình bày quá trình suy luận của nó."
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự trôi chảy và khả năng hiểu biết."
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet có thể tạo ra phản hồi gần như ngay lập tức hoặc suy nghĩ dần dần kéo dài, người dùng có thể thấy rõ những quá trình này. Người dùng API cũng có thể kiểm soát chi tiết thời gian suy nghĩ của mô hình."
+    "description": "Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể thấy rõ các quá trình này."
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Mô hình suy nghĩ Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể thấy rõ các quá trình này."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision là mô hình suy nghĩ sâu về thị giác, thể hiện khả năng hiểu và suy luận đa phương thức tổng quát mạnh mẽ hơn trong các kịch bản như giáo dục, kiểm duyệt hình ảnh, kiểm tra và an ninh, cũng như tìm kiếm và hỏi đáp AI. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa lên đến 64k token."
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Mô hình tạo ảnh Doubao do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, cung cấp trải nghiệm tạo ảnh chất lượng cao và kiểm soát tốt. Hỗ trợ chỉnh sửa hình ảnh qua chỉ dẫn văn bản, kích thước ảnh tạo ra từ 512 đến 1536 pixel."
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Mô hình tạo hình ảnh Doubao do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, mang lại trải nghiệm tạo hình ảnh chất lượng cao và kiểm soát tốt. Tạo hình ảnh dựa trên từ khóa văn bản."
+    "description": "Mô hình tạo ảnh Seedream 3.0 do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, cung cấp trải nghiệm tạo ảnh chất lượng cao và kiểm soát tốt. Tạo ảnh dựa trên từ khóa văn bản."
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Mô hình tạo ảnh Seedream 4.0 do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, cung cấp trải nghiệm tạo ảnh chất lượng cao và kiểm soát tốt. Tạo ảnh dựa trên từ khóa văn bản."
   },
   "doubao-vision-lite-32k": {
     "description": "Mô hình Doubao-vision là mô hình đa phương thức lớn do Doubao phát triển, có khả năng hiểu và suy luận hình ảnh mạnh mẽ, cùng khả năng hiểu chỉ dẫn chính xác. Mô hình thể hiện hiệu suất vượt trội trong việc trích xuất thông tin văn bản từ hình ảnh và các nhiệm vụ suy luận dựa trên hình ảnh, có thể ứng dụng trong các nhiệm vụ hỏi đáp thị giác phức tạp và đa dạng hơn."
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "So với ERNIE-X1-32K, mô hình này có hiệu suất và hiệu quả tốt hơn."
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Mô hình tạo ảnh Seedream 4.0 do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, cung cấp trải nghiệm tạo ảnh chất lượng cao và kiểm soát tốt. Tạo ảnh dựa trên từ khóa văn bản."
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "Mô hình FLUX.1 tập trung vào nhiệm vụ chỉnh sửa hình ảnh, hỗ trợ đầu vào văn bản và hình ảnh."
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] có khả năng xử lý đầu vào là văn bản và hình ảnh tham khảo, thực hiện chỉnh sửa cục bộ mục tiêu và biến đổi cảnh phức tạp một cách liền mạch."
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev] là mô hình tạo ảnh có sở thích thẩm mỹ, nhằm tạo ra hình ảnh chân thực và tự nhiên hơn."
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell] là mô hình tạo ảnh với 12 tỷ tham số, tập trung vào việc tạo ảnh chất lượng cao nhanh chóng."
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Mô hình tạo ảnh chất lượng cao do Google cung cấp."
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh qua đối thoại."
+  },
+  "fal-ai/qwen-image": {
+    "description": "Mô hình ảnh thô mạnh mẽ do đội Qwen phát triển, có khả năng tạo văn bản tiếng Trung ấn tượng và đa dạng phong cách hình ảnh."
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Mô hình chỉnh sửa hình ảnh chuyên nghiệp do đội Qwen phát hành, hỗ trợ chỉnh sửa ngữ nghĩa và ngoại hình, có thể chỉnh sửa chính xác văn bản tiếng Trung và tiếng Anh, thực hiện chuyển đổi phong cách, xoay đối tượng và các chỉnh sửa hình ảnh chất lượng cao khác."
+  },
   "flux-1-schnell": {
     "description": "Mô hình tạo hình ảnh từ văn bản 12 tỷ tham số do Black Forest Labs phát triển, sử dụng kỹ thuật chưng cất khuếch tán đối kháng tiềm ẩn, có thể tạo hình ảnh chất lượng cao trong 1 đến 4 bước. Mô hình có hiệu suất tương đương các sản phẩm đóng nguồn và được phát hành dưới giấy phép Apache-2.0, phù hợp cho cá nhân, nghiên cứu và thương mại."
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "Tạo và chỉnh sửa hình ảnh theo ngữ cảnh tiên tiến nhất — kết hợp văn bản và hình ảnh để đạt được kết quả chính xác, mạch lạc."
-  },
-  "flux-kontext/dev": {
-    "description": "Mô hình FLUX.1 tập trung vào nhiệm vụ chỉnh sửa hình ảnh, hỗ trợ đầu vào văn bản và hình ảnh."
   },
   "flux-merged": {
     "description": "Mô hình FLUX.1-merged kết hợp các đặc tính sâu sắc được khám phá trong giai đoạn phát triển của \"DEV\" và ưu thế thực thi nhanh của \"Schnell\". Qua đó, FLUX.1-merged không chỉ nâng cao giới hạn hiệu suất mà còn mở rộng phạm vi ứng dụng."
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "Tạo ảnh AI độ phân giải cực cao — hỗ trợ xuất ảnh 4 megapixel, tạo ảnh siêu nét trong vòng 10 giây."
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro] có khả năng xử lý văn bản và hình ảnh tham khảo làm đầu vào, thực hiện chỉnh sửa cục bộ có mục tiêu và biến đổi cảnh tổng thể phức tạp một cách liền mạch."
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell] là mô hình ít bước tiên tiến nhất mã nguồn mở hiện nay, vượt trội so với các đối thủ cùng loại và thậm chí hơn cả các mô hình không tinh luyện mạnh như Midjourney v6.0 và DALL·E 3 (HD). Mô hình được tinh chỉnh đặc biệt để giữ lại toàn bộ đa dạng đầu ra giai đoạn tiền huấn luyện, so với các mô hình tiên tiến trên thị trường, FLUX.1 [schnell] cải thiện đáng kể chất lượng hình ảnh, tuân thủ chỉ dẫn, thay đổi kích thước/tỷ lệ, xử lý phông chữ và đa dạng đầu ra, mang đến trải nghiệm tạo hình ảnh sáng tạo phong phú hơn cho người dùng."
   },
   "flux.1-schnell": {
     "description": "Bộ biến đổi luồng hiệu chỉnh với 12 tỷ tham số, có khả năng tạo hình ảnh dựa trên mô tả văn bản."
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] là một mô hình tạo hình ảnh với sở thích thẩm mỹ, nhằm tạo ra hình ảnh chân thực và tự nhiên hơn."
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell] là mô hình tạo hình ảnh với 12 tỷ tham số, tập trung vào việc tạo hình ảnh chất lượng cao nhanh chóng."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "Mô hình hàng đầu mới nhất và mạnh mẽ nhất của chúng tôi, thể hiện xuất sắc trong xử lý ngôn ngữ tự nhiên, tính toán toán học và suy luận — một lựa chọn toàn diện hoàn hảo."
   },
+  "grok-4-0709": {
+    "description": "Grok 4 của xAI, có khả năng suy luận mạnh mẽ."
+  },
   "grok-code-fast-1": {
     "description": "Chúng tôi rất vui mừng giới thiệu grok-code-fast-1, một mô hình suy luận nhanh và tiết kiệm chi phí, thể hiện xuất sắc trong việc mã hóa đại lý."
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
-  },
-  "imagen4/preview": {
-    "description": "Mô hình tạo hình ảnh chất lượng cao do Google cung cấp."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3 là một mô hình toàn năng mạnh mẽ, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
   },
+  "o3-2025-04-16": {
+    "description": "o3 là mô hình suy luận mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản, xuất ra văn bản, phù hợp cho các tác vụ phức tạp cần kiến thức phổ quát rộng."
+  },
   "o3-deep-research": {
     "description": "o3-deep-research là mô hình nghiên cứu sâu tiên tiến nhất của chúng tôi, được thiết kế đặc biệt để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu sắc hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro là mô hình suy luận mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản, xuất ra văn bản, phù hợp cho các tác vụ phức tạp cần kiến thức phổ quát rộng."
+  },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini là mô hình suy luận của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản, xuất ra văn bản, phù hợp cho các tác vụ phức tạp cần kiến thức phổ quát rộng. Mô hình này có ngữ cảnh 200K."
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research là mô hình nghiên cứu sâu nhanh hơn và tiết kiệm hơn của chúng tôi — rất phù hợp để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image là một mô hình sinh hình ảnh đa dụng, hỗ trợ nhiều phong cách nghệ thuật và đặc biệt giỏi trong việc tái hiện văn bản phức tạp, nhất là văn bản tiếng Trung và tiếng Anh. Mô hình hỗ trợ bố cục nhiều dòng, sinh văn bản ở cấp đoạn và khắc họa các chi tiết tinh tế, cho phép thực hiện các thiết kế bố cục kết hợp hình ảnh và văn bản phức tạp."
-  },
-  "qwen-image-edit": {
-    "description": "Mô hình chỉnh sửa hình ảnh chuyên nghiệp do nhóm Qwen phát hành, hỗ trợ chỉnh sửa ngữ nghĩa và chỉnh sửa ngoại hình, có thể chỉnh sửa chính xác văn bản tiếng Trung và tiếng Anh, thực hiện chuyển đổi phong cách, xoay đối tượng và các chỉnh sửa hình ảnh chất lượng cao khác."
   },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
