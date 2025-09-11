@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix not remove message with server mode."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.1"
+  },
+  {
+    "children": {
       "features": ["Seedream 4.0."],
       "improvements": ["Add hotkey tooltip to typobar actions."]
     },
