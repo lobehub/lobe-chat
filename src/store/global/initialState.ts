@@ -73,6 +73,7 @@ export interface SystemStatus {
   latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
+  noWideScreen?: boolean;
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
@@ -87,7 +88,6 @@ export interface SystemStatus {
    * theme mode
    */
   themeMode?: ThemeMode;
-  wideScreen?: boolean;
   zenMode?: boolean;
 }
 
@@ -124,6 +124,7 @@ export const INITIAL_STATUS = {
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
   mobileShowTopic: false,
+  noWideScreen: true,
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
@@ -135,7 +136,6 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
-  wideScreen: true,
   zenMode: false,
 } satisfies SystemStatus;
 
