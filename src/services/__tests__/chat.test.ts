@@ -67,9 +67,14 @@ vi.mock('@/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
 }));
 
-vi.mock('@lobechat/model-runtime', () => ({
-  parseDataUri: vi.fn(),
-}));
+vi.mock('@lobechat/model-runtime', async (importOriginal) => {
+  const actual = await importOriginal();
+
+  return {
+    ...(actual as any),
+    parseDataUri: vi.fn(),
+  };
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
