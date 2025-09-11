@@ -17,8 +17,8 @@ import {
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
+  ModelRuntime,
 } from '@lobechat/model-runtime';
-import { ModelRuntime } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
@@ -67,7 +67,7 @@ vi.mock('@/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
 }));
 
-vi.mock('@/libs/model-runtime/utils/uriParser', () => ({
+vi.mock('@lobechat/model-runtime', () => ({
   parseDataUri: vi.fn(),
 }));
 
@@ -92,7 +92,7 @@ beforeEach(async () => {
   // Set default mock return values for image processing utilities
   const { isLocalUrl } = await import('@/utils/url');
   const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-  const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+  const { parseDataUri } = await import('@lobechat/model-runtime');
 
   vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
   vi.mocked(isLocalUrl).mockReturnValue(false);
@@ -404,7 +404,7 @@ describe('ChatService', () => {
       it('should convert local image URLs to base64 and call processImageList', async () => {
         const { isLocalUrl } = await import('@/utils/url');
         const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+        const { parseDataUri } = await import('@lobechat/model-runtime');
 
         // Mock for local URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -490,7 +490,7 @@ describe('ChatService', () => {
       it('should not convert remote URLs to base64 and call processImageList', async () => {
         const { isLocalUrl } = await import('@/utils/url');
         const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+        const { parseDataUri } = await import('@lobechat/model-runtime');
 
         // Mock for remote URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -570,7 +570,7 @@ describe('ChatService', () => {
       it('should handle mixed local and remote URLs correctly', async () => {
         const { isLocalUrl } = await import('@/utils/url');
         const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+        const { parseDataUri } = await import('@lobechat/model-runtime');
 
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });

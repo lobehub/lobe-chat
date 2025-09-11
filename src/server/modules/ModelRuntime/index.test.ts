@@ -14,14 +14,13 @@ import {
   LobeOpenRouterAI,
   LobePerplexityAI,
   LobeQwenAI,
-  LobeRuntimeAI,
+  LobeStepfunAI,
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
+  ModelRuntime,
 } from '@lobechat/model-runtime';
-import { ModelRuntime } from '@lobechat/model-runtime';
-import { LobeStepfunAI } from '@lobechat/model-runtime';
 import { ClientSecretPayload } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
