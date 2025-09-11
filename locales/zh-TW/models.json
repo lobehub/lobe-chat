@@ -698,6 +698,9 @@
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。與 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
   },
+  "claude-3-5-haiku-latest": {
+    "description": "Claude 3.5 Haiku 提供快速回應，適合輕量級任務。"
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
   },
@@ -706,6 +709,9 @@
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
+  },
+  "claude-3-7-sonnet-latest": {
+    "description": "Claude 3.7 Sonnet 是 Anthropic 最新用於處理高度複雜任務的最強大模型。它在效能、智慧、流暢度和理解力方面表現卓越。"
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku 是 Anthropic 的最快且最緊湊的模型，旨在實現近乎即時的響應。它具有快速且準確的定向性能。"
@@ -719,11 +725,17 @@
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 是 Anthropic 最新的用於處理高度複雜任務的最強大模型。它在性能、智慧、流暢性和理解力方面表現卓越。"
   },
+  "claude-opus-4-1-20250805-thinking": {
+    "description": "Claude Opus 4.1 思考模型，可以展示其推理過程的高級版本。"
+  },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
   },
   "claude-sonnet-4-20250514": {
-    "description": "Claude 4 Sonnet 可以產生近乎即時的回應或延長的逐步思考，使用者可以清晰地看到這些過程。API 使用者還可以對模型思考的時間進行細緻的控制"
+    "description": "Claude Sonnet 4 可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。"
+  },
+  "claude-sonnet-4-20250514-thinking": {
+    "description": "Claude Sonnet 4 思考模型可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。"
   },
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"
@@ -1061,8 +1073,14 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision 視覺深度思考模型，在教育、圖像審核、巡檢與安防和 AI 搜尋問答等場景下展現出更強的通用多模態理解和推理能力。支援 256k 上下文視窗，輸出長度支援最大 64k tokens。"
   },
+  "doubao-seededit-3-0-i2i-250628": {
+    "description": "Doubao 圖片生成模型由字節跳動 Seed 團隊研發，支援文字與圖片輸入，提供高可控、高品質的圖片生成體驗。支援透過文字指令編輯圖像，生成圖像的邊長在512～1536之間。"
+  },
   "doubao-seedream-3-0-t2i-250415": {
-    "description": "Doubao 圖片生成模型由字節跳動 Seed 團隊研發，支持文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文本提示詞生成圖片。"
+    "description": "Seedream 3.0 圖片生成模型由字節跳動 Seed 團隊研發，支援文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文字提示詞生成圖片。"
+  },
+  "doubao-seedream-4-0-250828": {
+    "description": "Seedream 4.0 圖片生成模型由字節跳動 Seed 團隊研發，支援文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文字提示詞生成圖片。"
   },
   "doubao-vision-lite-32k": {
     "description": "Doubao-vision 模型是豆包推出的多模態大模型，具備強大的圖片理解與推理能力，以及精準的指令理解能力。模型在影像文本資訊擷取、基於影像的推理任務上展現出強大的性能，能夠應用於更複雜、更廣泛的視覺問答任務。"
@@ -1145,6 +1163,33 @@
   "ernie-x1-turbo-32k": {
     "description": "與ERNIE-X1-32K相比，模型效果和性能更佳。"
   },
+  "fal-ai/bytedance/seedream/v4": {
+    "description": "Seedream 4.0 圖片生成模型由字節跳動 Seed 團隊研發，支援文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文字提示詞生成圖片。"
+  },
+  "fal-ai/flux-kontext/dev": {
+    "description": "專注於圖像編輯任務的 FLUX.1 模型，支援文字和圖像輸入。"
+  },
+  "fal-ai/flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] 能夠處理文字和參考圖像作為輸入，無縫實現目標性的局部編輯和複雜的整體場景變換。"
+  },
+  "fal-ai/flux/krea": {
+    "description": "Flux Krea [dev] 是一個有美學偏好的圖像生成模型，目標是生成更加真實、自然的圖像。"
+  },
+  "fal-ai/flux/schnell": {
+    "description": "FLUX.1 [schnell] 是一個具有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
+  },
+  "fal-ai/imagen4/preview": {
+    "description": "Google 提供的高品質圖像生成模型"
+  },
+  "fal-ai/nano-banana": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模態模型，它允許您透過對話生成和編輯圖像。"
+  },
+  "fal-ai/qwen-image": {
+    "description": "Qwen 團隊帶來的強大生圖模型，具有令人印象深刻的中文文字生成能力和多樣圖片視覺風格。"
+  },
+  "fal-ai/qwen-image-edit": {
+    "description": "Qwen 團隊發布的專業圖像編輯模型，支援語義編輯和外觀編輯，能夠精確編輯中英文文字，實現風格轉換、物件旋轉等高品質圖像編輯。"
+  },
   "flux-1-schnell": {
     "description": "由 Black Forest Labs 開發的 120 億參數文生圖模型，採用潛在對抗擴散蒸餾技術，能夠在 1 到 4 步內生成高品質圖像。該模型性能媲美閉源替代品，並在 Apache-2.0 許可證下發布，適用於個人、科研和商業用途。"
   },
@@ -1156,9 +1201,6 @@
   },
   "flux-kontext-pro": {
     "description": "最先進的上下文圖像生成與編輯——結合文字與圖像以獲得精準、連貫的結果。"
-  },
-  "flux-kontext/dev": {
-    "description": "專注於圖像編輯任務的FLUX.1模型，支援文字和圖像輸入。"
   },
   "flux-merged": {
     "description": "FLUX.1-merged 模型結合了 \"DEV\" 在開發階段探索的深度特性和 \"Schnell\" 所代表的高速執行優勢。透過這一舉措，FLUX.1-merged 不僅提升了模型的性能界限，還拓寬了其應用範圍。"
@@ -1172,20 +1214,11 @@
   "flux-pro-1.1-ultra": {
     "description": "超高解析度 AI 圖像生成——支援 4 兆像素輸出，10 秒內生成超清圖像。"
   },
-  "flux-pro/kontext": {
-    "description": "FLUX.1 Kontext [pro] 能夠處理文字和參考圖像作為輸入，無縫實現目標性的局部編輯和複雜的整體場景變換。"
-  },
   "flux-schnell": {
     "description": "FLUX.1 [schnell] 作為目前開源最先進的少步模型，不僅超越了同類競爭者，甚至還優於諸如 Midjourney v6.0 和 DALL·E 3 (HD) 等強大的非精煉模型。該模型經過專門微調，以保留預訓練階段的全部輸出多樣性，相較於當前市場上的最先進模型，FLUX.1 [schnell] 顯著提升了在視覺品質、指令遵從、尺寸/比例變化、字體處理及輸出多樣性等方面的可能，為用戶帶來更為豐富多樣的創意圖像生成體驗。"
   },
   "flux.1-schnell": {
     "description": "具有120億參數的修正流變換器，能夠根據文本描述生成圖像。"
-  },
-  "flux/krea": {
-    "description": "Flux Krea [dev] 是一個具有美學偏好的圖像生成模型，目標是生成更加真實、自然的圖像。"
-  },
-  "flux/schnell": {
-    "description": "FLUX.1 [schnell] 是一個擁有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
@@ -1610,6 +1643,9 @@
   "grok-4": {
     "description": "我們最新最強大的旗艦模型，在自然語言處理、數學計算和推理方面表現卓越 —— 是一款完美的全能型選手。"
   },
+  "grok-4-0709": {
+    "description": "xAI 的 Grok 4，具備強大的推理能力。"
+  },
   "grok-code-fast-1": {
     "description": "我們很高興推出 grok-code-fast-1，這是一款快速且經濟高效的推理模型，在代理編碼方面表現出色。"
   },
@@ -1741,9 +1777,6 @@
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 第四代文字轉圖像模型系列 超級版"
-  },
-  "imagen4/preview": {
-    "description": "Google 提供的高品質圖像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
@@ -2219,6 +2252,9 @@
   "o3": {
     "description": "o3 是一款全能強大的模型，在多個領域表現出色。它為數學、科學、程式設計和視覺推理任務樹立了新標杆。它也擅長技術寫作和指令遵循。用戶可利用它分析文本、程式碼和圖像，解決多步驟的複雜問題。"
   },
+  "o3-2025-04-16": {
+    "description": "o3 是 OpenAI 新的推理模型，支援圖文輸入並輸出文字，適用於需要廣泛通用知識的複雜任務。"
+  },
   "o3-deep-research": {
     "description": "o3-deep-research 是我們最先進的深度研究模型，專為處理複雜的多步驟研究任務而設計。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
   },
@@ -2228,8 +2264,14 @@
   "o3-pro": {
     "description": "o3-pro 模型使用更多的計算來更深入地思考並始終提供更好的答案，僅支援 Responses API 下使用。"
   },
+  "o3-pro-2025-06-10": {
+    "description": "o3 Pro 是 OpenAI 新的推理模型，支援圖文輸入並輸出文字，適用於需要廣泛通用知識的複雜任務。"
+  },
   "o4-mini": {
     "description": "o4-mini 是我們最新的小型 o 系列模型。它專為快速有效的推理而優化，在編碼和視覺任務中表現出極高的效率和性能。"
+  },
+  "o4-mini-2025-04-16": {
+    "description": "o4-mini 是 OpenAI 的推理模型，支援圖文輸入並輸出文字，適用於需要廣泛通用知識的複雜任務。該模型具有200K上下文。"
   },
   "o4-mini-deep-research": {
     "description": "o4-mini-deep-research 是我們更快速、更實惠的深度研究模型——非常適合處理複雜的多步驟研究任務。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
@@ -2335,9 +2377,6 @@
   },
   "qwen-image": {
     "description": "Qwen-Image 是一款通用圖像生成模型，支援多種藝術風格，尤其擅長複雜文字渲染，特別是中英文文字的呈現。模型支援多行版式、段落級文字生成以及細緻的細節刻畫，可實現複雜的圖文混合版面設計。"
-  },
-  "qwen-image-edit": {
-    "description": "Qwen 團隊發布的專業圖像編輯模型，支援語意編輯與外觀編輯，能夠精確編輯中文與英文字元，實現風格轉換、物件旋轉等高品質圖像編輯。"
   },
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"
