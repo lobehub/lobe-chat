@@ -295,6 +295,40 @@ describe('OpenAIStream', () => {
     ]);
   });
 
+  it('should emit usage when choices are missing but usage exists', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: '99',
+          usage: {
+            prompt_tokens: 1,
+            completion_tokens: 2,
+            total_tokens: 3,
+            prompt_cache_miss_tokens: 1,
+          },
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks: string[] = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: 99\n',
+      'event: usage\n',
+      `data: {"inputCacheMissTokens":1,"inputTextTokens":1,"outputTextTokens":2,"totalInputTokens":1,"totalOutputTokens":2,"totalTokens":3}\n\n`,
+    ]);
+  });
+
   it('should handle error when there is not correct error', async () => {
     const mockOpenAIStream = new ReadableStream({
       start(controller) {
@@ -332,7 +366,7 @@ describe('OpenAIStream', () => {
         `data: "Hello"\n`,
         'id: 1',
         'event: error',
-        `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading '0')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
+        `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Missing choices in OpenAI stream chunk","name":"Error"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
       ].map((i) => `${i}\n`),
     );
   });
