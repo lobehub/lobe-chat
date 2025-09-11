@@ -164,14 +164,17 @@ describe('LobeOpenAICompatibleFactory', () => {
           if (done) break;
           chunks.push(decoder.decode(value));
         }
-        // Assertions for initial expected chunks
-        expect(chunks[0]).toEqual('id: a\n');
-        expect(chunks[1]).toEqual('event: text\n');
-        expect(chunks[2]).toEqual('data: "hello"\n\n');
-        // Ensure stream_end and error chunks are present
-        expect(chunks.some((c) => c.startsWith('id: stream_end'))).toBe(true);
-        expect(chunks.some((c) => c.startsWith('event: error'))).toBe(true);
-        expect(chunks.some((c) => c.includes('Stream parsing error'))).toBe(true);
+        // Assert that all expected chunk patterns are present
+        expect(chunks).toEqual(
+          expect.arrayContaining([
+            'id: a\n',
+            'event: text\n',
+            'data: "hello"\n\n',
+            expect.stringMatching(/^id: stream_end/),
+            expect.stringMatching(/^event: error/),
+            expect.stringMatching(/Stream parsing error/),
+          ]),
+        );
       });
 
       // https://github.com/lobehub/lobe-chat/issues/2752

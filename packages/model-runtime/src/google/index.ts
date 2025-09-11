@@ -31,6 +31,9 @@ import { safeParseJSON } from '../utils/safeParseJSON';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { createGoogleImage } from './createImage';
+import debug from 'debug';
+
+const log = debug('model-runtime:google');
 
 const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
 
@@ -246,7 +249,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       // 移除之前的静默处理，统一抛出错误
       if (isAbortError(err)) {
-        console.log('Request was cancelled');
+        log('Request was cancelled');
         throw AgentRuntimeError.chat({
           error: { message: 'Request was cancelled' },
           errorType: AgentRuntimeErrorType.ProviderBizError,
@@ -254,7 +257,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         });
       }
 
-      console.log(err);
+      log('Error: %O', err);
       const { errorType, error } = parseGoogleErrorMessage(err.message);
 
       throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
@@ -281,7 +284,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             if (signal.aborted) {
               // 如果有数据已经输出，优雅地关闭流而不是抛出错误
               if (hasData) {
-                console.log('Stream cancelled gracefully, preserving existing output');
+                log('Stream cancelled gracefully, preserving existing output');
                 // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
                 controller.enqueue({
                   [LOBE_ERROR_KEY]: {
@@ -295,7 +298,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
                 return;
               } else {
                 // 如果还没有数据输出，直接关闭流，由下游 SSE 在 flush 阶段补发错误事件
-                console.log('Stream cancelled before any output');
+                log('Stream cancelled before any output');
                 controller.close();
                 return;
               }
@@ -311,7 +314,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           if (isAbortError(err) || signal.aborted) {
             // 如果有数据已经输出，优雅地关闭流
             if (hasData) {
-              console.log('Stream reading cancelled gracefully, preserving existing output');
+              log('Stream reading cancelled gracefully, preserving existing output');
               // 显式注入取消错误，避免走 SSE 兜底 unexpected_end
               controller.enqueue({
                 [LOBE_ERROR_KEY]: {
@@ -324,7 +327,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               controller.close();
               return;
             } else {
-              console.log('Stream reading cancelled before any output');
+              log('Stream reading cancelled before any output');
               // 注入一个带详细错误信息的错误标记，交由下游 google-ai transformer 输出 error 事件
               controller.enqueue({
                 [LOBE_ERROR_KEY]: {
@@ -344,7 +347,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             }
           } else {
             // 处理其他流解析错误
-            console.error('Stream parsing error:', err);
+            log('Stream parsing error: %O', err);
             // 尝试解析 Google 错误并提取 code/message/status
             const { error: parsedError, errorType } = parseGoogleErrorMessage(
               err?.message || String(err),
@@ -400,7 +403,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       return processModelList(processedModels, MODEL_LIST_CONFIGS.google);
     } catch (error) {
-      console.error('Failed to fetch Google models:', error);
+      log('Failed to fetch Google models: %O', error);
       throw error;
     }
   }
