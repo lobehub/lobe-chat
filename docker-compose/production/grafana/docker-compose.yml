@@ -94,6 +94,68 @@ services:
     env_file:
       - .env
 
+  grafana:
+    image: grafana/grafana:12.2.0-17419259409
+    container_name: lobe-grafana
+    network_mode: 'service:network-service'
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - tempo
+      - prometheus
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: lobe-tempo
+    network_mode: 'service:network-service'
+    restart: always
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+      - tempo_data:/var/tempo
+    command: ['-config.file=/etc/tempo.yaml']
+
+  prometheus:
+    image: prom/prometheus
+    container_name: lobe-prometheus
+    network_mode: 'service:network-service'
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-otlp-receiver'
+      - '--web.enable-remote-write-receiver'
+      - '--enable-feature=exemplar-storage'
+
+  otel-collector:
+    image: otel/opentelemetry-collector
+    container_name: lobe-otel-collector
+    network_mode: 'service:network-service'
+    restart: always
+    volumes:
+      - ./otel-collector/collector-config.yaml:/etc/otelcol/config.yaml
+    command: ['--config', '/etc/otelcol/config.yaml']
+    depends_on:
+      - tempo
+      - prometheus
+
+  otel-tracing-test:
+    profiles:
+      - otel-test
+    image: ghcr.io/grafana/xk6-client-tracing:v0.0.7
+    container_name: lobe-otel-tracing-test
+    network_mode: 'service:network-service'
+    restart: always
+    environment:
+      - ENDPOINT=127.0.0.1:4317
+
   lobe:
     image: lobehub/lobe-chat-database
     container_name: lobe-chat
@@ -121,6 +183,10 @@ services:
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
       - 'S3_SET_ACL=0'
       - 'SEARXNG_URL=http://searxng:8080'
+      - 'OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf'
+      - 'OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics'
+      - 'OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf'
+      - 'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces'
     env_file:
       - .env
     restart: always
@@ -164,78 +230,6 @@ services:
         fi
         wait \$LOBE_PID
       "
-
-  grafana:
-    profiles:
-      - otel
-    image: grafana/grafana:12.2.0-17419259409
-    container_name: lobe-grafana
-    network_mode: 'service:network-service'
-    restart: always
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
-    depends_on:
-      - tempo
-      - prometheus
-
-  tempo:
-    profiles:
-      - otel
-    image: grafana/tempo:latest
-    container_name: lobe-tempo
-    network_mode: 'service:network-service'
-    restart: always
-    volumes:
-      - ./tempo/tempo.yaml:/etc/tempo.yaml
-      - tempo_data:/var/tempo
-    command: ['-config.file=/etc/tempo.yaml']
-
-  prometheus:
-    profiles:
-      - otel
-    image: prom/prometheus
-    container_name: lobe-prometheus
-    network_mode: 'service:network-service'
-    restart: always
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.enable-otlp-receiver'
-      - '--web.enable-remote-write-receiver'
-      - '--enable-feature=exemplar-storage'
-
-  otel-collector:
-    profiles:
-      - otel
-    image: otel/opentelemetry-collector
-    container_name: lobe-otel-collector
-    network_mode: 'service:network-service'
-    restart: always
-    volumes:
-      - ./otel-collector/collector-config.yaml:/etc/otelcol/config.yaml
-    command: ['--config', '/etc/otelcol/config.yaml']
-    depends_on:
-      - tempo
-      - prometheus
-
-  otel-tracing-test:
-    profiles:
-      - otel-test
-    image: ghcr.io/grafana/xk6-client-tracing:v0.0.7
-    container_name: lobe-otel-tracing-test
-    network_mode: 'service:network-service'
-    restart: always
-    environment:
-      - ENDPOINT=127.0.0.1:4317
 
 volumes:
   data:
