@@ -70,7 +70,7 @@ const transformOpenAIStream = (
         return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
       }
 
-      throw new Error('Missing choices in OpenAI stream chunk');
+      return { data: chunk, id: chunk.id, type: 'data' };
     }
 
     const item = chunk.choices[0];

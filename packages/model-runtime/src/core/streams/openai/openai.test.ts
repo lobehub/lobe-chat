@@ -365,8 +365,8 @@ describe('OpenAIStream', () => {
         'event: text',
         `data: "Hello"\n`,
         'id: 1',
-        'event: error',
-        `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Missing choices in OpenAI stream chunk","name":"Error"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
+        'event: data',
+        `data: {"id":"1"}\n`,
       ].map((i) => `${i}\n`),
     );
   });
