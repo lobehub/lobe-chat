@@ -8,8 +8,7 @@ import {
   AgentRuntimeError,
   AgentRuntimeErrorType,
   ILobeAgentRuntimeErrorType,
-} from '@/libs/model-runtime';
-import { parseComfyUIErrorMessage } from '@/libs/model-runtime/utils/comfyuiErrorParser';
+} from '@lobechat/model-runtime';
 import {
   ConfigError,
   ServicesError,
@@ -18,6 +17,90 @@ import {
   isComfyUIInternalError,
 } from '@/server/services/comfyui/errors';
 import { ModelResolverError } from '@/server/services/comfyui/errors/modelResolverError';
+
+interface ComfyUIError {
+  code?: number | string;
+  details?: any;
+  message: string;
+  status?: number;
+  type?: string;
+}
+
+interface ParsedError {
+  error: ComfyUIError;
+  errorType: ILobeAgentRuntimeErrorType;
+}
+
+/**
+ * Simple ComfyUI error parser
+ * Extracts error information and determines error type
+ */
+function parseComfyUIErrorMessage(error: any): ParsedError {
+  // Default error info
+  let message = 'Unknown error';
+  let status: number | undefined;
+  let code: string | undefined;
+  let errorType: ILobeAgentRuntimeErrorType = AgentRuntimeErrorType.ComfyUIBizError;
+
+  // Extract message
+  if (typeof error === 'string') {
+    message = error;
+  } else if (error instanceof Error) {
+    message = error.message;
+    code = (error as any).code;
+  } else if (error && typeof error === 'object') {
+    message = error.message || error.error?.message || String(error);
+    status = error.status || error.statusCode || error.response?.status;
+    code = error.code || error.error?.code;
+  }
+
+  // Determine error type based on status code
+  if (status) {
+    switch (status) {
+      case 400:
+      case 401:
+      case 404:
+        errorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
+        break;
+      case 403:
+        errorType = AgentRuntimeErrorType.PermissionDenied;
+        break;
+      default:
+        if (status >= 500) {
+          errorType = AgentRuntimeErrorType.ComfyUIServiceUnavailable;
+        }
+    }
+  }
+
+  // Check for network errors
+  const lowerMessage = message.toLowerCase();
+  if (
+    message === 'fetch failed' ||
+    lowerMessage.includes('econnrefused') ||
+    lowerMessage.includes('network error')
+  ) {
+    errorType = AgentRuntimeErrorType.ComfyUIServiceUnavailable;
+  }
+
+  // Check for model errors
+  if (
+    lowerMessage.includes('model not found') ||
+    lowerMessage.includes('checkpoint not found') ||
+    lowerMessage.includes('safetensors')
+  ) {
+    errorType = AgentRuntimeErrorType.ModelNotFound;
+  }
+
+  return {
+    error: {
+      code,
+      message,
+      status,
+      type: error?.name || error?.type,
+    },
+    errorType,
+  };
+}
 
 /**
  * Error Handler Service

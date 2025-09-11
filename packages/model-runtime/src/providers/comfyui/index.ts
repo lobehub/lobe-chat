@@ -1,8 +1,8 @@
-import type { ComfyUIKeyVault } from '@lobechat/types';
+import type { ComfyUIKeyVault } from '@/types/index';
 import debug from 'debug';
 
-import { LobeRuntimeAI } from '../BaseAI';
-import { AuthenticatedImageRuntime, CreateImagePayload, CreateImageResponse } from '../types/image';
+import { LobeRuntimeAI } from '../../core/BaseAI';
+import { AuthenticatedImageRuntime, CreateImagePayload, CreateImageResponse } from '../../types/image';
 
 const log = debug('lobe-image:comfyui');
 

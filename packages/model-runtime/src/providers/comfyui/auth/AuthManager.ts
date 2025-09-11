@@ -1,4 +1,4 @@
-import type { ComfyUIKeyVault } from '@lobechat/types';
+import type { ComfyUIKeyVault } from '@/types/index';
 
 export interface BasicCredentials {
   password: string;

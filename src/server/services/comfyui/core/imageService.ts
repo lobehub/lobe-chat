@@ -7,7 +7,7 @@
 import { PromptBuilder } from '@saintno/comfyui-sdk';
 import debug from 'debug';
 
-import type { CreateImagePayload, CreateImageResponse } from '@/libs/model-runtime';
+import type { CreateImagePayload, CreateImageResponse } from '@lobechat/model-runtime';
 import { ComfyUIClientService } from '@/server/services/comfyui/core/comfyUIClientService';
 import { ErrorHandlerService } from '@/server/services/comfyui/core/errorHandlerService';
 import { ModelResolverService } from '@/server/services/comfyui/core/modelResolverService';
