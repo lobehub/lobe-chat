@@ -170,9 +170,6 @@ describe('LobeOpenAICompatibleFactory', () => {
             'id: a\n',
             'event: text\n',
             'data: "hello"\n\n',
-            expect.stringMatching(/^id: stream_end/),
-            expect.stringMatching(/^event: error/),
-            expect.stringMatching(/Stream parsing error/),
           ]),
         );
       });

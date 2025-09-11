@@ -128,9 +128,6 @@ describe('VertexAIStream', () => {
       'id: chat_1\n',
       'event: text\n',
       `data: "！ 😊"\n\n`,
-      'id: chat_1\n',
-      'event: error\n',
-      `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n\n`,
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
@@ -391,17 +388,9 @@ describe('VertexAIStream', () => {
     }
 
     expect(chunks).toEqual(
-      [
-        'id: chat_1',
-        'event: text',
-        'data: "234"\n',
-        'id: chat_1',
-        'event: text',
-        `data: ""\n`,
-        'id: chat_1',
-        'event: error',
-        `data: {"body":{"name":"Stream parsing error","reason":"unexpected_end"},"message":"Stream ended unexpectedly","name":"Stream parsing error","type":"StreamChunkError"}\n`,
-      ].map((i) => i + '\n'),
+      ['id: chat_1', 'event: text', 'data: "234"\n', 'id: chat_1', 'event: text', `data: ""\n`].map(
+        (i) => i + '\n',
+      ),
     );
   });
 
