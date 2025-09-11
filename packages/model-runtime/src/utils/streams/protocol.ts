@@ -166,13 +166,15 @@ export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
 export const createSSEProtocolTransformer = (
   transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
   streamStack?: StreamContext,
+  options?: { requireTerminalEvent?: boolean },
 ) => {
   let hasTerminalEvent = false;
+  const requireTerminalEvent = Boolean(options?.requireTerminalEvent);
 
   return new TransformStream({
     flush(controller) {
       // If the upstream closes without sending a terminal event, emit a final error event
-      if (!hasTerminalEvent) {
+      if (requireTerminalEvent && !hasTerminalEvent) {
         const id = streamStack?.id || 'stream_end';
         const data = {
           body: { name: 'Stream parsing error', reason: 'unexpected_end' },

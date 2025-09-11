@@ -255,31 +255,24 @@ describe('createSSEProtocolTransformer', () => {
     return results;
   };
 
-  it('should convert chunk into SSE formatted lines', async () => {
+  it('should convert chunk into SSE formatted lines without enforcing terminal (default)', async () => {
     const transformerFn = (chunk: any) => ({ type: 'text', id: chunk.id, data: chunk.data });
   const transformer = createSSEProtocolTransformer(transformerFn as any);
 
     const input = { id: '1', data: 'hello' };
     const results = await processChunk(transformer, input);
 
+    // Should only output the text event, no injected error on flush (default not enforced)
     expect(results).toEqual([
       `id: 1\n`,
       `event: text\n`,
       `data: ${JSON.stringify('hello')}\n\n`,
-      `id: stream_end\n`,
-      `event: error\n`,
-      `data: ${JSON.stringify({
-        body: { name: 'Stream parsing error', reason: 'unexpected_end' },
-        message: 'Stream ended unexpectedly',
-        name: 'Stream parsing error',
-        type: 'StreamChunkError',
-      })}\n\n`,
     ]);
   });
 
-  it('should not emit flush error if a terminal event was received', async () => {
+  it('should not emit flush error if a terminal event was received (enforced)', async () => {
     const transformerFn = (chunk: any) => ({ type: 'stop', id: chunk.id, data: chunk.data });
-  const transformer = createSSEProtocolTransformer(transformerFn as any, { id: 'stream_ok' });
+  const transformer = createSSEProtocolTransformer(transformerFn as any, { id: 'stream_ok' }, { requireTerminalEvent: true });
 
     const input = { id: 'ok', data: 'bye' };
     const results = await processChunk(transformer, input);
@@ -292,10 +285,10 @@ describe('createSSEProtocolTransformer', () => {
     ]);
   });
 
-  it('should emit an error event on flush when no terminal event received', async () => {
+  it('should emit an error event on flush when no terminal event received (enforced)', async () => {
     const transformerFn = (chunk: any) => ({ type: 'text', id: chunk.id, data: chunk.data });
     const streamStack = { id: 'stream_missing_term' } as any;
-  const transformer = createSSEProtocolTransformer(transformerFn as any, streamStack);
+  const transformer = createSSEProtocolTransformer(transformerFn as any, streamStack, { requireTerminalEvent: true });
 
     const input = { id: '1', data: 'partial' };
     const results = await processChunk(transformer, input);
