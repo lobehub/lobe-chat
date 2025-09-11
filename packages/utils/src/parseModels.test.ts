@@ -323,29 +323,29 @@ describe('parseModelString', () => {
     it('should correctly parse FAL image model ids with slash and custom display names', async () => {
       const result = await parseModelString(
         'fal',
-        '-all,+flux-kontext/dev=KontextDev,+flux-pro/kontext=KontextPro,+flux/schnell=Schnell,+imagen4/preview=Imagen4',
+        '-all,+fal-ai/flux-kontext/dev=KontextDev,+fal-ai/flux-pro/kontext=KontextPro,+fal-ai/flux/schnell=Schnell,+fal-ai/imagen4/preview=Imagen4',
       );
       expect(result.add).toEqual([
         {
-          id: 'flux-kontext/dev',
+          id: 'fal-ai/flux-kontext/dev',
           displayName: 'KontextDev',
           abilities: {},
           type: 'image',
         },
         {
-          id: 'flux-pro/kontext',
+          id: 'fal-ai/flux-pro/kontext',
           displayName: 'KontextPro',
           abilities: {},
           type: 'image',
         },
         {
-          id: 'flux/schnell',
+          id: 'fal-ai/flux/schnell',
           displayName: 'Schnell',
           abilities: {},
           type: 'image',
         },
         {
-          id: 'imagen4/preview',
+          id: 'fal-ai/imagen4/preview',
           displayName: 'Imagen4',
           abilities: {},
           type: 'image',
@@ -356,15 +356,18 @@ describe('parseModelString', () => {
     });
 
     it('should correctly parse FAL image model ids with slash (no displayName)', async () => {
-      const result = await parseModelString('fal', '-all,+flux-kontext/dev,+flux-pro/kontext');
+      const result = await parseModelString(
+        'fal',
+        '-all,+fal-ai/flux-kontext/dev,+fal-ai/flux-pro/kontext',
+      );
       expect(result.add).toEqual([
         {
-          id: 'flux-kontext/dev',
+          id: 'fal-ai/flux-kontext/dev',
           abilities: {},
           type: 'image',
         },
         {
-          id: 'flux-pro/kontext',
+          id: 'fal-ai/flux-pro/kontext',
           abilities: {},
           type: 'image',
         },

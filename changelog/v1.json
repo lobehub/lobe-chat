@@ -1,6 +1,40 @@
 [
   {
     "children": {
+      "features": ["Seedream 4.0."],
+      "improvements": ["Add hotkey tooltip to typobar actions."]
+    },
+    "date": "2025-09-10",
+    "version": "1.127.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add CometAPI model provider and chat models, update i18n."]
+    },
+    "date": "2025-09-10",
+    "version": "1.126.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix editor key handling."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Assistant List error message."]
+    },
+    "date": "2025-09-09",
+    "version": "1.126.1"
+  },
+  {
+    "children": {},
+    "date": "2025-09-08",
+    "version": "1.126.0"
+  },
+  {
+    "children": {
       "features": ["Add Math and TaskList to Editor."]
     },
     "date": "2025-09-08",

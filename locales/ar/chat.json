@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "اضغط <key/> للإرسال",
     "sendWithEnter": "اضغط <key/> للإرسال",
     "stop": "توقف",
-    "warp": "تغيير السطر"
+    "warp": "تغيير السطر",
+    "warpWithKey": "اضغط على مفتاح <key/> للانتقال إلى السطر"
   },
   "intentUnderstanding": {
     "title": "جارٍ فهم وتحليل نواياك..."

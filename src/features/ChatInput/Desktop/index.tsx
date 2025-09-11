@@ -19,6 +19,8 @@ import FilePreview from './FilePreview';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
+    margin-block-start: -5px;
+
     .show-on-hover {
       opacity: 0;
     }
@@ -87,6 +89,11 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
           fullscreen={expand}
           header={showTypoBar && <TypoBar />}
           slashMenuRef={slashMenuRef}
+          styles={{
+            body: {
+              minHeight: 64,
+            },
+          }}
         >
           {expand && fileNode}
           <InputEditor />
