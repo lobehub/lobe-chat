@@ -111,6 +111,8 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
   return false;
 };
 
+const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -119,6 +121,7 @@ export const aiProviderSelectors = {
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
+  isInitAiProviderRuntimeState,
   isProviderConfigUpdating,
   isProviderEnableResponseApi,
   isProviderEnabled,

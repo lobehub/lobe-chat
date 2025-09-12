@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "<key/> 키를 눌러 전송",
     "sendWithEnter": "<key/> 키를 눌러 전송",
     "stop": "중지",
-    "warp": "줄바꿈"
+    "warp": "줄바꿈",
+    "warpWithKey": "<key/> 키를 눌러 줄 바꿈"
   },
   "intentUnderstanding": {
     "title": "귀하의 의도를 이해하고 분석하는 중입니다..."

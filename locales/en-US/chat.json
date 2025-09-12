@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Press <key/> to send",
     "sendWithEnter": "Press <key/> to send",
     "stop": "Stop",
-    "warp": "New Line"
+    "warp": "New Line",
+    "warpWithKey": "Press <key/> to insert a line break"
   },
   "intentUnderstanding": {
     "title": "Understanding and analyzing your intent..."

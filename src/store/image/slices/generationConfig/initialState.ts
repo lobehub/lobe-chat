@@ -21,6 +21,11 @@ export interface GenerationConfigState {
 
   isAspectRatioLocked: boolean;
   activeAspectRatio: string | null; // string - 虚拟比例; null - 原生比例
+
+  /**
+   * 标记配置是否已初始化（包括从记忆中恢复）
+   */
+  isInit: boolean;
 }
 
 export const DEFAULT_IMAGE_GENERATION_PARAMETERS: RuntimeImageGenParams =
@@ -34,4 +39,5 @@ export const initialGenerationConfigState: GenerationConfigState = {
   parametersSchema: gptImage1ParamsSchema,
   isAspectRatioLocked: false,
   activeAspectRatio: null,
+  isInit: false,
 };

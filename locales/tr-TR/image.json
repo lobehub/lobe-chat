@@ -5,6 +5,9 @@
       "lock": "En boy oranını kilitle",
       "unlock": "En boy oranının kilidini aç"
     },
+    "cfg": {
+      "label": "Yönlendirme Gücü"
+    },
     "header": {
       "desc": "Basit açıklama, hemen yarat",
       "title": "Resim"

@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "برای ارسال، کلید <key/> را فشار دهید",
     "sendWithEnter": "برای ارسال، کلید <key/> را فشار دهید",
     "stop": "توقف",
-    "warp": "خط جدید"
+    "warp": "خط جدید",
+    "warpWithKey": "با فشار دادن کلید <key/> خط جدید ایجاد کنید"
   },
   "intentUnderstanding": {
     "title": "در حال درک و تحلیل نیت شما..."

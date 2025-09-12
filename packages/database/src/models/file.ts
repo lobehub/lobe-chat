@@ -1,7 +1,6 @@
 import { and, asc, count, desc, eq, ilike, inArray, like, notExists, or, sum } from 'drizzle-orm';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
-import { LobeChatDatabase, Transaction } from '../type';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
 import {
@@ -9,12 +8,14 @@ import {
   NewFile,
   NewGlobalFile,
   chunks,
+  documentChunks,
   embeddings,
   fileChunks,
   files,
   globalFiles,
   knowledgeBaseFiles,
 } from '../schemas';
+import { LobeChatDatabase, Transaction } from '../type';
 
 export class FileModel {
   private readonly userId: string;
@@ -326,30 +327,19 @@ export class FileModel {
   private deleteFileChunks = async (trx: PgTransaction<any>, fileIds: string[]) => {
     if (fileIds.length === 0) return;
 
-    // 直接使用 JOIN 优化查询，减少数据传输量
+    // 获取要删除的文件相关的所有 chunk IDs（移除知识库保护逻辑）
     const relatedChunks = await trx
       .select({ chunkId: fileChunks.chunkId })
       .from(fileChunks)
-      .where(
-        and(
-          inArray(fileChunks.fileId, fileIds),
-          // 确保只查询有效的 chunkId
-          notExists(
-            trx
-              .select()
-              .from(knowledgeBaseFiles)
-              .where(eq(knowledgeBaseFiles.fileId, fileChunks.fileId)),
-          ),
-        ),
-      );
+      .where(inArray(fileChunks.fileId, fileIds));
 
     const chunkIds = relatedChunks.map((c) => c.chunkId).filter(Boolean) as string[];
 
     if (chunkIds.length === 0) return;
 
     // 批量处理配置
-    const BATCH_SIZE = 1000; // 增加批处理量
-    const MAX_CONCURRENT_BATCHES = 3; // 最大并行批次数
+    const BATCH_SIZE = 1000;
+    const MAX_CONCURRENT_BATCHES = 3;
 
     // 分批并行处理
     for (let i = 0; i < chunkIds.length; i += BATCH_SIZE * MAX_CONCURRENT_BATCHES) {
@@ -363,12 +353,31 @@ export class FileModel {
         const batchChunkIds = chunkIds.slice(startIdx, startIdx + BATCH_SIZE);
         if (batchChunkIds.length === 0) continue;
 
-        // 为每个批次创建一个删除任务
+        // 按正确的删除顺序处理每个批次，失败不阻止流程
         const batchPromise = (async () => {
-          // 先删除嵌入向量
-          await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
-          // 再删除块
-          await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+          // 1. 删除 embeddings (最顶层，有外键依赖)
+          try {
+            await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete embeddings:', e);
+          }
+
+          // 2. 删除 documentChunks 关联 (如果存在)
+          try {
+            await trx.delete(documentChunks).where(inArray(documentChunks.chunkId, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete documentChunks:', e);
+          }
+
+          // 3. 删除 chunks (核心数据)
+          try {
+            await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+          } catch (e) {
+            // 静默处理，不阻止删除流程
+            console.warn('Failed to delete chunks:', e);
+          }
         })();
 
         batchPromises.push(batchPromise);
@@ -376,6 +385,14 @@ export class FileModel {
 
       // 等待当前批次的所有任务完成
       await Promise.all(batchPromises);
+    }
+
+    // 4. 最后删除 fileChunks 关联表记录
+    try {
+      await trx.delete(fileChunks).where(inArray(fileChunks.fileId, fileIds));
+    } catch (e) {
+      // 静默处理，不阻止删除流程
+      console.warn('Failed to delete fileChunks:', e);
     }
 
     return chunkIds;

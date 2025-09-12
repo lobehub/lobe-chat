@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Nhấn <key/> để gửi",
     "sendWithEnter": "Nhấn <key/> để gửi",
     "stop": "Dừng",
-    "warp": "Xuống dòng"
+    "warp": "Xuống dòng",
+    "warpWithKey": "Nhấn phím <key/> để xuống dòng"
   },
   "intentUnderstanding": {
     "title": "Đang hiểu và phân tích ý định của bạn..."

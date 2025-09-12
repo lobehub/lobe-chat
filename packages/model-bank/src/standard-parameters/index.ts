@@ -98,6 +98,9 @@ export const ModelParamsMetaSchema = z.object({
       default: z.array(z.string()),
       description: z.string().optional(),
       maxCount: z.number().optional(),
+      /**
+       * The maximum file size in bytes
+       */
       maxFileSize: z.number().optional(),
       type: z.literal('array').optional(),
     })

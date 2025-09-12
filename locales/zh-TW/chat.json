@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "按 <key/> 鍵發送",
     "sendWithEnter": "按 <key/> 鍵發送",
     "stop": "停止",
-    "warp": "換行"
+    "warp": "換行",
+    "warpWithKey": "按 <key/> 鍵換行"
   },
   "intentUnderstanding": {
     "title": "正在理解並分析您的意圖..."

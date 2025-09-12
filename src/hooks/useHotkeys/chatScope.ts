@@ -18,12 +18,12 @@ import { useHotkeyById } from './useHotkeyById';
 export const useSaveTopicHotkey = () => {
   const openNewTopicOrSaveTopic = useChatStore((s) => s.openNewTopicOrSaveTopic);
   const { mutate } = useActionSWR('openNewTopicOrSaveTopic', openNewTopicOrSaveTopic);
-  return useHotkeyById(HotkeyEnum.SaveTopic, () => mutate());
+  return useHotkeyById(HotkeyEnum.SaveTopic, () => mutate(), { enableOnContentEditable: true });
 };
 
 export const useToggleZenModeHotkey = () => {
   const toggleZenMode = useGlobalStore((s) => s.toggleZenMode);
-  return useHotkeyById(HotkeyEnum.ToggleZenMode, toggleZenMode);
+  return useHotkeyById(HotkeyEnum.ToggleZenMode, toggleZenMode, { enableOnContentEditable: true });
 };
 
 export const useOpenChatSettingsHotkey = () => {
@@ -41,6 +41,7 @@ export const useRegenerateMessageHotkey = () => {
     HotkeyEnum.RegenerateMessage,
     () => !disable && regenerateMessage(lastMessage.id),
     {
+      enableOnContentEditable: true,
       enabled: !disable,
     },
   );
@@ -60,6 +61,7 @@ export const useToggleLeftPanelHotkey = () => {
         showSessionPanel: !showSessionPanel,
       }),
     {
+      enableOnContentEditable: true,
       enabled: !isZenMode && !isPinned,
     },
   );
@@ -70,20 +72,29 @@ export const useToggleRightPanelHotkey = () => {
   const toggleConfig = useGlobalStore((s) => s.toggleChatSideBar);
 
   return useHotkeyById(HotkeyEnum.ToggleRightPanel, () => toggleConfig(), {
+    enableOnContentEditable: true,
     enabled: !isZenMode,
   });
 };
 
 export const useAddUserMessageHotkey = () => {
   const { send } = useSend();
-  return useHotkeyById(HotkeyEnum.AddUserMessage, () => {
-    send({ onlyAddUserMessage: true });
-  });
+  return useHotkeyById(
+    HotkeyEnum.AddUserMessage,
+    () => {
+      send({ onlyAddUserMessage: true });
+    },
+    {
+      enableOnContentEditable: true,
+    },
+  );
 };
 
 export const useClearCurrentMessagesHotkey = () => {
   const clearCurrentMessages = useClearCurrentMessages();
-  return useHotkeyById(HotkeyEnum.ClearCurrentMessages, () => clearCurrentMessages());
+  return useHotkeyById(HotkeyEnum.ClearCurrentMessages, () => clearCurrentMessages(), {
+    enableOnContentEditable: true,
+  });
 };
 
 // 注册聚合

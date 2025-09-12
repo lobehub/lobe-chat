@@ -19,7 +19,6 @@ import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
-import { generateAIChatV2 } from '../generateAIChatV2';
 
 vi.stubGlobal(
   'fetch',
@@ -113,6 +112,8 @@ const mockState = {
   activeId: 'session-id',
   activeTopicId: 'topic-id',
   messages: [],
+  messagesMap: {},
+  mainSendMessageOperations: {},
   refreshMessages: vi.fn(),
   refreshTopic: vi.fn(),
   internal_execAgentRuntime: vi.fn(),
@@ -483,6 +484,37 @@ describe('generateAIChatV2 actions', () => {
       expect(
         result.current.mainSendMessageOperations[operationKey]?.inputSendErrorMsg,
       ).toBeUndefined();
+    });
+  });
+
+  describe('Temporary message cleanup tests', () => {
+    it('should remove temporary message when creating new topic in default state', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const message = 'Test message for new topic';
+
+      vi.spyOn(aiChatService, 'sendMessageInServer').mockResolvedValueOnce({
+        isCreatNewTopic: true,
+        topicId: 'topic-id',
+        messages: [{}, {}] as any,
+        topics: [{}] as any,
+        assistantMessageId: 'abc',
+        userMessageId: 'user-',
+      });
+
+      await act(async () => {
+        // Set up default state (no activeTopicId, simulating inbox)
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined, // This is the default state
+          messagesMap: {},
+        });
+
+        await result.current.sendMessage({ message });
+      });
+
+      // Verify that deleteMessage was called for temporary message cleanup
+      // This should happen because the mock aiChatService returns isCreatNewTopic: true
+      expect(useChatStore.getState().messagesMap['session-id_null']).toEqual([]);
     });
   });
 

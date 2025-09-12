@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Druk op <key/> om te verzenden",
     "sendWithEnter": "Druk op <key/> om te verzenden",
     "stop": "Stoppen",
-    "warp": "Nieuwe regel"
+    "warp": "Nieuwe regel",
+    "warpWithKey": "Druk op <key/> om een nieuwe regel te beginnen"
   },
   "intentUnderstanding": {
     "title": "Bezig met het begrijpen en analyseren van uw intentie..."

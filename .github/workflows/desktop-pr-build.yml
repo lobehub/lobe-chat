@@ -28,22 +28,23 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
+          package-manager-cache: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
+          bun-version: ${{ secrets.BUN_VERSION }}
 
       - name: Install deps
-        run: pnpm install
+        run: bun i
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Lint
-        run: pnpm run lint
+        run: bun run lint
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
@@ -61,9 +62,10 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
+          package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
       - name: Set version
@@ -93,24 +95,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-2025, ubuntu-latest]
+        os: [macos-latest, macos-13, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10
+          package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
-      - name: Install deps
+      - name: Install dependencies
         run: pnpm install --node-linker=hoisted
 
       - name: Install deps on Desktop
@@ -172,6 +175,28 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
 
+      # 处理 macOS latest-mac.yml 重命名 (避免多架构覆盖)
+      - name: Rename macOS latest-mac.yml for multi-architecture support
+        if: runner.os == 'macOS'
+        run: |
+          cd apps/desktop/release
+          if [ -f "latest-mac.yml" ]; then
+            # 使用系统架构检测，与 electron-builder 输出保持一致
+            SYSTEM_ARCH=$(uname -m)
+            if [[ "$SYSTEM_ARCH" == "arm64" ]]; then
+              ARCH_SUFFIX="arm64"
+            else
+              ARCH_SUFFIX="x64"
+            fi
+            
+            mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
+            echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml (detected: $SYSTEM_ARCH)"
+            ls -la latest-mac-*.yml
+          else
+            echo "⚠️ latest-mac.yml not found, skipping rename"
+            ls -la latest*.yml || echo "No latest*.yml files found"
+          fi
+
       # 上传构建产物
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -189,8 +214,64 @@ jobs:
             apps/desktop/release/*.tar.gz*
           retention-days: 5
 
-  publish-pr:
+  # 合并 macOS 多架构 latest-mac.yml 文件
+  merge-mac-files:
     needs: [build, version]
+    name: Merge macOS Release Files for PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      # 下载所有平台的构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+
+      # 列出下载的构建产物
+      - name: List downloaded artifacts
+        run: ls -R release
+
+      # 仅为该步骤在脚本目录安装 yaml 单包，避免安装整个 monorepo 依赖
+      - name: Install yaml only for merge step
+        run: |
+          cd scripts/electronWorkflow
+          # 在脚本目录创建最小 package.json，防止 bun 向上寻找根 package.json
+          if [ ! -f package.json ]; then
+            echo '{"name":"merge-mac-release","private":true}' > package.json
+          fi
+          bun add --no-save yaml@2.8.1
+
+      # 合并 macOS YAML 文件 (使用 bun 运行 JavaScript)
+      - name: Merge latest-mac.yml files
+        run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
+
+      # 上传合并后的构建产物
+      - name: Upload artifacts with merged macOS files
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-release-pr
+          path: release/
+          retention-days: 1
+
+  publish-pr:
+    needs: [merge-mac-files, version]
     name: Publish PR Build
     runs-on: ubuntu-latest
     # Grant write permissions for creating release and commenting on PR
@@ -204,22 +285,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 下载所有平台的构建产物
-      - name: Download artifacts
+      # 下载合并后的构建产物
+      - name: Download merged artifacts
         uses: actions/download-artifact@v4
         with:
+          name: merged-release-pr
           path: release
-          pattern: release-*
-          merge-multiple: true
 
       # 列出所有构建产物
-      - name: List artifacts
+      - name: List final artifacts
         run: ls -R release
 
       # 生成PR发布描述
       - name: Generate PR Release Body
         id: pr_release_body
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           result-encoding: string
           script: |
@@ -258,7 +338,7 @@ jobs:
 
       # 在 PR 上添加评论，包含构建信息和下载链接
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

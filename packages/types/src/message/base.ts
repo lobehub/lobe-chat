@@ -1,6 +1,5 @@
-import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-
-import { ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
+import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
+import type { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ErrorType } from '../fetch';
 import { GroundingSearch } from '../search';

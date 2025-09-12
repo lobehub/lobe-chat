@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
   },
+  "cometapi": {
+    "description": "CometAPI là một nền tảng dịch vụ cung cấp nhiều giao diện mô hình lớn tiên tiến, hỗ trợ OpenAI, Anthropic, Google và nhiều hơn nữa, phù hợp với các nhu cầu phát triển và ứng dụng đa dạng. Người dùng có thể linh hoạt lựa chọn mô hình và giá cả tối ưu theo nhu cầu của mình, giúp nâng cao trải nghiệm AI."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },

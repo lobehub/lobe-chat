@@ -1,6 +1,9 @@
 import { ChatInputActions, type ChatInputActionsProps } from '@lobehub/editor/react';
 import { memo, useMemo } from 'react';
 
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
+
 import { ActionKeys, actionMap } from '../ActionBar/config';
 import { useChatInputStore } from '../store';
 
@@ -35,10 +38,25 @@ const mapActionsToItems = (keys: ActionKeys[]): ChatInputActionsProps['items'] =
   });
 
 const ActionToolbar = memo(() => {
+  const [expandInputActionbar, toggleExpandInputActionbar] = useGlobalStore((s) => [
+    systemStatusSelectors.expandInputActionbar(s),
+    s.toggleExpandInputActionbar,
+  ]);
+
   const leftActions = useChatInputStore((s) => s.leftActions);
   const mobile = useChatInputStore((s) => s.mobile);
   const items = useMemo(() => mapActionsToItems(leftActions), [leftActions]);
-  return <ChatInputActions collapseOffset={mobile ? 48 : 80} items={items} />;
+  return (
+    <ChatInputActions
+      collapseOffset={mobile ? 48 : 80}
+      defaultGroupCollapse={true}
+      groupCollapse={!expandInputActionbar}
+      items={items}
+      onGroupCollapseChange={(v) => {
+        toggleExpandInputActionbar(!v);
+      }}
+    />
+  );
 });
 
 export default ActionToolbar;

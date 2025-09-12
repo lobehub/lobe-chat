@@ -160,10 +160,9 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
-
       - name: Comment on PR with Docker build info
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -178,5 +177,3 @@ jobs:
               platforms: "linux/amd64, linux/arm64",
             });
             core.info(`Status: ${result.updated ? 'Updated' : 'Created'}, ID: ${result.id}`);
-
-

@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere vous apporte les modèles multilingues les plus avancés, des fonctionnalités de recherche sophistiquées et un espace de travail AI sur mesure pour les entreprises modernes - le tout intégré dans une plateforme sécurisée."
   },
+  "cometapi": {
+    "description": "CometAPI est une plateforme de services offrant diverses interfaces de modèles avancés, prenant en charge OpenAI, Anthropic, Google et bien d'autres, adaptée à des besoins de développement et d'application variés. Les utilisateurs peuvent choisir librement le modèle et le tarif optimaux selon leurs besoins, favorisant ainsi une meilleure expérience en IA."
+  },
   "deepseek": {
     "description": "DeepSeek est une entreprise spécialisée dans la recherche et l'application des technologies d'intelligence artificielle, dont le dernier modèle, DeepSeek-V2.5, combine des capacités de dialogue général et de traitement de code, réalisant des améliorations significatives dans l'alignement des préférences humaines, les tâches d'écriture et le suivi des instructions."
   },

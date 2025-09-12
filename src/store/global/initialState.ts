@@ -47,6 +47,7 @@ export enum ProfileTabs {
 }
 
 export interface SystemStatus {
+  expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
   filePanelWidth: number;
@@ -61,9 +62,18 @@ export interface SystemStatus {
   isEnablePglite?: boolean;
   isShowCredit?: boolean;
   language?: LocaleMode;
+  /**
+   * 记住用户最后选择的图像生成模型
+   */
+  lastSelectedImageModel?: string;
+  /**
+   * 记住用户最后选择的图像生成提供商
+   */
+  lastSelectedImageProvider?: string;
   latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
+  noWideScreen?: boolean;
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
@@ -78,7 +88,6 @@ export interface SystemStatus {
    * theme mode
    */
   themeMode?: ThemeMode;
-  wideScreen?: boolean;
   zenMode?: boolean;
 }
 
@@ -106,6 +115,7 @@ export interface GlobalState {
 }
 
 export const INITIAL_STATUS = {
+  expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   filePanelWidth: 320,
   hideGemini2_5FlashImagePreviewChineseWarning: false,
@@ -114,6 +124,7 @@ export const INITIAL_STATUS = {
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
   mobileShowTopic: false,
+  noWideScreen: true,
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
@@ -125,7 +136,6 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
-  wideScreen: true,
   zenMode: false,
 } satisfies SystemStatus;
 

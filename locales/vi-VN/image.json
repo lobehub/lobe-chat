@@ -5,6 +5,9 @@
       "lock": "Khóa tỷ lệ khung hình",
       "unlock": "Mở khóa tỷ lệ khung hình"
     },
+    "cfg": {
+      "label": "Cường độ hướng dẫn"
+    },
     "header": {
       "desc": "Mô tả ngắn gọn, sáng tạo ngay lập tức",
       "title": "Vẽ tranh"

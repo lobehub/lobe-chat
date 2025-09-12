@@ -77,7 +77,8 @@
     "sendWithCmdEnter": "Naciśnij <key/>, aby wysłać",
     "sendWithEnter": "Naciśnij <key/>, aby wysłać",
     "stop": "Zatrzymaj",
-    "warp": "Złamanie wiersza"
+    "warp": "Złamanie wiersza",
+    "warpWithKey": "Zawijaj wiersz klawiszem <key/>"
   },
   "intentUnderstanding": {
     "title": "Rozumiemy i analizujemy Twoje intencje..."
