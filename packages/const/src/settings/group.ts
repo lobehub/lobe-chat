@@ -1,0 +1,26 @@
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings/llm';
+import {
+  LobeChatGroupChatConfig,
+  LobeChatGroupFullConfig,
+  LobeChatGroupMetaConfig,
+} from '@/types/chatGroup';
+
+export const DEFAULT_CHAT_GROUP_CHAT_CONFIG: LobeChatGroupChatConfig = {
+  maxResponseInRow: 1,
+  orchestratorModel: DEFAULT_MODEL,
+  orchestratorProvider: DEFAULT_PROVIDER,
+  responseOrder: 'natural',
+  responseSpeed: 'fast',
+  revealDM: false,
+  systemPrompt: '',
+};
+
+export const DEFAULT_CHAT_GROUP_META_CONFIG: LobeChatGroupMetaConfig = {
+  description: '',
+  title: '',
+};
+
+export const DEFAULT_CHAT_GROUP_CONFIG: LobeChatGroupFullConfig = {
+  chat: DEFAULT_CHAT_GROUP_CHAT_CONFIG,
+  meta: DEFAULT_CHAT_GROUP_META_CONFIG,
+};

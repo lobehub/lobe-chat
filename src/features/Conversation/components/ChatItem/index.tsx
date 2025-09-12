@@ -6,7 +6,7 @@ import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'r
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { HtmlPreviewAction } from '@/components/HtmlPreview';
+import DMTag from '@/components/DMTag';
 import { isDesktop } from '@/const/version';
 import ChatItem from '@/features/ChatItem';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
@@ -14,6 +14,9 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
@@ -28,19 +31,27 @@ import {
 } from '../../Messages';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
+import SupervisorMessage from '../SupervisorMessage';
 import { InPortalThreadContext } from './InPortalThreadContext';
 import { normalizeThinkTags, processWithArtifact } from './utils';
 
-const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
-const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
+const assistantRehypePlugins = markdownElements
+  .filter((element) => ['all', 'assistant'].includes(element.scope))
+  .map((element) => element.rehypePlugin)
+  .filter(Boolean);
+const assistantRemarkPlugins = markdownElements
+  .filter((element) => ['all', 'assistant'].includes(element.scope))
+  .map((element) => element.remarkPlugin)
+  .filter(Boolean);
 
-const isHtmlCode = (content: string, language: string) => {
-  return (
-    language === 'html' ||
-    (language === '' && content.includes('<html>')) ||
-    (language === '' && content.includes('<!DOCTYPE html>'))
-  );
-};
+const userRehypePlugins = markdownElements
+  .filter((element) => ['all', 'user'].includes(element.scope))
+  .map((element) => element.rehypePlugin)
+  .filter(Boolean);
+const userRemarkPlugins = markdownElements
+  .filter((element) => ['all', 'user'].includes(element.scope))
+  .map((element) => element.remarkPlugin)
+  .filter(Boolean);
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -64,6 +75,7 @@ export interface ChatListItemProps {
   id: string;
   inPortalThread?: boolean;
   index: number;
+  showAvatar?: boolean;
 }
 
 const Item = memo<ChatListItemProps>(
@@ -76,6 +88,7 @@ const Item = memo<ChatListItemProps>(
     disableEditing,
     inPortalThread = false,
     index,
+    showAvatar = true,
   }) => {
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
@@ -99,6 +112,8 @@ const Item = memo<ChatListItemProps>(
       s.toggleMessageEditing,
       s.modifyMessageContent,
     ]);
+
+    const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
     // when the message is in RAG flow or the AI generating, it should be in loading state
     const isProcessing = isInRAGFlow || generating;
@@ -184,25 +199,11 @@ const Item = memo<ChatListItemProps>(
       () => ({
         animated,
         citations: item?.role === 'user' ? undefined : item?.search?.citations,
-        componentProps: {
-          highlight: {
-            actionsRender: ({ content, actionIconSize, language, originalNode }: any) => {
-              const showHtmlPreview = isHtmlCode(content, language);
-
-              return (
-                <>
-                  {showHtmlPreview && <HtmlPreviewAction content={content} size={actionIconSize} />}
-                  {originalNode}
-                </>
-              );
-            },
-          },
-        },
         components,
         customRender: markdownCustomRender,
         enableCustomFootnotes: item?.role === 'assistant',
-        rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
-        remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
+        rehypePlugins: item?.role === 'user' ? userRehypePlugins : assistantRehypePlugins,
+        remarkPlugins: item?.role === 'user' ? userRemarkPlugins : assistantRemarkPlugins,
         showFootnotes:
           item?.role === 'user'
             ? undefined
@@ -261,6 +262,27 @@ const Item = memo<ChatListItemProps>(
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
 
+    // DM tag logic - show for assistant messages with targetId when not in thread panel
+    const isDM =
+      !!item?.targetId && !inPortalThread && (item?.role === 'assistant' || item?.role === 'user');
+
+    const isToCurrentUser = item?.targetId === 'user';
+
+    const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+
+    const revealDMContent = groupConfig?.revealDM;
+
+    if (isDM && item?.role === 'user') return null;
+
+    if (item?.agentId === 'supervisor') {
+      return (
+        <InPortalThreadContext.Provider value={inPortalThread}>
+          <SupervisorMessage message={item} />
+          {endRender}
+        </InPortalThreadContext.Provider>
+      );
+    }
+
     return (
       item && (
         <InPortalThreadContext.Provider value={inPortalThread}>
@@ -273,12 +295,17 @@ const Item = memo<ChatListItemProps>(
               actions={actionBar}
               avatar={item.meta}
               belowMessage={belowMessage}
+              disabled={isDM && !isToCurrentUser && !revealDMContent}
               editing={editing}
               error={error}
               errorMessage={errorMessage}
               loading={isProcessing}
               markdownProps={markdownProps}
-              message={message}
+              message={
+                isDM && !isToCurrentUser && !revealDMContent
+                  ? `*${t('hideForYou', { ns: 'chat' })}*`
+                  : message
+              }
               messageExtra={messageExtra}
               onAvatarClick={onAvatarsClick}
               onChange={onChange}
@@ -287,8 +314,13 @@ const Item = memo<ChatListItemProps>(
               placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
               primary={item.role === 'user'}
               renderMessage={renderMessage}
+              showAvatar={showAvatar}
+              showTitle={isGroupSession && item.role !== 'user' && !inPortalThread}
               text={text}
               time={item.updatedAt || item.createdAt}
+              titleAddon={
+                isDM && <DMTag senderId={item.agentId} targetId={item.targetId ?? undefined} />
+              }
               variant={type === 'chat' ? 'bubble' : 'docs'}
             />
             {endRender}

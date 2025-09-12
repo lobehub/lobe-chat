@@ -5,7 +5,11 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/config/featureFlags';
+import {
+  DEFAULT_FEATURE_FLAGS,
+  IFeatureFlagsState,
+  mapFeatureFlagsEnvToState,
+} from '@/config/featureFlags';
 import { createDevtools } from '@/store/middleware/createDevtools';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { merge } from '@/utils/merge';
@@ -13,14 +17,14 @@ import { merge } from '@/utils/merge';
 import { ServerConfigAction, createServerConfigSlice } from './action';
 
 interface ServerConfigState {
-  featureFlags: IFeatureFlags;
+  featureFlags: IFeatureFlagsState;
   isMobile?: boolean;
   segmentVariants?: string;
   serverConfig: GlobalServerConfig;
 }
 
 const initialState: ServerConfigState = {
-  featureFlags: DEFAULT_FEATURE_FLAGS,
+  featureFlags: mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS),
   segmentVariants: '',
   serverConfig: { aiProvider: {}, telemetry: {} },
 };

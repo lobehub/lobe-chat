@@ -1,12 +1,13 @@
 'use client';
 
-import { Avatar } from '@lobehub/ui';
+import { Avatar, GroupAvatar } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DEFAULT_AVATAR } from '@/const/meta';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
@@ -14,6 +15,9 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
+import { GroupMemberWithAgent } from '@/types/session';
 
 import TogglePanelButton from '../../../../features/TogglePanelButton';
 import Tags from './Tags';
@@ -34,7 +38,7 @@ const useStyles = createStyles(({ css }) => ({
 
     font-size: 14px;
     font-weight: bold;
-    line-height: 1;
+    line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
@@ -46,13 +50,28 @@ const Main = memo<{ className?: string }>(({ className }) => {
   useInitAgentConfig();
   const [isPinned] = usePinnedAgentState();
 
-  const [init, isInbox, title, avatar, backgroundColor] = useSessionStore((s) => [
-    sessionSelectors.isSomeSessionActive(s),
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
-    sessionMetaSelectors.currentAgentAvatar(s),
-    sessionMetaSelectors.currentAgentBackgroundColor(s),
-  ]);
+  const [init, isInbox, title, avatar, backgroundColor, members, sessionType] = useSessionStore(
+    (s) => {
+      const session = sessionSelectors.currentSession(s);
+
+      return [
+        sessionSelectors.isSomeSessionActive(s),
+        sessionSelectors.isInboxSession(s),
+        sessionMetaSelectors.currentAgentTitle(s),
+        sessionMetaSelectors.currentAgentAvatar(s),
+        sessionMetaSelectors.currentAgentBackgroundColor(s),
+        session?.type === 'group' ? session.members : undefined,
+        session?.type,
+      ];
+    },
+  );
+
+  const currentUser = useUserStore((s) => ({
+    avatar: userProfileSelectors.userAvatar(s),
+    name: userProfileSelectors.displayUserName(s) || userProfileSelectors.nickName(s) || 'You',
+  }));
+
+  const isGroup = sessionType === 'group';
 
   const openChatSettings = useOpenChatSettings();
 
@@ -71,6 +90,32 @@ const Main = memo<{ className?: string }>(({ className }) => {
         />
       </Flexbox>
     );
+
+  if (isGroup) {
+    return (
+      <Flexbox align={'center'} className={className} gap={12} horizontal>
+        {!isPinned && !showSessionPanel && <TogglePanelButton />}
+        <GroupAvatar
+          avatars={[
+            {
+              avatar: currentUser.avatar,
+            },
+            ...(members?.map((member: GroupMemberWithAgent) => ({
+              avatar: member.avatar || DEFAULT_AVATAR,
+              background: member.backgroundColor || undefined,
+            })) || []),
+          ]}
+          onClick={() => openChatSettings()}
+          size={32}
+          title={title}
+        />
+        <Flexbox align={'center'} className={styles.container} gap={8} horizontal>
+          <div className={styles.title}>{displayTitle}</div>
+          <Tags />
+        </Flexbox>
+      </Flexbox>
+    );
+  }
 
   return (
     <Flexbox align={'center'} className={className} gap={12} horizontal>

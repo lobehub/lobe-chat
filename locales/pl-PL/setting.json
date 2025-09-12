@@ -35,9 +35,16 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "groupTab": {
+    "chat": "Czat grupowy",
+    "members": "Członkowie",
+    "meta": "Informacje o czacie grupowym"
+  },
   "header": {
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
+    "group": "Ustawienia czatu grupowego",
+    "groupDesc": "Zarządzaj bieżącym czatem grupowym",
     "session": "Ustawienia sesji",
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
@@ -294,6 +301,82 @@
     },
     "title": "Ustawienia ogólne"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Wprowadź opis czatu grupowego",
+      "title": "Opis czatu grupowego"
+    },
+    "name": {
+      "placeholder": "Wprowadź nazwę czatu grupowego",
+      "title": "Nazwa czatu grupowego"
+    },
+    "submit": "Aktualizuj czat grupowy",
+    "systemPrompt": {
+      "placeholder": "Wprowadź systemową wskazówkę prowadzącego",
+      "title": "Systemowa wskazówka prowadzącego"
+    },
+    "title": "Informacje o czacie grupowym"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Pozwól członkom na wysyłanie prywatnych wiadomości",
+      "title": "Zezwól na prywatne wiadomości"
+    },
+    "maxResponseInRow": {
+      "desc": "Wybierz, ile wiadomości członek może odpowiedzieć z rzędu. Ustaw na 0, aby wyłączyć to ograniczenie.",
+      "title": "Liczba kolejnych odpowiedzi"
+    },
+    "model": {
+      "desc": "Wybierz model używany do prowadzenia rozmowy w czacie grupowym. Wypowiedzi członków grupy nie są zmieniane.",
+      "title": "Model prowadzącego"
+    },
+    "orchestratorTitle": "Ustawienia prowadzącego",
+    "responseOrder": {
+      "desc": "Agent będzie odpowiadał zgodnie z kolejnością ustaloną w czacie grupowym",
+      "options": {
+        "natural": "Naturalna",
+        "sequential": "Sekwencyjna"
+      },
+      "placeholder": "Wybierz kolejność odpowiedzi",
+      "title": "Kolejność odpowiedzi"
+    },
+    "responseSpeed": {
+      "desc": "Kontroluj ogólne tempo czatu grupowego",
+      "options": {
+        "fast": "Szybkie",
+        "medium": "Średnie",
+        "slow": "Wolne"
+      },
+      "placeholder": "Wybierz prędkość odpowiedzi",
+      "title": "Prędkość odpowiedzi"
+    },
+    "revealDM": {
+      "desc": "Umożliw wyświetlanie prywatnych wiadomości wysłanych do innych członków.",
+      "title": "Pokaż treść prywatnych wiadomości"
+    },
+    "submit": "Aktualizuj ustawienia",
+    "systemPrompt": {
+      "desc": "Niestandardowa systemowa wskazówka dla prowadzącego rozmowę w czacie grupowym. Może wpłynąć na domyślne zachowanie prowadzącego.",
+      "placeholder": "Wprowadź niestandardową systemową wskazówkę prowadzącego...",
+      "title": "Systemowa wskazówka prowadzącego"
+    },
+    "title": "Ustawienia czatu"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Dołącz do grupy",
+    "availableAgents": "Dostępni asystenci",
+    "defaultAgent": "Niestandardowy asystent",
+    "edit": "Edytuj członka",
+    "empty": "Brak agentów w tym czacie grupowym. Kliknij przycisk +, aby dodać członków.",
+    "groupMembers": "Członkowie grupy",
+    "noAvailableAgents": "Brak dostępnych asystentów",
+    "noDescription": "Brak opisu",
+    "noMembersInGroup": "Brak członków w grupie",
+    "owner": "Ty (właściciel)",
+    "remove": "Usuń członka",
+    "removeFromGroup": "Usuń z grupy",
+    "you": "Ty"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
@@ -514,6 +597,11 @@
       "label": "Model nazewnictwa tematów do AI w malarstwie",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
       "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+    },
+    "groupChatSupervisor": {
+      "label": "Model nadzoru czatu grupowego",
+      "modelDesc": "Model przeznaczony do nadzorowania i zarządzania rozmowami w czatach grupowych",
+      "title": "Nadzór i zarządzanie czatem grupowym"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {

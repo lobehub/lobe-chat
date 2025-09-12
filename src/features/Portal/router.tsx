@@ -4,6 +4,7 @@ import { memo } from 'react';
 
 import { Artifacts } from './Artifacts';
 import { FilePreview } from './FilePreview';
+import { GroupThread } from './GroupThread';
 import { HomeBody, HomeTitle } from './Home';
 import { MessageDetail } from './MessageDetail';
 import { Plugins } from './Plugins';
@@ -11,7 +12,8 @@ import { Thread } from './Thread';
 import Header from './components/Header';
 import { PortalImpl } from './type';
 
-const items: PortalImpl[] = [Thread, MessageDetail, Artifacts, Plugins, FilePreview];
+// Keep GroupThread before Thread so group DM threads take precedence when enabled
+const items: PortalImpl[] = [GroupThread, Thread, MessageDetail, Artifacts, Plugins, FilePreview];
 
 export const PortalTitle = memo(() => {
   const enabledList: boolean[] = [];

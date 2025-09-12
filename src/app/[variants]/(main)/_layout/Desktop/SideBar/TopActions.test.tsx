@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import {
@@ -13,7 +14,13 @@ import { useSessionStore } from '@/store/session';
 import TopActions, { TopActionProps } from './TopActions';
 
 beforeAll(() => {
-  initServerConfigStore({ featureFlags: { market: true, ai_image: true } });
+  initServerConfigStore({
+    featureFlags: {
+      ...mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS),
+      showMarket: true,
+      showAiImage: true,
+    },
+  });
 });
 
 beforeEach(() => {
@@ -21,7 +28,13 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  createServerConfigStore().setState({ featureFlags: { market: true, ai_image: true } });
+  createServerConfigStore().setState({
+    featureFlags: {
+      ...createServerConfigStore().getState().featureFlags,
+      showMarket: true,
+      showAiImage: true,
+    },
+  });
   cleanup();
 });
 
@@ -66,7 +79,12 @@ describe('TopActions', () => {
 
   it('should render only Chat icon when `-market` is set', () => {
     act(() => {
-      createServerConfigStore().setState({ featureFlags: { market: false } });
+      createServerConfigStore().setState({
+        featureFlags: {
+          ...createServerConfigStore().getState().featureFlags,
+          showMarket: false,
+        },
+      });
     });
 
     renderTopActions();
@@ -77,7 +95,12 @@ describe('TopActions', () => {
 
   it('should render File icon when `-knowledge_base` is set', () => {
     act(() => {
-      createServerConfigStore().setState({ featureFlags: { knowledge_base: false } });
+      createServerConfigStore().setState({
+        featureFlags: {
+          ...createServerConfigStore().getState().featureFlags,
+          enableKnowledgeBase: false,
+        },
+      });
     });
 
     renderTopActions();
@@ -88,7 +111,12 @@ describe('TopActions', () => {
 
   it('should not render AI Image icon when ai_image is disabled', () => {
     act(() => {
-      createServerConfigStore().setState({ featureFlags: { ai_image: false } });
+      createServerConfigStore().setState({
+        featureFlags: {
+          ...createServerConfigStore().getState().featureFlags,
+          showAiImage: false,
+        },
+      });
     });
 
     renderTopActions();

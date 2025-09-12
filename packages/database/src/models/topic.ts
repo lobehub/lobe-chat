@@ -1,4 +1,4 @@
-import { and, count, desc, eq, gt, ilike, inArray, isNull, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
 
 import { MessageItem } from '@/types/message';
 import { TopicRankItem } from '@/types/topic';
@@ -10,12 +10,14 @@ import { idGenerator } from '../utils/idGenerator';
 
 export interface CreateTopicParams {
   favorite?: boolean;
+  groupId?: string | null;
   messages?: string[];
   sessionId?: string | null;
   title?: string;
 }
 
 interface QueryTopicParams {
+  containerId?: string | null; // sessionId or groupId
   current?: number;
   pageSize?: number;
   sessionId?: string | null;
@@ -31,7 +33,7 @@ export class TopicModel {
   }
   // **************** Query *************** //
 
-  query = async ({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) => {
+  query = async ({ current = 0, pageSize = 9999, containerId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
     return (
       this.db
@@ -45,7 +47,7 @@ export class TopicModel {
           updatedAt: topics.updatedAt,
         })
         .from(topics)
-        .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
+        .where(and(eq(topics.userId, this.userId), this.matchContainer(containerId)))
         // In boolean sorting, false is considered "smaller" than true.
         // So here we use desc to ensure that topics with favorite as true are in front.
         .orderBy(desc(topics.favorite), desc(topics.updatedAt))
@@ -68,7 +70,7 @@ export class TopicModel {
       .where(eq(topics.userId, this.userId));
   };
 
-  queryByKeyword = async (keyword: string, sessionId?: string | null): Promise<TopicItem[]> => {
+  queryByKeyword = async (keyword: string, containerId?: string | null): Promise<TopicItem[]> => {
     if (!keyword) return [];
 
     const keywordLowerCase = keyword.toLowerCase();
@@ -78,7 +80,7 @@ export class TopicModel {
       orderBy: [desc(topics.updatedAt)],
       where: and(
         eq(topics.userId, this.userId),
-        this.matchSession(sessionId),
+        this.matchContainer(containerId),
         ilike(topics.title, `%${keywordLowerCase}%`),
       ),
     });
@@ -93,7 +95,7 @@ export class TopicModel {
           eq(messages.userId, this.userId),
           ilike(messages.content, `%${keywordLowerCase}%`),
           eq(topics.userId, this.userId),
-          this.matchSession(sessionId),
+          this.matchContainer(containerId),
         ),
       )
       .groupBy(messages.topicId);
@@ -176,17 +178,18 @@ export class TopicModel {
     id: string = this.genId(),
   ): Promise<TopicItem> => {
     return this.db.transaction(async (tx) => {
-      // 在 topics 表中插入新的 topic
-      const [topic] = await tx
-        .insert(topics)
-        .values({
-          ...params,
-          id: id,
-          userId: this.userId,
-        })
-        .returning();
+      const insertData = {
+        ...params,
+        groupId: params.groupId || null,
+        id,
+        sessionId: params.sessionId || null,
+        userId: this.userId,
+      };
 
-      // 如果有关联的 messages, 更新它们的 topicId
+      // Insert new topic
+      const [topic] = await tx.insert(topics).values(insertData).returning();
+
+      // Update associated messages' topicId
       if (messageIds && messageIds.length > 0) {
         await tx
           .update(messages)
@@ -207,8 +210,9 @@ export class TopicModel {
         .values(
           topicParams.map((params) => ({
             favorite: params.favorite,
+            groupId: params.sessionId ? null : params.groupId,
             id: params.id || this.genId(),
-            sessionId: params.sessionId,
+            sessionId: params.groupId ? null : params.sessionId,
             title: params.title,
             userId: this.userId,
           })),
@@ -303,6 +307,15 @@ export class TopicModel {
   };
 
   /**
+   * Deletes multiple topics based on the groupId.
+   */
+  batchDeleteByGroupId = async (groupId?: string | null) => {
+    return this.db
+      .delete(topics)
+      .where(and(this.matchGroup(groupId), eq(topics.userId, this.userId)));
+  };
+
+  /**
    * Deletes multiple topics and all messages associated with them in a transaction.
    */
   batchDelete = async (ids: string[]) => {
@@ -331,4 +344,13 @@ export class TopicModel {
 
   private matchSession = (sessionId?: string | null) =>
     sessionId ? eq(topics.sessionId, sessionId) : isNull(topics.sessionId);
+
+  private matchGroup = (groupId?: string | null) =>
+    groupId ? eq(topics.groupId, groupId) : isNull(topics.groupId);
+
+  private matchContainer = (containerId?: string | null) => {
+    if (containerId) return or(eq(topics.sessionId, containerId), eq(topics.groupId, containerId));
+    // If neither is provided, match topics with no session or group
+    return and(isNull(topics.sessionId), isNull(topics.groupId));
+  };
 }

@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { isServerMode } from '@/const/version';
 import { configService } from '@/services/config';
+import { useChatGroupStore } from '@/store/chatGroup';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -34,26 +35,29 @@ interface ActionProps {
   group: string | undefined;
   id: string;
   openCreateGroupModal: () => void;
+  parentType: 'agent' | 'group';
   setOpen: (open: boolean) => void;
 }
 
-const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen }) => {
+const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType, setOpen }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
 
   const sessionCustomGroups = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
-  const [pin, removeSession, pinSession, duplicateSession, updateSessionGroup] = useSessionStore(
-    (s) => {
+  const [pin, removeSession, pinSession, sessionType, duplicateSession, updateSessionGroup] =
+    useSessionStore((s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       return [
         sessionHelpers.getSessionPinned(session),
         s.removeSession,
         s.pinSession,
+        session.type,
         s.duplicateSession,
         s.updateSessionGroupId,
       ];
-    },
-  );
+    });
+
+  const [deleteGroup, pinGroup] = useChatGroupStore((s) => [s.deleteGroup, s.pinGroup]);
 
   const { modal, message } = App.useApp();
 
@@ -69,7 +73,11 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
             key: 'pin',
             label: t(pin ? 'pinOff' : 'pin'),
             onClick: () => {
-              pinSession(id, !pin);
+              if (parentType === 'group') {
+                pinGroup(id, !pin);
+              } else {
+                pinSession(id, !pin);
+              }
             },
           },
           {
@@ -157,11 +165,19 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
                 centered: true,
                 okButtonProps: { danger: true },
                 onOk: async () => {
-                  await removeSession(id);
-                  message.success(t('confirmRemoveSessionSuccess'));
+                  if (parentType === 'group') {
+                    await deleteGroup(id);
+                    message.success(t('confirmRemoveGroupSuccess'));
+                  } else {
+                    await removeSession(id);
+                    message.success(t('confirmRemoveSessionSuccess'));
+                  }
                 },
                 rootClassName: styles.modalRoot,
-                title: t('confirmRemoveSessionItemAlert'),
+                title:
+                  sessionType === 'group'
+                    ? t('confirmRemoveChatGroupItemAlert')
+                    : t('confirmRemoveSessionItemAlert'),
               });
             },
           },

@@ -77,7 +77,7 @@ describe('TopicService', () => {
     // Example for getTopics
     it('should query topics with given parameters', async () => {
       // Setup
-      const queryParams = { sessionId: 'session-id' };
+      const queryParams = { containerId: 'session-id' };
       (TopicModel.query as Mock).mockResolvedValue(mockTopics);
 
       // Execute

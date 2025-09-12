@@ -1,4 +1,5 @@
 export interface ChatGroupConfig {
+  allowDM?: boolean;
   maxResponseInRow?: number;
   orchestratorModel?: string;
   orchestratorProvider?: string;

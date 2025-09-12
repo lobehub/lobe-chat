@@ -1,4 +1,4 @@
-import type { IEditor } from '@lobehub/editor';
+import { IEditor, SlashOptions } from '@lobehub/editor';
 import type { ChatInputProps } from '@lobehub/editor/react';
 import type { MenuProps } from '@lobehub/ui/es/Menu';
 
@@ -27,6 +27,7 @@ export interface PublicState {
   allowExpand?: boolean;
   expand?: boolean;
   leftActions: ActionKeys[];
+  mentionItems?: SlashOptions['items'];
   mobile?: boolean;
   onMarkdownContentChange?: (content: string) => void;
   onSend?: SendButtonHandler;

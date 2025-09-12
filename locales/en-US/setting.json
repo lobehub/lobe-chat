@@ -35,9 +35,16 @@
       "title": "Reset All Settings"
     }
   },
+  "groupTab": {
+    "chat": "Group Chat",
+    "members": "Members",
+    "meta": "Group Info"
+  },
   "header": {
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
+    "group": "Group Chat Settings",
+    "groupDesc": "Manage the current group chat",
     "session": "Session Settings",
     "sessionDesc": "Role settings and session preferences.",
     "sessionWithName": "Session Settings · {{name}}",
@@ -294,6 +301,82 @@
     },
     "title": "General Settings"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Please enter the group chat description",
+      "title": "Group Chat Description"
+    },
+    "name": {
+      "placeholder": "Please enter the group chat name",
+      "title": "Group Chat Name"
+    },
+    "submit": "Update Group Chat",
+    "systemPrompt": {
+      "placeholder": "Please enter the host system prompt",
+      "title": "Host System Prompt"
+    },
+    "title": "Group Chat Information"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Allow members to send direct messages to each other",
+      "title": "Allow Direct Messages"
+    },
+    "maxResponseInRow": {
+      "desc": "Select how many consecutive messages a member can reply with. Set to 0 to disable this limit.",
+      "title": "Consecutive Reply Count"
+    },
+    "model": {
+      "desc": "Select the model used to host the group chat conversation. Group members' messages are unaffected.",
+      "title": "Host Model"
+    },
+    "orchestratorTitle": "Host Settings",
+    "responseOrder": {
+      "desc": "The agent will reply in the order set within the group chat",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequential"
+      },
+      "placeholder": "Select reply order",
+      "title": "Reply Order"
+    },
+    "responseSpeed": {
+      "desc": "Controls the overall pace of the group chat",
+      "options": {
+        "fast": "Fast",
+        "medium": "Medium",
+        "slow": "Slow"
+      },
+      "placeholder": "Select reply speed",
+      "title": "Reply Speed"
+    },
+    "revealDM": {
+      "desc": "Make private messages sent to other members visible to you.",
+      "title": "Show Private Messages"
+    },
+    "submit": "Update Settings",
+    "systemPrompt": {
+      "desc": "Custom system prompt for the group chat host. This may affect the default host behavior.",
+      "placeholder": "Please enter a custom host system prompt...",
+      "title": "Host System Prompt"
+    },
+    "title": "Chat Settings"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Add to Group",
+    "availableAgents": "Available Assistants",
+    "defaultAgent": "Custom Assistant",
+    "edit": "Edit Member",
+    "empty": "No agents in this group chat yet. Click the + button to add members.",
+    "groupMembers": "Group Members",
+    "noAvailableAgents": "No available assistants",
+    "noDescription": "No description",
+    "noMembersInGroup": "No members in the group",
+    "owner": "You (Owner)",
+    "remove": "Remove Member",
+    "removeFromGroup": "Remove from Group",
+    "you": "You"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
@@ -514,6 +597,11 @@
       "label": "AI Art Topic Naming Model",
       "modelDesc": "Model designated for automatic naming of AI art topics",
       "title": "AI Art Automatic Topic Naming"
+    },
+    "groupChatSupervisor": {
+      "label": "Group Chat Supervision Model",
+      "modelDesc": "Model for supervising and managing group chat conversations.",
+      "title": "Group Chat Supervision"
     },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {

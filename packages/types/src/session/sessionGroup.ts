@@ -1,5 +1,7 @@
 import { LobeSessions } from './agentSession';
 
+export type SessionGroupId = string;
+
 export enum SessionDefaultGroup {
   Default = 'default',
   Pinned = 'pinned',
