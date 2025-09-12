@@ -3,6 +3,7 @@ title: LobeChat Model Service Providers - Environment Variables and Configuratio
 description: >-
   Learn about the environment variables and configuration settings for various model service providers like OpenAI, Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
 
+
 tags:
   - Model Service Providers
   - Environment Variables
@@ -692,5 +693,28 @@ The above example disables all models first, then enables `flux-pro-1.1` and `fl
 - Example: `https://your-newapi-server.com/`
 
 NewAPI is a multi-provider model aggregation service that supports automatic model routing based on provider detection. It offers cost management features and provides a single endpoint for accessing models from multiple providers including OpenAI, Anthropic, Google, and more. Learn more about NewAPI at [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api).
+
+## Vercel AI Gateway
+
+### `ENABLED_VERCELAIGATEWAY`
+
+- Type: Optional
+- Description: Enables Vercel AI Gateway as a model provider by default. Set to `0` to disable the Vercel AI Gateway service.
+- Default: `1`
+- Example: `0`
+
+### `VERCELAIGATEWAY_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Vercel AI Gateway service.
+- Default: -
+- Example: `vck_xxxxxx...xxxxxx`
+
+### `VERCELAIGATEWAY_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the Vercel AI Gateway model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+vercel-model-1,+vercel-model-2=vercel-special`
 
 [model-list]: /docs/self-hosting/advanced/model-list

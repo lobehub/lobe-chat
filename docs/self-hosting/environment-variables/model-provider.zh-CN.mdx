@@ -691,7 +691,33 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 示例：`https://your-newapi-server.com`
 
 <Callout type={'info'}>
-  NewAPI 是一个多供应商模型聚合服务，支持基于供应商检测的自动模型路由。它提供成本管理功能，并为访问包括 OpenAI、Anthropic、Google 等多个供应商的模型提供单一端点。了解更多关于 NewAPI 的信息请访问 [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api)。
+  NewAPI
+  是一个多供应商模型聚合服务，支持基于供应商检测的自动模型路由。它提供成本管理功能，并为访问包括
+  OpenAI、Anthropic、Google 等多个供应商的模型提供单一端点。了解更多关于 NewAPI 的信息请访问
+  [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api)。
 </Callout>
+
+## Vercel AI Gateway
+
+### `ENABLED_VERCELAIGATEWAY`
+
+- 类型：可选
+- 描述：默认启用 Vercel AI Gateway 作为模型供应商，当设为 0 时关闭 Vercel AI Gateway 服务
+- 默认值：`1`
+- 示例：`0`
+
+### `VERCELAIGATEWAY_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Vercel AI Gateway 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`vck_xxxxxx...xxxxxx`
+
+### `VERCELAIGATEWAY_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制 Vercel AI Gateway 模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则与其他 provider 保持一致。
+- 默认值：`-`
+- 示例：`-all,+vercel-model-1,+vercel-model-2=vercel-special`
 
 [model-list]: /zh/docs/self-hosting/advanced/model-list
