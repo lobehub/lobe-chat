@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
@@ -129,6 +129,276 @@ describe('ChatService', () => {
         }),
         undefined,
       );
+    });
+
+    describe('message preprocessing', () => {
+      beforeEach(() => {
+        // Reset all mocks before each test
+        vi.clearAllMocks();
+      });
+
+      it('should slice messages based on history count configuration', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        // Create 5 messages
+        const messages = [
+          { id: '1', content: 'Message 1', role: 'user' },
+          { id: '2', content: 'Message 2', role: 'assistant' },
+          { id: '3', content: 'Message 3', role: 'user' },
+          { id: '4', content: 'Message 4', role: 'assistant' },
+          { id: '5', content: 'Message 5', role: 'user' },
+        ] as ChatMessage[];
+
+        // Mock agent config to enable history count with limit of 3
+        vi.spyOn(agentChatConfigSelectors, 'enableHistoryCount').mockReturnValue(true);
+        vi.spyOn(agentChatConfigSelectors, 'historyCount').mockReturnValue(2); // Should keep last 3 messages (2 + 1 for new user message)
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should only pass the last 3 messages to contextEngineering
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({ content: 'Message 3' }),
+              expect.objectContaining({ content: 'Message 4' }),
+              expect.objectContaining({ content: 'Message 5' }),
+            ]),
+          }),
+          undefined,
+        );
+
+        // Should not contain earlier messages
+        const callArgs = getChatCompletionSpy.mock.calls[0][0];
+        expect(callArgs.messages).not.toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ content: 'Message 1' }),
+            expect.objectContaining({ content: 'Message 2' }),
+          ]),
+        );
+      });
+
+      it('should apply input template to user messages when configured', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [
+          { id: '1', content: 'Original user message', role: 'user' },
+          { id: '2', content: 'Assistant response', role: 'assistant' },
+        ] as ChatMessage[];
+
+        // Mock chat config with input template
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+          inputTemplate: 'Template: {{text}} - End',
+          enableHistoryCount: false,
+          searchMode: 'off',
+        } as any);
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should apply template to user message but not assistant message
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({
+                content: 'Template: Original user message - End',
+                role: 'user',
+              }),
+              expect.objectContaining({
+                content: 'Assistant response',
+                role: 'assistant',
+              }),
+            ]),
+          }),
+          undefined,
+        );
+      });
+
+      it('should handle input template with no placeholders correctly', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ id: '1', content: 'User message', role: 'user' }] as ChatMessage[];
+
+        // Mock chat config with template that has no {{text}} placeholder
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+          inputTemplate: 'Static template without placeholder',
+          enableHistoryCount: false,
+          searchMode: 'off',
+        } as any);
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should apply template even without placeholder
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({
+                content: 'Static template without placeholder',
+                role: 'user',
+              }),
+            ]),
+          }),
+          undefined,
+        );
+      });
+
+      it('should add system role message when configured', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ id: '1', content: 'User message', role: 'user' }] as ChatMessage[];
+
+        // Mock agent config with system role
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+          enableHistoryCount: false,
+          searchMode: 'off',
+        } as any);
+
+        // Mock agent selectors to return system role
+        vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({
+          systemRole: 'You are a helpful assistant.',
+          params: {},
+          plugins: [],
+        });
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should add system role at the beginning
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({
+                content: 'You are a helpful assistant.',
+                role: 'system',
+              }),
+              expect.objectContaining({
+                content: 'User message',
+                role: 'user',
+              }),
+            ]),
+          }),
+          undefined,
+        );
+
+        // System message should be first
+        const callArgs = getChatCompletionSpy.mock.calls[0][0];
+        expect(callArgs.messages[0]).toEqual(
+          expect.objectContaining({
+            content: 'You are a helpful assistant.',
+            role: 'system',
+          }),
+        );
+      });
+
+      it('should combine all preprocessing steps correctly', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [
+          { id: '1', content: 'Old message 1', role: 'user' },
+          { id: '2', content: 'Old message 2', role: 'assistant' },
+          { id: '3', content: 'Recent user input', role: 'user' },
+        ] as ChatMessage[];
+
+        // Mock chat config with all preprocessing features
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+          inputTemplate: 'Processed: {{text}}',
+          enableHistoryCount: true,
+          searchMode: 'off',
+        } as any);
+
+        vi.spyOn(agentChatConfigSelectors, 'enableHistoryCount').mockReturnValue(true);
+        vi.spyOn(agentChatConfigSelectors, 'historyCount').mockReturnValue(1); // Keep last 2 messages (1 + 1)
+
+        // Mock agent config with system role
+        vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({
+          systemRole: 'System instructions here.',
+          params: {},
+          plugins: [],
+        });
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should apply all preprocessing: system role + history slicing + input template
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: [
+              expect.objectContaining({
+                content: 'System instructions here.',
+                role: 'system',
+              }),
+              expect.objectContaining({
+                content: 'Old message 2',
+                role: 'assistant',
+              }),
+              expect.objectContaining({
+                content: 'Processed: Recent user input', // Template applied
+                role: 'user',
+              }),
+            ],
+          }),
+          undefined,
+        );
+      });
+
+      it('should skip preprocessing when no configuration is set', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ id: '1', content: 'User message', role: 'user' }] as ChatMessage[];
+
+        // Mock empty configurations
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+          enableHistoryCount: false,
+          searchMode: 'off',
+        } as any);
+
+        vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({
+          systemRole: '', // Empty system role
+          params: {},
+          plugins: [],
+        });
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-4',
+          provider: 'openai',
+          plugins: [],
+        });
+
+        // Should pass messages unchanged
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: [
+              expect.objectContaining({
+                content: 'User message',
+                role: 'user',
+              }),
+            ],
+          }),
+          undefined,
+        );
+      });
     });
 
     describe('extendParams functionality', () => {
