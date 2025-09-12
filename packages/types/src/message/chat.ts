@@ -25,6 +25,14 @@ export interface ChatFileItem {
   url: string;
 }
 
+export interface ChatAudioItem {
+  id: string;
+  url: string;
+  name: string;
+  size?: number;
+  duration?: number;
+}
+
 export interface ChatFileChunk {
   fileId: string;
   fileType: string;
@@ -45,6 +53,7 @@ export interface ChatMessageExtra {
 }
 
 export interface ChatMessage {
+  audioList?: ChatAudioItem[];
   chunksList?: ChatFileChunk[];
   content: string;
   createdAt: number;

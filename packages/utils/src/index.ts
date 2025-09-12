@@ -1,3 +1,4 @@
+export * from './audioToBase64';
 export * from './client/cookie';
 export * from './detectChinese';
 export * from './format';

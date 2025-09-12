@@ -33,7 +33,7 @@ import {
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
-import { ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
+import { ChatAudioItem, ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
@@ -46,6 +46,7 @@ import {
   standardizeAnimationStyle,
 } from '@/utils/fetch';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
+import { audioUrlToBase64 } from '@lobehub/utils';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 import { isLocalUrl } from '@/utils/url';
@@ -68,6 +69,16 @@ const isCanUseVision = (model: string, provider: string) => {
     return modelProviderSelectors.isModelEnabledVision(model)(getUserStoreState());
   }
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
+};
+
+const isCanUseAudio = (model: string, provider: string) => {
+  // For now, we'll check if the model supports audio based on provider and model capabilities
+  // This will need to be updated as more providers add audio support
+  if (provider === 'google' && model.includes('gemini-2.0-flash')) {
+    return true;
+  }
+  // Add other provider/model combinations as they become available
+  return false;
 };
 
 /**
@@ -563,12 +574,17 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getUserContent = async (m: ChatMessage) => {
-      // only if message doesn't have images and files, then return the plain content
-      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
+      // only if message doesn't have images, files, and audio, then return the plain content
+      if ((!m.imageList || m.imageList.length === 0) && 
+          (!m.fileList || m.fileList.length === 0) && 
+          (!m.audioList || m.audioList.length === 0))
         return m.content;
 
       const imageList = m.imageList || [];
+      const audioList = m.audioList || [];
+      
       const imageContentParts = await this.processImageList({ imageList, model, provider });
+      const audioContentParts = await this.processAudioList({ audioList, model, provider });
 
       const filesContext = isServerMode
         ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
@@ -576,6 +592,7 @@ class ChatService {
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageContentParts,
+        ...audioContentParts,
       ] as UserMessageContentPart[];
     };
 
@@ -593,7 +610,7 @@ class ChatService {
           { text: m.content, type: 'text' },
         ] as UserMessageContentPart[];
       }
-      // only if message doesn't have images and files, then return the plain content
+      // only if message doesn't have images, files, and audio, then return the plain content
 
       if (m.imageList && m.imageList.length > 0) {
         const imageContentParts = await this.processImageList({
@@ -604,6 +621,18 @@ class ChatService {
         return [
           !!m.content ? { text: m.content, type: 'text' } : undefined,
           ...imageContentParts,
+        ].filter(Boolean) as UserMessageContentPart[];
+      }
+
+      if (m.audioList && m.audioList.length > 0) {
+        const audioContentParts = await this.processAudioList({
+          audioList: m.audioList,
+          model,
+          provider,
+        });
+        return [
+          !!m.content ? { text: m.content, type: 'text' } : undefined,
+          ...audioContentParts,
         ].filter(Boolean) as UserMessageContentPart[];
       }
 
@@ -726,6 +755,37 @@ class ChatService {
         }
 
         return { image_url: { detail: 'auto', url: processedUrl }, type: 'image_url' } as const;
+      }),
+    );
+  };
+
+  /**
+   * Process audioList: convert local URLs to base64 and format as UserMessageContentPart
+   */
+  private processAudioList = async ({
+    model,
+    provider,
+    audioList,
+  }: {
+    audioList: ChatAudioItem[];
+    model: string;
+    provider: string;
+  }) => {
+    if (!isCanUseAudio(model, provider)) {
+      return [];
+    }
+
+    return Promise.all(
+      audioList.map(async (audio) => {
+        const { type } = parseDataUri(audio.url);
+
+        let processedUrl = audio.url;
+        if (type === 'url' && isLocalUrl(audio.url)) {
+          const { base64, mimeType } = await audioUrlToBase64(audio.url);
+          processedUrl = `data:${mimeType};base64,${base64}`;
+        }
+
+        return { audio_url: { url: processedUrl }, type: 'audio_url' } as const;
       }),
     );
   };

@@ -21,10 +21,18 @@ interface UserMessageContentPartImage {
   type: 'image_url';
 }
 
+interface UserMessageContentPartAudio {
+  audio_url: {
+    url: string;
+  };
+  type: 'audio_url';
+}
+
 export type UserMessageContentPart =
   | UserMessageContentPartText
   | UserMessageContentPartImage
-  | UserMessageContentPartThinking;
+  | UserMessageContentPartThinking
+  | UserMessageContentPartAudio;
 
 export interface OpenAIChatMessage {
   /**
