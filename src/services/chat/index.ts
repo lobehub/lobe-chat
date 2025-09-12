@@ -108,7 +108,7 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  2. preprocess messages   ============ //
+    // ============  1. preprocess messages   ============ //
 
     const oaiMessages = await contextEngineering(
       {
@@ -120,14 +120,14 @@ class ChatService {
       options,
     );
 
-    // ============  3. preprocess tools   ============ //
+    // ============  2. preprocess tools   ============ //
 
     const tools = this.prepareTools(pluginIds, {
       model: payload.model,
       provider: payload.provider!,
     });
 
-    // ============  4. process extend params   ============ //
+    // ============  3. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
 

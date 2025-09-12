@@ -12,6 +12,11 @@
     "lobe"
   ],
   "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:update": "vitest -u"
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "immer": "^10.0.3",
