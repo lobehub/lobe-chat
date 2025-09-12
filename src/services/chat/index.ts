@@ -5,14 +5,15 @@ import {
 } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
-import { merge } from 'lodash-es';
+import { merge, template } from 'lodash-es';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { chatHelpers } from '@/store/chat/helpers';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
@@ -110,9 +111,52 @@ class ChatService {
 
     // ============  1. preprocess messages   ============ //
 
+    // Get agent and chat config for preprocessing
+    const agentStoreState = getAgentStoreState();
+    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
+    const preprocessChatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+
+    // 1.1 Slice messages with history count config
+    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
+    const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(agentStoreState);
+
+    let preprocessedMessages = chatHelpers.getSlicedMessages(messages, {
+      includeNewUserMessage: true,
+      enableHistoryCount,
+      historyCount,
+    });
+
+    // 1.2 Apply input message template if configured
+    if (preprocessChatConfig.inputTemplate) {
+      const compiler = template(preprocessChatConfig.inputTemplate, {
+        interpolate: /{{\s*(text)\s*}}/g,
+      });
+
+      preprocessedMessages = preprocessedMessages.map((m) => {
+        if (m.role === 'user') {
+          try {
+            return { ...m, content: compiler({ text: m.content }) };
+          } catch (error) {
+            console.error('Input template compilation error:', error);
+            return m;
+          }
+        }
+        return m;
+      });
+    }
+
+    // 1.3 Add system role if configured
+    if (agentConfig.systemRole) {
+      preprocessedMessages.unshift({
+        content: agentConfig.systemRole,
+        role: 'system',
+      } as ChatMessage);
+    }
+
+    // 1.4 Apply context engineering
     const oaiMessages = await contextEngineering(
       {
-        messages: messages,
+        messages: preprocessedMessages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
