@@ -132,8 +132,6 @@ export const useStyles = createStyles(
       const contentLineHeightSM = getLineHeight(contentFontSizeSM);
       const contentLineHeightLG = getLineHeight(contentFontSizeLG);
 
-      console.log(contentLineHeight, contentLineHeightSM, contentLineHeightLG);
-
       const paddingBlock = Math.max(
         (token.controlHeight - contentFontSize * contentLineHeight) / 2 - token.lineWidth,
         0,
@@ -146,8 +144,6 @@ export const useStyles = createStyles(
         (token.controlHeightLG - contentFontSizeLG * contentLineHeightLG) / 2 - token.lineWidth,
         0,
       );
-
-      console.log(paddingBlock, paddingBlockSM, paddingBlockLG);
 
       switch (size) {
         case 'small': {
@@ -185,6 +181,7 @@ export const useStyles = createStyles(
     return {
       button: {
         alignItems: 'center',
+        alignSelf: block ? 'auto' : 'flex-start',
         backgroundColor: typeStyles.backgroundColor,
         borderColor: typeStyles.borderColor,
         borderRadius: isCircle ? sizeStyles.height / 2 : token.borderRadius,
@@ -195,9 +192,12 @@ export const useStyles = createStyles(
         justifyContent: 'center',
         minHeight: isCircle ? undefined : sizeStyles.height,
         opacity: disabled ? 0.6 : 1,
-        paddingHorizontal: sizeStyles.paddingHorizontal,
-        paddingVertical: sizeStyles.paddingVertical,
+        paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal,
+        paddingVertical: isCircle ? 0 : sizeStyles.paddingVertical,
         width: isCircle ? sizeStyles.height : block ? '100%' : 'auto',
+      },
+      icon: {
+        marginRight: isCircle ? 0 : token.marginXS,
       },
       loading: {
         marginRight: isCircle ? 0 : token.marginXS,

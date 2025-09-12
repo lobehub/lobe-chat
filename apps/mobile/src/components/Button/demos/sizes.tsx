@@ -1,22 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
-
-import Button from '../index';
-import { createStyles } from '@/theme';
-
-const useStyles = createStyles((token) => ({
-  container: {
-    alignItems: 'flex-start',
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-}));
+import { Button, Space } from '@/components';
 
 const SizesDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
+    <Space size={[8, 16]} wrap>
       <Button onPress={() => console.log('Small clicked')} size="small" type="primary">
         Small
       </Button>
@@ -28,7 +15,7 @@ const SizesDemo = () => {
       <Button onPress={() => console.log('Large clicked')} size="large" type="primary">
         Large
       </Button>
-    </View>
+    </Space>
   );
 };
 

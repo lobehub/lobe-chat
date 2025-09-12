@@ -136,7 +136,7 @@ const Button: React.FC<ButtonProps> = ({
     }
 
     return (
-      <View style={styles.loading} testID="button-icon">
+      <View style={styles.icon} testID="button-icon">
         {iconNode}
       </View>
     );

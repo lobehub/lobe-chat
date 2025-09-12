@@ -1,42 +1,30 @@
 import React from 'react';
-import { View } from 'react-native';
 
-import Button from '../index';
-import { createStyles } from '@/theme';
-
-const useStyles = createStyles((token) => ({
-  container: {
-    alignItems: 'flex-start',
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-}));
+import { Button, Space } from '@/components';
 
 const DangerDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
+    <Space size={[8, 16]} wrap>
       <Button danger onPress={() => console.log('Danger Primary')} type="primary">
-        Danger Primary
+        Primary
       </Button>
 
       <Button danger onPress={() => console.log('Danger Default')} type="default">
-        Danger Default
+        Default
       </Button>
 
       <Button danger onPress={() => console.log('Danger Dashed')} type="dashed">
-        Danger Dashed
+        Dashed
       </Button>
 
       <Button danger onPress={() => console.log('Danger Text')} type="text">
-        Danger Text
+        Text
       </Button>
 
       <Button danger onPress={() => console.log('Danger Link')} type="link">
-        Danger Link
+        Link
       </Button>
-    </View>
+    </Space>
   );
 };
 

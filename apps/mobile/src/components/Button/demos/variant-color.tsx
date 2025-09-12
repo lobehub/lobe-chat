@@ -1,31 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import Button from '../index';
+import { Button, Space } from '@/components';
 import type { ButtonColor } from '../style';
-import { createStyles } from '@/theme';
-
-const useStyles = createStyles((token) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-  row: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: token.marginXS,
-  },
-}));
 
 const colors: ButtonColor[] = ['default', 'primary', 'danger', 'magenta', 'purple', 'cyan'];
 
 const VariantColorDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
+    <View>
       {colors.map((c) => (
-        <View key={c} style={styles.row}>
+        <Space key={c} size={[6, 16]} wrap>
           <Button color={c} size="small" variant="filled">
             Solid
           </Button>
@@ -49,7 +34,7 @@ const VariantColorDemo = () => {
           <Button color={c} size="small" variant="link">
             Link
           </Button>
-        </View>
+        </Space>
       ))}
     </View>
   );
