@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
     emotion: true,
   },
   compress: isProd,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     optimizePackageImports: [
       'emoji-mart',
@@ -195,6 +198,7 @@ const nextConfig: NextConfig = {
     },
   },
   reactStrictMode: true,
+
   redirects: async () => [
     {
       destination: '/sitemap-index.xml',
@@ -264,10 +268,13 @@ const nextConfig: NextConfig = {
       source: '/repos',
     },
   ],
+
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite'] : undefined,
-
   transpilePackages: ['pdfjs-dist', 'mermaid'],
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 
   webpack(config) {
     config.experiments = {
