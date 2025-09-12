@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { PipelineContext } from '../../types';
-import { InboxGuideProvider } from '../InboxGuideProvider';
+import { InboxGuideProvider } from '../InboxGuide';
 
 const createContext = (messages: any[]): PipelineContext => ({
   initialState: { messages: [] } as any,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { PipelineContext } from '../../types';
-import { ToolSystemRoleProvider } from '../ToolSystemRoleProvider';
+import { ToolSystemRoleProvider } from '../ToolSystemRole';
 
 const createContext = (messages: any[]): PipelineContext => ({
   initialState: { messages: [] } as any,

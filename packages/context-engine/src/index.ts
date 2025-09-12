@@ -10,24 +10,12 @@ export type { ContextEngineConfig } from './pipeline';
 export { ContextEngine } from './pipeline';
 
 // Context Providers
-export {
-  FilesContextInjector,
-  HistoryInjector,
-  HistorySummaryProvider,
-  InboxGuideProvider,
-  InputTemplateInjector,
-  PlaceholderVariableInjector,
-  RAGContextInjector,
-  SearchContextInjector,
-  SystemRoleInjector,
-  ToolSystemRoleProvider,
-} from './providers';
+export { HistorySummaryProvider, InboxGuideProvider, ToolSystemRoleProvider } from './providers';
 
 // Processors
 export {
   MessageCleanupProcessor,
   MessageContentProcessor,
-  ModelCapabilityValidator,
   PlaceholderVariablesProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
