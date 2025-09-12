@@ -15,27 +15,14 @@ export interface DemoItem {
 export interface ComponentPlaygroundProps {
   demos: DemoItem[];
   readmeContent: string;
-  subtitle: string;
-  title: string;
 }
 
-const ComponentPlayground = ({
-  title,
-  subtitle,
-  demos,
-  readmeContent,
-}: ComponentPlaygroundProps) => {
+const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('demo');
   const { styles } = useStyles();
 
   return (
     <View style={[styles.container]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
-      </View>
-
       {/* Main Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity

@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles, getLineHeight } from '@/theme';
 import type { PresetColorKey } from '@/theme/interface';
 
 export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
@@ -37,7 +37,7 @@ export const useStyles = createStyles(
         return (token as any)[key10] || token.colorPrimary;
       }
       // default neutral text color as accent for outlines/text
-      return token.colorText;
+      return token.colorTextDescription;
     };
 
     const baseColor = resolveBaseColor();
@@ -78,7 +78,7 @@ export const useStyles = createStyles(
         case 'dashed': {
           return {
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
-            borderColor: token.colorBorder,
+            borderColor: disabled ? token.colorBorder : baseColor,
             borderStyle: 'dashed' as const,
             borderWidth: 1,
             textColor: disabled
@@ -119,29 +119,59 @@ export const useStyles = createStyles(
     };
 
     const getSizeStyles = () => {
+      const paddingInline = token.paddingContentHorizontal - token.lineWidth;
+      const paddingInlineLG = token.paddingContentHorizontal - token.lineWidth;
+      const paddingInlineSM = 8 - token.lineWidth;
+
+      const contentFontSize = token.fontSize;
+      // 和 fontSize 保持一致
+      const contentFontSizeSM = token.fontSize;
+      const contentFontSizeLG = token.fontSizeLG;
+
+      const contentLineHeight = getLineHeight(contentFontSize);
+      const contentLineHeightSM = getLineHeight(contentFontSizeSM);
+      const contentLineHeightLG = getLineHeight(contentFontSizeLG);
+
+      console.log(contentLineHeight, contentLineHeightSM, contentLineHeightLG);
+
+      const paddingBlock = Math.max(
+        (token.controlHeight - contentFontSize * contentLineHeight) / 2 - token.lineWidth,
+        0,
+      );
+      const paddingBlockSM = Math.max(
+        (token.controlHeightSM - contentFontSizeSM * contentLineHeightSM) / 2 - token.lineWidth,
+        0,
+      );
+      const paddingBlockLG = Math.max(
+        (token.controlHeightLG - contentFontSizeLG * contentLineHeightLG) / 2 - token.lineWidth,
+        0,
+      );
+
+      console.log(paddingBlock, paddingBlockSM, paddingBlockLG);
+
       switch (size) {
         case 'small': {
           return {
-            fontSize: token.fontSizeSM,
+            fontSize: contentFontSizeSM,
             height: token.controlHeightSM,
-            paddingHorizontal: token.paddingContentHorizontalSM,
-            paddingVertical: token.paddingContentVerticalSM,
+            paddingHorizontal: paddingInlineSM,
+            paddingVertical: paddingBlockSM,
           };
         }
         case 'large': {
           return {
-            fontSize: token.fontSizeLG,
+            fontSize: contentFontSizeLG,
             height: token.controlHeightLG,
-            paddingHorizontal: token.paddingContentHorizontalLG,
-            paddingVertical: token.paddingContentVerticalLG,
+            paddingHorizontal: paddingInlineLG,
+            paddingVertical: paddingBlockLG,
           };
         }
         default: {
           return {
-            fontSize: token.fontSize,
+            fontSize: contentFontSize,
             height: token.controlHeight,
-            paddingHorizontal: token.paddingContentHorizontal,
-            paddingVertical: token.paddingContentVertical,
+            paddingHorizontal: paddingInline,
+            paddingVertical: paddingBlock,
           };
         }
       }
@@ -161,12 +191,12 @@ export const useStyles = createStyles(
         borderStyle: typeStyles.borderStyle,
         borderWidth: typeStyles.borderWidth,
         flexDirection: 'row',
-        height: isCircle ? sizeStyles.height : undefined,
+        height: sizeStyles.height,
         justifyContent: 'center',
         minHeight: isCircle ? undefined : sizeStyles.height,
         opacity: disabled ? 0.6 : 1,
-        paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal,
-        paddingVertical: isCircle ? 0 : sizeStyles.paddingVertical,
+        paddingHorizontal: sizeStyles.paddingHorizontal,
+        paddingVertical: sizeStyles.paddingVertical,
         width: isCircle ? sizeStyles.height : block ? '100%' : 'auto',
       },
       loading: {
