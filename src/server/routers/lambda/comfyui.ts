@@ -1,3 +1,4 @@
+import type { ComfyUIKeyVault } from '@lobechat/types';
 import { z } from 'zod';
 
 import { authedProcedure, router } from '@/libs/trpc/lambda';
@@ -8,33 +9,13 @@ import { ModelResolverService } from '@/server/services/comfyui/core/modelResolv
 import { WorkflowBuilderService } from '@/server/services/comfyui/core/workflowBuilderService';
 import type { WorkflowContext } from '@/server/services/comfyui/types';
 
-// Standard RuntimeImageGenParams validation schema
-const ComfyUIParamsSchema = z.object({
-  aspectRatio: z.string().optional(),
-  cfg: z.number().optional(),
-  height: z.number().optional(),
-  imageUrl: z.string().nullable().optional(),
-  imageUrls: z.array(z.string()).optional(),
-  prompt: z.string(),
-  samplerName: z.string().optional(),
-  scheduler: z.string().optional(),
-  seed: z.number().nullable().optional(),
-  size: z.string().optional(),
-  steps: z.number().optional(),
-  strength: z.number().optional(),
-  width: z.number().optional(),
-});
-
-const ComfyUIOptionsSchema = z
+// ComfyUI params validation - only validate required fields
+// Other RuntimeImageGenParams fields are passed through automatically
+const ComfyUIParamsSchema = z
   .object({
-    apiKey: z.string().optional(),
-    authType: z.enum(['none', 'basic', 'bearer', 'custom']).optional(),
-    baseURL: z.string().optional(),
-    customHeaders: z.record(z.string()).optional(),
-    password: z.string().optional(),
-    username: z.string().optional(),
+    prompt: z.string(), // 只验证必需字段
   })
-  .optional();
+  .passthrough();
 
 /**
  * ComfyUI tRPC Router
@@ -48,7 +29,7 @@ export const comfyuiRouter = router({
     .input(
       z.object({
         model: z.string(),
-        options: ComfyUIOptionsSchema,
+        options: z.custom<ComfyUIKeyVault>().optional(),
         params: ComfyUIParamsSchema,
       }),
     )
@@ -87,7 +68,7 @@ export const comfyuiRouter = router({
   getAuthHeaders: authedProcedure
     .input(
       z.object({
-        options: ComfyUIOptionsSchema,
+        options: z.custom<ComfyUIKeyVault>().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -101,7 +82,7 @@ export const comfyuiRouter = router({
   getModels: authedProcedure
     .input(
       z.object({
-        options: ComfyUIOptionsSchema,
+        options: z.custom<ComfyUIKeyVault>().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -118,7 +99,7 @@ export const comfyuiRouter = router({
     .input(
       z.object({
         baseURL: z.string(),
-        options: ComfyUIOptionsSchema,
+        options: z.custom<ComfyUIKeyVault>().optional(),
       }),
     )
     .mutation(async ({ input }) => {
