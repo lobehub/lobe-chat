@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, SizesDemo, StatesDemo, BlockDemo } from '@/components/Button/demos';
+import { BasicDemo, SizesDemo, StatesDemo, BlockDemo, IconDemo } from '@/components/Button/demos';
 import { Header } from '@/components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
@@ -16,6 +16,7 @@ React Native版本的按钮组件，参考Ant Design设计，支持多种类型�
 - ✅ 三种尺寸（Small、Middle、Large）
 - ✅ 加载状态支持
 - ✅ 禁用状态支持
+- ✅ 图标支持（\`icon\` 属性）
 - ✅ 自定义样式支持
 - ✅ TypeScript 支持
 - ✅ 主题适配
@@ -54,6 +55,11 @@ import Button from '@/components/Button';
 <Button block onPress={() => console.log('clicked')}>
   Block Button
 </Button>
+\n// 图标按钮
+import { Plus } from 'lucide-react-native';
+<Button icon={<Plus />} type="primary">
+  Create
+</Button>
 \`\`\`
 
 ## API
@@ -70,6 +76,7 @@ import Button from '@/components/Button';
 | onPress | \`() => void\` | - | 点击回调 |
 | style | \`ViewStyle\` | - | 容器样式 |
 | textStyle | \`TextStyle\` | - | 文本样式 |
+| icon | \`ReactNode\` | - | 左侧图标；会自动匹配颜色与尺寸 |
 | children | \`ReactNode\` | - | 按钮内容 |
 
 ## 按钮类型
@@ -91,6 +98,7 @@ const demos: DemoItem[] = [
   { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
   { component: <StatesDemo />, key: 'states', title: '按钮状态' },
   { component: <BlockDemo />, key: 'block', title: '块级按钮' },
+  { component: <IconDemo />, key: 'icon', title: '图标按钮' },
 ];
 
 export default function ButtonPlaygroundPage() {
