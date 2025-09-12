@@ -1,6 +1,6 @@
-import { createOpenAICompatibleRuntime } from '../core/openaiCompatibleFactory';
-import { AgentRuntimeErrorType, ChatCompletionErrorPayload, ModelProvider } from '../types';
-import { processMultiProviderModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { AgentRuntimeErrorType, ChatCompletionErrorPayload, ModelProvider } from '../../types';
+import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface VercelAIGatewayModelCard {
   id: string;
