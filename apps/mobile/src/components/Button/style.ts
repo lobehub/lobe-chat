@@ -1,6 +1,9 @@
 import { createStyles } from '@/theme';
+import type { PresetColorKey } from '@/theme/interface';
 
 export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
+export type ButtonVariant = 'tlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link';
+export type ButtonColor = 'default' | 'primary' | 'danger' | PresetColorKey;
 export type ButtonSize = 'small' | 'middle' | 'large';
 export type ButtonShape = 'default' | 'circle';
 
@@ -8,95 +11,107 @@ export const useStyles = createStyles(
   (
     token,
     {
-      type,
+      variant,
+      color,
       size,
       disabled,
       block,
-      danger,
       shape,
     }: {
       block: boolean;
-      danger: boolean;
+      color: ButtonColor;
       disabled: boolean;
       shape: ButtonShape;
       size: ButtonSize;
-      type: ButtonType;
+      variant: ButtonVariant;
     },
   ) => {
-    const getTypeStyles = () => {
-      if (danger) {
-        switch (type) {
-          case 'primary': {
-            return {
-              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorError,
-              borderColor: disabled ? token.colorPrimaryBorder : token.colorError,
-              textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
-            };
-          }
-          case 'dashed': {
-            return {
-              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
-              borderColor: disabled ? token.colorBorder : token.colorError,
-              textColor: disabled ? token.colorTextDisabled : token.colorError,
-            };
-          }
-          case 'text': {
-            return {
-              backgroundColor: 'transparent',
-              borderColor: 'transparent',
-              textColor: disabled ? token.colorTextDisabled : token.colorError,
-            };
-          }
-          case 'link': {
-            return {
-              backgroundColor: 'transparent',
-              borderColor: 'transparent',
-              textColor: disabled ? token.colorTextDisabled : token.colorError,
-            };
-          }
-          default: {
-            return {
-              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
-              borderColor: disabled ? token.colorBorder : token.colorError,
-              textColor: disabled ? token.colorTextDisabled : token.colorError,
-            };
-          }
-        }
+    // Resolve a base color from `color` prop (including PresetColorKey)
+    const resolveBaseColor = () => {
+      if (color === 'primary') return token.colorPrimary;
+      // If both `danger` and `color` are provided, respect `color`
+      if (color === 'danger') return token.colorError;
+      if (color && color !== 'default') {
+        const key10 = `${color}10` as keyof typeof token;
+        // prefer 10 shade if available, otherwise fallback to primary
+        return (token as any)[key10] || token.colorPrimary;
       }
+      // default neutral text color as accent for outlines/text
+      return token.colorText;
+    };
 
-      switch (type) {
-        case 'primary': {
+    const baseColor = resolveBaseColor();
+
+    const getVariantStyles = () => {
+      switch (variant) {
+        case 'filled': {
           return {
-            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
-            borderColor: disabled ? token.colorPrimaryBorder : token.colorBgElevated,
+            backgroundColor: disabled ? token.colorBgContainerDisabled : baseColor,
+            borderColor: disabled ? token.colorBorder : baseColor,
+            borderStyle: 'solid' as const,
+            borderWidth: 1,
             textColor: disabled ? token.colorTextDisabled : token.colorTextLightSolid,
+          };
+        }
+        case 'solid': {
+          return {
+            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+            borderColor: disabled || color === 'default' ? token.colorBorder : baseColor,
+            borderStyle: 'solid' as const,
+            borderWidth: 1,
+            textColor: disabled
+              ? token.colorTextDisabled
+              : color === 'default'
+                ? token.colorText
+                : baseColor,
+          };
+        }
+        case 'tlined': {
+          return {
+            backgroundColor: 'transparent',
+            borderColor: disabled ? token.colorBorder : baseColor,
+            borderStyle: 'solid' as const,
+            borderWidth: 1,
+            textColor: disabled ? token.colorTextDisabled : baseColor,
           };
         }
         case 'dashed': {
           return {
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
-            borderColor: disabled ? token.colorBorder : token.colorBorder,
-            textColor: disabled ? token.colorTextDisabled : token.colorText,
+            borderColor: token.colorBorder,
+            borderStyle: 'dashed' as const,
+            borderWidth: 1,
+            textColor: disabled
+              ? token.colorTextDisabled
+              : color === 'default'
+                ? token.colorText
+                : baseColor,
           };
         }
         case 'text': {
           return {
             backgroundColor: 'transparent',
             borderColor: 'transparent',
-            textColor: disabled ? token.colorTextDisabled : token.colorPrimary,
+            borderStyle: 'solid' as const,
+            borderWidth: 0,
+            textColor: disabled ? token.colorTextDisabled : baseColor,
           };
         }
         case 'link': {
           return {
             backgroundColor: 'transparent',
             borderColor: 'transparent',
-            textColor: disabled ? token.colorTextDisabled : token.colorPrimary,
+            borderStyle: 'solid' as const,
+            borderWidth: 0,
+            textColor: disabled ? token.colorTextDisabled : baseColor,
           };
         }
         default: {
           return {
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
             borderColor: disabled ? token.colorBorder : token.colorBorder,
+            borderStyle: 'solid' as const,
+            borderWidth: 1,
             textColor: disabled ? token.colorTextDisabled : token.colorText,
           };
         }
@@ -132,7 +147,7 @@ export const useStyles = createStyles(
       }
     };
 
-    const typeStyles = getTypeStyles();
+    const typeStyles = getVariantStyles();
     const sizeStyles = getSizeStyles();
 
     const isCircle = shape === 'circle';
@@ -143,8 +158,8 @@ export const useStyles = createStyles(
         backgroundColor: typeStyles.backgroundColor,
         borderColor: typeStyles.borderColor,
         borderRadius: isCircle ? sizeStyles.height / 2 : token.borderRadius,
-        borderStyle: type === 'dashed' ? 'dashed' : 'solid',
-        borderWidth: type === 'text' || type === 'link' ? 0 : 1,
+        borderStyle: typeStyles.borderStyle,
+        borderWidth: typeStyles.borderWidth,
         flexDirection: 'row',
         height: isCircle ? sizeStyles.height : undefined,
         justifyContent: 'center',
@@ -161,7 +176,7 @@ export const useStyles = createStyles(
         color: typeStyles.textColor,
         fontSize: sizeStyles.fontSize,
         textAlign: 'center',
-        textDecorationLine: type === 'link' ? 'underline' : 'none',
+        textDecorationLine: variant === 'link' ? 'underline' : 'none',
       },
     };
   },

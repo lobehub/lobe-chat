@@ -10,11 +10,19 @@ import {
   View,
 } from 'react-native';
 
-import { useStyles, ButtonType, ButtonSize, ButtonShape } from './style';
+import {
+  useStyles,
+  ButtonType,
+  ButtonSize,
+  ButtonShape,
+  ButtonVariant,
+  ButtonColor,
+} from './style';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
   children?: React.ReactNode;
+  color?: ButtonColor;
   danger?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
@@ -25,6 +33,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   type?: ButtonType;
+  variant?: ButtonVariant;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -35,6 +44,8 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   block = false,
   danger = false,
+  variant,
+  color,
   children,
   onPress,
   style,
@@ -42,7 +53,66 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   ...rest
 }) => {
-  const { styles } = useStyles({ block, danger, disabled: disabled || loading, shape, size, type });
+  // Map legacy `type` to new `variant` + `color` if not explicitly provided
+  const mapped = (() => {
+    // If both provided, use them directly
+    if (variant && color) return { color, variant };
+
+    // If only color provided, choose a sensible default variant
+    if (color && !variant) {
+      // non-default colors default to filled; default uses solid
+      return { color, variant: (color !== 'default' ? 'filled' : 'solid') as ButtonVariant };
+    }
+
+    // If only variant provided, default color
+    if (variant && !color) {
+      return { color: (danger ? 'danger' : 'default') as ButtonColor, variant };
+    }
+
+    // Fallback: derive from legacy `type` and `danger`
+    switch (type) {
+      case 'primary': {
+        return {
+          color: (danger ? 'danger' : 'primary') as ButtonColor,
+          variant: 'filled' as ButtonVariant,
+        };
+      }
+      case 'text': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'text' as ButtonVariant,
+        };
+      }
+      case 'link': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'link' as ButtonVariant,
+        };
+      }
+      case 'dashed': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'dashed' as ButtonVariant,
+        };
+      }
+      default: {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'solid' as ButtonVariant,
+        };
+      }
+    }
+  })();
+
+  const { styles } = useStyles({
+    block,
+    color: mapped.color,
+    danger,
+    disabled: disabled || loading,
+    shape,
+    size,
+    variant: mapped.variant,
+  });
 
   const handlePress = () => {
     if (!disabled && !loading && onPress) {
