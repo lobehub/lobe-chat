@@ -2,7 +2,7 @@ import { ChatImageItem, ChatMessage } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { PipelineContext } from '../../types';
-import { MessageContentProcessor } from '../MessageContentProcessor';
+import { MessageContentProcessor } from '../MessageContent';
 
 vi.mock('@lobechat/utils', () => ({
   imageUrlToBase64: vi.fn().mockResolvedValue({

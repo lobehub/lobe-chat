@@ -39,9 +39,9 @@ export const contextEngineering = async (
 ): Promise<OpenAIChatMessage[]> => {
   const pipeline = new ContextEngine({
     pipeline: [
-      // 创建系统角色注入 providers
+      // Create system role injection providers
 
-      // 1. 收件箱引导系统角色注入
+      // 1. Inbox guide system role injection
       new InboxGuideProvider({
         inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
         inboxSessionId: INBOX_SESSION_ID,
@@ -49,7 +49,7 @@ export const contextEngineering = async (
         sessionId: options?.trace?.sessionId,
       }),
 
-      // 2. 工具系统角色注入
+      // 2. Tool system role injection
       new ToolSystemRoleProvider({
         getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
         isCanUseFC,
@@ -58,18 +58,18 @@ export const contextEngineering = async (
         tools,
       }),
 
-      // 3. 历史摘要注入
+      // 3. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary: historySummaryPrompt,
         historySummary: options?.historySummary,
       }),
 
-      // 创建消息处理 processors
+      // Create message processing processors
 
-      // 1. 占位符变量处理
+      // 1. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 2. 消息内容处理
+      // 2. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
         isCanUseVision,
@@ -77,13 +77,13 @@ export const contextEngineering = async (
         provider,
       }),
 
-      // 3. 工具调用处理
+      // 3. Tool call processing
       new ToolCallProcessor({ genToolCallingName, isCanUseFC, model, provider }),
 
-      // 4. 工具重排
+      // 4. Tool message reordering
       new ToolMessageReorder(),
 
-      // 5. 消息清理（最后一步，只保留必要字段）
+      // 5. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ],
   });
@@ -92,7 +92,7 @@ export const contextEngineering = async (
     messages,
     model,
     provider,
-    systemRole: '', // 将由系统角色 providers 处理
+    systemRole: '', // Will be handled by system role providers
     tools: tools,
   };
 

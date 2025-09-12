@@ -4,7 +4,7 @@ import {
   PlaceholderVariablesProcessor,
   parsePlaceholderVariables,
   parsePlaceholderVariablesMessages,
-} from '../PlaceholderVariablesProcessor';
+} from '../PlaceholderVariables';
 
 describe('PlaceholderVariablesProcessor', () => {
   const mockVariableGenerators = {
