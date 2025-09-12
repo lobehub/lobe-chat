@@ -1,9 +1,4 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, SizesDemo, BordersDemo, ErrorDemo } from '@/components/Avatar/demos';
-
-const AVATAR_README = `# Avatar 头像组件
+const README = `# Avatar 头像组件
 
 可定制的头像组件，支持自定义尺寸、边框和错误处理。
 
@@ -58,13 +53,4 @@ import Avatar from '@/components/Avatar';
 | style | \`ViewStyle\` | - | 容器样式 |
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
-  { component: <BordersDemo />, key: 'borders', title: '边框样式' },
-  { component: <ErrorDemo />, key: 'error', title: '错误处理' },
-];
-
-export default function AvatarPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={AVATAR_README} />;
-}
+export default README;

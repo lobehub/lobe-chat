@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import { BasicDemo, SizesDemo, ComparisonDemo, TypeDemo } from '@/components/FluentEmoji/demos';
 
 const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件

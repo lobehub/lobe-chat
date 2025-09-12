@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import BasicDemo from '@/components/ColorSwatches/demos/basic';
 
 const COLORSWATCHES_README = `# ColorSwatches 颜色选择器组件

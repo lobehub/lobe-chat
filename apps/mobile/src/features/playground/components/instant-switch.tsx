@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import { BasicDemo, SizesDemo, StatesDemo } from '@/components/InstantSwitch/demos';
 
 const INSTANT_SWITCH_README = `# InstantSwitch 即时开关组件

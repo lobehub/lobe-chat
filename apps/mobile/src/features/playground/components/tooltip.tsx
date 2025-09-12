@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@/components/Tooltip/demos';
 
 const TOOLTIP_README = `# Tooltip 组件

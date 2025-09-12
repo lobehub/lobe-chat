@@ -6,7 +6,7 @@ import {
   FullFeaturedHighlighterDemo,
   LanguagesHighlighterDemo,
 } from '@/components/Highlighter/demos';
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 
 const HIGHLIGHTER_README = `# Highlighter 组件
 

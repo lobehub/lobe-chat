@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import { BasicDemo } from '@/components/Switch/demos';
 
 const SWITCH_README = `# Switch 开关

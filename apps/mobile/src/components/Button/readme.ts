@@ -1,18 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../Playground';
-import {
-  BasicDemo,
-  SizesDemo,
-  StatesDemo,
-  BlockDemo,
-  IconDemo,
-  ShapeDemo,
-  DangerDemo,
-  VariantColorDemo,
-  LoadingDemo,
-} from '@/components/Button/demos';
-
 const BUTTON_README = `# Button 按钮组件
 
 React Native版本的按钮组件，参考Ant Design设计，支持多种类型、尺寸和状态。
@@ -109,18 +94,4 @@ import { Plus } from 'lucide-react-native';
 - \`large\`: 大尺寸（40px 高度）
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
-  { component: <StatesDemo />, key: 'states', title: '按钮状态' },
-  { component: <BlockDemo />, key: 'block', title: '块级按钮' },
-  { component: <IconDemo />, key: 'icon', title: '图标按钮' },
-  { component: <ShapeDemo />, key: 'shape', title: '按钮形状' },
-  { component: <DangerDemo />, key: 'danger', title: '危险态按钮' },
-  { component: <VariantColorDemo />, key: 'variant-color', title: '变体与颜色' },
-  { component: <LoadingDemo />, key: 'loading', title: '加载状态' },
-];
-
-export default function ButtonPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={BUTTON_README} />;
-}
+export default BUTTON_README;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { AdvancedDemo, AvatarsDemo, BasicDemo, NavigationDemo } from '@/components/ListItem/demos';
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 
 // 读取README内容
 const readmeContent = `# ListItem组件

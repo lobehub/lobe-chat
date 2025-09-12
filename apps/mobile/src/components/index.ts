@@ -14,6 +14,7 @@ export { default as ListItem } from './ListItem';
 export { default as Markdown } from './Markdown';
 export { default as ModelInfoTags } from './ModelInfoTags';
 export { default as NavigateBack } from './NavigateBack';
+export { default as Playground } from './Playground';
 export { default as Skeleton } from './Skeleton';
 export { default as Space } from './Space';
 export { default as Switch } from './Switch';

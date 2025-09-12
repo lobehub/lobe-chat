@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BasicDemo } from '@/components/Markdown/demos';
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 
 const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 

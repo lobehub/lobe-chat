@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, ScrollingDemo, CategoriesDemo } from '@/components/CapsuleTabs/demos';
-
 const CAPSULETABS_README = `# CapsuleTabs 组件
 
 水平滚动的胶囊选项卡组件，支持自定义样式和选择状态。
@@ -55,12 +50,4 @@ const [selectedKey, setSelectedKey] = useState('all');
 | label | \`string\` | 选项卡显示文本 |
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <ScrollingDemo />, key: 'scrolling', title: '水平滚动' },
-  { component: <CategoriesDemo />, key: 'categories', title: '实际应用场景' },
-];
-
-export default function CapsuleTabsPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={CAPSULETABS_README} />;
-}
+export default CAPSULETABS_README;

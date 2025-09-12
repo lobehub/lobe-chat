@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '../Playground';
+import ComponentPlayground, { DemoItem } from '../../../components/Playground';
 import { BasicDemo, ColorsDemo, UseCaseDemo, BorderDemo, PresetDemo } from '@/components/Tag/demos';
 
 const TAG_README = `# Tag 标签组件
