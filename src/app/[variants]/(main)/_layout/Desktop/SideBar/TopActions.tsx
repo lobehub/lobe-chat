@@ -24,6 +24,7 @@ export interface TopActionProps {
   tab?: SidebarTabKey;
 }
 
+//  TODO Change icons
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
