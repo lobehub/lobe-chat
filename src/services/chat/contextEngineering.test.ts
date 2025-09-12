@@ -1,7 +1,7 @@
-import { ChatImageItem, ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+import { ChatMessage } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { contextEngineering, processImageList } from './contextEngineering';
+import { contextEngineering } from './contextEngineering';
 import * as helpers from './helper';
 
 // 默认设置 isServerMode 为 false
@@ -24,45 +24,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('processImageList', () => {
-  it('should return empty array if model cannot use vision (non-deprecated)', async () => {
-    vi.spyOn(helpers, 'isCanUseVision').mockReturnValue(false);
-
-    const result = await processImageList({
-      imageList: [{ url: 'image_url', alt: '', id: 'test' } as ChatImageItem],
-      model: 'any-model',
-      provider: 'any-provider',
-    });
-    expect(result).toEqual([]);
-  });
-
-  it('should process images if model can use vision (non-deprecated)', async () => {
-    vi.spyOn(helpers, 'isCanUseVision').mockReturnValue(true);
-
-    const result = await processImageList({
-      imageList: [{ url: 'image_url', alt: '', id: 'test' } as ChatImageItem],
-      model: 'any-model',
-      provider: 'any-provider',
-    });
-    expect(result.length).toBe(1);
-    expect(result[0].type).toBe('image_url');
-  });
-
-  it('should return empty array when vision disabled in deprecated edition', async () => {
-    const spy = vi.spyOn(helpers, 'isCanUseVision').mockReturnValue(false);
-
-    const result = await processImageList({
-      imageList: [{ url: 'image_url', alt: '', id: 'test' } as ChatImageItem],
-      model: 'any-model',
-      provider: 'any-provider',
-    });
-
-    expect(spy).toHaveBeenCalled();
-    expect(result).toEqual([]);
-  });
-});
-
-describe('processMessages', () => {
+describe('contextEngineering', () => {
   describe('handle with files content in server mode', () => {
     it('should includes files', async () => {
       isServerMode = true;

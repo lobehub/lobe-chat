@@ -1,7 +1,5 @@
-import { isDesktop } from '@lobechat/const';
-import { parseDataUri } from '@lobechat/model-runtime';
 import { filesPrompts } from '@lobechat/prompts';
-import { imageUrlToBase64, isLocalUrl } from '@lobechat/utils';
+import { imageUrlToBase64, isLocalUrl, parseDataUri } from '@lobechat/utils';
 import debug from 'debug';
 
 import { BaseProcessor } from '../base/BaseProcessor';
@@ -9,9 +7,16 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:processor:MessageContentProcessor');
 
+export interface FileContextConfig {
+  /** Whether to enable file context injection */
+  enabled?: boolean;
+  /** Whether to include file URLs in file context prompts */
+  includeFileUrl?: boolean;
+}
+
 export interface MessageContentConfig {
-  /** Whether to add file context to messages */
-  isAddFileContext?: boolean;
+  /** File context configuration */
+  fileContext?: FileContextConfig;
   /** Function to check if vision is supported */
   isCanUseVision?: (model: string, provider: string) => boolean | undefined;
   /** Model name */
@@ -117,9 +122,9 @@ export class MessageContentProcessor extends BaseProcessor {
     let textContent = message.content || '';
 
     // Add file context (if file context is enabled and has files or images)
-    if ((hasFiles || hasImages) && this.config.isAddFileContext) {
+    if ((hasFiles || hasImages) && this.config.fileContext?.enabled) {
       const filesContext = filesPrompts({
-        addUrl: !isDesktop,
+        addUrl: this.config.fileContext.includeFileUrl ?? true,
         fileList: message.fileList,
         imageList: message.imageList,
       });
@@ -144,10 +149,17 @@ export class MessageContentProcessor extends BaseProcessor {
     }
 
     // 明确返回的字段，只保留必要的消息字段
-    const hasFileContext = (hasFiles || hasImages) && this.config.isAddFileContext;
+    const hasFileContext = (hasFiles || hasImages) && this.config.fileContext?.enabled;
+    const hasVisionContent =
+      hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider);
 
-    // 如果只有文本内容且没有添加文件上下文，返回纯文本
-    if (contentParts.length === 1 && contentParts[0].type === 'text' && !hasFileContext) {
+    // 如果只有文本内容且没有添加文件上下文也没有视觉内容，返回纯文本
+    if (
+      contentParts.length === 1 &&
+      contentParts[0].type === 'text' &&
+      !hasFileContext &&
+      !hasVisionContent
+    ) {
       return {
         content: contentParts[0].text,
         createdAt: message.createdAt,

@@ -1,4 +1,4 @@
-import { INBOX_SESSION_ID, isServerMode } from '@lobechat/const';
+import { INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
 import {
   type AgentState,
   ContextEngine,
@@ -99,7 +99,10 @@ export const contextEngineering = async (
 
       // 1. 消息内容处理
       new MessageContentProcessor({
-        isAddFileContext: isServerMode,
+        fileContext: {
+          enabled: isServerMode,
+          includeFileUrl: !isDesktop,
+        },
         isCanUseVision,
         model,
         provider,

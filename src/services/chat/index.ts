@@ -27,7 +27,6 @@ import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload } from '@/types/openai/chat';
-import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import {
@@ -109,14 +108,11 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess placeholder variables   ============ //
-    const parsedMessages = parsePlaceholderVariablesMessages(messages);
-
     // ============  2. preprocess messages   ============ //
 
     const oaiMessages = await contextEngineering(
       {
-        messages: parsedMessages,
+        messages: messages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
