@@ -83,7 +83,7 @@ describe('genServerAiProvidersConfig', () => {
     };
 
     // Mock the LLM config to include our custom key
-    const { getLLMConfig } = vi.mocked(await import('@/config/llm'));
+    const { getLLMConfig } = vi.mocked(await import('@/envs/llm'));
     getLLMConfig.mockReturnValue({
       ENABLED_OPENAI: true,
       ENABLED_ANTHROPIC: false,
