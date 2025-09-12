@@ -32,6 +32,9 @@
   "bfl": {
     "description": "A leading, cutting-edge artificial intelligence research lab building the visual infrastructure of tomorrow."
   },
+  "burncloud": {
+    "description": "BurnCloud is a high-performance AI service platform providing API access to a wide range of industry-leading large models including Claude series, GPT series, Gemini, and DeepSeek. It features stable reliability and fast response times for seamless integration of advanced AI capabilities."
+  },
   "cloudflare": {
     "description": "Run serverless GPU-powered machine learning models on Cloudflare's global network."
   },
