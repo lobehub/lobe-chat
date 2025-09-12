@@ -59,7 +59,7 @@ export const MODEL_LIST_CONFIGS = {
       'qwen2.5',
       'qwen3',
     ],
-    reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-'],
+    reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
     visionKeywords: ['qvq', 'vl'],
   },
   v0: {
@@ -310,9 +310,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-            model.id.toLowerCase(),
-            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-          )
+        model.id.toLowerCase(),
+        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+      )
         ? 'embedding'
         : 'chat');
 

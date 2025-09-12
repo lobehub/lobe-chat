@@ -13,8 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install dbdocs
-        run: sudo npm install -g dbdocs
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
 
       - name: Check dbdocs
         run: dbdocs

@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 
-import { getAuthConfig } from '@/config/auth';
 import { getServerDBConfig } from '@/config/db';
+import { getAuthConfig } from '@/envs/auth';
 
 import { LobeNextAuthDbAdapter } from './adapter';
 import { ssoProviders } from './sso-providers';

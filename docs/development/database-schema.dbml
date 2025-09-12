@@ -24,6 +24,8 @@ table agents {
 
   indexes {
     (client_id, user_id) [name: 'client_id_user_id_unique', unique]
+    title [name: 'agents_title_idx']
+    description [name: 'agents_description_idx']
   }
 }
 

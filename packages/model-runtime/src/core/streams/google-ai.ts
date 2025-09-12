@@ -16,6 +16,8 @@ import {
   generateToolCallId,
 } from './protocol';
 
+export const LOBE_ERROR_KEY = '__lobe_error';
+
 const getBlockReasonMessage = (blockReason: string): string => {
   const blockReasonMessages = errorLocale.response.GoogleAIBlockReason;
 
@@ -29,6 +31,14 @@ const transformGoogleGenerativeAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
+  // Handle injected internal error marker to pass through detailed error info
+  if ((chunk as any)?.[LOBE_ERROR_KEY]) {
+    return {
+      data: (chunk as any)[LOBE_ERROR_KEY],
+      id: context?.id || 'error',
+      type: 'error',
+    };
+  }
   // Handle promptFeedback with blockReason (e.g., PROHIBITED_CONTENT)
   if ('promptFeedback' in chunk && (chunk as any).promptFeedback?.blockReason) {
     const blockReason = (chunk as any).promptFeedback.blockReason;
@@ -203,19 +213,26 @@ const transformGoogleGenerativeAIStream = (
 
 export interface GoogleAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
+  enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
 }
 
 export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<GenerateContentResponse>,
-  { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
+  { callbacks, inputStartAt, enableStreaming = true }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, { inputStartAt, streamStack }),
+      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, {
+        enableStreaming: enableStreaming,
+        inputStartAt,
+        streamStack,
+      }),
     )
-    .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
+    .pipeThrough(
+      createSSEProtocolTransformer((c) => c, streamStack, { requireTerminalEvent: true }),
+    )
     .pipeThrough(createCallbacksTransformer(callbacks));
 };

@@ -195,7 +195,10 @@ describe('ServerService', () => {
     await service.updateSessionConfig('123', config, signal);
     expect(lambdaClient.session.updateSessionConfig.mutate).toBeCalledWith(
       { id: '123', value: config },
-      { signal },
+      {
+        signal,
+        context: { showNotification: false },
+      },
     );
   });
 

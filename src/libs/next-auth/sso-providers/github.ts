@@ -1,6 +1,6 @@
 import GitHub from 'next-auth/providers/github';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 import { CommonProviderConfig } from './sso.config';
 

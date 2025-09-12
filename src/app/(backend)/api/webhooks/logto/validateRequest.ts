@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { createHmac } from 'node:crypto';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 export type LogtToUserEntity = {
   applicationId?: string;

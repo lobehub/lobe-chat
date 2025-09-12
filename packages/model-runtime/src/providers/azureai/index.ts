@@ -83,9 +83,12 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
         // the azure AI inference response is openai compatible
         const stream = transformResponseToStream(res.body as OpenAI.ChatCompletion);
-        return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
-          headers: options?.headers,
-        });
+        return StreamingResponse(
+          OpenAIStream(stream, { callbacks: options?.callback, enableStreaming: false }),
+          {
+            headers: options?.headers,
+          },
+        );
       }
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };

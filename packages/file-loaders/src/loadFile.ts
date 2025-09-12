@@ -37,6 +37,7 @@ const getFileType = (filePath: string): SupportedFileType | undefined => {
       log('File type identified as pdf');
       return 'pdf';
     }
+    case 'doc':
     case 'docx': {
       log('File type identified as docx');
       return 'docx';

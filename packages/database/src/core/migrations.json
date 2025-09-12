@@ -578,5 +578,14 @@
     "bps": true,
     "folderMillis": 1756298669289,
     "hash": "3af468ca75761ca4ca4e32ba8704728f0499aa935bfe00ae5aabfa8405a18bd4"
+  },
+  {
+    "sql": [
+      "CREATE INDEX \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
+      "\nCREATE INDEX \"agents_description_idx\" ON \"agents\" USING btree (\"description\");"
+    ],
+    "bps": true,
+    "folderMillis": 1757902833213,
+    "hash": "7f76a42dcaae9ca7de30a6eec432a3b52e64fa44b31828e3318d8b815f396624"
   }
 ]
