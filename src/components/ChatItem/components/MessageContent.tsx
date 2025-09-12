@@ -8,6 +8,7 @@ import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface MessageContentProps {
+  disabled?: ChatItemProps['disabled'];
   editing?: ChatItemProps['editing'];
   fontSize?: number;
   markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
@@ -38,8 +39,9 @@ const MessageContent = memo<MessageContentProps>(
     onDoubleClick,
     fontSize,
     markdownProps,
+    disabled,
   }) => {
-    const { cx, styles } = useStyles({ editing, placement, primary, variant });
+    const { cx, styles } = useStyles({ disabled, editing, placement, primary, variant });
     const { mobile } = useResponsive();
 
     const content = (

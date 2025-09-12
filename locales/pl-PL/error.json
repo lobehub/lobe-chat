@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
+  "supervisor": {
+    "decisionFailed": "Moderator grupy nie działa. Sprawdź konfigurację moderatora, aby upewnić się, że poprawnie ustawiono model, klucz API i adres API."
+  },
   "testConnectionFailed": "Test połączenia nie powiódł się: {{error}}",
   "tts": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"

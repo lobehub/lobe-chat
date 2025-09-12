@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import TopicSearchBar from '../features/TopicSearchBar';
+import TopicSearchBar from '../features/Topic/TopicSearchBar';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (

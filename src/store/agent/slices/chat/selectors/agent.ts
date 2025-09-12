@@ -26,6 +26,23 @@ const getAgentConfigById =
   (s: AgentStoreState): LobeAgentConfig =>
     merge(s.defaultAgentConfig, s.agentMap[id]);
 
+const getAgentConfigByAgentId =
+  (agentId: string) =>
+  (s: AgentStoreState): LobeAgentConfig => {
+    // Find the session that contains this agent
+    const sessionId = Object.keys(s.agentMap).find((sessionKey) => {
+      const agentConfig = s.agentMap[sessionKey];
+      return agentConfig?.id === agentId;
+    });
+
+    if (sessionId) {
+      return merge(s.defaultAgentConfig, s.agentMap[sessionId]);
+    }
+
+    // Fallback to default config if agent not found
+    return s.defaultAgentConfig;
+  };
+
 export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
   getAgentConfigById(s.activeId)(s);
 
@@ -155,6 +172,7 @@ export const agentSelectors = {
   currentAgentTTSVoice,
   currentEnabledKnowledge,
   currentKnowledgeIds,
+  getAgentConfigByAgentId,
   getAgentConfigById,
   hasEnabledKnowledge,
   hasKnowledge,
