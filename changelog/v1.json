@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor message proccesser to the context engine."]
+    },
+    "date": "2025-09-12",
+    "version": "1.128.1"
+  },
+  {
+    "children": {
       "features": ["ChatInput support resize."]
     },
     "date": "2025-09-12",
