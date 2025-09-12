@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "Lütfen TeX formülünü girin"
   },
+  "slash": {
+    "h1": "Birinci Seviye Başlık",
+    "h2": "İkinci Seviye Başlık",
+    "h3": "Üçüncü Seviye Başlık",
+    "hr": "Ayırıcı Çizgi",
+    "table": "Tablo",
+    "tex": "TeX Formülü"
+  },
   "table": {
     "delete": "Tabloyu sil",
     "deleteColumn": "Sütunu sil",
@@ -46,7 +54,7 @@
     "link": "Bağlantı",
     "numberList": "Numaralı liste",
     "strikethrough": "Üstü çizili",
-    "table": "Tablo ekle",
+    "table": "tablo",
     "taskList": "Görev Listesi",
     "tex": "TeX Formülü",
     "underline": "Altı çizili"
