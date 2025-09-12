@@ -24,17 +24,24 @@ npm install @lobehub/context-engine
 ### Basic Pipeline Setup
 
 ```typescript
-import { ContextPipeline, SystemRoleInjector, HistoryInjector, HistoryTruncator } from '@lobehub/context-engine';
+import {
+  ContextEngine,
+  HistoryInjector,
+  HistoryTruncator,
+  SystemRoleInjector,
+} from '@lobehub/context-engine';
 
 // Create processors
 const processors = [
-  new SystemRoleInjector("你是一个乐于助人的助手。"),
+  new SystemRoleInjector('你是一个乐于助人的助手。'),
   new HistoryInjector(),
   new HistoryTruncator(20),
 ];
 
 // Create and run pipeline
-const pipeline = new ContextPipeline(processors);
+const pipeline = new ContextEngine({
+  pipeline: processors,
+});
 const result = await pipeline.process({
   initialState: agentState,
   messages: [],
@@ -51,19 +58,21 @@ import { ContextProcessor, PipelineContext } from '@lobehub/context-engine';
 // Create custom processor
 class CustomContentProcessor implements ContextProcessor {
   name = 'CustomContentProcessor';
-  
+
   async process(context: PipelineContext): Promise<PipelineContext> {
     // Your custom logic here
     return context;
   }
 }
 
-const pipeline = new ContextPipeline([
-  new SystemRoleInjector("你是一个专业的AI助手"),
-  new HistoryInjector(),
-  new CustomContentProcessor(),
-  new HistoryTruncator(15),
-]);
+const pipeline = new ContextEngine({
+  pipeline: [
+    new SystemRoleInjector('你是一个专业的AI助手'),
+    new HistoryInjector(),
+    new CustomContentProcessor(),
+    new HistoryTruncator(15),
+  ],
+});
 ```
 
 ## 🏗️ Architecture
@@ -72,18 +81,20 @@ The Context Engine follows the Pipeline pattern with the following core componen
 
 - **PipelineContext**: Rich data structure flowing through the pipeline
 - **ContextProcessor**: Standardized interface for processing stations
-- **ContextPipeline**: Main orchestrator that executes processors sequentially
+- **ContextEngine**: Main orchestrator that executes processors sequentially
 
 ### Processor Types
 
 #### Injector Processors
+
 - `SystemRoleInjector` - Inject system role messages
 - `HistoryInjector` - Inject historical messages
 - `FilesContextInjector` - Inject file context information
 - `RAGContextInjector` - Inject RAG retrieval context
 - And more...
 
-#### Transformer Processors  
+#### Transformer Processors
+
 - `HistoryTruncator` - Truncate messages based on count/tokens
 - `ImageContentProcessor` - Process image content transformation
 - `MessageRoleTransformer` - Transform message roles and formats
@@ -91,11 +102,13 @@ The Context Engine follows the Pipeline pattern with the following core componen
 - And more...
 
 #### Validator Processors
+
 - `ModelCapabilityValidator` - Validate model capabilities
 - `EmptyMessageValidator` - Validate message content
 - `HistoryCountValidator` - Validate history count
 
 #### Optimizer Processors
+
 - `HistorySummaryProcessor` - Process and inject history summaries
 - `TokenBasedTruncator` - Smart truncation based on token limits
 

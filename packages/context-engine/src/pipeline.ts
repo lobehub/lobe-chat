@@ -9,17 +9,26 @@ import type {
 } from './types';
 import { PipelineError } from './types';
 
-const log = debug('context-engine:ContextPipeline');
+const log = debug('context-engine:ContextEngine');
 
 /**
- * 上下文管道 - 核心编排器，按顺序执行处理器
+ * 上下文引擎配置
  */
-export class ContextPipeline {
+export interface ContextEngineConfig extends ProcessorOptions {
+  /** 处理器管道 */
+  pipeline: ContextProcessor[];
+}
+
+/**
+ * 上下文引擎 - 核心编排器，按顺序执行处理器
+ */
+export class ContextEngine {
   private processors: ContextProcessor[] = [];
   private options: ProcessorOptions;
 
-  constructor(processors: ContextProcessor[] = [], options: ProcessorOptions = {}) {
-    this.processors = [...processors];
+  constructor(config: ContextEngineConfig) {
+    const { pipeline, ...options } = config;
+    this.processors = [...pipeline];
     this.options = {
       debug: false,
       logger: console.log,
@@ -167,8 +176,11 @@ export class ContextPipeline {
   /**
    * 克隆管道（深拷贝处理器列表）
    */
-  clone(): ContextPipeline {
-    return new ContextPipeline([...this.processors], { ...this.options });
+  clone(): ContextEngine {
+    return new ContextEngine({
+      pipeline: [...this.processors],
+      ...this.options,
+    });
   }
 
   /**

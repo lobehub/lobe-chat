@@ -1,9 +1,10 @@
 import { INBOX_SESSION_ID, isServerMode } from '@lobechat/const';
 import {
   type AgentState,
-  ContextPipeline,
+  ContextEngine,
   HistorySummaryProvider,
   InboxGuideProvider,
+  MessageCleanupProcessor,
   MessageContentProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
@@ -67,55 +68,58 @@ export const processMessages = async (
   },
   options?: FetchOptions,
 ): Promise<OpenAIChatMessage[]> => {
-  // 创建系统角色注入 providers
-  const systemRoleProviders = [
-    // 1. 收件箱引导系统角色注入
-    new InboxGuideProvider({
-      inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
-      inboxSessionId: INBOX_SESSION_ID,
-      isWelcomeQuestion: options?.isWelcomeQuestion,
-      sessionId: options?.trace?.sessionId,
-    }),
+  const pipeline = new ContextEngine({
+    pipeline: [
+      // 创建系统角色注入 providers
 
-    // 2. 工具系统角色注入
-    new ToolSystemRoleProvider({
-      getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
-      isCanUseFC,
-      model,
-      provider,
-      tools,
-    }),
+      // 1. 收件箱引导系统角色注入
+      new InboxGuideProvider({
+        inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
+        inboxSessionId: INBOX_SESSION_ID,
+        isWelcomeQuestion: options?.isWelcomeQuestion,
+        sessionId: options?.trace?.sessionId,
+      }),
 
-    // 3. 历史摘要注入
-    new HistorySummaryProvider({
-      formatHistorySummary: historySummaryPrompt,
-      historySummary: options?.historySummary,
-    }),
-  ];
+      // 2. 工具系统角色注入
+      new ToolSystemRoleProvider({
+        getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
+        isCanUseFC,
+        model,
+        provider,
+        tools,
+      }),
 
-  // 创建消息处理 processors
-  const messageProcessors = [
-    // 1. 消息内容处理
-    new MessageContentProcessor({
-      isAddFileContext: isServerMode,
-      isCanUseVision,
-      model,
-      provider,
-    }),
+      // 3. 历史摘要注入
+      new HistorySummaryProvider({
+        formatHistorySummary: historySummaryPrompt,
+        historySummary: options?.historySummary,
+      }),
 
-    // 2. 工具调用处理
-    new ToolCallProcessor({
-      genToolCallingName,
-      isCanUseFC,
-      model,
-      provider,
-    }),
+      // 创建消息处理 processors
 
-    // 3. 工具重排
-    new ToolMessageReorder(),
-  ];
+      // 1. 消息内容处理
+      new MessageContentProcessor({
+        isAddFileContext: isServerMode,
+        isCanUseVision,
+        model,
+        provider,
+      }),
 
-  const pipeline = new ContextPipeline([...systemRoleProviders, ...messageProcessors]);
+      // 2. 工具调用处理
+      new ToolCallProcessor({
+        genToolCallingName,
+        isCanUseFC,
+        model,
+        provider,
+      }),
+
+      // 3. 工具重排
+      new ToolMessageReorder(),
+
+      // 4. 消息清理（最后一步，只保留必要字段）
+      new MessageCleanupProcessor(),
+    ],
+  });
 
   const initialState: AgentState = {
     messages,

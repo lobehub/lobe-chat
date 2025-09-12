@@ -5,8 +5,9 @@ export type * from './types';
 export { BaseProcessor } from './base/BaseProcessor';
 export { BaseProvider } from './base/BaseProvider';
 
-// Pipeline
-export { ContextPipeline } from './pipeline';
+// Context Engine
+export type { ContextEngineConfig } from './pipeline';
+export { ContextEngine } from './pipeline';
 
 // Context Providers
 export {
@@ -24,6 +25,7 @@ export {
 
 // Processors
 export {
+  MessageCleanupProcessor,
   MessageContentProcessor,
   ModelCapabilityValidator,
   ToolCallProcessor,

@@ -1,4 +1,5 @@
 // Transformer processors
+export { MessageCleanupProcessor } from './MessageCleanupProcessor';
 export { MessageContentProcessor } from './MessageContentProcessor';
 export { ToolCallProcessor } from './ToolCallProcessor';
 export { ToolMessageReorder } from './ToolMessageReorder';
