@@ -1,11 +1,4 @@
-import React from 'react';
-
-import { BasicDemo } from '@/components/Markdown/demos';
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-
-const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
-
-const readmeContent = `# Markdown组件
+const MARKDOWN_README = `# Markdown组件
 
 一个功能强大的React Native Markdown渲染组件，支持数学公式、代码高亮、图片、视频等多种内容类型。
 
@@ -87,6 +80,4 @@ $$\\\\int_{-\\\\infty}^{\\\\infty} e^{-x^2} dx = \\\\sqrt{\\\\pi}$$
 
 更多详细信息请查看完整的README文档。`;
 
-export default function MarkdownPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={readmeContent} />;
-}
+export default MARKDOWN_README;

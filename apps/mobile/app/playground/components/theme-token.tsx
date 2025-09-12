@@ -1,4 +1,4 @@
-import ThemeTokensPlayground from '@/features/playground/components/theme-token';
+import ThemeTokensPlayground from '@/components/theme/theme-token';
 
 export default function ThemeTokensPlaygroundPage() {
   return <ThemeTokensPlayground />;

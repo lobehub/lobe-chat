@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import { BasicDemo, RangeDemo, ControlledDemo, MarksDemo } from '@/components/Slider/demos';
-
 const SLIDER_README = `# Slider 滑动输入条组件
 
 React Native 版本的滑动输入条组件，支持自定义范围、步长和流畅的手势交互。
@@ -162,13 +157,4 @@ import Slider from '@/components/Slider';
 - 一致的设计规范
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <RangeDemo />, key: 'range', title: '不同范围' },
-  { component: <ControlledDemo />, key: 'controlled', title: '受控模式' },
-  { component: <MarksDemo />, key: 'marks', title: '刻度标记' },
-];
-
-export default function SliderPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={SLIDER_README} />;
-}
+export default SLIDER_README;

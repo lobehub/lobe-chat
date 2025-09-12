@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import { BasicDemo, SizesDemo, ComparisonDemo, TypeDemo } from '@/components/FluentEmoji/demos';
-
 const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件
 
 微软 Fluent 风格的 3D 表情符号组件，支持自定义大小和回退。
@@ -58,13 +53,4 @@ FluentEmoji 组件提供了微软 Fluent 设计体系的 3D 表情符号，相�
 当 3D 表情符号加载失败时，会自动回退到原始的 Unicode 表情符号，确保功能的可用性。
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
-  { component: <ComparisonDemo />, key: 'comparison', title: '3D vs 原始' },
-  { component: <TypeDemo />, key: 'type', title: '不同类型' },
-];
-
-export default function FluentEmojiPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={FLUENTEMOJI_README} />;
-}
+export default FLUENTEMOJI_README;

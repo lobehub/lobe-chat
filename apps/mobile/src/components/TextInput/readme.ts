@@ -1,29 +1,4 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import {
-  BasicDemo,
-  PrefixDemo,
-  SuffixDemo,
-  SearchDemo,
-  PasswordDemo,
-  CompoundDemo,
-  VariantDemo,
-  SizesDemo,
-} from '@/components/TextInput/demos';
-
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <PrefixDemo />, key: 'prefix', title: '带前缀' },
-  { component: <SuffixDemo />, key: 'suffix', title: '带后缀' },
-  { component: <SearchDemo />, key: 'search', title: '搜索输入框' },
-  { component: <PasswordDemo />, key: 'password', title: '密码输入框' },
-  { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
-  { component: <VariantDemo />, key: 'variant', title: '外观变体' },
-  { component: <SizesDemo />, key: 'sizes', title: '尺寸大小' },
-];
-
-const readmeContent = `# TextInput组件
+const TEXTINPUT_README = `# TextInput组件
 
 一个增强的React Native文本输入组件，支持前缀、后缀和复合组件。
 
@@ -160,6 +135,4 @@ import { TouchableOpacity } from 'react-native';
 - **灵活性**：支持各种自定义需求
 - **易用性**：简单直观的API设计`;
 
-export default function TextInputPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={readmeContent} />;
-}
+export default TEXTINPUT_README;

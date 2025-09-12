@@ -1,15 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import {
-  BasicDemo,
-  AvatarDemo,
-  ParagraphDemo,
-  ComplexDemo,
-  AnimatedDemo,
-  CompoundDemo,
-} from '@/components/Skeleton/demos';
-
 const SKELETON_README = `# Skeleton 骨架屏组件
 
 React Native版本的骨架屏组件，参考Ant Design设计，用于页面加载状态显示。
@@ -160,15 +148,4 @@ import Skeleton from '@/components/Skeleton';
 可以通过 \`backgroundColor\` 和 \`highlightColor\` 属性自定义骨架屏的颜色，也可以通过 \`style\` 属性自定义容器样式。
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <AnimatedDemo />, key: 'animated', title: '动画效果' },
-  { component: <AvatarDemo />, key: 'avatar', title: '头像骨架屏' },
-  { component: <ParagraphDemo />, key: 'paragraph', title: '段落骨架屏' },
-  { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
-  { component: <ComplexDemo />, key: 'complex', title: '复杂示例' },
-];
-
-export default function SkeletonPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={SKELETON_README} />;
-}
+export default SKELETON_README;

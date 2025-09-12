@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@/components/Tooltip/demos';
-
 const TOOLTIP_README = `# Tooltip 组件
 
 参考 Ant Design 的 Tooltip 组件设计，为 React Native 应用提供功能完整的提示框组件。
@@ -63,13 +58,4 @@ type TooltipTrigger = 'click' | 'longPress' | 'none';
 \`\`\`
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <TriggerDemo />, key: 'trigger', title: '触发方式' },
-  { component: <PositionDemo />, key: 'position', title: '不同位置' },
-  { component: <AdvancedDemo />, key: 'advanced', title: '高级功能' },
-];
-
-export default function TooltipPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={TOOLTIP_README} />;
-}
+export default TOOLTIP_README;

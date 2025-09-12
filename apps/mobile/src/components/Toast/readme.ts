@@ -1,23 +1,4 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import {
-  AdvancedDemo,
-  BasicDemo,
-  IntegrationDemo,
-  StaticDemo,
-  TypesDemo,
-} from '@/components/Toast/demos';
-
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <TypesDemo />, key: 'types', title: '类型演示' },
-  { component: <StaticDemo />, key: 'static', title: '静态方法' },
-  { component: <AdvancedDemo />, key: 'advanced', title: '高级功能' },
-  { component: <IntegrationDemo />, key: 'integration', title: '集成示例' },
-];
-
-const readmeContent = `# Toast组件
+const TOAST_README = `# Toast组件
 
 一个优雅的React Native Toast通知组件，支持多种类型的消息提示和动画效果。
 
@@ -98,6 +79,4 @@ export default function MyComponent() {
 
 更多详细信息请查看完整的README文档。`;
 
-export default function ToastPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={readmeContent} />;
-}
+export default TOAST_README;

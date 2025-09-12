@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import BasicDemo from '@/components/ColorSwatches/demos/basic';
-
 const COLORSWATCHES_README = `# ColorSwatches 颜色选择器组件
 
 React Native版本的颜色选择器组件，基于 LobeUI 的 ColorSwatches 组件重写。
@@ -123,14 +118,4 @@ ColorSwatches 与项目的颜色系统完全集成，支持：
 \`\`\`
 `;
 
-const demos: DemoItem[] = [
-  {
-    component: <BasicDemo />,
-    key: 'basic',
-    title: '基础演示',
-  },
-];
-
-export default function ColorSwatchesPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={COLORSWATCHES_README} />;
-}
+export default COLORSWATCHES_README;

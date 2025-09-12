@@ -1,10 +1,4 @@
-import React from 'react';
-
-import { AdvancedDemo, AvatarsDemo, BasicDemo, NavigationDemo } from '@/components/ListItem/demos';
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-
-// 读取README内容
-const readmeContent = `# ListItem组件
+const LISTITEM_README = `# ListItem组件
 
 一个功能丰富的React Native列表项组件，支持头像、描述、额外内容显示和路由导航。
 
@@ -23,13 +17,4 @@ const readmeContent = `# ListItem组件
 
 查看完整文档请切换到 README 选项卡。`;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <AvatarsDemo />, key: 'avatars', title: '头像类型' },
-  { component: <NavigationDemo />, key: 'navigation', title: '导航交互' },
-  { component: <AdvancedDemo />, key: 'advanced', title: '高级功能' },
-];
-
-export default function ListItemPlayground() {
-  return <ComponentPlayground demos={demos} readmeContent={readmeContent} />;
-}
+export default LISTITEM_README;

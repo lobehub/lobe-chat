@@ -1,13 +1,3 @@
-import React from 'react';
-
-import {
-  BasicHighlighterDemo,
-  CompactHighlighterDemo,
-  FullFeaturedHighlighterDemo,
-  LanguagesHighlighterDemo,
-} from '@/components/Highlighter/demos';
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-
 const HIGHLIGHTER_README = `# Highlighter 组件
 
 基于 Shiki 的高性能代码高亮组件，为 React Native 应用提供丰富的语法高亮功能。
@@ -108,13 +98,4 @@ import Highlighter from '@/components/Highlighter';
 />
 \`\`\``;
 
-const demos: DemoItem[] = [
-  { component: <BasicHighlighterDemo />, key: 'basic', title: '基础高亮' },
-  { component: <FullFeaturedHighlighterDemo />, key: 'fullFeatured', title: '完整功能' },
-  { component: <CompactHighlighterDemo />, key: 'compact', title: '紧凑型' },
-  { component: <LanguagesHighlighterDemo />, key: 'languages', title: '多语言' },
-];
-
-export default function HighlighterPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={HIGHLIGHTER_README} />;
-}
+export default HIGHLIGHTER_README;

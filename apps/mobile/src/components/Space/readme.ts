@@ -1,14 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import {
-  BasicDemo,
-  DirectionsDemo,
-  SizesDemo,
-  AlignmentDemo,
-  AdvancedDemo,
-} from '@/components/Space/demos';
-
 const SPACE_README = `# Space 间距组件
 
 设置组件之间的间距，支持水平/垂直布局、不同对齐方式和分隔符。
@@ -70,14 +59,4 @@ import Space from '@/components/Space';
 | style | \`ViewStyle\` | - | 容器样式 |
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <DirectionsDemo />, key: 'directions', title: '方向' },
-  { component: <SizesDemo />, key: 'sizes', title: '间距大小' },
-  { component: <AlignmentDemo />, key: 'alignment', title: '对齐方式' },
-  { component: <AdvancedDemo />, key: 'advanced', title: '高级功能' },
-];
-
-export default function SpacePlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={SPACE_README} />;
-}
+export default SPACE_README;

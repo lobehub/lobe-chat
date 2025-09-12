@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import { BasicDemo, SizesDemo, StatesDemo } from '@/components/InstantSwitch/demos';
-
 const INSTANT_SWITCH_README = `# InstantSwitch 即时开关组件
 
 React Native版本的即时开关组件，支持异步切换操作，参考web端InstantSwitch实现。
@@ -111,12 +106,4 @@ InstantSwitch专门为异步操作设计，支持：
 - 需要异步确认的操作
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
-  { component: <StatesDemo />, key: 'states', title: '状态演示' },
-];
-
-export default function InstantSwitchPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={INSTANT_SWITCH_README} />;
-}
+export default INSTANT_SWITCH_README;

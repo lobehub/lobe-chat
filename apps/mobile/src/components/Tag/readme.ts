@@ -1,8 +1,3 @@
-import React from 'react';
-
-import ComponentPlayground, { DemoItem } from '../../../components/Playground';
-import { BasicDemo, ColorsDemo, UseCaseDemo, BorderDemo, PresetDemo } from '@/components/Tag/demos';
-
 const TAG_README = `# Tag 标签组件
 
 进行标记和分类的小标签组件，支持自定义样式。
@@ -59,14 +54,4 @@ import Tag from '@/components/Tag';
 - \`textStyle\`: 控制标签文本的样式（颜色、字体大小、字重等）
 `;
 
-const demos: DemoItem[] = [
-  { component: <BasicDemo />, key: 'basic', title: '基础用法' },
-  { component: <ColorsDemo />, key: 'colors', title: '颜色样式' },
-  { component: <PresetDemo />, key: 'preset', title: '预设颜色' },
-  { component: <BorderDemo />, key: 'border', title: '无边框' },
-  { component: <UseCaseDemo />, key: 'usecase', title: '实际应用' },
-];
-
-export default function TagPlaygroundPage() {
-  return <ComponentPlayground demos={demos} readmeContent={TAG_README} />;
-}
+export default TAG_README;
