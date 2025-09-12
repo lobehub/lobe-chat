@@ -11,7 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [file-loaders, prompts, model-runtime, web-crawler, electron-server-ipc, utils]
+        package:
+          - file-loaders
+          - prompts
+          - model-runtime
+          - web-crawler
+          - electron-server-ipc
+          - utils
+          - context-engine
 
     name: Test package ${{ matrix.package }}
 
