@@ -221,3 +221,5 @@ export const createRouterRuntime = ({
     }
   };
 };
+
+export type UniformRuntime = InstanceType<ReturnType<typeof createRouterRuntime>>;

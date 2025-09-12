@@ -9,6 +9,7 @@ export enum ModelProvider {
   AzureAI = 'azureai',
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
+  Bfl = 'bfl',
   Cloudflare = 'cloudflare',
   Cohere = 'cohere',
   CometAPI = 'cometapi',
