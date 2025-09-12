@@ -17,7 +17,7 @@ This guide is based on actual code implementation and helps developers extend Lo
 LobeChat ComfyUI integration uses a four-layer service architecture built around the main `LobeComfyUI` class:
 
 ```
-packages/model-runtime/src/comfyui/
+packages/model-runtime/src/providers/comfyui/
 ├── index.ts                      # LobeComfyUI main class entry
 ├── services/                     # Four core services
 │   ├── comfyuiClient.ts         # ComfyUIClientService - client and auth
@@ -49,6 +49,48 @@ packages/model-runtime/src/comfyui/
     ├── modelResolverError.ts    # Model resolution errors
     ├── workflowError.ts         # Workflow errors
     └── servicesError.ts         # Service errors
+
+src/server/services/comfyui/     # Server-side implementation
+├── core/                         # Core server services
+│   ├── comfyUIAuthService.ts    # Authentication service
+│   ├── comfyUIClientService.ts  # Client service
+│   ├── comfyUIConnectionService.ts # Connection service
+│   ├── errorHandlerService.ts   # Error handling service
+│   ├── imageService.ts          # Image generation service
+│   ├── modelResolverService.ts  # Model resolution service
+│   └── workflowBuilderService.ts # Workflow builder service
+├── config/                       # Server-side configurations
+│   ├── constants.ts             # Constants and defaults
+│   ├── modelRegistry.ts         # Model registry
+│   ├── fluxModelRegistry.ts     # FLUX models
+│   ├── sdModelRegistry.ts       # SD models
+│   ├── systemComponents.ts      # System components
+│   └── workflowRegistry.ts      # Workflow registry
+├── workflows/                    # Server-side workflow implementations
+│   ├── flux-dev.ts              # FLUX Dev workflow
+│   ├── flux-schnell.ts          # FLUX Schnell workflow
+│   ├── flux-kontext.ts          # FLUX Kontext workflow
+│   ├── sd35.ts                  # SD3.5 workflow
+│   └── simple-sd.ts             # Simple SD workflow
+├── utils/                        # Server utilities
+│   ├── cacheManager.ts          # Cache management
+│   ├── componentInfo.ts         # Component information
+│   ├── imageResizer.ts          # Image resizing
+│   ├── promptSplitter.ts        # Prompt splitting
+│   ├── staticModelLookup.ts     # Model lookup
+│   ├── weightDType.ts           # Weight dtype utilities
+│   ├── workflowDetector.ts      # Workflow detection
+│   └── workflowUtils.ts         # Workflow utilities
+└── errors/                       # Server error handling
+    ├── base.ts                  # Base error classes
+    ├── configError.ts           # Configuration errors
+    ├── modelResolverError.ts    # Model resolver errors
+    ├── servicesError.ts         # Service errors
+    ├── utilsError.ts            # Utility errors
+    └── workflowError.ts         # Workflow errors
+
+packages/model-runtime/src/utils/  # Shared utilities
+└── comfyuiErrorParser.ts        # Unified error parser for client/server
 ```
 
 ### Core Service Architecture
@@ -56,7 +98,7 @@ packages/model-runtime/src/comfyui/
 The main `LobeComfyUI` class initializes four core services:
 
 ```typescript
-// packages/model-runtime/src/comfyui/index.ts
+// packages/model-runtime/src/providers/comfyui/index.ts
 export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
   constructor(options: ComfyUIKeyVault = {}) {
     // 1. Client Service - handles auth and API calls
@@ -136,6 +178,58 @@ const comfyUI = new LobeComfyUI({
 });
 ```
 
+## WebAPI Routes
+
+ComfyUI provides a REST WebAPI route for image generation, supporting both regular authentication and internal service authentication:
+
+### Route Details
+
+```typescript
+// src/app/(backend)/webapi/text-to-image/comfyui/route.ts
+export const runtime = 'nodejs';
+export const maxDuration = 300;  // 5 minutes max
+
+// POST /api/text-to-image/comfyui
+{
+  model: string;           // Model identifier
+  params: {                // Generation parameters
+    prompt: string;
+    width?: number;
+    height?: number;
+    // ... other parameters
+  };
+  options?: {              // Optional generation options
+    // ... additional options
+  };
+}
+```
+
+### Authentication Middleware
+
+The WebAPI route uses the `checkAuth` middleware for authentication:
+
+```typescript
+import { checkAuth } from '@/app/(backend)/middleware/auth';
+
+// The route automatically validates JWT tokens
+// and passes authentication context to the tRPC caller
+```
+
+### Error Handling
+
+The WebAPI route provides structured error responses:
+
+```typescript
+// AgentRuntimeError is extracted from TRPCError's cause
+if (agentError && 'errorType' in agentError) {
+  // Convert errorType to appropriate HTTP status
+  // 401 for InvalidProviderAPIKey
+  // 403 for PermissionDenied
+  // 404 for NotFound
+  // 500+ for server errors
+}
+```
+
 ## Adding New Models
 
 ### 1. Understanding Model Registry Structure
@@ -143,7 +237,7 @@ const comfyUI = new LobeComfyUI({
 Model configurations are stored in configuration files:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/modelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/modelRegistry.ts
 export interface ModelConfig {
   modelFamily: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
   priority: number;        // 1=Official, 2=Enterprise, 3=Community
@@ -157,7 +251,7 @@ export interface ModelConfig {
 Add new models in `fluxModelRegistry.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/fluxModelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/fluxModelRegistry.ts
 export const FLUX_MODEL_REGISTRY: Record<string, ModelConfig> = {
   // Existing models...
 
@@ -184,7 +278,7 @@ export const FLUX_MODEL_REGISTRY: Record<string, ModelConfig> = {
 Add in `sdModelRegistry.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/sdModelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/sdModelRegistry.ts
 export const SD_MODEL_REGISTRY: Record<string, ModelConfig> = {
   // Existing models...
 
@@ -203,7 +297,7 @@ export const SD_MODEL_REGISTRY: Record<string, ModelConfig> = {
 If you need friendly model IDs for frontend, add mapping in `modelRegistry.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/modelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/modelRegistry.ts
 export const MODEL_ID_VARIANT_MAP: Record<string, string> = {
   // Existing mappings...
 
@@ -350,7 +444,7 @@ export async function buildYourCustomWorkflow(
 Add workflow mapping in `workflowRegistry.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/workflowRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/workflowRegistry.ts
 import { buildYourCustomWorkflow } from '../workflows/your-workflow';
 
 export const VARIANT_WORKFLOW_MAP: Record<string, WorkflowBuilder> = {
@@ -366,7 +460,7 @@ export const VARIANT_WORKFLOW_MAP: Record<string, WorkflowBuilder> = {
 Reference the real implementation in `flux-dev.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/workflows/flux-dev.ts (simplified)
+// packages/model-runtime/src/providers/comfyui/workflows/flux-dev.ts (simplified)
 export async function buildFluxDevWorkflow(
   modelFileName: string,
   params: Record<string, any>,
@@ -414,7 +508,7 @@ export async function buildFluxDevWorkflow(
 All system components (VAE, CLIP, T5, LoRA, ControlNet) are unified in `systemComponents.ts`:
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/systemComponents.ts
+// packages/model-runtime/src/providers/comfyui/config/systemComponents.ts
 export interface ComponentConfig {
   modelFamily: string;           // Model family
   priority: number;             // 1=Required, 2=Standard, 3=Optional
@@ -514,7 +608,7 @@ const cannyControlNets = getAllComponentsWithNames({
 ### ModelResolverService Working Principles
 
 ```typescript
-// packages/model-runtime/src/comfyui/services/modelResolver.ts
+// packages/model-runtime/src/providers/comfyui/services/modelResolver.ts
 export class ModelResolverService {
   async resolveModelFileName(modelId: string): Promise<string | undefined> {
     // 1. Clean model ID
@@ -577,7 +671,7 @@ console.log(devModels.slice(0, 3));
 ### Error Type Hierarchy
 
 ```typescript
-// packages/model-runtime/src/comfyui/errors/
+// packages/model-runtime/src/providers/comfyui/errors/
 ComfyUIInternalError              // Base error
 ├── ModelResolverError           // Model resolution errors
 ├── WorkflowError               // Workflow errors
@@ -606,6 +700,29 @@ try {
 }
 ```
 
+### Unified Error Parser
+
+A shared error parser is available for both client and server-side error handling:
+
+```typescript
+// packages/model-runtime/src/utils/comfyuiErrorParser.ts
+import { parseComfyUIErrorMessage, cleanComfyUIErrorMessage } from '../utils/comfyuiErrorParser';
+
+// Parse error messages and determine error types
+const { error, errorType } = parseComfyUIErrorMessage(rawError);
+
+// Clean error messages from ComfyUI formatting
+const cleanMessage = cleanComfyUIErrorMessage(errorMessage);
+```
+
+The error parser handles:
+
+- HTTP status code mapping to error types
+- Server-side error enhancement
+- Model file missing detection
+- Network error identification
+- Workflow validation errors
+
 ## Testing Architecture and Development
 
 ### Testing Architecture Overview
@@ -620,7 +737,7 @@ The ComfyUI integration uses a unified testing architecture that ensures maintai
 ### Test File Structure
 
 ```
-packages/model-runtime/src/comfyui/__tests__/
+packages/model-runtime/src/providers/comfyui/__tests__/
 ├── setup/
 │   └── unifiedMocks.ts              # Unified Mock configuration
 ├── fixtures/
@@ -651,7 +768,7 @@ export const myNewModelParamsSchema = {
 #### 2. Create Workflow Builder
 
 ```typescript
-// packages/model-runtime/src/comfyui/workflows/myNewModel.ts
+// packages/model-runtime/src/providers/comfyui/workflows/myNewModel.ts
 export async function buildMyNewModelWorkflow(
   modelName: string,
   params: MyNewModelParams,
@@ -670,7 +787,7 @@ export async function buildMyNewModelWorkflow(
 #### 3. Register Model in Fixtures
 
 ```typescript
-// packages/model-runtime/src/comfyui/__tests__/fixtures/parameters.fixture.ts
+// packages/model-runtime/src/providers/comfyui/__tests__/fixtures/parameters.fixture.ts
 import {
   myNewModelParamsSchema,
   // ... other schemas

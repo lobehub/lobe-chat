@@ -17,7 +17,7 @@ tags:
 LobeChat ComfyUI 集成采用四层服务架构，围绕 `LobeComfyUI` 主类构建：
 
 ```
-packages/model-runtime/src/comfyui/
+packages/model-runtime/src/providers/comfyui/
 ├── index.ts                      # LobeComfyUI 主类入口
 ├── services/                     # 四大核心服务
 │   ├── comfyuiClient.ts         # ComfyUIClientService - 客户端和认证
@@ -49,6 +49,48 @@ packages/model-runtime/src/comfyui/
     ├── modelResolverError.ts    # 模型解析错误
     ├── workflowError.ts         # 工作流错误
     └── servicesError.ts         # 服务错误
+
+src/server/services/comfyui/     # 服务端实现
+├── core/                         # 核心服务器服务
+│   ├── comfyUIAuthService.ts    # 认证服务
+│   ├── comfyUIClientService.ts  # 客户端服务
+│   ├── comfyUIConnectionService.ts # 连接服务
+│   ├── errorHandlerService.ts   # 错误处理服务
+│   ├── imageService.ts          # 图像生成服务
+│   ├── modelResolverService.ts  # 模型解析服务
+│   └── workflowBuilderService.ts # 工作流构建服务
+├── config/                       # 服务器端配置
+│   ├── constants.ts             # 常量和默认值
+│   ├── modelRegistry.ts         # 模型注册表
+│   ├── fluxModelRegistry.ts     # FLUX模型
+│   ├── sdModelRegistry.ts       # SD模型
+│   ├── systemComponents.ts      # 系统组件
+│   └── workflowRegistry.ts      # 工作流注册表
+├── workflows/                    # 服务端工作流实现
+│   ├── flux-dev.ts              # FLUX Dev 工作流
+│   ├── flux-schnell.ts          # FLUX Schnell 工作流
+│   ├── flux-kontext.ts          # FLUX Kontext 工作流
+│   ├── sd35.ts                  # SD3.5 工作流
+│   └── simple-sd.ts             # Simple SD 工作流
+├── utils/                        # 服务器工具
+│   ├── cacheManager.ts          # 缓存管理
+│   ├── componentInfo.ts         # 组件信息
+│   ├── imageResizer.ts          # 图像调整
+│   ├── promptSplitter.ts        # 提示词分割
+│   ├── staticModelLookup.ts     # 模型查找
+│   ├── weightDType.ts           # 权重数据类型工具
+│   ├── workflowDetector.ts      # 工作流检测
+│   └── workflowUtils.ts         # 工作流工具
+└── errors/                       # 服务器错误处理
+    ├── base.ts                  # 基础错误类
+    ├── configError.ts           # 配置错误
+    ├── modelResolverError.ts    # 模型解析器错误
+    ├── servicesError.ts         # 服务错误
+    ├── utilsError.ts            # 工具错误
+    └── workflowError.ts         # 工作流错误
+
+packages/model-runtime/src/utils/  # 共享工具
+└── comfyuiErrorParser.ts        # 客户端/服务器统一错误解析器
 ```
 
 ### 核心服务架构
@@ -56,7 +98,7 @@ packages/model-runtime/src/comfyui/
 `LobeComfyUI` 主类初始化四个核心服务：
 
 ```typescript
-// packages/model-runtime/src/comfyui/index.ts
+// packages/model-runtime/src/providers/comfyui/index.ts
 export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
   constructor(options: ComfyUIKeyVault = {}) {
     // 1. 客户端服务 - 处理认证和API调用
@@ -136,6 +178,58 @@ const comfyUI = new LobeComfyUI({
 });
 ```
 
+## WebAPI 路由
+
+ComfyUI 提供了用于图像生成的 REST WebAPI 路由，支持常规认证和内部服务认证：
+
+### 路由详情
+
+```typescript
+// src/app/(backend)/webapi/text-to-image/comfyui/route.ts
+export const runtime = 'nodejs';
+export const maxDuration = 300;  // 最长5分钟
+
+// POST /api/text-to-image/comfyui
+{
+  model: string;           // 模型标识符
+  params: {                // 生成参数
+    prompt: string;
+    width?: number;
+    height?: number;
+    // ... 其他参数
+  };
+  options?: {              // 可选生成选项
+    // ... 额外选项
+  };
+}
+```
+
+### 认证中间件
+
+WebAPI 路由使用 `checkAuth` 中间件进行认证：
+
+```typescript
+import { checkAuth } from '@/app/(backend)/middleware/auth';
+
+// 路由自动验证 JWT 令牌
+// 并将认证上下文传递给 tRPC 调用器
+```
+
+### 错误处理
+
+WebAPI 路由提供结构化的错误响应：
+
+```typescript
+// 从 TRPCError 的 cause 中提取 AgentRuntimeError
+if (agentError && 'errorType' in agentError) {
+  // 将 errorType 转换为适当的 HTTP 状态码
+  // 401 对应 InvalidProviderAPIKey
+  // 403 对应 PermissionDenied
+  // 404 对应 NotFound
+  // 500+ 对应服务器错误
+}
+```
+
 ## 添加新模型
 
 ### 1. 理解模型注册表结构
@@ -143,7 +237,7 @@ const comfyUI = new LobeComfyUI({
 模型配置存储在配置文件中：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/modelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/modelRegistry.ts
 export interface ModelConfig {
   modelFamily: 'FLUX' | 'SD1' | 'SDXL' | 'SD3';
   priority: number;        // 1=官方, 2=企业, 3=社区
@@ -157,7 +251,7 @@ export interface ModelConfig {
 在 `fluxModelRegistry.ts` 中添加新模型：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/fluxModelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/fluxModelRegistry.ts
 export const FLUX_MODEL_REGISTRY: Record<string, ModelConfig> = {
   // 现有模型...
 
@@ -184,7 +278,7 @@ export const FLUX_MODEL_REGISTRY: Record<string, ModelConfig> = {
 在 `sdModelRegistry.ts` 中添加：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/sdModelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/sdModelRegistry.ts
 export const SD_MODEL_REGISTRY: Record<string, ModelConfig> = {
   // 现有模型...
 
@@ -203,7 +297,7 @@ export const SD_MODEL_REGISTRY: Record<string, ModelConfig> = {
 如果需要为前端提供友好的模型 ID，在 `modelRegistry.ts` 中添加映射：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/modelRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/modelRegistry.ts
 export const MODEL_ID_VARIANT_MAP: Record<string, string> = {
   // 现有映射...
 
@@ -350,7 +444,7 @@ export async function buildYourCustomWorkflow(
 在 `workflowRegistry.ts` 中添加工作流映射：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/workflowRegistry.ts
+// packages/model-runtime/src/providers/comfyui/config/workflowRegistry.ts
 import { buildYourCustomWorkflow } from '../workflows/your-workflow';
 
 export const VARIANT_WORKFLOW_MAP: Record<string, WorkflowBuilder> = {
@@ -366,7 +460,7 @@ export const VARIANT_WORKFLOW_MAP: Record<string, WorkflowBuilder> = {
 参考 `flux-dev.ts` 的真实实现：
 
 ```typescript
-// packages/model-runtime/src/comfyui/workflows/flux-dev.ts (简化版)
+// packages/model-runtime/src/providers/comfyui/workflows/flux-dev.ts (简化版)
 export async function buildFluxDevWorkflow(
   modelFileName: string,
   params: Record<string, any>,
@@ -414,7 +508,7 @@ export async function buildFluxDevWorkflow(
 所有系统组件（VAE、CLIP、T5、LoRA、ControlNet）统一配置在 `systemComponents.ts`：
 
 ```typescript
-// packages/model-runtime/src/comfyui/config/systemComponents.ts
+// packages/model-runtime/src/providers/comfyui/config/systemComponents.ts
 export interface ComponentConfig {
   modelFamily: string;           // 模型家族
   priority: number;             // 1=必需, 2=标准, 3=可选
@@ -514,7 +608,7 @@ const cannyControlNets = getAllComponentsWithNames({
 ### ModelResolverService 工作原理
 
 ```typescript
-// packages/model-runtime/src/comfyui/services/modelResolver.ts
+// packages/model-runtime/src/providers/comfyui/services/modelResolver.ts
 export class ModelResolverService {
   async resolveModelFileName(modelId: string): Promise<string | undefined> {
     // 1. 清理模型ID
@@ -577,7 +671,7 @@ console.log(devModels.slice(0, 3));
 ### 错误类型层次
 
 ```typescript
-// packages/model-runtime/src/comfyui/errors/
+// packages/model-runtime/src/providers/comfyui/errors/
 ComfyUIInternalError              // 基础错误
 ├── ModelResolverError           // 模型解析错误
 ├── WorkflowError               // 工作流错误
@@ -606,6 +700,29 @@ try {
 }
 ```
 
+### 统一错误解析器
+
+客户端和服务器端错误处理可使用共享的错误解析器：
+
+```typescript
+// packages/model-runtime/src/utils/comfyuiErrorParser.ts
+import { parseComfyUIErrorMessage, cleanComfyUIErrorMessage } from '../utils/comfyuiErrorParser';
+
+// 解析错误消息并确定错误类型
+const { error, errorType } = parseComfyUIErrorMessage(rawError);
+
+// 清理 ComfyUI 格式的错误消息
+const cleanMessage = cleanComfyUIErrorMessage(errorMessage);
+```
+
+错误解析器处理：
+
+- HTTP 状态码映射到错误类型
+- 服务器端错误增强
+- 模型文件缺失检测
+- 网络错误识别
+- 工作流验证错误
+
 ## 测试架构与开发
 
 ### 测试架构概述
@@ -620,7 +737,7 @@ ComfyUI 集成使用了统一的测试架构，确保测试的可维护性和定
 ### 测试文件结构
 
 ```
-packages/model-runtime/src/comfyui/__tests__/
+packages/model-runtime/src/providers/comfyui/__tests__/
 ├── setup/
 │   └── unifiedMocks.ts              # 统一Mock配置
 ├── fixtures/
@@ -651,7 +768,7 @@ export const myNewModelParamsSchema = {
 #### 2. 创建工作流构建器
 
 ```typescript
-// packages/model-runtime/src/comfyui/workflows/myNewModel.ts
+// packages/model-runtime/src/providers/comfyui/workflows/myNewModel.ts
 export async function buildMyNewModelWorkflow(
   modelName: string,
   params: MyNewModelParams,
@@ -670,7 +787,7 @@ export async function buildMyNewModelWorkflow(
 #### 3. 在夹具中注册模型
 
 ```typescript
-// packages/model-runtime/src/comfyui/__tests__/fixtures/parameters.fixture.ts
+// packages/model-runtime/src/providers/comfyui/__tests__/fixtures/parameters.fixture.ts
 import {
   myNewModelParamsSchema,
   // ... 其他架构
