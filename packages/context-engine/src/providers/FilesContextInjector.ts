@@ -52,7 +52,7 @@ export class FilesContextInjector extends BaseProvider {
             fileContext,
           );
 
-          this.log(`为消息 ${message.id} 添加了文件上下文`);
+          this.log(`Added file context for message ${message.id}`);
 
           return {
             ...message,
@@ -71,7 +71,9 @@ export class FilesContextInjector extends BaseProvider {
     clonedContext.metadata.filesContextProcessed = processedCount;
     clonedContext.metadata.totalFilesProcessed = totalFilesProcessed;
 
-    this.log(`文件上下文处理完成，处理了 ${processedCount} 条消息，${totalFilesProcessed} 个文件`);
+    this.log(
+      `File context processing completed, processed ${processedCount} messages, ${totalFilesProcessed} files`,
+    );
 
     return this.markAsExecuted(clonedContext);
   }

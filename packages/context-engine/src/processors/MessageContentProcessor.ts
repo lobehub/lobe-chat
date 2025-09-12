@@ -10,13 +10,13 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 const log = debug('context-engine:processor:MessageContentProcessor');
 
 export interface MessageContentConfig {
-  /** 是否添加文件上下文到消息中 */
+  /** Whether to add file context to messages */
   isAddFileContext?: boolean;
-  /** 是否支持视觉功能的检查函数 */
+  /** Function to check if vision is supported */
   isCanUseVision?: (model: string, provider: string) => boolean | undefined;
-  /** 模型名称 */
+  /** Model name */
   model: string;
-  /** 提供商名称 */
+  /** Provider name */
   provider: string;
 }
 
@@ -32,8 +32,8 @@ export interface UserMessageContentPart {
 }
 
 /**
- * 消息内容处理器
- * 负责处理用户和助手消息的内容格式转换
+ * Message Content Processor
+ * Responsible for handling content format conversion of user and assistant messages
  */
 export class MessageContentProcessor extends BaseProcessor {
   readonly name = 'MessageContentProcessor';
@@ -75,10 +75,10 @@ export class MessageContentProcessor extends BaseProcessor {
 
         if (updatedMessage !== message) {
           clonedContext.messages[i] = updatedMessage;
-          log(`处理消息内容 ${message.id}，角色: ${message.role}`);
+          log(`Processed message content ${message.id}, role: ${message.role}`);
         }
       } catch (error) {
-        log.extend('error')(`处理消息 ${message.id} 内容时出错: ${error}`);
+        log.extend('error')(`Error processing message ${message.id} content: ${error}`);
         // 继续处理其他消息
       }
     }
@@ -89,21 +89,21 @@ export class MessageContentProcessor extends BaseProcessor {
     clonedContext.metadata.assistantMessagesProcessed = assistantMessagesProcessed;
 
     log(
-      `消息内容处理完成，处理了 ${processedCount} 条消息（用户: ${userMessagesProcessed}，助手: ${assistantMessagesProcessed}）`,
+      `Message content processing completed, processed ${processedCount} messages (user: ${userMessagesProcessed}, assistant: ${assistantMessagesProcessed})`,
     );
 
     return this.markAsExecuted(clonedContext);
   }
 
   /**
-   * 处理用户消息内容
+   * Process user message content
    */
   private async processUserMessage(message: any): Promise<any> {
-    // 检查是否需要处理图片或文件
+    // Check if images or files need processing
     const hasImages = message.imageList && message.imageList.length > 0;
     const hasFiles = message.fileList && message.fileList.length > 0;
 
-    // 如果没有图片和文件，直接返回纯文本内容
+    // If no images and files, return plain text content directly
     if (!hasImages && !hasFiles) {
       return {
         ...message,
@@ -113,10 +113,10 @@ export class MessageContentProcessor extends BaseProcessor {
 
     const contentParts: UserMessageContentPart[] = [];
 
-    // 添加文本内容
+    // Add text content
     let textContent = message.content || '';
 
-    // 添加文件上下文（如果启用文件上下文且有文件或图片）
+    // Add file context (if file context is enabled and has files or images)
     if ((hasFiles || hasImages) && this.config.isAddFileContext) {
       const filesContext = filesPrompts({
         addUrl: !isDesktop,
@@ -129,7 +129,7 @@ export class MessageContentProcessor extends BaseProcessor {
       }
     }
 
-    // 添加文本部分
+    // Add text part
     if (textContent) {
       contentParts.push({
         text: textContent,
@@ -137,7 +137,7 @@ export class MessageContentProcessor extends BaseProcessor {
       });
     }
 
-    // 处理图片内容
+    // Process image content
     if (hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider)) {
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);

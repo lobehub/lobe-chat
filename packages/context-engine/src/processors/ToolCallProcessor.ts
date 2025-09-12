@@ -6,19 +6,19 @@ import type { MessageToolCall, PipelineContext, ProcessorOptions } from '../type
 const log = debug('context-engine:processor:ToolCallProcessor');
 
 export interface ToolCallConfig {
-  /** 生成工具调用名称的函数 */
+  /** Function to generate tool calling name */
   genToolCallingName?: (identifier: string, apiName: string, type?: string) => string;
-  /** 是否支持函数调用的检查函数 */
+  /** Function to check if function calling is supported */
   isCanUseFC?: (model: string, provider: string) => boolean;
-  /** 模型名称 */
+  /** Model name */
   model: string;
-  /** 提供商名称 */
+  /** Provider name */
   provider: string;
 }
 
 /**
- * 工具调用处理器
- * 负责将 ChatMessage 格式的工具调用转换为 OpenAI 格式
+ * Tool Call Processor
+ * Responsible for converting ChatMessage format tool calls to OpenAI format
  */
 export class ToolCallProcessor extends BaseProcessor {
   readonly name = 'ToolCallProcessor';
@@ -75,7 +75,7 @@ export class ToolCallProcessor extends BaseProcessor {
     clonedContext.metadata.supportTools = supportTools;
 
     log(
-      `工具调用处理完成，处理了 ${processedCount} 条消息，转换了 ${toolCallsConverted} 个工具调用，${toolMessagesConverted} 条工具消息`,
+      `Tool call processing completed, processed ${processedCount} messages, converted ${toolCallsConverted} tool calls, ${toolMessagesConverted} tool messages`,
     );
 
     return this.markAsExecuted(clonedContext);

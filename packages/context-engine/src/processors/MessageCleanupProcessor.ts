@@ -38,7 +38,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
       totalMessages: clonedContext.messages.length,
     };
 
-    log(`消息清理完成，清理了 ${cleanedCount} 条消息`);
+    log(`Message cleanup completed, cleaned ${cleanedCount} messages`);
     return this.markAsExecuted(clonedContext);
   }
 

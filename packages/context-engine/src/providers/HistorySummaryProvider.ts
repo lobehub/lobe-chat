@@ -6,17 +6,17 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 const log = debug('context-engine:provider:HistorySummaryProvider');
 
 /**
- * 历史摘要配置
+ * History Summary Configuration
  */
 export interface HistorySummaryConfig {
-  /** 历史摘要模板函数 */
+  /** History summary template function */
   formatHistorySummary?: (summary: string) => string;
-  /** 历史摘要内容 */
+  /** History summary content */
   historySummary?: string;
 }
 
 /**
- * 默认历史摘要格式化函数
+ * Default history summary formatter function
  */
 const defaultHistorySummaryFormatter = (historySummary: string): string => `<chat_history_summary>
 <docstring>Users may have lots of chat messages, here is the summary of the history:</docstring>
@@ -24,8 +24,8 @@ const defaultHistorySummaryFormatter = (historySummary: string): string => `<cha
 </chat_history_summary>`;
 
 /**
- * 历史摘要提供者
- * 负责将历史对话摘要注入到系统消息中
+ * History Summary Provider
+ * Responsible for injecting history conversation summary into system messages
  */
 export class HistorySummaryProvider extends BaseProvider {
   readonly name = 'HistorySummaryProvider';
@@ -42,7 +42,7 @@ export class HistorySummaryProvider extends BaseProvider {
 
     // 检查是否有历史摘要
     if (!this.config.historySummary) {
-      log('无历史摘要内容，跳过处理');
+      log('No history summary content, skipping processing');
       return this.markAsExecuted(clonedContext);
     }
 
@@ -60,13 +60,13 @@ export class HistorySummaryProvider extends BaseProvider {
     };
 
     log(
-      `历史摘要注入完成，原始长度: ${this.config.historySummary.length}, 格式化后长度: ${formattedSummary.length}`,
+      `History summary injection completed, original length: ${this.config.historySummary.length}, formatted length: ${formattedSummary.length}`,
     );
     return this.markAsExecuted(clonedContext);
   }
 
   /**
-   * 格式化历史摘要
+   * Format history summary
    */
   private formatHistorySummary(historySummary: string): string {
     const formatter = this.config.formatHistorySummary || defaultHistorySummaryFormatter;
@@ -74,7 +74,7 @@ export class HistorySummaryProvider extends BaseProvider {
   }
 
   /**
-   * 注入历史摘要到系统消息
+   * Inject history summary to system message
    */
   private injectHistorySummary(context: PipelineContext, formattedSummary: string): void {
     const existingSystemMessage = context.messages.find((msg) => msg.role === 'system');
@@ -85,7 +85,9 @@ export class HistorySummaryProvider extends BaseProvider {
         .filter(Boolean)
         .join('\n\n');
 
-      log(`历史摘要已合并到现有系统消息，最终长度: ${existingSystemMessage.content.length}`);
+      log(
+        `History summary merged to existing system message, final length: ${existingSystemMessage.content.length}`,
+      );
     } else {
       // 创建新的系统消息
       const systemMessage = {
@@ -94,7 +96,7 @@ export class HistorySummaryProvider extends BaseProvider {
       };
 
       context.messages.unshift(systemMessage as any);
-      log(`新的历史摘要系统消息已创建，内容长度: ${formattedSummary.length}`);
+      log(`New history summary system message created, content length: ${formattedSummary.length}`);
     }
   }
 }

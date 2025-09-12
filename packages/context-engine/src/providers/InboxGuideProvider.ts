@@ -6,22 +6,22 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 const log = debug('context-engine:provider:InboxGuideProvider');
 
 /**
- * 收件箱引导系统角色配置
+ * Inbox Guide System Role Configuration
  */
 export interface InboxGuideConfig {
-  /** 收件箱引导系统角色内容 */
+  /** Inbox guide system role content */
   inboxGuideSystemRole: string;
-  /** 收件箱会话ID常量 */
+  /** Inbox session ID constant */
   inboxSessionId: string;
-  /** 是否为欢迎问题 */
+  /** Whether it's a welcome question */
   isWelcomeQuestion?: boolean;
-  /** 会话ID */
+  /** Session ID */
   sessionId?: string;
 }
 
 /**
- * 收件箱引导提供者
- * 负责为收件箱会话的欢迎问题注入引导系统角色
+ * Inbox Guide Provider
+ * Responsible for injecting guide system role for welcome questions in inbox sessions
  */
 export class InboxGuideProvider extends BaseProvider {
   readonly name = 'InboxGuideProvider';
@@ -40,7 +40,7 @@ export class InboxGuideProvider extends BaseProvider {
     const shouldInject = this.shouldInjectInboxGuide();
 
     if (!shouldInject) {
-      log('不满足收件箱引导注入条件，跳过处理');
+      log('Inbox guide injection conditions not met, skipping processing');
       return this.markAsExecuted(clonedContext);
     }
 
@@ -55,12 +55,12 @@ export class InboxGuideProvider extends BaseProvider {
       sessionId: this.config.sessionId,
     };
 
-    log('收件箱引导系统角色注入完成');
+    log('Inbox guide system role injection completed');
     return this.markAsExecuted(clonedContext);
   }
 
   /**
-   * 检查是否应该注入收件箱引导
+   * Check if inbox guide should be injected
    */
   private shouldInjectInboxGuide(): boolean {
     return (
@@ -72,7 +72,7 @@ export class InboxGuideProvider extends BaseProvider {
   }
 
   /**
-   * 注入收件箱引导系统角色
+   * Inject inbox guide system role
    */
   private injectInboxGuideSystemRole(context: PipelineContext): void {
     const existingSystemMessage = context.messages.find((msg) => msg.role === 'system');
@@ -86,13 +86,17 @@ export class InboxGuideProvider extends BaseProvider {
         .filter(Boolean)
         .join('\n\n');
 
-      log(`收件箱引导已合并到现有系统消息，最终长度: ${existingSystemMessage.content.length}`);
+      log(
+        `Inbox guide merged to existing system message, final length: ${existingSystemMessage.content.length}`,
+      );
     } else {
       context.messages.unshift({
         content: this.config.inboxGuideSystemRole,
         role: 'system' as const,
       } as any);
-      log(`新的收件箱引导系统消息已创建，内容长度: ${this.config.inboxGuideSystemRole.length}`);
+      log(
+        `New inbox guide system message created, content length: ${this.config.inboxGuideSystemRole.length}`,
+      );
     }
   }
 }

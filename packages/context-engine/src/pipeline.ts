@@ -12,15 +12,15 @@ import { PipelineError } from './types';
 const log = debug('context-engine:ContextEngine');
 
 /**
- * 上下文引擎配置
+ * Context Engine Configuration
  */
 export interface ContextEngineConfig extends ProcessorOptions {
-  /** 处理器管道 */
+  /** Processor pipeline */
   pipeline: ContextProcessor[];
 }
 
 /**
- * 上下文引擎 - 核心编排器，按顺序执行处理器
+ * Context Engine - Core orchestrator that executes processors sequentially
  */
 export class ContextEngine {
   private processors: ContextProcessor[] = [];
@@ -37,7 +37,7 @@ export class ContextEngine {
   }
 
   /**
-   * 添加处理器到管道
+   * Add processor to pipeline
    */
   addProcessor(processor: ContextProcessor): this {
     this.processors.push(processor);
@@ -45,7 +45,7 @@ export class ContextEngine {
   }
 
   /**
-   * 移除处理器
+   * Remove processor
    */
   removeProcessor(name: string): this {
     this.processors = this.processors.filter((p) => p.name !== name);
@@ -53,14 +53,14 @@ export class ContextEngine {
   }
 
   /**
-   * 获取处理器列表
+   * Get processor list
    */
   getProcessors(): ContextProcessor[] {
     return [...this.processors];
   }
 
   /**
-   * 清空所有处理器
+   * Clear all processors
    */
   clear(): this {
     this.processors = [];
@@ -68,7 +68,7 @@ export class ContextEngine {
   }
 
   /**
-   * 执行管道处理
+   * Execute pipeline processing
    */
   async process(input: {
     initialState: AgentState;
@@ -80,7 +80,7 @@ export class ContextEngine {
     const startTime = Date.now();
     const processorDurations: Record<string, number> = {};
 
-    // 创建初始管道上下文
+    // Create initial pipeline context
     let context: PipelineContext = {
       initialState: input.initialState,
       isAborted: false,
@@ -98,7 +98,7 @@ export class ContextEngine {
     let processedCount = 0;
 
     try {
-      // 依次执行每个处理器
+      // Execute each processor in sequence
       for (const processor of this.processors) {
         if (context.isAborted) {
           log('Pipeline aborted before processor', processor.name, 'reason:', context.abortReason);
@@ -127,7 +127,7 @@ export class ContextEngine {
 
           log('Processor', processor.name, 'execution failed:', error);
           throw new PipelineError(
-            `处理器 [${processor.name}] 执行失败`,
+            `Processor [${processor.name}] execution failed`,
             processor.name,
             error instanceof Error ? error : new Error(String(error)),
           );
@@ -156,7 +156,7 @@ export class ContextEngine {
       }
 
       throw new PipelineError(
-        '管道处理过程中发生未知错误',
+        'Unknown error occurred during pipeline processing',
         undefined,
         error instanceof Error ? error : new Error(String(error)),
       );
@@ -164,7 +164,7 @@ export class ContextEngine {
   }
 
   /**
-   * 获取管道统计信息
+   * Get pipeline statistics
    */
   getStats() {
     return {
@@ -174,7 +174,7 @@ export class ContextEngine {
   }
 
   /**
-   * 克隆管道（深拷贝处理器列表）
+   * Clone pipeline (deep copy processor list)
    */
   clone(): ContextEngine {
     return new ContextEngine({
@@ -184,30 +184,30 @@ export class ContextEngine {
   }
 
   /**
-   * 验证管道配置
+   * Validate pipeline configuration
    */
   validate(): { errors: string[]; valid: boolean } {
     const errors: string[] = [];
 
-    // 检查处理器名称重复
+    // Check for duplicate processor names
     const names = this.processors.map((p) => p.name);
     const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
     if (duplicates.length > 0) {
-      errors.push(`发现重复的处理器名称: ${duplicates.join(', ')}`);
+      errors.push(`Found duplicate processor names: ${duplicates.join(', ')}`);
     }
 
-    // 检查处理器是否为空
+    // Check if processors are empty
     if (this.processors.length === 0) {
-      errors.push('管道中没有处理器');
+      errors.push('No processors in pipeline');
     }
 
-    // 检查处理器是否实现了必要的方法
+    // Check if processors implement required methods
     this.processors.forEach((processor) => {
       if (!processor.name) {
-        errors.push('处理器缺少名称');
+        errors.push('Processor missing name');
       }
       if (typeof processor.process !== 'function') {
-        errors.push(`处理器 [${processor.name}] 缺少 process 方法`);
+        errors.push(`Processor [${processor.name}] missing process method`);
       }
     });
 
