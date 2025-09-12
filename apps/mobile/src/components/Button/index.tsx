@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import { useStyles, ButtonType, ButtonSize } from './style';
+import { useStyles, ButtonType, ButtonSize, ButtonShape } from './style';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
@@ -20,6 +20,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   icon?: React.ReactNode;
   loading?: boolean;
   onPress?: () => void;
+  shape?: ButtonShape;
   size?: ButtonSize;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -29,6 +30,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
 const Button: React.FC<ButtonProps> = ({
   type = 'default',
   size = 'middle',
+  shape = 'default',
   loading = false,
   disabled = false,
   block = false,
@@ -40,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   ...rest
 }) => {
-  const { styles } = useStyles({ block, danger, disabled: disabled || loading, size, type });
+  const { styles } = useStyles({ block, danger, disabled: disabled || loading, shape, size, type });
 
   const handlePress = () => {
     if (!disabled && !loading && onPress) {
@@ -50,8 +52,8 @@ const Button: React.FC<ButtonProps> = ({
 
   const renderIcon = () => {
     if (loading || !icon) return null;
-
     const iconColor = (styles.text?.color as string) ?? undefined;
+    // Always match icon size to button text size for consistency
     const iconSize = (styles.text?.fontSize as number) ?? undefined;
 
     let iconNode = icon;
@@ -90,7 +92,7 @@ const Button: React.FC<ButtonProps> = ({
         />
       )}
       {renderIcon()}
-      <Text style={[styles.text, textStyle]}>{children}</Text>
+      {children ? <Text style={[styles.text, textStyle]}>{children}</Text> : undefined}
     </TouchableOpacity>
   );
 };

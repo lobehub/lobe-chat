@@ -1,7 +1,15 @@
 import React from 'react';
 
 import ComponentPlayground, { DemoItem } from '../Playground';
-import { BasicDemo, SizesDemo, StatesDemo, BlockDemo, IconDemo } from '@/components/Button/demos';
+import {
+  BasicDemo,
+  SizesDemo,
+  StatesDemo,
+  BlockDemo,
+  IconDemo,
+  ShapeDemo,
+  DangerDemo,
+} from '@/components/Button/demos';
 import { Header } from '@/components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
@@ -12,7 +20,7 @@ React Native版本的按钮组件，参考Ant Design设计，支持多种类型�
 
 ## 功能特性
 
-- ✅ 多种按钮类型（Primary、Default、Text、Link）
+- ✅ 多种按钮类型（Primary、Default、Dashed、Text、Link）
 - ✅ 三种尺寸（Small、Middle、Large）
 - ✅ 加载状态支持
 - ✅ 禁用状态支持
@@ -34,6 +42,11 @@ import Button from '@/components/Button';
 // Primary 按钮
 <Button type="primary" onPress={() => console.log('clicked')}>
   Primary Button
+</Button>
+
+// Dashed 按钮
+<Button type="dashed" onPress={() => console.log('clicked')}>
+  Dashed Button
 </Button>
 
 // 不同尺寸
@@ -60,6 +73,9 @@ import { Plus } from 'lucide-react-native';
 <Button icon={<Plus />} type="primary">
   Create
 </Button>
+
+// 圆形按钮
+<Button shape="circle" type="primary" icon={<Plus />} />
 \`\`\`
 
 ## API
@@ -68,8 +84,9 @@ import { Plus } from 'lucide-react-native';
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| type | \`'primary' \\| 'default' \\| 'text' \\| 'link'\` | \`'default'\` | 按钮类型 |
+| type | \`'primary' \\| 'default' \\| 'dashed' \\| 'text' \\| 'link'\` | \`'default'\` | 按钮类型 |
 | size | \`'small' \\| 'middle' \\| 'large'\` | \`'middle'\` | 按钮尺寸 |
+| shape | \`'default' \\| 'circle'\` | \`'default'\` | 按钮形状；circle 为正圆，适合图标按钮 |
 | loading | \`boolean\` | \`false\` | 是否加载中 |
 | disabled | \`boolean\` | \`false\` | 是否禁用 |
 | block | \`boolean\` | \`false\` | 是否为块级按钮 |
@@ -99,6 +116,8 @@ const demos: DemoItem[] = [
   { component: <StatesDemo />, key: 'states', title: '按钮状态' },
   { component: <BlockDemo />, key: 'block', title: '块级按钮' },
   { component: <IconDemo />, key: 'icon', title: '图标按钮' },
+  { component: <ShapeDemo />, key: 'shape', title: '按钮形状' },
+  { component: <DangerDemo />, key: 'danger', title: '危险态按钮' },
 ];
 
 export default function ButtonPlaygroundPage() {

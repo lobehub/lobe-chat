@@ -24,6 +24,10 @@ const BasicDemo = () => {
         Default Button
       </Button>
 
+      <Button onPress={() => console.log('Dashed clicked')} type="dashed">
+        Dashed Button
+      </Button>
+
       <Button onPress={() => console.log('Text clicked')} type="text">
         Text Button
       </Button>

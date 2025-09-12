@@ -1,7 +1,8 @@
 import { createStyles } from '@/theme';
 
-export type ButtonType = 'primary' | 'default' | 'text' | 'link';
+export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
 export type ButtonSize = 'small' | 'middle' | 'large';
+export type ButtonShape = 'default' | 'circle';
 
 export const useStyles = createStyles(
   (
@@ -12,7 +13,15 @@ export const useStyles = createStyles(
       disabled,
       block,
       danger,
-    }: { block: boolean; danger: boolean; disabled: boolean; size: ButtonSize; type: ButtonType },
+      shape,
+    }: {
+      block: boolean;
+      danger: boolean;
+      disabled: boolean;
+      shape: ButtonShape;
+      size: ButtonSize;
+      type: ButtonType;
+    },
   ) => {
     const getTypeStyles = () => {
       if (danger) {
@@ -22,6 +31,13 @@ export const useStyles = createStyles(
               backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorError,
               borderColor: disabled ? token.colorPrimaryBorder : token.colorError,
               textColor: disabled ? token.colorTextDisabled : token.colorBgLayout,
+            };
+          }
+          case 'dashed': {
+            return {
+              backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+              borderColor: disabled ? token.colorBorder : token.colorError,
+              textColor: disabled ? token.colorTextDisabled : token.colorError,
             };
           }
           case 'text': {
@@ -54,6 +70,13 @@ export const useStyles = createStyles(
             backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimary,
             borderColor: disabled ? token.colorPrimaryBorder : token.colorBgElevated,
             textColor: disabled ? token.colorTextDisabled : token.colorTextLightSolid,
+          };
+        }
+        case 'dashed': {
+          return {
+            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+            borderColor: disabled ? token.colorBorder : token.colorBorder,
+            textColor: disabled ? token.colorTextDisabled : token.colorText,
           };
         }
         case 'text': {
@@ -112,28 +135,32 @@ export const useStyles = createStyles(
     const typeStyles = getTypeStyles();
     const sizeStyles = getSizeStyles();
 
+    const isCircle = shape === 'circle';
+
     return {
       button: {
-        alignItems: 'center' as const,
+        alignItems: 'center',
         backgroundColor: typeStyles.backgroundColor,
         borderColor: typeStyles.borderColor,
-        borderRadius: token.borderRadius,
+        borderRadius: isCircle ? sizeStyles.height / 2 : token.borderRadius,
+        borderStyle: type === 'dashed' ? 'dashed' : 'solid',
         borderWidth: type === 'text' || type === 'link' ? 0 : 1,
-        flexDirection: 'row' as const,
-        justifyContent: 'center' as const,
-        minHeight: sizeStyles.height,
+        flexDirection: 'row',
+        height: isCircle ? sizeStyles.height : undefined,
+        justifyContent: 'center',
+        minHeight: isCircle ? undefined : sizeStyles.height,
         opacity: disabled ? 0.6 : 1,
-        paddingHorizontal: sizeStyles.paddingHorizontal,
-        paddingVertical: sizeStyles.paddingVertical,
-        width: block ? '100%' : 'auto',
+        paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal,
+        paddingVertical: isCircle ? 0 : sizeStyles.paddingVertical,
+        width: isCircle ? sizeStyles.height : block ? '100%' : 'auto',
       },
       loading: {
-        marginRight: token.marginXS,
+        marginRight: isCircle ? 0 : token.marginXS,
       },
       text: {
         color: typeStyles.textColor,
         fontSize: sizeStyles.fontSize,
-        textAlign: 'center' as const,
+        textAlign: 'center',
         textDecorationLine: type === 'link' ? 'underline' : 'none',
       },
     };
