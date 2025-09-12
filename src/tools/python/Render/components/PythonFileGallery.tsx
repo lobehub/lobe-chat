@@ -1,9 +1,9 @@
+import { PythonFileItem } from '@lobechat/types';
 import { PreviewGroup } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import GalleyGrid from '@/components/GalleyGrid';
-import { PythonFileItem } from '@/types/tool/python';
 
 import { PythonFile, PythonImage } from './PythonFileItem';
 

@@ -1,3 +1,4 @@
+import { PythonFileItem } from '@lobechat/types';
 import { Icon, Image, MaterialFileTypeIcon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
@@ -5,7 +6,6 @@ import React, { memo } from 'react';
 
 import { fileService } from '@/services/file';
 import { useChatStore } from '@/store/chat';
-import { PythonFileItem } from '@/types/tool/python';
 
 const useImageStyles = createStyles(({ css, token }) => ({
   container: css`

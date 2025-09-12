@@ -1,6 +1,5 @@
 import { PythonInterpreter } from '@lobechat/python-interpreter';
-
-import { PythonResponse } from '@/types/tool/python';
+import { PythonResponse } from '@lobechat/types';
 
 class PythonService {
   async runPython(

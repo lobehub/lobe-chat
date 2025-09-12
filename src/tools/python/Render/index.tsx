@@ -1,3 +1,9 @@
+import {
+  BuiltinRenderProps,
+  PythonInterpreterParams,
+  PythonInterpreterState,
+  PythonResponse,
+} from '@lobechat/types';
 import { Alert, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
@@ -7,12 +13,6 @@ import { Flexbox } from 'react-layout-kit';
 import BubblesLoading from '@/components/BubblesLoading';
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/slices/builtinTool/selectors';
-import { BuiltinRenderProps } from '@/types/tool';
-import {
-  PythonInterpreterParams,
-  PythonInterpreterState,
-  PythonResponse,
-} from '@/types/tool/python';
 
 import PythonFileGallery from './components/PythonFileGallery';
 
