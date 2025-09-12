@@ -28,7 +28,9 @@ const portalWidth = (s: GlobalState) => s.status.portalWidth || 400;
 const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const imageTopicPanelWidth = (s: GlobalState) => s.status.imageTopicPanelWidth;
-const wideScreen = (s: GlobalState) => s.status.wideScreen;
+const wideScreen = (s: GlobalState) => !s.status.noWideScreen;
+const chatInputHeight = (s: GlobalState) => s.status.chatInputHeight || 64;
+const expandInputActionbar = (s: GlobalState) => s.status.expandInputActionbar;
 const isStatusInit = (s: GlobalState) => !!s.isStatusInit;
 const isPgliteNotEnabled = (s: GlobalState) =>
   isUsePgliteDB && !isServerMode && isStatusInit(s) && !s.status.isEnablePglite;
@@ -62,6 +64,8 @@ const getAgentSystemRoleExpanded =
   };
 
 export const systemStatusSelectors = {
+  chatInputHeight,
+  expandInputActionbar,
   filePanelWidth,
   getAgentSystemRoleExpanded,
   hidePWAInstaller,

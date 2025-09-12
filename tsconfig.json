@@ -18,8 +18,6 @@
     "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
-      "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
-      "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
       "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],

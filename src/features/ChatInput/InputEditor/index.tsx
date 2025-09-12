@@ -1,8 +1,7 @@
 import { isDesktop } from '@lobechat/const';
-import { HotkeyEnum } from '@lobechat/types';
+import { HotkeyEnum, KeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
-  INSERT_TABLE_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -12,17 +11,18 @@ import {
   ReactTablePlugin,
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
-import { Table2Icon } from 'lucide-react';
+import { combineKeys } from '@lobehub/ui';
 import { memo, useEffect, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
-import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
+import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
+import Placeholder from './Placeholder';
+import { useSlashItems } from './useSlashItems';
 
-const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
+const InputEditor = memo<{ defaultRows?: number }>(() => {
   const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
     s.editor,
     s.slashMenuRef,
@@ -32,10 +32,10 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
   ]);
 
   const storeApi = useStoreApi();
-
   const state = useEditorState(editor);
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
   const { enableScope, disableScope } = useHotkeysContext();
-  const { t } = useTranslation(['editor', 'chat']);
+  const slashItems = useSlashItems();
 
   const isChineseInput = useRef(false);
 
@@ -91,16 +91,24 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       }}
       onInit={(editor) => storeApi.setState({ editor })}
       onPressEnter={({ event: e }) => {
-        if (e.altKey || e.shiftKey || isChineseInput.current) return;
+        if (e.shiftKey || isChineseInput.current) return;
+        // when user like alt + enter to add ai message
+        if (e.altKey && hotkey === combineKeys([KeyEnum.Alt, KeyEnum.Enter])) return true;
         const commandKey = isCommandPressed(e);
         // when user like cmd + enter to send message
         if (useCmdEnterToSend) {
-          if (commandKey) send();
+          if (commandKey) {
+            send();
+            return true;
+          }
         } else {
-          if (!commandKey) send();
+          if (!commandKey) {
+            send();
+            return true;
+          }
         }
       }}
-      placeholder={t('sendPlaceholder', { ns: 'chat' })}
+      placeholder={<Placeholder />}
       plugins={[
         ReactListPlugin,
         ReactLinkPlugin,
@@ -117,16 +125,7 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
         }),
       ]}
       slashOption={{
-        items: [
-          {
-            icon: Table2Icon,
-            key: 'table',
-            label: t('typobar.table'),
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
-            },
-          },
-        ],
+        items: slashItems,
         renderComp: expand
           ? undefined
           : (props) => {
@@ -134,9 +133,6 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
                 <SlashMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
               );
             },
-      }}
-      style={{
-        minHeight: defaultRows > 1 ? defaultRows * 23 : undefined,
       }}
       type={'text'}
       variant={'chat'}
