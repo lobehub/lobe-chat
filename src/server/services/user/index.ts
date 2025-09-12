@@ -1,7 +1,7 @@
 import { UserJSON } from '@clerk/backend';
+import { LobeChatDatabase } from '@lobechat/database';
 
 import { UserModel } from '@/database/models/user';
-import { LobeChatDatabase } from '@/database/type';
 import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
