@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "Bitte TeX-Formel eingeben"
   },
+  "slash": {
+    "h1": "Überschrift 1. Ordnung",
+    "h2": "Überschrift 2. Ordnung",
+    "h3": "Überschrift 3. Ordnung",
+    "hr": "Trennlinie",
+    "table": "Tabelle",
+    "tex": "TeX-Formel"
+  },
   "table": {
     "delete": "Tabelle löschen",
     "deleteColumn": "Spalte löschen",
@@ -46,7 +54,7 @@
     "link": "Link",
     "numberList": "Nummerierte Liste",
     "strikethrough": "Durchgestrichen",
-    "table": "Tabelle einfügen",
+    "table": "Tabelle",
     "taskList": "Aufgabenliste",
     "tex": "TeX-Formel",
     "underline": "Unterstrichen"
