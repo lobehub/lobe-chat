@@ -10,6 +10,7 @@
  * - Automatic node connection based on input parameters
  * - Backward compatibility with existing API calls
  */
+import { generateUniqueSeeds } from '@lobechat/utils';
 import { PromptBuilder } from '@saintno/comfyui-sdk';
 
 import {
@@ -19,7 +20,6 @@ import {
 } from '@/server/services/comfyui/config/constants';
 import { type ModelConfig } from '@/server/services/comfyui/config/modelRegistry';
 import type { WorkflowContext } from '@/server/services/comfyui/core/workflowBuilderService';
-import { generateUniqueSeeds } from '@/server/services/comfyui/utils/seedGenerator';
 import { getModelConfig } from '@/server/services/comfyui/utils/staticModelLookup';
 import { getWorkflowFilenamePrefix } from '@/server/services/comfyui/utils/workflowUtils';
 

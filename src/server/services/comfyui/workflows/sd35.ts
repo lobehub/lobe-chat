@@ -6,6 +6,7 @@
  * 2. Dual CLIP: CLIP L + CLIP G only
  * 3. T5 only: T5XXL encoder only
  */
+import { generateUniqueSeeds } from '@lobechat/utils';
 import { PromptBuilder } from '@saintno/comfyui-sdk';
 
 import {
@@ -14,7 +15,6 @@ import {
 } from '@/server/services/comfyui/config/constants';
 import type { WorkflowContext } from '@/server/services/comfyui/core/workflowBuilderService';
 import { WorkflowError } from '@/server/services/comfyui/errors';
-import { generateUniqueSeeds } from '@/server/services/comfyui/utils/seedGenerator';
 import { getWorkflowFilenamePrefix } from '@/server/services/comfyui/utils/workflowUtils';
 
 /**

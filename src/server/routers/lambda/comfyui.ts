@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { authedProcedure, router } from '@/libs/trpc/lambda';
-import { keyVaults } from '@/libs/trpc/lambda/middleware';
 // Import Framework layer services
 import { ComfyUIClientService } from '@/server/services/comfyui/core/comfyUIClientService';
 import { ImageService } from '@/server/services/comfyui/core/imageService';
@@ -11,7 +10,6 @@ import type { WorkflowContext } from '@/server/services/comfyui/types';
 
 // Standard RuntimeImageGenParams validation schema
 const ComfyUIParamsSchema = z.object({
-  // Optional standard parameters
   aspectRatio: z.string().optional(),
   cfg: z.number().optional(),
   height: z.number().optional(),
@@ -27,7 +25,6 @@ const ComfyUIParamsSchema = z.object({
   width: z.number().optional(),
 });
 
-// ComfyUI认证配置Schema
 const ComfyUIOptionsSchema = z
   .object({
     apiKey: z.string().optional(),
@@ -48,7 +45,6 @@ export const comfyuiRouter = router({
    * Create image with complete business logic
    */
   createImage: authedProcedure
-    .use(keyVaults)
     .input(
       z.object({
         model: z.string(),
@@ -89,7 +85,6 @@ export const comfyuiRouter = router({
    * Get authentication headers for image downloads
    */
   getAuthHeaders: authedProcedure
-    .use(keyVaults)
     .input(
       z.object({
         options: ComfyUIOptionsSchema,
@@ -104,7 +99,6 @@ export const comfyuiRouter = router({
    * Get available models
    */
   getModels: authedProcedure
-    .use(keyVaults)
     .input(
       z.object({
         options: ComfyUIOptionsSchema,
@@ -121,7 +115,6 @@ export const comfyuiRouter = router({
    * Validate ComfyUI connection
    */
   validateConnection: authedProcedure
-    .use(keyVaults)
     .input(
       z.object({
         baseURL: z.string(),

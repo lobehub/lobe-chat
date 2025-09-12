@@ -29,10 +29,10 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
-          expect(e.error.message).toBe('Config is invalid');
-          expect(e.error.details).toEqual({ config: 'test' });
-          expect(e.provider).toBe('comfyui');
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
+          expect(e.cause.error.message).toBe('Config is invalid');
+          expect(e.cause.error.details).toEqual({ config: 'test' });
+          expect(e.cause.provider).toBe('comfyui');
         }
       });
 
@@ -46,8 +46,8 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
-          expect(e.error.message).toBe('Model not supported');
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
+          expect(e.cause.error.message).toBe('Model not supported');
         }
       });
 
@@ -61,7 +61,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIModelError);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIModelError);
         }
       });
 
@@ -71,7 +71,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIServiceUnavailable);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIServiceUnavailable);
         }
       });
 
@@ -81,7 +81,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
         }
       });
 
@@ -91,7 +91,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
         }
       });
 
@@ -104,7 +104,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error1);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ModelNotFound);
         }
 
         // Test unmapped reason - should hit line 120 and return default
@@ -113,7 +113,7 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error2);
         } catch (e: any) {
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
         }
       });
     });
@@ -130,8 +130,11 @@ describe('ErrorHandlerService', () => {
 
         try {
           service.handleError(error);
-        } catch (e) {
-          expect(e).toEqual(error);
+        } catch (e: any) {
+          // Verify the cause contains the same error properties
+          expect(e.cause.errorType).toBe(error.errorType);
+          expect(e.cause.message).toBe(error.message);
+          expect(e.cause.provider).toBe(error.provider);
         }
       });
     });
@@ -143,8 +146,8 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.provider).toBe('comfyui');
-          expect(e.error).toBeDefined();
+          expect(e.cause.provider).toBe('comfyui');
+          expect(e.cause.error).toBeDefined();
         }
       });
 
@@ -154,8 +157,8 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.provider).toBe('comfyui');
-          expect(e.error).toBeDefined();
+          expect(e.cause.provider).toBe('comfyui');
+          expect(e.cause.error).toBeDefined();
         }
       });
 
@@ -178,8 +181,8 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBeDefined();
-          expect(e.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
+          expect(e.cause.errorType).toBeDefined();
+          expect(e.cause.errorType).toBe(AgentRuntimeErrorType.ComfyUIBizError);
         }
       });
     });
@@ -201,7 +204,7 @@ describe('ErrorHandlerService', () => {
           service.handleError(error);
         } catch (e: any) {
           const expected = expectedMapping[reason] || AgentRuntimeErrorType.ComfyUIWorkflowError;
-          expect(e.errorType).toBe(expected);
+          expect(e.cause.errorType).toBe(expected);
         }
       });
     });
@@ -217,9 +220,9 @@ describe('ErrorHandlerService', () => {
         try {
           service.handleError(error);
         } catch (e: any) {
-          expect(e.errorType).toBeDefined();
+          expect(e.cause.errorType).toBeDefined();
           // Should not be undefined
-          expect(e.errorType).not.toBe(undefined);
+          expect(e.cause.errorType).not.toBe(undefined);
         }
       });
     });

@@ -104,13 +104,13 @@ describe('ComfyUIClientService', () => {
 
       expect(() => new ComfyUIClientService({ authType: 'basic' })).toThrow();
 
-      // Verify it throws an error (ErrorHandlerService wraps it into AgentRuntimeError)
+      // Verify it throws an error (ErrorHandlerService wraps it into TRPCError)
       try {
         new ComfyUIClientService({ authType: 'basic' });
         expect.fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error).toHaveProperty('errorType', 'InvalidComfyUIArgs');
-        expect(error).toHaveProperty('provider', 'comfyui');
+        expect(error.cause).toHaveProperty('errorType', 'InvalidComfyUIArgs');
+        expect(error.cause).toHaveProperty('provider', 'comfyui');
       }
     });
   });

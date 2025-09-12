@@ -1,6 +1,7 @@
 // @vitest-environment node
-import type { ComfyUIKeyVault } from '@/types/index';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import type { ComfyUIKeyVault } from '@/types/index';
 
 import type { CreateImagePayload } from '../../../types/image';
 import { LobeComfyUI } from '../index';
@@ -393,9 +394,10 @@ describe('LobeComfyUI Runtime', () => {
         text: vi.fn().mockResolvedValue('Internal server error'),
       });
 
-      await expect(runtime.createImage(mockPayload)).rejects.toThrow(
-        'ComfyUI API error: 500 - Internal server error',
-      );
+      await expect(runtime.createImage(mockPayload)).rejects.toMatchObject({
+        errorType: 'ComfyUIServiceUnavailable',
+        provider: 'comfyui',
+      });
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
@@ -411,7 +413,13 @@ describe('LobeComfyUI Runtime', () => {
       const networkError = new Error('Network connection failed');
       mockFetch.mockRejectedValue(networkError);
 
-      await expect(runtime.createImage(mockPayload)).rejects.toThrow('Network connection failed');
+      await expect(runtime.createImage(mockPayload)).rejects.toMatchObject({
+        errorType: 'ComfyUIBizError',
+        provider: 'comfyui',
+        error: {
+          message: 'Network connection failed',
+        },
+      });
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
@@ -480,12 +488,18 @@ describe('LobeComfyUI Runtime', () => {
       mockFetch.mockResolvedValue({
         ok: false,
         status: 400,
-        text: vi.fn().mockResolvedValue('{"error":"Invalid model specified"}'),
+        text: vi
+          .fn()
+          .mockResolvedValue('{"message":"Invalid model specified","error":"Model not found"}'),
       });
 
-      await expect(runtime.createImage(mockPayload)).rejects.toThrow(
-        'ComfyUI API error: 400 - {"error":"Invalid model specified"}',
-      );
+      await expect(runtime.createImage(mockPayload)).rejects.toMatchObject({
+        errorType: 'ComfyUIBizError',
+        provider: 'comfyui',
+        error: {
+          message: 'Invalid model specified',
+        },
+      });
     });
   });
 
