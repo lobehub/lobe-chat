@@ -3,10 +3,13 @@ import {
   type AgentState,
   ContextEngine,
   HistorySummaryProvider,
+  HistoryTruncateProcessor,
   InboxGuideProvider,
+  InputTemplateProcessor,
   MessageCleanupProcessor,
   MessageContentProcessor,
   PlaceholderVariablesProcessor,
+  SystemRoleInjector,
   ToolCallProcessor,
   ToolMessageReorder,
   ToolSystemRoleProvider,
@@ -29,19 +32,36 @@ export const contextEngineering = async (
     tools,
     model,
     provider,
+    systemRole,
+    inputTemplate,
+    enableHistoryCount,
+    historyCount,
   }: {
+    enableHistoryCount?: boolean;
+    historyCount?: number;
+    inputTemplate?: string;
     messages: ChatMessage[];
     model: string;
     provider: string;
+    systemRole?: string;
     tools?: string[];
   },
   options?: FetchOptions,
 ): Promise<OpenAIChatMessage[]> => {
   const pipeline = new ContextEngine({
     pipeline: [
-      // Create system role injection providers
+      // 1. History truncation (MUST be first, before any message injection)
+      new HistoryTruncateProcessor({
+        enableHistoryCount,
+        historyCount,
+      }),
 
-      // 1. Inbox guide system role injection
+      // --------- Create system role injection providers
+
+      // 2. System role injection (agent's system role)
+      new SystemRoleInjector({ systemRole }),
+
+      // 3. Inbox guide system role injection
       new InboxGuideProvider({
         inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
         inboxSessionId: INBOX_SESSION_ID,
@@ -49,7 +69,7 @@ export const contextEngineering = async (
         sessionId: options?.trace?.sessionId,
       }),
 
-      // 2. Tool system role injection
+      // 4. Tool system role injection
       new ToolSystemRoleProvider({
         getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
         isCanUseFC,
@@ -58,7 +78,7 @@ export const contextEngineering = async (
         tools,
       }),
 
-      // 3. History summary injection
+      // 5. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary: historySummaryPrompt,
         historySummary: options?.historySummary,
@@ -66,10 +86,15 @@ export const contextEngineering = async (
 
       // Create message processing processors
 
-      // 1. Placeholder variables processing
+      // 6. Input template processing
+      new InputTemplateProcessor({
+        inputTemplate,
+      }),
+
+      // 7. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 2. Message content processing
+      // 8. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
         isCanUseVision,
@@ -77,24 +102,18 @@ export const contextEngineering = async (
         provider,
       }),
 
-      // 3. Tool call processing
+      // 9. Tool call processing
       new ToolCallProcessor({ genToolCallingName, isCanUseFC, model, provider }),
 
-      // 4. Tool message reordering
+      // 10. Tool message reordering
       new ToolMessageReorder(),
 
-      // 5. Message cleanup (final step, keep only necessary fields)
+      // 11. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ],
   });
 
-  const initialState: AgentState = {
-    messages,
-    model,
-    provider,
-    systemRole: '', // Will be handled by system role providers
-    tools: tools,
-  };
+  const initialState: AgentState = { messages, model, provider, systemRole, tools };
 
   const result = await pipeline.process({
     initialState,

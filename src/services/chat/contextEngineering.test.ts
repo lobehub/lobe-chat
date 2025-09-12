@@ -247,7 +247,7 @@ describe('contextEngineering', () => {
     ]);
   });
 
-  it('should inject INBOX_GUIDE_SYSTEMROLE for welcome questions in inbox session', async () => {
+  it('should inject INBOX_GUIDE_SYSTEM_ROLE for welcome questions in inbox session', async () => {
     // Don't mock INBOX_GUIDE_SYSTEMROLE, use the real one
     const messages: ChatMessage[] = [
       {
@@ -551,6 +551,298 @@ describe('contextEngineering', () => {
       expect(content[1].image_url.url).toBe('http://example.com/test.jpg');
 
       isServerMode = false;
+    });
+  });
+
+  describe('Message preprocessing processors', () => {
+    it('should truncate message history when enabled', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Message 1',
+          createdAt: Date.now(),
+          id: 'test-1',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'assistant',
+          content: 'Response 1',
+          createdAt: Date.now(),
+          id: 'test-2',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'user',
+          content: 'Message 2',
+          createdAt: Date.now(),
+          id: 'test-3',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'assistant',
+          content: 'Response 2',
+          createdAt: Date.now(),
+          id: 'test-4',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'user',
+          content: 'Latest message',
+          createdAt: Date.now(),
+          id: 'test-5',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        enableHistoryCount: true,
+        historyCount: 4, // Should keep last 2 messages
+      });
+
+      // Should only keep the last 2 messages
+      expect(result).toHaveLength(4);
+      expect(result).toEqual([
+        { content: 'Response 1', role: 'assistant' },
+        { content: 'Message 2', role: 'user' },
+        { content: 'Response 2', role: 'assistant' },
+        { content: 'Latest message', role: 'user' },
+      ]);
+    });
+
+    it('should apply input template to user messages', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Original user input',
+          createdAt: Date.now(),
+          id: 'test-template',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'assistant',
+          content: 'Assistant response',
+          createdAt: Date.now(),
+          id: 'test-assistant',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        inputTemplate: 'Template: {{text}} - End',
+      });
+
+      // Should apply template to user message only
+      expect(result).toEqual([
+        {
+          content: 'Template: Original user input - End',
+          role: 'user',
+        },
+        {
+          role: 'assistant',
+          content: 'Assistant response',
+        },
+      ]);
+      expect(result[1].content).toBe('Assistant response'); // Unchanged
+    });
+
+    it('should inject system role at the beginning', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'User message',
+          createdAt: Date.now(),
+          id: 'test-user',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant.',
+      });
+
+      // Should have system role at the beginning
+      expect(result).toEqual([
+        { content: 'You are a helpful assistant.', role: 'system' },
+        { content: 'User message', role: 'user' },
+      ]);
+    });
+
+    it('should combine all preprocessing steps correctly', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Old message 1',
+          createdAt: Date.now(),
+          id: 'test-old-1',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'assistant',
+          content: 'Old response',
+          createdAt: Date.now(),
+          id: 'test-old-2',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'user',
+          content: 'Recent input with {{username}}',
+          createdAt: Date.now(),
+          id: 'test-recent',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'System instructions.',
+        inputTemplate: 'Processed: {{text}}',
+        enableHistoryCount: true,
+        historyCount: 2, // Should keep last 1 message
+      });
+
+      // System role should be first
+      expect(result).toEqual([
+        {
+          content: 'System instructions.',
+          role: 'system',
+        },
+        {
+          role: 'assistant',
+          content: 'Old response',
+        },
+        {
+          content: 'Processed: Recent input with TestUser',
+          role: 'user',
+        },
+      ]);
+    });
+
+    it('should skip preprocessing when no configuration is provided', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Simple message',
+          createdAt: Date.now(),
+          id: 'test-simple',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should pass message unchanged
+      expect(result).toEqual([
+        {
+          content: 'Simple message',
+          role: 'user',
+        },
+      ]);
+    });
+
+    it('should handle history truncation with system role injection correctly', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Message 1',
+          createdAt: Date.now(),
+          id: 'test-1',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'user',
+          content: 'Message 2',
+          createdAt: Date.now(),
+          id: 'test-2',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'user',
+          content: 'Message 3',
+          createdAt: Date.now(),
+          id: 'test-3',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'System role here.',
+        enableHistoryCount: true,
+        historyCount: 1, // Should keep only 1 message
+      });
+
+      // Should have system role + 1 truncated message
+      expect(result).toEqual([
+        {
+          content: 'System role here.',
+          role: 'system',
+        },
+        {
+          content: 'Message 3', // Only the last message should remain
+          role: 'user',
+        },
+      ]);
+    });
+
+    it('should handle input template compilation errors gracefully', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'User message',
+          createdAt: Date.now(),
+          id: 'test-error',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      // This should not throw an error, but handle it gracefully
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        inputTemplate: '<%- invalid javascript syntax %>',
+      });
+
+      // Should keep original message when template fails
+      expect(result).toEqual([
+        {
+          content: 'User message',
+          role: 'user',
+        },
+      ]);
     });
   });
 });
