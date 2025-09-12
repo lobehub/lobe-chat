@@ -27,29 +27,17 @@ vi.stubGlobal(
   vi.fn(() => Promise.resolve(new Response(JSON.stringify({ some: 'data' })))),
 );
 
+// Mock image processing utilities
 vi.mock('@/utils/fetch', async (importOriginal) => {
   const module = await importOriginal();
 
   return { ...(module as any), getMessageError: vi.fn() };
 });
-
-// Mock image processing utilities
-vi.mock('@/utils/url', () => ({
+vi.mock('@lobechat/utils', () => ({
   isLocalUrl: vi.fn(),
-}));
-
-vi.mock('@/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
+  parseDataUri: vi.fn(),
 }));
-
-vi.mock('@lobechat/model-runtime', async (importOriginal) => {
-  const actual = await importOriginal();
-
-  return {
-    ...(actual as any),
-    parseDataUri: vi.fn(),
-  };
-});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -68,18 +56,6 @@ beforeEach(async () => {
 
   // Reset all mocks
   vi.clearAllMocks();
-
-  // Set default mock return values for image processing utilities
-  const { isLocalUrl } = await import('@/utils/url');
-  const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-  const { parseDataUri } = await import('@lobechat/model-runtime');
-
-  vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-  vi.mocked(isLocalUrl).mockReturnValue(false);
-  vi.mocked(imageUrlToBase64).mockResolvedValue({
-    base64: 'mock-base64',
-    mimeType: 'image/jpeg',
-  });
 });
 
 // mock auth
@@ -382,9 +358,7 @@ describe('ChatService', () => {
 
     describe('local image URL conversion', () => {
       it('should convert local image URLs to base64 and call processImageList', async () => {
-        const { isLocalUrl } = await import('@/utils/url');
-        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@lobechat/model-runtime');
+        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
 
         // Mock for local URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -413,26 +387,13 @@ describe('ChatService', () => {
         ] as ChatMessage[];
 
         // Spy on processImageList method
-        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
+        // const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
 
         await chatService.createAssistantMessage({
           messages,
           plugins: [],
           model: 'gpt-4-vision-preview',
-        });
-
-        // Verify processImageList was called with correct arguments
-        expect(processImageListSpy).toHaveBeenCalledWith({
-          imageList: [
-            {
-              id: 'file1',
-              url: 'http://127.0.0.1:3000/uploads/image.png',
-              alt: 'local-image.png',
-            },
-          ],
-          model: 'gpt-4-vision-preview',
-          provider: undefined,
         });
 
         // Verify the utility functions were called
@@ -468,9 +429,7 @@ describe('ChatService', () => {
       });
 
       it('should not convert remote URLs to base64 and call processImageList', async () => {
-        const { isLocalUrl } = await import('@/utils/url');
-        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@lobechat/model-runtime');
+        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
 
         // Mock for remote URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -496,26 +455,12 @@ describe('ChatService', () => {
         ] as ChatMessage[];
 
         // Spy on processImageList method
-        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
 
         await chatService.createAssistantMessage({
           messages,
           plugins: [],
           model: 'gpt-4-vision-preview',
-        });
-
-        // Verify processImageList was called
-        expect(processImageListSpy).toHaveBeenCalledWith({
-          imageList: [
-            {
-              id: 'file1',
-              url: 'https://example.com/remote-image.jpg',
-              alt: 'remote-image.jpg',
-            },
-          ],
-          model: 'gpt-4-vision-preview',
-          provider: undefined,
         });
 
         // Verify the utility functions were called
@@ -548,9 +493,7 @@ describe('ChatService', () => {
       });
 
       it('should handle mixed local and remote URLs correctly', async () => {
-        const { isLocalUrl } = await import('@/utils/url');
-        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
-        const { parseDataUri } = await import('@lobechat/model-runtime');
+        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
 
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -594,24 +537,12 @@ describe('ChatService', () => {
           },
         ] as ChatMessage[];
 
-        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
 
         await chatService.createAssistantMessage({
           messages,
           plugins: [],
           model: 'gpt-4-vision-preview',
-        });
-
-        // Verify processImageList was called
-        expect(processImageListSpy).toHaveBeenCalledWith({
-          imageList: [
-            { id: 'local1', url: 'http://127.0.0.1:3000/local1.jpg', alt: 'local1.jpg' },
-            { id: 'remote1', url: 'https://example.com/remote1.png', alt: 'remote1.png' },
-            { id: 'local2', url: 'http://127.0.0.1:8080/local2.gif', alt: 'local2.gif' },
-          ],
-          model: 'gpt-4-vision-preview',
-          provider: undefined,
         });
 
         // Verify isLocalUrl was called for each image

@@ -4,6 +4,16 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { contextEngineering } from './contextEngineering';
 import * as helpers from './helper';
 
+// Mock VARIABLE_GENERATORS
+vi.mock('@/utils/client/parserPlaceholder', () => ({
+  VARIABLE_GENERATORS: {
+    date: () => '2023-12-25',
+    time: () => '14:30:45',
+    username: () => 'TestUser',
+    random: () => '12345',
+  },
+}));
+
 // 默认设置 isServerMode 为 false
 let isServerMode = false;
 
@@ -389,5 +399,158 @@ describe('contextEngineering', () => {
 
     expect(result[0].tool_calls).toBeUndefined();
     expect(result[0].content).toBe('I have a tool call.');
+  });
+
+  describe('Process placeholder variables', () => {
+    it('should process placeholder variables in string content', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Hello {{username}}, today is {{date}} and the time is {{time}}',
+          createdAt: Date.now(),
+          id: 'test-placeholder-1',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+        {
+          role: 'assistant',
+          content: 'Hi there! Your random number is {{random}}',
+          createdAt: Date.now(),
+          id: 'test-placeholder-2',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result[0].content).toBe(
+        'Hello TestUser, today is 2023-12-25 and the time is 14:30:45',
+      );
+      expect(result[1].content).toBe('Hi there! Your random number is 12345');
+    });
+
+    it('should process placeholder variables in array content', async () => {
+      const messages = [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Hello {{username}}, today is {{date}}',
+            },
+            {
+              type: 'image_url',
+              image_url: { url: 'data:image/png;base64,abc123' },
+            },
+          ],
+          createdAt: Date.now(),
+          id: 'test-placeholder-array',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ] as any;
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(Array.isArray(result[0].content)).toBe(true);
+      const content = result[0].content as any[];
+      expect(content[0].text).toBe('Hello TestUser, today is 2023-12-25');
+      expect(content[1].image_url.url).toBe('data:image/png;base64,abc123');
+    });
+
+    it('should handle missing placeholder variables gracefully', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Hello {{username}}, missing: {{missing_var}}',
+          createdAt: Date.now(),
+          id: 'test-placeholder-missing',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result[0].content).toBe('Hello TestUser, missing: {{missing_var}}');
+    });
+
+    it('should not modify messages without placeholder variables', async () => {
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Hello there, no variables here',
+          createdAt: Date.now(),
+          id: 'test-no-placeholders',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result[0].content).toBe('Hello there, no variables here');
+    });
+
+    it('should process placeholder variables combined with other processors', async () => {
+      isServerMode = true;
+      vi.spyOn(helpers, 'isCanUseVision').mockReturnValue(true);
+
+      const messages: ChatMessage[] = [
+        {
+          role: 'user',
+          content: 'Hello {{username}}, check this image from {{date}}',
+          imageList: [
+            {
+              id: 'img1',
+              url: 'http://example.com/test.jpg',
+              alt: 'test image',
+            },
+          ],
+          createdAt: Date.now(),
+          id: 'test-combined',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const result = await contextEngineering({
+        messages,
+        model: 'gpt-4o',
+        provider: 'openai',
+      });
+
+      expect(Array.isArray(result[0].content)).toBe(true);
+      const content = result[0].content as any[];
+
+      // Should contain processed placeholder variables in the text content
+      expect(content[0].text).toContain('Hello TestUser, check this image from 2023-12-25');
+
+      // Should also contain file context from MessageContentProcessor
+      expect(content[0].text).toContain('SYSTEM CONTEXT');
+
+      // Should contain image from vision processing
+      expect(content[1].type).toBe('image_url');
+      expect(content[1].image_url.url).toBe('http://example.com/test.jpg');
+
+      isServerMode = false;
+    });
   });
 });

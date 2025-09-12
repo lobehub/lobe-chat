@@ -28,6 +28,7 @@ export {
   MessageCleanupProcessor,
   MessageContentProcessor,
   ModelCapabilityValidator,
+  PlaceholderVariablesProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
 } from './processors';
