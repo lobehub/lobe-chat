@@ -15,6 +15,7 @@ import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
+import * as helpers from './helper';
 import { chatService } from './index';
 
 // Mocking external dependencies
@@ -44,6 +45,8 @@ afterEach(() => {
 });
 
 beforeEach(async () => {
+  // Reset all mocks
+  vi.clearAllMocks();
   // 清除所有模块的缓存
   vi.resetModules();
 
@@ -53,9 +56,6 @@ beforeEach(async () => {
     isDeprecatedEdition: true,
     isDesktop: false,
   }));
-
-  // Reset all mocks
-  vi.clearAllMocks();
 });
 
 // mock auth
@@ -291,6 +291,11 @@ describe('ChatService', () => {
 
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
+        // Mock utility functions used in processImageList
+        const { parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+        vi.mocked(isLocalUrl).mockReturnValue(false); // Not a local URL
+
         const messages = [
           {
             content: 'Hello',
@@ -310,6 +315,7 @@ describe('ChatService', () => {
           messages,
           plugins: [],
           model: 'gpt-4-vision-preview',
+          provider: 'openai',
         });
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
@@ -330,6 +336,9 @@ describe('ChatService', () => {
               },
             ],
             model: 'gpt-4-vision-preview',
+            provider: 'openai',
+            enabledSearch: undefined,
+            tools: undefined,
           },
           undefined,
         );
