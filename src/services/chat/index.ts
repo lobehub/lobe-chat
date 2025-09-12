@@ -41,8 +41,8 @@ import { createTraceHeader, getTraceId } from '@/utils/trace';
 import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
+import { contextEngineering } from './contextEngineering';
 import { findDeploymentName, isCanUseFC, isEnableFetchOnClient } from './helper';
-import { processMessages } from './processMessages';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -114,7 +114,7 @@ class ChatService {
 
     // ============  2. preprocess messages   ============ //
 
-    const oaiMessages = await processMessages(
+    const oaiMessages = await contextEngineering(
       {
         messages: parsedMessages,
         model: payload.model,
@@ -413,7 +413,7 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      const oaiMessages = await processMessages({
+      const oaiMessages = await contextEngineering({
         messages: params.messages as any,
         model: params.model!,
         provider: params.provider!,

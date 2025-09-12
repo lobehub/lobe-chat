@@ -1,8 +1,8 @@
 import { ChatImageItem, ChatMessage, OpenAIChatMessage } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { contextEngineering, processImageList } from './contextEngineering';
 import * as helpers from './helper';
-import { processImageList, processMessages } from './processMessages';
 
 // 默认设置 isServerMode 为 false
 let isServerMode = false;
@@ -100,7 +100,7 @@ describe('processMessages', () => {
         { content: 'Hey', role: 'assistant' }, // Regular user message
       ] as ChatMessage[];
 
-      const output = await processMessages({
+      const output = await contextEngineering({
         messages,
         model: 'gpt-4o',
         provider: 'openai',
@@ -167,7 +167,7 @@ describe('processMessages', () => {
         }, // Message with files
         { content: 'Hey', role: 'assistant' }, // Regular user message
       ] as ChatMessage[];
-      const output = await processMessages({
+      const output = await contextEngineering({
         messages,
         provider: 'openai',
         model: 'gpt-4-vision-preview',
@@ -221,7 +221,7 @@ describe('processMessages', () => {
       },
     ] as ChatMessage[];
 
-    const result = await processMessages({
+    const result = await contextEngineering({
       messages,
       model: 'gpt-4',
       provider: 'openai',
@@ -251,7 +251,7 @@ describe('processMessages', () => {
       },
     ] as ChatMessage[];
 
-    const result = await processMessages({
+    const result = await contextEngineering({
       messages,
       model: 'gpt-4',
       provider: 'openai',
@@ -288,7 +288,7 @@ describe('processMessages', () => {
       },
     ];
 
-    const result = await processMessages(
+    const result = await contextEngineering(
       {
         messages,
         model: 'gpt-4',
@@ -323,7 +323,7 @@ describe('processMessages', () => {
       },
     ];
 
-    const result = await processMessages(
+    const result = await contextEngineering(
       {
         messages,
         model: 'gpt-4',
@@ -356,7 +356,7 @@ describe('processMessages', () => {
           updatedAt: Date.now(),
         },
       ];
-      const result = await processMessages({
+      const result = await contextEngineering({
         messages,
         model: 'gpt-4-vision-preview',
         provider: 'openai',
@@ -383,7 +383,7 @@ describe('processMessages', () => {
           updatedAt: Date.now(),
         },
       ];
-      const result = await processMessages({
+      const result = await contextEngineering({
         messages,
         model: 'gpt-4-vision-preview',
         provider: 'openai',
@@ -419,7 +419,7 @@ describe('processMessages', () => {
       },
     ];
 
-    const result = await processMessages({
+    const result = await contextEngineering({
       messages,
       model: 'some-model-without-fc',
       provider: 'openai',
