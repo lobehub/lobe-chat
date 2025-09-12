@@ -118,7 +118,7 @@ class ChatService {
       {
         enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
         // include user messages
-        historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 1,
+        historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
         inputTemplate: chatConfig.inputTemplate,
         messages,
         model: payload.model,

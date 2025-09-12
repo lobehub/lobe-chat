@@ -51,10 +51,7 @@ export const contextEngineering = async (
   const pipeline = new ContextEngine({
     pipeline: [
       // 1. History truncation (MUST be first, before any message injection)
-      new HistoryTruncateProcessor({
-        enableHistoryCount,
-        historyCount,
-      }),
+      new HistoryTruncateProcessor({ enableHistoryCount, historyCount }),
 
       // --------- Create system role injection providers
 
