@@ -623,7 +623,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-07-28',
+      deploymentName: 'qwen-plus-2025-09-11',
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
@@ -667,7 +667,6 @@ const qwenChatModels: AIChatModelCard[] = [
               '[0, 128_000]_[false]': 2,
               '[0, 128_000]_[true]': 8,
               '[128_000, 256_000]_[false]': 20,
-
               '[128_000, 256_000]_[true]': 24,
               '[256_000, infinity]_[false]': 48,
               '[256_000, infinity]_[true]': 64,
