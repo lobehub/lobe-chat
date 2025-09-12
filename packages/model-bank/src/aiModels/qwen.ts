@@ -50,6 +50,92 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'GLM-4.5系列模型是智谱AI专为智能体设计的混合推理模型，提供思考与非思考两种模式。',
+    displayName: 'GLM-4.5',
+    id: 'glm-4.5',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 3,
+              '[32_000, infinity]': 4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 14,
+              '[32_000, infinity]': 16,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'GLM-4.5系列模型是智谱AI专为智能体设计的混合推理模型，提供思考与非思考两种模式。',
+    displayName: 'GLM-4.5-Air',
+    id: 'glm-4.5-air',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.8,
+              '[32_000, infinity]': 1.2,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 6,
+              '[32_000, infinity]': 8,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
     },
     config: {
