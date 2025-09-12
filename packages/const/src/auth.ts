@@ -1,4 +1,4 @@
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 export const enableClerk = authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH;
 export const enableNextAuth = authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH;

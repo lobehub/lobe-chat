@@ -1,7 +1,7 @@
-import { authEnv } from '@/config/auth';
 import { enableNextAuth } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
+import { authEnv } from '@/envs/auth';
 import { fileEnv } from '@/envs/file';
 import { knowledgeEnv } from '@/envs/knowledge';
 import { langfuseEnv } from '@/envs/langfuse';
