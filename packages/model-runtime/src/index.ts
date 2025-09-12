@@ -1,6 +1,7 @@
 export * from './core/BaseAI';
 export { ModelRuntime } from './core/ModelRuntime';
 export { createOpenAICompatibleRuntime } from './core/openaiCompatibleFactory';
+export * from './core/RouterRuntime';
 export * from './helpers';
 export { LobeAkashChatAI } from './providers/akashchat';
 export { LobeAnthropicAI } from './providers/anthropic';

@@ -64,8 +64,7 @@ const transformOpenAIStream = (
 
   try {
     // maybe need another structure to add support for multiple choices
-    const item = chunk.choices[0];
-    if (!item) {
+    if (!Array.isArray(chunk.choices) || chunk.choices.length === 0) {
       if (chunk.usage) {
         const usage = chunk.usage;
         return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
@@ -73,6 +72,8 @@ const transformOpenAIStream = (
 
       return { data: chunk, id: chunk.id, type: 'data' };
     }
+
+    const item = chunk.choices[0];
 
     if (item && typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       // tools calling

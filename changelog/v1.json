@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Improve OpenAIStream processing to emit usage data for chunks lacking choices."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.4"
+  },
+  {
+    "children": {
       "improvements": ["Refactor model runtime folder structure and add more tests."]
     },
     "date": "2025-09-11",
