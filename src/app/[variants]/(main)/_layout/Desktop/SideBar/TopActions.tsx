@@ -66,12 +66,12 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         />
       </Link>
       {enableKnowledgeBase && (
-        <Link aria-label={t('tab.files')} href={'/files'}>
+        <Link aria-label={t('tab.knowledgeBase')} href={'/files'}>
           <ActionIcon
             active={isFilesActive}
             icon={FolderClosed}
             size={ICON_SIZE}
-            title={t('tab.files')}
+            title={t('tab.knowledgeBase')}
             tooltipProps={{ placement: 'right' }}
           />
         </Link>
