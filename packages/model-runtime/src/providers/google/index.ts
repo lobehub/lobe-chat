@@ -78,6 +78,36 @@ function getThreshold(model: string): HarmBlockThreshold {
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 
+// Helper function to get audio mime type from data URI or default to mp3
+const getAudioMimeType = (url: string): string => {
+  const { mimeType } = parseDataUri(url);
+  return mimeType || 'audio/mp3';
+};
+
+// Helper function to convert audio URL to base64 (similar to imageUrlToBase64)
+const audioUrlToBase64 = async (audioUrl: string): Promise<{ base64: string; mimeType: string }> => {
+  try {
+    const res = await fetch(audioUrl);
+    const blob = await res.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+
+    const base64 =
+      typeof btoa === 'function'
+        ? btoa(
+            new Uint8Array(arrayBuffer).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          )
+        : Buffer.from(arrayBuffer).toString('base64');
+
+    return { base64, mimeType: blob.type };
+  } catch (error) {
+    console.error('Error converting audio to base64:', error);
+    throw error;
+  }
+};
+
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
@@ -404,6 +434,36 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         }
 
         throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
+      }
+
+      case 'audio_url': {
+        const { mimeType, base64, type } = parseDataUri(content.audio_url.url);
+
+        if (type === 'base64') {
+          if (!base64) {
+            throw new TypeError("Audio URL doesn't contain base64 data");
+          }
+
+          return {
+            inlineData: {
+              data: base64,
+              mimeType: mimeType || 'audio/mp3',
+            },
+          };
+        }
+
+        if (type === 'url') {
+          const { base64, mimeType } = await audioUrlToBase64(content.audio_url.url);
+
+          return {
+            inlineData: {
+              data: base64,
+              mimeType,
+            },
+          };
+        }
+
+        throw new TypeError(`currently we don't support audio url: ${content.audio_url.url}`);
       }
     }
   };
