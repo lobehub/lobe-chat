@@ -70,7 +70,7 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: ${token.borderRadius}px;
   `,
   description: css`
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.2;
     color: ${token.colorTextSecondary};
   `,
@@ -165,8 +165,12 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     // Get default model from the first enabled provider's first model
     const defaultModel = useMemo(() => {
       if (enabledModels.length > 0 && enabledModels[0].children.length > 0) {
+        console.log('Enabled models:', enabledModels);
+
         const firstProvider = enabledModels[0];
         const firstModel = firstProvider.children[0];
+
+        console.log('First model:', firstModel);
         return {
           model: firstModel.id,
           provider: firstProvider.id,
@@ -174,6 +178,8 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
       }
       return { model: undefined, provider: undefined };
     }, [enabledModels]);
+
+    console.log('Default model:', defaultModel);
 
     const [isMemberSelectionOpen, setIsMemberSelectionOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -187,7 +193,14 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     const isCreatingFromTemplate = externalLoading ?? false;
 
     const handleTemplateToggle = (templateId: string) => {
-      setSelectedTemplate((prev) => (prev === templateId ? '' : templateId));
+      setSelectedTemplate((prev) => {
+        const newTemplate = prev === templateId ? '' : templateId;
+        // Clear removed members when switching to a different template
+        if (newTemplate !== prev) {
+          setRemovedMembers({});
+        }
+        return newTemplate;
+      });
     };
 
     const handleReset = () => {
@@ -198,6 +211,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     };
 
     const handleHostModelChange = useCallback((config: { model?: string; provider?: string }) => {
+      console.log('Host model changed to:', config);
       setHostModelConfig(config);
     }, []);
 
@@ -213,6 +227,10 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
 
       // If using external loading state, don't manage loading internally
       if (externalLoading !== undefined) {
+        console.log(
+          'ChatGroupWizard: Creating from template with hostModelConfig:',
+          hostModelConfig,
+        );
         await onCreateFromTemplate(selectedTemplate, hostModelConfig);
         // Reset will be handled by parent after successful creation
         handleReset();
@@ -241,6 +259,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
 
     const handleMemberSelectionConfirm = async (selectedAgents: string[]) => {
       setIsMemberSelectionOpen(false);
+      console.log('ChatGroupWizard: Creating custom with hostModelConfig:', hostModelConfig);
       await onCreateCustom(selectedAgents, hostModelConfig);
     };
 
@@ -356,7 +375,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
 
             {/* Right Column - Group Members */}
             <Flexbox className={styles.rightColumn} flex={1}>
-              {selectedTemplateMembers.length === 0 ? (
+              {!selectedTemplate ? (
                 <Flexbox align="center" flex={1} justify="center">
                   <Empty
                     description={t('groupWizard.noSelectedTemplates')}
@@ -383,45 +402,45 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     </Flexbox>
                     <ModelSelect
                       onChange={handleHostModelChange}
-                      value={
-                        hostModelConfig.model && hostModelConfig.provider
-                          ? {
-                              model: hostModelConfig.model,
-                              provider: hostModelConfig.provider,
-                            }
-                          : undefined
-                      }
+                      value={{
+                        model: hostModelConfig.model || defaultModel.model!,
+                        provider: hostModelConfig.provider || defaultModel.provider!,
+                      }}
                     />
                   </Flexbox>
 
-                  <Text style={{ marginBottom: 16, textAlign: 'center' }} type="secondary">
-                    {t('groupWizard.groupMembers')}
-                  </Text>
+                  {selectedTemplateMembers.length > 0 && (
+                    <>
+                      <Text style={{ marginBottom: 16, textAlign: 'center' }} type="secondary">
+                        {t('groupWizard.groupMembers')}
+                      </Text>
 
-                  <List
-                    items={selectedTemplateMembers.map((member) => ({
-                      actions: (
-                        <ActionIcon
-                          icon={X}
-                          onClick={() => handleRemoveMember(selectedTemplate, member.title)}
-                          size="small"
-                          style={{ color: '#999' }}
-                        />
-                      ),
-                      avatar: (
-                        <Avatar
-                          avatar={member.avatar}
-                          background={member.backgroundColor}
-                          shape="circle"
-                          size={40}
-                        />
-                      ),
-                      description: member.description,
-                      key: member.key,
-                      showAction: true,
-                      title: member.title,
-                    }))}
-                  />
+                      <List
+                        items={selectedTemplateMembers.map((member) => ({
+                          actions: (
+                            <ActionIcon
+                              icon={X}
+                              onClick={() => handleRemoveMember(selectedTemplate, member.title)}
+                              size="small"
+                              style={{ color: '#999' }}
+                            />
+                          ),
+                          avatar: (
+                            <Avatar
+                              avatar={member.avatar}
+                              background={member.backgroundColor}
+                              shape="circle"
+                              size={40}
+                            />
+                          ),
+                          description: member.description,
+                          key: member.key,
+                          showAction: true,
+                          title: member.title,
+                        }))}
+                      />
+                    </>
+                  )}
                 </Flexbox>
               )}
             </Flexbox>
