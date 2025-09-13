@@ -31,6 +31,7 @@ const Action = memo<ActionProps>(
     onOpenChange,
     trigger,
     disabled,
+    onClick,
     ...rest
   }) => {
     const [show, setShow] = useMergeState(false, {
@@ -43,7 +44,10 @@ const Action = memo<ActionProps>(
         disabled={disabled}
         icon={icon}
         loading={loading}
-        onClick={() => setShow(true)}
+        onClick={(e) => {
+          if (onClick) return onClick(e);
+          setShow(true);
+        }}
         title={
           isUndefined(showTooltip) ? (mobile ? undefined : title) : showTooltip ? title : undefined
         }
