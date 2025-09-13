@@ -7,7 +7,7 @@ import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { DefaultMessage } from '../Default';
+import { DefaultMessage, MessageContentClassName } from '../Default';
 import FileChunks from './FileChunks';
 import IntentUnderstanding from './IntentUnderstanding';
 import Reasoning from './Reasoning';
@@ -47,7 +47,7 @@ export const AssistantMessage = memo<
       {...props}
     />
   ) : (
-    <Flexbox gap={8} id={id}>
+    <Flexbox className={MessageContentClassName} gap={8} id={id}>
       {showSearch && (
         <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />
       )}
