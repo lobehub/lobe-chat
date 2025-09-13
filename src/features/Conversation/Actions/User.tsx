@@ -28,17 +28,28 @@ export const UserActionsBar: RenderAction = memo(({ onActionClick, id }) => {
 
   const items = useMemo(
     () =>
-      [regenerate, edit, inThread || isGroupSession ? null : branching].filter(
+      [isGroupSession ? null : regenerate, edit, inThread || isGroupSession ? null : branching].filter(
         Boolean,
       ) as ActionIconGroupItemType[],
     [inThread, isGroupSession],
   );
 
+  const menuItems = [
+    edit,
+    copy,
+    divider,
+    tts,
+    translate,
+    divider,
+    ...(isGroupSession ? [] : [regenerate]),
+    del,
+  ];
+
   return (
     <ActionIconGroup
       items={items}
       menu={{
-        items: [edit, copy, divider, tts, translate, divider, regenerate, del],
+        items: menuItems,
       }}
       onActionClick={onActionClick}
     />

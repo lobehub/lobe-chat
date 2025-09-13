@@ -138,7 +138,7 @@ ${conversationHistory}
 Rules:
 - Return an array of objects where each object has an "id" field for the agent who should respond
 ${dmRules}
-- You can optionally include an "instruction" field to give specific guidance to the agent about what they should focus on or how they should respond
+- You can optionally include an "instruction" field to give specific guidance in English to the agent about what they should focus on or how they should respond
 - If the conversation seems complete, or no one needs reply, return empty array []
 ${naturalFlowRule}
 - Return ONLY a JSON array of objects, nothing else
