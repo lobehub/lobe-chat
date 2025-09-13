@@ -12,4 +12,6 @@ export interface UserGeneralConfig {
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;
   transitionMode?: ResponseAnimationStyle;
+  // Desktop-specific settings
+  autoUpdateNotificationEnabled?: boolean;
 }

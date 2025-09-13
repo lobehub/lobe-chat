@@ -6,4 +6,5 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   highlighterTheme: 'lobe-theme',
   mermaidTheme: 'lobe-theme',
   transitionMode: 'fadeIn',
+  autoUpdateNotificationEnabled: true,
 };
