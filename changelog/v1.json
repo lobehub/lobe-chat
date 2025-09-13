@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix open chat page with float link modal."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.3"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n, Update model configs."]
     },
     "date": "2025-09-13",
