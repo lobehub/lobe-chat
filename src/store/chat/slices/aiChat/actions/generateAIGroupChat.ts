@@ -307,8 +307,12 @@ export const chatAiGroupChat: StateCreator<
         await get().internal_executeAgentResponses(groupId, decisions);
       }
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (
+        (error instanceof Error && error.name === 'AbortError') ||
+        (error instanceof Error && error.message.includes('The operation was aborted'))
+      ) {
         console.log('Supervisor decision was aborted for group:', groupId);
+        // Don't create error message for intentional aborts
       } else {
         console.error('Supervisor decision failed:', error);
         // Create supervisor error message to show the error to users

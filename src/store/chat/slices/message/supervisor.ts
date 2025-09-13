@@ -103,9 +103,23 @@ export class GroupChatSupervisor {
       },
     });
 
+    // Check if the request was aborted
+    if (context.abortController?.signal.aborted) {
+      const abortError = new Error('The operation was aborted');
+      abortError.name = 'AbortError';
+      throw abortError;
+    }
+
     // If there was an error, throw it to be caught by the caller
     if (error) {
       throw error;
+    }
+
+    // If we have no response and no error, it might be an abort case
+    if (!res) {
+      const abortError = new Error('The operation was aborted');
+      abortError.name = 'AbortError';
+      throw abortError;
     }
 
     return res;
