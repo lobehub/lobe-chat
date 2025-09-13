@@ -295,6 +295,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
           backgroundColor: member.backgroundColor,
           description: template.title,
           key: `${selectedTemplate}-${member.title}`,
+          systemRole: member.systemRole,
           title: member.title,
         }));
     }, [selectedTemplate, removedMembers, groupTemplates]);
@@ -397,8 +398,10 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                   >
                     <Avatar avatar="🎙️" shape="circle" size={40} />
                     <Flexbox flex={1} gap={2}>
-                      <Text style={{ fontSize: 14, fontWeight: 500 }}>Host</Text>
-                      <Text style={{ color: '#999', fontSize: 12 }}>Built-in</Text>
+                      <Text style={{ fontSize: 14, fontWeight: 500 }}>{t('groupWizard.host')}</Text>
+                      <Text style={{ color: '#999', fontSize: 12 }}>
+                        {t('groupWizard.builtIn')}
+                      </Text>
                     </Flexbox>
                     <ModelSelect
                       onChange={handleHostModelChange}
@@ -433,7 +436,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               size={40}
                             />
                           ),
-                          description: member.description,
+                          description: member.systemRole,
                           key: member.key,
                           showAction: true,
                           title: member.title,
