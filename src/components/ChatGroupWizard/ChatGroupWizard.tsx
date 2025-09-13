@@ -10,6 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR } from '@/const/meta';
+import ModelSelect from '@/features/ModelSelect';
+import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 
 import { useGroupTemplates } from './templates';
 
@@ -105,6 +107,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding: ${token.paddingSM}px;
   `,
+  settingsPanel: css`
+    padding: ${token.paddingSM}px;
+    border-top: 1px solid ${token.colorBorderSecondary};
+    background: ${token.colorBgContainer};
+  `,
   templateCard: css`
     cursor: pointer;
     border: 1px solid ${token.colorBorderSecondary};
@@ -131,8 +138,8 @@ export interface ChatGroupWizardProps {
    */
   isCreatingFromTemplate?: boolean;
   onCancel: () => void;
-  onCreateCustom: (selectedAgents: string[]) => void | Promise<void>;
-  onCreateFromTemplate: (templateId: string) => void | Promise<void>;
+  onCreateCustom: (selectedAgents: string[], hostConfig?: { model?: string; provider?: string }) => void | Promise<void>;
+  onCreateFromTemplate: (templateId: string, hostConfig?: { model?: string; provider?: string }) => void | Promise<void>;
   open: boolean;
 }
 
@@ -147,10 +154,26 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     const { t } = useTranslation(['chat', 'common']);
     const { styles, cx } = useStyles();
     const groupTemplates = useGroupTemplates();
+    const enabledModels = useEnabledChatModels();
+    
+    // Get default model from the first enabled provider's first model
+    const defaultModel = useMemo(() => {
+      if (enabledModels.length > 0 && enabledModels[0].children.length > 0) {
+        const firstProvider = enabledModels[0];
+        const firstModel = firstProvider.children[0];
+        return {
+          model: firstModel.id,
+          provider: firstProvider.id,
+        };
+      }
+      return { model: undefined, provider: undefined };
+    }, [enabledModels]);
+
     const [isMemberSelectionOpen, setIsMemberSelectionOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTemplate, setSelectedTemplate] = useState<string>('');
     const [removedMembers, setRemovedMembers] = useState<Record<string, string[]>>({});
+    const [hostModelConfig, setHostModelConfig] = useState<{ model?: string; provider?: string }>(defaultModel);
 
     // Use external loading state if provided, otherwise use internal state
     const isCreatingFromTemplate = externalLoading ?? false;
@@ -163,7 +186,12 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
       setSelectedTemplate('');
       setSearchTerm('');
       setRemovedMembers({});
+      setHostModelConfig(defaultModel);
     };
+
+    const handleHostModelChange = useCallback((config: { model?: string; provider?: string }) => {
+      setHostModelConfig(config);
+    }, []);
 
     const handleRemoveMember = useCallback((templateId: string, memberTitle: string) => {
       setRemovedMembers((prev) => ({
@@ -177,13 +205,13 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
 
       // If using external loading state, don't manage loading internally
       if (externalLoading !== undefined) {
-        await onCreateFromTemplate(selectedTemplate);
+        await onCreateFromTemplate(selectedTemplate, hostModelConfig);
         // Reset will be handled by parent after successful creation
         handleReset();
       } else {
         // Fallback for backwards compatibility
         try {
-          await onCreateFromTemplate(selectedTemplate);
+          await onCreateFromTemplate(selectedTemplate, hostModelConfig);
           handleReset();
         } catch (error) {
           console.error('Failed to create group from template:', error);
@@ -205,7 +233,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
 
     const handleMemberSelectionConfirm = async (selectedAgents: string[]) => {
       setIsMemberSelectionOpen(false);
-      await onCreateCustom(selectedAgents);
+      await onCreateCustom(selectedAgents, hostModelConfig);
     };
 
     const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -329,9 +357,35 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                 </Flexbox>
               ) : (
                 <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-                  <Text style={{ marginBottom: 16 }} type="secondary">
+                  {/* Host Item */}
+                  <Flexbox
+                    align="center"
+                    gap={12}
+                    horizontal
+                    justify="center"
+                    padding={16}
+                    style={{
+                      marginBottom: 16,
+                    }}
+                  >
+                    <Avatar avatar="🎙️" shape="circle" size={40} />
+                    <Flexbox flex={1} gap={2}>
+                      <Text style={{ fontSize: 14, fontWeight: 500 }}>Host</Text>
+                      <Text style={{ color: '#999', fontSize: 12 }}>Built-in</Text>
+                    </Flexbox>
+                    <ModelSelect 
+                      value={hostModelConfig.model && hostModelConfig.provider ? {
+                        model: hostModelConfig.model,
+                        provider: hostModelConfig.provider,
+                      } : undefined}
+                      onChange={handleHostModelChange}
+                    />
+                  </Flexbox>
+
+                  <Text style={{ marginBottom: 16, textAlign: 'center' }} type="secondary">
                     {t('groupWizard.groupMembers')}
                   </Text>
+
                   <List
                     items={selectedTemplateMembers.map((member) => ({
                       actions: (
