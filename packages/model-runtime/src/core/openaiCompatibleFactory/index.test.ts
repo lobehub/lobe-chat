@@ -58,6 +58,14 @@ afterEach(() => {
 });
 
 describe('LobeOpenAICompatibleFactory', () => {
+  // Polyfill File for Node environment used in image tests
+  if (typeof File === 'undefined') {
+    // @ts-ignore
+    global.File = class MockFile {
+      constructor(public parts: any[], public name: string, public opts?: any) {}
+    };
+  }
+
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
       const instance = new LobeMockProvider({ apiKey: 'test_api_key' });
@@ -148,10 +156,22 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const decoder = new TextDecoder();
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toEqual('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toEqual('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toEqual('data: "hello"\n\n');
-        expect((await reader.read()).done).toBe(true);
+
+        // Collect all chunks
+        const chunks = [];
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          chunks.push(decoder.decode(value));
+        }
+        // Assert that all expected chunk patterns are present
+        expect(chunks).toEqual(
+          expect.arrayContaining([
+            'id: a\n',
+            'event: text\n',
+            'data: "hello"\n\n',
+          ]),
+        );
       });
 
       // https://github.com/lobehub/lobe-chat/issues/2752

@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Google stream error unable to abort request."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.5"
+  },
+  {
+    "children": {
       "improvements": ["Fix discover plugin link."]
     },
     "date": "2025-09-13",
