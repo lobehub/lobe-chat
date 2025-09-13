@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },
+  "supervisor": {
+    "decisionFailed": "그룹 진행자가 작동하지 않습니다. 진행자 구성을 확인하여 올바른 모델, API 키 및 API 주소가 설정되었는지 확인하세요."
+  },
   "testConnectionFailed": "연결 테스트 실패: {{error}}",
   "tts": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."

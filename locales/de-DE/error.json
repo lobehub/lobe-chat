@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },
+  "supervisor": {
+    "decisionFailed": "Der Gruppenleiter kann nicht arbeiten. Bitte überprüfen Sie Ihre Leiterkonfiguration und stellen Sie sicher, dass das richtige Modell, der API-Schlüssel und die API-Adresse korrekt konfiguriert sind."
+  },
   "testConnectionFailed": "Verbindungstest fehlgeschlagen: {{error}}",
   "tts": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"

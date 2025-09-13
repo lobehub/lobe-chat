@@ -6,6 +6,282 @@
     },
     "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?<br />Daha profesyonel veya özel bir asistan istiyorsanız, özel asistan oluşturmak için <plus /> butonuna tıklayabilirsiniz.",
     "defaultMessageWithoutCreate": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?",
+    "groupActivities": {
+      "a01": {
+        "description": "Çok perspektifli, işbirlikçi fikir üretme ve yaratıcı problem çözme",
+        "emoji": "🧠",
+        "prompt": "Projeye yönelik bir beyin fırtınası başlatalım. Bize yaratıcı fikirler ve çözümler üretmede yardımcı olabilir misin?",
+        "title": "Beyin Fırtınası"
+      },
+      "a02": {
+        "description": "Oyuncuların strateji ve tartışma ile kurt adamları bulduğu sosyal çıkarım oyunu",
+        "emoji": "🐺",
+        "prompt": "Kurt Adam oyunu oynayalım! Kuralları belirlememize ve bu sosyal çıkarım oyununu yönetmemize yardımcı olur musun?",
+        "title": "Kurt Adam Oyunu"
+      },
+      "a03": {
+        "description": "Birleşmiş Milletler tartışmalarını ve küresel konularla ilgili diplomatik müzakereleri canlandırma",
+        "emoji": "🌍",
+        "prompt": "Bir BM tartışmasını canlandıralım. Küresel bir konuda diplomatik bir müzakere düzenlememize yardımcı olur musun?",
+        "title": "Model Birleşmiş Milletler"
+      },
+      "a04": {
+        "description": "Tasarım konseptleri, prototipler veya yaratıcı çalışmalar için işbirlikçi geri bildirim oturumu",
+        "emoji": "🎨",
+        "prompt": "Bazı tasarımları gözden geçirmemiz gerekiyor. Tasarım konseptleri ve prototipler hakkında yapıcı geri bildirim vermemize yardımcı olabilir misin?",
+        "title": "Tasarım İncelemesi"
+      },
+      "a05": {
+        "description": "Kod değişiklikleri ve uygulamalar hakkında teknik tartışma ve eş değerlendirmesi",
+        "emoji": "💻",
+        "prompt": "Hadi birlikte bazı kodları inceleyelim. Bu kodları analiz edip iyileştirme alanlarını belirlememize yardımcı olur musun?",
+        "title": "Kod İncelemesi"
+      },
+      "a06": {
+        "description": "Kartlarla proje görevleri ve iş yükünü tahmin etmeye yönelik çevik tahmin tekniği",
+        "emoji": "🃏",
+        "prompt": "Proje için planlama pokeri yapıyoruz. Bu görevlerin iş yükünü çevik tekniklerle tahmin etmemize yardımcı olur musun?",
+        "title": "Planlama Pokeri"
+      },
+      "a07": {
+        "description": "Çeşitli konu ve güncel olaylar hakkında yapılandırılmış tartışma ve münazara",
+        "emoji": "⚖️",
+        "prompt": "Hadi yapılandırılmış bir tartışma yapalım. Bu konuda mantıklı ve gerekçeli bir tartışma düzenlememize yardımcı olur musun?",
+        "title": "Münazara Kulübü"
+      },
+      "a08": {
+        "description": "İşbirlikçi öğrenme oturumu; kavramları tartışma ve birlikte problem çözme",
+        "emoji": "📚",
+        "prompt": "Bir çalışma grubu oluşturalım. Bu kavramları anlamamıza ve birlikte sorunları çözmemize yardımcı olur musun?",
+        "title": "Çalışma Grubu"
+      },
+      "a09": {
+        "description": "Kitaplar, hikâyeler ve edebi eserler üzerine edebî tartışma ve analiz",
+        "emoji": "📖",
+        "prompt": "Okuma kulübü tartışmasına başlayalım. Bu kitabı analiz etmemize ve temalarını birlikte tartışmamıza yardımcı olur musun?",
+        "title": "Okuma Kulübü"
+      },
+      "a10": {
+        "description": "Takım bağları kurmak ve eğlenmek için eğlenceli etkileşimli oyunlar ve aktiviteler",
+        "emoji": "🎲",
+        "prompt": "Oyun gecesi başlıyor! Takım bağları kurmak için bazı eğlenceli etkileşimli oyunlar düzenlememize yardımcı olur musun?",
+        "title": "Oyun Gecesi"
+      },
+      "a11": {
+        "description": "Filmler, belgeseller ve görsel medyayı birlikte izleyip tartışma",
+        "emoji": "🎬",
+        "prompt": "Film kulübü tartışmasına başlayalım. Bu filmi analiz etmemize ve temalarını birlikte tartışmamıza yardımcı olur musun?",
+        "title": "Film Kulübü"
+      },
+      "a12": {
+        "description": "Anadili konuşanlarla birlikte konuşma pratiği ve yeni bir dil öğrenme",
+        "emoji": "🗣️",
+        "prompt": "Haydi yeni bir dil pratiği yapalım. Bu dili öğrenmemize ve konuşma pratiği yapmamıza yardımcı olur musun?",
+        "title": "Dil Pratiği"
+      },
+      "a13": {
+        "description": "Yemek pişirme teknikleri, tarifler ve mutfak geleneklerini öğrenme ve paylaşma",
+        "emoji": "👨‍🍳",
+        "prompt": "Hadi bir yemek dersi yapalım! Yeni tarifler ve pişirme teknikleri öğrenmemize yardımcı olur musun?",
+        "title": "Yemek Dersi"
+      },
+      "a14": {
+        "description": "Yeni teknolojiler, inovasyonlar ve sektörel trendleri tartışma",
+        "emoji": "🚀",
+        "prompt": "Hadi teknoloji sohbeti yapalım! Yeni teknolojiler ve sektörel trendler hakkında tartışmamıza yardımcı olur musun?",
+        "title": "Teknoloji Sohbeti"
+      },
+      "a15": {
+        "description": "İşbirlikçi müzik yaratımı, paylaşımı ve dinleme oturumu",
+        "emoji": "🎵",
+        "prompt": "Hadi müzik doğaçlaması yapalım! Birlikte müzik yaratmamıza ve dinlememize yardımcı olur musun?",
+        "title": "Müzik Doğaçlaması"
+      },
+      "a16": {
+        "description": "Piyasayı analiz etme, yatırım stratejilerini tartışma ve finansal öngörü paylaşma",
+        "emoji": "📈",
+        "prompt": "Hadi piyasayı birlikte analiz edelim. Yatırım stratejilerini tartışmamıza ve finansal içgörüler paylaşmamıza yardımcı olur musun?",
+        "title": "Yatırım Kulübü"
+      },
+      "a17": {
+        "description": "Grup fitness hedefleri belirleme, egzersiz yöntemlerini paylaşma ve birbirini motive etme",
+        "emoji": "💪",
+        "prompt": "Hadi bir fitness meydan okuması başlatalım! Hedef belirlememize ve birbirimizi sağlıklı kalmak için motive etmemize yardımcı olur musun?",
+        "title": "Fitness Meydan Okuması"
+      },
+      "a18": {
+        "description": "Seyahat planlama, seyahat deneyimlerini paylaşma ve yeni destinasyonlar keşfetme",
+        "emoji": "✈️",
+        "prompt": "Hadi birlikte bir gezi planlayalım! Gideceğimiz yerleri araştırmamıza ve seyahat rotası hazırlamamıza yardımcı olur musun?",
+        "title": "Seyahat Planlaması"
+      },
+      "a19": {
+        "description": "Çeşitli görsel ve dijital sanat formlarını yaratma, eleştirme ve takdir etme",
+        "emoji": "🖼️",
+        "prompt": "Hadi bir sanat atölyesi düzenleyelim! Çeşitli sanat biçimlerini yaratmamıza, eleştirip takdir etmemize yardımcı olur musun?",
+        "title": "Sanat Atölyesi"
+      },
+      "a20": {
+        "description": "Bilimsel kavramları keşfetme, deneyler yapma ve bulguları paylaşma",
+        "emoji": "🔬",
+        "prompt": "Hadi bilimi keşfedelim! Deneyler yapmamıza ve bulgularımızı paylaşmamıza yardımcı olur musun?",
+        "title": "Bilim Sergisi"
+      },
+      "title": "Grup Sohbeti Kullanım Önerileri"
+    },
+    "groupMessage": "Grup sohbetine hoş geldiniz! Paylaşılan bir konuşma alanında birden fazla yapay zeka asistanıyla işbirliği yapın。",
+    "groupTemplates": {
+      "analysis": {
+        "description": "Veri odaklı içgörüler, derinlemesine araştırma ve analiz",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Sen bir veri analistisin, verileri işleme ve yorumlama konusunda uzmansın, grafikler ve istatistiksel analizlerle verilerin ardındaki düzenleri ve trendleri ortaya çıkarırsın.",
+            "title": "Veri Analisti"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sen bir araştırma uzmanısın, bilgi toplama ve derinlemesine araştırma yapmaktan sorumlusun, sorunları çok boyutlu olarak kapsamlı bir şekilde analiz edebilirsin.",
+            "title": "Araştırma Uzmanı"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sen bir istatistik uzmanısın, çeşitli istatistik yöntemleri ve modellerinde uzmansın, verilerden değerli ticari içgörüler çıkarabilirsin.",
+            "title": "İstatistik Uzmanı"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Sen bir nicel analistsin, nicel modelleme ve risk değerlendirmesi yaparsın, karmaşık problemleri matematiksel yöntemlerle çözersin.",
+            "title": "Nicel Analist"
+          }
+        ],
+        "title": "Analiz Ekibi"
+      },
+      "brainstorm": {
+        "description": "Çoklu bakış açısıyla yaratıcı düşünce, sonsuz olasılıkları tetikle",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sen bir yaratıcı yönetmensin, yaratıcı yönü makro açıdan kontrol etmede uzmansın, soyut kavramları somut ve uygulanabilir yaratıcı çözümlere dönüştürebilirsin.",
+            "title": "Yaratıcı Yönetmen"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sen bir yenilik uzmanısın, yeni çözümler ve çığır açan düşünceler keşfetmekle sorumlusun, kalıpların dışına çıkarak düşünme becerisine sahipsin.",
+            "title": "Yenilik Uzmanı"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sen bir tasarım düşüncesi uzmanısın, kullanıcı deneyimi ve görsel sunum açısından düşünürsün, yaratıcılığın görselleştirilmesine önem verirsin.",
+            "title": "Tasarım Düşüncesi Uzmanı"
+          }
+        ],
+        "title": "Beyin Fırtınası Takımı"
+      },
+      "game": {
+        "description": "Çeşitli çok oyunculu metin oyunlarının keyfini çıkar, örneğin Kurt Adam ve Kim Casus",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sen bir oyun sunucususun, çeşitli çok oyunculu metin oyunlarını organize etmekte uzmansın, oyuncuları oyuna yönlendirebilirsin.",
+            "title": "Oyun Sunucusu"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sen bir oyuncusun, çeşitli çok oyunculu metin oyunlarına katılmakta uzmansın, oyun kurallarına göre oynayabilirsin.",
+            "title": "Oyuncu"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sen bir oyuncusun, çeşitli çok oyunculu metin oyunlarına katılmakta uzmansın, oyun kurallarına göre oynayabilirsin.",
+            "title": "Oyuncu"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sen bir oyuncusun, çeşitli çok oyunculu metin oyunlarına katılmakta uzmansın, oyun kurallarına göre oynayabilirsin.",
+            "title": "Oyuncu"
+          }
+        ],
+        "title": "Oyun Salonu"
+      },
+      "planning": {
+        "description": "Stratejik planlama ve proje yönetimi, genel durumu koordine etme",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sen bir proje yöneticisisin, projenin genel planlaması, ilerleme kontrolü ve kaynak koordinasyonundan sorumlusun, projenin zamanında ve yüksek kalitede tamamlanmasını sağlarsın.",
+            "title": "Şef"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sen bir strateji sorumlususun, uzun vadeli stratejik planlar yapar, pazar fırsatlarını analiz eder, hedefler ve gerçekleştirme yolları belirlersin.",
+            "title": "Malzeme Tedarik Uzmanı"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Sen bir gastronomi araştırma ve geliştirme uzmanısın, detaylı uygulama planları yapar, departmanlar arası kaynakları koordine eder, planların uygulanabilirliğini sağlarsın.",
+            "title": "Gastronomi Ar-Ge Uzmanı"
+          }
+        ],
+        "title": "Gastronomi Ar-Ge Takımı"
+      },
+      "product": {
+        "description": "Ürün tasarımı ve geliştirme, kaliteli ürünler yaratma",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sen bir tasarımcısın, çeşitli ürün türlerini tasarlamada uzmansın, ürün gereksinimlerine göre tasarım yapabilirsin.",
+            "title": "Tasarımcı"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sen bir ürün yöneticisisin, ürünün planlaması, tasarımı, geliştirilmesi ve bakımından sorumlusun, ürün kalitesi ve kullanıcı deneyimini sağlarsın.",
+            "title": "Ürün Yöneticisi"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Sen deneyimli bir tam yığın mühendisisin, çeşitli ürün türlerini geliştirmede uzmansın, ürün gereksinimlerine göre geliştirme yapabilirsin.",
+            "title": "Tam Yığın Mühendis"
+          }
+        ],
+        "title": "Ürün Ar-Ge Takımı"
+      },
+      "writing": {
+        "description": "İçerik oluşturma ve düzenleme, kaliteli metinler yaratma",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sen bir içerik yazarıyısın, çeşitli yazı türlerinde içerik oluşturmakta uzmansın, farklı senaryolara ve hedef kitlelere göre yazım stilini ayarlayabilirsin.",
+            "title": "İçerik Yazarı"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Sen bir editörsün, metinlerin düzeltme, parlatma ve optimizasyonundan sorumlusun, içeriğin doğruluğunu, akıcılığını ve profesyonelliğini sağlarsın.",
+            "title": "Editör"
+          }
+        ],
+        "title": "Yazım Çemberi"
+      }
+    },
     "qa": {
       "q01": "LobeHub nedir?",
       "q02": "{{appName}} nedir?",

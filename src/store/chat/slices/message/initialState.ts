@@ -1,3 +1,4 @@
+import { ChatGroupAgentItem, ChatGroupItem } from '@/database/schemas/chatGroup';
 import { ChatMessage } from '@/types/message';
 
 export interface ChatMessageState {
@@ -6,7 +7,23 @@ export interface ChatMessageState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-
+  /**
+   * Type of the currently active session ('agent' | 'group')
+   * Derived from session.type, used for caching to avoid repeated lookups
+   */
+  activeSessionType?: 'agent' | 'group';
+  /**
+   * Group agents maps by group ID
+   */
+  groupAgentMaps: Record<string, ChatGroupAgentItem[]>;
+  /**
+   * Group data maps by group ID
+   */
+  groupMaps: Record<string, ChatGroupItem>;
+  /**
+   * Groups initialization status
+   */
+  groupsInit: boolean;
   isCreatingMessage: boolean;
   /**
    * is the message is editing
@@ -21,13 +38,32 @@ export interface ChatMessageState {
    */
   messagesInit: boolean;
   messagesMap: Record<string, ChatMessage[]>;
+  /**
+   * Supervisor decision debounce timers by group ID
+   */
+  supervisorDebounceTimers: Record<string, number>;
+  /**
+   * Supervisor decision abort controllers by group ID
+   */
+  supervisorDecisionAbortControllers: Record<string, AbortController>;
+  /**
+   * Supervisor decision loading states
+   */
+  supervisorDecisionLoading: string[];
 }
 
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
+  activeSessionType: undefined,
+  groupAgentMaps: {},
+  groupMaps: {},
+  groupsInit: false,
   isCreatingMessage: false,
   messageEditingIds: [],
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
+  supervisorDebounceTimers: {},
+  supervisorDecisionAbortControllers: {},
+  supervisorDecisionLoading: [],
 };

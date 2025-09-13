@@ -1,7 +1,7 @@
-import { LobeAgentSession, LobeSessionType } from '@lobechat/types';
-
-import { DEFAULT_AGENT_META } from './meta';
-import { DEFAULT_AGENT_CONFIG } from './settings';
+import { DEFAULT_AGENT_META, DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { LobeAgentSession, LobeGroupSession, LobeSessionType } from '@/types/session';
+import { merge } from '@/utils/merge';
 
 export const INBOX_SESSION_ID = 'inbox';
 
@@ -16,3 +16,19 @@ export const DEFAULT_AGENT_LOBE_SESSION: LobeAgentSession = {
   type: LobeSessionType.Agent,
   updatedAt: new Date(),
 };
+
+export const DEFAULT_GROUP_LOBE_SESSION: LobeGroupSession = {
+  createdAt: new Date(),
+  id: '',
+  members: [],
+  meta: DEFAULT_AGENT_META,
+  type: LobeSessionType.Group,
+  updatedAt: new Date(),
+};
+
+export const DEFAULT_INBOX_SESSION: LobeAgentSession = merge(DEFAULT_AGENT_LOBE_SESSION, {
+  id: 'inbox',
+  meta: {
+    avatar: DEFAULT_INBOX_AVATAR,
+  },
+});

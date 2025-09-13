@@ -163,6 +163,10 @@ export default {
   stt: {
     responseError: '服务请求失败，请检查配置或重试',
   },
+  supervisor: {
+    decisionFailed:
+      '群组主持人无法工作。请检查你的主持人配置，确保配置了正确的模型、API Key 和 API 地址。',
+  },
   testConnectionFailed: '测试连接失败：{{error}}',
   tts: {
     responseError: '服务请求失败，请检查配置或重试',

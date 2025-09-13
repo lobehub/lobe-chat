@@ -421,7 +421,7 @@ describe('chatMessage actions', () => {
       // 在每个测试用例开始前恢复到实际的 SWR 实现
       vi.resetAllMocks();
     });
-    it('should refresh messages by calling mutate with current activeId and activeTopicId', async () => {
+    it('should refresh messages by calling mutate for both session and group types', async () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });
 
       const { result } = renderHook(() => useChatStore());
@@ -433,8 +433,20 @@ describe('chatMessage actions', () => {
         await result.current.refreshMessages();
       });
 
-      // 确保 mutate 调用了正确的参数
-      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_MESSAGES', activeId, activeTopicId]);
+      // 确保 mutate 调用了正确的参数（session 和 group 两次）
+      expect(mutate).toHaveBeenCalledWith([
+        'SWR_USE_FETCH_MESSAGES',
+        activeId,
+        activeTopicId,
+        'session',
+      ]);
+      expect(mutate).toHaveBeenCalledWith([
+        'SWR_USE_FETCH_MESSAGES',
+        activeId,
+        activeTopicId,
+        'group',
+      ]);
+      expect(mutate).toHaveBeenCalledTimes(2);
     });
     it('should handle errors during refreshing messages', async () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });

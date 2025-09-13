@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
+  "supervisor": {
+    "decisionFailed": "群組主持人無法工作。請檢查你的主持人設定，確保配置了正確的模型、API Key 和 API 位址。"
+  },
   "testConnectionFailed": "測試連線失敗：{{error}}",
   "tts": {
     "responseError": "服務請求失敗，請檢查配置或重試"

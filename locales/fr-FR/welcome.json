@@ -6,6 +6,282 @@
     },
     "defaultMessage": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?<br />Si vous avez besoin d'un assistant plus professionnel ou personnalisé, vous pouvez cliquer sur <plus /> pour créer un assistant sur mesure.",
     "defaultMessageWithoutCreate": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?",
+    "groupActivities": {
+      "a01": {
+        "description": "Génération créative collaborative et résolution de problèmes à partir de multiples perspectives",
+        "emoji": "🧠",
+        "prompt": "Commençons un brainstorming pour le projet. Peux-tu nous aider à générer des idées créatives et des solutions ?",
+        "title": "Brainstorming"
+      },
+      "a02": {
+        "description": "Jeu de déduction sociale où les joueurs identifient les loups-garous grâce à la stratégie et aux discussions",
+        "emoji": "🐺",
+        "prompt": "Jouons au jeu des Loups‑Garous ! Peux-tu nous aider à définir les règles et animer cette partie de déduction sociale ?",
+        "title": "Loups‑Garous"
+      },
+      "a03": {
+        "description": "Simulation de débats des Nations Unies et de négociations diplomatiques sur des enjeux mondiaux",
+        "emoji": "🌍",
+        "prompt": "Simulons un débat à l'ONU. Peux-tu nous aider à organiser une négociation diplomatique sur un enjeu mondial ?",
+        "title": "Simulation de l'ONU"
+      },
+      "a04": {
+        "description": "Réunion de feedback collaboratif sur des concepts de design, prototypes ou créations",
+        "emoji": "🎨",
+        "prompt": "Nous devons revoir des travaux de design. Peux-tu nous aider à fournir des retours constructifs sur des concepts et prototypes ?",
+        "title": "Revue de design"
+      },
+      "a05": {
+        "description": "Discussions techniques et revue par les pairs des changements et implémentations de code",
+        "emoji": "💻",
+        "prompt": "Examinons du code ensemble. Peux-tu nous aider à analyser ce code et à repérer des améliorations ?",
+        "title": "Revue de code"
+      },
+      "a06": {
+        "description": "Technique d'estimation agile utilisant des cartes pour évaluer les tâches et la charge de travail d'un projet",
+        "emoji": "🃏",
+        "prompt": "Nous faisons une planification Poker pour le projet. Peux-tu nous aider à estimer la charge de ces tâches avec cette technique agile ?",
+        "title": "Planning Poker"
+      },
+      "a07": {
+        "description": "Discussions et débats structurés sur divers sujets et actualités",
+        "emoji": "⚖️",
+        "prompt": "Faisons un débat structuré. Peux-tu nous aider à organiser une discussion argumentée sur ce sujet ?",
+        "title": "Club de débat"
+      },
+      "a08": {
+        "description": "Séances d'apprentissage collaboratif pour discuter de concepts et résoudre des problèmes ensemble",
+        "emoji": "📚",
+        "prompt": "Formons un groupe d'étude. Peux-tu nous aider à comprendre ces concepts et à résoudre les problèmes ensemble ?",
+        "title": "Groupe d'étude"
+      },
+      "a09": {
+        "description": "Discussions et analyses littéraires de livres, histoires et œuvres littéraires",
+        "emoji": "📖",
+        "prompt": "Démarrons une discussion du club de lecture. Peux-tu nous aider à analyser ce livre et à explorer ses thèmes ensemble ?",
+        "title": "Club de lecture"
+      },
+      "a10": {
+        "description": "Jeux et activités interactives amusants pour renforcer la cohésion d'équipe et s'amuser",
+        "emoji": "🎲",
+        "prompt": "C'est la soirée jeux ! Peux-tu nous aider à organiser des jeux interactifs amusants pour renforcer les liens d'équipe ?",
+        "title": "Soirée jeux"
+      },
+      "a11": {
+        "description": "Regarder et discuter ensemble de films, documentaires et médias visuels",
+        "emoji": "🎬",
+        "prompt": "Lançons la discussion du ciné-club. Peux-tu nous aider à analyser ce film et à en débattre les thèmes ensemble ?",
+        "title": "Ciné-club"
+      },
+      "a12": {
+        "description": "Pratiquer l'expression orale et apprendre une nouvelle langue avec des locuteurs natifs",
+        "emoji": "🗣️",
+        "prompt": "Pratiquons une nouvelle langue ensemble. Peux-tu nous aider à apprendre et à pratiquer la langue parlée ?",
+        "title": "Pratique linguistique"
+      },
+      "a13": {
+        "description": "Apprendre et partager des techniques culinaires, recettes et traditions gastronomiques",
+        "emoji": "👨‍🍳",
+        "prompt": "Allons en atelier cuisine ! Peux-tu nous aider à apprendre de nouvelles recettes et techniques culinaires ?",
+        "title": "Cours de cuisine"
+      },
+      "a14": {
+        "description": "Discuter des technologies émergentes, de l'innovation et des tendances sectorielles",
+        "emoji": "🚀",
+        "prompt": "Faisons un échange sur la tech ! Peux-tu nous aider à discuter des technologies émergentes et des tendances du secteur ?",
+        "title": "Échange technologique"
+      },
+      "a15": {
+        "description": "Séances de création musicale collaborative, de partage et d'appréciation",
+        "emoji": "🎵",
+        "prompt": "Faisons une improvisation musicale ! Peux-tu nous aider à créer et apprécier de la musique ensemble ?",
+        "title": "Improvisation musicale"
+      },
+      "a16": {
+        "description": "Analyser les marchés, discuter de stratégies d'investissement et partager des analyses financières",
+        "emoji": "📈",
+        "prompt": "Analysons le marché ensemble. Peux-tu nous aider à discuter de stratégies d'investissement et à partager des analyses financières ?",
+        "title": "Club d'investissement"
+      },
+      "a17": {
+        "description": "Fixer des objectifs de fitness en groupe, partager des entraînements et s'encourager mutuellement",
+        "emoji": "💪",
+        "prompt": "Lançons un défi fitness ! Peux-tu nous aider à fixer des objectifs et à nous motiver mutuellement pour rester en forme ?",
+        "title": "Défi fitness"
+      },
+      "a18": {
+        "description": "Planifier des voyages, partager des expériences et découvrir de nouvelles destinations",
+        "emoji": "✈️",
+        "prompt": "Planifions un voyage ensemble ! Peux-tu nous aider à rechercher des destinations et à organiser l'itinéraire ?",
+        "title": "Planification de voyage"
+      },
+      "a19": {
+        "description": "Créer, critiquer et apprécier diverses formes d'art visuel et numérique",
+        "emoji": "🖼️",
+        "prompt": "Organisons un atelier d'art ! Peux-tu nous aider à créer, critiquer et apprécier différentes formes d'art ?",
+        "title": "Atelier d'art"
+      },
+      "a20": {
+        "description": "Explorer des concepts scientifiques, réaliser des expériences et partager les découvertes",
+        "emoji": "🔬",
+        "prompt": "Explorons la science ensemble ! Peux-tu nous aider à mener des expériences et à partager nos découvertes ?",
+        "title": "Exposition scientifique"
+      },
+      "title": "Recommandations d'utilisation du chat de groupe"
+    },
+    "groupMessage": "Bienvenue dans le chat de groupe ! Collaborez avec plusieurs assistants IA dans un espace de conversation partagé.",
+    "groupTemplates": {
+      "analysis": {
+        "description": "Perspectives basées sur les données, analyses approfondies",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Vous êtes un analyste de données, expert dans le traitement et l'interprétation des données, révélant les règles et tendances sous-jacentes à travers des graphiques et des analyses statistiques.",
+            "title": "Analyste de données"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un expert en recherche, chargé de la collecte d'informations et des études approfondies, capable d'analyser les problèmes sous plusieurs angles.",
+            "title": "Expert en recherche"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes un statisticien, maîtrisant diverses méthodes et modèles statistiques, capable d'extraire des insights commerciaux précieux à partir des données.",
+            "title": "Statisticien"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Vous êtes un analyste quantitatif, spécialisé dans la modélisation quantitative et l'évaluation des risques, utilisant des méthodes mathématiques pour résoudre des problèmes complexes.",
+            "title": "Analyste quantitatif"
+          }
+        ],
+        "title": "Équipe d'analyse"
+      },
+      "brainstorm": {
+        "description": "Pensée créative multi-perspectives, stimulation d'infinies possibilités",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un directeur créatif, expert dans la gestion de la direction créative à un niveau macro, capable de transformer des concepts abstraits en plans créatifs concrets et réalisables.",
+            "title": "Directeur créatif"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes un expert en innovation, chargé de découvrir des solutions novatrices et des idées révolutionnaires, capable de penser hors des cadres établis.",
+            "title": "Expert en innovation"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un spécialiste de la pensée design, abordant les problèmes sous l'angle de l'expérience utilisateur et de la présentation visuelle, mettant l'accent sur l'expression créative visuelle.",
+            "title": "Spécialiste en design thinking"
+          }
+        ],
+        "title": "Équipe de brainstorming"
+      },
+      "game": {
+        "description": "Jouez à divers jeux de mots multijoueurs, tels que le Loup-Garou et Qui est l'Imposteur",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un animateur, expert dans l'organisation de divers jeux de mots multijoueurs, capable de guider les joueurs tout au long du jeu.",
+            "title": "Animateur de jeu"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes un joueur, expert dans la participation à divers jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un joueur, expert dans la participation à divers jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un joueur, expert dans la participation à divers jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          }
+        ],
+        "title": "Salle de jeux"
+      },
+      "planning": {
+        "description": "Planification stratégique et gestion de projet, coordination globale",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un chef de projet, responsable de la planification globale, du contrôle des délais et de la coordination des ressources, garantissant la réalisation du projet dans les temps et avec qualité.",
+            "title": "Chef de projet"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes responsable de la stratégie, chargé d'élaborer des plans stratégiques à long terme, d'analyser les opportunités du marché, de définir les objectifs et les voies de réalisation.",
+            "title": "Responsable stratégie"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Vous êtes un expert en développement culinaire, chargé d'élaborer des plans d'exécution détaillés, de coordonner les ressources des différents départements, assurant la faisabilité des plans.",
+            "title": "Expert en développement culinaire"
+          }
+        ],
+        "title": "Équipe de développement culinaire"
+      },
+      "product": {
+        "description": "Conception et développement de produits, création de produits de qualité",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un designer, expert dans la conception de divers types de produits, capable de concevoir selon les besoins du produit.",
+            "title": "Designer"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un chef de produit, responsable de la planification, conception, développement et maintenance du produit, garantissant la qualité et l'expérience utilisateur.",
+            "title": "Chef de produit"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Vous êtes un ingénieur full-stack expérimenté, expert dans le développement de divers types de produits, capable de développer selon les besoins du produit.",
+            "title": "Ingénieur full-stack"
+          }
+        ],
+        "title": "Équipe de développement produit"
+      },
+      "writing": {
+        "description": "Création et édition de contenu, production de textes de qualité",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un rédacteur de contenu, expert dans la création de contenus de divers styles, capable d'adapter le style d'écriture selon les contextes et les publics.",
+            "title": "Rédacteur de contenu"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Vous êtes un éditeur, responsable de la relecture, de la correction et de l'optimisation des textes, garantissant l'exactitude, la fluidité et le professionnalisme du contenu.",
+            "title": "Éditeur"
+          }
+        ],
+        "title": "Cercle d'écriture"
+      }
+    },
     "qa": {
       "q01": "Qu'est-ce que LobeHub ?",
       "q02": "Qu'est-ce que {{appName}} ?",

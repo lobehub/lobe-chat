@@ -10,9 +10,12 @@ export interface MarkdownElementProps<T = any> {
   type: string;
 }
 
+export type MarkdownPluginScope = 'user' | 'assistant' | 'all';
+
 export interface MarkdownElement {
   Component: FC<MarkdownElementProps>;
   rehypePlugin?: any;
   remarkPlugin?: any;
+  scope: MarkdownPluginScope;
   tag: string;
 }
