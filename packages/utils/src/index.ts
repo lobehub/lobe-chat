@@ -3,6 +3,7 @@ export * from './detectChinese';
 export * from './format';
 export * from './imageToBase64';
 export * from './keyboard';
+export * from './number';
 export * from './object';
 export * from './parseModels';
 export * from './pricing';

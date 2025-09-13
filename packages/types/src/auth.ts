@@ -26,6 +26,14 @@ export interface ClientSecretPayload {
   cloudflareBaseURLOrAccountID?: string;
 
   /**
+   * ComfyUI specific authentication fields
+   */
+  authType?: string;
+  username?: string;
+  password?: string;
+  customHeaders?: Record<string, string>;
+
+  /**
    * user id
    * in client db mode it's a uuid
    * in server db mode it's a user id

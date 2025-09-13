@@ -115,6 +115,30 @@ export const ModelParamsMetaSchema = z.object({
     type: z.literal('string').optional(),
   }),
 
+  /**
+   * samplerName is not requires by all i2i providers
+   */
+  samplerName: z
+    .object({
+      default: z.string(),
+      description: z.string().optional(),
+      enum: z.array(z.string()).optional(),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
+  /**
+   * scheduler is not requires by all i2i providers
+   */
+  scheduler: z
+    .object({
+      default: z.string(),
+      description: z.string().optional(),
+      enum: z.array(z.string()).optional(),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
   seed: z
     .object({
       default: z.number().nullable().default(null),
@@ -141,6 +165,20 @@ export const ModelParamsMetaSchema = z.object({
       max: z.number(),
       min: z.number(),
       step: z.number().optional().default(1),
+      type: z.literal('number').optional(),
+    })
+    .optional(),
+
+  /**
+   * strength/denoise is optional for t2i but must be used for i2i
+   */
+  strength: z
+    .object({
+      default: z.number(),
+      description: z.string().optional(),
+      max: z.number().optional().default(1),
+      min: z.number().optional().default(0),
+      step: z.number().optional().default(0.05),
       type: z.literal('number').optional(),
     })
     .optional(),
