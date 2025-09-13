@@ -1,4 +1,3 @@
-import { Divider } from 'antd';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -22,7 +21,6 @@ const Sidebar = async (props: DynamicLayoutProps) => {
   return (
     <Layout>
       <ConfigSwitcher />
-      <Divider style={{ margin: 0 }} />
       <Topic />
     </Layout>
   );
