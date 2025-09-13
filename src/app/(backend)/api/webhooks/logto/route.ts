@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { authEnv } from '@/config/auth';
 import { serverDB } from '@/database/server';
+import { authEnv } from '@/envs/auth';
 import { pino } from '@/libs/logger';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 

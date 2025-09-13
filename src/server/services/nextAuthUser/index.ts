@@ -1,3 +1,4 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { and, eq } from 'drizzle-orm';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 import { NextResponse } from 'next/server';
@@ -11,7 +12,6 @@ import {
   nextauthVerificationTokens,
   users,
 } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 import { pino } from '@/libs/logger';
 import { merge } from '@/utils/merge';
 

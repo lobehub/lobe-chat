@@ -2,7 +2,6 @@ import { isDesktop } from '@lobechat/const';
 import { HotkeyEnum, KeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
-  INSERT_TABLE_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -12,17 +11,16 @@ import {
   ReactTablePlugin,
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
-import { Hotkey, combineKeys } from '@lobehub/ui';
-import { Table2Icon } from 'lucide-react';
+import { combineKeys } from '@lobehub/ui';
 import { memo, useEffect, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
-import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
+import Placeholder from './Placeholder';
+import { useSlashItems } from './useSlashItems';
 
 const InputEditor = memo<{ defaultRows?: number }>(() => {
   const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
@@ -37,14 +35,11 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
   const state = useEditorState(editor);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
   const { enableScope, disableScope } = useHotkeysContext();
-  const { t } = useTranslation(['editor', 'chat']);
+  const slashItems = useSlashItems();
 
   const isChineseInput = useRef(false);
 
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
-  const wrapperShortcut = useCmdEnterToSend
-    ? KeyEnum.Enter
-    : combineKeys([KeyEnum.Mod, KeyEnum.Enter]);
 
   useEffect(() => {
     const fn = (e: BeforeUnloadEvent) => {
@@ -113,28 +108,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
           }
         }
       }}
-      placeholder={
-        <Flexbox align={'center'} as={'span'} gap={4} horizontal>
-          {t('sendPlaceholder', { ns: 'chat' }).replace('...', ', ')}
-          <Trans
-            as={'span'}
-            components={{
-              key: (
-                <Hotkey
-                  as={'span'}
-                  keys={wrapperShortcut}
-                  style={{ color: 'inherit' }}
-                  styles={{ kbdStyle: { color: 'inhert' } }}
-                  variant={'borderless'}
-                />
-              ),
-            }}
-            i18nKey={'input.warpWithKey'}
-            ns={'chat'}
-          />
-          {'...'}
-        </Flexbox>
-      }
+      placeholder={<Placeholder />}
       plugins={[
         ReactListPlugin,
         ReactLinkPlugin,
@@ -151,16 +125,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         }),
       ]}
       slashOption={{
-        items: [
-          {
-            icon: Table2Icon,
-            key: 'table',
-            label: t('typobar.table'),
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
-            },
-          },
-        ],
+        items: slashItems,
         renderComp: expand
           ? undefined
           : (props) => {

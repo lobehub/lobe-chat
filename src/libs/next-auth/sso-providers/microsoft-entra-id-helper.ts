@@ -1,4 +1,4 @@
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 function getTenantId() {
   return (

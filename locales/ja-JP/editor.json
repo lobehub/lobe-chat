@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "TeX 公式を入力してください"
   },
+  "slash": {
+    "h1": "見出し1",
+    "h2": "見出し2",
+    "h3": "見出し3",
+    "hr": "区切り線",
+    "table": "表",
+    "tex": "TeX 数式"
+  },
   "table": {
     "delete": "表を削除",
     "deleteColumn": "列を削除",
@@ -46,7 +54,7 @@
     "link": "リンク",
     "numberList": "番号付きリスト",
     "strikethrough": "取り消し線",
-    "table": "表を挿入",
+    "table": "表",
     "taskList": "タスクリスト",
     "tex": "TeX 公式",
     "underline": "下線"

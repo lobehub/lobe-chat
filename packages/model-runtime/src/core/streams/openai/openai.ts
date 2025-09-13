@@ -57,15 +57,15 @@ const transformOpenAIStream = (
 
     const errorData = {
       body: chunk,
-      type: 'errorType' in chunk ? chunk.errorType : AgentRuntimeErrorType.ProviderBizError,
-    } as ChatMessageError;
+      message: 'message' in chunk ? typeof chunk.message === 'string' ? chunk.message : JSON.stringify(chunk) : JSON.stringify(chunk),
+      type: 'errorType' in chunk ? chunk.errorType as typeof AgentRuntimeErrorType.ProviderBizError : AgentRuntimeErrorType.ProviderBizError,
+    } satisfies ChatMessageError;
     return { data: errorData, id: 'first_chunk_error', type: 'error' };
   }
 
   try {
     // maybe need another structure to add support for multiple choices
-    const item = chunk.choices[0];
-    if (!item) {
+    if (!Array.isArray(chunk.choices) || chunk.choices.length === 0) {
       if (chunk.usage) {
         const usage = chunk.usage;
         return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
@@ -73,6 +73,8 @@ const transformOpenAIStream = (
 
       return { data: chunk, id: chunk.id, type: 'data' };
     }
+
+    const item = chunk.choices[0];
 
     if (item && typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       // tools calling

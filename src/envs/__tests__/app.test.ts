@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '../../envs/app';
+import { getAppConfig } from '../app';
 
 // Stub the global process object to safely mock environment variables
 vi.stubGlobal('process', {

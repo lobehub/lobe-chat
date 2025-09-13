@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "Versión preliminar del modelo Max de la serie Qwen 3, que presenta una mejora significativa en la capacidad general en comparación con la serie 2.5, incluyendo comprensión de texto en chino e inglés, cumplimiento de instrucciones complejas, tareas abiertas subjetivas, capacidades multilingües y llamadas a herramientas; además, reduce notablemente las alucinaciones de conocimiento del modelo."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "Modelo de código abierto de nueva generación basado en Qwen3 en modo no reflexivo, que ofrece una mejor comprensión del texto en chino, mayor capacidad de razonamiento lógico y un mejor desempeño en tareas de generación de texto en comparación con la versión anterior (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Modelo de código abierto de nueva generación basado en Qwen3 en modo reflexivo, que mejora la capacidad de seguir instrucciones y ofrece respuestas más concisas en comparación con la versión anterior (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
+  },
   "qwq": {
     "description": "QwQ es un modelo de investigación experimental que se centra en mejorar la capacidad de razonamiento de la IA."
   },

@@ -1,6 +1,7 @@
+import { LobeChatDatabase } from '@lobechat/database';
+
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
-import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
 
 export class AiChatService {

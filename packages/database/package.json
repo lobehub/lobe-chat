@@ -2,8 +2,10 @@
   "name": "@lobechat/database",
   "version": "1.0.0",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas/index.ts"
+  },
   "scripts": {
     "test": "npm run test:client-db && npm run test:server-db",
     "test:client-db": "vitest run",
@@ -15,7 +17,7 @@
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "drizzle-orm": "^0.44.4",
     "nanoid": "^5.1.5",
     "pg": "^8.16.3",

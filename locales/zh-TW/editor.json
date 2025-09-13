@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "請輸入 TeX 公式"
   },
+  "slash": {
+    "h1": "一級標題",
+    "h2": "二級標題",
+    "h3": "三級標題",
+    "hr": "分隔線",
+    "table": "表格",
+    "tex": "TeX 公式"
+  },
   "table": {
     "delete": "刪除表格",
     "deleteColumn": "刪除列",
@@ -46,7 +54,7 @@
     "link": "連結",
     "numberList": "有序清單",
     "strikethrough": "刪除線",
-    "table": "插入表格",
+    "table": "表格",
     "taskList": "任務列表",
     "tex": "TeX 公式",
     "underline": "底線"

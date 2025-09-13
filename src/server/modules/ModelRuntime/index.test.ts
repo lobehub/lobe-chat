@@ -27,7 +27,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { initModelRuntimeWithUserPayload } from './index';
 
 // 模拟依赖项
-vi.mock('@/config/llm', () => ({
+vi.mock('@/envs/llm', () => ({
   getLLMConfig: vi.fn(() => ({
     // 确保为每个provider提供必要的配置信息
     OPENAI_API_KEY: 'test-openai-key',
