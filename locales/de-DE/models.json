@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "Die Preview-Version des Max-Modells der Tongyi Qianwen 3-Serie zeigt im Vergleich zur 2.5-Serie eine deutliche Steigerung der allgemeinen Fähigkeiten, einschließlich verbesserter chinesisch- und englischsprachiger Textverständnisfähigkeiten, komplexer Befolgung von Anweisungen, subjektiver offener Aufgaben, Mehrsprachigkeit und Werkzeugaufruf-Fähigkeiten; das Modell zeigt weniger Wissenshalluzinationen."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "Ein neues Open-Source-Modell der nächsten Generation im Nicht-Denk-Modus basierend auf Qwen3. Im Vergleich zur vorherigen Version (Tongyi Qianwen 3-235B-A22B-Instruct-2507) bietet es eine verbesserte chinesische Textverständnisfähigkeit, verstärkte logische Schlussfolgerungen und bessere Leistung bei textgenerierenden Aufgaben."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Ein neues Open-Source-Modell der nächsten Generation im Denkmodus basierend auf Qwen3. Im Vergleich zur vorherigen Version (Tongyi Qianwen 3-235B-A22B-Thinking-2507) wurde die Befehlsbefolgung verbessert und die Modellantworten sind prägnanter zusammengefasst."
+  },
   "qwq": {
     "description": "QwQ ist ein experimentelles Forschungsmodell, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
   },

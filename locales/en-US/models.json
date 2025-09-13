@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "The Qwen 3 series Max model preview version shows a significant overall improvement compared to the 2.5 series in general capabilities, including Chinese and English text understanding, complex instruction adherence, subjective open tasks, multilingual capabilities, and tool invocation. The model also exhibits fewer knowledge hallucinations."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "A new generation of non-thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Instruct-2507), it offers better Chinese text comprehension, enhanced logical reasoning abilities, and improved performance in text generation tasks."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "A new generation of thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Thinking-2507), it features improved instruction-following capabilities and more concise model-generated summaries."
+  },
   "qwq": {
     "description": "QwQ is an experimental research model focused on improving AI reasoning capabilities."
   },
