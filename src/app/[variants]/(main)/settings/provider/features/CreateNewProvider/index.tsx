@@ -37,7 +37,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
     try {
       await createNewAiProvider(values);
       setLoading(false);
-      router.push(`/settings/provider/${values.id}`);
+      router.push(`/settings?active=provider&provider=${values.id}`);
       message.success(t('createNewAiProvider.createSuccess'));
       onClose?.();
     } catch (e) {

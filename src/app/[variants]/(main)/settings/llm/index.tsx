@@ -1,7 +1,5 @@
 'use client';
 
-import { Flexbox } from 'react-layout-kit';
-
 import { isCustomBranding } from '@/const/version';
 
 import { useProviderList } from './ProviderList/providers';
@@ -12,12 +10,18 @@ const Page = () => {
   const list = useProviderList();
 
   return (
-    <Flexbox gap={24} width={'100%'}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 24,
+      }}
+    >
       {list.map(({ id, ...res }) => (
         <ProviderConfig id={id as any} key={id} {...res} />
       ))}
       {!isCustomBranding && <Footer />}
-    </Flexbox>
+    </div>
   );
 };
 
