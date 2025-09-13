@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getDebugConfig } from '../../envs/debug';
+import { getDebugConfig } from '../debug';
 
 // 测试前重置 process.env
 vi.stubGlobal('process', {

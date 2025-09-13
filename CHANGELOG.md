@@ -2,6 +2,107 @@
 
 # Changelog
 
+### [Version 1.128.4](https://github.com/lobehub/lobe-chat/compare/v1.128.3...v1.128.4)
+
+<sup>Released on **2025-09-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix discover plugin link.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix discover plugin link, closes [#9240](https://github.com/lobehub/lobe-chat/issues/9240) ([cfb2246](https://github.com/lobehub/lobe-chat/commit/cfb2246))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.128.3](https://github.com/lobehub/lobe-chat/compare/v1.128.2...v1.128.3)
+
+<sup>Released on **2025-09-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix open chat page with float link modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix open chat page with float link modal, closes [#9235](https://github.com/lobehub/lobe-chat/issues/9235) ([2c677e5](https://github.com/lobehub/lobe-chat/commit/2c677e5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.128.2](https://github.com/lobehub/lobe-chat/compare/v1.128.1...v1.128.2)
+
+<sup>Released on **2025-09-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n, Update model configs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9237](https://github.com/lobehub/lobe-chat/issues/9237) ([642dc3b](https://github.com/lobehub/lobe-chat/commit/642dc3b))
+- **misc**: Update model configs, closes [#9170](https://github.com/lobehub/lobe-chat/issues/9170) ([f89b730](https://github.com/lobehub/lobe-chat/commit/f89b730))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.128.1](https://github.com/lobehub/lobe-chat/compare/v1.128.0...v1.128.1)
+
+<sup>Released on **2025-09-12**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor message proccesser to the context engine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor message proccesser to the context engine, closes [#9230](https://github.com/lobehub/lobe-chat/issues/9230) ([dacfffd](https://github.com/lobehub/lobe-chat/commit/dacfffd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.128.0](https://github.com/lobehub/lobe-chat/compare/v1.127.4...v1.128.0)
 
 <sup>Released on **2025-09-12**</sup>

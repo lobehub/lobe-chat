@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "Phiên bản xem trước mô hình Max của dòng Qwen 3, so với dòng 2.5 có sự cải thiện lớn về năng lực tổng quát, khả năng hiểu văn bản song ngữ Trung-Anh, tuân thủ chỉ thị phức tạp, thực hiện nhiệm vụ mở chủ quan, đa ngôn ngữ và gọi công cụ đều được tăng cường rõ rệt; mô hình giảm thiểu ảo giác kiến thức."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "Mô hình mã nguồn mở thế hệ mới không có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Instruct-2507) có khả năng hiểu văn bản tiếng Trung tốt hơn, năng lực suy luận logic được cải thiện, và hiệu suất trong các nhiệm vụ tạo văn bản cũng tốt hơn."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Mô hình mã nguồn mở thế hệ mới có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Thinking-2507) có khả năng tuân thủ chỉ dẫn được nâng cao, và các phản hồi tóm tắt của mô hình trở nên ngắn gọn hơn."
+  },
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."
   },

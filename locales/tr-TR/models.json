@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "Tongyi Qianwen 3 serisi Max modelinin önizleme sürümüdür. 2.5 serisine kıyasla genel yeteneklerde büyük gelişmeler göstermiştir; Çince ve İngilizce genel metin anlama, karmaşık talimat uyumu, öznel açık görevler, çok dilli yetenekler ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi yanılgıları daha azdır."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "Qwen3 tabanlı yeni nesil düşünmeden çalışan açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Instruct-2507) kıyasla Çince metin anlama yeteneği daha iyi, mantıksal çıkarım yeteneği geliştirilmiş ve metin üretimi görevlerinde daha başarılıdır."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 tabanlı yeni nesil düşünme modlu açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Thinking-2507) kıyasla komutlara uyum yeteneği artırılmış ve modelin özetleyici yanıtları daha özlü hale getirilmiştir."
+  },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
   },

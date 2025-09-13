@@ -1,8 +1,8 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
-import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
 
 import { AiChatService } from '.';
