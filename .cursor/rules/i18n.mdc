@@ -2,117 +2,115 @@
 globs: *.tsx
 alwaysApply: false
 ---
-# LobeChat 国际化指南
+# LobeChat Internationalization Guide
 
-## 架构概览
+## Key Points
 
-LobeChat 使用 react-i18next 进行国际化，采用良好的命名空间架构：
+- Default language: Chinese (zh-CN) as the source language
+- Supported languages: 18 languages including English, Japanese, Korean, Arabic, etc.
+- Framework: react-i18next with Next.js app router
+- Translation automation: @lobehub/i18n-cli for automatic translation, config file: .i18nrc.js
+- Never manually modify any json file. You can only modify files in `default` folder
 
-- 默认语言：中文（zh-CN），作为源语言
-- 支持语言：18 种语言，包括英语、日语、韩语、阿拉伯语等
-- 框架：react-i18next 配合 Next.js app router
-- 翻译自动化：@lobehub/i18n-cli 用于自动翻译，配置文件：.i18nrc.js
-
-## 目录结构
+## Directory Structure
 
 ```
 src/locales/
-├── default/           # 源语言文件（zh-CN）
-│   ├── index.ts      # 命名空间导出
-│   ├── common.ts     # 通用翻译
-│   ├── chat.ts       # 聊天相关翻译
-│   ├── setting.ts    # 设置翻译
-│   └── ...           # 其他命名空间文件
-└── resources.ts      # 类型定义和语言配置
+├── default/           # Source language files (zh-CN)
+│   ├── index.ts      # Namespace exports
+│   ├── common.ts     # Common translations
+│   ├── chat.ts       # Chat-related translations
+│   ├── setting.ts    # Settings translations
+│   └── ...           # Other namespace files
+└── resources.ts      # Type definitions and language configuration
 
-locales/               # 翻译文件
-├── en-US/            # 英语翻译
-│   ├── common.json   # 通用翻译
-│   ├── chat.json     # 聊天翻译
-│   ├── setting.json  # 设置翻译
-│   └── ...           # 其他命名空间 JSON 文件
-├── ja-JP/            # 日语翻译
+locales/               # Translation files
+├── en-US/            # English translations
+│   ├── common.json   # Common translations
+│   ├── chat.json     # Chat translations
+│   ├── setting.json  # Settings translations
+│   └── ...           # Other namespace JSON files
+├── ja-JP/            # Japanese translations
 │   ├── common.json
 │   ├── chat.json
 │   └── ...
-└── ...               # 其他语言文件夹
+└── ...               # Other language folders
 ```
 
-## 添加新翻译的工作流程
+## Workflow for Adding New Translations
 
-### 1. 添加新的翻译键
+### 1. Adding New Translation Keys
 
-第一步：在 src/locales/default 目录下的相应命名空间文件中添加翻译键
+Step 1: Add translation keys in the corresponding namespace files under src/locales/default directory
 
 ```typescript
-// 示例：src/locales/default/common.ts
+// Example: src/locales/default/common.ts
 export default {
-    // ... 现有键
-    newFeature: {
-        title: "新功能标题",
-        description: "功能描述文案",
-        button: "操作按钮",
-    },
+  // ... existing keys
+  newFeature: {
+    title: '新功能标题',
+    description: '功能描述文案',
+    button: '操作按钮',
+  },
 };
 ```
 
-第二步：如果创建新命名空间，需要在 src/locales/default/index.ts 中导出
+Step 2: If creating a new namespace, export it in src/locales/default/index.ts
 
 ```typescript
-import newNamespace from "./newNamespace";
+import newNamespace from './newNamespace';
 
 const resources = {
-    // ... 现有命名空间
-    newNamespace,
+  // ... existing namespaces
+  newNamespace,
 } as const;
 ```
 
-### 2. 翻译过程
+### 2. Translation Process
 
-开发模式：
+Development mode:
 
-一般情况下不需要你帮我跑自动翻译工具，跑一次很久，需要的时候我会自己跑。
-但是为了立马能看到效果，还是需要先翻译 `locales/zh-CN/namespace.json`，不需要翻译其它语言。
+Generally, you don't need to help me run the automatic translation tool as it takes a long time. I'll run it myself when needed. However, to see immediate results, you still need to translate `locales/zh-CN/namespace.json` first, no need to translate other languages.
 
-生产模式：
+Production mode:
 
 ```bash
-# 为所有语言生成翻译
+# Generate translations for all languages
 npm run i18n
 ```
 
-## 在组件中使用
+## Usage in Components
 
-### 基本用法
+### Basic Usage
 
 ```tsx
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const MyComponent = () => {
-    const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
-    return (
-        <div>
-            <h1>{t("newFeature.title")}</h1>
-            <p>{t("newFeature.description")}</p>
-            <button>{t("newFeature.button")}</button>
-        </div>
-    );
+  return (
+    <div>
+      <h1>{t('newFeature.title')}</h1>
+      <p>{t('newFeature.description')}</p>
+      <button>{t('newFeature.button')}</button>
+    </div>
+  );
 };
 ```
 
-### 带参数的用法
+### Usage with Parameters
 
 ```tsx
-const { t } = useTranslation("common");
+const { t } = useTranslation('common');
 
-<p>{t("welcome.message", { name: "John" })}</p>;
+<p>{t('welcome.message', { name: 'John' })}</p>;
 
-// 对应的语言文件：
-// welcome: { message: '欢迎 {{name}} 使用!' }
+// Corresponding language file:
+// welcome: { message: 'Welcome {{name}}!' }
 ```
 
-### 多个命名空间
+### Multiple Namespaces
 
 ```tsx
 const { t } = useTranslation(['common', 'chat']);
@@ -121,59 +119,63 @@ const { t } = useTranslation(['common', 'chat']);
 <span>{t('chat:typing')}</span>
 ```
 
-## 类型安全
+## Type Safety
 
-项目使用 TypeScript 实现类型安全的翻译，类型从 src/locales/resources.ts 自动生成：
+The project uses TypeScript to implement type-safe translations, with types automatically generated from src/locales/resources.ts:
 
 ```typescript
-import type { DefaultResources, NS, Locales } from "@/locales/resources";
+import type { DefaultResources, Locales, NS } from '@/locales/resources';
 
-// 可用类型：
-// - NS: 可用命名空间键 ('common' | 'chat' | 'setting' | ...)
-// - Locales: 支持的语言代码 ('en-US' | 'zh-CN' | 'ja-JP' | ...)
+// Available types:
+// - NS: Available namespace keys ('common' | 'chat' | 'setting' | ...)
+// - Locales: Supported language codes ('en-US' | 'zh-CN' | 'ja-JP' | ...)
 
-const namespace: NS = "common";
-const locale: Locales = "en-US";
+const namespace: NS = 'common';
+const locale: Locales = 'en-US';
 ```
 
-## 最佳实践
+## Best Practices
 
-### 1. 命名空间组织
+### 1. Namespace Organization
 
-- common: 共享 UI 元素（按钮、标签、操作）
-- chat: 聊天特定功能
-- setting: 配置和设置
-- error: 错误消息和处理
-- [feature]: 功能特定或页面特定的命名空间
-- components: 可复用组件文案
+- common: Shared UI elements (buttons, labels, actions)
+- chat: Chat-specific functionality
+- setting: Configuration and settings
+- error: Error messages and handling
+- [feature]: Feature-specific or page-specific namespaces
+- components: Reusable component text
 
-### 2. 键命名约定
+### 2. Key Naming Conventions
 
 ```typescript
-// ✅ 好：层次结构
+// ✅ Good: Hierarchical structure
 export default {
-    modal: {
-        confirm: {
-            title: "确认操作",
-            message: "确定要执行此操作吗？",
-            actions: {
-                confirm: "确认",
-                cancel: "取消",
-            },
-        },
+  modal: {
+    confirm: {
+      title: '确认操作',
+      message: '确定要执行此操作吗？',
+      actions: {
+        confirm: '确认',
+        cancel: '取消',
+      },
     },
+  },
 };
 
-// ❌ 避免：扁平结构
+// ❌ Avoid: Flat structure
 export default {
-    modalConfirmTitle: "确认操作",
-    modalConfirmMessage: "确定要执行此操作吗？",
+  modalConfirmTitle: '确认操作',
+  modalConfirmMessage: '确定要执行此操作吗？',
 };
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 缺少翻译键
+### Missing Translation Keys
+
+- Check if the key exists in src/locales/default/namespace.ts
+- Ensure the namespace is correctly imported in the component
+- Ensure new namespaces are exported in src/locales/default/index.ts
 
 - 检查键是否存在于 src/locales/default/namespace.ts 中
 - 确保在组件中正确导入命名空间
