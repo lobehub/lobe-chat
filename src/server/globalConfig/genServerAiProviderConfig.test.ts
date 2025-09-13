@@ -11,7 +11,7 @@ vi.mock('model-bank', async (importOriginal) => {
   };
 });
 
-vi.mock('@/config/llm', () => ({
+vi.mock('@/envs/llm', () => ({
   getLLMConfig: vi.fn(() => ({
     ENABLED_OPENAI: true,
     ENABLED_ANTHROPIC: false,
