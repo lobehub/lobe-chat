@@ -5,8 +5,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { merge } from '@/utils/merge';
 
-import { ChatGroupState } from './initialState';
-import { ChatGroupStore } from './store';
+import { ChatGroupState, ChatGroupStore } from './initialState';
 
 const getGroupById =
   (id: string) =>

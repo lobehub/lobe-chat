@@ -109,7 +109,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   settingsPanel: css`
     padding: ${token.paddingSM}px;
-    border-top: 1px solid ${token.colorBorderSecondary};
+    border-block-start: 1px solid ${token.colorBorderSecondary};
     background: ${token.colorBgContainer};
   `,
   templateCard: css`
@@ -138,8 +138,14 @@ export interface ChatGroupWizardProps {
    */
   isCreatingFromTemplate?: boolean;
   onCancel: () => void;
-  onCreateCustom: (selectedAgents: string[], hostConfig?: { model?: string; provider?: string }) => void | Promise<void>;
-  onCreateFromTemplate: (templateId: string, hostConfig?: { model?: string; provider?: string }) => void | Promise<void>;
+  onCreateCustom: (
+    selectedAgents: string[],
+    hostConfig?: { model?: string; provider?: string },
+  ) => void | Promise<void>;
+  onCreateFromTemplate: (
+    templateId: string,
+    hostConfig?: { model?: string; provider?: string },
+  ) => void | Promise<void>;
   open: boolean;
 }
 
@@ -155,7 +161,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     const { styles, cx } = useStyles();
     const groupTemplates = useGroupTemplates();
     const enabledModels = useEnabledChatModels();
-    
+
     // Get default model from the first enabled provider's first model
     const defaultModel = useMemo(() => {
       if (enabledModels.length > 0 && enabledModels[0].children.length > 0) {
@@ -173,7 +179,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTemplate, setSelectedTemplate] = useState<string>('');
     const [removedMembers, setRemovedMembers] = useState<Record<string, string[]>>({});
-    const [hostModelConfig, setHostModelConfig] = useState<{ model?: string; provider?: string }>(defaultModel);
+    const [hostModelConfig, setHostModelConfig] = useState<{ model?: string; provider?: string }>(
+      defaultModel,
+    );
 
     // Use external loading state if provided, otherwise use internal state
     const isCreatingFromTemplate = externalLoading ?? false;
@@ -373,12 +381,16 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                       <Text style={{ fontSize: 14, fontWeight: 500 }}>Host</Text>
                       <Text style={{ color: '#999', fontSize: 12 }}>Built-in</Text>
                     </Flexbox>
-                    <ModelSelect 
-                      value={hostModelConfig.model && hostModelConfig.provider ? {
-                        model: hostModelConfig.model,
-                        provider: hostModelConfig.provider,
-                      } : undefined}
+                    <ModelSelect
                       onChange={handleHostModelChange}
+                      value={
+                        hostModelConfig.model && hostModelConfig.provider
+                          ? {
+                              model: hostModelConfig.model,
+                              provider: hostModelConfig.provider,
+                            }
+                          : undefined
+                      }
                     />
                   </Flexbox>
 

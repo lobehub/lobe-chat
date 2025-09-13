@@ -53,7 +53,10 @@ const Header = memo(() => {
     () => createSession(),
   );
 
-  const handleCreateGroupFromTemplate = async (templateId: string, hostConfig?: { model?: string; provider?: string }) => {
+  const handleCreateGroupFromTemplate = async (
+    templateId: string,
+    hostConfig?: { model?: string; provider?: string },
+  ) => {
     // Don't close the modal immediately, keep it open during the process
     setIsCreatingGroup(true);
     try {
@@ -101,11 +104,13 @@ const Header = memo(() => {
       // Create the group with the agent IDs and host configuration
       await createGroup(
         {
+          config: hostConfig
+            ? {
+                orchestratorModel: hostConfig.model,
+                orchestratorProvider: hostConfig.provider,
+              }
+            : undefined,
           title: template.title,
-          config: hostConfig ? {
-            orchestratorModel: hostConfig.model,
-            orchestratorProvider: hostConfig.provider,
-          } : undefined,
         },
         memberAgentIds,
       );
@@ -120,17 +125,22 @@ const Header = memo(() => {
     }
   };
 
-  const handleCreateGroupWithMembers = async (selectedAgents: string[], hostConfig?: { model?: string; provider?: string }) => {
+  const handleCreateGroupWithMembers = async (
+    selectedAgents: string[],
+    hostConfig?: { model?: string; provider?: string },
+  ) => {
     // Don't close modal immediately for custom group creation either
     setIsCreatingGroup(true);
     try {
       await createGroup(
         {
+          config: hostConfig
+            ? {
+                orchestratorModel: hostConfig.model,
+                orchestratorProvider: hostConfig.provider,
+              }
+            : undefined,
           title: t('defaultGroupChat'),
-          config: hostConfig ? {
-            orchestratorModel: hostConfig.model,
-            orchestratorProvider: hostConfig.provider,
-          } : undefined,
         },
         selectedAgents,
       );

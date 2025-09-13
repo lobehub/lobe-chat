@@ -4,14 +4,18 @@ import { mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { ChatGroupItem, NewChatGroup } from '@/database/schemas/chatGroup';
+import { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { getSessionStoreState } from '@/store/session';
-import { LobeChatGroupConfig } from '@/types/chatGroup';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { ChatGroupState, initialChatGroupState } from './initialState';
+import {
+  ChatGroupAction,
+  ChatGroupState,
+  ChatGroupStore,
+  initialChatGroupState,
+} from './initialState';
 import { ChatGroupReducer, chatGroupReducers } from './reducers';
 import { chatGroupSelectors } from './selectors';
 
@@ -19,42 +23,6 @@ const n = setNamespace('chatGroup');
 
 const FETCH_GROUPS_KEY = 'fetchGroups';
 const FETCH_GROUP_DETAIL_KEY = 'fetchGroupDetail';
-
-export interface ChatGroupAction {
-  addAgentsToGroup: (groupId: string, agentIds: string[]) => Promise<void>;
-  createGroup: (group: Omit<NewChatGroup, 'userId'>, agentIds?: string[]) => Promise<string>;
-  deleteGroup: (id: string) => Promise<void>;
-  internal_dispatchChatGroup: (
-    payload:
-      | {
-          type: keyof typeof chatGroupReducers;
-        }
-      | {
-          payload: any;
-          type: keyof typeof chatGroupReducers;
-        },
-  ) => void;
-  internal_refreshGroups: () => Promise<void>;
-
-  loadGroups: () => Promise<void>;
-  pinGroup: (id: string, pinned: boolean) => Promise<void>;
-  refreshGroupDetail: (groupId: string) => Promise<void>;
-  refreshGroups: () => Promise<void>;
-
-  removeAgentFromGroup: (groupId: string, agentId: string) => Promise<void>;
-  reorderGroupMembers: (groupId: string, orderedAgentIds: string[]) => Promise<void>;
-  toggleGroupSetting: (open: boolean) => void;
-  toggleThread: (agentId: string) => void;
-
-  updateGroup: (id: string, value: Partial<ChatGroupItem>) => Promise<void>;
-  updateGroupConfig: (config: Partial<LobeChatGroupConfig>) => Promise<void>;
-  updateGroupMeta: (meta: Partial<ChatGroupItem>) => Promise<void>;
-  useFetchGroupDetail: (enabled: boolean, groupId: string) => any;
-  useFetchGroups: (enabled: boolean, isLogin: boolean) => any;
-}
-
-// Create combined store type for StateCreator
-export type ChatGroupStore = ChatGroupState & ChatGroupAction;
 
 export const chatGroupAction: StateCreator<
   ChatGroupStore,
@@ -65,7 +33,9 @@ export const chatGroupAction: StateCreator<
   const dispatch: ChatGroupAction['internal_dispatchChatGroup'] = (payload) => {
     set(
       produce((draft: ChatGroupState) => {
-        const reducer = chatGroupReducers[payload.type] as ChatGroupReducer;
+        const reducer = chatGroupReducers[
+          payload.type as keyof typeof chatGroupReducers
+        ] as ChatGroupReducer;
         if (reducer) {
           // Apply the reducer and return the new state
           return reducer(draft, payload);

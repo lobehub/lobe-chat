@@ -3,10 +3,8 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { ChatGroupAction, chatGroupAction } from './action';
-import { ChatGroupState, initialChatGroupState } from './initialState';
-
-export type ChatGroupStore = ChatGroupAction & ChatGroupState;
+import { chatGroupAction } from './action';
+import { ChatGroupStore, initialChatGroupState } from './initialState';
 
 const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> = (...params) => ({
   ...initialChatGroupState,
