@@ -2615,6 +2615,12 @@
   "qwen3-max-preview": {
     "description": "Version Preview du modèle Max de la série Qwen 3, avec une amélioration significative des capacités générales par rapport à la série 2.5, notamment en compréhension de texte général bilingue (chinois et anglais), respect des instructions complexes, tâches ouvertes subjectives, capacités multilingues et appels d'outils ; le modèle présente également moins d'hallucinations de connaissances."
   },
+  "qwen3-next-80b-a3b-instruct": {
+    "description": "Modèle open source de nouvelle génération en mode non réflexif basé sur Qwen3, offrant une meilleure compréhension du texte en chinois, des capacités de raisonnement logique renforcées et de meilleures performances dans les tâches de génération de texte par rapport à la version précédente (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
+  },
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Modèle open source de nouvelle génération en mode réflexif basé sur Qwen3, avec une meilleure conformité aux instructions et des réponses plus concises dans les résumés par rapport à la version précédente (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
+  },
   "qwq": {
     "description": "QwQ est un modèle de recherche expérimental, axé sur l'amélioration des capacités de raisonnement de l'IA."
   },
