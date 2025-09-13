@@ -1,0 +1,15 @@
+{
+  "name": "@lobechat/agent-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "simple": "tsx examples/tools-calling.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "openai": "^4.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 ---
-description: 包含添加 debug 日志请求时
-globs: 
+description: 包含添加 console.log 日志请求时
+globs:
 alwaysApply: false
 ---
 # Debug 包使用指南
