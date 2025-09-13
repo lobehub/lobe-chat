@@ -2,7 +2,7 @@ import { GenerateContentResponse } from '@google/genai';
 import { describe, expect, it, vi } from 'vitest';
 
 import * as uuidModule from '../../utils/uuid';
-import { GoogleGenerativeAIStream } from './google-ai';
+import { GoogleGenerativeAIStream, LOBE_ERROR_KEY } from './google-ai';
 
 describe('GoogleGenerativeAIStream', () => {
   it('should transform Google Generative AI stream to protocol stream', async () => {
@@ -21,7 +21,21 @@ describe('GoogleGenerativeAIStream', () => {
         controller.enqueue(
           mockGenerateContentResponse('', [{ name: 'testFunction', args: { arg1: 'value1' } }]),
         );
-        controller.enqueue(mockGenerateContentResponse(' world!'));
+
+        // final chunk should include finishReason and usageMetadata to mark terminal event
+        controller.enqueue({
+          text: ' world!',
+          candidates: [
+            { content: { role: 'model' }, finishReason: 'STOP', index: 0 },
+          ],
+          usageMetadata: {
+            promptTokenCount: 1,
+            totalTokenCount: 1,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 1 }],
+          },
+          modelVersion: 'gemini-test',
+        } as unknown as GenerateContentResponse);
+
         controller.close();
       },
     });
@@ -63,6 +77,14 @@ describe('GoogleGenerativeAIStream', () => {
       'id: chat_1\n',
       'event: text\n',
       `data: " world!"\n\n`,
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputTextTokens":1,"outputImageTokens":0,"outputTextTokens":0,"totalInputTokens":1,"totalOutputTokens":0,"totalTokens":1}\n\n`,
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
@@ -73,8 +95,23 @@ describe('GoogleGenerativeAIStream', () => {
   });
 
   it('should handle empty stream', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('E5M9dFKw');
     const mockGoogleStream = new ReadableStream({
       start(controller) {
+        controller.enqueue({
+          candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
+          usageMetadata: {
+            promptTokenCount: 0,
+            cachedContentTokenCount: 0,
+            totalTokenCount: 0,
+            promptTokensDetails: [
+              { modality: 'TEXT', tokenCount: 0 },
+              { modality: 'IMAGE', tokenCount: 0 },
+            ],
+          },
+          modelVersion: 'gemini-test',
+        } as unknown as GenerateContentResponse);
+
         controller.close();
       },
     });
@@ -89,7 +126,14 @@ describe('GoogleGenerativeAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual([]);
+    expect(chunks).toEqual([
+      'id: chat_E5M9dFKw\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      'id: chat_E5M9dFKw\n',
+      'event: usage\n',
+      `data: {"inputCachedTokens":0,"inputImageTokens":0,"inputTextTokens":0,"outputImageTokens":0,"outputTextTokens":0,"totalInputTokens":0,"totalOutputTokens":0,"totalTokens":0}\n\n`,
+    ]);
   });
 
   it('should handle image', async () => {
@@ -102,13 +146,17 @@ describe('GoogleGenerativeAIStream', () => {
             parts: [{ inlineData: { mimeType: 'image/png', data: 'iVBORw0KGgoAA' } }],
             role: 'model',
           },
+          finishReason: 'STOP',
           index: 0,
         },
       ],
       usageMetadata: {
         promptTokenCount: 6,
         totalTokenCount: 6,
-        promptTokensDetails: [{ modality: 'TEXT', tokenCount: 6 }],
+        promptTokensDetails: [
+          { modality: 'TEXT', tokenCount: 6 },
+          { modality: 'IMAGE', tokenCount: 0 },
+        ],
       },
       modelVersion: 'gemini-2.0-flash-exp',
     };
@@ -136,6 +184,14 @@ describe('GoogleGenerativeAIStream', () => {
       'id: chat_1\n',
       'event: base64_image\n',
       `data: "data:image/png;base64,iVBORw0KGgoAA"\n\n`,
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputImageTokens":0,"inputTextTokens":6,"outputImageTokens":0,"outputTextTokens":0,"totalInputTokens":6,"totalOutputTokens":0,"totalTokens":6}\n\n`,
     ]);
   });
 
@@ -853,6 +909,35 @@ describe('GoogleGenerativeAIStream', () => {
       'id: chat_1\n',
       'event: error\n',
       `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"您的请求可能包含违禁内容。请调整您的请求，确保内容符合使用规范。","provider":"google"},"type":"ProviderBizError"}\n\n`,
+    ]);
+  });
+
+  it('should pass through injected lobe error marker', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const errorPayload = { message: 'internal error', code: 123 };
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({ [LOBE_ERROR_KEY]: errorPayload });
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: chat_1\n',
+      'event: error\n',
+      `data: ${JSON.stringify(errorPayload)}\n\n`,
     ]);
   });
 });
