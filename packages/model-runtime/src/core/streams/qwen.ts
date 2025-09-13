@@ -116,7 +116,11 @@ export const QwenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   // TODO: preserve for RFC 097
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
-  { callbacks, inputStartAt }: { callbacks?: ChatStreamCallbacks; inputStartAt?: number } = {},
+  {
+    callbacks,
+    inputStartAt,
+    enableStreaming = true,
+  }: { callbacks?: ChatStreamCallbacks; enableStreaming?: boolean; inputStartAt?: number } = {},
 ) => {
   const streamContext: StreamContext = { id: '' };
   const readableStream =
@@ -124,7 +128,11 @@ export const QwenAIStream = (
 
   return readableStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformQwenStream, { inputStartAt, streamStack: streamContext }),
+      createTokenSpeedCalculator(transformQwenStream, {
+        enableStreaming: enableStreaming,
+        inputStartAt,
+        streamStack: streamContext,
+      }),
     )
     .pipeThrough(createSSEProtocolTransformer((c) => c, streamContext))
     .pipeThrough(createCallbacksTransformer(callbacks));
