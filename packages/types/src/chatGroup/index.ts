@@ -4,13 +4,14 @@ export interface LobeChatGroupMetaConfig {
 }
 
 export interface LobeChatGroupChatConfig {
-  maxResponseInRow: number;
-  orchestratorModel: string;
-  orchestratorProvider: string;
-  responseOrder: 'sequential' | 'natural';
-  responseSpeed: 'slow' | 'medium' | 'fast';
-  revealDM: boolean;
-  systemPrompt?: string;
+    allowDM: boolean;
+    maxResponseInRow: number;
+    orchestratorModel: string;
+    orchestratorProvider: string;
+    responseOrder: 'sequential' | 'natural';
+    responseSpeed: 'slow' | 'medium' | 'fast';
+    revealDM: boolean;
+    systemPrompt?: string;
 }
 
 // Database config type (flat structure)

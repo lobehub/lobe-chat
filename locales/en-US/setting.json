@@ -634,7 +634,7 @@
   "tab": {
     "about": "About",
     "agent": "Default Assistant",
-    "common": "Common Settings",
+    "common": "General",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
     "llm": "Language Model",

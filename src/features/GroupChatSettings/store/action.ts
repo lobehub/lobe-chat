@@ -82,8 +82,6 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
   },
 
   updateGroupConfig: async (config) => {
-    console.log('updateGroupConfig', config);
-
     await get().setGroupConfig(config);
   },
 

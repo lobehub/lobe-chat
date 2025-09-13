@@ -69,6 +69,7 @@ ${historyTag}
 };
 
 export interface SupervisorPromptParams {
+  allowDM?: boolean;
   availableAgents: Array<{ id: string; title?: string | null }>;
   conversationHistory: string;
   systemPrompt?: string;
@@ -76,6 +77,7 @@ export interface SupervisorPromptParams {
 }
 
 export const buildSupervisorPrompt = ({
+  allowDM = true,
   availableAgents,
   conversationHistory,
   systemPrompt,
@@ -99,6 +101,25 @@ export const buildSupervisorPrompt = ({
     .map((member) => `  <member id="${member.id}" name="${member.name}" />`)
     .join('\n');
 
+  // Build rules and examples based on allowDM setting
+  const dmRules = allowDM
+    ? `- If a response should be a direct message to a specific member, include a "target" field with the target member ID or "user"
+- If no "target" field is provided, the response will be a group message visible to everyone`
+    : `- All responses will be group messages visible to everyone (DMs are not allowed in this group)`;
+
+  const dmExamples = allowDM
+    ? `- Group responses: [{"id": "agt_01"}]
+- With instructions: [{"id": "agt_01", "instruction": "Outline the main points from the article"}]
+- DM responses: [{"id": "agt_01", "target": "agt_02"}, {"id": "agt_04", "target": "user"}]
+- Mixed responses: [{"id": "agt_01"}, {"id": "agt_02", "target": "user", "instruction": "Provide a summary"}]`
+    : `- Group responses: [{"id": "agt_01"}]
+- With instructions: [{"id": "agt_01", "instruction": "Outline the main points from the article"}]
+- Multiple agents: [{"id": "agt_01"}, {"id": "agt_02", "instruction": "Provide a summary"}]`;
+
+  const naturalFlowRule = allowDM
+    ? `- Your goal is to make the conversation as natural as possible. For example, if user DM to an agent, the agent is likely to respond to the user privately too`
+    : `- Your goal is to make the conversation as natural as possible in group format`;
+
   const prompt = `
 You are a conversation supervisor for a group chat with multiple AI agents. Your role is to decide which agents should respond next based on the conversation context. Here's the group detail:
 
@@ -116,18 +137,14 @@ ${conversationHistory}
 
 Rules:
 - Return an array of objects where each object has an "id" field for the agent who should respond
-- If a response should be a direct message to a specific member, include a "target" field with the target member ID or "user"
-- If no "target" field is provided, the response will be a group message visible to everyone
+${dmRules}
 - You can optionally include an "instruction" field to give specific guidance to the agent about what they should focus on or how they should respond
 - If the conversation seems complete, or no one needs reply, return empty array []
-- Your goal is to make the conversation as natural as possible. For example, if user DM to an agent, the agent is likely to respond to the user privately too
+${naturalFlowRule}
 - Return ONLY a JSON array of objects, nothing else
 
 Examples: 
-- Group responses: [{"id": "agt_01"}]
-- With instructions: [{"id": "agt_01", "instruction": "Outline the main points from the article"}]
-- DM responses: [{"id": "agt_01", "target": "agt_02"}, {"id": "agt_04", "target": "user"}]
-- Mixed responses: [{"id": "agt_01"}, {"id": "agt_02", "target": "user", "instruction": "Provide a summary"}]
+${dmExamples}
 - Stop conversation: []
 
 Now return an array of objects where each object has an "id" field for the agent who should respond.

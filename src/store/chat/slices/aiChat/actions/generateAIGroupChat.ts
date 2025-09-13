@@ -288,6 +288,7 @@ export const chatAiGroupChat: StateCreator<
 
     try {
       const context: SupervisorContext = {
+        allowDM: groupConfig.allowDM,
         availableAgents: agents!,
         groupId,
         messages,

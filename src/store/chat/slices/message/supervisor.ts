@@ -17,6 +17,7 @@ export type SupervisorDecisionList = SupervisorDecision[]; // Empty array = stop
 
 export interface SupervisorContext {
   abortController?: AbortController;
+  allowDM?: boolean;
   availableAgents: GroupMemberWithAgent[];
   groupId: string;
   messages: ChatMessage[];
@@ -34,7 +35,7 @@ export class GroupChatSupervisor {
    * Make decision on who should speak next
    */
   async makeDecision(context: SupervisorContext): Promise<SupervisorDecisionList> {
-    const { messages, availableAgents, userName, systemPrompt } = context;
+    const { messages, availableAgents, userName, systemPrompt, allowDM } = context;
 
     // If no agents available, stop conversation
     if (availableAgents.length === 0) {
@@ -46,6 +47,7 @@ export class GroupChatSupervisor {
       const conversationHistory = groupSupervisorPrompts(messages);
 
       const supervisorPrompt = groupChatPrompts.buildSupervisorPrompt({
+        allowDM,
         availableAgents: availableAgents
           .filter((agent) => agent.id)
           .map((agent) => ({ id: agent.id!, title: agent.title })),

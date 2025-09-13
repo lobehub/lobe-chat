@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, Select, SliderWithInput } from '@lobehub/ui';
-import { Input, Switch } from 'antd';
+import { Form as AntdForm, Input, Switch } from 'antd';
 import { isEqual } from 'lodash';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,9 @@ const ChatGroupSettings = memo(() => {
   const [form] = Form.useForm();
   const updateConfig = useStore((s) => s.updateGroupConfig);
   const config = useStore(selectors.currentChatConfig, isEqual);
+
+  // Watch the allowDM value to conditionally show revealDM
+  const allowDM = AntdForm.useWatch('allowDM', form);
 
   const responseSpeedOptions = [
     { label: t('settingGroupChat.responseSpeed.options.slow'), value: 'slow' },
@@ -91,18 +94,23 @@ const ChatGroupSettings = memo(() => {
       },
       {
         children: <Switch />,
-        desc: t('settingGroupChat.revealDM.desc'),
-        divider: false,
-        label: t('settingGroupChat.revealDM.title'),
-        name: 'revealDM',
-      },
-      {
-        children: <Switch />,
         desc: t('settingGroupChat.allowDM.desc'),
         divider: false,
         label: t('settingGroupChat.allowDM.title'),
         name: 'allowDM',
       },
+      // Only show revealDM when allowDM is true
+      ...(allowDM
+        ? [
+            {
+              children: <Switch />,
+              desc: t('settingGroupChat.revealDM.desc'),
+              divider: false,
+              label: t('settingGroupChat.revealDM.title'),
+              name: 'revealDM',
+            },
+          ]
+        : []),
     ],
     title: t('settingGroupChat.title'),
   };
