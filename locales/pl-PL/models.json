@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 to podstawowy model architektury MoE o potężnych zdolnościach kodowania i agenta, z łączną liczbą parametrów 1 biliona i 32 miliardami aktywowanych parametrów. W testach wydajności w zakresie ogólnej wiedzy, programowania, matematyki i zadań agenta model K2 przewyższa inne popularne otwarte modele."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 to najnowsza i najpotężniejsza wersja Kimi K2. Jest to zaawansowany model językowy typu Mixture of Experts (MoE) z 1 bilionem parametrów ogółem i 32 miliardami aktywowanych parametrów. Główne cechy modelu to: wzmocniona inteligencja kodowania agentów, która wykazuje znaczącą poprawę wydajności w publicznych testach porównawczych oraz w rzeczywistych zadaniach kodowania agentów; ulepszone doświadczenie kodowania front-end, z postępami zarówno w estetyce, jak i funkcjonalności programowania front-endowego."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to innowacyjny model przetwarzania języka naturalnego, który efektywnie radzi sobie z złożonymi zadaniami generowania dialogów i rozumienia kontekstu."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Seria modeli tekst-na-obraz Imagen czwartej generacji, wersja Ultra"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 to mały, wysokowydajny model językowy oparty na architekturze MoE. Posiada 16 miliardów parametrów ogółem, jednak dla każdego tokena aktywowanych jest tylko 1,4 miliarda (nie obejmując osadzeń 789 milionów), co umożliwia bardzo wysoką prędkość generowania. Dzięki efektywnemu projektowi MoE oraz dużej, wysokiej jakości bazie treningowej, mimo że aktywowanych parametrów jest tylko 1,4 miliarda, Ling-mini-2.0 osiąga w zadaniach końcowych wydajność porównywalną z modelami dense LLM poniżej 10 miliardów parametrów oraz większymi modelami MoE."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferuje inteligentne rozwiązania dialogowe w różnych scenariuszach."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 to podstawowy model architektury MoE o potężnych zdolnościach kodowania i agenta, z łączną liczbą parametrów 1 biliona i 32 miliardami aktywowanych parametrów. W testach wydajności w zakresie ogólnej wiedzy, programowania, matematyki i zadań agenta model K2 przewyższa inne popularne otwarte modele."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
+    "description": "Kimi K2-Instruct-0905 to najnowsza i najpotężniejsza wersja Kimi K2. Jest to zaawansowany model językowy typu Mixture of Experts (MoE) z 1 bilionem parametrów ogółem i 32 miliardami aktywowanych parametrów. Główne cechy modelu to: wzmocniona inteligencja kodowania agentów, która wykazuje znaczącą poprawę wydajności w publicznych testach porównawczych oraz w rzeczywistych zadaniach kodowania agentów; ulepszone doświadczenie kodowania front-end, z postępami zarówno w estetyce, jak i funkcjonalności programowania front-endowego."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 to podstawowy model architektury MoE o wyjątkowych zdolnościach w zakresie kodowania i agentów, z łączną liczbą parametrów 1T i 32B aktywnych parametrów. W testach wydajnościowych obejmujących ogólną wiedzę, programowanie, matematykę i agentów, model K2 przewyższa inne popularne modele open source."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "Model kimi-k2-0905-preview obsługuje długość kontekstu do 256k, oferując silniejsze zdolności Agentic Coding, bardziej estetyczny i praktyczny kod frontendowy oraz lepsze rozumienie kontekstu."

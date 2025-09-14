@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 is the latest and most powerful version of Kimi K2. It is a top-tier Mixture of Experts (MoE) language model with a total of 1 trillion parameters and 32 billion activated parameters. Key features of this model include enhanced agent coding intelligence, demonstrating significant performance improvements in public benchmark tests and real-world agent coding tasks; and an improved frontend coding experience, with advancements in both aesthetics and practicality for frontend programming."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is an innovative natural language processing model capable of efficiently handling complex dialogue generation and context understanding tasks."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series Ultra version"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 is a compact, high-performance large language model based on the MoE architecture. It has 16 billion total parameters, but only activates 1.4 billion per token (non-embedding 789 million), enabling extremely fast generation speeds. Thanks to its efficient MoE design and large-scale, high-quality training data, Ling-mini-2.0 delivers top-tier performance on downstream tasks comparable to dense LLMs under 10 billion parameters and even larger MoE models, despite having only 1.4 billion activated parameters."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
+    "description": "Kimi K2-Instruct-0905 is the latest and most powerful version of Kimi K2. It is a top-tier Mixture of Experts (MoE) language model with a total of 1 trillion parameters and 32 billion activated parameters. Key features of this model include enhanced agent coding intelligence, demonstrating significant performance improvements in public benchmark tests and real-world agent coding tasks; and an improved frontend coding experience, with advancements in both aesthetics and practicality for frontend programming."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 is a MoE architecture base model with powerful coding and Agent capabilities, featuring a total of 1 trillion parameters and 32 billion active parameters. In benchmark tests across key categories such as general knowledge reasoning, programming, mathematics, and Agent tasks, the K2 model outperforms other mainstream open-source models."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
