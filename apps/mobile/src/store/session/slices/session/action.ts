@@ -236,7 +236,7 @@ export const createSessionSlice: StateCreator<SessionStore, [], [], SessionActio
           get().internal_processSessions(data.sessions, data.sessionGroups);
           set({ isSessionsFirstFetchFinished: true }, false);
         },
-        suspense: true,
+        suspense: false,
       },
     ),
   useSearchSessions: (keyword) =>
