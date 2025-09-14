@@ -120,7 +120,7 @@ COPY --from=base /distroless/ /
 COPY --from=builder /app/.next/standalone /app/
 
 # Copy database migrations
-COPY --from=builder /app/src/database/migrations /app/migrations
+COPY --from=builder /app/packages/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
 COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
@@ -291,7 +291,11 @@ ENV \
     # Infini-AI
     INFINIAI_API_KEY="" INFINIAI_MODEL_LIST="" \
     # 302.AI
-    AI302_API_KEY="" AI302_MODEL_LIST=""
+    AI302_API_KEY="" AI302_MODEL_LIST="" \
+    # FAL
+    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    # BFL
+    BFL_API_KEY="" BFL_MODEL_LIST=""
 
 USER nextjs
 

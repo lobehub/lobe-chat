@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 
-import { AiModelType, ChatModelPricing } from './aiModel';
-import { AiProviderSettings } from './aiProvider';
+import { ModelParamsSchema } from '@/libs/standard-parameters';
+import { AiModelType, Pricing } from '@/types/aiModel';
+import { AiProviderSettings } from '@/types/aiProvider';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
@@ -41,7 +42,9 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
-  pricing?: ChatModelPricing;
+  parameters?: ModelParamsSchema;
+
+  pricing?: Pricing;
 
   /**
    *  whether model supports reasoning

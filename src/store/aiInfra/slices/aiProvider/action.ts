@@ -6,7 +6,12 @@ import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
-import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
+import {
+  AIImageModelCard,
+  EnabledAiModel,
+  LobeDefaultAiModelListItem,
+  ModelAbilities,
+} from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -15,6 +20,7 @@ import {
   AiProviderSourceEnum,
   CreateAiProviderParams,
   EnabledProvider,
+  EnabledProviderWithModels,
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
@@ -23,10 +29,17 @@ import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 /**
  * Get models by provider ID and type, with proper formatting and deduplication
  */
-export const getModelListByType = (enabledAiModels: any[], providerId: string, type: string) => {
-  const models = enabledAiModels
-    .filter((model) => model.providerId === providerId && model.type === type)
-    .map((model) => ({
+export const getModelListByType = async (
+  enabledAiModels: EnabledAiModel[],
+  providerId: string,
+  type: string,
+) => {
+  const filteredModels = enabledAiModels.filter(
+    (model) => model.providerId === providerId && model.type === type,
+  );
+
+  const models = await Promise.all(
+    filteredModels.map(async (model) => ({
       abilities: (model.abilities || {}) as ModelAbilities,
       contextWindowTokens: model.contextWindowTokens,
       displayName: model.displayName ?? '',
@@ -34,11 +47,29 @@ export const getModelListByType = (enabledAiModels: any[], providerId: string, t
       ...(model.type === 'image' && {
         parameters:
           (model as AIImageModelCard).parameters ||
-          getModelPropertyWithFallback(model.id, 'parameters'),
+          (await getModelPropertyWithFallback(model.id, 'parameters')),
       }),
-    }));
+    })),
+  );
 
   return uniqBy(models, 'id');
+};
+
+/**
+ * Build provider model lists with proper async handling
+ */
+const buildProviderModelLists = async (
+  providers: EnabledProvider[],
+  enabledAiModels: EnabledAiModel[],
+  type: 'chat' | 'image',
+) => {
+  return Promise.all(
+    providers.map(async (provider) => ({
+      ...provider,
+      children: await getModelListByType(enabledAiModels, provider.id, type),
+      name: provider.name || provider.id,
+    })),
+  );
 };
 
 enum AiProviderSwrKey {
@@ -49,6 +80,8 @@ enum AiProviderSwrKey {
 
 type AiProviderRuntimeStateWithBuiltinModels = AiProviderRuntimeState & {
   builtinAiModelList: LobeDefaultAiModelListItem[];
+  enabledChatModelList?: EnabledProviderWithModels[];
+  enabledImageModelList?: EnabledProviderWithModels[];
 };
 
 export interface AiProviderAction {
@@ -203,31 +236,54 @@ export const createAiProviderSlice: StateCreator<
 
         if (isLogin) {
           const data = await aiProviderService.getAiProviderRuntimeState();
+
+          // Build model lists with proper async handling
+          const [enabledChatModelList, enabledImageModelList] = await Promise.all([
+            buildProviderModelLists(data.enabledChatAiProviders, data.enabledAiModels, 'chat'),
+            buildProviderModelLists(data.enabledImageAiProviders, data.enabledAiModels, 'image'),
+          ]);
+
           return {
             ...data,
             builtinAiModelList,
+            enabledChatModelList,
+            enabledImageModelList,
           };
         }
 
         const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
           (provider) => provider.enabled,
-        ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' }));
+        ).map((item) => ({ id: item.id, name: item.name, source: AiProviderSourceEnum.Builtin }));
+
+        const enabledChatAiProviders = enabledAiProviders.filter((provider) => {
+          return builtinAiModelList.some(
+            (model) => model.providerId === provider.id && model.type === 'chat',
+          );
+        });
+
+        const enabledImageAiProviders = enabledAiProviders
+          .filter((provider) => {
+            return builtinAiModelList.some(
+              (model) => model.providerId === provider.id && model.type === 'image',
+            );
+          })
+          .map((item) => ({ id: item.id, name: item.name, source: AiProviderSourceEnum.Builtin }));
+
+        // Build model lists for non-login state as well
+        const enabledAiModels = builtinAiModelList.filter((m) => m.enabled);
+        const [enabledChatModelList, enabledImageModelList] = await Promise.all([
+          buildProviderModelLists(enabledChatAiProviders, enabledAiModels, 'chat'),
+          buildProviderModelLists(enabledImageAiProviders, enabledAiModels, 'image'),
+        ]);
+
         return {
           builtinAiModelList,
-          enabledAiModels: builtinAiModelList.filter((m) => m.enabled),
-          enabledAiProviders: enabledAiProviders,
-          enabledChatAiProviders: enabledAiProviders.filter((provider) => {
-            return builtinAiModelList.some(
-              (model) => model.providerId === provider.id && model.type === 'chat',
-            );
-          }),
-          enabledImageAiProviders: enabledAiProviders
-            .filter((provider) => {
-              return builtinAiModelList.some(
-                (model) => model.providerId === provider.id && model.type === 'image',
-              );
-            })
-            .map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
+          enabledAiModels,
+          enabledAiProviders,
+          enabledChatAiProviders,
+          enabledChatModelList,
+          enabledImageAiProviders,
+          enabledImageModelList,
           runtimeConfig: {},
         };
       },
@@ -236,26 +292,14 @@ export const createAiProviderSlice: StateCreator<
         onSuccess: (data) => {
           if (!data) return;
 
-          const enabledChatModelList = data.enabledChatAiProviders.map((provider) => ({
-            ...provider,
-            children: getModelListByType(data.enabledAiModels, provider.id, 'chat'),
-            name: provider.name || provider.id,
-          }));
-
-          const enabledImageModelList = data.enabledImageAiProviders.map((provider) => ({
-            ...provider,
-            children: getModelListByType(data.enabledAiModels, provider.id, 'image'),
-            name: provider.name || provider.id,
-          }));
-
           set(
             {
               aiProviderRuntimeConfig: data.runtimeConfig,
               builtinAiModelList: data.builtinAiModelList,
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
-              enabledChatModelList,
-              enabledImageModelList,
+              enabledChatModelList: data.enabledChatModelList || [],
+              enabledImageModelList: data.enabledImageModelList || [],
             },
             false,
             'useFetchAiProviderRuntimeState',

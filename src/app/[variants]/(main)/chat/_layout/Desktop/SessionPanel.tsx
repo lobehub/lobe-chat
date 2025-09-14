@@ -3,11 +3,11 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { parseAsBoolean, useQueryState } from 'nuqs';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -35,7 +35,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const { md = true } = useResponsive();
 
-  const [isPinned] = useQueryState('pinned', parseAsBoolean);
+  const [isPinned] = usePinnedAgentState();
 
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
@@ -69,26 +69,30 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
     if (!md) updatePreference({ showSessionPanel: false });
   }, [md, cacheExpand]);
 
-  return (
-    <DraggablePanel
-      className={styles.panel}
-      defaultSize={{ width: tmpWidth }}
-      // 当进入 pin 模式下，不可展开
-      expand={!isPinned && sessionExpandable}
-      expandable={!isPinned}
-      maxWidth={400}
-      minWidth={FOLDER_WIDTH}
-      mode={md ? 'fixed' : 'float'}
-      onExpandChange={handleExpand}
-      onSizeChange={handleSizeChange}
-      placement="left"
-      size={{ height: '100%', width: sessionsWidth }}
-    >
-      <DraggablePanelContainer style={{ flex: 'none', height: '100%', minWidth: FOLDER_WIDTH }}>
-        {children}
-      </DraggablePanelContainer>
-    </DraggablePanel>
-  );
+  const SessionPanel = useMemo(() => {
+    return (
+      <DraggablePanel
+        className={styles.panel}
+        defaultSize={{ width: tmpWidth }}
+        // 当进入 pin 模式下，不可展开
+        expand={!isPinned && sessionExpandable}
+        expandable={!isPinned}
+        maxWidth={400}
+        minWidth={FOLDER_WIDTH}
+        mode={md ? 'fixed' : 'float'}
+        onExpandChange={handleExpand}
+        onSizeChange={handleSizeChange}
+        placement="left"
+        size={{ height: '100%', width: sessionsWidth }}
+      >
+        <DraggablePanelContainer style={{ flex: 'none', height: '100%', minWidth: FOLDER_WIDTH }}>
+          {children}
+        </DraggablePanelContainer>
+      </DraggablePanel>
+    );
+  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth]);
+
+  return SessionPanel;
 });
 
 export default withSuspense(SessionPanel);

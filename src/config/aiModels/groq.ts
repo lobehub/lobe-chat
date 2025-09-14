@@ -5,7 +5,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const groqChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 8192,
+    contextWindowTokens: 131_072,
     description:
       'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta',
@@ -15,7 +15,7 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8192,
+    contextWindowTokens: 131_072,
     description:
       'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta Mini',
@@ -33,10 +33,12 @@ const groqChatModels: AIChatModelCard[] = [
       'OpenAI GPT-OSS 120B 是一款拥有 1200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
     displayName: 'GPT OSS 120B',
     id: 'openai/gpt-oss-120b',
-    maxOutput: 32_768,
+    maxOutput: 65_536,
     pricing: {
-      input: 0.15,
-      output: 0.75,
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-08-06',
     type: 'chat',
@@ -51,10 +53,12 @@ const groqChatModels: AIChatModelCard[] = [
       'OpenAI GPT-OSS 20B 是一款拥有 200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
     displayName: 'GPT OSS 20B',
     id: 'openai/gpt-oss-20b',
-    maxOutput: 32_768,
+    maxOutput: 65_536,
     pricing: {
-      input: 0.1,
-      output: 0.5,
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-08-06',
     type: 'chat',
@@ -71,8 +75,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'moonshotai/kimi-k2-instruct',
     maxOutput: 16_384,
     pricing: {
-      input: 1,
-      output: 3,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-07-11',
     type: 'chat',
@@ -84,8 +90,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-4-scout-17b-16e-instruct',
     maxOutput: 8192,
     pricing: {
-      input: 0.11,
-      output: 0.34,
+      units: [
+        { name: 'textInput', rate: 0.11, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.34, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -99,8 +107,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
     maxOutput: 8192,
     pricing: {
-      input: 0.2,
-      output: 0.6,
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -111,10 +121,12 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 32B',
     id: 'qwen/qwen3-32b',
-    maxOutput: 131_072,
+    maxOutput: 40_960,
     pricing: {
-      input: 0.29,
-      output: 0.59,
+      units: [
+        { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -128,23 +140,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-llama-70b',
     maxOutput: 131_072,
     pricing: {
-      input: 0.75, // 0.75 - 5.00
-      output: 0.99, // 0.99 - 5.00
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 8192,
-    description: 'Gemma 2 9B 是一款优化用于特定任务和工具整合的模型。',
-    displayName: 'Gemma 2 9B',
-    id: 'gemma2-9b-it',
-    maxOutput: 8192,
-    pricing: {
-      input: 0.2,
-      output: 0.2,
+      units: [
+        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -159,8 +158,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'llama-3.1-8b-instant',
     maxOutput: 131_072,
     pricing: {
-      input: 0.05,
-      output: 0.08,
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -168,15 +169,17 @@ const groqChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
     displayName: 'Llama 3.3 70B Versatile',
     id: 'llama-3.3-70b-versatile',
     maxOutput: 32_768,
     pricing: {
-      input: 0.59,
-      output: 0.79,
+      units: [
+        { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -186,8 +189,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'mistral-saba-24b',
     maxOutput: 32_768,
     pricing: {
-      input: 0.79,
-      output: 0.79,
+      units: [
+        { name: 'textInput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },
@@ -197,8 +202,10 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-guard-4-12b',
     maxOutput: 1024,
     pricing: {
-      input: 0.2,
-      output: 0.2,
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     type: 'chat',
   },

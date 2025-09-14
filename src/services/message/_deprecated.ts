@@ -49,6 +49,12 @@ export class ClientService implements IMessageService {
     }));
   }
 
+  async getGroupMessages(groupId: string, topicId?: string): Promise<ChatMessage[]> {
+    // For the deprecated service, group messages are the same as regular messages
+    // since the old schema doesn't differentiate between session and group messages
+    return this.getMessages(groupId, topicId);
+  }
+
   async getAllMessages() {
     return MessageModel.queryAll();
   }

@@ -5,6 +5,42 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 const stepfunChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 64_000,
+    description:
+      '该模型拥有强大的视觉感知和复杂推理能力。可准确完成跨领域的复杂知识理解、数学与视觉信息的交叉分析，以及日常生活中的各类视觉分析问题。',
+    displayName: 'Step 3',
+    enabled: true,
+    id: 'step-3',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.5, upTo: 0.004 },
+            { rate: 4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 4, upTo: 0.004 },
+            { rate: 8, upTo: 'infinity' }, // 仍与文档有出入
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       // functionCall: true,
       reasoning: true,
       // search: true,
@@ -14,12 +50,13 @@ const stepfunChatModels: AIChatModelCard[] = [
     description:
       '该模型是拥有强大的图像理解能力的推理大模型，能够处理图像和文字信息，经过深度思考后输出文本生成文本内容。该模型在视觉推理领域表现突出，同时拥有第一梯队的数学、代码、文本推理能力。上下文长度为100k。',
     displayName: 'Step R1 V Mini',
-    enabled: true,
     id: 'step-r1-v-mini',
     pricing: {
       currency: 'CNY',
-      input: 2.5,
-      output: 8,
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     // settings: {
     //   searchImpl: 'params',
@@ -37,8 +74,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1-8k',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 20,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -56,8 +95,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1-32k',
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 70,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -75,8 +116,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1-256k',
     pricing: {
       currency: 'CNY',
-      input: 95,
-      output: 300,
+      units: [
+        { name: 'textInput', rate: 95, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 300, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -96,8 +139,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-2-mini',
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-14',
     settings: {
@@ -116,8 +161,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-2-16k',
     pricing: {
       currency: 'CNY',
-      input: 38,
-      output: 120,
+      units: [
+        { name: 'textInput', rate: 38, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -132,12 +179,13 @@ const stepfunChatModels: AIChatModelCard[] = [
     contextWindowTokens: 16_000,
     description: 'step-2模型的实验版本，包含最新的特性，滚动更新中。不推荐在正式生产环境使用。',
     displayName: 'Step 2 16K Exp',
-    enabled: true,
     id: 'step-2-16k-exp',
     pricing: {
       currency: 'CNY',
-      input: 38,
-      output: 120,
+      units: [
+        { name: 'textInput', rate: 38, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-15',
     settings: {
@@ -157,8 +205,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1v-8k',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 20,
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -177,8 +227,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1v-32k',
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 70,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     settings: {
       searchImpl: 'params',
@@ -196,8 +248,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1o-vision-32k',
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 70,
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 70, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-01-22',
     type: 'chat',
@@ -214,8 +268,10 @@ const stepfunChatModels: AIChatModelCard[] = [
     id: 'step-1o-turbo-vision',
     pricing: {
       currency: 'CNY',
-      input: 8,
-      output: 35,
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
     },
     releasedAt: '2025-02-14',
     type: 'chat',

@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Model"
   },
+  "active": "Active",
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
   "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
@@ -13,17 +14,23 @@
     "thought": "Thought",
     "unknownTitle": "Untitled Work"
   },
+  "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
+  "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionSuccess": "Assistant removed successfully",
   "defaultAgent": "Default Assistant",
   "defaultList": "Default List",
   "defaultSession": "Default Assistant",
+  "dm": {
+    "placeholder": "Your private messages with {{agentTitle}} will appear here.",
+    "tooltip": "Send a private message"
+  },
   "duplicateSession": {
     "loading": "Copying...",
     "success": "Copy successful",
@@ -46,16 +53,26 @@
     "reasoningEffort": {
       "title": "Reasoning Intensity"
     },
+    "textVerbosity": {
+      "title": "Output Text Detail Level"
+    },
     "thinking": {
       "title": "Deep Thinking Switch"
     },
     "title": "Model Extension Features"
   },
+  "group": {
+    "desc": "Collaborate with multiple AI assistants in a shared conversation space.",
+    "memberTooltip": "There are {{count}} members in the group",
+    "title": "Group"
+  },
+  "groupDescription": "Group description",
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
   },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
+  "inactive": "Inactive",
   "inbox": {
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
     "title": "Just Chat"
@@ -73,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Understanding and analyzing your intent..."
   },
+  "inviteMembers": "Invite members",
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
@@ -91,12 +109,24 @@
     "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
     "viewMore": "View More"
   },
+  "memberSelection": {
+    "addMember": "Add Member",
+    "noAvailableAgents": "No available agents",
+    "noSelectedAgents": "No selected agents",
+    "searchAgents": "Search agents...",
+    "setInitialMembers": "Set Initial Members"
+  },
+  "members": "Members",
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Send to",
+      "title": "Direct Message"
+    },
     "modelCard": {
       "credit": "Credits",
       "creditPricing": "Pricing",
@@ -140,6 +170,13 @@
     }
   },
   "newAgent": "New Assistant",
+  "newGroupChat": "New Group Chat",
+  "noAgentsYet": "There are no assistants in this group yet. Click the + button to invite an assistant.",
+  "noAvailableAgents": "No assistants available to invite",
+  "noMatchingAgents": "No matching assistants",
+  "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
+  "noSelectedAgents": "No assistant selected yet",
+  "owner": "Group Owner",
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
@@ -180,6 +217,8 @@
     "title": "Online Search"
   },
   "searchAgentPlaceholder": "Search assistants...",
+  "searchAgents": "Search assistants...",
+  "selectedAgents": "Selected agents",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
@@ -253,6 +292,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
+  "untitledAgent": "Untitled Assistant",
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {
@@ -275,5 +315,6 @@
       }
     }
   },
+  "you": "you",
   "zenMode": "Zen Mode"
 }

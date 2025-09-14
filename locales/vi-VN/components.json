@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Thêm tham số",
+    "argumentPlaceholder": "Tham số {{index}}",
+    "enterFirstArgument": "Nhập tham số đầu tiên..."
+  },
   "DragUpload": {
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh.",
     "dragFileDesc": "Kéo và thả hình ảnh và tệp vào đây, hỗ trợ tải lên nhiều hình ảnh và tệp.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "Đã tải lên {{completed}}/{{total}}"
+    },
+    "validation": {
+      "fileSizeExceeded": "Kích thước tệp vượt quá giới hạn",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) vượt quá kích thước tối đa cho phép là {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} tệp vượt quá kích thước tối đa cho phép là {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Số lượng hình ảnh vượt quá giới hạn"
     }
   },
   "OllamaSetupGuide": {

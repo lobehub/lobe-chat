@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Adicionar argumento",
+    "argumentPlaceholder": "Argumento {{index}}",
+    "enterFirstArgument": "Digite o primeiro argumento..."
+  },
   "DragUpload": {
     "dragDesc": "Arraste os arquivos para cá, suportando o upload de várias imagens.",
     "dragFileDesc": "Arraste imagens e arquivos para cá, suportando o upload de várias imagens e arquivos.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} enviados"
+    },
+    "validation": {
+      "fileSizeExceeded": "Tamanho do arquivo excede o limite",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) excede o limite máximo de {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} arquivos excedem o limite máximo de {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Número de imagens excede o limite"
     }
   },
   "OllamaSetupGuide": {

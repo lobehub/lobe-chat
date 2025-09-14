@@ -35,6 +35,11 @@ export default {
       title: '重置所有设置',
     },
   },
+  groupTab: {
+    chat: '群聊',
+    members: '成员',
+    meta: '群聊信息',
+  },
   header: {
     desc: '偏好与模型设置',
     global: '全局设置',
@@ -294,6 +299,69 @@ export default {
     },
     title: '通用设置',
   },
+  settingGroup: {
+    description: {
+      placeholder: 'Enter group description',
+      title: 'Group Description',
+    },
+    name: {
+      placeholder: 'Enter group name',
+      title: 'Group Name',
+    },
+    submit: 'Update Group',
+    systemPrompt: {
+      placeholder: 'Enter system prompt',
+      title: 'System Prompt',
+    },
+    title: 'Group Information',
+  },
+  settingGroupChat: {
+    maxResponseInRow: {
+      desc: 'Choose how many messages members can respond in a row. Set to 0 to disable.',
+      title: 'Max Messages in a Row',
+    },
+    model: {
+      desc: 'Choose the model to use for group conversations',
+      title: 'Orchestrator Model',
+    },
+    responseOrder: {
+      desc: 'Agents will respond in the order they are set in the group',
+      options: {
+        natural: 'Natural',
+        sequential: 'Sequential',
+      },
+      placeholder: 'Select response order',
+      title: 'Response Order',
+    },
+    responseSpeed: {
+      desc: 'Choose how agents respond in group conversations',
+      options: {
+        fast: 'Fast',
+        medium: 'Medium',
+        slow: 'Slow',
+      },
+      placeholder: 'Select response speed',
+      title: 'Response Speed',
+    },
+    revealDM: {
+      desc: 'Make the DM content sent to other members visible to you.',
+      title: 'Reveal DM',
+    },
+    submit: 'Update Settings',
+    systemPrompt: {
+      desc: 'Custom system prompt for the group conversation orchestrator. This overrides the default orchestrator behavior.',
+      placeholder: 'Enter custom orchestrator system prompt...',
+      title: 'Orchestrator System Prompt',
+    },
+    title: 'Chat Settings',
+  },
+  settingGroupMembers: {
+    edit: 'Edit Member',
+    empty: 'No agents in this group yet. Click the + button to add members.',
+    owner: 'You (Owner)',
+    remove: 'Remove Member',
+    you: 'You',
+  },
   settingModel: {
     enableMaxTokens: {
       title: '开启单次回复限制',
@@ -514,6 +582,11 @@ export default {
       label: 'AI 绘画话题命名模型',
       modelDesc: '指定用于 AI 绘画自动命名话题的模型',
       title: 'AI 绘画自动命名话题',
+    },
+    groupChatSupervisor: {
+      label: '群聊监督模型',
+      modelDesc: '指定用于监督和管理群聊对话的模型',
+      title: '群聊监督管理',
     },
     helpInfo: '当创建新助手时，将以默认助手设置作为预设值。',
     historyCompress: {

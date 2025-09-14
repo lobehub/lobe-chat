@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Mô hình"
   },
+  "active": "Hoạt động",
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, chúng ta hãy bắt đầu trò chuyện nào!",
@@ -13,17 +14,23 @@
     "thought": "Quá trình suy nghĩ",
     "unknownTitle": "Tác phẩm chưa được đặt tên"
   },
+  "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
   "chatList": {
     "longMessageDetail": "Xem chi tiết"
   },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+  "confirmRemoveGroupItemAlert": "Bạn sắp xóa nhóm này. Sau khi xóa, các trợ lý trong nhóm sẽ được chuyển sang danh sách mặc định. Vui lòng xác nhận hành động của bạn.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionSuccess": "Xóa trợ lý thành công",
   "defaultAgent": "Trợ lý mặc định",
   "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
+  "dm": {
+    "placeholder": "Tin nhắn riêng tư giữa bạn và {{agentTitle}} sẽ được hiển thị ở đây.",
+    "tooltip": "Gửi tin nhắn riêng"
+  },
   "duplicateSession": {
     "loading": "Đang sao chép...",
     "success": "Sao chép thành công",
@@ -46,16 +53,26 @@
     "reasoningEffort": {
       "title": "Cường độ suy luận"
     },
+    "textVerbosity": {
+      "title": "Mức độ chi tiết của văn bản đầu ra"
+    },
     "thinking": {
       "title": "Công tắc suy nghĩ sâu"
     },
     "title": "Chức năng mở rộng mô hình"
   },
+  "group": {
+    "desc": "Cộng tác với nhiều trợ lý AI trong không gian hội thoại chung。",
+    "memberTooltip": "Nhóm có {{count}} thành viên",
+    "title": "Nhóm"
+  },
+  "groupDescription": "Mô tả nhóm",
   "history": {
     "title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng"
   },
   "historyRange": "Phạm vi lịch sử",
   "historySummary": "Tóm tắt tin tức lịch sử",
+  "inactive": "Không hoạt động",
   "inbox": {
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
@@ -73,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Đang hiểu và phân tích ý định của bạn..."
   },
+  "inviteMembers": "Mời thành viên",
   "knowledgeBase": {
     "all": "Tất cả nội dung",
     "allFiles": "Tất cả tệp",
@@ -91,12 +109,24 @@
     "uploadGuide": "Các tệp đã tải lên có thể được xem trong 'Kho kiến thức'",
     "viewMore": "Xem thêm"
   },
+  "memberSelection": {
+    "addMember": "Thêm thành viên",
+    "noAvailableAgents": "Không có đại lý nào khả dụng",
+    "noSelectedAgents": "Chưa chọn đại lý nào",
+    "searchAgents": "Tìm kiếm đại lý...",
+    "setInitialMembers": "Thiết lập thành viên ban đầu"
+  },
+  "members": "Thành viên",
   "messageAction": {
     "delAndRegenerate": "Xóa và tạo lại",
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Gửi cho",
+      "title": "Tin nhắn riêng"
+    },
     "modelCard": {
       "credit": "Điểm",
       "creditPricing": "Định giá",
@@ -140,6 +170,13 @@
     }
   },
   "newAgent": "Tạo trợ lý mới",
+  "newGroupChat": "Tạo nhóm mới",
+  "noAgentsYet": "Nhóm này chưa có trợ lý. Nhấn nút + để mời trợ lý.",
+  "noAvailableAgents": "Không có trợ lý nào để mời",
+  "noMatchingAgents": "Không có trợ lý phù hợp",
+  "noMembersYet": "Nhóm này chưa có thành viên nào. Nhấp vào nút + để mời trợ lý.",
+  "noSelectedAgents": "Chưa chọn trợ lý nào",
+  "owner": "Chủ nhóm",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
   "rag": {
@@ -180,6 +217,8 @@
     "title": "Tìm kiếm trực tuyến"
   },
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
+  "searchAgents": "Trợ lý tìm kiếm...",
+  "selectedAgents": "Trợ lý đã chọn",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
   "sessionGroup": {
     "config": "Quản lý nhóm",
@@ -253,6 +292,7 @@
     "action": "Đọc bằng giọng nói",
     "clear": "Xóa giọng nói"
   },
+  "untitledAgent": "Trợ lý chưa đặt tên",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
     "action": {
@@ -275,5 +315,6 @@
       }
     }
   },
+  "you": "bạn",
   "zenMode": "Chế độ tập trung"
 }

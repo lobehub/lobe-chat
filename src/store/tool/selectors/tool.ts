@@ -1,6 +1,6 @@
+import { pluginPrompts } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { pluginPrompts } from '@/prompts/plugin';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';

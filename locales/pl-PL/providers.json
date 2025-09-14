@@ -26,6 +26,9 @@
   "bedrock": {
     "description": "Bedrock to usługa oferowana przez Amazon AWS, skoncentrowana na dostarczaniu zaawansowanych modeli językowych i wizualnych dla przedsiębiorstw. Jej rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując różnorodne opcje od lekkich do wysokowydajnych, wspierając generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, odpowiednie dla różnych skal i potrzeb aplikacji biznesowych."
   },
+  "bfl": {
+    "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
+  },
   "cloudflare": {
     "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
   },

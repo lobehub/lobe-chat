@@ -35,6 +35,11 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "groupTab": {
+    "chat": "Grup sohbeti",
+    "members": "Üyeler",
+    "meta": "Grup sohbeti bilgileri"
+  },
   "header": {
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
@@ -290,6 +295,69 @@
     },
     "title": "Genel Ayarlar"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Grup açıklamasını girin",
+      "title": "Grup Açıklaması"
+    },
+    "name": {
+      "placeholder": "Grup adını girin",
+      "title": "Grup Adı"
+    },
+    "submit": "Grubu Güncelle",
+    "systemPrompt": {
+      "placeholder": "Sistem istemini girin",
+      "title": "Sistem İstemi"
+    },
+    "title": "Grup Bilgileri"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Üyelerin art arda kaç mesaja cevap verebileceğini seçin. Devre dışı bırakmak için 0 olarak ayarlayın.",
+      "title": "Art Arda Maksimum Mesaj Sayısı"
+    },
+    "model": {
+      "desc": "Grup sohbetleri için kullanılacak modeli seçin",
+      "title": "Orkestratör Modeli"
+    },
+    "responseOrder": {
+      "desc": "Temsilciler grup içinde ayarlandıkları sırayla cevap verecekler",
+      "options": {
+        "natural": "Doğal",
+        "sequential": "Sıralı"
+      },
+      "placeholder": "Cevap sırasını seçin",
+      "title": "Cevap Sırası"
+    },
+    "responseSpeed": {
+      "desc": "Temsilcilerin grup sohbetlerindeki cevap hızını seçin",
+      "options": {
+        "fast": "Hızlı",
+        "medium": "Orta",
+        "slow": "Yavaş"
+      },
+      "placeholder": "Cevap hızını seçin",
+      "title": "Cevap Hızı"
+    },
+    "revealDM": {
+      "desc": "Diğer üyelere gönderilen DM içeriğini sizin için görünür hale getirin.",
+      "title": "DM'i Göster"
+    },
+    "submit": "Ayarları Güncelle",
+    "systemPrompt": {
+      "desc": "Grup konuşması orkestratörü için özel sistem istemi. Bu, varsayılan orkestratör davranışını geçersiz kılar.",
+      "placeholder": "Özel orkestratör sistem istemini girin...",
+      "title": "Orkestratör Sistem İstemi"
+    },
+    "title": "Sohbet Ayarları"
+  },
+  "settingGroupMembers": {
+    "edit": "Üyeyi Düzenle",
+    "empty": "Bu grupta henüz ajan yok. Üye eklemek için + düğmesine tıklayın.",
+    "owner": "Siz (Sahip)",
+    "remove": "Üyeyi Kaldır",
+    "you": "Siz"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
@@ -510,6 +578,11 @@
       "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
       "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
       "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+    },
+    "groupChatSupervisor": {
+      "label": "Grup Sohbet Denetim Modeli",
+      "modelDesc": "Grup sohbeti diyaloglarını denetlemek ve yönetmek için kullanılan model",
+      "title": "Grup Sohbet Denetimi ve Yönetimi"
     },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {

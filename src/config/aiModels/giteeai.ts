@@ -327,7 +327,7 @@ const giteeaiImageModels: AIImageModelCard[] = [
     },
     type: 'image',
   },
-    {
+  {
     description:
       'Kolors 是由快手 Kolors 团队开发的文生图模型。由数十亿的参数训练，在视觉质量、中文语义理解和文本渲染方面有显著优势。',
     displayName: 'Kolors',

@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "افزودن پارامتر",
+    "argumentPlaceholder": "پارامتر {{index}}",
+    "enterFirstArgument": "اولین پارامتر را وارد کنید..."
+  },
   "DragUpload": {
     "dragDesc": "فایل‌ها را اینجا بکشید، امکان بارگذاری چندین تصویر وجود دارد.",
     "dragFileDesc": "تصاویر و فایل‌ها را اینجا بکشید، امکان بارگذاری چندین تصویر و فایل وجود دارد.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} بارگذاری شده"
+    },
+    "validation": {
+      "fileSizeExceeded": "اندازه فایل از حد مجاز فراتر رفته",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) از حداکثر اندازه مجاز {{maxSize}} فراتر رفته است",
+      "fileSizeExceededMultiple": "{{count}} فایل از حداکثر اندازه مجاز {{maxSize}} فراتر رفته‌اند: {{fileList}}",
+      "imageCountExceeded": "تعداد تصاویر از حد مجاز فراتر رفته"
     }
   },
   "OllamaSetupGuide": {

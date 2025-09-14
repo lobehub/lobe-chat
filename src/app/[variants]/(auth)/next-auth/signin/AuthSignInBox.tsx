@@ -7,7 +7,7 @@ import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import BrandWatermark from '@/components/BrandWatermark';
@@ -70,6 +70,7 @@ export default memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('clerk');
   const router = useRouter();
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
 
   const oAuthSSOProviders = useUserStore((s) => s.oAuthSSOProviders);
 
@@ -79,9 +80,11 @@ export default memo(() => {
   const callbackUrl = searchParams.get('callbackUrl') ?? '/';
 
   const handleSignIn = async (provider: string) => {
+    setLoadingProvider(provider);
     try {
       await signIn(provider, { redirectTo: callbackUrl });
     } catch (error) {
+      setLoadingProvider(null);
       // Signin can fail for a number of reasons, such as the user
       // not existing, or the user not having the correct role.
       // In some cases, you may want to redirect to a custom error
@@ -127,6 +130,7 @@ export default memo(() => {
                   className={styles.button}
                   icon={AuthIcons(provider, 16)}
                   key={provider}
+                  loading={loadingProvider === provider}
                   onClick={() => handleSignIn(provider)}
                 >
                   {provider}

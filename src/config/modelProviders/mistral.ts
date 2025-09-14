@@ -12,10 +12,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'open-mistral-nemo',
-      pricing: {
-        input: 0.15,
-        output: 0.15,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -25,10 +21,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-small-latest',
-      pricing: {
-        input: 0.2,
-        output: 0.6,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -38,20 +30,12 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-large-latest',
-      pricing: {
-        input: 2,
-        output: 6,
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: 'Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。',
       displayName: 'Codestral',
       id: 'codestral-latest',
-      pricing: {
-        input: 0.2,
-        output: 0.6,
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -61,10 +45,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'pixtral-large-latest',
-      pricing: {
-        input: 2,
-        output: 6,
-      },
       vision: true,
     },
     {
@@ -74,10 +54,6 @@ const Mistral: ModelProviderCard = {
       displayName: 'Pixtral 12B',
       enabled: true,
       id: 'pixtral-12b-2409',
-      pricing: {
-        input: 0.15,
-        output: 0.15,
-      },
       vision: true,
     },
     {
@@ -85,20 +61,12 @@ const Mistral: ModelProviderCard = {
       description: 'Ministral 3B 是Mistral的世界顶级边缘模型。',
       displayName: 'Ministral 3B',
       id: 'ministral-3b-latest',
-      pricing: {
-        input: 0.04,
-        output: 0.04,
-      },
     },
     {
       contextWindowTokens: 128_000,
       description: 'Ministral 8B 是Mistral的性价比极高的边缘模型。',
       displayName: 'Ministral 8B',
       id: 'ministral-8b-latest',
-      pricing: {
-        input: 0.1,
-        output: 0.1,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -106,10 +74,6 @@ const Mistral: ModelProviderCard = {
         'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral 7B',
       id: 'open-mistral-7b',
-      pricing: {
-        input: 0.25,
-        output: 0.25,
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -117,10 +81,6 @@ const Mistral: ModelProviderCard = {
         'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
       displayName: 'Mixtral 8x7B',
       id: 'open-mixtral-8x7b',
-      pricing: {
-        input: 0.7,
-        output: 0.7,
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -129,10 +89,6 @@ const Mistral: ModelProviderCard = {
       displayName: 'Mixtral 8x22B',
       functionCall: true,
       id: 'open-mixtral-8x22b',
-      pricing: {
-        input: 2,
-        output: 6,
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -140,10 +96,6 @@ const Mistral: ModelProviderCard = {
         'Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。',
       displayName: 'Codestral Mamba',
       id: 'open-codestral-mamba',
-      pricing: {
-        input: 0.15,
-        output: 0.15,
-      },
     },
   ],
   checkModel: 'ministral-3b-latest',
@@ -154,6 +106,7 @@ const Mistral: ModelProviderCard = {
   modelsUrl: 'https://docs.mistral.ai/getting-started/models',
   name: 'Mistral',
   settings: {
+    disableBrowserRequest: true, // CORS Error
     proxyUrl: {
       placeholder: 'https://api.mistral.ai',
     },

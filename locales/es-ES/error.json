@@ -85,6 +85,17 @@
     "CreateMessageError": "Lo sentimos, el mensaje no se pudo enviar correctamente. Por favor, copia el contenido y vuelve a enviarlo. Después de actualizar la página, este mensaje no se conservará.",
     "ExceededContextWindow": "El contenido de la solicitud actual excede la longitud que el modelo puede procesar. Por favor, reduzca la cantidad de contenido y vuelva a intentarlo.",
     "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Su contenido contiene palabras prohibidas. Por favor, compruebe y modifique su entrada e inténtelo de nuevo.",
+      "IMAGE_SAFETY": "El contenido de la imagen generada ha sido bloqueado por motivos de seguridad. Intente modificar su solicitud de generación de imágenes.",
+      "LANGUAGE": "El idioma que está utilizando no es compatible por el momento. Intente volver a preguntar en inglés u otro idioma compatible.",
+      "OTHER": "El contenido ha sido bloqueado por una razón desconocida. Intente reformular su solicitud.",
+      "PROHIBITED_CONTENT": "Su solicitud puede contener contenido prohibido. Ajústela para garantizar que cumple las políticas de uso.",
+      "RECITATION": "Su contenido ha sido bloqueado porque podría implicar problemas de derechos de autor. Intente usar contenido original o reformular su solicitud.",
+      "SAFETY": "Su contenido ha sido bloqueado por las políticas de seguridad. Intente ajustar su solicitud para evitar contenidos potencialmente dañinos o inapropiados.",
+      "SPII": "Su contenido puede contener información personal sensible. Para proteger la privacidad, elimine la información sensible antes de intentar de nuevo.",
+      "default": "Contenido bloqueado: {{blockReason}}。请调整您的请求内容后重试。"
+    },
     "InsufficientQuota": "Lo sentimos, la cuota de esta clave ha alcanzado su límite. Por favor, verifique si el saldo de su cuenta es suficiente o aumente la cuota de la clave y vuelva a intentarlo.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",

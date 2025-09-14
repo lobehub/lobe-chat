@@ -38,7 +38,7 @@ export class ClientService extends BaseClientService implements ITopicService {
   getTopics: ITopicService['getTopics'] = async (params) => {
     const data = await this.topicModel.query({
       ...params,
-      sessionId: this.toDbSessionId(params.sessionId),
+      sessionId: this.toDbSessionId(params.containerId),
     });
     return data as unknown as Promise<ChatTopic[]>;
   };

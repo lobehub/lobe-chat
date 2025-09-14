@@ -1,6 +1,7 @@
 'use client';
 
-import { DEFAULT_REWRITE_QUERY } from '@/const/settings';
+import { DEFAULT_REWRITE_QUERY } from '@lobechat/prompts';
+
 import { isServerMode } from '@/const/version';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -15,6 +16,7 @@ const Page = () => {
       <SystemAgentForm systemAgentKey="translation" />
       <SystemAgentForm systemAgentKey="historyCompress" />
       <SystemAgentForm systemAgentKey="agentMeta" />
+      <SystemAgentForm systemAgentKey="groupChatSupervisor" />
       {isServerMode && enableKnowledgeBase && (
         <SystemAgentForm
           allowCustomPrompt

@@ -35,6 +35,11 @@
       "title": "Réinitialiser tous les paramètres"
     }
   },
+  "groupTab": {
+    "chat": "Discussion de groupe",
+    "members": "Membres",
+    "meta": "Informations du groupe"
+  },
   "header": {
     "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
@@ -290,6 +295,69 @@
     },
     "title": "Paramètres généraux"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Entrez la description du groupe",
+      "title": "Description du groupe"
+    },
+    "name": {
+      "placeholder": "Entrez le nom du groupe",
+      "title": "Nom du groupe"
+    },
+    "submit": "Mettre à jour le groupe",
+    "systemPrompt": {
+      "placeholder": "Saisissez l'invite système",
+      "title": "Invite système"
+    },
+    "title": "Informations sur le groupe"
+  },
+  "settingGroupChat": {
+    "maxResponseInRow": {
+      "desc": "Choisissez combien de messages un membre peut envoyer à la suite. Indiquez 0 pour désactiver.",
+      "title": "Nombre maximal de messages consécutifs"
+    },
+    "model": {
+      "desc": "Choisissez le modèle à utiliser pour les conversations de groupe",
+      "title": "Modèle de l'orchestrateur"
+    },
+    "responseOrder": {
+      "desc": "Les agents répondront dans l'ordre où ils sont définis dans le groupe",
+      "options": {
+        "natural": "Naturel",
+        "sequential": "Séquentiel"
+      },
+      "placeholder": "Sélectionnez l'ordre de réponse",
+      "title": "Ordre de réponse"
+    },
+    "responseSpeed": {
+      "desc": "Choisissez la rapidité de réponse des agents dans les conversations de groupe",
+      "options": {
+        "fast": "Rapide",
+        "medium": "Moyenne",
+        "slow": "Lente"
+      },
+      "placeholder": "Sélectionnez la vitesse de réponse",
+      "title": "Vitesse de réponse"
+    },
+    "revealDM": {
+      "desc": "Rendre le contenu des messages privés envoyés aux autres membres visible pour vous.",
+      "title": "Afficher les messages privés"
+    },
+    "submit": "Mettre à jour les paramètres",
+    "systemPrompt": {
+      "desc": "Prompt système personnalisé pour l'orchestrateur des conversations de groupe. Cela remplace le comportement par défaut de l'orchestrateur.",
+      "placeholder": "Entrez un prompt système personnalisé pour l'orchestrateur...",
+      "title": "Prompt système de l'orchestrateur"
+    },
+    "title": "Paramètres du chat"
+  },
+  "settingGroupMembers": {
+    "edit": "Modifier le membre",
+    "empty": "Aucun agent dans ce groupe pour le moment. Cliquez sur le bouton + pour ajouter des membres.",
+    "owner": "Vous (propriétaire)",
+    "remove": "Supprimer le membre",
+    "you": "Vous"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
@@ -510,6 +578,11 @@
       "label": "Modèle de nomination de sujets pour peinture IA",
       "modelDesc": "Modèle spécifiquement utilisé pour la nomination automatique des sujets de peinture IA",
       "title": "Nomination automatique des sujets de peinture IA"
+    },
+    "groupChatSupervisor": {
+      "label": "Modèle de supervision des discussions de groupe",
+      "modelDesc": "Modèle spécialement conçu pour superviser et gérer les conversations de groupe.",
+      "title": "Supervision et gestion des discussions de groupe"
     },
     "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {

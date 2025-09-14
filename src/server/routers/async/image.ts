@@ -188,6 +188,7 @@ export const imageRouter = router({
             metadata: {
               generationId,
               height: image.height,
+              path: uploadedImageUrl,
               width: image.width,
             },
             name: `${params.prompt.slice(0, FILENAME_MAX_LENGTH)}.${image.extension}`,

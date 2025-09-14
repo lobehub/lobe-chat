@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modelli"
   },
+  "active": "Attivo",
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
@@ -13,17 +14,23 @@
     "thought": "Processo di pensiero",
     "unknownTitle": "Opera non nominata"
   },
+  "availableAgents": "Assistenti disponibili",
   "backToBottom": "Torna in fondo",
   "chatList": {
     "longMessageDetail": "Visualizza dettagli"
   },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
+  "confirmRemoveGroupItemAlert": "Stai per eliminare questo gruppo. Dopo l'eliminazione, gli assistenti contenuti in esso verranno spostati nell'elenco predefinito. Confermi l'operazione?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionSuccess": "Session eliminata con successo",
   "defaultAgent": "Assistente predefinito",
   "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
+  "dm": {
+    "placeholder": "I tuoi messaggi privati con {{agentTitle}} verranno visualizzati qui.",
+    "tooltip": "Invia messaggio privato"
+  },
   "duplicateSession": {
     "loading": "In corso di duplicazione...",
     "success": "Duplicazione riuscita",
@@ -46,16 +53,26 @@
     "reasoningEffort": {
       "title": "Intensità del ragionamento"
     },
+    "textVerbosity": {
+      "title": "Livello di dettaglio dell'output testuale"
+    },
     "thinking": {
       "title": "Interruttore di pensiero profondo"
     },
     "title": "Funzionalità di estensione del modello"
   },
+  "group": {
+    "desc": "Collaborare con più assistenti IA in uno spazio di conversazione condiviso.",
+    "memberTooltip": "Nel gruppo ci sono {{count}} membri",
+    "title": "Gruppi"
+  },
+  "groupDescription": "Descrizione del gruppo",
   "history": {
     "title": "L'assistente ricorderà solo gli ultimi {{count}} messaggi"
   },
   "historyRange": "Intervallo cronologico",
   "historySummary": "Riepilogo della storia",
+  "inactive": "Inattivo",
   "inbox": {
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
@@ -73,6 +90,7 @@
   "intentUnderstanding": {
     "title": "Stiamo comprendendo e analizzando la tua intenzione..."
   },
+  "inviteMembers": "Invita membri",
   "knowledgeBase": {
     "all": "Tutti i contenuti",
     "allFiles": "Tutti i file",
@@ -91,12 +109,24 @@
     "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
     "viewMore": "Visualizza di più"
   },
+  "memberSelection": {
+    "addMember": "Aggiungi membro",
+    "noAvailableAgents": "Nessun agente disponibile",
+    "noSelectedAgents": "Nessun agente selezionato",
+    "searchAgents": "Cerca agenti...",
+    "setInitialMembers": "Imposta membri iniziali"
+  },
+  "members": "Membri",
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Invia a",
+      "title": "Messaggio privato"
+    },
     "modelCard": {
       "credit": "Crediti",
       "creditPricing": "Prezzo",
@@ -140,6 +170,13 @@
     }
   },
   "newAgent": "Nuovo assistente",
+  "newGroupChat": "Nuova chat di gruppo",
+  "noAgentsYet": "In questo gruppo non ci sono ancora assistenti. Fai clic sul pulsante + per invitare assistenti.",
+  "noAvailableAgents": "Nessun assistente disponibile da invitare",
+  "noMatchingAgents": "Nessun assistente corrispondente",
+  "noMembersYet": "Questo gruppo non ha ancora membri. Clicca sul pulsante + per invitare assistenti.",
+  "noSelectedAgents": "Nessun assistente selezionato",
+  "owner": "Proprietario del gruppo",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
   "rag": {
@@ -180,6 +217,8 @@
     "title": "Ricerca online"
   },
   "searchAgentPlaceholder": "Assistente di ricerca...",
+  "searchAgents": "Assistenti di ricerca...",
+  "selectedAgents": "Assistenti selezionati",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionGroup": {
     "config": "Gestione gruppi",
@@ -253,6 +292,7 @@
     "action": "Lettura vocale",
     "clear": "Cancella lettura vocale"
   },
+  "untitledAgent": "Assistente senza nome",
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
     "action": {
@@ -275,5 +315,6 @@
       }
     }
   },
+  "you": "tu",
   "zenMode": "Modalità di concentrazione"
 }

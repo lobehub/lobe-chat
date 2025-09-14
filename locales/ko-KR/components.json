@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "매개변수 추가",
+    "argumentPlaceholder": "매개변수 {{index}}",
+    "enterFirstArgument": "첫 번째 매개변수를 입력하세요..."
+  },
   "DragUpload": {
     "dragDesc": "여기에 파일을 드래그하여 여러 이미지를 업로드할 수 있습니다.",
     "dragFileDesc": "여기에 이미지와 파일을 드래그하여 여러 이미지와 파일을 업로드할 수 있습니다.",
@@ -125,6 +130,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} 업로드 완료"
+    },
+    "validation": {
+      "fileSizeExceeded": "파일 용량이 허용된 최대 크기를 초과했습니다",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}})이(가) 허용된 최대 크기 {{maxSize}}를 초과했습니다",
+      "fileSizeExceededMultiple": "{{count}}개의 파일이 허용된 최대 크기 {{maxSize}}를 초과합니다: {{fileList}}",
+      "imageCountExceeded": "이미지 수가 허용된 한도를 초과했습니다"
     }
   },
   "OllamaSetupGuide": {

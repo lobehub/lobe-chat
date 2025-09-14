@@ -450,7 +450,7 @@ ENV_EXAMPLES=(
     "$SUB_DIR/.env.example"
 )
 # Default values
-CASDOOR_PASSWORD="123"
+CASDOOR_PASSWORD="pswd123"
 CASDOOR_SECRET="CASDOOR_SECRET"
 MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
 CASDOOR_HOST="localhost:8000"
@@ -657,10 +657,10 @@ section_regenerate_secrets() {
     CASDOOR_PASSWORD=$(generate_key 10)
     if [ $? -ne 0 ]; then
         echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD"
-        CASDOOR_PASSWORD="123"
+        CASDOOR_PASSWORD="pswd123"
     else
         # replace `password` in init_data.json
-        sed "${SED_INPLACE_ARGS[@]}" "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
+        sed "${SED_INPLACE_ARGS[@]}" "s/"pswd123"/${CASDOOR_PASSWORD}/" init_data.json
         if [ $? -ne 0 ]; then
             echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD in \`init_data.json\`"
         fi

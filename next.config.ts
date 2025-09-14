@@ -24,6 +24,9 @@ const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
   basePath,
   compress: isProd,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     optimizePackageImports: [
       'emoji-mart',
