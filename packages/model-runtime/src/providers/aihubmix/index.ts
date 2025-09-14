@@ -76,7 +76,7 @@ export const LobeAiHubMixAI = createRouterRuntime({
       options: {
         baseURL: urlJoin(baseURL, '/v1'),
         chatCompletion: {
-          handlePayload,
+          preProcessPayload: handlePayload,
         },
       },
     },

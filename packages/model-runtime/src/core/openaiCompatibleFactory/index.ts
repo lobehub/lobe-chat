@@ -88,6 +88,10 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       data: OpenAI.ChatCompletion,
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
+    preProcessPayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => ChatStreamPayload;
   };
   constructorOptions?: ConstructorOptions<T>;
   createImage?: (
@@ -225,11 +229,20 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now();
+        
+        // 先进行实例级预处理
+        const instancePreProcessPayload = (this._options as any).chatCompletion?.preProcessPayload;
+        let processedPayload = payload;
+        if (instancePreProcessPayload) {
+          processedPayload = instancePreProcessPayload(payload, this._options);
+        }
+        
+        // 再进行工厂级处理
         const postPayload = chatCompletion?.handlePayload
-          ? chatCompletion.handlePayload(payload, this._options)
+          ? chatCompletion.handlePayload(processedPayload, this._options)
           : ({
-              ...payload,
-              stream: payload.stream ?? true,
+              ...processedPayload,
+              stream: processedPayload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         // new openai Response API
@@ -512,9 +525,16 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     ): Promise<Response> {
       const inputStartAt = Date.now();
 
+      // 先进行实例级预处理
+      const instancePreProcessPayload = (this._options as any).chatCompletion?.preProcessPayload;
+      let processedPayload = payload;
+      if (instancePreProcessPayload) {
+        processedPayload = instancePreProcessPayload(payload, this._options);
+      }
+
       const { messages, reasoning_effort, tools, reasoning, ...res } = responses?.handlePayload
-        ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
-        : payload;
+        ? (responses?.handlePayload(processedPayload, this._options) as ChatStreamPayload)
+        : processedPayload;
 
       // remove penalty params
       delete res.apiMode;
