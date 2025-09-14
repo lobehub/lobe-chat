@@ -7,8 +7,9 @@ export const useStyles = createStyles((token) => ({
     borderColor: token.colorBorder,
     borderRadius: token.borderRadius * 4,
     borderWidth: 0.5,
-    height: CHAT_INPUT_HEIGHT,
+    height: 'auto',
     marginHorizontal: token.marginXXS,
+    minHeight: CHAT_INPUT_HEIGHT,
     paddingHorizontal: token.padding,
     paddingVertical: token.paddingSM,
     // ...token.boxShadowCard,
@@ -30,7 +31,6 @@ export const useStyles = createStyles((token) => ({
   },
   input: {
     flex: 1,
-    maxHeight: 96,
   },
   inputArea: {
     alignItems: 'center',
