@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 là mô hình nền tảng kiến trúc MoE với khả năng mã hóa và đại lý vượt trội, tổng tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra chuẩn về suy luận kiến thức chung, lập trình, toán học và đại lý, hiệu suất của mô hình K2 vượt trội so với các mô hình mã nguồn mở phổ biến khác."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 là phiên bản mới nhất và mạnh mẽ nhất của Kimi K2. Đây là một mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) hàng đầu với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt. Các đặc điểm chính của mô hình bao gồm: tăng cường trí tuệ mã hóa tác nhân, thể hiện sự cải thiện đáng kể trong các bài kiểm tra chuẩn công khai và các nhiệm vụ mã hóa tác nhân trong thế giới thực; cải tiến trải nghiệm mã hóa giao diện người dùng, nâng cao cả về tính thẩm mỹ và tính thực tiễn trong lập trình giao diện."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là một mô hình xử lý ngôn ngữ tự nhiên độc đáo, có khả năng xử lý hiệu quả các nhiệm vụ tạo đối thoại phức tạp và hiểu ngữ cảnh."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 là một mô hình ngôn ngữ lớn hiệu suất cao kích thước nhỏ dựa trên kiến trúc MoE. Nó có tổng số 16 tỷ tham số, nhưng mỗi token chỉ kích hoạt 1.4 tỷ tham số (không bao gồm embedding là 789 triệu), từ đó đạt được tốc độ sinh nhanh vượt trội. Nhờ thiết kế MoE hiệu quả và dữ liệu huấn luyện quy mô lớn, chất lượng cao, mặc dù tham số kích hoạt chỉ là 1.4 tỷ, Ling-mini-2.0 vẫn thể hiện hiệu suất hàng đầu trong các nhiệm vụ hạ nguồn, có thể sánh ngang với các mô hình LLM dense dưới 10 tỷ tham số và các mô hình MoE quy mô lớn hơn."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 là mô hình nền tảng kiến trúc MoE có khả năng mã hóa và đại lý vượt trội, tổng tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra chuẩn về suy luận kiến thức chung, lập trình, toán học và đại lý, hiệu suất của mô hình K2 vượt trội so với các mô hình mã nguồn mở phổ biến khác."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "Mô hình kimi-k2-0905-preview có độ dài ngữ cảnh 256k, sở hữu năng lực Agentic Coding mạnh mẽ hơn, mã front-end đẹp mắt và thực dụng hơn, cùng khả năng hiểu ngữ cảnh tốt hơn."
+    "description": "Kimi K2-Instruct-0905 là phiên bản mới nhất và mạnh mẽ nhất của Kimi K2. Đây là một mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) hàng đầu với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt. Các đặc điểm chính của mô hình bao gồm: tăng cường trí tuệ mã hóa tác nhân, thể hiện sự cải thiện đáng kể trong các bài kiểm tra chuẩn công khai và các nhiệm vụ mã hóa tác nhân trong thế giới thực; cải tiến trải nghiệm mã hóa giao diện người dùng, nâng cao cả về tính thẩm mỹ và tính thực tiễn trong lập trình giao diện."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "Mô hình kimi-k2-0905-preview có độ dài ngữ cảnh 256k, sở hữu năng lực Agentic Coding mạnh mẽ hơn, mã front-end đẹp mắt và thực dụng hơn, cùng khả năng hiểu ngữ cảnh tốt hơn."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 là mô hình cơ sở kiến trúc MoE với khả năng mã hóa và Agent cực mạnh, tổng số tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra hiệu năng chuẩn về suy luận kiến thức chung, lập trình, toán học, Agent và các loại chính khác, mô hình K2 vượt trội hơn các mô hình mã nguồn mở phổ biến khác."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "Mô hình kimi-k2-0905-preview có độ dài ngữ cảnh 256k, sở hữu năng lực Agentic Coding mạnh mẽ hơn, mã front-end đẹp mắt và thực dụng hơn, cùng khả năng hiểu ngữ cảnh tốt hơn."

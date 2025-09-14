@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, karmaşık diyalog oluşturma ve bağlam anlama görevlerini etkili bir şekilde işleyebilen yenilikçi bir doğal dil işleme modelidir."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0, MoE mimarisi temelinde geliştirilmiş, küçük boyutlu yüksek performanslı büyük bir dil modelidir. Toplamda 16 milyar parametreye sahiptir, ancak her token için yalnızca 1.4 milyar (embedding dışı 789M) aktif hale gelir, bu da son derece yüksek üretim hızını mümkün kılar. Verimli MoE tasarımı ve büyük ölçekli yüksek kaliteli eğitim verileri sayesinde, aktif parametre sayısı sadece 1.4 milyar olmasına rağmen, Ling-mini-2.0, alt görevlerde 10 milyar altı yoğun LLM'ler ve daha büyük ölçekli MoE modelleriyle rekabet edebilecek üst düzey performans sergiler."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
+    "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2, güçlü kodlama ve Ajan yeteneklerine sahip MoE mimarili temel bir modeldir, toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik ve Ajan gibi ana kategorilerde yapılan kıyaslama testlerinde, K2 modeli diğer önde gelen açık kaynak modellerini geride bırakmaktadır."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."

@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 is een MoE-architectuurbasis model met krachtige codeer- en agentcapaciteiten, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model andere toonaangevende open-source modellen."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is een innovatief natuurlijk taalverwerkingsmodel dat efficiënt complexe dialooggeneratie en contextbegripstaken kan verwerken."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4e generatie tekst-naar-beeld modelserie Ultra versie"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 is een klein, hoogwaardig groot taalmodel gebaseerd op de MoE-architectuur. Het heeft in totaal 16 miljard parameters, maar activeert slechts 1,4 miljard per token (non-embedding 789 miljoen), wat zorgt voor een extreem hoge generatie snelheid. Dankzij het efficiënte MoE-ontwerp en grootschalige, hoogwaardige trainingsdata levert Ling-mini-2.0, ondanks slechts 1,4 miljard geactiveerde parameters, toch topprestaties die vergelijkbaar zijn met dense LLM's onder de 10 miljard en grotere MoE-modellen in downstream taken."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 is een MoE-architectuurbasis model met krachtige codeer- en agentcapaciteiten, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model andere toonaangevende open-source modellen."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "Het kimi-k2-0905-preview model heeft een contextlengte van 256k, beschikt over sterkere Agentic Coding-capaciteiten, een opvallender esthetiek en bruikbaarheid van frontend-code, en een beter contextbegrip."
+    "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "Het kimi-k2-0905-preview model heeft een contextlengte van 256k, beschikt over sterkere Agentic Coding-capaciteiten, een opvallender esthetiek en bruikbaarheid van frontend-code, en een beter contextbegrip."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 is een MoE-architectuurbasis model met krachtige codeer- en agentmogelijkheden, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agent-gerelateerde categorieën presteert het K2-model beter dan andere gangbare open-source modellen."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "Het kimi-k2-0905-preview model heeft een contextlengte van 256k, beschikt over sterkere Agentic Coding-capaciteiten, een opvallender esthetiek en bruikbaarheid van frontend-code, en een beter contextbegrip."
