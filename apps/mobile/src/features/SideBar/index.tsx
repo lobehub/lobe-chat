@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { useGlobalStore } from '@/store/global';
+import * as Haptics from 'expo-haptics';
 import { useStyles } from './style';
 
 import Header from './components/Header';
@@ -20,8 +21,14 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       drawerStyle={styles.drawerStyle}
       drawerType="slide"
       hideStatusBarOnOpen={false}
-      onClose={() => setDrawerOpen(false)}
-      onOpen={() => setDrawerOpen(true)}
+      onClose={() => {
+        setDrawerOpen(false);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
+      onOpen={() => {
+        setDrawerOpen(true);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
