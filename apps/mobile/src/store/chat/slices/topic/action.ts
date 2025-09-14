@@ -190,7 +190,7 @@ export const chatTopic: StateCreator<
       enable ? [SWR_USE_FETCH_TOPIC, sessionId] : null,
       async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
       {
-        suspense: true,
+        suspense: false,
         fallbackData: [],
         onSuccess: (topics) => {
           const nextMap = { ...get().topicMaps, [sessionId]: topics };
