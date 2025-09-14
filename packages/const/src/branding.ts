@@ -4,7 +4,7 @@
 
 export const LOBE_CHAT_CLOUD = 'LobeChat Cloud';
 
-export const BRANDING_NAME = 'LobeChat';
+export const BRANDING_NAME = 'InQubatorAI';
 export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = 'LobeHub';

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,9 +14,17 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/main/*"],
-      "~common/*": ["src/common/*"]
+      "@/*": [
+        "src/main/*"
+      ],
+      "~common/*": [
+        "src/common/*"
+      ]
     }
   },
-  "include": ["src/main/**/*", "src/preload/**/*", "electron-builder.js"]
+  "include": [
+    "src/main/**/*",
+    "src/preload/**/*",
+    "electron-builder.js"
+  ]
 }
