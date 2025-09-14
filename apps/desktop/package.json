@@ -59,7 +59,7 @@
     "electron-store": "^8.2.0",
     "electron-vite": "^3.0.0",
     "execa": "^9.5.2",
-    "fix-path": "^4.0.0",
+    "fix-path": "^5.0.0",
     "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.6",
     "just-diff": "^6.0.2",
