@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
+import * as Haptics from 'expo-haptics';
 
 import { useGlobalStore } from '@/store/global';
 import TopicList from './components/TopicList';
@@ -24,8 +25,14 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
       drawerStyle={styles.drawerStyle}
       drawerType="slide"
       hideStatusBarOnOpen={false}
-      onClose={() => setTopicDrawerOpen(false)}
-      onOpen={() => setTopicDrawerOpen(true)}
+      onClose={() => {
+        setTopicDrawerOpen(false);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
+      onOpen={() => {
+        setTopicDrawerOpen(true);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
