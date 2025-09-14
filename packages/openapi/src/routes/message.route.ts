@@ -10,6 +10,7 @@ import {
   MessageIdParamSchema,
   MessagesCountQuerySchema,
   MessagesCreateRequestSchema,
+  MessagesDeleteBatchRequestSchema,
   MessagesListQuerySchema,
 } from '../types/message.type';
 
@@ -91,6 +92,36 @@ MessageRoutes.post(
 
     // 检查是否是回复类型的消息创建
     return controller.handleCreateMessageWithAIReply(c);
+  },
+);
+
+// DELETE /api/v1/messages/:id - 删除单个消息 (需要消息删除权限)
+MessageRoutes.delete(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_DELETE'),
+    'You do not have permission to delete messages',
+  ),
+  zValidator('param', MessageIdParamSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleDeleteMessage(c);
+  },
+);
+
+// DELETE /api/v1/messages - 批量删除消息 (需要消息删除权限)
+MessageRoutes.delete(
+  '/',
+  requireAuth,
+  requireAnyPermission(
+    getAllScopePermissions('MESSAGE_DELETE'),
+    'You do not have permission to delete messages',
+  ),
+  zValidator('json', MessagesDeleteBatchRequestSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleDeleteBatchMessages(c);
   },
 );
 

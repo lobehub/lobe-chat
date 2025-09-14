@@ -5,6 +5,8 @@ import { z } from 'zod';
 
 import { SessionItem, TopicItem, UserItem } from '@/database/schemas';
 
+import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from '.';
+
 // ==================== Message Query Types ====================
 
 export interface MessagesQueryByTopicRequest {
@@ -51,38 +53,22 @@ export const CountByUserRequestSchema = z.object({
 /**
  * 消息列表查询参数
  */
-export interface MessagesListQuery {
-  page?: number;
-  limit?: number;
-  offset?: number;
+export interface MessagesListQuery extends IPaginationQuery {
   topicId?: string;
   sessionId?: string;
   userId?: string;
   role?: 'user' | 'system' | 'assistant' | 'tool';
-  query?: string;
-  sort?: 'createdAt' | 'updatedAt';
-  order?: 'asc' | 'desc';
 }
 
-export const MessagesListQuerySchema = z.object({
-  // 分页参数
-  page: z.number().min(1).nullish().default(1),
-  limit: z.number().min(1).max(100).nullish().default(20),
-  offset: z.number().min(0).nullish(),
-
-  // 过滤参数
-  topicId: z.string().nullish(),
-  sessionId: z.string().nullish(),
-  userId: z.string().nullish(),
-  role: z.enum(['user', 'system', 'assistant', 'tool']).nullish(),
-
-  // 搜索参数
-  query: z.string().nullish(), // 关键词搜索 (替代原来的 search 接口)
-
-  // 排序参数
-  sort: z.enum(['createdAt', 'updatedAt']).nullish().default('createdAt'),
-  order: z.enum(['asc', 'desc']).nullish().default('desc'),
-});
+export const MessagesListQuerySchema = z
+  .object({
+    // 过滤参数
+    topicId: z.string().nullish(),
+    sessionId: z.string().nullish(),
+    userId: z.string().nullish(),
+    role: z.enum(['user', 'system', 'assistant', 'tool']).nullish(),
+  })
+  .extend(PaginationQuerySchema.shape);
 
 // ==================== Message Search Types ====================
 
@@ -145,13 +131,13 @@ export const MessagesCreateRequestSchema = z.object({
   role: z.enum(['user', 'system', 'assistant', 'tool'], { required_error: '角色类型无效' }),
 
   // AI相关字段
-  model: z.string().nullish(), // 使用的模型，改名为model与数据库一致
-  provider: z.string().nullish(), // 提供商，改名为provider与数据库一致
+  model: z.string().nullish(), // 使用的模型
+  provider: z.string().nullish(), // 提供商
 
   // 会话关联
   sessionId: z.string().nullable().nullish(),
-  topicId: z.string().nullable().nullish(), // 改为topicId与数据库一致
-  threadId: z.string().nullable().nullish(), // 线程ID
+  topicId: z.string().nullable().nullish(),
+  threadId: z.string().nullable().nullish(),
 
   // 消息关联
   parentId: z.string().nullable().nullish(), // 父消息ID
@@ -226,6 +212,10 @@ export interface MessageResponseFromDatabase extends Omit<MessageItem, 'files'> 
 export interface MessageResponse extends Omit<MessageResponseFromDatabase, 'filesToMessages'> {
   files: FileItem[] | null;
 }
+
+export type MessageListResponse = PaginationQueryResponse<{
+  messages: MessageResponse[];
+}>;
 
 // ==================== Common Schemas ====================
 

@@ -1,4 +1,5 @@
-import { and, count, desc, eq, ilike, inArray, isNull } from 'drizzle-orm';
+import { and, asc, count, desc, eq, ilike, inArray, isNull } from 'drizzle-orm';
+import { omit } from 'lodash';
 
 import { messages, messagesFiles } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -6,8 +7,10 @@ import { idGenerator } from '@/database/utils/idGenerator';
 import { FileService as CoreFileService } from '@/server/services/file';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
+  MessageListResponse,
   MessageResponse,
   MessageResponseFromDatabase,
   MessagesCountQuery,
@@ -43,12 +46,16 @@ export class MessageService extends BaseService {
    * @returns
    */
   private async formatMessages(
-    messages: MessageResponseFromDatabase[],
+    messages?: MessageResponseFromDatabase[],
   ): Promise<MessageResponse[]> {
+    if (!messages?.length) {
+      return [] as MessageResponse[];
+    }
+
     return await Promise.all(
       messages.map(async (message) => {
         return {
-          ...message,
+          ...omit(message, 'filesToMessages'),
           files: await Promise.all(
             message.filesToMessages?.map(async ({ file }) => {
               if (file.url.startsWith('http')) {
@@ -238,109 +245,74 @@ export class MessageService extends BaseService {
 
   /**
    * 统一的消息列表查询方法
-   * @param query 查询参数
+   * @param request 查询参数
    * @returns 消息列表
    */
-  async getMessages(query: MessagesListQuery): ServiceResult<MessageResponse[]> {
-    this.log('info', '获取消息列表', { query, userId: this.userId });
+  async getMessages(request: MessagesListQuery): ServiceResult<MessageListResponse> {
+    this.log('info', '获取消息列表', { request, userId: this.userId });
 
     try {
-      // 如果有搜索关键词，调用搜索方法
-      if (query.query) {
-        const searchRequest: SearchMessagesByKeywordRequest = {
-          keyword: query.query,
-          limit: query.limit,
-          offset: query.offset || (query.page ? (query.page - 1) * (query.limit || 20) : 0),
-          sessionId: query.sessionId,
-        };
-
-        return await this.searchMessagesByKeyword(searchRequest);
-      }
-
       // 构建查询条件
       const conditions = [];
-      // 最终查询条件中的 userId 列表，因为涉及到多种查询条件，如果用户拥有最高权限时，userId 可能是多个
-      let queryUserId: Set<string> = new Set();
 
       // 校验 session 的归属以及用户有没有消息的读取权限
-      if (query.sessionId) {
+      if (request.sessionId) {
         const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
-          targetSessionId: query.sessionId,
+          targetSessionId: request.sessionId,
         });
 
         if (!permissionResult.isPermitted) {
           throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
         }
 
-        if (permissionResult.condition?.userId) {
-          queryUserId.add(permissionResult.condition.userId);
-        }
-
-        conditions.push(eq(messages.sessionId, query.sessionId));
+        conditions.push(eq(messages.sessionId, request.sessionId));
       }
 
       // 校验 user 的归属以及用户有没有消息的读取权限
-      if (query.userId) {
+      if (request.userId) {
         const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
-          targetUserId: query.userId,
+          targetUserId: request.userId,
         });
 
         if (!permissionResult.isPermitted) {
           throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
         }
 
-        if (permissionResult.condition?.userId) {
-          queryUserId.add(permissionResult.condition.userId);
-        }
-
-        conditions.push(eq(messages.userId, query.userId));
+        conditions.push(eq(messages.userId, request.userId));
       }
 
       // 校验 topic 的归属以及用户有没有消息的读取权限
-      if (query.topicId) {
+      if (request.topicId) {
         const permissionResult = await this.resolveOperationPermission('MESSAGE_READ', {
-          targetTopicId: query.topicId,
+          targetTopicId: request.topicId,
         });
 
         if (!permissionResult.isPermitted) {
           throw this.createAuthorizationError(permissionResult.message || '无权访问消息列表');
         }
 
-        if (permissionResult.condition?.userId) {
-          queryUserId.add(permissionResult.condition.userId);
-        }
-
-        conditions.push(eq(messages.topicId, query.topicId));
+        conditions.push(eq(messages.topicId, request.topicId));
       }
 
-      if (query.role) {
-        conditions.push(eq(messages.role, query.role));
+      if (request.role) {
+        conditions.push(eq(messages.role, request.role));
       }
 
-      if (query.query) {
-        conditions.push(ilike(messages.content, `%${query.query}%`));
-      }
-
-      if (queryUserId.size > 0) {
-        conditions.push(inArray(messages.userId, Array.from(queryUserId)));
+      if (request.keyword) {
+        conditions.push(ilike(messages.content, `%${request.keyword}%`));
       }
 
       // 计算偏移量
-      const offset = query.offset || (query.page ? (query.page - 1) * (query.limit || 20) : 0);
 
-      // 执行查询
-      const messageList = (await this.db.query.messages.findMany({
-        limit: query.limit,
+      const { limit, offset } = processPaginationConditions(request);
+      const whereExpr = conditions.length ? and(...conditions) : undefined;
+
+      // 创建查询语句
+      const listQuery = this.db.query.messages.findMany({
+        limit: limit,
         offset: offset,
-        orderBy:
-          query.order === 'asc'
-            ? query.sort === 'updatedAt'
-              ? messages.updatedAt
-              : messages.createdAt
-            : query.sort === 'updatedAt'
-              ? desc(messages.updatedAt)
-              : desc(messages.createdAt),
-        where: and(...conditions),
+        orderBy: asc(messages.createdAt),
+        where: whereExpr,
         with: {
           filesToMessages: {
             with: {
@@ -349,13 +321,22 @@ export class MessageService extends BaseService {
           },
           translation: true,
         },
-      })) as MessageResponseFromDatabase[];
+      });
 
-      const messageListWithFiles = await this.formatMessages(messageList);
+      const countQuery = this.db.select({ count: count() }).from(messages).where(whereExpr);
+
+      const [messageList, countResult] = await Promise.all([listQuery, countQuery]);
+
+      const messageListWithFiles = await this.formatMessages(
+        messageList as MessageResponseFromDatabase[],
+      );
 
       this.log('info', '获取消息列表完成', { count: messageListWithFiles.length });
 
-      return messageListWithFiles;
+      return {
+        messages: messageListWithFiles,
+        total: countResult[0]?.count || 0,
+      };
     } catch (error) {
       this.handleServiceError(error, '获取消息列表');
     }
@@ -501,11 +482,9 @@ export class MessageService extends BaseService {
    * @param messageData 用户消息数据
    * @returns 用户消息ID和AI回复消息ID
    */
-  async createMessageWithAIReply(messageData: MessagesCreateRequest): ServiceResult<{
-    aiReplyContent: string;
-    aiReplyId: string;
-    userMessageId: string;
-  }> {
+  async createMessageWithAIReply(
+    messageData: MessagesCreateRequest,
+  ): ServiceResult<MessageResponse | null | undefined> {
     this.log('info', '创建消息并生成AI回复', {
       role: messageData.role,
       sessionId: messageData.sessionId,
@@ -580,19 +559,11 @@ export class MessageService extends BaseService {
           userMessageId: userMessage.id,
         });
 
-        return {
-          aiReplyContent,
-          aiReplyId: aiReply.id,
-          userMessageId: userMessage.id,
-        };
+        return this.getMessageById(aiReply.id);
       }
 
-      // 如果不是用户消息，只返回消息ID
-      return {
-        aiReplyContent: '',
-        aiReplyId: '',
-        userMessageId: userMessage.id,
-      };
+      // 如果不是用户消息，返回空
+      return;
     } catch (error) {
       this.handleServiceError(error, '创建消息并生成AI回复');
     }
@@ -640,6 +611,84 @@ export class MessageService extends BaseService {
         topicId,
       });
       return [];
+    }
+  }
+
+  /**
+   * 删除单个消息
+   * @param messageId 消息ID
+   * @returns Promise<void>
+   */
+  async deleteMessage(messageId: string): Promise<void> {
+    try {
+      // 权限校验
+      const permissionResult = await this.resolveOperationPermission('MESSAGE_DELETE', {
+        targetMessageId: messageId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限删除该消息');
+      }
+
+      // 构建删除条件
+      const whereConditions = [eq(messages.id, messageId)];
+
+      // 应用权限条件
+      if (permissionResult.condition?.userId) {
+        whereConditions.push(eq(messages.userId, permissionResult.condition.userId));
+      }
+
+      // 使用事务删除消息、消息与文件的关联关系
+      await this.db.transaction(async (trx) => {
+        await trx.delete(messages).where(and(...whereConditions));
+        await trx.delete(messagesFiles).where(eq(messagesFiles.messageId, messageId));
+      });
+
+      this.log('info', '消息删除成功', { messageId });
+    } catch (error) {
+      return this.handleServiceError(error, '删除消息');
+    }
+  }
+
+  /**
+   * 批量删除消息
+   * @param messageIds 消息ID数组
+   * @returns Promise<{ success: number; failed: number; errors: any[] }>
+   */
+  async deleteBatchMessages(messageIds: string[]): Promise<{
+    errors: Array<{ error: string; messageId: string }>;
+    failed: number;
+    success: number;
+  }> {
+    try {
+      const result = {
+        errors: [] as Array<{ error: string; messageId: string }>,
+        failed: 0,
+        success: 0,
+      };
+
+      for (const messageId of messageIds) {
+        try {
+          await this.deleteMessage(messageId);
+          result.success++;
+        } catch (error) {
+          result.failed++;
+          result.errors.push({
+            error: error instanceof Error ? error.message : String(error),
+            messageId,
+          });
+        }
+      }
+
+      this.log('info', '批量删除消息完成', {
+        failed: result.failed,
+        success: result.success,
+        total: messageIds.length,
+      });
+
+      return result;
+    } catch (error) {
+      return this.handleServiceError(error, '批量删除消息');
     }
   }
 }

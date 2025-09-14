@@ -5,6 +5,7 @@ import { MessageService } from '../services/message.service';
 import {
   MessagesCountQuery,
   MessagesCreateRequest,
+  MessagesDeleteBatchRequest,
   MessagesListQuery,
 } from '../types/message.type';
 
@@ -43,19 +44,11 @@ export class MessageController extends BaseController {
   async handleGetMessages(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const rawQuery = this.getQuery(c);
-
-      // 处理数字类型的查询参数 (查询参数都是字符串，需要转换)
-      const processedQuery: MessagesListQuery = {
-        ...rawQuery,
-        limit: rawQuery.limit ? parseInt(rawQuery.limit as string, 10) : undefined,
-        offset: rawQuery.offset ? parseInt(rawQuery.offset as string, 10) : undefined,
-        page: rawQuery.page ? parseInt(rawQuery.page as string, 10) : undefined,
-      };
+      const request = this.getQuery<MessagesListQuery>(c);
 
       const db = await this.getDatabase();
       const messageService = new MessageService(db, userId);
-      const result = await messageService.getMessages(processedQuery);
+      const result = await messageService.getMessages(request);
 
       return this.success(c, result, '获取消息列表成功');
     } catch (error) {
@@ -122,6 +115,46 @@ export class MessageController extends BaseController {
       const result = await messageService.createMessageWithAIReply(messageData);
 
       return this.success(c, result, '创建消息并生成AI回复成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 删除单个消息
+   * DELETE /api/v1/messages/:id
+   * Params: { id: string }
+   */
+  async handleDeleteMessage(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const { id } = this.getParams<{ id: string }>(c);
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      await messageService.deleteMessage(id);
+
+      return this.success(c, null, '删除消息成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量删除消息
+   * DELETE /api/v1/messages
+   * Body: { messageIds: string[] }
+   */
+  async handleDeleteBatchMessages(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const { messageIds } = (await this.getBody<MessagesDeleteBatchRequest>(c))!;
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const result = await messageService.deleteBatchMessages(messageIds);
+
+      return this.success(c, result, '批量删除消息成功');
     } catch (error) {
       return this.handleError(c, error);
     }

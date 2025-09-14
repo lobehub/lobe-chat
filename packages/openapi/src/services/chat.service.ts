@@ -1,9 +1,10 @@
+import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
+
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
 import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 
 import { BaseService } from '../common/base.service';
 import { NO_THINKING_CHAT_OPTIONS } from '../constant/chat';
@@ -99,11 +100,7 @@ export class ChatService extends BaseService {
 
     const aiProviderConfigs = await this.db.query.aiProviders.findMany({
       where: (aiProviders, { eq, and }) =>
-        and(
-          eq(aiProviders.userId, this.userId!),
-          eq(aiProviders.id, provider),
-          eq(aiProviders.enabled, true),
-        ),
+        and(eq(aiProviders.userId, this.userId!), eq(aiProviders.id, provider)),
     });
 
     if (!aiProviderConfigs || aiProviderConfigs.length === 0) {
