@@ -54,6 +54,14 @@ export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
   provider: string;
 };
 
+// Instance-level chat completion hooks that can be passed via runtime constructor options
+export type InstanceChatCompletionOptions<T extends Record<string, any> = any> = {
+  preProcessPayload?: (
+    payload: ChatStreamPayload,
+    options: ConstructorOptions<T>,
+  ) => ChatStreamPayload;
+};
+
 export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
     client: any,
@@ -234,7 +242,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         const instancePreProcessPayload = (this._options as any).chatCompletion?.preProcessPayload;
         let processedPayload = payload;
         if (instancePreProcessPayload) {
-          processedPayload = instancePreProcessPayload(payload, this._options);
+          try {
+            processedPayload = instancePreProcessPayload(payload, this._options);
+          } catch {
+            // fallback to original payload on preprocessing error
+            processedPayload = payload;
+          }
         }
         
         // 再进行工厂级处理
@@ -245,9 +258,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
               stream: processedPayload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
-        // new openai Response API
         if ((postPayload as any).apiMode === 'responses') {
-          return this.handleResponseAPIMode(payload, options);
+          return this.handleResponseAPIMode(processedPayload, options);
         }
 
         const messages = await convertOpenAIMessages(postPayload.messages);
@@ -261,7 +273,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         };
 
         if (customClient?.createChatCompletionStream) {
-          response = customClient.createChatCompletionStream(this.client, payload, this) as any;
+          response = customClient.createChatCompletionStream(this.client, processedPayload, this) as any;
         } else {
           const finalPayload = {
             ...postPayload,
@@ -525,16 +537,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     ): Promise<Response> {
       const inputStartAt = Date.now();
 
-      // 先进行实例级预处理
-      const instancePreProcessPayload = (this._options as any).chatCompletion?.preProcessPayload;
-      let processedPayload = payload;
-      if (instancePreProcessPayload) {
-        processedPayload = instancePreProcessPayload(payload, this._options);
-      }
-
       const { messages, reasoning_effort, tools, reasoning, ...res } = responses?.handlePayload
-        ? (responses?.handlePayload(processedPayload, this._options) as ChatStreamPayload)
-        : processedPayload;
+        ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
+        : payload;
 
       // remove penalty params
       delete res.apiMode;
