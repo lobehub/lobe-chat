@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text, Alert, InteractionManager } from 'react-native';
 
 import { useSessionStore } from '@/store/session';
 import { useStyles } from './style';
@@ -74,7 +74,9 @@ export default function SideBar() {
                       onPress: () => {
                         removeSession(session.id).then(() => {
                           Toast.success(t('status.success', { ns: 'common' }));
-                          toggleDrawer();
+                          InteractionManager.runAfterInteractions(() => {
+                            toggleDrawer();
+                          });
                         });
                       },
                       style: 'destructive',
