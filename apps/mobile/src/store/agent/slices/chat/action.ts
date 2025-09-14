@@ -182,7 +182,7 @@ export const createChatSlice: StateCreator<
       ([, id]: string[]) => agentService.getFilesAndKnowledgeBases(id),
       {
         fallbackData: [],
-        suspense: true,
+        suspense: false,
       },
     );
   },
