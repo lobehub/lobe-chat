@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 是一款具備超強程式碼和 Agent 能力的 MoE 架構基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學、Agent 等主要類別的基準性能測試中，K2 模型的性能超過其他主流開源模型。"
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最強大的版本。它是一款頂尖的混合專家（MoE）語言模型，擁有 1 兆的總參數和 320 億的激活參數。該模型的主要特性包括：增強的智能體編碼智能，在公開基準測試和真實世界的編碼智能體任務中表現出顯著的性能提升；改進的前端編碼體驗，在前端程式設計的美觀性和實用性方面均有進步。"
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview 是一款獨具創新的自然語言處理模型，能夠高效處理複雜的對話生成與上下文理解任務。"
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 第四代文字轉圖像模型系列 超級版"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 是一款基於 MoE 架構的小尺寸高效能大型語言模型。它擁有 16B 總參數，但每個 token 僅激活 1.4B（non-embedding 789M），從而實現了極高的生成速度。得益於高效的 MoE 設計與大規模高品質訓練資料，儘管激活參數僅為 1.4B，Ling-mini-2.0 依然在下游任務中展現出可媲美 10B 以下 dense LLM 及更大規模 MoE 模型的頂尖性能。"
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 是一款具備超強程式碼和 Agent 能力的 MoE 架構基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學、Agent 等主要類別的基準性能測試中，K2 模型的性能超過其他主流開源模型。"
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
+    "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最強大的版本。它是一款頂尖的混合專家（MoE）語言模型，擁有 1 兆的總參數和 320 億的激活參數。該模型的主要特性包括：增強的智能體編碼智能，在公開基準測試和真實世界的編碼智能體任務中表現出顯著的性能提升；改進的前端編碼體驗，在前端程式設計的美觀性和實用性方面均有進步。"
   },
   "moonshotai/kimi-k2-0905": {
     "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 是一款具備超強程式碼與代理能力的 MoE 架構基礎模型，總參數量達 1T，啟用參數 32B。在通用知識推理、程式設計、數學、代理等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"

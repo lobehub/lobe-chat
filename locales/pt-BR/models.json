@@ -290,6 +290,9 @@
   "Pro/moonshotai/Kimi-K2-Instruct": {
     "description": "Kimi K2 é um modelo base com arquitetura MoE e capacidades avançadas de código e agente, com 1 trilhão de parâmetros totais e 32 bilhões ativados. Em testes de desempenho em raciocínio geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
   },
+  "Pro/moonshotai/Kimi-K2-Instruct-0905": {
+    "description": "Kimi K2-Instruct-0905 é a versão mais recente e poderosa do Kimi K2. Trata-se de um modelo de linguagem de especialistas mistos (MoE) de ponta, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. As principais características deste modelo incluem: inteligência aprimorada para codificação de agentes, demonstrando melhorias significativas em testes de referência públicos e em tarefas reais de codificação de agentes; experiência de codificação front-end melhorada, com avanços tanto na estética quanto na funcionalidade da programação front-end."
+  },
   "QwQ-32B-Preview": {
     "description": "O QwQ-32B-Preview é um modelo de processamento de linguagem natural inovador, capaz de lidar eficientemente com tarefas complexas de geração de diálogos e compreensão de contexto."
   },
@@ -1778,6 +1781,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Série de modelos de texto para imagem da 4ª geração Imagen, versão Ultra"
   },
+  "inclusionAI/Ling-mini-2.0": {
+    "description": "Ling-mini-2.0 é um modelo de linguagem grande de alto desempenho e pequeno porte baseado na arquitetura MoE. Ele possui 16 bilhões de parâmetros totais, mas ativa apenas 1,4 bilhão por token (789 milhões não-embedding), alcançando assim uma velocidade de geração extremamente alta. Graças ao design eficiente do MoE e a um grande volume de dados de treinamento de alta qualidade, apesar de ativar apenas 1,4 bilhão de parâmetros, o Ling-mini-2.0 ainda apresenta desempenho de ponta em tarefas downstream, comparável a modelos dense LLM abaixo de 10 bilhões e a modelos MoE de maior escala."
+  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferece soluções de diálogo inteligente em múltiplos cenários."
   },
@@ -2214,13 +2220,10 @@
     "description": "Kimi K2 é um modelo base com arquitetura MoE e capacidades avançadas de código e agente, com 1 trilhão de parâmetros totais e 32 bilhões ativados. Em testes de desempenho em raciocínio geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
   },
   "moonshotai/Kimi-K2-Instruct-0905": {
-    "description": "O modelo kimi-k2-0905-preview possui comprimento de contexto de 256k, com capacidades aprimoradas de Agentic Coding, maior estética e praticidade do código front-end, além de melhor compreensão do contexto."
+    "description": "Kimi K2-Instruct-0905 é a versão mais recente e poderosa do Kimi K2. Trata-se de um modelo de linguagem de especialistas mistos (MoE) de ponta, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. As principais características deste modelo incluem: inteligência aprimorada para codificação de agentes, demonstrando melhorias significativas em testes de referência públicos e em tarefas reais de codificação de agentes; experiência de codificação front-end melhorada, com avanços tanto na estética quanto na funcionalidade da programação front-end."
   },
   "moonshotai/kimi-k2-0905": {
     "description": "O modelo kimi-k2-0905-preview possui comprimento de contexto de 256k, com capacidades aprimoradas de Agentic Coding, maior estética e praticidade do código front-end, além de melhor compreensão do contexto."
-  },
-  "moonshotai/kimi-k2-instruct": {
-    "description": "kimi-k2 é um modelo base com arquitetura MoE que possui capacidades avançadas de código e agente, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. Nos testes de desempenho de referência em categorias principais como raciocínio de conhecimento geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "O modelo kimi-k2-0905-preview possui comprimento de contexto de 256k, com capacidades aprimoradas de Agentic Coding, maior estética e praticidade do código front-end, além de melhor compreensão do contexto."
