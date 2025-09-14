@@ -108,7 +108,7 @@ export class SessionService extends BaseService {
         .orderBy(desc(sessions.updatedAt));
 
       // 分页参数
-      const listQuery = limit && offset ? baseListQuery.limit(limit).offset(offset) : baseListQuery;
+      const listQuery = limit ? baseListQuery.limit(limit).offset(offset!) : baseListQuery;
 
       // 构建计数查询
       const countQuery = this.db

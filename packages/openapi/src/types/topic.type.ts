@@ -2,17 +2,19 @@ import { z } from 'zod';
 
 import { TopicItem, UserItem } from '@/database/schemas';
 
+import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from '.';
+
 // ==================== Topic Query Types ====================
 
-export interface TopicListQuery {
-  keyword?: string;
+export interface TopicListQuery extends IPaginationQuery {
   sessionId?: string; // 支持会话过滤
 }
 
-export const TopicListQuerySchema = z.object({
-  keyword: z.string().nullish(),
-  sessionId: z.string().nullish(), // 支持通过查询参数过滤会话
-});
+export const TopicListQuerySchema = z
+  .object({
+    sessionId: z.string().nullish(), // 支持通过查询参数过滤会话
+  })
+  .extend(PaginationQuerySchema.shape);
 
 // ==================== Topic CRUD Types ====================
 
@@ -27,10 +29,12 @@ export const TopicCreateRequestSchema = z.object({
 });
 
 export interface TopicUpdateRequest {
+  favorite?: boolean;
   title: string;
 }
 
 export const TopicUpdateRequestSchema = z.object({
+  favorite: z.boolean().optional(),
   title: z.string().min(1, '标题不能为空'),
 });
 
@@ -40,6 +44,13 @@ export interface TopicResponse extends TopicItem {
   messageCount: number;
   user: UserItem;
 }
+
+/**
+ * Topic 列表响应类型
+ */
+export type TopicListResponse = PaginationQueryResponse<{
+  topics: TopicResponse[];
+}>;
 
 // ==================== Common Schemas ====================
 

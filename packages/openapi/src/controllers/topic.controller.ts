@@ -18,7 +18,7 @@ export class TopicController extends BaseController {
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
 
-      const topics = await topicService.getTopicsBySessionId(request);
+      const topics = await topicService.getTopics(request);
 
       return this.success(c, topics, '获取话题列表成功');
     } catch (error) {
