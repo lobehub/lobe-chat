@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-09-14",
+    "version": "1.128.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-14",
+    "version": "1.128.6"
+  },
+  {
     "children": {
       "fixes": ["Google stream error unable to abort request."]
     },
