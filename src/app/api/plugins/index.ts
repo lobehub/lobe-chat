@@ -4,9 +4,9 @@ const router = express.Router();
 
 // Example plugin registry
 const plugins = [
-  { name: 'WebSearch', enabled: true, description: 'Search the web for information.' },
-  { name: 'Calculator', enabled: false, description: 'Perform calculations.' },
-  { name: 'Weather', enabled: false, description: 'Get current weather info.' },
+  { description: 'Search the web for information.', enabled: true, name: 'WebSearch' },
+  { description: 'Perform calculations.', enabled: false, name: 'Calculator' },
+  { description: 'Get current weather info.', enabled: false, name: 'Weather' },
 ];
 
 // List plugins
@@ -19,7 +19,7 @@ router.post('/toggle', (req, res) => {
   const { name, enabled } = req.body;
   const plugin = plugins.find(p => p.name === name);
   if (plugin) plugin.enabled = enabled;
-  res.json({ success: !!plugin, plugins });
+  res.json({ plugins, success: !!plugin });
 });
 
 // Invoke plugin (stub)

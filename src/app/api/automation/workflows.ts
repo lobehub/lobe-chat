@@ -3,20 +3,20 @@ import { NextApiRequest, NextApiResponse } from 'next';
 // Example in-memory automation workflow store
 let automationWorkflows = [
   {
+    actions: ['Generate Report', 'Send Email'],
     id: 1,
     name: 'Daily Report',
-    trigger: 'schedule',
     schedule: '0 8 * * *',
-    actions: ['Generate Report', 'Send Email'],
     status: 'Active',
+    trigger: 'schedule',
   },
   {
+    actions: ['Send Welcome Email', 'Assign Onboarding'],
+    event: 'user.created',
     id: 2,
     name: 'On New User',
-    trigger: 'event',
-    event: 'user.created',
-    actions: ['Send Welcome Email', 'Assign Onboarding'],
     status: 'Active',
+    trigger: 'event',
   },
 ];
 

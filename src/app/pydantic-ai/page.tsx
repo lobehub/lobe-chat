@@ -1,26 +1,29 @@
 
+
 import React, { useState } from 'react';
+
+// Handler functions moved to top-level scope for lint compliance
+function handleCreateAgent() { /* TODO: Implement agent creation */ }
+function handleDeployAgent() { /* TODO: Implement agent deployment */ }
+function handleScheduleTask() { /* TODO: Implement scheduling */ }
 
 const PydanticAIPage: React.FC = () => {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   // Agent management state
-  const [agents, setAgents] = useState([]);
-  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [agents] = useState([]);
   // Scheduling state
-  const [schedules, setSchedules] = useState([]);
+  const [schedules] = useState([]);
   // History tracking state
-  const [history, setHistory] = useState([]);
+  const [history] = useState([]);
+
 
   // Placeholder handlers
-  const handleLogin = () => setIsAuthenticated(true);
-  const handleLogout = () => setIsAuthenticated(false);
-  const handleCreateAgent = () => {/* TODO: Implement agent creation */};
-  const handleDeployAgent = () => {/* TODO: Implement agent deployment */};
-  const handleScheduleTask = () => {/* TODO: Implement scheduling */};
+  function handleLogin() { setIsAuthenticated(true); }
+  function handleLogout() { setIsAuthenticated(false); }
 
   return (
-    <div style={{ padding: 24, maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ margin: '0 auto', maxWidth: 1200, padding: 24 }}>
       <h1>Pydantic-AI Supervisor Agent</h1>
 
       {/* Authentication Section */}
@@ -29,24 +32,24 @@ const PydanticAIPage: React.FC = () => {
         {isAuthenticated ? (
           <div>
             <span>Logged in as Supervisor</span>
-            <button onClick={handleLogout} style={{ marginLeft: 16 }}>Logout</button>
+            <button onClick={handleLogout} style={{ marginLeft: 16 }} type="button">Logout</button>
           </div>
         ) : (
-          <button onClick={handleLogin}>Login as Supervisor</button>
+          <button onClick={handleLogin} type="button">Login as Supervisor</button>
         )}
       </section>
 
       {/* Agent Management Section */}
       <section style={{ marginBottom: 32 }}>
         <h2>Agent & Subagent Management</h2>
-        <button onClick={handleCreateAgent}>Create New Agent</button>
+  <button onClick={handleCreateAgent} type="button">Create New Agent</button>
         <ul>
           {agents.map((agent: any, idx: number) => (
             <li key={agent.id || idx}>
               <span>{agent.name || 'Unnamed Agent'}</span>
-              <button onClick={() => setSelectedAgent(agent)} style={{ marginLeft: 8 }}>Edit</button>
-              <button onClick={handleDeployAgent} style={{ marginLeft: 8 }}>Deploy</button>
-              <button style={{ marginLeft: 8 }}>Delete</button>
+              <button style={{ marginLeft: 8 }} type="button">Edit</button>
+              <button onClick={handleDeployAgent} style={{ marginLeft: 8 }} type="button">Deploy</button>
+              <button style={{ marginLeft: 8 }} type="button">Delete</button>
             </li>
           ))}
         </ul>
@@ -55,7 +58,7 @@ const PydanticAIPage: React.FC = () => {
       {/* Scheduling Section */}
       <section style={{ marginBottom: 32 }}>
         <h2>Scheduling</h2>
-        <button onClick={handleScheduleTask}>Schedule Task</button>
+  <button onClick={handleScheduleTask} type="button">Schedule Task</button>
         <ul>
           {schedules.map((schedule: any, idx: number) => (
             <li key={schedule.id || idx}>{schedule.description || 'Scheduled Task'}</li>

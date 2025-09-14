@@ -22,9 +22,9 @@ export default function SupervisorOrchestrationPanel() {
 
   const sendMessage = async (from: string, to: string, content: string) => {
     const res = await fetch('/api/agents/orchestrate/message', {
-      method: 'POST',
+      body: JSON.stringify({ content, from, to }),
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to, content }),
+      method: 'POST',
     });
     const data = await res.json();
     setMessages((prev) => [...prev, data]);
@@ -47,22 +47,6 @@ export default function SupervisorOrchestrationPanel() {
     recognition.start();
   };
 
-
-
-// Voice output (text-to-speech)
-
-
-// Voice output (text-to-speech)
-// Move to top-level scope to satisfy linter and ensure correct usage
-function speak(text: string) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    alert('Text-to-speech not supported');
-    return;
-  }
-  const utter = new window.SpeechSynthesisUtterance(text);
-  window.speechSynthesis.speak(utter);
-}
-
   return (
     <div>
       <h3>Supervisor Agent Orchestration</h3>
@@ -70,7 +54,7 @@ function speak(text: string) {
         {agents.map((from) => (
           agents.map((to) => (
             from !== to && (
-              <Button key={from + to} type="primary" onClick={() => sendMessage(from, to, `Hello from ${from} to ${to}`)}>
+              <Button key={from + to} onClick={() => sendMessage(from, to, `Hello from ${from} to ${to}`)} type="primary">
                 {`Send from ${from} to ${to}`}
               </Button>
             )
@@ -79,21 +63,21 @@ function speak(text: string) {
       </div>
       <div style={{ marginTop: 24 }}>
         <h4>Voice Command to Supervisor</h4>
-        <Button type="primary" onClick={startListening} disabled={isListening} style={{ marginRight: 8 }}>
+        <Button disabled={isListening} onClick={startListening} style={{ marginRight: 8 }} type="primary">
           {isListening ? 'Listening...' : 'Start Voice Command'}
         </Button>
         <Input
-          placeholder="Or type your command"
-          value={voiceInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVoiceInput(e.target.value)}
-          style={{ width: 320, marginRight: 8 }}
+          placeholder="Or type your command"
+          style={{ marginRight: 8, width: 320 }}
+          value={voiceInput}
         />
         <Button
-          type="default"
           onClick={() => {
             if (voiceInput) sendMessage('user', 'supervisor', voiceInput);
             setVoiceInput('');
           }}
+          type="default"
         >
           Send to Supervisor
         </Button>
@@ -105,7 +89,7 @@ function speak(text: string) {
             <li key={idx}>
               {msg.from} → {msg.to}: {msg.content}
               {msg.to === 'user' && (
-                <Button type="link" onClick={() => speak(msg.content)} style={{ marginLeft: 8 }}>
+                <Button onClick={() => speak(msg.content)} style={{ marginLeft: 8 }} type="link">
                   🔊 Listen
                 </Button>
               )}

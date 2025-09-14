@@ -22,7 +22,7 @@ export default function RAGConfigPanel() {
       ) : (
         <div>Loading...</div>
       )}
-      <Button type="primary" style={{ marginTop: 16 }}>
+      <Button style={{ marginTop: 16 }} type="primary">
         Edit Config (coming soon)
       </Button>
     </div>

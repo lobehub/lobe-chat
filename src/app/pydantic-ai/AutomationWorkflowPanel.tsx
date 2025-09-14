@@ -5,7 +5,7 @@ const { Option } = Select;
 
 export default function AutomationWorkflowPanel() {
   const [workflows, setWorkflows] = useState<any[]>([]);
-  const [form, setForm] = useState({ name: '', trigger: 'schedule', schedule: '', event: '', actions: '' });
+  const [form, setForm] = useState({ actions: '', event: '', name: '', schedule: '', trigger: 'schedule' });
 
   useEffect(() => {
     fetch('/api/automation/workflows')
@@ -15,11 +15,11 @@ export default function AutomationWorkflowPanel() {
 
   const createWorkflow = async () => {
     await fetch('/api/automation/workflows', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, actions: form.actions.split(',').map(a => a.trim()) }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
     });
-    setForm({ name: '', trigger: 'schedule', schedule: '', event: '', actions: '' });
+    setForm({ actions: '', event: '', name: '', schedule: '', trigger: 'schedule' });
     fetch('/api/automation/workflows').then(res => res.json()).then(setWorkflows);
   };
 
@@ -28,41 +28,41 @@ export default function AutomationWorkflowPanel() {
       <h3>Automation Workflows</h3>
       <div style={{ marginBottom: 24 }}>
         <Input
-          placeholder="Workflow Name"
-          value={form.name}
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+          placeholder="Workflow Name"
           style={{ marginBottom: 8 }}
+          value={form.name}
         />
         <Select
-          value={form.trigger}
           onChange={val => setForm(f => ({ ...f, trigger: val }))}
-          style={{ width: 160, marginBottom: 8 }}
+          style={{ marginBottom: 8, width: 160 }}
+          value={form.trigger}
         >
           <Option value="schedule">Schedule</Option>
           <Option value="event">Event</Option>
         </Select>
         {form.trigger === 'schedule' ? (
           <Input
-            placeholder="Cron Schedule (e.g. 0 8 * * *)"
-            value={form.schedule}
             onChange={e => setForm(f => ({ ...f, schedule: e.target.value }))}
+            placeholder="Cron Schedule (e.g. 0 8 * * *)"
             style={{ marginBottom: 8 }}
+            value={form.schedule}
           />
         ) : (
           <Input
-            placeholder="Event Name (e.g. user.created)"
-            value={form.event}
             onChange={e => setForm(f => ({ ...f, event: e.target.value }))}
+            placeholder="Event Name (e.g. user.created)"
             style={{ marginBottom: 8 }}
+            value={form.event}
           />
         )}
         <Input
-          placeholder="Actions (comma separated)"
-          value={form.actions}
           onChange={e => setForm(f => ({ ...f, actions: e.target.value }))}
+          placeholder="Actions (comma separated)"
           style={{ marginBottom: 8 }}
+          value={form.actions}
         />
-        <Button type="primary" onClick={createWorkflow}>Create Workflow</Button>
+        <Button onClick={createWorkflow} type="primary">Create Workflow</Button>
       </div>
       <ul>
         {workflows.map(wf => (

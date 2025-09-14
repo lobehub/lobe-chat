@@ -7,7 +7,7 @@ const UsersPage: React.FC = () => {
   const { data: users, error } = useSWR('/api/users', fetcher);
 
   return (
-    <div style={{ padding: 24, maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ margin: '0 auto', maxWidth: 1200, padding: 24 }}>
       <h1>User Directory</h1>
       {error && <div style={{ color: 'red' }}>Failed to load users</div>}
       {!users ? (

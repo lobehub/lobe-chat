@@ -7,7 +7,7 @@ const TenantsPage: React.FC = () => {
   const { data: tenants, error } = useSWR('/api/tenants', fetcher);
 
   return (
-    <div style={{ padding: 24, maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ margin: '0 auto', maxWidth: 1200, padding: 24 }}>
       <h1>Tenant Management</h1>
       <button type="button">Create New Tenant</button>
       {error && <div style={{ color: 'red' }}>Failed to load tenants</div>}

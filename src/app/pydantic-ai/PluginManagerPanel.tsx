@@ -12,9 +12,9 @@ export default function PluginManagerPanel() {
 
   const togglePlugin = async (name: string, enabled: boolean) => {
     await fetch('/api/plugins/toggle', {
-      method: 'POST',
+      body: JSON.stringify({ enabled, name }),
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, enabled }),
+      method: 'POST',
     });
     setPlugins(plugins => plugins.map(p => p.name === name ? { ...p, enabled } : p));
   };
