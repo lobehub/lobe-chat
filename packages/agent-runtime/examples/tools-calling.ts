@@ -27,7 +27,7 @@ async function* openaiRuntime(payload: any) {
 
     if (delta?.content) {
       content += delta.content;
-      yield { content: delta.content };
+      yield { content };
     }
 
     if (delta?.tool_calls) {
