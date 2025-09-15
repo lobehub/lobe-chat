@@ -199,14 +199,10 @@ export const useStyles = createStyles(
       icon: {
         marginRight: isCircle ? 0 : token.marginXS,
       },
-      loading: {
-        marginRight: isCircle ? 0 : token.marginXS,
-      },
       text: {
         color: typeStyles.textColor,
         fontSize: sizeStyles.fontSize,
         textAlign: 'center',
-        textDecorationLine: variant === 'link' ? 'underline' : 'none',
       },
     };
   },

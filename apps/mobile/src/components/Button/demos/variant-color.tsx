@@ -15,7 +15,7 @@ const VariantColorDemo = () => {
             Solid
           </Button>
 
-          <Button color={c} size="small" variant="tlined">
+          <Button color={c} size="small" variant="outlined">
             Outlined
           </Button>
 

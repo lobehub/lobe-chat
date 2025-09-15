@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Button, Space } from '@/components';
+import { CirclePower } from 'lucide-react-native';
 
 const LoadingDemo = () => {
   const [loading, setLoading] = useState(false);
@@ -13,13 +14,19 @@ const LoadingDemo = () => {
 
   return (
     <Space size={[8, 16]} wrap>
-      <Button color="primary" loading={loading} onPress={handleStartLoading} variant="filled">
+      <Button
+        color="primary"
+        icon={<CirclePower />}
+        loading={loading}
+        onPress={handleStartLoading}
+        variant="filled"
+      >
         Click to Load
       </Button>
       <Button color="default" loading variant="solid">
         Solid
       </Button>
-      <Button color="blue" loading variant="tlined">
+      <Button color="blue" loading variant="outlined">
         Outlined
       </Button>
       <Button color="purple" loading variant="dashed">

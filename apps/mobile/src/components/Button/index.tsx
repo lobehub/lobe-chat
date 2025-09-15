@@ -2,13 +2,15 @@ import React from 'react';
 import {
   TouchableOpacity,
   Text,
-  ActivityIndicator,
   TouchableOpacityProps,
   TextStyle,
   ViewStyle,
   StyleProp,
   View,
+  Animated,
+  Easing,
 } from 'react-native';
+import { LoaderCircle } from 'lucide-react-native';
 
 import {
   useStyles,
@@ -113,6 +115,35 @@ const Button: React.FC<ButtonProps> = ({
     variant: mapped.variant,
   });
 
+  // Infinite spin animation for loading indicator
+  const rotationProgress = React.useRef(new Animated.Value(0)).current;
+  const rotationAnimationRef = React.useRef<Animated.CompositeAnimation | null>(null);
+  const spin = rotationProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  React.useEffect(() => {
+    if (loading) {
+      rotationProgress.setValue(0);
+      rotationAnimationRef.current = Animated.loop(
+        Animated.timing(rotationProgress, {
+          duration: 1000,
+          easing: Easing.linear,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      );
+      rotationAnimationRef.current.start();
+    } else {
+      rotationAnimationRef.current?.stop?.();
+    }
+
+    return () => {
+      rotationAnimationRef.current?.stop?.();
+    };
+  }, [loading, rotationProgress]);
+
   const handlePress = () => {
     if (!disabled && !loading && onPress) {
       onPress();
@@ -153,12 +184,13 @@ const Button: React.FC<ButtonProps> = ({
       testID="button"
     >
       {loading && (
-        <ActivityIndicator
-          color={styles.text.color}
-          size="small"
-          style={styles.loading}
-          testID="loading-indicator"
-        />
+        <Animated.View style={[styles.icon, { transform: [{ rotate: spin }] }]}>
+          <LoaderCircle
+            color={styles.text.color}
+            size={styles.text.fontSize}
+            testID="loading-circle"
+          />
+        </Animated.View>
       )}
       {renderIcon()}
       {children ? <Text style={[styles.text, textStyle]}>{children}</Text> : undefined}
