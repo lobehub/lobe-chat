@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
   boolean,
+  index,
   jsonb,
   pgTable,
   primaryKey,
@@ -61,6 +62,8 @@ export const agents = pgTable(
   },
   (t) => ({
     clientIdUnique: uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
+    titleIndex: index('agents_title_idx').on(t.title),
+    descriptionIndex: index('agents_description_idx').on(t.description),
   }),
 );
 

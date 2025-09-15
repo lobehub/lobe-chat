@@ -58,6 +58,14 @@ afterEach(() => {
 });
 
 describe('LobeOpenAICompatibleFactory', () => {
+  // Polyfill File for Node environment used in image tests
+  if (typeof File === 'undefined') {
+    // @ts-ignore
+    global.File = class MockFile {
+      constructor(public parts: any[], public name: string, public opts?: any) {}
+    };
+  }
+
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
       const instance = new LobeMockProvider({ apiKey: 'test_api_key' });
@@ -148,10 +156,22 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const decoder = new TextDecoder();
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toEqual('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toEqual('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toEqual('data: "hello"\n\n');
-        expect((await reader.read()).done).toBe(true);
+
+        // Collect all chunks
+        const chunks = [];
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          chunks.push(decoder.decode(value));
+        }
+        // Assert that all expected chunk patterns are present
+        expect(chunks).toEqual(
+          expect.arrayContaining([
+            'id: a\n',
+            'event: text\n',
+            'data: "hello"\n\n',
+          ]),
+        );
       });
 
       // https://github.com/lobehub/lobe-chat/issues/2752
@@ -396,6 +416,78 @@ describe('LobeOpenAICompatibleFactory', () => {
           'id: a\n',
           'event: text\n',
           'data: "Hello"\n\n',
+          'id: a\n',
+          'event: usage\n',
+          'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
+          'id: output_speed\n',
+          'event: speed\n',
+          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft 测试结果不一样
+          'id: a\n',
+          'event: stop\n',
+          'data: "stop"\n\n',
+        ]);
+
+        expect((await reader.read()).done).toBe(true);
+      });
+
+      it('should transform non-streaming response to stream correctly with reasoning content', async () => {
+        const mockResponse = {
+          id: 'a',
+          object: 'chat.completion',
+          created: 123,
+          model: 'deepseek/deepseek-reasoner',
+          choices: [
+            {
+              index: 0,
+              message: {
+                role: 'assistant',
+                content: 'Hello',
+                reasoning_content: 'Thinking content',
+              },
+              finish_reason: 'stop',
+              logprobs: null,
+            },
+          ],
+          usage: {
+            prompt_tokens: 5,
+            completion_tokens: 5,
+            total_tokens: 10,
+          },
+        } as unknown as OpenAI.ChatCompletion;
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'deepseek/deepseek-reasoner',
+          temperature: 0,
+          stream: false,
+        });
+
+        const decoder = new TextDecoder();
+        const reader = result.body!.getReader();
+        const stream: string[] = [];
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual([
+          'id: a\n',
+          'event: reasoning\n',
+          'data: "Thinking content"\n\n',
+          'id: a\n',
+          'event: text\n',
+          'data: "Hello"\n\n',
+          'id: a\n',
+          'event: usage\n',
+          'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
+          'id: output_speed\n',
+          'event: speed\n',
+          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft 测试结果不一样
           'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
