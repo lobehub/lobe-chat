@@ -1,5 +1,14 @@
 [
   {
+    "children": {
+      "improvements": [
+        "Enable toggling search on/off via search button click & historyCount button."
+      ]
+    },
+    "date": "2025-09-15",
+    "version": "1.128.8"
+  },
+  {
     "children": {},
     "date": "2025-09-14",
     "version": "1.128.7"
