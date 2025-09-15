@@ -30,10 +30,15 @@ export interface UserMessageContentPart {
     detail?: string;
     url: string;
   };
+  file_url?: {
+    displayName?: string;
+    mimeType: string;
+    url: string;
+  };
   signature?: string;
   text?: string;
   thinking?: string;
-  type: 'text' | 'image_url' | 'thinking';
+  type: 'text' | 'image_url' | 'file_url' | 'thinking';
 }
 
 /**
@@ -146,6 +151,46 @@ export class MessageContentProcessor extends BaseProcessor {
     if (hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider)) {
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);
+    }
+
+    // Process audio/video files for Google Gemini via file_url parts
+    if (hasFiles && this.config.provider === 'google') {
+      const guessMimeFromName = (nameOrUrl: string): string | undefined => {
+        const lower = (nameOrUrl || '').toLowerCase();
+        if (lower.endsWith('.m4a')) return 'audio/aac';
+        if (lower.endsWith('.mp3')) return 'audio/mp3';
+        if (lower.endsWith('.wav')) return 'audio/wav';
+        if (lower.endsWith('.flac')) return 'audio/flac';
+        if (lower.endsWith('.ogg')) return 'audio/ogg';
+        if (lower.endsWith('.aiff') || lower.endsWith('.aif')) return 'audio/aiff';
+        if (lower.endsWith('.mp4')) return 'video/mp4';
+        if (lower.endsWith('.mov')) return 'video/mov';
+        if (lower.endsWith('.avi')) return 'video/avi';
+        if (lower.endsWith('.wmv')) return 'video/wmv';
+        if (lower.endsWith('.webm')) return 'video/webm';
+        if (lower.endsWith('.mpeg') || lower.endsWith('.mpg')) return 'video/mpeg';
+        if (lower.endsWith('.3gp') || lower.endsWith('.3gpp')) return 'video/3gpp';
+        return undefined;
+      };
+
+      for (const f of message.fileList || []) {
+        const rawMime = (f.fileType || '').toLowerCase();
+        const nameOrUrl = f.name || f.url || '';
+        const guessMime = guessMimeFromName(nameOrUrl);
+        const mimeType = rawMime || guessMime || 'application/octet-stream';
+        const isAudio = mimeType.startsWith('audio/');
+        const isVideo = mimeType.startsWith('video/');
+        if (isAudio || isVideo) {
+          contentParts.push({
+            file_url: {
+              displayName: f.name,
+              mimeType,
+              url: f.url,
+            },
+            type: 'file_url',
+          });
+        }
+      }
     }
 
     // 明确返回的字段，只保留必要的消息字段
