@@ -1,6 +1,6 @@
 export function getLineHeight(fontSize: number) {
   // RN 直接写像素值更常见，倍数需要修改为字符串，不方便计算
-  return fontSize + 8;
+  return (fontSize + 8) / fontSize;
 }
 
 // https://zhuanlan.zhihu.com/p/32746810
@@ -17,7 +17,7 @@ export default function getFontSizes(base: number) {
   fontSizes[1] = base;
 
   return fontSizes.map((size) => ({
-    lineHeight: getLineHeight(size),
+    lineHeight: getLineHeight(size) * size,
     size,
   }));
 }
