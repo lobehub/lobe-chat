@@ -25,7 +25,7 @@ const activeProviderConfig = (s: AIProviderStoreState) => s.aiProviderDetail;
 const isAiProviderConfigLoading = (id: string) => (s: AIProviderStoreState) =>
   s.activeAiProvider !== id;
 
-const providerWhitelist = new Set(['ollama']);
+const providerWhitelist = new Set(['ollama', 'lmstudio']);
 
 const activeProviderKeyVaults = (s: AIProviderStoreState) => activeProviderConfig(s)?.keyVaults;
 
@@ -111,6 +111,8 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
   return false;
 };
 
+const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -119,6 +121,7 @@ export const aiProviderSelectors = {
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
+  isInitAiProviderRuntimeState,
   isProviderConfigUpdating,
   isProviderEnableResponseApi,
   isProviderEnabled,

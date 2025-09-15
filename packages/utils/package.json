@@ -1,0 +1,22 @@
+{
+  "name": "@lobechat/utils",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server/index.ts",
+    "./client": "./src/client/index.ts"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "@lobechat/const": "workspace:*",
+    "@lobechat/types": "workspace:*",
+    "dayjs": "^1.11.18"
+  },
+  "devDependencies": {
+    "vitest-canvas-mock": "^0.3.3"
+  }
+}

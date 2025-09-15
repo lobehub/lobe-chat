@@ -1,15 +1,15 @@
+import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
+import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@lobechat/types';
 import debug from 'debug';
+import { RuntimeImageGenParams } from 'model-bank';
 import { z } from 'zod';
 
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
 import { FileModel } from '@/database/models/file';
 import { GenerationModel } from '@/database/models/generation';
-import { AgentRuntimeErrorType } from '@/libs/model-runtime/error';
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { GenerationService } from '@/server/services/generation';
-import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@/types/asyncTask';
 
 const log = debug('lobe-image:async');
 
@@ -112,7 +112,12 @@ export const imageRouter = router({
 
     log('Starting async image generation: %O', {
       generationId,
-      imageParams: { height: params.height, steps: params.steps, width: params.width },
+      imageParams: {
+        cfg: params.cfg,
+        height: params.height,
+        steps: params.steps,
+        width: params.width,
+      },
       model,
       prompt: params.prompt,
       provider,
@@ -188,6 +193,7 @@ export const imageRouter = router({
             metadata: {
               generationId,
               height: image.height,
+              path: uploadedImageUrl,
               width: image.width,
             },
             name: `${params.prompt.slice(0, FILENAME_MAX_LENGTH)}.${image.extension}`,

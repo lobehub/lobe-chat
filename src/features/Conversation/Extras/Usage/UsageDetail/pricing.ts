@@ -1,12 +1,11 @@
-import { Pricing } from '@/types/aiModel';
-import { ModelPriceCurrency } from '@/types/llm';
-import { formatPriceByCurrency } from '@/utils/format';
 import {
+  formatPriceByCurrency,
   getCachedTextInputUnitRate,
   getTextInputUnitRate,
   getTextOutputUnitRate,
   getWriteCacheInputUnitRate,
-} from '@/utils/pricing';
+} from '@lobechat/utils';
+import { ModelPriceCurrency, Pricing } from 'model-bank';
 
 export const getPrice = (pricing: Pricing) => {
   const inputRate = getTextInputUnitRate(pricing);

@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix cung cấp truy cập đến nhiều mô hình AI thông qua một giao diện API thống nhất."
   },
+  "akashchat": {
+    "description": "Akash là một thị trường tài nguyên đám mây phi tập trung, có giá cả cạnh tranh so với các nhà cung cấp đám mây truyền thống."
+  },
   "anthropic": {
     "description": "Anthropic là một công ty tập trung vào nghiên cứu và phát triển trí tuệ nhân tạo, cung cấp một loạt các mô hình ngôn ngữ tiên tiến như Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus và Claude 3 Haiku. Những mô hình này đạt được sự cân bằng lý tưởng giữa trí thông minh, tốc độ và chi phí, phù hợp cho nhiều ứng dụng từ khối lượng công việc doanh nghiệp đến phản hồi nhanh. Claude 3.5 Sonnet, là mô hình mới nhất của họ, thể hiện xuất sắc trong nhiều đánh giá, đồng thời duy trì tỷ lệ hiệu suất cao."
   },
@@ -26,11 +29,17 @@
   "bedrock": {
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
+  "bfl": {
+    "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong dẫn đầu, kiến tạo cơ sở hạ tầng thị giác cho ngày mai."
+  },
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },
   "cohere": {
     "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
+  },
+  "cometapi": {
+    "description": "CometAPI là một nền tảng dịch vụ cung cấp nhiều giao diện mô hình lớn tiên tiến, hỗ trợ OpenAI, Anthropic, Google và nhiều hơn nữa, phù hợp với các nhu cầu phát triển và ứng dụng đa dạng. Người dùng có thể linh hoạt lựa chọn mô hình và giá cả tối ưu theo nhu cầu của mình, giúp nâng cao trải nghiệm AI."
   },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
@@ -85,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
+  },
+  "nebius": {
+    "description": "Nebius cung cấp cơ sở hạ tầng hiệu suất cao cho các nhà đổi mới AI toàn cầu thông qua việc xây dựng cụm GPU quy mô lớn và nền tảng đám mây tích hợp dọc."
+  },
+  "newapi": {
+    "description": "Nền tảng tổng hợp và chuyển tiếp nhiều dịch vụ AI mã nguồn mở"
   },
   "novita": {
     "description": "Novita AI là một nền tảng cung cấp dịch vụ API cho nhiều mô hình ngôn ngữ lớn và tạo hình ảnh AI, linh hoạt, đáng tin cậy và hiệu quả về chi phí. Nó hỗ trợ các mô hình mã nguồn mở mới nhất như Llama3, Mistral, và cung cấp giải pháp API toàn diện, thân thiện với người dùng và tự động mở rộng cho phát triển ứng dụng AI, phù hợp cho sự phát triển nhanh chóng của các công ty khởi nghiệp AI."

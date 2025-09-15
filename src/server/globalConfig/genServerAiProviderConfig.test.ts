@@ -3,15 +3,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 
 // Mock dependencies using importOriginal to preserve real provider data
-vi.mock('@/config/aiModels', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/config/aiModels')>();
+vi.mock('model-bank', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('model-bank')>();
   return {
     ...actual,
     // Keep the original exports but we can override specific ones if needed
   };
 });
 
-vi.mock('@/config/llm', () => ({
+vi.mock('@/envs/llm', () => ({
   getLLMConfig: vi.fn(() => ({
     ENABLED_OPENAI: true,
     ENABLED_ANTHROPIC: false,
@@ -83,7 +83,7 @@ describe('genServerAiProvidersConfig', () => {
     };
 
     // Mock the LLM config to include our custom key
-    const { getLLMConfig } = vi.mocked(await import('@/config/llm'));
+    const { getLLMConfig } = vi.mocked(await import('@/envs/llm'));
     getLLMConfig.mockReturnValue({
       ENABLED_OPENAI: true,
       ENABLED_ANTHROPIC: false,
@@ -189,7 +189,7 @@ describe('genServerAiProvidersConfig Error Handling', () => {
     vi.resetModules();
 
     // Mock dependencies with a missing provider scenario
-    vi.doMock('@/config/aiModels', () => ({
+    vi.doMock('model-bank', () => ({
       // Explicitly set openai to undefined to simulate missing provider
       openai: undefined,
       anthropic: [

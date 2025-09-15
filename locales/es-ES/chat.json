@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interruptor de pensamiento profundo"
     },
-    "title": "Funcionalidad de extensión del modelo"
+    "title": "Funcionalidad de extensión del modelo",
+    "urlContext": {
+      "desc": "Al activarlo, se analizarán automáticamente los enlaces web para obtener el contenido contextual real de la página",
+      "title": "Extraer contenido del enlace web"
+    }
   },
   "history": {
     "title": "El asistente solo recordará los últimos {{count}} mensajes"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Agregar un mensaje de IA",
     "addUser": "Agregar un mensaje de usuario",
+    "disclaimer": "La IA también puede cometer errores, por favor verifique la información importante",
+    "errorMsg": "Error al enviar el mensaje, por favor revise la conexión y vuelva a intentarlo: {{errorMsg}}",
     "more": "más",
     "send": "Enviar",
-    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
-    "sendWithEnter": "Enviar con Enter",
+    "sendWithCmdEnter": "Presiona <key/> para enviar",
+    "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
-    "warp": "Salto de línea"
+    "warp": "Salto de línea",
+    "warpWithKey": "Presione la tecla <key/> para hacer un salto de línea"
   },
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Escritura en caché de entrada",
       "output": "Salida",
       "outputAudio": "Salida de audio",
+      "outputImage": "Salida de imagen",
       "outputText": "Salida de texto",
       "outputTitle": "Detalles de salida",
       "reasoning": "Razonamiento profundo",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} mensajes",
     "title": "Subtema"
   },
+  "toggleWideScreen": {
+    "off": "Desactivar modo de pantalla ancha",
+    "on": "Activar modo de pantalla ancha"
+  },
   "tokenDetails": {
     "chats": "Mensajes de chat",
     "historySummary": "Resumen histórico",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Subir archivo",
       "actionTooltip": "Subir",
-      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función",
+      "visionNotSupported": "El modelo actual no admite reconocimiento visual, por favor cambie de modelo para usar esta función"
     },
     "preview": {
       "prepareTasks": "Preparando fragmentos...",

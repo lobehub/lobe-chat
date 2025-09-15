@@ -153,6 +153,28 @@
     "searchProviders": "Szukaj dostawców...",
     "sort": "Niestandardowe sortowanie"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "Klucz API dostarczany przez platformę New API",
+      "placeholder": "Klucz API New API",
+      "required": "Klucz API jest wymagany",
+      "title": "Klucz API"
+    },
+    "apiUrl": {
+      "desc": "Adres API usługi New API, zazwyczaj wymaga dodania /v1",
+      "title": "Adres API"
+    },
+    "enabled": {
+      "title": "Włącz New API"
+    },
+    "models": {
+      "batchSelect": "Wybierz modele zbiorczo ({{count}} szt.)",
+      "fetch": "Pobierz listę modeli",
+      "selected": "Wybrane modele",
+      "title": "Dostępne modele"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Test czy adres proxy jest poprawnie wypełniony",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "Wybrano {{count}} modeli",
+      "title": "Wybór zbiorczy"
+    },
     "config": {
       "aesGcm": "Twój klucz oraz adres proxy będą szyfrowane za pomocą <1>AES-GCM</1>",
       "apiKey": {

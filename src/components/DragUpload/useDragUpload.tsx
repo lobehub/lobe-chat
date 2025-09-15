@@ -1,5 +1,11 @@
 /* eslint-disable no-undef */
+import { App } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 const DRAGGING_ROOT_ID = 'dragging-root';
 export const getContainer = () => document.querySelector(`#${DRAGGING_ROOT_ID}`);
@@ -62,11 +68,17 @@ const getFileListFromDataTransferItems = async (items: DataTransferItem[]) => {
 };
 
 export const useDragUpload = (onUploadFiles: (files: File[]) => Promise<void>) => {
+  const { t } = useTranslation('chat');
+  const { message } = App.useApp();
   const [isDragging, setIsDragging] = useState(false);
   // When a file is dragged to a different area, the 'dragleave' event may be triggered,
   // causing isDragging to be mistakenly set to false.
   // to fix this issue, use a counter to ensure the status change only when drag event left the browser window .
   const dragCounter = useRef(0);
+
+  const model = useAgentStore(agentSelectors.currentAgentModel);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
+  const supportVision = useModelSupportVision(model, provider);
 
   const handleDragEnter = (e: DragEvent) => {
     if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
@@ -113,6 +125,13 @@ export const useDragUpload = (onUploadFiles: (files: File[]) => Promise<void>) =
 
     if (files.length === 0) return;
 
+    // 检查是否有图片文件且模型不支持视觉功能
+    const hasImageFiles = files.some((file) => file.type.startsWith('image/'));
+    if (hasImageFiles && !supportVision) {
+      message.warning(t('upload.clientMode.visionNotSupported'));
+      return;
+    }
+
     // upload files
     onUploadFiles(files);
   };
@@ -124,6 +143,13 @@ export const useDragUpload = (onUploadFiles: (files: File[]) => Promise<void>) =
 
     const files = await getFileListFromDataTransferItems(items);
     if (files.length === 0) return;
+
+    // 检查是否有图片文件且模型不支持视觉功能
+    const hasImageFiles = files.some((file) => file.type.startsWith('image/'));
+    if (hasImageFiles && !supportVision) {
+      message.warning(t('upload.clientMode.visionNotSupported'));
+      return;
+    }
 
     onUploadFiles(files);
   };

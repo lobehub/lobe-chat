@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Collapse",
+      "on": "Expand"
+    },
+    "typobar": {
+      "off": "Hide formatting toolbar",
+      "on": "Show formatting toolbar"
+    }
+  },
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "file": {
+    "error": "Error: {{message}}",
+    "uploading": "Uploading file..."
+  },
+  "image": {
+    "broken": "Image is corrupted"
+  },
+  "link": {
+    "edit": "Edit link",
+    "open": "Open link",
+    "placeholder": "Enter link URL",
+    "unlink": "Unlink"
+  },
+  "math": {
+    "placeholder": "Please enter a TeX formula"
+  },
+  "slash": {
+    "h1": "Heading 1",
+    "h2": "Heading 2",
+    "h3": "Heading 3",
+    "hr": "Divider",
+    "table": "Table",
+    "tex": "TeX Formula"
+  },
+  "table": {
+    "delete": "Delete table",
+    "deleteColumn": "Delete column",
+    "deleteRow": "Delete row",
+    "insertColumnLeft": "Insert {{count}} column(s) to the left",
+    "insertColumnRight": "Insert {{count}} column(s) to the right",
+    "insertRowAbove": "Insert {{count}} row(s) above",
+    "insertRowBelow": "Insert {{count}} row(s) below"
+  },
+  "typobar": {
+    "blockquote": "Blockquote",
+    "bold": "Bold",
+    "bulletList": "Bulleted list",
+    "code": "Inline code",
+    "codeblock": "Code block",
+    "italic": "Italic",
+    "link": "Link",
+    "numberList": "Numbered list",
+    "strikethrough": "Strikethrough",
+    "table": "Table",
+    "taskList": "Task List",
+    "tex": "TeX Formula",
+    "underline": "Underline"
+  }
+}

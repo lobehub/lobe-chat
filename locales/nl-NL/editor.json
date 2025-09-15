@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Inklappen",
+      "on": "Uitklappen"
+    },
+    "typobar": {
+      "off": "Verberg opmaakwerkbalk",
+      "on": "Toon opmaakwerkbalk"
+    }
+  },
+  "cancel": "Annuleren",
+  "confirm": "Bevestigen",
+  "file": {
+    "error": "Fout: {{message}}",
+    "uploading": "Bestand wordt geüpload..."
+  },
+  "image": {
+    "broken": "Afbeelding beschadigd"
+  },
+  "link": {
+    "edit": "Link bewerken",
+    "open": "Link openen",
+    "placeholder": "Voer de URL van de link in",
+    "unlink": "Link verwijderen"
+  },
+  "math": {
+    "placeholder": "Voer TeX-formule in"
+  },
+  "slash": {
+    "h1": "Kop 1",
+    "h2": "Kop 2",
+    "h3": "Kop 3",
+    "hr": "Scheidingslijn",
+    "table": "Tabel",
+    "tex": "TeX-formule"
+  },
+  "table": {
+    "delete": "Tabel verwijderen",
+    "deleteColumn": "Kolom verwijderen",
+    "deleteRow": "Rij verwijderen",
+    "insertColumnLeft": "Voeg {{count}} kolommen links in",
+    "insertColumnRight": "Voeg {{count}} kolommen rechts in",
+    "insertRowAbove": "Voeg {{count}} rijen hierboven in",
+    "insertRowBelow": "Voeg {{count}} rijen hieronder in"
+  },
+  "typobar": {
+    "blockquote": "Citaat",
+    "bold": "Vet",
+    "bulletList": "Opsomming",
+    "code": "Inlinecode",
+    "codeblock": "Codeblok",
+    "italic": "Cursief",
+    "link": "Link",
+    "numberList": "Genummerde lijst",
+    "strikethrough": "Doorhalen",
+    "table": "tabel",
+    "taskList": "Takenlijst",
+    "tex": "TeX-formule",
+    "underline": "Onderstrepen"
+  }
+}

@@ -6,6 +6,7 @@ import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'r
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { isDesktop } from '@/const/version';
 import ChatItem from '@/features/ChatItem';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
@@ -32,6 +33,14 @@ import { normalizeThinkTags, processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
+
+const isHtmlCode = (content: string, language: string) => {
+  return (
+    language === 'html' ||
+    (language === '' && content.includes('<html>')) ||
+    (language === '' && content.includes('<!DOCTYPE html>'))
+  );
+};
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -175,6 +184,20 @@ const Item = memo<ChatListItemProps>(
       () => ({
         animated,
         citations: item?.role === 'user' ? undefined : item?.search?.citations,
+        componentProps: {
+          highlight: {
+            actionsRender: ({ content, actionIconSize, language, originalNode }: any) => {
+              const showHtmlPreview = isHtmlCode(content, language);
+
+              return (
+                <>
+                  {showHtmlPreview && <HtmlPreviewAction content={content} size={actionIconSize} />}
+                  {originalNode}
+                </>
+              );
+            },
+          },
+        },
         components,
         customRender: markdownCustomRender,
         enableCustomFootnotes: item?.role === 'assistant',

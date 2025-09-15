@@ -5,8 +5,6 @@ import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
 
-export const runtime = 'edge';
-
 export const POST = checkAuth(async (req, { params, jwtPayload }) => {
   const { provider } = await params;
 

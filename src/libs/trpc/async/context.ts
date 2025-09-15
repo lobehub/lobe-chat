@@ -1,8 +1,9 @@
+import { LobeChatDatabase } from '@lobechat/database';
+import { ClientSecretPayload } from '@lobechat/types';
 import debug from 'debug';
 import { NextRequest } from 'next/server';
 
-import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { LobeChatDatabase } from '@/database/type';
+import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 const log = debug('lobe-async:context');

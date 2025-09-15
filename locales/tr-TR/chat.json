@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
     },
-    "title": "Model Genişletme Özellikleri"
+    "title": "Model Genişletme Özellikleri",
+    "urlContext": {
+      "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlam içeriğini almak için web bağlantıları otomatik olarak çözümlenir",
+      "title": "Web Bağlantısı İçeriğini Çıkar"
+    }
   },
   "history": {
     "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Bir AI mesajı ekleyin",
     "addUser": "Bir kullanıcı mesajı ekleyin",
+    "disclaimer": "Yapay zeka da hata yapabilir, lütfen önemli bilgileri kontrol edin",
+    "errorMsg": "Mesaj gönderilemedi, lütfen ağı kontrol edip tekrar deneyin: {{errorMsg}}",
     "more": "Daha fazla",
     "send": "Gönder",
-    "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
-    "sendWithEnter": "Enter tuşuna basarak gönder",
+    "sendWithCmdEnter": "<key/> tuşuna basarak gönder",
+    "sendWithEnter": "<key/> tuşuna basarak gönder",
     "stop": "Dur",
-    "warp": "Satır atla"
+    "warp": "Satır atla",
+    "warpWithKey": "<key/> tuşuna basarak satır sonu yap"
   },
   "intentUnderstanding": {
     "title": "Niyetinizi anlama ve analiz etme aşamasındayız..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Giriş önbelleği yazma",
       "output": "Çıkış",
       "outputAudio": "Ses çıkışı",
+      "outputImage": "Görüntü Çıktısı",
       "outputText": "Metin çıkışı",
       "outputTitle": "Çıkış detayları",
       "reasoning": "Derin düşünme",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} mesaj",
     "title": "Alt konu"
   },
+  "toggleWideScreen": {
+    "off": "Geniş ekran modunu kapat",
+    "on": "Geniş ekran modunu aç"
+  },
   "tokenDetails": {
     "chats": "Sohbetler",
     "historySummary": "Tarih Özeti",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Dosya Yükle",
       "actionTooltip": "Yükle",
-      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin"
+      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
+      "visionNotSupported": "Seçili model görsel tanımayı desteklemiyor, lütfen başka bir modele geçiş yaparak kullanın"
     },
     "preview": {
       "prepareTasks": "Parçaları Hazırlıyor...",

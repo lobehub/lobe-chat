@@ -2,14 +2,14 @@
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { toolsEnv } from '@/config/tools';
+import { toolsEnv } from '@/envs/tools';
 import { SearXNGClient } from '@/server/services/search/impls/searxng/client';
 import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 
 import { searchRouter } from './search';
 
 // Mock JWT verification
-vi.mock('@/utils/server/xor', () => ({
+vi.mock('@lobechat/utils/server', () => ({
   getXorPayload: vi.fn().mockReturnValue({ userId: '1' }),
 }));
 

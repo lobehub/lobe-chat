@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix offre un accès à divers modèles d'IA via une interface API unifiée."
   },
+  "akashchat": {
+    "description": "Akash est un marché de ressources cloud sans autorisation, offrant des tarifs compétitifs par rapport aux fournisseurs cloud traditionnels."
+  },
   "anthropic": {
     "description": "Anthropic est une entreprise axée sur la recherche et le développement en intelligence artificielle, offrant une gamme de modèles linguistiques avancés, tels que Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus et Claude 3 Haiku. Ces modèles atteignent un équilibre idéal entre intelligence, rapidité et coût, adaptés à divers scénarios d'application, allant des charges de travail d'entreprise aux réponses rapides. Claude 3.5 Sonnet, en tant que dernier modèle, a excellé dans plusieurs évaluations tout en maintenant un bon rapport qualité-prix."
   },
@@ -26,11 +29,17 @@
   "bedrock": {
     "description": "Bedrock est un service proposé par Amazon AWS, axé sur la fourniture de modèles linguistiques et visuels avancés pour les entreprises. Sa famille de modèles comprend la série Claude d'Anthropic, la série Llama 3.1 de Meta, etc., offrant une variété d'options allant des modèles légers aux modèles haute performance, prenant en charge des tâches telles que la génération de texte, les dialogues et le traitement d'images, adaptées aux applications d'entreprise de différentes tailles et besoins."
   },
+  "bfl": {
+    "description": "Un laboratoire de recherche en intelligence artificielle à la pointe, construisant l'infrastructure visuelle de demain."
+  },
   "cloudflare": {
     "description": "Exécutez des modèles d'apprentissage automatique alimentés par GPU sans serveur sur le réseau mondial de Cloudflare."
   },
   "cohere": {
     "description": "Cohere vous apporte les modèles multilingues les plus avancés, des fonctionnalités de recherche sophistiquées et un espace de travail AI sur mesure pour les entreprises modernes - le tout intégré dans une plateforme sécurisée."
+  },
+  "cometapi": {
+    "description": "CometAPI est une plateforme de services offrant diverses interfaces de modèles avancés, prenant en charge OpenAI, Anthropic, Google et bien d'autres, adaptée à des besoins de développement et d'application variés. Les utilisateurs peuvent choisir librement le modèle et le tarif optimaux selon leurs besoins, favorisant ainsi une meilleure expérience en IA."
   },
   "deepseek": {
     "description": "DeepSeek est une entreprise spécialisée dans la recherche et l'application des technologies d'intelligence artificielle, dont le dernier modèle, DeepSeek-V2.5, combine des capacités de dialogue général et de traitement de code, réalisant des améliorations significatives dans l'alignement des préférences humaines, les tâches d'écriture et le suivi des instructions."
@@ -85,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot est une plateforme open source lancée par Beijing Dark Side Technology Co., Ltd., offrant divers modèles de traitement du langage naturel, avec des applications dans des domaines variés, y compris mais sans s'y limiter, la création de contenu, la recherche académique, les recommandations intelligentes, le diagnostic médical, etc., prenant en charge le traitement de longs textes et des tâches de génération complexes."
+  },
+  "nebius": {
+    "description": "Nebius fournit une infrastructure haute performance aux innovateurs en IA du monde entier en construisant de vastes clusters GPU et une plateforme cloud intégrée verticalement."
+  },
+  "newapi": {
+    "description": "Plateforme open source d'agrégation et de redirection unifiée de plusieurs services d'IA"
   },
   "novita": {
     "description": "Novita AI est une plateforme offrant des services API pour divers grands modèles de langage et la génération d'images IA, flexible, fiable et rentable. Elle prend en charge les derniers modèles open source tels que Llama3, Mistral, et fournit des solutions API complètes, conviviales et évolutives pour le développement d'applications IA, adaptées à la croissance rapide des startups IA."

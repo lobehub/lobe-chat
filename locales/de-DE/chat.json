@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Tiefdenk-Schalter"
     },
-    "title": "Modell Erweiterungsfunktionen"
+    "title": "Modell Erweiterungsfunktionen",
+    "urlContext": {
+      "desc": "Wenn aktiviert, werden Webseiten-Links automatisch analysiert, um den tatsächlichen Webseiteninhalt zu erfassen",
+      "title": "Webseiten-Link-Inhalt extrahieren"
+    }
   },
   "history": {
     "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Fügen Sie eine AI-Nachricht hinzu",
     "addUser": "Fügen Sie eine Benutzer-Nachricht hinzu",
+    "disclaimer": "KI kann auch Fehler machen, bitte überprüfen Sie wichtige Informationen",
+    "errorMsg": "Nachricht konnte nicht gesendet werden, bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut: {{errorMsg}}",
     "more": "Mehr",
     "send": "Senden",
-    "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
-    "sendWithEnter": "Mit Eingabetaste senden",
+    "sendWithCmdEnter": "Drücken Sie <key/>, um zu senden",
+    "sendWithEnter": "Drücken Sie <key/>, um zu senden",
     "stop": "Stoppen",
-    "warp": "Zeilenumbruch"
+    "warp": "Zeilenumbruch",
+    "warpWithKey": "Mit der Taste <key/> umbrechen"
   },
   "intentUnderstanding": {
     "title": "Verstehe und analysiere gerade Ihre Absicht..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Eingabe Cache schreiben",
       "output": "Ausgabe",
       "outputAudio": "Audioausgabe",
+      "outputImage": "Bildausgabe",
       "outputText": "Text-Ausgabe",
       "outputTitle": "Ausgabedetails",
       "reasoning": "Tiefes Denken",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} Nachrichten",
     "title": "Unterthema"
   },
+  "toggleWideScreen": {
+    "off": "Breitbildmodus deaktivieren",
+    "on": "Breitbildmodus aktivieren"
+  },
   "tokenDetails": {
     "chats": "Chats",
     "historySummary": "Historische Zusammenfassung",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Datei hochladen",
       "actionTooltip": "Hochladen",
-      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen."
+      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen.",
+      "visionNotSupported": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen."
     },
     "preview": {
       "prepareTasks": "Vorbereitung der Teile...",

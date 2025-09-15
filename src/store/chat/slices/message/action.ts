@@ -22,6 +22,7 @@ import {
   ModelReasoning,
 } from '@/types/message';
 import { ChatImageItem } from '@/types/message/image';
+import { UpdateMessageRAGParams } from '@/types/message/rag';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { Action, setNamespace } from '@/utils/storeDebug';
@@ -39,6 +40,7 @@ const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 export interface ChatMessageAction {
   // create
   addAIMessage: () => Promise<void>;
+  addUserMessage: (params: { message: string; fileList?: string[] }) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -59,16 +61,20 @@ export interface ChatMessageAction {
   ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-
+  replaceMessages: (messages: ChatMessage[]) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
+  internal_updateMessageRAG: (id: string, input: UpdateMessageRAGParams) => Promise<void>;
 
   /**
    * update message at the frontend
    * this method will not update messages to database
    */
-  internal_dispatchMessage: (payload: MessageDispatch) => void;
+  internal_dispatchMessage: (
+    payload: MessageDispatch,
+    context?: { topicId?: string | null; sessionId: string },
+  ) => void;
 
   /**
    * update the message content with optimistic update
@@ -213,6 +219,21 @@ export const chatMessage: StateCreator<
 
     updateInputMessage('');
   },
+  addUserMessage: async ({ message, fileList }) => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    if (!activeId) return;
+
+    await internal_createMessage({
+      content: message,
+      files: fileList,
+      role: 'user',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
 
@@ -266,16 +287,36 @@ export const chatMessage: StateCreator<
   refreshMessages: async () => {
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
   },
+  replaceMessages: (messages) => {
+    set(
+      {
+        messagesMap: {
+          ...get().messagesMap,
+          [messageMapKey(get().activeId, get().activeTopicId)]: messages,
+        },
+      },
+      false,
+      'replaceMessages',
+    );
+  },
+
+  internal_updateMessageRAG: async (id, data) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessageRAG(id, data);
+    await refreshMessages();
+  },
 
   // the internal process method of the AI message
-  internal_dispatchMessage: (payload) => {
-    const { activeId } = get();
+  internal_dispatchMessage: (payload, context) => {
+    const activeId = typeof context !== 'undefined' ? context.sessionId : get().activeId;
+    const topicId = typeof context !== 'undefined' ? context.topicId : get().activeTopicId;
 
-    if (!activeId) return;
+    const messagesKey = messageMapKey(activeId, topicId);
 
-    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
+    const messages = messagesReducer(chatSelectors.getBaseChatsByKey(messagesKey)(get()), payload);
 
-    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+    const nextMap = { ...get().messagesMap, [messagesKey]: messages };
 
     if (isEqual(nextMap, get().messagesMap)) return;
 

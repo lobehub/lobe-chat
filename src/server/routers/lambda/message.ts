@@ -7,6 +7,7 @@ import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { ChatMessage } from '@/types/message';
+import { UpdateMessageRAGParamsSchema } from '@/types/message/rag';
 import { BatchTaskResult } from '@/types/service';
 
 type ChatMessageList = ChatMessage[];
@@ -172,6 +173,12 @@ export const messageRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.messageModel.updateMessagePlugin(input.id, input.value);
+    }),
+
+  updateMessageRAG: messageProcedure
+    .input(UpdateMessageRAGParamsSchema)
+    .mutation(async ({ input, ctx }) => {
+      await ctx.messageModel.updateMessageRAG(input.id, input.value);
     }),
 
   updatePluginError: messageProcedure

@@ -118,7 +118,7 @@ class _MessageModel extends BaseModel {
   async batchCreate(messages: ChatMessage[]) {
     const data: DB_Message[] = messages.map((m) => this.mapChatMessageToDBMessage(m));
 
-    return this._batchAdd(data, { withSync: true });
+    return this._batchAdd(data);
   }
 
   async duplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {

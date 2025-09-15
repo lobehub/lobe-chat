@@ -54,6 +54,10 @@ export default {
       title: '深度思考开关',
     },
     title: '模型扩展功能',
+    urlContext: {
+      desc: '开启后将自动解析网页链接，以获取实际网页上下文内容',
+      title: '提取网页链接内容',
+    },
   },
   history: {
     title: '助手将只记住最后{{count}}条消息',
@@ -67,12 +71,15 @@ export default {
   input: {
     addAi: '添加一条 AI 消息',
     addUser: '添加一条用户消息',
+    disclaimer: 'AI 也可能会犯错，请检查重要信息',
+    errorMsg: '消息发送失败，请检查网络后重试: {{errorMsg}}',
     more: '更多',
     send: '发送',
-    sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
-    sendWithEnter: '按 Enter 键发送',
+    sendWithCmdEnter: '按 <key/> 键发送',
+    sendWithEnter: '按 <key/> 键发送',
     stop: '停止',
     warp: '换行',
+    warpWithKey: '按 <key/> 键换行',
   },
   intentUnderstanding: {
     title: '正在理解并分析您的意图...',
@@ -128,6 +135,7 @@ export default {
       inputWriteCached: '输入缓存写入',
       output: '输出',
       outputAudio: '音频输出',
+      outputImage: '图像输出',
       outputText: '文本输出',
       outputTitle: '输出明细',
       reasoning: '深度思考',
@@ -231,6 +239,10 @@ export default {
     threadMessageCount: '{{messageCount}} 条消息',
     title: '子话题',
   },
+  toggleWideScreen: {
+    off: '关闭宽屏模式',
+    on: '开启宽屏模式',
+  },
   tokenDetails: {
     chats: '会话消息',
     historySummary: '历史总结',
@@ -273,6 +285,7 @@ export default {
       actionFiletip: '上传文件',
       actionTooltip: '上传',
       disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+      visionNotSupported: '当前模型不支持视觉识别，请切换模型后使用',
     },
     preview: {
       prepareTasks: '准备分块...',

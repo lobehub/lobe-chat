@@ -1,4 +1,9 @@
 {
+  "ArgsInput": {
+    "addArgument": "Добавить параметр",
+    "argumentPlaceholder": "Параметр {{index}}",
+    "enterFirstArgument": "Введите первый параметр..."
+  },
   "DragUpload": {
     "dragDesc": "Перетащите файлы сюда, поддерживается загрузка нескольких изображений.",
     "dragFileDesc": "Перетащите изображения и файлы сюда, поддерживается загрузка нескольких изображений и файлов.",
@@ -68,6 +73,18 @@
   "GoBack": {
     "back": "Назад"
   },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Скачать",
+      "preview": "Предпросмотр"
+    },
+    "iframeTitle": "Предпросмотр HTML",
+    "mode": {
+      "code": "Код",
+      "preview": "Предпросмотр"
+    },
+    "title": "Предпросмотр HTML"
+  },
   "ImageUpload": {
     "actions": {
       "changeImage": "Нажмите, чтобы изменить изображение",
@@ -125,6 +142,12 @@
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} загружено"
+    },
+    "validation": {
+      "fileSizeExceeded": "Превышен допустимый размер файла",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) превышает максимально допустимый размер {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} файлов превышают максимально допустимый размер {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Превышено допустимое количество изображений"
     }
   },
   "OllamaSetupGuide": {

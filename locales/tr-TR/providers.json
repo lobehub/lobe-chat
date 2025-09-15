@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix, çeşitli yapay zeka modellerine tek bir API arayüzü üzerinden erişim sağlar."
   },
+  "akashchat": {
+    "description": "Akash, geleneksel bulut sağlayıcılarına kıyasla rekabetçi fiyatlandırmaya sahip, izin gerektirmeyen bir bulut kaynakları pazar yeridir."
+  },
   "anthropic": {
     "description": "Anthropic, yapay zeka araştırma ve geliştirmeye odaklanan bir şirkettir. Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus ve Claude 3 Haiku gibi bir dizi gelişmiş dil modeli sunmaktadır. Bu modeller, zeka, hız ve maliyet arasında ideal bir denge sağlamaktadır ve kurumsal düzeydeki iş yüklerinden hızlı yanıt gerektiren çeşitli uygulama senaryolarına kadar geniş bir yelpazede kullanılmaktadır. Claude 3.5 Sonnet, en son modeli olarak, birçok değerlendirmede mükemmel performans sergilemekte ve yüksek maliyet etkinliğini korumaktadır."
   },
@@ -26,11 +29,17 @@
   "bedrock": {
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
+  "bfl": {
+    "description": "Önde gelen bir ileri düzey yapay zeka araştırma laboratuvarı; yarının görsel altyapısını inşa ediyor."
+  },
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },
   "cohere": {
     "description": "Cohere, en son çok dilli modelleri, gelişmiş arama işlevselliğini ve modern işletmeler için özel olarak tasarlanmış AI çalışma alanını sunar - hepsi güvenli bir platformda entegre edilmiştir."
+  },
+  "cometapi": {
+    "description": "CometAPI, OpenAI, Anthropic, Google ve daha fazlasını destekleyen çeşitli ileri düzey büyük model arayüzleri sunan bir hizmet platformudur. Çeşitli geliştirme ve uygulama ihtiyaçlarına uygundur. Kullanıcılar, kendi ihtiyaçlarına göre en uygun modeli ve fiyatı esnek bir şekilde seçebilir, böylece yapay zeka deneyimini geliştirebilirler."
   },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
@@ -85,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot, Beijing Yuezhi Anmian Technology Co., Ltd. tarafından sunulan açık kaynaklı bir platformdur. İçerik oluşturma, akademik araştırma, akıllı öneri, tıbbi teşhis gibi geniş bir uygulama alanına sahip çeşitli doğal dil işleme modelleri sunmaktadır. Uzun metin işleme ve karmaşık üretim görevlerini desteklemektedir."
+  },
+  "nebius": {
+    "description": "Nebius, büyük ölçekli GPU kümeleri ve dikey entegre bulut platformları oluşturarak, dünya çapındaki yapay zeka yenilikçilerine yüksek performanslı altyapı sağlar."
+  },
+  "newapi": {
+    "description": "Açık kaynaklı çoklu AI hizmetlerini birleştiren ve yönlendiren platform"
   },
   "novita": {
     "description": "Novita AI, çeşitli büyük dil modelleri ve yapay zeka görüntü üretimi API hizmetleri sunan bir platformdur. Esnek, güvenilir ve maliyet etkin bir yapıya sahiptir. Llama3, Mistral gibi en son açık kaynak modelleri desteklemekte ve üretken yapay zeka uygulama geliştirme için kapsamlı, kullanıcı dostu ve otomatik ölçeklenebilir API çözümleri sunmaktadır. Bu, yapay zeka girişimlerinin hızlı gelişimi için uygundur."

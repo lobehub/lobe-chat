@@ -456,7 +456,7 @@ export default WelcomeMessage;
 
 由于我们目前两个新的配置字段都是可选的，所以理论上你不更新测试也能跑通，不过由于我们把前面提到的默认配置 `DEFAULT_AGENT_CONFIG` 增加了 `openingQuestions` 字段，这导致很多测试计算出的配置都是有这个字段的，因此我们还是需要更新一部分测试的快照。
 
-对于当前这个场景，我建议是本地直接跑下测试，看哪些测试失败了，针对需要更新，例如测试文件 `src/store/agent/slices/chat/selectors/agent.test.ts` 需要执行一下 `npx vitest -u src/store/agent/slices/chat/selectors/agent.test.ts` 更新快照。
+对于当前这个场景，我建议是本地直接跑下测试，看哪些测试失败了，针对需要更新，例如测试文件 `src/store/agent/slices/chat/selectors/agent.test.ts` 需要执行一下 `bunx vitest -u src/store/agent/slices/chat/selectors/agent.test.ts` 更新快照。
 
 ## 总结
 

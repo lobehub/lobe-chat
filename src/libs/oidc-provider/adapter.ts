@@ -1,6 +1,4 @@
-import debug from 'debug';
-import { eq, sql } from 'drizzle-orm';
-
+import { LobeChatDatabase } from '@lobechat/database';
 import {
   oidcAccessTokens,
   oidcAuthorizationCodes,
@@ -10,8 +8,9 @@ import {
   oidcInteractions,
   oidcRefreshTokens,
   oidcSessions,
-} from '@/database/schemas/oidc';
-import { LobeChatDatabase } from '@/database/type';
+} from '@lobechat/database/schemas';
+import debug from 'debug';
+import { eq, sql } from 'drizzle-orm';
 
 // 创建 adapter 日志命名空间
 const log = debug('lobe-oidc:adapter');
@@ -164,7 +163,7 @@ class OIDCAdapter {
       log('[%s] Setting userId: %s', this.name, payload.accountId);
     } else {
       try {
-        const { getUserAuth } = await import('@/utils/server/auth');
+        const { getUserAuth } = await import('@lobechat/utils/server');
         try {
           const { userId } = await getUserAuth();
           if (userId) {

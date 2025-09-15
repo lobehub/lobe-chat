@@ -1,8 +1,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeOpenAICompatibleRuntime } from '@/libs/model-runtime';
-
+import { LobeOpenAICompatibleRuntime } from './core/BaseAI';
 import * as debugStreamModule from './utils/debugStream';
 
 interface TesstProviderParams {

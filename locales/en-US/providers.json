@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix provides access to various AI models through a unified API interface."
   },
+  "akashchat": {
+    "description": "Akash is a permissionless cloud resource marketplace with competitive pricing compared to traditional cloud providers."
+  },
   "anthropic": {
     "description": "Anthropic is a company focused on AI research and development, offering a range of advanced language models such as Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus, and Claude 3 Haiku. These models achieve an ideal balance between intelligence, speed, and cost, suitable for various applications from enterprise workloads to rapid-response scenarios. Claude 3.5 Sonnet, as their latest model, has excelled in multiple evaluations while maintaining a high cost-performance ratio."
   },
@@ -26,11 +29,17 @@
   "bedrock": {
     "description": "Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs."
   },
+  "bfl": {
+    "description": "A leading, cutting-edge artificial intelligence research lab building the visual infrastructure of tomorrow."
+  },
   "cloudflare": {
     "description": "Run serverless GPU-powered machine learning models on Cloudflare's global network."
   },
   "cohere": {
     "description": "Cohere brings you cutting-edge multilingual models, advanced retrieval capabilities, and an AI workspace tailored for modern enterprises—all integrated into a secure platform."
+  },
+  "cometapi": {
+    "description": "CometAPI is a service platform offering a variety of cutting-edge large model interfaces, supporting OpenAI, Anthropic, Google, and more. It caters to diverse development and application needs, allowing users to flexibly choose the optimal model and pricing according to their requirements, enhancing the AI experience."
   },
   "deepseek": {
     "description": "DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following."
@@ -85,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot is an open-source platform launched by Beijing Dark Side Technology Co., Ltd., providing various natural language processing models with a wide range of applications, including but not limited to content creation, academic research, intelligent recommendations, and medical diagnosis, supporting long text processing and complex generation tasks."
+  },
+  "nebius": {
+    "description": "Nebius provides high-performance infrastructure for global AI innovators by building large-scale GPU clusters and vertically integrated cloud platforms."
+  },
+  "newapi": {
+    "description": "Open-source unified forwarding platform aggregating multiple AI services"
   },
   "novita": {
     "description": "Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups."

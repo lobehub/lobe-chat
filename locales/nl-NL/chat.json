@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Diepdenkschakelaar"
     },
-    "title": "Modeluitbreidingsfunctie"
+    "title": "Modeluitbreidingsfunctie",
+    "urlContext": {
+      "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
+      "title": "Inhoud van webkoppeling extraheren"
+    }
   },
   "history": {
     "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Voeg een AI-bericht toe",
     "addUser": "Voeg een gebruikersbericht toe",
+    "disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
+    "errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
     "more": "Meer",
     "send": "Verzenden",
-    "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
-    "sendWithEnter": "Verzenden met Enter",
+    "sendWithCmdEnter": "Druk op <key/> om te verzenden",
+    "sendWithEnter": "Druk op <key/> om te verzenden",
     "stop": "Stoppen",
-    "warp": "Nieuwe regel"
+    "warp": "Nieuwe regel",
+    "warpWithKey": "Druk op <key/> om een nieuwe regel te beginnen"
   },
   "intentUnderstanding": {
     "title": "Bezig met het begrijpen en analyseren van uw intentie..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Invoer cache schrijven",
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
+      "outputImage": "Afbeelding uitvoer",
       "outputText": "Tekstuitvoer",
       "outputTitle": "Uitvoerdetails",
       "reasoning": "Diep nadenken",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} berichten",
     "title": "Subonderwerp"
   },
+  "toggleWideScreen": {
+    "off": "Schakel breedbeeldmodus uit",
+    "on": "Schakel breedbeeldmodus in"
+  },
   "tokenDetails": {
     "chats": "Chats",
     "historySummary": "Geschiedenis samenvatting",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Bestand uploaden",
       "actionTooltip": "Uploaden",
-      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+      "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
     },
     "preview": {
       "prepareTasks": "Voorbereiden van blokken...",

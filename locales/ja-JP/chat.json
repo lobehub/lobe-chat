@@ -52,7 +52,11 @@
     "thinking": {
       "title": "深い思考のスイッチ"
     },
-    "title": "モデル拡張機能"
+    "title": "モデル拡張機能",
+    "urlContext": {
+      "desc": "有効にすると、実際のウェブページのコンテキスト内容を取得するためにウェブリンクを自動的に解析します",
+      "title": "ウェブリンク内容の抽出"
+    }
   },
   "history": {
     "title": "アシスタントは最後の{{count}}件のメッセージのみを記憶します"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "AIメッセージを追加",
     "addUser": "ユーザーメッセージを追加",
+    "disclaimer": "AIも誤りを犯すことがありますので、重要な情報はご確認ください",
+    "errorMsg": "メッセージの送信に失敗しました。ネットワークを確認してから再試行してください: {{errorMsg}}",
     "more": "もっと",
     "send": "送信",
-    "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
-    "sendWithEnter": "Enter キーで送信",
+    "sendWithCmdEnter": "<key/> キーを押して送信",
+    "sendWithEnter": "<key/> キーを押して送信",
     "stop": "停止",
-    "warp": "改行"
+    "warp": "改行",
+    "warpWithKey": "<key/> キーを押して改行"
   },
   "intentUnderstanding": {
     "title": "あなたの意図を理解し、分析しています..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "入力キャッシュ書き込み",
       "output": "出力",
       "outputAudio": "音声出力",
+      "outputImage": "画像出力",
       "outputText": "テキスト出力",
       "outputTitle": "出力の詳細",
       "reasoning": "深い思考",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} 件のメッセージ",
     "title": "サブトピック"
   },
+  "toggleWideScreen": {
+    "off": "ワイドスクリーンモードをオフにする",
+    "on": "ワイドスクリーンモードをオンにする"
+  },
   "tokenDetails": {
     "chats": "チャットメッセージ",
     "historySummary": "履歴の要約",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "ファイルをアップロード",
       "actionTooltip": "アップロード",
-      "disabled": "現在のモデルは視覚認識とファイル分析をサポートしていません。モデルを切り替えてから使用してください。"
+      "disabled": "現在のモデルは視覚認識とファイル分析をサポートしていません。モデルを切り替えてから使用してください。",
+      "visionNotSupported": "現在のモデルはビジョン認識をサポートしていません。モデルを切り替えてからご利用ください。"
     },
     "preview": {
       "prepareTasks": "ブロックの準備中...",

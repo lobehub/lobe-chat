@@ -74,7 +74,7 @@ ENV NEXT_PUBLIC_ANALYTICS_UMAMI="${NEXT_PUBLIC_ANALYTICS_UMAMI}" \
     NEXT_PUBLIC_UMAMI_WEBSITE_ID="${NEXT_PUBLIC_UMAMI_WEBSITE_ID}"
 
 # Node
-ENV NODE_OPTIONS="--max-old-space-size=8192"
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 WORKDIR /app
 
@@ -120,7 +120,7 @@ COPY --from=base /distroless/ /
 COPY --from=builder /app/.next/standalone /app/
 
 # Copy database migrations
-COPY --from=builder /app/src/database/migrations /app/migrations
+COPY --from=builder /app/packages/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
 COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
@@ -236,6 +236,10 @@ ENV \
     MODELSCOPE_API_KEY="" MODELSCOPE_MODEL_LIST="" MODELSCOPE_PROXY_URL="" \
     # Moonshot
     MOONSHOT_API_KEY="" MOONSHOT_MODEL_LIST="" MOONSHOT_PROXY_URL="" \
+    # Nebius
+    NEBIUS_API_KEY="" NEBIUS_MODEL_LIST="" NEBIUS_PROXY_URL="" \
+    # NewAPI
+    NEWAPI_API_KEY="" NEWAPI_PROXY_URL="" \
     # Novita
     NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
     # Nvidia NIM
@@ -291,7 +295,11 @@ ENV \
     # Infini-AI
     INFINIAI_API_KEY="" INFINIAI_MODEL_LIST="" \
     # 302.AI
-    AI302_API_KEY="" AI302_MODEL_LIST=""
+    AI302_API_KEY="" AI302_MODEL_LIST="" \
+    # FAL
+    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    # BFL
+    BFL_API_KEY="" BFL_MODEL_LIST=""
 
 USER nextjs
 

@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Przełącznik głębokiego myślenia"
     },
-    "title": "Funkcje rozszerzenia modelu"
+    "title": "Funkcje rozszerzenia modelu",
+    "urlContext": {
+      "desc": "Po włączeniu automatycznie analizuje linki do stron internetowych, aby uzyskać rzeczywistą zawartość kontekstu strony",
+      "title": "Wyodrębnij zawartość linku do strony"
+    }
   },
   "history": {
     "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Dodaj wiadomość AI",
     "addUser": "Dodaj wiadomość użytkownika",
+    "disclaimer": "AI również może popełniać błędy, proszę sprawdzić ważne informacje",
+    "errorMsg": "Wysyłanie wiadomości nie powiodło się, sprawdź połączenie sieciowe i spróbuj ponownie: {{errorMsg}}",
     "more": "więcej",
     "send": "Wyślij",
-    "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
-    "sendWithEnter": "Wyślij za pomocą klawisza Enter",
+    "sendWithCmdEnter": "Naciśnij <key/>, aby wysłać",
+    "sendWithEnter": "Naciśnij <key/>, aby wysłać",
     "stop": "Zatrzymaj",
-    "warp": "Złamanie wiersza"
+    "warp": "Złamanie wiersza",
+    "warpWithKey": "Zawijaj wiersz klawiszem <key/>"
   },
   "intentUnderstanding": {
     "title": "Rozumiemy i analizujemy Twoje intencje..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Zapisz wejście w pamięci podręcznej",
       "output": "Wyjście",
       "outputAudio": "Wyjście audio",
+      "outputImage": "Wyjściowy obraz",
       "outputText": "Wyjście tekstowe",
       "outputTitle": "Szczegóły wyjścia",
       "reasoning": "Głębokie myślenie",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} wiadomości",
     "title": "Podwątek"
   },
+  "toggleWideScreen": {
+    "off": "Wyłącz tryb szerokiego ekranu",
+    "on": "Włącz tryb szerokiego ekranu"
+  },
   "tokenDetails": {
     "chats": "Rozmowy",
     "historySummary": "Podsumowanie historii",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Prześlij plik",
       "actionTooltip": "Prześlij",
-      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji"
+      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji",
+      "visionNotSupported": "Obecny model nie obsługuje rozpoznawania wizualnego, proszę przełączyć model i spróbować ponownie"
     },
     "preview": {
       "prepareTasks": "Przygotowywanie fragmentów...",

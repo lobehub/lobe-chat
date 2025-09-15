@@ -1,7 +1,7 @@
+import { AiModelSourceEnum } from 'model-bank';
 import { describe, expect, it } from 'vitest';
 
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiModelSourceEnum } from '@/types/aiModel';
 
 import { aiModelSelectors } from './selectors';
 
@@ -67,6 +67,7 @@ describe('aiModelSelectors', () => {
     providerSearchKeyword: '',
     aiProviderRuntimeConfig: {},
     initAiProviderList: false,
+    isInitAiProviderRuntimeState: false,
   };
 
   describe('aiProviderChatModelListIds', () => {

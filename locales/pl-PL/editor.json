@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Zwiń",
+      "on": "Rozwiń"
+    },
+    "typobar": {
+      "off": "Ukryj pasek narzędzi formatowania",
+      "on": "Pokaż pasek narzędzi formatowania"
+    }
+  },
+  "cancel": "Anuluj",
+  "confirm": "Potwierdź",
+  "file": {
+    "error": "Błąd: {{message}}",
+    "uploading": "Przesyłanie pliku..."
+  },
+  "image": {
+    "broken": "Obraz uszkodzony"
+  },
+  "link": {
+    "edit": "Edytuj link",
+    "open": "Otwórz link",
+    "placeholder": "Wpisz adres URL linku",
+    "unlink": "Usuń link"
+  },
+  "math": {
+    "placeholder": "Wprowadź formułę TeX"
+  },
+  "slash": {
+    "h1": "Nagłówek poziomu 1",
+    "h2": "Nagłówek poziomu 2",
+    "h3": "Nagłówek poziomu 3",
+    "hr": "Linia pozioma",
+    "table": "Tabela",
+    "tex": "Formuła TeX"
+  },
+  "table": {
+    "delete": "Usuń tabelę",
+    "deleteColumn": "Usuń kolumnę",
+    "deleteRow": "Usuń wiersz",
+    "insertColumnLeft": "Wstaw {{count}} kolumn po lewej",
+    "insertColumnRight": "Wstaw {{count}} kolumn po prawej",
+    "insertRowAbove": "Wstaw {{count}} wierszy powyżej",
+    "insertRowBelow": "Wstaw {{count}} wierszy poniżej"
+  },
+  "typobar": {
+    "blockquote": "Cytat",
+    "bold": "Pogrubienie",
+    "bulletList": "Lista punktowana",
+    "code": "Kod w linii",
+    "codeblock": "Blok kodu",
+    "italic": "Kursywa",
+    "link": "Link",
+    "numberList": "Lista numerowana",
+    "strikethrough": "Przekreślenie",
+    "table": "tabela",
+    "taskList": "Lista zadań",
+    "tex": "Formuła TeX",
+    "underline": "Podkreślenie"
+  }
+}

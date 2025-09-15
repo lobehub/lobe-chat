@@ -26,10 +26,14 @@ const Header = memo(() => {
   const pathname = usePathname();
   const isProvider = pathname.includes('/settings/provider/');
   const providerName = useProviderName(activeSettingsKey);
+  const isProviderList = pathname === '/settings/provider';
+  const isProviderDetail = isProvider && !isProviderList;
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
       router.push('/chat');
+    } else if (isProviderDetail) {
+      router.push('/settings/provider');
     } else {
       router.push(enableAuth ? '/me/settings' : '/me');
     }

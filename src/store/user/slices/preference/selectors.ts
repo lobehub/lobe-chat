@@ -1,5 +1,6 @@
-import { DEFAULT_PREFERENCE } from '@/const/user';
-import { UserStore } from '@/store/user';
+import { DEFAULT_PREFERENCE } from '@lobechat/const';
+
+import type { UserStore } from '@/store/user';
 
 const useCmdEnterToSend = (s: UserStore): boolean => s.preference.useCmdEnterToSend || false;
 const topicDisplayMode = (s: UserStore) =>

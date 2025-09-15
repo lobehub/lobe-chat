@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
     },
-    "title": "Fonctionnalités d'extension du modèle"
+    "title": "Fonctionnalités d'extension du modèle",
+    "urlContext": {
+      "desc": "Une fois activé, il analysera automatiquement les liens web pour obtenir le contenu contextuel réel de la page web",
+      "title": "Extraction du contenu des liens web"
+    }
   },
   "history": {
     "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Ajouter un message AI",
     "addUser": "Ajouter un message utilisateur",
+    "disclaimer": "L'IA peut également faire des erreurs, veuillez vérifier les informations importantes",
+    "errorMsg": "Échec de l'envoi du message, veuillez vérifier votre connexion réseau et réessayer : {{errorMsg}}",
     "more": "Plus",
     "send": "Envoyer",
-    "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
-    "sendWithEnter": "Envoyer avec Entrée",
+    "sendWithCmdEnter": "Appuyez sur <key/> pour envoyer",
+    "sendWithEnter": "Appuyez sur <key/> pour envoyer",
     "stop": "Arrêter",
-    "warp": "Saut de ligne"
+    "warp": "Saut de ligne",
+    "warpWithKey": "Appuyez sur la touche <key/> pour un retour à la ligne"
   },
   "intentUnderstanding": {
     "title": "En train de comprendre et d'analyser votre intention..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Écriture de cache d'entrée",
       "output": "Sortie",
       "outputAudio": "Sortie audio",
+      "outputImage": "Sortie d'image",
       "outputText": "Sortie texte",
       "outputTitle": "Détails de la sortie",
       "reasoning": "Raisonnement approfondi",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} messages",
     "title": "Sous-sujet"
   },
+  "toggleWideScreen": {
+    "off": "Désactiver le mode écran large",
+    "on": "Activer le mode écran large"
+  },
   "tokenDetails": {
     "chats": "Messages de discussion",
     "historySummary": "Résumé historique",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Télécharger un fichier",
       "actionTooltip": "Télécharger",
-      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser"
+      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser",
+      "visionNotSupported": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser"
     },
     "preview": {
       "prepareTasks": "Préparation des morceaux...",

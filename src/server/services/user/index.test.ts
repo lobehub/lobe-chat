@@ -1,4 +1,5 @@
 import { UserJSON } from '@clerk/backend';
+import { LobeChatDatabase } from '@lobechat/database';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserModel } from '@/database/models/user';
@@ -46,6 +47,7 @@ vi.mock('@/server/services/agent', () => ({
 
 let service: UserService;
 const mockUserId = 'test-user-id';
+const mockDB = {} as LobeChatDatabase;
 
 // Mock user data
 const mockUserJSON: UserJSON = {
@@ -62,7 +64,7 @@ const mockUserJSON: UserJSON = {
 } as unknown as UserJSON;
 
 beforeEach(() => {
-  service = new UserService();
+  service = new UserService(mockDB);
   vi.clearAllMocks();
 });
 

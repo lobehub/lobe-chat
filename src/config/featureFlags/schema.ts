@@ -2,10 +2,6 @@
 import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
-  /**
-   * Enable WebRTC sync
-   */
-  webrtc_sync: z.boolean().optional(),
   check_updates: z.boolean().optional(),
   pin_list: z.boolean().optional(),
 
@@ -24,6 +20,7 @@ export const FeatureFlagsSchema = z.object({
 
   plugins: z.boolean().optional(),
   dalle: z.boolean().optional(),
+  ai_image: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
   token_counter: z.boolean().optional(),
 
@@ -50,7 +47,6 @@ export const FeatureFlagsSchema = z.object({
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  webrtc_sync: false,
   pin_list: false,
 
   language_model_settings: true,
@@ -66,6 +62,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   plugins: true,
   dalle: true,
+  ai_image: true,
 
   check_updates: true,
   welcome_suggest: true,
@@ -91,7 +88,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
   return {
-    enableWebrtc: config.webrtc_sync,
     isAgentEditable: config.edit_agent,
 
     showCreateSession: config.create_session,
@@ -106,6 +102,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     enablePlugins: config.plugins,
     showDalle: config.dalle,
+    showAiImage: config.ai_image,
     showChangelog: config.changelog,
 
     enableCheckUpdates: config.check_updates,

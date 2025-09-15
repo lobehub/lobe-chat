@@ -52,7 +52,11 @@
     "thinking": {
       "title": "Deep Thinking Switch"
     },
-    "title": "Model Extension Features"
+    "title": "Model Extension Features",
+    "urlContext": {
+      "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
+      "title": "Extract Webpage Link Content"
+    }
   },
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
@@ -66,12 +70,15 @@
   "input": {
     "addAi": "Add an AI message",
     "addUser": "Add a user message",
+    "disclaimer": "AI may also make mistakes, please verify important information",
+    "errorMsg": "Message sending failed, please check your network and try again: {{errorMsg}}",
     "more": "more",
     "send": "Send",
-    "sendWithCmdEnter": "Press {{meta}} + Enter to send",
-    "sendWithEnter": "Press Enter to send",
+    "sendWithCmdEnter": "Press <key/> to send",
+    "sendWithEnter": "Press <key/> to send",
     "stop": "Stop",
-    "warp": "New Line"
+    "warp": "New Line",
+    "warpWithKey": "Press <key/> to insert a line break"
   },
   "intentUnderstanding": {
     "title": "Understanding and analyzing your intent..."
@@ -125,6 +132,7 @@
       "inputWriteCached": "Input cache write",
       "output": "Output",
       "outputAudio": "Audio Output",
+      "outputImage": "Image Output",
       "outputText": "Text Output",
       "outputTitle": "Output Details",
       "reasoning": "Deep Thinking",
@@ -227,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} messages",
     "title": "Subtopic"
   },
+  "toggleWideScreen": {
+    "off": "Turn off widescreen mode",
+    "on": "Turn on widescreen mode"
+  },
   "tokenDetails": {
     "chats": "Chat Messages",
     "historySummary": "History Summary",
@@ -268,7 +280,8 @@
     "clientMode": {
       "actionFiletip": "Upload File",
       "actionTooltip": "Upload",
-      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature.",
+      "visionNotSupported": "The current model does not support visual recognition. Please switch to a different model to use this feature."
     },
     "preview": {
       "prepareTasks": "Preparing chunks...",

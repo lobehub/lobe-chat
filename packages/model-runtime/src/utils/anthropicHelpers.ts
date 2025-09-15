@@ -1,9 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 
-import { imageUrlToBase64 } from '@/utils/imageToBase64';
-
 import { OpenAIChatMessage, UserMessageContentPart } from '../types';
+import { imageUrlToBase64 } from '../utils/imageToBase64';
 import { parseDataUri } from './uriParser';
 
 export const buildAnthropicBlock = async (

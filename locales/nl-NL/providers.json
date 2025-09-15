@@ -11,6 +11,9 @@
   "aihubmix": {
     "description": "AiHubMix biedt via een uniforme API-toegang tot diverse AI-modellen."
   },
+  "akashchat": {
+    "description": "Akash is een vergunningvrije cloudbronnenmarkt met concurrerende prijzen in vergelijking met traditionele cloudproviders."
+  },
   "anthropic": {
     "description": "Anthropic is een bedrijf dat zich richt op onderzoek en ontwikkeling van kunstmatige intelligentie, en biedt een reeks geavanceerde taalmodellen aan, zoals Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus en Claude 3 Haiku. Deze modellen bereiken een ideale balans tussen intelligentie, snelheid en kosten, en zijn geschikt voor een breed scala aan toepassingen, van bedrijfswerkbelasting tot snelle respons. Claude 3.5 Sonnet, als hun nieuwste model, presteert uitstekend in verschillende evaluaties, terwijl het een hoge kosteneffectiviteit behoudt."
   },
@@ -26,11 +29,17 @@
   "bedrock": {
     "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
   },
+  "bfl": {
+    "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen bouwt."
+  },
   "cloudflare": {
     "description": "Voer machine learning-modellen aan, aangedreven door serverloze GPU's, uit op het wereldwijde netwerk van Cloudflare."
   },
   "cohere": {
     "description": "Cohere biedt u de meest geavanceerde meertalige modellen, geavanceerde zoekfunctionaliteit en een op maat gemaakt AI-werkruimte voor moderne bedrijven - alles geïntegreerd in een veilig platform."
+  },
+  "cometapi": {
+    "description": "CometAPI is een serviceplatform dat diverse geavanceerde modelinterfaces aanbiedt, met ondersteuning voor OpenAI, Anthropic, Google en meer. Het is geschikt voor uiteenlopende ontwikkelings- en toepassingsbehoeften. Gebruikers kunnen flexibel het beste model en de beste prijs kiezen op basis van hun eigen behoeften, wat bijdraagt aan een verbeterde AI-ervaring."
   },
   "deepseek": {
     "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
@@ -85,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot is een open platform gelanceerd door Beijing Dark Side Technology Co., Ltd., dat verschillende modellen voor natuurlijke taalverwerking biedt, met een breed toepassingsgebied, waaronder maar niet beperkt tot contentcreatie, academisch onderzoek, slimme aanbevelingen, medische diagnose, en ondersteunt lange tekstverwerking en complexe generatietaken."
+  },
+  "nebius": {
+    "description": "Nebius biedt wereldwijde AI-innovators hoogwaardige infrastructuur door het bouwen van grootschalige GPU-clusters en een verticaal geïntegreerd cloudplatform."
+  },
+  "newapi": {
+    "description": "Open source platform voor het samenvoegen en uniform doorsturen van meerdere AI-diensten"
   },
   "novita": {
     "description": "Novita AI is een platform dat API-diensten biedt voor verschillende grote taalmodellen en AI-beeldgeneratie, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open-source modellen zoals Llama3 en Mistral, en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor de ontwikkeling van generatieve AI-toepassingen, geschikt voor de snelle groei van AI-startups."

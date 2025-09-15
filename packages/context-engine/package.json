@@ -1,0 +1,40 @@
+{
+  "name": "@lobechat/context-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Context Pipeline Engine for LobeChat - A flexible and configurable context processing system",
+  "keywords": [
+    "context",
+    "pipeline",
+    "processor",
+    "chat",
+    "ai",
+    "lobe"
+  ],
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:update": "vitest -u"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "immer": "^10.0.3",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/lodash-es": "^4.17.12"
+  },
+  "peerDependencies": {
+    "@lobechat/const": "workspace:*",
+    "@lobechat/model-runtime": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/types": "workspace:*",
+    "@lobechat/utils": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

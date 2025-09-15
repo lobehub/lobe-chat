@@ -32,7 +32,6 @@ export const getAppConfig = () => {
 
   return createEnv({
     client: {
-      NEXT_PUBLIC_BASE_PATH: z.string(),
       NEXT_PUBLIC_ENABLE_SENTRY: z.boolean(),
     },
     server: {
@@ -59,8 +58,6 @@ export const getAppConfig = () => {
       SSRF_ALLOW_IP_ADDRESS_LIST: z.string().optional(),
     },
     runtimeEnv: {
-      NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
-
       // Sentry
       NEXT_PUBLIC_ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
 

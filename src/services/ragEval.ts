@@ -1,5 +1,3 @@
-import { lambdaClient } from '@/libs/trpc/client';
-import { uploadService } from '@/services/upload';
 import {
   CreateNewEvalDatasets,
   CreateNewEvalEvaluation,
@@ -7,7 +5,10 @@ import {
   RAGEvalDataSetItem,
   RAGEvalEvaluationItem,
   insertEvalDatasetsSchema,
-} from '@/types/eval';
+} from '@lobechat/types';
+
+import { lambdaClient } from '@/libs/trpc/client';
+import { uploadService } from '@/services/upload';
 
 class RAGEvalService {
   // Dataset

@@ -28,18 +28,19 @@ const portalWidth = (s: GlobalState) => s.status.portalWidth || 400;
 const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const imageTopicPanelWidth = (s: GlobalState) => s.status.imageTopicPanelWidth;
-const inputHeight = (s: GlobalState) => s.status.inputHeight;
-const threadInputHeight = (s: GlobalState) => s.status.threadInputHeight;
-
+const wideScreen = (s: GlobalState) => !s.status.noWideScreen;
+const chatInputHeight = (s: GlobalState) => s.status.chatInputHeight || 64;
+const expandInputActionbar = (s: GlobalState) => s.status.expandInputActionbar;
+const isStatusInit = (s: GlobalState) => !!s.isStatusInit;
 const isPgliteNotEnabled = (s: GlobalState) =>
-  isUsePgliteDB && !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
+  isUsePgliteDB && !isServerMode && isStatusInit(s) && !s.status.isEnablePglite;
 
 /**
  * 当且仅当 client db 模式，且 pglite 未初始化完成时返回 true
  */
 const isPgliteNotInited = (s: GlobalState) =>
   isUsePgliteDB &&
-  s.isStatusInit &&
+  isStatusInit(s) &&
   s.status.isEnablePglite &&
   s.initClientDBStage !== DatabaseLoadingState.Ready;
 
@@ -47,7 +48,7 @@ const isPgliteNotInited = (s: GlobalState) =>
  * 当且仅当 client db 模式，且 pglite 初始化完成时返回 true
  */
 const isPgliteInited = (s: GlobalState): boolean =>
-  (s.isStatusInit &&
+  (isStatusInit(s) &&
     s.status.isEnablePglite &&
     s.initClientDBStage === DatabaseLoadingState.Ready) ||
   false;
@@ -63,18 +64,20 @@ const getAgentSystemRoleExpanded =
   };
 
 export const systemStatusSelectors = {
+  chatInputHeight,
+  expandInputActionbar,
   filePanelWidth,
   getAgentSystemRoleExpanded,
   hidePWAInstaller,
   imagePanelWidth,
   imageTopicPanelWidth,
   inZenMode,
-  inputHeight,
   isDBInited,
   isPgliteInited,
   isPgliteNotEnabled,
   isPgliteNotInited,
   isShowCredit,
+  isStatusInit,
   language,
   mobileShowPortal,
   mobileShowTopic,
@@ -90,5 +93,5 @@ export const systemStatusSelectors = {
   showSystemRole,
   systemStatus,
   themeMode,
-  threadInputHeight,
+  wideScreen,
 };

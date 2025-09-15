@@ -1,5 +1,3 @@
-{/* eslint-disable no-irregular-whitespace */}
-
 # 状态管理最佳实践
 
 LobeChat 不同于传统 CRUD 的网页，存在大量的富交互能力，如何设计一个易于开发与易于维护的数据流架构非常重要。本篇文档将介绍 LobeChat 中的数据流管理最佳实践。
@@ -110,6 +108,8 @@ LobeChat SessionStore
 ### LobeChat SessionStore 目录结构最佳实践
 
 在 LobeChat 应用中，由于会话管理是一个复杂的功能模块，因此我们采用了 [slice 模式](https://github.com/pmndrs/zustand/blob/main/docs/guides/slices-pattern.md) 来组织数据流。下面是 LobeChat SessionStore 的目录结构，其中每个目录和文件都有其特定的用途：
+
+{/* eslint-disable no-irregular-whitespace */}
 
 ```fish
 src/store/session

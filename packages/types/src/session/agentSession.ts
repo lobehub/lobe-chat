@@ -1,7 +1,7 @@
-import { LobeAgentConfig } from '@/types/agent';
-
+import { LobeAgentConfig } from '../agent';
 import { MetaData } from '../meta';
-import { SessionGroupId } from './sessionGroup';
+
+export type SessionGroupId = 'default' | 'pinned' | string;
 
 export enum LobeSessionType {
   Agent = 'agent',

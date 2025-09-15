@@ -1,6 +1,7 @@
-import { ModelProviderKey } from '@/libs/model-runtime';
-import { AiFullModelCard } from '@/types/aiModel';
-import { ChatModelCard } from '@/types/llm';
+import type { ModelProviderKey } from '@lobechat/model-runtime';
+import { AiFullModelCard } from 'model-bank';
+
+import { ChatModelCard } from '../../llm';
 
 export interface ProviderConfig {
   /**
