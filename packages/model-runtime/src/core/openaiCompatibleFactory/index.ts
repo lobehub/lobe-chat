@@ -87,7 +87,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     handleTransformResponseToStream?: (
       data: OpenAI.ChatCompletion,
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
-      noUserId?: boolean;
+    noUserId?: boolean;
     /**
      * If true, route chat requests to Responses API path directly
      */
