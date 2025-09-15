@@ -120,7 +120,11 @@ const Space = ({
       styles.item,
       direction === 'vertical'
         ? { marginBottom: isLastItem ? 0 : verticalMargin }
-        : { marginRight: isLastItem ? 0 : horizontalMargin },
+        : {
+            marginRight: isLastItem ? 0 : horizontalMargin,
+            // 当横向并且自动换行时，为每个项增加底部间距，用于行间距
+            ...(wrap ? { marginBottom: verticalMargin } : {}),
+          },
     ];
 
     // 处理分隔符
