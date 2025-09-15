@@ -340,9 +340,6 @@ const withSentry =
           // Automatically tree-shake Sentry logger statements to reduce bundle size
           disableLogger: true,
 
-          // Hides source maps from generated client bundles
-          hideSourceMaps: true,
-
           org: process.env.SENTRY_ORG,
 
           project: process.env.SENTRY_PROJECT,
