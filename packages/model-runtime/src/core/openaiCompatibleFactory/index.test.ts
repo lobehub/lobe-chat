@@ -1065,6 +1065,8 @@ describe('LobeOpenAICompatibleFactory', () => {
         });
         const inst = new LobeMockProviderUseResponseModels({ apiKey: 'test' });
         const spy = vi.spyOn(inst['client'].responses, 'create');
+        // Prevent hanging by mocking normal chat completion stream
+        vi.spyOn(inst['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
 
         // First invocation: model contains the string
         spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
@@ -1075,6 +1077,10 @@ describe('LobeOpenAICompatibleFactory', () => {
         spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
         await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'special-xyz', temperature: 0 });
         expect(spy).toHaveBeenCalledTimes(2);
+
+        // Third invocation: model does not match any useResponseModels patterns
+        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'unrelated-model', temperature: 0 });
+        expect(spy).toHaveBeenCalledTimes(2); // Ensure no additional calls were made
       });
     });
 
