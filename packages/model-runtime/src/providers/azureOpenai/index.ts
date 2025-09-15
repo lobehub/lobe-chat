@@ -96,9 +96,12 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         });
       } else {
         const stream = transformResponseToStream(response as OpenAI.ChatCompletion);
-        return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
-          headers: options?.headers,
-        });
+        return StreamingResponse(
+          OpenAIStream(stream, { callbacks: options?.callback, enableStreaming: false }),
+          {
+            headers: options?.headers,
+          },
+        );
       }
     } catch (e) {
       return this.handleError(e, model);

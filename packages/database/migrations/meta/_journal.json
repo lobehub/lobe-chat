@@ -217,6 +217,13 @@
       "when": 1756298669289,
       "tag": "0030_add_group_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1757902833213,
+      "tag": "0031_add_agent_index",
+      "breakpoints": true
     }
   ],
   "version": "6"
