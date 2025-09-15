@@ -1031,6 +1031,53 @@ describe('LobeOpenAICompatibleFactory', () => {
       expect(customTransformHandler).toHaveBeenCalledWith(mockResponse);
     });
 
+    describe('responses routing', () => {
+      it('should route to Responses API when chatCompletion.useResponse is true', async () => {
+        const LobeMockProviderUseResponses = createOpenAICompatibleRuntime({
+          baseURL: 'https://api.test.com/v1',
+          chatCompletion: {
+            useResponse: true,
+          },
+          provider: ModelProvider.OpenAI,
+        });
+
+        const inst = new LobeMockProviderUseResponses({ apiKey: 'test' });
+
+        // mock responses.create to return a stream-like with tee
+        const prod = new ReadableStream();
+        const debug = new ReadableStream();
+        const mockResponsesCreate = vi
+          .spyOn(inst['client'].responses, 'create')
+          .mockResolvedValue({ tee: () => [prod, debug] } as any);
+
+        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'any-model', temperature: 0 });
+
+        expect(mockResponsesCreate).toHaveBeenCalled();
+      });
+
+      it('should route to Responses API when model matches useResponseModels', async () => {
+        const LobeMockProviderUseResponseModels = createOpenAICompatibleRuntime({
+          baseURL: 'https://api.test.com/v1',
+          chatCompletion: {
+            useResponseModels: ['special-model', /special-\w+/],
+          },
+          provider: ModelProvider.OpenAI,
+        });
+        const inst = new LobeMockProviderUseResponseModels({ apiKey: 'test' });
+        const spy = vi.spyOn(inst['client'].responses, 'create');
+
+        // First invocation: model contains the string
+        spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
+        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'prefix-special-model-suffix', temperature: 0 });
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        // Second invocation: model matches the RegExp
+        spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
+        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'special-xyz', temperature: 0 });
+        expect(spy).toHaveBeenCalledTimes(2);
+      });
+    });
+
     describe('DEBUG', () => {
       it('should call debugStream and return StreamingTextResponse when DEBUG_OPENROUTER_CHAT_COMPLETION is 1', async () => {
         // Arrange
