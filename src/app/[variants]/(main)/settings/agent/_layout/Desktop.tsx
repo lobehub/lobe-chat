@@ -14,9 +14,9 @@ const Layout = ({ children }: PropsWithChildren) => {
         <AgentMenu />
         <SettingContainer
           style={{
+            maxHeight: '100vh',
             paddingBlock: 24,
             paddingInline: 32,
-            maxHeight: "100vh"
           }}
         >
           {children}
