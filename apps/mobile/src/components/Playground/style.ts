@@ -35,7 +35,6 @@ export const useStyles = createStyles((token) => ({
   header: {
     borderBottomColor: token.colorBorderSecondary,
     borderBottomWidth: token.lineWidth,
-    padding: token.paddingLG,
   },
   readmeContainer: {
     padding: token.paddingLG,
@@ -62,7 +61,7 @@ export const useStyles = createStyles((token) => ({
     borderRadius: token.borderRadiusLG,
     flexDirection: 'row',
     marginHorizontal: token.marginLG,
-    marginTop: token.marginLG,
+    marginTop: token.marginSM,
     padding: token.paddingXXS,
   },
   tabText: {

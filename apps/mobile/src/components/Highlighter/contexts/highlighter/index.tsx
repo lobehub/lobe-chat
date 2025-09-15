@@ -1,34 +1,24 @@
 import { type HighlighterCore, createHighlighterCore } from '@shikijs/core';
-import bash from '@shikijs/langs/dist/bash.mjs';
-import c from '@shikijs/langs/dist/c.mjs';
-import cpp from '@shikijs/langs/dist/cpp.mjs';
-import csharp from '@shikijs/langs/dist/csharp.mjs';
-import css from '@shikijs/langs/dist/css.mjs';
-import diff from '@shikijs/langs/dist/diff.mjs';
-import go from '@shikijs/langs/dist/go.mjs';
-import graphql from '@shikijs/langs/dist/graphql.mjs';
-import html from '@shikijs/langs/dist/html.mjs';
-import ini from '@shikijs/langs/dist/ini.mjs';
-import java from '@shikijs/langs/dist/java.mjs';
-import javascript from '@shikijs/langs/dist/javascript.mjs';
-import json from '@shikijs/langs/dist/json.mjs';
-import jsx from '@shikijs/langs/dist/jsx.mjs';
-import kotlin from '@shikijs/langs/dist/kotlin.mjs';
-import markdown from '@shikijs/langs/dist/markdown.mjs';
-import mermaid from '@shikijs/langs/dist/mermaid.mjs';
-import php from '@shikijs/langs/dist/php.mjs';
-import python from '@shikijs/langs/dist/python.mjs';
-import ruby from '@shikijs/langs/dist/ruby.mjs';
-// 导入常用语言 - 避免使用 bundledLanguages 以防止 WebAssembly 相关问题
-import rust from '@shikijs/langs/dist/rust.mjs';
-import scala from '@shikijs/langs/dist/scala.mjs';
-import sql from '@shikijs/langs/dist/sql.mjs';
-import swift from '@shikijs/langs/dist/swift.mjs';
-import toml from '@shikijs/langs/dist/toml.mjs';
-import tsx from '@shikijs/langs/dist/tsx.mjs';
-import typescript from '@shikijs/langs/dist/typescript.mjs';
-import xml from '@shikijs/langs/dist/xml.mjs';
-import yaml from '@shikijs/langs/dist/yaml.mjs';
+import bash from '@shikijs/langs/bash';
+import c from '@shikijs/langs/c';
+import css from '@shikijs/langs/css';
+import go from '@shikijs/langs/go';
+import html from '@shikijs/langs/html';
+import java from '@shikijs/langs/java';
+import javascript from '@shikijs/langs/javascript';
+import json from '@shikijs/langs/json';
+import jsx from '@shikijs/langs/jsx';
+import kotlin from '@shikijs/langs/kotlin';
+import markdown from '@shikijs/langs/markdown';
+import php from '@shikijs/langs/php';
+import python from '@shikijs/langs/python';
+import ruby from '@shikijs/langs/ruby';
+import sql from '@shikijs/langs/sql';
+import swift from '@shikijs/langs/swift';
+import tsx from '@shikijs/langs/tsx';
+import typescript from '@shikijs/langs/typescript';
+import xml from '@shikijs/langs/xml';
+import yaml from '@shikijs/langs/yaml';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createNativeEngine, isNativeEngineAvailable } from 'react-native-shiki-engine';
 
@@ -43,29 +33,20 @@ let initializationPromise: Promise<void> | null = null;
 const languagesObj = {
   bash,
   c,
-  cpp,
-  csharp,
   css,
-  diff,
   go,
-  graphql,
   html,
-  ini,
   java,
   javascript,
   json,
   jsx,
   kotlin,
   markdown,
-  mermaid,
   php,
   python,
   ruby,
-  rust,
-  scala,
   sql,
   swift,
-  toml,
   tsx,
   typescript,
   xml,

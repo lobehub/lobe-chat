@@ -2,37 +2,52 @@ import React from 'react';
 import {
   TouchableOpacity,
   Text,
-  ActivityIndicator,
   TouchableOpacityProps,
   TextStyle,
   ViewStyle,
   StyleProp,
   View,
+  Animated,
+  Easing,
 } from 'react-native';
+import { LoaderCircle } from 'lucide-react-native';
 
-import { useStyles, ButtonType, ButtonSize } from './style';
+import {
+  useStyles,
+  ButtonType,
+  ButtonSize,
+  ButtonShape,
+  ButtonVariant,
+  ButtonColor,
+} from './style';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
   children?: React.ReactNode;
+  color?: ButtonColor;
   danger?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
   loading?: boolean;
   onPress?: () => void;
+  shape?: ButtonShape;
   size?: ButtonSize;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   type?: ButtonType;
+  variant?: ButtonVariant;
 }
 
 const Button: React.FC<ButtonProps> = ({
   type = 'default',
   size = 'middle',
+  shape = 'default',
   loading = false,
   disabled = false,
   block = false,
   danger = false,
+  variant,
+  color,
   children,
   onPress,
   style,
@@ -40,7 +55,94 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   ...rest
 }) => {
-  const { styles } = useStyles({ block, danger, disabled: disabled || loading, size, type });
+  // Map legacy `type` to new `variant` + `color` if not explicitly provided
+  const mapped = (() => {
+    // If both provided, use them directly
+    if (variant && color) return { color, variant };
+
+    // If only color provided, choose a sensible default variant
+    if (color && !variant) {
+      // non-default colors default to filled; default uses solid
+      return { color, variant: (color !== 'default' ? 'filled' : 'solid') as ButtonVariant };
+    }
+
+    // If only variant provided, default color
+    if (variant && !color) {
+      return { color: (danger ? 'danger' : 'default') as ButtonColor, variant };
+    }
+
+    // Fallback: derive from legacy `type` and `danger`
+    switch (type) {
+      case 'primary': {
+        return {
+          color: (danger ? 'danger' : 'primary') as ButtonColor,
+          variant: 'filled' as ButtonVariant,
+        };
+      }
+      case 'text': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'text' as ButtonVariant,
+        };
+      }
+      case 'link': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'link' as ButtonVariant,
+        };
+      }
+      case 'dashed': {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'dashed' as ButtonVariant,
+        };
+      }
+      default: {
+        return {
+          color: (danger ? 'danger' : 'default') as ButtonColor,
+          variant: 'solid' as ButtonVariant,
+        };
+      }
+    }
+  })();
+
+  const { styles } = useStyles({
+    block,
+    color: mapped.color,
+    disabled: disabled || loading,
+    shape,
+    size,
+    variant: mapped.variant,
+  });
+
+  // Infinite spin animation for loading indicator
+  const rotationProgress = React.useRef(new Animated.Value(0)).current;
+  const rotationAnimationRef = React.useRef<Animated.CompositeAnimation | null>(null);
+  const spin = rotationProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  React.useEffect(() => {
+    if (loading) {
+      rotationProgress.setValue(0);
+      rotationAnimationRef.current = Animated.loop(
+        Animated.timing(rotationProgress, {
+          duration: 1000,
+          easing: Easing.linear,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      );
+      rotationAnimationRef.current.start();
+    } else {
+      rotationAnimationRef.current?.stop?.();
+    }
+
+    return () => {
+      rotationAnimationRef.current?.stop?.();
+    };
+  }, [loading, rotationProgress]);
 
   const handlePress = () => {
     if (!disabled && !loading && onPress) {
@@ -50,8 +152,8 @@ const Button: React.FC<ButtonProps> = ({
 
   const renderIcon = () => {
     if (loading || !icon) return null;
-
     const iconColor = (styles.text?.color as string) ?? undefined;
+    // Always match icon size to button text size for consistency
     const iconSize = (styles.text?.fontSize as number) ?? undefined;
 
     let iconNode = icon;
@@ -65,7 +167,7 @@ const Button: React.FC<ButtonProps> = ({
     }
 
     return (
-      <View style={styles.loading} testID="button-icon">
+      <View style={styles.icon} testID="button-icon">
         {iconNode}
       </View>
     );
@@ -82,15 +184,16 @@ const Button: React.FC<ButtonProps> = ({
       testID="button"
     >
       {loading && (
-        <ActivityIndicator
-          color={styles.text.color}
-          size="small"
-          style={styles.loading}
-          testID="loading-indicator"
-        />
+        <Animated.View style={[styles.icon, { transform: [{ rotate: spin }] }]}>
+          <LoaderCircle
+            color={styles.text.color}
+            size={styles.text.fontSize}
+            testID="loading-circle"
+          />
+        </Animated.View>
       )}
       {renderIcon()}
-      <Text style={[styles.text, textStyle]}>{children}</Text>
+      {children ? <Text style={[styles.text, textStyle]}>{children}</Text> : undefined}
     </TouchableOpacity>
   );
 };

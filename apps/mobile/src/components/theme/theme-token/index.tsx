@@ -5,9 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import { Header } from '@/components';
-import ThemeControls from 'app/playground/components/theme-token/(components)/ThemeControls';
-import TokenHighlight from 'app/playground/components/theme-token/(components)/TokenJson';
-import TokenTable from 'app/playground/components/theme-token/(components)/TokenTable';
+import ThemeControls from './(components)/ThemeControls';
+import TokenHighlight from './(components)/TokenJson';
+import TokenTable from './(components)/TokenTable';
 import {
   useTheme,
   darkAlgorithm,
