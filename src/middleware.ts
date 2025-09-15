@@ -148,6 +148,7 @@ const defaultMiddleware = (request: NextRequest) => {
 const isPublicRoute = createRouteMatcher([
   // backend api
   '/api/auth(.*)',
+  '/api/agent(.*)',
   '/api/webhooks(.*)',
   '/webapi(.*)',
   '/trpc(.*)',

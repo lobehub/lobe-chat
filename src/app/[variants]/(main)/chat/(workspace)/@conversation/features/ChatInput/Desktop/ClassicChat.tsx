@@ -8,6 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
@@ -17,7 +19,10 @@ import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 import { useSend } from '../useSend';
 import MessageFromUrl from './MessageFromUrl';
 
+const leftAgentActions: ActionKeys[] = ['agentMode', 'model', 'mainToken'];
+
 const leftActions: ActionKeys[] = [
+  'agentMode',
   'model',
   'search',
   'typo',
@@ -39,6 +44,7 @@ const ClassicChatInput = memo(() => {
     s.updatePreference,
   ]);
 
+  const enableAgentMode = useAgentStore(agentSelectors.enableAgentMode);
   const [mainInputSendErrorMsg, clearSendMessageError] = useChatStore((s) => [
     aiChatSelectors.isCurrentSendMessageError(s),
     s.clearSendMessageError,
@@ -51,7 +57,7 @@ const ClassicChatInput = memo(() => {
         if (!instance) return;
         useChatStore.setState({ mainInputEditor: instance });
       }}
-      leftActions={leftActions}
+      leftActions={enableAgentMode ? leftAgentActions : leftActions}
       onMarkdownContentChange={(content) => {
         useChatStore.setState({ inputMessage: content });
       }}
