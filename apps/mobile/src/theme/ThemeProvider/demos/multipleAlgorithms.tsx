@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { compactAlgorithm, darkAlgorithm, ThemeProvider, useThemeToken } from '../index';
+import { ThemeProvider, useThemeToken } from '../index';
+import { darkAlgorithm } from '@/theme';
 
 // 示例组件，使用主题 token
 const ExampleComponent = () => {
@@ -95,7 +96,7 @@ export default function MultipleAlgorithmsDemo() {
   return (
     <ThemeProvider
       theme={{
-        algorithm: [darkAlgorithm, compactAlgorithm],
+        algorithm: [darkAlgorithm],
         token: {
           colorPrimary: '#ff6b35',
         },
