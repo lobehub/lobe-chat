@@ -11,6 +11,7 @@ if (!!process.env.NEXT_PUBLIC_SENTRY_DSN) {
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
     // You can remove this option if you're not planning to use the Sentry Session Replay feature:
     integrations: [
+      Sentry.browserTracingIntegration(),
       Sentry.replayIntegration({
         blockAllMedia: true,
         // Additional Replay configuration goes in here, for example:
