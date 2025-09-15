@@ -11,6 +11,7 @@ export { darkAlgorithm } from './algorithm/dark';
 export { lightAlgorithm } from './algorithm/light';
 
 // 导出主题 Provider 和相关功能
+export { getLineHeight } from './algorithm/shared/genFontSizes';
 export * from './color';
 export * from './colorUtils';
 export * from './interface';
