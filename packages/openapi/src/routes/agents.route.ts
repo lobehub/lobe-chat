@@ -6,10 +6,10 @@ import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 import { AgentController } from '../controllers/agent.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
+import { PaginationQuerySchema } from '../types';
 import {
   AgentIdParamSchema,
   CreateAgentRequestSchema,
-  GetAgentsRequestSchema,
   UpdateAgentRequestSchema,
 } from '../types/agent.type';
 
@@ -28,7 +28,7 @@ AgentRoutes.get(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view the Agent list',
   ),
-  zValidator('query', GetAgentsRequestSchema),
+  zValidator('query', PaginationQuerySchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.queryAgents(c);
@@ -78,7 +78,7 @@ AgentRoutes.get(
  * PUT /api/v1/agents/:id
  * 需要 Agent 更新权限
  */
-AgentRoutes.put(
+AgentRoutes.patch(
   '/:id',
   requireAuth,
   requireAnyPermission(

@@ -6,7 +6,8 @@ import { getAllScopePermissions } from '@/utils/rbac';
 import { ModelController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
-import { ModelConfigsQuerySchema, ModelsListQuerySchema } from '../types/model.type';
+import { PaginationQuerySchema } from '../types';
+import { ModelConfigsQuerySchema } from '../types/model.type';
 
 // Models 相关路由
 const ModelRoutes = new Hono();
@@ -16,14 +17,14 @@ ModelRoutes.get(
   '/',
   requireAuth,
   requireAnyPermission(getAllScopePermissions('AI_MODEL_READ'), '您没有权限查看模型列表'),
-  zValidator('query', ModelsListQuerySchema),
+  zValidator('query', PaginationQuerySchema),
   (c) => {
     const controller = new ModelController();
     return controller.handleGetModels(c);
   },
 );
 
-// GET /api/v1/model-configs - 获取模型配置 (支持按provider/model或sessionId查询)
+// GET /api/v1/models/configs - 获取模型配置 (支持按provider/model或sessionId查询)
 ModelRoutes.get(
   '/configs',
   requireAuth,

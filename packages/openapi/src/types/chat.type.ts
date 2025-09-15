@@ -57,20 +57,20 @@ export interface ChatServiceResponse {
  * 翻译服务参数
  */
 export interface TranslateServiceParams {
-  fromLanguage?: string;
+  from: string;
   model?: string;
   provider?: string;
   sessionId?: string | null;
   text: string;
-  toLanguage: string;
+  to: string;
 }
 
 export const TranslateServiceParamsSchema = z.object({
-  fromLanguage: z.string().nullish(),
+  from: z.string().min(1, '源语言不能为空'),
   model: z.string().nullish(),
   provider: z.string().nullish(),
   text: z.string().min(1, '待翻译文本不能为空'),
-  toLanguage: z.string().min(1, '目标语言不能为空'),
+  to: z.string().min(1, '目标语言不能为空'),
 });
 
 // ==================== Message Generation Types ====================

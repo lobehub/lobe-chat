@@ -25,11 +25,15 @@ export type MessageTranslateParams = MessageTranslateQueryRequest;
  */
 export interface MessageTranslateBody {
   from: string;
+  model?: string;
+  provider?: string;
   to: string;
 }
 
 export const MessageTranslateTriggerRequestSchema = z.object({
   from: z.string(),
+  model: z.string().nullish(),
+  provider: z.string().nullish(),
   to: z.string().min(1, 'target language is required, e.g. en-US, zh-CN'),
 });
 

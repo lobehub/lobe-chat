@@ -97,15 +97,16 @@ export class MessageTranslateService extends BaseService {
     }
 
     this.log('info', '开始翻译消息', {
-      from: translateData.from,
-      messageId: translateData.messageId,
-      to: translateData.to,
+      ...translateData,
       userId: this.userId,
     });
 
     try {
       // 首先获取原始消息内容和 sessionId
-      const messageInfo = await this.getMessageWithSessionId(translateData.messageId);
+      const messageInfo = await this.db.query.messages.findFirst({
+        where: eq(messages.id, translateData.messageId),
+      });
+
       if (!messageInfo) {
         throw this.createCommonError('未找到要翻译的消息');
       }
@@ -115,10 +116,9 @@ export class MessageTranslateService extends BaseService {
       // 使用ChatService进行翻译，传递 sessionId 以使用正确的模型配置
       const chatService = new ChatService(this.db, this.userId);
       const translatedContent = await chatService.translate({
-        fromLanguage: translateData.from,
+        ...translateData,
         sessionId: messageInfo.sessionId,
         text: removeSystemContext(messageInfo.content),
-        toLanguage: translateData.to,
       });
 
       // 使用 updateTranslateInfo 来更新翻译内容
@@ -161,7 +161,9 @@ export class MessageTranslateService extends BaseService {
 
     try {
       // 检查消息是否存在
-      const messageInfo = await this.getMessageWithSessionId(data.messageId);
+      const messageInfo = await this.db.query.messages.findFirst({
+        where: eq(messages.id, data.messageId),
+      });
       if (!messageInfo) {
         throw this.createCommonError('未找到要更新翻译信息的消息');
       }
@@ -196,33 +198,6 @@ export class MessageTranslateService extends BaseService {
       };
     } catch (error) {
       this.handleServiceError(error, '更新翻译信息');
-    }
-  }
-
-  /**
-   * 获取消息内容和 sessionId
-   * @param messageId 消息ID
-   * @returns 消息内容和 sessionId
-   */
-  private async getMessageWithSessionId(
-    messageId: string,
-  ): Promise<{ content: string; sessionId: string } | null> {
-    try {
-      const result = await this.db.query.messages.findFirst({
-        columns: { content: true, sessionId: true },
-        where: eq(messages.id, messageId),
-      });
-
-      if (!result?.content || !result?.sessionId) {
-        return null;
-      }
-
-      return {
-        content: result.content,
-        sessionId: result.sessionId,
-      };
-    } catch (error) {
-      this.handleServiceError(error, '获取消息内容和 sessionId');
     }
   }
 

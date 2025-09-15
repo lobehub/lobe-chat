@@ -24,7 +24,7 @@ MessageTranslatesRoutes.post(
     'You do not have permission to read translated message',
   ),
   requireAnyPermission(
-    getAllScopePermissions('MESSAGE_CREATE'),
+    getAllScopePermissions('TRANSLATION_CREATE'),
     'You do not have permission to translate message',
   ),
   zValidator('param', MessageTranslateQueryRequestSchema),
@@ -55,7 +55,7 @@ MessageTranslatesRoutes.get(
 );
 
 // PUT /api/v1/message-translates/:messageId - 更新消息翻译信息
-MessageTranslatesRoutes.put(
+MessageTranslatesRoutes.patch(
   '/:messageId',
   requireAuth,
   requireAnyPermission(
@@ -78,10 +78,6 @@ MessageTranslatesRoutes.put(
 MessageTranslatesRoutes.delete(
   '/:messageId',
   requireAuth,
-  requireAnyPermission(
-    getAllScopePermissions('MESSAGE_UPDATE'),
-    'You do not have permission to delete translation',
-  ),
   requireAnyPermission(
     getAllScopePermissions('TRANSLATION_DELETE'),
     'You do not have permission to delete translation',

@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { AiModelSelectItem } from '@/database/schemas';
 import { AiModelSourceType } from '@/libs/model-bank/types';
 
+import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from './common.type';
+
 // ==================== Model Configuration Query Types ====================
 
 /**
@@ -37,6 +39,7 @@ export const ModelConfigsQuerySchema = z
     // 按 sessionId 查询
     sessionId: z.string().nullish(),
   })
+  .extend(PaginationQuerySchema.shape)
   .refine(
     (data) => {
       // 确保至少提供一种查询方式
@@ -52,13 +55,9 @@ export const ModelConfigsQuerySchema = z
 /**
  * 模型列表查询参数
  */
-export interface ModelsListQuery {
+export interface ModelsListQuery extends IPaginationQuery {
   enabled?: boolean;
-  limit?: number;
-  order?: 'asc' | 'desc';
-  page?: number;
   provider?: string;
-  sort?: 'createdAt' | 'updatedAt' | 'sort';
   type?: 'chat' | 'embedding' | 'tts' | 'stt' | 'image' | 'text2video' | 'text2music' | 'realtime';
 }
 
@@ -94,10 +93,9 @@ export const ModelsListQuerySchema = z.object({
 
 // ==================== Model Response Types ====================
 
-export interface GetModelsResponse {
+export type GetModelsResponse = PaginationQueryResponse<{
   models?: AiModelSelectItem[];
-  totalModels: number;
-}
+}>;
 
 /**
  * Model config response types

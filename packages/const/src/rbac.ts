@@ -26,6 +26,8 @@ export const PERMISSION_ACTIONS = {
 
   AI_MODEL_UPDATE: 'ai_model:update',
 
+  AI_MODEL_INVOKE: 'ai_model:invoke',
+
   AI_PROVIDER_CREATE: 'ai_provider:create',
 
   AI_PROVIDER_DELETE: 'ai_provider:delete',

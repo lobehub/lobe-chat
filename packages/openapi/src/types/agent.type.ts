@@ -23,11 +23,6 @@ export interface CreateAgentRequest {
 
 export type GetAgentsRequest = IPaginationQuery;
 
-/**
- * 获取 Agent 列表查询参数
- */
-export { PaginationQuerySchema as GetAgentsRequestSchema } from '.';
-
 export const CreateAgentRequestSchema = z.object({
   avatar: z.string().nullish(),
   chatConfig: z
@@ -64,7 +59,7 @@ export type UpdateAgentRequest = CreateAgentRequest & {
   id: string;
 };
 
-export const UpdateAgentRequestSchema = CreateAgentRequestSchema;
+export const UpdateAgentRequestSchema = CreateAgentRequestSchema.partial();
 
 /**
  * 删除 Agent 请求参数

@@ -1,9 +1,10 @@
-import { and, asc, count, desc, eq } from 'drizzle-orm';
+import { and, asc, count, eq, ilike, or } from 'drizzle-orm';
 
 import { agents, agentsToSessions, aiModels } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
   GetModelConfigBySessionRequest,
@@ -40,10 +41,27 @@ export class ModelService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '无权访问模型列表');
       }
 
-      const { limit, order, page, provider, sort, type, enabled } = request;
-
-      // 构建查询条件 - 优化：避免嵌套 and 条件
+      // 构建查询条件
       const conditions = [];
+
+      // 权限条件直接加入主条件数组
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(aiModels.userId, permissionResult.condition.userId));
+      }
+
+      // 处理 ModelsListQuery 特定参数
+      const { page, pageSize, keyword, provider, type, enabled } = request;
+
+      // 如果提供了关键词，添加到查询条件中
+      if (keyword) {
+        conditions.push(
+          or(
+            ilike(aiModels.id, `%${keyword}%`),
+            ilike(aiModels.displayName, `%${keyword}%`),
+            ilike(aiModels.description, `%${keyword}%`),
+          ),
+        );
+      }
 
       if (provider) {
         conditions.push(eq(aiModels.providerId, provider));
@@ -57,54 +75,25 @@ export class ModelService extends BaseService {
         conditions.push(eq(aiModels.enabled, enabled));
       }
 
-      // 权限条件直接加入主条件数组
-      if (permissionResult.condition?.userId) {
-        conditions.push(eq(aiModels.userId, permissionResult.condition.userId));
-      }
-
-      // 构建排序条件 - 优化：支持标准排序字段
-      let sortField;
-      switch (sort) {
-        case 'createdAt': {
-          sortField = aiModels.createdAt;
-          break;
-        }
-        case 'updatedAt': {
-          sortField = aiModels.updatedAt;
-          break;
-        }
-        case 'sort': {
-          sortField = aiModels.sort;
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-
-      // 构建分页条件 - 优化：添加边界检查
-      const safeLimit = Math.min(100, Math.max(1, limit ?? 10)); // 限制在 1-100 之间
-      const safePage = Math.max(1, page ?? 1);
-      const offset = (safePage - 1) * safeLimit;
-
       const finalWhereCondition = conditions.length > 0 ? and(...conditions) : undefined;
 
-      // 并行执行查询和计数 - 优化：减少等待时间
+      // 计算偏移量
+      const { limit, offset } = processPaginationConditions({ page, pageSize });
+
+      // 并行执行查询和计数
       const [result, totalResult] = await Promise.all([
         this.db.query.aiModels.findMany({
-          limit: safeLimit,
-          offset: offset,
-          orderBy: sortField ? (order === 'asc' ? asc(sortField) : desc(sortField)) : undefined,
+          limit,
+          offset,
+          orderBy: asc(aiModels.sort),
           where: finalWhereCondition,
         }),
         this.db.select({ count: count() }).from(aiModels).where(finalWhereCondition),
       ]);
 
-      const totalModels = totalResult[0]?.count ?? 0;
-
       return {
         models: result,
-        totalModels,
+        total: totalResult[0]?.count ?? 0,
       };
     } catch (error) {
       this.handleServiceError(error, '获取模型列表失败');
@@ -250,7 +239,7 @@ export class ModelService extends BaseService {
 
       return model;
     } catch (error) {
-      this.handleServiceError(error, '根据会话ID获取模型配置失败');
+      this.handleServiceError(error, '根据会话ID获取模型配置');
     }
   }
 }
