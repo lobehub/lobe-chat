@@ -49,8 +49,8 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { genToolCallingName } from '@/utils/toolCall';
 import { isLocalUrl } from '@/utils/url';
-import { parseDataUri } from 'packages/model-runtime/src';
-import { filesPrompts, BuiltinSystemRolePrompts } from 'packages/prompts/src';
+import { parseDataUri } from '@lobechat/model-runtime';
+import { filesPrompts, BuiltinSystemRolePrompts } from '@lobechat/prompts';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   messages: ChatMessage[];
