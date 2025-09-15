@@ -411,6 +411,7 @@ table messages {
   agent_id text
   group_id text
   target_id text
+  message_group_id text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -434,6 +435,26 @@ table messages_files {
 
   indexes {
     (file_id, message_id) [pk]
+  }
+}
+
+table message_groups {
+  id text [pk, not null]
+  topic_id text
+  user_id text [not null]
+  parent_group_id text
+  user_message_id text
+  models jsonb
+  providers jsonb
+  title text
+  description text
+  client_id text
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'message_groups_client_id_user_id_unique', unique]
   }
 }
 
@@ -995,6 +1016,14 @@ ref: generations.user_id - users.id
 ref: generations.generation_batch_id > generation_batches.id
 
 ref: generations.async_task_id - async_tasks.id
+
+ref: message_groups.user_id - users.id
+
+ref: message_groups.topic_id - topics.id
+
+ref: messages.message_group_id > message_groups.id
+
+ref: message_groups.parent_group_id > message_groups.id
 
 ref: messages_files.file_id > files.id
 
