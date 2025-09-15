@@ -166,8 +166,27 @@ export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
 export const createSSEProtocolTransformer = (
   transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
   streamStack?: StreamContext,
-) =>
-  new TransformStream({
+  options?: { requireTerminalEvent?: boolean },
+) => {
+  let hasTerminalEvent = false;
+  const requireTerminalEvent = Boolean(options?.requireTerminalEvent);
+
+  return new TransformStream({
+    flush(controller) {
+      // If the upstream closes without sending a terminal event, emit a final error event
+      if (requireTerminalEvent && !hasTerminalEvent) {
+        const id = streamStack?.id || 'stream_end';
+        const data = {
+          body: { name: 'Stream parsing error', reason: 'unexpected_end' },
+          message: 'Stream ended unexpectedly',
+          name: 'Stream parsing error',
+          type: 'StreamChunkError',
+        };
+        controller.enqueue(`id: ${id}\n`);
+        controller.enqueue(`event: error\n`);
+        controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
+      }
+    },
     transform: (chunk, controller) => {
       const result = transformer(chunk, streamStack || { id: '' });
 
@@ -177,9 +196,13 @@ export const createSSEProtocolTransformer = (
         controller.enqueue(`id: ${id}\n`);
         controller.enqueue(`event: ${type}\n`);
         controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
+
+        // mark terminal when receiving any of these events
+        if (type === 'stop' || type === 'usage' || type === 'error') hasTerminalEvent = true;
       });
     },
   });
+};
 
 export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) {
   const textEncoder = new TextEncoder();

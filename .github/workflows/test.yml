@@ -19,6 +19,9 @@ jobs:
           - electron-server-ipc
           - utils
           - python-interpreter
+          - context-engine
+          - agent-runtime
+
 
     name: Test package ${{ matrix.package }}
 

@@ -25,7 +25,7 @@ vi.mock('@/config/modelProviders', () => ({
 }));
 
 // Mock LLM config
-vi.mock('@/config/llm', () => ({
+vi.mock('@/envs/llm', () => ({
   getLLMConfig: () => ({
     ENABLED_AZURE_OPENAI: true,
     ENABLED_AWS_BEDROCK: true,

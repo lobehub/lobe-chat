@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createSSEDataExtractor, createTokenSpeedCalculator } from './protocol';
+import { createSSEDataExtractor, createTokenSpeedCalculator, createSSEProtocolTransformer } from './protocol';
 
 describe('createSSEDataExtractor', () => {
   // Helper function to convert string to Uint8Array
@@ -231,5 +231,84 @@ describe('createTokenSpeedCalculator', async () => {
     // tps and ttft should be numeric (avoid flakiness if interval is 0ms)
     expect(speedChunk.data.tps).not.toBeNaN();
     expect(speedChunk.data.ttft).not.toBeNaN();
+  });
+});
+
+describe('createSSEProtocolTransformer', () => {
+  const processChunk = async (transformer: TransformStream, chunk: any) => {
+    const results: any[] = [];
+    const readable = new ReadableStream({
+      start(controller) {
+        controller.enqueue(chunk);
+        controller.close();
+      },
+    });
+
+    const writable = new WritableStream({
+      write(chunk) {
+        results.push(chunk);
+      },
+    });
+
+    await readable.pipeThrough(transformer).pipeTo(writable);
+
+    return results;
+  };
+
+  it('should convert chunk into SSE formatted lines without enforcing terminal (default)', async () => {
+    const transformerFn = (chunk: any) => ({ type: 'text', id: chunk.id, data: chunk.data });
+  const transformer = createSSEProtocolTransformer(transformerFn as any);
+
+    const input = { id: '1', data: 'hello' };
+    const results = await processChunk(transformer, input);
+
+    // Should only output the text event, no injected error on flush (default not enforced)
+    expect(results).toEqual([
+      `id: 1\n`,
+      `event: text\n`,
+      `data: ${JSON.stringify('hello')}\n\n`,
+    ]);
+  });
+
+  it('should not emit flush error if a terminal event was received (enforced)', async () => {
+    const transformerFn = (chunk: any) => ({ type: 'stop', id: chunk.id, data: chunk.data });
+  const transformer = createSSEProtocolTransformer(transformerFn as any, { id: 'stream_ok' }, { requireTerminalEvent: true });
+
+    const input = { id: 'ok', data: 'bye' };
+    const results = await processChunk(transformer, input);
+
+    // Only the stop event lines should be present (no extra error event from flush)
+    expect(results).toEqual([
+      `id: ok\n`,
+      `event: stop\n`,
+      `data: ${JSON.stringify('bye')}\n\n`,
+    ]);
+  });
+
+  it('should emit an error event on flush when no terminal event received (enforced)', async () => {
+    const transformerFn = (chunk: any) => ({ type: 'text', id: chunk.id, data: chunk.data });
+    const streamStack = { id: 'stream_missing_term' } as any;
+  const transformer = createSSEProtocolTransformer(transformerFn as any, streamStack, { requireTerminalEvent: true });
+
+    const input = { id: '1', data: 'partial' };
+    const results = await processChunk(transformer, input);
+
+    // original 3 lines + 3 lines from flush error
+    expect(results).toHaveLength(6);
+
+    // last three lines should be the injected error event
+    const lastThree = results.slice(-3);
+    const expectedData = {
+      body: { name: 'Stream parsing error', reason: 'unexpected_end' },
+      message: 'Stream ended unexpectedly',
+      name: 'Stream parsing error',
+      type: 'StreamChunkError',
+    };
+
+    expect(lastThree).toEqual([
+      `id: ${streamStack.id}\n`,
+      `event: error\n`,
+      `data: ${JSON.stringify(expectedData)}\n\n`,
+    ]);
   });
 });

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
+
 import {
   agents,
   agentsKnowledgeBases,
@@ -16,9 +17,8 @@ import {
   topics,
   userSettings,
   users,
-} from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
-
+} from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { DATA_EXPORT_CONFIG, DataExporterRepos } from './index';
 
 let db = clientDB as LobeChatDatabase;

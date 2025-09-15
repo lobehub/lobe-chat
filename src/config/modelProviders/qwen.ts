@@ -247,7 +247,7 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
   ],
-  checkModel: 'qwen-flash-latest',
+  checkModel: 'qwen-flash',
   description:
     '通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。',
   disableBrowserRequest: true,
