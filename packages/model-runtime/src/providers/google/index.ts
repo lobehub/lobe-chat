@@ -488,6 +488,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         const multipartBody = new Blob([part1, part2Header, mediaBlob, part3], {
           type: `multipart/related; boundary=${boundary}`,
         });
+
         // keep keys sorted in options object
         const uploadRes = await fetch(uploadUrl, { body: multipartBody, method: 'POST' });
         if (!uploadRes.ok) {

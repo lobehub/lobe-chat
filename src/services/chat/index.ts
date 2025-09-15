@@ -491,7 +491,6 @@ class ChatService {
           const isAudio = lower.startsWith('audio/');
           const isVideo = lower.startsWith('video/');
           if (isAudio || isVideo) {
-            // 保留双方新增内容，既支持多行对象，也支持单行对象
             fileUrlParts.push({
               file_url: {
                 displayName: f.name,
@@ -500,8 +499,6 @@ class ChatService {
               },
               type: 'file_url',
             } as any);
-            // 兼容单行对象格式（如有调用方依赖）
-            // fileUrlParts.push({ file_url: { displayName: f.name, mimeType: f.fileType, url: f.url }, type: 'file_url' } as any);
           }
         }
       }

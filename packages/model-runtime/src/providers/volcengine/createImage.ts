@@ -16,6 +16,8 @@ export async function createVolcengineImage(
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
+  const { apiKey, baseURL } = options;
+
   log('Creating image with Volcengine API - model: %s, params: %O', model, params);
 
   // Create OpenAI client with Volcengine configuration

@@ -33,8 +33,8 @@ function validateNoUrlsInConfig(obj: any, path: string = ''): void {
     if (obj.startsWith('http://') || obj.startsWith('https://')) {
       throw new Error(
         `Invalid configuration: Found full URL instead of key at ${path || 'root'}. ` +
-          `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
-          `All URLs must be converted to storage keys before database insertion.`,
+        `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
+        `All URLs must be converted to storage keys before database insertion.`,
       );
     }
   } else if (Array.isArray(obj)) {
@@ -132,12 +132,6 @@ export const imageRouter = router({
 
     // 防御性检测：确保没有完整URL进入数据库
     validateNoUrlsInConfig(configForDatabase, 'configForDatabase');
-
-    // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
-    const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
-
-    // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
-    const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
 
     // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
     const effectiveImageNum = model === 'doubao-seededit-3-0-i2i-250628' ? 1 : imageNum;
