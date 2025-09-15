@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
 
-import Button from '../index';
-import { createStyles } from '@/theme';
-
-const useStyles = createStyles((token) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-}));
+import { Button, Space } from '@/components';
 
 const StatesDemo = () => {
-  const { styles } = useStyles();
   const [loading, setLoading] = useState(false);
 
   const handleLoadingClick = () => {
@@ -21,7 +11,7 @@ const StatesDemo = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <Space size={[8, 16]} wrap>
       <Button onPress={() => console.log('Normal clicked')} type="primary">
         Normal
       </Button>
@@ -37,7 +27,7 @@ const StatesDemo = () => {
       <Button loading onPress={() => console.log('Always loading')} type="default">
         Always Loading
       </Button>
-    </View>
+    </Space>
   );
 };
 
