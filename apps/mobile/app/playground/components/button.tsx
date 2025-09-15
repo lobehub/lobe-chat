@@ -8,7 +8,7 @@ import ComponentPlayground, { DemoItem } from '@/components/Playground';
 import {
   BasicDemo,
   SizesDemo,
-  StatesDemo,
+  DisabledDemo,
   BlockDemo,
   IconDemo,
   ShapeDemo,
@@ -21,7 +21,7 @@ import README from '@/components/Button/readme';
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
-  { component: <StatesDemo />, key: 'states', title: '按钮状态' },
+  { component: <DisabledDemo />, key: 'disabled', title: '禁用状态' },
   { component: <BlockDemo />, key: 'block', title: '块级按钮' },
   { component: <IconDemo />, key: 'icon', title: '图标按钮' },
   { component: <ShapeDemo />, key: 'shape', title: '按钮形状' },

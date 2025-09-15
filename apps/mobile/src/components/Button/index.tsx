@@ -87,7 +87,7 @@ const Button: React.FC<ButtonProps> = ({
       }
       case 'link': {
         return {
-          color: (danger ? 'danger' : 'default') as ButtonColor,
+          color: (danger ? 'danger' : 'primary') as ButtonColor,
           variant: 'link' as ButtonVariant,
         };
       }

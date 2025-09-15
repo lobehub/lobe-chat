@@ -11,7 +11,7 @@ const VariantColorDemo = () => {
     <View>
       {colors.map((c) => (
         <Space key={c} size={[6, 16]} wrap>
-          <Button color={c} size="small" variant="filled">
+          <Button color={c} size="small" variant="solid">
             Solid
           </Button>
 
@@ -23,7 +23,7 @@ const VariantColorDemo = () => {
             Dashed
           </Button>
 
-          <Button color={c} size="small" variant="solid">
+          <Button color={c} size="small" variant="filled">
             Filled
           </Button>
 
