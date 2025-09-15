@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.128.8](https://github.com/lobehub/lobe-chat/compare/v1.128.7...v1.128.8)
+
+<sup>Released on **2025-09-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Enable toggling search on/off via search button click & historyCount button.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Enable toggling search on/off via search button click & historyCount button, closes [#9173](https://github.com/lobehub/lobe-chat/issues/9173) ([240c7b7](https://github.com/lobehub/lobe-chat/commit/240c7b7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.128.7](https://github.com/lobehub/lobe-chat/compare/v1.128.6...v1.128.7)
 
 <sup>Released on **2025-09-14**</sup>
