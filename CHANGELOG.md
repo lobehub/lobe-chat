@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.128.9](https://github.com/lobehub/lobe-chat/compare/v1.128.8...v1.128.9)
+
+<sup>Released on **2025-09-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve error handle with agent config, support `.doc` file parse.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve error handle with agent config, closes [#9263](https://github.com/lobehub/lobe-chat/issues/9263) ([6656217](https://github.com/lobehub/lobe-chat/commit/6656217))
+- **misc**: Support `.doc` file parse, closes [#8182](https://github.com/lobehub/lobe-chat/issues/8182) ([ed42753](https://github.com/lobehub/lobe-chat/commit/ed42753))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.128.8](https://github.com/lobehub/lobe-chat/compare/v1.128.7...v1.128.8)
 
 <sup>Released on **2025-09-15**</sup>
