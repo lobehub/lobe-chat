@@ -58,7 +58,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
           autoCorrect={false}
           keyboardType="default"
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={8}
           onChangeText={handleInputChange}
           onSubmitEditing={handleSubmit}
           placeholder={t('placeholder', { ns: 'chat' })}
