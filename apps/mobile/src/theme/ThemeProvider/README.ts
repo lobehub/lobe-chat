@@ -1,4 +1,4 @@
-# ThemeProvider
+const README = `# ThemeProvider
 
 基于 Ant Design 主题系统设计的 React Native 主题提供者组件，支持完全自定义的主题配置。
 
@@ -12,7 +12,7 @@
 
 ## 基础用法
 
-```tsx
+\`\`\`tsx
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 function App() {
@@ -22,13 +22,13 @@ function App() {
     </ThemeProvider>
   );
 }
-```
+\`\`\`
 
 ## 自定义配置
 
 ### 自定义 Token
 
-```tsx
+\`\`\`tsx
 <ThemeProvider
   theme={{
     token: {
@@ -39,11 +39,11 @@ function App() {
 >
   <YourApp />
 </ThemeProvider>
-```
+\`\`\`
 
 ### 自定义算法
 
-```tsx
+\`\`\`tsx
 import { darkAlgorithm } from '@/components/ThemeProvider';
 
 <ThemeProvider
@@ -53,11 +53,11 @@ import { darkAlgorithm } from '@/components/ThemeProvider';
 >
   <YourApp />
 </ThemeProvider>;
-```
+\`\`\`
 
 ### 组合配置
 
-```tsx
+\`\`\`tsx
 import { darkAlgorithm, compactAlgorithm } from '@/components/ThemeProvider';
 
 <ThemeProvider
@@ -71,13 +71,13 @@ import { darkAlgorithm, compactAlgorithm } from '@/components/ThemeProvider';
 >
   <YourApp />
 </ThemeProvider>;
-```
+\`\`\`
 
 ## 使用主题
 
 ### useThemeToken Hook
 
-```tsx
+\`\`\`tsx
 import { useThemeToken } from '@/components/ThemeProvider';
 
 function MyComponent() {
@@ -102,11 +102,11 @@ function MyComponent() {
     </View>
   );
 }
-```
+\`\`\`
 
 ### useTheme Hook
 
-```tsx
+\`\`\`tsx
 import { useTheme } from '@/components/ThemeProvider';
 
 function ThemeToggle() {
@@ -118,14 +118,14 @@ function ThemeToggle() {
     </TouchableOpacity>
   );
 }
-```
+\`\`\`
 
 ## 可用算法
 
-- `defaultAlgorithm` - 默认亮色算法
-- `darkAlgorithm` - 暗色算法
-- `compactAlgorithm` - 紧凑算法（较小间距）
-- `compactDarkAlgorithm` - 紧凑暗色算法
+- \`defaultAlgorithm\` - 默认亮色算法
+- \`darkAlgorithm\` - 暗色算法
+- \`compactAlgorithm\` - 紧凑算法（较小间距）
+- \`compactDarkAlgorithm\` - 紧凑暗色算法
 
 ## API
 
@@ -141,4 +141,7 @@ function ThemeToggle() {
 | 属性      | 类型                                    | 说明            |
 | --------- | --------------------------------------- | --------------- |
 | token     | Partial<SeedToken>                      | 种子 Token 配置 |
-| algorithm | MappingAlgorithm \| MappingAlgorithm\[] | 主题算法        |
+| algorithm | MappingAlgorithm \\| MappingAlgorithm\\[] | 主题算法        |
+`;
+
+export default README;
