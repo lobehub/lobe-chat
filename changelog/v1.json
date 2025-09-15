@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve error handle with agent config, support .doc file parse."]
+    },
+    "date": "2025-09-15",
+    "version": "1.128.9"
+  },
+  {
+    "children": {
       "improvements": [
         "Enable toggling search on/off via search button click & historyCount button."
       ]
