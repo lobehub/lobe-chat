@@ -167,7 +167,7 @@
     "@neondatabase/serverless": "^1.0.1",
     "@next/third-parties": "^15.5.3",
     "@react-spring/web": "^9.7.5",
-    "@sentry/nextjs": "^7.120.4",
+    "@sentry/nextjs": "^10.11.0",
     "@serwist/next": "^9.2.1",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.87.4",
