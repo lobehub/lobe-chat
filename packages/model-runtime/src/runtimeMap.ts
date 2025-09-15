@@ -12,6 +12,7 @@ import { LobeCloudflareAI } from './cloudflare';
 import { LobeCohereAI } from './cohere';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeFalAI } from './fal';
+import { LobeFeatherlessAI } from './featherlessai/index';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -71,6 +72,7 @@ export const providerRuntimeMap = {
   cohere: LobeCohereAI,
   deepseek: LobeDeepSeekAI,
   fal: LobeFalAI,
+  featherlessai: LobeFeatherlessAI,
   fireworksai: LobeFireworksAI,
   giteeai: LobeGiteeAI,
   github: LobeGithubAI,
