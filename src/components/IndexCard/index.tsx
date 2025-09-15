@@ -81,6 +81,7 @@ const IndexCard = memo<IndexCardProps>(
       <Flexbox
         style={{
           marginBottom: !expand ? 12 : undefined,
+          maxWidth: '1024px',
           position: 'relative',
           width: '100%',
         }}
