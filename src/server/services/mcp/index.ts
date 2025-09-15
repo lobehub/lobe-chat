@@ -322,6 +322,8 @@ export class MCPService {
     return {
       api: tools,
       identifier,
+      // @ts-ignore
+      mcpParams,
       meta: {
         avatar: metadata?.avatar || 'MCP_AVATAR',
         description:
@@ -338,13 +340,15 @@ export class MCPService {
     params: Omit<StdioMCPParams, 'type'>,
     metadata?: CustomPluginMetadata,
   ): Promise<LobeChatPluginManifest> {
-    const client = await this.getClient({
+    const mcpParams = {
       args: params.args,
       command: params.command,
       env: params.env,
       name: params.name,
-      type: 'stdio',
-    }); // Get client using params
+      type: 'stdio' as const,
+    };
+
+    const client = await this.getClient(mcpParams); // Get client using params
 
     const manifest = await client.listManifests();
 
@@ -365,6 +369,8 @@ export class MCPService {
         title: metadata?.name || identifier,
       },
       ...manifest,
+      // @ts-ignore
+      mcpParams,
       // TODO: temporary
       type: 'mcp' as any,
     } as LobeChatPluginManifest;

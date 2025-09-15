@@ -64,6 +64,8 @@ export const LobeChatPluginApiSchema = z.object({
   url: z.string().optional(),
 });
 
+import type { HumanInterventionPolicy } from './intervention';
+
 export interface BuiltinToolManifest {
   api: LobeChatPluginApi[];
 
