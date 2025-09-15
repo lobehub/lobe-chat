@@ -16,6 +16,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           style={{
             paddingBlock: 24,
             paddingInline: 32,
+            maxHeight: "100vh"
           }}
         >
           {children}

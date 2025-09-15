@@ -1,52 +1,44 @@
 'use client';
 
-import { css, cx } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import React, { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SkeletonLoading from '@/components/Loading/SkeletonLoading';
-import { SettingsTabs } from '@/store/global/initialState';
+import Loading from '@/components/Loading/BrandTextLoading';
 
-const HavePaddingLoadingClassName = cx(css`
-  padding: 24px;
-`);
+import { SettingsTabs } from '@/store/global/initialState';
 
 const componentMap = {
   [SettingsTabs.Common]: dynamic(() => import('../common'), {
-    loading: () => <SkeletonLoading />,
-    ssr: false,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
-    loading: () => <SkeletonLoading className={HavePaddingLoadingClassName} />,
-    ssr: false,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.LLM]: dynamic(() => import('../llm'), {
-    loading: () => <SkeletonLoading />,
-    ssr: false,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
-    loading: () => <SkeletonLoading className={HavePaddingLoadingClassName} />,
-    ssr: false,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.About]: dynamic(() => import('../about'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.Hotkey]: dynamic(() => import('../hotkey'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.Proxy]: dynamic(() => import('../proxy'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.Storage]: dynamic(() => import('../storage'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
   [SettingsTabs.SystemAgent]: dynamic(() => import('../system-agent'), {
-    loading: () => <SkeletonLoading />,
+    loading: () => <Loading />,
   }),
 };
 
