@@ -56,7 +56,13 @@ export class ServerService implements ISessionService {
   };
 
   updateSessionConfig: ISessionService['updateSessionConfig'] = (id, config, signal) => {
-    return lambdaClient.session.updateSessionConfig.mutate({ id, value: config }, { signal });
+    return lambdaClient.session.updateSessionConfig.mutate(
+      { id, value: config },
+      {
+        context: { showNotification: false },
+        signal,
+      },
+    );
   };
 
   updateSessionMeta: ISessionService['updateSessionMeta'] = (id, meta, signal) => {
