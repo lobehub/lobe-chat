@@ -27,9 +27,10 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
   },
   google: {
-    functionCallKeywords: ['gemini'],
+    functionCallKeywords: ['gemini', '!-image-'],
     imageOutputKeywords: ['-image-'],
-    reasoningKeywords: ['thinking', '-2.5-'],
+    reasoningKeywords: ['thinking', '-2.5-', '!-image-'],
+    searchKeywords: ['-search', '!-image-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
   inclusionai: {
@@ -361,9 +362,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
@@ -436,9 +437,7 @@ const processModelCard = (
     functionCall:
       model.functionCall ??
       knownModel?.abilities?.functionCall ??
-      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) &&
-        !isExcludedModel &&
-        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
+      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
         false),
     id: model.id,
     imageOutput:
@@ -451,18 +450,13 @@ const processModelCard = (
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??
-      ((isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) &&
-        !isExcludedModel &&
-        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
+      ((isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) && !isExcludedModel) ||
         false),
     releasedAt: processReleasedAt(model, knownModel),
     search:
       model.search ??
       knownModel?.abilities?.search ??
-      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) &&
-        !isExcludedModel &&
-        !isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords)) ||
-        false),
+      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
     type: modelType,
     // current, only image model use the parameters field
     ...(modelType === 'image' && {
