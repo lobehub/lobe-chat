@@ -67,7 +67,7 @@ export const LobeAiHubMixAI = createRouterRuntime({
         chatCompletion: {
           useResponseModels: [
             ...Array.from(responsesAPIModels),
-            /gpt-/,
+            /gpt-\d(?!\d)/,
             /^o\d/,
           ],
         },
