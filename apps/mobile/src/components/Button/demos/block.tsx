@@ -17,19 +17,22 @@ const BlockDemo = () => {
   return (
     <View style={styles.container}>
       <Button block onPress={() => console.log('Block Primary clicked')} type="primary">
-        Block Primary Button
+        Primary
       </Button>
 
       <Button block onPress={() => console.log('Block Default clicked')} type="default">
-        Block Default Button
+        Default
+      </Button>
+
+      <Button block onPress={() => console.log('Block Dashed clicked')} type="dashed">
+        Dashed
       </Button>
 
       <Button block onPress={() => console.log('Block Text clicked')} type="text">
-        Block Text Button
+        Text
       </Button>
-
-      <Button block onPress={() => console.log('Block Large clicked')} size="large" type="primary">
-        Block Large Button
+      <Button block onPress={() => console.log('Block Text clicked')} type="link">
+        Link
       </Button>
     </View>
   );
