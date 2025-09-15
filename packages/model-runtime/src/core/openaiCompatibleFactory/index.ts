@@ -54,14 +54,6 @@ export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
   provider: string;
 };
 
-// Instance-level chat completion hooks that can be passed via runtime constructor options
-export type InstanceChatCompletionOptions<T extends Record<string, any> = any> = {
-  preProcessPayload?: (
-    payload: ChatStreamPayload,
-    options: ConstructorOptions<T>,
-  ) => ChatStreamPayload;
-};
-
 export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
     client: any,
@@ -95,11 +87,16 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     handleTransformResponseToStream?: (
       data: OpenAI.ChatCompletion,
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
-    noUserId?: boolean;
-    preProcessPayload?: (
-      payload: ChatStreamPayload,
-      options: ConstructorOptions<T>,
-    ) => ChatStreamPayload;
+      noUserId?: boolean;
+    /**
+     * If true, route chat requests to Responses API path directly
+     */
+    useResponse?: boolean;
+    /**
+     * Allow only some models to use Responses API by simple matching.
+     * If any string appears in model id or RegExp matches, Responses API is used.
+     */
+    useResponseModels?: Array<string | RegExp>;
   };
   constructorOptions?: ConstructorOptions<T>;
   createImage?: (
@@ -238,16 +235,29 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       try {
         const inputStartAt = Date.now();
         
-        // 先进行实例级预处理
-        const instancePreProcessPayload = (this._options as any).chatCompletion?.preProcessPayload;
-        let processedPayload = payload;
-        if (instancePreProcessPayload) {
-          try {
-            processedPayload = instancePreProcessPayload(payload, this._options);
-          } catch {
-            // fallback to original payload on preprocessing error
-            processedPayload = payload;
-          }
+        // 工厂级 Responses API 路由控制（支持实例覆盖）
+        const modelId = (payload as any).model as string | undefined;
+        const shouldUseResponses = (() => {
+          const instanceChat = ((this._options as any).chatCompletion || {}) as {
+            useResponse?: boolean;
+            useResponseModels?: Array<string | RegExp>;
+          };
+          const flagUseResponse =
+            instanceChat.useResponse ?? (chatCompletion ? chatCompletion.useResponse : undefined);
+          const flagUseResponseModels =
+            instanceChat.useResponseModels ?? chatCompletion?.useResponseModels;
+
+          if (!chatCompletion && !instanceChat) return false;
+          if (flagUseResponse) return true;
+          if (!modelId || !flagUseResponseModels?.length) return false;
+          return flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
+          );
+        })();
+
+        let processedPayload: any = payload;
+        if (shouldUseResponses) {
+          processedPayload = { ...payload, apiMode: 'responses' } as any;
         }
         
         // 再进行工厂级处理
