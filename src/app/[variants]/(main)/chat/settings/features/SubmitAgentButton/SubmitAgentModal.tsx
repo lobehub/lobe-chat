@@ -156,6 +156,15 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
       let versionResult;
       try {
         versionResult = await marketApiService.createAgentVersion(versionData);
+        const { safetyCheck } = versionResult;
+
+        if (safetyCheck !== 'Safe') {
+          message.warning({
+            content: `版本创建成功，但是创建/更新的助手中包含有危险、反动等信息，请等待人工审核后上架`,
+            key: 'submit',
+          });
+        }
+
         console.log('Version created:', versionResult);
       } catch (versionError) {
         console.error('Version creation failed:', versionError);

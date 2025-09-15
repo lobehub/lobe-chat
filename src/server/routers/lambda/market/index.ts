@@ -85,6 +85,7 @@ export const marketRouter = router({
           category: z.string().optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
+          ownerId: z.string().optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),

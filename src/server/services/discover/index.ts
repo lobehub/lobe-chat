@@ -364,6 +364,7 @@ export class DiscoverService {
       pageSize = 20,
       q,
       sort = AssistantSorts.CreatedAt,
+      ownerId,
     } = params;
 
     try {
@@ -374,6 +375,7 @@ export class DiscoverService {
       if (normalizedLocale) queryParams.set('locale', normalizedLocale);
       if (category) queryParams.set('category', category);
       if (q) queryParams.set('q', q);
+      if (ownerId) queryParams.set('ownerId', ownerId);
       queryParams.set('page', page.toString());
       queryParams.set('pageSize', pageSize.toString());
       queryParams.set('order', order);
@@ -383,7 +385,8 @@ export class DiscoverService {
       // Map AssistantSorts to database API sort fields
       let apiSort = 'createdAt'; // default
       switch (sort) {
-        case AssistantSorts.CreatedAt: {
+        case AssistantSorts.CreatedAt:
+        case AssistantSorts.MyOwn: {
           apiSort = 'createdAt';
           break;
         }

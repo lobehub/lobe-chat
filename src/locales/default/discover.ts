@@ -51,6 +51,7 @@ export default {
       createdAt: '最近发布',
       identifier: '助手 ID',
       knowledgeCount: '知识库数量',
+      myown: '查看我的',
       pluginCount: '插件数量',
       title: '助手名称',
       tokenUsage: 'Token 使用量',

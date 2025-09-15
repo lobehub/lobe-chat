@@ -24,6 +24,7 @@ export enum AssistantSorts {
   CreatedAt = 'createdAt',
   Identifier = 'identifier',
   KnowledgeCount = 'knowledgeCount',
+  MyOwn = 'myown',
   PluginCount = 'pluginCount',
   Title = 'title',
   TokenUsage = 'tokenUsage',
@@ -51,6 +52,7 @@ export interface AssistantQueryParams {
   category?: string;
   locale?: string;
   order?: 'asc' | 'desc';
+  ownerId?: string;
   page?: number;
   pageSize?: number;
   q?: string;
