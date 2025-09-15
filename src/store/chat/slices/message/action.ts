@@ -6,7 +6,6 @@ import {
   ChatMessage,
   ChatMessageError,
   ChatMessagePluginError,
-  ChatVideoItem,
   CreateMessageParams,
   GroundingSearch,
   MessageMetadata,
@@ -27,7 +26,6 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { getFileStoreState } from '@/store/file/store';
 import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -379,30 +377,8 @@ export const chatMessage: StateCreator<
     } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
-      // 为临时消息附带本地可预览的图片/视频，提升发送前后的连续性
-      const files = getFileStoreState().chatUploadFileList;
-      const imageList: ChatImageItem[] = files
-        .filter((f) => f.file?.type?.startsWith('image'))
-        .map((f) => ({
-          id: f.id,
-          url: f.base64Url || f.previewUrl || f.fileUrl || '',
-          alt: f.file?.name || f.id,
-        }));
-      const videoList: ChatVideoItem[] = files
-        .filter((f) => f.file?.type?.startsWith('video'))
-        .map((f) => ({
-          id: f.id,
-          url: f.base64Url || f.previewUrl || f.fileUrl || '',
-          alt: f.file?.name || f.id,
-        }));
-
-      const tempMessageParams =
-        imageList.length > 0 || videoList.length > 0
-          ? { ...message, imageList, videoList }
-          : message;
-
       // use optimistic update to avoid the slow waiting
-      tempId = internal_createTmpMessage(tempMessageParams);
+      tempId = internal_createTmpMessage(message);
 
       internal_toggleMessageLoading(true, tempId);
     }
