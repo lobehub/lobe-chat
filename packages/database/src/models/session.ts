@@ -484,7 +484,7 @@ export class SessionModel {
           .filter((session) => session !== null && session !== undefined)
       );
     } catch (e) {
-      console.error('findSessionsByKeywords error:', e, { keyword, userId: this.userId });
+      console.error('findSessionsByKeywords error:', e, { keyword });
       return [];
     }
   };
