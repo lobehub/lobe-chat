@@ -1,6 +1,6 @@
 import { and, asc, count, desc, eq, ilike, or } from 'drizzle-orm';
 
-import { aiModels, aiProviders, AiProviderSelectItem } from '@/database/schemas';
+import { AiProviderSelectItem, aiModels, aiProviders } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
@@ -15,7 +15,6 @@ import {
   ProviderDetailResponse,
   ProviderKeyVaults,
   ProviderListQuery,
-  ProviderRecord,
   UpdateProviderRequest,
 } from '../types/provider.type';
 
@@ -71,12 +70,15 @@ export class ProviderService extends BaseService {
     }
   }
 
-  private transformProviderRecord(provider: AiProviderSelectItem): ProviderRecord {
-    const { keyVaults: _ignored, fetchOnClient, ...rest } = provider;
+  private async transformProviderRecord(
+    provider: AiProviderSelectItem,
+  ): Promise<ProviderDetailResponse> {
+    const { fetchOnClient, ...rest } = provider;
 
     return {
       ...rest,
-      fetchOnClient: typeof fetchOnClient === 'boolean' ? fetchOnClient : undefined,
+      fetchOnClient: typeof fetchOnClient === 'boolean' ? fetchOnClient : null,
+      keyVaults: await this.decryptKeyVaults(provider.keyVaults),
     };
   }
 
@@ -113,12 +115,8 @@ export class ProviderService extends BaseService {
         conditions.push(eq(aiProviders.enabled, request.enabled));
       }
 
-      if (request.source) {
-        conditions.push(eq(aiProviders.source, request.source));
-      }
-
       const whereCondition =
-        conditions.length > 1 ? and(...conditions) : conditions[0] ?? undefined;
+        conditions.length > 1 ? and(...conditions) : (conditions[0] ?? undefined);
 
       const { limit, offset } = processPaginationConditions(request);
 
@@ -132,7 +130,9 @@ export class ProviderService extends BaseService {
         this.db.select({ count: count() }).from(aiProviders).where(whereCondition),
       ]);
 
-      const sanitizedProviders = providers.map((provider) => this.transformProviderRecord(provider));
+      const sanitizedProviders = await Promise.all(
+        providers.map((provider) => this.transformProviderRecord(provider)),
+      );
 
       return {
         providers: sanitizedProviders,
@@ -143,7 +143,9 @@ export class ProviderService extends BaseService {
     }
   }
 
-  async getProviderDetail(request: GetProviderDetailRequest): ServiceResult<ProviderDetailResponse> {
+  async getProviderDetail(
+    request: GetProviderDetailRequest,
+  ): ServiceResult<ProviderDetailResponse> {
     this.log('info', '获取 Provider 详情', {
       id: request.id,
       userId: this.userId,
@@ -175,13 +177,7 @@ export class ProviderService extends BaseService {
         throw this.createNotFoundError(`未找到 Provider: ${request.id}`);
       }
 
-      const sanitized = this.transformProviderRecord(provider);
-      const keyVaults = await this.decryptKeyVaults(provider.keyVaults);
-
-      return {
-        ...sanitized,
-        keyVaults,
-      };
+      return await this.transformProviderRecord(provider);
     } catch (error) {
       this.handleServiceError(error, '获取 Provider 详情');
     }
@@ -194,10 +190,6 @@ export class ProviderService extends BaseService {
     });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未登录');
-      }
-
       const permissionResult = await this.resolveOperationPermission('AI_PROVIDER_CREATE');
 
       if (!permissionResult.isPermitted) {
@@ -238,12 +230,7 @@ export class ProviderService extends BaseService {
         })
         .returning();
 
-      const sanitized = this.transformProviderRecord(createdProvider);
-
-      return {
-        ...sanitized,
-        keyVaults: request.keyVaults,
-      };
+      return await this.transformProviderRecord(createdProvider);
     } catch (error) {
       this.handleServiceError(error, '创建 Provider');
     }
@@ -281,23 +268,14 @@ export class ProviderService extends BaseService {
         throw this.createNotFoundError(`未找到 Provider: ${request.id}`);
       }
 
-      const encryptedKeyVaults = await this.encryptKeyVaults(request.keyVaults);
+      const { keyVaults, ...rest } = request;
+
+      const encryptedKeyVaults = (await this.encryptKeyVaults(keyVaults || {})) as string;
 
       const updateData: Partial<typeof aiProviders.$inferInsert> = {
-        updatedAt: new Date(),
+        ...rest,
+        ...(keyVaults ? { keyVaults: encryptedKeyVaults } : {}),
       };
-
-      if (request.name !== undefined) updateData.name = request.name ?? null;
-      if (request.description !== undefined) updateData.description = request.description ?? null;
-      if (request.logo !== undefined) updateData.logo = request.logo ?? null;
-      if (request.checkModel !== undefined) updateData.checkModel = request.checkModel ?? null;
-      if (request.fetchOnClient !== undefined) updateData.fetchOnClient = request.fetchOnClient;
-      if (request.enabled !== undefined) updateData.enabled = request.enabled;
-      if (request.sort !== undefined) updateData.sort = request.sort ?? null;
-      if (request.source !== undefined) updateData.source = request.source;
-      if (request.settings !== undefined) updateData.settings = request.settings ?? {};
-      if (request.config !== undefined) updateData.config = request.config ?? {};
-      if (encryptedKeyVaults !== undefined) updateData.keyVaults = encryptedKeyVaults;
 
       const [updatedProvider] = await this.db
         .update(aiProviders)
@@ -309,16 +287,7 @@ export class ProviderService extends BaseService {
         throw this.createBusinessError('更新 Provider 失败');
       }
 
-      const sanitized = this.transformProviderRecord(updatedProvider);
-      const keyVaults =
-        request.keyVaults !== undefined
-          ? request.keyVaults ?? undefined
-          : await this.decryptKeyVaults(updatedProvider.keyVaults);
-
-      return {
-        ...sanitized,
-        keyVaults,
-      };
+      return await this.transformProviderRecord(updatedProvider);
     } catch (error) {
       this.handleServiceError(error, '更新 Provider');
     }

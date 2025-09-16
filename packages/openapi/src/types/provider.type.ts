@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { AiProviderSelectItem } from '@/database/schemas';
-import { AiProviderConfig, AiProviderSettings, AiProviderSourceType } from '@/types/aiProvider';
+import { AiProviderConfig, AiProviderSettings } from '@/types/aiProvider';
 
 import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from './common.type';
 
@@ -9,14 +9,12 @@ import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from
 
 export type ProviderKeyVaults = Record<string, string | undefined>;
 
-export type ProviderRecord = Omit<AiProviderSelectItem, 'keyVaults'>;
-
-export interface ProviderDetailResponse extends ProviderRecord {
+export type ProviderDetailResponse = Omit<AiProviderSelectItem, 'keyVaults'> & {
   keyVaults?: ProviderKeyVaults;
-}
+};
 
 export type GetProvidersResponse = PaginationQueryResponse<{
-  providers: ProviderRecord[];
+  providers: ProviderDetailResponse[];
 }>;
 
 export interface GetProviderDetailRequest {
@@ -31,27 +29,22 @@ export interface DeleteProviderRequest {
 
 export interface ProviderListQuery extends IPaginationQuery {
   enabled?: boolean;
-  source?: AiProviderSourceType;
 }
 
-const EnabledQuerySchema = z.preprocess(
-  (val) => {
-    if (typeof val === 'boolean') return val;
-    if (val === undefined || val === null || val === '') return undefined;
-    if (typeof val === 'string') {
-      const normalized = val.trim().toLowerCase();
-      if (normalized === 'true' || normalized === '1') return true;
-      if (normalized === 'false' || normalized === '0') return false;
-    }
+const EnabledQuerySchema = z.preprocess((val) => {
+  if (typeof val === 'boolean') return val;
+  if (val === undefined || val === null || val === '') return undefined;
+  if (typeof val === 'string') {
+    const normalized = val.trim().toLowerCase();
+    if (normalized === 'true' || normalized === '1') return true;
+    if (normalized === 'false' || normalized === '0') return false;
+  }
 
-    return undefined;
-  },
-  z.boolean().optional(),
-);
+  return undefined;
+}, z.boolean().optional());
 
 export const ProviderListQuerySchema = PaginationQuerySchema.extend({
   enabled: EnabledQuerySchema,
-  source: z.enum(['builtin', 'custom']).optional(),
 }).passthrough();
 
 export type ProviderListQuerySchemaType = z.infer<typeof ProviderListQuerySchema>;
@@ -74,7 +67,6 @@ const ProviderPayloadBaseSchema = z.object({
 
 export const CreateProviderRequestSchema = ProviderPayloadBaseSchema.extend({
   id: z.string().min(1, 'Provider ID 不能为空'),
-  source: z.enum(['builtin', 'custom']),
 });
 
 export const UpdateProviderRequestSchema = ProviderPayloadBaseSchema.extend({
@@ -87,8 +79,8 @@ export type UpdateProviderRequestSchemaType = z.infer<typeof UpdateProviderReque
 export interface CreateProviderRequest
   extends Omit<CreateProviderRequestSchemaType, 'config' | 'settings' | 'keyVaults'> {
   config?: AiProviderConfig;
-  settings?: AiProviderSettings;
   keyVaults?: ProviderKeyVaults;
+  settings?: AiProviderSettings;
 }
 
 export type UpdateProviderRequestBody = Omit<
@@ -96,16 +88,16 @@ export type UpdateProviderRequestBody = Omit<
   'config' | 'settings' | 'keyVaults'
 > & {
   config?: AiProviderConfig;
-  settings?: AiProviderSettings;
   keyVaults?: ProviderKeyVaults | null;
+  settings?: AiProviderSettings;
 };
 
 export interface UpdateProviderRequest extends UpdateProviderRequestBody {
   id: string;
 }
 
-export interface CreateProviderResponse extends ProviderDetailResponse {}
-export interface UpdateProviderResponse extends ProviderDetailResponse {}
+export type CreateProviderResponse = ProviderDetailResponse;
+export type UpdateProviderResponse = ProviderDetailResponse;
 
 // ==================== Provider Param Schemas ====================
 

@@ -6,8 +6,8 @@ import {
   CreateProviderRequest,
   DeleteProviderRequest,
   GetProviderDetailRequest,
-  ProviderListQuery,
   ProviderIdParam,
+  ProviderListQuery,
   UpdateProviderRequest,
   UpdateProviderRequestBody,
 } from '../types/provider.type';
@@ -51,7 +51,7 @@ export class ProviderController extends BaseController {
 
       const db = await this.getDatabase();
       const providerService = new ProviderService(db, this.getUserId(c));
-      const created = await providerService.createProvider(body);
+      const created = await providerService.createProvider({ ...body, source: 'custom' });
 
       return this.success(c, created, '创建 Provider 成功');
     } catch (error) {
