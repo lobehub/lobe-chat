@@ -32,8 +32,8 @@ export const agents = pgTable(
     slug: varchar('slug', { length: 100 })
       .$defaultFn(() => randomSlug(4))
       .unique(),
-    title: text('title'),
-    description: text('description'),
+    title: varchar('title', { length: 255 }),
+    description: varchar('description', { length: 1000 }),
     tags: jsonb('tags').$type<string[]>().default([]),
     avatar: text('avatar'),
     backgroundColor: text('background_color'),

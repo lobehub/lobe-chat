@@ -1,8 +1,8 @@
 table agents {
   id text [pk, not null]
   slug varchar(100) [unique]
-  title text
-  description text
+  title varchar(255)
+  description varchar(1000)
   tags jsonb [default: `[]`]
   avatar text
   background_color text
