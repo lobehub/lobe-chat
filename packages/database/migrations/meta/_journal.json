@@ -224,6 +224,13 @@
       "when": 1757902833213,
       "tag": "0031_add_agent_index",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1757993755131,
+      "tag": "0032_improve_agents_field",
+      "breakpoints": true
     }
   ],
   "version": "6"
