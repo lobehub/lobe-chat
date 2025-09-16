@@ -581,11 +581,22 @@
   },
   {
     "sql": [
-      "CREATE INDEX \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
-      "\nCREATE INDEX \"agents_description_idx\" ON \"agents\" USING btree (\"description\");"
+      "-- 将超过 2000 字符的 description 截断为 2000 字符\nUPDATE agents\nSET description = LEFT(description, 2000)\nWHERE LENGTH(description) > 2000;",
+      "\nCREATE INDEX IF NOT EXISTS \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
+      "\nCREATE INDEX IF NOT EXISTS \"agents_description_idx\" ON \"agents\" USING btree (\"description\");\n"
     ],
     "bps": true,
     "folderMillis": 1757902833213,
-    "hash": "7f76a42dcaae9ca7de30a6eec432a3b52e64fa44b31828e3318d8b815f396624"
+    "hash": "39b690dc849ae2bb09357a9ab9d1f2e8f3e37f609f636ab192670a2651d4f605"
+  },
+  {
+    "sql": [
+      "-- 将超过 255 字符的 title 截断为 255 字符\nUPDATE agents\nSET title = LEFT(title, 255)\nWHERE LENGTH(title) > 255;",
+      "\nALTER TABLE \"agents\" ALTER COLUMN \"title\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"agents\" ALTER COLUMN \"description\" SET DATA TYPE varchar(1000);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1757993755131,
+    "hash": "0e23099a1ae4d5a40fd9ea5667c3d1939548d98488906742b0f029cde272ef27"
   }
 ]
