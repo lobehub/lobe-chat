@@ -17,19 +17,19 @@ export default function SessionFooter() {
   const userAvatar = user?.avatar || DEFAULT_USER_AVATAR;
 
   return (
-    <View style={[styles.footer]}>
-      <View style={styles.userInfo}>
-        <Avatar avatar={userAvatar} size={32} title={displayName} />
-        <Text numberOfLines={1} style={styles.userName}>
-          {displayName}
-        </Text>
-      </View>
+    <Link asChild href="/setting">
+      <TouchableOpacity activeOpacity={1} style={styles.settingsButton}>
+        <View style={[styles.footer]}>
+          <View style={styles.userInfo}>
+            <Avatar avatar={userAvatar} size={32} title={displayName} />
+            <Text numberOfLines={1} style={styles.userName}>
+              {displayName}
+            </Text>
+          </View>
 
-      <Link asChild href="/setting">
-        <TouchableOpacity style={styles.settingsButton}>
           <Settings2 color={token.colorText} size={ICON_SIZE} />
-        </TouchableOpacity>
-      </Link>
-    </View>
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
 }
