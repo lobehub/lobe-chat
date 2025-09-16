@@ -8,10 +8,10 @@ export const useStyles = createStyles((token) => ({
     borderRadius: token.borderRadius * 4,
     borderWidth: 0.5,
     height: 'auto',
-    marginHorizontal: token.marginXXS,
+    marginHorizontal: token.paddingXS,
     minHeight: CHAT_INPUT_HEIGHT,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingSM,
+    paddingHorizontal: token.paddingSM,
+    paddingVertical: token.paddingXS,
     // ...token.boxShadowCard,
   },
   extraBtn: {
@@ -21,22 +21,15 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: token.marginXS,
     width: '100%',
   },
   iconGroup: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 4,
+    gap: token.marginXS,
   },
   input: {
     flex: 1,
-  },
-  inputArea: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   leftActions: {
     alignItems: 'center',
