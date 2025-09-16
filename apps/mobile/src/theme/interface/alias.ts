@@ -108,14 +108,6 @@ export interface AliasToken extends MapToken {
    */
   colorBgTextActive: string;
 
-  /**
-   * @nameZH 文本悬停态背景色
-   * @nameEN Text hover background color
-   * @desc 控制文本在悬停状态下的背景色。
-   * @descEN Control the background color of text in hover state.
-   */
-  colorBgTextHover: string;
-
   // Border
   /**
    * @nameZH 背景边框颜色
@@ -149,15 +141,6 @@ export interface AliasToken extends MapToken {
    */
   colorFillContent: string;
 
-  // Background
-  /**
-   * @nameZH 内容区域背景色（悬停）
-   * @nameEN Background color of content area (hover)
-   * @desc 控制内容区域背景色在鼠标悬停时的样式。
-   * @descEN Control the style of background color of content area when mouse hovers over it.
-   */
-  colorFillContentHover: string;
-
   /**
    * @nameZH 高亮颜色
    * @nameEN Highlight color
@@ -174,15 +157,6 @@ export interface AliasToken extends MapToken {
    * @descEN Weak action. Such as `allowClear` or Alert close button
    */
   colorIcon: string;
-
-  /**  */
-  /**
-   * @nameZH 弱操作图标悬浮态颜色
-   * @nameEN Weak action icon hover color
-   * @desc 控制弱操作图标在悬浮状态下的颜色，例如 allowClear 或 Alert 关闭按钮。
-   * @descEN Weak action hover color. Such as `allowClear` or Alert close button
-   */
-  colorIconHover: string;
 
   /**
    * @nameZH 分割线颜色
@@ -224,6 +198,13 @@ export interface AliasToken extends MapToken {
    */
   colorTextLabel: string;
 
+  /**
+   * @nameZH 固定文本高亮颜色
+   * @nameEN Fixed text highlight color
+   * @desc 控制带背景色的文本，例如 Primary Button 组件中的文本高亮颜色。
+   * @descEN Control the highlight color of text with background color, such as the text in Primary Button components.
+   */
+  colorTextLightSolid: string;
   // Text
   /**
    * @nameZH 占位文本颜色
@@ -262,22 +243,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the background color of control component item when active and disabled.
    */
   controlItemBgActiveDisabled: string;
-  // Note. It also is a color
-  /**
-   * @nameZH 控制组件项在鼠标悬浮且激活状态下的背景颜色
-   * @nameEN Background color of control component item when hovering and active
-   * @desc 控制组件项在鼠标悬浮且激活状态下的背景颜色。
-   * @descEN Control the background color of control component item when hovering and active.
-   */
-  controlItemBgActiveHover: string;
-
-  /**
-   * @nameZH 控制组件项在鼠标悬浮时的背景颜色
-   * @nameEN Background color of control component item when hovering
-   * @desc 控制组件项在鼠标悬浮时的背景颜色。
-   * @descEN Control the background color of control component item when hovering.
-   */
-  controlItemBgHover: string;
   /**
    * @nameZH 输入组件的 Outline 颜色
    * @nameEN Input component outline color
@@ -307,6 +272,7 @@ export interface AliasToken extends MapToken {
    * @descEN Control the horizontal padding of an element with a small-medium size.
    */
   controlPaddingHorizontalSM: number;
+
   /**
    * @deprecated
    * Used for DefaultButton, Switch which has default outline
@@ -314,7 +280,6 @@ export interface AliasToken extends MapToken {
    * @descEN Default style outline color.
    */
   controlTmpOutline: string;
-
   // Font
   /**
    * @nameZH 选择器、级联选择器等中的操作图标字体大小
@@ -354,19 +319,13 @@ export interface AliasToken extends MapToken {
    */
   linkFocusDecoration: string;
   /**
-   * @nameZH 链接鼠标悬浮时文本装饰
-   * @nameEN Link text decoration on mouse hover
-   * @desc 控制链接鼠标悬浮时文本的装饰样式。
-   * @descEN Control the text decoration style of a link on mouse hover.
-   */
-  linkHoverDecoration: string;
-  /**
    * @nameZH 外边距
    * @nameEN Margin
    * @desc 控制元素外边距，中等尺寸。
    * @descEN Control the margin of an element, with a medium size.
    */
   margin: number;
+
   /**
    * @nameZH 外边距 LG
    * @nameEN Margin LG
@@ -382,7 +341,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the margin of an element, with a medium-large size.
    */
   marginMD: number;
-
   /**
    * @nameZH 外边距 SM
    * @nameEN Margin SM
@@ -397,6 +355,7 @@ export interface AliasToken extends MapToken {
    * @descEN Control the margin of an element, with an extra-large size.
    */
   marginXL: number;
+
   /**
    * @nameZH 外边距 XS
    * @nameEN Margin XS
@@ -404,7 +363,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the margin of an element, with a small size.
    */
   marginXS: number;
-
   /**
    * @nameZH 外边距 XXL
    * @nameEN Margin XXL
@@ -420,6 +378,7 @@ export interface AliasToken extends MapToken {
    * @descEN Control the margin of an element, with the smallest size.
    */
   marginXXS: number;
+
   // =============== Legacy: should be remove ===============
   /**
    * @nameZH 加载状态透明度
@@ -428,7 +387,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the opacity of the loading state.
    */
   opacityLoading: number;
-
   /**
    * @nameZH 内间距
    * @nameEN Padding
@@ -436,6 +394,7 @@ export interface AliasToken extends MapToken {
    * @descEN Control the padding of the element.
    */
   padding: number;
+
   /**
    * @nameZH 内容水平内间距
    * @nameEN Content horizontal padding
@@ -443,7 +402,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the horizontal padding of content element.
    */
   paddingContentHorizontal: number;
-
   // Padding Content
   /**
    * @nameZH 内容水平内间距（LG）
@@ -558,6 +516,7 @@ export interface AliasToken extends MapToken {
    * @descEN Control the maximum width of medium screens.
    */
   screenMDMax: number;
+
   /**
    * @nameZH 屏幕宽度（像素） - 中等屏幕最小值
    * @nameEN Screen width (pixels) - Medium screens minimum value
@@ -573,7 +532,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the screen width of small screens.
    */
   screenSM: number;
-
   /**
    * @nameZH 屏幕宽度（像素） - 小屏幕最大值
    * @nameEN Screen width (pixels) - Small screens maximum value
