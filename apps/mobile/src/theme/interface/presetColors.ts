@@ -35,14 +35,10 @@ type ColorTokenKey =
   | 'FillTertiary'
   | 'FillQuaternary'
   | 'Bg'
-  | 'BgHover'
   | 'Border'
   | 'BorderSecondary'
-  | 'BorderHover'
-  | 'Hover'
   | ''
   | 'Active'
-  | 'TextHover'
   | 'Text'
   | 'TextActive';
 

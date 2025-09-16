@@ -2,7 +2,6 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
-    paddingHorizontal: token.paddingSM,
     paddingVertical: 0,
   },
 
@@ -17,8 +16,8 @@ export const useStyles = createStyles((token) => ({
 
   questionText: {
     color: token.colorText,
-    fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM,
+    fontSize: token.fontSize,
+    lineHeight: token.lineHeight,
   },
 
   questionsWrapper: {
@@ -30,6 +29,6 @@ export const useStyles = createStyles((token) => ({
   title: {
     color: token.colorTextDescription,
     fontSize: token.fontSize,
-    marginBottom: token.marginXS,
+    marginBottom: token.margin,
   },
 }));
