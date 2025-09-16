@@ -603,7 +603,8 @@
     "sql": [
       "-- 解决 chunks 表慢查询\nCREATE INDEX IF NOT EXISTS \"chunks_user_id_idx\" ON \"chunks\" USING btree (\"user_id\");",
       "\n\n-- 解决 topics 表批量删除慢查询\nCREATE INDEX IF NOT EXISTS \"topics_user_id_idx\" ON \"topics\" USING btree (\"user_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"topics_id_user_id_idx\" ON \"topics\" USING btree (\"id\",\"user_id\");\n\n-- 解决 sessions 表删除慢查询\nCREATE INDEX IF NOT EXISTS \"sessions_user_id_idx\" ON \"sessions\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"topics_id_user_id_idx\" ON \"topics\" USING btree (\"id\",\"user_id\");",
+      "\n\n-- 解决 sessions 表删除慢查询\nCREATE INDEX IF NOT EXISTS \"sessions_user_id_idx\" ON \"sessions\" USING btree (\"user_id\");",
       "\nCREATE INDEX IF NOT EXISTS \"sessions_id_user_id_idx\" ON \"sessions\" USING btree (\"id\",\"user_id\");",
       "\n\n-- 解决 messages 表统计查询慢查询\nCREATE INDEX IF NOT EXISTS \"messages_user_id_idx\" ON \"messages\" USING btree (\"user_id\");",
       "\nCREATE INDEX IF NOT EXISTS \"messages_session_id_idx\" ON \"messages\" USING btree (\"session_id\");",
@@ -613,6 +614,6 @@
     ],
     "bps": true,
     "folderMillis": 1758012348218,
-    "hash": "3e48015d2c0354bc9c74a190a6b7a11f54ae41be9d2609c6b5bf0d7c42b82dc4"
+    "hash": "ce04ef4cde2db479d28ff08dced8383052c5052c904bab8343b5493fa10b0679"
   }
 ]
