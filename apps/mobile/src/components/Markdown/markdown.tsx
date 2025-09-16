@@ -45,7 +45,7 @@ export const Markdown = ({
   customStyles,
   fontSize = 16,
   headerMultiple = 1,
-  lineHeight = 1.8,
+  lineHeight = 1.6,
   marginMultiple = 2,
 }: MarkdownProps) => {
   const tree = useMemo(() => parser.parse(children), [children]);

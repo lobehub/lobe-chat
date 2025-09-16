@@ -3,19 +3,14 @@ import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
 
-import { TextInput } from '@/components';
-import IconBtn from './components/IconBtn';
-import { ICON_SIZE } from '@/const/common';
+import { TextInput, Button } from '@/components';
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
-import { useThemeToken } from '@/theme';
 import ModelSwitch from './components/ModelSwitch';
 
 import StopLoadingIcon from '../StopLoadingIcon';
 import { useStyles } from './style';
 import NewChatBtn from './components/NewChatBtn';
-
-const PADDING_SIZE = 16;
 
 interface ChatInputProps {
   style?: ViewStyle;
@@ -25,29 +20,20 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   const { t } = useTranslation(['chat']);
   const { input, handleInputChange, handleSubmit, isLoading, canSend, stopGenerating } = useChat();
   useInitAgentConfig(); // 关键：触发agent配置加载
-  const token = useThemeToken();
   const { styles } = useStyles();
 
-  const senderIconColor = token.colorTextLightSolid;
-
   const SenderBtn = useMemo(
-    () => () =>
-      isLoading ? (
-        <IconBtn
-          icon={<StopLoadingIcon color={senderIconColor} size={ICON_SIZE + PADDING_SIZE} />}
-          onPress={stopGenerating}
-          variant="primary"
-        />
-      ) : (
-        <IconBtn
-          disabled={!canSend}
-          icon={<ArrowUp color={senderIconColor} size={ICON_SIZE} />}
-          onPress={handleSubmit}
-          style={{ opacity: canSend ? 1 : 0.5 }}
-          variant="primary"
-        />
-      ),
-    [isLoading, stopGenerating, handleSubmit, canSend, senderIconColor],
+    () => (
+      <Button
+        disabled={!canSend}
+        icon={isLoading ? <StopLoadingIcon /> : <ArrowUp />}
+        onPress={isLoading ? stopGenerating : handleSubmit}
+        shape="circle"
+        size="large"
+        type="primary"
+      />
+    ),
+    [isLoading, stopGenerating, handleSubmit, canSend],
   );
 
   return (
@@ -77,7 +63,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
         </View>
         <View style={styles.rightActions}>
           <NewChatBtn />
-          <SenderBtn />
+          {SenderBtn}
         </View>
       </View>
     </View>

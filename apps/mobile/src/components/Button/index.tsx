@@ -20,6 +20,7 @@ import {
   ButtonVariant,
   ButtonColor,
 } from './style';
+import { ICON_SIZE } from '@/const/common';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
@@ -154,7 +155,7 @@ const Button: React.FC<ButtonProps> = ({
     if (loading || !icon) return null;
     const iconColor = (styles.text?.color as string) ?? undefined;
     // Always match icon size to button text size for consistency
-    const iconSize = (styles.text?.fontSize as number) ?? undefined;
+    const iconSize = styles.text?.fontSize + 4 || ICON_SIZE;
 
     let iconNode = icon;
     if (React.isValidElement(icon)) {

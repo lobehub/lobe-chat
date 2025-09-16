@@ -33,11 +33,9 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
       <View style={styles.headerContent}>
         <View style={styles.headerInfo}>
           <Avatar avatar={avatar} size={AVATAR_SIZE} />
-          <View style={styles.headerText}>
-            <Text ellipsizeMode="tail" numberOfLines={1} style={styles.headerTitle}>
-              {displayTitle}
-            </Text>
-          </View>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
+            {displayTitle}
+          </Text>
         </View>
       </View>
       <View style={styles.headerActions}>

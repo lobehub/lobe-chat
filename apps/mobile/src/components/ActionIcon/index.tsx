@@ -1,13 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {
-  Animated,
-  ColorValue,
-  Easing,
-  Pressable,
-  PressableProps,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import { Animated, ColorValue, Easing, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 import { ICON_SIZE } from '@/const/common';
@@ -24,7 +16,7 @@ interface ActionIconProps extends PressableProps {
   /**
    * The icon to display. Can be a string, React element, or other.
    */
-  icon: React.FC<{ color?: ColorValue; size?: number | string; style?: StyleProp<ViewStyle> }>;
+  icon: React.FC<{ color?: ColorValue; size?: number }>;
   /**
    * The size of the icon. Defaults to 24.
    */

@@ -29,6 +29,6 @@ export const useStyles = createStyles((token) => ({
   title: {
     color: token.colorTextDescription,
     fontSize: token.fontSize,
-    marginBottom: token.marginLG,
+    marginBottom: token.margin,
   },
 }));
