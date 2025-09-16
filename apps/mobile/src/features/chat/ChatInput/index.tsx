@@ -1,21 +1,15 @@
-import { ArrowUp } from 'lucide-react-native';
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
 
-import { TextInput } from '@/components';
-import IconBtn from './components/IconBtn';
-import { ICON_SIZE } from '@/const/common';
+import { Space, TextInput } from '@/components';
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
-import { useThemeToken } from '@/theme';
 import ModelSwitch from './components/ModelSwitch';
+import SenderBtn from '@/features/chat/actions/SenderBtn';
+import ToogleTopic from '@/features/chat/actions/ToogleTopic';
 
-import StopLoadingIcon from '../StopLoadingIcon';
 import { useStyles } from './style';
-import NewChatBtn from './components/NewChatBtn';
-
-const PADDING_SIZE = 16;
 
 interface ChatInputProps {
   style?: ViewStyle;
@@ -23,62 +17,37 @@ interface ChatInputProps {
 
 const ChatInput = memo(({ style }: ChatInputProps) => {
   const { t } = useTranslation(['chat']);
-  const { input, handleInputChange, handleSubmit, isLoading, canSend, stopGenerating } = useChat();
+  const { input, handleInputChange, handleSubmit } = useChat();
   useInitAgentConfig(); // 关键：触发agent配置加载
-  const token = useThemeToken();
   const { styles } = useStyles();
-
-  const senderIconColor = token.colorTextLightSolid;
-
-  const SenderBtn = useMemo(
-    () => () =>
-      isLoading ? (
-        <IconBtn
-          icon={<StopLoadingIcon color={senderIconColor} size={ICON_SIZE + PADDING_SIZE} />}
-          onPress={stopGenerating}
-          variant="primary"
-        />
-      ) : (
-        <IconBtn
-          disabled={!canSend}
-          icon={<ArrowUp color={senderIconColor} size={ICON_SIZE} />}
-          onPress={handleSubmit}
-          style={{ opacity: canSend ? 1 : 0.5 }}
-          variant="primary"
-        />
-      ),
-    [isLoading, stopGenerating, handleSubmit, canSend, senderIconColor],
-  );
 
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.inputArea}>
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="default"
-          multiline={true}
-          numberOfLines={8}
-          onChangeText={handleInputChange}
-          onSubmitEditing={handleSubmit}
-          placeholder={t('placeholder', { ns: 'chat' })}
-          scrollEnabled={true}
-          spellCheck={false}
-          style={styles.input}
-          textAlignVertical="top"
-          textBreakStrategy="highQuality"
-          value={input}
-          variant="borderless"
-        />
-      </View>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="default"
+        multiline={true}
+        numberOfLines={8}
+        onChangeText={handleInputChange}
+        onSubmitEditing={handleSubmit}
+        placeholder={t('placeholder', { ns: 'chat' })}
+        scrollEnabled={true}
+        spellCheck={false}
+        style={styles.input}
+        textAlignVertical="top"
+        textBreakStrategy="highQuality"
+        value={input}
+        variant="borderless"
+      />
       <View style={styles.footer}>
-        <View style={styles.leftActions}>
+        <Space>
           <ModelSwitch />
-        </View>
-        <View style={styles.rightActions}>
-          <NewChatBtn />
+        </Space>
+        <Space>
+          <ToogleTopic />
           <SenderBtn />
-        </View>
+        </Space>
       </View>
     </View>
   );

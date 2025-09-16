@@ -619,7 +619,7 @@ const EmptyModelState = ({ providerId }: { providerId: string }) => (
 | 选中标识 | activeKey: menuKey(provider, model) | ✅ 完全一致 |
 | 选择行为 | updateAgentConfig({ model, provider }) | ✅ 完全一致 |
 | 空状态 | emptyProvider/emptyModel + 跳转 | ✅ 完全一致 |
-| 交互方式 | Hover + Click | Touch 友好的按钮尺寸 |
+| 交互方式 | Click | Touch 友好的按钮尺寸 |
 
 ---
 

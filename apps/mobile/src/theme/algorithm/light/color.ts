@@ -73,10 +73,6 @@ const lightBaseToken: Partial<AliasToken> = {
   // 链接颜色
   colorLink: infoToken.colorInfoText,
   colorLinkActive: infoToken.colorInfoTextActive,
-
-  colorLinkHover: infoToken.colorInfoTextHover,
-  // 浅色模式专用颜色
-  colorTextLightSolid: neutralToken.colorBgLayout,
 };
 
 export default lightBaseToken;
