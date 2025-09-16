@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
-import { AlignJustify, MoreHorizontal, MessagesSquare } from 'lucide-react-native';
+import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 
 import { AVATAR_SIZE } from '@/const/common';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -20,7 +19,6 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
   const { t } = useTranslation(['chat']);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
-  const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
   const { styles } = useStyles();
 
   const router = useRouter();
@@ -39,7 +37,6 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
         </View>
       </View>
       <View style={styles.headerActions}>
-        <ActionIcon icon={MessagesSquare} onPress={toggleTopicDrawer} />
         <ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />
       </View>
     </View>
