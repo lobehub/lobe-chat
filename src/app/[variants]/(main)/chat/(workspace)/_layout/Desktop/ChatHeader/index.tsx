@@ -16,7 +16,14 @@ const Header = () => {
       <ChatHeader
         left={<Main />}
         right={<HeaderAction />}
-        style={{ paddingInline: 8, position: 'initial', zIndex: 11 }}
+        style={{
+          height: 40,
+          maxHeight: 40,
+          minHeight: 40,
+          paddingInline: 8,
+          position: 'initial',
+          zIndex: 11,
+        }}
       />
     )
   );
