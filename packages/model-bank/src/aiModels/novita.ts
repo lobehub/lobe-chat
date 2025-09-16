@@ -710,9 +710,10 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 32_768,
     displayName: 'Deepseek R1 Distill Qwen 14B',
     id: 'deepseek/deepseek-r1-distill-qwen-14b',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
