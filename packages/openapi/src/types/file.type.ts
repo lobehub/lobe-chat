@@ -1,5 +1,8 @@
-import { FileMetadata } from '@lobechat/types';
 import { z } from 'zod';
+
+import { FileItem } from '@/database/schemas';
+
+import { PaginationQueryResponse } from './common.type';
 
 // ==================== File Upload Types ====================
 
@@ -24,25 +27,11 @@ export interface FileUploadRequest {
 }
 
 /**
- * 文件上传响应类型
+ * 文件详情类型
  */
-export interface FileUploadResponse {
-  /** 文件MIME类型 */
-  fileType: string;
-  /** 文件哈希值 */
-  hash: string;
-  /** 文件ID */
-  id?: string;
-  /** 文件元数据 */
-  metadata: FileMetadata;
-  /** 文件名 */
-  name: string;
-  /** 文件大小（字节） */
-  size: number;
-  /** 上传时间 */
-  uploadedAt: string;
-  /** 文件访问URL */
-  url: string;
+export interface FileDetailResponse {
+  file: Partial<FileItem>;
+  parsed?: FileParseResponse;
 }
 
 /**
@@ -61,65 +50,6 @@ export interface PublicFileUploadRequest {
   skipDeduplication?: boolean;
 }
 
-/**
- * 公共文件上传响应类型
- */
-export interface PublicFileUploadResponse {
-  /** 文件MIME类型 */
-  fileType: string;
-  /** 文件哈希值 */
-  hash: string;
-  /** 文件ID */
-  id: string;
-  /** 文件元数据 */
-  metadata: FileMetadata;
-  /** 文件名 */
-  name: string;
-  /** 文件大小（字节） */
-  size: number;
-  /** 上传时间 */
-  uploadedAt: string;
-  /** 永久访问URL */
-  url: string;
-}
-
-// ==================== Pre-signed URL Types ====================
-
-/**
- * 预签名URL请求类型
- */
-export interface PreSignedUrlRequest {
-  /** 文件MIME类型 */
-  fileType: string;
-  /** 文件名 */
-  name: string;
-  /** 自定义路径（可选） */
-  pathname?: string;
-  /** 文件大小（字节） */
-  size: number;
-}
-
-export const PreSignedUrlRequestSchema = z.object({
-  fileType: z.string().min(1, '文件类型不能为空'),
-  name: z.string().min(1, '文件名不能为空'),
-  pathname: z.string().nullish(),
-  size: z.number().positive('文件大小必须大于0'),
-});
-
-/**
- * 预签名URL响应类型
- */
-export interface PreSignedUrlResponse {
-  /** 过期时间 */
-  expiresIn: number;
-  /** 文件ID */
-  fileId: string;
-  /** S3对象键 */
-  key: string;
-  /** 上传URL */
-  uploadUrl: string;
-}
-
 // ==================== File Management Types ====================
 
 /**
@@ -128,8 +58,6 @@ export interface PreSignedUrlResponse {
 export interface FileListQuery {
   /** 文件类型过滤 */
   fileType?: string;
-  /** 知识库ID过滤 */
-  knowledgeBaseId?: string;
   /** 页码（从1开始） */
   page?: number;
   /** 每页数量 */
@@ -142,7 +70,6 @@ export interface FileListQuery {
 
 export const FileListQuerySchema = z.object({
   fileType: z.string().nullish(),
-  knowledgeBaseId: z.string().nullish(),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -160,26 +87,10 @@ export const FileListQuerySchema = z.object({
 /**
  * 文件列表响应类型
  */
-export interface FileListResponse {
+export type FileListResponse = PaginationQueryResponse<{
   /** 文件列表 */
-  files: FileUploadResponse[];
-  /** 当前页 */
-  page?: number;
-  /** 每页数量 */
-  pageSize?: number;
-  /** 总数 */
-  total: number;
-}
-
-/**
- * 文件删除响应类型
- */
-export interface FileDeleteResponse {
-  /** 是否删除成功 */
-  deleted: boolean;
-  /** 删除的文件ID */
-  fileId: string;
-}
+  files: FileDetailResponse['file'][];
+}>;
 
 // ==================== File URL Types ====================
 
@@ -195,7 +106,7 @@ export const FileUrlRequestSchema = z.object({
   expiresIn: z
     .string()
     .transform((val) => parseInt(val, 10))
-    .pipe(z.number().min(60).max(7200)) // 1分钟到2小时
+    .pipe(z.number())
     .nullish(),
 });
 
@@ -243,7 +154,7 @@ export interface BatchFileUploadResponse {
     name: string;
   }>;
   /** 成功上传的文件 */
-  successful: FileUploadResponse[];
+  successful: FileDetailResponse[];
   /** 总计数量 */
   summary: {
     failed: number;
@@ -274,12 +185,7 @@ export interface BatchGetFilesResponse {
     fileId: string;
   }>;
   /** 文件列表 */
-  files: Array<{
-    /** 文件详情（图片文件会包含base64字段） */
-    fileItem: FileUploadResponse;
-    /** 解析结果（非图片文件） */
-    parseResult?: FileParseResponse;
-  }>;
+  files: Array<FileDetailResponse>;
   /** 成功获取的文件数 */
   success: number;
   /** 请求总数 */
@@ -311,7 +217,7 @@ export const FileParseRequestSchema = z.object({
  */
 export interface FileParseResponse {
   /** 解析后的文本内容 */
-  content: string;
+  content?: string;
   /** 解析错误信息 */
   error?: string;
   /** 文件ID */
@@ -334,17 +240,7 @@ export interface FileParseResponse {
   /** 解析状态 */
   parseStatus: 'completed' | 'failed';
   /** 解析时间 */
-  parsedAt: string;
-}
-
-/**
- * 文件上传并解析响应类型
- */
-export interface FileUploadAndParseResponse {
-  /** 文件项 */
-  fileItem: FileUploadResponse;
-  /** 解析结果 */
-  parseResult: FileParseResponse;
+  parsedAt?: string;
 }
 
 // ==================== Common Schemas ====================
