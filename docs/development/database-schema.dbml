@@ -419,6 +419,9 @@ table messages {
     topic_id [name: 'messages_topic_id_idx']
     parent_id [name: 'messages_parent_id_idx']
     quota_id [name: 'messages_quota_id_idx']
+    user_id [name: 'messages_user_id_idx']
+    session_id [name: 'messages_session_id_idx']
+    thread_id [name: 'messages_thread_id_idx']
   }
 }
 
@@ -624,6 +627,7 @@ table chunks {
 
   indexes {
     (client_id, user_id) [name: 'chunks_client_id_user_id_unique', unique]
+    user_id [name: 'chunks_user_id_idx']
   }
 }
 
@@ -637,6 +641,7 @@ table embeddings {
 
   indexes {
     (client_id, user_id) [name: 'embeddings_client_id_user_id_unique', unique]
+    chunk_id [name: 'embeddings_chunk_id_idx']
   }
 }
 
@@ -836,6 +841,8 @@ table sessions {
   indexes {
     (slug, user_id) [name: 'slug_user_id_unique', unique]
     (client_id, user_id) [name: 'sessions_client_id_user_id_unique', unique]
+    user_id [name: 'sessions_user_id_idx']
+    (id, user_id) [name: 'sessions_id_user_id_idx']
   }
 }
 
@@ -886,6 +893,8 @@ table topics {
 
   indexes {
     (client_id, user_id) [name: 'topics_client_id_user_id_unique', unique]
+    user_id [name: 'topics_user_id_idx']
+    (id, user_id) [name: 'topics_id_user_id_idx']
   }
 }
 

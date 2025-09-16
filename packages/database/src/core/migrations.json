@@ -583,12 +583,12 @@
     "sql": [
       "-- Truncate title to 255 characters if it exceeds the limit\nUPDATE agents\nSET title = LEFT(title, 255)\nWHERE LENGTH(title) > 255;",
       "\n\n-- Truncate description to 1000 characters if it exceeds the limit\nUPDATE agents\nSET description = LEFT(description, 1000)\nWHERE LENGTH(description) > 1000;",
-      "\n\nCREATE INDEX IF NOT EXISTS \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
-      "\nCREATE INDEX IF NOT EXISTS \"agents_description_idx\" ON \"agents\" USING btree (\"description\");\n"
+      "\n\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
+      "\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"agents_description_idx\" ON \"agents\" USING btree (\"description\");\n"
     ],
     "bps": true,
     "folderMillis": 1757902833213,
-    "hash": "4b2e0d87485cd7b3aa4dd06edfd73b78d195137263776c7d1c3df6eb11c3bc62"
+    "hash": "60fb3cde5cc9e868c63e462480849bba16097e0f80ac47f2411a6db91a1c3d18"
   },
   {
     "sql": [
@@ -598,5 +598,21 @@
     "bps": true,
     "folderMillis": 1757993755131,
     "hash": "bafc1c74796a4c69342e61d28997b0e3a38f1e7d022ba92d9cbf31e00b5748c8"
+  },
+  {
+    "sql": [
+      "-- 解决 chunks 表慢查询\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"chunks_user_id_idx\" ON \"chunks\" USING btree (\"user_id\");",
+      "\n\n-- 解决 topics 表批量删除慢查询\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"topics_user_id_idx\" ON \"topics\" USING btree (\"user_id\");",
+      "\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"topics_id_user_id_idx\" ON \"topics\" USING btree (\"id\",\"user_id\");\n\n-- 解决 sessions 表删除慢查询\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"sessions_user_id_idx\" ON \"sessions\" USING btree (\"user_id\");",
+      "\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"sessions_id_user_id_idx\" ON \"sessions\" USING btree (\"id\",\"user_id\");",
+      "\n\n-- 解决 messages 表统计查询慢查询\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"messages_user_id_idx\" ON \"messages\" USING btree (\"user_id\");",
+      "\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"messages_session_id_idx\" ON \"messages\" USING btree (\"session_id\");",
+      "\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"messages_thread_id_idx\" ON \"messages\" USING btree (\"thread_id\");",
+      "\n\n-- 解决 embeddings 删除慢查询\nCREATE INDEX CONCURRENTLY IF NOT EXISTS \"embeddings_chunk_id_idx\" ON \"embeddings\" USING btree (\"chunk_id\");",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1758012348218,
+    "hash": "d6ed476ef5dd0396cfcf8f884d06e77e25a89243b667446f2fe8dffef64ae75f"
   }
 ]
