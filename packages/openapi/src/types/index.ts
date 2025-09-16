@@ -59,6 +59,7 @@ export * from './file.type';
 export * from './message.type';
 export * from './message-translations.type';
 export * from './model.type';
+export * from './provider.type';
 export * from './role.type';
 export * from './session.type';
 export * from './topic.type';

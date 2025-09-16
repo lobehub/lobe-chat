@@ -4,6 +4,7 @@ import FileRoutes from './files.route';
 import MessageTranslationsRoutes from './message-translations.route';
 import MessageRoutes from './message.route';
 import ModelRoutes from './models.route';
+import ProviderRoutes from './providers.route';
 import RolesRoutes from './roles.route';
 import SessionGroupRoutes from './session-groups.route';
 import SessionRoutes from './sessions.route';
@@ -17,6 +18,7 @@ export default {
   'message-translations': MessageTranslationsRoutes,
   'messages': MessageRoutes,
   'models': ModelRoutes,
+  'providers': ProviderRoutes,
   'roles': RolesRoutes,
   'session-groups': SessionGroupRoutes,
   'sessions': SessionRoutes,

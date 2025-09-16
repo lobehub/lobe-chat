@@ -4,6 +4,7 @@ export * from './file.controller';
 export * from './message.controller';
 export * from './message-translations.controller';
 export * from './model.controller';
+export * from './provider.controller';
 export * from './role.controller';
 export * from './session.controller';
 export * from './session-group.controller';
