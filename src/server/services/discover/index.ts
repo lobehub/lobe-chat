@@ -280,15 +280,15 @@ export class DiscoverService {
       const assistant = {
         author: data.author || `User${data.ownerId}`,
         avatar: data.avatar || '',
-
         category: data.category || 'general',
+
         // Add detail-specific fields
         config: data.config || {},
 
         createdAt: data.createdAt,
+
         description: data.description,
         homepage: data.homepage || `https://lobehub.com/discover/assistant/${data.identifier}`,
-
         identifier: data.identifier,
 
         knowledgeCount: data.config?.knowledgeBases?.lenght,
@@ -297,7 +297,9 @@ export class DiscoverService {
         pluginCount: data.config?.plugins?.length,
 
         readme: data.documentationUrl || '',
+
         schemaVersion: 1,
+        status: data?.status,
         systemRole: data.config?.systemRole || '',
         // Use author from API or fallback
         tags: data.config?.tags || [],

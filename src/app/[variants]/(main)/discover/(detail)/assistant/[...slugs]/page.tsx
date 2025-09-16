@@ -74,6 +74,8 @@ const Page = async (props: DiscoverPageProps) => {
   const { data, t, locale, identifier, isMobile } = await getSharedProps(props);
   if (!data) return notFound();
 
+  console.log('data', data);
+
   const { tags, title, description, createdAt, author } = data;
 
   const ld = ldModule.generate({

@@ -61,6 +61,7 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
 
         // 检查缓存
         const cached = agentOwnershipCache.get(marketIdentifier);
+        console.log('cached', cached);
         if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
           console.log('[useAgentOwnershipCheck] Using cached result:', cached.result);
           setResult({ isOwnAgent: cached.result });
