@@ -141,8 +141,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     colorBgTextActive: mapToken.colorFill,
 
-    colorBgTextHover: mapToken.colorFillSecondary,
-
     // ============== 分割线 ============== //
     colorBorderBg: mapToken.colorBgContainer,
 
@@ -154,13 +152,10 @@ export function formatToken(mapToken: MapToken): AliasToken {
     // ============== 内容区域背景色 ============== //
     colorFillContent: mapToken.colorFillSecondary,
 
-    colorFillContentHover: mapToken.colorFill,
-
     colorHighlight: mapToken.colorError,
 
     // ============== 图标颜色 ============== //
     colorIcon: mapToken.colorTextTertiary,
-    colorIconHover: mapToken.colorText,
 
     colorSplit: getAlphaColor(mapToken.colorBorderSecondary, 0.06),
 
@@ -171,6 +166,8 @@ export function formatToken(mapToken: MapToken): AliasToken {
     colorTextHeading: mapToken.colorText,
 
     colorTextLabel: mapToken.colorTextSecondary,
+
+    colorTextLightSolid: mapToken.colorWhite,
 
     // ============== 文本颜色 ============== //
     colorTextPlaceholder: mapToken.colorTextQuaternary,
@@ -183,10 +180,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     controlItemBgActiveDisabled: mapToken.colorFill,
 
-    controlItemBgActiveHover: mapToken.colorPrimaryBgHover,
-
-    controlItemBgHover: mapToken.colorFillTertiary,
-
     controlOutline: getAlphaColor(mapToken.colorPrimaryBg, 0.06),
 
     // ============== 控制器 ============== //
@@ -194,9 +187,10 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     // ============== 控制器内边距 ============== //
     controlPaddingHorizontal: 12,
-
     controlPaddingHorizontalSM: 8,
+
     controlTmpOutline: mapToken.colorFillQuaternary,
+
     // ============== 字体 ============== //
     fontSizeIcon: mapToken.fontSizeSM,
 
@@ -208,8 +202,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
     linkDecoration: 'none',
 
     linkFocusDecoration: 'none',
-
-    linkHoverDecoration: 'none',
 
     margin: mapToken.size,
 
@@ -248,7 +240,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
     paddingLG: mapToken.sizeLG,
 
     paddingMD: mapToken.sizeMD,
-
     paddingSM: mapToken.sizeSM,
     paddingXL: mapToken.sizeXL,
     paddingXS: mapToken.sizeXS,
