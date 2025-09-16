@@ -11,8 +11,8 @@ export const AVATAR_SIZE_LARGE = 64;
 
 export const HEADER_HEIGHT = AVATAR_SIZE + 8 * 2;
 
-export const FONT_SIZE_SMALL = 12;
-export const FONT_SIZE_STANDARD = 14;
-export const FONT_SIZE_LARGE = 18;
+export const FONT_SIZE_SMALL = 14;
+export const FONT_SIZE_STANDARD = 16;
+export const FONT_SIZE_LARGE = 20;
 
 export const CHAT_INPUT_HEIGHT = 100;
