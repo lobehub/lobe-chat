@@ -49,12 +49,6 @@ export interface ColorNeutralMapToken {
   colorBgSolidActive: string;
 
   /**
-   * @desc 实心的背景颜色悬浮态，目前只用在默认实心按钮的 hover 效果。
-   * @descEN Solid background color hover state, currently only used in the hover effect of the default solid button.
-   */
-  colorBgSolidHover: string;
-
-  /**
    * @nameZH 引起注意的背景色
    * @desc 该色用于引起用户强烈关注注意的背景色，目前只用在 Tooltip 的背景色上。
    * @descEN This color is used to draw the user's strong attention to the background color, and is currently only used in the background color of Tooltip.
@@ -171,15 +165,6 @@ interface ColorPrimaryMapToken {
    */
   colorPrimaryBg: string;
 
-  // 1
-  /**
-   * @nameZH 主色浅色背景悬浮态
-   * @nameEN Hover state of light background color of primary color
-   * @desc 与主色浅色背景颜色相对应的悬浮态颜色。
-   * @descEN The hover state color corresponding to the light background color of the primary color.
-   */
-  colorPrimaryBgHover: string;
-
   // 2
   /**
    * @nameZH 主色描边色
@@ -188,24 +173,6 @@ interface ColorPrimaryMapToken {
    * @descEN The stroke color under the main color gradient, used on the stroke of components such as Slider.
    */
   colorPrimaryBorder: string;
-
-  // 3
-  /**
-   * @nameZH 主色描边色悬浮态
-   * @nameEN Hover state of border color of primary color
-   * @desc 主色梯度下的描边用色的悬浮态，Slider 、Button 等组件的描边 Hover 时会使用。
-   * @descEN The hover state of the stroke color under the main color gradient, which will be used when the stroke Hover of components such as Slider and Button.
-   */
-  colorPrimaryBorderHover: string;
-
-  // 4
-  /**
-   * @nameZH 主色悬浮态
-   * @nameEN Hover state of primary color
-   * @desc 主色梯度下的悬浮态。
-   * @descEN Hover state under the main color gradient.
-   */
-  colorPrimaryHover: string;
 
   // 8
   /**
@@ -224,15 +191,6 @@ interface ColorPrimaryMapToken {
    * @descEN Active state of text color under the main color gradient.
    */
   colorPrimaryTextActive: string;
-
-  // 7
-  /**
-   * @nameZH 主色文本悬浮态
-   * @nameEN Hover state of text color of primary color
-   * @desc 主色梯度下的文本悬浮态。
-   * @descEN Hover state of text color under the main color gradient.
-   */
-  colorPrimaryTextHover: string; // 10
 }
 
 interface ColorSuccessMapToken {
@@ -262,15 +220,6 @@ interface ColorSuccessMapToken {
    */
   colorSuccessBg: string;
 
-  // 1
-  /**
-   * @nameZH 成功色的浅色背景色悬浮态
-   * @nameEN Hover State Color of Light Success Background
-   * @desc 成功色浅色背景颜色，一般用于视觉层级较弱的选中状态，不过 antd 目前没有使用到该 token
-   * @descEN Light background color of success color, but antd does not use this token currently
-   */
-  colorSuccessBgHover: string;
-
   // 2
   /**
    * @nameZH 成功色的描边色
@@ -279,24 +228,6 @@ interface ColorSuccessMapToken {
    * @descEN Border color of success color, used for Tag and Alert success state border color
    */
   colorSuccessBorder: string;
-
-  // 3
-  /**
-   * @nameZH 成功色的描边色悬浮态
-   * @nameEN Hover State Color of Success Border
-   * @desc 成功色的描边色悬浮态
-   * @descEN Hover state color of success color border
-   */
-  colorSuccessBorderHover: string;
-
-  // 4
-  /**
-   * @nameZH 成功色的深色悬浮态
-   * @nameEN Hover State Color of Dark Success
-   * @desc 成功色的深色悬浮态
-   * @descEN Hover state color of dark success color
-   */
-  colorSuccessHover: string;
 
   // 8
   /**
@@ -315,15 +246,6 @@ interface ColorSuccessMapToken {
    * @descEN Active state color of success color text
    */
   colorSuccessTextActive: string;
-
-  // 7
-  /**
-   * @nameZH 成功色的文本悬浮态
-   * @nameEN Hover State Color of Success Text
-   * @desc 成功色的文本悬浮态
-   * @descEN Hover state color of success color text
-   */
-  colorSuccessTextHover: string; // 10
 }
 
 interface ColorWarningMapToken {
@@ -353,15 +275,6 @@ interface ColorWarningMapToken {
    */
   colorWarningBg: string;
 
-  // 1
-  /**
-   * @nameZH 警戒色的浅色背景色悬浮态
-   * @nameEN Warning background color hover state
-   * @desc 警戒色的浅色背景色悬浮态
-   * @descEN The hover state background color of the warning state.
-   */
-  colorWarningBgHover: string;
-
   // 2
   /**
    * @nameZH 警戒色的描边色
@@ -370,24 +283,6 @@ interface ColorWarningMapToken {
    * @descEN The border color of the warning state.
    */
   colorWarningBorder: string;
-
-  // 3
-  /**
-   * @nameZH 警戒色的描边色悬浮态
-   * @nameEN Warning border color hover state
-   * @desc 警戒色的描边色悬浮态
-   * @descEN The hover state border color of the warning state.
-   */
-  colorWarningBorderHover: string;
-
-  // 4
-  /**
-   * @nameZH 警戒色的深色悬浮态
-   * @nameEN Warning hover color
-   * @desc 警戒色的深色悬浮态
-   * @descEN The hover state of the warning color.
-   */
-  colorWarningHover: string;
 
   // 8
   /**
@@ -406,15 +301,6 @@ interface ColorWarningMapToken {
    * @descEN The active state of the text in the warning color.
    */
   colorWarningTextActive: string;
-
-  // 7
-  /**
-   * @nameZH 警戒色的文本悬浮态
-   * @nameEN Warning text hover state
-   * @desc 警戒色的文本悬浮态
-   * @descEN The hover state of the text in the warning color.
-   */
-  colorWarningTextHover: string; // 10
 }
 
 interface ColorInfoMapToken {
@@ -444,15 +330,6 @@ interface ColorInfoMapToken {
    */
   colorInfoBg: string;
 
-  // 1
-  /**
-   * @nameZH 信息色的浅色背景色悬浮态
-   * @nameEN Hover state of light background color of information color
-   * @desc 信息色的浅色背景色悬浮态。
-   * @descEN Hover state of light background color of information color.
-   */
-  colorInfoBgHover: string;
-
   // 2
   /**
    * @nameZH 信息色的描边色
@@ -461,24 +338,6 @@ interface ColorInfoMapToken {
    * @descEN Border color of information color.
    */
   colorInfoBorder: string;
-
-  // 3
-  /**
-   * @nameZH 信息色的描边色悬浮态
-   * @nameEN Hover state of border color of information color
-   * @desc 信息色的描边色悬浮态。
-   * @descEN Hover state of border color of information color.
-   */
-  colorInfoBorderHover: string;
-
-  // 4
-  /**
-   * @nameZH 信息色的深色悬浮态
-   * @nameEN Hover state of dark color of information color
-   * @desc 信息色的深色悬浮态。
-   * @descEN Hover state of dark color of information color.
-   */
-  colorInfoHover: string;
 
   // 8
   /**
@@ -497,15 +356,6 @@ interface ColorInfoMapToken {
    * @descEN Active state of text color of information color.
    */
   colorInfoTextActive: string;
-
-  // 7
-  /**
-   * @nameZH 信息色的文本悬浮态
-   * @nameEN Hover state of text color of information color
-   * @desc 信息色的文本悬浮态。
-   * @descEN Hover state of text color of information color.
-   */
-  colorInfoTextHover: string; // 10
 }
 
 interface ColorErrorMapToken {
@@ -543,24 +393,6 @@ interface ColorErrorMapToken {
    */
   colorErrorBgActive: string;
 
-  // 2
-  /**
-   * @nameZH 错误色的浅色填充背景色悬浮态
-   * @nameEN Wrong color fill background color suspension state
-   * @desc 错误色的浅色填充背景色悬浮态，目前只用在危险填充按钮的 hover 效果。
-   * @descEN The wrong color fills the background color of the suspension state, which is currently only used in the hover effect of the dangerous filled button.
-   */
-  colorErrorBgFilledHover: string;
-
-  // 1
-  /**
-   * @nameZH 错误色的浅色背景色悬浮态
-   * @nameEN Error background color hover state
-   * @desc 错误色的浅色背景色悬浮态
-   * @descEN The hover state background color of the error state.
-   */
-  colorErrorBgHover: string;
-
   // 3
   /**
    * @nameZH 错误色的描边色
@@ -569,24 +401,6 @@ interface ColorErrorMapToken {
    * @descEN The border color of the error state.
    */
   colorErrorBorder: string;
-
-  // 3
-  /**
-   * @nameZH 错误色的描边色悬浮态
-   * @nameEN Error border color hover state
-   * @desc 错误色的描边色悬浮态
-   * @descEN The hover state border color of the error state.
-   */
-  colorErrorBorderHover: string;
-
-  // 4
-  /**
-   * @nameZH 错误色的深色悬浮态
-   * @nameEN Error hover color
-   * @desc 错误色的深色悬浮态
-   * @descEN The hover state of the error color.
-   */
-  colorErrorHover: string;
 
   // 8
   /**
@@ -605,15 +419,6 @@ interface ColorErrorMapToken {
    * @descEN The active state of the text in the error color.
    */
   colorErrorTextActive: string;
-
-  // 7
-  /**
-   * @nameZH 错误色的文本悬浮态
-   * @nameEN Error text hover state
-   * @desc 错误色的文本悬浮态
-   * @descEN The hover state of the text in the error color.
-   */
-  colorErrorTextHover: string; // 10
 }
 
 export interface ColorLinkMapToken {
@@ -631,13 +436,6 @@ export interface ColorLinkMapToken {
    * @descEN Control the color of hyperlink when clicked.
    */
   colorLinkActive: string;
-  /**
-   * @nameZH 超链接悬浮颜色
-   * @nameEN Hyperlink hover color
-   * @desc 控制超链接悬浮时的颜色。
-   * @descEN Control the color of hyperlink when hovering.
-   */
-  colorLinkHover: string;
 }
 
 export interface ColorMapToken

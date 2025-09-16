@@ -74,7 +74,6 @@ const lightBaseToken: Partial<AliasToken> = {
   colorLink: infoToken.colorInfoText,
   colorLinkActive: infoToken.colorInfoTextActive,
 
-  colorLinkHover: infoToken.colorInfoTextHover,
   // 浅色模式专用颜色
   colorTextLightSolid: neutralToken.colorBgLayout,
 };

@@ -108,14 +108,6 @@ export interface AliasToken extends MapToken {
    */
   colorBgTextActive: string;
 
-  /**
-   * @nameZH 文本悬停态背景色
-   * @nameEN Text hover background color
-   * @desc 控制文本在悬停状态下的背景色。
-   * @descEN Control the background color of text in hover state.
-   */
-  colorBgTextHover: string;
-
   // Border
   /**
    * @nameZH 背景边框颜色
@@ -149,15 +141,6 @@ export interface AliasToken extends MapToken {
    */
   colorFillContent: string;
 
-  // Background
-  /**
-   * @nameZH 内容区域背景色（悬停）
-   * @nameEN Background color of content area (hover)
-   * @desc 控制内容区域背景色在鼠标悬停时的样式。
-   * @descEN Control the style of background color of content area when mouse hovers over it.
-   */
-  colorFillContentHover: string;
-
   /**
    * @nameZH 高亮颜色
    * @nameEN Highlight color
@@ -174,15 +157,6 @@ export interface AliasToken extends MapToken {
    * @descEN Weak action. Such as `allowClear` or Alert close button
    */
   colorIcon: string;
-
-  /**  */
-  /**
-   * @nameZH 弱操作图标悬浮态颜色
-   * @nameEN Weak action icon hover color
-   * @desc 控制弱操作图标在悬浮状态下的颜色，例如 allowClear 或 Alert 关闭按钮。
-   * @descEN Weak action hover color. Such as `allowClear` or Alert close button
-   */
-  colorIconHover: string;
 
   /**
    * @nameZH 分割线颜色
@@ -262,22 +236,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the background color of control component item when active and disabled.
    */
   controlItemBgActiveDisabled: string;
-  // Note. It also is a color
-  /**
-   * @nameZH 控制组件项在鼠标悬浮且激活状态下的背景颜色
-   * @nameEN Background color of control component item when hovering and active
-   * @desc 控制组件项在鼠标悬浮且激活状态下的背景颜色。
-   * @descEN Control the background color of control component item when hovering and active.
-   */
-  controlItemBgActiveHover: string;
-
-  /**
-   * @nameZH 控制组件项在鼠标悬浮时的背景颜色
-   * @nameEN Background color of control component item when hovering
-   * @desc 控制组件项在鼠标悬浮时的背景颜色。
-   * @descEN Control the background color of control component item when hovering.
-   */
-  controlItemBgHover: string;
   /**
    * @nameZH 输入组件的 Outline 颜色
    * @nameEN Input component outline color
@@ -353,13 +311,6 @@ export interface AliasToken extends MapToken {
    * @descEN Control the text decoration style of a link on focus.
    */
   linkFocusDecoration: string;
-  /**
-   * @nameZH 链接鼠标悬浮时文本装饰
-   * @nameEN Link text decoration on mouse hover
-   * @desc 控制链接鼠标悬浮时文本的装饰样式。
-   * @descEN Control the text decoration style of a link on mouse hover.
-   */
-  linkHoverDecoration: string;
   /**
    * @nameZH 外边距
    * @nameEN Margin

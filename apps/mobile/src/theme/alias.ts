@@ -141,8 +141,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     colorBgTextActive: mapToken.colorFill,
 
-    colorBgTextHover: mapToken.colorFillSecondary,
-
     // ============== 分割线 ============== //
     colorBorderBg: mapToken.colorBgContainer,
 
@@ -154,13 +152,10 @@ export function formatToken(mapToken: MapToken): AliasToken {
     // ============== 内容区域背景色 ============== //
     colorFillContent: mapToken.colorFillSecondary,
 
-    colorFillContentHover: mapToken.colorFill,
-
     colorHighlight: mapToken.colorError,
 
     // ============== 图标颜色 ============== //
     colorIcon: mapToken.colorTextTertiary,
-    colorIconHover: mapToken.colorText,
 
     colorSplit: getAlphaColor(mapToken.colorBorderSecondary, 0.06),
 
@@ -183,10 +178,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     controlItemBgActiveDisabled: mapToken.colorFill,
 
-    controlItemBgActiveHover: mapToken.colorPrimaryBgHover,
-
-    controlItemBgHover: mapToken.colorFillTertiary,
-
     controlOutline: getAlphaColor(mapToken.colorPrimaryBg, 0.06),
 
     // ============== 控制器 ============== //
@@ -208,8 +199,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
     linkDecoration: 'none',
 
     linkFocusDecoration: 'none',
-
-    linkHoverDecoration: 'none',
 
     margin: mapToken.size,
 

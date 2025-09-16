@@ -76,7 +76,7 @@ const Button: React.FC<ButtonProps> = ({
       case 'primary': {
         return {
           color: (danger ? 'danger' : 'primary') as ButtonColor,
-          variant: 'filled' as ButtonVariant,
+          variant: 'solid' as ButtonVariant,
         };
       }
       case 'text': {
@@ -100,7 +100,7 @@ const Button: React.FC<ButtonProps> = ({
       default: {
         return {
           color: (danger ? 'danger' : 'default') as ButtonColor,
-          variant: 'solid' as ButtonVariant,
+          variant: 'outlined' as ButtonVariant,
         };
       }
     }

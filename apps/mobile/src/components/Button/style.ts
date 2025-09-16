@@ -32,12 +32,12 @@ export const useStyles = createStyles(
       // If both `danger` and `color` are provided, respect `color`
       if (color === 'danger') return token.colorError;
       if (color && color !== 'default') {
-        const key10 = `${color}10` as keyof typeof token;
         // prefer 10 shade if available, otherwise fallback to primary
-        return (token as any)[key10] || token.colorPrimary;
+        return (token[`${color}10`] as string) || token.colorPrimary;
       }
+
       // default neutral text color as accent for outlines/text
-      return token.colorTextDescription;
+      return token.colorText;
     };
 
     const baseColor = resolveBaseColor();
@@ -45,31 +45,72 @@ export const useStyles = createStyles(
     const getVariantStyles = () => {
       switch (variant) {
         case 'filled': {
+          // 单独处理 filled 取色
+          const getFilledColor = () => {
+            if (color === 'primary') return token.colorPrimaryBorder;
+            if (color === 'danger') return token.colorErrorFillTertiary;
+            if (color === 'default') return token[`gray3`] as string;
+            const lightColor = token[`${color}3`] as string;
+            return disabled ? token.colorBgContainerDisabled : lightColor;
+          };
+
+          const getTextColor = () => {
+            if (color === 'primary') return token.colorPrimaryText;
+            if (color === 'danger') return token.colorErrorText;
+            if (color === 'default') return token.colorText;
+            const darkColor = token[`${color}10`] as string;
+            return disabled ? token.colorTextDisabled : darkColor;
+          };
+
+          const filledColor = getFilledColor();
+          const textColor = getTextColor();
+
+          // 特殊处理
           return {
-            backgroundColor: disabled ? token.colorBgContainerDisabled : baseColor,
-            borderColor: disabled ? token.colorBorder : baseColor,
+            backgroundColor: filledColor,
+            borderColor: disabled || color === 'default' ? token.colorBorder : baseColor,
             borderStyle: 'solid' as const,
-            borderWidth: 1,
-            textColor: disabled ? token.colorTextDisabled : token.colorTextLightSolid,
+            borderWidth: 0,
+            textColor: textColor,
           };
         }
         case 'solid': {
+          // 单独处理 filled 取色
+          const getFilledColor = () => {
+            if (color === 'primary') return token.colorPrimary;
+            if (color === 'danger') return token.colorErrorFillTertiary;
+            if (color === 'default') return token.colorBgSolid;
+            const darkColor = token[`${color}10`] as string;
+
+            return disabled ? token.colorBgContainerDisabled : darkColor;
+          };
+
+          const getTextColor = () => {
+            if (color === 'primary') return token.colorWhite;
+            if (color === 'danger') return token.colorErrorText;
+            if (color === 'default') return token.colorBgContainer;
+            const lightColor = token[`${color}3`] as string;
+
+            return disabled ? token.colorTextDisabled : lightColor;
+          };
+          const filledColor = getFilledColor();
+          const textColor = getTextColor();
           return {
-            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+            backgroundColor: filledColor,
             borderColor: disabled || color === 'default' ? token.colorBorder : baseColor,
             borderStyle: 'solid' as const,
-            borderWidth: 1,
-            textColor: disabled
-              ? token.colorTextDisabled
-              : color === 'default'
-                ? token.colorText
-                : baseColor,
+            borderWidth: 0,
+            textColor: textColor,
           };
         }
         case 'outlined': {
           return {
-            backgroundColor: 'transparent',
-            borderColor: disabled ? token.colorBorder : baseColor,
+            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
+            borderColor: disabled
+              ? token.colorBorder
+              : color === 'default'
+                ? token.colorBorder
+                : baseColor,
             borderStyle: 'solid' as const,
             borderWidth: 1,
             textColor: disabled ? token.colorTextDisabled : baseColor,
@@ -77,8 +118,12 @@ export const useStyles = createStyles(
         }
         case 'dashed': {
           return {
-            backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorBgContainer,
-            borderColor: disabled ? token.colorBorder : baseColor,
+            backgroundColor: 'transparent',
+            borderColor: disabled
+              ? token.colorBorder
+              : color === 'default'
+                ? token.colorBorder
+                : baseColor,
             borderStyle: 'dashed' as const,
             borderWidth: 1,
             textColor: disabled
@@ -94,7 +139,11 @@ export const useStyles = createStyles(
             borderColor: 'transparent',
             borderStyle: 'solid' as const,
             borderWidth: 0,
-            textColor: disabled ? token.colorTextDisabled : baseColor,
+            textColor: disabled
+              ? token.colorTextDisabled
+              : color === 'default'
+                ? token.colorText
+                : baseColor,
           };
         }
         case 'link': {
