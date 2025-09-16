@@ -75,10 +75,6 @@ const darkBaseToken: Partial<AliasToken> = {
   colorLink: infoToken.colorInfoText,
 
   colorLinkActive: infoToken.colorInfoTextActive,
-
-  colorLinkHover: infoToken.colorInfoTextHover,
-  // 暗色模式专用颜色
-  colorTextLightSolid: neutralToken.colorBgLayout,
 };
 
 export default darkBaseToken;

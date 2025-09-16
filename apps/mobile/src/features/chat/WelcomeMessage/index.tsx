@@ -57,7 +57,7 @@ const WelcomeMessage = () => {
       <OpeningQuestions questions={openingQuestions} />
     </View>
   ) : (
-    welcomeBubble
+    <View style={styles.container}>{welcomeBubble}</View>
   );
 };
 
