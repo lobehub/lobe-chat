@@ -26,7 +26,7 @@ const testUserCode = 'test-user-code';
 const testExpires = new Date(Date.now() + 3600 * 1000); // 1小时后过期
 
 beforeEach(async () => {
-  await serverDB.insert(users).values({ id: testUserId });
+  await serverDB.insert(users).values({ id: testUserId }).onConflictDoNothing();
 });
 
 // 每次测试后清理数据
