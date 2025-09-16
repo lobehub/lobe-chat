@@ -577,19 +577,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 16_000,
-    description: 'Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。',
-    displayName: 'Dolphin Mixtral 8x22B',
-    id: 'cognitivecomputations/dolphin-mixtral-8x22b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 8192,
     description: 'Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2的升级版本，包含最新的内部开发的数据集。',
     displayName: 'Hermes 2 Pro Llama 3 8B',
