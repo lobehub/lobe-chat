@@ -18,6 +18,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { CreateAiProviderParams } from '@/types/aiProvider';
 
+import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 
 interface CreateNewProviderProps {
@@ -102,12 +103,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
               {label}
             </Flexbox>
           )}
-          options={[
-            { label: 'OpenAI', value: 'openai' },
-            { label: 'Anthropic', value: 'anthropic' },
-            { label: 'Ollama', value: 'ollama' },
-            // { label: 'Azure AI', value: 'azureai' },
-          ]}
+          options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}
         />
