@@ -2,18 +2,13 @@ import { HEADER_HEIGHT } from '@/const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  actionButton: {
-    backgroundColor: 'transparent',
-    borderRadius: token.borderRadiusXS,
-    padding: token.paddingXXS,
-  },
   header: {
     alignItems: 'center',
     backgroundColor: token.colorBgLayout,
     flexDirection: 'row',
     height: HEADER_HEIGHT,
     justifyContent: 'space-between',
-    paddingHorizontal: token.paddingSM,
+    paddingHorizontal: token.paddingXS,
     zIndex: 10,
   },
   headerActions: {

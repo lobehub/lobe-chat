@@ -78,8 +78,9 @@ const ActionIcon: React.FC<ActionIconProps> = ({
     const baseStyle: ViewStyle = {
       alignItems: 'center',
       borderRadius: token.borderRadiusXS,
+      height: size + token.paddingXS * 2,
       justifyContent: 'center',
-      padding: token.paddingXS,
+      width: size + token.paddingXS * 2,
     };
 
     switch (variant) {
