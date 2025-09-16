@@ -1,9 +1,9 @@
 export { default as BasicDemo } from './basic';
 export { default as BlockDemo } from './block';
 export { default as DangerDemo } from './danger';
+export { default as DisabledDemo } from './disabled';
 export { default as IconDemo } from './icon';
 export { default as LoadingDemo } from './loading';
 export { default as ShapeDemo } from './shape';
 export { default as SizesDemo } from './sizes';
-export { default as StatesDemo } from './states';
 export { default as VariantColorDemo } from './variant-color';

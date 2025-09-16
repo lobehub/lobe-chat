@@ -21,6 +21,7 @@ import { useProviderName } from '@/hooks/useProviderName';
 
 import { useStyles } from './style';
 import { TraceNameMap } from '@lobechat/types';
+import { Button } from '@/components';
 
 export type CheckErrorRender = (props: {
   defaultError: ReactNode;
@@ -288,22 +289,15 @@ const Checker = memo<CheckerProps>(
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <Button
             disabled={isProviderConfigUpdating || loading}
+            loading={loading}
             onPress={handleCheckPress}
-            style={[
-              styles.checkButton,
-              (isProviderConfigUpdating || loading) && styles.checkButtonDisabled,
-            ]}
+            size="large"
+            type="primary"
           >
-            {loading ? (
-              <ActivityIndicator color={token.colorTextLightSolid} size="small" />
-            ) : (
-              <Text style={styles.checkButtonText}>
-                {t('providerModels.config.checker.button')}
-              </Text>
-            )}
-          </TouchableOpacity>
+            {t('providerModels.config.checker.button')}
+          </Button>
         </View>
 
         {/* Model selector modal */}

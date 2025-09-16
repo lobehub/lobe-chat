@@ -362,7 +362,8 @@ const ProviderDetailPage = () => {
                 <View style={styles.modelsActions}>
                   <Button
                     disabled={item.data.isFetching}
-                    icon={item.data.isFetching ? <ActivityIndicator /> : <RefreshCcw />}
+                    icon={<RefreshCcw />}
+                    loading={item.data.isFetching}
                     onPress={handleFetchModels}
                     type="primary"
                   >
