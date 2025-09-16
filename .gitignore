@@ -43,6 +43,15 @@ tmp/
 venv/
 .venv/
 
+# Robust ignore for env files
+.env.production
+.env.staging
+.env.test
+.env.*
+!.env.example
+!.env.*.example
+
+
 # Dependencies
 node_modules/
 *.lock
