@@ -1,8 +1,10 @@
 import React, { memo, useState, useCallback } from 'react';
-import { ViewStyle } from 'react-native';
+import { TouchableOpacity, ViewStyle } from 'react-native';
+import { ModelIcon } from '@lobehub/icons-rn';
 
-import ModelSwitchButton from './ModelSwitchButton';
 import ModelSelectModal from './ModelSelectModal';
+import { useCurrentAgent } from '@/hooks/useCurrentAgent';
+import { ICON_SIZE_LARGE } from '@/const/common';
 
 interface ModelSwitchProps {
   style?: ViewStyle;
@@ -12,8 +14,9 @@ interface ModelSwitchProps {
  * 模型切换组合组件
  * 包含切换按钮和选择模态框，管理状态
  */
-const ModelSwitch = memo<ModelSwitchProps>(({ style }) => {
+const ModelSwitch = memo<ModelSwitchProps>(() => {
   const [modalVisible, setModalVisible] = useState(false);
+  const { currentModel } = useCurrentAgent();
 
   const handleOpenModal = useCallback(() => {
     setModalVisible(true);
@@ -25,7 +28,9 @@ const ModelSwitch = memo<ModelSwitchProps>(({ style }) => {
 
   return (
     <>
-      <ModelSwitchButton onPress={handleOpenModal} style={style} />
+      <TouchableOpacity onPress={handleOpenModal}>
+        <ModelIcon model={currentModel} size={ICON_SIZE_LARGE} />
+      </TouchableOpacity>
 
       <ModelSelectModal onClose={handleCloseModal} visible={modalVisible} />
     </>

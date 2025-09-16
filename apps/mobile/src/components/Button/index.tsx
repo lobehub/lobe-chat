@@ -20,6 +20,7 @@ import {
   ButtonVariant,
   ButtonColor,
 } from './style';
+import { ICON_SIZE } from '@/const/common';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
@@ -76,7 +77,7 @@ const Button: React.FC<ButtonProps> = ({
       case 'primary': {
         return {
           color: (danger ? 'danger' : 'primary') as ButtonColor,
-          variant: 'filled' as ButtonVariant,
+          variant: 'solid' as ButtonVariant,
         };
       }
       case 'text': {
@@ -87,7 +88,7 @@ const Button: React.FC<ButtonProps> = ({
       }
       case 'link': {
         return {
-          color: (danger ? 'danger' : 'default') as ButtonColor,
+          color: (danger ? 'danger' : 'primary') as ButtonColor,
           variant: 'link' as ButtonVariant,
         };
       }
@@ -100,7 +101,7 @@ const Button: React.FC<ButtonProps> = ({
       default: {
         return {
           color: (danger ? 'danger' : 'default') as ButtonColor,
-          variant: 'solid' as ButtonVariant,
+          variant: 'outlined' as ButtonVariant,
         };
       }
     }
@@ -154,7 +155,7 @@ const Button: React.FC<ButtonProps> = ({
     if (loading || !icon) return null;
     const iconColor = (styles.text?.color as string) ?? undefined;
     // Always match icon size to button text size for consistency
-    const iconSize = (styles.text?.fontSize as number) ?? undefined;
+    const iconSize = styles.text?.fontSize + 4 || ICON_SIZE;
 
     let iconNode = icon;
     if (React.isValidElement(icon)) {
