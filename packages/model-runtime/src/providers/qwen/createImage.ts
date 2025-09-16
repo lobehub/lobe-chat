@@ -148,7 +148,7 @@ async function createImageEdit(
   }
 
   const imageContent = choice.message.content.find((content) => 'image' in content);
-  if (!imageContent || !('image' in imageContent)) {
+  if (!imageContent) {
     throw new Error('No image found in response content');
   }
 
