@@ -103,6 +103,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
   v0?: OpenAICompatibleKeyVault;
+  vercelaigateway?: OpenAICompatibleKeyVault;
   vertexai?: OpenAICompatibleKeyVault;
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;
