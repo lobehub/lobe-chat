@@ -5,11 +5,6 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgLayout,
     flex: 1,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: token.paddingSM,
-    paddingTop: token.paddingXS,
-  },
   // 空状态
   emptyContainer: {
     alignItems: 'center',
@@ -179,7 +174,8 @@ export const useStyles = createStyles((token) => ({
   },
 
   scrollContainer: {
-    paddingBottom: token.marginMD,
+    paddingHorizontal: token.paddingContentHorizontal,
+    paddingTop: token.paddingContentVertical,
   },
 
   // Section header样式

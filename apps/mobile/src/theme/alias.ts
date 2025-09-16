@@ -167,6 +167,8 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     colorTextLabel: mapToken.colorTextSecondary,
 
+    colorTextLightSolid: mapToken.colorWhite,
+
     // ============== 文本颜色 ============== //
     colorTextPlaceholder: mapToken.colorTextQuaternary,
 
@@ -185,9 +187,10 @@ export function formatToken(mapToken: MapToken): AliasToken {
 
     // ============== 控制器内边距 ============== //
     controlPaddingHorizontal: 12,
-
     controlPaddingHorizontalSM: 8,
+
     controlTmpOutline: mapToken.colorFillQuaternary,
+
     // ============== 字体 ============== //
     fontSizeIcon: mapToken.fontSizeSM,
 
@@ -237,7 +240,6 @@ export function formatToken(mapToken: MapToken): AliasToken {
     paddingLG: mapToken.sizeLG,
 
     paddingMD: mapToken.sizeMD,
-
     paddingSM: mapToken.sizeSM,
     paddingXL: mapToken.sizeXL,
     paddingXS: mapToken.sizeXS,

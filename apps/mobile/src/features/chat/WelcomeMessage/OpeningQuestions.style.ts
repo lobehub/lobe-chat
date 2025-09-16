@@ -17,8 +17,8 @@ export const useStyles = createStyles((token) => ({
 
   questionText: {
     color: token.colorText,
-    fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM,
+    fontSize: token.fontSize,
+    lineHeight: token.lineHeight,
   },
 
   questionsWrapper: {

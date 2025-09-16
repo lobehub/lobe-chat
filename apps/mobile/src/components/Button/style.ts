@@ -86,12 +86,11 @@ export const useStyles = createStyles(
           };
 
           const getTextColor = () => {
-            if (color === 'primary') return token.colorWhite;
+            if (color === 'primary') return token.colorTextLightSolid;
             if (color === 'danger') return token.colorErrorText;
             if (color === 'default') return token.colorBgContainer;
-            const lightColor = token[`${color}3`] as string;
 
-            return disabled ? token.colorTextDisabled : lightColor;
+            return disabled ? token.colorTextDisabled : token.colorTextLightSolid;
           };
           const filledColor = getFilledColor();
           const textColor = getTextColor();

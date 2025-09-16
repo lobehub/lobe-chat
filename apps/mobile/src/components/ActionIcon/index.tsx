@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { useThemeToken } from '@/theme';
+import { ICON_SIZE } from '@/const/common';
 
 interface ActionIconProps extends PressableProps {
   /**
@@ -40,7 +41,7 @@ interface ActionIconProps extends PressableProps {
 
 const ActionIcon: React.FC<ActionIconProps> = ({
   icon: Icon,
-  size = 24,
+  size = ICON_SIZE,
   color,
   spin = false,
   duration = 1000,
