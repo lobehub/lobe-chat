@@ -84,6 +84,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-20',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -105,6 +108,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-31',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -164,6 +170,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-11',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -184,6 +193,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -223,6 +235,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -334,6 +349,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -353,6 +371,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-27',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -372,6 +393,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-16',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -391,6 +415,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-05-26',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -412,6 +439,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-25',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -453,6 +483,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-30',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -653,6 +686,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-14',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -788,6 +824,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -806,6 +845,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1011,6 +1053,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
