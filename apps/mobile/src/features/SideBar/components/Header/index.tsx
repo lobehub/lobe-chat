@@ -1,14 +1,14 @@
 import { Link } from 'expo-router';
 import { Sparkles, CompassIcon } from 'lucide-react-native';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { ICON_SIZE } from '@/const/common';
 import { isDev } from '@/utils/env';
 import { useStyles } from './style';
+import { ActionIcon } from '@/components';
 
 const SessionHeader: React.FC = () => {
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
 
   return (
     <View style={styles.header}>
@@ -16,15 +16,11 @@ const SessionHeader: React.FC = () => {
       <View style={styles.extra}>
         {isDev && (
           <Link asChild href="/playground">
-            <TouchableOpacity style={styles.settingButton}>
-              <Sparkles color={token.colorText} size={ICON_SIZE} />
-            </TouchableOpacity>
+            <ActionIcon icon={Sparkles} />
           </Link>
         )}
         <Link asChild href="/assistant/list">
-          <TouchableOpacity style={styles.settingButton}>
-            <CompassIcon color={token.colorText} size={ICON_SIZE} />
-          </TouchableOpacity>
+          <ActionIcon icon={CompassIcon} />
         </Link>
       </View>
     </View>

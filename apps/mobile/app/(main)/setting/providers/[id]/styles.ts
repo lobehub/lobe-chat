@@ -5,11 +5,6 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgLayout,
     flex: 1,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: token.paddingSM,
-    paddingTop: token.paddingXS,
-  },
   // 空状态
   emptyContainer: {
     alignItems: 'center',
@@ -88,9 +83,9 @@ export const useStyles = createStyles((token) => ({
 
   // ModelCard样式
   modelCard: {
-    backgroundColor: token.colorBgContainer,
-    borderBottomColor: token.colorBorderSecondary,
-    borderBottomWidth: 1,
+    // backgroundColor: token.colorBgContainer,
+    // borderBottomColor: token.colorBorderSecondary,
+    // borderBottomWidth: 1,
     paddingHorizontal: token.padding,
     paddingVertical: token.paddingSM,
   },
@@ -101,7 +96,7 @@ export const useStyles = createStyles((token) => ({
   },
 
   modelIdTag: {
-    backgroundColor: token.colorFillTertiary,
+    // backgroundColor: token.colorFillTertiary,
     marginBottom: 0,
     marginLeft: 0,
   },
@@ -150,7 +145,7 @@ export const useStyles = createStyles((token) => ({
 
   // Models相关样式（从ModelsSection迁移）
   modelsHeader: {
-    backgroundColor: token.colorBgContainer,
+    // backgroundColor: token.colorBgContainer,
     borderRadius: token.borderRadiusLG,
     marginBottom: token.marginSM,
     padding: token.padding,
@@ -179,12 +174,13 @@ export const useStyles = createStyles((token) => ({
   },
 
   scrollContainer: {
-    paddingBottom: token.marginMD,
+    paddingHorizontal: token.paddingContentHorizontal,
+    paddingTop: token.paddingContentVertical,
   },
 
   // Section header样式
   sectionHeader: {
-    backgroundColor: token.colorFillQuaternary,
+    // backgroundColor: token.colorFillQuaternary,
     paddingHorizontal: token.padding,
     paddingVertical: token.paddingXS,
   },
