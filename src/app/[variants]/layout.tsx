@@ -3,7 +3,6 @@ import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
-import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG } from '@/const/locale';
@@ -28,7 +27,7 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
   const { locale, isMobile, theme, primaryColor, neutralColor } =
     RouteVariants.deserializeVariants(variants);
 
-  const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
+  const direction = 'rtl'; // force rtl for hebrew
 
   return (
     <html dir={direction} lang={locale}>

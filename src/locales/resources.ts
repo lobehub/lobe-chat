@@ -3,6 +3,7 @@ import { DEFAULT_LANG } from '@/const/locale';
 import resources from './default';
 
 export const locales = [
+  'he-IL',
   'ar',
   'bg-BG',
   'de-DE',
@@ -50,6 +51,10 @@ type LocaleOptions = {
 }[];
 
 export const localeOptions: LocaleOptions = [
+  {
+    label: 'עברית',
+    value: 'he-IL',
+  },
   {
     label: 'English',
     value: 'en-US',
@@ -124,4 +129,4 @@ export const localeOptions: LocaleOptions = [
   },
 ] as LocaleOptions;
 
-export const supportLocales: string[] = [...locales, 'en', 'zh'];
+export const supportLocales: string[] = ['en', 'he'];
