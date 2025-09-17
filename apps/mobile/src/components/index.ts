@@ -8,6 +8,8 @@ export { default as FluentEmoji } from './FluentEmoji';
 export { default as GitHubAvatar } from './GithubAvatar';
 export { default as Header } from './Header';
 export { default as Highlighter } from './Highlighter';
+export { default as Icon } from './Icon';
+export * from './Icon';
 export { default as InstantSwitch } from './InstantSwitch';
 export { default as ListGroup } from './ListGroup';
 export { default as ListItem } from './ListItem';
