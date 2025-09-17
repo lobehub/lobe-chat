@@ -75,7 +75,7 @@
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
     "test-app": "vitest run",
-    "test-app:coverage": "vitest run --coverage",
+    "test-app:coverage": "vitest --coverage --silent='passed-only'",
     "test:update": "vitest -u",
     "type-check": "tsgo --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
