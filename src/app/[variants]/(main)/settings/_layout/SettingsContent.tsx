@@ -11,19 +11,15 @@ import { SettingsTabs } from '@/store/global/initialState';
 const componentMap = {
   [SettingsTabs.Common]: dynamic(() => import('../common'), {
     loading: () => <Loading />,
-    ssr: false,
   }),
   [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
     loading: () => <Loading />,
-    ssr: false,
   }),
   [SettingsTabs.LLM]: dynamic(() => import('../llm'), {
     loading: () => <Loading />,
-    ssr: false,
   }),
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
     loading: () => <Loading />,
-    ssr: false,
   }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
     loading: () => <Loading />,
