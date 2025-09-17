@@ -1,51 +1,56 @@
 import { ViewStyle } from 'react-native';
+
+import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL, ICON_SIZE_TINY } from '@/const/common';
 import type { AliasToken } from '@/theme';
+import type { IconSize, IconSizeConfig } from '../Icon';
 
-export type ActionIconSizeConfig = {
-  blockSize?: number | string;
-  borderRadius?: number | string;
-  size?: number;
-};
+const PRESET_ICON_SIZE = {
+  large: ICON_SIZE_LARGE,
+  middle: ICON_SIZE,
+  small: ICON_SIZE_SMALL,
+} as const;
 
-export type ActionIconSize = number | 'small' | 'middle' | 'large' | ActionIconSizeConfig;
+const PRESET_BLOCK_PADDING = {
+  large: ICON_SIZE_TINY,
+  middle: ICON_SIZE_TINY - ICON_SIZE_TINY / 4,
+  small: ICON_SIZE_TINY / 4,
+} as const;
 
-export const calcSize = (iconSize?: ActionIconSize) => {
-  let blockSize: number;
-  let borderRadius: number;
-  let innerIconSize: number | undefined;
-
-  if (typeof iconSize === 'number') {
-    blockSize = Math.round(iconSize * 1.8);
-    borderRadius = Math.floor(blockSize / 6);
-    innerIconSize = iconSize;
-  } else if (typeof iconSize === 'object' && iconSize !== null) {
-    blockSize = (iconSize.blockSize as number) || 36;
-    borderRadius = (iconSize.borderRadius as number) || 6;
-    innerIconSize = iconSize.size;
-  } else {
-    switch (iconSize) {
-      case 'large': {
-        blockSize = 44;
-        borderRadius = 8;
-        innerIconSize = 24;
-        break;
-      }
-      case 'small': {
-        blockSize = 24;
-        borderRadius = 4;
-        innerIconSize = 16;
-        break;
-      }
-      default: {
-        blockSize = 36;
-        borderRadius = 6;
-        innerIconSize = 20;
-        break;
-      }
-    }
-  }
+const createPresetSize = (preset: keyof typeof PRESET_ICON_SIZE) => {
+  const innerIconSize = PRESET_ICON_SIZE[preset];
+  const blockSize = innerIconSize + PRESET_BLOCK_PADDING[preset];
+  const borderRadius = Math.ceil(blockSize / 6);
 
   return { blockSize, borderRadius, innerIconSize };
+};
+
+export const calcSize = (iconSize?: IconSize) => {
+  if (typeof iconSize === 'number') {
+    const blockSize = Math.round(iconSize * 1.6);
+    const borderRadius = Math.ceil(blockSize / 6);
+
+    return { blockSize, borderRadius, innerIconSize: iconSize };
+  }
+
+  if (typeof iconSize === 'object' && iconSize !== null) {
+    const config = iconSize as IconSizeConfig;
+    const blockSize = (config.blockSize as number) || ICON_SIZE + PRESET_BLOCK_PADDING.middle;
+    const borderRadius = (config.borderRadius as number) || Math.ceil(blockSize / 6);
+
+    return { blockSize, borderRadius, innerIconSize: config.size };
+  }
+
+  switch (iconSize) {
+    case 'large': {
+      return createPresetSize('large');
+    }
+    case 'small': {
+      return createPresetSize('small');
+    }
+    default: {
+      return createPresetSize('middle');
+    }
+  }
 };
 
 export const getBaseStyle = (

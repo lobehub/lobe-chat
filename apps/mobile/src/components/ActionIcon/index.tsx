@@ -1,42 +1,37 @@
-import React, { memo, useEffect, useMemo, useRef } from 'react';
-import { Animated, ColorValue, Easing, Pressable, PressableProps, ViewStyle } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 import { LoaderCircle } from 'lucide-react-native';
 
+import Icon from '@/components/Icon';
+import type { IconProps as BaseIconProps, IconSize } from '@/components/Icon';
+import { ICON_SIZE } from '@/const/common';
 import { useThemeToken } from '@/theme';
-import { ActionIconSize, calcSize, getBaseStyle, getVariantStyle } from './style';
+import { calcSize, getBaseStyle, getVariantStyle } from './style';
 
-type IconComponent = React.ComponentType<{ color?: ColorValue; size?: number }>;
-
-const REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
-const REACT_MEMO_TYPE = Symbol.for('react.memo');
+type IconType = BaseIconProps['icon'];
 
 export interface ActionIconProps extends Omit<PressableProps, 'children'> {
+  color?: ColorValue;
   disabled?: boolean;
-  icon?: IconComponent | React.ReactNode;
+  icon?: IconType;
   loading?: boolean;
-  size?: ActionIconSize;
+  size?: IconSize;
+  spin?: boolean;
   variant?: 'borderless' | 'filled' | 'outlined';
 }
 
-const isIconComponent = (icon?: ActionIconProps['icon']): icon is IconComponent => {
-  if (!icon) {
-    return false;
-  }
-
-  if (typeof icon === 'function') {
-    return true;
-  }
-
-  if (typeof icon === 'object' && icon !== null && '$$typeof' in icon) {
-    const $$typeof = (icon as { $$typeof: symbol }).$$typeof;
-    return $$typeof === REACT_FORWARD_REF_TYPE || $$typeof === REACT_MEMO_TYPE;
-  }
-
-  return false;
-};
-
 const ActionIcon: React.FC<ActionIconProps> = memo(
-  ({ icon, loading, disabled, size = 'middle', variant = 'borderless', style, ...rest }) => {
+  ({
+    icon,
+    loading,
+    disabled,
+    size = 'middle',
+    variant = 'borderless',
+    style,
+    color,
+    spin,
+    ...rest
+  }) => {
     const token = useThemeToken();
     const { blockSize, borderRadius, innerIconSize } = useMemo(() => calcSize(size), [size]);
 
@@ -47,54 +42,9 @@ const ActionIcon: React.FC<ActionIconProps> = memo(
       [variant, token],
     );
 
-    const iconColor: ColorValue = token.colorTextTertiary;
+    const iconColor: ColorValue = color || token.colorText;
 
-    const rotationProgress = useRef(new Animated.Value(0)).current;
-    const rotationAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
-    const spin = rotationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    });
-
-    useEffect(() => {
-      if (loading) {
-        rotationProgress.setValue(0);
-        rotationAnimationRef.current = Animated.loop(
-          Animated.timing(rotationProgress, {
-            duration: 1000,
-            easing: Easing.linear,
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-        );
-        rotationAnimationRef.current.start();
-      } else {
-        rotationAnimationRef.current?.stop?.();
-      }
-
-      return () => {
-        rotationAnimationRef.current?.stop?.();
-      };
-    }, [loading, rotationProgress]);
-
-    const renderIcon = () => {
-      if (!icon) {
-        return null;
-      }
-
-      if (isIconComponent(icon)) {
-        return React.createElement(icon, { color: iconColor, size: innerIconSize });
-      }
-
-      if (React.isValidElement(icon)) {
-        return icon;
-      }
-
-      return icon as React.ReactNode;
-    };
-
-    const loaderColor = typeof iconColor === 'string' ? iconColor : undefined;
-    const loaderSize = innerIconSize ?? 20;
+    const loaderSize = innerIconSize ?? ICON_SIZE;
 
     return (
       <Pressable
@@ -108,13 +58,12 @@ const ActionIcon: React.FC<ActionIconProps> = memo(
         ]}
         {...rest}
       >
-        {loading ? (
-          <Animated.View style={{ transform: [{ rotate: spin }] }} testID="action-icon-loader">
-            <LoaderCircle color={loaderColor} size={loaderSize} />
-          </Animated.View>
-        ) : (
-          renderIcon()
-        )}
+        <Icon
+          color={iconColor}
+          icon={loading ? LoaderCircle : icon}
+          size={loaderSize}
+          spin={loading ? true : spin}
+        />
       </Pressable>
     );
   },
