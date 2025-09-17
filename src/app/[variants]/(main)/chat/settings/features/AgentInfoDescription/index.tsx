@@ -1,7 +1,7 @@
 'use client';
 
 import { ProDescriptions } from '@ant-design/pro-components';
-import { Tag, Typography } from 'antd';
+import { Tag } from 'antd';
 import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -225,15 +225,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                 render: (_: any, record: any) => {
                   const text = record.systemRole;
                   if (text === '未设置') return text;
-                  return (
-                    <Typography.Text
-                      ellipsis={{
-                        tooltip: '点击查看完整内容',
-                      }}
-                    >
-                      {text}
-                    </Typography.Text>
-                  );
+                  return text;
                 },
                 title: '系统角色',
               },
