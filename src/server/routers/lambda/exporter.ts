@@ -24,7 +24,8 @@ const exportProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 const generatePdfFromMessages = async (messages: ChatMessage[], title: string, systemRole?: string) => {
   // Import PDF generation libs dynamically (server-side only)
   const { generateMarkdown } = await import('@/features/ShareModal/ShareText/template');
-  const jsPDF = (await import('jspdf')).default;
+  const jsPDFModule = await import('jspdf');
+  const jsPDF = jsPDFModule.default;
   
   // Generate markdown content
   const content = generateMarkdown({
