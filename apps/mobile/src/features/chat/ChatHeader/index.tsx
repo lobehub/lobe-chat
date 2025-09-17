@@ -9,13 +9,11 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 import { useStyles } from './style';
 import { ActionIcon, Avatar } from '@/components';
 import { useTranslation } from 'react-i18next';
+import { useGlobalStore } from '@/store/global';
 
-interface ChatHeaderProps {
-  onDrawerToggle?: () => void;
-}
-
-export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
+export default function ChatHeader() {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+  const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
   const { t } = useTranslation(['chat']);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
@@ -27,7 +25,7 @@ export default function ChatHeader({ onDrawerToggle }: ChatHeaderProps) {
 
   return (
     <View style={[styles.header]}>
-      <ActionIcon icon={AlignJustify} onPress={onDrawerToggle} />
+      <ActionIcon icon={AlignJustify} onPress={toggleDrawer} />
       <View style={styles.headerContent}>
         <View style={styles.headerInfo}>
           <Avatar avatar={avatar} size={AVATAR_SIZE} />
