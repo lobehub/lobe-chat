@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "strict": true,
+    "types": ["node"],
     "module": "esnext",
     "paths": {
       // incase mixed with parent app
