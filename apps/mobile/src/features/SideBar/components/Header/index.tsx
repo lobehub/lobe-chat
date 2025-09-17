@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 
 import { isDev } from '@/utils/env';
 import { useStyles } from './style';
-import { ActionIcon } from '@/components';
+import { ActionIcon, Space } from '@/components';
 
 const SessionHeader: React.FC = () => {
   const { styles } = useStyles();
@@ -13,7 +13,7 @@ const SessionHeader: React.FC = () => {
   return (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>LobeChat</Text>
-      <View style={styles.extra}>
+      <Space>
         {isDev && (
           <Link asChild href="/playground">
             <ActionIcon icon={Sparkles} />
@@ -22,7 +22,7 @@ const SessionHeader: React.FC = () => {
         <Link asChild href="/assistant/list">
           <ActionIcon icon={CompassIcon} />
         </Link>
-      </View>
+      </Space>
     </View>
   );
 };

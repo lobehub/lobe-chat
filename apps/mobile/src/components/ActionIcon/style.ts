@@ -1,6 +1,6 @@
 import { ViewStyle } from 'react-native';
 
-import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL, ICON_SIZE_TINY } from '@/const/common';
+import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/const/common';
 import type { AliasToken } from '@/theme';
 import type { IconSize, IconSizeConfig } from '../Icon';
 
@@ -11,9 +11,9 @@ const PRESET_ICON_SIZE = {
 } as const;
 
 const PRESET_BLOCK_PADDING = {
-  large: ICON_SIZE_TINY,
-  middle: ICON_SIZE_TINY - ICON_SIZE_TINY / 4,
-  small: ICON_SIZE_TINY / 4,
+  large: 16,
+  middle: 8,
+  small: 4,
 } as const;
 
 const createPresetSize = (preset: keyof typeof PRESET_ICON_SIZE) => {
