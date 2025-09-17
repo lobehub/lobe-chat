@@ -80,19 +80,19 @@ export const exporterRouter = router({
       const { sessionId, topicId } = input;
 
       // Get session details
-      const session = await ctx.sessionModel.findByID(sessionId);
+      const session = await ctx.sessionModel.findByIdOrSlug(sessionId);
       if (!session) {
         throw new Error('Session not found');
       }
 
       // Get messages for the session/topic
-      const messages = await ctx.messageModel.findBySessionId(sessionId, topicId);
+      const messages = await ctx.messageModel.query({ sessionId, topicId });
 
       // Generate PDF
       const pdfBuffer = await generatePdfFromMessages(
         messages as ChatMessage[],
         session.title || 'Chat Export',
-        session.config?.systemRole,
+        session.agent?.systemRole || undefined,
       );
 
       // Return PDF as base64 for transport

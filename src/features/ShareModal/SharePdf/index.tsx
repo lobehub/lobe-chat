@@ -1,33 +1,33 @@
 import { Button } from '@lobehub/ui';
 import { App } from 'antd';
 import { DownloadIcon } from 'lucide-react';
-import { memo, useState, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
 
-import { useStyles } from '../style';
+import { useContainerStyles, useStyles } from '../style';
 import PdfPreview from './PdfPreview';
 import { usePdfGeneration } from './usePdfGeneration';
 
 const SharePdf = memo(() => {
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
+  const { styles: containerStyles } = useContainerStyles();
   const { message } = App.useApp();
   const isMobile = useIsMobile();
 
-  const activeId = useChatStore(chatSelectors.currentActiveSessionId);
-  const topicId = useChatStore(chatSelectors.currentActiveTopicId);
+  const activeId = useChatStore((s) => s.activeId);
+  const topicId = useChatStore((s) => s.activeTopicId);
 
   const { generatePdf, downloadPdf, pdfData, loading, error } = usePdfGeneration();
 
   // Generate PDF when component mounts
   useEffect(() => {
     if (activeId) {
-      generatePdf(activeId, topicId);
+      generatePdf(activeId, topicId || undefined);
     }
   }, [activeId, topicId, generatePdf]);
 
@@ -35,9 +35,9 @@ const SharePdf = memo(() => {
     if (pdfData) {
       try {
         await downloadPdf();
-        message.success(t('shareModal.downloadSuccess', { ns: 'common' }));
-      } catch (error) {
-        message.error(t('shareModal.downloadError', { ns: 'common' }));
+        message.success(t('shareModal.downloadSuccess'));
+      } catch {
+        message.error(t('shareModal.downloadError'));
       }
     }
   };
@@ -59,8 +59,8 @@ const SharePdf = memo(() => {
   if (error) {
     return (
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-        <div className={styles.preview} style={{ padding: 12 }}>
-          <div style={{ textAlign: 'center', color: 'red' }}>
+        <div className={containerStyles.preview} style={{ padding: 12 }}>
+          <div style={{ color: 'red', textAlign: 'center' }}>
             {t('shareModal.pdfGenerationError')}: {error}
           </div>
         </div>
