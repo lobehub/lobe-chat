@@ -8,7 +8,7 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     height: HEADER_HEIGHT,
     justifyContent: 'space-between',
-    paddingHorizontal: token.paddingXS,
+    paddingHorizontal: token.paddingSM,
     zIndex: 10,
   },
   headerActions: {
