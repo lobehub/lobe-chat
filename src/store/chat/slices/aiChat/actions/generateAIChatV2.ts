@@ -23,8 +23,11 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/c
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
+import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { ChatImageItem } from '@/types/message/image';
+import { ChatVideoItem } from '@/types/message/video';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
@@ -107,6 +110,23 @@ export const generateAIChatV2: StateCreator<
 
     const messages = chatSelectors.activeBaseChats(get());
 
+    // 构造服务端模式临时消息的本地媒体预览（优先使用 S3 URL）
+    const filesInStore = getFileStoreState().chatUploadFileList;
+    const tempImages: ChatImageItem[] = filesInStore
+      .filter((f) => f.file?.type?.startsWith('image'))
+      .map((f) => ({
+        id: f.id,
+        url: f.fileUrl || f.base64Url || f.previewUrl || '',
+        alt: f.file?.name || f.id,
+      }));
+    const tempVideos: ChatVideoItem[] = filesInStore
+      .filter((f) => f.file?.type?.startsWith('video'))
+      .map((f) => ({
+        id: f.id,
+        url: f.fileUrl || f.base64Url || f.previewUrl || '',
+        alt: f.file?.name || f.id,
+      }));
+
     // use optimistic update to avoid the slow waiting
     const tempId = get().internal_createTmpMessage({
       content: message,
@@ -117,6 +137,8 @@ export const generateAIChatV2: StateCreator<
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
+      imageList: tempImages.length > 0 ? tempImages : undefined,
+      videoList: tempVideos.length > 0 ? tempVideos : undefined,
     });
     get().internal_toggleMessageLoading(true, tempId);
 

@@ -38,13 +38,14 @@ export const useSend = () => {
   const { analytics } = useAnalytics();
   const checkGeminiChineseWarning = useGeminiChineseWarning();
 
-  const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
+  // 使用订阅以保持最新文件列表
+  const reactiveFileList = useFileStore(fileChatSelectors.chatUploadFileList);
   const [isUploadingFiles, clearChatUploadFileList] = useFileStore((s) => [
     fileChatSelectors.isUploadingFiles(s),
     s.clearChatUploadFileList,
   ]);
 
-  const isInputEmpty = isContentEmpty && fileList.length === 0;
+  const isInputEmpty = isContentEmpty && reactiveFileList.length === 0;
 
   const canNotSend =
     isInputEmpty || isUploadingFiles || isSendButtonDisabledByMessage || isSendingMessage;
@@ -63,6 +64,8 @@ export const useSend = () => {
     if (chatSelectors.isAIGenerating(store)) return;
 
     const inputMessage = store.inputMessage;
+    // 发送时再取一次最新的文件列表，防止闭包拿到旧值
+    const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
 
     // if there is no message and no image, then we should not send the message
     if (!inputMessage && fileList.length === 0) return;
@@ -92,9 +95,11 @@ export const useSend = () => {
     // 获取分析数据
     const userStore = getUserStoreState();
 
-    // 直接使用现有数据结构判断消息类型
+    // 直接使用现有数据结构判断消息类型（支持 video）
     const hasImages = fileList.some((file) => file.file?.type?.startsWith('image'));
-    const messageType = fileList.length === 0 ? 'text' : hasImages ? 'image' : 'file';
+    const hasVideos = fileList.some((file) => file.file?.type?.startsWith('video'));
+    const messageType =
+      fileList.length === 0 ? 'text' : hasVideos ? 'video' : hasImages ? 'image' : 'file';
 
     analytics?.track({
       name: 'send_message',

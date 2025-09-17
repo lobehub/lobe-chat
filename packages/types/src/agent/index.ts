@@ -1,4 +1,4 @@
-import { LLMParams } from '../../../model-bank/src/types/aiModel';
+import { LLMParams } from 'model-bank';
 import { FileItem } from '../files';
 import { KnowledgeBaseItem } from '../knowledgeBase';
 import { FewShots } from '../llm';

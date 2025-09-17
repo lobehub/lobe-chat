@@ -1,4 +1,4 @@
-import { ChatFileItem, ChatImageItem } from '@lobechat/types';
+import { ChatFileItem, ChatImageItem, ChatVideoItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { filesPrompts } from './index';
@@ -19,6 +19,12 @@ describe('filesPrompts', () => {
     url: 'https://example.com/test.pdf',
   };
 
+  const mockVideo: ChatVideoItem = {
+    id: 'video-1',
+    alt: 'test video',
+    url: 'https://example.com/video.mp4',
+  };
+
   it('should generate prompt with only images', () => {
     const result = filesPrompts({
       imageList: [mockImage],
@@ -37,7 +43,6 @@ describe('filesPrompts', () => {
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="test image" url="https://example.com/image.jpg"></image>
 </images>
-
 </files_info>
 <!-- END SYSTEM CONTEXT -->`,
     );
@@ -57,7 +62,6 @@ describe('filesPrompts', () => {
 2. the context is only required when user's queries rely on it.
 </context.instruction>
 <files_info>
-
 <files>
 <files_docstring>here are user upload files you can refer to</files_docstring>
 <file id="file-1" name="test.pdf" type="application/pdf" size="1024" url="https://example.com/test.pdf"></file>
@@ -183,5 +187,146 @@ describe('filesPrompts', () => {
       </files_info>
       <!-- END SYSTEM CONTEXT -->"
     `);
+  });
+
+  describe('Video functionality', () => {
+    it('should generate prompt with only videos', () => {
+      const result = filesPrompts({
+        videoList: [mockVideo],
+      });
+
+      expect(result).toEqual(
+        `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<videos>
+<videos_docstring>here are user upload videos you can refer to</videos_docstring>
+<video name="test video" url="https://example.com/video.mp4"></video>
+</videos>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+      );
+    });
+
+    it('should generate prompt with videos and images', () => {
+      const result = filesPrompts({
+        imageList: [mockImage],
+        videoList: [mockVideo],
+      });
+
+      expect(result).toEqual(
+        `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="test image" url="https://example.com/image.jpg"></image>
+</images>
+<videos>
+<videos_docstring>here are user upload videos you can refer to</videos_docstring>
+<video name="test video" url="https://example.com/video.mp4"></video>
+</videos>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+      );
+    });
+
+    it('should generate prompt with all media types', () => {
+      const result = filesPrompts({
+        imageList: [mockImage],
+        fileList: [mockFile],
+        videoList: [mockVideo],
+      });
+
+      expect(result).toEqual(
+        `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="test image" url="https://example.com/image.jpg"></image>
+</images>
+<files>
+<files_docstring>here are user upload files you can refer to</files_docstring>
+<file id="file-1" name="test.pdf" type="application/pdf" size="1024" url="https://example.com/test.pdf"></file>
+</files>
+<videos>
+<videos_docstring>here are user upload videos you can refer to</videos_docstring>
+<video name="test video" url="https://example.com/video.mp4"></video>
+</videos>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+      );
+    });
+
+    it('should handle multiple videos', () => {
+      const videos: ChatVideoItem[] = [
+        mockVideo,
+        {
+          id: 'video-2',
+          alt: 'second video',
+          url: 'https://example.com/video2.mp4',
+        },
+      ];
+
+      const result = filesPrompts({
+        videoList: videos,
+      });
+
+      expect(result).toContain('test video');
+      expect(result).toContain('second video');
+      expect(result).toMatch(/<video.*?>.*<video.*?>/s); // Check for multiple video tags
+    });
+
+    it('should handle videos without url when addUrl is false', () => {
+      const result = filesPrompts({
+        videoList: [mockVideo],
+        addUrl: false,
+      });
+
+      expect(result).toMatchInlineSnapshot(`
+        "<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+        <context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+        1. Always prioritize handling user-visible content.
+        2. the context is only required when user's queries rely on it.
+        </context.instruction>
+        <files_info>
+        <videos>
+        <videos_docstring>here are user upload videos you can refer to</videos_docstring>
+        <video name="test video"></video>
+        </videos>
+        </files_info>
+        <!-- END SYSTEM CONTEXT -->"
+      `);
+    });
+
+    it('should return empty string when all lists are empty', () => {
+      const result = filesPrompts({
+        imageList: [],
+        fileList: [],
+        videoList: [],
+      });
+
+      expect(result).toEqual('');
+    });
+
+    it('should return empty string when no lists are provided', () => {
+      const result = filesPrompts({});
+
+      expect(result).toEqual('');
+    });
   });
 });

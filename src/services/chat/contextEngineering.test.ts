@@ -162,7 +162,6 @@ describe('contextEngineering', () => {
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="abc.png" url="http://example.com/image.jpg"></image>
 </images>
-
 </files_info>
 <!-- END SYSTEM CONTEXT -->`,
               type: 'text',

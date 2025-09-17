@@ -3,6 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import ImageFileListViewer from '@/features/Conversation/Messages/User/ImageFileListViewer';
+import VideoFileListViewer from '@/features/Conversation/Messages/User/VideoFileListViewer';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
@@ -18,7 +19,7 @@ export const AssistantMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, tools, content, chunksList, search, imageList, ...props }) => {
+>(({ id, tools, content, chunksList, search, imageList, videoList, ...props }) => {
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
@@ -30,6 +31,7 @@ export const AssistantMessage = memo<
 
   const showSearch = !!search && !!search.citations?.length;
   const showImageItems = !!imageList && imageList.length > 0;
+  const showVideoItems = !!videoList && videoList.length > 0;
 
   // remove \n to avoid empty content
   // refs: https://github.com/lobehub/lobe-chat/pull/6153
@@ -67,6 +69,7 @@ export const AssistantMessage = memo<
         )
       )}
       {showImageItems && <ImageFileListViewer items={imageList} />}
+      {showVideoItems && <VideoFileListViewer items={videoList} />}
       {tools && (
         <Flexbox gap={8}>
           {tools.map((toolCall, index) => (

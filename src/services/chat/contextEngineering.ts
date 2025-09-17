@@ -23,7 +23,7 @@ import { toolSelectors } from '@/store/tool/selectors';
 import { VARIABLE_GENERATORS } from '@/utils/client/parserPlaceholder';
 import { genToolCallingName } from '@/utils/toolCall';
 
-import { isCanUseFC, isCanUseVision } from './helper';
+import { isCanUseFC, isCanUseVideo, isCanUseVision } from './helper';
 import { FetchOptions } from './types';
 
 export const contextEngineering = async (
@@ -94,6 +94,7 @@ export const contextEngineering = async (
       // 8. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
+        isCanUseVideo,
         isCanUseVision,
         model,
         provider,
