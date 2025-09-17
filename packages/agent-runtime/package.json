@@ -6,7 +6,7 @@
   "scripts": {
     "simple": "tsx examples/tools-calling.ts",
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {},
   "devDependencies": {

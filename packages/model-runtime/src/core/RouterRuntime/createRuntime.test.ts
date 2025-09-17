@@ -9,14 +9,15 @@ describe('createRouterRuntime', () => {
   });
 
   describe('initialization', () => {
-    it('should throw error when routers array is empty', () => {
-      expect(() => {
-        const Runtime = createRouterRuntime({
-          id: 'test-runtime',
-          routers: [],
-        });
-        new Runtime();
-      }).toThrow('empty providers');
+    it('should throw error when routers array is empty', async () => {
+      const Runtime = createRouterRuntime({
+        id: 'test-runtime',
+        routers: [],
+      });
+      const runtime = new Runtime();
+
+      // 现在错误在使用时才抛出，因为是延迟创建
+      await expect(runtime.getRuntimeByModel('test-model')).rejects.toThrow('empty providers');
     });
 
     it('should create UniformRuntime class with valid routers', () => {
@@ -44,7 +45,7 @@ describe('createRouterRuntime', () => {
       expect(runtime).toBeDefined();
     });
 
-    it('should merge router options with constructor options', () => {
+    it('should merge router options with constructor options', async () => {
       const mockConstructor = vi.fn();
 
       class MockRuntime implements LobeRuntimeAI {
@@ -52,6 +53,10 @@ describe('createRouterRuntime', () => {
           mockConstructor(options);
         }
         chat = vi.fn();
+        textToImage = vi.fn();
+        models = vi.fn();
+        embeddings = vi.fn();
+        textToSpeech = vi.fn();
       }
 
       const Runtime = createRouterRuntime({
@@ -61,11 +66,15 @@ describe('createRouterRuntime', () => {
             apiType: 'openai',
             options: { baseURL: 'https://api.example.com' },
             runtime: MockRuntime as any,
+            models: ['test-model'],
           },
         ],
       });
 
-      new Runtime({ apiKey: 'constructor-key' });
+      const runtime = new Runtime({ apiKey: 'constructor-key' });
+
+      // 触发 runtime 创建
+      await runtime.getRuntimeByModel('test-model');
 
       expect(mockConstructor).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -77,10 +86,14 @@ describe('createRouterRuntime', () => {
     });
   });
 
-  describe('getModels', () => {
-    it('should return synchronous models array directly', async () => {
+  describe('model matching', () => {
+    it('should return correct runtime for matching model', async () => {
       const mockRuntime = {
         chat: vi.fn(),
+        textToImage: vi.fn(),
+        models: vi.fn(),
+        embeddings: vi.fn(),
+        textToSpeech: vi.fn(),
       } as unknown as LobeRuntimeAI;
 
       const Runtime = createRouterRuntime({
@@ -96,50 +109,54 @@ describe('createRouterRuntime', () => {
       });
 
       const runtime = new Runtime();
-      const models = await runtime['getRouterMatchModels']({
-        id: 'test',
-        models: ['model-1', 'model-2'],
-        runtime: mockRuntime,
-      });
+      const selectedRuntime = await runtime.getRuntimeByModel('model-1');
 
-      expect(models).toEqual(['model-1', 'model-2']);
+      expect(selectedRuntime).toBeDefined();
     });
 
-    it('should call asynchronous models function', async () => {
+    it('should support dynamic routers with asynchronous model fetching', async () => {
       const mockRuntime = {
         chat: vi.fn(),
+        textToImage: vi.fn(),
+        models: vi.fn(),
+        embeddings: vi.fn(),
+        textToSpeech: vi.fn(),
       } as unknown as LobeRuntimeAI;
 
       const mockModelsFunction = vi.fn().mockResolvedValue(['async-model-1', 'async-model-2']);
 
       const Runtime = createRouterRuntime({
         id: 'test-runtime',
-        routers: [
-          {
-            apiType: 'openai',
-            options: {},
-            runtime: mockRuntime.constructor as any,
-            models: mockModelsFunction,
-          },
-        ],
+        routers: async () => {
+          // 异步获取模型列表
+          const models = await mockModelsFunction();
+          return [
+            {
+              apiType: 'openai',
+              options: {},
+              runtime: mockRuntime.constructor as any,
+              models, // 静态数组
+            },
+          ];
+        },
       });
 
       const runtime = new Runtime();
-      const runtimeItem = {
-        id: 'test',
-        models: mockModelsFunction,
-        runtime: mockRuntime,
-      };
 
-      // Call the function
-      const models = await runtime['getRouterMatchModels'](runtimeItem);
-      expect(models).toEqual(['async-model-1', 'async-model-2']);
-      expect(mockModelsFunction).toHaveBeenCalledTimes(1);
+      // 触发 routers 函数调用
+      const selectedRuntime = await runtime.getRuntimeByModel('async-model-1');
+
+      expect(selectedRuntime).toBeDefined();
+      expect(mockModelsFunction).toHaveBeenCalled();
     });
 
-    it('should return empty array when models is undefined', async () => {
+    it('should return fallback runtime when model not found', async () => {
       const mockRuntime = {
         chat: vi.fn(),
+        textToImage: vi.fn(),
+        models: vi.fn(),
+        embeddings: vi.fn(),
+        textToSpeech: vi.fn(),
       } as unknown as LobeRuntimeAI;
 
       const Runtime = createRouterRuntime({
@@ -149,17 +166,15 @@ describe('createRouterRuntime', () => {
             apiType: 'openai',
             options: {},
             runtime: mockRuntime.constructor as any,
+            models: ['known-model'],
           },
         ],
       });
 
       const runtime = new Runtime();
-      const models = await runtime['getRouterMatchModels']({
-        id: 'test',
-        runtime: mockRuntime,
-      });
+      const selectedRuntime = await runtime.getRuntimeByModel('unknown-model');
 
-      expect(models).toEqual([]);
+      expect(selectedRuntime).toBeDefined();
     });
   });
 
@@ -194,10 +209,10 @@ describe('createRouterRuntime', () => {
       const runtime = new Runtime();
 
       const result1 = await runtime.getRuntimeByModel('gpt-4');
-      expect(result1).toBe(runtime['_runtimes'][0].runtime);
+      expect(result1).toBeInstanceOf(MockRuntime1);
 
       const result2 = await runtime.getRuntimeByModel('claude-3');
-      expect(result2).toBe(runtime['_runtimes'][1].runtime);
+      expect(result2).toBeInstanceOf(MockRuntime2);
     });
 
     it('should return last runtime when no model matches', async () => {
@@ -230,7 +245,7 @@ describe('createRouterRuntime', () => {
       const runtime = new Runtime();
       const result = await runtime.getRuntimeByModel('unknown-model');
 
-      expect(result).toBe(runtime['_runtimes'][1].runtime);
+      expect(result).toBeInstanceOf(MockRuntime2);
     });
   });
 
@@ -277,6 +292,9 @@ describe('createRouterRuntime', () => {
 
       const Runtime = createRouterRuntime({
         id: 'test-runtime',
+        chatCompletion: {
+          handleError,
+        },
         routers: [
           {
             apiType: 'openai',
@@ -287,11 +305,7 @@ describe('createRouterRuntime', () => {
         ],
       });
 
-      const runtime = new Runtime({
-        chat: {
-          handleError,
-        },
-      });
+      const runtime = new Runtime();
 
       await expect(
         runtime.chat({ model: 'gpt-4', messages: [], temperature: 0.7 }),
@@ -452,7 +466,7 @@ describe('createRouterRuntime', () => {
   });
 
   describe('dynamic routers configuration', () => {
-    it('should support function-based routers configuration', () => {
+    it('should support function-based routers configuration', async () => {
       class MockRuntime implements LobeRuntimeAI {
         chat = vi.fn();
         textToImage = vi.fn();
@@ -461,7 +475,7 @@ describe('createRouterRuntime', () => {
         textToSpeech = vi.fn();
       }
 
-      const dynamicRoutersFunction = (options: any) => [
+      const dynamicRoutersFunction = vi.fn((options: any) => [
         {
           apiType: 'openai' as const,
           options: {
@@ -478,7 +492,7 @@ describe('createRouterRuntime', () => {
           runtime: MockRuntime as any,
           models: ['claude-3'],
         },
-      ];
+      ]);
 
       const Runtime = createRouterRuntime({
         id: 'test-runtime',
@@ -493,21 +507,32 @@ describe('createRouterRuntime', () => {
       const runtime = new Runtime(userOptions);
 
       expect(runtime).toBeDefined();
-      expect(runtime['_runtimes']).toHaveLength(2);
-      expect(runtime['_runtimes'][0].id).toBe('openai');
-      expect(runtime['_runtimes'][1].id).toBe('anthropic');
+
+      // 测试动态 routers 是否能正确工作
+      const result = await runtime.getRuntimeByModel('gpt-4');
+      expect(result).toBeDefined();
+
+      // 验证动态函数被调用时传入了正确的参数
+      expect(dynamicRoutersFunction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          apiKey: 'test-key',
+          baseURL: 'https://yourapi.cn',
+        }),
+        { model: 'gpt-4' },
+      );
     });
 
-    it('should throw error when dynamic routers function returns empty array', () => {
+    it('should throw error when dynamic routers function returns empty array', async () => {
       const emptyRoutersFunction = () => [];
 
-      expect(() => {
-        const Runtime = createRouterRuntime({
-          id: 'test-runtime',
-          routers: emptyRoutersFunction,
-        });
-        new Runtime();
-      }).toThrow('empty providers');
+      const Runtime = createRouterRuntime({
+        id: 'test-runtime',
+        routers: emptyRoutersFunction,
+      });
+      const runtime = new Runtime();
+
+      // 现在错误在使用时才抛出，因为是延迟创建
+      await expect(runtime.getRuntimeByModel('test-model')).rejects.toThrow('empty providers');
     });
   });
 });
