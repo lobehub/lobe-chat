@@ -1,6 +1,6 @@
 import { Button, Form, type FormItemProps, Segmented } from '@lobehub/ui';
 import { Switch } from 'antd';
-import { CopyIcon } from 'lucide-react';
+import { CopyIcon, FileTextIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useImgToClipboard } from '@/hooks/useImgToClipboard';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { usePdfExport } from '@/hooks/usePdfExport';
 import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -34,6 +35,9 @@ const ShareImage = memo<{ mobile?: boolean }>(() => {
     title: currentAgentTitle,
   });
   const { loading: copyLoading, onCopy } = useImgToClipboard();
+  const { loading: pdfLoading, onDownload: onPdfDownload } = usePdfExport({
+    title: currentAgentTitle,
+  });
   const settings: FormItemProps[] = [
     {
       children: <Switch />,
@@ -84,6 +88,15 @@ const ShareImage = memo<{ mobile?: boolean }>(() => {
       </Button>
       <Button block loading={loading} onClick={onDownload} size={isMobile ? undefined : 'large'}>
         {t('shareModal.download')}
+      </Button>
+      <Button 
+        block 
+        icon={FileTextIcon}
+        loading={pdfLoading} 
+        onClick={onPdfDownload} 
+        size={isMobile ? undefined : 'large'}
+      >
+        {t('shareModal.exportPdf')}
       </Button>
     </>
   );

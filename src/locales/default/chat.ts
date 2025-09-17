@@ -216,6 +216,7 @@ export default {
     copy: '复制',
     download: '下载截图',
     downloadFile: '下载文件',
+    exportPdf: '导出为 PDF',
     exportTitle: '默认标题',
     imageType: '图片格式',
     includeTool: '包含插件消息',
