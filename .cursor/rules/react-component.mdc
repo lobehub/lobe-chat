@@ -86,9 +86,9 @@ const Card: FC<CardProps> = ({ title, content }) => {
 
 ## Lobe UI 包含的组件
 
-- 不知道 @lobehub/ui 的组件怎么用，有哪些属性，就自己搜下这个项目其它地方怎么用的，不要瞎猜，大部分组件都是在 antd 的基础上扩展了属性
+- 不知道 `@lobehub/ui` 的组件怎么用，有哪些属性，就自己搜下这个项目其它地方怎么用的，不要瞎猜，大部分组件都是在 antd 的基础上扩展了属性
 - 具体用法不懂可以联网搜索，例如 ActionIcon 就爬取 https://ui.lobehub.com/components/action-icon
-- 可以阅读 node_modules/@lobehub/ui/es/index.js 了解有哪些组件，每个组件的属性是什么
+- 可以阅读 `node_modules/@lobehub/ui/es/index.js` 了解有哪些组件，每个组件的属性是什么
 
 - General
   - ActionIcon
