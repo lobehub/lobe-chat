@@ -1,18 +1,17 @@
 import { MessageSquarePlus } from 'lucide-react-native';
-import { useCallback } from 'react';
-import { ActionIcon } from '@/components';
+import { ActionIcon, useThemeToken } from '@/components';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
-import { ICON_SIZE_LARGE } from '@/const/common';
 
 const NewChatBtn = () => {
   const switchTopic = useSwitchTopic();
-
-  const handleNewChatTopic = useCallback(() => {
-    switchTopic();
-  }, [switchTopic]);
+  const token = useThemeToken();
 
   return (
-    <ActionIcon icon={MessageSquarePlus} onPress={handleNewChatTopic} size={ICON_SIZE_LARGE} />
+    <ActionIcon
+      color={token.colorTextSecondary}
+      icon={MessageSquarePlus}
+      onPress={() => switchTopic()}
+    />
   );
 };
 
