@@ -71,7 +71,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "zod": "^3.25.76"
