@@ -17,6 +17,7 @@ import { ThemeProvider, useTheme, useThemeToken } from '@/theme';
 import { authLogger } from '@/utils/logger';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
@@ -172,15 +173,17 @@ export default function RootLayout() {
                   <I18nextProvider i18n={i18n}>
                     <I18nReadyGate>
                       <ToastProvider>
-                        <ThemedSystemBars />
-                        <Stack screenOptions={{ headerShown: false }}>
-                          {/* 指定首页, 防止 expo 路由错乱 */}
-                          <Stack.Screen name="index" options={{ animation: 'none' }} />
-                          {/* main page should not have animation */}
-                          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-                          {/* auth page should not have animation  */}
-                          <Stack.Screen name="auth" options={{ animation: 'none' }} />
-                        </Stack>
+                        <RootSiblingParent>
+                          <ThemedSystemBars />
+                          <Stack screenOptions={{ headerShown: false }}>
+                            {/* 指定首页, 防止 expo 路由错乱 */}
+                            <Stack.Screen name="index" options={{ animation: 'none' }} />
+                            {/* main page should not have animation */}
+                            <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+                            {/* auth page should not have animation  */}
+                            <Stack.Screen name="auth" options={{ animation: 'none' }} />
+                          </Stack>
+                        </RootSiblingParent>
                       </ToastProvider>
                     </I18nReadyGate>
                   </I18nextProvider>
