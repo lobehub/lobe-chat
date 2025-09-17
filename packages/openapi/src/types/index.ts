@@ -33,7 +33,7 @@ export interface TTarget {
   targetMessageId?: string;
   targetModelId?: string;
   targetProviderId?: string;
-  targetRoleId?: string;
+  targetRoleId?: number;
   targetSessionId?: string;
   targetTopicId?: string;
   targetUserId?: string;
@@ -45,7 +45,7 @@ export interface TBatchTarget {
   targetMessageIds?: string[];
   targetModelIds?: string[];
   targetProviderIds?: string[];
-  targetRoleIds?: string[];
+  targetRoleIds?: number[];
   targetSessionIds?: string[];
   targetTopicIds?: string[];
   targetUserIds?: string[];
@@ -59,6 +59,7 @@ export * from './file.type';
 export * from './message.type';
 export * from './message-translations.type';
 export * from './model.type';
+export * from './permission.type';
 export * from './provider.type';
 export * from './role.type';
 export * from './session.type';

@@ -4,6 +4,7 @@ export * from './file.service';
 export * from './message.service';
 export * from './message-translations.service';
 export * from './model.service';
+export * from './permission.service';
 export * from './provider.service';
 export * from './role.service';
 export * from './session.service';

@@ -160,15 +160,15 @@ app.post(
  * - directory: string (optional) - 上传目录
  * - skipExist: boolean (optional) - 是否跳过已存在的解析结果，默认false
  */
-app.post(
-  '/batches',
-  requireAuth,
-  requireAnyPermission(getAllScopePermissions('FILE_UPDATE'), '您没有权限批量上传文件'),
-  async (c) => {
-    const fileController = new FileController();
-    return await fileController.batchUploadFiles(c);
-  },
-);
+// app.post(
+//   '/batches',
+//   requireAuth,
+//   requireAnyPermission(getAllScopePermissions('FILE_UPDATE'), '您没有权限批量上传文件'),
+//   async (c) => {
+//     const fileController = new FileController();
+//     return await fileController.batchUploadFiles(c);
+//   },
+// );
 
 /**
  * 批量获取文件详情

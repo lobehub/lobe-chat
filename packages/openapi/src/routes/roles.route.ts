@@ -7,8 +7,11 @@ import { RoleController } from '../controllers/role.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
+  CreateRoleRequestSchema,
   RoleIdParamSchema,
+  RolePermissionsListQuerySchema,
   RolesListQuerySchema,
+  UpdateRolePermissionsRequestSchema,
   UpdateRoleRequestSchema,
 } from '../types/role.type';
 
@@ -31,6 +34,25 @@ RolesRoutes.get(
     const roleController = new RoleController();
 
     return await roleController.getRoles(c);
+  },
+);
+
+/**
+ * Create a new role
+ * POST /api/v1/roles 创建角色
+ */
+RolesRoutes.post(
+  '/',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_ROLE_CREATE', ['ALL', 'WORKSPACE']),
+    '您没有权限创建角色',
+  ),
+  zValidator('json', CreateRoleRequestSchema),
+  async (c) => {
+    const roleController = new RoleController();
+
+    return await roleController.createRole(c);
   },
 );
 
@@ -66,10 +88,31 @@ RolesRoutes.get(
     'You do not have permission to view role permissions',
   ),
   zValidator('param', RoleIdParamSchema),
+  zValidator('query', RolePermissionsListQuerySchema),
   async (c) => {
     const roleController = new RoleController();
 
     return roleController.getRolePermissions(c);
+  },
+);
+
+/**
+ * Update role permissions
+ * PATCH /api/v1/roles/:id/permissions 更新角色的权限列表
+ */
+RolesRoutes.patch(
+  '/:id/permissions',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_ROLE_UPDATE', ['ALL', 'WORKSPACE']),
+    '您没有权限更新角色权限',
+  ),
+  zValidator('param', RoleIdParamSchema),
+  zValidator('json', UpdateRolePermissionsRequestSchema),
+  async (c) => {
+    const roleController = new RoleController();
+
+    return roleController.updateRolePermissions(c);
   },
 );
 
@@ -110,6 +153,25 @@ RolesRoutes.patch(
     const roleController = new RoleController();
 
     return await roleController.updateRole(c);
+  },
+);
+
+/**
+ * Delete role by ID
+ * DELETE /api/v1/roles/:id 删除角色
+ */
+RolesRoutes.delete(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_ROLE_DELETE', ['ALL', 'WORKSPACE']),
+    '您没有权限删除角色',
+  ),
+  zValidator('param', RoleIdParamSchema),
+  async (c) => {
+    const roleController = new RoleController();
+
+    return await roleController.deleteRole(c);
   },
 );
 

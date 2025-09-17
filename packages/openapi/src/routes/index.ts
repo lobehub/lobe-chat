@@ -1,9 +1,10 @@
 import AgentRoutes from './agents.route';
-import ChatRoutes from './chat.route';
+// import ChatRoutes from './chat.route';
 import FileRoutes from './files.route';
 import MessageTranslationsRoutes from './message-translations.route';
 import MessageRoutes from './message.route';
 import ModelRoutes from './models.route';
+import PermissionsRoutes from './permissions.route';
 import ProviderRoutes from './providers.route';
 import RolesRoutes from './roles.route';
 import SessionGroupRoutes from './session-groups.route';
@@ -13,11 +14,12 @@ import UserRoutes from './users.route';
 
 export default {
   'agents': AgentRoutes,
-  'chat': ChatRoutes,
+  // 'chat': ChatRoutes,
   'files': FileRoutes,
   'message-translations': MessageTranslationsRoutes,
   'messages': MessageRoutes,
   'models': ModelRoutes,
+  'permissions': PermissionsRoutes,
   'providers': ProviderRoutes,
   'roles': RolesRoutes,
   'session-groups': SessionGroupRoutes,
