@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
+  index,
   integer,
   jsonb,
   pgTable,
@@ -29,9 +30,10 @@ export const chunks = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('chunks_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [
+    uniqueIndex('chunks_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('chunks_user_id_idx').on(t.userId),
+  ],
 );
 
 export type NewChunkItem = typeof chunks.$inferInsert & { fileId?: string };
@@ -75,9 +77,11 @@ export const embeddings = pgTable(
     clientId: text('client_id'),
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('embeddings_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [
+    uniqueIndex('embeddings_client_id_user_id_unique').on(t.clientId, t.userId),
+    // improve delete embeddings query
+    index('embeddings_chunk_id_idx').on(t.chunkId),
+  ],
 );
 
 export type NewEmbeddingsItem = typeof embeddings.$inferInsert;
