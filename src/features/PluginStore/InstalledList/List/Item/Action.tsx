@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import PluginDetailModal from '@/features/PluginDetailModal';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
@@ -36,7 +37,10 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
   const { t } = useTranslation('plugin');
   const [open, setOpen] = useState(false);
   const plugin = useToolStore(pluginSelectors.getToolManifestById(identifier));
-  const togglePlugin = useAgentStore((s) => s.togglePlugin);
+  const [togglePlugin, isPluginEnabledInAgent] = useAgentStore((s) => [
+    s.togglePlugin,
+    agentSelectors.currentAgentPlugins(s).includes(identifier),
+  ]);
   const { modal } = App.useApp();
   const [tab, setTab] = useState('info');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
@@ -89,8 +93,17 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
                     onClick: () => {
                       modal.confirm({
                         centered: true,
+                        content: isPluginEnabledInAgent 
+                          ? t('store.actions.confirmUninstallEnabled', { defaultValue: 'This plugin is currently enabled in this agent. Uninstalling will also disable it from this agent.' })
+                          : undefined,
                         okButtonProps: { danger: true },
-                        onOk: async () => unInstallPlugin(identifier),
+                        onOk: async () => {
+                          // If plugin is enabled in current agent, disable it first
+                          if (isPluginEnabledInAgent) {
+                            await togglePlugin(identifier, false);
+                          }
+                          await unInstallPlugin(identifier);
+                        },
                         title: t('store.actions.confirmUninstall'),
                         type: 'error',
                       });
