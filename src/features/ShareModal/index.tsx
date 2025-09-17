@@ -7,10 +7,12 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 
 import ShareImage from './ShareImage';
 import ShareJSON from './ShareJSON';
+import SharePdf from './SharePdf';
 import ShareText from './ShareText';
 
 enum Tab {
   JSON = 'json',
+  PDF = 'pdf',
   Screenshot = 'screenshot',
   Text = 'text',
 }
@@ -28,6 +30,10 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
       {
         label: t('shareModal.text'),
         value: Tab.Text,
+      },
+      {
+        label: t('shareModal.pdf'),
+        value: Tab.PDF,
       },
       {
         label: 'JSON',
@@ -59,6 +65,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
         />
         {tab === Tab.Screenshot && <ShareImage mobile={isMobile} />}
         {tab === Tab.Text && <ShareText />}
+        {tab === Tab.PDF && <SharePdf />}
         {tab === Tab.JSON && <ShareJSON />}
       </Flexbox>
     </Modal>
