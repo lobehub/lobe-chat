@@ -5,6 +5,25 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3-Next-80B-A3B-Instruct 是由阿里巴巴通义千问团队发布的下一代基础模型。它基于全新的 Qwen3-Next 架构，旨在实现极致的训练和推理效率。该模型采用了创新的混合注意力机制（Gated DeltaNet 和 Gated Attention）、高稀疏度混合专家（MoE）结构以及多项训练稳定性优化。作为一个拥有 800 亿总参数的稀疏模型，它在推理时仅需激活约 30 亿参数，从而大幅降低了计算成本，并在处理超过 32K tokens 的长上下文任务时，推理吞吐量比 Qwen3-32B 模型高出 10 倍以上。此模型为指令微调版本，专为通用任务设计，不支持思维链（Thinking）模式。在性能上，它与通义千问的旗舰模型 Qwen3-235B 在部分基准测试中表现相当，尤其在超长上下文任务中展现出明显优势。',
+    displayName: 'Qwen3 Next 80B A3B Instruct',
+    id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 163_840,
@@ -53,7 +72,26 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
-      'Ling-mini-2.0 是一款基于 MoE 架构的小尺寸高性能大语言模型。它拥有 16B 总参数，但每个 token 仅激活 1.4B（non-embedding 789M），从而实现了极高的生成速度。得益于高效的 MoE 设计与大规模高质量训练数据，尽管激活参数仅为 1.4B，Ling-mini-2.0 依然在下游任务中展现出可媲美 10B 以下 dense LLM 及更大规模 MoE 模型的顶尖性能',
+      'Ling-flash-2.0 是由蚂蚁集团百灵团队发布的 Ling 2.0 架构系列的第三款模型。它是一款混合专家（MoE）模型，总参数规模达到 1000 亿，但每个 token 仅激活 61 亿参数（非词向量激活 48 亿）。 作为一个轻量级配置的模型，Ling-flash-2.0 在多个权威评测中展现出媲美甚至超越 400 亿级别稠密（Dense）模型及更大规模 MoE 模型的性能。该模型旨在通过极致的架构设计与训练策略，在“大模型等于大参数”的共识下探索高效能的路径。',
+    displayName: 'Ling Flash 2.0',
+    id: 'inclusionAI/Ling-flash-2.0',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-mini-2.0 是一款基于 MoE 架构的小尺寸高性能大语言模型。它拥有 16B 总参数，但每个 token 仅激活 1.4B（non-embedding 789M），从而实现了极高的生成速度。得益于高效的 MoE 设计与大规模高质量训练数据，尽管激活参数仅为 1.4B，Ling-mini-2.0 依然在下游任务中展现出可媲美 10B 以下 dense LLM 及更大规模 MoE 模型的顶尖性能。',
     displayName: 'Ling Mini 2.0',
     id: 'inclusionAI/Ling-mini-2.0',
     pricing: {

@@ -26,6 +26,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
+  inclusionai: {
+    functionCallKeywords: ['ling-'],
+    reasoningKeywords: ['ring-'],
+    visionKeywords: ['ming-'],
+  },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
@@ -87,6 +92,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
+  inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
