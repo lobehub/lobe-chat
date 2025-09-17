@@ -1,156 +1,74 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, ColorValue, Easing, Pressable, PressableProps, ViewStyle } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
+import { LoaderCircle } from 'lucide-react-native';
 
-import { useThemeToken } from '@/theme';
+import Icon from '@/components/Icon';
+import type { IconProps as BaseIconProps, IconSize } from '@/components/Icon';
 import { ICON_SIZE } from '@/const/common';
+import { useThemeToken } from '@/theme';
+import { calcSize, getBaseStyle, getVariantStyle } from './style';
 
-interface ActionIconProps extends PressableProps {
-  /**
-   * The color of the icon. Defaults to the current text color.
-   */
+type IconType = BaseIconProps['icon'];
+
+export interface ActionIconProps extends Omit<PressableProps, 'children'> {
   color?: ColorValue;
-  /**
-   * The duration of the spin animation in milliseconds. Defaults to 1000.
-   */
-  duration?: number;
-  /**
-   * The icon to display. Can be a string, React element, or other.
-   */
-  icon: React.FC<{ color?: ColorValue; size?: number }>;
-  /**
-   * The size of the icon. Defaults to 24.
-   */
-  size?: number;
-  /**
-   * Whether the icon should spin or not. Defaults to false.
-   */
+  disabled?: boolean;
+  icon?: IconType;
+  loading?: boolean;
+  size?: IconSize;
   spin?: boolean;
-  /**
-   * The variant of the icon. Defaults to 'default'.
-   */
-  variant?: 'default' | 'primary' | 'secondary' | 'danger';
+  variant?: 'borderless' | 'filled' | 'outlined';
 }
 
-const ActionIcon: React.FC<ActionIconProps> = ({
-  icon: Icon,
-  size = ICON_SIZE,
-  color,
-  spin = false,
-  duration = 1000,
-  variant = 'default',
-  style,
-  ...rest
-}) => {
-  const token = useThemeToken();
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const loopRef = useRef<Animated.CompositeAnimation | null>(null);
+const ActionIcon: React.FC<ActionIconProps> = memo(
+  ({
+    icon,
+    loading,
+    disabled,
+    size = 'middle',
+    variant = 'borderless',
+    style,
+    color,
+    spin,
+    ...rest
+  }) => {
+    const token = useThemeToken();
+    const { blockSize, borderRadius, innerIconSize } = useMemo(() => calcSize(size), [size]);
 
-  const getIconColor = (): ColorValue => {
-    if (color) {
-      return color;
-    }
+    const baseStyle: ViewStyle = getBaseStyle(blockSize, borderRadius, disabled);
 
-    switch (variant) {
-      case 'primary': {
-        return token.colorPrimary;
-      }
-      case 'secondary': {
-        return token.colorTextSecondary;
-      }
-      case 'danger': {
-        return token.colorError;
-      }
-      default: {
-        return token.colorText;
-      }
-    }
-  };
+    const variantStyle: ViewStyle = useMemo(
+      () => getVariantStyle(variant, token),
+      [variant, token],
+    );
 
-  const getContainerStyle = (): ViewStyle => {
-    const baseStyle: ViewStyle = {
-      alignItems: 'center',
-      borderRadius: token.borderRadiusXS,
-      height: size + token.paddingXS * 2,
-      justifyContent: 'center',
-      width: size + token.paddingXS * 2,
-    };
+    const iconColor: ColorValue = color || token.colorText;
 
-    switch (variant) {
-      case 'primary': {
-        return {
-          ...baseStyle,
-          backgroundColor: token.colorPrimaryBg,
-        };
-      }
-      case 'secondary': {
-        return {
-          ...baseStyle,
-          backgroundColor: token.colorFillSecondary,
-        };
-      }
-      case 'danger': {
-        return {
-          ...baseStyle,
-          backgroundColor: token.colorErrorBg,
-        };
-      }
-      default: {
-        return {
-          ...baseStyle,
-          backgroundColor: 'transparent',
-        };
-      }
-    }
-  };
+    const loaderSize = innerIconSize ?? ICON_SIZE;
 
-  useEffect(() => {
-    if (spin) {
-      rotateAnim.setValue(0);
-      loopRef.current = Animated.loop(
-        Animated.timing(rotateAnim, {
-          duration,
-          easing: Easing.linear,
-          isInteraction: false,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      );
-      loopRef.current.start();
-    } else {
-      loopRef.current?.stop();
-      rotateAnim.setValue(0);
-    }
-    return () => {
-      loopRef.current?.stop();
-    };
-  }, [spin, rotateAnim, duration]);
+    return (
+      <Pressable
+        accessibilityRole="button"
+        disabled={disabled || loading}
+        style={(state) => [
+          baseStyle,
+          variantStyle,
+          state.pressed && !disabled ? { opacity: 0.7 } : null,
+          typeof style === 'function' ? style(state) : style,
+        ]}
+        {...rest}
+      >
+        <Icon
+          color={iconColor}
+          icon={loading ? LoaderCircle : icon}
+          size={loaderSize}
+          spin={loading ? true : spin}
+        />
+      </Pressable>
+    );
+  },
+);
 
-  const spinTransform = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  const animatedStyle = spin
-    ? {
-        transform: [{ rotate: spinTransform }],
-      }
-    : {};
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      style={(state) => [
-        getContainerStyle(),
-        state.pressed && { opacity: 0.7 },
-        typeof style === 'function' ? style(state) : style,
-      ]}
-      {...rest}
-    >
-      <Animated.View style={animatedStyle}>
-        <Icon color={getIconColor()} size={size} />
-      </Animated.View>
-    </Pressable>
-  );
-};
+ActionIcon.displayName = 'ActionIcon';
 
 export default ActionIcon;
