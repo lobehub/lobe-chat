@@ -143,7 +143,7 @@ export const createRouterRuntime = ({
     }
 
     /**
-     * TODO: 考虑添加缓存机制，避免重复创建相同配置的 runtimes
+     * TODO: routers 如果是静态对象，可以提前生成 runtimes, 避免运行时生成开销
      */
     private async createRuntimesByRouters(model?: string): Promise<RuntimeItem[]> {
       // 动态获取 routers，支持传入 model
