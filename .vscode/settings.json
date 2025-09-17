@@ -88,6 +88,8 @@
     "**/src/server/routers/async/*.ts": "${filename} • async",
     "**/src/server/routers/edge/*.ts": "${filename} • edge",
 
-    "**/src/locales/default/*.ts": "${filename} • locale"
+    "**/src/locales/default/*.ts": "${filename} • locale",
+
+    "**/index.*": "${dirname}/${filename}.${extname}"
   }
 }

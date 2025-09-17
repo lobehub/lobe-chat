@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run test:client-db && npm run test:server-db",
     "test:client-db": "vitest run",
-    "test:coverage": "vitest --coverage --config vitest.config.server.mts",
+    "test:coverage": "vitest --coverage --silent='passed-only' --config vitest.config.server.mts",
     "test:server-db": "vitest run --config vitest.config.server.mts"
   },
   "dependencies": {

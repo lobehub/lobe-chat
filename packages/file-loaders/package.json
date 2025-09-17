@@ -22,7 +22,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "@langchain/community": "^0.3.41",
