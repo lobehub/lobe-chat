@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Improve db migrations sql."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.2"
+  },
+  {
+    "children": {
       "improvements": ["Update SiliconCloud reasoning models."]
     },
     "date": "2025-09-16",
