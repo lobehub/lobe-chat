@@ -19,6 +19,7 @@ export class PermissionController extends BaseController {
   async getPermissions(c: Context): Promise<Response> {
     try {
       const query = this.getQuery<PermissionsListQuery>(c);
+
       const db = await this.getDatabase();
       const permissionService = new PermissionService(db, this.getUserId(c));
       const permissions = await permissionService.getPermissions(query);

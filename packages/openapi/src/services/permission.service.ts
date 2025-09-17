@@ -1,13 +1,15 @@
-import { and, eq, ilike, or } from 'drizzle-orm';
+import { and, count, desc, eq, ilike, or } from 'drizzle-orm';
 
 import { PermissionItem, permissions, rolePermissions } from '@/database/schemas/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
   CreatePermissionRequest,
   PermissionsListQuery,
+  PermissionsListResponse,
   UpdatePermissionRequest,
 } from '../types/permission.type';
 
@@ -19,40 +21,53 @@ export class PermissionService extends BaseService {
   /**
    * Get permission list with optional filters
    */
-  async getPermissions(queryParams: PermissionsListQuery): ServiceResult<PermissionItem[]> {
-    const permissionResult = await this.resolveOperationPermission('RBAC_PERMISSION_READ');
-    if (!permissionResult.isPermitted) {
-      throw this.createAuthorizationError(permissionResult.message || '无权查看权限列表');
-    }
-
-    const conditions = [] as any[];
-
-    if (queryParams.active !== undefined) {
-      conditions.push(eq(permissions.isActive, queryParams.active));
-    }
-
-    if (queryParams.category) {
-      conditions.push(eq(permissions.category, queryParams.category));
-    }
-
-    if (queryParams.keyword) {
-      const keyword = `%${queryParams.keyword}%`;
-      conditions.push(
-        or(
-          ilike(permissions.code, keyword),
-          ilike(permissions.name, keyword),
-          ilike(permissions.description, keyword),
-        ),
-      );
-    }
-
-    const whereClause = conditions.length ? and(...conditions) : undefined;
-
+  async getPermissions(queryParams: PermissionsListQuery): ServiceResult<PermissionsListResponse> {
     try {
-      return await this.db.query.permissions.findMany({
-        orderBy: [permissions.category, permissions.code],
-        where: whereClause,
+      const permissionResult = await this.resolveOperationPermission('RBAC_PERMISSION_READ');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权查看权限列表');
+      }
+
+      const conditions = [];
+
+      if (queryParams.active !== undefined) {
+        conditions.push(eq(permissions.isActive, queryParams.active));
+      }
+
+      if (queryParams.category) {
+        conditions.push(eq(permissions.category, queryParams.category));
+      }
+
+      if (queryParams.keyword) {
+        const keyword = `%${queryParams.keyword}%`;
+        conditions.push(
+          or(
+            ilike(permissions.code, keyword),
+            ilike(permissions.name, keyword),
+            ilike(permissions.description, keyword),
+          ),
+        );
+      }
+
+      const whereExpr = conditions.length ? and(...conditions) : undefined;
+
+      const { limit, offset } = processPaginationConditions(queryParams);
+
+      const listQuery = this.db.query.permissions.findMany({
+        limit,
+        offset,
+        orderBy: desc(permissions.createdAt),
+        where: whereExpr,
       });
+
+      const countQuery = this.db.select({ count: count() }).from(permissions).where(whereExpr);
+
+      const [listResult, totalResult] = await Promise.all([listQuery, countQuery]);
+
+      return {
+        permissions: listResult,
+        total: totalResult[0]?.count || 0,
+      };
     } catch (error) {
       this.handleServiceError(error, '获取权限列表');
     }
@@ -173,7 +188,7 @@ export class PermissionService extends BaseService {
   /**
    * Delete permission by ID
    */
-  async deletePermission(id: number): ServiceResult<{ deleted: boolean; id: number }> {
+  async deletePermission(id: number): ServiceResult<void> {
     const permissionResult = await this.resolveOperationPermission('RBAC_PERMISSION_DELETE');
     if (!permissionResult.isPermitted) {
       throw this.createAuthorizationError(permissionResult.message || '无权删除权限');
@@ -206,10 +221,7 @@ export class PermissionService extends BaseService {
         throw this.createBusinessError('Failed to delete permission');
       }
 
-      return {
-        deleted: true,
-        id: deleted.id,
-      };
+      return;
     } catch (error) {
       this.handleServiceError(error, '删除权限');
     }

@@ -1,25 +1,33 @@
 import { z } from 'zod';
 
+import { PermissionItem } from '@/database/schemas';
+
+import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from './common.type';
+
 // ==================== Permission Query Types ====================
 
 /**
  * Permission list query parameters
  */
-export type PermissionsListQuery = {
+export type PermissionsListQuery = IPaginationQuery & {
   active?: boolean;
   category?: string;
-  keyword?: string;
 };
 
-export const PermissionsListQuerySchema = z.object({
-  active: z
-    .string()
-    .transform((val) => val === 'true')
-    .pipe(z.boolean())
-    .nullish(),
-  category: z.string().min(1).nullish(),
-  keyword: z.string().min(1).nullish(),
-});
+export const PermissionsListQuerySchema = z
+  .object({
+    active: z
+      .string()
+      .transform((val) => val === 'true')
+      .pipe(z.boolean())
+      .nullish(),
+    category: z.string().min(1).nullish(),
+  })
+  .extend(PaginationQuerySchema.shape);
+
+export type PermissionsListResponse = PaginationQueryResponse<{
+  permissions: PermissionItem[];
+}>;
 
 // ==================== Permission CRUD Types ====================
 
