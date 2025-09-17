@@ -3,7 +3,8 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useStyles } from './style';
-import { Avatar } from '..';
+import { Avatar } from '@/components';
+import { AVATAR_SIZE_MEDIUM } from '@/const/common';
 
 interface ListItemProps {
   active?: boolean;
@@ -23,7 +24,7 @@ const ListItem = ({ title, avatar, description, extra, onPress, href, active }: 
 
   const content = (
     <View style={styles.listItem}>
-      {avatar && <Avatar avatar={avatar} size={48} />}
+      {avatar && <Avatar avatar={avatar} size={AVATAR_SIZE_MEDIUM} />}
       <View style={styles.info}>
         <Text numberOfLines={1} style={styles.title}>
           {title}
