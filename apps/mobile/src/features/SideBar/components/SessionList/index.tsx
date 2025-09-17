@@ -12,6 +12,7 @@ import { SessionListSkeleton } from './components/SkeletonList';
 import * as ContextMenu from 'zeego/context-menu';
 import { Toast, TextInput } from '@/components';
 import { useGlobalStore } from '@/store/global';
+import { loading } from '@/libs/loading';
 
 export default function SideBar() {
   const { t } = useTranslation('chat');
@@ -72,10 +73,12 @@ export default function SideBar() {
                     },
                     {
                       onPress: () => {
+                        const { done } = loading.start();
                         removeSession(session.id).then(() => {
                           Toast.success(t('status.success', { ns: 'common' }));
                           InteractionManager.runAfterInteractions(() => {
                             toggleDrawer();
+                            done();
                           });
                         });
                       },
