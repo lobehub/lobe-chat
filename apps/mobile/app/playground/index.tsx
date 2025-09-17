@@ -97,6 +97,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'action-icon': {
+        router.push('/playground/components/action-icon');
+
+        break;
+      }
       case 'skeleton': {
         router.push('/playground/components/skeleton');
 

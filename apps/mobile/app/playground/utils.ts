@@ -106,6 +106,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['button', 'action', 'click', 'primary', 'loading'],
   },
   {
+    category: 'basic',
+    description: '轻量级的图标操作按钮，支持尺寸、变体、加载与禁用状态',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'ActionIcon',
+    path: 'action-icon',
+    tags: ['icon', 'button', 'action', 'loading'],
+  },
+  {
     category: 'feedback',
     description: '骨架屏组件，用于页面加载状态，支持头像、标题、段落和动画效果',
     hasDemos: true,
