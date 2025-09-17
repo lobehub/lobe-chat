@@ -1,10 +1,6 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  extra: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
