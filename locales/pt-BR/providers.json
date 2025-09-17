@@ -161,6 +161,9 @@
   "v0": {
     "description": "v0 é um assistente de programação em par; basta descrever suas ideias em linguagem natural, e ele gerará código e interface de usuário (UI) para o seu projeto"
   },
+  "vercelaigateway": {
+    "description": "O Vercel AI Gateway oferece uma API unificada para acessar mais de 100 modelos, permitindo o uso de modelos de vários provedores como OpenAI, Anthropic, Google, entre outros, através de um único endpoint. Suporta configuração de orçamento, monitoramento de uso, balanceamento de carga de requisições e failover."
+  },
   "vertexai": {
     "description": "A série Gemini do Google é seu modelo de IA mais avançado e versátil, desenvolvido pelo Google DeepMind, projetado para ser multimodal, suportando compreensão e processamento sem costura de texto, código, imagens, áudio e vídeo. Adequado para uma variedade de ambientes, desde data centers até dispositivos móveis, aumentando significativamente a eficiência e a aplicabilidade dos modelos de IA."
   },
