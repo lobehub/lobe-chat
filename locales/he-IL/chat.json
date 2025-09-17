@@ -1,0 +1,295 @@
+{
+  "ModelSwitch": {
+    "title": "Model"
+  },
+  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
+  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
+  "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
+  "agents": "Assistants",
+  "artifact": {
+    "generating": "Generating",
+    "inThread": "Cannot view in subtopic, please switch to the main conversation area to open",
+    "thinking": "Thinking",
+    "thought": "Thought",
+    "unknownTitle": "Untitled Work"
+  },
+  "backToBottom": "Back to bottom",
+  "chatList": {
+    "longMessageDetail": "View Details"
+  },
+  "clearCurrentMessages": "Clear current session messages",
+  "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionSuccess": "Assistant removed successfully",
+  "defaultAgent": "Default Assistant",
+  "defaultList": "Default List",
+  "defaultSession": "Default Assistant",
+  "duplicateSession": {
+    "loading": "Copying...",
+    "success": "Copy successful",
+    "title": "{{title}} Copy"
+  },
+  "duplicateTitle": "{{title}} Copy",
+  "emptyAgent": "No assistant available",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
+      "title": "Enable Context Caching"
+    },
+    "enableReasoning": {
+      "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
+      "title": "Enable Deep Thinking"
+    },
+    "reasoningBudgetToken": {
+      "title": "Thinking Consumption Token"
+    },
+    "reasoningEffort": {
+      "title": "Reasoning Intensity"
+    },
+    "textVerbosity": {
+      "title": "Output Text Detail Level"
+    },
+    "thinking": {
+      "title": "Deep Thinking Switch"
+    },
+    "title": "Model Extension Features",
+    "urlContext": {
+      "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
+      "title": "Extract Webpage Link Content"
+    }
+  },
+  "history": {
+    "title": "The assistant will only remember the last {{count}} messages."
+  },
+  "historyRange": "History Range",
+  "historySummary": "Historical Message Summary",
+  "inbox": {
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
+    "title": "Just Chat"
+  },
+  "input": {
+    "addAi": "Add an AI message",
+    "addUser": "Add a user message",
+    "disclaimer": "AI may also make mistakes, please verify important information",
+    "errorMsg": "Message sending failed, please check your network and try again: {{errorMsg}}",
+    "more": "more",
+    "send": "Send",
+    "sendWithCmdEnter": "Press <key/> to send",
+    "sendWithEnter": "Press <key/> to send",
+    "stop": "Stop",
+    "warp": "New Line",
+    "warpWithKey": "Press <key/> to insert a line break"
+  },
+  "intentUnderstanding": {
+    "title": "Understanding and analyzing your intent..."
+  },
+  "knowledgeBase": {
+    "all": "All Content",
+    "allFiles": "All Files",
+    "allKnowledgeBases": "All Knowledge Bases",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server-side database deployment or use the {{cloud}} service.",
+    "library": {
+      "action": {
+        "add": "Add",
+        "detail": "Details",
+        "remove": "Remove"
+      },
+      "title": "Files/Knowledge Base"
+    },
+    "relativeFilesOrKnowledgeBases": "Related Files/Knowledge Bases",
+    "title": "Knowledge Base",
+    "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
+    "viewMore": "View More"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Delete and Regenerate",
+    "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
+    "regenerate": "Regenerate"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Pricing",
+      "creditTooltip": "For counting purposes, we convert $1 to 1M credits; for example, $3/M tokens can be converted to 3 credits/token.",
+      "pricing": {
+        "inputCachedTokens": "Cached input {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M characters",
+        "inputMinutes": "${{amount}}/minute",
+        "inputTokens": "Input {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Output {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache input write {{amount}}/points · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Average unit price",
+      "input": "Input",
+      "inputAudio": "Audio Input",
+      "inputCached": "Cached Input",
+      "inputCitation": "Input citation",
+      "inputText": "Text Input",
+      "inputTitle": "Input Details",
+      "inputUncached": "Uncached Input",
+      "inputWriteCached": "Input cache write",
+      "output": "Output",
+      "outputAudio": "Audio Output",
+      "outputImage": "Image Output",
+      "outputText": "Text Output",
+      "outputTitle": "Output Details",
+      "reasoning": "Deep Thinking",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokens Per Second (TPS). This indicates the average speed of AI-generated content (Tokens/second), calculated from the moment the first Token is received."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Time To First Token (TTFT). This refers to the time interval from when you send a message to when the client receives the first Token."
+        }
+      },
+      "title": "Generation Details",
+      "total": "Total Consumption"
+    }
+  },
+  "newAgent": "New Assistant",
+  "pin": "Pin",
+  "pinOff": "Unpin",
+  "rag": {
+    "referenceChunks": "Reference Source",
+    "userQuery": {
+      "actions": {
+        "delete": "Delete Query Rewrite",
+        "regenerate": "Regenerate Query"
+      }
+    }
+  },
+  "regenerate": "Regenerate",
+  "roleAndArchive": "Role and Archive",
+  "search": {
+    "grounding": {
+      "searchQueries": "Search Keywords",
+      "title": "Found {{count}} results"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligently determine whether a search is needed based on the conversation content",
+        "title": "Smart Online Search"
+      },
+      "off": {
+        "desc": "Use only the model's basic knowledge without performing a web search",
+        "title": "Disable Online Search"
+      },
+      "on": {
+        "desc": "Continuously perform web searches to obtain the latest information",
+        "title": "Always Online"
+      },
+      "useModelBuiltin": "Use the model's built-in search engine"
+    },
+    "searchModel": {
+      "desc": "The current model does not support function calls, so it needs to be paired with a model that does support function calls for online searching.",
+      "title": "Search Assistant Model"
+    },
+    "title": "Online Search"
+  },
+  "searchAgentPlaceholder": "Search assistants...",
+  "sendPlaceholder": "Type your message here...",
+  "sessionGroup": {
+    "config": "Group Management",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
+    "createAgentSuccess": "Assistant created successfully",
+    "createGroup": "Add New Group",
+    "createSuccess": "Created successfully",
+    "creatingAgent": "Creating assistant...",
+    "inputPlaceholder": "Please enter group name...",
+    "moveGroup": "Move to Group",
+    "newGroup": "New Group",
+    "rename": "Rename Group",
+    "renameSuccess": "Renamed successfully",
+    "sortSuccess": "Reorder successful",
+    "sorting": "Group sorting updating...",
+    "tooLong": "Group name length should be between 1-20"
+  },
+  "shareModal": {
+    "copy": "Copy",
+    "download": "Download Screenshot",
+    "downloadFile": "Download File",
+    "exportTitle": "Default Title",
+    "imageType": "Image Format",
+    "includeTool": "Include Plugin Messages",
+    "includeUser": "Include User Messages",
+    "screenshot": "Screenshot",
+    "settings": "Export Settings",
+    "text": "Text",
+    "withBackground": "Include Background Image",
+    "withFooter": "Include Footer",
+    "withPluginInfo": "Include Plugin Information",
+    "withRole": "Include Message Role",
+    "withSystemRole": "Include Assistant Role Setting"
+  },
+  "stt": {
+    "action": "Voice Input",
+    "loading": "Recognizing...",
+    "prettifying": "Polishing..."
+  },
+  "thread": {
+    "divider": "Subtopic",
+    "threadMessageCount": "{{messageCount}} messages",
+    "title": "Subtopic"
+  },
+  "toggleWideScreen": {
+    "off": "Turn off widescreen mode",
+    "on": "Turn on widescreen mode"
+  },
+  "tokenDetails": {
+    "chats": "Chat Messages",
+    "historySummary": "History Summary",
+    "rest": "Remaining",
+    "systemRole": "Role Settings",
+    "title": "Context Details",
+    "tools": "Plugin Settings",
+    "total": "Total Available",
+    "used": "Total Used"
+  },
+  "tokenTag": {
+    "overload": "Exceeded Limit",
+    "remained": "Remaining",
+    "used": "Used"
+  },
+  "topic": {
+    "checkOpenNewTopic": "Enable new topic?",
+    "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
+    "openNewTopic": "Open New Topic",
+    "saveCurrentMessages": "Save current session as topic"
+  },
+  "translate": {
+    "action": "Translate",
+    "clear": "Clear Translation"
+  },
+  "tts": {
+    "action": "Text-to-Speech",
+    "clear": "Clear Speech"
+  },
+  "updateAgent": "Update Assistant Information",
+  "upload": {
+    "action": {
+      "fileUpload": "Upload File",
+      "folderUpload": "Upload Folder",
+      "imageDisabled": "The current model does not support visual recognition. Please switch models to use this feature.",
+      "imageUpload": "Upload Image",
+      "tooltip": "Upload"
+    },
+    "clientMode": {
+      "actionFiletip": "Upload File",
+      "actionTooltip": "Upload",
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature.",
+      "visionNotSupported": "The current model does not support visual recognition. Please switch to a different model to use this feature."
+    },
+    "preview": {
+      "prepareTasks": "Preparing chunks...",
+      "status": {
+        "pending": "Preparing to upload...",
+        "processing": "Processing file..."
+      }
+    }
+  },
+  "zenMode": "Zen Mode"
+}

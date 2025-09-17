@@ -1,0 +1,186 @@
+{
+  "ArgsInput": {
+    "addArgument": "Add Argument",
+    "argumentPlaceholder": "Argument {{index}}",
+    "enterFirstArgument": "Enter first argument..."
+  },
+  "DragUpload": {
+    "dragDesc": "Drag and drop files here to upload multiple images.",
+    "dragFileDesc": "Drag and drop images and files here to upload multiple images and files.",
+    "dragFileTitle": "Upload Files",
+    "dragTitle": "Upload Images"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Add to Knowledge Base",
+      "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
+      "batchChunking": "Batch Chunking",
+      "chunking": "Chunking",
+      "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
+      "chunkingUnsupported": "This file does not support chunking.",
+      "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
+      "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
+      "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
+      "copyUrl": "Copy Link",
+      "copyUrlSuccess": "File url copied successfully.",
+      "createChunkingTask": "Preparing...",
+      "deleteSuccess": "File deleted successfully.",
+      "downloading": "Downloading file...",
+      "removeFromKnowledgeBase": "Remove from Knowledge Base",
+      "removeFromKnowledgeBaseSuccess": "File removed successfully."
+    },
+    "bottom": "You've reached the end.",
+    "config": {
+      "showFilesInKnowledgeBase": "Show content in Knowledge Base"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Upload File",
+        "folder": "Upload Folder",
+        "knowledgeBase": "Create New Knowledge Base"
+      },
+      "or": "or",
+      "title": "Drag files or folders here"
+    },
+    "title": {
+      "createdAt": "Created At",
+      "size": "Size",
+      "title": "File"
+    },
+    "total": {
+      "fileCount": "Total {{count}} items",
+      "selectedCount": "Selected {{count}} items"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Text chunks have not been fully embedded, which will render the semantic search feature unavailable. To improve search quality, please embedding the text chunks.",
+        "error": "Embedding failed",
+        "errorResult": "Vectorization failed, please check and try again. Error detail:",
+        "processing": "Text chunks are being embedded, please be patient.",
+        "success": "All current text chunks have been embedded"
+      },
+      "embeddings": "Embedding",
+      "status": {
+        "error": "Chunking failed",
+        "errorResult": "Chunking failed, please check and try again. Error detail:",
+        "processing": "Chunking",
+        "processingTip": "The server is splitting text chunks; closing the page will not affect the chunking progress."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Back"
+  },
+  "HtmlPreview": {
+    "actions": {
+      "download": "Download",
+      "preview": "Preview"
+    },
+    "iframeTitle": "HTML Preview",
+    "mode": {
+      "code": "Code",
+      "preview": "Preview"
+    },
+    "title": "HTML Preview"
+  },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Click to change image",
+      "dropMultipleFiles": "Uploading multiple files at once is not supported; only the first file will be used"
+    },
+    "placeholder": {
+      "primary": "Add Image",
+      "secondary": "Click or drag to upload"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Add a row",
+    "deleteTooltip": "Delete",
+    "duplicateKeyError": "Key must be unique",
+    "keyPlaceholder": "Key",
+    "valuePlaceholder": "Value"
+  },
+  "MaxTokenSlider": {
+    "unlimited": "Unlimited"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function calls and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
+      "file": "This model supports file upload for reading and recognition.",
+      "functionCall": "This model supports function calls.",
+      "imageOutput": "This model supports image generation.",
+      "reasoning": "This model supports deep thinking.",
+      "search": "This model supports online search.",
+      "tokens": "This model supports up to {{tokens}} tokens in a single session.",
+      "vision": "This model supports visual recognition."
+    },
+    "removed": "The model is not in the list. It will be automatically removed if deselected."
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "No enabled model. Please go to settings to enable.",
+    "emptyProvider": "No enabled providers. Please go to settings to enable one.",
+    "goToSettings": "Go to settings",
+    "provider": "Provider",
+    "title": "Model"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Click or drag to upload more"
+    },
+    "modal": {
+      "complete": "Done",
+      "newFileIndicator": "New",
+      "selectImageToPreview": "Please select an image to preview",
+      "title": "Manage Images ({{count}})",
+      "upload": "Upload Images"
+    },
+    "placeholder": {
+      "primary": "Click or drag to upload images",
+      "secondary": "Supports multiple image selection"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} uploaded"
+    },
+    "validation": {
+      "fileSizeExceeded": "File size exceeds the maximum allowed",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) exceeds the maximum allowed size of {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} files exceed the maximum allowed size of {{maxSize}}: {{fileList}}",
+      "imageCountExceeded": "Maximum number of images exceeded"
+    }
+  },
+  "OllamaSetupGuide": {
+    "action": {
+      "close": "Close Prompt",
+      "start": "Installed and running, start the conversation"
+    },
+    "cors": {
+      "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+      "linux": {
+        "env": "Add `Environment` under the [Service] section, and set the OLLAMA_ORIGINS environment variable:",
+        "reboot": "Reload systemd and restart Ollama",
+        "systemd": "Edit the ollama service using systemd:"
+      },
+      "macos": "Please open the 'Terminal' application, paste the following command, and press Enter to run it.",
+      "reboot": "Please restart the Ollama service after the execution is complete.",
+      "title": "Configure Ollama for Cross-Origin Access",
+      "windows": "On Windows, click 'Control Panel' and go to edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, with the value set to *, and click 'OK/Apply' to save."
+    },
+    "install": {
+      "description": "Please ensure that you have started Ollama. If you haven't downloaded Ollama, please visit the official website to <1>download</1> it.",
+      "docker": "If you prefer to use Docker, Ollama also provides an official Docker image, which you can pull using the following command:",
+      "linux": {
+        "command": "Install using the following command:",
+        "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for a manual installation."
+      },
+      "title": "Install and Start the Ollama Application Locally",
+      "windowsTab": "Windows (Preview)"
+    }
+  },
+  "Thinking": {
+    "thinking": "Deep Thinking...",
+    "thought": "Deeply Thought (in {{duration}} seconds)",
+    "thoughtWithDuration": "Deeply Thought"
+  }
+}

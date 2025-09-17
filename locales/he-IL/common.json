@@ -1,0 +1,378 @@
+{
+  "about": "About",
+  "advanceSettings": "Advanced Settings",
+  "alert": {
+    "cloud": {
+      "action": "Free Trial",
+      "desc": "We offer {{credit}} free computing credits to all registered users, no complex configuration required, ready to use out of the box, support unlimited conversation history and global cloud synchronization.",
+      "descOnMobile": "We provide {{credit}} free computing credits for all registered users, ready to use without complex configuration.",
+      "title": "Launch {{name}}"
+    }
+  },
+  "appLoading": {
+    "appIdle": "Ready to start",
+    "appInitializing": "Application is starting...",
+    "failed": "Sorry, the application initialization failed. Please check the details for troubleshooting.",
+    "finished": "Database initialization completed",
+    "goToChat": "Loading chat page...",
+    "initAuth": "Initializing authentication service...",
+    "initUser": "Initializing user status...",
+    "initializing": "Initializing PGlite database...",
+    "loadingDependencies": "Initializing dependencies...",
+    "loadingWasm": "Loading WASM module...",
+    "migrating": "Performing database migration...",
+    "ready": "Database is ready",
+    "showDetail": "View details"
+  },
+  "autoGenerate": "Auto Generate",
+  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "back": "Back",
+  "batchDelete": "Batch Delete",
+  "blog": "Product Blog",
+  "branching": "Create Subtopic",
+  "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Current topic is not saved, please save it first to use subtopic feature",
+  "cancel": "Cancel",
+  "changelog": "Changelog",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initializing PGlite Database"
+    },
+    "error": {
+      "desc": "We apologize, an error occurred during the Pglite database initialization process. Please click the button to retry. If the error persists after multiple attempts, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "detail": "Error reason: [{{type}}] {{message}}. Details are as follows:",
+      "detailTitle": "Error Reason",
+      "report": "Report Issue",
+      "retry": "Retry",
+      "selfSolve": "Self-Solve",
+      "title": "Database Initialization Failed"
+    },
+    "initing": {
+      "error": "An error occurred, please try again",
+      "idle": "Waiting for initialization...",
+      "initializing": "Initializing...",
+      "loadingDependencies": "Loading dependencies...",
+      "loadingWasmModule": "Loading WASM module...",
+      "migrating": "Performing database migration...",
+      "ready": "Database is ready"
+    },
+    "modal": {
+      "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
+      "enable": "Enable Now",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
+          "title": "Support for knowledge base conversations"
+        },
+        "localFirst": {
+          "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
+          "title": "Local first, privacy first"
+        },
+        "pglite": {
+          "desc": "Built on PGlite, natively supports AI Native advanced features (vector search)",
+          "title": "Next-generation client storage architecture"
+        }
+      },
+      "init": {
+        "desc": "Initializing the database, which may take 5 to 30 seconds depending on network conditions.",
+        "title": "Initializing PGlite Database"
+      },
+      "title": "Enable Client Database"
+    },
+    "ready": {
+      "button": "Use Now",
+      "desc": "Ready to use",
+      "title": "PGlite Database is Ready"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Backup",
+        "backupSuccess": "Backup Successful",
+        "desc": "Export key data from the current database",
+        "export": "Export All Data",
+        "exportDesc": "The exported data will be saved in JSON format, which can be used for future recovery or analysis.",
+        "reset": {
+          "alert": "Warning",
+          "alertDesc": "The following actions may result in data loss. Please ensure you have backed up important data before proceeding.",
+          "button": "Completely Reset Database (Delete All Data)",
+          "confirm": {
+            "desc": "This action will delete all data and cannot be undone. Do you confirm to continue?",
+            "title": "Confirm Database Reset"
+          },
+          "desc": "Reset the database in case of irreversible migration",
+          "title": "Database Reset"
+        },
+        "restore": "Restore",
+        "restoreSuccess": "Restore Successful",
+        "title": "Data Backup"
+      },
+      "diagnosis": {
+        "createdAt": "Creation Time",
+        "migratedAt": "Migration Completion Time",
+        "sql": "Migration SQL",
+        "title": "Migration Status"
+      },
+      "repair": {
+        "desc": "Manually manage migration status",
+        "runSQL": "Custom Execute",
+        "sql": {
+          "clear": "Clear",
+          "desc": "Execute custom SQL statements to fix database issues",
+          "markFinished": "Mark as Finished",
+          "placeholder": "Enter SQL statement...",
+          "result": "Execution Result",
+          "run": "Execute",
+          "title": "SQL Executor"
+        },
+        "title": "Migration Control"
+      },
+      "tabs": {
+        "backup": "Backup & Restore",
+        "diagnosis": "Diagnosis",
+        "repair": "Repair"
+      }
+    }
+  },
+  "close": "Close",
+  "contact": "Contact Us",
+  "copy": "Copy",
+  "copyFail": "Copy failed",
+  "copySuccess": "Copied successfully",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Assistants",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
+  "defaultAgent": "Default Assistant",
+  "defaultSession": "Default Assistant",
+  "delete": "Delete",
+  "document": "User Manual",
+  "download": "Download",
+  "duplicate": "Create Duplicate",
+  "edit": "Edit",
+  "export": "Export Configuration",
+  "exportType": {
+    "agent": "Export Assistant Settings",
+    "agentWithMessage": "Export Assistant and Messages",
+    "all": "Export Global Settings and All Assistant Data",
+    "allAgent": "Export All Assistant Settings",
+    "allAgentWithMessage": "Export All Assistants and Messages",
+    "globalSetting": "Export Global Settings"
+  },
+  "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Share Your Valuable Feedback",
+      "star": "Star on GitHub"
+    },
+    "and": "and",
+    "feedback": {
+      "action": "Share Feedback",
+      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make LobeChat even better.",
+      "title": "Share Your Valuable Feedback on GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Star It",
+      "desc": "If you love our product and want to support us, could you go to GitHub and give us a star? This small gesture means a lot to us and motivates us to continue providing you with great experiences.",
+      "title": "Star Us on GitHub"
+    },
+    "title": "Like Our Product?"
+  },
+  "fullscreen": "Full Screen Mode",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana may occasionally fail to generate images when using Chinese. It is recommended to use English for better results.",
+    "continueGenerate": "Continue Generating",
+    "continueSend": "Continue Sending",
+    "doNotShowAgain": "Do Not Show Again",
+    "title": "Chinese Input Notice"
+  },
+  "historyRange": "History Range",
+  "import": "Import",
+  "importData": "Import Data",
+  "importModal": {
+    "error": {
+      "desc": "Sorry, an error occurred during the data import process. Please try importing again, or <1>submit a request</1>, and we will help you troubleshoot the issue as soon as possible.",
+      "title": "Data Import Failed"
+    },
+    "finish": {
+      "onlySettings": "System settings imported successfully",
+      "start": "Start using",
+      "subTitle": "Data imported successfully, took {{duration}} seconds. Import details are as follows:",
+      "title": "Data import completed"
+    },
+    "loading": "Data importing, please wait...",
+    "preparing": "Data import module is preparing...",
+    "result": {
+      "added": "Imported successfully",
+      "errors": "Import errors",
+      "messages": "Messages",
+      "sessionGroups": "Groups",
+      "sessions": "Assistants",
+      "skips": "Duplicates skipped",
+      "topics": "Topics",
+      "type": "Data Type",
+      "update": "Record Updated"
+    },
+    "title": "Import Data",
+    "uploading": {
+      "desc": "The current file is large, and is being uploaded...",
+      "restTime": "Time remaining",
+      "speed": "Upload speed"
+    }
+  },
+  "importPreview": {
+    "confirmImport": "Confirm Import",
+    "tables": {
+      "count": "Record Count",
+      "name": "Table Name"
+    },
+    "title": "Data Import Preview",
+    "totalRecords": "A total of {{count}} records will be imported",
+    "totalTables": "{{count}} tables"
+  },
+  "information": "Community and News",
+  "installPWA": "Install browser app",
+  "lang": {
+    "ar": "Arabic",
+    "bg-BG": "Bulgarian",
+    "bn": "Bengali",
+    "cs-CZ": "Czech",
+    "da-DK": "Danish",
+    "de-DE": "German",
+    "el-GR": "Greek",
+    "en": "English",
+    "en-US": "English",
+    "es-ES": "Spanish",
+    "fa-IR": "Persian",
+    "fi-FI": "Finnish",
+    "fr-FR": "French",
+    "hi-IN": "Hindi",
+    "hu-HU": "Hungarian",
+    "id-ID": "Indonesian",
+    "it-IT": "Italian",
+    "ja-JP": "Japanese",
+    "ko-KR": "Korean",
+    "nl-NL": "Dutch",
+    "no-NO": "Norwegian",
+    "pl-PL": "Polish",
+    "pt-BR": "Portuguese",
+    "pt-PT": "Portuguese",
+    "ro-RO": "Romanian",
+    "ru-RU": "Russian",
+    "sk-SK": "Slovak",
+    "sr-RS": "Serbian",
+    "sv-SE": "Swedish",
+    "th-TH": "Thai",
+    "tr-TR": "Turkish",
+    "uk-UA": "Ukrainian",
+    "vi-VN": "Vietnamese",
+    "zh": "Simplified Chinese",
+    "zh-CN": "Simplified Chinese",
+    "zh-TW": "Traditional Chinese"
+  },
+  "layoutInitializing": "Initializing layout...",
+  "legal": "Legal Disclaimer",
+  "loading": "Loading...",
+  "mail": {
+    "business": "Business Cooperation",
+    "support": "Email Support"
+  },
+  "oauth": "SSO Login",
+  "officialSite": "Official Website",
+  "ok": "OK",
+  "password": "Password",
+  "pin": "Pin",
+  "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
+  "regenerate": "Regenerate",
+  "releaseNotes": "Version Details",
+  "rename": "Rename",
+  "reset": "Reset",
+  "retry": "Retry",
+  "run": "Run",
+  "save": "Save",
+  "send": "Send",
+  "setting": "Settings",
+  "share": "Share",
+  "stop": "Stop",
+  "sync": {
+    "actions": {
+      "settings": "Sync Settings",
+      "sync": "Sync Now"
+    },
+    "awareness": {
+      "current": "Current Device"
+    },
+    "channel": "Channel",
+    "disabled": {
+      "actions": {
+        "enable": "Enable Cloud Sync",
+        "settings": "Sync Settings"
+      },
+      "desc": "Current session data is only stored in this browser. If you need to sync data across multiple devices, please configure and enable cloud sync.",
+      "title": "Data Sync Disabled"
+    },
+    "enabled": {
+      "title": "Data Sync Enabled"
+    },
+    "status": {
+      "connecting": "Connecting",
+      "disabled": "Sync Disabled",
+      "ready": "Connected",
+      "synced": "Synced",
+      "syncing": "Syncing",
+      "unconnected": "Connection Failed"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Signaling server connection failed, and peer-to-peer communication channel cannot be established. Please check the network and try again."
+    }
+  },
+  "tab": {
+    "aiImage": "AI Painting",
+    "chat": "Chat",
+    "discover": "Discover",
+    "files": "Files",
+    "me": "Me",
+    "setting": "Settings"
+  },
+  "telemetry": {
+    "allow": "Allow",
+    "deny": "Deny",
+    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "learnMore": "Learn More",
+    "title": "Help LobeChat be better"
+  },
+  "temp": "Temporary",
+  "terms": "Terms of Service",
+  "update": "Update",
+  "updateAgent": "Update Assistant Information",
+  "upgradeVersion": {
+    "action": "Upgrade",
+    "hasNew": "New update available",
+    "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymous User",
+    "billing": "Billing Management",
+    "cloud": "Launch {{name}}",
+    "community": "Community Edition",
+    "data": "Data Storage",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "profile": "Account",
+    "setting": "Settings",
+    "usages": "Usage Statistics"
+  },
+  "version": "Version"
+}
