@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, Hotkey, Icon } from '@lobehub/ui';
-import { BotMessageSquare, LucideCheck, MessageSquarePlus } from 'lucide-react';
+import { LucideCheck } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -11,25 +11,27 @@ import WideScreenContainer from '@/features/Conversation/components/WideScreenCo
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
-import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
+import { preferenceSelectors } from '@/store/user/selectors';
+import { KeyEnum } from '@/types/hotkey';
 
 import { useSend } from '../useSend';
 import MessageFromUrl from './MessageFromUrl';
 
 const leftActions: ActionKeys[] = [
-  'model',
-  'search',
-  'typo',
-  'fileUpload',
-  'knowledgeBase',
+  // 'model',
+  // 'search',
+  // 'typo',
+  // 'fileUpload',
+  // 'knowledgeBase',
   'tools',
-  '---',
-  ['params', 'history', 'stt', 'clear'],
-  'mainToken',
+  // '---',
+  // ['params', 'history', 'stt', 'clear'],
+  // 'mainToken',
 ];
 
-const rightActions: ActionKeys[] = ['saveTopic'];
+const rightActions: ActionKeys[] = [
+  // 'saveTopic'
+];
 
 const ClassicChatInput = memo(() => {
   const { t } = useTranslation('chat');
@@ -43,7 +45,7 @@ const ClassicChatInput = memo(() => {
     aiChatSelectors.isCurrentSendMessageError(s),
     s.clearSendMessageError,
   ]);
-  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
+  // const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
 
   return (
     <ChatInputProvider
@@ -103,30 +105,30 @@ const ClassicChatInput = memo(() => {
               updatePreference({ useCmdEnterToSend: true });
             },
           },
-          { type: 'divider' },
-          {
-            // disabled,
-            icon: <Icon icon={BotMessageSquare} />,
-            key: 'addAi',
-            label: t('input.addAi'),
-            onClick: () => {
-              send({ onlyAddAIMessage: true });
-            },
-          },
-          {
-            // disabled,
-            icon: <Icon icon={MessageSquarePlus} />,
-            key: 'addUser',
-            label: (
-              <Flexbox align={'center'} gap={24} horizontal>
-                {t('input.addUser')}
-                <Hotkey keys={hotkey} />
-              </Flexbox>
-            ),
-            onClick: () => {
-              send({ onlyAddUserMessage: true });
-            },
-          },
+          // { type: 'divider' },
+          // {
+          //   // disabled,
+          //   icon: <Icon icon={BotMessageSquare} />,
+          //   key: 'addAi',
+          //   label: t('input.addAi'),
+          //   onClick: () => {
+          //     send({ onlyAddAIMessage: true });
+          //   },
+          // },
+          // {
+          //   // disabled,
+          //   icon: <Icon icon={MessageSquarePlus} />,
+          //   key: 'addUser',
+          //   label: (
+          //     <Flexbox align={'center'} gap={24} horizontal>
+          //       {t('input.addUser')}
+          //       <Hotkey keys={hotkey} />
+          //     </Flexbox>
+          //   ),
+          //   onClick: () => {
+          //     send({ onlyAddUserMessage: true });
+          //   },
+          // },
         ],
       }}
     >

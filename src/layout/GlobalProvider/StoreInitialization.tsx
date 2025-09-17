@@ -1,12 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { enableNextAuth } from '@/const/auth';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { ALL_MCP_PLUGINS_CONFIG } from '@/plugins';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
@@ -41,6 +42,20 @@ const StoreInitialization = memo(() => {
   const useFetchServerConfig = useServerConfigStore((s) => s.useInitServerConfig);
   useFetchServerConfig();
 
+  // Auto-install MCP plugins early in initialization
+  useEffect(() => {
+    const autoInstall = async () => {
+      try {
+        const { autoInstallMcpPlugins } = await import('@/services/mcp-auto-installer');
+        await autoInstallMcpPlugins(ALL_MCP_PLUGINS_CONFIG);
+      } catch (error) {
+        console.warn('Failed to auto-install MCP plugins:', error);
+      }
+    };
+
+    autoInstall();
+  }, []); // Run once on mount
+
   // Update NextAuth status
   const useUserStoreUpdater = createStoreUpdater(useUserStore);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
@@ -62,7 +77,7 @@ const StoreInitialization = memo(() => {
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
-    onSuccess: (state) => {
+    onSuccess: async (state) => {
       if (state.isOnboard === false) {
         router.push('/onboard');
       }

@@ -5,6 +5,8 @@ import {
   UserDefaultAgent,
 } from '@lobechat/types';
 
+import { MCP_PLUGIN_IDENTIFIERS } from '@/plugins';
+
 import { DEFAULT_AGENT_META } from '../meta';
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
 
@@ -46,7 +48,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
     temperature: 1,
     top_p: 1,
   },
-  plugins: [],
+  plugins: ['lobe-artifacts', ...MCP_PLUGIN_IDENTIFIERS],
   provider: DEFAULT_PROVIDER,
   systemRole: '',
   tts: DEFAUTT_AGENT_TTS_CONFIG,

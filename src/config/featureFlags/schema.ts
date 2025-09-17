@@ -49,41 +49,41 @@ export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   pin_list: false,
 
-  language_model_settings: true,
-  provider_settings: true,
+  language_model_settings: false,
+  provider_settings: false,
 
-  openai_api_key: true,
-  openai_proxy_url: true,
+  openai_api_key: false,
+  openai_proxy_url: false,
 
   api_key_manage: false,
 
-  create_session: true,
-  edit_agent: true,
+  create_session: false,
+  edit_agent: false,
 
-  plugins: true,
-  dalle: true,
-  ai_image: true,
+  plugins: false,
+  dalle: false,
+  ai_image: false,
 
-  check_updates: true,
-  welcome_suggest: true,
-  token_counter: true,
+  check_updates: false,
+  welcome_suggest: false,
+  token_counter: false,
 
-  knowledge_base: true,
+  knowledge_base: false,
   rag_eval: false,
 
-  clerk_sign_up: true,
+  clerk_sign_up: false,
 
   cloud_promotion: false,
 
-  market: true,
-  speech_to_text: true,
-  changelog: true,
+  market: false,
+  speech_to_text: false,
+  changelog: false,
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
   // please contact us for more information: hello@lobehub.com
-  commercial_hide_github: false,
-  commercial_hide_docs: false,
+  commercial_hide_github: true,
+  commercial_hide_docs: true,
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
