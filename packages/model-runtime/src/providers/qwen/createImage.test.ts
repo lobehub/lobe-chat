@@ -591,4 +591,114 @@ describe('createQwenImage', () => {
       expect(fetch).toHaveBeenCalledTimes(4);
     });
   });
+
+  describe('qwen-image-edit model', () => {
+    it('should successfully generate image with qwen-image-edit model', async () => {
+      const mockImageUrl =
+        'https://dashscope.oss-cn-beijing.aliyuncs.com/aigc/test-generated-image.jpg';
+
+      // Mock fetch for multimodal-generation API
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          output: {
+            choices: [
+              {
+                message: {
+                  content: [{ image: mockImageUrl }],
+                },
+              },
+            ],
+          },
+          request_id: 'req-edit-123',
+        }),
+      });
+
+      const payload: CreateImagePayload = {
+        model: 'qwen-image-edit',
+        params: {
+          prompt: 'Edit this image to add a cat',
+          imageUrl: 'https://example.com/source-image.jpg',
+        },
+      };
+
+      const result = await createQwenImage(payload, mockOptions);
+
+      expect(result).toEqual({
+        imageUrl: mockImageUrl,
+      });
+
+      expect(fetch).toHaveBeenCalled();
+      const [url, options] = (fetch as any).mock.calls[0];
+
+      expect(url).toBe(
+        'https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation',
+      );
+      expect(options.method).toBe('POST');
+      expect(options.headers).toEqual({
+        'Authorization': 'Bearer test-api-key',
+        'Content-Type': 'application/json',
+      });
+
+      const body = JSON.parse(options.body);
+      expect(body).toEqual({
+        input: {
+          messages: [
+            {
+              content: [
+                { image: 'https://example.com/source-image.jpg' },
+                { text: 'Edit this image to add a cat' },
+              ],
+              role: 'user',
+            },
+          ],
+        },
+        model: 'qwen-image-edit',
+        parameters: {},
+      });
+    });
+
+    it('should throw error when imageUrl is missing for qwen-image-edit', async () => {
+      const payload: CreateImagePayload = {
+        model: 'qwen-image-edit',
+        params: {
+          prompt: 'Edit this image',
+          // imageUrl is missing
+        },
+      };
+
+      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: 'ProviderBizError',
+          provider: 'qwen',
+        }),
+      );
+    });
+
+    it('should handle qwen-image-edit API errors', async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        statusText: 'Bad Request',
+        json: async () => ({
+          message: 'Invalid image format',
+        }),
+      });
+
+      const payload: CreateImagePayload = {
+        model: 'qwen-image-edit',
+        params: {
+          prompt: 'Edit this image',
+          imageUrl: 'https://example.com/invalid-image.jpg',
+        },
+      };
+
+      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: 'ProviderBizError',
+          provider: 'qwen',
+        }),
+      );
+    });
+  });
 });
