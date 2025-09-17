@@ -161,6 +161,9 @@
   "v0": {
     "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway cung cấp API thống nhất để truy cập hơn 100 mô hình, cho phép sử dụng các mô hình từ nhiều nhà cung cấp như OpenAI, Anthropic, Google chỉ qua một điểm cuối duy nhất. Hỗ trợ thiết lập ngân sách, giám sát sử dụng, cân bằng tải yêu cầu và chuyển đổi dự phòng."
+  },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
   },

@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.129.3](https://github.com/lobehub/lobe-chat/compare/v1.129.2...v1.129.3)
+
+<sup>Released on **2025-09-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add qwen provider support for image-edit model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add qwen provider support for image-edit model, closes [#9277](https://github.com/lobehub/lobe-chat/issues/9277) [#9184](https://github.com/lobehub/lobe-chat/issues/9184) ([e137b33](https://github.com/lobehub/lobe-chat/commit/e137b33))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.129.2](https://github.com/lobehub/lobe-chat/compare/v1.129.1...v1.129.2)
+
+<sup>Released on **2025-09-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve db migrations sql.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve db migrations sql, closes [#9295](https://github.com/lobehub/lobe-chat/issues/9295) ([96ff5aa](https://github.com/lobehub/lobe-chat/commit/96ff5aa))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9294](https://github.com/lobehub/lobe-chat/issues/9294) ([c018f3d](https://github.com/lobehub/lobe-chat/commit/c018f3d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.129.1](https://github.com/lobehub/lobe-chat/compare/v1.129.0...v1.129.1)
 
 <sup>Released on **2025-09-16**</sup>

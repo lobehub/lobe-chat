@@ -161,6 +161,9 @@
   "v0": {
     "description": "v0 是一個配對程式設計助手，你只需用自然語言描述想法，它就能為你的專案生成程式碼和使用者介面（UI）"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway 提供統一的 API 來存取 100 多個模型，透過單一端點即可使用 OpenAI、Anthropic、Google 等多個供應商的模型。支援預算設定、使用監控、請求負載平衡和故障轉移。"
+  },
   "vertexai": {
     "description": "Google 的 Gemini 系列是其最先進、通用的 AI 模型，由 Google DeepMind 打造，專為多模態設計，支持文本、程式碼、圖像、音訊和視頻的無縫理解與處理。適用於從數據中心到行動裝置的多種環境，極大提升了 AI 模型的效率與應用廣泛性。"
   },
