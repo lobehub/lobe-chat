@@ -581,14 +581,14 @@
   },
   {
     "sql": [
-      "-- Truncate title to 255 characters if it exceeds the limit\nUPDATE agents\nSET title = LEFT(title, 255)\nWHERE LENGTH(title) > 255;",
-      "\n\n-- Truncate description to 1000 characters if it exceeds the limit\nUPDATE agents\nSET description = LEFT(description, 1000)\nWHERE LENGTH(description) > 1000;",
+      "-- Truncate title to 150 characters if it exceeds the limit\nUPDATE agents\nSET title = LEFT(title, 200)\nWHERE LENGTH(title) > 200;",
+      "\n\n-- Truncate description to 300 characters if it exceeds the limit\nUPDATE agents\nSET description = LEFT(description, 300)\nWHERE LENGTH(description) > 300;",
       "\n\nCREATE INDEX IF NOT EXISTS \"agents_title_idx\" ON \"agents\" USING btree (\"title\");",
       "\nCREATE INDEX IF NOT EXISTS \"agents_description_idx\" ON \"agents\" USING btree (\"description\");\n"
     ],
     "bps": true,
     "folderMillis": 1757902833213,
-    "hash": "4b2e0d87485cd7b3aa4dd06edfd73b78d195137263776c7d1c3df6eb11c3bc62"
+    "hash": "41395946b955d89f5c97272077d27d131a626b64bdca2b970c0bbcdf0a8370fd"
   },
   {
     "sql": [
