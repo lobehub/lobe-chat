@@ -8,7 +8,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { z } from 'zod';
 
-import { fileEnv } from '@/config/file';
+import { fileEnv } from '@/envs/file';
 import { YEAR } from '@/utils/units';
 import { inferContentTypeFromImageUrl } from '@/utils/url';
 

@@ -1,9 +1,9 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { loadFile } from '@lobechat/file-loaders';
 import debug from 'debug';
 
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
-import { LobeChatDatabase } from '@/database/type';
 import { LobeDocument } from '@/types/document';
 
 import { FileService } from '../file';

@@ -1,6 +1,133 @@
 [
   {
     "children": {
+      "fixes": ["Add qwen provider support for image-edit model."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.3"
+  },
+  {
+    "children": {
+      "fixes": ["Improve db migrations sql."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update SiliconCloud reasoning models."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.1"
+  },
+  {
+    "children": {
+      "features": ["Support Vercel AI Gateway provider."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure ai runtime error."]
+    },
+    "date": "2025-09-16",
+    "version": "1.128.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve error handle with agent config, support .doc file parse."]
+    },
+    "date": "2025-09-15",
+    "version": "1.128.9"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Enable toggling search on/off via search button click & historyCount button."
+      ]
+    },
+    "date": "2025-09-15",
+    "version": "1.128.8"
+  },
+  {
+    "children": {},
+    "date": "2025-09-14",
+    "version": "1.128.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-14",
+    "version": "1.128.6"
+  },
+  {
+    "children": {
+      "fixes": ["Google stream error unable to abort request."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix discover plugin link."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix open chat page with float link modal."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n, Update model configs."]
+    },
+    "date": "2025-09-13",
+    "version": "1.128.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor message proccesser to the context engine."]
+    },
+    "date": "2025-09-12",
+    "version": "1.128.1"
+  },
+  {
+    "children": {
+      "features": ["ChatInput support resize."]
+    },
+    "date": "2025-09-12",
+    "version": "1.128.0"
+  },
+  {
+    "children": {
+      "fixes": ["Improve OpenAIStream processing to emit usage data for chunks lacking choices."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model runtime folder structure and add more tests."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.3"
+  },
+  {
+    "children": {
+      "fixes": ["Delete files should delete chunks、embedings、fileChunk."]
+    },
+    "date": "2025-09-11",
+    "version": "1.127.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix not remove message with server mode."],
       "improvements": ["Update i18n."]
     },

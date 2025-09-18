@@ -1,6 +1,6 @@
 import Auth0 from 'next-auth/providers/auth0';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 import { CommonProviderConfig } from './sso.config';
 

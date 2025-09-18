@@ -27,6 +27,14 @@ export default {
   math: {
     placeholder: '请输入 TeX 公式',
   },
+  slash: {
+    h1: '一级标题',
+    h2: '二级标题',
+    h3: '三级标题',
+    hr: '分割线',
+    table: '表格',
+    tex: 'TeX 公式',
+  },
   table: {
     delete: '删除表格',
     deleteColumn: '删除列',
@@ -46,7 +54,7 @@ export default {
     link: '链接',
     numberList: '有序列表',
     strikethrough: '删除线',
-    table: '插入表格',
+    table: 'table',
     taskList: '任务列表',
     tex: 'TeX 公式',
     underline: '下划线',

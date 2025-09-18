@@ -5,11 +5,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
-import { authEnv } from '@/config/auth';
 import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { appEnv } from '@/envs/app';
+import { authEnv } from '@/envs/auth';
 import NextAuth from '@/libs/next-auth';
 import { Locales } from '@/locales/resources';
 

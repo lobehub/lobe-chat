@@ -147,14 +147,7 @@ const TypoBar = memo(() => {
 
   return (
     <ChatInputActionBar
-      left={
-        <ChatInputActions
-          items={items}
-          onClick={() => {
-            editor?.focus();
-          }}
-        />
-      }
+      left={<ChatInputActions items={items} />}
       style={{
         background: theme.colorFillQuaternary,
         borderTopLeftRadius: 8,

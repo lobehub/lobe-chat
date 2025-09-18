@@ -1,3 +1,4 @@
+export { ModelProvider } from '../const/modelProvider';
 export * from './chat';
 export * from './embeddings';
 export * from './error';

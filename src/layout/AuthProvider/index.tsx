@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 import Clerk from './Clerk';
 import NextAuth from './NextAuth';

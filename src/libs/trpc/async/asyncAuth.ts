@@ -1,9 +1,9 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
-import { LobeChatDatabase } from '@/database/type';
 
 import { asyncTrpc } from './init';
 

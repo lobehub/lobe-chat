@@ -1,4 +1,4 @@
-import { getLLMConfig } from '@/config/llm';
+import { getLLMConfig } from '@/envs/llm';
 
 interface KeyStore {
   index: number;

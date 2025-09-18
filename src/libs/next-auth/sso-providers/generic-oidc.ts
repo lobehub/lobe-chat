@@ -1,6 +1,6 @@
 import type { OIDCConfig } from '@auth/core/providers';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 import { CommonProviderConfig } from './sso.config';
 

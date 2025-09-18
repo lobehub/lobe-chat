@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { fileEnv } from '@/config/file';
+import { fileEnv } from '@/envs/file';
 import { S3 } from '@/server/modules/S3';
 
 import { FileServiceImpl } from './type';

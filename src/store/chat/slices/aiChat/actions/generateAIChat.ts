@@ -4,7 +4,6 @@ import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
-import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
@@ -16,7 +15,6 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { getAgentStoreState } from '@/store/agent/store';
 import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
 import { getAiInfraStoreState } from '@/store/aiInfra/store';
-import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getFileStoreState } from '@/store/file/store';
@@ -545,46 +543,9 @@ export const generateAIChat: StateCreator<
     const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
-    const compiler = template(chatConfig.inputTemplate, {
-      interpolate: /{{\s*(text)\s*}}/g,
-    });
-
     // ================================== //
     //   messages uniformly preprocess    //
     // ================================== //
-
-    // 1. slice messages with config
-    const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
-    const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(getAgentStoreState());
-
-    let preprocessMsgs = chatHelpers.getSlicedMessages(messages, {
-      includeNewUserMessage: true,
-      enableHistoryCount,
-      historyCount,
-    });
-
-    // 2. replace inputMessage template
-    preprocessMsgs = !chatConfig.inputTemplate
-      ? preprocessMsgs
-      : preprocessMsgs.map((m) => {
-          if (m.role === 'user') {
-            try {
-              return { ...m, content: compiler({ text: m.content }) };
-            } catch (error) {
-              console.error(error);
-
-              return m;
-            }
-          }
-
-          return m;
-        });
-
-    // 3. add systemRole
-    if (agentConfig.systemRole) {
-      preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as ChatMessage);
-    }
-
     // 4. handle max_tokens
     agentConfig.params.max_tokens = chatConfig.enableMaxTokens
       ? agentConfig.params.max_tokens
@@ -610,7 +571,7 @@ export const generateAIChat: StateCreator<
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
-        messages: preprocessMsgs,
+        messages,
         model,
         provider,
         ...agentConfig.params,

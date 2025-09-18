@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "Voer TeX-formule in"
   },
+  "slash": {
+    "h1": "Kop 1",
+    "h2": "Kop 2",
+    "h3": "Kop 3",
+    "hr": "Scheidingslijn",
+    "table": "Tabel",
+    "tex": "TeX-formule"
+  },
   "table": {
     "delete": "Tabel verwijderen",
     "deleteColumn": "Kolom verwijderen",
@@ -46,7 +54,7 @@
     "link": "Link",
     "numberList": "Genummerde lijst",
     "strikethrough": "Doorhalen",
-    "table": "Tabel invoegen",
+    "table": "tabel",
     "taskList": "Takenlijst",
     "tex": "TeX-formule",
     "underline": "Onderstrepen"

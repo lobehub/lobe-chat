@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "TeX 수식을 입력하세요"
   },
+  "slash": {
+    "h1": "1단계 제목",
+    "h2": "2단계 제목",
+    "h3": "3단계 제목",
+    "hr": "구분선",
+    "table": "표",
+    "tex": "TeX 수식"
+  },
   "table": {
     "delete": "테이블 삭제",
     "deleteColumn": "열 삭제",
@@ -46,7 +54,7 @@
     "link": "링크",
     "numberList": "번호 매긴 목록",
     "strikethrough": "취소선",
-    "table": "표 삽입",
+    "table": "표",
     "taskList": "작업 목록",
     "tex": "TeX 수식",
     "underline": "밑줄"

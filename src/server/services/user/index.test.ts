@@ -1,9 +1,9 @@
 import { UserJSON } from '@clerk/backend';
+import { LobeChatDatabase } from '@lobechat/database';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 import { pino } from '@/libs/logger';
 import { AgentService } from '@/server/services/agent';
 

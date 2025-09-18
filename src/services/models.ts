@@ -7,7 +7,7 @@ import { ChatModelCard } from '@/types/llm';
 import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
-import { initializeWithClientStore } from './chat';
+import { initializeWithClientStore } from './chat/clientModelRuntime';
 
 const isEnableFetchOnClient = (provider: string) => {
   // TODO: remove this condition in V2.0

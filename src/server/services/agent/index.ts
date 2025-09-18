@@ -1,5 +1,6 @@
+import { LobeChatDatabase } from '@lobechat/database';
+
 import { SessionModel } from '@/database/models/session';
-import { LobeChatDatabase } from '@/database/type';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
 
 export class AgentService {

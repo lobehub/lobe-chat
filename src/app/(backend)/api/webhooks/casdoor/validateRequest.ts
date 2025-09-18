@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 export type CasdoorUserEntity = {
   avatar?: string;
