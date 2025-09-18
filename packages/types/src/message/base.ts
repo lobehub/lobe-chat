@@ -77,7 +77,6 @@ export interface MessageItem {
   createdAt: Date;
   error: any | null;
   favorite: boolean | null;
-  files: string[] | null;
   id: string;
   metadata?: MessageMetadata | null;
   model: string | null;

@@ -201,7 +201,7 @@ export interface MessageIdParam {
 }
 
 // 从数据库联表查询出来的消息类型，包含关联的 session 和 user 信息
-export interface MessageResponseFromDatabase extends Omit<MessageItem, 'files'> {
+export interface MessageResponseFromDatabase extends MessageItem {
   session: SessionItem | null;
   user: UserItem;
   topic: TopicItem | null;

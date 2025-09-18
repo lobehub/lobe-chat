@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import urlJoin from 'url-join';
 
-import { fileEnv } from '@/config/file';
+import { fileEnv } from '@/envs/file';
 
 /**
  * 给文件添加URL前缀

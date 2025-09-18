@@ -1,10 +1,10 @@
+import { ChatStreamPayload } from '@lobechat/model-runtime';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 import { and, eq } from 'drizzle-orm';
 
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { agents, agentsToSessions, aiModels } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
-import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 
