@@ -88,4 +88,28 @@ describe('imageUrlToBase64', () => {
 
     await expect(imageUrlToBase64('https://example.com/image.jpg')).rejects.toThrow('Fetch failed');
   });
+
+  it('should use custom fetch when provided', async () => {
+    const customFetch = vi.fn().mockResolvedValue({
+      arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+      blob: () => Promise.resolve(new Blob([mockArrayBuffer], { type: 'image/png' })),
+    });
+
+    const result = await imageUrlToBase64('https://example.com/image.png', customFetch as any);
+
+    expect(customFetch).toHaveBeenCalledWith('https://example.com/image.png');
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(result).toEqual({ base64: 'mockBase64String', mimeType: 'image/png' });
+  });
+
+  it('should use global fetch when custom fetch is not provided', async () => {
+    mockFetch.mockResolvedValue({
+      arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+      blob: () => Promise.resolve(new Blob([mockArrayBuffer], { type: 'image/jpg' })),
+    });
+
+    await imageUrlToBase64('https://example.com/image.jpg');
+
+    expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
+  });
 });

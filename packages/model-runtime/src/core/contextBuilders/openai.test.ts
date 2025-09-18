@@ -52,7 +52,28 @@ describe('convertMessageContent', () => {
     });
 
     expect(parseDataUri).toHaveBeenCalledWith('https://example.com/image.jpg');
-    expect(imageUrlToBase64).toHaveBeenCalledWith('https://example.com/image.jpg');
+    expect(imageUrlToBase64).toHaveBeenCalledWith('https://example.com/image.jpg', undefined);
+  });
+
+  it('should pass custom fetch to imageUrlToBase64', async () => {
+    process.env.LLM_VISION_IMAGE_USE_BASE64 = '1';
+
+    const content = {
+      type: 'image_url',
+      image_url: { url: 'https://example.com/image.jpg' },
+    } as OpenAI.ChatCompletionContentPart;
+
+    const customFetch = vi.fn() as any;
+
+    vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+    vi.mocked(imageUrlToBase64).mockResolvedValue({
+      base64: 'base64String',
+      mimeType: 'image/jpeg',
+    });
+
+    await convertMessageContent(content, customFetch);
+
+    expect(imageUrlToBase64).toHaveBeenCalledWith('https://example.com/image.jpg', customFetch);
   });
 
   it('should not convert image URL when not necessary', async () => {
@@ -426,6 +447,28 @@ describe('convertImageUrlToFile', () => {
       );
 
       expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
+    });
+
+    it('should use custom fetch when provided', async () => {
+      const mockArrayBuffer = new ArrayBuffer(8);
+      const mockHeaders = new Headers();
+      mockHeaders.set('content-type', 'image/png');
+
+      const customFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+        headers: mockHeaders,
+      });
+
+      const result = await convertImageUrlToFile(
+        'https://example.com/custom.png',
+        customFetch as any,
+      );
+
+      expect(customFetch).toHaveBeenCalledWith('https://example.com/custom.png');
+      expect(mockFetch).not.toHaveBeenCalled();
+      expect(result).toHaveProperty('name', 'image.png');
+      expect(result).toHaveProperty('type', 'image/png');
     });
   });
 

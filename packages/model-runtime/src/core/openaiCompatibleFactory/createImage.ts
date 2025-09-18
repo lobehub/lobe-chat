@@ -19,6 +19,7 @@ async function generateByImageMode(
   client: OpenAI,
   payload: CreateImagePayload,
   provider: string,
+  customFetch?: typeof fetch,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
 
@@ -48,7 +49,7 @@ async function generateByImageMode(
     try {
       // Convert all image URLs to File objects
       const imageFiles = await Promise.all(
-        userInput.image.map((url: string) => convertImageUrlToFile(url)),
+        userInput.image.map((url: string) => convertImageUrlToFile(url, customFetch)),
       );
 
       // According to official docs, if there are multiple images, pass an array; if only one, pass a single File
@@ -127,7 +128,10 @@ async function generateByImageMode(
 /**
  * Process image URL for chat model input
  */
-async function processImageUrlForChat(imageUrl: string): Promise<string> {
+async function processImageUrlForChat(
+  imageUrl: string,
+  customFetch?: typeof fetch,
+): Promise<string> {
   const { type, base64, mimeType } = parseDataUri(imageUrl);
 
   if (type === 'base64') {
@@ -137,7 +141,10 @@ async function processImageUrlForChat(imageUrl: string): Promise<string> {
     return `data:${mimeType || 'image/png'};base64,${base64}`;
   } else if (type === 'url') {
     // For URL type, convert to base64 first
-    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(
+      imageUrl,
+      customFetch,
+    );
     return `data:${urlMimeType};base64,${urlBase64}`;
   } else {
     throw new TypeError(`Currently we don't support image url: ${imageUrl}`);
@@ -150,6 +157,7 @@ async function processImageUrlForChat(imageUrl: string): Promise<string> {
 async function generateByChatModel(
   client: OpenAI,
   payload: CreateImagePayload,
+  customFetch?: typeof fetch,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
   const actualModel = model.replace(':image', ''); // Remove :image suffix
@@ -168,7 +176,7 @@ async function generateByChatModel(
   if (params.imageUrl && params.imageUrl !== null) {
     log('Processing image URL for editing mode: %s', params.imageUrl);
     try {
-      const processedImageUrl = await processImageUrlForChat(params.imageUrl);
+      const processedImageUrl = await processImageUrlForChat(params.imageUrl, customFetch);
       content.push({
         image_url: {
           url: processedImageUrl,
@@ -224,14 +232,15 @@ export async function createOpenAICompatibleImage(
   client: OpenAI,
   payload: CreateImagePayload,
   provider: string,
+  customFetch?: typeof fetch,
 ): Promise<CreateImageResponse> {
   const { model } = payload;
 
   // Check if it's a chat model for image generation (via :image suffix)
   if (model.endsWith(':image')) {
-    return await generateByChatModel(client, payload);
+    return await generateByChatModel(client, payload, customFetch);
   }
 
   // Default to traditional images API
-  return await generateByImageMode(client, payload, provider);
+  return await generateByImageMode(client, payload, provider, customFetch);
 }

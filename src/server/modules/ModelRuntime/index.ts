@@ -1,6 +1,7 @@
 import { ModelRuntime } from '@lobechat/model-runtime';
 import { ClientSecretPayload } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 
 import { getLLMConfig } from '@/envs/llm';
 
@@ -133,5 +134,6 @@ export const initModelRuntimeWithUserPayload = (
   return ModelRuntime.initializeWithProvider(runtimeProvider, {
     ...getParamsFromPayload(runtimeProvider, payload),
     ...params,
+    fetch: ssrfSafeFetch as any,
   });
 };
