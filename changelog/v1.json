@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix svg xss issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.129.4"
+  },
+  {
+    "children": {
       "fixes": ["Add qwen provider support for image-edit model."]
     },
     "date": "2025-09-17",

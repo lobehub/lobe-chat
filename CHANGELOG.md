@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.129.4](https://github.com/lobehub/lobe-chat/compare/v1.129.3...v1.129.4)
+
+<sup>Released on **2025-09-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix svg xss issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix svg xss issue, closes [#9313](https://github.com/lobehub/lobe-chat/issues/9313) ([9f044ed](https://github.com/lobehub/lobe-chat/commit/9f044ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.129.3](https://github.com/lobehub/lobe-chat/compare/v1.129.2...v1.129.3)
 
 <sup>Released on **2025-09-17**</sup>
