@@ -7,7 +7,6 @@ export * from './object';
 export * from './parseModels';
 export * from './pricing';
 export * from './safeParseJSON';
-export * from './sanitize';
 export * from './sleep';
 export * from './uriParser';
 export * from './url';

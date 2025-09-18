@@ -1,5 +1,4 @@
-import { sanitizeSVGContent } from '@lobechat/utils';
-import { copyImageToClipboard } from '@lobechat/utils/client';
+import { copyImageToClipboard, sanitizeSVGContent } from '@lobechat/utils/client';
 import { Button, Dropdown, Tooltip } from '@lobehub/ui';
 import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
