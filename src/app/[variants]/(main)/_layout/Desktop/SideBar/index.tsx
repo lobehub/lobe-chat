@@ -52,7 +52,11 @@ const Nav = memo(() => {
         }}
         topActions={
           <Suspense>
-            <div className={electronStylish.nodrag}>
+            <div className={electronStylish.nodrag} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              maxHeight: "calc(100vh - 150px)"
+            }}>
               <Top />
               {showPinList && <PinList />}
             </div>
