@@ -1,6 +1,10 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
   },
@@ -13,7 +17,7 @@ export const useStyles = createStyles((token) => ({
   },
   paragraphLine: {
     height: token.fontSize,
-    marginBottom: token.marginXXS,
+    marginTop: token.marginXS,
   },
   skeletonItem: {
     backgroundColor: token.colorFillContent,
@@ -28,6 +32,5 @@ export const useStyles = createStyles((token) => ({
   },
   titleLine: {
     height: token.fontSizeLG,
-    marginBottom: token.marginXS,
   },
 }));
