@@ -1,7 +1,8 @@
+import { sanitizeSVGContent } from '@lobechat/utils';
+import { copyImageToClipboard } from '@lobechat/utils/client';
 import { Button, Dropdown, Tooltip } from '@lobehub/ui';
 import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
-import DOMPurify from 'dompurify';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
 import { useMemo } from 'react';
@@ -11,7 +12,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { BRANDING_NAME } from '@/const/branding';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
-import { copyImageToClipboard } from '@/utils/clipboard';
 
 const svgContainer = css`
   width: 100%;
@@ -39,7 +39,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
   const { message } = App.useApp();
 
   // Sanitize SVG content to prevent XSS attacks
-  const sanitizedContent = useMemo(() => DOMPurify.sanitize(content), [content]);
+  const sanitizedContent = useMemo(() => sanitizeSVGContent(content), [content]);
 
   const generatePng = async () => {
     return domToPng(document.querySelector(`#${DOM_ID}`) as HTMLDivElement, {
