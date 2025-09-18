@@ -25,7 +25,7 @@ export const useStyles = createStyles((token) => ({
   title: {
     color: token.colorTextHeading,
     flex: 1,
-    fontSize: 17,
+    fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
     textAlign: 'center',
   },
