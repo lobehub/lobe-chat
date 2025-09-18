@@ -82,8 +82,8 @@ const PinList = () => {
     hasList && (
       <>
         <Divider style={{ marginBottom: 8, marginTop: 4 }} />
-        <ScrollShadow size={40} style={{ flex: 1, height: '100%' }}>
-          <Flexbox gap={12} style={{ padding: '0 8px' }}>
+        <ScrollShadow height={"100%"} hideScrollBar={true} size={40}>
+          <Flexbox gap={12} style={{ padding: '0' }}>
             {list.map((item, index) => (
               <Flexbox key={item.id} style={{ position: 'relative' }}>
                 <Tooltip
