@@ -11,6 +11,7 @@ export const useStyles = createStyles((token) => ({
   },
   authorInfo: {
     flex: 1,
+    gap: token.marginXS,
     marginLeft: token.marginXS,
   },
   authorSection: {
