@@ -158,7 +158,7 @@
     "@lobehub/charts": "^2.1.2",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
-    "@lobehub/editor": "^1.8.5",
+    "@lobehub/editor": "^1.9.2",
     "@lobehub/icons": "^2.32.2",
     "@lobehub/market-sdk": "^0.22.7",
     "@lobehub/tts": "^2.0.1",
