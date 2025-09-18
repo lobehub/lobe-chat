@@ -1,206 +1,101 @@
 import React from 'react';
-import { View } from 'react-native';
+import { DimensionValue, View } from 'react-native';
+
 import { Skeleton } from '@/components';
-import { useThemeToken } from '@/theme';
 import { ICON_SIZE } from '@/const/common';
 
-// Assistant Detail Page Skeleton Components
-const AssistantDetailSkeleton = () => {
-  const token = useThemeToken();
+import { useStyles } from './styles';
 
-  return (
-    <View style={{ padding: 16 }}>
-      {/* Title skeleton */}
-      <View style={{ marginBottom: 16 }}>
-        <Skeleton.Title animated style={{ height: 28 }} width="80%" />
-      </View>
+const TAG_WIDTHS = [64, 88, 72, 96];
+const SYSTEM_ROLE_WIDTHS: DimensionValue[] = ['100%', '95%', '90%', '100%', '85%', '75%'];
+const DESCRIPTION_WIDTHS: DimensionValue[] = ['100%', '95%', '85%'];
 
-      {/* Author info skeleton */}
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          marginBottom: 16,
-        }}
-      >
-        <Skeleton.Avatar animated shape="circle" size={24} />
-        <View style={{ flex: 1, marginLeft: 8 }}>
-          <Skeleton.Title animated style={{ height: 14 }} width="50%" />
-        </View>
-      </View>
-
-      {/* Description skeleton */}
-      <View style={{ marginBottom: 16 }}>
-        <Skeleton.Paragraph animated rows={3} width={['100%', '95%', '85%']} />
-      </View>
-
-      {/* Tags skeleton */}
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 8,
-          marginBottom: 20,
-        }}
-      >
-        {[60, 80, 70, 90].map((width, index) => (
-          <Skeleton.Title
-            animated
-            key={index}
-            style={{
-              backgroundColor: token.colorFillSecondary,
-              borderRadius: 14,
-              height: 28,
-            }}
-            width={width}
-          />
-        ))}
-      </View>
-
-      {/* Action button skeleton */}
-      <View style={{ marginBottom: 24 }}>
-        <Skeleton.Title
-          animated
-          style={{
-            backgroundColor: token.colorFillSecondary,
-            borderRadius: 8,
-            height: 48,
-          }}
-          width="100%"
-        />
-      </View>
-
-      {/* System role section skeleton */}
-      <View>
-        {/* Section header */}
-        <View
-          style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-            marginBottom: 16,
-          }}
-        >
-          <Skeleton.Avatar animated shape="square" size={ICON_SIZE} style={{ borderRadius: 4 }} />
-          <View style={{ marginLeft: 8 }}>
-            <Skeleton.Title animated style={{ height: 16 }} width={120} />
-          </View>
-        </View>
-
-        {/* Content */}
-        <Skeleton.Paragraph
-          animated
-          rows={6}
-          width={['100%', '95%', '90%', '100%', '85%', '75%']}
-        />
-      </View>
-    </View>
-  );
-};
-
-// Assistant Detail Title Skeleton
 export const AssistantTitleSkeleton = () => {
+  const { styles } = useStyles();
+
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Skeleton.Title animated style={{ height: 28 }} width="80%" />
+    <View style={styles.titleSection}>
+      <Skeleton.Title animated style={styles.titleSkeleton} width="80%" />
     </View>
   );
 };
 
-// Assistant Detail Author Skeleton
 export const AssistantAuthorSkeleton = () => {
+  const { styles, token } = useStyles();
+
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        flexDirection: 'row',
-        marginBottom: 16,
-      }}
-    >
-      <Skeleton.Avatar animated shape="circle" size={24} />
-      <View style={{ flex: 1, marginLeft: 8 }}>
-        <Skeleton.Title animated style={{ height: 14 }} width="50%" />
+    <View style={styles.authorSection}>
+      <Skeleton.Avatar animated shape="circle" size={token.controlHeightSM} />
+      <View style={styles.authorInfo}>
+        <Skeleton.Title animated style={styles.authorSkeleton} width="50%" />
       </View>
     </View>
   );
 };
 
-// Assistant Detail Description Skeleton
 export const AssistantDescriptionSkeleton = () => {
+  const { styles } = useStyles();
+
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Skeleton.Paragraph animated rows={3} width={['100%', '95%', '85%']} />
+    <View style={styles.descriptionSection}>
+      <Skeleton.Paragraph animated rows={3} width={DESCRIPTION_WIDTHS} />
     </View>
   );
 };
 
-// Assistant Detail Tags Skeleton
 export const AssistantTagsSkeleton = () => {
-  const token = useThemeToken();
+  const { styles } = useStyles();
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 20,
-      }}
-    >
-      {[60, 80, 70, 90].map((width, index) => (
-        <Skeleton.Title
-          animated
-          key={index}
-          style={{
-            backgroundColor: token.colorFillSecondary,
-            borderRadius: 14,
-            height: 28,
-          }}
-          width={width}
-        />
+    <View style={styles.tagsSection}>
+      {TAG_WIDTHS.map((width) => (
+        <Skeleton.Title animated key={width} style={styles.tagSkeleton} width={width} />
       ))}
     </View>
   );
 };
 
-// Assistant Detail Action Button Skeleton
 export const AssistantActionButtonSkeleton = () => {
-  const token = useThemeToken();
+  const { styles } = useStyles();
 
   return (
-    <View style={{ marginBottom: 24 }}>
-      <Skeleton.Title
-        animated
-        style={{
-          backgroundColor: token.colorFillSecondary,
-          borderRadius: 8,
-          height: 48,
-        }}
-        width="100%"
-      />
+    <View style={styles.actionSection}>
+      <Skeleton.Title animated style={styles.actionButtonSkeleton} width="100%" />
     </View>
   );
 };
 
-// Assistant Detail System Role Skeleton
 export const AssistantSystemRoleSkeleton = () => {
+  const { styles } = useStyles();
+
   return (
-    <View>
-      {/* Section header */}
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          marginBottom: 16,
-        }}
-      >
-        <Skeleton.Avatar animated shape="square" size={ICON_SIZE} style={{ borderRadius: 4 }} />
-        <View style={{ marginLeft: 8 }}>
-          <Skeleton.Title animated style={{ height: 16 }} width={120} />
+    <View style={styles.systemRoleSection}>
+      <View style={styles.systemRoleHeader}>
+        <Skeleton.Avatar animated shape="square" size={ICON_SIZE} style={styles.systemRoleAvatar} />
+        <View style={styles.systemRoleTitleContainer}>
+          <Skeleton.Title animated style={styles.systemRoleTitleSkeleton} width="40%" />
         </View>
       </View>
 
-      {/* Content */}
-      <Skeleton.Paragraph animated rows={6} width={['100%', '95%', '90%', '100%', '85%', '75%']} />
+      <View style={styles.systemRoleContent}>
+        <Skeleton.Paragraph animated rows={SYSTEM_ROLE_WIDTHS.length} width={SYSTEM_ROLE_WIDTHS} />
+        <Skeleton.Paragraph animated rows={SYSTEM_ROLE_WIDTHS.length} width={SYSTEM_ROLE_WIDTHS} />
+      </View>
+    </View>
+  );
+};
+
+const AssistantDetailSkeleton = () => {
+  const { styles } = useStyles();
+
+  return (
+    <View style={styles.container}>
+      <AssistantTitleSkeleton />
+      <AssistantAuthorSkeleton />
+      <AssistantDescriptionSkeleton />
+      <AssistantTagsSkeleton />
+      <AssistantActionButtonSkeleton />
+      <AssistantSystemRoleSkeleton />
     </View>
   );
 };
