@@ -197,7 +197,6 @@ const nextConfig: NextConfig = {
     },
   },
   reactStrictMode: true,
-
   redirects: async () => [
     {
       destination: '/sitemap-index.xml',
@@ -269,7 +268,7 @@ const nextConfig: NextConfig = {
   ],
 
   // when external packages in dev mode with turbopack, this config will lead to bundle error
-  serverExternalPackages: isProd ? ['@electric-sql/pglite'] : undefined,
+  serverExternalPackages: isProd ? ['@electric-sql/pglite', "pdfkit"] : ["pdfkit"],
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   typescript: {
@@ -320,10 +319,10 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapp
 const withPWA =
   isProd && !isDesktop
     ? withSerwistInit({
-        register: false,
-        swDest: 'public/sw.js',
-        swSrc: 'src/app/sw.ts',
-      })
+      register: false,
+      swDest: 'public/sw.js',
+      swSrc: 'src/app/sw.ts',
+    })
     : noWrapper;
 
 export default withBundleAnalyzer(withPWA(nextConfig as NextConfig));

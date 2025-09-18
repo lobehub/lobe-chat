@@ -1,6 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -13,16 +13,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 interface PdfPreviewProps {
   loading: boolean;
   pdfData: string | null;
+  pageNumber: number;
+  onLoadSuccess: (numPages: number) => void;
 }
 
-const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
+const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, pageNumber, onLoadSuccess }) => {
   const { styles } = useContainerStyles();
   const isMobile = useIsMobile();
-  const [numPages, setNumPages] = useState<number>(0);
-  const [pageNumber] = useState<number>(1);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
+    onLoadSuccess(numPages);
   };
 
   if (loading) {
@@ -32,14 +32,15 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
           style={{
             alignItems: 'center',
             display: 'flex',
+            flexDirection: 'column',
             height: '200px',
             justifyContent: 'center',
           }}
         >
-          <Spin 
-            indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
-            tip="Generating PDF..."
+          <Spin
+            indicator={<LoadingOutlined spin style={{ fontSize: 24 }} />}
           />
+          <div style={{ color: '#666', marginTop: 8 }}>Generating PDF...</div>
         </div>
       </div>
     );
@@ -51,10 +52,10 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
         <div
           style={{
             alignItems: 'center',
+            color: '#666',
             display: 'flex',
             height: '200px',
             justifyContent: 'center',
-            color: '#666',
           }}
         >
           No PDF data available
@@ -67,28 +68,40 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
   const pdfDataUri = `data:application/pdf;base64,${pdfData}`;
 
   return (
-    <div className={styles.preview} style={{ padding: 12 }}>
+    <div
+      className={styles.preview}
+      style={{
+        padding: 12,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start'
+      }}
+    >
       <Document
         file={pdfDataUri}
         loading={
-          <div style={{ textAlign: 'center', padding: '20px' }}>
-            <Spin tip="Loading PDF..." />
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+          >
+            <Spin />
+            <div style={{ color: '#666', marginTop: 8 }}>Loading PDF...</div>
           </div>
         }
         onLoadSuccess={onDocumentLoadSuccess}
       >
         <Page
           pageNumber={pageNumber}
-          width={isMobile ? 300 : 400}
           renderAnnotationLayer={false}
           renderTextLayer={false}
+          width={isMobile ? 300 : 400}
         />
       </Document>
-      {numPages > 1 && (
-        <div style={{ textAlign: 'center', marginTop: 8, fontSize: '12px', color: '#666' }}>
-          Page {pageNumber} of {numPages}
-        </div>
-      )}
     </div>
   );
 });
