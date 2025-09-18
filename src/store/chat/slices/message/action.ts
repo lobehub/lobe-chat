@@ -33,6 +33,14 @@ import { chatSelectors } from '../../selectors';
 import { preventLeavingFn, toggleBooleanList } from '../../utils';
 import { MessageDispatch, messagesReducer } from './reducer';
 
+// Helper function to transform tools for database saving
+const transformToolsForDB = (tools: any[]) => {
+  return tools?.map((tool) => ({
+    ...tool,
+    type: tool.type === 'mcp-ui' ? 'builtin' : tool.type, // Convert mcp-ui to builtin for DB
+  }));
+};
+
 const n = setNamespace('m');
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
@@ -356,7 +364,9 @@ export const chatMessage: StateCreator<
 
     await messageService.updateMessage(id, {
       content,
-      tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+      tools: extra?.toolCalls
+        ? transformToolsForDB(internal_transformToolCalls(extra?.toolCalls))
+        : undefined,
       reasoning: extra?.reasoning,
       search: extra?.search,
       metadata: extra?.metadata,

@@ -1,6 +1,8 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { memo } from 'react';
 
+import McpUIRender from '@/tools/mcp-ui/Render';
+import { extractUIResources } from '@/tools/mcp-ui/utils/extractUIResources';
 import { LobeToolRenderType } from '@/types/tool';
 
 import BuiltinType from './BuiltinType';
@@ -50,6 +52,33 @@ const PluginRender = memo<PluginRenderProps>(
             pluginState={pluginState}
           />
         );
+      }
+
+      case 'mcp-ui': {
+        try {
+          // Extract UI resources from our encoded format
+          const { textContent, uiResources } = extractUIResources(content);
+
+          const mcpUIContent = {
+            text: textContent,
+            uiResources: uiResources,
+          };
+
+          return (
+            <McpUIRender
+              apiName={payload?.apiName}
+              args={{}}
+              content={mcpUIContent}
+              identifier={identifier}
+              messageId={id}
+              pluginError={pluginError}
+              pluginState={pluginState}
+            />
+          );
+        } catch (error) {
+          console.error('Failed to parse MCP UI content:', error);
+          return <DefaultType content={content} loading={loading} name={identifier} />;
+        }
       }
 
       case 'markdown': {

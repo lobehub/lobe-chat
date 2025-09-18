@@ -3,7 +3,8 @@ import { CallReportRequest } from '@lobehub/market-types';
 
 import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { desktopClient, toolsClient } from '@/libs/trpc/client';
-import { ChatToolPayload } from '@/types/message';
+import { extractUIResources } from '@/tools/mcp-ui/utils/extractUIResources';
+import { ChatToolPayload } from '@/types/message/tools';
 import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -68,6 +69,34 @@ class MCPService {
       }
 
       success = true;
+
+      // Extract UI resources from the response
+      const { textContent, uiResources } = extractUIResources(result);
+
+      // If there are UI resources, encode them into the response string
+      if (uiResources.length > 0) {
+        // Encode UI resources as base64 JSON and append to content
+        const encodedResources = btoa(JSON.stringify({ uiResources }));
+
+        // Exclude verbose UI resource text from LLM context
+        // Return only minimal context to prevent AI from processing UI content
+        const finalTextContent = textContent?.trim() || '';
+
+        // Original simple filtering: only exclude very basic success messages
+        const hasSubstantialText =
+          finalTextContent &&
+          finalTextContent.length > 0 &&
+          !/^(ok|done|success|completed?|rendered?)\.?$/i.test(finalTextContent);
+
+        if (hasSubstantialText) {
+          // If there's meaningful text content, include it
+          return `${finalTextContent}\n__MCP_UI_RESOURCES__:${encodedResources}`;
+        } else {
+          // For pure UI responses, return minimal non-descriptive text
+          return `\n__MCP_UI_RESOURCES__:${encodedResources}`;
+        }
+      }
+
       return result;
     } catch (error) {
       success = false;

@@ -10,6 +10,7 @@ import PluginResult from '@/features/Conversation/Messages/Assistant/Tool/Inspec
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { hasUIResources } from '@/tools/mcp-ui/utils/extractUIResources';
 import { ChatMessage } from '@/types/message';
 
 import Arguments from './Arguments';
@@ -77,12 +78,26 @@ const CustomRender = memo<CustomRenderProps>(
     useEffect(() => {
       if (!plugin?.type || loading) return;
 
-      setShowPluginRender(!['default', 'mcp'].includes(plugin?.type));
-    }, [plugin?.type, loading]);
+      // For MCP tools, show plugin render only if UI resources are detected
+      const isMcpTool =
+        plugin?.identifier?.includes('mcp-') || plugin?.identifier?.includes('____'); // MCP tool naming pattern
+      if (isMcpTool) {
+        const mcpHasUI = hasUIResources(content);
+        setShowPluginRender(mcpHasUI);
+      } else {
+        // For other types, use existing logic
+        setShowPluginRender(!['default'].includes(plugin?.type));
+      }
+    }, [plugin?.type, loading, content]);
 
     if (loading) return <Arguments arguments={requestArgs} shine />;
 
-    if (showPluginRender)
+    if (showPluginRender) {
+      // Determine the render type for MCP tools with UI resources
+      const isMcpTool =
+        plugin?.identifier?.includes('mcp-') || plugin?.identifier?.includes('____'); // MCP tool naming pattern
+      const renderType = isMcpTool && hasUIResources(content) ? 'mcp-ui' : plugin?.type;
+
       return (
         <Flexbox gap={12} id={id} width={'100%'}>
           <PluginRender
@@ -94,10 +109,11 @@ const CustomRender = memo<CustomRenderProps>(
             payload={plugin}
             pluginError={pluginError}
             pluginState={pluginState}
-            type={plugin?.type}
+            type={renderType}
           />
         </Flexbox>
       );
+    }
 
     if (isEditing)
       return (

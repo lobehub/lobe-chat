@@ -21,7 +21,7 @@ export interface LobeTool {
   type: LobeToolType;
 }
 
-export type LobeToolRenderType = LobePluginType | 'builtin';
+export type LobeToolRenderType = LobePluginType | 'builtin' | 'mcp-ui';
 
 export * from './builtin';
 export * from './plugin';
