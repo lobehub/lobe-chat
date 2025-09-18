@@ -3,8 +3,8 @@ import debug from 'debug';
 const log = debug('lobe-oidc:validateRedirectHost');
 
 /**
- * 验证重定向主机是否在允许的白名单中
- * 防止 Open Redirect 攻击
+ * Validate if redirect host is in the allowed whitelist
+ * Prevent Open Redirect attacks
  */
 export const validateRedirectHost = (targetHost: string): boolean => {
   if (!targetHost || targetHost === 'null') {
@@ -12,7 +12,7 @@ export const validateRedirectHost = (targetHost: string): boolean => {
     return false;
   }
 
-  // 获取配置的 APP_URL 作为基准域名
+  // Get configured APP_URL as base domain
   const appUrl = process.env.APP_URL;
   if (!appUrl) {
     log('Warning: APP_URL not configured, rejecting redirect to: %s', targetHost);
@@ -25,13 +25,13 @@ export const validateRedirectHost = (targetHost: string): boolean => {
 
     log('Validating target host: %s against app host: %s', targetHost, appHost);
 
-    // 完全匹配
+    // Exact match
     if (targetHost === appHost) {
       log('Host validation passed: exact match');
       return true;
     }
 
-    // 允许 localhost 和本地地址（开发环境）
+    // Allow localhost and local addresses (development environment)
     const isLocalhost =
       targetHost === 'localhost' ||
       targetHost.startsWith('localhost:') ||
@@ -50,9 +50,9 @@ export const validateRedirectHost = (targetHost: string): boolean => {
       return true;
     }
 
-    // 检查是否为配置域名的子域名
-    const appDomain = appHost.split(':')[0]; // 移除端口号
-    const targetDomain = targetHost.split(':')[0]; // 移除端口号
+    // Check if it's a subdomain of the configured domain
+    const appDomain = appHost.split(':')[0]; // Remove port number
+    const targetDomain = targetHost.split(':')[0]; // Remove port number
 
     if (targetDomain.endsWith('.' + appDomain)) {
       log('Host validation passed: subdomain of %s', appDomain);
