@@ -1,6 +1,8 @@
 import debug from 'debug';
 import { NextRequest } from 'next/server';
 
+import { validateRedirectHost } from './validateRedirectHost';
+
 const log = debug('lobe-oidc:correctOIDCUrl');
 
 /**
@@ -30,6 +32,12 @@ export const correctOIDCUrl = (req: NextRequest, url: URL): URL => {
   // 如果无法确定有效的主机名，直接返回原URL
   if (!actualHost || actualHost === 'null') {
     log('Warning: Cannot determine valid host, returning original URL');
+    return url;
+  }
+
+  // 验证目标主机是否安全，防止 Open Redirect 攻击
+  if (!validateRedirectHost(actualHost)) {
+    log('Warning: Target host %s failed validation, returning original URL', actualHost);
     return url;
   }
 
