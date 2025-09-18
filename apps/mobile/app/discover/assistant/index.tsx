@@ -5,10 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'ahooks';
 import { AssistantCategory } from '@/types/discover';
 import { useDiscoverStore } from '@/store/discover';
-import AgentCard from './components/AgentCard';
-import CategoryTabs from './components/CategoryTabs';
-import { CategoryTabsSkeleton, AssistantListSkeleton } from './components/SkeletonList';
-import useCategory from './hooks/useCategory';
+import AgentCard from '@/features/discover/assistant/components/AgentCard';
+import CategoryTabs from '@/features/discover/assistant/components/CategoryTabs';
+import {
+  CategoryTabsSkeleton,
+  AssistantListSkeleton,
+} from '@/features/discover/assistant/components/SkeletonList';
+import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useStyles } from './styles';
 import { Header, TextInput } from '@/components';
 
