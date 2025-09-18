@@ -1,4 +1,6 @@
+import formidable from 'formidable';
 import { Context } from 'hono';
+import { PassThrough, Readable } from 'node:stream';
 import urlJoin from 'url-join';
 
 import { fileEnv } from '@/envs/file';
@@ -42,92 +44,86 @@ export function addFilesUrlPrefix<T extends { path?: string; url?: string }>(fil
  */
 export async function parseFormData(c: Context): Promise<FormData> {
   const contentType = c.req.header('content-type') || '';
-  const boundaryMatch = contentType.match(/boundary=(.+)$/);
-
-  if (!boundaryMatch) {
-    throw new Error('无法找到 multipart boundary');
+  if (!/multipart\/form-data/i.test(contentType)) {
+    throw new Error('Content-Type 必须是 multipart/form-data');
   }
 
-  const boundary = boundaryMatch[1];
-  const bodyBuffer = await c.req.arrayBuffer();
-  const bodyBytes = new Uint8Array(bodyBuffer);
-  const formData = new FormData();
-
-  // 转换 boundary 为字节数组
-  const boundaryBytes = new TextEncoder().encode(`--${boundary}`);
-
-  // 找到所有 boundary 位置
-  const boundaryPositions: number[] = [];
-  for (let i = 0; i <= bodyBytes.length - boundaryBytes.length; i++) {
-    let match = true;
-    for (const [j, boundaryByte] of boundaryBytes.entries()) {
-      if (bodyBytes[i + j] !== boundaryByte) {
-        match = false;
-        break;
-      }
+  // 优先使用 formidable（流式、健壮），失败时回退到原生 formData()
+  try {
+    const webReq = c.req.raw as Request;
+    const webBody = webReq.body;
+    if (!webBody) {
+      throw new Error('解析失败：当前请求缺少可读的 body 流');
     }
-    if (match) {
-      boundaryPositions.push(i);
+
+    // 将 Web ReadableStream 转为 Node Readable（Node 18+）
+    const nodeReadable =
+      typeof Readable?.fromWeb === 'function' ? Readable.fromWeb(webBody as any) : null;
+    if (!nodeReadable) {
+      throw new Error('解析失败：运行时不支持 Readable.fromWeb，将不进行回退');
     }
-  }
 
-  // 解析每个 part
-  for (let i = 0; i < boundaryPositions.length - 1; i++) {
-    const partStart = boundaryPositions[i] + boundaryBytes.length + 2; // +2 for \r\n
-    const partEnd = boundaryPositions[i + 1];
+    // 构造最小化 Node-like IncomingMessage 供 formidable 使用
+    const fakeReq: any = nodeReadable;
+    fakeReq.headers = Object.fromEntries((webReq.headers as any) || []);
+    fakeReq.method = webReq.method;
 
-    if (partStart >= partEnd) continue;
+    const form = formidable({
+      allowEmptyFiles: false,
+      fileWriteStreamHandler: () => {
+        const pass = new PassThrough();
+        const chunks: Buffer[] = [];
+        pass.on('data', (d: Buffer) => chunks.push(Buffer.isBuffer(d) ? d : Buffer.from(d)));
+        pass.on('end', function (this: any) {
+          // 把合并后的 buffer 暂存，供 parse 回调读取
+          this._buffer = Buffer.concat(chunks);
+        });
+        return pass;
+      },
+      maxFileSize: 100 * 1024 * 1024,
+      multiples: true,
+    });
 
-    const partBytes = bodyBytes.slice(partStart, partEnd - 2); // -2 for \r\n
+    const { fields, files } = await new Promise<{ fields: Record<string, any>; files: any }>(
+      (resolve, reject) => {
+        form.parse(fakeReq, (err: any, fds: any, fls: any) => {
+          if (err) return reject(err);
+          resolve({ fields: fds || {}, files: fls || {} });
+        });
+      },
+    );
 
-    // 找到头部和内容的分隔符 \r\n\r\n
-    const headerEndPattern = new TextEncoder().encode('\r\n\r\n');
-    let headerEnd = -1;
+    const fd = new FormData();
 
-    for (let j = 0; j <= partBytes.length - headerEndPattern.length; j++) {
-      let match = true;
-      for (const [k, element] of headerEndPattern.entries()) {
-        if (partBytes[j + k] !== element) {
-          match = false;
-          break;
+    // 追加普通字段（多值逐项 append）
+    for (const [name, value] of Object.entries(fields)) {
+      if (Array.isArray(value)) value.forEach((v) => fd.append(name, String(v)));
+      else fd.append(name, String(value));
+    }
+
+    // 追加文件字段（兼容单值/多值）
+    for (const [name, entry] of Object.entries(files)) {
+      const list = Array.isArray(entry) ? entry : [entry];
+      for (const f of list) {
+        const buf: Buffer | undefined = (f as any)?._writeStream?._buffer || (f as any)?._buffer;
+        const filename = (f as any).originalFilename || (f as any).newFilename || 'file';
+        const mime = (f as any).mimetype || 'application/octet-stream';
+        if (buf && typeof File !== 'undefined') {
+          const file = new File([buf], filename, { type: mime });
+          fd.append(name, file);
+        } else if ((f as any).filepath) {
+          // @ts-ignore
+          const fs = require('node:fs');
+          const bin = fs.readFileSync((f as any).filepath);
+          const file = new File([bin], filename, { type: mime });
+          fd.append(name, file);
         }
       }
-      if (match) {
-        headerEnd = j;
-        break;
-      }
     }
 
-    if (headerEnd === -1) continue;
-
-    const headerBytes = partBytes.slice(0, headerEnd);
-    const contentBytes = partBytes.slice(headerEnd + 4); // +4 for \r\n\r\n
-
-    const headers = new TextDecoder().decode(headerBytes);
-
-    // 解析 Content-Disposition 头
-    const dispositionMatch = headers.match(
-      /content-disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]+)")?/i,
-    );
-    if (!dispositionMatch) continue;
-
-    const fieldName = dispositionMatch[1];
-    const fileName = dispositionMatch[2];
-
-    if (fileName) {
-      // 这是文件字段
-      const contentTypeMatch = headers.match(/content-type:\s*(.+)/i);
-      const fileType = contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream';
-
-      // 创建 File 对象
-      const file = new File([contentBytes], fileName, { type: fileType });
-      formData.append(fieldName, file);
-    } else {
-      // 这是普通字段
-      const content = new TextDecoder().decode(contentBytes).trim();
-      formData.append(fieldName, content);
-    }
+    return fd;
+  } catch (e) {
+    // 保持失败即抛错，让上层按统一异常处理返回
+    throw e instanceof Error ? e : new Error('parseFormData 解析失败');
   }
-
-  return formData;
 }

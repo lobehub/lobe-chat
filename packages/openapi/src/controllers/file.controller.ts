@@ -27,31 +27,23 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data，支持中文文件名
-      const formData = await c.req.formData();
-
+      // 处理 multipart/form-data（返回对象：{ fields, files }）
+      const formData = await this.getFormData(c);
       const files: File[] = [];
-
-      // 收集所有文件
       const fileEntries = formData.getAll('files');
-
       for (const file of fileEntries) {
-        if (file instanceof File) {
-          files.push(file);
-        } else {
-          return this.error(c, 'Invalid file format', 400);
-        }
+        if (file instanceof File) files.push(file);
       }
 
-      if (files.length === 0) {
+      if (!files.length) {
         return this.error(c, 'No files provided', 400);
       }
 
       // 获取其他参数
-      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
+      const knowledgeBaseId = (formData.get('knowledgeBaseId') as string | null) || null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
-      const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
+      const directory = (formData.get('directory') as string | null) || null;
+      const sessionId = (formData.get('sessionId') as string | null) || null;
 
       const request: BatchFileUploadRequest = {
         directory: directory || undefined,
@@ -151,17 +143,17 @@ export class FileController extends BaseController {
       const fileService = new FileUploadService(db, userId);
 
       const formData = await this.getFormData(c);
-      const file = formData.get('file') as File;
+      const file = formData.get('file') as File | null;
 
       if (!file) {
         return this.error(c, 'No file provided', 400);
       }
 
       // 获取其他参数
-      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
+      const knowledgeBaseId = (formData.get('knowledgeBaseId') as string | null) || null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
-      const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
+      const directory = (formData.get('directory') as string | null) || null;
+      const sessionId = (formData.get('sessionId') as string | null) || null;
 
       const options: PublicFileUploadRequest = {
         directory: directory || undefined,
