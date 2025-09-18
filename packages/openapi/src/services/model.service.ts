@@ -1,17 +1,17 @@
 import { and, asc, count, eq, ilike, or } from 'drizzle-orm';
 
-import { agents, agentsToSessions, aiModels } from '@/database/schemas';
+import { aiModels } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
 import { processPaginationConditions } from '../helpers/pagination';
 import { ServiceResult } from '../types';
 import {
-  GetModelConfigBySessionRequest,
-  GetModelConfigRequest,
+  CreateModelRequest,
   GetModelsResponse,
-  ModelConfigResponse,
+  ModelDetailResponse,
   ModelsListQuery,
+  UpdateModelRequest,
 } from '../types/model.type';
 
 /**
@@ -101,145 +101,164 @@ export class ModelService extends BaseService {
   }
 
   /**
-   * 根据 provider 和 model 名称获取模型配置
-   * 优先从数据库查询，如果没有找到则从配置文件查询
-   * @param request 查询请求参数
-   * @returns 模型配置信息
+   * 获取模型详情
    */
-  async getModelConfig(request: GetModelConfigRequest): ServiceResult<ModelConfigResponse> {
-    this.log('info', '获取模型配置', {
-      ...request,
-      userId: this.userId,
-    });
+  async getModelDetail(providerId: string, modelId: string): ServiceResult<ModelDetailResponse> {
+    this.log('info', '获取模型详情', { modelId, providerId, userId: this.userId });
 
     try {
-      // 权限校验
       const permissionResult = await this.resolveOperationPermission('AI_MODEL_READ', {
-        targetModelId: request.model,
+        targetModelId: modelId,
       });
 
       if (!permissionResult.isPermitted) {
-        throw this.createAuthorizationError(permissionResult.message || '无权访问此模型配置');
+        throw this.createAuthorizationError(permissionResult.message || '无权访问模型详情');
       }
 
-      // 构建查询条件
-      const conditions = [
-        eq(aiModels.providerId, request.provider),
-        eq(aiModels.id, request.model),
-      ];
+      const conditions = [eq(aiModels.providerId, providerId), eq(aiModels.id, modelId)];
 
-      // 权限条件处理 - 根据权限结果添加用户限制
       if (permissionResult.condition?.userId) {
-        // 如果权限校验返回了特定用户ID限制，只查询该用户的模型
         conditions.push(eq(aiModels.userId, permissionResult.condition.userId));
       }
 
-      // 首先从数据库查询
-      const model = await this.db.query.aiModels.findFirst({
-        where: and(...conditions),
-      });
+      const model = await this.db.query.aiModels.findFirst({ where: and(...conditions) });
 
       if (!model) {
-        this.log('warn', '模型配置不存在', {
-          hasUserRestriction: !!permissionResult.condition?.userId,
-          model: request.model,
-          provider: request.provider,
-        });
-        throw this.createNotFoundError(`未找到模型配置: ${request.provider}/${request.model}`);
+        throw this.createNotFoundError(`模型 ${providerId}/${modelId} 不存在`);
       }
-
-      this.log('info', '从数据库获取模型配置成功', {
-        model: request.model,
-        provider: request.provider,
-      });
 
       return model;
     } catch (error) {
-      this.handleServiceError(error, '获取模型配置失败');
+      this.handleServiceError(error, '获取模型详情');
     }
   }
 
   /**
-   * 根据会话ID获取模型配置
-   * @param request 查询请求参数
-   * @returns 模型配置信息
+   * 创建模型
    */
-  async getModelConfigBySession(
-    request: GetModelConfigBySessionRequest,
-  ): ServiceResult<ModelConfigResponse> {
-    this.log('info', '根据会话ID获取模型配置', {
-      ...request,
-      userId: this.userId,
-    });
+  async createModel(payload: CreateModelRequest): ServiceResult<ModelDetailResponse> {
+    this.log('info', '创建模型', { payload, userId: this.userId });
 
     try {
-      // 权限校验 - 需要同时有 SESSION_READ 和 AI_MODEL_READ 权限
-      const sessionPermission = await this.resolveOperationPermission('SESSION_READ', {
-        targetSessionId: request.sessionId,
-      });
-
-      if (!sessionPermission.isPermitted) {
-        throw this.createAuthorizationError(sessionPermission.message || '无权访问此会话');
+      const permissionResult = await this.resolveOperationPermission('AI_MODEL_CREATE');
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权创建模型');
       }
 
-      const modelPermission = await this.resolveOperationPermission('AI_MODEL_READ');
-
-      if (!modelPermission.isPermitted) {
-        throw this.createAuthorizationError(modelPermission.message || '无权访问模型配置');
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
       }
 
-      // 构建查询条件
-      const conditions = [eq(agentsToSessions.sessionId, request.sessionId)];
-
-      // 添加会话权限条件
-      if (sessionPermission.condition?.userId) {
-        conditions.push(eq(agentsToSessions.userId, sessionPermission.condition.userId));
-      }
-
-      // 添加模型权限条件
-      if (modelPermission.condition?.userId) {
-        conditions.push(eq(aiModels.userId, modelPermission.condition.userId));
-      }
-
-      // 使用 JOIN 查询一次性获取所有相关数据，避免 N+1 查询
-      const targetModel = await this.db
-        .select({
-          agent: agents,
-          model: aiModels, // 额外返回 agent 信息用于日志
-        })
-        .from(agentsToSessions)
-        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
-        .innerJoin(
-          aiModels,
-          and(
-            eq(agents.model, aiModels.id),
-            eq(agents.provider, aiModels.providerId), // 确保 provider 也匹配
+      return await this.db.transaction(async (tx) => {
+        const existingModel = await tx.query.aiModels.findFirst({
+          where: and(
+            eq(aiModels.id, payload.id),
+            eq(aiModels.providerId, payload.providerId),
+            eq(aiModels.userId, this.userId),
           ),
-        )
-        .where(and(...conditions))
-        .limit(1);
-
-      if (!targetModel.length) {
-        this.log('warn', '会话对应的模型配置不存在', {
-          hasModelRestriction: !!modelPermission.condition?.userId,
-          hasSessionRestriction: !!sessionPermission.condition?.userId,
-          sessionId: request.sessionId,
         });
-        throw this.createNotFoundError(`会话对应的模型不存在: ${request.sessionId}`);
-      }
 
-      const { model, agent } = targetModel[0];
+        if (existingModel) {
+          throw this.createBusinessError(`模型 ${payload.providerId}/${payload.id} 已存在`);
+        }
 
-      this.log('info', '从数据库获取会话模型配置成功', {
-        agentId: agent.id,
-        modelId: model.id,
-        providerId: model.providerId,
-        sessionId: request.sessionId,
+        const [created] = await tx
+          .insert(aiModels)
+          .values({
+            abilities: payload.abilities ?? {},
+            config: payload.config ?? null,
+            contextWindowTokens: payload.contextWindowTokens ?? null,
+            description: payload.description ?? null,
+            displayName: payload.displayName,
+            enabled: payload.enabled ?? true,
+            id: payload.id,
+            organization: payload.organization ?? null,
+            parameters: payload.parameters ?? {},
+            pricing: payload.pricing ?? null,
+            providerId: payload.providerId,
+            releasedAt: payload.releasedAt ?? null,
+            sort: payload.sort ?? null,
+            source: payload.source ?? null,
+            type: payload.type ?? 'chat',
+            userId: this.userId,
+          })
+          .returning();
+
+        return created;
+      });
+    } catch (error) {
+      this.handleServiceError(error, '创建模型');
+    }
+  }
+
+  /**
+   * 更新模型
+   */
+  async updateModel(
+    providerId: string,
+    modelId: string,
+    payload: UpdateModelRequest,
+  ): ServiceResult<ModelDetailResponse> {
+    this.log('info', '更新模型', { modelId, payload, providerId, userId: this.userId });
+
+    try {
+      const permissionResult = await this.resolveOperationPermission('AI_MODEL_UPDATE', {
+        targetModelId: modelId,
       });
 
-      return model;
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权更新模型');
+      }
+
+      const conditions = [eq(aiModels.providerId, providerId), eq(aiModels.id, modelId)];
+      if (permissionResult.condition?.userId) {
+        conditions.push(eq(aiModels.userId, permissionResult.condition.userId));
+      }
+
+      return await this.db.transaction(async (tx) => {
+        const existingModel = await tx.query.aiModels.findFirst({ where: and(...conditions) });
+
+        if (!existingModel) {
+          throw this.createNotFoundError(`模型 ${providerId}/${modelId} 不存在`);
+        }
+
+        const updateFields = {
+          ...(payload.abilities !== undefined && { abilities: payload.abilities }),
+          ...(payload.config !== undefined && { config: payload.config }),
+          ...(payload.contextWindowTokens !== undefined && {
+            contextWindowTokens: payload.contextWindowTokens,
+          }),
+          ...(payload.description !== undefined && { description: payload.description }),
+          ...(payload.displayName !== undefined && { displayName: payload.displayName }),
+          ...(payload.enabled !== undefined && { enabled: payload.enabled }),
+          ...(payload.organization !== undefined && { organization: payload.organization }),
+          ...(payload.parameters !== undefined && { parameters: payload.parameters }),
+          ...(payload.pricing !== undefined && { pricing: payload.pricing }),
+          ...(payload.releasedAt !== undefined && { releasedAt: payload.releasedAt }),
+          ...(payload.sort !== undefined && { sort: payload.sort }),
+          ...(payload.source !== undefined && { source: payload.source }),
+          ...(payload.type !== undefined && { type: payload.type }),
+          updatedAt: new Date(),
+        } as Record<string, unknown>;
+
+        if (Object.keys(updateFields).length === 1) {
+          throw this.createBusinessError('未提供需要更新的字段');
+        }
+
+        const [updated] = await tx
+          .update(aiModels)
+          .set(updateFields)
+          .where(and(...conditions))
+          .returning();
+
+        if (!updated) {
+          throw this.createBusinessError('更新模型失败');
+        }
+
+        return updated;
+      });
     } catch (error) {
-      this.handleServiceError(error, '根据会话ID获取模型配置');
+      this.handleServiceError(error, '更新模型');
     }
   }
 }

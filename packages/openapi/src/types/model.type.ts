@@ -1,54 +1,8 @@
 import { z } from 'zod';
 
 import { AiModelSelectItem } from '@/database/schemas';
-import { AiModelSourceType } from '@/libs/model-bank/types';
 
-import { IPaginationQuery, PaginationQueryResponse, PaginationQuerySchema } from './common.type';
-
-// ==================== Model Configuration Query Types ====================
-
-/**
- * 根据 provider 和 model 获取模型配置
- */
-export interface GetModelConfigRequest {
-  model: string;
-  provider: string;
-}
-
-/**
- * 根据 sessionId 获取模型配置
- */
-export interface GetModelConfigBySessionRequest {
-  sessionId: string;
-}
-
-/**
- * 模型配置查询参数
- */
-export interface ModelConfigsQuery {
-  model?: string;
-  provider?: string;
-  sessionId?: string;
-}
-
-export const ModelConfigsQuerySchema = z
-  .object({
-    model: z.string().nullish(),
-    // 按 provider/model 查询
-    provider: z.string().nullish(),
-    // 按 sessionId 查询
-    sessionId: z.string().nullish(),
-  })
-  .extend(PaginationQuerySchema.shape)
-  .refine(
-    (data) => {
-      // 确保至少提供一种查询方式
-      return (data.provider && data.model) || data.sessionId;
-    },
-    {
-      message: '必须提供 (provider 和 model) 或 sessionId 参数',
-    },
-  );
+import { IPaginationQuery, PaginationQueryResponse } from './common.type';
 
 // ==================== Model List Query Types ====================
 
@@ -61,46 +15,46 @@ export interface ModelsListQuery extends IPaginationQuery {
   type?: 'chat' | 'embedding' | 'tts' | 'stt' | 'image' | 'text2video' | 'text2music' | 'realtime';
 }
 
-export const ModelsListQuerySchema = z.object({
-  // 过滤参数
-  enabled: z
-    .string()
-    .nullish()
-    .transform((val) => val === 'true'),
-
-  limit: z
-    .string()
-    .nullish()
-    .transform((val) => (val ? parseInt(val, 10) : undefined)),
-
-  order: z.enum(['asc', 'desc']).nullish().default('asc'),
-
-  // 分页参数 (标准化：pageSize -> limit)
-  page: z
-    .string()
-    .nullish()
-    .transform((val) => (val ? parseInt(val, 10) : undefined)),
-
-  provider: z.string().nullish(),
-
-  // 排序参数
-  sort: z.enum(['createdAt', 'updatedAt', 'sort']).nullish().default('sort'),
-
-  type: z
-    .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
-    .nullish(),
-});
-
 // ==================== Model Response Types ====================
 
 export type GetModelsResponse = PaginationQueryResponse<{
   models?: AiModelSelectItem[];
 }>;
 
-/**
- * Model config response types
- */
-export interface ModelConfigResponse extends AiModelSelectItem {
-  providerId: string;
-  source: AiModelSourceType | null;
-}
+// ==================== Model Detail / Mutation Types ====================
+
+export type ModelDetailResponse = AiModelSelectItem;
+
+const ModelPayloadBaseSchema = z.object({
+  abilities: z.record(z.unknown()).nullish(),
+  config: z.record(z.unknown()).nullish(),
+  contextWindowTokens: z.number().int().nullish(),
+  description: z.string().nullish(),
+  displayName: z.string().min(1, '模型显示名称不能为空'),
+  enabled: z.boolean().nullish(),
+  organization: z.string().nullish(),
+  parameters: z.record(z.unknown()).nullish(),
+  pricing: z.record(z.unknown()).nullish(),
+  releasedAt: z.string().nullish(),
+  sort: z.number().int().nullish(),
+  source: z.enum(['remote', 'custom', 'builtin']).nullish(),
+  type: z
+    .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
+    .nullish(),
+});
+
+export const CreateModelRequestSchema = ModelPayloadBaseSchema.extend({
+  displayName: z.string().min(1, '模型显示名称不能为空'),
+  id: z.string().min(1, '模型 ID 不能为空'),
+  providerId: z.string().min(1, 'Provider ID 不能为空'),
+});
+
+export const UpdateModelRequestSchema = ModelPayloadBaseSchema.partial();
+
+export type CreateModelRequest = z.infer<typeof CreateModelRequestSchema>;
+export type UpdateModelRequest = z.infer<typeof UpdateModelRequestSchema>;
+
+export const ModelIdParamSchema = z.object({
+  modelId: z.string().min(1, '模型 ID 不能为空'),
+  providerId: z.string().min(1, 'Provider ID 不能为空'),
+});

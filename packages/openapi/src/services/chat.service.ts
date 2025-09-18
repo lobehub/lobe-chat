@@ -1,6 +1,8 @@
 import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
+import { and, eq } from 'drizzle-orm';
 
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
+import { agents, agentsToSessions, aiModels } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
@@ -16,7 +18,6 @@ import {
   MessageGenerationParams,
   TranslateServiceParams,
 } from '../types/chat.type';
-import { ModelService } from './model.service';
 
 /**
  * 聊天服务类
@@ -527,13 +528,38 @@ export class ChatService extends BaseService {
       return { model: params.model, provider: params.provider };
     }
 
-    let modelConfig: { agent?: LobeAgentConfig; model?: string; provider?: string } = {};
+    try {
+      // 尝试根据 sessionId 或 agentId 获取模型配置
+      if (params.sessionId) {
+        const agentAndModel = await this.db
+          .select({
+            agent: agents,
+            model: aiModels,
+          })
+          .from(agentsToSessions)
+          .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+          .innerJoin(
+            aiModels,
+            and(
+              eq(agents.model, aiModels.id),
+              eq(agents.provider, aiModels.providerId), // 确保 provider 也匹配
+            ),
+          )
+          .where(and(eq(agentsToSessions.sessionId, params.sessionId!)));
 
-    // 尝试根据 sessionId 或 agentId 获取模型配置
-    if (params.sessionId) {
-      try {
-        const modelService = new ModelService(this.db, this.userId);
-        const sessionModelConfig = await modelService.getModelConfigBySession({
+        if (!agentAndModel.length) {
+          this.log('warn', '会话对应的模型配置不存在', {
+            sessionId: params.sessionId,
+          });
+          throw this.createNotFoundError(`会话对应的模型不存在: ${params.sessionId}`);
+        }
+
+        const { model, agent } = agentAndModel[0];
+
+        this.log('info', '从数据库获取会话模型配置成功', {
+          agentId: agent.id,
+          modelId: model.id,
+          providerId: model.providerId,
           sessionId: params.sessionId,
         });
 
@@ -546,33 +572,29 @@ export class ChatService extends BaseService {
           throw this.createNotFoundError('会话对应的 agent 不存在');
         }
 
-        const agent = (await this.db.query.agents.findFirst({
-          where: (agents, { eq }) => eq(agents.id, agentToSession.agentId),
-        })) as LobeAgentConfig;
-
-        modelConfig = {
-          agent,
-          model: sessionModelConfig.id,
-          provider: sessionModelConfig.providerId,
-        };
-
         this.log('info', '根据 sessionId 获取模型配置成功', {
-          model: modelConfig.model,
-          provider: modelConfig.provider,
           sessionId: params.sessionId,
         });
-      } catch (error) {
-        this.log('warn', '根据 sessionId 获取模型配置失败', {
-          error: error instanceof Error ? error.message : String(error),
-          sessionId: params.sessionId,
-        });
+
+        // 返回最终配置（用户指定 > session配置 > 默认）
+        return {
+          agent: agent as LobeAgentConfig,
+          model: model.id || params.model,
+          provider: model.providerId || params.provider,
+        };
       }
+    } catch (error) {
+      this.log('error', '获取模型配置失败', {
+        error: error instanceof Error ? error.message : String(error),
+        sessionId: params.sessionId,
+      });
+      throw this.createCommonError('获取模型配置失败');
     }
 
-    // 返回最终配置（用户指定 > session配置 > 默认）
+    // 返回用户指定或默认配置
     return {
-      model: params.model || modelConfig.model,
-      provider: params.provider || modelConfig.provider,
+      model: params.model,
+      provider: params.provider,
     };
   }
 }

@@ -7,7 +7,11 @@ import { ModelController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
 import { PaginationQuerySchema } from '../types';
-import { ModelConfigsQuerySchema } from '../types/model.type';
+import {
+  CreateModelRequestSchema,
+  ModelIdParamSchema,
+  UpdateModelRequestSchema,
+} from '../types/model.type';
 
 // Models 相关路由
 const ModelRoutes = new Hono();
@@ -24,15 +28,40 @@ ModelRoutes.get(
   },
 );
 
-// GET /api/v1/models/configs - 获取模型配置 (支持按provider/model或sessionId查询)
-ModelRoutes.get(
-  '/configs',
+// POST /api/v1/models - 创建模型
+ModelRoutes.post(
+  '/',
   requireAuth,
-  requireAnyPermission(getAllScopePermissions('AI_MODEL_READ'), '您没有权限查看模型配置'),
-  zValidator('query', ModelConfigsQuerySchema),
+  requireAnyPermission(getAllScopePermissions('AI_MODEL_CREATE'), '您没有权限创建模型'),
+  zValidator('json', CreateModelRequestSchema),
   (c) => {
     const controller = new ModelController();
-    return controller.handleGetModelConfigs(c);
+    return controller.handleCreateModel(c);
+  },
+);
+
+// GET /api/v1/models/:providerId/:modelId - 获取模型详情
+ModelRoutes.get(
+  '/:providerId/:modelId',
+  requireAuth,
+  requireAnyPermission(getAllScopePermissions('AI_MODEL_READ'), '您没有权限查看模型详情'),
+  zValidator('param', ModelIdParamSchema),
+  (c) => {
+    const controller = new ModelController();
+    return controller.handleGetModel(c);
+  },
+);
+
+// PATCH /api/v1/models/:providerId/:modelId - 更新模型
+ModelRoutes.patch(
+  '/:providerId/:modelId',
+  requireAuth,
+  requireAnyPermission(getAllScopePermissions('AI_MODEL_UPDATE'), '您没有权限更新模型'),
+  zValidator('param', ModelIdParamSchema),
+  zValidator('json', UpdateModelRequestSchema),
+  (c) => {
+    const controller = new ModelController();
+    return controller.handleUpdateModel(c);
   },
 );
 
