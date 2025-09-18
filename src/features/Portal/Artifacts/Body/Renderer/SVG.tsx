@@ -1,8 +1,10 @@
 import { Button, Dropdown, Tooltip } from '@lobehub/ui';
 import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
+import DOMPurify from 'dompurify';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -36,6 +38,9 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
   const { t } = useTranslation('portal');
   const { message } = App.useApp();
 
+  // Sanitize SVG content to prevent XSS attacks
+  const sanitizedContent = useMemo(() => DOMPurify.sanitize(content), [content]);
+
   const generatePng = async () => {
     return domToPng(document.querySelector(`#${DOM_ID}`) as HTMLDivElement, {
       features: {
@@ -50,7 +55,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
     let dataUrl = '';
     if (type === 'png') dataUrl = await generatePng();
     else if (type === 'svg') {
-      const blob = new Blob([content], { type: 'image/svg+xml' });
+      const blob = new Blob([sanitizedContent], { type: 'image/svg+xml' });
 
       dataUrl = URL.createObjectURL(blob);
     }
@@ -73,7 +78,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
     >
       <Center
         className={cx(svgContainer)}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         id={DOM_ID}
       />
       <Flexbox className={cx(actions)}>
