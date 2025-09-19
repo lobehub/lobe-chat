@@ -1,4 +1,4 @@
-import { Avatar, Tooltip } from '@lobehub/ui';
+import { Avatar, ScrollShadow, Tooltip } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -82,33 +82,35 @@ const PinList = () => {
     hasList && (
       <>
         <Divider style={{ marginBottom: 8, marginTop: 4 }} />
-        <Flexbox flex={1} gap={12} height={'100%'}>
-          {list.slice(0, 9).map((item, index) => (
-            <Flexbox key={item.id} style={{ position: 'relative' }}>
-              <Tooltip
-                hotkey={hotkey.replaceAll(KeyEnum.Number, String(index + 1))}
-                placement={'right'}
-                title={sessionHelpers.getTitle(item.meta)}
-              >
-                <Flexbox
-                  className={cx(
-                    styles.ink,
-                    isPinned && activeId === item.id ? styles.inkActive : undefined,
-                  )}
+        <ScrollShadow height={"100%"} hideScrollBar={true} size={40}>
+          <Flexbox gap={12} style={{ padding: '0' }}>
+            {list.map((item, index) => (
+              <Flexbox key={item.id} style={{ position: 'relative' }}>
+                <Tooltip
+                  hotkey={index < 9 ? hotkey.replaceAll(KeyEnum.Number, String(index + 1)) : undefined}
+                  placement={'right'}
+                  title={sessionHelpers.getTitle(item.meta)}
                 >
-                  <Avatar
-                    avatar={sessionHelpers.getAvatar(item.meta)}
-                    background={item.meta.backgroundColor}
-                    onClick={() => {
-                      switchAgent(item.id);
-                    }}
-                    size={40}
-                  />
-                </Flexbox>
-              </Tooltip>
-            </Flexbox>
-          ))}
-        </Flexbox>
+                  <Flexbox
+                    className={cx(
+                      styles.ink,
+                      isPinned && activeId === item.id ? styles.inkActive : undefined,
+                    )}
+                  >
+                    <Avatar
+                      avatar={sessionHelpers.getAvatar(item.meta)}
+                      background={item.meta.backgroundColor}
+                      onClick={() => {
+                        switchAgent(item.id);
+                      }}
+                      size={40}
+                    />
+                  </Flexbox>
+                </Tooltip>
+              </Flexbox>
+            ))}
+          </Flexbox>
+        </ScrollShadow>
       </>
     )
   );
