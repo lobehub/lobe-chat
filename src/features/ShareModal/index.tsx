@@ -1,7 +1,6 @@
-import { Modal, type ModalProps, Segmented, type SegmentedProps } from '@lobehub/ui';
+import { Modal, type ModalProps, Segmented, Tabs } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -9,6 +8,7 @@ import ShareImage from './ShareImage';
 import ShareJSON from './ShareJSON';
 import SharePdf from './SharePdf';
 import ShareText from './ShareText';
+import { Flexbox } from 'react-layout-kit';
 
 enum Tab {
   JSON = 'json',
@@ -20,34 +20,38 @@ enum Tab {
 const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
   const [tab, setTab] = useState<Tab>(Tab.Screenshot);
   const { t } = useTranslation('chat');
+  const isMobile = useIsMobile();
 
-  const options: SegmentedProps['options'] = useMemo(
+  const tabItems = useMemo(
     () => [
       {
+        children: <ShareImage mobile={isMobile} />,
+        key: Tab.Screenshot,
         label: t('shareModal.screenshot'),
-        value: Tab.Screenshot,
       },
       {
+        children: <ShareText />,
+        key: Tab.Text,
         label: t('shareModal.text'),
-        value: Tab.Text,
       },
       {
+        children: <SharePdf />,
+        key: Tab.PDF,
         label: t('shareModal.pdf'),
-        value: Tab.PDF,
       },
       {
+        children: <ShareJSON />,
+        key: Tab.JSON,
         label: 'JSON',
-        value: Tab.JSON,
       },
     ],
-    [],
+    [isMobile, t],
   );
-
-  const isMobile = useIsMobile();
   return (
     <Modal
       allowFullscreen
       centered={false}
+      destroyOnHidden={true}
       footer={null}
       onCancel={onCancel}
       open={open}
@@ -58,16 +62,26 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
         <Segmented
           block
           onChange={(value) => setTab(value as Tab)}
-          options={options}
+          options={tabItems.map((item) => {
+            return {
+              label: item?.label,
+              value: item?.key,
+            }
+          })}
           style={{ width: '100%' }}
           value={tab}
           variant={'filled'}
         />
-        {tab === Tab.Screenshot && <ShareImage mobile={isMobile} />}
-        {tab === Tab.Text && <ShareText />}
-        {tab === Tab.PDF && <SharePdf />}
-        {tab === Tab.JSON && <ShareJSON />}
+        <Tabs
+          activeKey={tab}
+          indicator={{ align: 'center', size: (origin) => origin - 20 }}
+          items={tabItems}
+          onChange={(key) => setTab(key as Tab)}
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          renderTabBar={() => { return <></> }}
+        />
       </Flexbox>
+
     </Modal>
   );
 });

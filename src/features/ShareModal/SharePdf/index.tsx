@@ -1,8 +1,8 @@
 import { Button } from '@lobehub/ui';
-import { App, Input } from 'antd';
+import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { ChevronLeft, ChevronRight, DownloadIcon } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { DownloadIcon, FileText } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -46,39 +46,16 @@ const SharePdf = memo(() => {
 
   const { generatePdf, downloadPdf, pdfData, loading, error } = usePdfGeneration();
 
-  // Page navigation state
-  const [numPages, setNumPages] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-
-  const goToPrevPage = () => {
-    if (pageNumber > 1) {
-      setPageNumber(pageNumber - 1);
-    }
-  };
-
-  const goToNextPage = () => {
-    if (pageNumber < numPages) {
-      setPageNumber(pageNumber + 1);
-    }
-  };
-
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= numPages) {
-      setPageNumber(page);
-    }
-  };
-
-  // Generate PDF when component mounts
-  useEffect(() => {
+  const handleGeneratePdf = async () => {
     if (activeId && messages.length > 0 && markdownContent.trim()) {
-      generatePdf({
+      await generatePdf({
         content: markdownContent,
         sessionId: activeId,
         title,
         topicId: topicId || undefined,
       });
     }
-  }, [activeId, topicId, markdownContent, title, generatePdf]);
+  };
 
   const handleDownload = async () => {
     if (pdfData) {
@@ -91,25 +68,36 @@ const SharePdf = memo(() => {
     }
   };
 
-  const getButtonText = () => {
-    if (loading) return t('shareModal.generatingPdf');
-    if (pdfData && !loading) return t('shareModal.downloadPdf');
-    return t('shareModal.downloadPdf');
-  };
-
-  const button = (
+  const generateButton = (
     <Button
       block
-      disabled={!pdfData || loading}
-      icon={loading ? undefined : DownloadIcon}
+      disabled={loading}
+      icon={loading ? undefined : FileText}
       loading={loading}
-      onClick={handleDownload}
+      onClick={handleGeneratePdf}
       size={isMobile ? undefined : 'large'}
       type="primary"
     >
-      {getButtonText()}
+      {loading
+        ? t('shareModal.generatingPdf')
+        : pdfData
+          ? t('shareModal.regeneratePdf', { defaultValue: '重新生成 PDF' })
+          : t('shareModal.generatePdf', { defaultValue: '生成 PDF' })
+      }
     </Button>
   );
+
+  const downloadButton = pdfData ? (
+    <Button
+      block
+      icon={DownloadIcon}
+      onClick={handleDownload}
+      size={isMobile ? undefined : 'large'}
+      type="default"
+    >
+      {t('shareModal.downloadPdf')}
+    </Button>
+  ) : null;
 
   if (error) {
     return (
@@ -121,96 +109,23 @@ const SharePdf = memo(() => {
         </div>
         <Flexbox className={styles.sidebar} gap={12}>
           <div>{t('shareModal.pdfErrorDescription')}</div>
+          {generateButton}
         </Flexbox>
       </Flexbox>
     );
   }
 
   return (
-    <>
-      <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-        <PdfPreview
-          loading={loading}
-          pageNumber={pageNumber}
-          pdfData={pdfData}
-          onLoadSuccess={setNumPages}
-        />
-        <Flexbox className={styles.sidebar} gap={12}>
-          {!isMobile && button}
-          {!isMobile && numPages > 1 && (
-            <Flexbox align="center" gap={8} horizontal justify="center">
-              <Button
-                disabled={pageNumber <= 1}
-                icon={<ChevronLeft size={16} />}
-                onClick={goToPrevPage}
-                size="small"
-                type="text"
-              />
-              <Flexbox align="center" gap={4} horizontal>
-                <Input
-                  max={numPages}
-                  min={1}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (!isNaN(value)) goToPage(value);
-                  }}
-                  size="small"
-                  style={{ textAlign: 'center', width: 50 }}
-                  type="number"
-                  value={pageNumber}
-                />
-                <span style={{ color: '#666', fontSize: '12px' }}>/ {numPages}</span>
-              </Flexbox>
-              <Button
-                disabled={pageNumber >= numPages}
-                icon={<ChevronRight size={16} />}
-                onClick={goToNextPage}
-                size="small"
-                type="text"
-              />
-            </Flexbox>
-          )}
-        </Flexbox>
+    <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
+      <PdfPreview
+        loading={loading}
+        pdfData={pdfData}
+      />
+      <Flexbox className={styles.sidebar} gap={12}>
+        {generateButton}
+        {downloadButton}
       </Flexbox>
-      {isMobile && (
-        <Flexbox className={styles.footer} gap={8}>
-          {button}
-          {numPages > 1 && (
-            <Flexbox align="center" gap={8} horizontal justify="center">
-              <Button
-                disabled={pageNumber <= 1}
-                icon={<ChevronLeft size={16} />}
-                onClick={goToPrevPage}
-                size="small"
-                type="text"
-              />
-              <Flexbox align="center" gap={4} horizontal>
-                <Input
-                  max={numPages}
-                  min={1}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (!isNaN(value)) goToPage(value);
-                  }}
-                  size="small"
-                  style={{ textAlign: 'center', width: 50 }}
-                  type="number"
-                  value={pageNumber}
-                />
-                <span style={{ color: '#666', fontSize: '12px' }}>/ {numPages}</span>
-              </Flexbox>
-              <Button
-                disabled={pageNumber >= numPages}
-                icon={<ChevronRight size={16} />}
-                onClick={goToNextPage}
-                size="small"
-                type="text"
-              />
-            </Flexbox>
-          )}
-        </Flexbox>
-      )}
-    </>
+    </Flexbox>
   );
 });
 
