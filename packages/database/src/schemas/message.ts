@@ -83,6 +83,8 @@ export const messages = pgTable(
   ],
 );
 
+export type MessageItem = typeof messages.$inferSelect;
+
 // if the message container a plugin
 export const messagePlugins = pgTable(
   'message_plugins',
@@ -157,6 +159,8 @@ export const messageTranslates = pgTable(
     ),
   }),
 );
+
+export type MessageTranslateItem = typeof messageTranslates.$inferSelect;
 
 // if the message contains a file
 // save the file id and message id

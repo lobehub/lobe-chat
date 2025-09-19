@@ -51,4 +51,10 @@ export class DocumentModel {
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(documents.id, id), eq(documents.userId, this.userId)));
   };
+
+  findByFileId = async (fileId: string) => {
+    return this.db.query.documents.findFirst({
+      where: and(eq(documents.fileId, fileId), eq(documents.userId, this.userId)),
+    });
+  };
 }

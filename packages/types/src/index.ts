@@ -9,6 +9,7 @@ export * from './clientDB';
 export * from './discover';
 export * from './eval';
 export * from './fetch';
+export * from './files';
 export * from './hotkey';
 export * from './knowledgeBase';
 export * from './llm';
@@ -24,7 +25,9 @@ export * from './user';
 export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload
+export * from './openai';
 export * from './openai/chat';
 export * from './openai/plugin';
+export * from './session';
 export * from './trace';
 export * from './zustand';

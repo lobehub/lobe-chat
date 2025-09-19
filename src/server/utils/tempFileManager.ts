@@ -1,6 +1,6 @@
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 /**
  * 安全存储临时文件工具类
@@ -24,6 +24,12 @@ export class TempFileManager {
     const filePath = join(this.tempDir, name);
 
     try {
+      // 确保目录存在
+      const dir = dirname(filePath);
+      if (!existsSync(dir)) {
+        mkdirSync(dir, { recursive: true });
+      }
+
       writeFileSync(filePath, data);
       this.filePaths.add(filePath);
       return filePath;
