@@ -19,6 +19,8 @@ const standaloneConfig: NextConfig = {
   outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
 };
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
   compiler: {
@@ -28,6 +30,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Force a fresh dist directory in development to avoid serving stale client bundles
+  // You can also override via NEXT_DIST_DIR env var when needed
+  ...(isDev ? { distDir: process.env.NEXT_DIST_DIR || '.next-dev-v2' } : {}),
+
   experimental: {
     optimizePackageImports: [
       'emoji-mart',

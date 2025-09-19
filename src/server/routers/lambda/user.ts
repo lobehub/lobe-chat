@@ -1,4 +1,5 @@
 import { UserJSON } from '@clerk/backend';
+import { and, eq, like } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
@@ -7,6 +8,7 @@ import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
+import { payments } from '@/database/schemas';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
@@ -16,6 +18,7 @@ import { S3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
+import { Plans } from '@/types/subscription';
 import {
   NextAuthAccountSchame,
   UserGuideSchema,
@@ -103,6 +106,25 @@ export const userRouter = router({
     const hasAnyMessages = await messageModel.hasMoreThanN(0);
     const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
+    // Determine subscription plan based on successful Sepay payments linked to this user (no new table required)
+    let subscriptionPlan: Plans | undefined = undefined;
+    try {
+      const db = ctx.serverDB;
+      const rows = await db
+        .select({ id: payments.id })
+        .from(payments)
+        .where(
+          and(
+            eq(payments.status, 'completed'),
+            like(payments.description, `%[UID:${ctx.userId}]%`),
+          ),
+        )
+        .limit(1);
+      if (rows && rows.length > 0) subscriptionPlan = Plans.Premium;
+    } catch {
+      // ignore DB error; treat as no subscription
+    }
+
     return {
       avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
@@ -119,6 +141,7 @@ export const userRouter = router({
       lastName: state.lastName,
       preference: state.preference as UserPreference,
       settings: state.settings,
+      subscriptionPlan,
       userId: ctx.userId,
       username: state.username,
     } satisfies UserInitializationState;
