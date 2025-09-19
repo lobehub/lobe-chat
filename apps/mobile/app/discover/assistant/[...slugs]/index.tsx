@@ -7,9 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
-import { Tag, Button, Markdown, Header } from '@/components';
+import { Tag, Button, Markdown, Header, Icon } from '@/components';
 import { useStyles } from './styles';
-import { ICON_SIZE } from '@/const/common';
 import { useDiscoverStore } from '@/store/discover';
 import { useSessionStore } from '@/store/session';
 import { useGlobalStore } from '@/store/global';
@@ -17,7 +16,7 @@ import { useGlobalStore } from '@/store/global';
 const AssistantDetail = () => {
   const { slugs } = useLocalSearchParams<{ slugs: string[] }>();
   const identifier = decodeURIComponent(slugs.join('/'));
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
   const { t } = useTranslation(['common', 'discover']);
   const [isAdding, setIsAdding] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
@@ -164,7 +163,7 @@ const AssistantDetail = () => {
               size="large"
               onPress={handleShare}
             >
-              <Share2 size={ICON_SIZE_SMALL} color={token.colorText} />
+              <Icon icon={Share2} size="small" color={token.colorText} />
             </Button> */}
           </View>
 
@@ -172,7 +171,7 @@ const AssistantDetail = () => {
           {systemRoleContent && (
             <View style={styles.systemRoleContainer}>
               <View style={styles.settingsTitleContainer}>
-                <BotMessageSquare color={token.colorText} size={ICON_SIZE} />
+                <Icon icon={BotMessageSquare} />
                 <Text style={styles.systemRoleTitle}>
                   {t('assistant.detail.assistantSettings', { ns: 'discover' })}
                 </Text>
