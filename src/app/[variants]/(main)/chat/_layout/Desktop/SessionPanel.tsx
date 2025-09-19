@@ -7,6 +7,7 @@ import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -33,11 +34,14 @@ export const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
+  const isSingleMode = useIsSingleMode();
+
   const { md = true } = useResponsive();
 
   const [isPinned] = usePinnedAgentState();
 
   const { styles } = useStyles();
+
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
     systemStatusSelectors.sessionWidth(s),
     systemStatusSelectors.showSessionPanel(s),
@@ -76,8 +80,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
       <DraggablePanel
         className={styles.panel}
         defaultSize={{ width: tmpWidth }}
-        // 当进入 pin 模式下，不可展开
-        expand={!isPinned && sessionExpandable}
+        // 当进入 pin 或者桌面的单一模式模式下，不可展开
+        expand={!isPinned && sessionExpandable && !isSingleMode}
         expandable={!isPinned}
         maxWidth={400}
         minWidth={FOLDER_WIDTH}
@@ -92,7 +96,7 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
         </DraggablePanelContainer>
       </DraggablePanel>
     );
-  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance]);
+  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance, isSingleMode]);
 
   return SessionPanel;
 });
