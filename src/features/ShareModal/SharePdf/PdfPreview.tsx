@@ -1,10 +1,12 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button } from '@lobehub/ui';
 import { Input, Modal, Spin } from 'antd';
+import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Flexbox } from 'react-layout-kit';
+import { useTranslation } from 'react-i18next';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -13,6 +15,115 @@ import { useContainerStyles } from '../style';
 // Set PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+const useStyles = createStyles(({ css }) => ({
+  containerWrapper: css`
+    position: relative;
+    width: 100%;
+    height: 100%;
+  `,
+  documentLoading: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 565px;
+    padding: 20px;
+  `,
+  emptyState: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 565px;
+
+    color: #666;
+  `,
+  expandButton: css`
+    position: absolute;
+    z-index: 1000;
+    inset-block-start: 20px;
+    inset-inline-end: 20px;
+  `,
+  footerNavigation: css`
+    position: absolute;
+    z-index: 10;
+    inset-block-end: 0;
+    inset-inline: 0 0;
+
+    padding: 12px;
+    border-block-start: 1px solid rgba(0, 0, 0, 10%);
+
+    background: rgba(255, 255, 255, 90%);
+    backdrop-filter: blur(8px);
+  `,
+  fullscreenButton: css`
+    border-color: white;
+    color: white;
+  `,
+  fullscreenContent: css`
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    min-height: 100%;
+    padding: 20px;
+  `,
+  fullscreenModal: css`
+    position: relative;
+    overflow: auto;
+    height: 90vh;
+  `,
+  fullscreenNavigation: css`
+    position: fixed;
+    z-index: 1001;
+    inset-block-end: 20px;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+
+    padding-block: 12px;
+    padding-inline: 20px;
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 70%);
+    backdrop-filter: blur(8px);
+  `,
+  fullscreenPageInput: css`
+    width: 60px;
+    text-align: center;
+  `,
+  loadingState: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 565px;
+  `,
+  fullscreenPageText: css`
+    font-size: 14px;
+    color: white;
+  `,
+  loadingText: css`
+    margin-block-start: 8px;
+    color: #666;
+  `,
+  pageInput: css`
+    width: 50px;
+    text-align: center;
+  `,
+  pageNumberText: css`
+    font-size: 12px;
+    color: #666;
+  `,
+  previewContainer: css`
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px;
+  `,
+}));
+
 interface PdfPreviewProps {
   loading: boolean;
   pdfData: string | null;
@@ -20,6 +131,8 @@ interface PdfPreviewProps {
 
 const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
   const { styles } = useContainerStyles();
+  const { styles: localStyles } = useStyles();
+  const { t } = useTranslation('chat');
   const isMobile = useIsMobile();
 
   // Page navigation state
@@ -79,19 +192,11 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
   if (loading) {
     return (
       <div className={styles.preview} style={{ padding: 12 }}>
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '200px',
-            justifyContent: 'center',
-          }}
-        >
+        <div className={localStyles.loadingState}>
           <Spin
             indicator={<LoadingOutlined spin style={{ fontSize: 24 }} />}
           />
-          <div style={{ color: '#666', marginTop: 8 }}>Generating PDF...</div>
+          <div className={localStyles.loadingText}>{t('shareModal.generatingPdf')}</div>
         </div>
       </div>
     );
@@ -100,16 +205,8 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
   if (!pdfData) {
     return (
       <div className={styles.preview} style={{ padding: 12 }}>
-        <div
-          style={{
-            alignItems: 'center',
-            color: '#666',
-            display: 'flex',
-            height: '200px',
-            justifyContent: 'center',
-          }}
-        >
-          No PDF data available
+        <div className={localStyles.emptyState}>
+          {t('shareModal.noPdfData', { defaultValue: 'No PDF data available' })}
         </div>
       </div>
     );
@@ -120,46 +217,27 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
 
   return (
     <>
-      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div className={localStyles.containerWrapper}>
         {/* 全屏按钮 - 移到最外层 */}
         {pdfData && (
           <Button
+            className={localStyles.expandButton}
             icon={<Expand size={16} />}
             onClick={handleFullscreen}
             size="small"
-            style={{
-              position: 'absolute',
-              top: 20,
-              right: 20,
-              zIndex: 1000,
-            }}
             type="text"
           />
         )}
 
-        <div
-          className={styles.preview}
-          style={{
-            padding: 12,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start'
-          }}
-        >
+        <div className={`${styles.preview} ${localStyles.previewContainer}`}>
           <Document
             file={pdfDataUri}
             loading={
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  padding: '20px',
-                }}
-              >
+              <div className={localStyles.documentLoading}>
                 <Spin />
-                <div style={{ color: '#666', marginTop: 8 }}>Loading PDF...</div>
+                <div className={localStyles.loadingText}>
+                  {t('shareModal.loadingPdf', { defaultValue: 'Loading PDF...' })}
+                </div>
               </div>
             }
             onLoadSuccess={onDocumentLoadSuccess}
@@ -175,19 +253,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
 
         {/* 页脚导航 */}
         {pdfData && numPages > 1 && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: 12,
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(8px)',
-              borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-              zIndex: 10,
-            }}
-          >
+          <div className={localStyles.footerNavigation}>
             <Flexbox align="center" gap={8} horizontal justify="center">
               <Button
                 disabled={pageNumber <= 1}
@@ -198,6 +264,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
               />
               <Flexbox align="center" gap={4} horizontal>
                 <Input
+                  className={localStyles.pageInput}
                   max={numPages}
                   min={1}
                   onChange={(e) => {
@@ -205,11 +272,10 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
                     if (!isNaN(value)) goToPage(value);
                   }}
                   size="small"
-                  style={{ textAlign: 'center', width: 50 }}
                   type="number"
                   value={pageNumber}
                 />
-                <span style={{ color: '#666', fontSize: '12px' }}>/ {numPages}</span>
+                <span className={localStyles.pageNumberText}>/ {numPages}</span>
               </Flexbox>
               <Button
                 disabled={pageNumber >= numPages}
@@ -235,16 +301,8 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
         }}
         width="95vw"
       >
-        <div style={{ position: 'relative', height: '90vh', overflow: 'auto' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              minHeight: '100%',
-              padding: 20,
-            }}
-          >
+        <div className={localStyles.fullscreenModal}>
+          <div className={localStyles.fullscreenContent}>
             <Document file={pdfDataUri} onLoadSuccess={onDocumentLoadSuccess}>
               <Page
                 pageNumber={fullscreenPageNumber}
@@ -257,30 +315,19 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
 
           {/* 全屏模式下的导航 */}
           {numPages > 1 && (
-            <div
-              style={{
-                position: 'fixed',
-                bottom: 20,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                padding: '12px 20px',
-                background: 'rgba(0, 0, 0, 0.7)',
-                borderRadius: 8,
-                backdropFilter: 'blur(8px)',
-                zIndex: 1001,
-              }}
-            >
+            <div className={localStyles.fullscreenNavigation}>
               <Flexbox align="center" gap={12} horizontal>
                 <Button
+                  className={localStyles.fullscreenButton}
                   disabled={fullscreenPageNumber <= 1}
                   icon={<ChevronLeft size={16} />}
                   onClick={goToFullscreenPrevPage}
                   size="small"
                   type="text"
-                  style={{ color: 'white', borderColor: 'white' }}
                 />
                 <Flexbox align="center" gap={8} horizontal>
                   <Input
+                    className={localStyles.fullscreenPageInput}
                     max={numPages}
                     min={1}
                     onChange={(e) => {
@@ -288,19 +335,18 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
                       if (!isNaN(value)) goToFullscreenPage(value);
                     }}
                     size="small"
-                    style={{ textAlign: 'center', width: 60 }}
                     type="number"
                     value={fullscreenPageNumber}
                   />
-                  <span style={{ color: 'white', fontSize: '14px' }}>/ {numPages}</span>
+                  <span className={localStyles.fullscreenPageText}>/ {numPages}</span>
                 </Flexbox>
                 <Button
+                  className={localStyles.fullscreenButton}
                   disabled={fullscreenPageNumber >= numPages}
                   icon={<ChevronRight size={16} />}
                   onClick={goToFullscreenNextPage}
                   size="small"
                   type="text"
-                  style={{ color: 'white', borderColor: 'white' }}
                 />
               </Flexbox>
             </div>

@@ -1,11 +1,12 @@
-import { Button } from '@lobehub/ui';
-import { App } from 'antd';
+import { Button, Form, type FormItemProps } from '@lobehub/ui';
+import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { DownloadIcon, FileText } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -13,16 +14,60 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 
 import { generateMarkdown } from '../ShareText/template';
+import { FieldType } from '../ShareText/type';
 import { useContainerStyles, useStyles } from '../style';
 import PdfPreview from './PdfPreview';
 import { usePdfGeneration } from './usePdfGeneration';
 
+const DEFAULT_FIELD_VALUE: FieldType = {
+  includeTool: true,
+  includeUser: true,
+  withRole: true,
+  withSystemRole: false,
+};
+
 const SharePdf = memo(() => {
+  const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
   const { styles: containerStyles } = useContainerStyles();
   const { message } = App.useApp();
   const isMobile = useIsMobile();
+
+  const settings: FormItemProps[] = [
+    {
+      children: <Switch />,
+      label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'withSystemRole',
+      valuePropName: 'checked',
+    },
+    {
+      children: <Switch />,
+      label: t('shareModal.withRole'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'withRole',
+      valuePropName: 'checked',
+    },
+    {
+      children: <Switch />,
+      label: t('shareModal.includeUser'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'includeUser',
+      valuePropName: 'checked',
+    },
+    {
+      children: <Switch />,
+      label: t('shareModal.includeTool'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'includeTool',
+      valuePropName: 'checked',
+    },
+  ];
 
   // Use the same data gathering logic as ShareText
   const [systemRole] = useAgentStore((s) => [agentSelectors.currentAgentSystemRole(s)]);
@@ -35,13 +80,10 @@ const SharePdf = memo(() => {
 
   // Generate markdown content using the same logic as ShareText
   const markdownContent = generateMarkdown({
-    includeTool: true,
-    includeUser: true,
+    ...fieldValue,
     messages,
     systemRole,
     title,
-    withRole: true,
-    withSystemRole: !!systemRole,
   }).replaceAll('\n\n\n', '\n');
 
   const { generatePdf, downloadPdf, pdfData, loading, error } = usePdfGeneration();
@@ -54,6 +96,29 @@ const SharePdf = memo(() => {
         title,
         topicId: topicId || undefined,
       });
+    }
+  };
+
+  // Regenerate PDF when configuration changes and PDF already exists
+  const handleConfigChange = (changedValues: any, allValues: FieldType) => {
+    setFieldValue(allValues);
+    // If PDF already exists, regenerate it with new configuration
+    if (pdfData && !loading) {
+      const newMarkdownContent = generateMarkdown({
+        ...allValues,
+        messages,
+        systemRole,
+        title,
+      }).replaceAll('\n\n\n', '\n');
+
+      if (activeId && messages.length > 0 && newMarkdownContent.trim()) {
+        generatePdf({
+          content: newMarkdownContent,
+          sessionId: activeId,
+          title,
+          topicId: topicId || undefined,
+        });
+      }
     }
   };
 
@@ -109,6 +174,13 @@ const SharePdf = memo(() => {
         </div>
         <Flexbox className={styles.sidebar} gap={12}>
           <div>{t('shareModal.pdfErrorDescription')}</div>
+          <Form
+            initialValues={DEFAULT_FIELD_VALUE}
+            items={settings}
+            itemsType={'flat'}
+            onValuesChange={handleConfigChange}
+            {...FORM_STYLE}
+          />
           {generateButton}
         </Flexbox>
       </Flexbox>
@@ -122,6 +194,13 @@ const SharePdf = memo(() => {
         pdfData={pdfData}
       />
       <Flexbox className={styles.sidebar} gap={12}>
+        <Form
+          initialValues={DEFAULT_FIELD_VALUE}
+          items={settings}
+          itemsType={'flat'}
+          onValuesChange={handleConfigChange}
+          {...FORM_STYLE}
+        />
         {generateButton}
         {downloadButton}
       </Flexbox>
