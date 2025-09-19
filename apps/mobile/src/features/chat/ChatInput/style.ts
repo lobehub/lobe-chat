@@ -10,8 +10,6 @@ export const useStyles = createStyles((token) => ({
     height: 'auto',
     marginHorizontal: token.paddingXS,
     minHeight: CHAT_INPUT_HEIGHT,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
     // ...token.boxShadowCard,
   },
   extraBtn: {
@@ -21,15 +19,14 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: token.paddingXS,
+    paddingHorizontal: token.paddingSM,
     width: '100%',
   },
   iconGroup: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: token.marginXS,
-  },
-  input: {
-    flex: 1,
   },
   leftActions: {
     alignItems: 'center',
