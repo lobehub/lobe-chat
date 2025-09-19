@@ -335,7 +335,10 @@ export const chatPlugin: StateCreator<
     const updateAssistantMessage = async () => {
       if (!assistantMessage) return;
       await messageService.updateMessage(assistantMessage!.id, {
-        tools: assistantMessage?.tools,
+        tools: assistantMessage?.tools?.map((tool) => ({
+          ...tool,
+          type: tool.type === 'mcp-ui' ? 'builtin' : tool.type,
+        })) as any,
       });
     };
 
@@ -380,7 +383,12 @@ export const chatPlugin: StateCreator<
     const { internal_toggleMessageLoading, refreshMessages } = get();
 
     internal_toggleMessageLoading(true, id);
-    await messageService.updateMessage(id, { tools: message.tools });
+    await messageService.updateMessage(id, {
+      tools: message.tools?.map((tool) => ({
+        ...tool,
+        type: tool.type === 'mcp-ui' ? 'builtin' : tool.type,
+      })) as any,
+    });
     internal_toggleMessageLoading(false, id);
 
     await refreshMessages();
