@@ -1,8 +1,8 @@
 import { CheckCircle, Info, RefreshCw, X, XCircle } from 'lucide-react-native';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Animated, Text, TouchableOpacity } from 'react-native';
 
-import { ICON_SIZE_SMALL } from '@/const/common';
+import Icon from '@/components/Icon';
 import { useThemeToken } from '@/theme';
 import { useStyles } from './style';
 
@@ -20,44 +20,20 @@ export interface ToastProps {
 const Toast: React.FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
   const token = useThemeToken();
   const { styles } = useStyles();
-  const spinValue = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (type === 'loading') {
-      const spin = Animated.loop(
-        Animated.timing(spinValue, {
-          duration: 1000,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      );
-      spin.start();
-      return () => spin.stop();
-    }
-  }, [type, spinValue]);
 
   const getIcon = () => {
-    const spin = spinValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    });
-
     switch (type) {
       case 'success': {
-        return <CheckCircle color={token.colorSuccess} size={ICON_SIZE_SMALL} />;
+        return <Icon color={token.colorSuccess} icon={CheckCircle} size="small" />;
       }
       case 'error': {
-        return <XCircle color={token.colorError} size={ICON_SIZE_SMALL} />;
+        return <Icon color={token.colorError} icon={XCircle} size="small" />;
       }
       case 'info': {
-        return <Info color={token.colorInfo} size={ICON_SIZE_SMALL} />;
+        return <Icon color={token.colorInfo} icon={Info} size="small" />;
       }
       case 'loading': {
-        return (
-          <Animated.View style={{ transform: [{ rotate: spin }] }}>
-            <RefreshCw color={token.colorInfo} size={ICON_SIZE_SMALL} />
-          </Animated.View>
-        );
+        return <Icon color={token.colorInfo} icon={RefreshCw} size="small" spin />;
       }
       default: {
         return null;
@@ -81,7 +57,7 @@ const Toast: React.FC<ToastProps> = ({ id, message, type, opacity, onClose }) =>
           onPress={handleClose}
           style={styles.closeButton}
         >
-          <X color={token.colorTextTertiary} size={16} />
+          <Icon color={token.colorTextTertiary} icon={X} />
         </TouchableOpacity>
       </Animated.View>
     </TouchableOpacity>

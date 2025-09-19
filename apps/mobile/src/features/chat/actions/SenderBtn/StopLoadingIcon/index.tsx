@@ -3,21 +3,25 @@ import { Animated, Easing, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
 import { useStyles } from './style';
+import { ICON_SIZE_LARGE, ICON_SIZE_SMALL, ICON_SIZE } from '@/const/common';
 
 interface StopLoadingIconProps {
   color?: string;
   duration?: number;
-  size?: number;
+  size?: 'small' | 'middle' | 'large';
 }
 
 const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
-  size = 24,
+  size = 'middle',
   color = '#FFF',
   duration = 1000,
 }) => {
+  const realSize =
+    size === 'small' ? ICON_SIZE_SMALL : size === 'middle' ? ICON_SIZE : ICON_SIZE_LARGE;
+
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
-  const { styles } = useStyles(size);
+  const { styles } = useStyles(realSize);
 
   useEffect(() => {
     rotateAnim.setValue(0);
@@ -42,8 +46,8 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
   });
 
   const strokeWidth = 1.5;
-  const radius = (size - strokeWidth) / 2;
-  const center = size / 2;
+  const radius = (realSize - strokeWidth) / 2;
+  const center = realSize / 2;
   const arcAngle = 140;
   const gapAngle = 360 - arcAngle;
   const circumference = 2 * Math.PI * radius;
@@ -61,7 +65,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
           },
         ]}
       >
-        <Svg height={size} width={size}>
+        <Svg height={realSize} width={realSize}>
           <Circle
             cx={center}
             cy={center}
@@ -78,14 +82,14 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
 
       {/* 静止的方块 */}
       <View style={styles.staticContainer}>
-        <Svg height={size} width={size}>
+        <Svg height={realSize} width={realSize}>
           <Rect
             fill={color}
-            height={size * 0.3}
+            height={realSize * 0.3}
             rx={2}
-            width={size * 0.3}
-            x={center - size * 0.15}
-            y={center - size * 0.15}
+            width={realSize * 0.3}
+            x={center - realSize * 0.15}
+            y={center - realSize * 0.15}
           />
         </Svg>
       </View>

@@ -23,8 +23,8 @@ export const AgentCard = ({ item }: AgentCardProps) => {
     <Pressable
       onPress={() =>
         router.push({
-          params: { identifier: item.identifier },
-          pathname: '/(discover)/assistant/detail',
+          params: { slugs: [item.identifier] },
+          pathname: '/discover/assistant/[...slugs]',
         })
       }
       style={styles.cardLink}

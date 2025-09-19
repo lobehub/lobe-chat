@@ -1,7 +1,7 @@
 import { ArrowDown } from 'lucide-react-native';
 import { TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE } from '@/const/common';
+import Icon from '@/components/Icon';
 import { useStyles } from './style';
 
 interface ScrollToBottomProps {
@@ -10,7 +10,7 @@ interface ScrollToBottomProps {
 }
 
 export default function ScrollToBottom({ onScrollToBottom, visible }: ScrollToBottomProps) {
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
 
   if (!visible) return null;
 
@@ -21,7 +21,7 @@ export default function ScrollToBottom({ onScrollToBottom, visible }: ScrollToBo
         onPress={onScrollToBottom}
         style={styles.scrollToBottomBtn}
       >
-        <ArrowDown color={token.colorText} size={ICON_SIZE} />
+        <Icon icon={ArrowDown} />
       </TouchableOpacity>
     </View>
   );

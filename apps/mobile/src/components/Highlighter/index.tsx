@@ -2,8 +2,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Check, Copy } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
-
-import { ICON_SIZE_TINY } from '@/const/common';
+import { Icon } from '@/components';
 
 import FullFeatured from './FullFeatured';
 import { TokenDisplay } from './components/TokenDisplay';
@@ -89,9 +88,9 @@ const Highlighter: React.FC<HighlighterProps> = ({
       {copyable && (
         <Pressable onPress={handleCopy} style={styles.simpleCopyButton}>
           {copied ? (
-            <Check color={token.colorSuccess} size={ICON_SIZE_TINY} />
+            <Icon color={token.colorSuccess} icon={Check} size="small" />
           ) : (
-            <Copy color={token.colorText} size={ICON_SIZE_TINY} />
+            <Icon color={token.colorText} icon={Copy} size="small" />
           )}
         </Pressable>
       )}

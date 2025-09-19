@@ -34,6 +34,9 @@
     },
     "title": "Trò chuyện tự do"
   },
+  "setting": {
+    "title": "Cài đặt cuộc trò chuyện"
+  },
   "share": "Chia sẻ",
   "stop": "Dừng",
   "thinking": "Đang suy nghĩ..."

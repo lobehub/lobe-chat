@@ -52,7 +52,7 @@ export const useStyles = createStyles((token) => ({
   },
   headerTitle: {
     color: token.colorText,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     fontWeight: token.fontWeightStrong,
     textAlign: 'center',
   },

@@ -2,7 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   assistantBubble: {
-    width: '75%',
+    width: '100%',
   },
   assistantContainer: {
     alignItems: 'flex-start',
@@ -11,11 +11,10 @@ export const useStyles = createStyles((token) => ({
   },
   container: {
     marginVertical: token.marginXS,
-    paddingHorizontal: token.paddingSM,
     width: '100%',
   },
   userBubble: {
-    width: '75%',
+    width: '90%',
   },
   userContainer: {
     alignItems: 'flex-end',
