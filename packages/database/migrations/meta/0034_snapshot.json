@@ -1,0 +1,53 @@
+{
+  "_meta": {"columns": {}, "schemas": {}, "tables": {}},
+  "dialect": "postgresql",
+  "enums": {},
+  "id": "d7f9b4a1-9f6b-4f1a-9e8a-1a2b3c4d5e6f",
+  "policies": {},
+  "prevId": "943ae678-fb1a-4dbd-b797-cfdf83931092",
+  "roles": {},
+  "schemas": {},
+  "sequences": {},
+  "tables": {
+    "public.payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {"name": "id", "type": "varchar(30)", "primaryKey": true, "notNull": true},
+        "order_code": {"name": "order_code", "type": "varchar(64)", "primaryKey": false, "notNull": true},
+        "description": {"name": "description", "type": "text", "primaryKey": false, "notNull": false},
+        "amount": {"name": "amount", "type": "integer", "primaryKey": false, "notNull": true},
+        "currency": {"name": "currency", "type": "varchar(8)", "primaryKey": false, "notNull": false, "default": "'VND'"},
+        "gateway": {"name": "gateway", "type": "varchar(32)", "primaryKey": false, "notNull": false, "default": "'sepay'"},
+        "status": {"name": "status", "type": "varchar(16)", "primaryKey": false, "notNull": true, "default": "'pending'"},
+        "transaction_id": {"name": "transaction_id", "type": "varchar(64)", "primaryKey": false, "notNull": false},
+        "reference_code": {"name": "reference_code", "type": "varchar(128)", "primaryKey": false, "notNull": false},
+        "transaction_date": {"name": "transaction_date", "type": "varchar(64)", "primaryKey": false, "notNull": false},
+        "gateway_response": {"name": "gateway_response", "type": "jsonb", "primaryKey": false, "notNull": false},
+        "paid_at": {"name": "paid_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": false},
+        "accessed_at": {"name": "accessed_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true, "default": "now()"},
+        "created_at": {"name": "created_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true, "default": "now()"},
+        "updated_at": {"name": "updated_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true, "default": "now()"}
+      },
+      "indexes": {
+        "payments_order_code_unique": {
+          "name": "payments_order_code_unique",
+          "columns": [
+            {"expression": "order_code", "isExpression": false, "asc": true, "nulls": "last"}
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  }
+}
+
