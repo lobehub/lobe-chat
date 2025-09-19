@@ -136,35 +136,38 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const { model, thinkingBudget } = payload;
 
+      // https://ai.google.dev/gemini-api/docs/thinking#set-budget
+      const resolvedThinkingBudget = (() => {
+        if (thinkingBudget !== undefined && thinkingBudget !== null) {
+          if (model.includes('-2.5-flash-lite')) {
+            if (thinkingBudget === 0 || thinkingBudget === -1) {
+              return thinkingBudget;
+            }
+            return Math.max(512, Math.min(thinkingBudget, 24_576));
+          } else if (model.includes('-2.5-flash')) {
+            return Math.min(thinkingBudget, 24_576);
+          } else if (model.includes('-2.5-pro')) {
+            return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
+          }
+          return Math.min(thinkingBudget, 24_576);
+        }
+
+        if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
+          return -1;
+        } else if (model.includes('-2.5-flash-lite')) {
+          return 0;
+        }
+        return undefined;
+      })();
+
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
-          !!thinkingBudget ||
-          (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
+          (!!thinkingBudget ||
+            (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
+          resolvedThinkingBudget !== 0
             ? true
             : undefined,
-        // https://ai.google.dev/gemini-api/docs/thinking#set-budget
-        thinkingBudget: (() => {
-          if (thinkingBudget !== undefined && thinkingBudget !== null) {
-            if (model.includes('-2.5-flash-lite')) {
-              if (thinkingBudget === 0 || thinkingBudget === -1) {
-                return thinkingBudget;
-              }
-              return Math.max(512, Math.min(thinkingBudget, 24_576));
-            } else if (model.includes('-2.5-flash')) {
-              return Math.min(thinkingBudget, 24_576);
-            } else if (model.includes('-2.5-pro')) {
-              return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
-            }
-            return Math.min(thinkingBudget, 24_576);
-          }
-
-          if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
-            return -1;
-          } else if (model.includes('-2.5-flash-lite')) {
-            return 0;
-          }
-          return undefined;
-        })(),
+        thinkingBudget: resolvedThinkingBudget,
       };
 
       const contents = await this.buildGoogleMessages(payload.messages);
