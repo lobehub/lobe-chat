@@ -32,5 +32,13 @@
     ]
   },
   "exclude": ["node_modules", "public/sw.js", "apps/desktop", "tmp", "temp", ".temp"],
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
+  "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next-dev-v2/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    ".next-dev-v3/types/**/*.ts"
+  ]
 }

@@ -10,6 +10,7 @@ import { DEFAULT_LANG } from '@/const/locale';
 import { isDesktop } from '@/const/version';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
+import DevPatches from '@/layout/DevPatches';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
@@ -49,6 +50,8 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
             variants={variants}
           >
             <AuthProvider>
+              {/* Dev patches: suppress noisy compatibility warnings in development only */}
+              {process.env.NODE_ENV !== 'production' && <DevPatches />}
               {children}
               {!isMobile && modal}
             </AuthProvider>

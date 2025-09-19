@@ -6,6 +6,7 @@ import {
   Book,
   CircleUserRound,
   Cloudy,
+  CreditCard,
   Download,
   Feather,
   FileClockIcon,
@@ -66,7 +67,7 @@ const NewVersionBadge = memo(
 export const useMenu = () => {
   const { canInstall, install } = usePWAInstall();
   const hasNewVersion = useNewVersion();
-  const { t } = useTranslation(['common', 'setting', 'auth']);
+  const { t } = useTranslation(['common', 'setting', 'auth', 'subscription']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth] = useUserStore((s) => [
     authSelectors.isLogin(s),
@@ -93,6 +94,15 @@ export const useMenu = () => {
       label: (
         <Link href={'/settings/common'}>
           <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>
+        </Link>
+      ),
+    },
+    {
+      icon: <Icon icon={CreditCard} />,
+      key: 'subscription-vn',
+      label: (
+        <Link href={'/subscription/plans'}>
+          {t('menu.vnLabel', { defaultValue: 'Subscription (VN)', ns: 'subscription' })}
         </Link>
       ),
     },

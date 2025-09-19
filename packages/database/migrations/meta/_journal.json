@@ -238,6 +238,13 @@
       "when": 1758012348218,
       "tag": "0033_modern_mercury",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1757951755250,
+      "tag": "0034_add_payments",
+      "breakpoints": true
     }
   ],
   "version": "6"

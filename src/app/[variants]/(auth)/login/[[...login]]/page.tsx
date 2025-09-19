@@ -8,6 +8,8 @@ import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
+import LoginMethodsBanner from './LoginMethodsBanner';
+
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
   const { t } = await translation('clerk', locale);
@@ -21,7 +23,12 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 const Page = () => {
   if (!enableClerk) return notFound();
 
-  return <SignIn path="/login" />;
+  return (
+    <>
+      <LoginMethodsBanner />
+      <SignIn path="/login" />
+    </>
+  );
 };
 
 Page.displayName = 'Login';

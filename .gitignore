@@ -43,6 +43,15 @@ tmp/
 venv/
 .venv/
 
+# Robust ignore for env files
+.env.production
+.env.staging
+.env.test
+.env.*
+!.env.example
+!.env.*.example
+
+
 # Dependencies
 node_modules/
 *.lock
@@ -117,3 +126,20 @@ CLAUDE.local.md
 
 prd
 GEMINI.md
+
+# Next.js dev caches (Turbopack/Next 15 variants)
+.next-dev-v2/
+.next-dev-v3/
+
+# Local temp/debug artifacts
+tmp_*
+*.trace
+*.har
+*.http
+*.prof
+docs/logs_result.json
+
+# Local-only performance/test configs (keep untracked unless you confirm)
+performance-config.json
+performance-monitoring-setup.js
+vietnam-market-testing-config.json

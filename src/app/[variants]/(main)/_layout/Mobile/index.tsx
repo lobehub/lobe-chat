@@ -22,6 +22,8 @@ const MOBILE_NAV_ROUTES = new Set([
   '/me',
 ]);
 
+const PaymentPendingBanner = dynamic(() => import('@/features/AlertBanner/PaymentPendingBanner'));
+
 const Layout = memo(({ children }: PropsWithChildren) => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const pathname = usePathname();
@@ -32,6 +34,7 @@ const Layout = memo(({ children }: PropsWithChildren) => {
   return (
     <>
       {showCloudPromotion && <CloudBanner mobile />}
+      <PaymentPendingBanner />
       {children}
       {showNav && <NavBar />}
     </>

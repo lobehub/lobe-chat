@@ -944,6 +944,28 @@ table users {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+table payments {
+  id varchar(30) [pk, not null]
+  order_code varchar(64) [not null]
+  description text
+  amount integer [not null]
+  currency varchar(8) [default: 'VND']
+  gateway varchar(32) [default: 'sepay']
+  status varchar(16) [not null, default: 'pending']
+  transaction_id varchar(64)
+  reference_code varchar(128)
+  transaction_date varchar(64)
+  gateway_response jsonb
+  paid_at "timestamp with time zone"
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    order_code [name: 'payments_order_code_unique', unique]
+  }
+}
+
 ref: agents_files.file_id > files.id
 
 ref: agents_files.agent_id > agents.id

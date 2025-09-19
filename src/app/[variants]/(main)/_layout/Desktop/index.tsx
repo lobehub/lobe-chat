@@ -19,6 +19,7 @@ import RegisterHotkeys from './RegisterHotkeys';
 import SideBar from './SideBar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
+const PaymentPendingBanner = dynamic(() => import('@/features/AlertBanner/PaymentPendingBanner'));
 
 const Layout = memo<PropsWithChildren>(({ children }) => {
   const { isPWA } = usePlatform();
@@ -29,6 +30,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       {isDesktop && <TitleBar />}
       {showCloudPromotion && <CloudBanner />}
+      <PaymentPendingBanner />
       <Flexbox
         height={
           isDesktop

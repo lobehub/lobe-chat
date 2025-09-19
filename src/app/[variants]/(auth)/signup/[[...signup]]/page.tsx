@@ -8,6 +8,8 @@ import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
+import SignupMethodsBanner from './SignupMethodsBanner';
+
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
   const { t } = await translation('clerk', locale);
@@ -27,7 +29,12 @@ const Page = () => {
     redirect('/login');
   }
 
-  return <SignUp path="/signup" />;
+  return (
+    <>
+      <SignupMethodsBanner />
+      <SignUp path="/signup" />
+    </>
+  );
 };
 
 Page.displayName = 'SignUp';
