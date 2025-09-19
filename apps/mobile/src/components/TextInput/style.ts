@@ -7,9 +7,6 @@ interface UseStylesProps {
   variant?: 'filled' | 'borderless' | 'outlined';
 }
 
-const getVerticalPadding = (controlHeight: number, lineHeight: number) =>
-  Math.max(Math.round((controlHeight - lineHeight) / 2), 0);
-
 export const useStyles = createStyles(
   (token, { multiline = false, variant = 'filled', size = 'middle' }: UseStylesProps) => {
     const getSizeStyles = () => {
@@ -17,28 +14,28 @@ export const useStyles = createStyles(
         case 'small': {
           return {
             controlHeight: token.controlHeightSM,
-            fontSize: token.fontSizeSM,
-            lineHeight: token.lineHeightSM,
-            paddingHorizontal: token.paddingContentHorizontalSM,
-            paddingVertical: getVerticalPadding(token.controlHeightSM, token.lineHeightSM),
+            fontHeight: token.fontHeight,
+            fontSize: token.fontSize,
+            paddingHorizontal: token.paddingXS,
+            paddingVertical: 0,
           };
         }
         case 'large': {
           return {
             controlHeight: token.controlHeightLG,
+            fontHeight: token.fontHeightLG,
             fontSize: token.fontSizeLG,
-            lineHeight: token.lineHeightLG,
-            paddingHorizontal: token.paddingContentHorizontalLG,
-            paddingVertical: getVerticalPadding(token.controlHeightLG, token.lineHeightLG),
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXS,
           };
         }
         default: {
           return {
             controlHeight: token.controlHeight,
+            fontHeight: token.fontHeight,
             fontSize: token.fontSize,
-            lineHeight: token.lineHeight,
-            paddingHorizontal: token.paddingContentHorizontal,
-            paddingVertical: getVerticalPadding(token.controlHeight, token.lineHeight),
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXXS,
           };
         }
       }
@@ -55,7 +52,7 @@ export const useStyles = createStyles(
         borderWidth: variant === 'outlined' ? token.lineWidth : 0,
         display: 'flex',
         flexDirection: 'row',
-        minHeight: multiline ? undefined : sizeStyles.controlHeight,
+        height: multiline ? undefined : sizeStyles.controlHeight,
         paddingHorizontal: variant === 'borderless' ? 0 : sizeStyles.paddingHorizontal,
         paddingVertical: variant === 'borderless' ? 0 : sizeStyles.paddingVertical,
       },
@@ -64,11 +61,14 @@ export const useStyles = createStyles(
         flex: 1,
         fontFamily: token.fontFamily,
         fontSize: sizeStyles.fontSize,
-        height: undefined,
-        lineHeight: multiline ? token.lineHeightLG : sizeStyles.lineHeight,
+        height: multiline ? undefined : sizeStyles.fontHeight,
+        // 不要设置 lineHeight
+        lineHeight: undefined,
         textAlignVertical: multiline ? 'top' : 'center',
         ...(Platform.OS === 'android' && {
           includeFontPadding: false,
+          // 垂直居中
+          paddingTop: token.paddingXXS,
           paddingVertical: 0,
         }),
       },
