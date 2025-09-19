@@ -12,16 +12,9 @@ const akashChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3.1',
     enabled: true,
     id: 'DeepSeek-V3-1',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
+    settings: {
+      extendParams: ['enableReasoning'],
     },
-    contextWindowTokens: 65_536,
-    displayName: 'DeepSeek R1 Distill Qwen 32B',
-    id: 'DeepSeek-R1-Distill-Qwen-32B',
     type: 'chat',
   },
   {
@@ -34,12 +27,12 @@ const akashChatModels: AIChatModelCard[] = [
     displayName: 'GPT-OSS-120B',
     enabled: true,
     id: 'gpt-oss-120b',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 262_144,
     description:
       'Qwen3 235B A22B Instruct 2507：面向高级推理与对话指令优化的模型，混合专家架构以在大规模参数下保持推理效率。',
@@ -49,7 +42,15 @@ const akashChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    id: 'DeepSeek-R1-Distill-Qwen-32B',
+    type: 'chat',
+  },
+  {
+    abilities: {
       vision: true,
     },
     contextWindowTokens: 131_072,
