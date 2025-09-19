@@ -12,7 +12,7 @@ export default function RoutesLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="assistant/detail/index" options={{ headerShown: false }} />
+      <Stack.Screen name="assistant/[...slugs]" options={{ headerShown: false }} />
     </Stack>
   );
 }

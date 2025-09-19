@@ -7,7 +7,6 @@ import { Skeleton, Space } from '@/components';
 import { useStyles } from './styles';
 
 const CARD_TAG_WIDTHS = [64, 88, 72];
-const CARD_DESCRIPTION_WIDTHS = ['100%', '85%'];
 
 const AgentCardSkeleton = () => {
   const { styles, token } = useStyles();
@@ -28,7 +27,7 @@ const AgentCardSkeleton = () => {
         </View>
 
         <View style={styles.descriptionSection}>
-          <Skeleton.Paragraph animated rows={2} width={CARD_DESCRIPTION_WIDTHS} />
+          <Skeleton.Paragraph animated rows={2} width={['100%', '85%']} />
         </View>
 
         <View style={styles.tagsRow}>

@@ -1,5 +1,6 @@
 import { createStyles, getLineHeight } from '@/theme';
 import type { PresetColorKey } from '@/theme/interface';
+import { AggregationColor, isBright } from '@/utils/color';
 
 export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
 export type ButtonVariant = 'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link';
@@ -85,15 +86,19 @@ export const useStyles = createStyles(
             return disabled ? token.colorBgContainerDisabled : darkColor;
           };
 
-          const getTextColor = () => {
-            if (color === 'primary') return token.colorTextLightSolid;
+          const getTextColor = (filledColor: string) => {
+            if (color === 'primary' || color === 'default') {
+              const solidTextColor = isBright(new AggregationColor(filledColor), '#fff')
+                ? '#000'
+                : '#fff';
+              return solidTextColor;
+            }
             if (color === 'danger') return token.colorErrorText;
-            if (color === 'default') return token.colorBgContainer;
 
             return disabled ? token.colorTextDisabled : token.colorTextLightSolid;
           };
           const filledColor = getFilledColor();
-          const textColor = getTextColor();
+          const textColor = getTextColor(filledColor);
           return {
             backgroundColor: filledColor,
             borderColor: disabled || color === 'default' ? token.colorBorder : baseColor,

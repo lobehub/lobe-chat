@@ -20,7 +20,7 @@ import {
   ButtonVariant,
   ButtonColor,
 } from './style';
-import { ICON_SIZE } from '@/const/common';
+import { FONT_SIZE_SMALL, FONT_SIZE_LARGE, FONT_SIZE_STANDARD } from '@/const/common';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
@@ -151,11 +151,21 @@ const Button: React.FC<ButtonProps> = ({
     }
   };
 
+  const getIconSize = () => {
+    if (size === 'large') {
+      return FONT_SIZE_LARGE;
+    }
+    if (size === 'small') {
+      return FONT_SIZE_SMALL;
+    }
+    return FONT_SIZE_STANDARD;
+  };
+
   const renderIcon = () => {
     if (loading || !icon) return null;
     const iconColor = (styles.text?.color as string) ?? undefined;
     // Always match icon size to button text size for consistency
-    const iconSize = styles.text?.fontSize + 4 || ICON_SIZE;
+    const iconSize = getIconSize();
 
     let iconNode = icon;
     if (React.isValidElement(icon)) {
