@@ -176,9 +176,6 @@ describe('postProcessModelList', () => {
       enabled: true,
       contextWindowTokens: 4096,
       description: 'A flash model',
-      functionCall: true,
-      vision: true,
-      reasoning: false,
       maxOutput: 2048,
       type: 'image',
       parameters: {

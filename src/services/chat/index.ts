@@ -96,9 +96,13 @@ class ChatService {
       payload.model,
       payload.provider!,
     )(aiInfraStoreState);
+    const isModelBuiltinSearchInternal = aiModelSelectors.isModelBuiltinSearchInternal(
+      payload.model,
+      payload.provider!,
+    )(aiInfraStoreState);
 
     const useModelSearch =
-      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
+      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch) || isModelBuiltinSearchInternal;
 
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
