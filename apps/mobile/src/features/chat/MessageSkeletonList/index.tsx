@@ -9,10 +9,10 @@ const MessageSkeletonList: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <MessageSkeleton role="assistant" />
       <MessageSkeleton role="user" />
-      <MessageSkeleton role="assistant" />
+      <MessageSkeleton role="assistant" width={['100%', '100%', '100%', '80%']} />
       <MessageSkeleton role="user" />
+      <MessageSkeleton role="assistant" width={['100%', '100%', '100%', '100%', '100%', '50%']} />
     </View>
   );
 };

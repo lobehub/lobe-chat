@@ -98,8 +98,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       color: token.colorText,
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
-      // marginVertical: options.fontSize * options.marginMultiple * 0.33,
-      marginVertical: 4,
+      marginVertical: options.fontSize * options.marginMultiple * 0.16,
     },
     strong: {
       color: token.colorTextHeading,

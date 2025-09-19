@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/const/common';
+import { useThemeToken } from '@/theme';
 
 import type {
   IconComponentType,
@@ -53,7 +54,9 @@ const resolveIconSize = (size?: IconSize): number => {
 };
 
 const Icon: React.FC<IconProps> = memo(({ icon, size = 'middle', color, spin = false, style }) => {
+  const token = useThemeToken();
   const resolvedSize = resolveIconSize(size);
+  const resolvedColor = color ?? token.colorText;
   const rotationProgress = useRef(new Animated.Value(0)).current;
   const rotationAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
   const spinValue = rotationProgress.interpolate({
@@ -89,22 +92,22 @@ const Icon: React.FC<IconProps> = memo(({ icon, size = 'middle', color, spin = f
     }
 
     if (isIconComponent(icon)) {
-      return React.createElement(icon, { color, size: resolvedSize });
+      return React.createElement(icon, { color: resolvedColor, size: resolvedSize });
     }
 
     if (React.isValidElement(icon)) {
       const nextProps: Record<string, unknown> = {};
+      const element = icon as React.ReactElement<any>;
 
-      if (color !== undefined) {
-        nextProps.color = color;
+      if (color !== undefined || element.props?.color === undefined) {
+        nextProps.color = resolvedColor;
       }
+
       if (size !== undefined) {
         nextProps.size = resolvedSize;
       }
 
-      return Object.keys(nextProps).length > 0
-        ? React.cloneElement(icon as React.ReactElement<any>, nextProps)
-        : icon;
+      return Object.keys(nextProps).length > 0 ? React.cloneElement(element, nextProps) : icon;
     }
 
     return icon as React.ReactNode;
