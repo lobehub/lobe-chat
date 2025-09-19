@@ -1,9 +1,8 @@
 import { marked } from 'marked';
-import PDFDocument from 'pdfkit';
-import { z } from 'zod';
 import fs from 'node:fs';
 import path from 'node:path';
-
+import PDFDocument from 'pdfkit';
+import { z } from 'zod';
 
 import { DrizzleMigrationModel } from '@/database/models/drizzleMigration';
 import { MessageModel } from '@/database/models/message';
@@ -34,11 +33,11 @@ const exportProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
  */
 const generatePdfFromMarkdown = async (
   markdownContent: string,
-  title: string,
+  title?: string,
 ): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     try {
-     const tokens = marked.lexer(markdownContent);
+      const tokens = marked.lexer(markdownContent);
 
       const doc = new PDFDocument({
         bufferPages: true,
@@ -66,7 +65,9 @@ const generatePdfFromMarkdown = async (
       });
       doc.on('error', reject);
 
-      doc.fontSize(20).text(title, { align: 'center' });
+      if (title) {
+        doc.fontSize(20).text(title, { align: 'center' });
+      }
       doc.moveDown(2);
 
       let currentY = doc.y;
@@ -80,64 +81,50 @@ const generatePdfFromMarkdown = async (
         switch (token.type) {
           case 'heading': {
             const headingSize = Math.max(16 - (token.depth - 1) * 2, 12);
-            doc.fontSize(headingSize)
-              .fillColor('#222')
-              .text(token.text, { continued: false });
+            doc.fontSize(headingSize).fillColor('#222').text(token.text, { continued: false });
             doc.moveDown(0.5);
             break;
           }
 
           case 'paragraph': {
-            doc.fontSize(12)
-              .fillColor('#333')
-              .text(token.text, { align: 'left', lineGap: 2 });
+            doc.fontSize(12).fillColor('#333').text(token.text, { align: 'left', lineGap: 2 });
             doc.moveDown(1);
             break;
           }
 
           case 'list': {
             for (const item of token.items) {
-              doc.fontSize(12)
-                .fillColor('#333')
-                .text(`• ${item.text}`, { indent: 20, lineGap: 2 });
+              doc.fontSize(12).fillColor('#333').text(`• ${item.text}`, { indent: 20, lineGap: 2 });
             }
             doc.moveDown(1);
             break;
           }
 
           case 'blockquote': {
-            doc.fontSize(12)
-              .fillColor('#666')
-              .text(token.text, { indent: 20, lineGap: 2 });
+            doc.fontSize(12).fillColor('#666').text(token.text, { indent: 20, lineGap: 2 });
             doc.moveDown(1);
             break;
           }
 
           case 'code': {
-            doc.fontSize(10)
-              .fillColor('#333')
-              .text(token.text, {
-                continued: false,
-                indent: 20,
-                lineGap: 1
-              });
+            doc.fontSize(10).fillColor('#333').text(token.text, {
+              continued: false,
+              indent: 20,
+              lineGap: 1,
+            });
             doc.moveDown(1);
             break;
           }
 
           case 'hr': {
-            doc.moveTo(50, doc.y)
-              .lineTo(545, doc.y)
-              .stroke();
+            doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
             doc.moveDown(1);
             break;
           }
 
           default: {
             if ('text' in token && token.text) {
-              doc.fontSize(12)
-                .fillColor('#333')
-                .text(token.text, { align: 'left', lineGap: 2 });
+              doc.fontSize(12).fillColor('#333').text(token.text, { align: 'left', lineGap: 2 });
               doc.moveDown(1);
             }
             break;
@@ -150,19 +137,23 @@ const generatePdfFromMarkdown = async (
       const pages = doc.bufferedPageRange();
       for (let i = 0; i < pages.count; i++) {
         doc.switchToPage(i);
-        doc.fontSize(8)
+        doc
+          .fontSize(8)
           .fillColor('#666')
           .text(`Page ${i + 1} of ${pages.count}`, 50, 750, {
             align: 'center',
-            width: 495
+            width: 495,
           });
       }
 
       // 完成文档
       doc.end();
-
     } catch (error) {
-      reject(new Error(`PDFKit PDF generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`));
+      reject(
+        new Error(
+          `PDFKit PDF generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        ),
+      );
     }
   });
 };
@@ -179,14 +170,14 @@ export const exporterRouter = router({
       z.object({
         content: z.string(),
         sessionId: z.string(),
-        title: z.string(),
+        title: z.string().optional(),
         topicId: z.string().optional(),
       }),
     )
     .mutation(async ({ input }) => {
       const { content, title } = input;
       const pdfBuffer = await generatePdfFromMarkdown(content, title);
-      console.log("pdfBuffer", pdfBuffer)
+      console.log('pdfBuffer', pdfBuffer);
       return {
         filename: `${title}.pdf`,
         pdf: pdfBuffer.toString('base64'),
