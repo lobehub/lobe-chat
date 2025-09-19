@@ -8,7 +8,8 @@
       "loadFailed": "Failed to Load Assistant Details, please try again later",
       "notFoundIdentifier": "Assistant Identifier Not Found",
       "share": "Share",
-      "shareFailed": "Share Failed"
+      "shareFailed": "Share Failed",
+      "title": "Assistant Details"
     }
   },
   "category": {

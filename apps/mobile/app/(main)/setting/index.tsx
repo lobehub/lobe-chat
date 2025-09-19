@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 import { isDev } from '@/utils/env';
@@ -11,11 +11,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { SettingItem, SettingGroup } from './(components)';
 import { useTheme } from '@/theme';
 import { Header } from '@/components';
+import { useSettingStore } from '@/store/setting';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
   const { getLocaleDisplayName } = useLocale();
   const { theme } = useTheme();
+  const { developerMode, setDeveloperMode } = useSettingStore();
+
+  const [tapCount, setTapCount] = useState(0);
+  const tapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getThemeModeDisplayName = () => {
     if (theme.mode === 'auto') {
@@ -24,7 +29,38 @@ export default function SettingScreen() {
     return t(`themeMode.${theme.mode}`, { ns: 'setting' });
   };
 
+  const handleVersionTap = () => {
+    const newTapCount = tapCount + 1;
+    setTapCount(newTapCount);
+
+    // 清除之前的定时器
+    if (tapTimeoutRef.current) {
+      clearTimeout(tapTimeoutRef.current);
+    }
+
+    // 连续点击7次开启开发者模式
+    if (newTapCount >= 7 && !developerMode) {
+      setDeveloperMode(true);
+      setTapCount(0);
+      // 可以在这里添加提示用户已开启开发者模式的逻辑
+    } else {
+      // 2秒后重置计数器
+      tapTimeoutRef.current = setTimeout(() => {
+        setTapCount(0);
+      }, 2000);
+    }
+  };
+
   const { styles } = useStyles();
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (tapTimeoutRef.current) {
+        clearTimeout(tapTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
@@ -50,7 +86,7 @@ export default function SettingScreen() {
           <SettingItem href="/setting/providers" title={t('providers', { ns: 'setting' })} />
         </SettingGroup>
 
-        {isDev && (
+        {(isDev || developerMode) && (
           <SettingGroup>
             <SettingItem
               href="/setting/developer"
@@ -73,7 +109,11 @@ export default function SettingScreen() {
             title={t('changelog', { ns: 'setting' })}
           />
           <SettingItem href="mailto:support@lobehub.com" title={t('support', { ns: 'setting' })} />
-          <SettingItem extra={version} title={t('version', { ns: 'setting' })} />
+          <SettingItem
+            extra={version}
+            onPress={handleVersionTap}
+            title={t('version', { ns: 'setting' })}
+          />
         </SettingGroup>
       </ScrollView>
     </SafeAreaView>

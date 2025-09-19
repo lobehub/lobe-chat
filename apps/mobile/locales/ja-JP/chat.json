@@ -34,6 +34,9 @@
     },
     "title": "気軽におしゃべり"
   },
+  "setting": {
+    "title": "会話設定"
+  },
   "share": "共有",
   "stop": "停止",
   "thinking": "考え中..."

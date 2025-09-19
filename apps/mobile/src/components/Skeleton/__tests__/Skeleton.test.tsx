@@ -180,6 +180,12 @@ describe('Skeleton', () => {
     expect(root).toBeTruthy();
   });
 
+  it('renders button compound component', () => {
+    const { root } = renderWithTheme(<Skeleton.Button />);
+
+    expect(root).toBeTruthy();
+  });
+
   it('renders with complex children', () => {
     const { toJSON } = renderWithTheme(
       <Skeleton loading={false}>
