@@ -8,6 +8,10 @@ function getTenantId() {
   );
 }
 
+function getClientLoginBaseUrl() {
+  return process.env.AUTH_MICROSOFT_ENTRA_ID_BASE_URL ?? 'https://login.microsoftonline.com';
+}
+
 function getIssuer() {
   const issuer = process.env.MICROSOFT_ENTRA_ID_ISSUER;
   if (issuer) {
@@ -16,7 +20,7 @@ function getIssuer() {
   const tenantId = getTenantId();
   if (tenantId) {
     // refs: https://github.com/nextauthjs/next-auth/discussions/9154#discussioncomment-10583104
-    return `https://login.microsoftonline.com/${tenantId}/v2.0`;
+    return `${getClientLoginBaseUrl()}/${tenantId}/v2.0`;
   } else {
     return undefined;
   }
