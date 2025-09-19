@@ -16,6 +16,7 @@ import Avatar from './Avatar';
 import BottomActions from './BottomActions';
 import PinList from './PinList';
 import TopActions from './TopActions';
+import { useSearchParams } from 'next/navigation';
 
 const Top = () => {
   const [isPinned] = usePinnedAgentState();
@@ -26,11 +27,12 @@ const Top = () => {
 
 const Nav = memo(() => {
   const theme = useTheme();
+  const isSingleMode = useSearchParams().get('mode') === 'single'
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    !inZenMode && (
+    !inZenMode && !isSingleMode && (
       <SideNav
         avatar={
           <div className={electronStylish.nodrag}>

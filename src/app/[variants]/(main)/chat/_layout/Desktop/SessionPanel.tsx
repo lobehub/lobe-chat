@@ -12,6 +12,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { TOOGLE_PANEL_BUTTON_ID } from '../../features/TogglePanelButton';
+import { useSearchParams } from 'next/navigation';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -33,11 +34,15 @@ export const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
+
+  const isSingleMode = useSearchParams().get('mode') === 'single'
+
   const { md = true } = useResponsive();
 
   const [isPinned] = usePinnedAgentState();
 
   const { styles } = useStyles();
+
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
     systemStatusSelectors.sessionWidth(s),
     systemStatusSelectors.showSessionPanel(s),
@@ -76,8 +81,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
       <DraggablePanel
         className={styles.panel}
         defaultSize={{ width: tmpWidth }}
-        // 当进入 pin 模式下，不可展开
-        expand={!isPinned && sessionExpandable}
+        // 当进入 pin 或者桌面的单一模式模式下，不可展开
+        expand={!isPinned && sessionExpandable && !isSingleMode}
         expandable={!isPinned}
         maxWidth={400}
         minWidth={FOLDER_WIDTH}
@@ -92,7 +97,7 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
         </DraggablePanelContainer>
       </DraggablePanel>
     );
-  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance]);
+  }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance, isSingleMode]);
 
   return SessionPanel;
 });

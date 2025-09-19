@@ -11,16 +11,22 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
+import { useSearchParams } from 'next/navigation';
 
 export const TOOGLE_PANEL_BUTTON_ID = 'toggle-panel-button';
 
 const TogglePanelButton = memo(() => {
+  const isSingleMode = useSearchParams().get('mode') === 'single'
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleLeftPanel));
 
   const { t } = useTranslation(['chat', 'hotkey']);
 
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+
+  if (isSingleMode) {
+    return null
+  }
 
   return (
     <Tooltip hotkey={hotkey} title={t('toggleLeftPanel.title', { ns: 'hotkey' })}>

@@ -20,6 +20,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { isDesktop } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
 
 const useStyles = createStyles(({ css }) => ({
   content: css`
@@ -46,6 +47,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation(['topic', 'common']);
 
   const mobile = useIsMobile();
+
+  const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
 
   const [
     editing,
@@ -74,28 +77,6 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
 
   const { modal } = App.useApp();
 
-  const openTopicInNewWindow = async () => {
-    if (!isDesktop) return;
-
-    try {
-      const { dispatch } = await import('@lobechat/electron-client-ipc');
-
-      const url = `/chat?session=${activeId}&topic=${id}&mode=single`;
-
-      const result = await dispatch('createMultiInstanceWindow', {
-        templateId: 'chatSingle',
-        path: url,
-        uniqueId: `chat_${activeId}_${id}`,
-      });
-
-      if (!result.success) {
-        console.error('Failed to open topic in new window:', result.error);
-      }
-    } catch (error) {
-      console.error('Error opening topic in new window:', error);
-    }
-  };
-
   const items = useMemo<MenuProps['items']>(
     () => [
       {
@@ -116,15 +97,15 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       },
       ...(isDesktop
         ? [
-            {
-              icon: <Icon icon={ExternalLink} />,
-              key: 'openInNewWindow',
-              label: '单独打开页面',
-              onClick: () => {
-                openTopicInNewWindow();
-              },
+          {
+            icon: <Icon icon={ExternalLink} />,
+            key: 'openInNewWindow',
+            label: '单独打开页面',
+            onClick: () => {
+              openTopicInNewWindow(activeId, id);
             },
-          ]
+          },
+        ]
         : []),
       {
         type: 'divider',
@@ -207,6 +188,11 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           <Text
             className={styles.title}
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
+            onDoubleClick={() => {
+              if (isDesktop) {
+                openTopicInNewWindow(activeId, id)
+              }
+            }}
             style={{ margin: 0 }}
           >
             {title}
