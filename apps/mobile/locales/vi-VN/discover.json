@@ -8,7 +8,8 @@
       "loadFailed": "Lấy chi tiết trợ lý thất bại, vui lòng thử lại sau",
       "notFoundIdentifier": "Không tìm thấy định danh trợ lý",
       "share": "Chia sẻ",
-      "shareFailed": "Chia sẻ thất bại"
+      "shareFailed": "Chia sẻ thất bại",
+      "title": "Chi tiết trợ lý"
     }
   },
   "category": {

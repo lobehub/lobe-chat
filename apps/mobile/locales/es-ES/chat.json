@@ -34,6 +34,9 @@
     },
     "title": "Charlemos"
   },
+  "setting": {
+    "title": "Configuración de la conversación"
+  },
   "share": "Compartir",
   "stop": "Detener",
   "thinking": "Pensando..."
