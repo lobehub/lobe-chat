@@ -7,6 +7,7 @@ React Native版本的骨架屏组件，参考Ant Design设计，用于页面加�
 - ✅ 基础骨架屏显示
 - ✅ 头像骨架屏支持
 - ✅ 标题和段落骨架屏
+- ✅ 按钮骨架屏
 - ✅ 动画效果支持
 - ✅ 自定义行数和宽度
 - ✅ 加载状态控制
@@ -49,6 +50,8 @@ import Skeleton from '@/components/Skeleton';
 <Skeleton.Avatar size={48} shape="circle" />
 <Skeleton.Title width="80%" />
 <Skeleton.Paragraph rows={4} />
+<Skeleton.Button />
+<Skeleton.Button block size="large" />
 \`\`\`
 
 ## API
@@ -120,6 +123,19 @@ import Skeleton from '@/components/Skeleton';
 | style | \`ViewStyle\` | - | 自定义样式 |
 | backgroundColor | \`string\` | - | 自定义背景色 |
 | highlightColor | \`string\` | - | 自定义高亮色 |
+
+### Skeleton.Button
+
+独立的按钮骨架屏组件。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| size | \`'small' | 'middle' | 'large'\` | \`'middle'\` | 按钮高度尺寸 |
+| block | \`boolean\` | \`false\` | 是否占满整行宽度 |
+| shape | \`'default' | 'circle'\` | \`'default'\` | 按钮形状 |
+| width | \`number | string\` | \`'50%'\` | 按钮宽度（当非 block 且非圆形时生效） |
+| animated | \`boolean\` | \`false\` | 是否显示动画效果 |
+| style | \`ViewStyle\` | - | 自定义样式 |
 
 ## 使用场景
 

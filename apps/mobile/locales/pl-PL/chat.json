@@ -34,6 +34,9 @@
     },
     "title": "Rozmowa na luzie"
   },
+  "setting": {
+    "title": "Ustawienia rozmowy"
+  },
   "share": "Udostępnij",
   "stop": "Zatrzymaj",
   "thinking": "Myślę..."

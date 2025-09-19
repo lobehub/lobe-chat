@@ -9,8 +9,10 @@ import { useStyles } from './styles';
 import { AVATAR_SIZE_LARGE } from '@/const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 export default function AgentDetail() {
+  const { t } = useTranslation(['chat']);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
@@ -18,7 +20,7 @@ export default function AgentDetail() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={title} />
+      <Header showBack title={t('setting.title', { ns: 'chat' })} />
       <KeyboardAwareScrollView
         bottomOffset={40}
         extraKeyboardSpace={60}

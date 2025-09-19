@@ -34,6 +34,9 @@
     },
     "title": "隨便聊聊"
   },
+  "setting": {
+    "title": "會話設定"
+  },
   "share": "分享",
   "stop": "停止",
   "thinking": "思考中..."

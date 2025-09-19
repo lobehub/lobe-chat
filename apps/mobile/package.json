@@ -43,6 +43,7 @@
     "submit": "npm run submit:ios & npm run submit:android"
   },
   "dependencies": {
+    "@ant-design/fast-color": "^3.0.0",
     "@csark0812/zustand-expo-devtools": "^2.0.2",
     "@expo/react-native-action-sheet": "^4.1.1",
     "@gorhom/portal": "^1.0.14",

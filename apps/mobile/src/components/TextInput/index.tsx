@@ -59,8 +59,7 @@ const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => 
 const TextInputSearch = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
   const token = useThemeToken();
   const size = props.size ?? 'middle';
-  const iconSize =
-    size === 'small' ? token.fontSizeSM : size === 'large' ? token.fontSizeLG : token.fontSize;
+  const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
 
   return (
     <TextInput
@@ -79,8 +78,7 @@ const TextInputPassword = React.forwardRef<
   const token = useThemeToken();
   const [isSecure, setIsSecure] = React.useState(true);
   const size = props.size ?? 'middle';
-  const iconSize =
-    size === 'small' ? token.fontSizeSM : size === 'large' ? token.fontSizeLG : token.fontSize;
+  const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
 
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);

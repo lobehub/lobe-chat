@@ -2,8 +2,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
-
-import { ICON_SIZE_TINY } from '@/const/common';
+import { Icon } from '@/components';
 
 import { LanguageSelect } from './components/LanguageSelect';
 import { TokenDisplay } from './components/TokenDisplay';
@@ -85,9 +84,9 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
         <View style={styles.headerLeft}>
           <Pressable onPress={() => setExpanded(!expanded)} style={styles.expandIcon}>
             {expanded ? (
-              <ChevronDown color={token.colorText} size={18} />
+              <Icon icon={ChevronDown} size="small" />
             ) : (
-              <ChevronRight color={token.colorText} size={18} />
+              <Icon icon={ChevronRight} size="small" />
             )}
           </Pressable>
         </View>
@@ -104,9 +103,9 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           {copyable && (
             <Pressable onPress={handleCopy} style={styles.copyButton}>
               {copied ? (
-                <Check color={token.colorSuccess} size={ICON_SIZE_TINY} />
+                <Icon color={token.colorSuccess} icon={Check} size="small" />
               ) : (
-                <Copy color={token.colorText} size={ICON_SIZE_TINY} />
+                <Icon icon={Copy} size="small" />
               )}
             </Pressable>
           )}

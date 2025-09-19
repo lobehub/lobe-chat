@@ -35,6 +35,9 @@ export default {
     },
     title: '随便聊聊',
   },
+  setting: {
+    title: '会话设置',
+  },
   share: '分享',
   stop: '停止',
   thinking: '思考中...',
