@@ -8,7 +8,8 @@
       "loadFailed": "Het ophalen van assistentdetails is mislukt, probeer het later opnieuw",
       "notFoundIdentifier": "Assistentidentificatie niet gevonden",
       "share": "Delen",
-      "shareFailed": "Delen mislukt"
+      "shareFailed": "Delen mislukt",
+      "title": "Assistentdetails"
     }
   },
   "category": {

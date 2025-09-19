@@ -1,4 +1,4 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import Hydration from '@/features/Hydration';
@@ -10,7 +10,8 @@ import { useStyles } from './styles';
 import ChatHeader from '@/features/chat/ChatHeader';
 
 export default function ChatWithDrawer() {
-  const { styles } = useStyles();
+  const { styles, token } = useStyles();
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
@@ -22,7 +23,7 @@ export default function ChatWithDrawer() {
           <KeyboardAvoidingView
             behavior="padding"
             enabled
-            keyboardVerticalOffset={60}
+            keyboardVerticalOffset={insets.top + token.marginXS}
             style={{ flex: 1 }}
           >
             <ChatList />

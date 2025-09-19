@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Button, Space } from '@/components';
-import { CirclePower } from 'lucide-react-native';
+import { Upload } from 'lucide-react-native';
 
 const LoadingDemo = () => {
   const [loadings, setLoadings] = useState<boolean[]>([]);
@@ -27,7 +27,7 @@ const LoadingDemo = () => {
   return (
     <Space size={[8, 16]} wrap>
       <Button
-        icon={<CirclePower />}
+        icon={<Upload />}
         loading={loadings[0]}
         onPress={() => enterLoading(0)}
         type="primary"
@@ -35,7 +35,7 @@ const LoadingDemo = () => {
         Click to Load
       </Button>
       <Button
-        icon={<CirclePower />}
+        icon={<Upload />}
         loading={loadings[1]}
         onPress={() => enterLoading(1)}
         shape="circle"

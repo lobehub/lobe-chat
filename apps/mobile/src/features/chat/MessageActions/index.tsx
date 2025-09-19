@@ -4,8 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-import { useToast } from '@/components';
-import { ICON_SIZE_TINY } from '@/const/common';
+import { useToast, Icon } from '@/components';
 import { useChatStore } from '@/store/chat';
 import { useThemeToken } from '@/theme';
 import { ChatMessage } from '@/types/message';
@@ -77,18 +76,18 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message, style }) => {
         style={styles.actionButton}
       >
         {isCopied ? (
-          <Check color={token.colorSuccess} size={ICON_SIZE_TINY} />
+          <Icon color={token.colorSuccess} icon={Check} size="small" />
         ) : (
-          <Copy color={token.colorIcon} size={ICON_SIZE_TINY} />
+          <Icon color={token.colorIcon} icon={Copy} size="small" />
         )}
       </TouchableOpacity>
 
       <TouchableOpacity activeOpacity={0.7} onPress={handleRegenerate} style={styles.actionButton}>
-        <RefreshCw color={token.colorIcon} size={ICON_SIZE_TINY} />
+        <Icon color={token.colorIcon} icon={RefreshCw} size="small" />
       </TouchableOpacity>
 
       <TouchableOpacity activeOpacity={0.7} onPress={handleDelete} style={styles.actionButton}>
-        <Trash2 color={token.colorIcon} size={ICON_SIZE_TINY} />
+        <Icon color={token.colorIcon} icon={Trash2} size="small" />
       </TouchableOpacity>
     </View>
   );
