@@ -8,7 +8,8 @@
       "loadFailed": "Nie udało się pobrać szczegółów asystenta, spróbuj ponownie później",
       "notFoundIdentifier": "Nie znaleziono identyfikatora asystenta",
       "share": "Udostępnij",
-      "shareFailed": "Udostępnianie nie powiodło się"
+      "shareFailed": "Udostępnianie nie powiodło się",
+      "title": "Szczegóły asystenta"
     }
   },
   "category": {

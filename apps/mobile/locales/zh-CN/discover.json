@@ -8,7 +8,8 @@
       "loadFailed": "获取助手详情失败，请稍后重试",
       "notFoundIdentifier": "未找到助手标识符",
       "share": "分享",
-      "shareFailed": "分享失败"
+      "shareFailed": "分享失败",
+      "title": "助手详情"
     }
   },
   "category": {

@@ -12,12 +12,11 @@ export const useStyles = createStyles((token) => ({
   authorInfo: {
     flex: 1,
     gap: token.marginXS,
-    marginLeft: token.marginXS,
   },
   authorSection: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: token.margin,
+    gap: token.margin,
   },
   authorSkeleton: {
     borderRadius: token.borderRadiusXS,
@@ -29,15 +28,14 @@ export const useStyles = createStyles((token) => ({
   descriptionSection: {
     marginBottom: token.margin,
   },
-  systemRoleAvatar: {
-    borderRadius: token.borderRadiusSM,
-  },
+
   systemRoleContent: {
     gap: token.margin,
   },
   systemRoleHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    gap: token.marginXS,
     marginBottom: token.margin,
   },
   systemRoleSection: {
@@ -50,10 +48,7 @@ export const useStyles = createStyles((token) => ({
     flex: 1,
     marginLeft: token.marginXS,
   },
-  systemRoleTitleSkeleton: {
-    borderRadius: token.borderRadiusXS,
-    height: token.fontHeight,
-  },
+
   tagSkeleton: {
     backgroundColor: token.colorFillSecondary,
     borderRadius: token.borderRadiusLG,
