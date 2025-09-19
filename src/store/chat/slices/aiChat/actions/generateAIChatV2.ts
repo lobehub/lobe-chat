@@ -132,9 +132,20 @@ export const generateAIChatV2: StateCreator<
       'creatingMessage/start',
     );
 
+    const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+    
+    // Check if we should create a new topic based on the setting and threshold
+    let shouldCreateTopic = false;
+    if (!activeTopicId && agentConfig.enableAutoCreateTopic) {
+      // we will add two messages (user and assistant), so the final length should +2
+      const featureLength = messages.length + 2;
+      shouldCreateTopic = featureLength >= (agentConfig.autoCreateTopicThreshold || 2);
+    }
+
     let data: SendMessageServerResponse | undefined;
     try {
-      const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+      
       data = await aiChatService.sendMessageInServer(
         {
           newUserMessage: {
@@ -144,7 +155,7 @@ export const generateAIChatV2: StateCreator<
           // if there is activeTopicId，then add topicId to message
           topicId: activeTopicId,
           threadId: activeThreadId,
-          newTopic: !activeTopicId
+          newTopic: shouldCreateTopic
             ? {
                 topicMessageIds: messages.map((m) => m.id),
                 title: t('defaultTitle', { ns: 'topic' }),
@@ -163,8 +174,8 @@ export const generateAIChatV2: StateCreator<
         topicId: data.topicId,
       });
 
-      if (!activeTopicId) {
-        await get().switchTopic(data.topicId!, true);
+      if (!activeTopicId && shouldCreateTopic && data.topicId) {
+        await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
       if (e instanceof TRPCClientError) {
