@@ -2,6 +2,7 @@ import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps, Text } from '
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import {
+  ExternalLink,
   LucideCopy,
   LucideLoader2,
   MoreVertical,
@@ -16,6 +17,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
+import { isDesktop } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
@@ -53,6 +55,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     autoRenameTopicTitle,
     duplicateTopic,
     isLoading,
+    activeId,
   ] = useChatStore((s) => [
     s.topicRenamingId === id,
     s.favoriteTopic,
@@ -61,6 +64,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     s.autoRenameTopicTitle,
     s.duplicateTopic,
     s.topicLoadingIds.includes(id),
+    s.activeId,
   ]);
   const { styles, theme } = useStyles();
 
@@ -69,6 +73,28 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   };
 
   const { modal } = App.useApp();
+
+  const openTopicInNewWindow = async () => {
+    if (!isDesktop) return;
+
+    try {
+      const { dispatch } = await import('@lobechat/electron-client-ipc');
+
+      const url = `/chat?session=${activeId}&topic=${id}&mode=single`;
+
+      const result = await dispatch('createMultiInstanceWindow', {
+        templateId: 'chatSingle',
+        path: url,
+        uniqueId: `chat_${activeId}_${id}`,
+      });
+
+      if (!result.success) {
+        console.error('Failed to open topic in new window:', result.error);
+      }
+    } catch (error) {
+      console.error('Error opening topic in new window:', error);
+    }
+  };
 
   const items = useMemo<MenuProps['items']>(
     () => [
@@ -88,6 +114,18 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           toggleEditing(true);
         },
       },
+      ...(isDesktop
+        ? [
+            {
+              icon: <Icon icon={ExternalLink} />,
+              key: 'openInNewWindow',
+              label: '单独打开页面',
+              onClick: () => {
+                openTopicInNewWindow();
+              },
+            },
+          ]
+        : []),
       {
         type: 'divider',
       },
@@ -134,7 +172,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         },
       },
     ],
-    [],
+    [id, activeId, autoRenameTopicTitle, duplicateTopic, removeTopic, t, toggleEditing, openTopicInNewWindow],
   );
 
   return (

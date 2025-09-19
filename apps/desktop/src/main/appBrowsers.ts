@@ -46,4 +46,40 @@ export const appBrowsers = {
   },
 } satisfies Record<string, BrowserWindowOpts>;
 
+// Window templates for multi-instance windows
+export interface WindowTemplate {
+  baseIdentifier: string;
+  basePath: string;
+  allowMultipleInstances: boolean;
+  // Include common BrowserWindow options
+  autoHideMenuBar?: boolean;
+  height?: number;
+  keepAlive?: boolean;
+  minWidth?: number;
+  parentIdentifier?: string;
+  titleBarStyle?: string;
+  vibrancy?: string;
+  width?: number;
+  devTools?: boolean;
+  showOnInit?: boolean;
+  title?: string;
+}
+
+export const windowTemplates = {
+  chatSingle: {
+    autoHideMenuBar: true,
+    height: 600,
+    baseIdentifier: 'chatSingle',
+    basePath: '/chat',
+    allowMultipleInstances: true,
+    keepAlive: false, // Multi-instance windows don't need to stay alive
+    minWidth: 400,
+    parentIdentifier: 'chat',
+    titleBarStyle: 'hidden',
+    vibrancy: 'under-window',
+    width: 900,
+  },
+} satisfies Record<string, WindowTemplate>;
+
 export type AppBrowsersIdentifiers = keyof typeof appBrowsers;
+export type WindowTemplateIdentifiers = keyof typeof windowTemplates;
