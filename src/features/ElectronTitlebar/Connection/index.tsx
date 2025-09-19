@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ConnectionMode from './ConnectionMode';
 import RemoteStatus from './RemoteStatus';
 import WaitingOAuth from './Waiting';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -20,9 +21,13 @@ const useStyles = createStyles(({ css }) => {
 
 const Connection = () => {
   const { styles, theme } = useStyles();
-
   const [isOpen, setIsOpen] = useState(false);
   const [isWaiting, setWaiting] = useState(false);
+  const isSingleMode = useIsSingleMode()
+
+  if (isSingleMode) {
+    return null
+  }
 
   return (
     <>
