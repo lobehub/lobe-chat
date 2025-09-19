@@ -48,30 +48,45 @@ export const appBrowsers = {
 
 // Window templates for multi-instance windows
 export interface WindowTemplate {
-  baseIdentifier: string;
-  basePath: string;
   allowMultipleInstances: boolean;
   // Include common BrowserWindow options
   autoHideMenuBar?: boolean;
+  baseIdentifier: string;
+  basePath: string;
+  devTools?: boolean;
   height?: number;
   keepAlive?: boolean;
   minWidth?: number;
   parentIdentifier?: string;
-  titleBarStyle?: string;
-  vibrancy?: string;
-  width?: number;
-  devTools?: boolean;
   showOnInit?: boolean;
   title?: string;
+  titleBarStyle?: 'hidden' | 'default' | 'hiddenInset' | 'customButtonsOnHover';
+  vibrancy?:
+    | 'appearance-based'
+    | 'content'
+    | 'fullscreen-ui'
+    | 'header'
+    | 'hud'
+    | 'menu'
+    | 'popover'
+    | 'selection'
+    | 'sheet'
+    | 'sidebar'
+    | 'titlebar'
+    | 'tooltip'
+    | 'under-page'
+    | 'under-window'
+    | 'window';
+  width?: number;
 }
 
 export const windowTemplates = {
   chatSingle: {
+    allowMultipleInstances: true,
     autoHideMenuBar: true,
-    height: 600,
     baseIdentifier: 'chatSingle',
     basePath: '/chat',
-    allowMultipleInstances: true,
+    height: 600,
     keepAlive: false, // Multi-instance windows don't need to stay alive
     minWidth: 400,
     parentIdentifier: 'chat',
