@@ -748,6 +748,7 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-max-preview',
     maxOutput: 32_768,
     organization: 'Qwen',
+    /* eslint-disable sort-keys-fix/sort-keys-fix */
     pricing: {
       currency: 'CNY',
       units: [
@@ -755,8 +756,8 @@ const qwenChatModels: AIChatModelCard[] = [
           lookup: {
             prices: {
               '[0, 32_000]': 6 * 0.2,
-              '[128_000, infinity]': 15 * 0.2,
               '[32_000, 128_000]': 10 * 0.2,
+              '[128_000, infinity]': 15 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -767,9 +768,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6,
-              '[128_000, infinity]': 15,
-              '[32_000, 128_000]': 10,
+              '[0, 32_000]': 6 * 0.2,
+              '[32_000, 128_000]': 10 * 0.2,
+              '[128_000, infinity]': 15 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -780,9 +781,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 24,
-              '[128_000, infinity]': 60,
-              '[32_000, 128_000]': 40,
+              '[0, 32_000]': 6 * 0.2,
+              '[32_000, 128_000]': 10 * 0.2,
+              '[128_000, infinity]': 15 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -792,6 +793,7 @@ const qwenChatModels: AIChatModelCard[] = [
         },
       ],
     },
+    /* eslint-enable sort-keys-fix/sort-keys-fix */
     releasedAt: '2025-09-05',
     settings: {
       searchImpl: 'params',
@@ -1575,8 +1577,8 @@ const qwenImageModels: AIImageModelCard[] = [
       seed: { default: null },
     },
     pricing: {
-      currency: 'CNY',
-      units: [{ name: 'imageGeneration', rate: 0.25, strategy: 'fixed', unit: 'image' }],
+      currency: 'USD',
+      units: [{ name: 'imageGeneration', rate: 0.041, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-09-18',
     type: 'image',
