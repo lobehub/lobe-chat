@@ -35,7 +35,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
         scrollEnabled={true}
         size="large"
         spellCheck={false}
-        style={styles.input}
         textAlignVertical="top"
         textBreakStrategy="highQuality"
         value={input}
