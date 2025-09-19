@@ -7,12 +7,12 @@ import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { TOOGLE_PANEL_BUTTON_ID } from '../../features/TogglePanelButton';
-import { useSearchParams } from 'next/navigation';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -34,8 +34,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
-
-  const isSingleMode = useSearchParams().get('mode') === 'single'
+  const isSingleMode = useIsSingleMode();
 
   const { md = true } = useResponsive();
 

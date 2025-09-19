@@ -6,6 +6,7 @@ import { Suspense, memo } from 'react';
 
 import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -16,7 +17,6 @@ import Avatar from './Avatar';
 import BottomActions from './BottomActions';
 import PinList from './PinList';
 import TopActions from './TopActions';
-import { useSearchParams } from 'next/navigation';
 
 const Top = () => {
   const [isPinned] = usePinnedAgentState();
@@ -27,7 +27,7 @@ const Top = () => {
 
 const Nav = memo(() => {
   const theme = useTheme();
-  const isSingleMode = useSearchParams().get('mode') === 'single'
+  const isSingleMode = useIsSingleMode()
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 

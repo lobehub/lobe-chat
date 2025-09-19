@@ -6,17 +6,17 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
-import { useSearchParams } from 'next/navigation';
 
 export const TOOGLE_PANEL_BUTTON_ID = 'toggle-panel-button';
 
 const TogglePanelButton = memo(() => {
-  const isSingleMode = useSearchParams().get('mode') === 'single'
+  const isSingleMode = useIsSingleMode();
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleLeftPanel));
 
   const { t } = useTranslation(['chat', 'hotkey']);
