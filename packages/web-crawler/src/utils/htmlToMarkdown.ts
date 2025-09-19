@@ -1,4 +1,4 @@
-import { Readability } from '@mozilla/readability';
+import { Readability, isProbablyReaderable } from '@mozilla/readability';
 import { Window } from 'happy-dom';
 import { NodeHtmlMarkdown, type TranslatorConfigObject } from 'node-html-markdown';
 
@@ -32,7 +32,7 @@ export const htmlToMarkdown = (
   document.body.innerHTML = html;
 
   // @ts-expect-error reason: Readability expects a Document type
-  const parsedContent = new Readability(document).parse();
+  const parsedContent = isProbablyReaderable(document) ? new Readability(document).parse() : null;
 
   const useReadability = filterOptions.enableReadability ?? true;
 
