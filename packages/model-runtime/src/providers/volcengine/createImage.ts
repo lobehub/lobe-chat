@@ -1,11 +1,11 @@
-import createDebug from 'debug';
+import debug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
 
 import { CreateImageOptions } from '../../core/openaiCompatibleFactory';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 
-const log = createDebug('lobe-image:volcengine');
+const log = debug('lobe-image:volcengine');
 
 /**
  * Volcengine image generation implementation
@@ -16,6 +16,7 @@ export async function createVolcengineImage(
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
+  const { apiKey, baseURL } = options;
 
   log('Creating image with Volcengine API - model: %s, params: %O', model, params);
 
@@ -48,20 +49,84 @@ export async function createVolcengineImage(
 
   if (hasImageInput) {
     log('Image input detected: %O', userInput.image);
+    if (Array.isArray(userInput.image)) {
+      userInput.image = userInput.image[0];
+    }
   } else {
     delete userInput.image;
   }
 
-  // Build request options
+  // 将通用的 cfg 参数映射到 Volcengine 的 guidance_scale
+  if (userInput.cfg !== undefined && userInput.guidance_scale === undefined) {
+    userInput.guidance_scale = userInput.cfg;
+    delete userInput.cfg;
+  }
+
+  // Check if the model supports guidance_scale parameter
+  // Seedream 4.0 models do not support guidance_scale
+  const isSeedream4Model = model.includes('seedream-4') || model === 'doubao-seedream-4-0-250828';
+  if (isSeedream4Model && userInput.guidance_scale !== undefined) {
+    log('Removing guidance_scale parameter for Seedream 4.0 model: %s', model);
+    delete userInput.guidance_scale;
+  }
+
+  // 设置模型专有的默认参数（按照用户要求的默认值）
+  const defaultParams: Record<string, any> = {
+    response_format: 'url',
+    size: 'adaptive',
+    watermark: false,
+  };
+
+  // Only add guidance_scale default for models that support it
+  if (!isSeedream4Model) {
+    defaultParams.guidance_scale = 10;
+  }
+
+  // 对于 doubao-seededit 模型，确保有图片输入
+  if (model.includes('seededit') && !userInput.image) {
+    throw new Error('SeedEdit model requires an input image. Please upload an image first.');
+  }
+
+  // 如果 width/height 存在而 size 未设置，则将其映射为 Ark 的 size 字段
+  if (
+    userInput.width &&
+    userInput.height &&
+    !userInput.size &&
+    Number.isFinite(userInput.width) &&
+    Number.isFinite(userInput.height)
+  ) {
+    userInput.size = `${userInput.width}x${userInput.height}`;
+    delete userInput.width;
+    delete userInput.height;
+  }
+
+  // SeedEdit 模型必须提供 image 输入，同时强制 size=adaptive
+  if (model.includes('seededit')) {
+    const hasImage = !!userInput.image && (Array.isArray(userInput.image) ? userInput.image.length > 0 : true);
+    if (!hasImage) {
+      throw new Error('SeedEdit model requires an input image. Please upload an image first.');
+    }
+    userInput.size = 'adaptive';
+  }
+
+  // 针对 doubao-seededit-3-0-i2i-250628 模型，移除不支持的参数
+  if (model === 'doubao-seededit-3-0-i2i-250628') {
+    delete (userInput as Record<string, any>).width;
+    delete (userInput as Record<string, any>).height;
+    delete (userInput as Record<string, any>).n;
+    userInput.size = 'adaptive';
+  }
+
+  // Build request options with defaults then user inputs (user overrides defaults)
   const requestOptions = {
     model,
-    watermark: false, // Default to no watermark
+    ...defaultParams,
     ...userInput,
-  };
+  } as Record<string, any>;
 
   log('Volcengine API options: %O', requestOptions);
 
-  // Call Volcengine image generation API
+  // Call Volcengine image generation API (OpenAI-compatible)
   const response = await client.images.generate(requestOptions as any);
 
   log('Volcengine API response: %O', response);
@@ -83,14 +148,14 @@ export async function createVolcengineImage(
   let height: number | undefined;
 
   // Handle base64 format response
-  if (imageData.b64_json) {
-    const mimeType = 'image/jpeg'; // Volcengine defaults to JPEG format
-    imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
+  if ((imageData as any).b64_json) {
+    const mimeType = 'image/jpeg';
+    imageUrl = `data:${mimeType};base64,${(imageData as any).b64_json}`;
     log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
   }
   // Handle URL format response
-  else if (imageData.url) {
-    imageUrl = imageData.url;
+  else if ((imageData as any).url) {
+    imageUrl = (imageData as any).url;
     log('Using direct image URL: %s', imageUrl);
   }
   // If neither format exists, throw error
@@ -101,8 +166,11 @@ export async function createVolcengineImage(
 
   // Extract size information (Volcengine specific)
   const volcengineImageData = imageData as any;
-  if (volcengineImageData.size) {
-    const sizeMatch = volcengineImageData.size.match(/^(\d+)x(\d+)$/);
+  if (typeof volcengineImageData.width === 'number') width = volcengineImageData.width;
+  if (typeof volcengineImageData.height === 'number') height = volcengineImageData.height;
+
+  if ((!width || !height) && volcengineImageData.size) {
+    const sizeMatch = (volcengineImageData.size as string).match(/^(\d+)x(\d+)$/);
     if (sizeMatch) {
       width = parseInt(sizeMatch[1], 10);
       height = parseInt(sizeMatch[2], 10);
