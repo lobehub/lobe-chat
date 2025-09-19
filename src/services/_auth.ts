@@ -10,6 +10,7 @@ import {
   AWSBedrockKeyVault,
   AzureOpenAIKeyVault,
   CloudflareKeyVault,
+  ComfyUIKeyVault,
   OpenAICompatibleKeyVault,
 } from '@/types/user/settings';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
@@ -19,7 +20,8 @@ export const getProviderAuthPayload = (
   keyVaults: OpenAICompatibleKeyVault &
     AzureOpenAIKeyVault &
     AWSBedrockKeyVault &
-    CloudflareKeyVault,
+    CloudflareKeyVault &
+    ComfyUIKeyVault,
 ) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
@@ -69,6 +71,17 @@ export const getProviderAuthPayload = (
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
         /** @deprecated */
         cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+      };
+    }
+
+    case ModelProvider.ComfyUI: {
+      return {
+        apiKey: keyVaults?.apiKey,
+        authType: keyVaults?.authType,
+        baseURL: keyVaults?.baseURL,
+        customHeaders: keyVaults?.customHeaders,
+        password: keyVaults?.password,
+        username: keyVaults?.username,
       };
     }
 
