@@ -14,25 +14,28 @@ export const useStyles = createStyles(
         case 'small': {
           return {
             controlHeight: token.controlHeightSM,
-            fontSize: token.fontSizeSM,
-            paddingHorizontal: token.paddingContentHorizontalSM,
-            paddingVertical: token.paddingContentVerticalSM,
+            fontHeight: token.fontHeight,
+            fontSize: token.fontSize,
+            paddingHorizontal: token.paddingXS,
+            paddingVertical: 0,
           };
         }
         case 'large': {
           return {
             controlHeight: token.controlHeightLG,
+            fontHeight: token.fontHeightLG,
             fontSize: token.fontSizeLG,
-            paddingHorizontal: token.paddingContentHorizontalLG,
-            paddingVertical: token.paddingContentVerticalLG,
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXS,
           };
         }
         default: {
           return {
             controlHeight: token.controlHeight,
+            fontHeight: token.fontHeight,
             fontSize: token.fontSize,
-            paddingHorizontal: token.paddingContentHorizontal,
-            paddingVertical: token.paddingContentVertical,
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXXS,
           };
         }
       }
@@ -49,17 +52,18 @@ export const useStyles = createStyles(
         borderWidth: variant === 'outlined' ? token.lineWidth : 0,
         display: 'flex',
         flexDirection: 'row',
-        minHeight: multiline ? undefined : sizeStyles.controlHeight,
-        paddingHorizontal: variant === 'borderless' ? 0 : sizeStyles.paddingHorizontal,
-        paddingVertical: variant === 'borderless' ? 0 : sizeStyles.paddingVertical,
+        height: multiline ? undefined : sizeStyles.controlHeight,
+        paddingHorizontal: sizeStyles.paddingHorizontal,
+        paddingVertical: sizeStyles.paddingVertical,
       },
       input: {
         color: token.colorText,
         flex: 1,
         fontFamily: token.fontFamily,
         fontSize: sizeStyles.fontSize,
-        height: undefined,
-        lineHeight: multiline ? token.lineHeightLG : undefined,
+        height: multiline ? undefined : sizeStyles.fontHeight,
+        // 不要设置 lineHeight
+        lineHeight: undefined,
         textAlignVertical: multiline ? 'top' : 'center',
         ...(Platform.OS === 'android' && {
           includeFontPadding: false,

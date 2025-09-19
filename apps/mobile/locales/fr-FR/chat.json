@@ -34,6 +34,9 @@
     },
     "title": "Discuter librement"
   },
+  "setting": {
+    "title": "Paramètres de la conversation"
+  },
   "share": "Partager",
   "stop": "Arrêter",
   "thinking": "Réflexion en cours..."

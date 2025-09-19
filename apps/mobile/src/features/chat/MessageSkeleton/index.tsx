@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { DimensionValue, View } from 'react-native';
 
 import Skeleton from '@/components/Skeleton';
 
@@ -7,16 +7,20 @@ import { useStyles } from './style';
 
 interface MessageSkeletonProps {
   role: 'assistant' | 'user';
+  width?: DimensionValue[];
 }
 
-const MessageSkeleton: React.FC<MessageSkeletonProps> = ({ role }) => {
+const MessageSkeleton: React.FC<MessageSkeletonProps> = ({
+  role,
+  width = ['100%', '100%', '75%'],
+}) => {
   const { styles } = useStyles();
   const isUser = role === 'user';
 
   return (
     <View style={[styles.container, isUser ? styles.userContainer : styles.assistantContainer]}>
       <View style={isUser ? styles.userBubble : styles.assistantBubble}>
-        <Skeleton.Paragraph animated={true} rows={1} width="100%" />
+        <Skeleton.Paragraph animated={true} rows={width.length} width={width} />
       </View>
     </View>
   );

@@ -8,7 +8,8 @@
       "loadFailed": "Recupero dettagli assistente fallito, riprova più tardi",
       "notFoundIdentifier": "Identificatore assistente non trovato",
       "share": "Condividi",
-      "shareFailed": "Condivisione fallita"
+      "shareFailed": "Condivisione fallita",
+      "title": "Dettagli Assistente"
     }
   },
   "category": {

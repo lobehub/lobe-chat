@@ -8,7 +8,8 @@
       "loadFailed": "取得助理詳情失敗，請稍後再試",
       "notFoundIdentifier": "未找到助理識別碼",
       "share": "分享",
-      "shareFailed": "分享失敗"
+      "shareFailed": "分享失敗",
+      "title": "助理詳情"
     }
   },
   "category": {

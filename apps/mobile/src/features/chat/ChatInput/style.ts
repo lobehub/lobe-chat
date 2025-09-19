@@ -5,13 +5,11 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,
-    borderRadius: token.borderRadius * 4,
+    borderRadius: token.borderRadiusLG * 2,
     borderWidth: 0.5,
     height: 'auto',
     marginHorizontal: token.paddingXS,
     minHeight: CHAT_INPUT_HEIGHT,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
     // ...token.boxShadowCard,
   },
   extraBtn: {
@@ -21,6 +19,8 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: token.paddingXS,
+    paddingHorizontal: token.paddingSM,
     width: '100%',
   },
   iconGroup: {
@@ -29,7 +29,8 @@ export const useStyles = createStyles((token) => ({
     gap: token.marginXS,
   },
   input: {
-    flex: 1,
+    alignItems: 'flex-start',
+    flexGrow: 1,
   },
   leftActions: {
     alignItems: 'center',
