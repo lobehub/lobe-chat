@@ -9,6 +9,7 @@ export default {
       notFoundIdentifier: '未找到助手标识符',
       share: '分享',
       shareFailed: '分享失败',
+      title: '助手详情',
     },
   },
   category: {

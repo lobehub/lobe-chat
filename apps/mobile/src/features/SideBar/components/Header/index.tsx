@@ -19,7 +19,7 @@ const SessionHeader: React.FC = () => {
             <ActionIcon icon={Sparkles} />
           </Link>
         )}
-        <Link asChild href="/assistant/list">
+        <Link asChild href="/discover/assistant">
           <ActionIcon icon={CompassIcon} />
         </Link>
       </Space>

@@ -34,6 +34,9 @@
     },
     "title": "Gewoon kletsen"
   },
+  "setting": {
+    "title": "Gespreksinstellingen"
+  },
   "share": "Delen",
   "stop": "Stoppen",
   "thinking": "Bezig met nadenken..."

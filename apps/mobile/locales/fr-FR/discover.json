@@ -8,7 +8,8 @@
       "loadFailed": "Échec de la récupération des détails de l'assistant, veuillez réessayer plus tard",
       "notFoundIdentifier": "Identifiant de l'assistant introuvable",
       "share": "Partager",
-      "shareFailed": "Échec du partage"
+      "shareFailed": "Échec du partage",
+      "title": "Détails de l'assistant"
     }
   },
   "category": {

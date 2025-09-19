@@ -8,7 +8,8 @@
       "loadFailed": "アシスタントの詳細取得に失敗しました。後でもう一度お試しください",
       "notFoundIdentifier": "アシスタント識別子が見つかりません",
       "share": "共有",
-      "shareFailed": "共有に失敗しました"
+      "shareFailed": "共有に失敗しました",
+      "title": "アシスタントの詳細"
     }
   },
   "category": {

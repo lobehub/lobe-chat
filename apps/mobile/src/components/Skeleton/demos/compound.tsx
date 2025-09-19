@@ -108,6 +108,52 @@ const CompoundDemo: React.FC = () => {
         </View>
       </View>
 
+      {/* Button Demo */}
+      <View style={{ marginBottom: 24 }}>
+        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
+          Skeleton.Button
+        </Text>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, marginBottom: 4 }}>
+            Default Width (50%)
+          </Text>
+          <Skeleton.Button />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, marginBottom: 4 }}>
+            Block Button
+          </Text>
+          <Skeleton.Button block />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, marginBottom: 4 }}>
+            Circle Button
+          </Text>
+          <Skeleton.Button shape="circle" />
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, marginBottom: 4 }}>
+            Size Variants
+          </Text>
+          <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 }}>
+            <Skeleton.Button size="small" width={96} />
+            <Skeleton.Button size="middle" width={120} />
+            <Skeleton.Button size="large" width={160} />
+          </View>
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 14, marginBottom: 4 }}>
+            Animated
+          </Text>
+          <Skeleton.Button animated block />
+        </View>
+      </View>
+
       {/* Paragraph Demo */}
       <View style={{ marginBottom: 24 }}>
         <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>

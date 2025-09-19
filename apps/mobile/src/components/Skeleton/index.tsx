@@ -3,6 +3,7 @@ import { View, Animated, ViewStyle, StyleProp, DimensionValue } from 'react-nati
 
 import { useStyles } from './style';
 import SkeletonAvatar from './Avatar';
+import SkeletonButton from './Button';
 import SkeletonTitle from './Title';
 import SkeletonParagraph from './Paragraph';
 import SkeletonImage from './Image';
@@ -180,12 +181,14 @@ const Skeleton: React.FC<SkeletonProps> = ({
 // Add compound components to main Skeleton component
 const SkeletonWithCompounds = Skeleton as typeof Skeleton & {
   Avatar: typeof SkeletonAvatar;
+  Button: typeof SkeletonButton;
   Image: typeof SkeletonImage;
   Paragraph: typeof SkeletonParagraph;
   Title: typeof SkeletonTitle;
 };
 
 SkeletonWithCompounds.Avatar = SkeletonAvatar;
+SkeletonWithCompounds.Button = SkeletonButton;
 SkeletonWithCompounds.Title = SkeletonTitle;
 SkeletonWithCompounds.Paragraph = SkeletonParagraph;
 SkeletonWithCompounds.Image = SkeletonImage;
