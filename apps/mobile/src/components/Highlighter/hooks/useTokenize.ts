@@ -20,8 +20,8 @@ export function useTokenize(code: string, lang: string, theme: 'light' | 'dark')
   // 生成缓存 key
   const cacheKey = useMemo(() => {
     const hash = code.length < MD5_LENGTH_THRESHOLD ? code : Md5.hashStr(code);
-    return `${lang}-${hash}`;
-  }, [code, lang]);
+    return `${theme}-${lang}-${hash}`;
+  }, [code, lang, theme]);
 
   // 计算高亮结果
   const result: { error: Error | null; tokens: ThemedToken[][] } = useMemo(() => {

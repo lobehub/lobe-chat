@@ -8,7 +8,8 @@
       "loadFailed": "Error al obtener detalles del asistente, por favor intente de nuevo más tarde",
       "notFoundIdentifier": "Identificador del asistente no encontrado",
       "share": "Compartir",
-      "shareFailed": "Error al compartir"
+      "shareFailed": "Error al compartir",
+      "title": "Detalles del asistente"
     }
   },
   "category": {

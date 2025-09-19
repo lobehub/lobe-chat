@@ -2,9 +2,7 @@ import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import React, { ReactNode } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import { Switch } from '@/components';
-
-import { ICON_SIZE_SMALL } from '@/const/common';
+import { Switch, Icon } from '@/components';
 
 import { useStyles } from './style';
 
@@ -41,7 +39,7 @@ export const SettingItem = ({
   loading = false,
   customContent,
 }: SettingItemProps) => {
-  const { styles, token } = useStyles();
+  const { styles } = useStyles();
 
   const renderRightContent = () => {
     if (showSwitch) {
@@ -59,7 +57,7 @@ export const SettingItem = ({
         )}
         {!loading && showCheckmark && isSelected && (
           <Text style={styles.checkmark}>
-            <Check color={token.colorText} size={ICON_SIZE_SMALL} />
+            <Icon icon={Check} size="small" />
           </Text>
         )}
         {(onPress || href) && !showCheckmark && !loading && (

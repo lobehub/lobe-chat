@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { BotMessageSquare } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import DetailHeader from './components/Header';
-import SkeletonDetail from './components/SkeletonDetail';
-import { Tag, Button, Markdown, Header } from '@/components';
+import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
+import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
+import { Tag, Button, Markdown, Header, Icon } from '@/components';
 import { useStyles } from './styles';
-import { ICON_SIZE } from '@/const/common';
 import { useDiscoverStore } from '@/store/discover';
 import { useSessionStore } from '@/store/session';
 import { useGlobalStore } from '@/store/global';
 
 const AssistantDetail = () => {
-  const { identifier } = useLocalSearchParams<{ identifier: string }>();
-  const { styles, token } = useStyles();
+  const { slugs } = useLocalSearchParams<{ slugs: string[] }>();
+  const identifier = decodeURIComponent(slugs.join('/'));
+  const { styles } = useStyles();
   const { t } = useTranslation(['common', 'discover']);
   const [isAdding, setIsAdding] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
@@ -122,7 +122,7 @@ const AssistantDetail = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
-      <Header showBack title={agent.title} />
+      <Header showBack title={t('assistant.detail.title', { ns: 'discover' })} />
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           {/* Header with avatar on left, title/author/date on right */}
@@ -163,7 +163,7 @@ const AssistantDetail = () => {
               size="large"
               onPress={handleShare}
             >
-              <Share2 size={ICON_SIZE_SMALL} color={token.colorText} />
+              <Icon icon={Share2} size="small" color={token.colorText} />
             </Button> */}
           </View>
 
@@ -171,7 +171,7 @@ const AssistantDetail = () => {
           {systemRoleContent && (
             <View style={styles.systemRoleContainer}>
               <View style={styles.settingsTitleContainer}>
-                <BotMessageSquare color={token.colorText} size={ICON_SIZE} />
+                <Icon icon={BotMessageSquare} />
                 <Text style={styles.systemRoleTitle}>
                   {t('assistant.detail.assistantSettings', { ns: 'discover' })}
                 </Text>

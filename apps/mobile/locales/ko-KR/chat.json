@@ -34,6 +34,9 @@
     },
     "title": "편하게 대화하기"
   },
+  "setting": {
+    "title": "대화 설정"
+  },
   "share": "공유",
   "stop": "중지",
   "thinking": "생각 중..."
