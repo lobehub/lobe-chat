@@ -275,7 +275,9 @@ class SepayService {
 
   /**
    * Get payment status by order code
-   * Note: This would typically query your database for payment status
+   *
+   * NOTE: STUB implementation — does NOT query the database and always returns 'pending'.
+   * TODO: Implement DB lookup for the given order code and return real status/amount/txId.
    */
   async getPaymentStatus(): Promise<{
     amount?: number;
@@ -283,7 +285,7 @@ class SepayService {
     success: boolean;
     transactionId?: number;
   }> {
-    // This is a placeholder - in production, you'd query your database
+    // STUB: Replace with actual database query logic.
     return {
       status: 'pending',
       success: true,
@@ -296,7 +298,9 @@ class SepayService {
   validatePayment(orderCode: string, amount: number, expectedAmount: number): boolean {
     // Check if amounts match (allow small variance for fees)
     const amountDifference = Math.abs(amount - expectedAmount);
-    const allowedVariance = expectedAmount * 0.01; // 1% variance allowed
+    const percentVariance = expectedAmount * 0.01; // 1% variance allowed
+    const minVarianceVND = 1000; // minimum allowed variance (cap for small payments)
+    const allowedVariance = Math.max(percentVariance, minVarianceVND);
 
     return amountDifference <= allowedVariance;
   }

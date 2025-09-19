@@ -299,10 +299,32 @@ export default function PaymentCheckoutPage() {
     );
   }
 
-  if (!orderCode || !qrUrl || !accountInfo) {
+  if (!orderCode) {
     return (
       <Flex gap={16} style={{ padding: 24 }} vertical>
         <Alert message="Failed to create payment" showIcon type="error" />
+        <Button onClick={() => router.refresh()} type="primary">
+          Retry
+        </Button>
+      </Flex>
+    );
+  }
+
+  if (!qrUrl) {
+    return (
+      <Flex gap={16} style={{ padding: 24 }} vertical>
+        <Alert message="QR code could not be generated. Please try again." showIcon type="error" />
+        <Button onClick={() => router.refresh()} type="primary">
+          Retry
+        </Button>
+      </Flex>
+    );
+  }
+
+  if (!accountInfo) {
+    return (
+      <Flex gap={16} style={{ padding: 24 }} vertical>
+        <Alert message="Account information is missing. Please try again." showIcon type="error" />
         <Button onClick={() => router.refresh()} type="primary">
           Retry
         </Button>

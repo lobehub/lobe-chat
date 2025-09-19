@@ -75,6 +75,8 @@ describe('PaymentCheckoutPage', () => {
     expect(await screen.findByText(/Preparing payment/i)).toBeInTheDocument();
   });
 
+  // NOTE: Skipped in CI due to polling timer flakiness; TODO enable after improving mocks/stabilizing timers
+
   it.skip('creates a payment and redirects to success after polling shows completed', async () => {
     const fetchMock = setupFetchMock();
 

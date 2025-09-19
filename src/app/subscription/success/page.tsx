@@ -11,12 +11,12 @@ export default function SubscriptionSuccessPage() {
   const search = useSearchParams();
   const refreshUserState = useUserStore((s) => s.refreshUserState);
 
+  const orderCode = search.get('orderCode') || undefined;
+
   useEffect(() => {
     // Refresh user state so subscriptionPlan reflects immediately
     refreshUserState();
-  }, [refreshUserState]);
-
-  const orderCode = search.get('orderCode') || undefined;
+  }, [refreshUserState, orderCode]);
 
   return (
     <Card style={{ margin: '48px auto', maxWidth: 720 }}>
