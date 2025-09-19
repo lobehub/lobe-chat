@@ -22,7 +22,7 @@ export default function ChatWithDrawer() {
           <KeyboardAvoidingView
             behavior="padding"
             enabled
-            keyboardVerticalOffset={60}
+            keyboardVerticalOffset={68}
             style={{ flex: 1 }}
           >
             <ChatList />
