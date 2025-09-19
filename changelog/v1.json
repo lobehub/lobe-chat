@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Qwen provider add qwen-image-edit model support."]
+    },
+    "date": "2025-09-19",
+    "version": "1.131.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix oidc open direct issue."]
     },
     "date": "2025-09-18",
