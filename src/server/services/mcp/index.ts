@@ -36,12 +36,14 @@ class MCPService {
 
   // listTools now accepts MCPClientParams
   async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
     log(`Listing tools using client for params: %O`, loggableParams);
 
     try {
-      const result = await client.listTools();
+      const result = await this.executeWithRetry(params, async (client) => {
+        return await client.listTools();
+      });
+      
       log(
         `Tools listed successfully for params: %O, result count: %d`,
         loggableParams,
@@ -64,22 +66,24 @@ class MCPService {
     }
   }
 
-  // listTools now accepts MCPClientParams
+  // listRawTools now accepts MCPClientParams
   async listRawTools(params: MCPClientParams): Promise<McpTool[]> {
-    const client = await this.getClient(params); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
-    log(`Listing tools using client for params: %O`, loggableParams);
+    log(`Listing raw tools using client for params: %O`, loggableParams);
 
     try {
-      const result = await client.listTools();
+      const result = await this.executeWithRetry(params, async (client) => {
+        return await client.listTools();
+      });
+      
       log(
-        `Tools listed successfully for params: %O, result count: %d`,
+        `Raw tools listed successfully for params: %O, result count: %d`,
         loggableParams,
         result.length,
       );
       return result;
     } catch (error) {
-      console.error(`Error listing tools for params %O:`, loggableParams, error);
+      console.error(`Error listing raw tools for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
         cause: error,
@@ -91,12 +95,14 @@ class MCPService {
 
   // listResources now accepts MCPClientParams
   async listResources(params: MCPClientParams): Promise<McpResource[]> {
-    const client = await this.getClient(params); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
     log(`Listing resources using client for params: %O`, loggableParams);
 
     try {
-      const result = await client.listResources();
+      const result = await this.executeWithRetry(params, async (client) => {
+        return await client.listResources();
+      });
+      
       log(
         `Resources listed successfully for params: %O, result count: %d`,
         loggableParams,
@@ -116,12 +122,14 @@ class MCPService {
 
   // listPrompts now accepts MCPClientParams
   async listPrompts(params: MCPClientParams): Promise<McpPrompt[]> {
-    const client = await this.getClient(params); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
     log(`Listing prompts using client for params: %O`, loggableParams);
 
     try {
-      const result = await client.listPrompts();
+      const result = await this.executeWithRetry(params, async (client) => {
+        return await client.listPrompts();
+      });
+      
       log(
         `Prompts listed successfully for params: %O, result count: %d`,
         loggableParams,
@@ -141,8 +149,6 @@ class MCPService {
 
   // callTool now accepts MCPClientParams, toolName, and args
   async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
-    const client = await this.getClient(params); // Get client using params
-
     const args = safeParseJSON(argsStr);
     const loggableParams = this.sanitizeForLogging(params);
 
@@ -153,8 +159,10 @@ class MCPService {
     );
 
     try {
-      // Delegate the call to the MCPClient instance
-      const result = await client.callTool(toolName, args); // Pass args directly
+      const result = await this.executeWithRetry(params, async (client) => {
+        return await client.callTool(toolName, args);
+      });
+      
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
@@ -247,6 +255,70 @@ class MCPService {
     }
   }
 
+  // Helper method to determine if an error indicates a stale connection
+  private isConnectionError(error: any): boolean {
+    if (!error) return false;
+    
+    const errorMessage = error.message?.toLowerCase() || '';
+    const errorString = String(error).toLowerCase();
+    
+    // Check for common connection error patterns
+    return (
+      errorMessage.includes('connection') ||
+      errorMessage.includes('econnrefused') ||
+      errorMessage.includes('enotfound') ||
+      errorMessage.includes('timeout') ||
+      errorMessage.includes('disconnected') ||
+      errorMessage.includes('broken pipe') ||
+      errorMessage.includes('socket hang up') ||
+      errorString.includes('400') ||
+      errorString.includes('503') ||
+      errorString.includes('502') ||
+      // TRPCError codes that might indicate connection issues
+      (error.code && ['BAD_REQUEST', 'SERVICE_UNAVAILABLE', 'TIMEOUT'].includes(error.code))
+    );
+  }
+
+  // Helper method to clear cached client
+  private clearCachedClient(params: MCPClientParams): void {
+    const key = this.serializeParams(params);
+    if (this.clients.has(key)) {
+      log(`Clearing cached client for key: ${key.slice(0, 20)}`);
+      this.clients.delete(key);
+    }
+  }
+
+  // Enhanced method with retry logic for operations
+  private async executeWithRetry<T>(
+    params: MCPClientParams,
+    operation: (client: MCPClient) => Promise<T>,
+    maxRetries: number = 1
+  ): Promise<T> {
+    let lastError: any;
+    
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const client = await this.getClient(params);
+        return await operation(client);
+      } catch (error) {
+        lastError = error;
+        
+        // If this is a connection error and we have retries left, clear cache and retry
+        if (this.isConnectionError(error) && attempt < maxRetries) {
+          log(`Connection error detected on attempt ${attempt + 1}, clearing cache and retrying: ${error.message}`);
+          this.clearCachedClient(params);
+          continue;
+        }
+        
+        // If not a connection error or out of retries, throw immediately
+        throw error;
+      }
+    }
+    
+    // This should never be reached, but just in case
+    throw lastError;
+  }
+
   // Custom serialization function to ensure consistent keys
   private serializeParams(params: MCPClientParams): string {
     const sortedKeys = Object.keys(params).sort();
@@ -309,15 +381,17 @@ class MCPService {
     params: Omit<StdioMCPParams, 'type'>,
     metadata?: CustomPluginMetadata,
   ): Promise<LobeChatPluginManifest> {
-    const client = await this.getClient({
+    const mcpParams = {
       args: params.args,
       command: params.command,
       env: params.env,
       name: params.name,
-      type: 'stdio',
-    }); // Get client using params
+      type: 'stdio' as const,
+    };
 
-    const manifest = await client.listManifests();
+    const manifest = await this.executeWithRetry(mcpParams, async (client) => {
+      return await client.listManifests();
+    });
 
     const identifier = params.name;
 
