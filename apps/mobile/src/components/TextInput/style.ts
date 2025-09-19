@@ -7,6 +7,9 @@ interface UseStylesProps {
   variant?: 'filled' | 'borderless' | 'outlined';
 }
 
+const getVerticalPadding = (controlHeight: number, lineHeight: number) =>
+  Math.max(Math.round((controlHeight - lineHeight) / 2), 0);
+
 export const useStyles = createStyles(
   (token, { multiline = false, variant = 'filled', size = 'middle' }: UseStylesProps) => {
     const getSizeStyles = () => {
@@ -15,24 +18,27 @@ export const useStyles = createStyles(
           return {
             controlHeight: token.controlHeightSM,
             fontSize: token.fontSizeSM,
+            lineHeight: token.lineHeightSM,
             paddingHorizontal: token.paddingContentHorizontalSM,
-            paddingVertical: token.paddingContentVerticalSM,
+            paddingVertical: getVerticalPadding(token.controlHeightSM, token.lineHeightSM),
           };
         }
         case 'large': {
           return {
             controlHeight: token.controlHeightLG,
             fontSize: token.fontSizeLG,
+            lineHeight: token.lineHeightLG,
             paddingHorizontal: token.paddingContentHorizontalLG,
-            paddingVertical: token.paddingContentVerticalLG,
+            paddingVertical: getVerticalPadding(token.controlHeightLG, token.lineHeightLG),
           };
         }
         default: {
           return {
             controlHeight: token.controlHeight,
             fontSize: token.fontSize,
+            lineHeight: token.lineHeight,
             paddingHorizontal: token.paddingContentHorizontal,
-            paddingVertical: token.paddingContentVertical,
+            paddingVertical: getVerticalPadding(token.controlHeight, token.lineHeight),
           };
         }
       }
@@ -59,12 +65,10 @@ export const useStyles = createStyles(
         fontFamily: token.fontFamily,
         fontSize: sizeStyles.fontSize,
         height: undefined,
-        lineHeight: multiline ? token.lineHeightLG : undefined,
+        lineHeight: multiline ? token.lineHeightLG : sizeStyles.lineHeight,
         textAlignVertical: multiline ? 'top' : 'center',
         ...(Platform.OS === 'android' && {
           includeFontPadding: false,
-          // 垂直居中
-          paddingTop: token.paddingXXS,
           paddingVertical: 0,
         }),
       },

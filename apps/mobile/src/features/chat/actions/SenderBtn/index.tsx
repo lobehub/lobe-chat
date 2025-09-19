@@ -6,15 +6,15 @@ import { Button } from '@/components';
 const SenderBtn = () => {
   const { handleSubmit, isLoading, canSend, stopGenerating } = useChat();
 
-  const size = 'middle';
-
-  return (
+  return isLoading ? (
+    <Button icon={<StopLoadingIcon />} onPress={stopGenerating} shape="circle" />
+  ) : (
     <Button
       disabled={!canSend}
-      icon={isLoading ? <StopLoadingIcon size={size} /> : <ArrowUp />}
-      onPress={isLoading ? stopGenerating : handleSubmit}
+      icon={<ArrowUp />}
+      loading={!canSend}
+      onPress={handleSubmit}
       shape="circle"
-      size={size}
       type="primary"
     />
   );
