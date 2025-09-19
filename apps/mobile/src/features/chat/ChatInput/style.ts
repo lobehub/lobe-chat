@@ -5,7 +5,7 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,
-    borderRadius: token.borderRadius * 4,
+    borderRadius: token.borderRadiusLG * 2,
     borderWidth: 0.5,
     height: 'auto',
     marginHorizontal: token.paddingXS,
@@ -27,6 +27,10 @@ export const useStyles = createStyles((token) => ({
     alignItems: 'center',
     flexDirection: 'row',
     gap: token.marginXS,
+  },
+  input: {
+    alignItems: 'flex-start',
+    flexGrow: 1,
   },
   leftActions: {
     alignItems: 'center',
