@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix oidc open direct issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.1"
+  },
+  {
+    "children": {
+      "features": ["Add scroll support for pinned assistants using ScrollShadow."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix svg xss issue."]
     },
     "date": "2025-09-18",
