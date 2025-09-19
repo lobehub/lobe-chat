@@ -768,9 +768,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6 * 0.2,
-              '[32_000, 128_000]': 10 * 0.2,
-              '[128_000, infinity]': 15 * 0.2,
+              '[0, 32_000]': 6,
+              '[32_000, 128_000]': 10,
+              '[128_000, infinity]': 15,
             },
             pricingParams: ['textInputRange'],
           },
@@ -781,9 +781,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6 * 0.2,
-              '[32_000, 128_000]': 10 * 0.2,
-              '[128_000, infinity]': 15 * 0.2,
+              '[0, 32_000]': 24,
+              '[32_000, 128_000]': 40,
+              '[128_000, infinity]': 60,
             },
             pricingParams: ['textInputRange'],
           },
