@@ -84,6 +84,8 @@ const electron = {
     },
   },
   updater: {
+    autoUpdateNotification: '自动更新提示',
+    autoUpdateNotificationDesc: '当有新版本可用时，是否显示弹窗提示更新',
     checkingUpdate: '检查新版本',
     checkingUpdateDesc: '正在获取版本信息...',
     downloadNewVersion: '下载新版本',

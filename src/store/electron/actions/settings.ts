@@ -11,14 +11,18 @@ import type { ElectronStore } from '../store';
  * 设置操作
  */
 export interface ElectronSettingsAction {
+  refreshAutoUpdateNotificationSetting: () => Promise<void>;
   refreshDesktopHotkeys: () => Promise<void>;
   refreshProxySettings: () => Promise<void>;
+  setAutoUpdateNotificationEnabled: (enabled: boolean) => Promise<void>;
   setProxySettings: (params: Partial<NetworkProxySettings>) => Promise<void>;
   updateDesktopHotkey: (id: string, accelerator: string) => Promise<ShortcutUpdateResult>;
+  useFetchAutoUpdateNotificationSetting: () => SWRResponse;
   useFetchDesktopHotkeys: () => SWRResponse;
   useGetProxySettings: () => SWRResponse;
 }
 
+const ELECTRON_AUTO_UPDATE_NOTIFICATION_KEY = 'electron:getAutoUpdateNotificationEnabled';
 const ELECTRON_PROXY_SETTINGS_KEY = 'electron:getProxySettings';
 const ELECTRON_DESKTOP_HOTKEYS_KEY = 'electron:getDesktopHotkeys';
 
@@ -28,12 +32,28 @@ export const settingsSlice: StateCreator<
   [],
   ElectronSettingsAction
 > = (set, get) => ({
+  refreshAutoUpdateNotificationSetting: async () => {
+    await mutate(ELECTRON_AUTO_UPDATE_NOTIFICATION_KEY);
+  },
+
   refreshDesktopHotkeys: async () => {
     await mutate(ELECTRON_DESKTOP_HOTKEYS_KEY);
   },
 
   refreshProxySettings: async () => {
     await mutate(ELECTRON_PROXY_SETTINGS_KEY);
+  },
+
+  setAutoUpdateNotificationEnabled: async (enabled) => {
+    try {
+      // 更新设置
+      await desktopSettingsService.setAutoUpdateNotificationEnabled(enabled);
+
+      // 刷新状态
+      await get().refreshAutoUpdateNotificationSetting();
+    } catch (error) {
+      console.error('自动更新通知设置更新失败:', error);
+    }
   },
 
   setProxySettings: async (values) => {
@@ -67,6 +87,19 @@ export const settingsSlice: StateCreator<
       };
     }
   },
+
+  useFetchAutoUpdateNotificationSetting: () =>
+    useSWR<boolean>(
+      ELECTRON_AUTO_UPDATE_NOTIFICATION_KEY,
+      async () => desktopSettingsService.getAutoUpdateNotificationEnabled(),
+      {
+        onSuccess: (data) => {
+          if (data !== get().autoUpdateNotificationEnabled) {
+            set({ autoUpdateNotificationEnabled: data });
+          }
+        },
+      },
+    ),
 
   useFetchDesktopHotkeys: () =>
     useSWR<Record<string, string>>(
