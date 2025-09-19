@@ -2,12 +2,11 @@
 
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'react';
+import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import { isDesktop } from '@/const/version';
 import ChatItem from '@/features/ChatItem';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useAgentStore } from '@/store/agent';
@@ -26,9 +25,12 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
+import { useChatItemContextMenu } from '../../hooks/useChatItemContextMenu';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
+import ContextMenu from './ContextMenu';
 import { InPortalThreadContext } from './InPortalThreadContext';
+import ShareMessageModal from './ShareMessageModal';
 import { normalizeThinkTags, processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
@@ -79,6 +81,7 @@ const Item = memo<ChatListItemProps>(
   }) => {
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
+    const [showShareModal, setShareModal] = useState(false);
 
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
     const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
@@ -91,6 +94,14 @@ const Item = memo<ChatListItemProps>(
       editing,
       toggleMessageEditing,
       updateMessageContent,
+      updateInputMessage,
+      deleteMessage,
+      regenerateMessage,
+      copyMessage,
+      openThreadCreator,
+      delAndRegenerateMessage,
+      translateMessage,
+      ttsMessage,
     ] = useChatStore((s) => [
       chatSelectors.isMessageLoading(id)(s),
       chatSelectors.isMessageGenerating(id)(s),
@@ -98,6 +109,14 @@ const Item = memo<ChatListItemProps>(
       chatSelectors.isMessageEditing(id)(s),
       s.toggleMessageEditing,
       s.modifyMessageContent,
+      s.updateInputMessage,
+      s.deleteMessage,
+      s.regenerateMessage,
+      s.copyMessage,
+      s.openThreadCreator,
+      s.delAndRegenerateMessage,
+      s.translateMessage,
+      s.ttsMessage,
     ]);
 
     // when the message is in RAG flow or the AI generating, it should be in loading state
@@ -105,6 +124,83 @@ const Item = memo<ChatListItemProps>(
     const animated = transitionMode === 'fadeIn' && generating;
 
     const onAvatarsClick = useAvatarsClick(item?.role);
+    const virtuosoRef = use(VirtuosoContext);
+
+    // Context menu functionality
+    const handleContextMenuAction = useCallback(
+      async (action: any) => {
+        switch (action.key) {
+          case 'copy': {
+            if (action.selectedText) {
+              await copyMessage(id, action.selectedText);
+            } else if (item) {
+              await copyMessage(id, item.content);
+            }
+            break;
+          }
+          case 'edit': {
+            toggleMessageEditing(id, true);
+            virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+            break;
+          }
+          case 'regenerate': {
+            regenerateMessage(id);
+            // if this message is an error message, we need to delete it
+            if (item?.error) deleteMessage(id);
+            break;
+          }
+          case 'branching': {
+            openThreadCreator(id);
+            break;
+          }
+          case 'delAndRegenerate': {
+            delAndRegenerateMessage(id);
+            break;
+          }
+          case 'share': {
+            setShareModal(true);
+            break;
+          }
+          case 'tts': {
+            ttsMessage(id);
+            break;
+          }
+          case 'del': {
+            deleteMessage(id);
+            break;
+          }
+        }
+
+        // Handle translation actions
+        if (action.keyPath?.at(-1) === 'translate') {
+          const lang = action.keyPath[0];
+          translateMessage(id, lang);
+        }
+      },
+      [
+        id,
+        item,
+        updateInputMessage,
+        copyMessage,
+        toggleMessageEditing,
+        regenerateMessage,
+        deleteMessage,
+        openThreadCreator,
+        delAndRegenerateMessage,
+        ttsMessage,
+        translateMessage,
+        virtuosoRef,
+        index,
+      ],
+    );
+
+    const { contextMenuState, containerRef, handleContextMenu, handleMenuClick } =
+      useChatItemContextMenu({
+        editing,
+        onActionClick: handleContextMenuAction,
+      });
+
+    console.log("contextMenuState", contextMenuState)
 
     const renderMessage = useCallback(
       (editableContent: ReactNode) => {
@@ -207,16 +303,15 @@ const Item = memo<ChatListItemProps>(
           item?.role === 'user'
             ? undefined
             : item?.search?.citations &&
-              // if the citations are all empty, we should not show the citations
-              item?.search?.citations.length > 0 &&
-              // if the citations's url and title are all the same, we should not show the citations
-              item?.search?.citations.every((item) => item.title !== item.url),
+            // if the citations are all empty, we should not show the citations
+            item?.search?.citations.length > 0 &&
+            // if the citations's url and title are all the same, we should not show the citations
+            item?.search?.citations.every((item) => item.title !== item.url),
       }),
       [animated, components, markdownCustomRender, item?.role, item?.search],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);
-    const virtuosoRef = use(VirtuosoContext);
 
     const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
       (e) => {
@@ -244,19 +339,6 @@ const Item = memo<ChatListItemProps>(
       toggleMessageEditing(id, edit);
     }, []);
 
-    const onContextMenu = useCallback(async () => {
-      if (isDesktop && item) {
-        const { electronSystemService } = await import('@/services/electron/system');
-
-        electronSystemService.showContextMenu('chat', {
-          content: item.content,
-          hasError: !!item.error,
-          messageId: id,
-          role: item.role,
-        });
-      }
-    }, [id, item]);
-
     const belowMessage = useMemo(() => item && <BelowMessage data={item} />, [item]);
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
@@ -267,7 +349,8 @@ const Item = memo<ChatListItemProps>(
           {enableHistoryDivider && <History />}
           <Flexbox
             className={cx(styles.message, className, isMessageLoading && styles.loading)}
-            onContextMenu={onContextMenu}
+            onContextMenu={handleContextMenu}
+            ref={containerRef}
           >
             <ChatItem
               actions={actionBar}
@@ -293,6 +376,22 @@ const Item = memo<ChatListItemProps>(
             />
             {endRender}
           </Flexbox>
+          <ContextMenu
+            onMenuClick={handleMenuClick}
+            position={contextMenuState.position}
+            role={item?.role}
+            selectedText={contextMenuState.selectedText}
+            visible={contextMenuState.visible}
+          />
+          {item && showShareModal && (
+            <ShareMessageModal
+              message={item}
+              onCancel={() => {
+                setShareModal(false);
+              }}
+              open={showShareModal}
+            />
+          )}
         </InPortalThreadContext.Provider>
       )
     );
