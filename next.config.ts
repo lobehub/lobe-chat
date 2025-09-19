@@ -244,11 +244,11 @@ const nextConfig: NextConfig = {
       permanent: true,
       source: '/discover/providers',
     },
-    {
-      destination: '/settings/common',
-      permanent: true,
-      source: '/settings',
-    },
+    // {
+    //   destination: '/settings/common',
+    //   permanent: true,
+    //   source: '/settings',
+    // },
     {
       destination: '/chat',
       permanent: true,

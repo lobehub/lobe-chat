@@ -68,26 +68,27 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
   );
 });
 
-const Content = () => {
+const ProviderMenu = ({
+  mobile,
+  onProviderSelect = () => {},
+}: {
+  mobile?: boolean;
+  onProviderSelect?: (providerKey: string) => void;
+}) => {
   const [initAiProviderList, providerSearchKeyword] = useAiInfraStore((s) => [
     s.initAiProviderList,
     s.providerSearchKeyword,
   ]);
 
+  let Content = <ProviderList mobile={mobile} onProviderSelect={onProviderSelect} />;
+
   // loading
-  if (!initAiProviderList) return <SkeletonList />;
+  if (!initAiProviderList) Content = <SkeletonList />;
 
   // search
-  if (!!providerSearchKeyword) return <SearchResult />;
+  if (!!providerSearchKeyword) Content = <SearchResult onProviderSelect={onProviderSelect} />;
 
-  // default
-  return <ProviderList />;
+  return <Layout mobile={mobile}>{Content}</Layout>;
 };
-
-const ProviderMenu = ({ mobile }: { mobile?: boolean }) => (
-  <Layout mobile={mobile}>
-    <Content />
-  </Layout>
-);
 
 export default ProviderMenu;

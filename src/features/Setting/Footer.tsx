@@ -22,6 +22,8 @@ const useStyles = createStyles(
   `,
 );
 
+export const LayoutSettingsFooterClassName = 'settings-layout-footer';
+
 const Footer = memo<PropsWithChildren>(() => {
   const { t } = useTranslation('common');
   const [openStar, setOpenStar] = useState(false);
@@ -32,7 +34,7 @@ const Footer = memo<PropsWithChildren>(() => {
 
   return hideGitHub ? null : (
     <>
-      <Flexbox justify={'flex-end'}>
+      <Flexbox className={LayoutSettingsFooterClassName} justify={'flex-end'}>
         <Center
           as={'footer'}
           className={styles}

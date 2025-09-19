@@ -33,7 +33,7 @@ const ProviderCard = memo<ProviderCardProps>(
     return (
       <Flexbox className={cx(styles.container)} gap={24}>
         <Flexbox gap={12} padding={16} width={'100%'}>
-          <Link href={`/settings/provider/${id}`}>
+          <Link href={`/settings?active=provider&provider=${id}`}>
             <Flexbox gap={12} width={'100%'}>
               <Flexbox align={'center'} horizontal justify={'space-between'}>
                 {source === 'builtin' ? (

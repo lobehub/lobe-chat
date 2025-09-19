@@ -66,7 +66,9 @@ const ModelSelect = memo(() => {
             ),
             onClick: () => {
               router.push(
-                isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
+                isDeprecatedEdition
+                  ? '/settings?active=llm'
+                  : `/settings?active=provider&provider=${provider.id}`,
               );
             },
             value: `${provider.id}/empty`,
@@ -89,7 +91,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings/llm' : '/settings/provider');
+            router.push(isDeprecatedEdition ? '/settings?active=llm' : '/settings?active=provider');
           },
           value: 'no-provider',
         },
@@ -112,7 +114,11 @@ const ModelSelect = memo(() => {
           />
           {showLLM && (
             <Link
-              href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+              href={
+                isDeprecatedEdition
+                  ? '/settings?active=llm'
+                  : `/settings?active=provider&provider=${provider.id}`
+              }
             >
               <ActionIcon
                 icon={LucideBolt}

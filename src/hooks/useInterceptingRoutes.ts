@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import urlJoin from 'url-join';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { isDeprecatedEdition } from '@/const/version';
@@ -17,7 +16,7 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
 
   return useMemo(() => {
     if (isDeprecatedEdition && activeId === INBOX_SESSION_ID) {
-      return () => router.push(urlJoin('/settings', SettingsTabs.Agent));
+      return () => router.push(`/settings?active=${SettingsTabs.Agent}`);
     }
 
     if (isMobile) return () => router.push('/chat/settings', { query: { session: activeId } });

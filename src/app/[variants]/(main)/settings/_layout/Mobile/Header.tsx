@@ -1,15 +1,12 @@
 'use client';
 
-import { Tag } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { usePathname } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
-import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
-import { useProviderName } from '@/hooks/useProviderName';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -18,22 +15,21 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
-
   const router = useQueryRoute();
   const showMobileWorkspace = useShowMobileWorkspace();
-  const activeSettingsKey = useActiveSettingsKey();
+
+  const [activeSettingsKey, setActiveSettingsKey] = useQueryState('active');
+  const [providerName, setProviderName] = useQueryState('provider');
+
   const isSessionActive = useSessionStore((s) => !!s.activeId);
-  const pathname = usePathname();
-  const isProvider = pathname.includes('/settings/provider/');
-  const providerName = useProviderName(activeSettingsKey);
-  const isProviderList = pathname === '/settings/provider';
-  const isProviderDetail = isProvider && !isProviderList;
+  const isProvider = providerName ? true : false;
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
       router.push('/chat');
-    } else if (isProviderDetail) {
-      router.push('/settings/provider');
+    } else if (activeSettingsKey === 'provider' && providerName !== null) {
+      setProviderName(null);
+      setActiveSettingsKey('provider');
     } else {
       router.push(enableAuth ? '/me/settings' : '/me');
     }
@@ -46,13 +42,8 @@ const Header = memo(() => {
           title={
             <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}>
-                {isProvider ? providerName : t(`tab.${activeSettingsKey}`)}
+                {isProvider ? providerName : t(`tab.${activeSettingsKey as SettingsTabs}`)}
               </span>
-              {activeSettingsKey === SettingsTabs.Sync && (
-                <Tag bordered={false} color={'warning'}>
-                  {t('tab.experiment')}
-                </Tag>
-              )}
             </Flexbox>
           }
         />
