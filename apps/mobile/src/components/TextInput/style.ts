@@ -53,8 +53,8 @@ export const useStyles = createStyles(
         display: 'flex',
         flexDirection: 'row',
         height: multiline ? undefined : sizeStyles.controlHeight,
-        paddingHorizontal: variant === 'borderless' ? 0 : sizeStyles.paddingHorizontal,
-        paddingVertical: variant === 'borderless' ? 0 : sizeStyles.paddingVertical,
+        paddingHorizontal: sizeStyles.paddingHorizontal,
+        paddingVertical: sizeStyles.paddingVertical,
       },
       input: {
         color: token.colorText,
