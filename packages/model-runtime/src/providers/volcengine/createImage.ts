@@ -62,13 +62,25 @@ export async function createVolcengineImage(
     delete userInput.cfg;
   }
 
+  // Check if the model supports guidance_scale parameter
+  // Seedream 4.0 models do not support guidance_scale
+  const isSeedream4Model = model.includes('seedream-4') || model === 'doubao-seedream-4-0-250828';
+  if (isSeedream4Model && userInput.guidance_scale !== undefined) {
+    log('Removing guidance_scale parameter for Seedream 4.0 model: %s', model);
+    delete userInput.guidance_scale;
+  }
+
   // 设置模型专有的默认参数（按照用户要求的默认值）
-  const defaultParams = {
-    guidance_scale: 10,
+  const defaultParams: Record<string, any> = {
     response_format: 'url',
     size: 'adaptive',
     watermark: false,
   };
+
+  // Only add guidance_scale default for models that support it
+  if (!isSeedream4Model) {
+    defaultParams.guidance_scale = 10;
+  }
 
   // 对于 doubao-seededit 模型，确保有图片输入
   if (model.includes('seededit') && !userInput.image) {
