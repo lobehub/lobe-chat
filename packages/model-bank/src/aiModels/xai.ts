@@ -5,6 +5,89 @@ const xaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    displayName: 'Grok 4 Fast (Non-Reasoning)',
+    enabled: true,
+    id: 'grok-4-fast-non-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-09-09',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    displayName: 'Grok 4 Fast',
+    enabled: true,
+    id: 'grok-4-fast-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-09-09',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 256_000,
@@ -21,8 +104,8 @@ const xaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-08-27',
     // settings: {
-      // reasoning_effort is not supported by grok-code. Specifying reasoning_effort parameter will get an error response.
-      // extendParams: ['reasoningEffort'],
+    // reasoning_effort is not supported by grok-code. Specifying reasoning_effort parameter will get an error response.
+    // extendParams: ['reasoningEffort'],
     // },
     type: 'chat',
   },
@@ -110,7 +193,6 @@ const xaiChatModels: AIChatModelCard[] = [
     description:
       '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
     displayName: 'Grok 3 Mini',
-    enabled: true,
     id: 'grok-3-mini',
     pricing: {
       units: [
