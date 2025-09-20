@@ -68,7 +68,7 @@ export interface MessageMetadata extends ModelTokensUsage {
   ttft?: number;
 }
 
-export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor';
 
 export interface MessageItem {
   agentId: string | null;

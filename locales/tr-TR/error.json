@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },
+  "supervisor": {
+    "decisionFailed": "Grup yöneticisi çalışamıyor. Lütfen yönetici yapılandırmanızı kontrol edin ve doğru model, API Anahtarı ve API adresinin yapılandırıldığından emin olun."
+  },
   "testConnectionFailed": "Bağlantı testi başarısız: {{error}}",
   "tts": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"

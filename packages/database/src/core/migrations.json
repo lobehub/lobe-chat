@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -510,7 +515,9 @@
     "hash": "a7ccf007fd185ff922823148d1eae6fafe652fc98d2fd2793f84a84f29e93cd1"
   },
   {
-    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1749309388370,
     "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
@@ -615,5 +622,15 @@
     "bps": true,
     "folderMillis": 1758012348218,
     "hash": "ce04ef4cde2db479d28ff08dced8383052c5052c904bab8343b5493fa10b0679"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" ALTER COLUMN \"role\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"chat_groups\" ADD COLUMN \"group_id\" text;",
+      "\nALTER TABLE \"chat_groups\" ADD CONSTRAINT \"chat_groups_group_id_session_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"session_groups\"(\"id\") ON DELETE set null ON UPDATE no action;"
+    ],
+    "bps": true,
+    "folderMillis": 1758265517922,
+    "hash": "b83588ca40b206383ad9390550c95ed3af23338569c7113237f2dbaf1accd3cb"
   }
 ]

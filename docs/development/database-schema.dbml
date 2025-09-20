@@ -138,6 +138,7 @@ table chat_groups {
   config jsonb
   client_id text
   user_id text [not null]
+  group_id text
   pinned boolean [default: false]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
@@ -387,7 +388,7 @@ table message_translates {
 
 table messages {
   id text [pk, not null]
-  role text [not null]
+  role varchar(255) [not null]
   content text
   reasoning jsonb
   search jsonb

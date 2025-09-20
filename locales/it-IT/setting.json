@@ -35,9 +35,16 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "groupTab": {
+    "chat": "Chat di gruppo",
+    "members": "Membri",
+    "meta": "Informazioni sul gruppo"
+  },
   "header": {
     "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
+    "group": "Impostazioni chat di gruppo",
+    "groupDesc": "Gestisci la chat di gruppo corrente",
     "session": "Impostazioni della sessione",
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
@@ -294,6 +301,82 @@
     },
     "title": "Impostazioni Generali"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Inserisci la descrizione della chat di gruppo",
+      "title": "Descrizione della chat di gruppo"
+    },
+    "name": {
+      "placeholder": "Inserisci il nome della chat di gruppo",
+      "title": "Nome della chat di gruppo"
+    },
+    "submit": "Aggiorna chat di gruppo",
+    "systemPrompt": {
+      "placeholder": "Inserisci il prompt di sistema del moderatore",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Informazioni chat di gruppo"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Consenti ai membri di inviare messaggi privati tra loro",
+      "title": "Consenti messaggi privati"
+    },
+    "maxResponseInRow": {
+      "desc": "Seleziona quante risposte consecutive un membro può inviare. Imposta a 0 per disabilitare questo limite.",
+      "title": "Numero di risposte consecutive"
+    },
+    "model": {
+      "desc": "Seleziona il modello da utilizzare per moderare la conversazione di gruppo. Gli interventi dei membri non saranno influenzati.",
+      "title": "Modello moderatore"
+    },
+    "orchestratorTitle": "Impostazioni moderatore",
+    "responseOrder": {
+      "desc": "Gli agenti risponderanno nell'ordine stabilito nella chat di gruppo",
+      "options": {
+        "natural": "Naturale",
+        "sequential": "Sequenziale"
+      },
+      "placeholder": "Seleziona l'ordine di risposta",
+      "title": "Ordine di risposta"
+    },
+    "responseSpeed": {
+      "desc": "Controlla la velocità complessiva della chat di gruppo",
+      "options": {
+        "fast": "Veloce",
+        "medium": "Media",
+        "slow": "Lenta"
+      },
+      "placeholder": "Seleziona la velocità di risposta",
+      "title": "Velocità di risposta"
+    },
+    "revealDM": {
+      "desc": "Rendi visibili i messaggi privati inviati ad altri membri.",
+      "title": "Mostra contenuti messaggi privati"
+    },
+    "submit": "Aggiorna impostazioni",
+    "systemPrompt": {
+      "desc": "Prompt di sistema personalizzato per il moderatore della chat di gruppo. Può influenzare il comportamento predefinito del moderatore.",
+      "placeholder": "Inserisci un prompt di sistema personalizzato per il moderatore...",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Impostazioni chat"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Aggiungi al gruppo",
+    "availableAgents": "Assistenti disponibili",
+    "defaultAgent": "Assistente personalizzato",
+    "edit": "Modifica membro",
+    "empty": "Nessun agente presente in questa chat di gruppo. Clicca il pulsante + per aggiungere membri.",
+    "groupMembers": "Membri del gruppo",
+    "noAvailableAgents": "Nessun assistente disponibile",
+    "noDescription": "Nessuna descrizione",
+    "noMembersInGroup": "Nessun membro nel gruppo",
+    "owner": "Tu (proprietario)",
+    "remove": "Rimuovi membro",
+    "removeFromGroup": "Rimuovi dal gruppo",
+    "you": "Tu"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
@@ -514,6 +597,11 @@
       "label": "Modello di denominazione argomenti per disegno AI",
       "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
       "title": "Denominazione automatica argomenti per disegno AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Modello di supervisione per chat di gruppo",
+      "modelDesc": "Specifica il modello da utilizzare per la supervisione e la gestione delle conversazioni di gruppo",
+      "title": "Supervisione e gestione delle chat di gruppo"
     },
     "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {

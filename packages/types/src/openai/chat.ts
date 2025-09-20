@@ -2,6 +2,26 @@ import { LLMRoleType } from '../llm';
 import { MessageToolCall } from '../message';
 import { OpenAIFunctionCall } from './functionCall';
 
+export type ChatResponseFormat =
+  | { type: 'json_object' }
+  | {
+      json_schema: {
+        /**
+         * Schema identifier required by OpenAI.
+         */
+        name: string;
+        /**
+         * JSON schema definition used for validation.
+         */
+        schema: Record<string, any>;
+        /**
+         * Enforce strict schema validation when true.
+         */
+        strict?: boolean;
+      };
+      type: 'json_schema';
+    };
+
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
@@ -79,6 +99,8 @@ export interface ChatStreamPayload {
    * @default openai
    */
   provider?: string;
+  responseMode?: 'stream' | 'json';
+  response_format?: ChatResponseFormat;
   /**
    * @title 是否开启流式请求
    * @default true

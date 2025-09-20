@@ -35,9 +35,16 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "groupTab": {
+    "chat": "Grup sohbeti",
+    "members": "Üyeler",
+    "meta": "Grup sohbeti bilgileri"
+  },
   "header": {
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
+    "group": "Grup Sohbeti Ayarları",
+    "groupDesc": "Mevcut grup sohbetini yönet",
     "session": "Oturum Ayarları",
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
@@ -294,6 +301,82 @@
     },
     "title": "Genel Ayarlar"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Lütfen grup sohbeti açıklamasını girin",
+      "title": "Grup Sohbeti Açıklaması"
+    },
+    "name": {
+      "placeholder": "Lütfen grup sohbeti adını girin",
+      "title": "Grup Sohbeti Adı"
+    },
+    "submit": "Grup Sohbetini Güncelle",
+    "systemPrompt": {
+      "placeholder": "Lütfen moderatör sistem istemini girin",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Grup Sohbeti Bilgisi"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Üyelerin birbirlerine özel mesaj göndermesine izin ver",
+      "title": "Özel Mesaja İzin Ver"
+    },
+    "maxResponseInRow": {
+      "desc": "Üyelerin kaç mesajı ardışık olarak yanıtlayabileceğini seçin. 0 olarak ayarlanırsa bu kısıtlama devre dışı bırakılır.",
+      "title": "Ardışık Yanıt Mesaj Sayısı"
+    },
+    "model": {
+      "desc": "Grup sohbeti moderatörü için kullanılacak modeli seçin. Grup üyelerinin konuşmaları etkilenmez.",
+      "title": "Moderatör Modeli"
+    },
+    "orchestratorTitle": "Moderatör Ayarları",
+    "responseOrder": {
+      "desc": "Temsilci, grup sohbetinde ayarlanan sıraya göre yanıt verecektir",
+      "options": {
+        "natural": "Doğal",
+        "sequential": "Sıralı"
+      },
+      "placeholder": "Yanıt sırasını seçin",
+      "title": "Yanıt Sırası"
+    },
+    "responseSpeed": {
+      "desc": "Grup sohbetinin genel hızını kontrol edin",
+      "options": {
+        "fast": "Hızlı",
+        "medium": "Orta",
+        "slow": "Yavaş"
+      },
+      "placeholder": "Yanıt hızını seçin",
+      "title": "Yanıt Hızı"
+    },
+    "revealDM": {
+      "desc": "Diğer üyelere gönderilen özel mesajların içeriğini sizin için görünür yapar.",
+      "title": "Özel Mesaj İçeriğini Göster"
+    },
+    "submit": "Ayarları Güncelle",
+    "systemPrompt": {
+      "desc": "Grup sohbeti moderatörünün özel sistem istemi. Bu, varsayılan moderatör davranışını etkileyebilir.",
+      "placeholder": "Lütfen özel moderatör sistem istemini girin...",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Sohbet Ayarları"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Gruba Ekle",
+    "availableAgents": "Mevcut Asistanlar",
+    "defaultAgent": "Özel Asistan",
+    "edit": "Üyeyi Düzenle",
+    "empty": "Bu grup sohbetinde henüz temsilci yok. Üye eklemek için + butonuna tıklayın.",
+    "groupMembers": "Grup Üyeleri",
+    "noAvailableAgents": "Mevcut asistan yok",
+    "noDescription": "Açıklama yok",
+    "noMembersInGroup": "Grup üyesi yok",
+    "owner": "Siz (Sahip)",
+    "remove": "Üyeyi Kaldır",
+    "removeFromGroup": "Grup Dışına Çıkar",
+    "you": "Siz"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
@@ -514,6 +597,11 @@
       "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
       "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
       "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+    },
+    "groupChatSupervisor": {
+      "label": "Grup Sohbet Denetim Modeli",
+      "modelDesc": "Grup sohbeti diyaloglarını denetlemek ve yönetmek için kullanılan model",
+      "title": "Grup Sohbet Denetimi ve Yönetimi"
     },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {

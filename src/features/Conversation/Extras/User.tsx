@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -20,7 +21,7 @@ export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, 
   if (!showExtra) return;
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <Flexbox gap={8} style={{ marginTop: 8 }}>
       {extra?.tts && (
         <ExtraContainer>
           <TTS content={content} id={id} loading={loading} {...extra?.tts} />
@@ -31,6 +32,6 @@ export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, 
           <Translate id={id} {...extra?.translate} loading={loading} />
         </ExtraContainer>
       )}
-    </div>
+    </Flexbox>
   );
 });

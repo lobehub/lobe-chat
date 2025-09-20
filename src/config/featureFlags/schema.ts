@@ -1,50 +1,77 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { z } from 'zod';
 
+// Define a union type for feature flag values: either boolean or array of user IDs
+const FeatureFlagValue = z.union([z.boolean(), z.array(z.string())]);
+
 export const FeatureFlagsSchema = z.object({
-  check_updates: z.boolean().optional(),
-  pin_list: z.boolean().optional(),
+  /**
+   * Enable WebRTC sync
+   */
+  webrtc_sync: FeatureFlagValue.optional(),
+  check_updates: FeatureFlagValue.optional(),
+  pin_list: FeatureFlagValue.optional(),
 
   // settings
-  language_model_settings: z.boolean().optional(),
-  provider_settings: z.boolean().optional(),
+  language_model_settings: FeatureFlagValue.optional(),
+  provider_settings: FeatureFlagValue.optional(),
 
-  openai_api_key: z.boolean().optional(),
-  openai_proxy_url: z.boolean().optional(),
+  openai_api_key: FeatureFlagValue.optional(),
+  openai_proxy_url: FeatureFlagValue.optional(),
 
   // profile
-  api_key_manage: z.boolean().optional(),
+  api_key_manage: FeatureFlagValue.optional(),
 
-  create_session: z.boolean().optional(),
-  edit_agent: z.boolean().optional(),
+  create_session: FeatureFlagValue.optional(),
+  edit_agent: FeatureFlagValue.optional(),
 
-  plugins: z.boolean().optional(),
-  dalle: z.boolean().optional(),
-  ai_image: z.boolean().optional(),
-  speech_to_text: z.boolean().optional(),
-  token_counter: z.boolean().optional(),
+  plugins: FeatureFlagValue.optional(),
+  dalle: FeatureFlagValue.optional(),
+  ai_image: FeatureFlagValue.optional(),
+  speech_to_text: FeatureFlagValue.optional(),
+  token_counter: FeatureFlagValue.optional(),
 
-  welcome_suggest: z.boolean().optional(),
-  changelog: z.boolean().optional(),
+  welcome_suggest: FeatureFlagValue.optional(),
+  changelog: FeatureFlagValue.optional(),
 
-  clerk_sign_up: z.boolean().optional(),
+  clerk_sign_up: FeatureFlagValue.optional(),
 
-  market: z.boolean().optional(),
-  knowledge_base: z.boolean().optional(),
+  market: FeatureFlagValue.optional(),
+  knowledge_base: FeatureFlagValue.optional(),
 
-  rag_eval: z.boolean().optional(),
+  rag_eval: FeatureFlagValue.optional(),
+
+  group_chat: FeatureFlagValue.optional(),
 
   // internal flag
-  cloud_promotion: z.boolean().optional(),
+  cloud_promotion: FeatureFlagValue.optional(),
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
   // please contact us for more information: hello@lobehub.com
-  commercial_hide_github: z.boolean().optional(),
-  commercial_hide_docs: z.boolean().optional(),
+  commercial_hide_github: FeatureFlagValue.optional(),
+  commercial_hide_docs: FeatureFlagValue.optional(),
 });
 
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
+
+/**
+ * Evaluate a feature flag value against a user ID
+ * @param flagValue - The feature flag value (boolean or array of user IDs)
+ * @param userId - The current user ID
+ * @returns boolean indicating if the feature is enabled for the user
+ */
+export const evaluateFeatureFlag = (
+  flagValue: boolean | string[] | undefined,
+  userId?: string,
+): boolean => {
+  if (flagValue === undefined) return false;
+  if (typeof flagValue === 'boolean') return flagValue;
+  if (Array.isArray(flagValue)) {
+    return userId ? flagValue.includes(userId) : false;
+  }
+  return false;
+};
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   pin_list: false,
@@ -79,6 +106,8 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   speech_to_text: true,
   changelog: true,
 
+  group_chat: false,
+
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
   // please contact us for more information: hello@lobehub.com
@@ -86,39 +115,44 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   commercial_hide_docs: false,
 };
 
-export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
+export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string) => {
   return {
-    isAgentEditable: config.edit_agent,
+    enableWebrtc: evaluateFeatureFlag(config.webrtc_sync, userId),
+    isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
 
-    showCreateSession: config.create_session,
-    showLLM: config.language_model_settings,
-    showProvider: config.provider_settings,
-    showPinList: config.pin_list,
+    showCreateSession: evaluateFeatureFlag(config.create_session, userId),
+    showLLM: evaluateFeatureFlag(config.language_model_settings, userId),
+    showProvider: evaluateFeatureFlag(config.provider_settings, userId),
+    showPinList: evaluateFeatureFlag(config.pin_list, userId),
 
-    showOpenAIApiKey: config.openai_api_key,
-    showOpenAIProxyUrl: config.openai_proxy_url,
+    showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
+    showOpenAIProxyUrl: evaluateFeatureFlag(config.openai_proxy_url, userId),
 
-    showApiKeyManage: config.api_key_manage,
+    showApiKeyManage: evaluateFeatureFlag(config.api_key_manage, userId),
 
-    enablePlugins: config.plugins,
-    showDalle: config.dalle,
-    showAiImage: config.ai_image,
-    showChangelog: config.changelog,
+    enablePlugins: evaluateFeatureFlag(config.plugins, userId),
+    showDalle: evaluateFeatureFlag(config.dalle, userId),
+    showAiImage: evaluateFeatureFlag(config.ai_image, userId),
+    showChangelog: evaluateFeatureFlag(config.changelog, userId),
 
-    enableCheckUpdates: config.check_updates,
-    showWelcomeSuggest: config.welcome_suggest,
+    enableCheckUpdates: evaluateFeatureFlag(config.check_updates, userId),
+    showWelcomeSuggest: evaluateFeatureFlag(config.welcome_suggest, userId),
 
-    enableClerkSignUp: config.clerk_sign_up,
+    enableClerkSignUp: evaluateFeatureFlag(config.clerk_sign_up, userId),
 
-    enableKnowledgeBase: config.knowledge_base,
-    enableRAGEval: config.rag_eval,
+    enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
+    enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
 
-    showCloudPromotion: config.cloud_promotion,
+    enableGroupChat: evaluateFeatureFlag(config.group_chat, userId),
 
-    showMarket: config.market,
-    enableSTT: config.speech_to_text,
+    showCloudPromotion: evaluateFeatureFlag(config.cloud_promotion, userId),
 
-    hideGitHub: config.commercial_hide_github,
-    hideDocs: config.commercial_hide_docs,
+    showMarket: evaluateFeatureFlag(config.market, userId),
+    enableSTT: evaluateFeatureFlag(config.speech_to_text, userId),
+
+    hideGitHub: evaluateFeatureFlag(config.commercial_hide_github, userId),
+    hideDocs: evaluateFeatureFlag(config.commercial_hide_docs, userId),
   };
 };
+
+export type IFeatureFlagsState = ReturnType<typeof mapFeatureFlagsEnvToState>;

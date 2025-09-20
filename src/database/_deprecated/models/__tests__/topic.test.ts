@@ -139,7 +139,7 @@ describe('TopicModel', () => {
     // Create multiple topics to test the query method
     await TopicModel.batchCreate([topicData, topicData]);
 
-    const queryParams: QueryTopicParams = { pageSize: 1, current: 0, sessionId: 'session1' };
+    const queryParams: QueryTopicParams = { pageSize: 1, current: 0, containerId: 'session1' };
     const queriedTopics = await TopicModel.query(queryParams);
 
     expect(queriedTopics).toHaveLength(1);

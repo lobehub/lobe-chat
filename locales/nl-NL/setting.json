@@ -35,9 +35,16 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "groupTab": {
+    "chat": "Groepschat",
+    "members": "Leden",
+    "meta": "Groepschatinformatie"
+  },
   "header": {
     "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
+    "group": "Groepschatinstellingen",
+    "groupDesc": "Beheer de huidige groepschat",
     "session": "Sessie-instellingen",
     "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
     "sessionWithName": "Sessie-instellingen · {{name}}",
@@ -294,6 +301,82 @@
     },
     "title": "Algemene instellingen"
   },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Voer een groepschatbeschrijving in",
+      "title": "Groepschatbeschrijving"
+    },
+    "name": {
+      "placeholder": "Voer een groepschatnaam in",
+      "title": "Groepschatnaam"
+    },
+    "submit": "Groepschat bijwerken",
+    "systemPrompt": {
+      "placeholder": "Voer de systeemopdracht van de host in",
+      "title": "Systeemopdracht van de host"
+    },
+    "title": "Groepschatinformatie"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Sta leden toe privéberichten naar elkaar te sturen",
+      "title": "Privéberichten toestaan"
+    },
+    "maxResponseInRow": {
+      "desc": "Kies hoeveel berichten een lid achter elkaar kan beantwoorden. Stel in op 0 om deze beperking uit te schakelen.",
+      "title": "Aantal opeenvolgende antwoorden"
+    },
+    "model": {
+      "desc": "Kies het model dat wordt gebruikt om de groepschat te hosten. De bijdragen van groepsleden worden hierdoor niet beïnvloed.",
+      "title": "Hostmodel"
+    },
+    "orchestratorTitle": "Hostinstellingen",
+    "responseOrder": {
+      "desc": "De agent zal antwoorden in de volgorde die in de groepschat is ingesteld",
+      "options": {
+        "natural": "Natuurlijk",
+        "sequential": "Opeenvolgend"
+      },
+      "placeholder": "Kies de antwoordvolgorde",
+      "title": "Antwoordvolgorde"
+    },
+    "responseSpeed": {
+      "desc": "Beheert het algemene tempo van de groepschat",
+      "options": {
+        "fast": "Snel",
+        "medium": "Gemiddeld",
+        "slow": "Langzaam"
+      },
+      "placeholder": "Kies de reactiesnelheid",
+      "title": "Reactiesnelheid"
+    },
+    "revealDM": {
+      "desc": "Maak privéberichten die naar andere leden zijn gestuurd zichtbaar voor jou.",
+      "title": "Privéberichten tonen"
+    },
+    "submit": "Instellingen bijwerken",
+    "systemPrompt": {
+      "desc": "Aangepaste systeemopdracht voor de host van de groepschat. Dit kan het standaardgedrag van de host beïnvloeden.",
+      "placeholder": "Voer een aangepaste systeemopdracht voor de host in...",
+      "title": "Systeemopdracht van de host"
+    },
+    "title": "Chatinstellingen"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Toevoegen aan groep",
+    "availableAgents": "Beschikbare assistenten",
+    "defaultAgent": "Aangepaste assistent",
+    "edit": "Lid bewerken",
+    "empty": "Er zijn momenteel geen agenten in deze groepschat. Klik op de + knop om leden toe te voegen.",
+    "groupMembers": "Groepsleden",
+    "noAvailableAgents": "Geen beschikbare assistenten",
+    "noDescription": "Geen beschrijving",
+    "noMembersInGroup": "Geen leden in de groep",
+    "owner": "Jij (eigenaar)",
+    "remove": "Lid verwijderen",
+    "removeFromGroup": "Verwijderen uit groep",
+    "you": "Jij"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
@@ -514,6 +597,11 @@
       "label": "AI-schilderij onderwerp naamgevingsmodel",
       "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
       "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+    },
+    "groupChatSupervisor": {
+      "label": "Model voor groepschattoezicht",
+      "modelDesc": "Speciaal model voor het toezicht en beheer van groepschatgesprekken",
+      "title": "Groepschattoezicht en -beheer"
     },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
