@@ -52,6 +52,7 @@ import { LobeTencentCloudAI } from './providers/tencentcloud';
 import { LobeTogetherAI } from './providers/togetherai';
 import { LobeUpstageAI } from './providers/upstage';
 import { LobeV0AI } from './providers/v0';
+import { LobeVercelAIGatewayAI } from './providers/vercelaigateway';
 import { LobeVLLMAI } from './providers/vllm';
 import { LobeVolcengineAI } from './providers/volcengine';
 import { LobeWenxinAI } from './providers/wenxin';
@@ -115,6 +116,7 @@ export const providerRuntimeMap = {
   togetherai: LobeTogetherAI,
   upstage: LobeUpstageAI,
   v0: LobeV0AI,
+  vercelaigateway: LobeVercelAIGatewayAI,
   vllm: LobeVLLMAI,
   volcengine: LobeVolcengineAI,
   wenxin: LobeWenxinAI,

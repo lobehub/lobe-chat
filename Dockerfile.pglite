@@ -255,7 +255,9 @@ ENV \
     # FAL
     FAL_API_KEY="" FAL_MODEL_LIST="" \
     # BFL
-    BFL_API_KEY="" BFL_MODEL_LIST=""
+    BFL_API_KEY="" BFL_MODEL_LIST="" \
+    # Vercel AI Gateway
+    VERCELAIGATEWAY_API_KEY="" VERCELAIGATEWAY_MODEL_LIST=""
 
 USER nextjs
 

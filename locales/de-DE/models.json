@@ -602,6 +602,33 @@
   "ai21-labs/AI21-Jamba-1.5-Mini": {
     "description": "Ein mehrsprachiges Modell mit 52 Milliarden Parametern (davon 12 Milliarden aktiv), das ein 256K langes Kontextfenster, Funktionsaufrufe, strukturierte Ausgaben und faktengestützte Generierung bietet."
   },
+  "alibaba/qwen-3-14b": {
+    "description": "Qwen3 ist das neueste große Sprachmodell der Qwen-Serie und bietet eine umfassende Palette an dichten und gemischten Experten (MoE) Modellen. Basierend auf umfangreichem Training erzielt Qwen3 bahnbrechende Fortschritte in den Bereichen Inferenz, Befolgung von Anweisungen, Agentenfähigkeiten und mehrsprachige Unterstützung."
+  },
+  "alibaba/qwen-3-235b": {
+    "description": "Qwen3 ist das neueste große Sprachmodell der Qwen-Serie und bietet eine umfassende Palette an dichten und gemischten Experten (MoE) Modellen. Basierend auf umfangreichem Training erzielt Qwen3 bahnbrechende Fortschritte in den Bereichen Inferenz, Befolgung von Anweisungen, Agentenfähigkeiten und mehrsprachige Unterstützung."
+  },
+  "alibaba/qwen-3-30b": {
+    "description": "Qwen3 ist das neueste große Sprachmodell der Qwen-Serie und bietet eine umfassende Palette an dichten und gemischten Experten (MoE) Modellen. Basierend auf umfangreichem Training erzielt Qwen3 bahnbrechende Fortschritte in den Bereichen Inferenz, Befolgung von Anweisungen, Agentenfähigkeiten und mehrsprachige Unterstützung."
+  },
+  "alibaba/qwen-3-32b": {
+    "description": "Qwen3 ist das neueste große Sprachmodell der Qwen-Serie und bietet eine umfassende Palette an dichten und gemischten Experten (MoE) Modellen. Basierend auf umfangreichem Training erzielt Qwen3 bahnbrechende Fortschritte in den Bereichen Inferenz, Befolgung von Anweisungen, Agentenfähigkeiten und mehrsprachige Unterstützung."
+  },
+  "alibaba/qwen3-coder": {
+    "description": "Qwen3-Coder-480B-A35B-Instruct ist das agentenfähigste Codierungsmodell von Qwen mit herausragender Leistung bei Agenten-Codierung, Agenten-Browsernutzung und anderen grundlegenden Codierungsaufgaben, vergleichbar mit Claude Sonnet."
+  },
+  "amazon/nova-lite": {
+    "description": "Ein äußerst kostengünstiges multimodales Modell, das Bilder, Videos und Texteingaben extrem schnell verarbeitet."
+  },
+  "amazon/nova-micro": {
+    "description": "Ein reines Textmodell, das bei sehr niedrigen Kosten die geringste Latenz für Antworten bietet."
+  },
+  "amazon/nova-pro": {
+    "description": "Ein hochkompetentes multimodales Modell mit optimaler Kombination aus Genauigkeit, Geschwindigkeit und Kosten, geeignet für eine breite Palette von Aufgaben."
+  },
+  "amazon/titan-embed-text-v2": {
+    "description": "Amazon Titan Text Embeddings V2 ist ein leichtgewichtiges, effizientes mehrsprachiges Einbettungsmodell mit Unterstützung für 1024, 512 und 256 Dimensionen."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet hebt den Branchenstandard an, übertrifft die Konkurrenzmodelle und Claude 3 Opus und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittleren Modelle beibehält."
   },
@@ -627,25 +654,28 @@
     "description": "Die aktualisierte Version von Claude 2 bietet ein doppelt so großes Kontextfenster sowie Verbesserungen in der Zuverlässigkeit, der Halluzinationsrate und der evidenzbasierten Genauigkeit in langen Dokumenten und RAG-Kontexten."
   },
   "anthropic/claude-3-haiku": {
-    "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic, das darauf ausgelegt ist, nahezu sofortige Antworten zu liefern. Es bietet schnelle und präzise zielgerichtete Leistungen."
+    "description": "Claude 3 Haiku ist das bisher schnellste Modell von Anthropic, speziell für Unternehmens-Workloads mit meist längeren Eingabeaufforderungen entwickelt. Haiku kann große Dokumentenmengen wie Quartalsberichte, Verträge oder Rechtsfälle schnell analysieren und kostet dabei nur die Hälfte anderer Modelle seiner Leistungsklasse."
   },
   "anthropic/claude-3-opus": {
-    "description": "Claude 3 Opus ist das leistungsstärkste Modell von Anthropic zur Bearbeitung hochkomplexer Aufgaben. Es zeichnet sich durch hervorragende Leistung, Intelligenz, Flüssigkeit und Verständnis aus."
+    "description": "Claude 3 Opus ist das intelligenteste Modell von Anthropic mit marktführender Leistung bei hochkomplexen Aufgaben. Es meistert offene Eingabeaufforderungen und unbekannte Szenarien mit herausragender Flüssigkeit und menschenähnlichem Verständnis."
   },
   "anthropic/claude-3.5-haiku": {
-    "description": "Claude 3.5 Haiku ist das schnellste nächste Generation Modell von Anthropic. Im Vergleich zu Claude 3 Haiku hat Claude 3.5 Haiku in allen Fähigkeiten Fortschritte gemacht und übertrifft in vielen intellektuellen Benchmark-Tests das größte Modell der vorherigen Generation, Claude 3 Opus."
+    "description": "Claude 3.5 Haiku ist die nächste Generation unseres schnellsten Modells. Mit ähnlicher Geschwindigkeit wie Claude 3 Haiku wurde Claude 3.5 Haiku in allen Kompetenzbereichen verbessert und übertrifft in vielen Intelligenz-Benchmarks unser bisher größtes Modell Claude 3 Opus."
   },
   "anthropic/claude-3.5-sonnet": {
-    "description": "Claude 3.5 Sonnet bietet Fähigkeiten, die über Opus hinausgehen, und eine schnellere Geschwindigkeit als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in Programmierung, Datenwissenschaft, visueller Verarbeitung und Agentenaufgaben."
+    "description": "Claude 3.5 Sonnet erreicht eine ideale Balance zwischen Intelligenz und Geschwindigkeit – besonders für Unternehmens-Workloads. Im Vergleich zu ähnlichen Produkten bietet es starke Leistung zu geringeren Kosten und ist für hohe Belastbarkeit bei großflächigen KI-Einsätzen konzipiert."
   },
   "anthropic/claude-3.7-sonnet": {
-    "description": "Claude 3.7 Sonnet ist das intelligenteste Modell von Anthropic bis heute und das erste hybride Inferenzmodell auf dem Markt. Claude 3.7 Sonnet kann nahezu sofortige Antworten oder verlängerte, schrittweise Überlegungen erzeugen, wobei die Benutzer diesen Prozess klar nachvollziehen können. Sonnet ist besonders gut in den Bereichen Programmierung, Datenwissenschaft, visuelle Verarbeitung und Agentenaufgaben."
+    "description": "Claude 3.7 Sonnet ist das erste hybride Inferenzmodell und das intelligenteste Modell von Anthropic bisher. Es bietet modernste Leistung bei Codierung, Inhaltserstellung, Datenanalyse und Planungsaufgaben und baut auf den Software-Engineering- und Computerfähigkeiten seines Vorgängers Claude 3.5 Sonnet auf."
   },
   "anthropic/claude-opus-4": {
-    "description": "Claude Opus 4 ist das leistungsstärkste Modell von Anthropic zur Bewältigung hochkomplexer Aufgaben. Es zeichnet sich durch herausragende Leistung, Intelligenz, Flüssigkeit und Verständnis aus."
+    "description": "Claude Opus 4 ist das leistungsstärkste Modell von Anthropic und das weltweit beste Codierungsmodell mit Spitzenwerten bei SWE-bench (72,5 %) und Terminal-bench (43,2 %). Es bietet anhaltende Leistung für langfristige Aufgaben mit tausenden Schritten und kann stundenlang ununterbrochen arbeiten – was die Fähigkeiten von KI-Agenten erheblich erweitert."
+  },
+  "anthropic/claude-opus-4.1": {
+    "description": "Claude Opus 4.1 ist ein Plug-and-Play-Ersatz für Opus 4 und bietet herausragende Leistung und Präzision für praktische Codierungs- und Agentenaufgaben. Opus 4.1 hebt die modernste Codierungsleistung auf 74,5 % bei SWE-bench Verified und behandelt komplexe mehrstufige Probleme mit höherer Genauigkeit und Detailgenauigkeit."
   },
   "anthropic/claude-sonnet-4": {
-    "description": "Claude Sonnet 4 kann nahezu sofortige Antworten oder verlängerte schrittweise Überlegungen erzeugen, die für den Nutzer klar nachvollziehbar sind. API-Nutzer können zudem die Denkzeit des Modells präzise steuern."
+    "description": "Claude Sonnet 4 baut auf den branchenführenden Fähigkeiten von Sonnet 3.7 auf und zeigt herausragende Codierungsleistung mit einem Spitzenwert von 72,7 % bei SWE-bench. Das Modell bietet eine ausgewogene Kombination aus Leistung und Effizienz, geeignet für interne und externe Anwendungsfälle, und ermöglicht durch verbesserte Steuerbarkeit eine größere Kontrolle über die Ergebnisse."
   },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B ist ein spärlich besetztes großes Sprachmodell mit 72 Milliarden Parametern und 16 Milliarden aktivierten Parametern. Es basiert auf der gruppierten Mixture-of-Experts-Architektur (MoGE), bei der Experten in Gruppen eingeteilt werden und Tokens innerhalb jeder Gruppe eine gleiche Anzahl von Experten aktivieren, um eine ausgewogene Expertenauslastung zu gewährleisten. Dies verbessert die Effizienz der Modellausführung auf der Ascend-Plattform erheblich."
@@ -796,6 +826,18 @@
   },
   "cohere/Cohere-command-r-plus": {
     "description": "Command R+ ist ein hochmodernes, für RAG optimiertes Modell, das für unternehmensweite Arbeitslasten ausgelegt ist."
+  },
+  "cohere/command-a": {
+    "description": "Command A ist das leistungsstärkste Modell von Cohere mit hervorragender Leistung bei Werkzeugnutzung, Agenten, Retrieval-unterstützter Generierung (RAG) und mehrsprachigen Anwendungsfällen. Command A unterstützt eine Kontextlänge von 256K und läuft auf nur zwei GPUs, mit einer 150 % höheren Durchsatzrate im Vergleich zu Command R+ 08-2024."
+  },
+  "cohere/command-r": {
+    "description": "Command R ist ein großes Sprachmodell, optimiert für dialogbasierte Interaktionen und Aufgaben mit langem Kontext. Es gehört zur Kategorie der \"skalierbaren\" Modelle und bietet eine Balance zwischen hoher Leistung und starker Genauigkeit, sodass Unternehmen über Proof-of-Concept hinaus in die Produktion gehen können."
+  },
+  "cohere/command-r-plus": {
+    "description": "Command R+ ist das neueste große Sprachmodell von Cohere, optimiert für dialogbasierte Interaktionen und Aufgaben mit langem Kontext. Es zielt darauf ab, außergewöhnliche Leistung zu bieten, damit Unternehmen über Proof-of-Concept hinaus in die Produktion gehen können."
+  },
+  "cohere/embed-v4.0": {
+    "description": "Ein Modell, das es ermöglicht, Text, Bilder oder gemischte Inhalte zu klassifizieren oder in Einbettungen umzuwandeln."
   },
   "command": {
     "description": "Ein dialogbasiertes Modell, das Anweisungen folgt und in sprachlichen Aufgaben hohe Qualität und Zuverlässigkeit bietet. Im Vergleich zu unserem grundlegenden Generierungsmodell hat es eine längere Kontextlänge."
@@ -975,7 +1017,7 @@
     "description": "DeepSeek-V3.1 ist ein großes hybrides Inferenzmodell, das 128K langen Kontext und effizienten Moduswechsel unterstützt. Es erzielt herausragende Leistung und Geschwindigkeit bei Tool-Aufrufen, Codegenerierung und komplexen Inferenzaufgaben."
   },
   "deepseek/deepseek-r1": {
-    "description": "DeepSeek-R1 hat die Schlussfolgerungsfähigkeiten des Modells erheblich verbessert, selbst bei nur wenigen gekennzeichneten Daten. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
+    "description": "Das DeepSeek R1 Modell wurde in einer kleinen Version aktualisiert, aktuell DeepSeek-R1-0528. Das neueste Update verbessert die Inferenztiefe und -fähigkeit erheblich durch erhöhte Rechenressourcen und nachträgliche algorithmische Optimierungen. Das Modell zeigt hervorragende Leistungen in Mathematik, Programmierung und allgemeiner Logik und nähert sich führenden Modellen wie O3 und Gemini 2.5 Pro an."
   },
   "deepseek/deepseek-r1-0528": {
     "description": "DeepSeek-R1 verbessert die Modellschlussfolgerungsfähigkeit erheblich, selbst bei sehr begrenzten annotierten Daten. Vor der Ausgabe der endgültigen Antwort generiert das Modell eine Denkprozesskette, um die Genauigkeit der Antwort zu erhöhen."
@@ -984,7 +1026,7 @@
     "description": "DeepSeek-R1 verbessert die Modellschlussfolgerungsfähigkeit erheblich, selbst bei sehr begrenzten annotierten Daten. Vor der Ausgabe der endgültigen Antwort generiert das Modell eine Denkprozesskette, um die Genauigkeit der Antwort zu erhöhen."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek R1 Distill Llama 70B ist ein großes Sprachmodell, das auf Llama3.3 70B basiert und durch Feinabstimmung mit den Ausgaben von DeepSeek R1 eine wettbewerbsfähige Leistung erreicht, die mit großen, fortschrittlichen Modellen vergleichbar ist."
+    "description": "DeepSeek-R1-Distill-Llama-70B ist eine destillierte, effizientere Variante des 70B Llama Modells. Es behält starke Leistung bei Textgenerierungsaufgaben bei und reduziert den Rechenaufwand für einfachere Bereitstellung und Forschung. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B ist ein distilliertes großes Sprachmodell, das auf Llama-3.1-8B-Instruct basiert und durch Training mit den Ausgaben von DeepSeek R1 erstellt wurde."
@@ -1002,7 +1044,10 @@
     "description": "DeepSeek-R1 hat die Schlussfolgerungsfähigkeiten des Modells erheblich verbessert, selbst bei nur wenigen gekennzeichneten Daten. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
   },
   "deepseek/deepseek-v3": {
-    "description": "DeepSeek-V3 hat einen bedeutenden Durchbruch in der Inferenzgeschwindigkeit im Vergleich zu früheren Modellen erzielt. Es belegt den ersten Platz unter den Open-Source-Modellen und kann mit den weltweit fortschrittlichsten proprietären Modellen konkurrieren. DeepSeek-V3 verwendet die Multi-Head-Latent-Attention (MLA) und die DeepSeekMoE-Architektur, die in DeepSeek-V2 umfassend validiert wurden. Darüber hinaus hat DeepSeek-V3 eine unterstützende verlustfreie Strategie für die Lastenverteilung eingeführt und mehrere Zielvorgaben für das Training von Mehrfachvorhersagen festgelegt, um eine stärkere Leistung zu erzielen."
+    "description": "Schnelles, universelles großes Sprachmodell mit verbesserter Inferenzfähigkeit."
+  },
+  "deepseek/deepseek-v3.1-base": {
+    "description": "DeepSeek V3.1 Base ist eine verbesserte Version des DeepSeek V3 Modells."
   },
   "deepseek/deepseek-v3/community": {
     "description": "DeepSeek-V3 hat einen bedeutenden Durchbruch in der Inferenzgeschwindigkeit im Vergleich zu früheren Modellen erzielt. Es belegt den ersten Platz unter den Open-Source-Modellen und kann mit den weltweit fortschrittlichsten proprietären Modellen konkurrieren. DeepSeek-V3 verwendet die Multi-Head-Latent-Attention (MLA) und die DeepSeekMoE-Architektur, die in DeepSeek-V2 umfassend validiert wurden. Darüber hinaus hat DeepSeek-V3 eine unterstützende verlustfreie Strategie für die Lastenverteilung eingeführt und mehrere Zielvorgaben für das Training von Mehrfachvorhersagen festgelegt, um eine stärkere Leistung zu erzielen."
@@ -1430,17 +1475,26 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
   },
+  "google/gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash bietet Funktionen der nächsten Generation und Verbesserungen, darunter herausragende Geschwindigkeit, integrierte Werkzeugnutzung, multimodale Generierung und ein Kontextfenster von 1 Million Tokens."
+  },
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
   },
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu früheren Versionen eine gewisse Qualitätsverbesserung aufweist, insbesondere in Bezug auf Weltwissen, Code und langen Kontext."
   },
+  "google/gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash Lite bietet Funktionen der nächsten Generation und Verbesserungen, darunter herausragende Geschwindigkeit, integrierte Werkzeugnutzung, multimodale Generierung und ein Kontextfenster von 1 Million Tokens."
+  },
   "google/gemini-2.5-flash": {
-    "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, speziell entwickelt für anspruchsvolle Aufgaben in den Bereichen logisches Denken, Programmierung, Mathematik und Wissenschaft. Es verfügt über eingebaute \"Denkfähigkeiten\", die es ermöglichen, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell gibt es in zwei Varianten: mit und ohne Denkfähigkeit. Die Preisgestaltung für die Ausgabe variiert erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, vermeidet das Modell ausdrücklich die Erzeugung von Denk-Token.\n\nUm die Denkfähigkeit zu nutzen und Denk-Token zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Kosten für die Denk-Ausgabe führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"Maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+    "description": "Gemini 2.5 Flash ist ein Denkmodell mit hervorragenden umfassenden Fähigkeiten. Es ist auf ein ausgewogenes Verhältnis von Preis und Leistung ausgelegt und unterstützt multimodale Eingaben sowie ein Kontextfenster von 1 Million Tokens."
   },
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash Experimentelles Modell, unterstützt Bildgenerierung"
+  },
+  "google/gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite ist ein ausgewogenes, latenzarmes Modell mit konfigurierbarem Denkbudget und Werkzeuganbindung (z. B. Google Search Grounding und Codeausführung). Es unterstützt multimodale Eingaben und bietet ein Kontextfenster von 1 Million Tokens."
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, das für fortgeschrittenes Denken, Codierung, Mathematik und wissenschaftliche Aufgaben entwickelt wurde. Es enthält die eingebaute Fähigkeit zu \"denken\", was es ihm ermöglicht, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell hat zwei Varianten: Denken und Nicht-Denken. Die Ausgabepreise variieren erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist oder nicht. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, wird das Modell ausdrücklich vermeiden, Denk-Tokens zu generieren.\n\nUm die Denkfähigkeit zu nutzen und Denk-Tokens zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Preisen für Denk-Ausgaben führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
@@ -1449,10 +1503,13 @@
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, das für fortgeschrittenes Denken, Codierung, Mathematik und wissenschaftliche Aufgaben entwickelt wurde. Es enthält die eingebaute Fähigkeit zu \"denken\", was es ihm ermöglicht, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell hat zwei Varianten: Denken und Nicht-Denken. Die Ausgabepreise variieren erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist oder nicht. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, wird das Modell ausdrücklich vermeiden, Denk-Tokens zu generieren.\n\nUm die Denkfähigkeit zu nutzen und Denk-Tokens zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Preisen für Denk-Ausgaben führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-pro": {
-    "description": "Gemini 2.5 Pro ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer zu analysieren sowie große Datensätze, Codebasen und Dokumente mit langem Kontext zu untersuchen."
+    "description": "Gemini 2.5 Pro ist unser fortschrittlichstes Inferenz-Gemini-Modell, das komplexe Probleme lösen kann. Es verfügt über ein Kontextfenster von 2 Millionen Tokens und unterstützt multimodale Eingaben, darunter Text, Bilder, Audio, Video und PDF-Dokumente."
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und MINT zu analysieren sowie große Datensätze, Codebasen und Dokumente mit langem Kontext zu untersuchen."
+  },
+  "google/gemini-embedding-001": {
+    "description": "Modernstes Einbettungsmodell mit hervorragender Leistung bei englischen, mehrsprachigen und Code-Aufgaben."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash bietet optimierte multimodale Verarbeitungsfähigkeiten, die für verschiedene komplexe Aufgabenszenarien geeignet sind."
@@ -1489,6 +1546,12 @@
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Bezug auf Effizienz und Leistung setzt."
+  },
+  "google/text-embedding-005": {
+    "description": "Englisch-fokussiertes Texteingebettetes Modell, optimiert für Code- und englischsprachige Aufgaben."
+  },
+  "google/text-multilingual-embedding-002": {
+    "description": "Mehrsprachiges Texteingebettetes Modell, optimiert für sprachübergreifende Aufgaben und unterstützt mehrere Sprachen."
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo eignet sich für eine Vielzahl von Textgenerierungs- und Verständnisaufgaben. Derzeit verweist es auf gpt-3.5-turbo-0125."
@@ -1781,6 +1844,9 @@
   "imagen-4.0-ultra-generate-preview-06-06": {
     "description": "Imagen 4. Generation Text-zu-Bild Modellserie Ultra-Version"
   },
+  "inception/mercury-coder-small": {
+    "description": "Mercury Coder Small ist ideal für Codegenerierung, Debugging und Refactoring-Aufgaben mit minimaler Latenz."
+  },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 ist ein kleines, leistungsstarkes großes Sprachmodell basierend auf der MoE-Architektur. Es verfügt über 16 Milliarden Gesamtparameter, aktiviert jedoch pro Token nur 1,4 Milliarden (nicht-Embedding 789 Millionen), was eine extrem hohe Generierungsgeschwindigkeit ermöglicht. Dank des effizienten MoE-Designs und umfangreicher, qualitativ hochwertiger Trainingsdaten zeigt Ling-mini-2.0 trotz nur 1,4 Milliarden aktivierter Parameter Spitzenleistungen bei nachgelagerten Aufgaben, die mit dichten LLMs unter 10 Milliarden und größeren MoE-Modellen vergleichbar sind."
   },
@@ -2057,29 +2123,62 @@
   "meta/Meta-Llama-3.1-8B-Instruct": {
     "description": "Llama 3.1 ist ein instruktionsoptimiertes Textmodell, das für mehrsprachige Dialoganwendungen optimiert wurde und in vielen verfügbaren offenen und geschlossenen Chatmodellen bei gängigen Branchenbenchmarks hervorragende Leistungen zeigt."
   },
+  "meta/llama-3-70b": {
+    "description": "Ein von Meta sorgfältig für die Befolgung von Anweisungen abgestimmtes Open-Source-Modell mit 70 Milliarden Parametern. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+  },
+  "meta/llama-3-8b": {
+    "description": "Ein von Meta sorgfältig für die Befolgung von Anweisungen abgestimmtes Open-Source-Modell mit 8 Milliarden Parametern. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "Fortgeschrittenes LLM, das die Generierung synthetischer Daten, Wissensverdichtung und Schlussfolgerungen unterstützt, geeignet für Chatbots, Programmierung und spezifische Aufgaben."
+  },
+  "meta/llama-3.1-70b": {
+    "description": "Aktualisierte Version von Meta Llama 3 70B Instruct mit erweitertem 128K Kontextfenster, Mehrsprachigkeit und verbesserter Inferenzfähigkeit."
   },
   "meta/llama-3.1-70b-instruct": {
     "description": "Ermöglicht komplexe Gespräche mit hervorragendem Kontextverständnis, Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
   },
+  "meta/llama-3.1-8b": {
+    "description": "Llama 3.1 8B unterstützt ein 128K Kontextfenster und ist ideal für Echtzeit-Dialogschnittstellen und Datenanalysen, während es im Vergleich zu größeren Modellen erhebliche Kosteneinsparungen bietet. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+  },
   "meta/llama-3.1-8b-instruct": {
     "description": "Fortschrittliches, hochmodernes Modell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.2-11b": {
+    "description": "Anweisungsabgestimmtes Bildinferenz-Generierungsmodell (Text + Bildeingabe / Textausgabe), optimiert für visuelle Erkennung, Bildinferenz, Bildunterschriftenerstellung und allgemeine Fragen zu Bildern."
   },
   "meta/llama-3.2-11b-vision-instruct": {
     "description": "Spitzenmäßiges visuelles Sprachmodell, das in der Lage ist, qualitativ hochwertige Schlussfolgerungen aus Bildern zu ziehen."
   },
+  "meta/llama-3.2-1b": {
+    "description": "Reines Textmodell, unterstützt On-Device-Anwendungsfälle wie mehrsprachige lokale Wissenssuche, Zusammenfassung und Umschreibung."
+  },
   "meta/llama-3.2-1b-instruct": {
     "description": "Fortschrittliches, hochmodernes kleines Sprachmodell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.2-3b": {
+    "description": "Reines Textmodell, sorgfältig abgestimmt zur Unterstützung von On-Device-Anwendungsfällen wie mehrsprachige lokale Wissenssuche, Zusammenfassung und Umschreibung."
   },
   "meta/llama-3.2-3b-instruct": {
     "description": "Fortschrittliches, hochmodernes kleines Sprachmodell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
   },
+  "meta/llama-3.2-90b": {
+    "description": "Anweisungsabgestimmtes Bildinferenz-Generierungsmodell (Text + Bildeingabe / Textausgabe), optimiert für visuelle Erkennung, Bildinferenz, Bildunterschriftenerstellung und allgemeine Fragen zu Bildern."
+  },
   "meta/llama-3.2-90b-vision-instruct": {
     "description": "Spitzenmäßiges visuelles Sprachmodell, das in der Lage ist, qualitativ hochwertige Schlussfolgerungen aus Bildern zu ziehen."
   },
+  "meta/llama-3.3-70b": {
+    "description": "Perfekte Kombination aus Leistung und Effizienz. Das Modell unterstützt leistungsstarke Dialog-KI, ist für Inhaltserstellung, Unternehmensanwendungen und Forschung konzipiert und bietet fortschrittliche Sprachverständnisfähigkeiten, einschließlich Textzusammenfassung, Klassifikation, Sentimentanalyse und Codegenerierung."
+  },
   "meta/llama-3.3-70b-instruct": {
     "description": "Fortschrittliches LLM, das auf Schlussfolgern, Mathematik, Allgemeinwissen und Funktionsaufrufen spezialisiert ist."
+  },
+  "meta/llama-4-maverick": {
+    "description": "Die Llama 4 Modellreihe sind native multimodale KI-Modelle, die Text- und multimodale Erlebnisse unterstützen. Diese Modelle nutzen eine gemischte Expertenarchitektur und bieten branchenführende Leistung bei Text- und Bildverständnis. Llama 4 Maverick ist ein 17 Milliarden Parameter Modell mit 128 Experten. Bereitgestellt von DeepInfra."
+  },
+  "meta/llama-4-scout": {
+    "description": "Die Llama 4 Modellreihe sind native multimodale KI-Modelle, die Text- und multimodale Erlebnisse unterstützen. Diese Modelle nutzen eine gemischte Expertenarchitektur und bieten branchenführende Leistung bei Text- und Bildverständnis. Llama 4 Scout ist ein 17 Milliarden Parameter Modell mit 16 Experten. Bereitgestellt von DeepInfra."
   },
   "microsoft/Phi-3-medium-128k-instruct": {
     "description": "Dasselbe Phi-3-medium-Modell, jedoch mit größerem Kontextfenster, geeignet für RAG oder wenige Eingabeaufforderungen."
@@ -2156,6 +2255,48 @@
   "mistral-small-latest": {
     "description": "Mistral Small ist eine kosteneffiziente, schnelle und zuverlässige Option für Anwendungsfälle wie Übersetzung, Zusammenfassung und Sentimentanalyse."
   },
+  "mistral/codestral": {
+    "description": "Mistral Codestral 25.01 ist ein hochmodernes Codierungsmodell, optimiert für latenzarme und hochfrequente Anwendungsfälle. Es beherrscht über 80 Programmiersprachen und zeigt hervorragende Leistungen bei Aufgaben wie Fill-in-the-Middle (FIM), Codekorrektur und Testgenerierung."
+  },
+  "mistral/codestral-embed": {
+    "description": "Ein Code-Einbettungsmodell, das in Code-Datenbanken und Repositories eingebettet werden kann, um Codierungsassistenten zu unterstützen."
+  },
+  "mistral/devstral-small": {
+    "description": "Devstral ist ein agentenfähiges großes Sprachmodell für Software-Engineering-Aufgaben und somit eine ausgezeichnete Wahl für Software-Engineering-Agenten."
+  },
+  "mistral/magistral-medium": {
+    "description": "Komplexes Denken, unterstützt durch tiefes Verständnis mit nachvollziehbarer und überprüfbarer transparenter Argumentation. Das Modell behält auch bei Sprachwechseln während der Aufgabe eine hohe Genauigkeit in vielen Sprachen bei."
+  },
+  "mistral/magistral-small": {
+    "description": "Komplexes Denken, unterstützt durch tiefes Verständnis mit nachvollziehbarer und überprüfbarer transparenter Argumentation. Das Modell behält auch bei Sprachwechseln während der Aufgabe eine hohe Genauigkeit in vielen Sprachen bei."
+  },
+  "mistral/ministral-3b": {
+    "description": "Ein kompaktes, effizientes Modell für On-Device-Aufgaben wie intelligente Assistenten und lokale Analysen mit niedriger Latenz."
+  },
+  "mistral/ministral-8b": {
+    "description": "Ein leistungsfähigeres Modell mit schnellerer und speichereffizienter Inferenz, ideal für komplexe Workflows und anspruchsvolle Edge-Anwendungen."
+  },
+  "mistral/mistral-embed": {
+    "description": "Universelles Texteingebettetes Modell für semantische Suche, Ähnlichkeit, Clustering und RAG-Workflows."
+  },
+  "mistral/mistral-large": {
+    "description": "Mistral Large ist ideal für komplexe Aufgaben, die große Inferenzkapazitäten oder hohe Spezialisierung erfordern – wie synthetische Textgenerierung, Codegenerierung, RAG oder Agenten."
+  },
+  "mistral/mistral-saba-24b": {
+    "description": "Mistral Saba 24B ist ein 24 Milliarden Parameter Open-Source-Modell von Mistral.ai. Saba ist ein spezialisiertes Modell, das für herausragende Leistungen in Arabisch, Persisch, Urdu, Hebräisch und indischen Sprachen trainiert wurde. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+  },
+  "mistral/mistral-small": {
+    "description": "Mistral Small ist ideal für einfache Aufgaben, die in großen Mengen ausgeführt werden können – wie Klassifikation, Kundensupport oder Textgenerierung. Es bietet hervorragende Leistung zu einem erschwinglichen Preis."
+  },
+  "mistral/mixtral-8x22b-instruct": {
+    "description": "8x22b Instruct Modell. 8x22b ist ein von Mistral bereitgestelltes gemischtes Experten-Open-Source-Modell."
+  },
+  "mistral/pixtral-12b": {
+    "description": "Ein 12 Milliarden Parameter Modell mit Bildverständnisfähigkeiten sowie Text."
+  },
+  "mistral/pixtral-large": {
+    "description": "Pixtral Large ist das zweite Modell unserer multimodalen Familie und demonstriert Spitzenleistungen im Bildverständnis. Insbesondere kann das Modell Dokumente, Diagramme und natürliche Bilder verstehen und behält dabei die führenden Textverständnisfähigkeiten von Mistral Large 2 bei."
+  },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct ist bekannt für seine hohe Leistung und eignet sich für eine Vielzahl von Sprachaufgaben."
   },
@@ -2222,11 +2363,20 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 ist die neueste und leistungsstärkste Version von Kimi K2. Es handelt sich um ein erstklassiges Mixture-of-Experts (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern. Die Hauptmerkmale dieses Modells umfassen: verbesserte Agenten-Codierungsintelligenz, die in öffentlichen Benchmark-Tests und realen Agenten-Codierungsaufgaben eine signifikante Leistungssteigerung zeigt; verbesserte Frontend-Codierungserfahrung mit Fortschritten in Ästhetik und Praktikabilität der Frontend-Programmierung."
   },
+  "moonshotai/kimi-k2": {
+    "description": "Kimi K2 ist ein von Moonshot AI entwickeltes großes gemischtes Experten (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktiven Parametern pro Vorwärtsdurchlauf. Es ist auf Agentenfähigkeiten optimiert, einschließlich fortgeschrittener Werkzeugnutzung, Inferenz und Code-Synthese."
+  },
   "moonshotai/kimi-k2-0905": {
     "description": "Das Modell kimi-k2-0905-preview hat eine Kontextlänge von 256k, verfügt über stärkere Agentic-Coding-Fähigkeiten, eine herausragendere Ästhetik und Praktikabilität von Frontend-Code sowie ein besseres Kontextverständnis."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "Das Modell kimi-k2-0905-preview hat eine Kontextlänge von 256k, verfügt über stärkere Agentic-Coding-Fähigkeiten, eine herausragendere Ästhetik und Praktikabilität von Frontend-Code sowie ein besseres Kontextverständnis."
+  },
+  "morph/morph-v3-fast": {
+    "description": "Morph bietet ein spezialisiertes KI-Modell, das von führenden Modellen wie Claude oder GPT-4o vorgeschlagene Codeänderungen schnell auf Ihre bestehenden Code-Dateien anwendet – mit über 4500 Tokens pro Sekunde. Es fungiert als letzter Schritt im KI-Codierungsworkflow und unterstützt 16k Eingabe- und 16k Ausgabe-Tokens."
+  },
+  "morph/morph-v3-large": {
+    "description": "Morph bietet ein spezialisiertes KI-Modell, das von führenden Modellen wie Claude oder GPT-4o vorgeschlagene Codeänderungen schnell auf Ihre bestehenden Code-Dateien anwendet – mit über 2500 Tokens pro Sekunde. Es fungiert als letzter Schritt im KI-Codierungsworkflow und unterstützt 16k Eingabe- und 16k Ausgabe-Tokens."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B ist die aktualisierte Version von Nous Hermes 2 und enthält die neuesten intern entwickelten Datensätze."
@@ -2294,29 +2444,47 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B ist ein spärliches Expertenmodell, das mehrere Parameter nutzt, um die Schlussfolgerungsgeschwindigkeit zu erhöhen und sich für die Verarbeitung mehrsprachiger und Codegenerierungsaufgaben eignet."
   },
+  "openai/gpt-3.5-turbo": {
+    "description": "OpenAIs leistungsfähigstes und kosteneffizientestes Modell der GPT-3.5-Reihe, optimiert für Chat-Anwendungen, aber auch gut für traditionelle Completion-Aufgaben geeignet."
+  },
+  "openai/gpt-3.5-turbo-instruct": {
+    "description": "Fähigkeiten ähnlich den Modellen der GPT-3-Ära. Kompatibel mit traditionellen Completion-Endpunkten, nicht mit Chat-Completion-Endpunkten."
+  },
+  "openai/gpt-4-turbo": {
+    "description": "OpenAIs gpt-4-turbo verfügt über umfangreiches Allgemeinwissen und Fachkenntnisse, kann komplexen natürlichen Sprachbefehlen folgen und schwierige Probleme präzise lösen. Wissensstand bis April 2023, Kontextfenster von 128.000 Tokens."
+  },
   "openai/gpt-4.1": {
-    "description": "GPT-4.1 ist unser Flaggschiff-Modell für komplexe Aufgaben. Es eignet sich hervorragend zur Lösung von Problemen über verschiedene Fachgebiete hinweg."
+    "description": "GPT 4.1 ist das Flaggschiffmodell von OpenAI, geeignet für komplexe Aufgaben. Es ist hervorragend für interdisziplinäre Problemlösungen."
   },
   "openai/gpt-4.1-mini": {
-    "description": "GPT-4.1 mini bietet ein Gleichgewicht zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
+    "description": "GPT 4.1 mini bietet eine ausgewogene Kombination aus Intelligenz, Geschwindigkeit und Kosten und ist damit für viele Anwendungsfälle attraktiv."
   },
   "openai/gpt-4.1-nano": {
-    "description": "GPT-4.1 nano ist das schnellste und kosteneffektivste Modell der GPT-4.1-Reihe."
+    "description": "GPT-4.1 nano ist das schnellste und kosteneffizienteste Modell der GPT 4.1 Reihe."
   },
   "openai/gpt-4o": {
-    "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technischem Support."
+    "description": "GPT-4o von OpenAI verfügt über umfangreiches Allgemeinwissen und Fachkenntnisse, kann komplexen natürlichen Sprachbefehlen folgen und schwierige Probleme präzise lösen. Es bietet die Leistung von GPT-4 Turbo mit schnellerem und kostengünstigerem API-Zugriff."
   },
   "openai/gpt-4o-mini": {
-    "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und Text- und Bild-Eingaben unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und über 60 % günstiger als GPT-3.5 Turbo. Es behält die fortschrittlichste Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
+    "description": "GPT-4o mini von OpenAI ist ihr fortschrittlichstes und kosteneffizientestes kleines Modell. Es ist multimodal (akzeptiert Text- oder Bildeingaben und gibt Text aus) und intelligenter als gpt-3.5-turbo, bei gleicher Geschwindigkeit."
+  },
+  "openai/gpt-5": {
+    "description": "GPT-5 ist OpenAIs Flaggschiff-Sprachmodell mit herausragender Leistung bei komplexer Inferenz, umfangreichem Weltwissen, codeintensiven und mehrstufigen Agentenaufgaben."
+  },
+  "openai/gpt-5-mini": {
+    "description": "GPT-5 mini ist ein kostenoptimiertes Modell mit hervorragender Leistung bei Inferenz- und Chat-Aufgaben. Es bietet die beste Balance zwischen Geschwindigkeit, Kosten und Fähigkeiten."
+  },
+  "openai/gpt-5-nano": {
+    "description": "GPT-5 nano ist ein Modell mit hohem Durchsatz, das bei einfachen Anweisungen oder Klassifizierungsaufgaben hervorragende Leistungen zeigt."
   },
   "openai/gpt-oss-120b": {
-    "description": "OpenAI GPT-OSS 120B ist ein Spitzen-Sprachmodell mit 120 Milliarden Parametern, integriertem Browser-Such- und Code-Ausführungsfunktionen sowie ausgeprägten Inferenzfähigkeiten."
+    "description": "Extrem leistungsfähiges universelles großes Sprachmodell mit starker, kontrollierbarer Inferenzfähigkeit."
   },
   "openai/gpt-oss-20b": {
-    "description": "OpenAI GPT-OSS 20B ist ein Spitzen-Sprachmodell mit 20 Milliarden Parametern, integriertem Browser-Such- und Code-Ausführungsfunktionen sowie ausgeprägten Inferenzfähigkeiten."
+    "description": "Ein kompaktes, Open-Source-Gewichtsmodell, optimiert für niedrige Latenz und ressourcenbeschränkte Umgebungen, einschließlich lokaler und Edge-Bereitstellungen."
   },
   "openai/o1": {
-    "description": "o1 ist OpenAIs neues Inferenzmodell, das Bild- und Texteingaben unterstützt und Text ausgibt. Es eignet sich für komplexe Aufgaben, die umfangreiches Allgemeinwissen erfordern. Das Modell verfügt über einen Kontext von 200K und einen Wissensstand bis Oktober 2023."
+    "description": "OpenAIs o1 ist ein Flaggschiff-Inferenzmodell, entwickelt für komplexe Probleme, die tiefes Nachdenken erfordern. Es bietet starke Inferenzfähigkeiten und höhere Genauigkeit bei komplexen mehrstufigen Aufgaben."
   },
   "openai/o1-mini": {
     "description": "o1-mini ist ein schnelles und kosteneffizientes Inferenzmodell, das für Programmier-, Mathematik- und Wissenschaftsanwendungen entwickelt wurde. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
@@ -2325,22 +2493,43 @@
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
   "openai/o3": {
-    "description": "o3 ist ein leistungsstarkes Allround-Modell, das in mehreren Bereichen hervorragende Leistungen zeigt. Es setzt neue Maßstäbe für mathematische, wissenschaftliche, programmiertechnische und visuelle Denkaufgaben. Es ist auch versiert in technischer Schreibweise und der Befolgung von Anweisungen. Benutzer können es nutzen, um Texte, Code und Bilder zu analysieren und komplexe Probleme mit mehreren Schritten zu lösen."
+    "description": "OpenAIs o3 ist das leistungsstärkste Inferenzmodell mit neuen Spitzenleistungen in Codierung, Mathematik, Wissenschaft und visueller Wahrnehmung. Es ist besonders gut bei komplexen Anfragen, die multidisziplinäre Analyse erfordern, und hat besondere Stärken bei der Analyse von Bildern, Diagrammen und Grafiken."
   },
   "openai/o3-mini": {
-    "description": "o3-mini bietet hohe Intelligenz bei den gleichen Kosten- und Verzögerungszielen wie o1-mini."
+    "description": "o3-mini ist OpenAIs neuestes kleines Inferenzmodell, das bei gleichen Kosten- und Latenzzielen wie o1-mini hohe Intelligenz bietet."
   },
   "openai/o3-mini-high": {
     "description": "o3-mini high ist eine hochintelligente Version mit dem gleichen Kosten- und Verzögerungsziel wie o1-mini."
   },
   "openai/o4-mini": {
-    "description": "o4-mini ist für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
+    "description": "OpenAIs o4-mini bietet schnelle, kosteneffiziente Inferenz mit hervorragender Leistung für seine Größe, insbesondere bei Mathematik (beste Leistung im AIME-Benchmark), Codierung und visuellen Aufgaben."
   },
   "openai/o4-mini-high": {
     "description": "o4-mini Hochleistungsmodell, optimiert für schnelle und effektive Inferenz, zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
   },
+  "openai/text-embedding-3-large": {
+    "description": "OpenAIs leistungsfähigstes Einbettungsmodell, geeignet für englische und nicht-englische Aufgaben."
+  },
+  "openai/text-embedding-3-small": {
+    "description": "OpenAIs verbesserte, leistungsstärkere Version des ada-Einbettungsmodells."
+  },
+  "openai/text-embedding-ada-002": {
+    "description": "OpenAIs traditionelles Texteingebettetes Modell."
+  },
   "openrouter/auto": {
     "description": "Je nach Kontextlänge, Thema und Komplexität wird Ihre Anfrage an Llama 3 70B Instruct, Claude 3.5 Sonnet (selbstregulierend) oder GPT-4o gesendet."
+  },
+  "perplexity/sonar": {
+    "description": "Perplexitys leichtgewichtiges Produkt mit Suchanbindung, schneller und günstiger als Sonar Pro."
+  },
+  "perplexity/sonar-pro": {
+    "description": "Perplexitys Flaggschiffprodukt mit Suchanbindung, unterstützt erweiterte Abfragen und Folgeaktionen."
+  },
+  "perplexity/sonar-reasoning": {
+    "description": "Ein auf Inferenz fokussiertes Modell, das Denkprozesse (CoT) in Antworten ausgibt und detaillierte Erklärungen mit Suchanbindung bietet."
+  },
+  "perplexity/sonar-reasoning-pro": {
+    "description": "Ein fortgeschrittenes, auf Inferenz fokussiertes Modell, das Denkprozesse (CoT) in Antworten ausgibt und umfassende Erklärungen mit verbesserter Suchfähigkeit und mehreren Suchanfragen pro Anfrage bietet."
   },
   "phi3": {
     "description": "Phi-3 ist ein leichtgewichtiges offenes Modell von Microsoft, das für effiziente Integration und großangelegte Wissensschlüsse geeignet ist."
@@ -2804,6 +2993,12 @@
   "v0-1.5-md": {
     "description": "Das Modell v0-1.5-md ist für alltägliche Aufgaben und die Generierung von Benutzeroberflächen (UI) geeignet"
   },
+  "vercel/v0-1.0-md": {
+    "description": "Zugriff auf das Modell hinter v0 zur Generierung, Reparatur und Optimierung moderner Webanwendungen mit frameworkspezifischer Inferenz und aktuellem Wissen."
+  },
+  "vercel/v0-1.5-md": {
+    "description": "Zugriff auf das Modell hinter v0 zur Generierung, Reparatur und Optimierung moderner Webanwendungen mit frameworkspezifischer Inferenz und aktuellem Wissen."
+  },
   "wan2.2-t2i-flash": {
     "description": "Wanxiang 2.2 Turbo-Version, das aktuell neueste Modell. Es bietet umfassende Verbesserungen in Kreativität, Stabilität und realistischer Textur, erzeugt schnell und bietet ein hervorragendes Preis-Leistungs-Verhältnis."
   },
@@ -2833,6 +3028,27 @@
   },
   "x1": {
     "description": "Das Spark X1 Modell wird weiter verbessert und erreicht in allgemeinen Aufgaben wie Schlussfolgerungen, Textgenerierung und Sprachverständnis Ergebnisse, die mit OpenAI o1 und DeepSeek R1 vergleichbar sind, basierend auf der bereits führenden Leistung in mathematischen Aufgaben."
+  },
+  "xai/grok-2": {
+    "description": "Grok 2 ist ein fortschrittliches Sprachmodell mit modernsten Inferenzfähigkeiten. Es bietet fortschrittliche Fähigkeiten in Chat, Codierung und Inferenz und übertrifft Claude 3.5 Sonnet und GPT-4-Turbo in der LMSYS-Rangliste."
+  },
+  "xai/grok-2-vision": {
+    "description": "Das visuelle Modell Grok 2 zeigt hervorragende Leistungen bei visuellen Aufgaben und bietet modernste Leistung bei visueller mathematischer Inferenz (MathVista) und dokumentenbasierter Fragebeantwortung (DocVQA). Es kann verschiedene visuelle Informationen verarbeiten, darunter Dokumente, Diagramme, Grafiken, Screenshots und Fotos."
+  },
+  "xai/grok-3": {
+    "description": "xAIs Flaggschiffmodell mit hervorragender Leistung bei Unternehmensanwendungen wie Datenerfassung, Codierung und Textzusammenfassung. Es verfügt über tiefes Fachwissen in den Bereichen Finanzen, Gesundheitswesen, Recht und Wissenschaft."
+  },
+  "xai/grok-3-fast": {
+    "description": "xAIs Flaggschiffmodell mit hervorragender Leistung bei Unternehmensanwendungen wie Datenerfassung, Codierung und Textzusammenfassung. Die schnelle Modellvariante wird auf schnellerer Infrastruktur bereitgestellt und bietet deutlich schnellere Antwortzeiten. Die erhöhte Geschwindigkeit geht mit höheren Kosten pro ausgegebenem Token einher."
+  },
+  "xai/grok-3-mini": {
+    "description": "xAIs leichtgewichtiges Modell, das vor der Antwort nachdenkt. Ideal für einfache oder logikbasierte Aufgaben ohne tiefes Fachwissen. Der ursprüngliche Denkprozess ist zugänglich."
+  },
+  "xai/grok-3-mini-fast": {
+    "description": "xAIs leichtgewichtiges Modell, das vor der Antwort nachdenkt. Ideal für einfache oder logikbasierte Aufgaben ohne tiefes Fachwissen. Der ursprüngliche Denkprozess ist zugänglich. Die schnelle Modellvariante wird auf schnellerer Infrastruktur bereitgestellt und bietet deutlich schnellere Antwortzeiten. Die erhöhte Geschwindigkeit geht mit höheren Kosten pro ausgegebenem Token einher."
+  },
+  "xai/grok-4": {
+    "description": "xAIs neuestes und bestes Flaggschiffmodell mit unvergleichlicher Leistung in natürlicher Sprache, Mathematik und Inferenz – der perfekte Allrounder."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 ist eine verbesserte Version von Yi. Es wurde mit einem hochwertigen Korpus von 500B Tokens auf Yi fortlaufend vortrainiert und auf 3M diversen Feinabstimmungsbeispielen feinjustiert."
@@ -2881,5 +3097,14 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V ist das neueste visuell-sprachliche Modell (VLM), das von Zhipu AI veröffentlicht wurde. Das Modell basiert auf dem Flaggschiff-Textmodell GLM-4.5-Air mit insgesamt 106 Milliarden Parametern und 12 Milliarden Aktivierungsparametern und verwendet eine Mixture-of-Experts-(MoE)-Architektur. Es zielt darauf ab, bei geringeren Inferenzkosten herausragende Leistung zu erzielen. Technisch setzt es die Entwicklungslinie von GLM-4.1V-Thinking fort und führt Innovationen wie die dreidimensionale Rotations-Positionskodierung (3D-RoPE) ein, wodurch die Wahrnehmung und das Schließen über dreidimensionale Raumbeziehungen deutlich verbessert werden. Durch Optimierungen in den Phasen des Pre-Trainings, der überwachten Feinabstimmung und des Reinforcement Learnings ist das Modell in der Lage, verschiedene visuelle Inhalte wie Bilder, Videos und lange Dokumente zu verarbeiten; in 41 öffentlichen multimodalen Benchmarks erreichte es Spitzenwerte unter frei verfügbaren Modellen derselben Klasse. Zudem wurde ein \"Denkmodus\"-Schalter hinzugefügt, der es Nutzern erlaubt, flexibel zwischen schneller Reaktion und tiefgehendem Schlussfolgern zu wählen, um Effizienz und Ergebnisqualität auszubalancieren."
+  },
+  "zai/glm-4.5": {
+    "description": "Die GLM-4.5 Modellreihe sind speziell für Agenten entwickelte Basismodelle. Das Flaggschiff GLM-4.5 integriert 355 Milliarden Gesamtparameter (32 Milliarden aktiv) und vereint Inferenz-, Codierungs- und Agentenfähigkeiten zur Lösung komplexer Anwendungsanforderungen. Als hybrides Inferenzsystem bietet es zwei Betriebsmodi."
+  },
+  "zai/glm-4.5-air": {
+    "description": "GLM-4.5 und GLM-4.5-Air sind unsere neuesten Flaggschiffmodelle, speziell als Basismodelle für Agentenanwendungen entwickelt. Beide nutzen eine gemischte Expertenarchitektur (MoE). GLM-4.5 hat 355 Milliarden Gesamtparameter mit 32 Milliarden aktiven Parametern pro Vorwärtsdurchlauf, während GLM-4.5-Air ein vereinfachtes Design mit 106 Milliarden Gesamtparametern und 12 Milliarden aktiven Parametern verwendet."
+  },
+  "zai/glm-4.5v": {
+    "description": "GLM-4.5V basiert auf dem GLM-4.5-Air Basismodell, übernimmt bewährte Techniken von GLM-4.1V-Thinking und skaliert effektiv mit einer leistungsstarken MoE-Architektur mit 106 Milliarden Parametern."
   }
 }

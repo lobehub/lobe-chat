@@ -1,15 +1,16 @@
+import { copyImageToClipboard, sanitizeSVGContent } from '@lobechat/utils/client';
 import { Button, Dropdown, Tooltip } from '@lobehub/ui';
 import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
-import { copyImageToClipboard } from '@/utils/clipboard';
 
 const svgContainer = css`
   width: 100%;
@@ -36,6 +37,9 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
   const { t } = useTranslation('portal');
   const { message } = App.useApp();
 
+  // Sanitize SVG content to prevent XSS attacks
+  const sanitizedContent = useMemo(() => sanitizeSVGContent(content), [content]);
+
   const generatePng = async () => {
     return domToPng(document.querySelector(`#${DOM_ID}`) as HTMLDivElement, {
       features: {
@@ -50,7 +54,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
     let dataUrl = '';
     if (type === 'png') dataUrl = await generatePng();
     else if (type === 'svg') {
-      const blob = new Blob([content], { type: 'image/svg+xml' });
+      const blob = new Blob([sanitizedContent], { type: 'image/svg+xml' });
 
       dataUrl = URL.createObjectURL(blob);
     }
@@ -73,7 +77,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
     >
       <Center
         className={cx(svgContainer)}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         id={DOM_ID}
       />
       <Flexbox className={cx(actions)}>

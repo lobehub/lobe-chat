@@ -9,6 +9,7 @@ export abstract class BaseProcessor implements ContextProcessor {
   abstract readonly name: string;
 
   // 为了兼容现有子类构造函数签名，保留参数但不做任何处理
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_options: ProcessorOptions = {}) {}
 
   /**
@@ -69,8 +70,8 @@ export abstract class BaseProcessor implements ContextProcessor {
   protected abort(context: PipelineContext, reason: string): PipelineContext {
     return {
       ...context,
-      isAborted: true,
       abortReason: reason,
+      isAborted: true,
     };
   }
 

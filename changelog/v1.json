@@ -1,6 +1,77 @@
 [
   {
     "children": {
+      "features": ["Qwen provider add qwen-image-edit model support."]
+    },
+    "date": "2025-09-19",
+    "version": "1.131.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc open direct issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.1"
+  },
+  {
+    "children": {
+      "features": ["Add scroll support for pinned assistants using ScrollShadow."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix svg xss issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.129.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add qwen provider support for image-edit model."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.3"
+  },
+  {
+    "children": {
+      "fixes": ["Improve db migrations sql."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update SiliconCloud reasoning models."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.1"
+  },
+  {
+    "children": {
+      "features": ["Support Vercel AI Gateway provider."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure ai runtime error."]
+    },
+    "date": "2025-09-16",
+    "version": "1.128.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve error handle with agent config, support .doc file parse."]
+    },
+    "date": "2025-09-15",
+    "version": "1.128.9"
+  },
+  {
+    "children": {
       "improvements": [
         "Enable toggling search on/off via search button click & historyCount button."
       ]

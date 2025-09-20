@@ -18,13 +18,13 @@ The project uses the following technologies:
 - Next.js 15 for frontend and backend, using app router instead of pages router
 - react 19, using hooks, functional components, react server components
 - TypeScript programming language
-- antd, @lobehub/ui for component framework
+- antd, `@lobehub/ui` for component framework
 - antd-style for css-in-js framework
 - react-layout-kit for flex layout
 - react-i18next for i18n
-- lucide-react, @ant-design/icons for icons
-- @lobehub/icons for AI provider/model logo icon
-- @formkit/auto-animate for react list animation
+- lucide-react, `@ant-design/icons` for icons
+- `@lobehub/icons` for AI provider/model logo icon
+- `@formkit/auto-animate` for react list animation
 - zustand for global state management
 - nuqs for type-safe search params state manager
 - SWR for react data fetch
