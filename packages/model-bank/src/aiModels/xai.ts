@@ -17,8 +17,24 @@ const xaiChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-09-09',
@@ -43,8 +59,24 @@ const xaiChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-09-09',
