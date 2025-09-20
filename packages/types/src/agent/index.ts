@@ -19,6 +19,7 @@ export interface LobeAgentTTSConfig {
 
 export interface LobeAgentConfig {
   chatConfig: LobeAgentChatConfig;
+  enableAgentMode?: boolean;
   fewShots?: FewShots;
   files?: FileItem[];
   id?: string;

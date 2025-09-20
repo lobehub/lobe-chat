@@ -55,6 +55,7 @@ export const aiChatRouter = router({
       const assistantMessageItem = await ctx.messageModel.create({
         content: LOADING_FLAT,
         fromModel: input.newAssistantMessage.model,
+        fromProvider: input.newAssistantMessage.provider,
         parentId: messageId,
         role: 'assistant',
         sessionId: input.sessionId!,

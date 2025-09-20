@@ -19,7 +19,6 @@ export interface RuntimeContext {
     | 'error';
   /** Session metadata */
   session: {
-    eventCount: number;
     messageCount: number;
     sessionId: string;
     status: AgentState['status'];

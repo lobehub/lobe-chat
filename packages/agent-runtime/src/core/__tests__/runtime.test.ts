@@ -53,7 +53,6 @@ function createTestContext(
     session: {
       sessionId,
       messageCount: 1,
-      eventCount: 0,
       status: 'idle',
       stepCount: 0,
     },
@@ -701,7 +700,6 @@ describe('AgentRuntime', () => {
         session: {
           sessionId: 'test-session',
           messageCount: 1,
-          eventCount: 2, // init + interrupt
           status: 'interrupted',
           stepCount: 0,
         },

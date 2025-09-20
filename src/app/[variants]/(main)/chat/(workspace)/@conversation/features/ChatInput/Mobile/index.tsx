@@ -17,6 +17,7 @@ import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
 import { useSend } from '../useSend';
 
 const leftActions: ActionKeys[] = [
+  'agentMode',
   'model',
   'search',
   'fileUpload',

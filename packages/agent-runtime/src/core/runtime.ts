@@ -63,7 +63,6 @@ export class AgentRuntime {
           reasonDetail: `Maximum steps exceeded: ${newState.maxSteps}`,
           type: 'done' as const,
         };
-        newState.events = [...newState.events, finishEvent];
 
         return {
           events: [finishEvent],
@@ -93,9 +92,6 @@ export class AgentRuntime {
       // Ensure stepCount is preserved in the result
       result.newState.stepCount = newState.stepCount;
       result.newState.lastModified = newState.lastModified;
-
-      // Accumulate events to state history
-      result.newState.events = [...result.newState.events, ...result.events];
 
       return result;
     } catch (error) {
@@ -157,8 +153,6 @@ export class AgentRuntime {
       type: 'interrupted',
     };
 
-    newState.events = [...newState.events, interruptEvent];
-
     return {
       events: [interruptEvent],
       newState,
@@ -199,8 +193,6 @@ export class AgentRuntime {
       resumedFromStep,
       type: 'resumed',
     };
-
-    newState.events = [...newState.events, resumeEvent];
 
     // If context is provided, continue with that context
     if (context) {
@@ -269,7 +261,6 @@ export class AgentRuntime {
       cost: defaultCost,
       // Default values
       createdAt: now,
-      events: [],
       lastModified: now,
       messages: [],
       status: 'idle',
@@ -308,6 +299,7 @@ export class AgentRuntime {
       try {
         // Stream LLM response
         for await (const chunk of modelRuntime(payload)) {
+          // Emit individual stream events for each chunk
           events.push({ chunk, type: 'llm_stream' });
 
           // Accumulate content and tool calls from chunks
@@ -550,7 +542,6 @@ export class AgentRuntime {
           reasonDetail: `Cost limit exceeded: ${newState.cost.total} ${newState.cost.currency} > ${costLimit.maxTotalCost} ${costLimit.currency}`,
           type: 'done' as const,
         };
-        newState.events = [...newState.events, finishEvent];
         return {
           events: [finishEvent],
           newState,
@@ -582,7 +573,6 @@ export class AgentRuntime {
           ),
           type: 'error' as const,
         };
-        newState.events = [...newState.events, warningEvent];
         return {
           events: [warningEvent],
           newState,
@@ -601,7 +591,6 @@ export class AgentRuntime {
    */
   private createSessionContext(state: AgentState) {
     return {
-      eventCount: state.events.length,
       messageCount: state.messages.length,
       sessionId: state.sessionId,
       status: state.status,
@@ -644,9 +633,6 @@ export class AgentRuntime {
     errorState.lastModified = new Date().toISOString();
 
     const errorEvent = { error, type: 'error' } as const;
-
-    // Accumulate error event to state history
-    errorState.events = [...errorState.events, errorEvent];
 
     return {
       events: [errorEvent],
