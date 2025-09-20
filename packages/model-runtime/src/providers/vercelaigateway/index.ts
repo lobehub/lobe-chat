@@ -1,19 +1,20 @@
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { AgentRuntimeErrorType, ChatCompletionErrorPayload, ModelProvider } from '../../types';
+import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface VercelAIGatewayModelCard {
-  id: string;
-  created?: number | string;
-  name?: string;
-  description?: string;
   context_window?: number;
+  created?: number | string;
+  description?: string;
+  id: string;
   max_tokens?: number;
-  tags?: string[];
+  name?: string;
   pricing?: {
     input?: string | number;
     output?: string | number;
   };
+  tags?: string[];
+  type?: string;
 }
 
 const formatPrice = (price?: string | number) => {
@@ -53,18 +54,19 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
       }
 
       return {
-        id: m.id,
-        created: m.created,
         contextWindowTokens: m.context_window ?? undefined,
+        created: m.created,
         description: m.description ?? '',
         displayName,
         functionCall: tags.includes('tool-use') || false,
+        id: m.id,
         maxOutput: typeof m.max_tokens === 'number' ? m.max_tokens : undefined,
         pricing: {
           input: inputPrice,
           output: outputPrice,
         },
         reasoning: tags.includes('reasoning') || false,
+        type: m.type === 'embedding' ? 'embedding' : 'chat',
         vision: tags.includes('vision') || false,
       } as any;
     });
