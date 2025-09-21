@@ -5,9 +5,10 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as debugStreamModule from '../../utils/debugStream';
 import officalOpenAIModels from './fixtures/openai-models.json';
 import { LobeOpenAI } from './index';
+import global from '@/styles/global';
 
 // Mock the console.error to avoid polluting test output
-vi.spyOn(console, 'error').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => { });
 
 // Mock fetch for most tests, but will be restored for real network tests
 const mockFetch = vi.fn();
@@ -249,7 +250,7 @@ describe('LobeOpenAI', () => {
   });
 
   describe('responses.handlePayload', () => {
-    it('should add web_search_preview tool when enabledSearch is true', async () => {
+    it('should add web_search tool when enabledSearch is true', async () => {
       const payload = {
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o', // 使用常规模型，通过 enabledSearch 触发 responses API
@@ -263,7 +264,7 @@ describe('LobeOpenAI', () => {
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
       expect(createCall.tools).toEqual([
         { type: 'function', name: 'test', description: 'test' },
-        { type: 'web_search_preview' },
+        { type: 'web_search' },
       ]);
     });
 
