@@ -15,7 +15,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'google/gemini-2.5-pro',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
@@ -35,7 +34,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude Opus 4.1',
     id: 'anthropic/claude-opus-4.1',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
@@ -57,7 +55,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude Opus 4',
     id: 'anthropic/claude-opus-4',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
@@ -79,7 +76,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'anthropic/claude-sonnet-4',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -101,12 +97,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'openai/gpt-5',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
     },
     type: 'chat',
   },
@@ -123,12 +121,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'openai/o3',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -144,12 +144,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'o1',
     id: 'openai/o1',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -165,7 +167,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.7 Sonnet',
     id: 'anthropic/claude-3.7-sonnet',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -187,7 +188,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.5 Sonnet',
     id: 'anthropic/claude-3.5-sonnet',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -209,7 +209,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3 Opus',
     id: 'anthropic/claude-3-opus',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 75, strategy: 'fixed', unit: 'millionTokens' },
@@ -231,7 +230,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o',
     id: 'openai/gpt-4o',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
@@ -251,12 +249,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-5 mini',
     id: 'openai/gpt-5-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
     },
     type: 'chat',
   },
@@ -270,12 +270,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-5 nano',
     id: 'openai/gpt-5-nano',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.005, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
     },
     type: 'chat',
   },
@@ -289,11 +291,13 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'gpt-oss-120b',
     id: 'openai/gpt-oss-120b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -307,11 +311,13 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'gpt-oss-20b',
     id: 'openai/gpt-oss-20b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -326,12 +332,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'o3-mini',
     id: 'openai/o3-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -346,12 +354,14 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'o4-mini',
     id: 'openai/o4-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -366,7 +376,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4.1',
     id: 'openai/gpt-4.1',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
@@ -387,7 +396,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'moonshotai/kimi-k2',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -406,7 +414,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'alibaba/qwen3-coder',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -425,7 +432,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Qwen3 235B A22B Instruct 2507',
     id: 'alibaba/qwen-3-235b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -445,7 +451,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'zai/glm-4.5',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -464,7 +469,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GLM 4.5 Air',
     id: 'zai/glm-4.5-air',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -484,7 +488,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GLM 4.5V',
     id: 'zai/glm-4.5v',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
@@ -503,7 +506,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Qwen3 32B',
     id: 'alibaba/qwen-3-32b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -522,9 +524,8 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Qwen3 30B A3B',
     id: 'alibaba/qwen-3-30b',
     pricing: {
-      currency: 'USD',
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -541,9 +542,8 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Qwen3 14B',
     id: 'alibaba/qwen-3-14b',
     pricing: {
-      currency: 'USD',
       units: [
-        { name: 'textInput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -559,9 +559,8 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Command A',
     id: 'cohere/command-a',
     pricing: {
-      currency: 'USD',
       units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
@@ -577,7 +576,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Command R',
     id: 'cohere/command-r',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -595,7 +593,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Command R+',
     id: 'cohere/command-r-plus',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
@@ -614,7 +611,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 0528',
     id: 'deepseek/deepseek-r1',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.19, strategy: 'fixed', unit: 'millionTokens' },
@@ -631,7 +627,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3 0324',
     id: 'deepseek/deepseek-v3',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.77, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.77, strategy: 'fixed', unit: 'millionTokens' },
@@ -645,7 +640,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3.1 Base',
     id: 'deepseek/deepseek-v3.1-base',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1999, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.8001, strategy: 'fixed', unit: 'millionTokens' },
@@ -665,7 +659,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Gemini 2.0 Flash',
     id: 'google/gemini-2.0-flash',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -685,7 +678,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Gemini 2.0 Flash Lite',
     id: 'google/gemini-2.0-flash-lite',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -705,7 +697,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Gemini 2.5 Flash',
     id: 'google/gemini-2.5-flash',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -725,7 +716,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Gemini 2.5 Flash Lite',
     id: 'google/gemini-2.5-flash-lite',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
@@ -743,7 +733,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Gemma 2 9B IT',
     id: 'google/gemma-2-9b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -762,7 +751,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 4',
     id: 'xai/grok-4',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -781,7 +769,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Mini Fast Beta',
     id: 'xai/grok-3-mini-fast',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
@@ -800,7 +787,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Mini Beta',
     id: 'xai/grok-3-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -819,7 +805,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Fast Beta',
     id: 'xai/grok-3-fast',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
@@ -838,7 +823,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Beta',
     id: 'xai/grok-3',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -857,7 +841,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 2 Vision',
     id: 'xai/grok-2-vision',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
@@ -876,7 +859,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Grok 2',
     id: 'xai/grok-2',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
@@ -894,7 +876,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 70B Instruct',
     id: 'meta/llama-3-70b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
@@ -912,7 +893,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 8B Instruct',
     id: 'meta/llama-3-8b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
@@ -930,7 +910,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 70B Instruct',
     id: 'meta/llama-3.1-70b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
@@ -948,7 +927,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 8B Instruct',
     id: 'meta/llama-3.1-8b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.08, strategy: 'fixed', unit: 'millionTokens' },
@@ -967,7 +945,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 11B Vision Instruct',
     id: 'meta/llama-3.2-11b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.16, strategy: 'fixed', unit: 'millionTokens' },
@@ -984,7 +961,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 1B Instruct',
     id: 'meta/llama-3.2-1b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -1001,7 +977,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 3B Instruct',
     id: 'meta/llama-3.2-3b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -1020,7 +995,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 90B Vision Instruct',
     id: 'meta/llama-3.2-90b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
@@ -1038,7 +1012,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.3 70B Instruct',
     id: 'meta/llama-3.3-70b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.72, strategy: 'fixed', unit: 'millionTokens' },
@@ -1057,7 +1030,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 4 Maverick 17B 128E Instruct',
     id: 'meta/llama-4-maverick',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -1076,7 +1048,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Llama 4 Scout 17B 16E Instruct',
     id: 'meta/llama-4-scout',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -1094,7 +1065,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Codestral 25.01',
     id: 'mistral/codestral',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
@@ -1112,7 +1082,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Devstral Small',
     id: 'mistral/devstral-small',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
@@ -1127,10 +1096,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description:
       '复杂思维，由深刻理解支持，具有您可以遵循和验证的透明推理。该模型即使在任务中途切换语言时，也能在众多语言中保持高保真推理。',
-    displayName: 'Magistral Medium 2506',
+    displayName: 'Magistral Medium 2509',
     id: 'mistral/magistral-medium',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
@@ -1148,7 +1116,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Magistral Small 2506',
     id: 'mistral/magistral-small',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -1165,7 +1132,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Ministral 3B',
     id: 'mistral/ministral-3b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
@@ -1183,7 +1149,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Ministral 8B',
     id: 'mistral/ministral-8b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
@@ -1201,28 +1166,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Large',
     id: 'mistral/mistral-large',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Mistral Saba 24B 是一个由 Mistral.ai 开发的 240 亿参数开源模型。Saba 是一个专门训练以在阿拉伯语、波斯语、乌尔都语、希伯来语和印度语言方面表现出色的专门模型。由 Groq 使用其自定义语言处理单元 (LPU) 硬件提供服务，以提供快速高效的推理。',
-    displayName: 'Mistral Saba 24B',
-    id: 'mistral/mistral-saba-24b',
-    pricing: {
-      currency: 'USD',
-      units: [
-        { name: 'textInput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.79, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1237,7 +1183,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Small',
     id: 'mistral/mistral-small',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -1254,7 +1199,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Mixtral MoE 8x22B Instruct',
     id: 'mistral/mixtral-8x22b-instruct',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -1272,7 +1216,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Pixtral 12B 2409',
     id: 'mistral/pixtral-12b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -1291,7 +1234,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Pixtral Large',
     id: 'mistral/pixtral-large',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
@@ -1308,7 +1250,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Mercury Coder Small Beta',
     id: 'inception/mercury-coder-small',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
@@ -1326,7 +1267,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Morph V3 Fast',
     id: 'morph/morph-v3-fast',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -1344,7 +1284,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Morph V3 Large',
     id: 'morph/morph-v3-large',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.9, strategy: 'fixed', unit: 'millionTokens' },
@@ -1362,7 +1301,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo',
     id: 'openai/gpt-3.5-turbo',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -1379,7 +1317,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-3.5 Turbo Instruct',
     id: 'openai/gpt-3.5-turbo-instruct',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
@@ -1397,7 +1334,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4 Turbo',
     id: 'openai/gpt-4-turbo',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
@@ -1416,7 +1352,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4.1 mini',
     id: 'openai/gpt-4.1-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -1435,7 +1370,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4.1 nano',
     id: 'openai/gpt-4.1-nano',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
@@ -1455,7 +1389,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o mini',
     id: 'openai/gpt-4o-mini',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -1473,7 +1406,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Sonar',
     id: 'perplexity/sonar',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
@@ -1490,7 +1422,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Sonar Pro',
     id: 'perplexity/sonar-pro',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -1508,7 +1439,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Sonar Reasoning',
     id: 'perplexity/sonar-reasoning',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
@@ -1527,7 +1457,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Sonar Reasoning Pro',
     id: 'perplexity/sonar-reasoning-pro',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
@@ -1545,7 +1474,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'v0-1.0-md',
     id: 'vercel/v0-1.0-md',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -1563,7 +1491,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'v0-1.5-md',
     id: 'vercel/v0-1.5-md',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
@@ -1580,7 +1507,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Nova Lite',
     id: 'amazon/nova-lite',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
@@ -1597,7 +1523,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Nova Micro',
     id: 'amazon/nova-micro',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.035, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.14, strategy: 'fixed', unit: 'millionTokens' },
@@ -1616,7 +1541,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.5 Haiku',
     id: 'anthropic/claude-3.5-haiku',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
@@ -1637,7 +1561,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3 Haiku',
     id: 'anthropic/claude-3-haiku',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
@@ -1657,7 +1580,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 Distill Llama 70B',
     id: 'deepseek/deepseek-r1-distill-llama-70b',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
@@ -1674,7 +1596,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     displayName: 'Nova Pro',
     id: 'amazon/nova-pro',
     pricing: {
-      currency: 'USD',
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
@@ -1692,7 +1613,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'amazon/titan-embed-text-v2',
     maxDimension: 1024,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1703,7 +1623,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'google/gemini-embedding-001',
     maxDimension: 768,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1714,7 +1633,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'google/text-embedding-005',
     maxDimension: 768,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1725,7 +1643,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'google/text-multilingual-embedding-002',
     maxDimension: 768,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1736,7 +1653,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'cohere/embed-v4.0',
     maxDimension: 1024,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1747,7 +1663,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'mistral/codestral-embed',
     maxDimension: 1024,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1758,7 +1673,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'mistral/mistral-embed',
     maxDimension: 1024,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1769,7 +1683,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'openai/text-embedding-3-large',
     maxDimension: 3072,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.13, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1780,7 +1693,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'openai/text-embedding-3-small',
     maxDimension: 1536,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
@@ -1791,7 +1703,6 @@ const vercelAIGatewayEmbeddingModels: AIEmbeddingModelCard[] = [
     id: 'openai/text-embedding-ada-002',
     maxDimension: 1536,
     pricing: {
-      currency: 'USD',
       units: [{ name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' }],
     },
     type: 'embedding',
