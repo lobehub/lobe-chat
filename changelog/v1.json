@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Extend custom provider runtime options, Optimized modelFetch for Vercel AI Gateway, update i18n."
+      ]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.1"
+  },
+  {
+    "children": {
       "features": ["Qwen provider add qwen-image-edit model support."]
     },
     "date": "2025-09-19",
