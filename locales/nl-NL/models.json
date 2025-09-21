@@ -2570,6 +2570,9 @@
   "qwen-image": {
     "description": "Qwen-Image is een veelzijdig beeldgeneratiemodel dat meerdere kunststijlen ondersteunt en uitblinkt in het renderen van complexe tekst, met name het weergeven van Chinese en Engelse tekst. Het model ondersteunt meerregelige lay-outs, tekstgeneratie op paragraafniveau en fijne detaillering, en maakt complexe gemengde tekst-beeldlay-outs mogelijk."
   },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit is een beeld-naar-beeld model dat beeldbewerking en aanpassing ondersteunt op basis van ingevoerde afbeeldingen en tekstuele aanwijzingen. Het kan de originele afbeelding nauwkeurig aanpassen en creatief transformeren volgens de wensen van de gebruiker."
+  },
   "qwen-long": {
     "description": "Qwen is een grootschalig taalmodel dat lange tekstcontexten ondersteunt, evenals dialoogfunctionaliteit op basis van lange documenten en meerdere documenten."
   },
