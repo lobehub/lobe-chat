@@ -1,6 +1,7 @@
 import { ChatMessage } from '@lobechat/types';
 
 import { lambdaClient } from '@/libs/trpc/client';
+import { HumanInterventionRequest } from '@/services/agentRuntime/type';
 import { contextEngineering } from '@/services/chat/contextEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
@@ -9,9 +10,11 @@ export { agentRuntimeClient } from './client';
 export * from './type';
 
 interface AgentSessionRequest {
+  agentSessionId?: string;
   autoStart?: boolean;
   messages: ChatMessage[];
-  sessionId?: string;
+  threadId?: string;
+  topicId?: string;
   userMessageId: string;
 }
 
@@ -25,6 +28,7 @@ class AgentRuntimeService {
       model: agentConfig.model,
       provider: agentConfig.provider!,
     };
+
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
       enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
@@ -39,10 +43,10 @@ class AgentRuntimeService {
 
     return await lambdaClient.aiAgent.createSession.mutate({
       ...data,
+      // TODO
       agentConfig: {
         // costLimit: agentChatConfig.costLimit,
         // enableRAG: false,
-        // TODO: 基于消息内容判断
         enableSearch: agentChatConfigSelectors.isAgentEnableSearch(agentStoreState),
         // humanApprovalRequired: agentChatConfig.humanApprovalRequired || false,
         maxSteps: 50,
@@ -51,6 +55,33 @@ class AgentRuntimeService {
       modelRuntimeConfig,
     });
   };
+
+  /**
+   * Delete a session
+   */
+  async deleteSession(sessionId: string): Promise<void> {
+    await lambdaClient.session.removeSession.mutate({ id: sessionId });
+  }
+
+  /**
+   * Get session status
+   */
+  async getSessionStatus(sessionId: string, includeHistory = false): Promise<any> {
+    return await lambdaClient.aiAgent.getSessionStatus.query({ includeHistory, sessionId });
+  }
+
+  /**
+   * Handle human intervention
+   */
+  async handleHumanIntervention(request: HumanInterventionRequest): Promise<any> {
+    return await lambdaClient.aiAgent.processHumanIntervention.mutate({
+      action: request.action,
+      data: request.data,
+      reason: request.reason,
+      sessionId: request.sessionId,
+      stepIndex: 0, // Default to 0 since it's not provided in the request type
+    });
+  }
 }
 
 export const agentRuntimeService = new AgentRuntimeService();

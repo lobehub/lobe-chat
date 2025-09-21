@@ -1,3 +1,4 @@
+import { RuntimeContext } from '@lobechat/agent-runtime';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -17,6 +18,8 @@ const CreateAgentSessionSchema = z.object({
     model: z.string(),
     provider: z.string(),
   }),
+  threadId: z.string().optional().nullable(),
+  topicId: z.string().optional().nullable(),
   userId: z.string().optional(),
 });
 
@@ -80,11 +83,16 @@ export const aiAgentRouter = router({
         autoStart = true,
         messages = [],
         modelRuntimeConfig,
+        threadId,
+        topicId,
       } = input;
 
       // Validate required parameters
       if (!modelRuntimeConfig.model || !modelRuntimeConfig.provider) {
-        throw new Error('modelRuntimeConfig.model and modelRuntimeConfig.provider are required');
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'modelRuntimeConfig.model and modelRuntimeConfig.provider are required',
+        });
       }
 
       // Generate runtime session ID
@@ -93,14 +101,10 @@ export const aiAgentRouter = router({
       pino.info(`Creating session ${runtimeSessionId} for user ${ctx.userId}`);
 
       // Create initial context
-      const initialContext = {
-        payload: {
-          isFirstMessage: messages.length <= 1,
-          sessionId: agentSessionId,
-        },
+      const initialContext: RuntimeContext = {
+        payload: { sessionId: agentSessionId, threadId, topicId },
         phase: 'user_input' as const,
         session: {
-          eventCount: 0,
           messageCount: messages.length,
           sessionId: runtimeSessionId,
           status: 'idle' as const,

@@ -1,7 +1,7 @@
 import { fetchEventSource } from '@lobechat/utils/client';
 import debug from 'debug';
 
-import { HumanInterventionRequest, StreamConnectionOptions, StreamEvent } from './type';
+import { StreamConnectionOptions, StreamEvent } from './type';
 
 const log = debug('lobe-agent-runtime:client');
 
@@ -10,63 +10,6 @@ const log = debug('lobe-agent-runtime:client');
  */
 class AgentRuntimeClient {
   private baseUrl = '/api/agent';
-
-  /**
-   * Get session status
-   */
-  async getSessionStatus(sessionId: string, includeHistory = false): Promise<any> {
-    const params = new URLSearchParams({
-      includeHistory: includeHistory.toString(),
-      sessionId,
-    });
-
-    const response = await fetch(`${this.baseUrl}/session?${params}`, {
-      method: 'GET',
-    });
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Failed to get session status' }));
-      throw new Error(error.error || 'Failed to get session status');
-    }
-
-    return response.json();
-  }
-
-  /**
-   * Delete a session
-   */
-  async deleteSession(sessionId: string): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/session?sessionId=${sessionId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Failed to delete session' }));
-      throw new Error(error.error || 'Failed to delete session');
-    }
-  }
-
-  /**
-   * Handle human intervention
-   */
-  async handleHumanIntervention(request: HumanInterventionRequest): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/human-intervention`, {
-      body: JSON.stringify(request),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      const error = await response
-        .json()
-        .catch(() => ({ error: 'Failed to handle human intervention' }));
-      throw new Error(error.error || 'Failed to handle human intervention');
-    }
-
-    return response.json();
-  }
 
   /**
    * Create a streaming connection to receive real-time agent events

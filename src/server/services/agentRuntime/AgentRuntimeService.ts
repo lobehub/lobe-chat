@@ -71,7 +71,7 @@ export class AgentRuntimeService {
       const initialState = {
         events: [],
         lastModified: new Date().toISOString(),
-        messages: initialMessages || [], // 使用传入的初始消息
+        messages: initialMessages, // 使用传入的初始消息
         metadata: {
           agentConfig,
           createdAt: new Date().toISOString(),

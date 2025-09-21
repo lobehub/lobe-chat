@@ -57,7 +57,7 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
 
     // 如果有错误，删除服务端会话
     if (session.sessionId && session.status === 'error') {
-      agentRuntimeClient.deleteSession(session.sessionId).catch((error: Error) => {
+      agentRuntimeService.deleteSession(session.sessionId).catch((error: Error) => {
         console.warn(
           `[Agent Runtime] Failed to delete server session ${session.sessionId}:`,
           error,
@@ -277,7 +277,7 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
       log(`Handling human intervention ${action} for ${assistantId}:`, data);
 
       // 发送人工干预请求
-      await agentRuntimeClient.handleHumanIntervention({
+      await agentRuntimeService.handleHumanIntervention({
         action: action as any,
         data,
         sessionId: session.sessionId,
@@ -359,6 +359,7 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
     set({ isCreatingMessage: false }, false, n('creatingMessage/end'));
 
     if (!userMessageId) return;
+    const messages = chatSelectors.activeBaseChats(get());
 
     // Create a placeholder AI message for the agent response
     const agentMessageId = get().internal_createTmpMessage({
@@ -375,12 +376,13 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
       get().internal_toggleChatLoading(true, agentMessageId, n('sendAgentMessage/start') as string);
 
       // 创建 Agent 会话
-      const messages = chatSelectors.activeBaseChats(get());
 
       const sessionResponse = await agentRuntimeService.createSession({
+        agentSessionId: activeId,
         autoStart: true,
         messages,
-        sessionId: get().activeId,
+        threadId: activeThreadId,
+        topicId: activeThreadId,
         userMessageId,
       });
 
