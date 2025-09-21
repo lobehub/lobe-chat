@@ -82,7 +82,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         ? [
             ...(tools || []),
             {
-              type: 'web_search_preview',
+              type: 'web_search',
               ...(oaiSearchContextSize && {
                 search_context_size: oaiSearchContextSize,
               }),

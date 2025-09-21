@@ -2570,6 +2570,9 @@
   "qwen-image": {
     "description": "Qwen-Image é um modelo de geração de imagens de uso geral que suporta diversos estilos artísticos. É especialmente eficaz na renderização de textos complexos, em particular na renderização de textos em chinês e inglês. O modelo oferece suporte a layouts de múltiplas linhas, geração de texto em nível de parágrafo e detalhamento de alta precisão, possibilitando a criação de designs complexos com layouts híbridos de imagem e texto."
   },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit é um modelo de geração de imagens que suporta edição e modificação de imagens com base em uma imagem de entrada e instruções de texto, capaz de ajustar e transformar a imagem original com precisão e criatividade conforme as necessidades do usuário."
+  },
   "qwen-long": {
     "description": "O Qwen é um modelo de linguagem em larga escala que suporta contextos de texto longos e funcionalidades de diálogo baseadas em documentos longos e múltiplos cenários."
   },

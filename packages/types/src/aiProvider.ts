@@ -38,6 +38,21 @@ export const AiProviderSDKEnum = {
 
 export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];
 
+const AiProviderSdkTypes = [
+  'anthropic',
+  'openai',
+  'ollama',
+  'azure',
+  'azureai',
+  'bedrock',
+  'cloudflare',
+  'google',
+  'huggingface',
+  'router',
+  'volcengine',
+  'qwen',
+] as const satisfies readonly AiProviderSDKType[];
+
 export interface AiProviderSettings {
   /**
    * whether provider show browser request option by default
@@ -109,7 +124,7 @@ const AiProviderSettingsSchema = z.object({
     })
     .or(ResponseAnimationType)
     .optional(),
-  sdkType: z.enum(['anthropic', 'openai', 'ollama']).optional(),
+  sdkType: z.enum(AiProviderSdkTypes).optional(),
   searchMode: z.enum(['params', 'internal']).optional(),
   showAddNewModel: z.boolean().optional(),
   showApiKey: z.boolean().optional(),
@@ -131,7 +146,7 @@ export const CreateAiProviderSchema = z.object({
   keyVaults: z.any().optional(),
   logo: z.string().optional(),
   name: z.string(),
-  sdkType: z.enum(['openai', 'anthropic']).optional(),
+  sdkType: z.enum(AiProviderSdkTypes).optional(),
   settings: AiProviderSettingsSchema.optional(),
   source: z.enum(['builtin', 'custom']),
   // checkModel: z.string().optional(),
@@ -213,7 +228,7 @@ export const UpdateAiProviderSchema = z.object({
   description: z.string().nullable().optional(),
   logo: z.string().nullable().optional(),
   name: z.string(),
-  sdkType: z.enum(['openai', 'anthropic']).optional(),
+  sdkType: z.enum(AiProviderSdkTypes).optional(),
   settings: AiProviderSettingsSchema.optional(),
 });
 
