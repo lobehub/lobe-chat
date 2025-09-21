@@ -91,8 +91,7 @@ export const transformResponseToStream = (data: OpenAI.ChatCompletion) =>
 export const transformResponseAPIToStream = (data: OpenAI.Responses.Response) =>
   new ReadableStream({
     start(controller) {
-      // For Response API, we need to create compatible streaming chunks
-      // The Response API structure is different from ChatCompletion
+      // For Response API, we need to create ResponseStreamEvent events
 
       // Extract content from the output array - look for message type with content
       const messageOutput = data.output?.find((output) => output.type === 'message');
@@ -102,58 +101,64 @@ export const transformResponseAPIToStream = (data: OpenAI.Responses.Response) =>
           (content: any) => content.type === 'output_text',
         );
         if (textContent && textContent.type === 'output_text') {
-          const chunk = {
-            choices: [
-              {
-                delta: {
-                  content: textContent.text,
-                  role: 'assistant',
-                },
-                finish_reason: null,
-                index: 0,
-                logprobs: null,
-              },
-            ],
-            created: Math.floor(Date.now() / 1000),
-            id: data.id,
-            model: data.model || 'unknown',
-            object: 'chat.completion.chunk',
-          } as OpenAI.ChatCompletionChunk;
+          // Generate message item ID from response data
+          const item_id = messageOutput.id || `msg_${data.id}`;
+          let sequenceNumber = 1;
 
-          controller.enqueue(chunk);
+          // Send content_part.added event
+          controller.enqueue({
+            content_index: 0,
+            item_id,
+            output_index: 1,
+            part: {
+              annotations: [],
+              text: textContent.text,
+              type: 'output_text',
+            },
+            sequence_number: sequenceNumber++,
+            type: 'response.content_part.added',
+          } as OpenAI.Responses.ResponseStreamEvent);
+
+          // Send output_text.done event
+          controller.enqueue({
+            content_index: 0,
+            item_id,
+            output_index: 1,
+            sequence_number: sequenceNumber++,
+            text: textContent.text,
+            type: 'response.output_text.done',
+          } as OpenAI.Responses.ResponseStreamEvent);
+
+          // Send content_part.done event
+          controller.enqueue({
+            content_index: 0,
+            item_id,
+            output_index: 1,
+            part: {
+              annotations: [],
+              text: textContent.text,
+              type: 'output_text',
+            },
+            sequence_number: sequenceNumber++,
+            type: 'response.content_part.done',
+          } as OpenAI.Responses.ResponseStreamEvent);
+
+          // Send output_item.done event
+          controller.enqueue({
+            item: messageOutput,
+            output_index: 1,
+            sequence_number: sequenceNumber++,
+            type: 'response.output_item.done',
+          } as OpenAI.Responses.ResponseStreamEvent);
         }
       }
 
-      // Enqueue usage if available
-      if (data.usage) {
-        controller.enqueue({
-          choices: [],
-          created: Math.floor(Date.now() / 1000),
-          id: data.id,
-          model: data.model || 'unknown',
-          object: 'chat.completion.chunk',
-          usage: data.usage,
-        } as unknown as OpenAI.ChatCompletionChunk);
-      }
-
-      // Final chunk with finish_reason
-      controller.enqueue({
-        choices: [
-          {
-            delta: {
-              content: null,
-              role: 'assistant',
-            },
-            finish_reason: 'stop',
-            index: 0,
-            logprobs: null,
-          },
-        ],
-        created: Math.floor(Date.now() / 1000),
-        id: data.id,
-        model: data.model || 'unknown',
-        object: 'chat.completion.chunk',
-      } as OpenAI.ChatCompletionChunk);
+      // Send response.done event with usage
+      // controller.enqueue({
+      //   response: data,
+      //   sequence_number: 999,
+      //   type: 'response.done',
+      // } as OpenAI.Responses.ResponseStreamEvent);
 
       controller.close();
     },
