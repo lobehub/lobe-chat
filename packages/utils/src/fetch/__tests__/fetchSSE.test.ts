@@ -2,9 +2,9 @@ import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { ChatMessageError } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { FetchEventSourceInit } from '../../client/fetchEventSource';
+import { fetchEventSource } from '../../client/fetchEventSource';
 import { sleep } from '../../sleep';
-import { FetchEventSourceInit } from '../fetchEventSource';
-import { fetchEventSource } from '../fetchEventSource';
 import { fetchSSE } from '../fetchSSE';
 
 // 模拟 i18next
@@ -12,7 +12,7 @@ vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
 
-vi.mock('../fetchEventSource', () => ({
+vi.mock('../../client/fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 
