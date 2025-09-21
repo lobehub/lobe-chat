@@ -24,9 +24,12 @@ let instance: LobeGoogleAI;
 beforeEach(() => {
   instance = new LobeGoogleAI({ apiKey: 'test' });
 
-  // Use vi.spyOn to mock the chat.completions.create method
+  // Use vi.spyOn to mock the streaming method
   const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
   vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+  
+  // Mock the non-streaming method
+  vi.spyOn(instance['client'].models, 'generateContent').mockResolvedValue({} as any);
 });
 
 afterEach(() => {
@@ -213,6 +216,48 @@ describe('LobeGoogleAI', () => {
       vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
         mockStream as any,
       );
+    });
+
+    it('should use generateContent for non-streaming when stream is false', async () => {
+      // Mock the non-streaming generateContent method
+      const mockResponse = {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: 'Hello from non-streaming response!' }],
+              role: 'model',
+            },
+            finishReason: 'STOP',
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 5,
+          candidatesTokenCount: 7,
+          totalTokenCount: 12,
+        },
+      };
+
+      const generateContentSpy = vi
+        .spyOn(instance['client'].models, 'generateContent')
+        .mockResolvedValue(mockResponse as any);
+
+      const result = await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'gemini-2.0-flash',
+        stream: false, // Explicitly disable streaming
+        temperature: 0,
+      });
+
+      expect(generateContentSpy).toHaveBeenCalledWith({
+        config: expect.objectContaining({
+          temperature: 0,
+          maxOutputTokens: undefined,
+        }),
+        contents: expect.any(Array),
+        model: 'gemini-2.0-flash',
+      });
+
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should call debugStream in DEBUG mode', async () => {

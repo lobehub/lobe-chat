@@ -220,6 +220,37 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const inputStartAt = Date.now();
 
+      // Check if streaming is disabled or explicitly set to false
+      const useStreaming = payload.stream !== false;
+
+      if (!useStreaming) {
+        // Non-streaming mode: use generateContent
+        const geminiResponse = await this.client.models.generateContent({
+          config,
+          contents,
+          model,
+        });
+
+        // Transform the non-streaming response to a streaming format
+        const stream = this.transformGoogleResponseToStream(geminiResponse, inputStartAt);
+        
+        const key = this.isVertexAi
+          ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
+          : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+
+        if (process.env[key] === '1') {
+          console.log('[Non-streaming Google response]', geminiResponse);
+        }
+
+        // Convert the response into a friendly text-stream
+        const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+        const processedStream = Stream(stream, { callbacks: options?.callback, inputStartAt });
+
+        // Respond with the stream
+        return StreamingResponse(processedStream, { headers: options?.headers });
+      }
+
+      // Streaming mode: use generateContentStream (existing logic)
       const geminiStreamResponse = await this.client.models.generateContentStream({
         config,
         contents,
@@ -269,6 +300,94 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     return createGoogleImage(this.client, this.provider, payload);
+  }
+
+  /**
+   * Transform a non-streaming Google response to a streaming format
+   * Similar to transformResponseToStream for OpenAI compatibility
+   */
+  private transformGoogleResponseToStream(response: any, inputStartAt?: number): ReadableStream {
+    return new ReadableStream({
+      start(controller) {
+        const candidates = response.candidates || [];
+        const first = candidates[0];
+        
+        if (first?.content?.parts) {
+          // Process thinking content if present
+          const thinkingPart = first.content.parts.find((part: any) => part.thinking);
+          if (thinkingPart?.thinking) {
+            controller.enqueue({
+              candidates: [
+                {
+                  content: {
+                    parts: [{ thinking: thinkingPart.thinking }],
+                    role: 'model',
+                  },
+                  finishReason: null,
+                  index: 0,
+                },
+              ],
+            });
+          }
+
+          // Process main content
+          const textParts = first.content.parts.filter((part: any) => part.text || part.inlineData);
+          if (textParts.length > 0) {
+            controller.enqueue({
+              candidates: [
+                {
+                  content: {
+                    parts: textParts,
+                    role: 'model',
+                  },
+                  finishReason: null,
+                  index: 0,
+                },
+              ],
+            });
+          }
+
+          // Process function calls if present
+          const functionCallParts = first.content.parts.filter((part: any) => part.functionCall);
+          if (functionCallParts.length > 0) {
+            controller.enqueue({
+              candidates: [
+                {
+                  content: {
+                    parts: functionCallParts,
+                    role: 'model',
+                  },
+                  finishReason: null,
+                  index: 0,
+                },
+              ],
+            });
+          }
+        }
+
+        // Send usage information if available
+        if (response.usageMetadata) {
+          controller.enqueue({
+            candidates: [],
+            usageMetadata: response.usageMetadata,
+          });
+        }
+
+        // Send finish reason
+        controller.enqueue({
+          candidates: candidates.map((candidate: any) => ({
+            content: {
+              parts: [],
+              role: 'model',
+            },
+            finishReason: candidate.finishReason || 'STOP',
+            index: 0,
+          })),
+        });
+
+        controller.close();
+      },
+    });
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
