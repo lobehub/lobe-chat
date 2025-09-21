@@ -2,6 +2,10 @@ import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactor
 import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
+const THINKING_MODELS = [
+  'DeepSeek-V3-1',
+];
+
 export interface AkashChatModelCard {
   id: string;
 }
@@ -10,12 +14,22 @@ export const LobeAkashChatAI = createOpenAICompatibleRuntime({
   baseURL: 'https://chatapi.akash.network/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, ...rest } = payload;
+      const { model, thinking, ...rest } = payload;
+
+      const thinkingFlag =
+        thinking?.type === 'enabled' ? true : thinking?.type === 'disabled' ? false : undefined;
 
       return {
         ...rest,
+        allowed_openai_params: ['reasoning_effort'],
+        cache: { 'no-cache': true },
         model,
         stream: true,
+        ...(THINKING_MODELS.some((keyword) => model.includes(keyword))
+          ? {
+              chat_template_kwargs: { thinking: thinkingFlag },
+            }
+          : {}),
       } as any;
     },
   },

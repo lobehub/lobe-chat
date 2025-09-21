@@ -2,6 +2,131 @@
 
 # Changelog
 
+### [Version 1.132.3](https://github.com/lobehub/lobe-chat/compare/v1.132.2...v1.132.3)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Added `AUTH_MICROSOFT_ENTRA_ID_BASE_URL` routing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Added `AUTH_MICROSOFT_ENTRA_ID_BASE_URL` routing, closes [#9293](https://github.com/lobehub/lobe-chat/issues/9293) ([78a2f9e](https://github.com/lobehub/lobe-chat/commit/78a2f9e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.132.2](https://github.com/lobehub/lobe-chat/compare/v1.132.1...v1.132.2)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix non stream mode in OpenAI Response API.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix non stream mode in OpenAI Response API, closes [#9360](https://github.com/lobehub/lobe-chat/issues/9360) ([1c61b21](https://github.com/lobehub/lobe-chat/commit/1c61b21))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.132.1](https://github.com/lobehub/lobe-chat/compare/v1.132.0...v1.132.1)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix missing provider in server message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix missing provider in server message, closes [#9361](https://github.com/lobehub/lobe-chat/issues/9361) ([4099dfd](https://github.com/lobehub/lobe-chat/commit/4099dfd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.132.0](https://github.com/lobehub/lobe-chat/compare/v1.131.4...v1.132.0)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### ✨ Features
+
+- **misc**: Support google video understanding.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support google video understanding, closes [#8761](https://github.com/lobehub/lobe-chat/issues/8761) ([f02d43b](https://github.com/lobehub/lobe-chat/commit/f02d43b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.131.4](https://github.com/lobehub/lobe-chat/compare/v1.131.3...v1.131.4)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Enhanced AkashChat experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Enhanced AkashChat experience, closes [#9330](https://github.com/lobehub/lobe-chat/issues/9330) ([47ec2d8](https://github.com/lobehub/lobe-chat/commit/47ec2d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.131.3](https://github.com/lobehub/lobe-chat/compare/v1.131.2...v1.131.3)
 
 <sup>Released on **2025-09-21**</sup>

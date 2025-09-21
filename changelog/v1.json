@@ -1,6 +1,41 @@
 [
   {
     "children": {
+      "improvements": ["Added AUTH_MICROSOFT_ENTRA_ID_BASE_URL routing."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix non stream mode in OpenAI Response API."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix missing provider in server message."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.1"
+  },
+  {
+    "children": {
+      "features": ["Support google video understanding."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.0"
+  },
+  {
+    "children": {
+      "improvements": ["Enhanced AkashChat experience."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.4"
+  },
+  {
+    "children": {
       "fixes": ["Update Responses search tool to web_search."]
     },
     "date": "2025-09-21",

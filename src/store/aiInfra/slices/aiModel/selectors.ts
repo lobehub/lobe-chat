@@ -62,6 +62,12 @@ const isModelSupportVision = (id: string, provider: string) => (s: AIProviderSto
   return model?.abilities?.vision || false;
 };
 
+const isModelSupportVideo = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.video;
+};
+
 const isModelSupportReasoning = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
@@ -136,6 +142,7 @@ export const aiModelSelectors = {
   isModelSupportFiles,
   isModelSupportReasoning,
   isModelSupportToolUse,
+  isModelSupportVideo,
   isModelSupportVision,
   modelBuiltinSearchImpl,
   modelContextWindowTokens,
