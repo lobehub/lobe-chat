@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
-import { isDev } from '@/utils/env';
 
 import { useLocale } from '@/hooks/useLocale';
 import { version } from '../../../package.json';
@@ -10,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from './(components)';
 import { useTheme } from '@/theme';
-import { Header } from '@/components';
+import { Header, Toast } from '@/components';
 import { useSettingStore } from '@/store/setting';
 
 export default function SettingScreen() {
@@ -38,17 +37,38 @@ export default function SettingScreen() {
       clearTimeout(tapTimeoutRef.current);
     }
 
-    // 连续点击7次开启开发者模式
-    if (newTapCount >= 7 && !developerMode) {
-      setDeveloperMode(true);
-      setTapCount(0);
-      // 可以在这里添加提示用户已开启开发者模式的逻辑
-    } else {
-      // 2秒后重置计数器
-      tapTimeoutRef.current = setTimeout(() => {
+    // 开发者模式开启后提示
+    if (developerMode) {
+      if (newTapCount >= 3) {
+        Toast.info(t('developer.mode.already', { ns: 'setting' }));
         setTapCount(0);
-      }, 2000);
+        return;
+      }
+    } else {
+      // 连续点击7次开启开发者模式
+      if (newTapCount >= 7) {
+        setDeveloperMode(true);
+        setTapCount(0);
+        Toast.success(t('developer.mode.enabled', { ns: 'setting' }));
+        return;
+      }
+
+      if (newTapCount >= 3) {
+        const remaining = 7 - newTapCount;
+        Toast.info(
+          t('developer.mode.remaining', {
+            count: remaining,
+            ns: 'setting',
+          }),
+          1500,
+        );
+      }
     }
+
+    // 2秒后重置计数器
+    tapTimeoutRef.current = setTimeout(() => {
+      setTapCount(0);
+    }, 2000);
   };
 
   const { styles } = useStyles();
@@ -86,7 +106,7 @@ export default function SettingScreen() {
           <SettingItem href="/setting/providers" title={t('providers', { ns: 'setting' })} />
         </SettingGroup>
 
-        {(isDev || developerMode) && (
+        {developerMode && (
           <SettingGroup>
             <SettingItem
               href="/setting/developer"
