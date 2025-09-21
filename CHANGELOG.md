@@ -2,6 +2,41 @@
 
 # Changelog
 
+### [Version 1.131.1](https://github.com/lobehub/lobe-chat/compare/v1.131.0...v1.131.1)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Improve codebase.
+
+#### 💄 Styles
+
+- **misc**: Extend custom provider runtime options, Optimized modelFetch for Vercel AI Gateway, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Improve codebase, closes [#9353](https://github.com/lobehub/lobe-chat/issues/9353) ([7dc000e](https://github.com/lobehub/lobe-chat/commit/7dc000e))
+
+#### Styles
+
+- **misc**: Extend custom provider runtime options, closes [#9278](https://github.com/lobehub/lobe-chat/issues/9278) ([a94e881](https://github.com/lobehub/lobe-chat/commit/a94e881))
+- **misc**: Optimized modelFetch for Vercel AI Gateway, closes [#9342](https://github.com/lobehub/lobe-chat/issues/9342) ([45b7a43](https://github.com/lobehub/lobe-chat/commit/45b7a43))
+- **misc**: Update i18n, closes [#9338](https://github.com/lobehub/lobe-chat/issues/9338) ([d2ff75c](https://github.com/lobehub/lobe-chat/commit/d2ff75c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.131.0](https://github.com/lobehub/lobe-chat/compare/v1.130.1...v1.131.0)
 
 <sup>Released on **2025-09-19**</sup>
