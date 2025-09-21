@@ -5,6 +5,7 @@ import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { autoUpdateService } from '@/services/electron/autoUpdate';
+import { useElectronStore } from '@/store/electron';
 import { formatSpeed } from '@/utils/format';
 
 export const UpdateModal = memo(() => {
@@ -17,6 +18,9 @@ export const UpdateModal = memo(() => {
   const [progress, setProgress] = useState<ProgressInfo | null>(null);
   const [latestVersionInfo, setLatestVersionInfo] = useState<UpdateInfo | null>(null); // State for latest version modal
   const { modal } = App.useApp();
+
+  // Get auto update notification setting from electron store
+  const autoUpdateNotificationEnabled = useElectronStore((s) => s.autoUpdateNotificationEnabled);
   // --- Event Listeners ---
 
   useWatchBroadcast('manualUpdateCheckStart', () => {
@@ -86,7 +90,12 @@ export const UpdateModal = memo(() => {
     // This event implies a download finished, likely the one we started manually
     setIsChecking(false);
     setIsDownloading(false);
-    setDownloadedInfo(info);
+
+    // Only show the modal if auto update notifications are enabled
+    if (autoUpdateNotificationEnabled) {
+      setDownloadedInfo(info);
+    }
+
     setProgress(null); // Clear progress
     setLatestVersionInfo(null); // Ensure other modals are closed
     setUpdateAvailableInfo(null);
