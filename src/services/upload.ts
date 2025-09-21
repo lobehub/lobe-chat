@@ -84,7 +84,7 @@ class UploadService {
 
     // upload to client s3
     // 客户端上传逻辑
-    if (!skipCheckFileType && !file.type.startsWith('image')) {
+    if (!skipCheckFileType && !file.type.startsWith('image') && !file.type.startsWith('video')) {
       onNotSupported?.();
       return { data: undefined as unknown as FileMetadata, success: false };
     }

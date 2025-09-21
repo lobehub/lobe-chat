@@ -9,14 +9,16 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
-    "dayjs": "^1.11.18"
+    "dayjs": "^1.11.18",
+    "dompurify": "^3.2.7"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.2.0",
     "vitest-canvas-mock": "^0.3.3"
   }
 }

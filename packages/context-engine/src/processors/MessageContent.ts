@@ -17,6 +17,8 @@ export interface FileContextConfig {
 export interface MessageContentConfig {
   /** File context configuration */
   fileContext?: FileContextConfig;
+  /** Function to check if video is supported */
+  isCanUseVideo?: (model: string, provider: string) => boolean | undefined;
   /** Function to check if vision is supported */
   isCanUseVision?: (model: string, provider: string) => boolean | undefined;
   /** Model name */
@@ -33,7 +35,10 @@ export interface UserMessageContentPart {
   signature?: string;
   text?: string;
   thinking?: string;
-  type: 'text' | 'image_url' | 'thinking';
+  type: 'text' | 'image_url' | 'thinking' | 'video_url';
+  video_url?: {
+    url: string;
+  };
 }
 
 /**
@@ -104,12 +109,13 @@ export class MessageContentProcessor extends BaseProcessor {
    * Process user message content
    */
   private async processUserMessage(message: any): Promise<any> {
-    // Check if images or files need processing
+    // Check if images, videos or files need processing
     const hasImages = message.imageList && message.imageList.length > 0;
+    const hasVideos = message.videoList && message.videoList.length > 0;
     const hasFiles = message.fileList && message.fileList.length > 0;
 
-    // If no images and files, return plain text content directly
-    if (!hasImages && !hasFiles) {
+    // If no images, videos and files, return plain text content directly
+    if (!hasImages && !hasVideos && !hasFiles) {
       return {
         ...message,
         content: message.content,
@@ -121,12 +127,13 @@ export class MessageContentProcessor extends BaseProcessor {
     // Add text content
     let textContent = message.content || '';
 
-    // Add file context (if file context is enabled and has files or images)
-    if ((hasFiles || hasImages) && this.config.fileContext?.enabled) {
+    // Add file context (if file context is enabled and has files, images or videos)
+    if ((hasFiles || hasImages || hasVideos) && this.config.fileContext?.enabled) {
       const filesContext = filesPrompts({
         addUrl: this.config.fileContext.includeFileUrl ?? true,
         fileList: message.fileList,
-        imageList: message.imageList,
+        imageList: message.imageList || [],
+        videoList: message.videoList || [],
       });
 
       if (filesContext) {
@@ -148,17 +155,26 @@ export class MessageContentProcessor extends BaseProcessor {
       contentParts.push(...imageContentParts);
     }
 
+    // Process video content
+    if (hasVideos && this.config.isCanUseVideo?.(this.config.model, this.config.provider)) {
+      const videoContentParts = await this.processVideoList(message.videoList || []);
+      contentParts.push(...videoContentParts);
+    }
+
     // 明确返回的字段，只保留必要的消息字段
-    const hasFileContext = (hasFiles || hasImages) && this.config.fileContext?.enabled;
+    const hasFileContext = (hasFiles || hasImages || hasVideos) && this.config.fileContext?.enabled;
     const hasVisionContent =
       hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider);
+    const hasVideoContent =
+      hasVideos && this.config.isCanUseVideo?.(this.config.model, this.config.provider);
 
-    // 如果只有文本内容且没有添加文件上下文也没有视觉内容，返回纯文本
+    // 如果只有文本内容且没有添加文件上下文也没有视觉/视频内容，返回纯文本
     if (
       contentParts.length === 1 &&
       contentParts[0].type === 'text' &&
       !hasFileContext &&
-      !hasVisionContent
+      !hasVisionContent &&
+      !hasVideoContent
     ) {
       return {
         content: contentParts[0].text,
@@ -275,6 +291,22 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
+   * 处理视频列表
+   */
+  private async processVideoList(videoList: any[]): Promise<UserMessageContentPart[]> {
+    if (!videoList || videoList.length === 0) {
+      return [];
+    }
+
+    return videoList.map((video) => {
+      return {
+        type: 'video_url',
+        video_url: { url: video.url },
+      } as UserMessageContentPart;
+    });
+  }
+
+  /**
    * 验证内容部分格式
    */
   private validateContentPart(part: UserMessageContentPart): boolean {
@@ -289,6 +321,9 @@ export class MessageContentProcessor extends BaseProcessor {
       }
       case 'thinking': {
         return !!(part.thinking && part.signature);
+      }
+      case 'video_url': {
+        return !!(part.video_url && part.video_url.url);
       }
       default: {
         return false;

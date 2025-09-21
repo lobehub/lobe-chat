@@ -1,15 +1,15 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { boolean, index, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { ChatTopicMetadata } from '@/types/topic';
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps, timestamptz } from './_helpers';
+import { chatGroups } from './chatGroup';
 import { documents } from './document';
 import { sessions } from './session';
 import { users } from './user';
-import { chatGroups } from './chatGroup';
 
 export const topics = pgTable(
   'topics',
@@ -29,7 +29,11 @@ export const topics = pgTable(
     metadata: jsonb('metadata').$type<ChatTopicMetadata | undefined>(),
     ...timestamps,
   },
-  (t) => [uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId)],
+  (t) => [
+    uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('topics_user_id_idx').on(t.userId),
+    index('topics_id_user_id_idx').on(t.id, t.userId),
+  ],
 );
 
 export type NewTopic = typeof topics.$inferInsert;

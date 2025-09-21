@@ -114,7 +114,7 @@ describe('SparkAIStream', () => {
       chunks.push(chunk);
     }
 
-    expect(chunks).toHaveLength(2);
+    expect(chunks).toHaveLength(3);
     expect(chunks[0].choices[0].delta.tool_calls).toEqual([
       {
         function: {
@@ -126,7 +126,7 @@ describe('SparkAIStream', () => {
         type: 'function',
       },
     ]);
-    expect(chunks[1].choices[0].finish_reason).toBeDefined();
+    expect(chunks[2].choices[0].finish_reason).toBeDefined();
   });
 
   it('should transform streaming response with tool calls', async () => {

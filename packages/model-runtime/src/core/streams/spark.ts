@@ -50,7 +50,16 @@ export function transformSparkResponseToStream(data: OpenAI.ChatCompletion) {
       };
 
       controller.enqueue(chunk);
-
+      if (data.usage) {
+        controller.enqueue({
+          choices: [],
+          created: data.created,
+          id: data.id,
+          model: data.model,
+          object: 'chat.completion.chunk',
+          usage: data.usage,
+        } as unknown as OpenAI.ChatCompletionChunk);
+      }
       controller.enqueue({
         choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
