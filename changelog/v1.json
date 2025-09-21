@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix non stream mode in OpenAI Response API."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix missing provider in server message."]
     },
     "date": "2025-09-21",
