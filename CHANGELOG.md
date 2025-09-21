@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.132.3](https://github.com/lobehub/lobe-chat/compare/v1.132.2...v1.132.3)
+
+<sup>Released on **2025-09-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Added `AUTH_MICROSOFT_ENTRA_ID_BASE_URL` routing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Added `AUTH_MICROSOFT_ENTRA_ID_BASE_URL` routing, closes [#9293](https://github.com/lobehub/lobe-chat/issues/9293) ([78a2f9e](https://github.com/lobehub/lobe-chat/commit/78a2f9e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.132.2](https://github.com/lobehub/lobe-chat/compare/v1.132.1...v1.132.2)
 
 <sup>Released on **2025-09-21**</sup>
