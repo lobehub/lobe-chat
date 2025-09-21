@@ -5,10 +5,9 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as debugStreamModule from '../../utils/debugStream';
 import officalOpenAIModels from './fixtures/openai-models.json';
 import { LobeOpenAI } from './index';
-import global from '@/styles/global';
 
 // Mock the console.error to avoid polluting test output
-vi.spyOn(console, 'error').mockImplementation(() => { });
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
 // Mock fetch for most tests, but will be restored for real network tests
 const mockFetch = vi.fn();
