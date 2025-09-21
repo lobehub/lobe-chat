@@ -260,7 +260,7 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
-    "request-filtering-agent": "^2.0.1",
+    "request-filtering-agent": "^3.0.0",
     "resolve-accept-language": "^3.1.13",
     "rtl-detect": "^1.1.2",
     "semver": "^7.7.2",
