@@ -2,7 +2,27 @@ export default {
   about: {
     title: '关于',
   },
+  agent: {
+    autoSuggestion: {
+      customPrompt: {
+        desc: 'Custom prompt to guide suggestion generation',
+        placeholder: 'Enter custom instructions for generating suggestions...',
+        title: 'Custom Prompt',
+      },
+      enabled: {
+        desc: 'Generate suggested follow-up questions after assistant responses',
+        title: 'Enable Auto-Suggestions',
+      },
+      maxSuggestions: {
+        desc: 'Number of suggestions to display (1-5)',
+        title: 'Max Suggestions',
+      },
+      submit: 'Update Auto-Suggestion Settings',
+      title: 'Auto-Suggestions',
+    },
+  },
   agentTab: {
+    autoSuggestion: 'Auto-Suggestions',
     chat: '聊天偏好',
     meta: '助手信息',
     modal: '模型设置',

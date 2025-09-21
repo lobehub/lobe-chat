@@ -16,6 +16,10 @@ export default {
     unknownTitle: '未命名作品',
   },
   availableAgents: '可用助手',
+  autoSuggestions: {
+    generating: 'Generating suggestions...',
+    title: 'Suggested questions',
+  },
   backToBottom: '跳转至当前',
   chatList: {
     longMessageDetail: '查看详情',

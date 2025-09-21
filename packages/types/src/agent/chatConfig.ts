@@ -61,11 +61,36 @@ export interface LobeAgentChatConfig {
   searchFCModel?: WorkingModel;
   urlContext?: boolean;
   useModelBuiltinSearch?: boolean;
+
+  /**
+   * Auto suggestion configuration
+   */
+  autoSuggestion?: {
+    /**
+     * Enable auto suggestions
+     */
+    enabled?: boolean;
+    /**
+     * Custom prompt for generating suggestions
+     */
+    customPrompt?: string;
+    /**
+     * Maximum number of suggestions to generate
+     */
+    maxSuggestions?: number;
+  };
 }
 /* eslint-enable */
 
 export const AgentChatConfigSchema = z.object({
   autoCreateTopicThreshold: z.number().default(2),
+  autoSuggestion: z
+    .object({
+      customPrompt: z.string().optional(),
+      enabled: z.boolean().optional(),
+      maxSuggestions: z.number().optional(),
+    })
+    .optional(),
   displayMode: z.enum(['chat', 'docs']).optional(),
   enableAutoCreateTopic: z.boolean().optional(),
   enableCompressHistory: z.boolean().optional(),

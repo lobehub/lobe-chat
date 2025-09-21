@@ -647,6 +647,14 @@ export const generateAIChat: StateCreator<
           imageList: finalImages.length > 0 ? finalImages : undefined,
           metadata: speed ? { ...usage, ...speed } : usage,
         });
+
+        // Generate auto-suggestions after message completion
+        try {
+          await get().generateSuggestions(messageId);
+        } catch (error) {
+          console.error('Error generating auto-suggestions:', error);
+          // Don't let suggestion errors break the main flow
+        }
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {

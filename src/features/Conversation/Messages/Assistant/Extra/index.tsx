@@ -2,10 +2,6 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import ExtraContainer from '@/features/Conversation/components/Extras/ExtraContainer';
-import TTS from '@/features/Conversation/components/Extras/TTS';
-import Translate from '@/features/Conversation/components/Extras/Translate';
-import Usage from '@/features/Conversation/components/Extras/Usage';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { type MessageMetadata } from '@/types/message';
@@ -17,6 +13,13 @@ interface AssistantMessageExtraProps {
   metadata?: MessageMetadata | null;
   tools?: any[];
 }
+
+import { RenderMessageExtra } from '../types';
+import AutoSuggestions from './AutoSuggestions';
+import ExtraContainer from './ExtraContainer';
+import TTS from './TTS';
+import Translate from './Translate';
+import Usage from './Usage';
 
 export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
   ({ extra, id, content, metadata, tools }) => {
@@ -32,6 +35,11 @@ export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
           />
         )}
         <>
+          {!!extra?.autoSuggestions && (
+            <ExtraContainer>
+              <AutoSuggestions id={id} {...extra.autoSuggestions} />
+            </ExtraContainer>
+          )}
           {!!extra?.tts && (
             <ExtraContainer>
               <TTS content={content} id={id} loading={loading} {...extra?.tts} />
