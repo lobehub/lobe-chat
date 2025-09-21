@@ -134,7 +134,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const { model, thinkingBudget } = payload;
+      const { model, thinkingBudget, stream = true } = payload;
 
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
@@ -220,31 +220,61 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const inputStartAt = Date.now();
 
-      const geminiStreamResponse = await this.client.models.generateContentStream({
-        config,
-        contents,
-        model,
-      });
+      // Support both streaming and non-streaming modes
+      if (stream) {
+        const geminiStreamResponse = await this.client.models.generateContentStream({
+          config,
+          contents,
+          model,
+        });
 
-      const googleStream = this.createEnhancedStream(geminiStreamResponse, controller.signal);
-      const [prod, useForDebug] = googleStream.tee();
+        const googleStream = this.createEnhancedStream(geminiStreamResponse, controller.signal);
+        const [prod, useForDebug] = googleStream.tee();
 
-      const key = this.isVertexAi
-        ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
-        : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+        const key = this.isVertexAi
+          ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
+          : 'DEBUG_GOOGLE_CHAT_COMPLETION';
 
-      if (process.env[key] === '1') {
-        debugStream(useForDebug).catch();
+        if (process.env[key] === '1') {
+          debugStream(useForDebug).catch();
+        }
+
+        // Convert the response into a friendly text-stream
+        const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+        const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
+
+        // Respond with the stream
+        return StreamingResponse(stream, { headers: options?.headers });
+      } else {
+        // Non-streaming mode - use generateContent instead of generateContentStream
+        const geminiResponse = await this.client.models.generateContent({
+          config,
+          contents,
+          model,
+        });
+
+        const key = this.isVertexAi
+          ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
+          : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+
+        if (process.env[key] === '1') {
+          log('Non-streaming response: %O', geminiResponse);
+        }
+
+        // Transform non-streaming response to stream format
+        const stream = this.transformGoogleResponseToStream(geminiResponse);
+        const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+        const processedStream = Stream(stream, { callbacks: options?.callback, inputStartAt, enableStreaming: false });
+
+        return StreamingResponse(processedStream, { headers: options?.headers });
       }
-
-      // Convert the response into a friendly text-stream
-      const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
-
-      // Respond with the stream
-      return StreamingResponse(stream, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
+
+      // Enhanced error logging for stream debugging
+      log('Gemini chat error occurred: %O', err);
+      log('Error stack: %s', err.stack);
+      log('Error message: %s', err.message);
 
       // 移除之前的静默处理，统一抛出错误
       if (isAbortError(err)) {
@@ -366,6 +396,63 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           }
         }
 
+        controller.close();
+      },
+    });
+  }
+
+  private transformGoogleResponseToStream(response: any): ReadableStream {
+    return new ReadableStream({
+      start(controller) {
+        try {
+          const candidate = response.candidates?.[0];
+          if (!candidate) {
+            controller.close();
+            return;
+          }
+
+          // Handle thinking content if present
+          if (candidate.content?.parts) {
+            for (const part of candidate.content.parts) {
+              if (part.thought) {
+                // Emit thinking content first
+                controller.enqueue({
+                  candidates: [
+                    {
+                      content: {
+                        parts: [{ thought: part.thought }],
+                        role: 'model',
+                      },
+                      finishReason: null,
+                      index: 0,
+                    },
+                  ],
+                });
+              }
+            }
+          }
+
+          // Create chunk with main content
+          const chunk = {
+            candidates: [
+              {
+                content: {
+                  parts: candidate.content?.parts?.filter((part: any) => !part.thought) || [],
+                  role: 'model',
+                },
+                finishReason: candidate.finishReason || 'STOP',
+                index: 0,
+                safetyRatings: candidate.safetyRatings,
+              },
+            ],
+            usageMetadata: response.usageMetadata,
+          };
+
+          controller.enqueue(chunk);
+        } catch (error) {
+          log('Error transforming Google response: %O', error);
+        }
+        
         controller.close();
       },
     });
