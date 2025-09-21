@@ -91,74 +91,30 @@ export const transformResponseToStream = (data: OpenAI.ChatCompletion) =>
 export const transformResponseAPIToStream = (data: OpenAI.Responses.Response) =>
   new ReadableStream({
     start(controller) {
-      // For Response API, we need to create ResponseStreamEvent events
-
-      // Extract content from the output array - look for message type with content
-      const messageOutput = data.output?.find((output) => output.type === 'message');
-      if (messageOutput && messageOutput.type === 'message') {
-        // Find text content in the message
-        const textContent = messageOutput.content?.find(
-          (content: any) => content.type === 'output_text',
-        );
-        if (textContent && textContent.type === 'output_text') {
-          // Generate message item ID from response data
-          const item_id = messageOutput.id || `msg_${data.id}`;
-          let sequenceNumber = 1;
-
-          // Send content_part.added event
-          controller.enqueue({
-            content_index: 0,
-            item_id,
-            output_index: 1,
-            part: {
-              annotations: [],
-              text: textContent.text,
-              type: 'output_text',
-            },
-            sequence_number: sequenceNumber++,
-            type: 'response.content_part.added',
-          } as OpenAI.Responses.ResponseStreamEvent);
-
-          // Send output_text.done event
-          controller.enqueue({
-            content_index: 0,
-            item_id,
-            output_index: 1,
-            sequence_number: sequenceNumber++,
-            text: textContent.text,
-            type: 'response.output_text.done',
-          } as OpenAI.Responses.ResponseStreamEvent);
-
-          // Send content_part.done event
-          controller.enqueue({
-            content_index: 0,
-            item_id,
-            output_index: 1,
-            part: {
-              annotations: [],
-              text: textContent.text,
-              type: 'output_text',
-            },
-            sequence_number: sequenceNumber++,
-            type: 'response.content_part.done',
-          } as OpenAI.Responses.ResponseStreamEvent);
-
-          // Send output_item.done event
-          controller.enqueue({
-            item: messageOutput,
-            output_index: 1,
-            sequence_number: sequenceNumber++,
-            type: 'response.output_item.done',
-          } as OpenAI.Responses.ResponseStreamEvent);
+      data.output.forEach((output) => {
+        switch (output.type) {
+          case 'message': {
+            output.content.forEach((content) => {
+              switch (content.type) {
+                case 'output_text': {
+                  controller.enqueue({
+                    delta: content.text,
+                    type: 'response.output_text.delta',
+                  });
+                }
+              }
+            });
+            break;
+          }
         }
-      }
+      });
 
       // Send response.done event with usage
-      // controller.enqueue({
-      //   response: data,
-      //   sequence_number: 999,
-      //   type: 'response.done',
-      // } as OpenAI.Responses.ResponseStreamEvent);
+      controller.enqueue({
+        response: data,
+        sequence_number: 999,
+        type: 'response.completed',
+      } as OpenAI.Responses.ResponseStreamEvent);
 
       controller.close();
     },
