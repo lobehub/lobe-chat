@@ -15,8 +15,8 @@ import {
   ResponseAnimationStyle,
 } from '@lobechat/types';
 
+import { fetchEventSource } from '../client/fetchEventSource';
 import { nanoid } from '../uuid';
-import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
 
 type SSEFinishType = 'done' | 'error' | 'abort';

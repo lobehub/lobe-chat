@@ -2570,6 +2570,9 @@
   "qwen-image": {
     "description": "Qwen-Image là một mô hình sinh hình ảnh đa dụng, hỗ trợ nhiều phong cách nghệ thuật và đặc biệt giỏi trong việc tái hiện văn bản phức tạp, nhất là văn bản tiếng Trung và tiếng Anh. Mô hình hỗ trợ bố cục nhiều dòng, sinh văn bản ở cấp đoạn và khắc họa các chi tiết tinh tế, cho phép thực hiện các thiết kế bố cục kết hợp hình ảnh và văn bản phức tạp."
   },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit là một mô hình tạo hình ảnh từ hình ảnh, hỗ trợ chỉnh sửa và thay đổi hình ảnh dựa trên hình ảnh đầu vào và các gợi ý văn bản, có khả năng điều chỉnh chính xác và sáng tạo hình ảnh gốc theo yêu cầu của người dùng."
+  },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
   },

@@ -10,6 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { AiProviderDetailItem, UpdateAiProviderParams } from '@/types/aiProvider';
 
+import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../../customProviderSdkOptions';
+
 interface CreateNewProviderProps {
   id: string;
   initialValues: AiProviderDetailItem;
@@ -88,12 +90,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
               {label}
             </Flexbox>
           )}
-          options={[
-            { label: 'OpenAI', value: 'openai' },
-            { label: 'Anthropic', value: 'anthropic' },
-            { label: 'Ollama', value: 'ollama' },
-            // { label: 'Azure AI', value: 'azureai' },
-          ]}
+          options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}
         />
