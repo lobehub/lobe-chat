@@ -103,6 +103,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
     type: 'chat',
   },
   {
@@ -124,6 +127,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -143,6 +149,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -246,6 +255,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
     type: 'chat',
   },
   {
@@ -264,6 +276,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheRead', rate: 0.005, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+    },
     type: 'chat',
   },
   {
@@ -281,6 +296,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -297,6 +315,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -317,6 +338,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheRead', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -335,6 +359,9 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.275, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },

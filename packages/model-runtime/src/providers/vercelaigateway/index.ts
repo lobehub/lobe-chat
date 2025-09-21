@@ -29,11 +29,30 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
   baseURL: 'https://ai-gateway.vercel.sh/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, ...rest } = payload;
+      const { model, reasoning_effort, verbosity, ...rest } = payload;
+
+      const providerOptions: any = {};
+      if (reasoning_effort) {
+        providerOptions.openai = {
+          reasoningEffort: reasoning_effort,
+          reasoningSummary: 'auto'
+        };
+      }
+      if (verbosity) {
+        providerOptions.openai.textVerbosity = verbosity;
+      }
+
       return {
         ...rest,
         model,
+        providerOptions,
       } as any;
+    },
+  },
+  constructorOptions: {
+    defaultHeaders: {
+      'http-referer': 'https://lobehub.com',
+      'x-title': 'LobeHub',
     },
   },
   debug: {

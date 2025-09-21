@@ -11,6 +11,7 @@ const VercelAIGateway: ModelProviderCard = {
   modelsUrl: 'https://vercel.com/ai-gateway/models',
   name: 'Vercel AI Gateway',
   settings: {
+    disableBrowserRequest: true, // CORS error
     responseAnimation: 'smooth',
     showModelFetcher: true,
   },
