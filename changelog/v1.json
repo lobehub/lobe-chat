@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Use ID as name if provider name is empty."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.2"
+  },
+  {
+    "children": {
       "improvements": [
         "Extend custom provider runtime options, Optimized modelFetch for Vercel AI Gateway, update i18n."
       ]
