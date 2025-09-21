@@ -2570,6 +2570,9 @@
   "qwen-image": {
     "description": "Qwen-Image, çeşitli sanat stillerini destekleyen genel amaçlı bir görsel oluşturma modelidir; karmaşık metin renderleme konusunda, özellikle Çince ve İngilizce metinlerin renderlenmesinde uzmandır. Model çok satırlı düzenleri, paragraf düzeyinde metin üretimini ve ince ayrıntıların işlenmesini destekler; karmaşık görsel-metin karışık düzen tasarımlarının oluşturulmasına olanak tanır."
   },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit, girdiğiniz görüntü ve metin ipuçlarına dayanarak görüntü düzenleme ve değiştirme yapabilen bir görüntüden görüntüye modelidir. Kullanıcı ihtiyaçlarına göre orijinal görüntüyü hassas bir şekilde ayarlayabilir ve yaratıcı dönüşümler gerçekleştirebilir."
+  },
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
