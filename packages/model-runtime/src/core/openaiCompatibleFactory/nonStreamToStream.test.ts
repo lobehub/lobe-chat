@@ -404,59 +404,16 @@ describe('nonStreamToStream', () => {
       }
 
       expect(events).toEqual([
-        // First event: response.content_part.added
+        // First event: response.output_text.delta
         {
-          content_index: 0,
-          item_id: 'msg_001',
-          output_index: 1,
-          part: {
-            annotations: [],
-            text: 'Hello! How can I help you today?',
-            type: 'output_text',
-          },
-          sequence_number: 1,
-          type: 'response.content_part.added',
+          delta: 'Hello! How can I help you today?',
+          type: 'response.output_text.delta',
         },
-        // Second event: response.output_text.done
+        // Second event: response.completed
         {
-          content_index: 0,
-          item_id: 'msg_001',
-          output_index: 1,
-          sequence_number: 2,
-          text: 'Hello! How can I help you today?',
-          type: 'response.output_text.done',
-        },
-        // Third event: response.content_part.done
-        {
-          content_index: 0,
-          item_id: 'msg_001',
-          output_index: 1,
-          part: {
-            annotations: [],
-            text: 'Hello! How can I help you today?',
-            type: 'output_text',
-          },
-          sequence_number: 3,
-          type: 'response.content_part.done',
-        },
-        // Fourth event: response.output_item.done
-        {
-          item: {
-            id: 'msg_001',
-            object: 'realtime.item',
-            type: 'message',
-            status: 'completed',
-            role: 'assistant',
-            content: [
-              {
-                type: 'output_text',
-                text: 'Hello! How can I help you today?',
-              },
-            ],
-          },
-          output_index: 1,
-          sequence_number: 4,
-          type: 'response.output_item.done',
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
         },
       ]);
     });
@@ -473,6 +430,7 @@ describe('nonStreamToStream', () => {
             object: 'realtime.item',
             type: 'message' as any,
             status: 'completed',
+            // Missing content property
           },
         ],
         usage: {
@@ -497,8 +455,14 @@ describe('nonStreamToStream', () => {
         events.push(value);
       }
 
-      // Should produce no events because there's no message with text content
-      expect(events).toEqual([]);
+      // Should only produce response.completed event, no text deltas
+      expect(events).toEqual([
+        {
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
+        },
+      ]);
     });
 
     it('should handle Response API with message but no text content', async () => {
@@ -518,6 +482,7 @@ describe('nonStreamToStream', () => {
               {
                 type: 'output_text' as any,
                 audio: 'base64encodedaudio',
+                // No text property
               },
             ],
           },
@@ -544,11 +509,17 @@ describe('nonStreamToStream', () => {
         events.push(value);
       }
 
-      // Should produce no events because message has no text content
-      expect(events).toEqual([]);
+      // Should only produce response.completed event because message has no text content
+      expect(events).toEqual([
+        {
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
+        },
+      ]);
     });
 
-    it('should generate proper item_id when message id is missing', async () => {
+    it('should handle Response API with message id missing', async () => {
       const mockResponse: OpenAI.Responses.Response = {
         id: 'resp_missing_id',
         object: 'response',
@@ -591,14 +562,17 @@ describe('nonStreamToStream', () => {
         events.push(value);
       }
 
-      // Check that all events use the generated item_id and have correct structure
-      const expectedItemId = 'msg_resp_missing_id';
-      expect(events).toHaveLength(4);
-      events.forEach((event) => {
-        if ('item_id' in event) {
-          expect(event.item_id).toBe(expectedItemId);
-        }
-      });
+      expect(events).toEqual([
+        {
+          delta: 'Response without message ID',
+          type: 'response.output_text.delta',
+        },
+        {
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
+        },
+      ]);
     });
 
     it('should handle empty output array', async () => {
@@ -630,8 +604,14 @@ describe('nonStreamToStream', () => {
         events.push(value);
       }
 
-      // Should produce no events because output array is empty
-      expect(events).toEqual([]);
+      // Should only produce response.completed event even with empty output
+      expect(events).toEqual([
+        {
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
+        },
+      ]);
     });
 
     it('should handle missing output field', async () => {
@@ -663,8 +643,14 @@ describe('nonStreamToStream', () => {
         events.push(value);
       }
 
-      // Should produce no events because output field is missing
-      expect(events).toEqual([]);
+      // Should only produce response.completed event since output is missing
+      expect(events).toEqual([
+        {
+          response: mockResponse,
+          sequence_number: 999,
+          type: 'response.completed',
+        },
+      ]);
     });
   });
 });

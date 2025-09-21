@@ -91,25 +91,35 @@ export const transformResponseToStream = (data: OpenAI.ChatCompletion) =>
 export const transformResponseAPIToStream = (data: OpenAI.Responses.Response) =>
   new ReadableStream({
     start(controller) {
-      data.output.forEach((output) => {
-        switch (output.type) {
-          case 'message': {
-            output.content.forEach((content) => {
-              switch (content.type) {
-                case 'output_text': {
-                  controller.enqueue({
-                    delta: content.text,
-                    type: 'response.output_text.delta',
-                  });
-                }
+      // Check if output exists and is an array
+      if (data.output && Array.isArray(data.output)) {
+        data.output.forEach((output) => {
+          switch (output.type) {
+            case 'message': {
+              // Check if content exists and is an array
+              if (output.content && Array.isArray(output.content)) {
+                output.content.forEach((content) => {
+                  switch (content.type) {
+                    case 'output_text': {
+                      // Only emit delta if text exists
+                      if (content.text) {
+                        controller.enqueue({
+                          delta: content.text,
+                          type: 'response.output_text.delta',
+                        });
+                      }
+                      break;
+                    }
+                  }
+                });
               }
-            });
-            break;
+              break;
+            }
           }
-        }
-      });
+        });
+      }
 
-      // Send response.done event with usage
+      // Always send response.completed event
       controller.enqueue({
         response: data,
         sequence_number: 999,
