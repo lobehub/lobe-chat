@@ -114,7 +114,7 @@ async function createImageEdit(
       },
       model,
       parameters: {
-        // watermark defaults to false (no watermark) unless explicitly requested
+        ...(typeof params.seed === 'number' ? { seed: params.seed } : {}),
       },
     }),
     headers: {

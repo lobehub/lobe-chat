@@ -1974,7 +1974,10 @@
     "description": "LLaVA 是結合視覺編碼器和 Vicuna 的多模態模型，用於強大的視覺和語言理解。"
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 為 Mistral AI 於 2025 年 7 月發佈的尖端推理模型。"
+    "description": "Magistral Medium 1.2 是 Mistral AI 於 2025 年 9 月發布的前沿級推理模型，具備視覺支援。"
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 是 Mistral AI 於 2025 年 9 月發布的開源小型推理模型，具備視覺支援。"
   },
   "mathstral": {
     "description": "MathΣtral 專為科學研究和數學推理設計，提供有效的計算能力和結果解釋。"
@@ -2282,9 +2285,6 @@
   "mistral/mistral-large": {
     "description": "Mistral Large 是複雜任務的理想選擇，這些任務需要大型推理能力或高度專業化——如合成文字生成、程式碼生成、RAG 或代理。"
   },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B 是一個由 Mistral.ai 開發的 240 億參數開源模型。Saba 是一個專門訓練以在阿拉伯語、波斯語、烏爾都語、希伯來語和印度語言方面表現出色的專門模型。由 Groq 使用其自訂語言處理單元 (LPU) 硬體提供服務，以提供快速高效的推理。"
-  },
   "mistral/mistral-small": {
     "description": "Mistral Small 是簡單任務的理想選擇，這些任務可以批量完成——如分類、客戶支援或文字生成。它以可負擔的價格點提供出色的性能。"
   },
@@ -2569,6 +2569,9 @@
   },
   "qwen-image": {
     "description": "Qwen-Image 是一款通用圖像生成模型，支援多種藝術風格，尤其擅長複雜文字渲染，特別是中英文文字的呈現。模型支援多行版式、段落級文字生成以及細緻的細節刻畫，可實現複雜的圖文混合版面設計。"
+  },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit 是一款圖生圖模型，支援基於輸入圖像和文字提示進行圖像編輯和修改，能夠根據使用者需求對原圖進行精準調整和創意改造。"
   },
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"

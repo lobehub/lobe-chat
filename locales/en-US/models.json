@@ -1974,7 +1974,10 @@
     "description": "LLaVA is a multimodal model that combines a visual encoder with Vicuna for powerful visual and language understanding."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 is a state-of-the-art inference model released by Mistral AI in July 2025."
+    "description": "Magistral Medium 1.2 is a cutting-edge inference model with visual support, released by Mistral AI in September 2025."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 is an open-source compact inference model with visual support, released by Mistral AI in September 2025."
   },
   "mathstral": {
     "description": "MathΣtral is designed for scientific research and mathematical reasoning, providing effective computational capabilities and result interpretation."
@@ -2282,9 +2285,6 @@
   "mistral/mistral-large": {
     "description": "Mistral Large is ideal for complex tasks requiring large-scale reasoning capabilities or high specialization—such as synthetic text generation, code generation, RAG, or agents."
   },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B is a 24 billion parameter open-source model developed by Mistral.ai. Saba is a specialized model trained to excel in Arabic, Persian, Urdu, Hebrew, and Indian languages. Served by Groq using its custom Language Processing Unit (LPU) hardware for fast, efficient inference."
-  },
   "mistral/mistral-small": {
     "description": "Mistral Small is ideal for simple tasks that can be batched—such as classification, customer support, or text generation. It delivers excellent performance at an affordable price point."
   },
@@ -2569,6 +2569,9 @@
   },
   "qwen-image": {
     "description": "Qwen-Image is a general-purpose image generation model that supports a wide range of artistic styles and is particularly adept at rendering complex text, especially Chinese and English. The model supports multi-line layouts, paragraph-level text generation, and fine-grained detail rendering, enabling complex mixed text-and-image layout designs."
+  },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit is an image-to-image model that supports editing and modifying images based on input images and text prompts, enabling precise adjustments and creative transformations of the original image according to user needs."
   },
   "qwen-long": {
     "description": "Qwen is a large-scale language model that supports long text contexts and dialogue capabilities based on long documents and multiple documents."

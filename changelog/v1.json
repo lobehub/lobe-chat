@@ -1,6 +1,78 @@
 [
   {
     "children": {
+      "improvements": ["Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.4"
+  },
+  {
+    "children": {
+      "improvements": ["Added AUTH_MICROSOFT_ENTRA_ID_BASE_URL routing."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix non stream mode in OpenAI Response API."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix missing provider in server message."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.1"
+  },
+  {
+    "children": {
+      "features": ["Support google video understanding."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.0"
+  },
+  {
+    "children": {
+      "improvements": ["Enhanced AkashChat experience."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.4"
+  },
+  {
+    "children": {
+      "fixes": ["Update Responses search tool to web_search."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.3"
+  },
+  {
+    "children": {
+      "improvements": ["Use ID as name if provider name is empty."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Extend custom provider runtime options, Optimized modelFetch for Vercel AI Gateway, update i18n."
+      ]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.1"
+  },
+  {
+    "children": {
+      "features": ["Qwen provider add qwen-image-edit model support."]
+    },
+    "date": "2025-09-19",
+    "version": "1.131.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix oidc open direct issue."]
     },
     "date": "2025-09-18",

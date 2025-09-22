@@ -748,6 +748,7 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-max-preview',
     maxOutput: 32_768,
     organization: 'Qwen',
+    /* eslint-disable sort-keys-fix/sort-keys-fix */
     pricing: {
       currency: 'CNY',
       units: [
@@ -792,6 +793,7 @@ const qwenChatModels: AIChatModelCard[] = [
         },
       ],
     },
+    /* eslint-enable sort-keys-fix/sort-keys-fix */
     releasedAt: '2025-09-05',
     settings: {
       searchImpl: 'params',
@@ -1558,6 +1560,29 @@ const qwenChatModels: AIChatModelCard[] = [
 ];
 
 const qwenImageModels: AIImageModelCard[] = [
+  {
+    description:
+      'Qwen Image Edit 是一款图生图模型，支持基于输入图像和文本提示进行图像编辑和修改，能够根据用户需求对原图进行精准调整和创意改造。',
+    displayName: 'Qwen Image Edit',
+    enabled: true,
+    id: 'qwen-image-edit',
+    organization: 'Qwen',
+    parameters: {
+      imageUrl: {
+        default: '',
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+    },
+    pricing: {
+      currency: 'USD',
+      units: [{ name: 'imageGeneration', rate: 0.041, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-09-18',
+    type: 'image',
+  },
   {
     description:
       'Qwen-Image 是一款通用图像生成模型，支持多种艺术风格，尤其擅长复杂文本渲染，特别是中英文文本渲染。模型支持多行布局、段落级文本生成以及细粒度细节刻画，可实现复杂的图文混合布局设计。',

@@ -281,6 +281,7 @@
       "actionFiletip": "Tải lên tệp",
       "actionTooltip": "Tải lên",
       "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng",
+      "fileNotSupported": "Chế độ trình duyệt hiện không hỗ trợ tải lên tệp, chỉ hỗ trợ hình ảnh",
       "visionNotSupported": "Mô hình hiện tại không hỗ trợ nhận dạng hình ảnh, vui lòng chuyển sang mô hình khác để sử dụng"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "Đang chuẩn bị tải lên...",
         "processing": "Đang xử lý tệp..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước tệp hiện tại là {{actualSize}}"
     }
   },
   "zenMode": "Chế độ tập trung"

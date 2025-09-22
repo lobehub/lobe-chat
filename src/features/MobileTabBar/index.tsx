@@ -28,7 +28,7 @@ export default memo<Props>(({ className, tabBarKey }) => {
   const { styles } = useStyles();
   const router = useRouter();
   const openSettings = () => {
-    router.push('/settings/llm');
+    router.push('/settings?active=llm');
   };
   const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
