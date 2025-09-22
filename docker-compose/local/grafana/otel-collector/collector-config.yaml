@@ -35,7 +35,7 @@ exporters:
 service:
   pipelines:
     metrics:
-      receivers: [prometheus]
+      receivers: [prometheus, otlp]
       exporters: [prometheusremotewrite]
     traces:
       receivers: [otlp]
