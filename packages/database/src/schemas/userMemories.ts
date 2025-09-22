@@ -1,33 +1,43 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { bigint, index, jsonb, numeric, pgTable, real, text, vector } from 'drizzle-orm/pg-core';
+import {
+  bigint,
+  index,
+  jsonb,
+  numeric,
+  pgTable,
+  real,
+  text,
+  varchar,
+  vector,
+} from 'drizzle-orm/pg-core';
 
 import { idGenerator } from '../utils/idGenerator';
-import { timestamps, timestamptz, varchar255 } from './_helpers';
+import { timestamps, timestamptz } from './_helpers';
 import { users } from './user';
 
 export const userMemories = pgTable(
   'user_memories',
   {
-    id: varchar255('id')
-      .$defaultFn(() => idGenerator('memory'))
+    id: text('id')
+      .$defaultFn(() => idGenerator('messages'))
       .primaryKey(),
 
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
 
-    memoryCategory: varchar255('memory_category'),
-    memoryLayer: varchar255('memory_layer'),
-    memoryType: varchar255('memory_type'),
+    memoryCategory: text('memory_category'),
+    memoryLayer: text('memory_layer'),
+    memoryType: text('memory_type'),
 
-    title: varchar255('title'),
+    title: varchar('title', { length: 255 }),
     summary: text('summary'),
     summaryVector1024: vector('summary_vector_1024', { dimensions: 1024 }),
     details: text('details'),
     detailsVector1024: vector('details_vector_1024', { dimensions: 1024 }),
 
-    status: varchar255('status'),
+    status: text('status'),
 
     accessedCount: bigint('accessed_count', { mode: 'number' }).default(0),
-    lastAccessedAt: timestamptz('last_accessed_at').notNull(),
+    lastAccessedAt: timestamptz('last_accessed_at').notNull().defaultNow(),
 
     ...timestamps,
   },
@@ -46,7 +56,7 @@ export const userMemories = pgTable(
 export const userMemoriesContexts = pgTable(
   'user_memories_contexts',
   {
-    id: varchar255('id')
+    id: text('id')
       .$defaultFn(() => idGenerator('memory'))
       .primaryKey(),
 
@@ -63,7 +73,7 @@ export const userMemoriesContexts = pgTable(
     description: text('description'),
     descriptionVector: vector('description_vector', { dimensions: 1024 }),
 
-    type: varchar255('type'),
+    type: text('type'),
     currentStatus: text('current_status'),
 
     scoreImpact: numeric('score_impact', { mode: 'number' }).default(0),
@@ -87,16 +97,14 @@ export const userMemoriesContexts = pgTable(
 export const userMemoriesPreferences = pgTable(
   'user_memories_preferences',
   {
-    id: varchar255('id')
+    id: text('id')
       .$defaultFn(() => idGenerator('memory'))
       .primaryKey(),
 
-    contextId: varchar255('context_id').references(() => userMemoriesContexts.id, {
+    contextId: text('context_id').references(() => userMemoriesContexts.id, {
       onDelete: 'cascade',
     }),
-    userMemoryId: varchar255('user_memory_id').references(() => userMemories.id, {
-      onDelete: 'cascade',
-    }),
+    userMemoryId: text('user_memory_id').references(() => userMemories.id, { onDelete: 'cascade' }),
 
     labels: jsonb('labels'),
     extractedLabels: jsonb('extracted_labels'),
@@ -105,7 +113,7 @@ export const userMemoriesPreferences = pgTable(
     conclusionDirectives: text('conclusion_directives'),
     conclusionDirectivesVector: vector('conclusion_directives_vector', { dimensions: 1024 }),
 
-    type: varchar255('type'),
+    type: text('type'),
     suggestions: text('suggestions'),
 
     scorePriority: numeric('score_priority', { mode: 'number' }).default(0),
@@ -120,6 +128,7 @@ export const userMemoriesPreferences = pgTable(
   ],
 );
 
+// 身份/角色记忆表
 export const userMemoriesIdentities = pgTable(
   'user_memories_identities',
   {
@@ -128,7 +137,7 @@ export const userMemoriesIdentities = pgTable(
     descriptionVector: vector('description_vector', { dimensions: 1024 }),
     experience: text('experience'),
     extractedLabels: jsonb('extracted_labels'),
-    id: varchar255('id')
+    id: text('id')
       .$defaultFn(() => idGenerator('memory'))
       .primaryKey(),
 
@@ -136,7 +145,7 @@ export const userMemoriesIdentities = pgTable(
     relationship: text('relationship'),
     role: text('role'),
 
-    type: varchar255('type'),
+    type: text('type'),
     userMemoryId: text('user_memory_id').references(() => userMemories.id, { onDelete: 'cascade' }),
 
     ...timestamps,
@@ -150,10 +159,11 @@ export const userMemoriesIdentities = pgTable(
   ],
 );
 
+// 经验/体验记忆表
 export const userMemoriesExperiences = pgTable(
   'user_memories_experiences',
   {
-    id: varchar255('id')
+    id: text('id')
       .$defaultFn(() => idGenerator('memory'))
       .primaryKey(),
 
@@ -161,7 +171,7 @@ export const userMemoriesExperiences = pgTable(
 
     labels: jsonb('labels'),
     extractedLabels: jsonb('extracted_labels'),
-    type: varchar255('type'),
+    type: text('type'),
 
     situation: text('situation'),
     situationVector: vector('situation_vector', { dimensions: 1024 }),
@@ -194,6 +204,7 @@ export const userMemoriesExperiences = pgTable(
   ],
 );
 
+// 类型定义
 export type UserMemoryItem = typeof userMemories.$inferSelect;
 export type NewUserMemory = typeof userMemories.$inferInsert;
 
