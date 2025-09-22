@@ -4,8 +4,8 @@ import {
   ChatStreamCallbacks,
   ChatStreamPayload,
   LobeOpenAICompatibleRuntime,
-  ModelProvider,
 } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -62,7 +62,11 @@ describe('LobeOpenAICompatibleFactory', () => {
   if (typeof File === 'undefined') {
     // @ts-ignore
     global.File = class MockFile {
-      constructor(public parts: any[], public name: string, public opts?: any) {}
+      constructor(
+        public parts: any[],
+        public name: string,
+        public opts?: any,
+      ) {}
     };
   }
 
@@ -166,11 +170,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         }
         // Assert that all expected chunk patterns are present
         expect(chunks).toEqual(
-          expect.arrayContaining([
-            'id: a\n',
-            'event: text\n',
-            'data: "hello"\n\n',
-          ]),
+          expect.arrayContaining(['id: a\n', 'event: text\n', 'data: "hello"\n\n']),
         );
       });
 

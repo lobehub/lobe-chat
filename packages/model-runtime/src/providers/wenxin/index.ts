@@ -1,5 +1,6 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 
 export const LobeWenxinAI = createOpenAICompatibleRuntime({
   baseURL: 'https://qianfan.baidubce.com/v2',

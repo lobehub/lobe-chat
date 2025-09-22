@@ -1,4 +1,4 @@
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 
 import * as ProviderCards from '@/config/modelProviders';
 import { getLLMConfig } from '@/envs/llm';
