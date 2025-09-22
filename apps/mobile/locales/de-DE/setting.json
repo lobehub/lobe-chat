@@ -126,6 +126,12 @@
     },
     "title": "Spracheinstellungen"
   },
+  "mode": {
+    "already": "Sie befinden sich bereits im Entwicklermodus",
+    "enabled": "Entwicklermodus ist aktiviert",
+    "remaining": "Noch {{count}} Mal tippen, um den Entwicklermodus zu aktivieren",
+    "title": "Entwicklermodus"
+  },
   "openai": "OpenAI Einstellungen",
   "openaiSettings": {
     "apiKey": "API-Schlüssel",

@@ -126,6 +126,12 @@
     },
     "title": "Language Settings"
   },
+  "mode": {
+    "already": "You are already in Developer Mode",
+    "enabled": "Developer Mode is enabled",
+    "remaining": "Tap {{count}} more times to enable Developer Mode",
+    "title": "Developer Mode"
+  },
   "openai": "OpenAI Settings",
   "openaiSettings": {
     "apiKey": "API Key",
