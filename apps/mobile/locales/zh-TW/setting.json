@@ -126,6 +126,12 @@
     },
     "title": "語言設定"
   },
+  "mode": {
+    "already": "你已處於開發者模式",
+    "enabled": "開發者模式已啟用",
+    "remaining": "再點按 {{count}} 次即可啟用開發者模式",
+    "title": "開發者模式"
+  },
   "openai": "OpenAI 設定",
   "openaiSettings": {
     "apiKey": "API Key",
