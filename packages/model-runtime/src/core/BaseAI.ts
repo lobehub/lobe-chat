@@ -4,21 +4,28 @@ import OpenAI from 'openai';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
+  CreateImagePayload,
+  CreateImageResponse,
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   ModelRequestOptions,
   PullModelParams,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../types';
-import { CreateImagePayload, CreateImageResponse } from '../types/image';
 
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {
   baseURL?: string;
   chat?(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
+  generateObject?(
+    payload: GenerateObjectPayload,
+    options?: GenerateObjectOptions,
+  ): Promise<Response>;
 
   embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
