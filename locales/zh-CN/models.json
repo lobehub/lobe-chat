@@ -1974,7 +1974,10 @@
     "description": "LLaVA 是结合视觉编码器和 Vicuna 的多模态模型，用于强大的视觉和语言理解。"
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 是 Mistral AI 于2025年7月发布的前沿级推理模型。"
+    "description": "Magistral Medium 1.2 是Mistral AI于2025年9月发布的前沿级推理模型，具有视觉支持。"
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 是Mistral AI于2025年9月发布的开源小型推理模型，具有视觉支持。"
   },
   "mathstral": {
     "description": "MathΣtral 专为科学研究和数学推理设计，提供有效的计算能力和结果解释。"
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "Mistral Large 是复杂任务的理想选择，这些任务需要大型推理能力或高度专业化——如合成文本生成、代码生成、RAG 或代理。"
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B 是一个由 Mistral.ai 开发的 240 亿参数开源模型。Saba 是一个专门训练以在阿拉伯语、波斯语、乌尔都语、希伯来语和印度语言方面表现出色的专门模型。由 Groq 使用其自定义语言处理单元 (LPU) 硬件提供服务，以提供快速高效的推理。"
   },
   "mistral/mistral-small": {
     "description": "Mistral Small 是简单任务的理想选择，这些任务可以批量完成——如分类、客户支持或文本生成。它以可承受的价格点提供出色的性能。"
