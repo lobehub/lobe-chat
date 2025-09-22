@@ -86,7 +86,7 @@ describe('agentChatConfigSelectors', () => {
   });
 
   describe('historyCount', () => {
-    it('should return undefined when historyCount is not defined', () => {
+    it('should return default value when historyCount is not defined', () => {
       const state = createMockState();
       expect(agentChatConfigSelectors.historyCount(state)).toBe(20);
     });
@@ -94,6 +94,11 @@ describe('agentChatConfigSelectors', () => {
     it('should return the historyCount value when defined', () => {
       const state = createMockState({ historyCount: 20 });
       expect(agentChatConfigSelectors.historyCount(state)).toBe(20);
+    });
+
+    it('should return 0 when historyCount is explicitly set to 0', () => {
+      const state = createMockState({ historyCount: 0 });
+      expect(agentChatConfigSelectors.historyCount(state)).toBe(0);
     });
   });
 
