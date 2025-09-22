@@ -205,7 +205,7 @@ describe('LobeComfyUI Runtime', () => {
       const result = await runtime.createImage(mockPayload);
 
       // Verify fetch was called with correct parameters
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3010/webapi/text-to-image/comfyui', {
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3010/webapi/create-image/comfyui', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ describe('LobeComfyUI Runtime', () => {
 
       // Should use default localhost:3000
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3000/webapi/text-to-image/comfyui',
+        'http://localhost:3000/webapi/create-image/comfyui',
         expect.any(Object),
       );
 
@@ -301,7 +301,7 @@ describe('LobeComfyUI Runtime', () => {
 
       // Should use default localhost:3010
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3010/webapi/text-to-image/comfyui',
+        'http://localhost:3010/webapi/create-image/comfyui',
         expect.any(Object),
       );
 

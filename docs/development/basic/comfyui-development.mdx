@@ -185,11 +185,11 @@ ComfyUI provides a REST WebAPI route for image generation, supporting both regul
 ### Route Details
 
 ```typescript
-// src/app/(backend)/webapi/text-to-image/comfyui/route.ts
+// src/app/(backend)/webapi/create-image/comfyui/route.ts
 export const runtime = 'nodejs';
 export const maxDuration = 300;  // 5 minutes max
 
-// POST /api/text-to-image/comfyui
+// POST /api/create-image/comfyui
 {
   model: string;           // Model identifier
   params: {                // Generation parameters

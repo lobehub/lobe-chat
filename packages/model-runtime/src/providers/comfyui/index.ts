@@ -94,7 +94,7 @@ export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
         headers['Authorization'] = `Bearer ${keyVaultSecret}`;
       }
 
-      const response = await fetch(`${appUrl}/webapi/text-to-image/comfyui`, {
+      const response = await fetch(`${appUrl}/webapi/create-image/comfyui`, {
         body: JSON.stringify({
           model: payload.model,
           options: this.options,

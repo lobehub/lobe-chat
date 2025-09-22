@@ -185,11 +185,11 @@ ComfyUI 提供了用于图像生成的 REST WebAPI 路由，支持常规认证�
 ### 路由详情
 
 ```typescript
-// src/app/(backend)/webapi/text-to-image/comfyui/route.ts
+// src/app/(backend)/webapi/create-image/comfyui/route.ts
 export const runtime = 'nodejs';
 export const maxDuration = 300;  // 最长5分钟
 
-// POST /api/text-to-image/comfyui
+// POST /api/create-image/comfyui
 {
   model: string;           // 模型标识符
   params: {                // 生成参数
