@@ -45,7 +45,7 @@ export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProvid
 
 const AiProviderSdkTypes = [
   'anthropic',
-  ‘comfyui’,
+  'comfyui',
   'openai',
   'ollama',
   'azure',

@@ -827,6 +827,18 @@
   "cohere/Cohere-command-r-plus": {
     "description": "Command R+是一个最先进的RAG优化模型，旨在应对企业级工作负载。"
   },
+  "cohere/command-a": {
+    "description": "Command A 是 Cohere 迄今为止性能最强的模型，在工具使用、代理、检索增强生成 (RAG) 和多语言用例方面表现出色。Command A 的上下文长度为 256K，仅需两个 GPU 即可运行，与 Command R+ 08-2024 相比吞吐量提高了 150%。"
+  },
+  "cohere/command-r": {
+    "description": "Command R 是一个针对对话交互和长上下文任务优化的大型语言模型。它定位于\"可扩展\"类别的模型，在高性能和强准确性之间取得平衡，使公司能够超越概念验证并进入生产。"
+  },
+  "cohere/command-r-plus": {
+    "description": "Command R+ 是 Cohere 最新的大型语言模型，针对对话交互和长上下文任务进行了优化。它的目标是在性能上极其出色，使公司能够超越概念验证并进入生产。"
+  },
+  "cohere/embed-v4.0": {
+    "description": "一个允许对文本、图像或混合内容进行分类或转换为嵌入的模型。"
+  },
   "comfyui/flux-dev": {
     "description": "FLUX.1 Dev - 高质量文生图模型，支持 guidance scale 调节，10-50步生成，非商业许可，适合高质量创作和艺术作品生成"
   },
@@ -866,17 +878,6 @@
   "comfyui/stable-diffusion-xl": {
     "displayName": "SDXL Text-to-Image",
     "description": "SDXL 文生图模型，支持1024x1024高分辨率文本到图像生成，提供更好的图像质量和细节表现。支持负向提示。"
-  "cohere/command-a": {
-    "description": "Command A 是 Cohere 迄今为止性能最强的模型，在工具使用、代理、检索增强生成 (RAG) 和多语言用例方面表现出色。Command A 的上下文长度为 256K，仅需两个 GPU 即可运行，与 Command R+ 08-2024 相比吞吐量提高了 150%。"
-  },
-  "cohere/command-r": {
-    "description": "Command R 是一个针对对话交互和长上下文任务优化的大型语言模型。它定位于\"可扩展\"类别的模型，在高性能和强准确性之间取得平衡，使公司能够超越概念验证并进入生产。"
-  },
-  "cohere/command-r-plus": {
-    "description": "Command R+ 是 Cohere 最新的大型语言模型，针对对话交互和长上下文任务进行了优化。它的目标是在性能上极其出色，使公司能够超越概念验证并进入生产。"
-  },
-  "cohere/embed-v4.0": {
-    "description": "一个允许对文本、图像或混合内容进行分类或转换为嵌入的模型。"
   },
   "command": {
     "description": "一个遵循指令的对话模型，在语言任务中表现出高质量、更可靠，并且相比我们的基础生成模型具有更长的上下文长度。"
