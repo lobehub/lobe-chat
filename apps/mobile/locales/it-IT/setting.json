@@ -126,6 +126,12 @@
     },
     "title": "Impostazioni lingua"
   },
+  "mode": {
+    "already": "Sei già in modalità sviluppatore",
+    "enabled": "Modalità sviluppatore attivata",
+    "remaining": "Tocca ancora {{count}} volte per attivare la modalità sviluppatore",
+    "title": "Modalità sviluppatore"
+  },
   "openai": "Impostazioni OpenAI",
   "openaiSettings": {
     "apiKey": "API Key",

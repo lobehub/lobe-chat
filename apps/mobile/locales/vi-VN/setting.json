@@ -126,6 +126,12 @@
     },
     "title": "Cài đặt ngôn ngữ"
   },
+  "mode": {
+    "already": "Bạn đã ở chế độ nhà phát triển",
+    "enabled": "Chế độ nhà phát triển đã được bật",
+    "remaining": "Chạm thêm {{count}} lần để bật chế độ nhà phát triển",
+    "title": "Chế độ nhà phát triển"
+  },
   "openai": "Cài đặt OpenAI",
   "openaiSettings": {
     "apiKey": "API Key",

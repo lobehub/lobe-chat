@@ -126,6 +126,12 @@
     },
     "title": "언어 설정"
   },
+  "mode": {
+    "already": "이미 개발자 모드입니다",
+    "enabled": "개발자 모드가 활성화되었습니다",
+    "remaining": "개발자 모드를 활성화하려면 {{count}}번 더 누르세요",
+    "title": "개발자 모드"
+  },
   "openai": "OpenAI 설정",
   "openaiSettings": {
     "apiKey": "API 키",
