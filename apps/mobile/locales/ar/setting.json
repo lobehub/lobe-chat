@@ -126,6 +126,12 @@
     },
     "title": "إعدادات اللغة"
   },
+  "mode": {
+    "already": "أنت بالفعل في وضع المطور",
+    "enabled": "تم تفعيل وضع المطور",
+    "remaining": "اضغط {{count}} مرات أخرى لتفعيل وضع المطور",
+    "title": "وضع المطور"
+  },
   "openai": "إعدادات OpenAI",
   "openaiSettings": {
     "apiKey": "مفتاح API",

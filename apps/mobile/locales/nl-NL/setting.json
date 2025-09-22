@@ -126,6 +126,12 @@
     },
     "title": "Taalinstellingen"
   },
+  "mode": {
+    "already": "Je bevindt je al in de ontwikkelaarsmodus",
+    "enabled": "Ontwikkelaarsmodus is ingeschakeld",
+    "remaining": "Nog {{count}} keer tikken om de ontwikkelaarsmodus in te schakelen",
+    "title": "Ontwikkelaarsmodus"
+  },
   "openai": "OpenAI-instellingen",
   "openaiSettings": {
     "apiKey": "API-sleutel",
