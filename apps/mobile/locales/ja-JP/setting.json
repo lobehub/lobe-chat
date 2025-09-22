@@ -126,6 +126,12 @@
     },
     "title": "言語設定"
   },
+  "mode": {
+    "already": "すでに開発者モードです",
+    "enabled": "開発者モードが有効になりました",
+    "remaining": "あと {{count}} 回タップすると開発者モードが有効になります",
+    "title": "開発者モード"
+  },
   "openai": "OpenAI 設定",
   "openaiSettings": {
     "apiKey": "API キー",
