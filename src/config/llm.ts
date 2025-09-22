@@ -58,6 +58,9 @@ export const getLLMConfig = () => {
       ENABLED_TOGETHERAI: z.boolean(),
       TOGETHERAI_API_KEY: z.string().optional(),
 
+      ENABLED_FEATHERLESSAI: z.boolean(),
+      FEATHERLESSAI_API_KEY: z.string().optional(),
+
       ENABLED_FIREWORKSAI: z.boolean(),
       FIREWORKSAI_API_KEY: z.string().optional(),
 
@@ -225,6 +228,9 @@ export const getLLMConfig = () => {
 
       ENABLED_TOGETHERAI: !!process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_API_KEY: process.env.TOGETHERAI_API_KEY,
+
+      ENABLED_FEATHERLESSAI: !!process.env.FEATHERLESSAI_API_KEY,
+      FEATHERLESSAI_API_KEY: process.env.FEATHERLESSAI_API_KEY,
 
       ENABLED_FIREWORKSAI: !!process.env.FIREWORKSAI_API_KEY,
       FIREWORKSAI_API_KEY: process.env.FIREWORKSAI_API_KEY,

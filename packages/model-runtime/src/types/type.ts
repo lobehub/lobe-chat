@@ -41,6 +41,7 @@ export enum ModelProvider {
   Cohere = 'cohere',
   DeepSeek = 'deepseek',
   Fal = 'fal',
+  FeatherlessAI = 'featherlessai',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
   Github = 'github',
