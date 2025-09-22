@@ -281,6 +281,7 @@
       "actionFiletip": "파일 업로드",
       "actionTooltip": "업로드",
       "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "fileNotSupported": "브라우저 모드에서는 파일 업로드를 지원하지 않으며, 이미지 업로드만 가능합니다",
       "visionNotSupported": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용해 주세요"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "업로드 준비 중...",
         "processing": "파일 처리 중..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
   },
   "zenMode": "집중 모드"

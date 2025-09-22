@@ -1974,7 +1974,10 @@
     "description": "LLaVA ist ein multimodales Modell, das visuelle Encoder und Vicuna kombiniert und für starke visuelle und sprachliche Verständnisse sorgt."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 ist ein fortschrittliches Inferenzmodell, das Mistral AI im Juli 2025 veröffentlicht hat."
+    "description": "Magistral Medium 1.2 ist ein fortschrittliches Inferenzmodell mit visueller Unterstützung, das von Mistral AI im September 2025 veröffentlicht wurde."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 ist ein Open-Source-Kleinmodell für Inferenz mit visueller Unterstützung, das von Mistral AI im September 2025 veröffentlicht wurde."
   },
   "mathstral": {
     "description": "MathΣtral ist für wissenschaftliche Forschung und mathematische Schlussfolgerungen konzipiert und bietet effektive Rechenfähigkeiten und Ergebnisinterpretationen."
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "Mistral Large ist ideal für komplexe Aufgaben, die große Inferenzkapazitäten oder hohe Spezialisierung erfordern – wie synthetische Textgenerierung, Codegenerierung, RAG oder Agenten."
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B ist ein 24 Milliarden Parameter Open-Source-Modell von Mistral.ai. Saba ist ein spezialisiertes Modell, das für herausragende Leistungen in Arabisch, Persisch, Urdu, Hebräisch und indischen Sprachen trainiert wurde. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
   },
   "mistral/mistral-small": {
     "description": "Mistral Small ist ideal für einfache Aufgaben, die in großen Mengen ausgeführt werden können – wie Klassifikation, Kundensupport oder Textgenerierung. Es bietet hervorragende Leistung zu einem erschwinglichen Preis."
