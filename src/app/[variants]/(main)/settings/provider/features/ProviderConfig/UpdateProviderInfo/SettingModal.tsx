@@ -117,7 +117,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
                 okText: t('delete', { ns: 'common' }),
                 onOk: async () => {
                   await deleteAiProvider(id);
-                  router.push('/settings/provider');
+                  router.push('/settings?active=provider');
 
                   onClose?.();
                   message.success(t('updateAiProvider.deleteSuccess'));

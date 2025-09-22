@@ -114,6 +114,7 @@
       "reasoning": "Ten model wspiera głębokie myślenie",
       "search": "Ten model wspiera wyszukiwanie w sieci",
       "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
+      "video": "Ten model obsługuje rozpoznawanie wideo",
       "vision": "Ten model obsługuje rozpoznawanie wizualne."
     },
     "removed": "Ten model nie znajduje się na liście, jeśli zostanie odznaczony, zostanie automatycznie usunięty"

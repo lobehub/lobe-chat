@@ -1974,7 +1974,10 @@
     "description": "LLaVA, görsel kodlayıcı ve Vicuna'yı birleştiren çok modlu bir modeldir, güçlü görsel ve dil anlama yetenekleri sunar."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1, Mistral AI tarafından Temmuz 2025'te yayımlanan ileri düzey bir çıkarım modelidir."
+    "description": "Magistral Medium 1.2, Mistral AI tarafından Eylül 2025'te yayınlanan, görsel destekli ileri seviye bir çıkarım modelidir."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2, Mistral AI tarafından Eylül 2025'te yayınlanan, görsel destekli açık kaynaklı küçük ölçekli bir çıkarım modelidir."
   },
   "mathstral": {
     "description": "MathΣtral, bilimsel araştırma ve matematik akıl yürütme için tasarlanmış, etkili hesaplama yetenekleri ve sonuç açıklamaları sunar."
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "Mistral Large, büyük çıkarım yetenekleri veya yüksek uzmanlık gerektiren karmaşık görevler için ideal seçimdir—örneğin sentez metin üretimi, kod üretimi, RAG veya ajanlık."
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B, Mistral.ai tarafından geliştirilen 24 milyar parametreli açık kaynak modelidir. Saba, Arapça, Farsça, Urduca, İbranice ve Hint dillerinde üstün performans göstermek üzere özel olarak eğitilmiş bir modeldir. Groq tarafından özel Dil İşleme Birimi (LPU) donanımı ile hizmet verilir ve hızlı, verimli çıkarım sağlar."
   },
   "mistral/mistral-small": {
     "description": "Mistral Small, sınıflandırma, müşteri desteği veya metin üretimi gibi toplu yapılabilen basit görevler için ideal seçimdir. Uygun fiyat noktasında mükemmel performans sunar."

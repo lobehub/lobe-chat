@@ -36,9 +36,15 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
     setLoading(true);
 
     try {
-      await createNewAiProvider(values);
+      // 如果 name 为空，使用 id 作为 name
+      const finalValues = {
+        ...values,
+        name: values.name || values.id,
+      };
+
+      await createNewAiProvider(finalValues);
       setLoading(false);
-      router.push(`/settings/provider/${values.id}`);
+      router.push(`/settings?active=provider&provider=${values.id}`);
       message.success(t('createNewAiProvider.createSuccess'));
       onClose?.();
     } catch (e) {
@@ -71,7 +77,6 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       label: t('createNewAiProvider.name.title'),
       minWidth: 400,
       name: 'name',
-      rules: [{ message: t('createNewAiProvider.name.required'), required: true }],
     },
     {
       children: (

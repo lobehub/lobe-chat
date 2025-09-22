@@ -36,7 +36,12 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
             {category}
           </Header>
         )}
-        <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
+        <SettingContainer
+          addonAfter={<Footer />}
+          style={{
+            paddingBlock: 24,
+            paddingInline: 32,
+          }}>{children}</SettingContainer>
       </Flexbox>
       <InitClientDB />
     </>

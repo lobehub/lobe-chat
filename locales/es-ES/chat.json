@@ -281,6 +281,7 @@
       "actionFiletip": "Subir archivo",
       "actionTooltip": "Subir",
       "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función",
+      "fileNotSupported": "La carga de archivos no está soportada en el modo navegador, solo se permiten imágenes",
       "visionNotSupported": "El modelo actual no admite reconocimiento visual, por favor cambie de modelo para usar esta función"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "Preparando para subir...",
         "processing": "Procesando archivo..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
   },
   "zenMode": "Modo de concentración"

@@ -1974,7 +1974,10 @@
     "description": "LLaVAは、視覚エンコーダーとVicunaを組み合わせたマルチモーダルモデルであり、強力な視覚と言語理解を提供します。"
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 は Mistral AI が2025年7月に発表した最先端の推論モデルです。"
+    "description": "Magistral Medium 1.2 は、Mistral AI が2025年9月にリリースした最先端の推論モデルで、視覚サポートを備えています。"
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 は、Mistral AI が2025年9月にリリースしたオープンソースの小型推論モデルで、視覚サポートを備えています。"
   },
   "mathstral": {
     "description": "MathΣtralは、科学研究と数学推論のために設計されており、効果的な計算能力と結果の解釈を提供します。"
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "大規模推論能力や高度な専門性を必要とする複雑なタスクに最適なモデルで、合成テキスト生成、コード生成、RAG、エージェントに適しています。"
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B は Mistral.ai による240億パラメータのオープンソースモデルです。Saba はアラビア語、ペルシャ語、ウルドゥー語、ヘブライ語、インド言語での優れた性能を目指して特別に訓練されたモデルです。Groq のカスタム言語処理ユニット（LPU）ハードウェアでサービス提供され、高速かつ効率的な推論を実現します。"
   },
   "mistral/mistral-small": {
     "description": "Mistral Small は分類、カスタマーサポート、テキスト生成などのバッチ処理可能なシンプルなタスクに最適で、手頃な価格で優れた性能を提供します。"

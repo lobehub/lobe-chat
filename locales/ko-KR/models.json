@@ -1974,7 +1974,10 @@
     "description": "LLaVA는 시각 인코더와 Vicuna를 결합한 다중 모달 모델로, 강력한 시각 및 언어 이해를 제공합니다."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1은 Mistral AI가 2025년 7월에 공개한 최첨단 추론 모델입니다."
+    "description": "Magistral Medium 1.2는 Mistral AI가 2025년 9월에 발표한 최첨단 추론 모델로, 시각 지원 기능을 갖추고 있습니다."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2는 Mistral AI가 2025년 9월에 발표한 오픈 소스 소형 추론 모델로, 시각 지원 기능을 갖추고 있습니다."
   },
   "mathstral": {
     "description": "MathΣtral은 과학 연구 및 수학 추론을 위해 설계되었으며, 효과적인 계산 능력과 결과 해석을 제공합니다."
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "Mistral Large는 대규모 추론 능력이나 고도로 전문화된 작업에 이상적이며, 합성 텍스트 생성, 코드 생성, RAG 또는 에이전트 작업에 적합합니다."
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B는 Mistral.ai가 개발한 240억 매개변수 오픈소스 모델입니다. Saba는 아랍어, 페르시아어, 우르두어, 히브리어 및 인도 언어에서 뛰어난 성능을 발휘하도록 특별히 훈련된 전문 모델입니다. Groq의 맞춤형 언어 처리 유닛(LPU) 하드웨어를 사용하여 빠르고 효율적인 추론을 제공합니다."
   },
   "mistral/mistral-small": {
     "description": "Mistral Small은 분류, 고객 지원 또는 텍스트 생성과 같이 대량 처리 가능한 간단한 작업에 이상적입니다. 합리적인 가격대에 뛰어난 성능을 제공합니다."
