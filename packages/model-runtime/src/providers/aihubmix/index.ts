@@ -1,9 +1,8 @@
-import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
+import { LOBE_DEFAULT_MODEL_LIST, ModelProvider } from 'model-bank';
 import urlJoin from 'url-join';
 
 import { responsesAPIModels } from '../../const/models';
 import { createRouterRuntime } from '../../core/RouterRuntime';
-import { ModelProvider } from '../../types';
 import { ChatStreamPayload } from '../../types/chat';
 import { detectModelProvider, processMultiProviderModelList } from '../../utils/modelParse';
 

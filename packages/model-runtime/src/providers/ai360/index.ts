@@ -1,7 +1,8 @@
+import { ModelProvider } from 'model-bank';
+
 import type { ChatModelCard } from '@/types/llm';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 
 export interface Ai360ModelCard {
   id: string;

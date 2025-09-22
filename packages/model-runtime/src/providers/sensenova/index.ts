@@ -1,7 +1,8 @@
+import { ModelProvider } from 'model-bank';
+
 import type { ChatModelCard } from '@/types/llm';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { convertSenseNovaMessage } from '../../utils/sensenovaHelpers';
 
 export interface SenseNovaModelCard {

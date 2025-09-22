@@ -1,5 +1,5 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { act } from '@testing-library/react';
+import { ModelProvider } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useUserStore } from '@/store/user';
