@@ -1,12 +1,13 @@
 import createClient, { ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 
 import { systemToUserModels } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { transformResponseToStream } from '../../core/openaiCompatibleFactory';
 import { OpenAIStream, createSSEDataExtractor } from '../../core/streams';
-import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../../types';
+import { ChatMethodOptions, ChatStreamPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';

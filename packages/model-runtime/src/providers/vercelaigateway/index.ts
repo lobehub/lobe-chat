@@ -1,5 +1,6 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface VercelAIGatewayModelCard {
@@ -35,7 +36,7 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
       if (reasoning_effort) {
         providerOptions.openai = {
           reasoningEffort: reasoning_effort,
-          reasoningSummary: 'auto'
+          reasoningSummary: 'auto',
         };
       }
       if (verbosity) {

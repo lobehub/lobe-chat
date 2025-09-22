@@ -1,7 +1,7 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { TogetherAIModel } from './type';
 
 export const LobeTogetherAI = createOpenAICompatibleRuntime({

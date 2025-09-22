@@ -1,9 +1,9 @@
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 
-import type { ChatModelCard } from '@/types/llm';
-
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ChatStreamPayload, ModelProvider } from '../../types';
+import { ChatStreamPayload } from '../../types';
 
 export interface Search1APIModelCard {
   id: string;

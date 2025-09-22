@@ -18,10 +18,10 @@ import {
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
-  ModelProvider,
   ModelRuntime,
 } from '@lobechat/model-runtime';
 import { ClientSecretPayload } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
 
 import { initModelRuntimeWithUserPayload } from './index';

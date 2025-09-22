@@ -3,12 +3,13 @@ import { TraceNameMap } from '@lobechat/types';
 import { ClientSecretPayload } from '@lobechat/types';
 import { Langfuse } from 'langfuse';
 import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
+import { ModelProvider } from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as langfuseCfg from '@/envs/langfuse';
 import { createTraceOptions } from '@/server/modules/ModelRuntime';
 
-import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '../index';
+import { ChatStreamPayload, LobeOpenAI, ModelRuntime } from '../index';
 import { providerRuntimeMap } from '../runtimeMap';
 import { CreateImagePayload } from '../types/image';
 import { AgentChatOptions } from './ModelRuntime';
