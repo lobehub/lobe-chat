@@ -1,8 +1,7 @@
 import { GenerateContentResponse } from '@google/genai';
+import { GroundingSearch, ModelTokensUsage } from '@lobechat/types';
 
 import errorLocale from '@/locales/default/error';
-import { ModelTokensUsage } from '@/types/message';
-import { GroundingSearch } from '@/types/search';
 
 import { ChatStreamCallbacks } from '../../types';
 import { nanoid } from '../../utils/uuid';
