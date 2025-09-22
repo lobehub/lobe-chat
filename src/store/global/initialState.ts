@@ -34,7 +34,6 @@ export enum SettingsTabs {
   Provider = 'provider',
   Proxy = 'proxy',
   Storage = 'storage',
-  Sync = 'sync',
   SystemAgent = 'system-agent',
   TTS = 'tts',
 }

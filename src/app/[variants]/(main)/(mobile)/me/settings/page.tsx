@@ -20,7 +20,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 const Page = async (props: DynamicLayoutProps) => {
   const isMobile = await RouteVariants.getIsMobile(props);
 
-  if (!isMobile) return redirect('/settings/common');
+  if (!isMobile) return redirect('/settings');
 
   return <Category />;
 };

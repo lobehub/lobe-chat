@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.4"
+  },
+  {
+    "children": {
       "improvements": ["Added AUTH_MICROSOFT_ENTRA_ID_BASE_URL routing."]
     },
     "date": "2025-09-21",

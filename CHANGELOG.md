@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.132.4](https://github.com/lobehub/lobe-chat/compare/v1.132.3...v1.132.4)
+
+<sup>Released on **2025-09-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Enable thinkingBudget control for Vertex Gemini 2.5 models, closes [#8223](https://github.com/lobehub/lobe-chat/issues/8223) ([c665646](https://github.com/lobehub/lobe-chat/commit/c665646))
+- **misc**: Update i18n, closes [#9363](https://github.com/lobehub/lobe-chat/issues/9363) ([785d5d7](https://github.com/lobehub/lobe-chat/commit/785d5d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.132.3](https://github.com/lobehub/lobe-chat/compare/v1.132.2...v1.132.3)
 
 <sup>Released on **2025-09-21**</sup>

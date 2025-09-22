@@ -91,7 +91,7 @@ export const useMenu = () => {
       icon: <Icon icon={Settings2} />,
       key: 'setting',
       label: (
-        <Link href={'/settings/common'}>
+        <Link href={'/settings'}>
           <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>
         </Link>
       ),
