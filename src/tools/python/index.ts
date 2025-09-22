@@ -6,7 +6,7 @@ export const PythonManifest: BuiltinToolManifest = {
   api: [
     {
       description: 'A Python interpreter. Use this tool to run Python code. ',
-      name: 'interpreter',
+      name: 'python',
       parameters: {
         properties: {
           code: {
