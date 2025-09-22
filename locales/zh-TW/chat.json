@@ -281,6 +281,7 @@
       "actionFiletip": "上傳檔案",
       "actionTooltip": "上傳",
       "disabled": "當前模型不支援視覺識別和檔案分析，請切換模型後使用",
+      "fileNotSupported": "瀏覽器模式下暫不支援上傳檔案，僅支援圖片",
       "visionNotSupported": "當前模型不支援視覺識別，請切換模型後使用"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "準備上傳...",
         "processing": "檔案處理中..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "影片檔案大小不能超過 20MB，當前檔案大小為 {{actualSize}}"
     }
   },
   "zenMode": "專注模式"

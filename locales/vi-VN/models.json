@@ -1974,7 +1974,10 @@
     "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 là một mô hình suy luận tiên tiến do Mistral AI ra mắt vào tháng 7 năm 2025."
+    "description": "Magistral Medium 1.2 là mô hình suy luận tiên tiến do Mistral AI phát hành vào tháng 9 năm 2025, có hỗ trợ thị giác."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 là mô hình suy luận nhỏ mã nguồn mở do Mistral AI phát hành vào tháng 9 năm 2025, có hỗ trợ thị giác."
   },
   "mathstral": {
     "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
@@ -2281,9 +2284,6 @@
   },
   "mistral/mistral-large": {
     "description": "Mistral Large là lựa chọn lý tưởng cho các nhiệm vụ phức tạp đòi hỏi khả năng suy luận lớn hoặc chuyên môn cao — như tạo văn bản tổng hợp, tạo mã, RAG hoặc đại lý."
-  },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B là mô hình mã nguồn mở 24 tỷ tham số do Mistral.ai phát triển. Saba là mô hình chuyên biệt được huấn luyện để thể hiện xuất sắc trong các ngôn ngữ Ả Rập, Ba Tư, Urdu, Do Thái và các ngôn ngữ Ấn Độ. Được Groq phục vụ bằng phần cứng đơn vị xử lý ngôn ngữ (LPU) tùy chỉnh để cung cấp suy luận nhanh và hiệu quả."
   },
   "mistral/mistral-small": {
     "description": "Mistral Small là lựa chọn lý tưởng cho các nhiệm vụ đơn giản có thể xử lý theo lô — như phân loại, hỗ trợ khách hàng hoặc tạo văn bản. Nó cung cấp hiệu suất xuất sắc với mức giá phải chăng."

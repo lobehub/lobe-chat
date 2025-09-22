@@ -114,6 +114,7 @@
       "reasoning": "Ce modèle prend en charge une réflexion approfondie",
       "search": "Ce modèle prend en charge la recherche en ligne",
       "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "video": "Ce modèle prend en charge la reconnaissance vidéo",
       "vision": "Ce modèle prend en charge la reconnaissance visuelle."
     },
     "removed": "Le modèle n'est pas dans la liste, il sera automatiquement supprimé si vous annulez la sélection"

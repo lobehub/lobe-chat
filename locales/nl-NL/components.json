@@ -114,6 +114,7 @@
       "reasoning": "Dit model ondersteunt diepgaand denken",
       "search": "Dit model ondersteunt online zoeken",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
+      "video": "Dit model ondersteunt videoherkenning",
       "vision": "This model supports visual recognition."
     },
     "removed": "Dit model staat niet meer in de lijst. Als je het deselecteert, wordt het automatisch verwijderd."
