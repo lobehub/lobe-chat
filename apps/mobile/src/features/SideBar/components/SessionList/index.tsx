@@ -46,6 +46,7 @@ export default function SideBar() {
       <TextInput.Search
         onChangeText={setSearchText}
         placeholder={t('session.search.placeholder', { ns: 'chat' })}
+        size="large"
         style={styles.searchInput}
         value={searchText}
       />
