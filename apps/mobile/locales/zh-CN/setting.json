@@ -100,12 +100,6 @@
       "title": "清空认证数据"
     },
     "failurePrefix": "操作失败: ",
-    "mode": {
-      "already": "你已经处于开发者模式",
-      "enabled": "开发者模式已开启",
-      "remaining": "再点按 {{count}} 次即可开启开发者模式",
-      "title": "开发者模式"
-    },
     "refreshToken": {
       "expire": {
         "success": "已使刷新令牌立即过期",
@@ -131,6 +125,12 @@
       "title": "跟随系统"
     },
     "title": "语言设置"
+  },
+  "mode": {
+    "already": "你已经处于开发者模式",
+    "enabled": "开发者模式已开启",
+    "remaining": "再点按 {{count}} 次即可开启开发者模式",
+    "title": "开发者模式"
   },
   "openai": "OpenAI 设置",
   "openaiSettings": {

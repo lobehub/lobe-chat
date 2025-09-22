@@ -126,6 +126,12 @@
     },
     "title": "Dil Ayarları"
   },
+  "mode": {
+    "already": "Geliştirici modundasınız",
+    "enabled": "Geliştirici modu etkinleştirildi",
+    "remaining": "Geliştirici modunu açmak için {{count}} kez daha dokunun",
+    "title": "Geliştirici Modu"
+  },
   "openai": "OpenAI Ayarları",
   "openaiSettings": {
     "apiKey": "API Anahtarı",

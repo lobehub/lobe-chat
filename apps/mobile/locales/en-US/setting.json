@@ -100,12 +100,6 @@
       "title": "Clear Authentication Data"
     },
     "failurePrefix": "Operation failed: ",
-    "mode": {
-      "already": "You're already in developer mode",
-      "enabled": "Developer mode enabled",
-      "remaining": "Just {{count}} more taps to enable developer mode",
-      "title": "Developer Mode"
-    },
     "refreshToken": {
       "expire": {
         "success": "Refresh token has been expired immediately",
@@ -131,6 +125,12 @@
       "title": "Follow System"
     },
     "title": "Language Settings"
+  },
+  "mode": {
+    "already": "You are already in Developer Mode",
+    "enabled": "Developer Mode is enabled",
+    "remaining": "Tap {{count}} more times to enable Developer Mode",
+    "title": "Developer Mode"
   },
   "openai": "OpenAI Settings",
   "openaiSettings": {
