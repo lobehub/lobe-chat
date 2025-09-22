@@ -1,10 +1,6 @@
 // @vitest-environment node
-import {
-  ChatStreamCallbacks,
-  LobeMoonshotAI,
-  LobeOpenAICompatibleRuntime,
-  ModelProvider,
-} from '@lobechat/model-runtime';
+import { LobeOpenAICompatibleRuntime } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 

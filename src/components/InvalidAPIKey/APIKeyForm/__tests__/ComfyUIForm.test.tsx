@@ -1,4 +1,4 @@
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
 
 import APIKeyForm from '../index';

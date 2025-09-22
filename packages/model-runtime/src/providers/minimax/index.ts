@@ -1,7 +1,6 @@
-import { minimax as minimaxChatModels } from 'model-bank';
+import { ModelProvider, minimax as minimaxChatModels } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { createMiniMaxImage } from './createImage';
 
 export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {

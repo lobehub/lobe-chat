@@ -1,9 +1,8 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { and, asc, desc, eq } from 'drizzle-orm';
 import { isEmpty } from 'lodash-es';
+import { ModelProvider } from 'model-bank';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { LobeChatDatabase } from '../type';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -14,6 +13,7 @@ import {
 import { merge } from '@/utils/merge';
 
 import { AiProviderSelectItem, aiModels, aiProviders } from '../schemas';
+import { LobeChatDatabase } from '../type';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 

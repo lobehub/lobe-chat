@@ -1,4 +1,3 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import type {
   ChatModelCard,
   GlobalLLMProviderKey,
@@ -7,6 +6,7 @@ import type {
   UserModelProviderConfig,
 } from '@lobechat/types';
 import { produce } from 'immer';
+import { ModelProvider } from 'model-bank';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 

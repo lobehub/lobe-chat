@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Move the ModelProvider to model-bank."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.5"
+  },
+  {
+    "children": {
       "improvements": ["Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n."]
     },
     "date": "2025-09-22",

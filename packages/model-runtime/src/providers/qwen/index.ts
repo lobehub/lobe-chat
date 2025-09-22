@@ -1,6 +1,7 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { QwenAIStream } from '../../core/streams';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { createQwenImage } from './createImage';
 

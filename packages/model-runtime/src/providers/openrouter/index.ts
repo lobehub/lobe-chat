@@ -1,7 +1,6 @@
-import { openrouter as OpenRouterModels } from 'model-bank';
+import { ModelProvider, openrouter as OpenRouterModels } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { OpenRouterModelCard, OpenRouterReasoning } from './type';
 
