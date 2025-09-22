@@ -20,6 +20,10 @@ const list: TestItem[] = [
     url: 'https://www.qiumiwu.com/standings/yingchao',
     filterOptions: { pureText: true, enableReadability: false },
   },
+  {
+    file: 'shortpage.html',
+    url: 'https://short.tld',
+  },
 ];
 
 describe('htmlToMarkdown', () => {
