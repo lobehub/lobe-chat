@@ -36,9 +36,12 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
       agentSelectors.currentAgentSystemRole(s),
       agentSelectors.currentAgentModel(s) as string,
       agentSelectors.currentAgentModelProvider(s) as string,
-      // add these two params to enable the component to re-render
+      // add these params to enable the component to re-render
       agentChatConfigSelectors.historyCount(s),
       agentChatConfigSelectors.enableHistoryCount(s),
+      // add search config to enable re-render when search settings change
+      agentChatConfigSelectors.isAgentEnableSearch(s),
+      agentChatConfigSelectors.useModelBuiltinSearch(s),
     ];
   });
 
@@ -52,6 +55,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   // Tool usage token
   const canUseTool = useModelSupportToolUse(model, provider);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
+
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
     const schemaNumber = toolSelectors
