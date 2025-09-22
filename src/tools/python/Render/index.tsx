@@ -32,7 +32,12 @@ const Python = memo<
     <Flexbox gap={12}>
       {/* Python 代码显示 */}
       <Flexbox>
-        <Highlighter actionIconSize="small" language="python" showLanguage={false}>
+        <Highlighter
+          actionIconSize="small"
+          language="python"
+          showLanguage={false}
+          style={{ maxHeight: 200, overflow: 'scroll', width: '100%' }}
+        >
           {args.code}
         </Highlighter>
       </Flexbox>
