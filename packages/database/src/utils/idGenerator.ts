@@ -14,6 +14,7 @@ const prefixes = {
   generationTopics: 'gt',
   generations: 'gen',
   knowledgeBases: 'kb',
+  memory: 'mem',
   messages: 'msg',
   plugins: 'plg',
   sessionGroups: 'sg',
