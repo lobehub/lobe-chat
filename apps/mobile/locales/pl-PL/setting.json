@@ -126,6 +126,12 @@
     },
     "title": "Ustawienia języka"
   },
+  "mode": {
+    "already": "Jesteś już w trybie deweloperskim",
+    "enabled": "Tryb deweloperski jest włączony",
+    "remaining": "Naciśnij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
+    "title": "Tryb deweloperski"
+  },
   "openai": "Ustawienia OpenAI",
   "openaiSettings": {
     "apiKey": "Klucz API",
