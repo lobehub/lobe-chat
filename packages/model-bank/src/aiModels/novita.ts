@@ -71,10 +71,11 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 163_840,
+    contextWindowTokens: 131_072,
     displayName: 'DeepSeek V3.1',
     enabled: true,
     id: 'deepseek/deepseek-v3.1',
+    maxOutput: 32_768,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
