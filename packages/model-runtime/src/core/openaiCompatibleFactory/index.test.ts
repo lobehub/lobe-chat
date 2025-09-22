@@ -1416,6 +1416,167 @@ describe('LobeOpenAICompatibleFactory', () => {
     });
   });
 
+  describe('generateObject', () => {
+    it('should return parsed JSON object on successful API call', async () => {
+      const mockResponse = {
+        output_text: '{"name": "John", "age": 30}',
+      };
+
+      vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(mockResponse as any);
+
+      const payload = {
+        messages: [{ content: 'Generate a person object', role: 'user' as const }],
+        schema: {
+          type: 'object',
+          properties: { name: { type: 'string' }, age: { type: 'number' } },
+        },
+        model: 'gpt-4o',
+      };
+
+      const result = await instance.generateObject(payload);
+
+      expect(instance['client'].responses.create).toHaveBeenCalledWith(
+        {
+          input: payload.messages,
+          model: payload.model,
+          // @ts-ignore
+          text: { format: { strict: true, type: 'json_schema', ...payload.schema } },
+          user: undefined,
+        },
+        { headers: undefined, signal: undefined },
+      );
+
+      expect(result).toEqual({ name: 'John', age: 30 });
+    });
+
+    it('should handle options correctly', async () => {
+      const mockResponse = {
+        output_text: '{"status": "success"}',
+      };
+
+      vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(mockResponse as any);
+
+      const payload = {
+        messages: [{ content: 'Generate status', role: 'user' as const }],
+        schema: { type: 'object', properties: { status: { type: 'string' } } },
+        model: 'gpt-4o',
+      };
+
+      const options = {
+        headers: { 'Custom-Header': 'test-value' },
+        user: 'test-user',
+        signal: new AbortController().signal,
+      };
+
+      const result = await instance.generateObject(payload, options);
+
+      expect(instance['client'].responses.create).toHaveBeenCalledWith(
+        {
+          input: payload.messages,
+          model: payload.model,
+          // @ts-ignore
+          text: { format: { strict: true, type: 'json_schema', ...payload.schema } },
+          user: options.user,
+        },
+        { headers: options.headers, signal: options.signal },
+      );
+
+      expect(result).toEqual({ status: 'success' });
+    });
+
+    it('should return undefined when JSON parsing fails', async () => {
+      const mockResponse = {
+        output_text: 'invalid json string',
+      };
+
+      vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(mockResponse as any);
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const payload = {
+        messages: [{ content: 'Generate data', role: 'user' as const }],
+        schema: { type: 'object' },
+        model: 'gpt-4o',
+      };
+
+      const result = await instance.generateObject(payload);
+
+      expect(consoleSpy).toHaveBeenCalledWith('parse json error:', 'invalid json string');
+      expect(result).toBeUndefined();
+
+      consoleSpy.mockRestore();
+    });
+
+    it('should handle empty response text', async () => {
+      const mockResponse = {
+        output_text: '',
+      };
+
+      vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(mockResponse as any);
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const payload = {
+        messages: [{ content: 'Generate data', role: 'user' as const }],
+        schema: { type: 'object' },
+        model: 'gpt-4o',
+      };
+
+      const result = await instance.generateObject(payload);
+
+      expect(consoleSpy).toHaveBeenCalledWith('parse json error:', '');
+      expect(result).toBeUndefined();
+
+      consoleSpy.mockRestore();
+    });
+
+    it('should handle complex nested JSON objects', async () => {
+      const mockResponse = {
+        output_text:
+          '{"user": {"name": "Alice", "profile": {"age": 25, "preferences": ["music", "sports"]}}, "metadata": {"created": "2024-01-01"}}',
+      };
+
+      vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(mockResponse as any);
+
+      const payload = {
+        messages: [{ content: 'Generate complex user data', role: 'user' as const }],
+        schema: {
+          type: 'object',
+          properties: {
+            user: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                profile: {
+                  type: 'object',
+                  properties: {
+                    age: { type: 'number' },
+                    preferences: { type: 'array', items: { type: 'string' } },
+                  },
+                },
+              },
+            },
+            metadata: { type: 'object' },
+          },
+        },
+        model: 'gpt-4o',
+      };
+
+      const result = await instance.generateObject(payload);
+
+      expect(result).toEqual({
+        user: {
+          name: 'Alice',
+          profile: {
+            age: 25,
+            preferences: ['music', 'sports'],
+          },
+        },
+        metadata: {
+          created: '2024-01-01',
+        },
+      });
+    });
+  });
+
   describe('models', () => {
     it('should get models with third party model list', async () => {
       vi.spyOn(instance['client'].models, 'list').mockResolvedValue({

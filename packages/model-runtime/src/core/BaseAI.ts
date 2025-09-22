@@ -50,6 +50,10 @@ export abstract class LobeOpenAICompatibleRuntime {
 
   abstract chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
   abstract createImage(payload: CreateImagePayload): Promise<CreateImageResponse>;
+  abstract generateObject(
+    payload: GenerateObjectPayload,
+    options?: GenerateObjectOptions,
+  ): Promise<Response>;
 
   abstract models(): Promise<AIBaseModelCard[]>;
 
