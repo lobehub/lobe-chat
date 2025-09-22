@@ -4,6 +4,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { PrimaryColors, ThemeMode, NeutralColors } from '@/theme';
+import { isDev } from '@/utils/env';
 
 interface SettingState {
   // 开发者模式相关
@@ -23,45 +24,34 @@ interface SettingState {
 export const useSettingStore = createWithEqualityFn<SettingState>()(
   persist(
     (set) => ({
-      
-      // 开发者模式默认关闭
-developerMode: false,
+      // 开发者模式默认只在开发环境开启
+      developerMode: isDev,
 
-      
-      
-// 默认字体大小
-fontSize: 14,
+      // 默认字体大小
+      fontSize: 14,
 
-      
-      
-// 默认中性色
-neutralColor: 'mauve',
+      // 默认中性色
+      neutralColor: 'mauve',
 
-      
-// 默认主色
-primaryColor: 'primary',
+      // 默认主色
+      primaryColor: 'primary',
 
-      
-setDeveloperMode: (developerMode: boolean) => {
+      setDeveloperMode: (developerMode: boolean) => {
         set({ developerMode });
       },
 
-      
-setFontSize: (fontSize: number) => {
+      setFontSize: (fontSize: number) => {
         set({ fontSize });
       },
 
-      
-setNeutralColor: (neutralColor: NeutralColors) => {
+      setNeutralColor: (neutralColor: NeutralColors) => {
         set({ neutralColor });
       },
 
-      
-setPrimaryColor: (primaryColor: PrimaryColors) => {
+      setPrimaryColor: (primaryColor: PrimaryColors) => {
         set({ primaryColor });
       },
 
-      
       setThemeMode: (themeMode: ThemeMode) => {
         set({ themeMode });
       },
