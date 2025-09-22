@@ -1,6 +1,6 @@
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 
-import { ModelProvider } from '../const/modelProvider';
 import { ChatStreamPayload } from './chat';
 import { ILobeAgentRuntimeErrorType } from './error';
 

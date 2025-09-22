@@ -3,6 +3,7 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
+import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import {
@@ -16,7 +17,6 @@ import {
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
-  ModelProvider,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';

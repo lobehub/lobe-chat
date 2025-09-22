@@ -1,5 +1,6 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 
 export interface V0ModelCard {

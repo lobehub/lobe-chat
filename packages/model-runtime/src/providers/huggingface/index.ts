@@ -1,11 +1,10 @@
 import { HfInference } from '@huggingface/inference';
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 import urlJoin from 'url-join';
-
-import type { ChatModelCard } from '@/types/llm';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { convertIterableToStream } from '../../core/streams';
-import { ModelProvider } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 
 export interface HuggingFaceModelCard {

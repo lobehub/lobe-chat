@@ -1,8 +1,8 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { Aws } from '@lobehub/icons';
 import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Network, ShieldPlus } from 'lucide-react';
+import { ModelProvider } from 'model-bank';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

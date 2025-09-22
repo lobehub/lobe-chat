@@ -5,7 +5,6 @@ import { LOADING_FLAT } from '@/const/message';
 import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
-import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';

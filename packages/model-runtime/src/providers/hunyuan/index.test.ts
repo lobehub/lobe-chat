@@ -1,6 +1,7 @@
 // @vitest-environment node
-import { LobeOpenAICompatibleRuntime, ModelProvider } from '@lobechat/model-runtime';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { LobeOpenAICompatibleRuntime } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { testProvider } from '../../providerTestUtils';
 import { LobeHunyuanAI } from './index';

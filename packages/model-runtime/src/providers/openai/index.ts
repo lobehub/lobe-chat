@@ -1,4 +1,5 @@
-import { ModelProvider } from '../../const/modelProvider';
+import { ModelProvider } from 'model-bank';
+
 import { responsesAPIModels } from '../../const/models';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
