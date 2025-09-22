@@ -5,7 +5,8 @@ const isDallEImageGenerating = (id: string) => (s: ChatStoreState) => s.dalleIma
 const isGeneratingDallEImage = (s: ChatStoreState) =>
   Object.values(s.dalleImageLoading).some(Boolean);
 
-const isPythonExecuting = (id: string) => (s: ChatStoreState) => s.pythonExecuting[id];
+const isInterpreterExecuting = (id: string) => (s: ChatStoreState) =>
+  s.codeInterpreterExecuting[id];
 
 const isSearXNGSearching = (id: string) => (s: ChatStoreState) => s.searchLoading[id];
 const isSearchingLocalFiles = (id: string) => (s: ChatStoreState) => s.localFileLoading[id];
@@ -13,7 +14,7 @@ const isSearchingLocalFiles = (id: string) => (s: ChatStoreState) => s.localFile
 export const chatToolSelectors = {
   isDallEImageGenerating,
   isGeneratingDallEImage,
-  isPythonExecuting,
+  isInterpreterExecuting,
   isSearXNGSearching,
   isSearchingLocalFiles,
 };

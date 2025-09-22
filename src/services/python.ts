@@ -1,12 +1,12 @@
 import { PythonInterpreter } from '@lobechat/python-interpreter';
-import { PythonResponse } from '@lobechat/types';
+import { CodeInterpreterResponse } from '@lobechat/types';
 
 class PythonService {
   async runPython(
     code: string,
     packages: string[],
     files: File[],
-  ): Promise<PythonResponse | undefined> {
+  ): Promise<CodeInterpreterResponse | undefined> {
     if (typeof Worker === 'undefined') return;
     const interpreter = await new PythonInterpreter!({
       pyodideIndexUrl: process.env.NEXT_PUBLIC_PYODIDE_INDEX_URL!,

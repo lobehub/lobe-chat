@@ -1,13 +1,13 @@
-import { PythonFileItem } from '@lobechat/types';
+import { CodeInterpreterFileItem } from '@lobechat/types';
 import { PreviewGroup } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import GalleyGrid from '@/components/GalleyGrid';
 
-import { PythonFile, PythonImage } from './PythonFileItem';
+import { ResultFile, ResultImage } from './ResultFileItem';
 
-const PythonFileGallery = memo<{ files: PythonFileItem[] }>(({ files }) => {
+const ResultFileGallery = memo<{ files: CodeInterpreterFileItem[] }>(({ files }) => {
   if (!files || files.length === 0) {
     return null;
   }
@@ -31,12 +31,12 @@ const PythonFileGallery = memo<{ files: PythonFileItem[] }>(({ files }) => {
           {imageFiles.length === 1 ? (
             // 单张图片时占据更大空间
             <Flexbox style={{ maxWidth: 400 }}>
-              <PythonImage {...imageFiles[0]} />
+              <ResultImage {...imageFiles[0]} />
             </Flexbox>
           ) : (
             <GalleyGrid
               items={imageFiles.map((file) => ({ ...file }))}
-              renderItem={(props) => <PythonImage {...props} />}
+              renderItem={(props) => <ResultImage {...props} />}
             />
           )}
         </PreviewGroup>
@@ -46,7 +46,7 @@ const PythonFileGallery = memo<{ files: PythonFileItem[] }>(({ files }) => {
       {otherFiles.length > 0 && (
         <Flexbox gap={8} horizontal wrap="wrap">
           {otherFiles.map((file, index) => (
-            <PythonFile key={`${file.filename}-${index}`} {...file} />
+            <ResultFile key={`${file.filename}-${index}`} {...file} />
           ))}
         </Flexbox>
       )}
@@ -54,4 +54,4 @@ const PythonFileGallery = memo<{ files: PythonFileItem[] }>(({ files }) => {
   );
 });
 
-export default PythonFileGallery;
+export default ResultFileGallery;

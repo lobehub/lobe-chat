@@ -1,8 +1,8 @@
 import {
   BuiltinRenderProps,
-  PythonInterpreterParams,
-  PythonInterpreterState,
-  PythonResponse,
+  CodeInterpreterParams,
+  CodeInterpreterResponse,
+  CodeInterpreterState,
 } from '@lobechat/types';
 import { Alert, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -14,15 +14,15 @@ import BubblesLoading from '@/components/BubblesLoading';
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/slices/builtinTool/selectors';
 
-import PythonFileGallery from './components/PythonFileGallery';
+import ResultFileGallery from './components/ResultFileGallery';
 
-const Python = memo<
-  BuiltinRenderProps<PythonResponse, PythonInterpreterParams, PythonInterpreterState>
->(({ content, args, pluginState, messageId }) => {
+const CodeInterpreter = memo<
+  BuiltinRenderProps<CodeInterpreterResponse, CodeInterpreterParams, CodeInterpreterState>
+>(({ content, args, pluginState, messageId, apiName }) => {
   const { t } = useTranslation('tool');
   const theme = useTheme();
 
-  const isExecuting = useChatStore(chatToolSelectors.isPythonExecuting(messageId));
+  const isExecuting = useChatStore(chatToolSelectors.isInterpreterExecuting(messageId));
 
   if (pluginState?.error) {
     console.error(pluginState.error);
@@ -30,11 +30,11 @@ const Python = memo<
 
   return (
     <Flexbox gap={12}>
-      {/* Python 代码显示 */}
+      {/* 代码显示 */}
       <Flexbox>
         <Highlighter
           actionIconSize="small"
-          language="python"
+          language={apiName!}
           showLanguage={false}
           style={{ maxHeight: 200, overflow: 'scroll', width: '100%' }}
         >
@@ -46,7 +46,7 @@ const Python = memo<
       {isExecuting && (
         <Flexbox gap={8} horizontal>
           <BubblesLoading />
-          <Text type="secondary">{t('python.executing')}</Text>
+          <Text type="secondary">{t('codeInterpreter.executing')}</Text>
         </Flexbox>
       )}
 
@@ -54,7 +54,7 @@ const Python = memo<
       {!isExecuting && pluginState?.error && (
         <Alert
           description={String(pluginState.error)}
-          message={t('python.error')}
+          message={t('codeInterpreter.error')}
           showIcon
           type="error"
         />
@@ -66,7 +66,7 @@ const Python = memo<
           {content.result && (
             <Flexbox>
               <Text strong style={{ marginBottom: 4 }}>
-                {t('python.returnValue')}
+                {t('codeInterpreter.returnValue')}
               </Text>
               <Highlighter copyable={false} language="text" showLanguage={false}>
                 {content.result}
@@ -78,7 +78,7 @@ const Python = memo<
           {content?.output && content.output.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 4 }}>
-                {t('python.output')}
+                {t('codeInterpreter.output')}
               </Text>
               <div
                 style={{
@@ -105,9 +105,9 @@ const Python = memo<
           {content?.files && content.files.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 8 }}>
-                {t('python.files')}
+                {t('codeInterpreter.files')}
               </Text>
-              <PythonFileGallery files={content.files} />
+              <ResultFileGallery files={content.files} />
             </Flexbox>
           )}
         </Flexbox>
@@ -116,4 +116,4 @@ const Python = memo<
   );
 });
 
-export default Python;
+export default CodeInterpreter;

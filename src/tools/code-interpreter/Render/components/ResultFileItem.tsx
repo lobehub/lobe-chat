@@ -1,4 +1,4 @@
-import { PythonFileItem } from '@lobechat/types';
+import { CodeInterpreterFileItem } from '@lobechat/types';
 import { Icon, Image, MaterialFileTypeIcon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
@@ -57,8 +57,8 @@ function basename(filename: string) {
 }
 
 // 图片显示子组件
-const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
-  const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchPythonFileItem]);
+const ResultImage = memo<CodeInterpreterFileItem>(({ filename, previewUrl, fileId }) => {
+  const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchInterpreterFileItem]);
   const { data } = useFetchPythonFileItem(fileId);
   const { styles } = useImageStyles();
 
@@ -79,7 +79,7 @@ const PythonImage = memo<PythonFileItem>(({ filename, previewUrl, fileId }) => {
 });
 
 // 文件显示子组件
-const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
+const ResultFile = memo<CodeInterpreterFileItem>(({ filename, fileId, previewUrl }) => {
   const { styles } = useFileStyles();
   const baseName = basename(filename);
   const onDownload = async (e: React.MouseEvent) => {
@@ -103,4 +103,4 @@ const PythonFile = memo<PythonFileItem>(({ filename, fileId, previewUrl }) => {
   );
 });
 
-export { PythonFile, PythonImage };
+export { ResultFile, ResultImage };

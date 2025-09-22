@@ -1,4 +1,8 @@
-import { PythonFileItem, PythonInterpreterParams, PythonResponse } from '@lobechat/types';
+import {
+  CodeInterpreterFileItem,
+  CodeInterpreterParams,
+  CodeInterpreterResponse,
+} from '@lobechat/types';
 import { produce } from 'immer';
 import pMap from 'p-map';
 import { SWRResponse } from 'swr';
@@ -10,36 +14,39 @@ import { pythonService } from '@/services/python';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
-import { PythonToolIdentifier } from '@/tools/python';
+import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
 import { setNamespace } from '@/utils/storeDebug';
 
-const n = setNamespace('python');
+const n = setNamespace('codeInterpreter');
 
-const SWR_FETCH_PYTHON_FILE_KEY = 'FetchPythonFileItem';
+const SWR_FETCH_INTERPRETER_FILE_KEY = 'FetchCodeInterpreterFileItem';
 
-export interface ChatPythonAction {
-  python: (id: string, params: PythonInterpreterParams) => Promise<boolean | undefined>;
-  togglePythonExecuting: (id: string, loading: boolean) => void;
-  updatePythonFileItem: (id: string, updater: (data: PythonResponse) => void) => Promise<void>;
-  uploadPythonFiles: (id: string, files: PythonFileItem[]) => Promise<void>;
-  useFetchPythonFileItem: (id?: string) => SWRResponse;
+export interface ChatCodeInterpreterAction {
+  python: (id: string, params: CodeInterpreterParams) => Promise<boolean | undefined>;
+  toggleInterpreterExecuting: (id: string, loading: boolean) => void;
+  updateInterpreterFileItem: (
+    id: string,
+    updater: (data: CodeInterpreterResponse) => void,
+  ) => Promise<void>;
+  uploadInterpreterFiles: (id: string, files: CodeInterpreterFileItem[]) => Promise<void>;
+  useFetchInterpreterFileItem: (id?: string) => SWRResponse;
 }
 
-export const pythonSlice: StateCreator<
+export const codeInterpreterSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatPythonAction
+  ChatCodeInterpreterAction
 > = (set, get) => ({
-  python: async (id: string, params: PythonInterpreterParams) => {
+  python: async (id: string, params: CodeInterpreterParams) => {
     const {
-      togglePythonExecuting,
+      toggleInterpreterExecuting,
       updatePluginState,
       internal_updateMessageContent,
-      uploadPythonFiles,
+      uploadInterpreterFiles,
     } = get();
 
-    togglePythonExecuting(id, true);
+    toggleInterpreterExecuting(id, true);
 
     // TODO: 应该只下载 AI 用到的文件
     const files: File[] = [];
@@ -53,10 +60,10 @@ export const pythonSlice: StateCreator<
         files.push(new File([blob], image.alt));
       }
       for (const tool of message.tools ?? []) {
-        if (tool.identifier === PythonToolIdentifier) {
+        if (tool.identifier === CodeInterpreterIdentifier) {
           const message = chatSelectors.getMessageByToolCallId(tool.id)(get());
           if (message?.content) {
-            const content = JSON.parse(message.content) as PythonResponse;
+            const content = JSON.parse(message.content) as CodeInterpreterResponse;
             for (const file of content.files ?? []) {
               const item = await fileService.getFile(file.fileId!);
               const blob = await fetch(item.url).then((res) => res.blob());
@@ -71,7 +78,7 @@ export const pythonSlice: StateCreator<
       const result = await pythonService.runPython(params.code, params.packages, files);
       if (result?.files) {
         await internal_updateMessageContent(id, JSON.stringify(result));
-        await uploadPythonFiles(id, result.files);
+        await uploadInterpreterFiles(id, result.files);
       } else {
         await internal_updateMessageContent(id, JSON.stringify(result));
       }
@@ -80,25 +87,28 @@ export const pythonSlice: StateCreator<
       // 如果调用过程中出现了错误，不要触发 AI 消息
       return;
     } finally {
-      togglePythonExecuting(id, false);
+      toggleInterpreterExecuting(id, false);
     }
 
     return true;
   },
 
-  togglePythonExecuting: (id: string, executing: boolean) => {
+  toggleInterpreterExecuting: (id: string, executing: boolean) => {
     set(
-      { pythonExecuting: { ...get().pythonExecuting, [id]: executing } },
+      { codeInterpreterExecuting: { ...get().codeInterpreterExecuting, [id]: executing } },
       false,
-      n('togglePythonExecuting'),
+      n('toggleInterpreterExecuting'),
     );
   },
 
-  updatePythonFileItem: async (id: string, updater: (data: PythonResponse) => void) => {
+  updateInterpreterFileItem: async (
+    id: string,
+    updater: (data: CodeInterpreterResponse) => void,
+  ) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
-    const result: PythonResponse = JSON.parse(message.content);
+    const result: CodeInterpreterResponse = JSON.parse(message.content);
     if (!result.files) return;
 
     const nextResult = produce(result, updater);
@@ -106,8 +116,8 @@ export const pythonSlice: StateCreator<
     await get().internal_updateMessageContent(id, JSON.stringify(nextResult));
   },
 
-  uploadPythonFiles: async (id: string, files: PythonFileItem[]) => {
-    const { updatePythonFileItem } = get();
+  uploadInterpreterFiles: async (id: string, files: CodeInterpreterFileItem[]) => {
+    const { updateInterpreterFileItem } = get();
 
     if (!files) return;
 
@@ -121,7 +131,7 @@ export const pythonSlice: StateCreator<
         });
 
         if (uploadResult?.id) {
-          await updatePythonFileItem(id, (draft) => {
+          await updateInterpreterFileItem(id, (draft) => {
             if (draft.files?.[index]) {
               draft.files[index].fileId = uploadResult.id;
               draft.files[index].previewUrl = undefined;
@@ -130,28 +140,28 @@ export const pythonSlice: StateCreator<
           });
         }
       } catch (error) {
-        console.error('Failed to upload Python file:', error);
+        console.error('Failed to upload CodeInterpreter file:', error);
       }
     });
   },
 
-  useFetchPythonFileItem: (id) =>
-    useClientDataSWR(id ? [SWR_FETCH_PYTHON_FILE_KEY, id] : null, async () => {
+  useFetchInterpreterFileItem: (id) =>
+    useClientDataSWR(id ? [SWR_FETCH_INTERPRETER_FILE_KEY, id] : null, async () => {
       if (!id) return null;
 
       const item = await fileService.getFile(id);
 
       set(
         produce((draft) => {
-          if (!draft.pythonFileMap) {
-            draft.pythonFileMap = {};
+          if (!draft.codeInterpreterFileMap) {
+            draft.codeInterpreterFileMap = {};
           }
-          if (draft.pythonFileMap[id]) return;
+          if (draft.codeInterpreterFileMap[id]) return;
 
-          draft.pythonFileMap[id] = item;
+          draft.codeInterpreterFileMap[id] = item;
         }),
         false,
-        n('useFetchPythonFileItem'),
+        n('useFetchInterpreterFileItem'),
       );
 
       return item;

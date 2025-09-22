@@ -1,4 +1,11 @@
 export default {
+  codeInterpreter: {
+    error: '执行错误',
+    executing: '执行中...',
+    files: '文件：',
+    output: '输出：',
+    returnValue: '返回值：',
+  },
   dalle: {
     autoGenerate: '自动生成',
     downloading: 'DallE3 生成的图片链接有效期仅1小时，正在缓存图片到本地...',
@@ -20,13 +27,6 @@ export default {
     readFileError: '读取文件失败，请检查文件路径是否正确',
     readFiles: '读取文件',
     readFilesError: '读取文件失败，请检查文件路径是否正确',
-  },
-  python: {
-    error: '执行错误',
-    executing: '执行中...',
-    files: '文件：',
-    output: '输出：',
-    returnValue: '返回值：',
   },
   search: {
     createNewSearch: '创建新的搜索记录',
