@@ -27,7 +27,11 @@ const ProviderConfig = memo(() => {
   const { url, modelsUrl, identifier } = useDetailContext();
   const router = useRouter();
   const openSettings = () => {
-    router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${identifier}`);
+    router.push(
+      isDeprecatedEdition
+        ? '/settings?active=llm'
+        : `/settings?active=provider&provider=${identifier}`,
+    );
   };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={16} />;

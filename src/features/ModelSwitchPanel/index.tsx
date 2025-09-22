@@ -82,7 +82,9 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             ),
             onClick: () => {
               router.push(
-                isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
+                isDeprecatedEdition
+                  ? '/settings?active=llm'
+                  : `/settings?active=provider&provider=${provider.id}`,
               );
             },
           },
@@ -102,7 +104,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider`);
+            router.push(isDeprecatedEdition ? '/settings?active=llm' : `/settings?active=provider`);
           },
         },
       ];
@@ -121,7 +123,11 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
           />
           {showLLM && (
             <Link
-              href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+              href={
+                isDeprecatedEdition
+                  ? '/settings?active=llm'
+                  : `/settings?active=provider&provider=${provider.id}`
+              }
             >
               <ActionIcon
                 icon={LucideBolt}
