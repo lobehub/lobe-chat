@@ -42,7 +42,7 @@ export class Manifest {
       categories: ['productivity', 'design', 'development', 'education'],
       description: description,
       display: 'standalone',
-      display_override: ['tabbed'],
+      display_override: ['window-controls-overlay'],
       edge_side_panel: {
         preferred_width: 480,
       },
