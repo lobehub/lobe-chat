@@ -63,12 +63,11 @@ export const useStyles = createStyles(
         fontSize: sizeStyles.fontSize,
         height: multiline ? undefined : sizeStyles.fontHeight,
         // 不要设置 lineHeight
-        lineHeight: undefined,
         textAlignVertical: multiline ? 'top' : 'center',
         ...(Platform.OS === 'android' && {
+          // 不要影响 IOS 配置
           includeFontPadding: false,
           // 垂直居中
-          paddingTop: token.paddingXXS,
           paddingVertical: 0,
         }),
       },

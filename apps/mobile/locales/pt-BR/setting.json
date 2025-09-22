@@ -126,6 +126,12 @@
     },
     "title": "Configuração de idioma"
   },
+  "mode": {
+    "already": "Você já está no modo desenvolvedor",
+    "enabled": "Modo desenvolvedor ativado",
+    "remaining": "Toque mais {{count}} vezes para ativar o modo desenvolvedor",
+    "title": "Modo desenvolvedor"
+  },
   "openai": "Configurações OpenAI",
   "openaiSettings": {
     "apiKey": "Chave API",
