@@ -1974,7 +1974,10 @@
     "description": "LLaVA es un modelo multimodal que combina un codificador visual y Vicuna, utilizado para una poderosa comprensión visual y lingüística."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 es un modelo de inferencia de última generación lanzado por Mistral AI en julio de 2025."
+    "description": "Magistral Medium 1.2 es un modelo de inferencia de vanguardia con soporte visual, lanzado por Mistral AI en septiembre de 2025."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 es un modelo de inferencia pequeño y de código abierto con soporte visual, lanzado por Mistral AI en septiembre de 2025."
   },
   "mathstral": {
     "description": "MathΣtral está diseñado para la investigación científica y el razonamiento matemático, proporcionando capacidades de cálculo efectivas y explicación de resultados."
@@ -2282,9 +2285,6 @@
   "mistral/mistral-large": {
     "description": "Mistral Large es ideal para tareas complejas que requieren capacidades de inferencia grandes o altamente especializadas, como generación de texto sintético, generación de código, RAG o agentes."
   },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B es un modelo de código abierto de 24 mil millones de parámetros desarrollado por Mistral.ai. Saba es un modelo especializado entrenado para un rendimiento sobresaliente en árabe, persa, urdu, hebreo y lenguas indias. Operado por Groq con su hardware personalizado de unidad de procesamiento de lenguaje (LPU) para ofrecer inferencia rápida y eficiente."
-  },
   "mistral/mistral-small": {
     "description": "Mistral Small es ideal para tareas simples que pueden procesarse en lotes, como clasificación, soporte al cliente o generación de texto. Ofrece un rendimiento excelente a un precio asequible."
   },
@@ -2569,6 +2569,9 @@
   },
   "qwen-image": {
     "description": "Qwen-Image es un modelo de generación de imágenes de uso general que admite diversos estilos artísticos y destaca por su capacidad para renderizar textos complejos, especialmente textos en chino e inglés. El modelo soporta maquetación en varias líneas, generación de texto a nivel de párrafo y representación de detalles finos, lo que permite crear diseños complejos que combinan texto e imagen."
+  },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit es un modelo de generación de imágenes que permite la edición y modificación de imágenes basándose en una imagen de entrada y un texto indicativo, capaz de realizar ajustes precisos y transformaciones creativas en la imagen original según las necesidades del usuario."
   },
   "qwen-long": {
     "description": "Qwen es un modelo de lenguaje a gran escala que admite contextos de texto largos y funciones de conversación basadas en documentos largos y múltiples."

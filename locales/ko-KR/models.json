@@ -1974,7 +1974,10 @@
     "description": "LLaVA는 시각 인코더와 Vicuna를 결합한 다중 모달 모델로, 강력한 시각 및 언어 이해를 제공합니다."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1은 Mistral AI가 2025년 7월에 공개한 최첨단 추론 모델입니다."
+    "description": "Magistral Medium 1.2는 Mistral AI가 2025년 9월에 발표한 최첨단 추론 모델로, 시각 지원 기능을 갖추고 있습니다."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2는 Mistral AI가 2025년 9월에 발표한 오픈 소스 소형 추론 모델로, 시각 지원 기능을 갖추고 있습니다."
   },
   "mathstral": {
     "description": "MathΣtral은 과학 연구 및 수학 추론을 위해 설계되었으며, 효과적인 계산 능력과 결과 해석을 제공합니다."
@@ -2282,9 +2285,6 @@
   "mistral/mistral-large": {
     "description": "Mistral Large는 대규모 추론 능력이나 고도로 전문화된 작업에 이상적이며, 합성 텍스트 생성, 코드 생성, RAG 또는 에이전트 작업에 적합합니다."
   },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B는 Mistral.ai가 개발한 240억 매개변수 오픈소스 모델입니다. Saba는 아랍어, 페르시아어, 우르두어, 히브리어 및 인도 언어에서 뛰어난 성능을 발휘하도록 특별히 훈련된 전문 모델입니다. Groq의 맞춤형 언어 처리 유닛(LPU) 하드웨어를 사용하여 빠르고 효율적인 추론을 제공합니다."
-  },
   "mistral/mistral-small": {
     "description": "Mistral Small은 분류, 고객 지원 또는 텍스트 생성과 같이 대량 처리 가능한 간단한 작업에 이상적입니다. 합리적인 가격대에 뛰어난 성능을 제공합니다."
   },
@@ -2569,6 +2569,9 @@
   },
   "qwen-image": {
     "description": "Qwen-Image는 범용 이미지 생성 모델로, 다양한 예술적 스타일을 지원하며 특히 복잡한 텍스트 렌더링, 그중에서도 중국어와 영어 텍스트 렌더링에 뛰어납니다. 모델은 다중 행 레이아웃, 문단 단위 텍스트 생성 및 세밀한 디테일 묘사를 지원하여 복잡한 이미지-텍스트 혼합 레이아웃 디자인을 구현할 수 있습니다."
+  },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit는 입력 이미지와 텍스트 프롬프트를 기반으로 이미지 편집 및 수정을 지원하는 이미지 생성 모델로, 사용자의 요구에 따라 원본 이미지를 정밀하게 조정하고 창의적으로 변형할 수 있습니다."
   },
   "qwen-long": {
     "description": "통의천문 초대규모 언어 모델로, 긴 텍스트 컨텍스트를 지원하며, 긴 문서 및 다수의 문서에 기반한 대화 기능을 제공합니다."

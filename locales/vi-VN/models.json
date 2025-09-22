@@ -1974,7 +1974,10 @@
     "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
   },
   "magistral-medium-latest": {
-    "description": "Magistral Medium 1.1 là một mô hình suy luận tiên tiến do Mistral AI ra mắt vào tháng 7 năm 2025."
+    "description": "Magistral Medium 1.2 là mô hình suy luận tiên tiến do Mistral AI phát hành vào tháng 9 năm 2025, có hỗ trợ thị giác."
+  },
+  "magistral-small-2509": {
+    "description": "Magistral Small 1.2 là mô hình suy luận nhỏ mã nguồn mở do Mistral AI phát hành vào tháng 9 năm 2025, có hỗ trợ thị giác."
   },
   "mathstral": {
     "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
@@ -2282,9 +2285,6 @@
   "mistral/mistral-large": {
     "description": "Mistral Large là lựa chọn lý tưởng cho các nhiệm vụ phức tạp đòi hỏi khả năng suy luận lớn hoặc chuyên môn cao — như tạo văn bản tổng hợp, tạo mã, RAG hoặc đại lý."
   },
-  "mistral/mistral-saba-24b": {
-    "description": "Mistral Saba 24B là mô hình mã nguồn mở 24 tỷ tham số do Mistral.ai phát triển. Saba là mô hình chuyên biệt được huấn luyện để thể hiện xuất sắc trong các ngôn ngữ Ả Rập, Ba Tư, Urdu, Do Thái và các ngôn ngữ Ấn Độ. Được Groq phục vụ bằng phần cứng đơn vị xử lý ngôn ngữ (LPU) tùy chỉnh để cung cấp suy luận nhanh và hiệu quả."
-  },
   "mistral/mistral-small": {
     "description": "Mistral Small là lựa chọn lý tưởng cho các nhiệm vụ đơn giản có thể xử lý theo lô — như phân loại, hỗ trợ khách hàng hoặc tạo văn bản. Nó cung cấp hiệu suất xuất sắc với mức giá phải chăng."
   },
@@ -2569,6 +2569,9 @@
   },
   "qwen-image": {
     "description": "Qwen-Image là một mô hình sinh hình ảnh đa dụng, hỗ trợ nhiều phong cách nghệ thuật và đặc biệt giỏi trong việc tái hiện văn bản phức tạp, nhất là văn bản tiếng Trung và tiếng Anh. Mô hình hỗ trợ bố cục nhiều dòng, sinh văn bản ở cấp đoạn và khắc họa các chi tiết tinh tế, cho phép thực hiện các thiết kế bố cục kết hợp hình ảnh và văn bản phức tạp."
+  },
+  "qwen-image-edit": {
+    "description": "Qwen Image Edit là một mô hình tạo hình ảnh từ hình ảnh, hỗ trợ chỉnh sửa và thay đổi hình ảnh dựa trên hình ảnh đầu vào và các gợi ý văn bản, có khả năng điều chỉnh chính xác và sáng tạo hình ảnh gốc theo yêu cầu của người dùng."
   },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."

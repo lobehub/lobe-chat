@@ -281,6 +281,7 @@
       "actionFiletip": "Datei hochladen",
       "actionTooltip": "Hochladen",
       "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen.",
+      "fileNotSupported": "Im Browser-Modus wird das Hochladen von Dateien derzeit nicht unterstützt, nur Bilder sind erlaubt",
       "visionNotSupported": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen."
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "Vorbereitung des Uploads...",
         "processing": "Datei wird verarbeitet..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "Die Videodatei darf nicht größer als 20 MB sein, die aktuelle Dateigröße beträgt {{actualSize}}"
     }
   },
   "zenMode": "Fokusmodus"

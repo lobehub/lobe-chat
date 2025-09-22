@@ -23,31 +23,36 @@ import { toolSelectors } from '@/store/tool/selectors';
 import { VARIABLE_GENERATORS } from '@/utils/client/parserPlaceholder';
 import { genToolCallingName } from '@/utils/toolCall';
 
-import { isCanUseFC, isCanUseVision } from './helper';
-import { FetchOptions } from './types';
+import { isCanUseFC, isCanUseVideo, isCanUseVision } from './helper';
 
-export const contextEngineering = async (
-  {
-    messages = [],
-    tools,
-    model,
-    provider,
-    systemRole,
-    inputTemplate,
-    enableHistoryCount,
-    historyCount,
-  }: {
-    enableHistoryCount?: boolean;
-    historyCount?: number;
-    inputTemplate?: string;
-    messages: ChatMessage[];
-    model: string;
-    provider: string;
-    systemRole?: string;
-    tools?: string[];
-  },
-  options?: FetchOptions,
-): Promise<OpenAIChatMessage[]> => {
+
+interface ContextEngineeringContext {
+  enableHistoryCount?: boolean;
+  historyCount?: number;
+  historySummary?: string;
+  inputTemplate?: string;
+  isWelcomeQuestion?: boolean;
+  messages: ChatMessage[];
+  model: string;
+  provider: string;
+  sessionId?: string;
+  systemRole?: string;
+  tools?: string[];
+}
+
+export const contextEngineering = async ({
+  messages = [],
+  tools,
+  model,
+  provider,
+  systemRole,
+  inputTemplate,
+  enableHistoryCount,
+  historyCount,
+  historySummary,
+  sessionId,
+  isWelcomeQuestion,
+}: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const pipeline = new ContextEngine({
     pipeline: [
       // 1. History truncation (MUST be first, before any message injection)
@@ -62,8 +67,8 @@ export const contextEngineering = async (
       new InboxGuideProvider({
         inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
         inboxSessionId: INBOX_SESSION_ID,
-        isWelcomeQuestion: options?.isWelcomeQuestion,
-        sessionId: options?.trace?.sessionId,
+        isWelcomeQuestion: isWelcomeQuestion,
+        sessionId: sessionId,
       }),
 
       // 4. Tool system role injection
@@ -78,7 +83,7 @@ export const contextEngineering = async (
       // 5. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary: historySummaryPrompt,
-        historySummary: options?.historySummary,
+        historySummary: historySummary,
       }),
 
       // Create message processing processors
@@ -94,6 +99,7 @@ export const contextEngineering = async (
       // 8. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
+        isCanUseVideo,
         isCanUseVision,
         model,
         provider,

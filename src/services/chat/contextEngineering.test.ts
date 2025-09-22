@@ -162,7 +162,6 @@ describe('contextEngineering', () => {
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="abc.png" url="http://example.com/image.jpg"></image>
 </images>
-
 </files_info>
 <!-- END SYSTEM CONTEXT -->`,
               type: 'text',
@@ -260,17 +259,13 @@ describe('contextEngineering', () => {
       },
     ];
 
-    const result = await contextEngineering(
-      {
-        messages,
-        model: 'gpt-4',
-        provider: 'openai',
-      },
-      {
-        isWelcomeQuestion: true,
-        trace: { sessionId: 'inbox' },
-      },
-    );
+    const result = await contextEngineering({
+      messages,
+      model: 'gpt-4',
+      provider: 'openai',
+      isWelcomeQuestion: true,
+      sessionId: 'inbox',
+    });
 
     // Should have system message with inbox guide content
     const systemMessage = result.find((msg) => msg.role === 'system');
@@ -295,16 +290,12 @@ describe('contextEngineering', () => {
       },
     ];
 
-    const result = await contextEngineering(
-      {
-        messages,
-        model: 'gpt-4',
-        provider: 'openai',
-      },
-      {
-        historySummary,
-      },
-    );
+    const result = await contextEngineering({
+      messages,
+      model: 'gpt-4',
+      historySummary,
+      provider: 'openai',
+    });
 
     // Should have system message with history summary
     const systemMessage = result.find((msg) => msg.role === 'system');
