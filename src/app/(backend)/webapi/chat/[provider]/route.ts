@@ -8,10 +8,11 @@ import { ChatErrorType } from '@lobechat/types';
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { createTraceOptions, initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChatStreamPayload } from '@/types/openai/chat';
+import { getMaxDuration } from '@/utils/env';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
 
-export { maxDuration } from '@/utils/env';
+export const maxDuration = getMaxDuration();
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
   const { provider } = await params;
