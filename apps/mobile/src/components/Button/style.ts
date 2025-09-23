@@ -1,12 +1,6 @@
 import { createStyles, getLineHeight } from '@/theme';
-import type { PresetColorKey } from '@/theme/interface';
 import { AggregationColor, isBright } from '@/utils/color';
-
-export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
-export type ButtonVariant = 'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link';
-export type ButtonColor = 'default' | 'primary' | 'danger' | PresetColorKey;
-export type ButtonSize = 'small' | 'middle' | 'large';
-export type ButtonShape = 'default' | 'circle';
+import { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from './type';
 
 export const useStyles = createStyles(
   (
