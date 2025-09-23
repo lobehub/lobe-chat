@@ -206,6 +206,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 235B A22b Thinking 2507',
     id: 'qwen/qwen3-235b-a22b-thinking-2507',
+    maxOutput: 32_768,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },

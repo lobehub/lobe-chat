@@ -5,6 +5,26 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-Next-80B-A3B-Thinking 是由阿里巴巴通义千问团队发布的、专为复杂推理任务设计的下一代基础模型。它基于创新的 Qwen3-Next 架构，该架构融合了混合注意力机制（Gated DeltaNet 与 Gated Attention）和高稀疏度混合专家（MoE）结构，旨在实现极致的训练与推理效率。作为一个总参数达 800 亿的稀疏模型，它在推理时仅激活约 30 亿参数，大幅降低了计算成本，在处理超过 32K tokens 的长上下文任务时，吞吐量比 Qwen3-32B 模型高出 10 倍以上。此“Thinking”版本专为执行数学证明、代码综合、逻辑分析和规划等高难度多步任务而优化，并默认以结构化的“思维链”形式输出推理过程。在性能上，它不仅超越了 Qwen3-32B-Thinking 等成本更高的模型，还在多个基准测试中优于 Gemini-2.5-Flash-Thinking。',
+    displayName: 'Qwen3 Next 80B A3B Thinking',
+    id: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     contextWindowTokens: 131_072,
     description:
