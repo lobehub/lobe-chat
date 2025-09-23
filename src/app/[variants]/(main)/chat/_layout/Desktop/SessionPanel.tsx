@@ -76,12 +76,18 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const { appearance } = useThemeMode();
 
   const SessionPanel = useMemo(() => {
+    if (isSingleMode) {
+      // 在单一模式下，仍然渲染 children 以确保 SessionHydration 等逻辑组件正常工作
+      // 但使用隐藏样式而不是 return null
+      return <div style={{ display: 'none' }}>{children}</div>;
+    }
+
     return (
       <DraggablePanel
         className={styles.panel}
         defaultSize={{ width: tmpWidth }}
-        // 当进入 pin 或者桌面的单一模式模式下，不可展开
-        expand={!isPinned && sessionExpandable && !isSingleMode}
+        // 当进入 pin 模式下，不可展开
+        expand={!isPinned && sessionExpandable}
         expandable={!isPinned}
         maxWidth={400}
         minWidth={FOLDER_WIDTH}
