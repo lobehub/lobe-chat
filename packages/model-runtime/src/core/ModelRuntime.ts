@@ -1,6 +1,5 @@
+import type { TracePayload } from '@lobechat/types';
 import { ClientOptions } from 'openai';
-
-import type { TracePayload } from '@/types/index';
 
 import { LobeBedrockAIParams } from '../providers/bedrock';
 import { LobeCloudflareParams } from '../providers/cloudflare';

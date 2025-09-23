@@ -1,6 +1,5 @@
+import type { ChatModelCard } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-
-import type { ChatModelCard } from '@/types/llm';
 
 import {
   MODEL_LIST_CONFIGS,
