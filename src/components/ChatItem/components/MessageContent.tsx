@@ -4,6 +4,8 @@ import { useResponsive } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { MessageContentClassName } from '@/features/Conversation/Messages/Default';
+
 import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
@@ -61,7 +63,7 @@ const MessageContent = memo<MessageContentProps>(
 
     return (
       <Flexbox
-        className={cx(styles.message, editing && styles.editingContainer)}
+        className={cx(styles.message, editing && styles.editingContainer, MessageContentClassName)}
         onDoubleClick={onDoubleClick}
       >
         {messageContent}
