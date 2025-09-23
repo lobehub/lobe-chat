@@ -33,8 +33,8 @@ function validateNoUrlsInConfig(obj: any, path: string = ''): void {
     if (obj.startsWith('http://') || obj.startsWith('https://')) {
       throw new Error(
         `Invalid configuration: Found full URL instead of key at ${path || 'root'}. ` +
-          `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
-          `All URLs must be converted to storage keys before database insertion.`,
+        `URL: "${obj.slice(0, 100)}${obj.length > 100 ? '...' : ''}". ` +
+        `All URLs must be converted to storage keys before database insertion.`,
       );
     }
   } else if (Array.isArray(obj)) {
