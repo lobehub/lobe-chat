@@ -5,6 +5,7 @@
  * Supports 4 authentication modes: none, basic, bearer, custom
  */
 import type { ComfyUIKeyVault } from '@lobechat/types';
+import { createBasicAuthCredentials } from '@lobechat/utils';
 import type {
   BasicCredentials,
   BearerTokenCredentials,
@@ -121,7 +122,7 @@ export class ComfyUIAuthService {
     switch (authType) {
       case 'basic': {
         if (username && password) {
-          const basicAuth = btoa(`${username}:${password}`);
+          const basicAuth = createBasicAuthCredentials(username, password);
           return { Authorization: `Basic ${basicAuth}` };
         }
         break;

@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { createBasicAuthCredentials } from '@lobechat/utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ComfyUIKeyVault } from '@/types/index';
@@ -91,7 +92,7 @@ describe('LobeComfyUI Runtime', () => {
       const headers = runtime.getAuthHeaders();
 
       expect(headers).toEqual({
-        Authorization: `Basic ${btoa('testuser:testpass')}`,
+        Authorization: `Basic ${createBasicAuthCredentials('testuser', 'testpass')}`,
       });
     });
 
@@ -342,7 +343,7 @@ describe('LobeComfyUI Runtime', () => {
         expect.objectContaining({
           headers: expect.objectContaining({
             'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testuser:testpass')}`,
+            'Authorization': `Basic ${createBasicAuthCredentials('testuser', 'testpass')}`,
           }),
         }),
       );

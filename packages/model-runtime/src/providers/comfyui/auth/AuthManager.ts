@@ -1,3 +1,5 @@
+import { createBasicAuthCredentials } from '@lobechat/utils';
+
 import type { ComfyUIKeyVault } from '@/types/index';
 
 export interface BasicCredentials {
@@ -93,7 +95,7 @@ export class AuthManager {
     switch (authType) {
       case 'basic': {
         if (!username || !password) return undefined;
-        const credentials = btoa(`${username}:${password}`);
+        const credentials = createBasicAuthCredentials(username, password);
         return { Authorization: `Basic ${credentials}` };
       }
 

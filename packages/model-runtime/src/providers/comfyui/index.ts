@@ -1,3 +1,4 @@
+import { createBasicAuthCredentials } from '@lobechat/utils';
 import debug from 'debug';
 
 import type { ComfyUIKeyVault } from '@/types/index';
@@ -42,7 +43,7 @@ export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
     switch (authType) {
       case 'basic': {
         if (username && password) {
-          return { Authorization: `Basic ${btoa(`${username}:${password}`)}` };
+          return { Authorization: `Basic ${createBasicAuthCredentials(username, password)}` };
         }
         return undefined;
       }
