@@ -13,7 +13,7 @@ import { Search, Eye, EyeOff } from 'lucide-react-native';
 import { useStyles } from './style';
 import { useThemeToken } from '@/theme';
 
-export interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
+export interface InputProps extends Omit<RNTextInputProps, 'style'> {
   contentStyle?: StyleProp<TextStyle>;
   prefix?: React.ReactNode;
   size?: 'large' | 'middle' | 'small';
@@ -22,7 +22,7 @@ export interface TextInputProps extends Omit<RNTextInputProps, 'style'> {
   variant?: 'filled' | 'borderless' | 'outlined';
 }
 
-const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
+const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
   const {
     style,
     contentStyle,
@@ -56,13 +56,13 @@ const TextInput = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => 
   );
 });
 
-const TextInputSearch = React.forwardRef<RNTextInput, TextInputProps>((props, ref) => {
+const InputSearch = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
   const token = useThemeToken();
   const size = props.size ?? 'middle';
   const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
 
   return (
-    <TextInput
+    <Input
       ref={ref}
       {...props}
       prefix={<Search color={token.colorTextPlaceholder} size={iconSize} />}
@@ -71,44 +71,43 @@ const TextInputSearch = React.forwardRef<RNTextInput, TextInputProps>((props, re
   );
 });
 
-const TextInputPassword = React.forwardRef<
-  RNTextInput,
-  Omit<TextInputProps, 'suffix' | 'secureTextEntry'>
->((props, ref) => {
-  const token = useThemeToken();
-  const [isSecure, setIsSecure] = React.useState(true);
-  const size = props.size ?? 'middle';
-  const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
+const InputPassword = React.forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 'secureTextEntry'>>(
+  (props, ref) => {
+    const token = useThemeToken();
+    const [isSecure, setIsSecure] = React.useState(true);
+    const size = props.size ?? 'middle';
+    const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
 
-  const toggleSecureEntry = () => {
-    setIsSecure(!isSecure);
-  };
+    const toggleSecureEntry = () => {
+      setIsSecure(!isSecure);
+    };
 
-  return (
-    <TextInput
-      ref={ref}
-      {...props}
-      secureTextEntry={isSecure}
-      suffix={
-        <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
-          {isSecure ? (
-            <EyeOff color={token.colorTextPlaceholder} size={iconSize} />
-          ) : (
-            <Eye color={token.colorTextPlaceholder} size={iconSize} />
-          )}
-        </TouchableOpacity>
-      }
-    />
-  );
-});
+    return (
+      <Input
+        ref={ref}
+        {...props}
+        secureTextEntry={isSecure}
+        suffix={
+          <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
+            {isSecure ? (
+              <EyeOff color={token.colorTextPlaceholder} size={iconSize} />
+            ) : (
+              <Eye color={token.colorTextPlaceholder} size={iconSize} />
+            )}
+          </TouchableOpacity>
+        }
+      />
+    );
+  },
+);
 
-// Add compound components to main TextInput component
-const TextInputWithCompounds = TextInput as typeof TextInput & {
-  Password: typeof TextInputPassword;
-  Search: typeof TextInputSearch;
+// Add compound components to main Input component
+const InputWithCompounds = Input as typeof Input & {
+  Password: typeof InputPassword;
+  Search: typeof InputSearch;
 };
 
-TextInputWithCompounds.Search = TextInputSearch;
-TextInputWithCompounds.Password = TextInputPassword;
+InputWithCompounds.Search = InputSearch;
+InputWithCompounds.Password = InputPassword;
 
-export default TextInputWithCompounds;
+export default InputWithCompounds;

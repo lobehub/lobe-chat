@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
 
-import { Space, TextInput } from '@/components';
+import { Space, Input } from '@/components';
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import ModelSwitch from './components/ModelSwitch';
@@ -23,7 +23,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
 
   return (
     <View style={[styles.container, style]}>
-      <TextInput
+      <Input
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="default"

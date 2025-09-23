@@ -14,8 +14,8 @@ import {
   CompoundDemo,
   VariantDemo,
   SizesDemo,
-} from '@/components/TextInput/demos';
-import README from '@/components/TextInput/readme';
+} from '@/components/Input/demos';
+import README from '@/components/Input/readme';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
@@ -28,12 +28,12 @@ const demos: DemoItem[] = [
   { component: <SizesDemo />, key: 'sizes', title: '尺寸大小' },
 ];
 
-export default function TextInputPlaygroundPage() {
+export default function InputPlaygroundPage() {
   const { styles } = useStyles();
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="TextInput 组件" />
+      <Header showBack title="Input 组件" />
       <ComponentPlayground demos={demos} readmeContent={README} />
     </SafeAreaView>
   );

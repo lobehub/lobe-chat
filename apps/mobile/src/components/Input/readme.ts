@@ -1,4 +1,4 @@
-const TEXTINPUT_README = `# TextInput组件
+const INPUT_README = `# Input组件
 
 一个增强的React Native文本输入组件，支持前缀、后缀和复合组件。
 
@@ -18,10 +18,10 @@ const TEXTINPUT_README = `# TextInput组件
 ### 1. 基础输入框
 
 \`\`\`jsx
-import TextInput from '@/components/TextInput';
+import Input from '@/components/Input';
 
-<TextInput placeholder="请输入内容" />
-<TextInput defaultValue="预设值" />
+<Input placeholder="请输入内容" />
+<Input defaultValue="预设值" />
 \`\`\`
 
 ### 2. 带前缀的输入框
@@ -29,7 +29,7 @@ import TextInput from '@/components/TextInput';
 \`\`\`jsx
 import { Text } from 'react-native';
 
-<TextInput 
+<Input 
   placeholder="请输入用户名" 
   prefix={<Text>@</Text>}
 />
@@ -40,12 +40,12 @@ import { Text } from 'react-native';
 \`\`\`jsx
 import { TouchableOpacity } from 'react-native';
 
-<TextInput 
+<Input 
   placeholder="输入邮箱前缀" 
   suffix={<Text>@gmail.com</Text>}
 />
 
-<TextInput 
+<Input 
   placeholder="输入消息" 
   suffix={<TouchableOpacity><SendIcon /></TouchableOpacity>}
 />
@@ -55,52 +55,52 @@ import { TouchableOpacity } from 'react-native';
 
 \`\`\`jsx
 // 搜索输入框
-<TextInput.Search placeholder="搜索内容..." />
+<Input.Search placeholder="搜索内容..." />
 
 // 密码输入框（自动切换显示/隐藏）
-<TextInput.Password placeholder="请输入密码" />
+<Input.Password placeholder="请输入密码" />
 \`\`\`
 
 ### 5. 外观变体
 
 \`\`\`jsx
 // 默认（filled）
-<TextInput placeholder="请输入内容" />
+<Input placeholder="请输入内容" />
 
 // 无底色（borderless）
-<TextInput variant="borderless" placeholder="请输入内容" />
-<TextInput.Search variant="borderless" placeholder="搜索内容..." />
-<TextInput.Password variant="borderless" placeholder="请输入密码" />
+<Input variant="borderless" placeholder="请输入内容" />
+<Input.Search variant="borderless" placeholder="搜索内容..." />
+<Input.Password variant="borderless" placeholder="请输入密码" />
 
 // 描边（outlined）
-<TextInput variant="outlined" placeholder="请输入内容" />
-<TextInput.Search variant="outlined" placeholder="搜索内容..." />
-<TextInput.Password variant="outlined" placeholder="请输入密码" />
+<Input variant="outlined" placeholder="请输入内容" />
+<Input.Search variant="outlined" placeholder="搜索内容..." />
+<Input.Password variant="outlined" placeholder="请输入密码" />
 \`\`\`
 
 ### 6. 尺寸大小
 
 \`\`\`jsx
 // 小号
-<TextInput size="small" placeholder="Small" />
-<TextInput.Search size="small" placeholder="Small Search" />
-<TextInput.Password size="small" placeholder="Small Password" />
+<Input size="small" placeholder="Small" />
+<Input.Search size="small" placeholder="Small Search" />
+<Input.Password size="small" placeholder="Small Password" />
 
 // 中号（默认）
-<TextInput size="middle" placeholder="Middle" />
-<TextInput.Search size="middle" placeholder="Middle Search" />
-<TextInput.Password size="middle" placeholder="Middle Password" />
+<Input size="middle" placeholder="Middle" />
+<Input.Search size="middle" placeholder="Middle Search" />
+<Input.Password size="middle" placeholder="Middle Password" />
 
 // 大号
-<TextInput size="large" placeholder="Large" />
-<TextInput.Search size="large" placeholder="Large Search" />
-<TextInput.Password size="large" placeholder="Large Password" />
+<Input size="large" placeholder="Large" />
+<Input.Search size="large" placeholder="Large Search" />
+<Input.Password size="large" placeholder="Large Password" />
 \`\`\`
 
 ### 7. 自定义样式
 
 \`\`\`jsx
-<TextInput
+<Input
   placeholder="自定义样式"
   style={{ backgroundColor: 'red' }}
   contentStyle={{ fontSize: 18 }}
@@ -109,7 +109,7 @@ import { TouchableOpacity } from 'react-native';
 
 ## API参考
 
-### TextInputProps
+### InputProps
 
 | 属性 | 类型 | 描述 |
 |------|------|------|
@@ -123,10 +123,10 @@ import { TouchableOpacity } from 'react-native';
 
 ### 复合组件
 
-#### TextInput.Search
+#### Input.Search
 搜索输入框，自动添加搜索图标前缀，returnKeyType设为search
 
-#### TextInput.Password  
+#### Input.Password  
 密码输入框，自动添加眼睛图标后缀，支持切换显示/隐藏密码
 
 ## 设计原则
@@ -135,4 +135,4 @@ import { TouchableOpacity } from 'react-native';
 - **灵活性**：支持各种自定义需求
 - **易用性**：简单直观的API设计`;
 
-export default TEXTINPUT_README;
+export default INPUT_README;

@@ -13,7 +13,7 @@ import {
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useStyles } from './styles';
-import { Header, TextInput } from '@/components';
+import { Header, Input } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
@@ -138,7 +138,7 @@ const AssistantList = () => {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
       <Header showBack title={t('title', { ns: 'discover' })} />
       <View style={styles.filterContainer}>
-        <TextInput.Search
+        <Input.Search
           onChangeText={setSearchText}
           onSubmitEditing={handleSearchSubmit}
           placeholder={t('assistant.search', { ns: 'common' })}

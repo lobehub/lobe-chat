@@ -9,6 +9,7 @@ export const authConfig: AuthConfig = {
   additionalParameters: {
     // 额外的参数可以在这里添加
     // 比如：prompt: 'consent' 可以强制用户每次都同意授权
+    // 需要添加该参数，否则服务端不会返回 refresh_token
     prompt: 'consent',
   },
   clientId: process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID || 'lobehub-mobile',

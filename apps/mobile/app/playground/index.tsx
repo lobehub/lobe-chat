@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Tag, TextInput, Header, CapsuleTabs, CapsuleTabItem } from '@/components';
+import { Tag, Input, Header, CapsuleTabs, CapsuleTabItem } from '@/components';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
@@ -147,8 +147,8 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
-      case 'textinput': {
-        router.push('/playground/components/textinput');
+      case 'input': {
+        router.push('/playground/components/input');
 
         break;
       }
@@ -197,7 +197,7 @@ export default function ComponentPlaygroundIndex() {
     <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
       <Header showBack title="Playground" />
       <View style={styles.filterContainer}>
-        <TextInput.Search
+        <Input.Search
           onChangeText={setSearchText}
           placeholder="搜索组件..."
           style={styles.searchContainer}

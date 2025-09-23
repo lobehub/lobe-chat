@@ -13,15 +13,7 @@ import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { AiProviderModelListItem } from '@/types/aiModel';
-import {
-  Button,
-  InstantSwitch,
-  ModelInfoTags,
-  Tag,
-  useToast,
-  Header,
-  TextInput,
-} from '@/components';
+import { Button, InstantSwitch, ModelInfoTags, Tag, useToast, Header, Input } from '@/components';
 import { useThemeToken } from '@/theme';
 
 import { useStyles } from './styles';
@@ -374,7 +366,7 @@ const ProviderDetailPage = () => {
                 </View>
               </View>
 
-              <TextInput.Search
+              <Input.Search
                 onChangeText={setSearchKeyword}
                 placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
                 style={styles.modelsSearchInput}
