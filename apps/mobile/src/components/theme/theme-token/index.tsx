@@ -59,7 +59,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
 
     return (
       <PageContainer
-        right={
+        extra={
           <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
             {theme.isDark ? (
               <Sun color={token.colorText} size={20} />

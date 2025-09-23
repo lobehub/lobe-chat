@@ -9,8 +9,8 @@ import { ChevronLeft } from 'lucide-react-native';
 
 export interface PageContainerProps {
   children?: ReactNode;
+  extra?: ReactNode;
   left?: ReactNode;
-  right?: ReactNode;
   showBack?: boolean;
   style?: StyleProp<ViewStyle>;
   title?: ReactNode;
@@ -22,7 +22,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
   left = undefined,
   showBack = false,
   title = '',
-  right = undefined,
+  extra = undefined,
 }) => {
   const { styles } = useStyles();
 
@@ -39,7 +39,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
         <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
           {title}
         </Text>
-        <View style={styles.right}>{right}</View>
+        <View style={styles.extra}>{extra}</View>
       </View>
       {children}
     </SafeAreaView>

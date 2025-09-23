@@ -39,8 +39,8 @@ export default function ChatWithDrawer() {
   const renderContent = () => {
     return (
       <PageContainer
+        extra={<ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />}
         left={<ActionIcon icon={AlignJustify} onPress={toggleDrawer} />}
-        right={<ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />}
         title={
           <Space>
             <Avatar avatar={avatar} size={AVATAR_SIZE} />

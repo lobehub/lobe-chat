@@ -6,6 +6,10 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgLayout,
     flex: 1,
   },
+  extra: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -15,10 +19,6 @@ export const useStyles = createStyles((token) => ({
   },
   left: {
     alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  right: {
-    alignItems: 'flex-end',
     justifyContent: 'center',
   },
   title: {

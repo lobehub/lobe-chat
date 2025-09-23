@@ -38,8 +38,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
         <PageContainer
-          left={<Text style={styles.headerTitle}>LobeChat</Text>}
-          right={
+          extra={
             <Space>
               {isDev && (
                 <Link asChild href="/playground">
@@ -51,6 +50,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
               </Link>
             </Space>
           }
+          left={<Text style={styles.headerTitle}>LobeChat</Text>}
         >
           <SessionList />
           <Footer />
