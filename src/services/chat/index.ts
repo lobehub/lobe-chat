@@ -482,17 +482,49 @@ class ChatService {
 
       // 当使用 Google Gemini 且存在可读媒体文件（audio/*, video/*）时，将其作为 file_url 注入
       const fileUrlParts: UserMessageContentPart[] = [];
-      if (provider === 'google' && Array.isArray(m.fileList) && m.fileList.length > 0) {
-        for (const f of m.fileList) {
-          const lower = (f.fileType || '').toLowerCase();
-          const isAudio = lower.startsWith('audio/');
-          const isVideo = lower.startsWith('video/');
-          if (isAudio || isVideo) {
+      if (provider === 'google') {
+        // 处理文件列表中的可读媒体（包含 audio/*，以及部分情况下可能带有 video/*）
+        if (Array.isArray(m.fileList) && m.fileList.length > 0) {
+          for (const f of m.fileList) {
+            const lower = (f.fileType || '').toLowerCase();
+            const isAudio = lower.startsWith('audio/');
+            const isVideo = lower.startsWith('video/');
+            if (isAudio || isVideo) {
+              fileUrlParts.push({
+                file_url: {
+                  displayName: f.name,
+                  mimeType: f.fileType,
+                  url: f.url,
+                },
+                type: 'file_url',
+              } as any);
+            }
+          }
+        }
+
+        // 处理视频列表（通常视频被单独存放在 videoList 中，不在 fileList）
+        if (Array.isArray((m as any).videoList) && (m as any).videoList.length > 0) {
+          const guessMimeFromName = (nameOrUrl: string): string | undefined => {
+            const lower = (nameOrUrl || '').toLowerCase();
+            if (lower.endsWith('.mp4')) return 'video/mp4';
+            if (lower.endsWith('.mov') || lower.endsWith('.qt')) return 'video/quicktime';
+            if (lower.endsWith('.avi')) return 'video/avi';
+            if (lower.endsWith('.wmv')) return 'video/wmv';
+            if (lower.endsWith('.webm')) return 'video/webm';
+            if (lower.endsWith('.mpeg') || lower.endsWith('.mpg')) return 'video/mpeg';
+            if (lower.endsWith('.3gp') || lower.endsWith('.3gpp')) return 'video/3gpp';
+            if (lower.endsWith('.flv')) return 'video/x-flv';
+            return undefined;
+          };
+
+          for (const v of (m as any).videoList as Array<{ url: string; alt?: string }>) {
+            const nameOrUrl = (v as any).name || v.url || '';
+            const mimeType = guessMimeFromName(nameOrUrl) || 'video/mp4';
             fileUrlParts.push({
               file_url: {
-                displayName: f.name,
-                mimeType: f.fileType,
-                url: f.url,
+                displayName: (v as any).name || v.alt || nameOrUrl.split('/').pop() || 'video',
+                mimeType,
+                url: v.url,
               },
               type: 'file_url',
             } as any);
@@ -501,7 +533,7 @@ class ChatService {
       }
 
       const filesContext = isServerMode
-        ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
+        ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList, videoList: (m as any).videoList })
         : '';
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
