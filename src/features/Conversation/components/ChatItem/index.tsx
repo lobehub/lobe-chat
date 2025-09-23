@@ -200,8 +200,6 @@ const Item = memo<ChatListItemProps>(
         onActionClick: handleContextMenuAction,
       });
 
-    console.log("contextMenuState", contextMenuState)
-
     const renderMessage = useCallback(
       (editableContent: ReactNode) => {
         if (!item?.role) return;
@@ -303,10 +301,10 @@ const Item = memo<ChatListItemProps>(
           item?.role === 'user'
             ? undefined
             : item?.search?.citations &&
-            // if the citations are all empty, we should not show the citations
-            item?.search?.citations.length > 0 &&
-            // if the citations's url and title are all the same, we should not show the citations
-            item?.search?.citations.every((item) => item.title !== item.url),
+              // if the citations are all empty, we should not show the citations
+              item?.search?.citations.length > 0 &&
+              // if the citations's url and title are all the same, we should not show the citations
+              item?.search?.citations.every((item) => item.title !== item.url),
       }),
       [animated, components, markdownCustomRender, item?.role, item?.search],
     );

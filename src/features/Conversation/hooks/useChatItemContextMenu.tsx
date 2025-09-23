@@ -1,6 +1,9 @@
 import { type ActionIconGroupEvent } from '@lobehub/ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+
 import { MessageContentClassName } from '../Messages/Default';
 
 interface ContextMenuState {
@@ -19,6 +22,8 @@ export const useChatItemContextMenu = ({
   onActionClick,
   editing,
 }: Omit<UseChatItemContextMenuProps, 'id'>) => {
+  const contextMenuMode = useUserStore(userGeneralSettingsSelectors.contextMenuMode);
+
   const [contextMenuState, setContextMenuState] = useState<ContextMenuState>({
     position: { x: 0, y: 0 },
     visible: false,
@@ -28,6 +33,11 @@ export const useChatItemContextMenu = ({
 
   const handleContextMenu = useCallback(
     (event: React.MouseEvent) => {
+      // Don't show context menu if disabled in settings
+      if (contextMenuMode === 'disabled') {
+        return;
+      }
+
       // Don't show context menu in editing mode
       if (editing) {
         return;
@@ -62,7 +72,7 @@ export const useChatItemContextMenu = ({
         visible: true,
       });
     },
-    [editing],
+    [contextMenuMode, editing],
   );
 
   const hideContextMenu = useCallback(() => {
