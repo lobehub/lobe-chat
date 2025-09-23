@@ -1,11 +1,12 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import type { NextRequest } from 'next/server';
+// Note: Run this route on Node.js runtime for better compatibility with server-only deps
 
 import { pino } from '@/libs/logger';
 import { createEdgeContext } from '@/libs/trpc/edge/context';
 import { edgeRouter } from '@/server/routers/edge';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
@@ -16,7 +17,7 @@ const handler = (req: NextRequest) =>
 
     endpoint: '/trpc/edge',
 
-    onError: ({ error, path }) => {
+    onError: ({ error, path }: { error: unknown; path?: string }) => {
       pino.info(`Error in tRPC handler (edge) on path: ${path}`);
       console.error(error);
     },
