@@ -1,0 +1,29 @@
+import AgentRoutes from './agents.route';
+// import ChatRoutes from './chat.route';
+import FileRoutes from './files.route';
+import MessageTranslationsRoutes from './message-translations.route';
+import MessageRoutes from './message.route';
+import ModelRoutes from './models.route';
+import PermissionsRoutes from './permissions.route';
+import ProviderRoutes from './providers.route';
+import RolesRoutes from './roles.route';
+import SessionGroupRoutes from './session-groups.route';
+import SessionRoutes from './sessions.route';
+import TopicsRoutes from './topics.route';
+import UserRoutes from './users.route';
+
+export default {
+  'agents': AgentRoutes,
+  // 'chat': ChatRoutes,
+  'files': FileRoutes,
+  'message-translations': MessageTranslationsRoutes,
+  'messages': MessageRoutes,
+  'models': ModelRoutes,
+  'permissions': PermissionsRoutes,
+  'providers': ProviderRoutes,
+  'roles': RolesRoutes,
+  'session-groups': SessionGroupRoutes,
+  'sessions': SessionRoutes,
+  'topics': TopicsRoutes,
+  'users': UserRoutes,
+};

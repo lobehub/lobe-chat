@@ -1,0 +1,12 @@
+{
+  "name": "@lobechat/openapi",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "formidable": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/formidable": "^3.0.0"
+  }
+}

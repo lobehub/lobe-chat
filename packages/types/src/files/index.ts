@@ -23,5 +23,12 @@ export interface FileItem {
   url: string;
 }
 
+export interface FileMetadata {
+  date: string;
+  dirname: string;
+  filename: string;
+  path: string;
+}
+
 export * from './list';
 export * from './upload';
