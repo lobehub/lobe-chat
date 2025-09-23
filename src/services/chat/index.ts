@@ -1,11 +1,8 @@
-import {
-  AgentRuntimeError,
-  ChatCompletionErrorPayload,
-  ModelProvider,
-} from '@lobechat/model-runtime';
+import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'lodash-es';
+import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';

@@ -1,4 +1,4 @@
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 import { describe, expect, it } from 'vitest';
 
 describe('ModelProvider', () => {

@@ -1,7 +1,8 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ChatCompletionErrorPayload, ModelProvider } from '../../types';
+import { ChatCompletionErrorPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 
 export interface InfiniAIModelCard {

@@ -1,13 +1,9 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
+import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { AnthropicStream } from '../../core/streams';
-import {
-  type ChatCompletionErrorPayload,
-  ChatMethodOptions,
-  ChatStreamPayload,
-  ModelProvider,
-} from '../../types';
+import { type ChatCompletionErrorPayload, ChatMethodOptions, ChatStreamPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';

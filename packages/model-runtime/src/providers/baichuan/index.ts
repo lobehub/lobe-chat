@@ -1,7 +1,8 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ChatStreamPayload, ModelProvider } from '../../types';
+import { ChatStreamPayload } from '../../types';
 
 export interface BaichuanModelCard {
   function_call: boolean;

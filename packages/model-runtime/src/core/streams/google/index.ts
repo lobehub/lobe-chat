@@ -1,11 +1,8 @@
 import { GenerateContentResponse } from '@google/genai';
+import { GroundingSearch, ModelTokensUsage } from '@lobechat/types';
 
-import errorLocale from '@/locales/default/error';
-import { ModelTokensUsage } from '@/types/message';
-import { GroundingSearch } from '@/types/search';
-
-import { ChatStreamCallbacks } from '../../types';
-import { nanoid } from '../../utils/uuid';
+import { ChatStreamCallbacks } from '../../../types';
+import { nanoid } from '../../../utils/uuid';
 import {
   StreamContext,
   StreamProtocolChunk,
@@ -14,12 +11,13 @@ import {
   createSSEProtocolTransformer,
   createTokenSpeedCalculator,
   generateToolCallId,
-} from './protocol';
+} from '../protocol';
+import { GOOGLE_AI_BLOCK_REASON } from './const';
 
 export const LOBE_ERROR_KEY = '__lobe_error';
 
 const getBlockReasonMessage = (blockReason: string): string => {
-  const blockReasonMessages = errorLocale.response.GoogleAIBlockReason;
+  const blockReasonMessages = GOOGLE_AI_BLOCK_REASON;
 
   return (
     blockReasonMessages[blockReason as keyof typeof blockReasonMessages] ||

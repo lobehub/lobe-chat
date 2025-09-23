@@ -1,6 +1,7 @@
 // @vitest-environment node
+import { ModelProvider } from 'model-bank';
+
 import { testProvider } from '../../providerTestUtils';
-import { ModelProvider } from '../../types';
 import { LobeCometAPIAI } from './index';
 
 testProvider({
