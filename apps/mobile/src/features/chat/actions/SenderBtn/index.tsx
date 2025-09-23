@@ -10,7 +10,6 @@ const SenderBtn = () => {
     <Button icon={<StopLoadingIcon />} onPress={stopGenerating} shape="circle" />
   ) : (
     <Button
-      disabled={!canSend}
       icon={<ArrowUp />}
       loading={!canSend}
       onPress={handleSubmit}

@@ -15,6 +15,7 @@ export const useStyles = createStyles(
       variant,
       color,
       size,
+      loading,
       disabled,
       block,
       shape,
@@ -22,6 +23,7 @@ export const useStyles = createStyles(
       block: boolean;
       color: ButtonColor;
       disabled: boolean;
+      loading: boolean;
       shape: ButtonShape;
       size: ButtonSize;
       variant: ButtonVariant;
@@ -48,19 +50,27 @@ export const useStyles = createStyles(
         case 'filled': {
           // 单独处理 filled 取色
           const getFilledColor = () => {
+            if (disabled) return token.colorBgContainerDisabled;
+
             if (color === 'primary') return token.colorPrimaryBorder;
             if (color === 'danger') return token.colorErrorFillTertiary;
             if (color === 'default') return token[`gray3`] as string;
+
+            // preset colors
             const lightColor = token[`${color}3`] as string;
-            return disabled ? token.colorBgContainerDisabled : lightColor;
+            return lightColor;
           };
 
           const getTextColor = () => {
+            if (disabled) return token.colorTextDisabled;
+
             if (color === 'primary') return token.colorPrimaryText;
             if (color === 'danger') return token.colorErrorText;
             if (color === 'default') return token.colorText;
+
+            // preset colors
             const darkColor = token[`${color}10`] as string;
-            return disabled ? token.colorTextDisabled : darkColor;
+            return darkColor;
           };
 
           const filledColor = getFilledColor();
@@ -78,15 +88,20 @@ export const useStyles = createStyles(
         case 'solid': {
           // 单独处理 filled 取色
           const getFilledColor = () => {
+            if (disabled) return token.colorBgContainerDisabled;
+
             if (color === 'primary') return token.colorPrimary;
             if (color === 'danger') return token.colorErrorFillTertiary;
             if (color === 'default') return token.colorBgSolid;
-            const darkColor = token[`${color}10`] as string;
 
-            return disabled ? token.colorBgContainerDisabled : darkColor;
+            // preset colors
+            const darkColor = token[`${color}10`] as string;
+            return darkColor;
           };
 
           const getTextColor = (filledColor: string) => {
+            if (disabled) return token.colorTextDisabled;
+
             if (color === 'primary' || color === 'default') {
               const solidTextColor = isBright(new AggregationColor(filledColor), '#fff')
                 ? '#000'
@@ -95,7 +110,7 @@ export const useStyles = createStyles(
             }
             if (color === 'danger') return token.colorErrorText;
 
-            return disabled ? token.colorTextDisabled : token.colorTextLightSolid;
+            return token.colorTextLightSolid;
           };
           const filledColor = getFilledColor();
           const textColor = getTextColor(filledColor);
@@ -244,7 +259,7 @@ export const useStyles = createStyles(
         height: sizeStyles.height,
         justifyContent: 'center',
         minHeight: isCircle ? undefined : sizeStyles.height,
-        opacity: disabled ? 0.6 : 1,
+        opacity: loading ? token.opacityLoading : 1,
         paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal,
         paddingVertical: isCircle ? 0 : sizeStyles.paddingVertical,
         width: isCircle ? sizeStyles.height : block ? '100%' : 'auto',

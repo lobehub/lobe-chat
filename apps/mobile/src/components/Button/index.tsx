@@ -110,7 +110,8 @@ const Button: React.FC<ButtonProps> = ({
   const { styles } = useStyles({
     block,
     color: mapped.color,
-    disabled: disabled || loading,
+    disabled,
+    loading,
     shape,
     size,
     variant: mapped.variant,
