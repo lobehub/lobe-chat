@@ -3,9 +3,11 @@ interface GenerateObjectMessage {
   name?: string;
   role: 'user' | 'system' | 'assistant';
 }
+
 export interface GenerateObjectPayload {
   messages: GenerateObjectMessage[];
   model: string;
+  responseApi?: boolean;
   schema: any;
 }
 
