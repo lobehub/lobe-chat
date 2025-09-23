@@ -1,4 +1,4 @@
-import { ChatCitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
+import { ChatCitationItem, ModelSpeed, ModelTokensUsage } from '@lobechat/types';
 
 import { parseToolCalls } from '../../helpers';
 import { ChatStreamCallbacks } from '../../types';

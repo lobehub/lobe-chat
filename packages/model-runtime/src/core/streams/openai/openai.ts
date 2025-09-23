@@ -1,7 +1,6 @@
+import { ChatCitationItem, ChatMessageError } from '@lobechat/types';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
-
-import { ChatCitationItem, ChatMessageError } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../../types';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../types/error';
@@ -57,8 +56,16 @@ const transformOpenAIStream = (
 
     const errorData = {
       body: chunk,
-      message: 'message' in chunk ? typeof chunk.message === 'string' ? chunk.message : JSON.stringify(chunk) : JSON.stringify(chunk),
-      type: 'errorType' in chunk ? chunk.errorType as typeof AgentRuntimeErrorType.ProviderBizError : AgentRuntimeErrorType.ProviderBizError,
+      message:
+        'message' in chunk
+          ? typeof chunk.message === 'string'
+            ? chunk.message
+            : JSON.stringify(chunk)
+          : JSON.stringify(chunk),
+      type:
+        'errorType' in chunk
+          ? (chunk.errorType as typeof AgentRuntimeErrorType.ProviderBizError)
+          : AgentRuntimeErrorType.ProviderBizError,
     } satisfies ChatMessageError;
     return { data: errorData, id: 'first_chunk_error', type: 'error' };
   }

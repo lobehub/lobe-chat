@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
-
-import { ChatCitationItem, ModelTokensUsage } from '@/types/message';
+import { ChatCitationItem, ModelTokensUsage } from '@lobechat/types';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
