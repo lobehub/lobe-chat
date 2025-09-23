@@ -36,6 +36,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: [],
     visionKeywords: ['llava'],
   },
+  longcat: {
+    functionCallKeywords: ['longcat'],
+    reasoningKeywords: ['thinking'],
+    visionKeywords: [],
+  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
@@ -94,6 +99,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   google: ['gemini', 'imagen'],
   inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
+  longcat: ['longcat'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],

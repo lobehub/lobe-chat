@@ -72,8 +72,25 @@ const novitaChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    displayName: 'DeepSeek V3.1',
+    displayName: 'DeepSeek V3.1 Terminus',
     enabled: true,
+    id: 'deepseek/deepseek-v3.1-terminus',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'DeepSeek V3.1',
     id: 'deepseek/deepseek-v3.1',
     maxOutput: 32_768,
     pricing: {
