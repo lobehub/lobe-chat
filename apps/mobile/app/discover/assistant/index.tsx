@@ -152,6 +152,7 @@ const AssistantList = () => {
             items={categoriesWithStats}
             onSelect={handleCategorySelect}
             selectedKey={selectedCategory}
+            size="large"
           />
         )}
       </View>
