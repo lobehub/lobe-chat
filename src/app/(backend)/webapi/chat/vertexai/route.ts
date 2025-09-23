@@ -7,7 +7,7 @@ import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { POST as UniverseRoute } from '../[provider]/route';
 
-export const maxDuration = 300;
+export { maxDuration } from '@/utils/env';
 // due to the Chinese region does not support accessing Google
 // we need to use proxy to access it
 // refs: https://github.com/google/generative-ai-js/issues/29#issuecomment-1866246513
