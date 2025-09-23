@@ -211,6 +211,7 @@ export default function ComponentPlaygroundIndex() {
             onSelect={setSelectedCategory}
             selectedKey={selectedCategory}
             showsHorizontalScrollIndicator={false}
+            size="large"
           />
         </View>
       </View>

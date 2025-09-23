@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import Input from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({

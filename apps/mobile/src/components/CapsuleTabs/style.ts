@@ -67,14 +67,10 @@ export const useStyles = createStyles((token, size: 'large' | 'middle' | 'small'
       alignItems: 'center',
       flexDirection: 'row',
     },
-    tabIcon: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginRight: token.marginXXS,
-    },
     tabText: {
       color: token.colorText,
       fontSize: sizeStyles.fontSize,
+      lineHeight: sizeStyles.fontSize,
       textTransform: 'capitalize',
     },
     tabTextActive: {

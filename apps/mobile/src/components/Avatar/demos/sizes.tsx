@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Avatar from '../index';
+import { Avatar } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const SizesDemo = () => {

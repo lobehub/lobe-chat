@@ -48,3 +48,4 @@ export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
 };
 
 export default CapsuleTabs;
+export * from './type';

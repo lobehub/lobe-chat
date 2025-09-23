@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import Button from '@/components/Button';
+import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
-
-import { useToast } from '@/components/Toast';
 
 export default function AdvancedDemo() {
   const toast = useToast();

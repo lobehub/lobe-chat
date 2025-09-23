@@ -2,7 +2,7 @@ import { Download, Heart, Home, Search, Share } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import ListItem from '../index';
+import { ListItem } from '@/components';
 
 const handlePress = (title: string) => {
   console.log(`点击了: ${title}`);

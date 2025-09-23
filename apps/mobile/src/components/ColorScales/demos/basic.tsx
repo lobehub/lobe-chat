@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 
-import ColorScales from '../index';
+import { ColorScales } from '@/components';
 import { colorScales } from '@/theme';
 
 const BasicDemo = () => {

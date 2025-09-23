@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Copy, Send, X } from 'lucide-react-native';
 
-import Input from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
