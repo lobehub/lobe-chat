@@ -1,9 +1,8 @@
 import { ModelProvider } from 'model-bank';
 
-import { volcengine as volcengineAllModels } from 'model-bank';
+import volcengineAllModels from 'model-bank/volcengine';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
-import volcengineAllModels from 'model-bank/volcengine';
 
 import { createVolcengineImage } from './createImage';
 

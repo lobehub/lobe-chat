@@ -327,19 +327,12 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理视频列表
+   * 处理视频列表（已弃用，现在通过 file_url 处理媒体文件）
+   * @deprecated 使用 file_url 类型处理视频和音频文件
    */
   private async processVideoList(videoList: any[]): Promise<UserMessageContentPart[]> {
-    if (!videoList || videoList.length === 0) {
-      return [];
-    }
-
-    return videoList.map((video) => {
-      return {
-        type: 'video_url',
-        video_url: { url: video.url },
-      } as UserMessageContentPart;
-    });
+    // 视频现在通过 file_url 类型在 processUserMessage 中处理
+    return [];
   }
 
   /**
@@ -355,11 +348,11 @@ export class MessageContentProcessor extends BaseProcessor {
       case 'image_url': {
         return !!(part.image_url && part.image_url.url);
       }
+      case 'file_url': {
+        return !!(part.file_url && part.file_url.url && part.file_url.mimeType);
+      }
       case 'thinking': {
         return !!(part.thinking && part.signature);
-      }
-      case 'video_url': {
-        return !!(part.video_url && part.video_url.url);
       }
       default: {
         return false;
