@@ -10,17 +10,15 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     height: HEADER_HEIGHT,
     justifyContent: 'space-between',
-    paddingHorizontal: token.paddingSM,
+    paddingHorizontal: token.paddingXS,
   },
   left: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    width: 44,
   },
   right: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    width: 44,
   },
   title: {
     color: token.colorTextHeading,

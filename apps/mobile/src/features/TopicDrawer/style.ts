@@ -10,7 +10,7 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgMask,
   },
   drawerStyle: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: token.colorBgLayout,
     width: '80%',
   },
   safeAreaView: {

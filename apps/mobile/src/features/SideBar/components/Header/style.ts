@@ -12,6 +12,7 @@ export const useStyles = createStyles((token) => ({
     color: token.colorTextHeading,
     fontSize: token.fontSizeHeading4,
     fontWeight: token.fontWeightStrong,
+    padding: token.paddingXXS,
   },
   settingButton: {
     padding: token.paddingXS,

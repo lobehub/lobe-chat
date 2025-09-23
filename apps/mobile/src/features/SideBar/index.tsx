@@ -34,7 +34,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
+        <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
           <View style={styles.container}>
             <Header />
             <SessionList />

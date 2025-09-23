@@ -7,6 +7,7 @@ import * as Haptics from 'expo-haptics';
 import { useGlobalStore } from '@/store/global';
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
+import TopicHeader from './components/TopicHeader';
 
 /**
  * TopicDrawer - 右侧Topic抽屉组件
@@ -37,8 +38,9 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
+        <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
           <View style={styles.drawerContent}>
+            <TopicHeader />
             <TopicList />
           </View>
         </SafeAreaView>
