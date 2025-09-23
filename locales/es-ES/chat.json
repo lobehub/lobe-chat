@@ -70,12 +70,15 @@
   "input": {
     "addAi": "Agregar un mensaje de IA",
     "addUser": "Agregar un mensaje de usuario",
+    "disclaimer": "La IA también puede cometer errores, por favor verifique la información importante",
+    "errorMsg": "Error al enviar el mensaje, por favor revise la conexión y vuelva a intentarlo: {{errorMsg}}",
     "more": "más",
     "send": "Enviar",
-    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
-    "sendWithEnter": "Enviar con Enter",
+    "sendWithCmdEnter": "Presiona <key/> para enviar",
+    "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
-    "warp": "Salto de línea"
+    "warp": "Salto de línea",
+    "warpWithKey": "Presione la tecla <key/> para hacer un salto de línea"
   },
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
@@ -232,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} mensajes",
     "title": "Subtema"
   },
+  "toggleWideScreen": {
+    "off": "Desactivar modo de pantalla ancha",
+    "on": "Activar modo de pantalla ancha"
+  },
   "tokenDetails": {
     "chats": "Mensajes de chat",
     "historySummary": "Resumen histórico",
@@ -273,7 +280,9 @@
     "clientMode": {
       "actionFiletip": "Subir archivo",
       "actionTooltip": "Subir",
-      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función",
+      "fileNotSupported": "La carga de archivos no está soportada en el modo navegador, solo se permiten imágenes",
+      "visionNotSupported": "El modelo actual no admite reconocimiento visual, por favor cambie de modelo para usar esta función"
     },
     "preview": {
       "prepareTasks": "Preparando fragmentos...",
@@ -281,6 +290,9 @@
         "pending": "Preparando para subir...",
         "processing": "Procesando archivo..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
   },
   "zenMode": "Modo de concentración"

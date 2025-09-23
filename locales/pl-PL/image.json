@@ -5,6 +5,9 @@
       "lock": "Zablokuj proporcje",
       "unlock": "Odblokuj proporcje"
     },
+    "cfg": {
+      "label": "Siła prowadzenia"
+    },
     "header": {
       "desc": "Prosty opis, twórz natychmiast",
       "title": "Malarstwo"

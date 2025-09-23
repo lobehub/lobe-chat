@@ -153,6 +153,28 @@
     "searchProviders": "البحث عن مزودين...",
     "sort": "ترتيب مخصص"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "مفتاح API المقدم من منصة New API",
+      "placeholder": "مفتاح API الخاص بـ New API",
+      "required": "مفتاح API مطلوب",
+      "title": "مفتاح API"
+    },
+    "apiUrl": {
+      "desc": "عنوان API لخدمة New API، غالبًا ما يحتاج إلى /v1",
+      "title": "عنوان API"
+    },
+    "enabled": {
+      "title": "تمكين New API"
+    },
+    "models": {
+      "batchSelect": "تحديد نماذج متعددة ({{count}})",
+      "fetch": "جلب قائمة النماذج",
+      "selected": "النماذج المختارة",
+      "title": "النماذج المتاحة"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "تم اختيار {{count}} نموذج",
+      "title": "تحديد متعدد"
+    },
     "config": {
       "aesGcm": "سيتم استخدام خوارزمية التشفير <1>AES-GCM</1> لتشفير مفتاحك وعنوان الوكيل وما إلى ذلك",
       "apiKey": {

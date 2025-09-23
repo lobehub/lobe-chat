@@ -1,6 +1,6 @@
 import Authentik from 'next-auth/providers/authentik';
 
-import { authEnv } from '@/config/auth';
+import { authEnv } from '@/envs/auth';
 
 import { CommonProviderConfig } from './sso.config';
 

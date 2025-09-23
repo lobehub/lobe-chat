@@ -71,12 +71,15 @@ export default {
   input: {
     addAi: '添加一条 AI 消息',
     addUser: '添加一条用户消息',
+    disclaimer: 'AI 也可能会犯错，请检查重要信息',
+    errorMsg: '消息发送失败，请检查网络后重试: {{errorMsg}}',
     more: '更多',
     send: '发送',
-    sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
-    sendWithEnter: '按 Enter 键发送',
+    sendWithCmdEnter: '按 <key/> 键发送',
+    sendWithEnter: '按 <key/> 键发送',
     stop: '停止',
     warp: '换行',
+    warpWithKey: '按 <key/> 键换行',
   },
   intentUnderstanding: {
     title: '正在理解并分析您的意图...',
@@ -236,6 +239,10 @@ export default {
     threadMessageCount: '{{messageCount}} 条消息',
     title: '子话题',
   },
+  toggleWideScreen: {
+    off: '关闭宽屏模式',
+    on: '开启宽屏模式',
+  },
   tokenDetails: {
     chats: '会话消息',
     historySummary: '历史总结',
@@ -278,6 +285,7 @@ export default {
       actionFiletip: '上传文件',
       actionTooltip: '上传',
       disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+      fileNotSupported: '浏览器模式下暂不支持上传文件，仅支持图片',
       visionNotSupported: '当前模型不支持视觉识别，请切换模型后使用',
     },
     preview: {
@@ -286,6 +294,9 @@ export default {
         pending: '准备上传...',
         processing: '文件处理中...',
       },
+    },
+    validation: {
+      videoSizeExceeded: '视频文件大小不能超过 20MB，当前文件大小为 {{actualSize}}',
     },
   },
   zenMode: '专注模式',

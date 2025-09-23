@@ -17,6 +17,7 @@
     "./bfl": "./src/aiModels/bfl.ts",
     "./cloudflare": "./src/aiModels/cloudflare.ts",
     "./cohere": "./src/aiModels/cohere.ts",
+    "./cometapi": "./src/aiModels/cometapi.ts",
     "./deepseek": "./src/aiModels/deepseek.ts",
     "./fal": "./src/aiModels/fal.ts",
     "./fireworksai": "./src/aiModels/fireworksai.ts",
@@ -37,6 +38,7 @@
     "./modelscope": "./src/aiModels/modelscope.ts",
     "./moonshot": "./src/aiModels/moonshot.ts",
     "./nebius": "./src/aiModels/nebius.ts",
+    "./newapi": "./src/aiModels/newapi.ts",
     "./novita": "./src/aiModels/novita.ts",
     "./nvidia": "./src/aiModels/nvidia.ts",
     "./ollama": "./src/aiModels/ollama.ts",
@@ -57,6 +59,7 @@
     "./togetherai": "./src/aiModels/togetherai.ts",
     "./upstage": "./src/aiModels/upstage.ts",
     "./v0": "./src/aiModels/v0.ts",
+    "./vercelaigateway": "./src/aiModels/vercelaigateway.ts",
     "./vertexai": "./src/aiModels/vertexai.ts",
     "./vllm": "./src/aiModels/vllm.ts",
     "./volcengine": "./src/aiModels/volcengine.ts",
@@ -68,7 +71,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "zod": "^3.25.76"

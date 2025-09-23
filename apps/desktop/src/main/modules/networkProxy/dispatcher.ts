@@ -1,4 +1,5 @@
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { SocksProxies, socksDispatcher } from 'fetch-socks';
 import { Agent, ProxyAgent, getGlobalDispatcher, setGlobalDispatcher } from 'undici';
 
 import { createLogger } from '@/utils/logger';
@@ -91,8 +92,29 @@ export class ProxyDispatcherManager {
    */
   static createProxyAgent(proxyType: string, proxyUrl: string) {
     try {
-      // undici 的 ProxyAgent 支持 http, https 和 socks5
-      return new ProxyAgent({ uri: proxyUrl });
+      if (proxyType === 'socks5') {
+        // 解析 SOCKS5 代理 URL
+        const url = new URL(proxyUrl);
+        const socksProxies: SocksProxies = [
+          {
+            host: url.hostname,
+            port: parseInt(url.port, 10),
+            type: 5,
+            ...(url.username && url.password
+              ? {
+                  password: url.password,
+                  userId: url.username,
+                }
+              : {}),
+          },
+        ];
+
+        // 使用 fetch-socks 处理 SOCKS5 代理
+        return socksDispatcher(socksProxies);
+      } else {
+        // undici 的 ProxyAgent 支持 http, https
+        return new ProxyAgent({ uri: proxyUrl });
+      }
     } catch (error) {
       logger.error(`Failed to create proxy agent for ${proxyType}:`, error);
       throw new Error(

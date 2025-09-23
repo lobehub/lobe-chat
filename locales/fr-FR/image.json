@@ -5,6 +5,9 @@
       "lock": "Verrouiller le rapport hauteur/largeur",
       "unlock": "Déverrouiller le rapport hauteur/largeur"
     },
+    "cfg": {
+      "label": "Intensité de guidage"
+    },
     "header": {
       "desc": "Description simple, création immédiate",
       "title": "Peinture"

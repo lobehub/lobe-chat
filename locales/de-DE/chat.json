@@ -70,12 +70,15 @@
   "input": {
     "addAi": "Fügen Sie eine AI-Nachricht hinzu",
     "addUser": "Fügen Sie eine Benutzer-Nachricht hinzu",
+    "disclaimer": "KI kann auch Fehler machen, bitte überprüfen Sie wichtige Informationen",
+    "errorMsg": "Nachricht konnte nicht gesendet werden, bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut: {{errorMsg}}",
     "more": "Mehr",
     "send": "Senden",
-    "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
-    "sendWithEnter": "Mit Eingabetaste senden",
+    "sendWithCmdEnter": "Drücken Sie <key/>, um zu senden",
+    "sendWithEnter": "Drücken Sie <key/>, um zu senden",
     "stop": "Stoppen",
-    "warp": "Zeilenumbruch"
+    "warp": "Zeilenumbruch",
+    "warpWithKey": "Mit der Taste <key/> umbrechen"
   },
   "intentUnderstanding": {
     "title": "Verstehe und analysiere gerade Ihre Absicht..."
@@ -232,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} Nachrichten",
     "title": "Unterthema"
   },
+  "toggleWideScreen": {
+    "off": "Breitbildmodus deaktivieren",
+    "on": "Breitbildmodus aktivieren"
+  },
   "tokenDetails": {
     "chats": "Chats",
     "historySummary": "Historische Zusammenfassung",
@@ -273,7 +280,9 @@
     "clientMode": {
       "actionFiletip": "Datei hochladen",
       "actionTooltip": "Hochladen",
-      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen."
+      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen.",
+      "fileNotSupported": "Im Browser-Modus wird das Hochladen von Dateien derzeit nicht unterstützt, nur Bilder sind erlaubt",
+      "visionNotSupported": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen."
     },
     "preview": {
       "prepareTasks": "Vorbereitung der Teile...",
@@ -281,6 +290,9 @@
         "pending": "Vorbereitung des Uploads...",
         "processing": "Datei wird verarbeitet..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "Die Videodatei darf nicht größer als 20 MB sein, die aktuelle Dateigröße beträgt {{actualSize}}"
     }
   },
   "zenMode": "Fokusmodus"

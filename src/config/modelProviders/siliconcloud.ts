@@ -419,7 +419,7 @@ const SiliconCloud: ModelProviderCard = {
       vision: true,
     },
   ],
-  checkModel: 'Pro/Qwen/Qwen2-1.5B-Instruct',
+  checkModel: 'Pro/Qwen/Qwen2-7B-Instruct',
   description: 'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },

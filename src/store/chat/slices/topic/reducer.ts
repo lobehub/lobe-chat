@@ -14,12 +14,21 @@ interface UpdateChatTopicAction {
   value: Partial<ChatTopic>;
 }
 
+interface UpdateTopicsAction {
+  type: 'updateTopics';
+  value: ChatTopic[];
+}
+
 interface DeleteChatTopicAction {
   id: string;
   type: 'deleteTopic';
 }
 
-export type ChatTopicDispatch = AddChatTopicAction | UpdateChatTopicAction | DeleteChatTopicAction;
+export type ChatTopicDispatch =
+  | AddChatTopicAction
+  | UpdateChatTopicAction
+  | DeleteChatTopicAction
+  | UpdateTopicsAction;
 
 export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch): ChatTopic[] => {
   switch (payload.type) {
@@ -49,6 +58,10 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
           draftState[topicIndex] = { ...draftState[topicIndex], ...value, updatedAt: new Date() };
         }
       });
+    }
+
+    case 'updateTopics': {
+      return payload.value;
     }
 
     case 'deleteTopic': {

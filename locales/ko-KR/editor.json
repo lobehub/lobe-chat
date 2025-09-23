@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "접기",
+      "on": "펼치기"
+    },
+    "typobar": {
+      "off": "서식 도구 모음 숨기기",
+      "on": "서식 도구 모음 표시"
+    }
+  },
+  "cancel": "취소",
+  "confirm": "확인",
+  "file": {
+    "error": "오류: {{message}}",
+    "uploading": "파일 업로드 중..."
+  },
+  "image": {
+    "broken": "이미지가 손상되었습니다"
+  },
+  "link": {
+    "edit": "링크 편집",
+    "open": "링크 열기",
+    "placeholder": "링크 URL 입력",
+    "unlink": "링크 제거"
+  },
+  "math": {
+    "placeholder": "TeX 수식을 입력하세요"
+  },
+  "slash": {
+    "h1": "1단계 제목",
+    "h2": "2단계 제목",
+    "h3": "3단계 제목",
+    "hr": "구분선",
+    "table": "표",
+    "tex": "TeX 수식"
+  },
+  "table": {
+    "delete": "테이블 삭제",
+    "deleteColumn": "열 삭제",
+    "deleteRow": "행 삭제",
+    "insertColumnLeft": "왼쪽에 {{count}}개의 열 삽입",
+    "insertColumnRight": "오른쪽에 {{count}}개의 열 삽입",
+    "insertRowAbove": "위에 {{count}}개의 행 삽입",
+    "insertRowBelow": "아래에 {{count}}개의 행 삽입"
+  },
+  "typobar": {
+    "blockquote": "인용",
+    "bold": "굵게",
+    "bulletList": "순서 없는 목록",
+    "code": "인라인 코드",
+    "codeblock": "코드 블록",
+    "italic": "기울임꼴",
+    "link": "링크",
+    "numberList": "번호 매긴 목록",
+    "strikethrough": "취소선",
+    "table": "표",
+    "taskList": "작업 목록",
+    "tex": "TeX 수식",
+    "underline": "밑줄"
+  }
+}

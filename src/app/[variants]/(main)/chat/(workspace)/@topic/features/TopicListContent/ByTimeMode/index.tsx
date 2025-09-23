@@ -55,14 +55,11 @@ const ByTimeMode = memo(() => {
   const groupContent = useCallback(
     (index: number) => {
       if (index === 0) return <div style={{ height: 1 }} />;
-
       const topicGroup = groups[index];
       return <TopicGroupItem {...topicGroup} />;
     },
     [groups],
   );
-
-  // const activeIndex = topics.findIndex((topic) => topic.id === activeTopicId);
 
   return (
     <GroupedVirtuoso
@@ -70,6 +67,9 @@ const ByTimeMode = memo(() => {
       groupCounts={groupCounts}
       itemContent={itemContent}
       ref={virtuosoRef}
+      style={{
+        minHeight: groupCounts.length === 1 ? '0px' : '200px',
+      }}
     />
   );
 });

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { genServerLLMConfig } from './_deprecated';
 
 // Mock ModelProvider enum
-vi.mock('@lobechat/model-runtime', () => ({
+vi.mock('model-bank', () => ({
   ModelProvider: {
     Azure: 'azure',
     Bedrock: 'bedrock',
@@ -25,7 +25,7 @@ vi.mock('@/config/modelProviders', () => ({
 }));
 
 // Mock LLM config
-vi.mock('@/config/llm', () => ({
+vi.mock('@/envs/llm', () => ({
   getLLMConfig: () => ({
     ENABLED_AZURE_OPENAI: true,
     ENABLED_AWS_BEDROCK: true,

@@ -1,6 +1,5 @@
+import { ModelTokensUsage } from '@lobechat/types';
 import OpenAI from 'openai';
-
-import { ModelTokensUsage } from '@/types/message';
 
 export const convertUsage = (
   usage: OpenAI.Completions.CompletionUsage,

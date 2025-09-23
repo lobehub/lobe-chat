@@ -153,6 +153,28 @@
     "searchProviders": "جستجوی ارائه‌دهندگان...",
     "sort": "مرتب‌سازی سفارشی"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "کلید API ارائه شده توسط پلتفرم New API",
+      "placeholder": "کلید API New API",
+      "required": "کلید API الزامی است",
+      "title": "کلید API"
+    },
+    "apiUrl": {
+      "desc": "آدرس API سرویس New API، اغلب نیاز به /v1 دارد",
+      "title": "آدرس API"
+    },
+    "enabled": {
+      "title": "فعال‌سازی New API"
+    },
+    "models": {
+      "batchSelect": "انتخاب دسته‌ای مدل‌ها ({{count}} عدد)",
+      "fetch": "دریافت فهرست مدل‌ها",
+      "selected": "مدل‌های انتخاب شده",
+      "title": "مدل‌های قابل استفاده"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "آزمایش کنید که آیا آدرس پروکسی به درستی وارد شده است",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}} مدل انتخاب شده",
+      "title": "انتخاب دسته‌ای"
+    },
     "config": {
       "aesGcm": "کلید شما و آدرس پروکسی و غیره با استفاده از <1>AES-GCM</1> رمزگذاری خواهد شد",
       "apiKey": {

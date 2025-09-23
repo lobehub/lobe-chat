@@ -112,7 +112,12 @@ export const imageRouter = router({
 
     log('Starting async image generation: %O', {
       generationId,
-      imageParams: { height: params.height, steps: params.steps, width: params.width },
+      imageParams: {
+        cfg: params.cfg,
+        height: params.height,
+        steps: params.steps,
+        width: params.width,
+      },
       model,
       prompt: params.prompt,
       provider,

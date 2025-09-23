@@ -1,10 +1,10 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
-import { LobeChatDatabase } from '@/database/type';
 import { appEnv } from '@/envs/app';
 import { getJWKS } from '@/libs/oidc-provider/jwt';
 

@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere biedt u de meest geavanceerde meertalige modellen, geavanceerde zoekfunctionaliteit en een op maat gemaakt AI-werkruimte voor moderne bedrijven - alles geïntegreerd in een veilig platform."
   },
+  "cometapi": {
+    "description": "CometAPI is een serviceplatform dat diverse geavanceerde modelinterfaces aanbiedt, met ondersteuning voor OpenAI, Anthropic, Google en meer. Het is geschikt voor uiteenlopende ontwikkelings- en toepassingsbehoeften. Gebruikers kunnen flexibel het beste model en de beste prijs kiezen op basis van hun eigen behoeften, wat bijdraagt aan een verbeterde AI-ervaring."
+  },
   "deepseek": {
     "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
   },
@@ -91,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot is een open platform gelanceerd door Beijing Dark Side Technology Co., Ltd., dat verschillende modellen voor natuurlijke taalverwerking biedt, met een breed toepassingsgebied, waaronder maar niet beperkt tot contentcreatie, academisch onderzoek, slimme aanbevelingen, medische diagnose, en ondersteunt lange tekstverwerking en complexe generatietaken."
+  },
+  "nebius": {
+    "description": "Nebius biedt wereldwijde AI-innovators hoogwaardige infrastructuur door het bouwen van grootschalige GPU-clusters en een verticaal geïntegreerd cloudplatform."
+  },
+  "newapi": {
+    "description": "Open source platform voor het samenvoegen en uniform doorsturen van meerdere AI-diensten"
   },
   "novita": {
     "description": "Novita AI is een platform dat API-diensten biedt voor verschillende grote taalmodellen en AI-beeldgeneratie, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open-source modellen zoals Llama3 en Mistral, en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor de ontwikkeling van generatieve AI-toepassingen, geschikt voor de snelle groei van AI-startups."
@@ -151,6 +160,9 @@
   },
   "v0": {
     "description": "v0 is een pair programming-assistent; je hoeft alleen je ideeën in natuurlijke taal te beschrijven, en het genereert code en gebruikersinterfaces (UI) voor je project."
+  },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway biedt een uniforme API voor toegang tot meer dan 100 modellen, waarmee u via één enkele endpoint modellen van verschillende aanbieders zoals OpenAI, Anthropic en Google kunt gebruiken. Ondersteunt budgetinstellingen, gebruiksmonitoring, verzoekbelastingbalancering en failover."
   },
   "vertexai": {
     "description": "De Gemini-serie van Google is zijn meest geavanceerde, algemene AI-modellen, ontwikkeld door Google DeepMind. Deze modellen zijn ontworpen voor multimodale toepassingen en ondersteunen naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video. Ze zijn geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, en verbeteren aanzienlijk de efficiëntie en toepasbaarheid van AI-modellen."

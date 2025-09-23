@@ -1,9 +1,9 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { TRPCError } from '@trpc/server';
 
 import { serverDBEnv } from '@/config/db';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 import { TempFileManager } from '@/server/utils/tempFileManager';
 import { nanoid } from '@/utils/uuid';
 

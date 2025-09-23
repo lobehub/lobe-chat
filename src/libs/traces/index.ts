@@ -1,7 +1,7 @@
+import { CURRENT_VERSION } from '@lobechat/const';
 import { Langfuse } from 'langfuse';
 import { CreateLangfuseTraceBody } from 'langfuse-core';
 
-import { CURRENT_VERSION } from '@/const/version';
 import { getLangfuseConfig } from '@/envs/langfuse';
 import { TraceEventClient } from '@/libs/traces/event';
 

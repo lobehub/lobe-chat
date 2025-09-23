@@ -70,12 +70,15 @@
   "input": {
     "addAi": "Adicionar uma mensagem de IA",
     "addUser": "Adicionar uma mensagem de usuário",
+    "disclaimer": "A IA também pode cometer erros, por favor verifique as informações importantes",
+    "errorMsg": "Falha ao enviar a mensagem, verifique a rede e tente novamente: {{errorMsg}}",
     "more": "mais",
     "send": "Enviar",
-    "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",
-    "sendWithEnter": "Pressione Enter para enviar",
+    "sendWithCmdEnter": "Pressione <key/> para enviar",
+    "sendWithEnter": "Pressione <key/> para enviar",
     "stop": "Parar",
-    "warp": "Quebrar linha"
+    "warp": "Quebrar linha",
+    "warpWithKey": "Quebrar linha pressionando <key/> tecla"
   },
   "intentUnderstanding": {
     "title": "Entendendo e analisando sua intenção..."
@@ -232,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} mensagens",
     "title": "Subtópico"
   },
+  "toggleWideScreen": {
+    "off": "Desativar modo de tela ampla",
+    "on": "Ativar modo de tela ampla"
+  },
   "tokenDetails": {
     "chats": "Mensagens de bate-papo",
     "historySummary": "Resumo Histórico",
@@ -273,7 +280,9 @@
     "clientMode": {
       "actionFiletip": "Enviar arquivo",
       "actionTooltip": "Enviar",
-      "disabled": "O modelo atual não suporta reconhecimento visual e análise de arquivos, por favor, mude de modelo antes de usar"
+      "disabled": "O modelo atual não suporta reconhecimento visual e análise de arquivos, por favor, mude de modelo antes de usar",
+      "fileNotSupported": "O modo navegador não suporta upload de arquivos, apenas imagens são permitidas",
+      "visionNotSupported": "O modelo atual não suporta reconhecimento visual, por favor, altere o modelo para usar esta função"
     },
     "preview": {
       "prepareTasks": "Preparando partes...",
@@ -281,6 +290,9 @@
         "pending": "Preparando para upload...",
         "processing": "Processando arquivo..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "O tamanho do arquivo de vídeo não pode exceder 20MB, o tamanho atual do arquivo é {{actualSize}}"
     }
   },
   "zenMode": "Modo de Foco"

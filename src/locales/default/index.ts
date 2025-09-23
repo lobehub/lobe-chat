@@ -6,6 +6,7 @@ import color from './color';
 import common from './common';
 import components from './components';
 import discover from './discover';
+import editor from './editor';
 import electron from './electron';
 import error from './error';
 import file from './file';
@@ -37,6 +38,7 @@ const resources = {
   common,
   components,
   discover,
+  editor,
   electron,
   error,
   file,

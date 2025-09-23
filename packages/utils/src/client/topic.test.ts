@@ -1,7 +1,6 @@
+import { ChatTopic } from '@lobechat/types';
 import dayjs from 'dayjs';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-
-import { ChatTopic } from '@/types/topic';
 
 import { groupTopicsByTime } from './topic';
 

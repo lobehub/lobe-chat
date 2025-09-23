@@ -70,12 +70,15 @@
   "input": {
     "addAi": "Voeg een AI-bericht toe",
     "addUser": "Voeg een gebruikersbericht toe",
+    "disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
+    "errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
     "more": "Meer",
     "send": "Verzenden",
-    "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
-    "sendWithEnter": "Verzenden met Enter",
+    "sendWithCmdEnter": "Druk op <key/> om te verzenden",
+    "sendWithEnter": "Druk op <key/> om te verzenden",
     "stop": "Stoppen",
-    "warp": "Nieuwe regel"
+    "warp": "Nieuwe regel",
+    "warpWithKey": "Druk op <key/> om een nieuwe regel te beginnen"
   },
   "intentUnderstanding": {
     "title": "Bezig met het begrijpen en analyseren van uw intentie..."
@@ -232,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} berichten",
     "title": "Subonderwerp"
   },
+  "toggleWideScreen": {
+    "off": "Schakel breedbeeldmodus uit",
+    "on": "Schakel breedbeeldmodus in"
+  },
   "tokenDetails": {
     "chats": "Chats",
     "historySummary": "Geschiedenis samenvatting",
@@ -273,7 +280,9 @@
     "clientMode": {
       "actionFiletip": "Bestand uploaden",
       "actionTooltip": "Uploaden",
-      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+      "fileNotSupported": "Bestand uploaden wordt momenteel niet ondersteund in de browsermodus, alleen afbeeldingen zijn toegestaan",
+      "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
     },
     "preview": {
       "prepareTasks": "Voorbereiden van blokken...",
@@ -281,6 +290,9 @@
         "pending": "Voorbereiden om te uploaden...",
         "processing": "Bestand wordt verwerkt..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
     }
   },
   "zenMode": "Focusmodus"

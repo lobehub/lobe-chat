@@ -1,9 +1,8 @@
+import { ChatCompletionTool, OpenAIPluginManifest } from '@lobechat/types';
 import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
 import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-import { ChatCompletionTool } from '@/types/openai/chat';
-import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { genToolCallingName } from '@/utils/toolCall';
 
 const fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
@@ -108,17 +107,20 @@ export const getToolManifest = async (
   if (parser.data.openapi) {
     const openapiJson = await fetchJSON(parser.data.openapi, useProxy);
 
-    try {
-      const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
+    // avoid https://github.com/lobehub/lobe-chat/issues/9059
+    if (typeof window !== 'undefined') {
+      try {
+        const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
 
-      const convertor = new OpenAPIConvertor(openapiJson);
-      const openAPIs = await convertor.convertOpenAPIToPluginSchema();
+        const convertor = new OpenAPIConvertor(openapiJson);
+        const openAPIs = await convertor.convertOpenAPIToPluginSchema();
 
-      data.api = [...data.api, ...openAPIs];
+        data.api = [...data.api, ...openAPIs];
 
-      data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
-    } catch (error) {
-      throw new TypeError('openAPIInvalid', { cause: error });
+        data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
+      } catch (error) {
+        throw new TypeError('openAPIInvalid', { cause: error });
+      }
     }
   }
 

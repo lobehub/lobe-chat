@@ -1,12 +1,11 @@
-import { ChatCompletionErrorPayload, ModelProvider } from '@lobechat/model-runtime';
+import { ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
-
-export const runtime = 'edge';
 
 const noNeedAPIKey = (provider: string) => [ModelProvider.OpenRouter].includes(provider as any);
 

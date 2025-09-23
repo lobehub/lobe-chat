@@ -1,11 +1,13 @@
-import { ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
+import { ModelRuntime } from '@lobechat/model-runtime';
 import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
+import { ModelProvider } from 'model-bank';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { POST as UniverseRoute } from '../[provider]/route';
 
+export const maxDuration = 300;
 // due to the Chinese region does not support accessing Google
 // we need to use proxy to access it
 // refs: https://github.com/google/generative-ai-js/issues/29#issuecomment-1866246513
@@ -15,7 +17,7 @@ import { POST as UniverseRoute } from '../[provider]/route';
 //   setGlobalDispatcher(new ProxyAgent({ uri: process.env.HTTP_PROXY_URL }));
 // }
 
-export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
+export const POST: any = checkAuth(async (req: Request, { jwtPayload }) =>
   UniverseRoute(req, {
     createRuntime: () => {
       const googleAuthStr = jwtPayload.apiKey ?? process.env.VERTEXAI_CREDENTIALS ?? undefined;

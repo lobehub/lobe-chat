@@ -5,6 +5,9 @@
       "lock": "Seitenverhältnis sperren",
       "unlock": "Seitenverhältnis entsperren"
     },
+    "cfg": {
+      "label": "Führungsstärke"
+    },
     "header": {
       "desc": "Einfache Beschreibung, sofortige Kreation",
       "title": "Malerei"

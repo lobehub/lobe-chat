@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere, en son çok dilli modelleri, gelişmiş arama işlevselliğini ve modern işletmeler için özel olarak tasarlanmış AI çalışma alanını sunar - hepsi güvenli bir platformda entegre edilmiştir."
   },
+  "cometapi": {
+    "description": "CometAPI, OpenAI, Anthropic, Google ve daha fazlasını destekleyen çeşitli ileri düzey büyük model arayüzleri sunan bir hizmet platformudur. Çeşitli geliştirme ve uygulama ihtiyaçlarına uygundur. Kullanıcılar, kendi ihtiyaçlarına göre en uygun modeli ve fiyatı esnek bir şekilde seçebilir, böylece yapay zeka deneyimini geliştirebilirler."
+  },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
@@ -91,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot, Beijing Yuezhi Anmian Technology Co., Ltd. tarafından sunulan açık kaynaklı bir platformdur. İçerik oluşturma, akademik araştırma, akıllı öneri, tıbbi teşhis gibi geniş bir uygulama alanına sahip çeşitli doğal dil işleme modelleri sunmaktadır. Uzun metin işleme ve karmaşık üretim görevlerini desteklemektedir."
+  },
+  "nebius": {
+    "description": "Nebius, büyük ölçekli GPU kümeleri ve dikey entegre bulut platformları oluşturarak, dünya çapındaki yapay zeka yenilikçilerine yüksek performanslı altyapı sağlar."
+  },
+  "newapi": {
+    "description": "Açık kaynaklı çoklu AI hizmetlerini birleştiren ve yönlendiren platform"
   },
   "novita": {
     "description": "Novita AI, çeşitli büyük dil modelleri ve yapay zeka görüntü üretimi API hizmetleri sunan bir platformdur. Esnek, güvenilir ve maliyet etkin bir yapıya sahiptir. Llama3, Mistral gibi en son açık kaynak modelleri desteklemekte ve üretken yapay zeka uygulama geliştirme için kapsamlı, kullanıcı dostu ve otomatik ölçeklenebilir API çözümleri sunmaktadır. Bu, yapay zeka girişimlerinin hızlı gelişimi için uygundur."
@@ -151,6 +160,9 @@
   },
   "v0": {
     "description": "v0, eşli programlama asistanıdır; sadece doğal dilde fikirlerinizi tanımlamanız yeterlidir, o da projeniz için kod ve kullanıcı arayüzü (UI) oluşturur"
+  },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway, 100'den fazla modele erişim sağlamak için birleşik bir API sunar; tek bir uç nokta üzerinden OpenAI, Anthropic, Google ve diğer sağlayıcıların modellerini kullanmanıza olanak tanır. Bütçe ayarları, kullanım izleme, istek yük dengeleme ve hata toleransı desteklenmektedir."
   },
   "vertexai": {
     "description": "Google'un Gemini serisi, Google DeepMind tarafından geliştirilen en gelişmiş ve genel amaçlı AI modelleridir. Çok modlu tasarım için özel olarak oluşturulmuş olup, metin, kod, görüntü, ses ve video gibi içeriklerin kesintisiz anlaşılması ve işlenmesini destekler. Veri merkezlerinden mobil cihazlara kadar çeşitli ortamlarda kullanılabilir, AI modellerinin verimliliğini ve uygulama kapsamını büyük ölçüde artırır."

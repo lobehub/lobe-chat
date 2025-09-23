@@ -143,4 +143,8 @@ export class ClientService implements IMessageService {
   async updateMessagePluginError() {
     throw new Error('Method not implemented.');
   }
+
+  async updateMessageRAG(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }

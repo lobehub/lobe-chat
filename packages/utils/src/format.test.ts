@@ -1,7 +1,6 @@
+import { USD_TO_CNY } from '@lobechat/const';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
-
-import { USD_TO_CNY } from '@/const/currency';
 
 import {
   formatDate,

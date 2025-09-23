@@ -1,9 +1,21 @@
-import { ChatMessageError } from '@/types/message/chat';
-import { ChatImageItem } from '@/types/message/image';
-import { ChatToolPayload, MessageToolCall } from '@/types/message/tools';
-import { GroundingSearch } from '@/types/search';
+import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
+import type { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
-export interface CitationItem {
+import { ErrorType } from '../fetch';
+import { GroundingSearch } from '../search';
+import { ChatImageItem } from './image';
+import { ChatToolPayload, MessageToolCall } from './tools';
+
+/**
+ * 聊天消息错误对象
+ */
+export interface ChatMessageError {
+  body?: any;
+  message: string;
+  type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
+}
+
+export interface ChatCitationItem {
   id?: string;
   onlyUrl?: boolean;
   title?: string;

@@ -5,6 +5,9 @@ export default {
       lock: '锁定宽高比',
       unlock: '解锁宽高比',
     },
+    cfg: {
+      label: '引导强度',
+    },
     header: {
       desc: '简单描述，即刻创作',
       title: '绘画',

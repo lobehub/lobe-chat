@@ -1,0 +1,62 @@
+export default {
+  actions: {
+    expand: {
+      off: '收起',
+      on: '展开',
+    },
+    typobar: {
+      off: '隐藏格式工具栏',
+      on: '显示格式工具栏',
+    },
+  },
+  cancel: '取消',
+  confirm: '确认',
+  file: {
+    error: '错误：{{message}}',
+    uploading: '正在上传文件...',
+  },
+  image: {
+    broken: '图片损坏',
+  },
+  link: {
+    edit: '编辑链接',
+    open: '打开链接',
+    placeholder: '输入链接 URL',
+    unlink: '取消链接',
+  },
+  math: {
+    placeholder: '请输入 TeX 公式',
+  },
+  slash: {
+    h1: '一级标题',
+    h2: '二级标题',
+    h3: '三级标题',
+    hr: '分割线',
+    table: '表格',
+    tex: 'TeX 公式',
+  },
+  table: {
+    delete: '删除表格',
+    deleteColumn: '删除列',
+    deleteRow: '删除行',
+    insertColumnLeft: '在左侧插入 {{count}} 列',
+    insertColumnRight: '在右侧插入 {{count}} 列',
+    insertRowAbove: '在上方插入 {{count}} 行',
+    insertRowBelow: '在下方插入 {{count}} 行',
+  },
+  typobar: {
+    blockquote: '引用',
+    bold: '加粗',
+    bulletList: '无序列表',
+    code: '行内代码',
+    codeblock: '代码块',
+    italic: '斜体',
+    link: '链接',
+    numberList: '有序列表',
+    strikethrough: '删除线',
+    table: 'table',
+    taskList: '任务列表',
+    tex: 'TeX 公式',
+    underline: '下划线',
+  },
+};

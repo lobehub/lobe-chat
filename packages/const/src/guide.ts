@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { BRANDING_EMAIL } from '@/const/branding';
+import { BRANDING_EMAIL } from './branding';
 import {
   BLOG,
   DOCKER_IMAGE,
@@ -11,7 +11,7 @@ import {
   SELF_HOSTING_DOCUMENTS,
   USAGE_DOCUMENTS,
   WIKI,
-} from '@/const/url';
+} from './url';
 
 export const INBOX_GUIDE_SYSTEMROLE = `# Role: LobeChat Support Assistant
 

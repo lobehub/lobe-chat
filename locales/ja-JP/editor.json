@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "折りたたむ",
+      "on": "展開する"
+    },
+    "typobar": {
+      "off": "書式ツールバーを非表示",
+      "on": "書式ツールバーを表示"
+    }
+  },
+  "cancel": "キャンセル",
+  "confirm": "確認",
+  "file": {
+    "error": "エラー：{{message}}",
+    "uploading": "ファイルをアップロードしています..."
+  },
+  "image": {
+    "broken": "画像が破損しています"
+  },
+  "link": {
+    "edit": "リンクを編集",
+    "open": "リンクを開く",
+    "placeholder": "リンクの URL を入力",
+    "unlink": "リンクを解除"
+  },
+  "math": {
+    "placeholder": "TeX 公式を入力してください"
+  },
+  "slash": {
+    "h1": "見出し1",
+    "h2": "見出し2",
+    "h3": "見出し3",
+    "hr": "区切り線",
+    "table": "表",
+    "tex": "TeX 数式"
+  },
+  "table": {
+    "delete": "表を削除",
+    "deleteColumn": "列を削除",
+    "deleteRow": "行を削除",
+    "insertColumnLeft": "左側に {{count}} 列を挿入",
+    "insertColumnRight": "右側に {{count}} 列を挿入",
+    "insertRowAbove": "上に {{count}} 行を挿入",
+    "insertRowBelow": "下に {{count}} 行を挿入"
+  },
+  "typobar": {
+    "blockquote": "引用",
+    "bold": "太字",
+    "bulletList": "番号なしリスト",
+    "code": "インラインコード",
+    "codeblock": "コードブロック",
+    "italic": "斜体",
+    "link": "リンク",
+    "numberList": "番号付きリスト",
+    "strikethrough": "取り消し線",
+    "table": "表",
+    "taskList": "タスクリスト",
+    "tex": "TeX 公式",
+    "underline": "下線"
+  }
+}

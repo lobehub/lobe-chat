@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Thu gọn",
+      "on": "Mở rộng"
+    },
+    "typobar": {
+      "off": "Ẩn thanh công cụ định dạng",
+      "on": "Hiển thị thanh công cụ định dạng"
+    }
+  },
+  "cancel": "Hủy",
+  "confirm": "Xác nhận",
+  "file": {
+    "error": "Lỗi: {{message}}",
+    "uploading": "Đang tải tệp lên..."
+  },
+  "image": {
+    "broken": "Hình ảnh bị hỏng"
+  },
+  "link": {
+    "edit": "Chỉnh sửa liên kết",
+    "open": "Mở liên kết",
+    "placeholder": "Nhập URL liên kết",
+    "unlink": "Gỡ liên kết"
+  },
+  "math": {
+    "placeholder": "Vui lòng nhập công thức TeX"
+  },
+  "slash": {
+    "h1": "Tiêu đề cấp 1",
+    "h2": "Tiêu đề cấp 2",
+    "h3": "Tiêu đề cấp 3",
+    "hr": "Đường phân cách",
+    "table": "Bảng",
+    "tex": "Công thức TeX"
+  },
+  "table": {
+    "delete": "Xóa bảng",
+    "deleteColumn": "Xóa cột",
+    "deleteRow": "Xóa hàng",
+    "insertColumnLeft": "Chèn {{count}} cột vào bên trái",
+    "insertColumnRight": "Chèn {{count}} cột vào bên phải",
+    "insertRowAbove": "Chèn {{count}} hàng vào phía trên",
+    "insertRowBelow": "Chèn {{count}} hàng vào phía dưới"
+  },
+  "typobar": {
+    "blockquote": "Trích dẫn",
+    "bold": "Đậm",
+    "bulletList": "Danh sách gạch đầu dòng",
+    "code": "Mã nội tuyến",
+    "codeblock": "Khối mã",
+    "italic": "Nghiêng",
+    "link": "Liên kết",
+    "numberList": "Danh sách có thứ tự",
+    "strikethrough": "Gạch ngang",
+    "table": "bảng",
+    "taskList": "Danh sách công việc",
+    "tex": "Công thức TeX",
+    "underline": "Gạch chân"
+  }
+}

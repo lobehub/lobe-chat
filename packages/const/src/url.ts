@@ -1,9 +1,9 @@
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
-import { isDev } from '@/utils/env';
-
 import { INBOX_SESSION_ID } from './session';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 export const UTM_SOURCE = 'chat_preview';
 

@@ -5,6 +5,9 @@
       "lock": "Vergrendel beeldverhouding",
       "unlock": "Ontgrendel beeldverhouding"
     },
+    "cfg": {
+      "label": "Leidende intensiteit"
+    },
     "header": {
       "desc": "Eenvoudige beschrijving, direct creëren",
       "title": "Schilderen"

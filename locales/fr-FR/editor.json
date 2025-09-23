@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Réduire",
+      "on": "Développer"
+    },
+    "typobar": {
+      "off": "Masquer la barre d'outils de formatage",
+      "on": "Afficher la barre d'outils de formatage"
+    }
+  },
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "file": {
+    "error": "Erreur : {{message}}",
+    "uploading": "Téléversement du fichier en cours..."
+  },
+  "image": {
+    "broken": "Image endommagée"
+  },
+  "link": {
+    "edit": "Modifier le lien",
+    "open": "Ouvrir le lien",
+    "placeholder": "Entrez l'URL du lien",
+    "unlink": "Supprimer le lien"
+  },
+  "math": {
+    "placeholder": "Veuillez saisir une formule TeX"
+  },
+  "slash": {
+    "h1": "Titre de niveau 1",
+    "h2": "Titre de niveau 2",
+    "h3": "Titre de niveau 3",
+    "hr": "Ligne de séparation",
+    "table": "Tableau",
+    "tex": "Formule TeX"
+  },
+  "table": {
+    "delete": "Supprimer le tableau",
+    "deleteColumn": "Supprimer la colonne",
+    "deleteRow": "Supprimer la ligne",
+    "insertColumnLeft": "Insérer {{count}} colonne(s) à gauche",
+    "insertColumnRight": "Insérer {{count}} colonne(s) à droite",
+    "insertRowAbove": "Insérer {{count}} ligne(s) au-dessus",
+    "insertRowBelow": "Insérer {{count}} ligne(s) en dessous"
+  },
+  "typobar": {
+    "blockquote": "Citation",
+    "bold": "Gras",
+    "bulletList": "Liste à puces",
+    "code": "Code en ligne",
+    "codeblock": "Bloc de code",
+    "italic": "Italique",
+    "link": "Lien",
+    "numberList": "Liste numérotée",
+    "strikethrough": "Barré",
+    "table": "tableau",
+    "taskList": "Liste des tâches",
+    "tex": "Formule TeX",
+    "underline": "Souligné"
+  }
+}

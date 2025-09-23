@@ -26,9 +26,8 @@ export class AssistantStore {
   };
 
   getAgentIndex = async (locale: Locales = DEFAULT_LANG): Promise<any[]> => {
+    let res: Response;
     try {
-      let res: Response;
-
       res = await fetch(this.getAgentIndexUrl(locale as any), {
         cache: 'force-cache',
         next: { revalidate: CacheRevalidate.List, tags: [CacheTag.Discover, CacheTag.Assistants] },
@@ -49,7 +48,7 @@ export class AssistantStore {
         return [];
       }
 
-      const data: any = await res.json();
+      const data: any = await res.clone().json();
 
       if (EdgeConfig.isEnabled()) {
         // Get the assistant whitelist from Edge Config
@@ -75,8 +74,11 @@ export class AssistantStore {
         return [];
       }
 
-      console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
+      console.error(`[AgentIndexFetchError] failed to fetch agent index, error detail:`);
       console.error(e);
+      if (res!) {
+        console.error(`status code: ${res?.status}`, await res.text());
+      }
 
       throw e;
     }

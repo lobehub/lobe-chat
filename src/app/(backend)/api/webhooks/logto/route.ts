@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { authEnv } from '@/config/auth';
 import { serverDB } from '@/database/server';
+import { authEnv } from '@/envs/auth';
 import { pino } from '@/libs/logger';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 
@@ -35,6 +35,15 @@ export const POST = async (req: Request): Promise<NextResponse> => {
           fullName: data?.name,
         },
       );
+    }
+    case 'User.SuspensionStatus.Updated': {
+      if (data.isSuspended) {
+        return nextAuthUserService.safeSignOutUser({
+          provider: 'logto',
+          providerAccountId: data.id,
+        });
+      }
+      return NextResponse.json({ message: 'user reactivated', success: true }, { status: 200 });
     }
 
     default: {

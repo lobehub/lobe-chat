@@ -161,9 +161,9 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   if (enableNextAuth) {
     log('Attempting NextAuth authentication');
     try {
-      const { default: NextAuthEdge } = await import('@/libs/next-auth/edge');
+      const { default: NextAuth } = await import('@/libs/next-auth');
 
-      const session = await NextAuthEdge.auth();
+      const session = await NextAuth.auth();
       if (session && session?.user?.id) {
         auth = session.user;
         userId = session.user.id;

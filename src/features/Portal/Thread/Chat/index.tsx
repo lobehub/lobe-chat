@@ -11,7 +11,7 @@ interface ConversationProps {
 }
 
 const Conversation = memo<ConversationProps>(({ mobile }) => (
-  <Flexbox height={'100%'}>
+  <>
     <Suspense
       fallback={
         <Flexbox flex={1} height={'100%'}>
@@ -22,7 +22,7 @@ const Conversation = memo<ConversationProps>(({ mobile }) => (
       <ChatList mobile={mobile} />
     </Suspense>
     <ChatInput />
-  </Flexbox>
+  </>
 ));
 
 export default Conversation;

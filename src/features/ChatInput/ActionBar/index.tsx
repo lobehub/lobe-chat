@@ -1,55 +1,62 @@
-import { ChatInputActionBar } from '@lobehub/ui/chat';
-import { ReactNode, memo } from 'react';
+import { ChatInputActions, type ChatInputActionsProps } from '@lobehub/editor/react';
+import { memo, useMemo } from 'react';
 
-import { ActionKeys, actionMap } from './config';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
-const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
-  <>
-    {dataSource.map((key) => {
-      const Render = actionMap[key];
-      return <Render key={key} />;
-    })}
-  </>
-);
+import { ActionKeys, actionMap } from '../ActionBar/config';
+import { useChatInputStore } from '../store';
 
-export interface ActionBarProps {
-  leftActions: ActionKeys[];
-  leftAreaEndRender?: ReactNode;
-  leftAreaStartRender?: ReactNode;
-  padding?: number | string;
-  rightActions: ActionKeys[];
-  rightAreaEndRender?: ReactNode;
-  rightAreaStartRender?: ReactNode;
-}
-
-const ActionBar = memo<ActionBarProps>(
-  ({
-    padding = '0 8px',
-    rightAreaStartRender,
-    rightAreaEndRender,
-    leftAreaStartRender,
-    leftAreaEndRender,
-    leftActions,
-    rightActions,
-  }) => (
-    <ChatInputActionBar
-      leftAddons={
-        <>
-          {leftAreaStartRender}
-          <RenderActionList dataSource={leftActions} />
-          {leftAreaEndRender}
-        </>
+const mapActionsToItems = (keys: ActionKeys[]): ChatInputActionsProps['items'] =>
+  keys.map((actionKey, index) => {
+    if (typeof actionKey === 'string') {
+      if (actionKey === '---') {
+        return {
+          key: `divider-${index}`,
+          type: 'divider',
+        };
       }
-      padding={padding}
-      rightAddons={
-        <>
-          {rightAreaStartRender}
-          <RenderActionList dataSource={rightActions} />
-          {rightAreaEndRender}
-        </>
-      }
+      const Render = actionMap[actionKey];
+      return {
+        alwaysDisplay: actionKey === 'mainToken',
+        children: <Render key={actionKey} />,
+        key: actionKey,
+      };
+    } else {
+      return {
+        children: actionKey.map((groupActionKey) => {
+          const Render = actionMap[groupActionKey];
+          return {
+            children: <Render key={groupActionKey} />,
+            key: groupActionKey,
+          };
+        }),
+        key: `group-${index}`,
+        type: 'collapse',
+      };
+    }
+  });
+
+const ActionToolbar = memo(() => {
+  const [expandInputActionbar, toggleExpandInputActionbar] = useGlobalStore((s) => [
+    systemStatusSelectors.expandInputActionbar(s),
+    s.toggleExpandInputActionbar,
+  ]);
+
+  const leftActions = useChatInputStore((s) => s.leftActions);
+  const mobile = useChatInputStore((s) => s.mobile);
+  const items = useMemo(() => mapActionsToItems(leftActions), [leftActions]);
+  return (
+    <ChatInputActions
+      collapseOffset={mobile ? 48 : 80}
+      defaultGroupCollapse={true}
+      groupCollapse={!expandInputActionbar}
+      items={items}
+      onGroupCollapseChange={(v) => {
+        toggleExpandInputActionbar(!v);
+      }}
     />
-  ),
-);
+  );
+});
 
-export default ActionBar;
+export default ActionToolbar;

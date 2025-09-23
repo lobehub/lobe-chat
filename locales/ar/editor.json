@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "طي",
+      "on": "توسيع"
+    },
+    "typobar": {
+      "off": "إخفاء شريط أدوات التنسيق",
+      "on": "إظهار شريط أدوات التنسيق"
+    }
+  },
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
+  "file": {
+    "error": "خطأ: {{message}}",
+    "uploading": "جاري رفع الملف..."
+  },
+  "image": {
+    "broken": "الصورة تالفة"
+  },
+  "link": {
+    "edit": "تعديل الرابط",
+    "open": "فتح الرابط",
+    "placeholder": "أدخل عنوان URL للرابط",
+    "unlink": "إزالة الرابط"
+  },
+  "math": {
+    "placeholder": "يرجى إدخال معادلة TeX"
+  },
+  "slash": {
+    "h1": "عنوان رئيسي من المستوى الأول",
+    "h2": "عنوان فرعي من المستوى الثاني",
+    "h3": "عنوان فرعي من المستوى الثالث",
+    "hr": "خط فاصل",
+    "table": "جدول",
+    "tex": "معادلة TeX"
+  },
+  "table": {
+    "delete": "حذف الجدول",
+    "deleteColumn": "حذف العمود",
+    "deleteRow": "حذف الصف",
+    "insertColumnLeft": "إدراج {{count}} عمودًا إلى اليسار",
+    "insertColumnRight": "إدراج {{count}} عمودًا إلى اليمين",
+    "insertRowAbove": "إدراج {{count}} صفًا في الأعلى",
+    "insertRowBelow": "إدراج {{count}} صفًا في الأسفل"
+  },
+  "typobar": {
+    "blockquote": "اقتباس",
+    "bold": "غامق",
+    "bulletList": "قائمة نقطية",
+    "code": "كود مضمن",
+    "codeblock": "كتلة كود",
+    "italic": "مائل",
+    "link": "رابط",
+    "numberList": "قائمة مرقمة",
+    "strikethrough": "شطب",
+    "table": "جدول",
+    "taskList": "قائمة المهام",
+    "tex": "معادلة TeX",
+    "underline": "تسطير"
+  }
+}

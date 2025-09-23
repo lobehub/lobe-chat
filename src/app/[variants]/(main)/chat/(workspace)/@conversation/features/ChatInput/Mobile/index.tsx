@@ -1,91 +1,69 @@
 'use client';
 
-import { Skeleton } from 'antd';
-import { useTheme } from 'antd-style';
-import { TextAreaRef } from 'antd/es/input/TextArea';
-import { memo, useRef, useState } from 'react';
+import { Alert } from '@lobehub/ui';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ActionBar from '@/features/ChatInput/ActionBar';
-import STT from '@/features/ChatInput/ActionBar/STT';
-import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import SaveTopic from '@/features/ChatInput/Topic';
-import { useSendMessage } from '@/features/ChatInput/useSend';
-import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
+import {
+  type ActionKey,
+  type ActionKeys,
+  MobileChatInput as ChatInput,
+  ChatInputProvider,
+} from '@/features/ChatInput';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
 
-import Files from './Files';
-import InputArea from './InputArea';
-import SendButton from './Send';
+import { useSend } from '../useSend';
 
-const defaultLeftActions: ActionKeys[] = [
+const leftActions: ActionKeys[] = [
   'model',
   'search',
   'fileUpload',
   'knowledgeBase',
-  'history',
   'tools',
-  'params',
+  '---',
+  ['params', 'history', 'stt', 'clear'],
   'mainToken',
 ];
 
-const defaultRightActions: ActionKeys[] = ['clear'];
+const rightActions: ActionKey[] = ['saveTopic'];
 
 const MobileChatInput = memo(() => {
-  const theme = useTheme();
-  const ref = useRef<TextAreaRef>(null);
-  const [expand, setExpand] = useState<boolean>(false);
-  const { send: sendMessage, canSend } = useSendMessage();
-  const { isLoading } = useInitAgentConfig();
+  const { t } = useTranslation('chat');
+  const { send, disabled, generating, stop } = useSend();
 
-  const [loading, value, onInput, onStop] = useChatStore((s) => [
-    chatSelectors.isAIGenerating(s),
-    s.inputMessage,
-    s.updateInputMessage,
-    s.stopGenerateMessage,
+  const [mainInputSendErrorMsg, clearSendMessageError] = useChatStore((s) => [
+    aiChatSelectors.isCurrentSendMessageError(s),
+    s.clearSendMessageError,
   ]);
-
   return (
-    <InputArea
-      expand={expand}
-      onInput={onInput}
-      onSend={() => {
-        setExpand(false);
-
-        sendMessage();
+    <ChatInputProvider
+      chatInputEditorRef={(instance) => {
+        if (!instance) return;
+        useChatStore.setState({ mainInputEditor: instance });
       }}
-      ref={ref}
-      setExpand={setExpand}
-      style={{
-        background: theme.colorBgLayout,
-        top: expand ? 0 : undefined,
-        width: '100%',
-        zIndex: 101,
+      leftActions={leftActions}
+      mobile
+      onMarkdownContentChange={(content) => {
+        useChatStore.setState({ inputMessage: content });
       }}
-      textAreaLeftAddons={<STT mobile />}
-      textAreaRightAddons={
-        <SendButton disabled={!canSend} loading={loading} onSend={sendMessage} onStop={onStop} />
-      }
-      topAddons={
-        isLoading ? (
-          <Flexbox paddingInline={8}>
-            <Skeleton.Button active block size={'small'} />
-          </Flexbox>
-        ) : (
-          <>
-            <Files />
-            <ActionBar
-              leftActions={defaultLeftActions}
-              padding={'0 8px'}
-              rightActions={defaultRightActions}
-              rightAreaStartRender={<SaveTopic mobile />}
-            />
-          </>
-        )
-      }
-      value={value}
-    />
+      onSend={() => send()}
+      rightActions={rightActions}
+      sendButtonProps={{ disabled, generating, onStop: stop }}
+    >
+      {mainInputSendErrorMsg && (
+        <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
+          <Alert
+            closable
+            message={t('input.errorMsg', { errorMsg: mainInputSendErrorMsg })}
+            onClose={clearSendMessageError}
+            type={'warning'}
+          />
+        </Flexbox>
+      )}
+      <ChatInput />
+    </ChatInputProvider>
   );
 });
 

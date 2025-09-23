@@ -153,6 +153,28 @@
     "searchProviders": "Zoek providers...",
     "sort": "Aangepaste sortering"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "API-sleutel geleverd door het New API-platform",
+      "placeholder": "New API API-sleutel",
+      "required": "API-sleutel is verplicht",
+      "title": "API-sleutel"
+    },
+    "apiUrl": {
+      "desc": "API-adres van de New API-service, meestal met /v1",
+      "title": "API-adres"
+    },
+    "enabled": {
+      "title": "New API inschakelen"
+    },
+    "models": {
+      "batchSelect": "Modellen in batch selecteren ({{count}})",
+      "fetch": "Modelijst ophalen",
+      "selected": "Geselecteerde modellen",
+      "title": "Beschikbare modellen"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "{{count}} modellen geselecteerd",
+      "title": "Batchselectie"
+    },
     "config": {
       "aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
       "apiKey": {

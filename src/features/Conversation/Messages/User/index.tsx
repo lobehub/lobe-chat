@@ -8,18 +8,20 @@ import { ChatMessage } from '@/types/message';
 import FileListViewer from './FileListViewer';
 import ImageFileListViewer from './ImageFileListViewer';
 import { MessageContentClassName } from '../Default';
+import VideoFileListViewer from './VideoFileListViewer';
 
 export const UserMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, editableContent, content, imageList, fileList }) => {
+>(({ id, editableContent, content, imageList, videoList, fileList }) => {
   if (content === LOADING_FLAT) return <BubblesLoading />;
 
   return (
     <Flexbox className={MessageContentClassName} gap={8} id={id}>
       {editableContent}
       {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
+      {videoList && videoList?.length > 0 && <VideoFileListViewer items={videoList} />}
       {fileList && fileList?.length > 0 && (
         <div style={{ marginTop: 8 }}>
           <FileListViewer items={fileList} />

@@ -67,6 +67,7 @@ describe('aiModelSelectors', () => {
     providerSearchKeyword: '',
     aiProviderRuntimeConfig: {},
     initAiProviderList: false,
+    isInitAiProviderRuntimeState: false,
   };
 
   describe('aiProviderChatModelListIds', () => {

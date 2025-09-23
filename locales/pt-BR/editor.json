@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "Recolher",
+      "on": "Expandir"
+    },
+    "typobar": {
+      "off": "Ocultar barra de formatação",
+      "on": "Mostrar barra de formatação"
+    }
+  },
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "file": {
+    "error": "Erro: {{message}}",
+    "uploading": "Enviando arquivo..."
+  },
+  "image": {
+    "broken": "Imagem corrompida"
+  },
+  "link": {
+    "edit": "Editar link",
+    "open": "Abrir link",
+    "placeholder": "Digite a URL do link",
+    "unlink": "Remover link"
+  },
+  "math": {
+    "placeholder": "Por favor, insira a fórmula TeX"
+  },
+  "slash": {
+    "h1": "Título de Nível 1",
+    "h2": "Título de Nível 2",
+    "h3": "Título de Nível 3",
+    "hr": "Linha Divisória",
+    "table": "Tabela",
+    "tex": "Fórmula TeX"
+  },
+  "table": {
+    "delete": "Excluir tabela",
+    "deleteColumn": "Excluir coluna",
+    "deleteRow": "Excluir linha",
+    "insertColumnLeft": "Inserir {{count}} coluna(s) à esquerda",
+    "insertColumnRight": "Inserir {{count}} coluna(s) à direita",
+    "insertRowAbove": "Inserir {{count}} linha(s) acima",
+    "insertRowBelow": "Inserir {{count}} linha(s) abaixo"
+  },
+  "typobar": {
+    "blockquote": "Citação",
+    "bold": "Negrito",
+    "bulletList": "Lista não ordenada",
+    "code": "Código inline",
+    "codeblock": "Bloco de código",
+    "italic": "Itálico",
+    "link": "Link",
+    "numberList": "Lista numerada",
+    "strikethrough": "Tachado",
+    "table": "tabela",
+    "taskList": "Lista de Tarefas",
+    "tex": "Fórmula TeX",
+    "underline": "Sublinhado"
+  }
+}

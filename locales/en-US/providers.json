@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere brings you cutting-edge multilingual models, advanced retrieval capabilities, and an AI workspace tailored for modern enterprises—all integrated into a secure platform."
   },
+  "cometapi": {
+    "description": "CometAPI is a service platform offering a variety of cutting-edge large model interfaces, supporting OpenAI, Anthropic, Google, and more. It caters to diverse development and application needs, allowing users to flexibly choose the optimal model and pricing according to their requirements, enhancing the AI experience."
+  },
   "deepseek": {
     "description": "DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following."
   },
@@ -91,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot is an open-source platform launched by Beijing Dark Side Technology Co., Ltd., providing various natural language processing models with a wide range of applications, including but not limited to content creation, academic research, intelligent recommendations, and medical diagnosis, supporting long text processing and complex generation tasks."
+  },
+  "nebius": {
+    "description": "Nebius provides high-performance infrastructure for global AI innovators by building large-scale GPU clusters and vertically integrated cloud platforms."
+  },
+  "newapi": {
+    "description": "Open-source unified forwarding platform aggregating multiple AI services"
   },
   "novita": {
     "description": "Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups."
@@ -151,6 +160,9 @@
   },
   "v0": {
     "description": "v0 is a pair programming assistant that generates code and user interfaces (UI) for your projects based on your natural language descriptions."
+  },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway provides a unified API to access over 100 models, allowing you to use models from multiple providers such as OpenAI, Anthropic, and Google through a single endpoint. It supports budget settings, usage monitoring, request load balancing, and failover."
   },
   "vertexai": {
     "description": "Google's Gemini series is its most advanced and versatile AI model, developed by Google DeepMind. It is designed for multimodal use, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for a variety of environments, from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models."

@@ -67,10 +67,19 @@ vitest test-file.test.ts
 
 ### 核心原则
 
-1. **充分阅读测试代码**: 在修复测试之前，必须完整理解测试的意图和实现
-2. **测试优先修复**: 如果是测试本身写错了，修改测试而不是实现代码
-3. **专注单一问题**: 只修复指定的测试，不要添加额外测试或功能
-4. **不自作主张**: 不要因为发现其他问题就直接修改，先提出再讨论
+1. **收集足够的上下文**  
+   在修复测试之前，务必做到：
+   - 完整理解测试的意图和实现
+   - 强烈建议阅读当前的 git diff 和 PR diff
+
+2. **测试优先修复**  
+   如果是测试本身写错了，应优先修改测试，而不是实现代码。
+
+3. **专注单一问题**  
+   只修复指定的测试，不要顺带添加额外测试。
+
+4. **不自作主张**  
+   发现其他问题时，不要直接修改，需先提出并讨论。
 
 ### 测试协作最佳实践
 
@@ -291,7 +300,7 @@ beforeEach(() => {
     naturalWidth: 800,
   }));
   vi.stubGlobal('Image', mockImage);
-  
+
   // 现代方法2：使用vi.spyOn保留原功能，只mock特定方法
   vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
   vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
@@ -312,8 +321,8 @@ global.Image = mockImage;
 global.URL = { ...global.URL, createObjectURL: mockFn };
 
 // ✅ 现代方法：类型安全的vi API
-vi.stubGlobal('Image', mockImage);        // 完全替换全局对象
-vi.spyOn(URL, 'createObjectURL');         // 部分mock，保留其他功能
+vi.stubGlobal('Image', mockImage); // 完全替换全局对象
+vi.spyOn(URL, 'createObjectURL'); // 部分mock，保留其他功能
 ```
 
 ### 测试覆盖率原则：代码分支优于用例数量
@@ -324,16 +333,16 @@ vi.spyOn(URL, 'createObjectURL');         // 部分mock，保留其他功能
 // ❌ 过度测试：29个测试用例都验证相同分支
 describe('getImageDimensions', () => {
   it('should reject .txt files');
-  it('should reject .pdf files'); 
+  it('should reject .pdf files');
   // ... 25个类似测试，都走相同的验证分支
 });
 
 // ✅ 精简测试：4个核心用例覆盖所有分支
 describe('getImageDimensions', () => {
-  it('should return dimensions for valid File object');     // 成功路径 - File
-  it('should return dimensions for valid data URI');        // 成功路径 - String
-  it('should return undefined for invalid inputs');         // 输入验证分支
-  it('should return undefined when image fails to load');   // 错误处理分支
+  it('should return dimensions for valid File object'); // 成功路径 - File
+  it('should return dimensions for valid data URI'); // 成功路径 - String
+  it('should return undefined for invalid inputs'); // 输入验证分支
+  it('should return undefined when image fails to load'); // 错误处理分支
 });
 ```
 
@@ -345,6 +354,7 @@ describe('getImageDimensions', () => {
 4. **业务逻辑** - 覆盖所有if/else分支
 
 **合理测试数量**
+
 - 简单工具函数：2-5个测试
 - 复杂业务逻辑：5-10个测试
 - 核心安全功能：适当增加，但避免重复路径
@@ -358,10 +368,12 @@ describe('getImageDimensions', () => {
 ```typescript
 // ✅ 测试错误类型和属性
 expect(() => validateUser({})).toThrow(ValidationError);
-expect(() => processPayment({})).toThrow(expect.objectContaining({
-  code: 'INVALID_PAYMENT_DATA',
-  statusCode: 400,
-}));
+expect(() => processPayment({})).toThrow(
+  expect.objectContaining({
+    code: 'INVALID_PAYMENT_DATA',
+    statusCode: 400,
+  }),
+);
 
 // ❌ 避免测试具体错误文本
 expect(() => processUser({})).toThrow('用户数据不能为空，请检查输入参数');
@@ -460,7 +472,6 @@ await (instance as any).getFromCache('key'); // 避免as any
 - **私有成员访问优先级**: 中括号访问 > `as any` 转换，保持更好的类型安全性
 - **文档说明**: 对于使用 `any` 的复杂场景，添加注释说明原因
 - **测试覆盖**: 确保即使使用了 `any`，测试仍能有效验证功能正确性
-
 
 ### 检查最近修改记录
 

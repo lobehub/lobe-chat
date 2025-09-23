@@ -1,7 +1,7 @@
 import { AIChatModelCard } from '../types/aiModel';
 
 // https://docs.mistral.ai/getting-started/models/models_overview/
-// https://mistral.ai/products/la-plateforme#pricing
+// https://mistral.ai/pricing#api-pricing
 
 const mistralChatModels: AIChatModelCard[] = [
   {
@@ -10,13 +10,48 @@ const mistralChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description: 'Mistral Medium 3 以 8 倍的成本提供最先进的性能，并从根本上简化了企业部署。',
-    displayName: 'Mistral Medium 3',
+    displayName: 'Mistral Medium 3.1',
     enabled: true,
     id: 'mistral-medium-latest',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'Magistral Medium 1.2 是Mistral AI于2025年9月发布的前沿级推理模型，具有视觉支持。',
+    displayName: 'Magistral Medium 1.2',
+    enabled: true,
+    id: 'magistral-medium-latest',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'Magistral Small 1.2 是Mistral AI于2025年9月发布的开源小型推理模型，具有视觉支持。',
+    displayName: 'Magistral Small 1.2',
+    id: 'magistral-small-2509',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -46,7 +81,6 @@ const mistralChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'Mistral Small是成本效益高、快速且可靠的选项，适用于翻译、摘要和情感分析等用例。',
     displayName: 'Mistral Small 3.2',
-    enabled: true,
     id: 'mistral-small-latest',
     pricing: {
       units: [
@@ -65,29 +99,11 @@ const mistralChatModels: AIChatModelCard[] = [
     description:
       'Mistral Large是旗舰大模型，擅长多语言任务、复杂推理和代码生成，是高端应用的理想选择。',
     displayName: 'Mistral Large 2.1',
-    enabled: true,
     id: 'mistral-large-latest',
     pricing: {
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 128_000,
-    description: 'Magistral Medium 1.1 是 Mistral AI 于2025年7月发布的前沿级推理模型。',
-    displayName: 'Magistral Medium 1.1',
-    enabled: true,
-    id: 'magistral-medium-latest',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -119,7 +135,6 @@ const mistralChatModels: AIChatModelCard[] = [
     description:
       'Pixtral Large 是一款拥有 1240 亿参数的开源多模态模型，基于 Mistral Large 2 构建。这是我们多模态家族中的第二款模型，展现了前沿水平的图像理解能力。',
     displayName: 'Pixtral Large',
-    enabled: true,
     id: 'pixtral-large-latest',
     pricing: {
       units: [

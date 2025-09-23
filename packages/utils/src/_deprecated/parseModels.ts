@@ -1,7 +1,7 @@
+import { ChatModelCard } from '@lobechat/types';
 import { produce } from 'immer';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { ChatModelCard } from '@/types/llm';
 
 /**
  * Parse model string to add or remove models.

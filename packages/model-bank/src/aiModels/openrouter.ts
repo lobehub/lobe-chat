@@ -52,19 +52,6 @@ const openrouterChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      imageOutput: true,
-      vision: true,
-    },
-    contextWindowTokens: 32_768 + 8192,
-    description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
-    displayName: 'Nano Banana (free)',
-    id: 'google/gemini-2.5-flash-image-preview:free',
-    maxOutput: 8192,
-    releasedAt: '2025-08-26',
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       reasoning: true,
     },
@@ -396,9 +383,9 @@ const openrouterChatModels: AIChatModelCard[] = [
     maxOutput: 100_000,
     pricing: {
       units: [
-        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-04-17',

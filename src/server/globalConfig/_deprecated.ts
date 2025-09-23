@@ -1,7 +1,7 @@
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 
-import { getLLMConfig } from '@/config/llm';
 import * as ProviderCards from '@/config/modelProviders';
+import { getLLMConfig } from '@/envs/llm';
 import { ModelProviderCard } from '@/types/llm';
 import { extractEnabledModels, transformToChatModelCards } from '@/utils/_deprecated/parseModels';
 

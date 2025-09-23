@@ -6,7 +6,7 @@
   "types": "src/index.ts",
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",

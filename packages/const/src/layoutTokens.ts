@@ -7,6 +7,7 @@ export const CHAT_TEXTAREA_MAX_HEIGHT = 800;
 export const CHAT_TEXTAREA_HEIGHT = 160;
 export const CHAT_TEXTAREA_HEIGHT_MOBILE = 108;
 export const CHAT_SIDEBAR_WIDTH = 280;
+export const CONVERSATION_MIN_WIDTH = 850;
 
 export const CHAT_PORTAL_WIDTH = 400;
 export const CHAT_PORTAL_MAX_WIDTH = 1280;
@@ -20,7 +21,7 @@ export const FORM_STYLE: FormProps = {
   style: { maxWidth: MAX_WIDTH, width: '100%' },
 };
 export const MOBILE_HEADER_ICON_SIZE: ActionIconProps['size'] = { blockSize: 36, size: 22 };
-export const DESKTOP_HEADER_ICON_SIZE: ActionIconProps['size'] = { blockSize: 36, size: 22 };
+export const DESKTOP_HEADER_ICON_SIZE: ActionIconProps['size'] = { blockSize: 32, size: 20 };
 export const HEADER_ICON_SIZE = (mobile?: boolean) =>
   mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE;
 export const PWA_INSTALL_ID = 'pwa-install';

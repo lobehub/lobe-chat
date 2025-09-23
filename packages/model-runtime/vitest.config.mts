@@ -4,14 +4,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     alias: {
-      /* eslint-disable sort-keys-fix/sort-keys-fix */
-      '@/libs/model-runtime': resolve(__dirname, './src'),
-      '@/types': resolve(__dirname, '../types/src'),
-      '@/utils/errorResponse': resolve(__dirname, '../../src/utils/errorResponse'),
-      '@/utils': resolve(__dirname, '../utils/src'),
-      '@/const': resolve(__dirname, '../const/src'),
+      // TODO: 目前仍然残留 ModelRuntime.test.ts 中的部分测试依赖了主项目的内容，后续需要拆分测试
       '@': resolve(__dirname, '../../src'),
-      /* eslint-enable */
     },
     coverage: {
       reporter: ['text', 'json', 'lcov', 'text-summary'],

@@ -153,6 +153,28 @@
     "searchProviders": "Tìm kiếm nhà cung cấp...",
     "sort": "Sắp xếp tùy chỉnh"
   },
+  "newapi": {
+    "apiKey": {
+      "desc": "Khóa API do nền tảng New API cung cấp",
+      "placeholder": "Khóa API New API",
+      "required": "Khóa API là bắt buộc",
+      "title": "Khóa API"
+    },
+    "apiUrl": {
+      "desc": "Địa chỉ API của dịch vụ New API, thường cần kèm theo /v1",
+      "title": "Địa chỉ API"
+    },
+    "enabled": {
+      "title": "Kích hoạt New API"
+    },
+    "models": {
+      "batchSelect": "Chọn nhiều mô hình ({{count}} cái)",
+      "fetch": "Lấy danh sách mô hình",
+      "selected": "Mô hình đã chọn",
+      "title": "Mô hình khả dụng"
+    },
+    "title": "New API"
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",
@@ -185,6 +207,10 @@
     }
   },
   "providerModels": {
+    "batchSelect": {
+      "selected": "Đã chọn {{count}} mô hình",
+      "title": "Chọn nhiều"
+    },
     "config": {
       "aesGcm": "Khóa của bạn và địa chỉ proxy sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
       "apiKey": {

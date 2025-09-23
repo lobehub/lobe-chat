@@ -4,7 +4,7 @@ import { uuid } from '@lobechat/utils';
 import dayjs from 'dayjs';
 import { sha256 } from 'js-sha256';
 
-import { fileEnv } from '@/config/file';
+import { fileEnv } from '@/envs/file';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { clientS3Storage } from '@/services/file/ClientS3';
@@ -84,7 +84,7 @@ class UploadService {
 
     // upload to client s3
     // 客户端上传逻辑
-    if (!skipCheckFileType && !file.type.startsWith('image')) {
+    if (!skipCheckFileType && !file.type.startsWith('image') && !file.type.startsWith('video')) {
       onNotSupported?.();
       return { data: undefined as unknown as FileMetadata, success: false };
     }

@@ -1,6 +1,3 @@
-import { Locales } from '@/locales/resources';
-import { PageProps } from '@/types/next';
-
 export * from './assistants';
 export * from './mcp';
 export * from './models';
@@ -15,11 +12,6 @@ export enum DiscoverTab {
   Plugins = 'plugin',
   Providers = 'provider',
 }
-
-export type DiscoverPageProps<T = string> = PageProps<
-  { slug: T; variants: string },
-  { hl?: Locales }
->;
 
 export type IdentifiersResponse = {
   identifier: string;

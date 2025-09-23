@@ -5,6 +5,9 @@
       "lock": "Bloquear proporção",
       "unlock": "Desbloquear proporção"
     },
+    "cfg": {
+      "label": "Intensidade de Orientação"
+    },
     "header": {
       "desc": "Descrição simples, crie imediatamente",
       "title": "Pintura"

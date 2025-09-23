@@ -32,6 +32,7 @@
   "blog": "Product Blog",
   "branching": "Create Subtopic",
   "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
+  "branchingRequiresSavedTopic": "Current topic is not saved, please save it first to use subtopic feature",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "clientDB": {
@@ -182,6 +183,13 @@
     "title": "Like Our Product?"
   },
   "fullscreen": "Full Screen Mode",
+  "geminiImageChineseWarning": {
+    "content": "Nano Banana may occasionally fail to generate images when using Chinese. It is recommended to use English for better results.",
+    "continueGenerate": "Continue Generating",
+    "continueSend": "Continue Sending",
+    "doNotShowAgain": "Do Not Show Again",
+    "title": "Chinese Input Notice"
+  },
   "historyRange": "History Range",
   "import": "Import",
   "importData": "Import Data",

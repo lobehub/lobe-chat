@@ -1,15 +1,3 @@
-import type { HeatmapsProps } from '@lobehub/charts';
-import dayjs from 'dayjs';
-import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
-
-import { LobeChatDatabase } from '../type';
-import {
-  genEndDateWhere,
-  genRangeWhere,
-  genStartDateWhere,
-  genWhere,
-} from '../utils/genWhere';
-import { idGenerator } from '../utils/idGenerator';
 import {
   ChatFileItem,
   ChatImageItem,
@@ -17,12 +5,18 @@ import {
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
+  ChatVideoItem,
   CreateMessageParams,
   MessageItem,
   ModelRankItem,
   NewMessageQueryParams,
   UpdateMessageParams,
-} from '@/types/message';
+  UpdateMessageRAGParams,
+} from '@lobechat/types';
+import type { HeatmapsProps } from '@lobehub/charts';
+import dayjs from 'dayjs';
+import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
+
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
@@ -41,6 +35,9 @@ import {
   messages,
   messagesFiles,
 } from '../schemas';
+import { LobeChatDatabase } from '../type';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 
 export interface QueryMessageParams {
   current?: number;
@@ -179,7 +176,10 @@ export class MessageModel {
     }
 
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
-    const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
+    const videoList = relatedFileList.filter((i) => (i.fileType || '').startsWith('video'));
+    const fileList = relatedFileList.filter(
+      (i) => !(i.fileType || '').startsWith('image') && !(i.fileType || '').startsWith('video'),
+    );
 
     // 3. get relative file chunks
     const chunksList = await this.db
@@ -255,6 +255,10 @@ export class MessageModel {
           ragQuery: messageQuery?.rewriteQuery,
           ragQueryId: messageQuery?.id,
           ragRawQuery: messageQuery?.userQuery,
+          videoList: videoList
+            .filter((relation) => relation.messageId === item.id)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
         } as unknown as ChatMessage;
       },
     );
@@ -613,6 +617,18 @@ export class MessageModel {
       .set({ contentMd5: tts.contentMd5, fileId: tts.file, voice: tts.voice })
       .where(eq(messageTTS.id, id));
   };
+
+  async updateMessageRAG(id: string, { ragQueryId, fileChunks }: UpdateMessageRAGParams) {
+    return this.db.insert(messageQueryChunks).values(
+      fileChunks.map((chunk) => ({
+        chunkId: chunk.id,
+        messageId: id,
+        queryId: ragQueryId,
+        similarity: chunk.similarity?.toString(),
+        userId: this.userId,
+      })),
+    );
+  }
 
   // **************** Delete *************** //
 

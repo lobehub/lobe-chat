@@ -70,12 +70,15 @@
   "input": {
     "addAi": "Thêm một tin nhắn AI",
     "addUser": "Thêm một tin nhắn người dùng",
+    "disclaimer": "AI cũng có thể mắc lỗi, vui lòng kiểm tra kỹ thông tin quan trọng",
+    "errorMsg": "Gửi tin nhắn thất bại, vui lòng kiểm tra mạng và thử lại: {{errorMsg}}",
     "more": "Thêm",
     "send": "Gửi",
-    "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
-    "sendWithEnter": "Nhấn Enter để gửi",
+    "sendWithCmdEnter": "Nhấn <key/> để gửi",
+    "sendWithEnter": "Nhấn <key/> để gửi",
     "stop": "Dừng",
-    "warp": "Xuống dòng"
+    "warp": "Xuống dòng",
+    "warpWithKey": "Nhấn phím <key/> để xuống dòng"
   },
   "intentUnderstanding": {
     "title": "Đang hiểu và phân tích ý định của bạn..."
@@ -232,6 +235,10 @@
     "threadMessageCount": "{{messageCount}} tin nhắn",
     "title": "Chủ đề con"
   },
+  "toggleWideScreen": {
+    "off": "Tắt chế độ màn hình rộng",
+    "on": "Bật chế độ màn hình rộng"
+  },
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",
     "historySummary": "Tóm tắt lịch sử",
@@ -273,7 +280,9 @@
     "clientMode": {
       "actionFiletip": "Tải lên tệp",
       "actionTooltip": "Tải lên",
-      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng"
+      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng",
+      "fileNotSupported": "Chế độ trình duyệt hiện không hỗ trợ tải lên tệp, chỉ hỗ trợ hình ảnh",
+      "visionNotSupported": "Mô hình hiện tại không hỗ trợ nhận dạng hình ảnh, vui lòng chuyển sang mô hình khác để sử dụng"
     },
     "preview": {
       "prepareTasks": "Chuẩn bị phân đoạn...",
@@ -281,6 +290,9 @@
         "pending": "Đang chuẩn bị tải lên...",
         "processing": "Đang xử lý tệp..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước tệp hiện tại là {{actualSize}}"
     }
   },
   "zenMode": "Chế độ tập trung"

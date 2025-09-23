@@ -18,14 +18,6 @@ import type { PartialDeep } from 'type-fest';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeChatDatabase } from '../type';
-import {
-  genEndDateWhere,
-  genRangeWhere,
-  genStartDateWhere,
-  genWhere,
-} from '../utils/genWhere';
-import { idGenerator } from '../utils/idGenerator';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -41,6 +33,9 @@ import {
   sessions,
   topics,
 } from '../schemas';
+import { LobeChatDatabase } from '../type';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 
 export class SessionModel {
   private userId: string;
@@ -461,28 +456,36 @@ export class SessionModel {
   }) => {
     const { keyword, pageSize = 9999, current = 0 } = params;
     const offset = current * pageSize;
-    const results = await this.db.query.agents.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(agents.updatedAt)],
-      where: and(
-        eq(agents.userId, this.userId),
-        or(
-          like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
-          like(
-            sql`lower(${agents.description})` as unknown as Column,
-            `%${keyword.toLowerCase()}%`,
+
+    try {
+      const results = await this.db.query.agents.findMany({
+        limit: pageSize,
+        offset,
+        orderBy: [desc(agents.updatedAt)],
+        where: and(
+          eq(agents.userId, this.userId),
+          or(
+            like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
+            like(
+              sql`lower(${agents.description})` as unknown as Column,
+              `%${keyword.toLowerCase()}%`,
+            ),
           ),
         ),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { session: true } } },
-    });
-    try {
-      // @ts-expect-error
-      return results.map((item) => item.agentsToSessions[0].session);
+        with: { agentsToSessions: { columns: {}, with: { session: true } } },
+      });
+
+      // 过滤和映射结果，确保有有效的 session 关联
+      return (
+        results
+          .filter((item) => item.agentsToSessions && item.agentsToSessions.length > 0)
+          // @ts-expect-error
+          .map((item) => item.agentsToSessions[0].session)
+          .filter((session) => session !== null && session !== undefined)
+      );
     } catch (e) {
-      console.error('findSessionsByKeywords error:', e);
+      console.error('findSessionsByKeywords error:', e, { keyword });
+      return [];
     }
-    return [];
   };
 }

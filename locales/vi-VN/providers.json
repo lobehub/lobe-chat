@@ -38,6 +38,9 @@
   "cohere": {
     "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
   },
+  "cometapi": {
+    "description": "CometAPI là một nền tảng dịch vụ cung cấp nhiều giao diện mô hình lớn tiên tiến, hỗ trợ OpenAI, Anthropic, Google và nhiều hơn nữa, phù hợp với các nhu cầu phát triển và ứng dụng đa dạng. Người dùng có thể linh hoạt lựa chọn mô hình và giá cả tối ưu theo nhu cầu của mình, giúp nâng cao trải nghiệm AI."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
@@ -91,6 +94,12 @@
   },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
+  },
+  "nebius": {
+    "description": "Nebius cung cấp cơ sở hạ tầng hiệu suất cao cho các nhà đổi mới AI toàn cầu thông qua việc xây dựng cụm GPU quy mô lớn và nền tảng đám mây tích hợp dọc."
+  },
+  "newapi": {
+    "description": "Nền tảng tổng hợp và chuyển tiếp nhiều dịch vụ AI mã nguồn mở"
   },
   "novita": {
     "description": "Novita AI là một nền tảng cung cấp dịch vụ API cho nhiều mô hình ngôn ngữ lớn và tạo hình ảnh AI, linh hoạt, đáng tin cậy và hiệu quả về chi phí. Nó hỗ trợ các mô hình mã nguồn mở mới nhất như Llama3, Mistral, và cung cấp giải pháp API toàn diện, thân thiện với người dùng và tự động mở rộng cho phát triển ứng dụng AI, phù hợp cho sự phát triển nhanh chóng của các công ty khởi nghiệp AI."
@@ -151,6 +160,9 @@
   },
   "v0": {
     "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
+  },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway cung cấp API thống nhất để truy cập hơn 100 mô hình, cho phép sử dụng các mô hình từ nhiều nhà cung cấp như OpenAI, Anthropic, Google chỉ qua một điểm cuối duy nhất. Hỗ trợ thiết lập ngân sách, giám sát sử dụng, cân bằng tải yêu cầu và chuyển đổi dự phòng."
   },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
