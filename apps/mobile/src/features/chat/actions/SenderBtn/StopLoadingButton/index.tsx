@@ -52,7 +52,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
     outputRange: ['0deg', '360deg'],
   });
 
-  const strokeWidth = 1.5;
+  const strokeWidth = 2;
   const radius = (realSize - strokeWidth) / 2;
   const center = realSize / 2;
   const arcAngle = 140;
@@ -65,7 +65,13 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
     <Pressable
       onPress={onPress}
       style={{
+        alignItems: 'center',
+        backgroundColor: token.colorBgContainer,
+        borderColor: token.colorBorder,
+        borderRadius: realSize / 2,
+        borderWidth: token.lineWidth,
         height: realSize,
+        justifyContent: 'center',
         position: 'relative',
         width: realSize,
       }}

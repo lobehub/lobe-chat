@@ -1,5 +1,4 @@
 import { View, Text } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import Hydration from '@/features/Hydration';
@@ -24,7 +23,6 @@ import { AVATAR_SIZE } from '@/const/common';
 
 export default function ChatWithDrawer() {
   const { styles, token } = useStyles();
-  const insets = useSafeAreaInsets();
 
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
@@ -53,7 +51,7 @@ export default function ChatWithDrawer() {
         <KeyboardAvoidingView
           behavior="padding"
           enabled
-          keyboardVerticalOffset={insets.top + token.marginXS}
+          keyboardVerticalOffset={token.marginXS}
           style={{ flex: 1 }}
         >
           <ChatList />
