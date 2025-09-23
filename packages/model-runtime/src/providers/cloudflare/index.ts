@@ -1,8 +1,9 @@
-import { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { createCallbacksTransformer } from '../../core/streams';
-import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../../types';
+import { ChatMethodOptions, ChatStreamPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import {
   CloudflareStreamTransformer,

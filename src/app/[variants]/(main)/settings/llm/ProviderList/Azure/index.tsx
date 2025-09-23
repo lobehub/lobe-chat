@@ -1,8 +1,8 @@
 'use client';
 
-import { ModelProvider } from '@lobechat/model-runtime';
 import { AutoComplete, Input, InputPassword, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { ModelProvider } from 'model-bank';
 import { useTranslation } from 'react-i18next';
 
 import { AzureProviderCard } from '@/config/modelProviders';

@@ -1,5 +1,6 @@
-import { ChatCompletionErrorPayload, ModelProvider } from '@lobechat/model-runtime';
+import { ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';

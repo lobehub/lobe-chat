@@ -1,10 +1,9 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
-const THINKING_MODELS = [
-  'DeepSeek-V3-1',
-];
+const THINKING_MODELS = ['DeepSeek-V3-1'];
 
 export interface AkashChatModelCard {
   id: string;

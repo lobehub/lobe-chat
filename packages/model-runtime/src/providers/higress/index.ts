@@ -1,9 +1,8 @@
+import type { ChatModelCard } from '@lobechat/types';
 import uniqueId from 'lodash-es/uniqueId';
-
-import type { ChatModelCard } from '@/types/index';
+import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 
 export interface HigressModelCard {
   context_length: number;
