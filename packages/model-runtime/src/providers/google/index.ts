@@ -9,10 +9,11 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
+import debug from 'debug';
 
-import { LOBE_ERROR_KEY } from '../../core/streams/google-ai';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../../core/streams';
+import { LOBE_ERROR_KEY } from '../../core/streams/google';
 import {
   ChatCompletionTool,
   ChatMethodOptions,
@@ -30,7 +31,6 @@ import { StreamingResponse } from '../../utils/response';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
-import debug from 'debug';
 
 const log = debug('model-runtime:google');
 

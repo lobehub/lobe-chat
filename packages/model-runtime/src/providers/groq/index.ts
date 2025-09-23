@@ -1,6 +1,5 @@
+import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
-
-import type { ChatModelCard } from '@/types/llm';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { AgentRuntimeErrorType } from '../../types/error';
