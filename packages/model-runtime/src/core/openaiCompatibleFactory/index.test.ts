@@ -1431,6 +1431,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           properties: { name: { type: 'string' }, age: { type: 'number' } },
         },
         model: 'gpt-4o',
+        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
@@ -1460,6 +1461,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         messages: [{ content: 'Generate status', role: 'user' as const }],
         schema: { type: 'object', properties: { status: { type: 'string' } } },
         model: 'gpt-4o',
+        responseApi: true,
       };
 
       const options = {
@@ -1496,6 +1498,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         messages: [{ content: 'Generate data', role: 'user' as const }],
         schema: { type: 'object' },
         model: 'gpt-4o',
+        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
@@ -1518,6 +1521,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         messages: [{ content: 'Generate data', role: 'user' as const }],
         schema: { type: 'object' },
         model: 'gpt-4o',
+        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
@@ -1558,6 +1562,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
         },
         model: 'gpt-4o',
+        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
@@ -1573,6 +1578,235 @@ describe('LobeOpenAICompatibleFactory', () => {
         metadata: {
           created: '2024-01-01',
         },
+      });
+    });
+
+    it('should propagate errors from responses API', async () => {
+      const apiError = new Error('API Error: Invalid schema format');
+
+      vi.spyOn(instance['client'].responses, 'create').mockRejectedValue(apiError);
+
+      const payload = {
+        messages: [{ content: 'Generate data', role: 'user' as const }],
+        schema: { type: 'object' },
+        model: 'gpt-4o',
+        responseApi: true,
+      };
+
+      await expect(instance.generateObject(payload)).rejects.toThrow(
+        'API Error: Invalid schema format',
+      );
+    });
+
+    describe('chat completions API path', () => {
+      it('should return parsed JSON object using chat completions API', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content: '{"name": "Bob", "age": 25}',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Generate a person object', role: 'user' as const }],
+          schema: {
+            type: 'object',
+            properties: { name: { type: 'string' }, age: { type: 'number' } },
+          },
+          model: 'gpt-4o',
+          // responseApi: false or undefined - uses chat completions API
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: payload.messages,
+            model: payload.model,
+            response_format: { json_schema: payload.schema, type: 'json_schema' },
+            user: undefined,
+          },
+          { headers: undefined, signal: undefined },
+        );
+
+        expect(result).toEqual({ name: 'Bob', age: 25 });
+      });
+
+      it('should handle options correctly with chat completions API', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content: '{"status": "completed"}',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Generate status', role: 'user' as const }],
+          schema: { type: 'object', properties: { status: { type: 'string' } } },
+          model: 'gpt-4o',
+          responseApi: false,
+        };
+
+        const options = {
+          headers: { Authorization: 'Bearer token' },
+          user: 'test-user-123',
+          signal: new AbortController().signal,
+        };
+
+        const result = await instance.generateObject(payload, options);
+
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: payload.messages,
+            model: payload.model,
+            response_format: { json_schema: payload.schema, type: 'json_schema' },
+            user: options.user,
+          },
+          { headers: options.headers, signal: options.signal },
+        );
+
+        expect(result).toEqual({ status: 'completed' });
+      });
+
+      it('should return undefined when JSON parsing fails with chat completions API', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content: 'This is not valid JSON',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          schema: { type: 'object' },
+          model: 'gpt-4o',
+          responseApi: false,
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(consoleSpy).toHaveBeenCalledWith('parse json error:', 'This is not valid JSON');
+        expect(result).toBeUndefined();
+
+        consoleSpy.mockRestore();
+      });
+
+      it('should handle empty string content from chat completions API', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content: '',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          schema: { type: 'object' },
+          model: 'gpt-4o',
+          responseApi: false,
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(consoleSpy).toHaveBeenCalledWith('parse json error:', '');
+        expect(result).toBeUndefined();
+
+        consoleSpy.mockRestore();
+      });
+
+      it('should handle complex arrays with chat completions API', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content:
+                  '{"items": [{"id": 1, "name": "Item 1"}, {"id": 2, "name": "Item 2"}], "total": 2}',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Generate items list', role: 'user' as const }],
+          schema: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    name: { type: 'string' },
+                  },
+                },
+              },
+              total: { type: 'number' },
+            },
+          },
+          model: 'gpt-4o',
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(result).toEqual({
+          items: [
+            { id: 1, name: 'Item 1' },
+            { id: 2, name: 'Item 2' },
+          ],
+          total: 2,
+        });
+      });
+
+      it('should propagate errors from chat completions API', async () => {
+        const apiError = new Error('API Error: Rate limit exceeded');
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          schema: { type: 'object' },
+          model: 'gpt-4o',
+          responseApi: false,
+        };
+
+        await expect(instance.generateObject(payload)).rejects.toThrow(
+          'API Error: Rate limit exceeded',
+        );
       });
     });
   });
