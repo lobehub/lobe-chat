@@ -151,6 +151,7 @@
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
     "@lobechat/model-runtime": "workspace:*",
+    "@lobechat/observability-otel": "workspace:*",
     "@lobechat/prompts": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
