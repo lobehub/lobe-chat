@@ -1,12 +1,13 @@
 const CAPSULETABS_README = `# CapsuleTabs 组件
 
-水平滚动的胶囊选项卡组件，支持自定义样式和选择状态。
+水平滚动的胶囊选项卡组件，支持自定义样式、图标组合和选择状态。
 
 ## 功能特性
 
 - ✅ 胶囊样式的选项卡设计
 - ✅ 水平滚动支持
 - ✅ 选择状态管理
+- ✅ 图标和文本的组合展示
 - ✅ 自定义样式
 - ✅ TypeScript 支持
 - ✅ 主题适配
@@ -14,11 +15,13 @@ const CAPSULETABS_README = `# CapsuleTabs 组件
 ## 基础使用
 
 \`\`\`tsx
+import { Briefcase, Home } from 'lucide-react-native';
+
 import { CapsuleTabs, CapsuleTabItem } from '@/components/CapsuleTabs';
 
 const items: CapsuleTabItem[] = [
-  { key: 'all', label: 'All' },
-  { key: 'work', label: 'Work' },
+  { key: 'all', label: 'All', icon: Home },
+  { key: 'work', label: 'Work', icon: Briefcase },
   { key: 'personal', label: 'Personal' },
 ];
 
@@ -48,6 +51,7 @@ const [selectedKey, setSelectedKey] = useState('all');
 | --- | --- | --- |
 | key | \`string\` | 选项卡唯一标识 |
 | label | \`string\` | 选项卡显示文本 |
+| icon | \`IconRenderable\` | 可选，选项卡前置图标 |
 `;
 
 export default CAPSULETABS_README;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
+import { Home } from 'lucide-react-native';
 import { renderWithTheme } from '@/test/utils';
 import CapsuleTabs from '../index';
 
@@ -122,5 +123,18 @@ describe('CapsuleTabs', () => {
     );
 
     expect(toJSON()).toBeTruthy();
+  });
+
+  it('renders icons when provided', () => {
+    const itemsWithIcons = [
+      { icon: Home, key: 'home', label: 'Home' },
+      { key: 'plain', label: 'Plain' },
+    ];
+    const onSelect = jest.fn();
+    const { getByTestId } = renderWithTheme(
+      <CapsuleTabs items={itemsWithIcons} selectedKey="home" onSelect={onSelect} />,
+    );
+
+    expect(getByTestId('capsule-tab-icon-home')).toBeTruthy();
   });
 });

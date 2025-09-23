@@ -23,11 +23,10 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
 
   return (
     <View style={[styles.container, style]}>
-      <Input
+      <Input.TextArea
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="default"
-        multiline={true}
         numberOfLines={8}
         onChangeText={handleInputChange}
         onSubmitEditing={handleSubmit}
@@ -36,7 +35,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
         size="large"
         spellCheck={false}
         style={styles.input}
-        textAlignVertical="top"
         textBreakStrategy="highQuality"
         value={input}
         variant="borderless"

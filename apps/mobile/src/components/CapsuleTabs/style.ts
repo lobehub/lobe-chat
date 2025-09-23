@@ -10,6 +10,7 @@ export const useStyles = createStyles((token) => {
       flexDirection: 'row',
     },
     tab: {
+      alignItems: 'center',
       backgroundColor: token.colorBgContainer,
       borderRadius: token.borderRadiusLG,
       marginRight: token.marginXS,
@@ -18,6 +19,15 @@ export const useStyles = createStyles((token) => {
     },
     tabActive: {
       backgroundColor: activeTabColor,
+    },
+    tabContent: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    tabIcon: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: token.marginXXS,
     },
     tabText: {
       color: token.colorText,

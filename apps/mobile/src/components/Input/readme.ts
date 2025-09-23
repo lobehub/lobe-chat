@@ -12,6 +12,7 @@ const INPUT_README = `# Input组件
 - ✅ **TypeScript** - 完整的TypeScript类型支持
 - ✅ **主题适配** - 自动适配明暗主题
 - ✅ **平台优化** - 针对Android和iOS的样式优化
+- ✅ **文本域支持** - 提供 TextArea 专用多行输入
 
 ## 基本用法
 
@@ -107,6 +108,18 @@ import { TouchableOpacity } from 'react-native';
 />
 \`\`\`
 
+### 8. 多行文本输入
+
+\`\`\`jsx
+<Input.TextArea placeholder="请输入详细描述" numberOfLines={4} />
+
+<Input.TextArea
+  placeholder="支持自定义高度"
+  style={{ minHeight: 160 }}
+  variant="outlined"
+/>
+\`\`\`
+
 ## API参考
 
 ### InputProps
@@ -119,7 +132,19 @@ import { TouchableOpacity } from 'react-native';
 | \`suffix\` | \`React.ReactNode\` | 后缀内容 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
 | \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
-| ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性 |
+| ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性（不包含 multiline） |
+
+### TextAreaProps
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
+| \`size\` | \`'large' | 'middle' | 'small'\` | 尺寸大小（默认 middle） |
+| \`prefix\` | \`React.ReactNode\` | 前缀内容 |
+| \`suffix\` | \`React.ReactNode\` | 后缀内容 |
+| \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
+| \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
+| ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性（默认启用 multiline） |
 
 ### 复合组件
 
@@ -128,6 +153,9 @@ import { TouchableOpacity } from 'react-native';
 
 #### Input.Password  
 密码输入框，自动添加眼睛图标后缀，支持切换显示/隐藏密码
+
+#### Input.TextArea  
+多行文本输入框，默认开启 \`multiline\`，适合长文本场景
 
 ## 设计原则
 

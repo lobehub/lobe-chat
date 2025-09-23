@@ -6,14 +6,13 @@ import { useDebounce } from 'ahooks';
 import { AssistantCategory } from '@/types/discover';
 import { useDiscoverStore } from '@/store/discover';
 import AgentCard from '@/features/discover/assistant/components/AgentCard';
-import CategoryTabs from '@/features/discover/assistant/components/CategoryTabs';
 import {
   CategoryTabsSkeleton,
   AssistantListSkeleton,
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useStyles } from './styles';
-import { Header, Input } from '@/components';
+import { Header, Input, CapsuleTabs } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
@@ -148,7 +147,7 @@ const AssistantList = () => {
         {isCategoryLoading ? (
           <CategoryTabsSkeleton />
         ) : (
-          <CategoryTabs
+          <CapsuleTabs
             items={categoriesWithStats}
             onSelect={handleCategorySelect}
             selectedKey={selectedCategory}
