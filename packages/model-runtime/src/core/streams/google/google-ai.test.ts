@@ -1,8 +1,8 @@
 import { GenerateContentResponse } from '@google/genai';
 import { describe, expect, it, vi } from 'vitest';
 
-import * as uuidModule from '../../utils/uuid';
-import { GoogleGenerativeAIStream, LOBE_ERROR_KEY } from './google-ai';
+import * as uuidModule from '../../../utils/uuid';
+import { GoogleGenerativeAIStream, LOBE_ERROR_KEY } from './index';
 
 describe('GoogleGenerativeAIStream', () => {
   it('should transform Google Generative AI stream to protocol stream', async () => {
@@ -25,9 +25,7 @@ describe('GoogleGenerativeAIStream', () => {
         // final chunk should include finishReason and usageMetadata to mark terminal event
         controller.enqueue({
           text: ' world!',
-          candidates: [
-            { content: { role: 'model' }, finishReason: 'STOP', index: 0 },
-          ],
+          candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
           usageMetadata: {
             promptTokenCount: 1,
             totalTokenCount: 1,
@@ -908,7 +906,7 @@ describe('GoogleGenerativeAIStream', () => {
     expect(chunks).toEqual([
       'id: chat_1\n',
       'event: error\n',
-      `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"您的请求可能包含违禁内容。请调整您的请求，确保内容符合使用规范。","provider":"google"},"type":"ProviderBizError"}\n\n`,
+      `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"Your request may contain prohibited content. Please adjust your request to comply with the usage guidelines.","provider":"google"},"type":"ProviderBizError"}\n\n`,
     ]);
   });
 

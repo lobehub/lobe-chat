@@ -1,7 +1,6 @@
+import type { ChatModelCard } from '@lobechat/types';
 import uniqueId from 'lodash-es/uniqueId';
 import { ModelProvider } from 'model-bank';
-
-import type { ChatModelCard } from '@/types/index';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 

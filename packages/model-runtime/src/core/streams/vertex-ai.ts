@@ -1,10 +1,9 @@
 import { GenerateContentResponse } from '@google/genai';
-
-import { GroundingSearch } from '@/types/search';
+import { GroundingSearch } from '@lobechat/types';
 
 import { ModelTokensUsage } from '../../types';
 import { nanoid } from '../../utils/uuid';
-import { type GoogleAIStreamOptions } from './google-ai';
+import { type GoogleAIStreamOptions } from './google';
 import {
   StreamContext,
   StreamProtocolChunk,
