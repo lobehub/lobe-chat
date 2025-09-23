@@ -1,24 +1,33 @@
 import React, { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { StyleProp, View, ViewStyle, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft } from 'lucide-react-native';
-import { ActionIcon } from '@/components';
 
 import { useStyles } from './style';
 import { router } from 'expo-router';
+import ActionIcon from '@/components/ActionIcon';
+import { ChevronLeft } from 'lucide-react-native';
 
-interface HeaderProps {
+export interface PageContainerProps {
+  children?: ReactNode;
   left?: ReactNode;
   right?: ReactNode;
   showBack?: boolean;
+  style?: StyleProp<ViewStyle>;
   title?: ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({ title = '', left, right, showBack }) => {
+const PageContainer: React.FC<PageContainerProps> = ({
+  children,
+  style,
+  left = undefined,
+  showBack = false,
+  title = '',
+  right = undefined,
+}) => {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['top']} style={styles.container}>
+    <SafeAreaView edges={['top', 'bottom']} style={[styles.container, style]}>
       <View style={styles.header}>
         <View style={styles.left}>
           {left !== undefined ? (
@@ -32,8 +41,9 @@ const Header: React.FC<HeaderProps> = ({ title = '', left, right, showBack }) =>
         </Text>
         <View style={styles.right}>{right}</View>
       </View>
+      {children}
     </SafeAreaView>
   );
 };
 
-export default Header;
+export default PageContainer;

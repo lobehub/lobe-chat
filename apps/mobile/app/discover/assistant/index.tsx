@@ -12,7 +12,7 @@ import {
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useStyles } from './styles';
-import { Header, Input, CapsuleTabs } from '@/components';
+import { PageContainer, Input, CapsuleTabs } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
@@ -134,8 +134,7 @@ const AssistantList = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
-      <Header showBack title={t('title', { ns: 'discover' })} />
+    <PageContainer showBack style={styles.safeAreaContainer} title={t('title', { ns: 'discover' })}>
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}
@@ -179,7 +178,7 @@ const AssistantList = () => {
           renderItem={({ item }) => <AgentCard item={item} />}
         />
       )}
-    </SafeAreaView>
+    </PageContainer>
   );
 };
 

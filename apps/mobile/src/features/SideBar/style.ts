@@ -11,7 +11,20 @@ export const useStyles = createStyles((token) => ({
     backgroundColor: token.colorBgLayout,
     width: '80%',
   },
-  safeAreaView: {
-    flex: 1,
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: token.controlHeightLG,
+    justifyContent: 'space-between',
+    paddingHorizontal: token.padding,
+  },
+  headerTitle: {
+    color: token.colorTextHeading,
+    fontSize: token.fontSizeHeading4,
+    fontWeight: token.fontWeightStrong,
+    padding: token.paddingXXS,
+  },
+  settingButton: {
+    padding: token.paddingXS,
   },
 }));

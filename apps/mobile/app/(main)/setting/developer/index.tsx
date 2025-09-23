@@ -1,7 +1,6 @@
 import React from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
@@ -12,7 +11,7 @@ import {
   invalidateAccessToken,
   invalidateRefreshToken,
 } from './utils';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import { useSettingStore } from '@/store/setting';
 
 export default function DeveloperScreen() {
@@ -55,8 +54,11 @@ export default function DeveloperScreen() {
   };
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('developer.title', { ns: 'setting' })} />
+    <PageContainer
+      showBack
+      style={styles.safeAreaView}
+      title={t('developer.title', { ns: 'setting' })}
+    >
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem
@@ -122,6 +124,6 @@ export default function DeveloperScreen() {
           </SettingGroup>
         )}
       </View>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

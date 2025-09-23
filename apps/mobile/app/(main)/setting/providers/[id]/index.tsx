@@ -2,7 +2,6 @@ import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { RefreshCcw } from 'lucide-react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
@@ -13,7 +12,15 @@ import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { AiProviderModelListItem } from '@/types/aiModel';
-import { Button, InstantSwitch, ModelInfoTags, Tag, useToast, Header, Input } from '@/components';
+import {
+  Button,
+  InstantSwitch,
+  ModelInfoTags,
+  PageContainer,
+  Tag,
+  useToast,
+  Input,
+} from '@/components';
 import { useThemeToken } from '@/theme';
 
 import { useStyles } from './styles';
@@ -466,27 +473,25 @@ const ProviderDetailPage = () => {
 
   if (isLoading || isConfigLoading) {
     return (
-      <SafeAreaView edges={['bottom']} style={styles.container}>
-        <Header showBack title={headerTitle} />
+      <PageContainer showBack style={styles.container} title={headerTitle}>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>
             {t('aiProviders.detail.loading', { ns: 'setting' })}
           </Text>
         </View>
-      </SafeAreaView>
+      </PageContainer>
     );
   }
 
   if (error || (!providerDetail && !isLoading && !isConfigLoading)) {
     return (
-      <SafeAreaView edges={['bottom']} style={styles.container}>
-        <Header showBack title={headerTitle} />
+      <PageContainer showBack style={styles.container} title={headerTitle}>
         <View style={styles.loadingContainer}>
           <Text style={styles.errorText}>
             {t('aiProviders.detail.loadFailed', { ns: 'setting' })}
           </Text>
         </View>
-      </SafeAreaView>
+      </PageContainer>
     );
   }
 
@@ -495,8 +500,7 @@ const ProviderDetailPage = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
-      <Header showBack title={headerTitle} />
+    <PageContainer showBack style={styles.container} title={headerTitle}>
       <FlashList
         ListFooterComponent={renderFooter}
         contentContainerStyle={styles.scrollContainer}
@@ -510,7 +514,7 @@ const ProviderDetailPage = () => {
         renderItem={renderItem}
         showsVerticalScrollIndicator={true}
       />
-    </SafeAreaView>
+    </PageContainer>
   );
 };
 

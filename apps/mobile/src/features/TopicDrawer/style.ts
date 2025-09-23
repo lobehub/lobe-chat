@@ -9,9 +9,15 @@ export const useStyles = createStyles((token) => ({
   drawerOverlay: {
     backgroundColor: token.colorBgMask,
   },
+
   drawerStyle: {
     backgroundColor: token.colorBgLayout,
     width: '80%',
+  },
+  headerTitle: {
+    color: token.colorTextHeading,
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
   },
   safeAreaView: {
     flex: 1,

@@ -2,9 +2,8 @@ import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Tag, Input, Header, CapsuleTabs, CapsuleTabItem } from '@/components';
+import { Tag, Input, PageContainer, CapsuleTabs, CapsuleTabItem } from '@/components';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
@@ -194,8 +193,7 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="Playground" />
+    <PageContainer showBack style={styles.safeAreaView} title="Playground">
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}
@@ -219,6 +217,6 @@ export default function ComponentPlaygroundIndex() {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <View style={styles.componentList}>{filteredComponents.map(renderComponentCard)}</View>
       </ScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

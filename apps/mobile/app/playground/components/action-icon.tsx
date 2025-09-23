@@ -1,7 +1,6 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 import {
   BasicDemo,
@@ -28,9 +27,8 @@ export default function ActionIconPlaygroundPage() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="ActionIcon 组件" />
+    <PageContainer showBack style={styles.safeAreaView} title="ActionIcon 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
-    </SafeAreaView>
+    </PageContainer>
   );
 }

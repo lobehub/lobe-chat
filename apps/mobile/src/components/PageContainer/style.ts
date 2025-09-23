@@ -4,6 +4,7 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgLayout,
+    flex: 1,
   },
   header: {
     alignItems: 'center',
@@ -25,11 +26,5 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
     textAlign: 'center',
-  },
-  titleWrapper: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
 }));
