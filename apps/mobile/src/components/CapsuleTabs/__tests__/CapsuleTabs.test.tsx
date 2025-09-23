@@ -137,4 +137,18 @@ describe('CapsuleTabs', () => {
 
     expect(getByTestId('capsule-tab-icon-home')).toBeTruthy();
   });
+
+  it('supports different size variants', () => {
+    const onSelect = jest.fn();
+
+    const { toJSON: largeTree } = renderWithTheme(
+      <CapsuleTabs items={mockItems} onSelect={onSelect} selectedKey="tab1" size="large" />,
+    );
+    const { toJSON: smallTree } = renderWithTheme(
+      <CapsuleTabs items={mockItems} onSelect={onSelect} selectedKey="tab1" size="small" />,
+    );
+
+    expect(largeTree()).toBeTruthy();
+    expect(smallTree()).toBeTruthy();
+  });
 });

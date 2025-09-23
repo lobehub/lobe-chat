@@ -200,6 +200,7 @@ export default function ComponentPlaygroundIndex() {
         <Input.Search
           onChangeText={setSearchText}
           placeholder="搜索组件..."
+          size="large"
           style={styles.searchContainer}
           value={searchText}
         />

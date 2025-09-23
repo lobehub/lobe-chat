@@ -9,6 +9,7 @@ const CAPSULETABS_README = `# CapsuleTabs 组件
 - ✅ 选择状态管理
 - ✅ 图标和文本的组合展示
 - ✅ 自定义样式
+- ✅ 支持大 / 中 / 小三种尺寸
 - ✅ TypeScript 支持
 - ✅ 主题适配
 
@@ -34,6 +35,16 @@ const [selectedKey, setSelectedKey] = useState('all');
 />
 \`\`\`
 
+## 尺寸
+
+通过 \`size\` 属性可以快速切换组件高度与字号，提供 \`large\`、\`middle\` 和 \`small\` 三种预设。
+
+\`\`\`tsx
+<CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="large" />
+<CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="middle" />
+<CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="small" />
+\`\`\`
+
 ## API
 
 ### CapsuleTabsProps
@@ -43,6 +54,7 @@ const [selectedKey, setSelectedKey] = useState('all');
 | items | \`CapsuleTabItem[]\` | - | 选项卡数据 |
 | selectedKey | \`string\` | - | 当前选中的选项卡key |
 | onSelect | \`(key: string) => void\` | - | 选择回调函数 |
+| size | \`'large' | 'middle' | 'small'\` | \`'middle'\` | 控制胶囊高度与字体大小 |
 | showsHorizontalScrollIndicator | \`boolean\` | \`false\` | 是否显示水平滚动条 |
 
 ### CapsuleTabItem

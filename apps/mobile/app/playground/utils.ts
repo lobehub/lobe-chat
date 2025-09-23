@@ -89,7 +89,7 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'navigation',
-    description: '水平滚动的胶囊选项卡组件，支持自定义样式和选择状态',
+    description: '水平滚动的胶囊选项卡组件，支持多尺寸、自定义样式和选择状态',
     hasDemos: true,
     hasReadme: false,
     name: 'CapsuleTabs',

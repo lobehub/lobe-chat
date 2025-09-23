@@ -1,32 +1,22 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text, ViewStyle, StyleProp, StyleSheet } from 'react-native';
-import { useStyles } from './style';
-import Icon, { type IconRenderable } from '@/components/Icon';
-import { FONT_SIZE_STANDARD } from '@/const/common';
+import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import Icon from '@/components/Icon';
+import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
 import { Space } from '@/components';
-
-export interface CapsuleTabItem {
-  icon?: IconRenderable;
-  key: string;
-  label: string;
-}
-
-export interface CapsuleTabsProps {
-  items: CapsuleTabItem[];
-  onSelect: (key: string) => void;
-  selectedKey: string;
-  showsHorizontalScrollIndicator?: boolean;
-  style?: StyleProp<ViewStyle>;
-}
+import { useStyles } from './style';
+import { CapsuleTabsProps } from './type';
 
 export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
   items,
   selectedKey,
   onSelect,
   showsHorizontalScrollIndicator = false,
+  size = 'middle',
   style,
 }) => {
-  const { styles } = useStyles();
+  const { styles } = useStyles(size);
+  const iconSize =
+    size === 'large' ? FONT_SIZE_LARGE : size === 'small' ? FONT_SIZE_SMALL : FONT_SIZE_STANDARD;
 
   return (
     <ScrollView
@@ -47,9 +37,7 @@ export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
             style={[styles.tab, isActive && styles.tabActive]}
           >
             <Space>
-              {item.icon ? (
-                <Icon color={iconColor} icon={item.icon} size={FONT_SIZE_STANDARD} />
-              ) : null}
+              {item.icon ? <Icon color={iconColor} icon={item.icon} size={iconSize} /> : null}
               <Text style={[styles.tabText, isActive && styles.tabTextActive]}>{item.label}</Text>
             </Space>
           </TouchableOpacity>

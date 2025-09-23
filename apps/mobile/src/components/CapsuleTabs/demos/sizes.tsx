@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
-
+import { View, Text } from 'react-native';
 import { CapsuleTabs, type CapsuleTabItem, type CapsuleTabsSize } from '../index';
 import { useThemeToken } from '@/theme';
 
 const items: CapsuleTabItem[] = [
-  { icon: Home, key: 'home', label: '首页' },
-  { icon: Briefcase, key: 'work', label: '工作' },
-  { icon: HeartPulse, key: 'health', label: '健康' },
-  { icon: Palette, key: 'hobby', label: '兴趣' },
+  { key: 'overview', label: 'Overview' },
+  { key: 'updates', label: 'Updates' },
+  { key: 'activity', label: 'Activity' },
 ];
 
 const sizeOptions: Array<{ label: string; size: CapsuleTabsSize }> = [
