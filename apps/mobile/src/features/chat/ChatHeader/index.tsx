@@ -1,13 +1,13 @@
 import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 import { AVATAR_SIZE } from '@/const/common';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import { useStyles } from './style';
-import { ActionIcon, Avatar } from '@/components';
+import { ActionIcon, Avatar, Header, Space } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useGlobalStore } from '@/store/global';
 
@@ -24,19 +24,17 @@ export default function ChatHeader() {
   const displayTitle = isInbox ? t('inbox.title', { ns: 'chat' }) : title;
 
   return (
-    <View style={[styles.header]}>
-      <ActionIcon icon={AlignJustify} onPress={toggleDrawer} />
-      <View style={styles.headerContent}>
-        <View style={styles.headerInfo}>
+    <Header
+      left={<ActionIcon icon={AlignJustify} onPress={toggleDrawer} />}
+      right={<ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />}
+      title={
+        <Space>
           <Avatar avatar={avatar} size={AVATAR_SIZE} />
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
             {displayTitle}
           </Text>
-        </View>
-      </View>
-      <View style={styles.headerActions}>
-        <ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />
-      </View>
-    </View>
+        </Space>
+      }
+    />
   );
 }

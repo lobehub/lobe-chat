@@ -1,3 +1,4 @@
+import { View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
@@ -13,24 +14,30 @@ export default function ChatWithDrawer() {
   const { styles, token } = useStyles();
   const insets = useSafeAreaInsets();
 
+  const renderContent = () => {
+    return (
+      <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+        <ChatHeader />
+        <KeyboardAvoidingView
+          behavior="padding"
+          enabled
+          keyboardVerticalOffset={insets.top + token.marginXS}
+          style={{ flex: 1 }}
+        >
+          <ChatList />
+          <ChatInput />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  };
+
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
+    <View style={styles.root}>
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
       <SideBar>
-        <TopicDrawer>
-          <ChatHeader />
-          <KeyboardAvoidingView
-            behavior="padding"
-            enabled
-            keyboardVerticalOffset={insets.top + token.marginXS}
-            style={{ flex: 1 }}
-          >
-            <ChatList />
-            <ChatInput />
-          </KeyboardAvoidingView>
-        </TopicDrawer>
+        <TopicDrawer>{renderContent()}</TopicDrawer>
       </SideBar>
-    </SafeAreaView>
+    </View>
   );
 }

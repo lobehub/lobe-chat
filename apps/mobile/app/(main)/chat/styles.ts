@@ -1,15 +1,9 @@
-import { createStyles, getAlphaColor } from '@/theme';
+import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  chatList: {
-    flex: 1,
-  },
-  drawerOverlay: {
-    backgroundColor: getAlphaColor(token.colorBorderBg, 0.9),
-  },
-  drawerStyle: {
+  root: {
     backgroundColor: token.colorBgLayout,
-    width: '80%',
+    flex: 1,
   },
   safeAreaView: {
     backgroundColor: token.colorBgLayout,

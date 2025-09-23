@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Drawer } from 'react-native-drawer-layout';
 import * as Haptics from 'expo-haptics';
 
@@ -36,9 +37,11 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <View style={styles.drawerContent}>
-          <TopicList />
-        </View>
+        <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
+          <View style={styles.drawerContent}>
+            <TopicList />
+          </View>
+        </SafeAreaView>
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}

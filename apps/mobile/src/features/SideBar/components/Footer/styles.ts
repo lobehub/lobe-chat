@@ -3,9 +3,6 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => ({
   footer: {
     alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    borderTopColor: token.colorBorderSecondary,
-    borderTopWidth: 0.5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: token.padding,

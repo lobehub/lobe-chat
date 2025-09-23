@@ -24,9 +24,14 @@ export const useStyles = createStyles((token) => ({
   },
   title: {
     color: token.colorTextHeading,
-    flex: 1,
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
     textAlign: 'center',
+  },
+  titleWrapper: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 }));

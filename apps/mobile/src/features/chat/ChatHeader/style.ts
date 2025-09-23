@@ -1,33 +1,19 @@
-import { HEADER_HEIGHT } from '@/const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  header: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    flexDirection: 'row',
-    height: HEADER_HEIGHT,
-    justifyContent: 'space-between',
-    paddingHorizontal: token.paddingXS,
-    zIndex: 10,
-  },
-  headerActions: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  headerContent: {
-    alignItems: 'center',
-  },
-  headerInfo: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: token.marginXS,
-    maxWidth: '100%',
-  },
   title: {
     color: token.colorText,
+    flexShrink: 1,
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
+    maxWidth: '100%',
     textAlign: 'left',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexShrink: 1,
+    gap: token.marginXS,
+    maxWidth: '100%',
   },
 }));

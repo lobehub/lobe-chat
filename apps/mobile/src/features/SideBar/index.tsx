@@ -1,5 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Drawer } from 'react-native-drawer-layout';
 
 import { useGlobalStore } from '@/store/global';
@@ -32,11 +34,13 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <View style={styles.container}>
-          <Header />
-          <SessionList />
-          <Footer />
-        </View>
+        <SafeAreaView edges={['top', 'bottom']} style={styles.safeAreaView}>
+          <View style={styles.container}>
+            <Header />
+            <SessionList />
+            <Footer />
+          </View>
+        </SafeAreaView>
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}
