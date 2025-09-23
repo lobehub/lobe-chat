@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.6"
+  },
+  {
     "children": {
       "improvements": ["Move the ModelProvider to model-bank."]
     },
