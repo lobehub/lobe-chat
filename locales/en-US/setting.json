@@ -190,6 +190,12 @@
       "elegant": "Elegant",
       "title": "Response Animation"
     },
+    "contextMenuMode": {
+      "default": "LobeChat Default",
+      "desc": "Select the display mode for the chat message right-click menu",
+      "disabled": "Disabled",
+      "title": "Right-Click Menu Mode"
+    },
     "neutralColor": {
       "desc": "Custom grayscale with different color tendencies",
       "title": "Neutral Color"
