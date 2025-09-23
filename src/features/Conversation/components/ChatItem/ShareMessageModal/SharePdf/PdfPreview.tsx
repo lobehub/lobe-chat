@@ -2,7 +2,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Button } from '@lobehub/ui';
 import { Input, Modal, Spin } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Expand, FileText } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -126,10 +126,11 @@ const useStyles = createStyles(({ css }) => ({
 
 interface PdfPreviewProps {
   loading: boolean;
+  onGeneratePdf?: () => void;
   pdfData: string | null;
 }
 
-const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
+const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) => {
   const { styles } = useContainerStyles();
   const { styles: localStyles } = useStyles();
   const { t } = useTranslation('chat');
@@ -204,7 +205,9 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
     return (
       <div className={styles.preview} style={{ padding: 12 }}>
         <div className={localStyles.emptyState}>
-          {t('shareModal.noPdfData', { defaultValue: 'No PDF data available' })}
+          <Button icon={<FileText size={20} />} onClick={onGeneratePdf} size="large" type="primary">
+            {t('shareModal.generatePdf', { defaultValue: '生成 PDF' })}
+          </Button>
         </div>
       </div>
     );
@@ -216,7 +219,6 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData }) => {
   return (
     <>
       <div className={localStyles.containerWrapper}>
-        {/* 全屏按钮 - 移到最外层 */}
         {pdfData && (
           <Button
             className={localStyles.expandButton}

@@ -13,13 +13,16 @@ export const useContainerStyles = createStyles(({ css, token, stylish, cx, respo
 
       background: ${token.colorBgLayout};
 
-      * {
+      /* stylelint-disable selector-class-pattern */
+      .react-pdf__Document *,
+      .react-pdf__Page * {
         pointer-events: none;
+      }
+      /* stylelint-enable selector-class-pattern */
 
-        ::-webkit-scrollbar {
-          width: 0 !important;
-          height: 0 !important;
-        }
+      ::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
       }
 
       ${responsive.mobile} {

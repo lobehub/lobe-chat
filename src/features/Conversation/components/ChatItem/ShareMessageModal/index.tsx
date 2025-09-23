@@ -3,6 +3,7 @@ import { memo, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { isServerMode } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ChatMessage } from '@/types/message';
 
@@ -28,8 +29,8 @@ const ShareModal = memo<ShareModalProps>(({ onCancel, open, message }) => {
   const uniqueId = useId();
   const isMobile = useIsMobile();
 
-  const tabItems = useMemo(
-    () => [
+  const tabItems = useMemo(() => {
+    const items = [
       {
         children: <ShareImage message={message} mobile={isMobile} uniqueId={uniqueId} />,
         key: Tab.Screenshot,
@@ -40,14 +41,19 @@ const ShareModal = memo<ShareModalProps>(({ onCancel, open, message }) => {
         key: Tab.Text,
         label: t('shareModal.text'),
       },
-      {
+    ];
+
+    // Only add PDF tab in server mode
+    if (isServerMode) {
+      items.push({
         children: <SharePdf message={message} />,
         key: Tab.PDF,
         label: t('shareModal.pdf'),
-      },
-    ],
-    [isMobile, message, uniqueId, t],
-  );
+      });
+    }
+
+    return items;
+  }, [isMobile, message, uniqueId, t]);
 
   return (
     <Modal

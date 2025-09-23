@@ -105,11 +105,13 @@ const SharePdf = memo<SharePdfProps>(({ message }) => {
 
   return (
     <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-      <PdfPreview loading={loading} pdfData={pdfData} />
-      <Flexbox className={styles.sidebar} gap={12}>
-        {generateButton}
-        {downloadButton}
-      </Flexbox>
+      <PdfPreview loading={loading} onGeneratePdf={handleGeneratePdf} pdfData={pdfData} />
+      {pdfData && (
+        <Flexbox className={styles.sidebar} gap={12}>
+          {pdfData && generateButton}
+          {downloadButton}
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

@@ -78,48 +78,32 @@ const SharePdf = memo(() => {
 
   const title = topic?.title || t('shareModal.exportTitle');
 
-  // Generate markdown content using the same logic as ShareText
-  const markdownContent = generateMarkdown({
-    ...fieldValue,
-    messages,
-    systemRole,
-    title,
-  }).replaceAll('\n\n\n', '\n');
-
   const { generatePdf, downloadPdf, pdfData, loading, error } = usePdfGeneration();
 
   const handleGeneratePdf = async () => {
-    if (activeId && messages.length > 0 && markdownContent.trim()) {
-      await generatePdf({
-        content: markdownContent,
-        sessionId: activeId,
-        title,
-        topicId: topicId || undefined,
-      });
-    }
-  };
-
-  // Regenerate PDF when configuration changes and PDF already exists
-  const handleConfigChange = (changedValues: any, allValues: FieldType) => {
-    setFieldValue(allValues);
-    // If PDF already exists, regenerate it with new configuration
-    if (pdfData && !loading) {
-      const newMarkdownContent = generateMarkdown({
-        ...allValues,
+    if (activeId && messages.length > 0) {
+      // Generate markdown with current field values
+      const currentMarkdownContent = generateMarkdown({
+        ...fieldValue,
         messages,
         systemRole,
         title,
       }).replaceAll('\n\n\n', '\n');
 
-      if (activeId && messages.length > 0 && newMarkdownContent.trim()) {
-        generatePdf({
-          content: newMarkdownContent,
+      if (currentMarkdownContent.trim()) {
+        await generatePdf({
+          content: currentMarkdownContent,
           sessionId: activeId,
           title,
           topicId: topicId || undefined,
         });
       }
     }
+  };
+
+  // Update configuration when form changes
+  const handleConfigChange = (_changedValues: any, allValues: FieldType) => {
+    setFieldValue(allValues);
   };
 
   const handleDownload = async () => {
@@ -147,8 +131,7 @@ const SharePdf = memo(() => {
         ? t('shareModal.generatingPdf')
         : pdfData
           ? t('shareModal.regeneratePdf', { defaultValue: '重新生成 PDF' })
-          : t('shareModal.generatePdf', { defaultValue: '生成 PDF' })
-      }
+          : t('shareModal.generatePdf', { defaultValue: '生成 PDF' })}
     </Button>
   );
 
@@ -189,10 +172,7 @@ const SharePdf = memo(() => {
 
   return (
     <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-      <PdfPreview
-        loading={loading}
-        pdfData={pdfData}
-      />
+      <PdfPreview loading={loading} onGeneratePdf={handleGeneratePdf} pdfData={pdfData} />
       <Flexbox className={styles.sidebar} gap={12}>
         <Form
           initialValues={DEFAULT_FIELD_VALUE}
@@ -201,7 +181,7 @@ const SharePdf = memo(() => {
           onValuesChange={handleConfigChange}
           {...FORM_STYLE}
         />
-        {generateButton}
+        {pdfData && generateButton}
         {downloadButton}
       </Flexbox>
     </Flexbox>

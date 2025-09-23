@@ -3,6 +3,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { isServerMode } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 import ShareImage from './ShareImage';
@@ -22,8 +23,8 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
   const { t } = useTranslation('chat');
   const isMobile = useIsMobile();
 
-  const tabItems = useMemo(
-    () => [
+  const tabItems = useMemo(() => {
+    const items = [
       {
         children: <ShareImage mobile={isMobile} />,
         key: Tab.Screenshot,
@@ -35,18 +36,23 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
         label: t('shareModal.text'),
       },
       {
-        children: <SharePdf />,
-        key: Tab.PDF,
-        label: t('shareModal.pdf'),
-      },
-      {
         children: <ShareJSON />,
         key: Tab.JSON,
         label: 'JSON',
       },
-    ],
-    [isMobile, t],
-  );
+    ];
+
+    // Only add PDF tab in server mode
+    if (isServerMode) {
+      items.splice(2, 0, {
+        children: <SharePdf />,
+        key: Tab.PDF,
+        label: t('shareModal.pdf'),
+      });
+    }
+
+    return items;
+  }, [isMobile, t]);
   return (
     <Modal
       allowFullscreen
