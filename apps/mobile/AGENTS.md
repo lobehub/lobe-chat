@@ -10,18 +10,18 @@
 
 ## Build and Test Commands
 
-| Task | Command | Notes |
-| --- | --- | --- |
-| Install dependencies | `pnpm install` | Requires Node 18+ and pnpm 8+. |
-| Start Expo dev server | `pnpm start` | Opens the Metro bundler with QR code pairing. |
-| Run on iOS simulator/device | `pnpm ios` / `pnpm device:ios` | Uses `expo run:ios`; ensure Xcode tooling is installed. |
-| Run on Android emulator/device | `pnpm android` / `pnpm device:android` | Uses `expo run:android`; start an emulator first. |
-| Web preview | `pnpm web` | Launches the web bundle for quick UI checks. |
-| Jest unit tests | `pnpm test` | Runs through `jest-expo` with coverage enabled. |
-| Lint TypeScript/JS | `pnpm lint` | Delegates to Expo + ESLint rules defined in repo. |
-| Format sources | `pnpm prettier` | Applies Prettier across the workspace. |
-| Generate translations | `pnpm i18n` | Executes scripted workflow from `rules/internationalization.mdc`. |
-| Production builds | `pnpm production:ios` / `pnpm production:android` | Wraps EAS build profiles from `eas.json`. |
+| Task                           | Command                                           | Notes                                                             |
+| ------------------------------ | ------------------------------------------------- | ----------------------------------------------------------------- |
+| Install dependencies           | `pnpm install`                                    | Requires Node 18+ and pnpm 8+.                                    |
+| Start Expo dev server          | `pnpm start`                                      | Opens the Metro bundler with QR code pairing.                     |
+| Run on iOS simulator/device    | `pnpm ios` / `pnpm device:ios`                    | Uses `expo run:ios`; ensure Xcode tooling is installed.           |
+| Run on Android emulator/device | `pnpm android` / `pnpm device:android`            | Uses `expo run:android`; start an emulator first.                 |
+| Web preview                    | `pnpm web`                                        | Launches the web bundle for quick UI checks.                      |
+| Jest unit tests                | `pnpm test`                                       | Runs through `jest-expo` with coverage enabled.                   |
+| Lint TypeScript/JS             | `pnpm lint`                                       | Delegates to Expo + ESLint rules defined in repo.                 |
+| Format sources                 | `pnpm prettier`                                   | Applies Prettier across the workspace.                            |
+| Generate translations          | `pnpm i18n`                                       | Executes scripted workflow from `rules/internationalization.mdc`. |
+| Production builds              | `pnpm production:ios` / `pnpm production:android` | Wraps EAS build profiles from `eas.json`.                         |
 
 ## Code Style Guidelines
 
