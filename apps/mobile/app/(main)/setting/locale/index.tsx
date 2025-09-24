@@ -1,13 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import { PageContainer } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { LANGUAGE_OPTIONS, LocaleMode } from '@/i18n/resource';
-import { useTranslation } from 'react-i18next';
 
-import { SettingItem, SettingGroup } from '../(components)';
+import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
-import { PageContainer } from '@/components';
 
 export default function LocaleScreen() {
   const { styles } = useStyles();
