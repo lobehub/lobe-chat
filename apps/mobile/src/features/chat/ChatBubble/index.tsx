@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-
 import { Markdown } from '@/components';
 import { ChatMessage } from '@/types/message';
-
 import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
 import UserContextMenu from '../UserContextMenu';
 import ErrorContent from './ErrorContent';
 import { useStyles } from './style';
 import { useSettingStore } from '@/store/setting';
+import AssistantMenu from '../AssistantMenu';
 
 interface ChatBubbleProps {
   isLoading?: boolean;
@@ -49,9 +48,11 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
       {isAssistant ? (
         <View style={styles.aiMessageContainer}>
           <View style={styles.aiContentContainer}>
-            <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
-              {content}
-            </View>
+            <AssistantMenu message={message}>
+              <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
+                {content}
+              </View>
+            </AssistantMenu>
             {!isLoading && (message.content || hasError) && (
               <MessageActions message={message} style={styles.messageActions} />
             )}
