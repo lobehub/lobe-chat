@@ -98,8 +98,15 @@ async function createImageEdit(
   const endpoint = `https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`;
   log('Creating image edit with model: %s, endpoint: %s', model, endpoint);
 
-  if (!params.imageUrl) {
-    throw new Error('imageUrl is required for qwen-image-edit model');
+  // Handle imageUrls to imageUrl conversion
+  let imageUrl = params.imageUrl;
+  if (!imageUrl && params.imageUrls && params.imageUrls.length > 0) {
+    imageUrl = params.imageUrls[0];
+    log('Converting imageUrls to imageUrl: using first image %s', imageUrl);
+  }
+
+  if (!imageUrl) {
+    throw new Error('imageUrl or imageUrls is required for qwen-image-edit model');
   }
 
   const response = await fetch(endpoint, {
@@ -107,7 +114,7 @@ async function createImageEdit(
       input: {
         messages: [
           {
-            content: [{ image: params.imageUrl }, { text: params.prompt }],
+            content: [{ image: imageUrl }, { text: params.prompt }],
             role: 'user',
           },
         ],
