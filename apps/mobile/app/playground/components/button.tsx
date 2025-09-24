@@ -1,5 +1,4 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import { useStyles } from './style';
 
 import React from 'react';
@@ -33,9 +32,8 @@ const demos: DemoItem[] = [
 export default function ButtonPlaygroundPage() {
   const { styles } = useStyles();
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="Button 组件" />
+    <PageContainer showBack style={styles.safeAreaView} title="Button 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
-    </SafeAreaView>
+    </PageContainer>
   );
 }

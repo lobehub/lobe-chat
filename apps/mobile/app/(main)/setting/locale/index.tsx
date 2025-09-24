@@ -7,8 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './styles';
-import { Header } from '@/components';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { PageContainer } from '@/components';
 
 export default function LocaleScreen() {
   const { styles } = useStyles();
@@ -32,8 +31,11 @@ export default function LocaleScreen() {
   ];
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('locale.title', { ns: 'setting' })} />
+    <PageContainer
+      showBack
+      style={styles.safeAreaView}
+      title={t('locale.title', { ns: 'setting' })}
+    >
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <SettingGroup>
           {localeOptions.map((option, index) => (
@@ -52,6 +54,6 @@ export default function LocaleScreen() {
           ))}
         </SettingGroup>
       </ScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

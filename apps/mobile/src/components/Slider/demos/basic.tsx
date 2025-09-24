@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 
 import { createStyles } from '@/theme';
 
-import Slider from '../index';
+import { Slider } from '@/components';
 
 const useStyles = createStyles((token) => ({
   container: {

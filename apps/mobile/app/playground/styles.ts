@@ -57,7 +57,7 @@ export const useStyles = createStyles((token) => ({
   },
   componentList: {
     gap: token.marginSM,
-    padding: token.padding,
+    paddingHorizontal: token.padding,
   },
   componentName: {
     color: token.colorText,

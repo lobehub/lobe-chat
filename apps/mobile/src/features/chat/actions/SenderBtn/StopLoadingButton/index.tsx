@@ -1,27 +1,34 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, Easing, View, Pressable } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
+import { ButtonSize } from '@/components';
 
-import { useStyles } from './style';
-import { ICON_SIZE_LARGE, ICON_SIZE_SMALL, ICON_SIZE } from '@/const/common';
+import { useThemeToken } from '@/theme';
 
 interface StopLoadingIconProps {
   color?: string;
   duration?: number;
-  size?: 'small' | 'middle' | 'large';
+  onPress?: () => void;
+  size?: ButtonSize;
 }
 
 const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
   size = 'middle',
-  color = '#FFF',
+  color,
   duration = 1000,
+  onPress,
 }) => {
-  const realSize =
-    size === 'small' ? ICON_SIZE_SMALL : size === 'middle' ? ICON_SIZE : ICON_SIZE_LARGE;
-
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
-  const { styles } = useStyles(realSize);
+  const token = useThemeToken();
+  const iconColor = color || token.colorText;
+
+  const realSize =
+    size === 'small'
+      ? token.controlHeightSM
+      : size === 'middle'
+        ? token.controlHeight
+        : token.controlHeightLG;
 
   useEffect(() => {
     rotateAnim.setValue(0);
@@ -45,7 +52,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
     outputRange: ['0deg', '360deg'],
   });
 
-  const strokeWidth = 1.5;
+  const strokeWidth = 2;
   const radius = (realSize - strokeWidth) / 2;
   const center = realSize / 2;
   const arcAngle = 140;
@@ -55,11 +62,28 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
   const gapLength = (gapAngle / 360) * circumference;
 
   return (
-    <View pointerEvents="none" style={styles.container}>
+    <Pressable
+      onPress={onPress}
+      style={{
+        alignItems: 'center',
+        backgroundColor: token.colorBgContainer,
+        borderColor: token.colorBorder,
+        borderRadius: realSize / 2,
+        borderWidth: token.lineWidth,
+        height: realSize,
+        justifyContent: 'center',
+        position: 'relative',
+        width: realSize,
+      }}
+    >
       {/* 旋转的弧 */}
       <Animated.View
         style={[
-          styles.rotatingContainer,
+          {
+            height: realSize,
+            position: 'absolute',
+            width: realSize,
+          },
           {
             transform: [{ rotate: spin }],
           },
@@ -71,7 +95,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
             cy={center}
             fill="none"
             r={radius}
-            stroke={color}
+            stroke={iconColor}
             strokeDasharray={`${arcLength},${gapLength}`}
             strokeDashoffset={0}
             strokeLinecap="round"
@@ -81,10 +105,16 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
       </Animated.View>
 
       {/* 静止的方块 */}
-      <View style={styles.staticContainer}>
+      <View
+        style={{
+          height: realSize,
+          position: 'absolute',
+          width: realSize,
+        }}
+      >
         <Svg height={realSize} width={realSize}>
           <Rect
-            fill={color}
+            fill={iconColor}
             height={realSize * 0.3}
             rx={2}
             width={realSize * 0.3}
@@ -93,7 +123,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
           />
         </Svg>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

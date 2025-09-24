@@ -208,7 +208,7 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
       presentationStyle="pageSheet"
       visible={visible}
     >
-      <SafeAreaView edges={['bottom']} style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* 标题栏 */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>

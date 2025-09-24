@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
-import InstantSwitch from '../index';
+import { InstantSwitch } from '@/components';
 import { createStyles } from '@/theme';
 
 const handleErrorChange = async () => {

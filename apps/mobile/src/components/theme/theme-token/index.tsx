@@ -1,10 +1,9 @@
 import { Sun, Moon } from 'lucide-react-native';
 import React, { useState, useCallback, memo } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import ThemeControls from './(components)/ThemeControls';
 import TokenHighlight from './(components)/TokenJson';
 import TokenTable from './(components)/TokenTable';
@@ -59,21 +58,20 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
     }, []);
 
     return (
-      <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-        <Header
-          right={
-            <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
-              {theme.isDark ? (
-                <Sun color={token.colorText} size={20} />
-              ) : (
-                <Moon color={token.colorText} size={20} />
-              )}
-            </TouchableOpacity>
-          }
-          showBack
-          title="主题令牌"
-        />
-
+      <PageContainer
+        extra={
+          <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
+            {theme.isDark ? (
+              <Sun color={token.colorText} size={20} />
+            ) : (
+              <Moon color={token.colorText} size={20} />
+            )}
+          </TouchableOpacity>
+        }
+        showBack
+        style={styles.safeArea}
+        title="主题令牌"
+      >
         <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
           {/* 主题控制器 */}
           <ThemeControls
@@ -97,7 +95,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
             <TokenHighlight title="Design Tokens JSON" token={token} />
           )}
         </ScrollView>
-      </SafeAreaView>
+      </PageContainer>
     );
   },
 );
