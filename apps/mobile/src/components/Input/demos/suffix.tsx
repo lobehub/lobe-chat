@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Copy, Send, X } from 'lucide-react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -36,13 +36,13 @@ const SuffixDemo = () => {
   return (
     <View style={styles.container}>
       {/* 基础后缀文本 */}
-      <TextInput
+      <Input
         placeholder="输入邮箱前缀"
         suffix={<Text style={styles.suffixText}>@gmail.com</Text>}
       />
 
       {/* 后缀按钮 */}
-      <TextInput
+      <Input
         placeholder="输入消息"
         suffix={
           <TouchableOpacity style={styles.suffixButton}>
@@ -52,7 +52,7 @@ const SuffixDemo = () => {
       />
 
       {/* 复制按钮后缀 */}
-      <TextInput
+      <Input
         defaultValue="可复制的内容"
         suffix={
           <TouchableOpacity style={styles.clearButton}>
@@ -62,7 +62,7 @@ const SuffixDemo = () => {
       />
 
       {/* 清除按钮后缀 */}
-      <TextInput
+      <Input
         onChangeText={setInputValue}
         placeholder="输入内容，支持清除"
         suffix={
@@ -76,7 +76,7 @@ const SuffixDemo = () => {
       />
 
       {/* 前缀和后缀组合 */}
-      <TextInput
+      <Input
         placeholder="搜索"
         prefix={<Text style={styles.suffixText}>🔍</Text>}
         suffix={<Text style={styles.suffixText}>⌘K</Text>}

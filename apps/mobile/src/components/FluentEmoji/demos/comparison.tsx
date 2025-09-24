@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useThemeToken } from '@/theme';
-import FluentEmoji from '../index';
+import { FluentEmoji } from '@/components';
 
 const ComparisonDemo = () => {
   const token = useThemeToken();

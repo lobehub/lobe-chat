@@ -44,16 +44,23 @@ const LoadingDemo = () => {
       <Button loading={loadings[2]} onPress={() => enterLoading(2)} size="small" type="primary">
         Click to Load
       </Button>
-      <Button loading onPress={() => enterLoading(2)} type="default">
+
+      <Button loading type="primary">
+        Primary
+      </Button>
+      <Button disabled loading type="primary">
+        Primary Disabled
+      </Button>
+      <Button loading type="default">
         Solid
       </Button>
-      <Button loading onPress={() => enterLoading(3)} type="dashed">
+      <Button loading type="dashed">
         Dashed
       </Button>
-      <Button loading onPress={() => enterLoading(4)} type="text">
+      <Button loading type="text">
         Text
       </Button>
-      <Button loading onPress={() => enterLoading(5)} type="link">
+      <Button loading type="link">
         Link
       </Button>
     </Space>

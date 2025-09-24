@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
-
-import { useToast } from '../InnerToastProvider';
 
 export default function IntegrationDemo() {
   const toast = useToast();

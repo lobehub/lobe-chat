@@ -10,7 +10,7 @@ import SessionItem from './SessionItem';
 import { useAuth } from '@/store/user';
 import { SessionListSkeleton } from './components/SkeletonList';
 import * as ContextMenu from 'zeego/context-menu';
-import { Toast, TextInput } from '@/components';
+import { Toast, Input } from '@/components';
 import { useGlobalStore } from '@/store/global';
 import { loading } from '@/libs/loading';
 
@@ -43,7 +43,7 @@ export default function SideBar() {
   return (
     <View style={styles.container}>
       {/* 搜索栏 */}
-      <TextInput.Search
+      <Input.Search
         onChangeText={setSearchText}
         placeholder={t('session.search.placeholder', { ns: 'chat' })}
         size="large"

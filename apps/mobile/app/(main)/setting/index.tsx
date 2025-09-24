@@ -5,11 +5,10 @@ import { ScrollView } from 'react-native';
 import { useLocale } from '@/hooks/useLocale';
 import { version } from '../../../package.json';
 import { useStyles } from './styles';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SettingItem, SettingGroup } from './(components)';
 import { useTheme } from '@/theme';
-import { Header, Toast } from '@/components';
+import { PageContainer, Toast } from '@/components';
 import { useSettingStore } from '@/store/setting';
 
 export default function SettingScreen() {
@@ -83,8 +82,7 @@ export default function SettingScreen() {
   }, []);
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('title', { ns: 'setting' })} />
+    <PageContainer showBack style={styles.safeAreaView} title={t('title', { ns: 'setting' })}>
       <ScrollView style={[styles.container]}>
         <SettingGroup>
           <SettingItem
@@ -136,6 +134,6 @@ export default function SettingScreen() {
           />
         </SettingGroup>
       </ScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

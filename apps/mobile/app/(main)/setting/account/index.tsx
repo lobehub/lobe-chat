@@ -6,10 +6,9 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
+import { PageContainer } from '@/components';
 import { SettingItem, SettingGroup } from '../(components)';
 import { useStyles } from './style';
-import { Header } from '@/components';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error']);
@@ -51,8 +50,11 @@ export default function AccountScreen() {
   };
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('account.title', { ns: 'setting' })} />
+    <PageContainer
+      showBack
+      style={styles.safeAreaView}
+      title={t('account.title', { ns: 'setting' })}
+    >
       <View style={styles.container}>
         {isAuthenticated && user && (
           <>
@@ -83,6 +85,6 @@ export default function AccountScreen() {
           </>
         )}
       </View>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

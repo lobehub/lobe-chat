@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import ListItem from '../index';
+import { ListItem } from '@/components';
 
 const handleActionPress = (action: string) => {
   Alert.alert('操作确认', `确定要执行 "${action}" 操作吗？`, [
