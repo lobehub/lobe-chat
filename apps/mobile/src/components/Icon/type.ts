@@ -1,6 +1,6 @@
+import type { LucideIcon } from 'lucide-react-native';
 import type React from 'react';
 import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
-import type { LucideIcon } from 'lucide-react-native';
 
 export interface IconSizeConfig {
   blockSize?: number | string;

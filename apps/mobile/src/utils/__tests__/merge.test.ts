@@ -1,3 +1,5 @@
+import { merge, mergeArrayById } from '../merge';
+
 // Mock lodash-es to avoid ES module issues in Jest
 jest.mock('lodash-es', () => ({
   merge: jest.fn((target, source, customizer) => {
@@ -68,8 +70,6 @@ jest.mock('lodash-es', () => ({
     return result;
   }),
 }));
-
-import { merge, mergeArrayById } from '../merge';
 
 describe('merge utilities', () => {
   describe('merge', () => {

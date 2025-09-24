@@ -10,6 +10,12 @@
 
 // 颜色解析函数
 export function parseColor(color: string): { a: number; b: number; g: number; r: number } {
+  // 检查输入参数是否有效
+  if (!color || typeof color !== 'string') {
+    console.warn('parseColor: Invalid color input:', color);
+    return { a: 0, b: 0, g: 0, r: 0 };
+  }
+
   // 处理 rgba 格式
   const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
   if (rgbaMatch) {
@@ -63,18 +69,30 @@ export function toHexString(r: number, g: number, b: number): string {
 
 // 设置颜色透明度
 export function setAlpha(color: string, alpha: number): string {
+  if (!color || typeof color !== 'string') {
+    console.warn('setAlpha: Invalid color input:', color);
+    return 'rgba(0, 0, 0, 0)';
+  }
   const { r, g, b } = parseColor(color);
   return toRgbaString(r, g, b, alpha);
 }
 
 // 获取带透明度的颜色
 export function getAlphaColor(baseColor: string, alpha: number): string {
+  if (!baseColor || typeof baseColor !== 'string') {
+    console.warn('getAlphaColor: Invalid color input:', baseColor);
+    return 'rgba(0, 0, 0, 0)';
+  }
   const { r, g, b } = parseColor(baseColor);
   return toRgbaString(r, g, b, alpha);
 }
 
 // 颜色亮度调整
 export function adjustBrightness(color: string, amount: number): string {
+  if (!color || typeof color !== 'string') {
+    console.warn('adjustBrightness: Invalid color input:', color);
+    return 'rgba(0, 0, 0, 0)';
+  }
   const { r, g, b, a } = parseColor(color);
 
   const adjust = (value: number) => {

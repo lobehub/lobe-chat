@@ -1,5 +1,6 @@
-import { createStyles } from '@/theme';
 import { Platform } from 'react-native';
+
+import { createStyles } from '@/theme';
 
 interface UseStylesProps {
   multiline?: boolean;
@@ -8,7 +9,7 @@ interface UseStylesProps {
 }
 
 export const useStyles = createStyles(
-  (token, { multiline = false, variant = 'filled', size = 'middle' }: UseStylesProps) => {
+  ({ token }, { multiline = false, variant = 'filled', size = 'middle' }: UseStylesProps) => {
     const getSizeStyles = () => {
       switch (size) {
         case 'small': {

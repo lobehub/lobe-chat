@@ -3,13 +3,14 @@ import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiModelService } from '@/services/aiModel';
-import type { AiInfraStore } from '../../store';
 import {
   AiModelSortMap,
   AiProviderModelListItem,
   CreateAiModelParams,
   ToggleAiModelEnableParams,
 } from '@/types/aiModel';
+
+import type { AiInfraStore } from '../../store';
 
 const FETCH_AI_PROVIDER_MODEL_LIST_KEY = 'FETCH_AI_PROVIDER_MODELS';
 

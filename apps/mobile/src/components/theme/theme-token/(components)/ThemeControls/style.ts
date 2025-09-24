@@ -1,7 +1,7 @@
-import { createStyles } from '@/theme';
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
+import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => {
+export const useStyles = createStyles(({ token }) => {
   return {
     // 控制器样式
     controlInput: {

@@ -5,7 +5,7 @@ export const BORDER_WIDTH = 2;
 
 export const DOT_SIZE = 12 + 2 * BORDER_WIDTH;
 
-export const useStyles = createStyles((token, { disabled }: { disabled: boolean }) => ({
+export const useStyles = createStyles(({ token }, { disabled }: { disabled: boolean }) => ({
   activeTrack: {
     backgroundColor: disabled ? token.colorBgContainerDisabled : token.colorPrimaryBorder,
     borderRadius: token.borderRadiusSM,

@@ -1,4 +1,5 @@
 import { FetchRequestInit } from 'expo/fetch';
+
 /**
  * 将 HeadersInit 转换为 Record<string, string>
  * @param headersInit - Headers 初始化对象

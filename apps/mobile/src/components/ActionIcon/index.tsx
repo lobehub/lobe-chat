@@ -1,11 +1,12 @@
+import { LoaderCircle } from 'lucide-react-native';
 import React, { memo, useMemo } from 'react';
 import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
-import { LoaderCircle } from 'lucide-react-native';
 
 import Icon from '@/components/Icon';
 import type { IconProps as BaseIconProps, IconSize } from '@/components/Icon';
 import { ICON_SIZE } from '@/const/common';
 import { useThemeToken } from '@/theme';
+
 import { calcSize, getBaseStyle, getVariantStyle } from './style';
 
 type IconType = BaseIconProps['icon'];

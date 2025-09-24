@@ -16,3 +16,6 @@ export * from './color';
 export * from './colorUtils';
 export * from './interface';
 export * from './ThemeProvider';
+
+// 导出 CVA 工具
+export * from './cva';

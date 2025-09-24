@@ -1,4 +1,4 @@
-import { useAgentStore, agentSelectors } from '@/store/agent';
+import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
 
 /**

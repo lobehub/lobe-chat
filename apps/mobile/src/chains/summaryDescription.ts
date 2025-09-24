@@ -1,5 +1,6 @@
-import { ChatStreamPayload } from '@/types/openai/chat';
 import i18n from 'i18next';
+
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 export const chainSummaryDescription = (content: string): Partial<ChatStreamPayload> => ({
   messages: [

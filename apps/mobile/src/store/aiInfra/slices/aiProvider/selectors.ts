@@ -1,6 +1,7 @@
 import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
-import { AIProviderStoreState } from '../../initialState';
 import { AiProviderRuntimeConfig } from '@/types/aiProvider';
+
+import { AIProviderStoreState } from '../../initialState';
 
 // List
 const enabledAiProviderList = (s: AIProviderStoreState) =>

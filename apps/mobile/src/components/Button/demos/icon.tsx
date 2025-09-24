@@ -1,5 +1,5 @@
-import React from 'react';
 import { ArrowRight, Check, Plus, Search } from 'lucide-react-native';
+import React from 'react';
 
 import { Button, Space } from '@/components';
 
