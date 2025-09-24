@@ -1,7 +1,7 @@
-import type { AliasToken } from '../../interface';
-import { generateColorPalette, generateColorNeutralPalette } from '../shared/generateColorPalette';
-import { colorScales } from '../../color/primary';
 import { neutralColorScales } from '../../color/neutrals';
+import { colorScales } from '../../color/primary';
+import type { AliasToken } from '../../interface';
+import { generateColorNeutralPalette, generateColorPalette } from '../shared/generateColorPalette';
 
 // 使用默认颜色生成亮色主题Token
 const primaryToken = generateColorPalette({

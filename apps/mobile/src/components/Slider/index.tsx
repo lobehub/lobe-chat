@@ -1,12 +1,12 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import { View, ViewStyle, LayoutRectangle, Text } from 'react-native';
+import { LayoutRectangle, Text, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
+  Extrapolation,
   interpolate,
   runOnJS,
-  Extrapolation,
+  useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
 
 import { DOT_SIZE, useStyles } from './style';

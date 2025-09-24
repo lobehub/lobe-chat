@@ -12,7 +12,7 @@ const handleErrorChange = async () => {
   throw new Error('Network error');
 };
 
-const useStyles = createStyles((token) => ({
+const useStyles = createStyles(({ token }) => ({
   container: {
     gap: token.marginLG,
     padding: token.paddingLG,

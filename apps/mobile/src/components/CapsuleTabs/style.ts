@@ -43,7 +43,7 @@ const getSizeStyles = (
   return sizeMap[size];
 };
 
-export const useStyles = createStyles((token, size: 'large' | 'middle' | 'small' = 'middle') => {
+export const useStyles = createStyles(({token}, size: 'large' | 'middle' | 'small' = 'middle') => {
   const activeTabColor = token.colorPrimary;
   const solidTextColor = isBright(new AggregationColor(activeTabColor), '#fff') ? '#000' : '#fff';
   const sizeStyles = getSizeStyles(token, size);

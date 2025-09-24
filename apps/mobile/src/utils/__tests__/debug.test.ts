@@ -1,4 +1,4 @@
-import { createLogger, safeDebugObject, formatDebugMessage, Logger } from '../debug';
+import { Logger, createLogger, formatDebugMessage, safeDebugObject } from '../debug';
 
 // Mock the logger module to test the deprecation wrapper
 jest.mock('../logger', () => ({

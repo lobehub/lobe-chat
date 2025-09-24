@@ -151,7 +151,7 @@ export default Component;
 // 2. styles.ts 样式文件模式
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({token}) => ({
   // 样式定义
 }));
 ```
@@ -603,23 +603,23 @@ const EmptyModelState = ({ providerId }: { providerId: string }) => (
 
 ## 11. 核心差异总结
 
-| 方面 | Web 端 (ModelSwitchPanel) | 移动端 (重构后) |
-| --- | --- | --- |
-| 文件位置 | `src/features/ModelSwitchPanel/` | `app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/` |
-| 组件类型 | Feature 组件 | 业务组件 |
-| 文件结构 | 单文件 `index.tsx` | `index.tsx + styles.ts` 规范 |
-| 引用方式 | 模块导入 | 相对路径引用 |
-| 容器 | ActionDropdown + Menu | Modal + ScrollView |
-| 触发器 | children (任意内容) | ModelIcon |
-| 数据获取 | useAgentStore + useEnabledChatModels | ✅ 完全一致 |
-| 菜单构建 | getModelItems + useMemo | ✅ 完全一致 |
-| 模型项 | ModelItemRender | ModelItemRender (对齐) |
-| 分组头 | ProviderItemRender | ProviderItemRender (对齐) |
-| 能力标签 | ModelInfoTags (antd Tag) | ModelInfoTags (移动端 Tag) |
-| 选中标识 | activeKey: menuKey(provider, model) | ✅ 完全一致 |
-| 选择行为 | updateAgentConfig({ model, provider }) | ✅ 完全一致 |
-| 空状态 | emptyProvider/emptyModel + 跳转 | ✅ 完全一致 |
-| 交互方式 | Click | Touch 友好的按钮尺寸 |
+| 方面     | Web 端 (ModelSwitchPanel)              | 移动端 (重构后)                                                    |
+| -------- | -------------------------------------- | ------------------------------------------------------------------ |
+| 文件位置 | `src/features/ModelSwitchPanel/`       | `app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/` |
+| 组件类型 | Feature 组件                           | 业务组件                                                           |
+| 文件结构 | 单文件 `index.tsx`                     | `index.tsx + styles.ts` 规范                                       |
+| 引用方式 | 模块导入                               | 相对路径引用                                                       |
+| 容器     | ActionDropdown + Menu                  | Modal + ScrollView                                                 |
+| 触发器   | children (任意内容)                    | ModelIcon                                                          |
+| 数据获取 | useAgentStore + useEnabledChatModels   | ✅ 完全一致                                                        |
+| 菜单构建 | getModelItems + useMemo                | ✅ 完全一致                                                        |
+| 模型项   | ModelItemRender                        | ModelItemRender (对齐)                                             |
+| 分组头   | ProviderItemRender                     | ProviderItemRender (对齐)                                          |
+| 能力标签 | ModelInfoTags (antd Tag)               | ModelInfoTags (移动端 Tag)                                         |
+| 选中标识 | activeKey: menuKey(provider, model)    | ✅ 完全一致                                                        |
+| 选择行为 | updateAgentConfig({ model, provider }) | ✅ 完全一致                                                        |
+| 空状态   | emptyProvider/emptyModel + 跳转        | ✅ 完全一致                                                        |
+| 交互方式 | Click                                  | Touch 友好的按钮尺寸                                               |
 
 ---
 

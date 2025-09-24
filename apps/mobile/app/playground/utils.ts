@@ -204,6 +204,33 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     path: 'theme-provider',
     tags: ['theme', 'token'],
   },
+  {
+    category: 'layout',
+    description: '基于 Flexbox 的弹性布局容器，提供简洁的 API 来控制子元素排列',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'FlexBox',
+    path: 'flexbox',
+    tags: ['flexbox', 'layout', 'container', 'alignment'],
+  },
+  {
+    category: 'layout',
+    description: '居中组件，支持水平、垂直或完全居中显示子元素',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Center',
+    path: 'center',
+    tags: ['center', 'layout', 'align', 'middle'],
+  },
+  {
+    category: 'layout',
+    description: '基于 FlexBox 的灵活容器组件，支持多种样式变体、阴影和玻璃效果，使用 CVA 管理样式',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Block',
+    path: 'block',
+    tags: ['block', 'container', 'cva', 'variant', 'layout'],
+  },
 ];
 
 /**

@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   badge: {
     backgroundColor: token.colorError,
     borderRadius: token.borderRadiusXS,

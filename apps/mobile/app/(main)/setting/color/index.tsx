@@ -4,14 +4,15 @@ import { View } from 'react-native';
 import { PageContainer, ColorSwatches } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import {
-  findCustomThemeName,
-  PrimaryColors,
   NeutralColors,
-  primaryColors,
+  PrimaryColors,
+  findCustomThemeName,
   neutralColors,
+  primaryColors,
 } from '@/theme';
+
+import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from '../styles';
-import { SettingItem, SettingGroup } from '../(components)';
 import Preview from './(components)/Preview';
 
 export default function ThemeSettingScreen() {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
-import { ChatMessage, ChatTranslate } from '@/types/message';
 import { trpcClient } from '@/services/_auth/trpc';
+import { ChatMessage, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 

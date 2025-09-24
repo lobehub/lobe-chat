@@ -1,4 +1,5 @@
-import { router as globalRouter, type Router } from 'expo-router';
+import { type Router, router as globalRouter } from 'expo-router';
+
 import { isLoginMounted } from './loginState';
 
 export const isOnLoginPath = () => isLoginMounted();

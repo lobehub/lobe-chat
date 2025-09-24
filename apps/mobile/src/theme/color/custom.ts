@@ -1,20 +1,20 @@
+import { mauve, olive, sage, sand, slate } from './neutrals';
 import {
   blue,
   cyan,
   geekblue,
   gold,
+  gray,
   green,
   lime,
   magenta,
   orange,
+  primary,
   purple,
   red,
   volcano,
-  primary,
   yellow,
-  gray,
 } from './primary';
-import { mauve, olive, sage, sand, slate } from './neutrals';
 
 export const primaryColors = {
   blue: blue.dark[9],

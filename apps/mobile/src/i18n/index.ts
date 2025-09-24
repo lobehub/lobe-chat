@@ -5,7 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import { DEFAULT_LANG } from '@/const/locale';
 import { isDev } from '@/utils/env';
 
-import { loadLocaleResources, getSupportedLocales } from './generatedConfig';
+import { getSupportedLocales, loadLocaleResources } from './generatedConfig';
 import { getDetectedLocale } from './resource';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';

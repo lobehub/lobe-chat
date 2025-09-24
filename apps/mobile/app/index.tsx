@@ -1,4 +1,5 @@
 import { Redirect } from 'expo-router';
+
 import { useAuth } from '@/store/user';
 
 export default function Page() {

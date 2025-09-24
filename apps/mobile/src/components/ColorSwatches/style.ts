@@ -2,7 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(
   (
-    token,
+    { token },
     {
       size,
       shape,
