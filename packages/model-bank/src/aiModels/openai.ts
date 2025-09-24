@@ -27,6 +27,34 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
+      'GPT-5-Codex 是 GPT-5 的一个版本，针对 Codex 或类似环境中的代理编码任务进行了优化。',
+    displayName: 'GPT-5-Codex',
+    enabled: true,
+    id: 'gpt-5-codex',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-23',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
       '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
     displayName: 'GPT-5',
     enabled: true,
