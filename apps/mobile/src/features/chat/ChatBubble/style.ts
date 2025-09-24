@@ -41,7 +41,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   codeText: {
     color: token.colorText,
-    fontFamily: 'monospace',
+    fontFamily: token.fontFamilyCode,
     fontSize: token.fontSize,
     lineHeight: token.lineHeightSM,
   },
