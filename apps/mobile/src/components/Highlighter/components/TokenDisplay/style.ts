@@ -1,11 +1,4 @@
-import { Platform } from 'react-native';
-
 import { createStyles } from '@/theme';
-
-const monospaceFontFamily = Platform.select({
-  android: 'monospace',
-  ios: 'Menlo',
-});
 
 export const useStyles = createStyles(({ token }) => ({
   codeContainer: {
@@ -18,7 +11,7 @@ export const useStyles = createStyles(({ token }) => ({
   codeLine: {
     flexDirection: 'row',
     flexShrink: 0,
-    fontFamily: monospaceFontFamily,
+    fontFamily: token.fontFamilyCode,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
   },
@@ -29,7 +22,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   codeText: {
     flexShrink: 0,
-    fontFamily: monospaceFontFamily,
+    fontFamily: token.fontFamilyCode,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
   },

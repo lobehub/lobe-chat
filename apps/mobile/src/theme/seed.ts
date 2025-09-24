@@ -2,12 +2,12 @@ import { primaryColors } from './color';
 import type { PresetColorType, SeedToken } from './interface';
 
 // 字体定义
-const FONT_EN = `"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
-const FONT_CN = `"PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif`;
+const FONT_EN = `"HarmonyOS-Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
+const FONT_CN = `"HarmonyOS-Sans-SC", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif`;
 const FONT_EMOJI = `"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"`;
-const FONT_CODE = `"SF Mono", "Menlo", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace`;
+const FONT_CODE = `"Hack", "SF Mono", "Menlo", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace`;
 
-// 优先使用系统默认字体
+// 优先使用系统默认字体，但在 React Native 中使用自定义字体
 const FONT_SYSTEM = 'System';
 
 export const defaultPresetColors: PresetColorType = primaryColors;
