@@ -15,6 +15,8 @@ import {
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
@@ -337,6 +339,48 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       return await postProcessModelList(resultModels, (modelId) =>
         getModelPropertyWithFallback<AiModelType>(modelId, 'type'),
       );
+    }
+
+    async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+      const { messages, schema, model, responseApi } = payload;
+
+      if (responseApi) {
+        const res = await this.client!.responses.create(
+          {
+            input: messages,
+            model,
+            text: { format: { strict: true, type: 'json_schema', ...schema } },
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const text = res.output_text;
+        try {
+          return JSON.parse(text);
+        } catch {
+          console.error('parse json error:', text);
+          return undefined;
+        }
+      }
+
+      const res = await this.client.chat.completions.create(
+        {
+          messages,
+          model,
+          response_format: { json_schema: schema, type: 'json_schema' },
+          user: options?.user,
+        },
+        { headers: options?.headers, signal: options?.signal },
+      );
+      const text = res.choices[0].message.content!;
+
+      try {
+        return JSON.parse(text);
+      } catch {
+        console.error('parse json error:', text);
+        return undefined;
+      }
     }
 
     async embeddings(
