@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useMemo, memo } from 'react';
-import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
-import { RefreshCcw } from 'lucide-react-native';
-import { Input, Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { RefreshCcw } from 'lucide-react-native';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
 
+import { Button, Input, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderModelListItem } from '@/types/aiModel';
 
-import { useStyles } from './style';
 import ModelListSkeleton from '../ModelListSkeleton';
+import { useStyles } from './style';
 
 interface ModelsSectionProps {
   providerId: string;
