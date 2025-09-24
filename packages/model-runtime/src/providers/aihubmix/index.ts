@@ -15,16 +15,6 @@ export interface AiHubMixModelCard {
 
 const baseURL = 'https://aihubmix.com';
 
-const handlePayload = (payload: ChatStreamPayload) => {
-  if (
-    responsesAPIModels.has(payload.model) ||
-    payload.model.includes('gpt-') ||
-    /^o\d/.test(payload.model)
-  ) {
-    return { ...payload, apiMode: 'responses' } as any;
-  }
-  return payload as any;
-};
 
 export const LobeAiHubMixAI = createRouterRuntime({
   debug: {
@@ -75,7 +65,11 @@ export const LobeAiHubMixAI = createRouterRuntime({
       options: {
         baseURL: urlJoin(baseURL, '/v1'),
         chatCompletion: {
-          handlePayload,
+          useResponseModels: [
+            ...Array.from(responsesAPIModels),
+            /gpt-\d(?!\d)/,
+            /^o\d/,
+          ],
         },
       },
     },
