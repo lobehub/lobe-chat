@@ -1,12 +1,11 @@
 import * as Clipboard from 'expo-clipboard';
-import { Copy, LucideIcon, RefreshCw, RotateCcw, Trash2 } from 'lucide-react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, View } from 'react-native';
+import * as ContextMenu from 'zeego/context-menu';
 
-import { useToast, Tooltip } from '@/components';
+import { useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
-import { useThemeToken } from '@/theme';
 import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
@@ -20,40 +19,32 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
   const { t } = useTranslation(['chat', 'common']);
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const token = useThemeToken();
   const { styles } = useStyles();
-  const [tooltipVisible, setTooltipVisible] = React.useState(false);
 
-  const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
 
   // 复制消息内容
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await Clipboard.setStringAsync(message.content);
       toast.success(t('messageCopied', { ns: 'chat' }));
-      setTooltipVisible(false); // 关闭tooltip
     } catch (error) {
       console.error('复制失败:', error);
       toast.error(t('copyFailed', { ns: 'chat' }));
-      setTooltipVisible(false); // 关闭tooltip
     }
-  };
+  }, [message.content, t, toast]);
 
   // 重新生成消息
-  const handleRegenerate = async () => {
+  const handleRegenerate = useCallback(async () => {
     try {
       await regenerateMessage(message.id);
-      setTooltipVisible(false); // 关闭tooltip
     } catch (error: any) {
       toast.error(error.message || t('regenerateFailed', { ns: 'chat' }));
-      setTooltipVisible(false); // 关闭tooltip
     }
-  };
+  }, [message.id, regenerateMessage, t, toast]);
 
   // 删除消息
-  const handleDelete = () => {
-    setTooltipVisible(false); // 先关闭tooltip
+  const handleDelete = useCallback(() => {
     Alert.alert(t('confirmDelete', { ns: 'chat' }), t('deleteMessageConfirm', { ns: 'chat' }), [
       {
         style: 'cancel',
@@ -67,61 +58,47 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
         text: t('delete', { ns: 'common' }),
       },
     ]);
-  };
+  }, [deleteMessage, message.id, t]);
 
-  // 渲染单个操作项
-  const renderActionItem = (Icon: LucideIcon, label: string, onPress: () => void) => (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={styles.actionItem}>
-      <Icon color={token.colorBgContainer} size={20} />
-      <Text style={[styles.actionLabel]}>{label}</Text>
-    </TouchableOpacity>
-  );
-
-  // 渲染操作网格
-  const renderActions = () => {
-    if (isAssistant) {
-      // AI消息操作：复制、重新生成、删除
-      return (
-        <View style={styles.actionsContainer}>
-          <View style={styles.actionsRow}>
-            {renderActionItem(Copy, t('actions.copy', { ns: 'common' }), handleCopy)}
-            {renderActionItem(RefreshCw, t('actions.retry', { ns: 'common' }), handleRegenerate)}
-            {renderActionItem(Trash2, t('actions.delete', { ns: 'common' }), handleDelete)}
-          </View>
-        </View>
-      );
-    } else {
-      // 用户消息操作：复制、重新生成、删除
-      return (
-        <View style={styles.actionsContainer}>
-          <View style={styles.actionsRow}>
-            {renderActionItem(Copy, t('actions.copy', { ns: 'common' }), handleCopy)}
-            {renderActionItem(
-              RotateCcw,
-              t('actions.regenerate', { ns: 'common' }),
-              handleRegenerate,
-            )}
-            {renderActionItem(Trash2, t('actions.delete', { ns: 'common' }), handleDelete)}
-          </View>
-        </View>
-      );
-    }
-  };
+  const regenerateLabel = isAssistant
+    ? t('actions.retry', { ns: 'common' })
+    : t('actions.regenerate', { ns: 'common' });
 
   return (
-    <Tooltip
-      arrow={true}
-      onVisibleChange={setTooltipVisible}
-      overlayStyle={styles.tooltipOverlay}
-      placement={isUser ? 'topRight' : 'topLeft'}
-      title={renderActions()}
-      trigger="longPress"
-      visible={tooltipVisible}
-    >
-      <TouchableOpacity activeOpacity={1} style={styles.touchableWrapper}>
-        {children}
-      </TouchableOpacity>
-    </Tooltip>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>
+        <View style={styles.touchableWrapper}>{children}</View>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item key={`${message.id}-copy`} onSelect={handleCopy}>
+          <ContextMenu.ItemTitle>{t('actions.copy', { ns: 'common' })}</ContextMenu.ItemTitle>
+          <ContextMenu.ItemIcon
+            ios={{
+              name: 'doc.on.doc',
+              pointSize: 18,
+            }}
+          />
+        </ContextMenu.Item>
+        <ContextMenu.Item key={`${message.id}-regenerate`} onSelect={handleRegenerate}>
+          <ContextMenu.ItemTitle>{regenerateLabel}</ContextMenu.ItemTitle>
+          <ContextMenu.ItemIcon
+            ios={{
+              name: 'arrow.clockwise',
+              pointSize: 18,
+            }}
+          />
+        </ContextMenu.Item>
+        <ContextMenu.Item destructive key={`${message.id}-delete`} onSelect={handleDelete}>
+          <ContextMenu.ItemTitle>{t('actions.delete', { ns: 'common' })}</ContextMenu.ItemTitle>
+          <ContextMenu.ItemIcon
+            ios={{
+              name: 'trash',
+              pointSize: 18,
+            }}
+          />
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
   );
 };
 
