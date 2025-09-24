@@ -1,7 +1,7 @@
-import { createStyles } from '@/theme';
 import { LOGO_SIZE } from '@/const/common';
+import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   container: {
     alignItems: 'center',
     backgroundColor: token.colorBgContainer,

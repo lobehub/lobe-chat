@@ -1,8 +1,8 @@
+import type { ThemedToken } from '@shikijs/core';
 import { useMemo, useRef } from 'react';
 import { Md5 } from 'ts-md5';
 
 import { useHighlighter } from './useHighlighter';
-import type { ThemedToken } from '@shikijs/core';
 
 const MD5_LENGTH_THRESHOLD = 10_000;
 

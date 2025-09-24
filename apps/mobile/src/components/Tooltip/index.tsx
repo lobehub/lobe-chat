@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 import { useTheme, useThemeToken } from '@/theme';
+
 import { useStyles } from './style';
 
 export type TooltipPlacement =

@@ -1,5 +1,5 @@
 import { primaryColors } from './color';
-import type { SeedToken, PresetColorType } from './interface';
+import type { PresetColorType, SeedToken } from './interface';
 
 // 字体定义
 const FONT_EN = `"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
@@ -22,13 +22,13 @@ const seedToken: SeedToken = {
   // 圆角
   borderRadius: 6,
 
-  colorBgBase: '',
+  colorBgBase: '#ffffff',
 
   colorError: '#ff4d4f',
 
   colorInfo: '#1677ff',
 
-  colorLink: '',
+  colorLink: '#1677ff',
 
   // 品牌色 - 默认使用黑色作为主色
   colorPrimary: primaryColors.primary,
@@ -37,7 +37,7 @@ const seedToken: SeedToken = {
   colorSuccess: '#52c41a',
 
   // 中性色基础
-  colorTextBase: '',
+  colorTextBase: '#000000',
 
   colorWarning: '#faad14',
 

@@ -1,5 +1,5 @@
-import { DiscoverAssistantItem } from '@/types/discover';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { DiscoverAssistantItem } from '@/types/discover';
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
 

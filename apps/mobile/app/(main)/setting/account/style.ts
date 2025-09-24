@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   avatarSection: {
     alignItems: 'center',
     marginBottom: token.marginLG,

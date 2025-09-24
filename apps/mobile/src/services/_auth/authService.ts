@@ -1,12 +1,14 @@
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { jwtDecode } from 'jwt-decode';
-import { TokenStorage } from './tokenStorage';
-import { PKCEUtils } from './pkce';
-import type { AuthConfig, AuthService, Token, User, PKCE } from '@/_types/user';
-import { authLogger } from '@/utils/logger';
+
+import type { AuthConfig, AuthService, PKCE, Token, User } from '@/_types/user';
 import { AUTH_ENDPOINTS } from '@/config/auth';
 import { getUserStoredLocale } from '@/i18n';
+import { authLogger } from '@/utils/logger';
+
+import { PKCEUtils } from './pkce';
+import { TokenStorage } from './tokenStorage';
 
 // 为 Web 浏览器配置预热
 WebBrowser.maybeCompleteAuthSession();

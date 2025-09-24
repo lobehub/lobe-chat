@@ -1,7 +1,9 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
-import { View, ColorValue, StyleProp, ViewStyle } from 'react-native';
+import React from 'react';
+import { ColorValue, StyleProp, View, ViewStyle } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import ActionIcon from '../index';
 
 const MockIcon = ({

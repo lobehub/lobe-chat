@@ -1,9 +1,10 @@
-import React, { memo } from 'react';
-import { View, Text } from 'react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
+import React, { memo } from 'react';
+import { Text, View } from 'react-native';
 
-import { AIChatModelCard } from '@/types/aiModel';
 import { ModelInfoTags } from '@/components';
+import { AIChatModelCard } from '@/types/aiModel';
+
 import { useStyles } from './styles';
 
 interface ModelItemRenderProps extends AIChatModelCard {

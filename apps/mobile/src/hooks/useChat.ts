@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+
 import { useSendMessage } from './useSendMessage';
 
 export function useChat() {

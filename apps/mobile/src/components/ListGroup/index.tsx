@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, type ViewProps, Text } from 'react-native';
+import { Text, View, type ViewProps } from 'react-native';
 
 import { useStyles } from './style';
 

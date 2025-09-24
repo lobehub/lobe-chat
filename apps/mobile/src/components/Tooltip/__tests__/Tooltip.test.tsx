@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import Tooltip from '../index';
 
 describe('Tooltip', () => {

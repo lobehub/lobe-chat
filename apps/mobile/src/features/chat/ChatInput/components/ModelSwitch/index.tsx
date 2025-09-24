@@ -1,10 +1,11 @@
-import React, { memo, useState, useCallback } from 'react';
-import { TouchableOpacity, ViewStyle } from 'react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
+import React, { memo, useCallback, useState } from 'react';
+import { TouchableOpacity, ViewStyle } from 'react-native';
+
+import { ICON_SIZE_LARGE } from '@/const/common';
+import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 
 import ModelSelectModal from './ModelSelectModal';
-import { useCurrentAgent } from '@/hooks/useCurrentAgent';
-import { ICON_SIZE_LARGE } from '@/const/common';
 
 interface ModelSwitchProps {
   style?: ViewStyle;

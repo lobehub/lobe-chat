@@ -2,8 +2,8 @@ import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { ChatModelCard } from '@/types/llm';
 import { getMessageError } from '@/utils/fetch';
 
-import { API_ENDPOINTS } from './_url';
 import { createHeaderWithAuth } from './_auth/header';
+import { API_ENDPOINTS } from './_url';
 
 const isEnableFetchOnClient = (provider: string) => {
   return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());

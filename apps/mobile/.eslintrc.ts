@@ -1,3 +1,1 @@
-module.exports = {
-  extends: '../../.eslintrc.js',
-};
+module.exports = require('@lobehub/lint').eslint;

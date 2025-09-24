@@ -1,11 +1,12 @@
+import dayjs from 'dayjs';
 import React from 'react';
 import { Text, View } from 'react-native';
-import dayjs from 'dayjs';
 
 import { Avatar } from '@/components';
 import GitHubAvatar from '@/components/GithubAvatar';
-import { useStyles } from './styles';
 import { AVATAR_SIZE_LARGE } from '@/const/common';
+
+import { useStyles } from './styles';
 
 interface DetailHeaderProps {
   author: string;

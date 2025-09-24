@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { Button, Space } from '@/components';
+
 import type { ButtonColor } from '../style';
 
 const colors: ButtonColor[] = ['default', 'primary', 'danger', 'magenta', 'purple', 'cyan'];
