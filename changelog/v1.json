@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Macos desktop sign."]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.10"
+  },
+  {
     "children": {},
     "date": "2025-09-23",
     "version": "1.132.9"
