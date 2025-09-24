@@ -27,7 +27,7 @@ const useStyles = createStyles(({ css }) => ({
     align-items: center;
     justify-content: center;
 
-    height: 565px;
+    height: 100%;
     padding: 20px;
   `,
   emptyState: css`
@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css }) => ({
     align-items: center;
     justify-content: center;
 
-    height: 565px;
+    height: 100%;
 
     color: #666;
   `,
@@ -93,6 +93,7 @@ const useStyles = createStyles(({ css }) => ({
     text-align: center;
   `,
   fullscreenPageText: css`
+    min-width: 20px;
     font-size: 14px;
     color: white;
   `,
@@ -102,7 +103,7 @@ const useStyles = createStyles(({ css }) => ({
     align-items: center;
     justify-content: center;
 
-    height: 565px;
+    height: 100%;
   `,
   loadingText: css`
     margin-block-start: 8px;
