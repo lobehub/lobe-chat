@@ -178,6 +178,9 @@ export default {
     },
     title: 'New API',
   },
+  poe: {
+    title: 'Poe',
+  },
   ollama: {
     checker: {
       desc: '测试代理地址是否正确填写',
