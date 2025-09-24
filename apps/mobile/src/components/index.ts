@@ -1,11 +1,14 @@
 export * from '../theme/ThemeProvider';
 export { default as ActionIcon } from './ActionIcon';
 export { default as Avatar } from './Avatar';
+export { default as Block } from './Block';
 export { default as Button } from './Button';
 export * from './Button';
 export * from './CapsuleTabs';
 export { default as ColorScales } from './ColorScales';
+export { default as Center } from './Center';
 export { default as ColorSwatches } from './ColorSwatches';
+export { default as FlexBox } from './FlexBox';
 export { default as FluentEmoji } from './FluentEmoji';
 export { default as GitHubAvatar } from './GithubAvatar';
 export { default as Highlighter } from './Highlighter';

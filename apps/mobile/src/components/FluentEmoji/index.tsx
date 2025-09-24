@@ -2,8 +2,9 @@ import React, { memo, useMemo, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
+
 import { useStyles } from './style';
-import { genEmojiUrl, EmojiType, genCdnUrl } from './utils';
+import { EmojiType, genCdnUrl, genEmojiUrl } from './utils';
 
 export interface FluentEmojiProps {
   /**

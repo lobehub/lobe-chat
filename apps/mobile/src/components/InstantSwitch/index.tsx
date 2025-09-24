@@ -1,5 +1,5 @@
-import React, { memo, useState, useEffect } from 'react';
-import { Switch, ActivityIndicator, ViewStyle, View } from 'react-native';
+import React, { memo, useEffect, useState } from 'react';
+import { ActivityIndicator, Switch, View, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';
 

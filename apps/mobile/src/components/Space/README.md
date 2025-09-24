@@ -79,7 +79,7 @@ export default () => (
 设置对齐模式。
 
 ```jsx
-import { Space, View, Text } from 'react-native';
+import { Space, Text, View } from 'react-native';
 
 export default () => (
   <Space align="center">
@@ -101,7 +101,7 @@ export default () => (
 自动换行。
 
 ```jsx
-import { Space, View, Text } from 'react-native';
+import { Space, Text, View } from 'react-native';
 
 export default () => (
   <Space wrap>
@@ -134,14 +134,14 @@ export default () => (
 
 ### Space
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
-| direction | 间距方向 | `'vertical' \| 'horizontal'` | `'horizontal'` |
-| size | 间距大小 | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'` |
-| split | 设置拆分 | ReactNode | - |
-| wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | false |
-| style | 自定义样式 | StyleProp<ViewStyle> | - |
+| 参数      | 说明                                   | 类型                                                           | 默认值         |
+| --------- | -------------------------------------- | -------------------------------------------------------------- | -------------- |
+| align     | 对齐方式                               | `'start' \| 'end' \| 'center' \| 'baseline'`                   | -              |
+| direction | 间距方向                               | `'vertical' \| 'horizontal'`                                   | `'horizontal'` |
+| size      | 间距大小                               | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'`      |
+| split     | 设置拆分                               | ReactNode                                                      | -              |
+| wrap      | 是否自动换行，仅在 `horizontal` 时有效 | boolean                                                        | false          |
+| style     | 自定义样式                             | StyleProp<ViewStyle>                                           | -              |
 
 ```
 

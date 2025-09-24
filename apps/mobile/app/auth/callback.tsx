@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 // 处理 OAuth 回调的占位页面
 // Android 在完成外部浏览器登录后会通过 deep link 打开 com.lobehub.app://auth/callback

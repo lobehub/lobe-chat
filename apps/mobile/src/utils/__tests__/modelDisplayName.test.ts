@@ -1,4 +1,4 @@
-import { generateModelDisplayName, isModelFree, extractModelCoreName } from '../modelDisplayName';
+import { extractModelCoreName, generateModelDisplayName, isModelFree } from '../modelDisplayName';
 
 describe('modelDisplayName utilities', () => {
   describe('generateModelDisplayName', () => {

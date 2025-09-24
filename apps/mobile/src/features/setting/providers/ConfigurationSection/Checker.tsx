@@ -1,27 +1,27 @@
-import React, { useState, memo, ReactNode, useMemo, useCallback } from 'react';
+import { TraceNameMap } from '@lobechat/types';
+import { ModelIcon } from '@lobehub/icons-rn';
+import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
+import React, { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ActivityIndicator,
-  Modal,
   FlatList,
   ListRenderItem,
+  Modal,
   ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { CheckCircle, XCircle, ChevronDown, X } from 'lucide-react-native';
-import { useTranslation } from 'react-i18next';
-import { ModelIcon } from '@lobehub/icons-rn';
 
-import { useThemeToken } from '@/theme';
-import { chatService } from '@/services/chat';
-import { ChatMessageError } from '@/types/message';
-import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { Button } from '@/components';
 import { useProviderName } from '@/hooks/useProviderName';
+import { chatService } from '@/services/chat';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { useThemeToken } from '@/theme';
+import { ChatMessageError } from '@/types/message';
 
 import { useStyles } from './style';
-import { TraceNameMap } from '@lobechat/types';
-import { Button } from '@/components';
 
 export type CheckErrorRender = (props: {
   defaultError: ReactNode;

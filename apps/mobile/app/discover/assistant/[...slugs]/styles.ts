@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   // 操作按钮相关样式
   actionButtonsContainer: {
     flexDirection: 'row',

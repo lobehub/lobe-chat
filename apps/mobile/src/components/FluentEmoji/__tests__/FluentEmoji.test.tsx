@@ -1,7 +1,9 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
+import React from 'react';
 import { View } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import FluentEmoji from '../index';
 
 // Mocks are now in jest.setup.js

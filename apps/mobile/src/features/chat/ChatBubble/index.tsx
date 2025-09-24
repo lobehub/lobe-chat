@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
 import { Markdown } from '@/components';
+import { useSettingStore } from '@/store/setting';
 import { ChatMessage } from '@/types/message';
 
 import LoadingDots from '../LoadingDots';
@@ -9,7 +10,6 @@ import MessageActions from '../MessageActions';
 import ToolTipActions from '../ToolTipActions';
 import ErrorContent from './ErrorContent';
 import { useStyles } from './style';
-import { useSettingStore } from '@/store/setting';
 
 interface ChatBubbleProps {
   isLoading?: boolean;

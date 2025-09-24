@@ -1,8 +1,4 @@
 {
-  "cli": {
-    "version": ">= 14.7.1",
-    "appVersionSource": "remote"
-  },
   "build": {
     "development": {
       "developmentClient": true,
@@ -26,6 +22,10 @@
       "channel": "production",
       "pnpm": "10.10.0"
     }
+  },
+  "cli": {
+    "version": ">= 14.7.1",
+    "appVersionSource": "remote"
   },
   "submit": {
     "production": {

@@ -1,29 +1,28 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import * as NavigationBar from 'expo-navigation-bar';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
-import { Platform } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { ToastProvider } from '@/components';
 import i18n from '@/i18n';
+import { I18nReadyGate } from '@/i18n/ReadyGate';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
+import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
+import { TRPCProvider, trpcClient } from '@/services/_auth/trpc';
 import { useAuth, useUserStore } from '@/store/user';
 import { ThemeProvider, useTheme, useThemeToken } from '@/theme';
 import { authLogger } from '@/utils/logger';
-import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RootSiblingParent } from 'react-native-root-siblings';
-
-import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
 import '../polyfills';
-import { I18nReadyGate } from '@/i18n/ReadyGate';
-import { safeReplaceLogin } from '@/navigation/safeLogin';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete
 SplashScreen.preventAutoHideAsync();

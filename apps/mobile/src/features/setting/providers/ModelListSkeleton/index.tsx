@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
-import ModelCardSkeleton from '../ModelCardSkeleton';
 
+import ModelCardSkeleton from '../ModelCardSkeleton';
 import { useStyles } from './style';
 
 const ModelListSkeleton: React.FC = () => {

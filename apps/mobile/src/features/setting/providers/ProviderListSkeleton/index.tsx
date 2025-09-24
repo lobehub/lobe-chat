@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
-import ProviderCardSkeleton from '../ProviderCardSkeleton';
 
+import ProviderCardSkeleton from '../ProviderCardSkeleton';
 import { useStyles } from './style';
 
 const ProviderListSkeleton: React.FC = () => {
