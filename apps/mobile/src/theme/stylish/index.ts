@@ -123,4 +123,3 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
 
 // 导出类型和函数
 export type { LobeStylish };
-export { generateStylish };
