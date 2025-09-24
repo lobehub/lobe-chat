@@ -1,7 +1,7 @@
+import { MoonStar, Sun } from 'lucide-react-native';
 import React from 'react';
 
 import { ActionIcon, Space } from '@/components';
-import { Sun, MoonStar } from 'lucide-react-native';
 
 const VariantsDemo = () => {
   return (

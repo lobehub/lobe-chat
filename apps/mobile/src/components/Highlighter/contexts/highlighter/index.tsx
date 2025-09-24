@@ -23,6 +23,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createNativeEngine, isNativeEngineAvailable } from 'react-native-shiki-engine';
 
 import { themeConfig } from '@/components/Highlighter/theme';
+
 import type { HighlighterContextType } from './context';
 import { HighlighterContext } from './context';
 

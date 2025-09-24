@@ -97,8 +97,8 @@ const fetchUserData = async () => {
 #### 手动创建认证服务：
 
 ```typescript
-import { OAuthService } from '@/services/auth/authService';
 import { getAuthConfig } from '@/config/auth';
+import { OAuthService } from '@/services/auth/authService';
 
 const authService = new OAuthService(getAuthConfig());
 

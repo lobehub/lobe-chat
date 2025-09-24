@@ -1,13 +1,13 @@
-import { Text, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { Settings2 } from 'lucide-react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { Avatar, Icon } from '@/components';
+import { AVATAR_SIZE } from '@/const/common';
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { useAuth } from '@/store/user';
 
 import { useStyles } from './styles';
-import { AVATAR_SIZE } from '@/const/common';
 
 export default function SessionFooter() {
   const { styles } = useStyles();

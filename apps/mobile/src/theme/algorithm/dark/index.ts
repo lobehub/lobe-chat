@@ -1,16 +1,15 @@
-import { colorScales, neutralColorScales, ColorScaleItem } from '../../color';
-import darkBaseToken from './color';
+import { ColorScaleItem, colorScales, neutralColorScales } from '../../color';
 import type { MappingAlgorithm } from '../../interface';
-
+import genCommonMapToken from '../shared/genCommonMapToken';
+import genControlHeight from '../shared/genControlHeight';
+import genFontMapToken from '../shared/genFontMapToken';
+import genSizeMapToken from '../shared/genSizeMapToken';
 import {
   generateColorNeutralPalette,
   generateColorPalette,
   generateCustomColorPalettes,
 } from '../shared/generateColorPalette';
-import genCommonMapToken from '../shared/genCommonMapToken';
-import genControlHeight from '../shared/genControlHeight';
-import genSizeMapToken from '../shared/genSizeMapToken';
-import genFontMapToken from '../shared/genFontMapToken';
+import darkBaseToken from './color';
 
 export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
   const primaryColor = seedToken.primaryColor;

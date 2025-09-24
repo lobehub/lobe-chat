@@ -4,7 +4,7 @@ import { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from './type';
 
 export const useStyles = createStyles(
   (
-    token,
+    { token },
     {
       variant,
       color,

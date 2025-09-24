@@ -1,11 +1,11 @@
 import { BlurView } from 'expo-blur';
+import { CircleXIcon } from 'lucide-react-native';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import RootSiblings from 'react-native-root-siblings';
 
 import { FullWindowOverlay } from '@/components/FullWindowOverlay/FullWindowOverlay';
-import { CircleXIcon } from 'lucide-react-native';
 import { useThemeToken } from '@/theme';
 
 const LoadingContainer: FC<{

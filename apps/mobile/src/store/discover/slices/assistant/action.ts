@@ -1,4 +1,5 @@
 import type { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
+import i18n from 'i18next';
 import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
@@ -10,7 +11,6 @@ import {
   DiscoverAssistantDetail,
   IdentifiersResponse,
 } from '@/types/discover';
-import i18n from 'i18next';
 
 export interface AssistantAction {
   useAssistantCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;

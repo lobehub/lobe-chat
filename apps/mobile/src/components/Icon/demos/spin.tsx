@@ -1,7 +1,7 @@
+import { LoaderCircle, RefreshCw, RotateCcw } from 'lucide-react-native';
 import React from 'react';
 
 import { Icon, Space } from '@/components';
-import { LoaderCircle, RefreshCw, RotateCcw } from 'lucide-react-native';
 
 const SpinDemo = () => {
   return (

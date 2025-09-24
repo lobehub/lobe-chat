@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import Skeleton from '../index';
 
 jest.mock('react-native', () => ({
