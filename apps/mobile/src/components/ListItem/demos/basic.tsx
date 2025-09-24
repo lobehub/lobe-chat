@@ -1,9 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
-
 import { ListItem } from '@/components';
+import { useThemeToken } from '@/theme';
 
 const handlePress = (title: string) => {
   console.log(`点击了: ${title}`);

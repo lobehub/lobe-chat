@@ -1,8 +1,11 @@
 import React from 'react';
-import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Alert, View } from 'react-native';
 
-import { SettingItem, SettingGroup } from '../(components)';
+import { PageContainer } from '@/components';
+import { useSettingStore } from '@/store/setting';
+
+import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
 import {
   clearAuthData,
@@ -11,8 +14,6 @@ import {
   invalidateAccessToken,
   invalidateRefreshToken,
 } from './utils';
-import { PageContainer } from '@/components';
-import { useSettingStore } from '@/store/setting';
 
 export default function DeveloperScreen() {
   const { styles } = useStyles();

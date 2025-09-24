@@ -1,4 +1,5 @@
 import { StyleProp, ViewStyle } from 'react-native';
+
 import { IconRenderable } from '../Icon';
 
 export type CapsuleTabsSize = 'large' | 'middle' | 'small';

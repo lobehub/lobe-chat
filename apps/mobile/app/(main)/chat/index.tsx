@@ -1,25 +1,21 @@
-import { View, Text } from 'react-native';
+import { useRouter } from 'expo-router';
+import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
+import { ActionIcon, Avatar, PageContainer, Space } from '@/components';
+import { AVATAR_SIZE } from '@/const/common';
 import Hydration from '@/features/Hydration';
+import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';
 import ChatInput from '@/features/chat/ChatInput';
 import ChatList from '@/features/chat/ChatList';
-import SideBar from '@/features/SideBar';
-
-import { useRouter } from 'expo-router';
-
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import { useStyles } from './style';
-import { useTranslation } from 'react-i18next';
-import { useGlobalStore } from '@/store/global';
-import { ActionIcon, Avatar, PageContainer, Space } from '@/components';
-
-import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
-
-import { AVATAR_SIZE } from '@/const/common';
 
 export default function ChatWithDrawer() {
   const { styles, token } = useStyles();

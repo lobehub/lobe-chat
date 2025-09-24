@@ -1,7 +1,9 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
 import { Home } from 'lucide-react-native';
+import React from 'react';
+
 import { renderWithTheme } from '@/test/utils';
+
 import CapsuleTabs from '../index';
 
 const mockItems = [

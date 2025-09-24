@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
-import { useLocale } from '@/hooks/useLocale';
-import { version } from '../../../package.json';
-import { useStyles } from './styles';
-
-import { SettingItem, SettingGroup } from './(components)';
-import { useTheme } from '@/theme';
 import { PageContainer, Toast } from '@/components';
+import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
+import { useTheme } from '@/theme';
+
+import { version } from '../../../package.json';
+import { SettingGroup, SettingItem } from './(components)';
+import { useStyles } from './styles';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);

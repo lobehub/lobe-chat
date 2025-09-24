@@ -1,5 +1,6 @@
-import React, { useMemo, useState, memo, useCallback } from 'react';
-import { View, Text } from 'react-native';
+import React, { memo, useCallback, useMemo, useState } from 'react';
+import { Text, View } from 'react-native';
+
 import { Input } from '@/components';
 
 import { useStyles } from './style';
