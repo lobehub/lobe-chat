@@ -28,6 +28,11 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 const Follow = memo(() => {
+  // Hidden for imoogleAI branding - social media links removed from UI
+  return null;
+  
+  // Original social media links code preserved but commented out
+  /*
   const { styles } = useStyles();
   const { t } = useTranslation('common');
   return (
@@ -58,6 +63,7 @@ const Follow = memo(() => {
       </Link>
     </Flexbox>
   );
+  */
 });
 
 Follow.displayName = 'Follow';

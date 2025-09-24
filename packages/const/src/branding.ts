@@ -1,13 +1,13 @@
 // the code below can only be modified with commercial license
 // if you want to use it in the commercial usage
-// please contact us for more information: hello@lobehub.com
+// please contact us for more information: support@imoogleai.xyz
 
-export const LOBE_CHAT_CLOUD = 'LobeChat Cloud';
+export const LOBE_CHAT_CLOUD = 'imoogleAI Cloud';
 
-export const BRANDING_NAME = 'LobeChat';
+export const BRANDING_NAME = 'imoogleAI';
 export const BRANDING_LOGO_URL = '';
 
-export const ORG_NAME = 'LobeHub';
+export const ORG_NAME = 'imoogleAI';
 
 export const BRANDING_URL = {
   help: undefined,
@@ -24,6 +24,6 @@ export const SOCIAL_URL = {
 };
 
 export const BRANDING_EMAIL = {
-  business: 'hello@lobehub.com',
-  support: 'support@lobehub.com',
+  business: 'support@imoogleai.xyz',
+  support: 'support@imoogleai.xyz',
 };

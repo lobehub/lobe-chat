@@ -2,13 +2,13 @@
 
 [![][image-banner]][vercel-link]
 
-# Lobe Chat
+# imoogleAI
 
 An open-source, modern design ChatGPT/LLMs UI/framework.<br/>
-Supports speech synthesis, multi-modal, and extensible ([function call][docs-function-call]) plugin system.<br/>
+Supports speech synthesis, multi-modal, and extensible plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog][changelog] · [Support](mailto:support@imoogleai.xyz)
 
 <!-- SHIELD GROUP -->
 
@@ -27,7 +27,7 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 [![][github-license-shield]][github-license-link]<br>
 [![][sponsor-shield]][sponsor-link]
 
-**Share LobeChat Repository**
+**Share imoogleAI Repository**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]

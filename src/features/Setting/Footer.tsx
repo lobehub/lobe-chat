@@ -32,6 +32,9 @@ const Footer = memo<PropsWithChildren>(() => {
 
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
 
+  return null; // Hidden for imoogleAI branding
+  
+  /* Original footer code commented out for imoogleAI branding
   return hideGitHub ? null : (
     <>
       <Flexbox className={LayoutSettingsFooterClassName} justify={'flex-end'}>
@@ -98,6 +101,7 @@ const Footer = memo<PropsWithChildren>(() => {
       />
     </>
   );
+  */
 });
 
 Footer.displayName = 'SettingFooter';

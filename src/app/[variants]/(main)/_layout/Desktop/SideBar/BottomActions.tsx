@@ -15,6 +15,11 @@ const ICON_SIZE: ActionIconProps['size'] = {
 };
 
 const BottomActions = memo(() => {
+  // Hidden for imoogleAI branding - removed GitHub and User Manual links from sidebar
+  return null;
+  
+  // Original code preserved but commented out
+  /*
   const { t } = useTranslation('common');
   const { hideGitHub, hideDocs } = useServerConfigStore(featureFlagsSelectors);
 
@@ -42,6 +47,7 @@ const BottomActions = memo(() => {
       )}
     </Flexbox>
   );
+  */
 });
 
 export default BottomActions;
