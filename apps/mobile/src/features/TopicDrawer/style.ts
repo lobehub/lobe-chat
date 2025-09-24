@@ -1,17 +1,25 @@
-import { createStyles, getAlphaColor } from '@/theme';
+import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   // 抽屉内容容器
   drawerContent: {
-    backgroundColor: token.colorBgLayout,
     flex: 1,
   },
 
   drawerOverlay: {
-    backgroundColor: getAlphaColor(token.colorBorderBg, 0.9),
+    backgroundColor: token.colorBgMask,
   },
+
   drawerStyle: {
     backgroundColor: token.colorBgLayout,
     width: '80%',
+  },
+  headerTitle: {
+    color: token.colorTextHeading,
+    fontSize: token.fontSizeLG,
+    fontWeight: token.fontWeightStrong,
+  },
+  safeAreaView: {
+    flex: 1,
   },
 }));

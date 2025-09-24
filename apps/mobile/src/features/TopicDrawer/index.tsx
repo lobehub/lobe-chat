@@ -1,11 +1,13 @@
 import React, { memo } from 'react';
-import { View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import * as Haptics from 'expo-haptics';
+import { Text } from 'react-native';
 
 import { useGlobalStore } from '@/store/global';
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
+import { PageContainer } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 /**
  * TopicDrawer - 右侧Topic抽屉组件
@@ -13,6 +15,7 @@ import { useStyles } from './style';
  */
 const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
   const { styles } = useStyles();
+  const { t } = useTranslation(['topic']);
 
   const [topicDrawerOpen, setTopicDrawerOpen] = useGlobalStore((s) => [
     s.topicDrawerOpen,
@@ -36,9 +39,9 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <View style={styles.drawerContent}>
+        <PageContainer left={<Text style={styles.headerTitle}>{t('title')}</Text>}>
           <TopicList />
-        </View>
+        </PageContainer>
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}

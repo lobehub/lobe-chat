@@ -37,7 +37,7 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     }
 
     return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
-  }, [hasError, message.error, isLoading, message.content]);
+  }, [fontSize, hasError, isLoading, message.content, message.error]);
 
   return (
     <View
@@ -49,11 +49,9 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
       {isAssistant ? (
         <View style={styles.aiMessageContainer}>
           <View style={styles.aiContentContainer}>
-            <ToolTipActions message={message}>
-              <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
-                {content}
-              </View>
-            </ToolTipActions>
+            <View style={[styles.bubble, styles.aiBubble, hasError && styles.errorBubble]}>
+              {content}
+            </View>
             {!isLoading && (message.content || hasError) && (
               <MessageActions message={message} style={styles.messageActions} />
             )}
