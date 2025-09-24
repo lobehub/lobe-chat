@@ -2,11 +2,11 @@ import React, { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import { getDesignToken } from './getDesignToken';
 
-import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
 import { darkAlgorithm } from '../algorithm/dark';
 import { lightAlgorithm } from '../algorithm/light';
+import { getDesignToken } from './getDesignToken';
+import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 

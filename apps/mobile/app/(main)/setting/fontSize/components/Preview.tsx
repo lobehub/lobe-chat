@@ -2,10 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { Markdown } from '@/components';
-import { createStyles } from '@/theme';
 import { useSettingStore } from '@/store/setting';
+import { createStyles } from '@/theme';
 
-const usePreviewStyles = createStyles((token) => ({
+const usePreviewStyles = createStyles(({ token }) => ({
   aiBubble: {
     width: '100%',
   },

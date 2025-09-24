@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { PrimaryColors, ThemeMode, NeutralColors } from '@/theme';
+import { NeutralColors, PrimaryColors, ThemeMode } from '@/theme';
 import { isDev } from '@/utils/env';
 
 interface SettingState {

@@ -1,5 +1,6 @@
-import { ActionIcon, useThemeToken } from '@/components';
 import { MessagesSquare } from 'lucide-react-native';
+
+import { ActionIcon, useThemeToken } from '@/components';
 import { useGlobalStore } from '@/store/global';
 
 const ToogleTopicBtn = () => {

@@ -1,5 +1,4 @@
 import type { ColorScaleItem } from '../types';
-
 import mauve from './mauve';
 import olive from './olive';
 import sage from './sage';

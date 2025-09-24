@@ -4,6 +4,7 @@ import { Animated, Text, TouchableOpacity } from 'react-native';
 
 import Icon from '@/components/Icon';
 import { useThemeToken } from '@/theme';
+
 import { useStyles } from './style';
 
 export type ToastType = 'success' | 'error' | 'info' | 'loading';

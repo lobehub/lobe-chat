@@ -1,11 +1,11 @@
-import { useUserStore } from '@/store/user';
-import { TokenStorage } from './tokenStorage';
-import { authLogger } from '@/utils/logger';
-import { LOBE_CHAT_OIDC_AUTH_HEADER, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-
-import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
+import { LOBE_CHAT_AUTH_HEADER, LOBE_CHAT_OIDC_AUTH_HEADER } from '@/const/auth';
 import { authExpired } from '@/features/Error/AuthExpired';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { useUserStore } from '@/store/user';
+import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
+import { authLogger } from '@/utils/logger';
+
+import { TokenStorage } from './tokenStorage';
 
 /**
  * 认证参数接口，与 Web 端保持一致

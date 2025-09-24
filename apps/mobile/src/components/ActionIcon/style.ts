@@ -2,6 +2,7 @@ import { ViewStyle } from 'react-native';
 
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/const/common';
 import type { AliasToken } from '@/theme';
+
 import type { IconSize, IconSizeConfig } from '../Icon';
 
 const PRESET_ICON_SIZE = {

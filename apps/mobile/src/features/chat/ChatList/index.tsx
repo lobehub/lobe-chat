@@ -1,3 +1,4 @@
+import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   InteractionManager,
@@ -7,20 +8,21 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { FlashList, type ListRenderItem, type FlashListRef } from '@shopify/flash-list';
+import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
+import { runOnJS } from 'react-native-reanimated';
+
+import { LOADING_FLAT } from '@/const/message';
+import AutoScroll from '@/features/chat/AutoScroll';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { ChatMessage } from '@/types/message';
+
+import ChatBubble from '../ChatBubble';
 import MessageSkeletonList from '../MessageSkeletonList';
 import WelcomeMessage from '../WelcomeMessage';
 import { useStyles } from './style';
-import { ChatMessage } from '@/types/message';
-import { LOADING_FLAT } from '@/const/message';
-import ChatBubble from '../ChatBubble';
-import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
-import { runOnJS } from 'react-native-reanimated';
-import AutoScroll from '@/features/chat/AutoScroll';
 
 interface ChatListProps {
   style?: ViewStyle;

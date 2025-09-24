@@ -1,16 +1,16 @@
+import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import dayjs from 'dayjs';
 
-import { DiscoverAssistantItem } from '@/types/discover';
-import GitHubAvatar from '@/components/GithubAvatar';
 import Avatar from '@/components/Avatar';
+import GitHubAvatar from '@/components/GithubAvatar';
 import Space from '@/components/Space';
 import Tag from '@/components/Tag';
+import { AVATAR_SIZE_MEDIUM } from '@/const/common';
+import { DiscoverAssistantItem } from '@/types/discover';
 
 import { useStyles } from './style';
-import { AVATAR_SIZE_MEDIUM } from '@/const/common';
 
 interface AgentCardProps {
   item: DiscoverAssistantItem;

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { trpcClient } from '@/services/_auth/trpc';
+
 import { ISessionService } from './type';
 
 export class ServerService implements ISessionService {

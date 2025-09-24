@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { ThemeProvider, useThemeToken } from '../index';
 import { darkAlgorithm } from '@/theme';
+
+import { ThemeProvider, useThemeToken } from '../index';
 
 // 示例组件，使用主题 token
 const ExampleComponent = () => {

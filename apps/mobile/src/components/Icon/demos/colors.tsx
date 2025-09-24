@@ -1,7 +1,7 @@
+import { Flame, Palette, Sparkles } from 'lucide-react-native';
 import React from 'react';
 
 import { Icon, Space } from '@/components';
-import { Flame, Palette, Sparkles } from 'lucide-react-native';
 
 const ColorsDemo = () => {
   return (

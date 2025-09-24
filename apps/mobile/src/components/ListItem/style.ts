@@ -1,7 +1,7 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(
-  (token, hasDescription: boolean = false, active: boolean = false) => ({
+  ({ token }, hasDescription: boolean = false, active: boolean = false) => ({
     avatar: {
       borderRadius: token.borderRadiusLG + token.borderRadiusXS,
       height: token.controlHeightLG,

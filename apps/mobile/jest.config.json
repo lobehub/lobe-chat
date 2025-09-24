@@ -1,25 +1,25 @@
 {
-  "testEnvironment": "jsdom",
-  "moduleFileExtensions": ["ts", "tsx", "js", "jsx"],
-  "transform": {
-    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-  },
-  "testMatch": ["**/__tests__/**/*.(ts|tsx|js)", "**/*.(test|spec).(ts|tsx|js)"],
-  "moduleNameMapper": {
-    "^@/test/(.*)$": "<rootDir>/test/$1",
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^react-native$": "react-native-web"
-  },
-  "transformIgnorePatterns": [
-    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)"
-  ],
-  "setupFiles": ["<rootDir>/test/jest.setup.js"],
-  "setupFilesAfterEnv": ["<rootDir>/test/jest.setupAfterEnv.js"],
   "collectCoverage": true,
   "collectCoverageFrom": [
     "src/**/*.{ts,tsx,js,jsx}",
     "app/**/*.{ts,tsx,js,jsx}",
     "!app/playground/**",
     "!**/node_modules/**"
+  ],
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx"],
+  "moduleNameMapper": {
+    "^@/test/(.*)$": "<rootDir>/test/$1",
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^react-native$": "react-native-web"
+  },
+  "setupFiles": ["<rootDir>/test/jest.setup.js"],
+  "setupFilesAfterEnv": ["<rootDir>/test/jest.setupAfterEnv.js"],
+  "testEnvironment": "jsdom",
+  "testMatch": ["**/__tests__/**/*.(ts|tsx|js)", "**/*.(test|spec).(ts|tsx|js)"],
+  "transform": {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)"
   ]
 }
