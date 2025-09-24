@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { CapsuleTabs, CapsuleTabItem } from '@/components';
+import { Text, View } from 'react-native';
+
+import { CapsuleTabItem, CapsuleTabs } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const items: CapsuleTabItem[] = [
