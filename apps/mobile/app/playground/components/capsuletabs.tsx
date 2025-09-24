@@ -1,11 +1,11 @@
-import { PageContainer } from '@/components';
-import { useStyles } from './style';
-
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
-import { BasicDemo, IconsDemo, SizesDemo, ScrollingDemo } from '@/components/CapsuleTabs/demos';
+import { PageContainer } from '@/components';
+import { BasicDemo, IconsDemo, ScrollingDemo, SizesDemo } from '@/components/CapsuleTabs/demos';
 import README from '@/components/CapsuleTabs/readme';
+import ComponentPlayground, { DemoItem } from '@/components/Playground';
+
+import { useStyles } from './style';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
