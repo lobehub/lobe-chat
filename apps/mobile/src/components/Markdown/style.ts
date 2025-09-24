@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Platform } from 'react-native';
 
 import { useTheme, useThemeToken } from '@/theme';
 
@@ -76,7 +75,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     inlineCode: {
       backgroundColor: token.colorFillSecondary,
       color: token.colorText,
-      fontFamily: Platform.select({ android: 'monospace', ios: 'Menlo' }),
+      fontFamily: token.fontFamilyCode,
       fontSize: options.fontSize * 0.875,
     },
     link: {
