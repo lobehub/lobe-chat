@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
-import ColorSwatches from '../index';
+import { ColorSwatches } from '@/components';
 
 const BasicDemo = () => {
   const [selectedColor, setSelectedColor] = useState<string | undefined>();

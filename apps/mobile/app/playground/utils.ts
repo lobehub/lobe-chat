@@ -89,7 +89,7 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'navigation',
-    description: '水平滚动的胶囊选项卡组件，支持自定义样式和选择状态',
+    description: '水平滚动的胶囊选项卡组件，支持多尺寸、自定义样式和选择状态',
     hasDemos: true,
     hasReadme: false,
     name: 'CapsuleTabs',
@@ -173,9 +173,9 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     description: '增强的文本输入组件，支持前缀图标和统一样式设计',
     hasDemos: true,
     hasReadme: true,
-    name: 'TextInput',
-    path: 'textinput',
-    tags: ['textinput', 'input', 'form', 'prefix', 'text'],
+    name: 'Input',
+    path: 'input',
+    tags: ['input', 'textinput', 'form', 'prefix', 'text'],
   },
   {
     category: 'display',

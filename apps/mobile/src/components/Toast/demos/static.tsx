@@ -1,10 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, Toast } from '@/components';
 import { useThemeToken } from '@/theme';
-
-import Toast from '../index';
 
 const showSuccess = () => {
   Toast.success('操作成功');

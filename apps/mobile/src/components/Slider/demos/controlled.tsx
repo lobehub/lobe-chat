@@ -1,10 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, Slider } from '@/components';
 import { createStyles } from '@/theme';
-
-import Slider from '../index';
 
 const useStyles = createStyles((token) => ({
   buttonGroup: {
