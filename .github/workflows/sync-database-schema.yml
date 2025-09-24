@@ -21,9 +21,6 @@ jobs:
       - name: Install deps
         run: bun i
 
-      - name: Check dbdocs
-        run: dbdocs
-
       - name: sync database schema to dbdocs
         env:
           DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}

@@ -12,7 +12,7 @@ Built with modern technologies:
 - **Database**: PostgreSQL, PGLite, Drizzle ORM
 - **Testing**: Vitest, Testing Library
 - **Package Manager**: pnpm (monorepo structure)
-- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod), Vitest
+- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod)
 
 ## Directory Structure
 
@@ -28,7 +28,7 @@ The project follows a well-organized monorepo structure:
 
 ### Git Workflow
 
-- Use rebase for git pull: `git pull --rebase`
+- Use rebase for git pull
 - Git commit messages should prefix with gitmoji
 - Git branch name format: `username/feat/feature-name`
 - Use `.github/PULL_REQUEST_TEMPLATE.md` for PR descriptions
@@ -52,9 +52,6 @@ The project follows a well-organized monorepo structure:
 #### React Components
 
 - Use functional components with hooks
-- Follow the component structure guidelines
-- Use antd-style & @lobehub/ui for styling
-- Implement proper error boundaries
 
 #### Database Schema
 
@@ -75,7 +72,7 @@ The project follows a well-organized monorepo structure:
 **Important Notes**:
 
 - Wrap file paths in single quotes to avoid shell expansion
-- Never run `bun run test` - this runs all tests and takes ~10 minutes
+- Never run `bun run test` - this runs all tests and takes \~10 minutes
 - If a test fails twice, stop and ask for help
 - Always add tests for new code
 

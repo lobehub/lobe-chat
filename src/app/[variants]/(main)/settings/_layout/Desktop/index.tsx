@@ -1,35 +1,32 @@
 'use client';
 
 import { useResponsive, useTheme } from 'antd-style';
-import { usePathname } from 'next/navigation';
-import { PropsWithChildren, memo, useRef } from 'react';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
-import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
+import { SettingsTabs } from '@/store/global/initialState';
 
+import CategoryContent from '../CategoryContent';
+import SettingsContent from '../SettingsContent';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const SKIP_PATHS = ['/settings/provider', '/settings/agent'];
-
-const ContentContainer = memo<PropsWithChildren>(({ children }) => {
-  const pathname = usePathname();
-  const isSkip = SKIP_PATHS.some((path) => pathname.includes(path));
-
-  return isSkip ? (
-    children
-  ) : (
-    <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
-  );
-});
-
-const Layout = memo<LayoutProps>(({ children, category }) => {
-  const ref = useRef<any>(null);
+const Layout = memo<LayoutProps>((props) => {
+  const { showLLM = true } = props;
+  const ref = useRef<HTMLDivElement | null>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
+
+  const [activeTab, setActiveTab] = useQueryState(
+    'active',
+    parseAsStringEnum(Object.values(SettingsTabs)).withDefault(SettingsTabs.Common),
+  );
+
+  const category = <CategoryContent activeTab={activeTab} onMenuSelect={setActiveTab} />;
 
   return (
     <Flexbox
@@ -43,7 +40,9 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       ) : (
         <Header getContainer={() => ref.current!}>{category}</Header>
       )}
-      <ContentContainer>{children}</ContentContainer>
+      <SettingContainer maxWidth={'none'}>
+        <SettingsContent activeTab={activeTab} mobile={false} showLLM={showLLM} />
+      </SettingContainer>
       <InitClientDB />
     </Flexbox>
   );

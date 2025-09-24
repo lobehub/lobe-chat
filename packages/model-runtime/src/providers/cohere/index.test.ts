@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 
 import { testProvider } from '../../providerTestUtils';
 import { LobeCohereAI } from './index';

@@ -281,6 +281,7 @@
       "actionFiletip": "Bestand uploaden",
       "actionTooltip": "Uploaden",
       "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+      "fileNotSupported": "Bestand uploaden wordt momenteel niet ondersteund in de browsermodus, alleen afbeeldingen zijn toegestaan",
       "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "Voorbereiden om te uploaden...",
         "processing": "Bestand wordt verwerkt..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
     }
   },
   "zenMode": "Focusmodus"

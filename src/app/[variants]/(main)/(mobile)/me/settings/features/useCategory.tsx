@@ -1,7 +1,6 @@
 import { Bot, Brain, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import urlJoin from 'url-join';
 
 import { CellProps } from '@/components/Cell';
 import { isDeprecatedEdition } from '@/const/version';
@@ -51,6 +50,6 @@ export const useCategory = () => {
 
   return items.map((item) => ({
     ...item,
-    onClick: () => router.push(urlJoin('/settings', item.key as SettingsTabs)),
+    onClick: () => router.push(`/settings?active=${item.key}`),
   }));
 };

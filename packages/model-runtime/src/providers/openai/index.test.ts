@@ -249,7 +249,7 @@ describe('LobeOpenAI', () => {
   });
 
   describe('responses.handlePayload', () => {
-    it('should add web_search_preview tool when enabledSearch is true', async () => {
+    it('should add web_search tool when enabledSearch is true', async () => {
       const payload = {
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o', // 使用常规模型，通过 enabledSearch 触发 responses API
@@ -263,7 +263,7 @@ describe('LobeOpenAI', () => {
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
       expect(createCall.tools).toEqual([
         { type: 'function', name: 'test', description: 'test' },
-        { type: 'web_search_preview' },
+        { type: 'web_search' },
       ]);
     });
 

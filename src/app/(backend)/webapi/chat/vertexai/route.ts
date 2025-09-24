@@ -1,5 +1,6 @@
-import { ModelProvider, ModelRuntime } from '@lobechat/model-runtime';
+import { ModelRuntime } from '@lobechat/model-runtime';
 import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
+import { ModelProvider } from 'model-bank';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -16,7 +17,7 @@ export const maxDuration = 300;
 //   setGlobalDispatcher(new ProxyAgent({ uri: process.env.HTTP_PROXY_URL }));
 // }
 
-export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
+export const POST: any = checkAuth(async (req: Request, { jwtPayload }) =>
   UniverseRoute(req, {
     createRuntime: () => {
       const googleAuthStr = jwtPayload.apiKey ?? process.env.VERTEXAI_CREDENTIALS ?? undefined;

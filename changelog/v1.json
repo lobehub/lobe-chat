@@ -1,6 +1,171 @@
 [
   {
     "children": {
+      "fixes": ["Macos desktop sign."]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.10"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.9"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor all @/types in model runtime to @lobechat/types."]
+    },
+    "date": "2025-09-23",
+    "version": "1.132.8"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.7"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.6"
+  },
+  {
+    "children": {
+      "improvements": ["Move the ModelProvider to model-bank."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.5"
+  },
+  {
+    "children": {
+      "improvements": ["Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.4"
+  },
+  {
+    "children": {
+      "improvements": ["Added AUTH_MICROSOFT_ENTRA_ID_BASE_URL routing."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix non stream mode in OpenAI Response API."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix missing provider in server message."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.1"
+  },
+  {
+    "children": {
+      "features": ["Support google video understanding."]
+    },
+    "date": "2025-09-21",
+    "version": "1.132.0"
+  },
+  {
+    "children": {
+      "improvements": ["Enhanced AkashChat experience."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.4"
+  },
+  {
+    "children": {
+      "fixes": ["Update Responses search tool to web_search."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.3"
+  },
+  {
+    "children": {
+      "improvements": ["Use ID as name if provider name is empty."]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Extend custom provider runtime options, Optimized modelFetch for Vercel AI Gateway, update i18n."
+      ]
+    },
+    "date": "2025-09-21",
+    "version": "1.131.1"
+  },
+  {
+    "children": {
+      "features": ["Qwen provider add qwen-image-edit model support."]
+    },
+    "date": "2025-09-19",
+    "version": "1.131.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc open direct issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.1"
+  },
+  {
+    "children": {
+      "features": ["Add scroll support for pinned assistants using ScrollShadow."]
+    },
+    "date": "2025-09-18",
+    "version": "1.130.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix svg xss issue."]
+    },
+    "date": "2025-09-18",
+    "version": "1.129.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add qwen provider support for image-edit model."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.3"
+  },
+  {
+    "children": {
+      "fixes": ["Improve db migrations sql."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-17",
+    "version": "1.129.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update SiliconCloud reasoning models."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.1"
+  },
+  {
+    "children": {
+      "features": ["Support Vercel AI Gateway provider."]
+    },
+    "date": "2025-09-16",
+    "version": "1.129.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure ai runtime error."]
+    },
+    "date": "2025-09-16",
+    "version": "1.128.10"
+  },
+  {
+    "children": {
       "improvements": ["Improve error handle with agent config, support .doc file parse."]
     },
     "date": "2025-09-15",

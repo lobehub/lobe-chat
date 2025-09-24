@@ -1,11 +1,8 @@
-import {
-  AgentRuntimeError,
-  ChatCompletionErrorPayload,
-  ModelProvider,
-} from '@lobechat/model-runtime';
+import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'lodash-es';
+import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -114,20 +111,20 @@ class ChatService {
     const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
 
     // Apply context engineering with preprocessing configuration
-    const oaiMessages = await contextEngineering(
-      {
-        enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
-        // include user messages
-        historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
-        inputTemplate: chatConfig.inputTemplate,
-        messages,
-        model: payload.model,
-        provider: payload.provider!,
-        systemRole: agentConfig.systemRole,
-        tools: pluginIds,
-      },
-      options,
-    );
+    const oaiMessages = await contextEngineering({
+      enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
+      // include user messages
+      historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
+      historySummary: options?.historySummary,
+      inputTemplate: chatConfig.inputTemplate,
+      isWelcomeQuestion: options?.isWelcomeQuestion,
+      messages,
+      model: payload.model,
+      provider: payload.provider!,
+      sessionId: options?.trace?.sessionId,
+      systemRole: agentConfig.systemRole,
+      tools: pluginIds,
+    });
 
     // ============  2. preprocess tools   ============ //
 

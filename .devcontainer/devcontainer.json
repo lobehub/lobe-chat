@@ -1,6 +1,7 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/typescript-node",
   "features": {
-    "ghcr.io/devcontainer-community/devcontainer-features/bun.sh:1": {}
-  }
+    "ghcr.io/devcontainer-community/devcontainer-features/bun.sh:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "image": "mcr.microsoft.com/devcontainers/typescript-node"
 }

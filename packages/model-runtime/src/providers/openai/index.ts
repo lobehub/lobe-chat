@@ -1,4 +1,5 @@
-import { ModelProvider } from '../../const/modelProvider';
+import { ModelProvider } from 'model-bank';
+
 import { responsesAPIModels } from '../../const/models';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
@@ -82,7 +83,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         ? [
             ...(tools || []),
             {
-              type: 'web_search_preview',
+              type: 'web_search',
               ...(oaiSearchContextSize && {
                 search_context_size: oaiSearchContextSize,
               }),

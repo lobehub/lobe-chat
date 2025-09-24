@@ -23,6 +23,7 @@ Desktop.ini
 .history/
 .windsurfrules
 *.code-workspace
+.vscode/sessions.json
 
 # Temporary files
 .temp/
@@ -115,3 +116,4 @@ CLAUDE.local.md
 *.xls*
 
 prd
+GEMINI.md

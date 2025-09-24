@@ -114,6 +114,7 @@
       "reasoning": "Este modelo suporta pensamento profundo",
       "search": "Este modelo suporta pesquisa online",
       "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão.",
+      "video": "Este modelo suporta reconhecimento de vídeo",
       "vision": "Este modelo suporta reconhecimento visual."
     },
     "removed": "Este modelo não está na lista, se for desmarcado, será removido automaticamente"
