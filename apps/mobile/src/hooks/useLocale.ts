@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LANGUAGE_OPTIONS, LocaleMode, getDetectedLocale } from '@/i18n/resource';
 import { ensureLanguageResources } from '@/i18n';
+import { LANGUAGE_OPTIONS, LocaleMode, getDetectedLocale } from '@/i18n/resource';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 

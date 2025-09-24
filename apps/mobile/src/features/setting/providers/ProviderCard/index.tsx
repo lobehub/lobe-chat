@@ -1,15 +1,15 @@
+import { ProviderCombine } from '@lobehub/icons-rn';
 import { useRouter } from 'expo-router';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { AiProviderListItem } from '@/types/aiProvider';
-import { useThemeToken } from '@/theme';
-import { useAiInfraStore } from '@/store/aiInfra';
 import { InstantSwitch } from '@/components';
+import { useAiInfraStore } from '@/store/aiInfra';
+import { useThemeToken } from '@/theme';
+import { AiProviderListItem } from '@/types/aiProvider';
 
 import { useStyles } from './style';
-import { ProviderCombine } from '@lobehub/icons-rn';
-import { useTranslation } from 'react-i18next';
 
 interface ProviderCardProps {
   provider: AiProviderListItem;

@@ -1,18 +1,19 @@
+import { useRouter } from 'expo-router';
+import { ArrowRight, BoltIcon, X } from 'lucide-react-native';
 import React, { memo, useCallback, useMemo } from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { X, ArrowRight, BoltIcon } from 'lucide-react-native';
 
+import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
-import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useThemeToken } from '@/theme';
+import { EnabledProviderWithModels } from '@/types/aiProvider';
+
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';
 import { useStyles } from './styles';
-import { useRouter } from 'expo-router';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
-import { useTranslation } from 'react-i18next';
 
 // 生成菜单键，与Web端保持一致
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;

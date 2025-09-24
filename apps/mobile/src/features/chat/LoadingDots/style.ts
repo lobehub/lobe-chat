@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token, size: number, dotColor: string) => ({
+export const useStyles = createStyles(({ token }, size: number, dotColor: string) => ({
   container: {
     alignItems: 'center',
     flexDirection: 'row',

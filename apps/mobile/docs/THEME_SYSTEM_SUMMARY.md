@@ -65,7 +65,7 @@
 
 ```typescript
 // 使用现有的颜色系统
-import { blue, gray, primary, green, red } from '@/color/colors';
+import { blue, gray, green, primary, red } from '@/color/colors';
 
 // 生成主题 token
 const token = generateThemeToken(isDark);

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { renderWithTheme } from '@/test/utils';
+
 import Highlighter from '../index';
 
 jest.mock('@/theme', () => ({

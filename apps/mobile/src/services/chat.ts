@@ -2,6 +2,7 @@ import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload } from '@/const/trace';
+import { ModelProvider } from '@/libs/model-runtime/types/type';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -11,13 +12,12 @@ import { useUserStore } from '@/store/user';
 import { ChatImageItem, ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
+import { TraceTagMap } from '@/types/trace';
 import { FetchSSEOptions, fetchSSE, standardizeAnimationStyle } from '@/utils/fetch';
 import { createTraceHeader } from '@/utils/trace';
 
-import { API_ENDPOINTS } from './_url';
 import { createHeaderWithAuth } from './_auth/header';
-import { ModelProvider } from '@/libs/model-runtime/types/type';
-import { TraceTagMap } from '@/types/trace';
+import { API_ENDPOINTS } from './_url';
 
 const isCanUseVision = (model: string, provider: string) => {
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());

@@ -99,12 +99,12 @@ func createUser(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Invalid JSON", http.StatusBadRequest)
         return
     }
-    
+
     user.ID = nextID
     nextID++
     user.IsActive = true
     users = append(users, user)
-    
+
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusCreated)
     json.NewEncoder(w).Encode(user)
@@ -117,7 +117,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Invalid user ID", http.StatusBadRequest)
         return
     }
-    
+
     for _, user := range users {
         if user.ID == id {
             w.Header().Set("Content-Type", "application/json")
@@ -125,7 +125,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
             return
         }
     }
-    
+
     http.Error(w, "User not found", http.StatusNotFound)
 }
 
@@ -133,7 +133,7 @@ func main() {
     r := mux.NewRouter()
     r.HandleFunc("/users", createUser).Methods("POST")
     r.HandleFunc("/users/{id}", getUser).Methods("GET")
-    
+
     fmt.Println("Server starting on :8080")
     log.Fatal(http.ListenAndServe(":8080", r))
 }`,
@@ -150,7 +150,7 @@ func main() {
 
 services:
   web:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
@@ -263,14 +263,14 @@ import { Button, Alert } from 'react-native';
 
 const Welcome = ({ name }) => {
   const [count, setCount] = useState(0);
-  
+
   const handlePress = () => {
     setCount(count + 1);
     Alert.alert('Hello!', \`Welcome \${name}! Count: \${count + 1}\`);
   };
 
   return (
-    <Button 
+    <Button
       title={\`Hello \${name} (\${count})\`}
       onPress={handlePress}
     />
@@ -353,7 +353,7 @@ export default {
   .container {
     padding: 1rem;
   }
-  
+
   .card {
     width: 100%;
   }

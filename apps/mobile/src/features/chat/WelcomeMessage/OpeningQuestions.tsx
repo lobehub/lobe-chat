@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useSendMessage } from '@/hooks/useSendMessage';
 import { useChatStore } from '@/store/chat';
+
 import { useStyles } from './OpeningQuestions.style';
-import { useTranslation } from 'react-i18next';
 
 interface OpeningQuestionsProps {
   questions: string[];

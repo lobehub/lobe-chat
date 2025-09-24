@@ -1,6 +1,7 @@
-import type { AliasToken, MapToken } from './interface';
-import { getAlphaColor } from './colorUtils';
 import { mix } from 'polished';
+
+import { getAlphaColor } from './colorUtils';
+import type { AliasToken, MapToken } from './interface';
 
 /**
  * 格式化 Token，从 MapToken 生成 AliasToken

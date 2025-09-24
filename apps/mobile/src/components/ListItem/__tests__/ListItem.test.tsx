@@ -1,7 +1,9 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react-native';
-import { View, Text } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import ListItem from '../index';
 
 jest.mock('expo-router', () => ({

@@ -5,9 +5,9 @@ import ColorSwatches from '@/components/ColorSwatches';
 import Slider from '@/components/Slider';
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
 import {
-  findCustomThemeName,
-  PrimaryColors,
   NeutralColors,
+  PrimaryColors,
+  findCustomThemeName,
   neutralColors,
   primaryColors,
   useThemeToken,

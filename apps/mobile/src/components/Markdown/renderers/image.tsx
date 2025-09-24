@@ -2,9 +2,9 @@ import { ImageReference, Image as MdImage } from 'mdast';
 import { ReactNode, useEffect, useState } from 'react';
 import { Image } from 'react-native';
 
+import Skeleton from '../../Skeleton';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
-import Skeleton from '../../Skeleton';
 
 type AutoSizedImageProps = {
   uri: string;

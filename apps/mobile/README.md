@@ -188,12 +188,12 @@ We warmly welcome all forms of contributions!
 
 ## 🔗 More Tools
 
-| Project | Description |
-| --- | --- |
-| **[🤯 Lobe Chat](https://github.com/lobehub/lobe-chat)** | Modern open-source ChatGPT/LLM chat app (Web version) |
-| **[🅰️ Lobe UI](https://github.com/lobehub/lobe-ui)** | Open-source UI component library for building AIGC web apps |
-| **[🌏 Lobe i18n](https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n)** | ChatGPT-powered i18n translation automation tool |
-| **[💌 Lobe Commit](https://github.com/lobehub/lobe-commit)** | AI-based Git commit message generator |
+| Project                                                                                   | Description                                                 |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **[🤯 Lobe Chat](https://github.com/lobehub/lobe-chat)**                                  | Modern open-source ChatGPT/LLM chat app (Web version)       |
+| **[🅰️ Lobe UI](https://github.com/lobehub/lobe-ui)**                                      | Open-source UI component library for building AIGC web apps |
+| **[🌏 Lobe i18n](https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n)** | ChatGPT-powered i18n translation automation tool            |
+| **[💌 Lobe Commit](https://github.com/lobehub/lobe-commit)**                              | AI-based Git commit message generator                       |
 
 ---
 

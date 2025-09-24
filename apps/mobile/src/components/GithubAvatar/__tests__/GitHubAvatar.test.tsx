@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { renderWithTheme } from '@/test/utils';
+
 import GitHubAvatar from '../index';
 
 jest.mock('url-join', () => jest.fn((baseUrl: string, path: string) => `${baseUrl}/${path}`));

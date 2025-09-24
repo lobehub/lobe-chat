@@ -2,8 +2,8 @@ import { router } from 'expo-router';
 import { memo, useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { useChatStore } from '@/store/chat';
 import { useLocalSearchParams } from '@/hooks/useLocalSearchParams';
+import { useChatStore } from '@/store/chat';
 
 /**
  * ChatHydration - 聊天状态同步组件

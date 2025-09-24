@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { ColorScaleItem } from '../../theme/color/types';
-
 import ScaleColumn from './ScaleColumn';
 import { useStyles } from './style';
 

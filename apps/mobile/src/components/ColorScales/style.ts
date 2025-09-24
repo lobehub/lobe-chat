@@ -6,7 +6,7 @@ export const alphaBg = {
   light: '#ffffff',
 };
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   alphaBackground: {
     // 为透明色添加棋盘格效果的近似实现
     borderColor: token.colorBorder,

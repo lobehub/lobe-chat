@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
-import { View, Text, Alert, Image } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useAuth, useAuthActions } from '@/store/user';
-import Button from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
-import { useStyles } from './styles';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert, Image, Text, View } from 'react-native';
+
+import Button from '@/components/Button';
 import { setLoginMounted } from '@/navigation/loginState';
+import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
+
+import { useStyles } from './styles';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);

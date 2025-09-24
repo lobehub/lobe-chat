@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import Highlighter from '@/components/Highlighter';
 import { useTheme } from '@/theme';
