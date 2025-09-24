@@ -1,7 +1,7 @@
+import { Upload } from 'lucide-react-native';
 import React, { useState } from 'react';
 
 import { Button, Space } from '@/components';
-import { Upload } from 'lucide-react-native';
 
 const LoadingDemo = () => {
   const [loadings, setLoadings] = useState<boolean[]>([]);

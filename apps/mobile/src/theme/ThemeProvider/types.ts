@@ -1,6 +1,5 @@
 // ======================================================================
 // ==                           Theme                                   ==
-
 import { AliasToken, MappingAlgorithm } from '@/theme';
 
 export type ThemeAppearance = 'dark' | 'light';

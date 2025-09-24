@@ -1,7 +1,7 @@
+import { Heart, MessageSquare, Settings2 } from 'lucide-react-native';
 import React from 'react';
 
 import { ActionIcon, Space } from '@/components';
-import { Heart, MessageSquare, Settings2 } from 'lucide-react-native';
 
 const BasicDemo = () => {
   return (

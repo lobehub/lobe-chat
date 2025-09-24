@@ -1,7 +1,8 @@
 import { createStyles } from '@/theme';
+
 import type { TagColor } from './type';
 
-export const useStyles = createStyles((token, color?: TagColor, border: boolean = true) => {
+export const useStyles = createStyles(({ token }, color?: TagColor, border: boolean = true) => {
   // 如果指定了颜色，使用颜色预设；否则使用默认样式
   const getColorStyles = () => {
     if (!color || typeof color !== 'string') {

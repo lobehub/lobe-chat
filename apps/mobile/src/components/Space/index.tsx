@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
+
 import { useStyles } from './style';
 
 export type SpaceAlign = 'start' | 'end' | 'center' | 'baseline';

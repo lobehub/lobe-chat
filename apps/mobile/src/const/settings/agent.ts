@@ -2,10 +2,9 @@
  * 移动端 Agent 默认配置
  * 与 web 端保持完全一致
  */
-
 import {
-  LobeAgentConfig,
   LobeAgentChatConfig,
+  LobeAgentConfig,
   LobeAgentTTSConfig,
   WorkingModel,
 } from '@/types/agent';

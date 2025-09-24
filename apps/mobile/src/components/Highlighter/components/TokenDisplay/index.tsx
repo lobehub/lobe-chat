@@ -2,9 +2,10 @@ import type { ThemedToken } from '@shikijs/core';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { useStyles } from './style';
-import { useTokenize } from '../../hooks/useTokenize';
 import { useTheme } from '@/theme';
+
+import { useTokenize } from '../../hooks/useTokenize';
+import { useStyles } from './style';
 
 interface TokenDisplayProps {
   code: string;

@@ -1,7 +1,9 @@
 import React from 'react';
-import { renderWithTheme } from '@/test/utils';
-import Tag from '../index';
 import { ViewStyle } from 'react-native';
+
+import { renderWithTheme } from '@/test/utils';
+
+import Tag from '../index';
 
 describe('Tag', () => {
   it('renders correctly with default props', () => {

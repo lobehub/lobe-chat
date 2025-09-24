@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, ViewStyle, StyleProp, DimensionValue } from 'react-native';
+import { Animated, DimensionValue, StyleProp, View, ViewStyle } from 'react-native';
 
-import { useStyles } from './style';
 import SkeletonAvatar from './Avatar';
 import SkeletonButton from './Button';
-import SkeletonTitle from './Title';
-import SkeletonParagraph from './Paragraph';
 import SkeletonImage from './Image';
+import SkeletonParagraph from './Paragraph';
+import SkeletonTitle from './Title';
+import { useStyles } from './style';
 
 export interface SkeletonProps {
   /** Display animated shimmer effect */

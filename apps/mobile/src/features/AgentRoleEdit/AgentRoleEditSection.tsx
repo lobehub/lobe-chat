@@ -1,13 +1,14 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { View, Text, TextInput } from 'react-native';
 import { Edit3 } from 'lucide-react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Text, TextInput, View } from 'react-native';
 
 import { Button, Markdown } from '@/components';
-import { useAgentStore, agentSelectors } from '@/store/agent';
-import { sessionSelectors } from '@/store/session/selectors';
+import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useThemeToken } from '@/theme';
+
 import { useStyles } from './sectionStyles';
 
 export const AgentRoleEditSection: React.FC = () => {

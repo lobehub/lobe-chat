@@ -1,8 +1,10 @@
-import { Image, View, Text, ViewStyle, StyleProp } from 'react-native';
-import { memo, ReactNode, useState, isValidElement } from 'react';
+import { ReactNode, isValidElement, memo, useState } from 'react';
+import { Image, StyleProp, Text, View, ViewStyle } from 'react-native';
+
 import { DEFAULT_AVATAR } from '@/const/meta';
-import FluentEmoji from '../FluentEmoji';
 import { isEmoji } from '@/utils/common';
+
+import FluentEmoji from '../FluentEmoji';
 import { useStyles } from './style';
 
 export interface AvatarProps {

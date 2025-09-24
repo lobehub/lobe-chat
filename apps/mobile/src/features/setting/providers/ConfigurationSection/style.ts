@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
+
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   // AES-GCM 相关样式
   aesGcmContainer: {
     alignItems: 'flex-start',

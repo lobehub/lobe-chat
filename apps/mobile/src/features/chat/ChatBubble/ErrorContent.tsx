@@ -1,11 +1,11 @@
-import React from 'react';
-import { Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 
-import { ChatMessageError } from '@/types/message';
-import { useThemeToken } from '@/theme';
 import { useProviderName } from '@/hooks/useProviderName';
+import { useThemeToken } from '@/theme';
+import { ChatMessageError } from '@/types/message';
 
 interface ErrorContentProps {
   error: ChatMessageError;

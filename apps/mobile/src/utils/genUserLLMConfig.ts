@@ -1,7 +1,7 @@
 import * as ProviderCards from '@/config/modelProviders';
+import { ModelProvider } from '@/libs/model-runtime';
 import { ModelProviderCard } from '@/types/llm';
 import { UserModelProviderConfig } from '@/types/user/settings';
-import { ModelProvider } from '@/libs/model-runtime';
 
 export const genUserLLMConfig = (specificConfig: Record<any, any>): UserModelProviderConfig => {
   return Object.keys(ModelProvider).reduce((config, providerKey) => {

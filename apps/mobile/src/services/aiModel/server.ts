@@ -1,4 +1,5 @@
 import { trpcClient } from '@/services/_auth/trpc';
+
 import { IAiModelService } from './type';
 
 export class ServerService implements IAiModelService {
