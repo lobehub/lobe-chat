@@ -1,14 +1,15 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { Avatar, PageContainer } from '@/components';
 
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useStyles } from './styles';
+import { Avatar, PageContainer } from '@/components';
 import { AVATAR_SIZE_LARGE } from '@/const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
-import { useTranslation } from 'react-i18next';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+
+import { useStyles } from './styles';
 
 export default function AgentDetail() {
   const { t } = useTranslation(['chat']);

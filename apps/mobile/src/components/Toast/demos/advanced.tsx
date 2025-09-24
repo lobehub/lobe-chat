@@ -1,6 +1,6 @@
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-import dayjs from 'dayjs';
 
 import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';

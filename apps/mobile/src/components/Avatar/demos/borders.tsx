@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
+
 import { Avatar } from '@/components';
 import { useThemeToken } from '@/theme';
 

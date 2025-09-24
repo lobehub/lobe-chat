@@ -2,10 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useTheme as useAppTheme } from '@/theme';
-import { useStyles } from '../styles';
-import { SettingGroup, SettingItem } from '../(components)';
 import { PageContainer } from '@/components';
+import { useTheme as useAppTheme } from '@/theme';
+
+import { SettingGroup, SettingItem } from '../(components)';
+import { useStyles } from '../styles';
 
 export default function ThemeModeSettingScreen() {
   const { t } = useTranslation(['setting']);

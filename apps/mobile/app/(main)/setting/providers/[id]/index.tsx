@@ -1,31 +1,31 @@
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { Text, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { FlashList } from '@shopify/flash-list';
-import { RefreshCcw } from 'lucide-react-native';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { FlashList } from '@shopify/flash-list';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { RefreshCcw } from 'lucide-react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { aiModelSelectors } from '@/store/aiInfra/selectors';
-import { AiProviderDetailItem } from '@/types/aiProvider';
-import { AiProviderModelListItem } from '@/types/aiModel';
 import {
   Button,
+  Input,
   InstantSwitch,
   ModelInfoTags,
   PageContainer,
   Tag,
   useToast,
-  Input,
 } from '@/components';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import ConfigurationSection from '@/features/setting/providers/ConfigurationSection';
+import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { useThemeToken } from '@/theme';
+import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderDetailItem } from '@/types/aiProvider';
 
 import { useStyles } from './styles';
-import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';
-import ConfigurationSection from '@/features/setting/providers/ConfigurationSection';
 
 // 定义FlashList数据项类型
 type FlashListItem =
