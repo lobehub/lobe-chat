@@ -1,17 +1,17 @@
-import React, { useMemo, useCallback } from 'react';
-import { View, Text } from 'react-native';
-import isEqual from 'fast-deep-equal';
-import { useTranslation } from 'react-i18next';
 import { FlashList } from '@shopify/flash-list';
+import isEqual from 'fast-deep-equal';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 
+import { PageContainer } from '@/components';
+import ProviderCard from '@/features/setting/providers/ProviderCard';
+import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { AiProviderListItem } from '@/types/aiProvider';
-import { useStyles } from './styles';
 
-import ProviderCard from '@/features/setting/providers/ProviderCard';
-import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
-import { PageContainer } from '@/components';
+import { useStyles } from './styles';
 
 // 定义FlashList数据项类型
 type ProviderFlashListItem =

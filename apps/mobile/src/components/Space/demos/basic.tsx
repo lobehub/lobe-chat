@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useThemeToken } from '@/theme';
+
 import { Space } from '@/components';
+import { useThemeToken } from '@/theme';
 
 const DemoItem = ({ children }: { children: React.ReactNode }) => {
   const token = useThemeToken();

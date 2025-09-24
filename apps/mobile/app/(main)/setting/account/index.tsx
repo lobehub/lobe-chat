@@ -1,13 +1,15 @@
-import React from 'react';
-import { View, Alert } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { safeReplaceLogin } from '@/navigation/safeLogin';
-import { useAuth, useAuthActions } from '@/store/user';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert, View } from 'react-native';
+
+import { PageContainer } from '@/components';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
-import { PageContainer } from '@/components';
-import { SettingItem, SettingGroup } from '../(components)';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
+import { useAuth, useAuthActions } from '@/store/user';
+
+import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './style';
 
 export default function AccountScreen() {

@@ -1,13 +1,14 @@
-import React, { memo } from 'react';
-import { Drawer } from 'react-native-drawer-layout';
 import * as Haptics from 'expo-haptics';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text } from 'react-native';
+import { Drawer } from 'react-native-drawer-layout';
 
+import { PageContainer } from '@/components';
 import { useGlobalStore } from '@/store/global';
+
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
-import { PageContainer } from '@/components';
-import { useTranslation } from 'react-i18next';
 
 /**
  * TopicDrawer - 右侧Topic抽屉组件

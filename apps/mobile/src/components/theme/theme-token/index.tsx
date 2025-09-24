@@ -1,22 +1,22 @@
-import { Sun, Moon } from 'lucide-react-native';
-import React, { useState, useCallback, memo } from 'react';
+import { Moon, Sun } from 'lucide-react-native';
+import React, { memo, useCallback, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
-import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
 import { PageContainer } from '@/components';
+import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
+import {
+  NeutralColors,
+  PrimaryColors,
+  ThemeProvider,
+  darkAlgorithm,
+  lightAlgorithm,
+  useTheme,
+  useThemeToken,
+} from '@/theme';
+
 import ThemeControls from './(components)/ThemeControls';
 import TokenHighlight from './(components)/TokenJson';
 import TokenTable from './(components)/TokenTable';
-import {
-  useTheme,
-  darkAlgorithm,
-  lightAlgorithm,
-  ThemeProvider,
-  useThemeToken,
-  PrimaryColors,
-  NeutralColors,
-} from '@/theme';
-
 import { useStyles } from './style';
 
 // 内部组件，使用 ThemeProvider 包装

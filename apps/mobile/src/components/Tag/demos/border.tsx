@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
+
 import { Tag } from '@/components';
 import { createStyles } from '@/theme';
 

@@ -1,21 +1,21 @@
-import { PageContainer } from '@/components';
-import { useStyles } from './style';
-
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@/components';
 import {
   BasicDemo,
-  SizesDemo,
-  DisabledDemo,
   BlockDemo,
-  IconDemo,
-  ShapeDemo,
   DangerDemo,
-  VariantColorDemo,
+  DisabledDemo,
+  IconDemo,
   LoadingDemo,
+  ShapeDemo,
+  SizesDemo,
+  VariantColorDemo,
 } from '@/components/Button/demos';
 import README from '@/components/Button/readme';
+import ComponentPlayground, { DemoItem } from '@/components/Playground';
+
+import { useStyles } from './style';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },

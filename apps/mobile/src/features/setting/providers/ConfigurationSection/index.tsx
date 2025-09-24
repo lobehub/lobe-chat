@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect, memo } from 'react';
-import { View, Text, Alert, Linking, ActivityIndicator } from 'react-native';
 import { Lock } from 'lucide-react-native';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
 
-import { useTranslation, Trans } from 'react-i18next';
 import { Input } from '@/components';
-
-import { AiProviderDetailItem } from '@/types/aiProvider';
-import { useAiInfraStore } from '@/store/aiInfra';
 import { AES_GCM_URL } from '@/const/url';
+import { useAiInfraStore } from '@/store/aiInfra';
+import { AiProviderDetailItem } from '@/types/aiProvider';
 
-import { useStyles } from './style';
 import Checker from './Checker';
+import { useStyles } from './style';
 
 interface ConfigurationSectionProps {
   provider: AiProviderDetailItem;
