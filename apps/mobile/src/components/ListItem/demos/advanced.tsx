@@ -10,8 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import Button from '@/components/Button';
-import ListItem from '../index';
+import { Button, ListItem } from '@/components';
 
 interface CustomListItemProps {
   avatar: string | React.ReactNode;

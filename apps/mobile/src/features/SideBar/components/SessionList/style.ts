@@ -2,7 +2,6 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
-    backgroundColor: token.colorBgLayout,
     flex: 1,
   },
   header: {
@@ -13,12 +12,11 @@ export const useStyles = createStyles((token) => ({
     fontSize: token.fontSizeLG,
   },
   searchInput: {
-    marginHorizontal: token.margin,
+    marginHorizontal: token.paddingSM,
     marginVertical: token.marginXS,
   },
   sessionList: {
     flex: 1,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.marginXS,
+    paddingHorizontal: token.paddingSM,
   },
 }));

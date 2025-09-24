@@ -1,6 +1,5 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 
 import React from 'react';
 
@@ -14,8 +13,9 @@ import {
   CompoundDemo,
   VariantDemo,
   SizesDemo,
-} from '@/components/TextInput/demos';
-import README from '@/components/TextInput/readme';
+  TextAreaDemo,
+} from '@/components/Input/demos';
+import README from '@/components/Input/readme';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
@@ -25,16 +25,16 @@ const demos: DemoItem[] = [
   { component: <PasswordDemo />, key: 'password', title: '密码输入框' },
   { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
   { component: <VariantDemo />, key: 'variant', title: '外观变体' },
+  { component: <TextAreaDemo />, key: 'textarea', title: '多行文本' },
   { component: <SizesDemo />, key: 'sizes', title: '尺寸大小' },
 ];
 
-export default function TextInputPlaygroundPage() {
+export default function InputPlaygroundPage() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="TextInput 组件" />
+    <PageContainer showBack style={styles.safeAreaView} title="Input 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
-    </SafeAreaView>
+    </PageContainer>
   );
 }

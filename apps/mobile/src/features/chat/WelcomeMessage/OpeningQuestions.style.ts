@@ -2,7 +2,7 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   container: {
-    paddingVertical: 0,
+    padding: token.paddingSM,
   },
 
   questionButton: {

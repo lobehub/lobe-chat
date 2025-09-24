@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 
-import Highlighter from '../index';
+import { Highlighter } from '@/components';
 
 /**
  * 紧凑型显示演示
