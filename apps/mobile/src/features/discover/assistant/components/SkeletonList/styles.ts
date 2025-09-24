@@ -15,7 +15,7 @@ export const useStyles = createStyles((token) => ({
   categoryTabSkeleton: {
     backgroundColor: token.colorFillSecondary,
     borderRadius: token.borderRadiusLG,
-    height: token.controlHeightSM,
+    height: token.controlHeightLG,
   },
   categoryTabs: {
     flexDirection: 'row',

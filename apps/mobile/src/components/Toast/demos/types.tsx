@@ -1,10 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
-
-import { useToast } from '../InnerToastProvider';
 
 const styles = StyleSheet.create({
   buttonGroup: {

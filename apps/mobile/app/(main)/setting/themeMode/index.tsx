@@ -5,8 +5,7 @@ import { View } from 'react-native';
 import { useTheme as useAppTheme } from '@/theme';
 import { useStyles } from '../styles';
 import { SettingGroup, SettingItem } from '../(components)';
-import { Header } from '@/components';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { PageContainer } from '@/components';
 
 export default function ThemeModeSettingScreen() {
   const { t } = useTranslation(['setting']);
@@ -16,8 +15,11 @@ export default function ThemeModeSettingScreen() {
   const isFollowSystem = theme.mode === 'auto';
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('themeMode.title', { ns: 'setting' })} />
+    <PageContainer
+      showBack
+      style={styles.safeAreaView}
+      title={t('themeMode.title', { ns: 'setting' })}
+    >
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem
@@ -44,6 +46,6 @@ export default function ThemeModeSettingScreen() {
           </SettingGroup>
         )}
       </View>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

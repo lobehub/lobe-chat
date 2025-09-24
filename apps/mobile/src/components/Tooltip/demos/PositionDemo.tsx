@@ -2,10 +2,9 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
-import Button from '@/components/Button';
+import { Button, Tooltip } from '@/components';
 
-import { Tooltip } from '..';
-import type { TooltipPlacement } from '..';
+import type { TooltipPlacement } from '@/components';
 
 const placements: TooltipPlacement[] = [
   'topLeft',

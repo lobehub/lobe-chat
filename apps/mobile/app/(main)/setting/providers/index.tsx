@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
 import { FlashList } from '@shopify/flash-list';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
@@ -12,7 +11,7 @@ import { useStyles } from './styles';
 
 import ProviderCard from '@/features/setting/providers/ProviderCard';
 import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 
 // 定义FlashList数据项类型
 type ProviderFlashListItem =
@@ -132,28 +131,25 @@ const ProviderList = () => {
   // Loading状态
   if (isLoading) {
     return (
-      <>
-        <Header showBack title={t('providers', { ns: 'setting' })} />
+      <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
         <ProviderListSkeleton />
-      </>
+      </PageContainer>
     );
   }
 
   // Error状态
   if (error) {
     return (
-      <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-        <Header showBack title={t('providers', { ns: 'setting' })} />
+      <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
         <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
           <Text style={styles.label}>{t('aiProviders.list.loadFailed', { ns: 'setting' })}</Text>
         </View>
-      </SafeAreaView>
+      </PageContainer>
     );
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('providers', { ns: 'setting' })} />
+    <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
       <View style={styles.container}>
         <FlashList
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -166,7 +162,7 @@ const ProviderList = () => {
           showsVerticalScrollIndicator={true}
         />
       </View>
-    </SafeAreaView>
+    </PageContainer>
   );
 };
 

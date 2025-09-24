@@ -5,4 +5,5 @@ export { default as PrefixDemo } from './prefix';
 export { default as SearchDemo } from './search';
 export { default as SizesDemo } from './sizes';
 export { default as SuffixDemo } from './suffix';
+export { default as TextAreaDemo } from './textarea';
 export { default as VariantDemo } from './variant';

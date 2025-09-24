@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -30,18 +30,18 @@ const CompoundDemo = () => {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>搜索输入框</Text>
       <Text style={styles.description}>内置搜索图标，returnKeyType为search</Text>
-      <TextInput.Search placeholder="搜索内容..." />
-      <TextInput.Search placeholder="搜索用户" />
+      <Input.Search placeholder="搜索内容..." />
+      <Input.Search placeholder="搜索用户" />
 
       <Text style={styles.sectionTitle}>密码输入框</Text>
       <Text style={styles.description}>支持密码显示/隐藏切换</Text>
-      <TextInput.Password placeholder="请输入密码" />
-      <TextInput.Password placeholder="确认密码" />
+      <Input.Password placeholder="请输入密码" />
+      <Input.Password placeholder="确认密码" />
 
       <Text style={styles.sectionTitle}>组合使用</Text>
       <Text style={styles.description}>常见的登录表单示例</Text>
-      <TextInput.Search placeholder="搜索用户名..." />
-      <TextInput.Password placeholder="输入密码" />
+      <Input.Search placeholder="搜索用户名..." />
+      <Input.Password placeholder="输入密码" />
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
 import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { RefreshCcw } from 'lucide-react-native';
-import { TextInput, Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
+import { Input, Button, InstantSwitch, ModelInfoTags, Tag, useToast } from '@/components';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useTranslation } from 'react-i18next';
@@ -212,7 +212,7 @@ const ModelsSection = memo<ModelsSectionProps>(({ providerId }) => {
           </View>
         </View>
 
-        <TextInput.Search
+        <Input.Search
           onChangeText={setSearchKeyword}
           placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
           style={styles.searchInput}

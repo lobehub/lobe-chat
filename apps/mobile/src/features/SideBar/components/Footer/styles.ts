@@ -3,9 +3,8 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles((token) => ({
   footer: {
     alignItems: 'center',
-    backgroundColor: token.colorBgLayout,
-    borderTopColor: token.colorBorderSecondary,
-    borderTopWidth: 0.5,
+    // glass effect
+    backdropFilter: 'saturate(150%) blur(10px)',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: token.padding,

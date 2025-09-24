@@ -1,10 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
-
-import { useToast } from '../InnerToastProvider';
 
 export default function BasicDemo() {
   const token = useThemeToken();
