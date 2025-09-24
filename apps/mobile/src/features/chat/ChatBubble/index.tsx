@@ -37,7 +37,7 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
     }
 
     return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
-  }, [hasError, message.error, isLoading, message.content]);
+  }, [fontSize, hasError, isLoading, message.content, message.error]);
 
   return (
     <View
