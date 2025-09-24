@@ -34,7 +34,7 @@ export const useStyles = createStyles((token) => ({
     paddingTop: token.padding,
   },
   listContainer: {
-    padding: token.padding,
+    paddingHorizontal: token.padding,
   },
   loadingContainer: {
     alignItems: 'center',

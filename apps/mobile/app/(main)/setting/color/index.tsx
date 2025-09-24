@@ -1,9 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { ColorSwatches, Header } from '@/components';
+import { PageContainer, ColorSwatches } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import {
   findCustomThemeName,
@@ -48,8 +46,7 @@ export default function ThemeSettingScreen() {
   ];
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('color.title', { ns: 'setting' })} />
+    <PageContainer showBack style={styles.safeAreaView} title={t('color.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <Preview />
         <SettingGroup style={{ marginTop: 16 }}>
@@ -85,6 +82,6 @@ export default function ThemeSettingScreen() {
           />
         </SettingGroup>
       </View>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

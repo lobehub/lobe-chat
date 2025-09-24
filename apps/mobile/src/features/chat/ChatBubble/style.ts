@@ -31,8 +31,7 @@ export const useStyles = createStyles((token) => ({
   bubbleContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
-    marginHorizontal: token.paddingContentHorizontal,
-    marginVertical: token.paddingContentVertical,
+    padding: token.paddingSM,
   },
   codeBlockContainer: {
     backgroundColor: token.colorBgElevated,

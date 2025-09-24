@@ -12,14 +12,8 @@ import {
 } from 'react-native';
 import { LoaderCircle } from 'lucide-react-native';
 
-import {
-  useStyles,
-  ButtonType,
-  ButtonSize,
-  ButtonShape,
-  ButtonVariant,
-  ButtonColor,
-} from './style';
+import { useStyles } from './style';
+import { ButtonType, ButtonSize, ButtonShape, ButtonVariant, ButtonColor } from './type';
 import { FONT_SIZE_SMALL, FONT_SIZE_LARGE, FONT_SIZE_STANDARD } from '@/const/common';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
@@ -110,7 +104,8 @@ const Button: React.FC<ButtonProps> = ({
   const { styles } = useStyles({
     block,
     color: mapped.color,
-    disabled: disabled || loading,
+    disabled,
+    loading,
     shape,
     size,
     variant: mapped.variant,
@@ -210,3 +205,5 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 export default Button;
+
+export * from './type';

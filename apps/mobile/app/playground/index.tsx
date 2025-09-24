@@ -2,9 +2,8 @@ import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Tag, TextInput, Header, CapsuleTabs, CapsuleTabItem } from '@/components';
+import { Tag, Input, PageContainer, CapsuleTabs, CapsuleTabItem } from '@/components';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
@@ -147,8 +146,8 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
-      case 'textinput': {
-        router.push('/playground/components/textinput');
+      case 'input': {
+        router.push('/playground/components/input');
 
         break;
       }
@@ -194,12 +193,12 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="Playground" />
+    <PageContainer showBack style={styles.safeAreaView} title="Playground">
       <View style={styles.filterContainer}>
-        <TextInput.Search
+        <Input.Search
           onChangeText={setSearchText}
           placeholder="搜索组件..."
+          size="large"
           style={styles.searchContainer}
           value={searchText}
         />
@@ -210,6 +209,7 @@ export default function ComponentPlaygroundIndex() {
             onSelect={setSelectedCategory}
             selectedKey={selectedCategory}
             showsHorizontalScrollIndicator={false}
+            size="large"
           />
         </View>
       </View>
@@ -217,6 +217,6 @@ export default function ComponentPlaygroundIndex() {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <View style={styles.componentList}>{filteredComponents.map(renderComponentCard)}</View>
       </ScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

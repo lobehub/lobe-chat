@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -16,8 +16,8 @@ const BasicDemo = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="请输入内容" />
-      <TextInput defaultValue="预设值" />
+      <Input placeholder="请输入内容" />
+      <Input defaultValue="预设值" />
     </View>
   );
 };

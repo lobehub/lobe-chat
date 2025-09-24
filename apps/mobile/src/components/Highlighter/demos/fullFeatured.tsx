@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 
-import Highlighter from '../index';
+import { Highlighter } from '@/components';
 
 /**
  * 完整功能模式演示
@@ -17,7 +17,6 @@ export const FullFeaturedHighlighterDemo: React.FC = () => {
       code: `import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import Button from '@/components/Button';
 
 interface CounterProps {
   initialValue?: number;

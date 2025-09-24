@@ -14,10 +14,10 @@ export const useStyles = createStyles((token) => ({
     borderRadius: 0,
     flexShrink: 1,
     margin: 0,
-    padding: token.paddingSM,
   },
   codeLine: {
     flexDirection: 'row',
+    flexShrink: 0,
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
@@ -25,8 +25,10 @@ export const useStyles = createStyles((token) => ({
   codeScrollContainer: {
     flexDirection: 'column',
     minWidth: '100%',
+    padding: token.paddingSM,
   },
   codeText: {
+    flexShrink: 0,
     fontFamily: monospaceFontFamily,
     fontSize: token.fontSize,
     lineHeight: token.lineHeight,
@@ -34,5 +36,8 @@ export const useStyles = createStyles((token) => ({
   errorText: {
     color: token.colorText,
     margin: 8,
+  },
+  horizontalScrollContent: {
+    flexGrow: 1,
   },
 }));
