@@ -84,7 +84,7 @@ export const useStyles = createStyles(({ token }) => ({
 
   errorDetailsText: {
     color: token.colorTextSecondary,
-    fontFamily: 'monospace',
+    fontFamily: token.fontFamilyCode,
     fontSize: token.fontSize,
   },
 
