@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import { useThemeToken } from '@/theme';
-import Skeleton from '../index';
+import { Skeleton } from '@/components';
 
 const AvatarDemo: React.FC = () => {
   const token = useThemeToken();

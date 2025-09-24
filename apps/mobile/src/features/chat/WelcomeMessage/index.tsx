@@ -1,20 +1,17 @@
 import isEqual from 'fast-deep-equal';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import WelcomeChatBubble from '../WelcomeChatBubble';
+import WelcomeChatBubble from '../ChatBubble/Welcome';
 import OpeningQuestions from './OpeningQuestions';
-import { useStyles } from './style';
 
 const WelcomeMessage = () => {
   const { t } = useTranslation('chat');
-  const { styles } = useStyles();
 
   // 触发agent配置加载，获取loading状态
   // const { isLoading: isAgentLoading } = useInitAgentConfig();
@@ -52,12 +49,12 @@ const WelcomeMessage = () => {
   );
 
   return openingQuestions.length > 0 ? (
-    <View style={styles.container}>
+    <>
       {welcomeBubble}
       <OpeningQuestions questions={openingQuestions} />
-    </View>
+    </>
   ) : (
-    <View style={styles.container}>{welcomeBubble}</View>
+    welcomeBubble
   );
 };
 

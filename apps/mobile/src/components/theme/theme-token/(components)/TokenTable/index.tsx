@@ -1,6 +1,6 @@
 import React, { useMemo, useState, memo, useCallback } from 'react';
 import { View, Text } from 'react-native';
-import { TextInput } from '@/components';
+import { Input } from '@/components';
 
 import { useStyles } from './style';
 
@@ -61,7 +61,7 @@ const TokenTable: React.FC<TokenTableProps> = memo(({ token, title }) => {
       <Text style={styles.tableSubtitle}>{filteredTokens.length} tokens</Text>
 
       {/* 搜索框 */}
-      <TextInput.Search
+      <Input.Search
         onChangeText={handleSearchChange}
         placeholder="搜索令牌..."
         style={styles.searchInput}

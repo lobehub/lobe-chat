@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -65,17 +65,13 @@ const SearchDemo = () => {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>基础搜索</Text>
       <Text style={styles.description}>内置搜索图标，returnKeyType为search</Text>
-      <TextInput.Search
-        onChangeText={setSearchQuery}
-        placeholder="搜索内容..."
-        value={searchQuery}
-      />
+      <Input.Search onChangeText={setSearchQuery} placeholder="搜索内容..." value={searchQuery} />
 
       <Text style={styles.sectionTitle}>不同场景的搜索框</Text>
-      <TextInput.Search placeholder="搜索用户..." />
-      <TextInput.Search placeholder="搜索文档..." />
-      <TextInput.Search placeholder="搜索设置..." />
-      <TextInput.Search placeholder="全局搜索..." />
+      <Input.Search placeholder="搜索用户..." />
+      <Input.Search placeholder="搜索文档..." />
+      <Input.Search placeholder="搜索设置..." />
+      <Input.Search placeholder="全局搜索..." />
 
       {searchQuery ? (
         <>
