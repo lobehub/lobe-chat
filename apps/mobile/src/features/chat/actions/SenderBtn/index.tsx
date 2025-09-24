@@ -1,7 +1,9 @@
 import { ArrowUp } from 'lucide-react-native';
-import StopLoadingButton from './StopLoadingButton';
-import { useChat } from '@/hooks/useChat';
+
 import { Button } from '@/components';
+import { useChat } from '@/hooks/useChat';
+
+import StopLoadingButton from './StopLoadingButton';
 
 const SenderBtn = () => {
   const { handleSubmit, isLoading, canSend, stopGenerating } = useChat();

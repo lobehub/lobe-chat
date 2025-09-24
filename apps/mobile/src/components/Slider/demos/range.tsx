@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-
-import { createStyles } from '@/theme';
+import { Text, View } from 'react-native';
 
 import { Slider } from '@/components';
+import { createStyles } from '@/theme';
 
-const useStyles = createStyles((token) => ({
+const useStyles = createStyles(({ token }) => ({
   container: {
     padding: token.padding,
   },

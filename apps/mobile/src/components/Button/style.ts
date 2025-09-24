@@ -1,10 +1,11 @@
 import { createStyles, getLineHeight } from '@/theme';
 import { AggregationColor, isBright } from '@/utils/color';
+
 import { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from './type';
 
 export const useStyles = createStyles(
   (
-    token,
+    { token },
     {
       variant,
       color,

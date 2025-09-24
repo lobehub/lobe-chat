@@ -1,11 +1,12 @@
+import { router } from 'expo-router';
+import { ChevronLeft } from 'lucide-react-native';
 import React, { ReactNode } from 'react';
-import { StyleProp, View, ViewStyle, Text } from 'react-native';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useStyles } from './style';
-import { router } from 'expo-router';
 import ActionIcon from '@/components/ActionIcon';
-import { ChevronLeft } from 'lucide-react-native';
+
+import { useStyles } from './style';
 
 export interface PageContainerProps {
   children?: ReactNode;

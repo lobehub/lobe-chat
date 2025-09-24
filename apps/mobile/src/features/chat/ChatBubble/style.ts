@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   aiBubble: {
     flex: 1,
   },
@@ -41,7 +41,7 @@ export const useStyles = createStyles((token) => ({
   },
   codeText: {
     color: token.colorText,
-    fontFamily: 'monospace',
+    fontFamily: token.fontFamilyCode,
     fontSize: token.fontSize,
     lineHeight: token.lineHeightSM,
   },

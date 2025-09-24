@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
-import { ToastContextSetter } from './staticMethods';
 import { ToastProvider as OriginalToastProvider } from './ToastProvider';
+import { ToastContextSetter } from './staticMethods';
 
 // Enhanced ToastProvider that sets global context
 interface ToastProviderProps {

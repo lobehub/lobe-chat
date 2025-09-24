@@ -1,6 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
+// Import the mocked component
+import MarkdownRender from '../index';
 
 // Mock the entire Markdown module to avoid complex dependency issues
 jest.mock('../index', () => {
@@ -18,9 +22,6 @@ jest.mock('../index', () => {
     },
   };
 });
-
-// Import the mocked component
-import MarkdownRender from '../index';
 
 describe('Markdown', () => {
   it('renders markdown content correctly', () => {

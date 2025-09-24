@@ -1,11 +1,12 @@
-import { subscribeWithSelector } from 'zustand/middleware';
 import { useMemo } from 'react';
+import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-import { TokenStorage } from '@/services/_auth/tokenStorage';
-import { OAuthService } from '@/services/_auth/authService';
+
+import type { AuthState, Token, User } from '@/_types/user';
 import { getAuthConfig } from '@/config/auth';
-import type { AuthState, User, Token } from '@/_types/user';
+import { OAuthService } from '@/services/_auth/authService';
+import { TokenStorage } from '@/services/_auth/tokenStorage';
 import { authLogger } from '@/utils/logger';
 
 interface UserStore extends AuthState {

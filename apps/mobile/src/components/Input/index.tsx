@@ -1,3 +1,4 @@
+import { Eye, EyeOff, Search } from 'lucide-react-native';
 import React from 'react';
 import {
   TextInput as RNTextInput,
@@ -8,10 +9,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { Search, Eye, EyeOff } from 'lucide-react-native';
+
+import { useThemeToken } from '@/theme';
 
 import { useStyles } from './style';
-import { useThemeToken } from '@/theme';
 
 export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
   contentStyle?: StyleProp<TextStyle>;

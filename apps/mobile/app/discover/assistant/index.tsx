@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { FlatList, Text, View, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'ahooks';
-import { AssistantCategory } from '@/types/discover';
-import { useDiscoverStore } from '@/store/discover';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { CapsuleTabs, Input, PageContainer } from '@/components';
 import AgentCard from '@/features/discover/assistant/components/AgentCard';
 import {
-  CategoryTabsSkeleton,
   AssistantListSkeleton,
+  CategoryTabsSkeleton,
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
+import { useDiscoverStore } from '@/store/discover';
+import { AssistantCategory } from '@/types/discover';
+
 import { useStyles } from './styles';
-import { PageContainer, Input, CapsuleTabs } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 

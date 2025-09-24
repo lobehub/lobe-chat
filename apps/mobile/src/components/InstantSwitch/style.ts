@@ -3,7 +3,7 @@ import { createStyles } from '@/theme';
 export type InstantSwitchSize = 'small' | 'default' | 'large';
 
 export const useStyles = createStyles(
-  (token, { disabled, size }: { disabled: boolean; size: InstantSwitchSize }) => {
+  ({ token }, { disabled, size }: { disabled: boolean; size: InstantSwitchSize }) => {
     const getSizeStyles = () => {
       switch (size) {
         case 'small': {

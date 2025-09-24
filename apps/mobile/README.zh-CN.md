@@ -152,7 +152,6 @@ pnpm run android
 # 运行测试
 pnpm run test
 
-
 # 代码检查
 pnpm run lint
 
@@ -189,12 +188,12 @@ pnpm build
 
 ## 🔗 更多工具
 
-| 项目 | 描述 |
-| --- | --- |
-| **[🤯 Lobe Chat](https://github.com/lobehub/lobe-chat)** | 现代化设计的开源 ChatGPT/LLM 聊天应用（Web 版） |
-| **[🅰️ Lobe UI](https://github.com/lobehub/lobe-ui)** | 构建 AIGC 网页应用的开源 UI 组件库 |
-| **[🌏 Lobe i18n](https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n)** | 由 ChatGPT 驱动的 i18n 翻译自动化工具 |
-| **[💌 Lobe Commit](https://github.com/lobehub/lobe-commit)** | 基于 AI 的 Git 提交信息生成工具 |
+| 项目                                                                                      | 描述                                            |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| **[🤯 Lobe Chat](https://github.com/lobehub/lobe-chat)**                                  | 现代化设计的开源 ChatGPT/LLM 聊天应用（Web 版） |
+| **[🅰️ Lobe UI](https://github.com/lobehub/lobe-ui)**                                      | 构建 AIGC 网页应用的开源 UI 组件库              |
+| **[🌏 Lobe i18n](https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n)** | 由 ChatGPT 驱动的 i18n 翻译自动化工具           |
+| **[💌 Lobe Commit](https://github.com/lobehub/lobe-commit)**                              | 基于 AI 的 Git 提交信息生成工具                 |
 
 ---
 

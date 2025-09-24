@@ -1,6 +1,6 @@
+import * as Clipboard from 'expo-clipboard';
 import React, { memo } from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
 
 import { useStyles } from './style';
 

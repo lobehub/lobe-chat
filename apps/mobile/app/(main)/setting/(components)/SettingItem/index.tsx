@@ -2,7 +2,8 @@ import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import React, { ReactNode } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import { Switch, Icon } from '@/components';
+
+import { Icon, Switch } from '@/components';
 
 import { useStyles } from './style';
 

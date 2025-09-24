@@ -3,9 +3,10 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { produce } from 'immer';
-import { StateCreator } from 'zustand/vanilla';
 import Mustache from 'mustache';
+import { StateCreator } from 'zustand/vanilla';
 
+import Toast from '@/components/Toast';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 // import { isDesktop, isServerMode } from '@/const/version';
 // import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
@@ -26,7 +27,6 @@ import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/mes
 import { ChatImageItem } from '@/types/message/image';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
-import Toast from '@/components/Toast';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
 

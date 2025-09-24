@@ -1,9 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
-
 import { Highlighter } from '@/components';
+import { useThemeToken } from '@/theme';
 
 /**
  * 紧凑型显示演示

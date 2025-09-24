@@ -1,12 +1,13 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
-import { authExpired } from '@/features/Error/AuthExpired';
-import { createHeaderWithAuth } from './header';
+
 import { OFFICIAL_URL } from '@/const/url';
+import { authExpired } from '@/features/Error/AuthExpired';
 
 // Local type reference to server router
 import type { MobileRouter } from '../../../../../src/server/routers/mobile';
+import { createHeaderWithAuth } from './header';
 
 const remoteUrl = process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL;
 

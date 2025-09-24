@@ -2,12 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, View } from 'react-native';
 
-import Slider from '@/components/Slider';
-import { FONT_SIZE_STANDARD, FONT_SIZE_LARGE, FONT_SIZE_SMALL } from '@/const/common';
-import { useSettingStore } from '@/store/setting';
-import { useStyles } from './styles';
-import Preview from './components/Preview';
 import { PageContainer } from '@/components';
+import Slider from '@/components/Slider';
+import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
+import { useSettingStore } from '@/store/setting';
+
+import Preview from './components/Preview';
+import { useStyles } from './styles';
 
 export default function FontSizeSettingScreen() {
   const { t } = useTranslation(['setting']);

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { InstantSwitch } from '@/components';
 import { createStyles } from '@/theme';
 
-const useStyles = createStyles((token) => ({
+const useStyles = createStyles(({ token }) => ({
   container: {
     gap: token.marginLG,
     padding: token.paddingLG,

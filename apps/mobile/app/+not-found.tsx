@@ -1,11 +1,11 @@
 import { Link, Stack } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { useTranslation } from 'react-i18next';
 import { createStyles } from '@/theme';
 
-const useStyles = createStyles((token) => ({
+const useStyles = createStyles(({ token }) => ({
   container: {
     alignItems: 'center',
     backgroundColor: token.colorBgContainer,
