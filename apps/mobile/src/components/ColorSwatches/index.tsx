@@ -1,7 +1,7 @@
+import chroma from 'chroma-js';
+import { Check } from 'lucide-react-native';
 import React, { memo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { Check } from 'lucide-react-native';
-import chroma from 'chroma-js';
 
 import ConicGradientPattern from './ConicGradientPatern';
 import { useStyles } from './style';

@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   closeButton: {
     borderRadius: token.borderRadiusXS,
     marginLeft: token.marginXS,

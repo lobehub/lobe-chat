@@ -1,15 +1,16 @@
-import React, { memo } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { MessageSquareDashed } from 'lucide-react-native';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session';
-import { useGlobalStore } from '@/store/global';
 import { topicSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 import { useThemeToken } from '@/theme';
+
 import TopicItem from '../TopicItem';
 import { useStyles } from './style';
 

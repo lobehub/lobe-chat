@@ -4,7 +4,8 @@ import { View, Text } from 'react-native';
 import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
-const useStyles = createStyles((token) => ({
+
+const useStyles = createStyles(({ token }) => ({
   container: {
     gap: token.marginSM,
     padding: token.paddingLG,

@@ -1,4 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
+
 import i18n from '@/i18n';
 
 export const I18nReadyGate = ({ children }: PropsWithChildren) => {

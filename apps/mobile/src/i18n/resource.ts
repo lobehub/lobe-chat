@@ -1,9 +1,9 @@
 import * as Localization from 'expo-localization';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { getSupportedLocales } from './generatedConfig';
 
 import resources from './default';
+import { getSupportedLocales } from './generatedConfig';
 
 // 获取支持的语言列表并转换为 const 类型
 export const locales = getSupportedLocales() as readonly string[];

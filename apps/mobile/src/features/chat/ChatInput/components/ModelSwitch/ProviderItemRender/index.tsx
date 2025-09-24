@@ -1,10 +1,11 @@
-import React, { memo } from 'react';
-import { View, Text, Image } from 'react-native';
 import { ProviderIcon } from '@lobehub/icons-rn';
+import React, { memo } from 'react';
+import { Image, Text, View } from 'react-native';
 
-import { AiProviderSourceType } from '@/types/aiProvider';
-import { useStyles } from './styles';
 import { useThemeToken } from '@/theme';
+import { AiProviderSourceType } from '@/types/aiProvider';
+
+import { useStyles } from './styles';
 
 interface ProviderItemRenderProps {
   logo?: string;

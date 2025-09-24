@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { useThemeToken } from '@/theme';
 

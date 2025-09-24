@@ -1,7 +1,9 @@
-import React from 'react';
 import { act, fireEvent } from '@testing-library/react-native';
+import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
+
 import { renderWithTheme } from '@/test/utils';
+
 import { ToastProvider, useToast } from '../InnerToastProvider';
 
 jest.mock('react-native-safe-area-context', () => ({

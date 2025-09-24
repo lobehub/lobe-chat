@@ -1,5 +1,5 @@
 import ToastComponent from './Toast';
-import { staticMethods, ToastStatic } from './staticMethods';
+import { ToastStatic, staticMethods } from './staticMethods';
 
 // Create the Toast object with static methods
 const Toast = ToastComponent as typeof ToastComponent & ToastStatic;

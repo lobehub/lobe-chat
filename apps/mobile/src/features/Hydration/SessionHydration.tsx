@@ -2,10 +2,10 @@ import { router } from 'expo-router';
 import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useLocalSearchParams } from '@/hooks/useLocalSearchParams';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
-import { useLocalSearchParams } from '@/hooks/useLocalSearchParams';
 
 /**
  * SessionHydration - 会话状态同步组件

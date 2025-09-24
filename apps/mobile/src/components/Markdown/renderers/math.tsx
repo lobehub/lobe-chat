@@ -3,8 +3,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
 
-import { RendererArgs } from './renderers';
 import { useMarkdownContext } from '../context';
+import { RendererArgs } from './renderers';
 
 interface MathNode extends Node {
   type: 'math';

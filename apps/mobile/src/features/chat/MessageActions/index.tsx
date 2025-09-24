@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-import { useToast, Icon } from '@/components';
+import { Icon, useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
 import { useThemeToken } from '@/theme';
 import { ChatMessage } from '@/types/message';
