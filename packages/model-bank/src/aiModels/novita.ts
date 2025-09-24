@@ -4,6 +4,40 @@ import { AIChatModelCard } from '../types/aiModel';
 const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      vision: true,
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 VL 235B A22B Instruct',
+    id: 'qwen/qwen3-vl-235b-a22b-instruct',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 VL 235B A22B Thinking',
+    id: 'qwen/qwen3-vl-235b-a22b-thinking',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       reasoning: true,
     },

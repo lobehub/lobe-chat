@@ -193,7 +193,7 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen3-coder-plus', // 其支持上下文缓存
     },
-    contextWindowTokens: 1_048_576,
+    contextWindowTokens: 1_000_000,
     description:
       '通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
     displayName: 'Qwen3 Coder Plus',
