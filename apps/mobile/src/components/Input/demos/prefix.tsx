@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -20,13 +20,13 @@ const PrefixDemo = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="请输入用户名" prefix={<Text style={styles.prefixText}>@</Text>} />
-      <TextInput
+      <Input placeholder="请输入用户名" prefix={<Text style={styles.prefixText}>@</Text>} />
+      <Input
         placeholder="请输入密码"
         prefix={<Text style={styles.prefixText}>🔒</Text>}
         secureTextEntry
       />
-      <TextInput placeholder="搜索内容" prefix={<Text style={styles.prefixText}>🔍</Text>} />
+      <Input placeholder="搜索内容" prefix={<Text style={styles.prefixText}>🔍</Text>} />
     </View>
   );
 };

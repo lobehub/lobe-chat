@@ -6,14 +6,13 @@ import { useDebounce } from 'ahooks';
 import { AssistantCategory } from '@/types/discover';
 import { useDiscoverStore } from '@/store/discover';
 import AgentCard from '@/features/discover/assistant/components/AgentCard';
-import CategoryTabs from '@/features/discover/assistant/components/CategoryTabs';
 import {
   CategoryTabsSkeleton,
   AssistantListSkeleton,
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useStyles } from './styles';
-import { Header, TextInput } from '@/components';
+import { PageContainer, Input, CapsuleTabs } from '@/components';
 
 const INITIAL_PAGE_SIZE = 21;
 
@@ -135,23 +134,24 @@ const AssistantList = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
-      <Header showBack title={t('title', { ns: 'discover' })} />
+    <PageContainer showBack style={styles.safeAreaContainer} title={t('title', { ns: 'discover' })}>
       <View style={styles.filterContainer}>
-        <TextInput.Search
+        <Input.Search
           onChangeText={setSearchText}
           onSubmitEditing={handleSearchSubmit}
           placeholder={t('assistant.search', { ns: 'common' })}
+          size="large"
           style={styles.searchContainer}
         />
 
         {isCategoryLoading ? (
           <CategoryTabsSkeleton />
         ) : (
-          <CategoryTabs
+          <CapsuleTabs
             items={categoriesWithStats}
             onSelect={handleCategorySelect}
             selectedKey={selectedCategory}
+            size="large"
           />
         )}
       </View>
@@ -178,7 +178,7 @@ const AssistantList = () => {
           renderItem={({ item }) => <AgentCard item={item} />}
         />
       )}
-    </SafeAreaView>
+    </PageContainer>
   );
 };
 

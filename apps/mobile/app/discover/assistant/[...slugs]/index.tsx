@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BotMessageSquare } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
-import { Tag, Button, Markdown, Header, Icon } from '@/components';
+import { Tag, Button, Markdown, Icon, PageContainer } from '@/components';
 import { useStyles } from './styles';
 import { useDiscoverStore } from '@/store/discover';
 import { useSessionStore } from '@/store/session';
@@ -95,25 +94,31 @@ const AssistantDetail = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
-        <Header showBack />
+      <PageContainer
+        showBack
+        style={styles.safeAreaContainer}
+        title={t('assistant.detail.title', { ns: 'discover' })}
+      >
         <ScrollView style={styles.scrollContainer}>
           <SkeletonDetail />
         </ScrollView>
-      </SafeAreaView>
+      </PageContainer>
     );
   }
 
   if (error || !agent) {
     return (
-      <SafeAreaView style={styles.errorContainer}>
-        <Header showBack />
+      <PageContainer
+        showBack
+        style={styles.errorContainer}
+        title={t('assistant.detail.title', { ns: 'discover' })}
+      >
         <Text style={styles.errorText}>
           {!identifier
             ? t('assistant.detail.notFoundIdentifier', { ns: 'discover' })
             : t('assistant.detail.loadFailed', { ns: 'discover' })}
         </Text>
-      </SafeAreaView>
+      </PageContainer>
     );
   }
 
@@ -121,8 +126,11 @@ const AssistantDetail = () => {
   const systemRoleContent = agent.config.systemRole;
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaContainer}>
-      <Header showBack title={t('assistant.detail.title', { ns: 'discover' })} />
+    <PageContainer
+      showBack
+      style={styles.safeAreaContainer}
+      title={t('assistant.detail.title', { ns: 'discover' })}
+    >
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           {/* Header with avatar on left, title/author/date on right */}
@@ -183,7 +191,7 @@ const AssistantDetail = () => {
           )}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 };
 

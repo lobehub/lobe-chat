@@ -5,9 +5,8 @@ import {
   CustomTokenAndAlgorithmDemo,
   MultipleAlgorithmsDemo,
 } from '@/theme/ThemeProvider/demos';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStyles } from './style';
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 import README from '@/theme/ThemeProvider/README';
 
@@ -43,9 +42,8 @@ export default function ThemeProviderPlaygroundPage() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="ThemeProvider 组件" />
+    <PageContainer showBack style={styles.safeAreaView} title="ThemeProvider 组件">
       <ComponentPlayground demos={themeProviderDemos} readmeContent={README} />
-    </SafeAreaView>
+    </PageContainer>
   );
 }

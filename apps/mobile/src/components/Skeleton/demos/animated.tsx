@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
-import Button from '@/components/Button';
+import { Button, Skeleton } from '@/components';
 import { useThemeToken } from '@/theme';
-import Skeleton from '../index';
 
 const AnimatedDemo: React.FC = () => {
   const [animationEnabled, setAnimationEnabled] = useState(true);

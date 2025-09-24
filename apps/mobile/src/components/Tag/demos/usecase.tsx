@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useThemeToken } from '@/theme';
-import Tag from '../index';
+import { Tag } from '@/components';
 
 const UseCaseDemo = () => {
   const token = useThemeToken();

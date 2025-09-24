@@ -1,14 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { Avatar, Header } from '@/components';
+import { Avatar, PageContainer } from '@/components';
 
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useStyles } from './styles';
 import { AVATAR_SIZE_LARGE } from '@/const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 export default function AgentDetail() {
@@ -19,8 +18,7 @@ export default function AgentDetail() {
   const { styles } = useStyles();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title={t('setting.title', { ns: 'chat' })} />
+    <PageContainer showBack style={styles.safeAreaView} title={t('setting.title', { ns: 'chat' })}>
       <KeyboardAwareScrollView
         bottomOffset={40}
         extraKeyboardSpace={60}
@@ -34,6 +32,6 @@ export default function AgentDetail() {
         {description ? <Text style={styles.description}>{description}</Text> : null}
         <AgentRoleEditSection />
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </PageContainer>
   );
 }

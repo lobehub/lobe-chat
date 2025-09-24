@@ -3,7 +3,7 @@ import { View, Text, Alert, Linking, ActivityIndicator } from 'react-native';
 import { Lock } from 'lucide-react-native';
 
 import { useTranslation, Trans } from 'react-i18next';
-import { TextInput } from '@/components';
+import { Input } from '@/components';
 
 import { AiProviderDetailItem } from '@/types/aiProvider';
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -122,7 +122,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               ns: 'setting',
             })}
           </Text>
-          <TextInput.Password
+          <Input.Password
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect={false}
@@ -152,7 +152,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               t('aiProviders.configuration.proxyUrl.desc', { ns: 'setting' })}
           </Text>
           <View style={[!isValidUrl(proxyUrl) && styles.inputContainerError]}>
-            <TextInput
+            <Input
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect={false}

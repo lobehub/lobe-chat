@@ -28,8 +28,13 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   return error ? (
     <Text style={styles.errorText}>{code}</Text>
   ) : (
-    <ScrollView style={styles.codeContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator>
+    <View style={styles.codeContainer}>
+      <ScrollView
+        contentContainerStyle={styles.horizontalScrollContent}
+        horizontal
+        nestedScrollEnabled
+        showsHorizontalScrollIndicator
+      >
         <View style={styles.codeScrollContainer}>
           {tokens.map((line, lineIndex) => (
             <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
@@ -51,6 +56,6 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
           ))}
         </View>
       </ScrollView>
-    </ScrollView>
+    </View>
   );
 }

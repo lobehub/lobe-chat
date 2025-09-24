@@ -46,53 +46,45 @@ const TopicList = memo(() => {
   }
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('title')}</Text>
-      </View>
-
-      {/* Topic列表 */}
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        removeClippedSubviews={true}
-        scrollEventThrottle={32}
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}
+    <ScrollView
+      contentContainerStyle={styles.scrollContent}
+      removeClippedSubviews={true}
+      scrollEventThrottle={32}
+      showsVerticalScrollIndicator={false}
+      style={styles.scrollView}
+    >
+      {/* 默认话题 - 始终显示在第一位，参考web端实现 */}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          switchTopic(); // 切换到默认topic (null)
+          setTopicDrawerOpen(false);
+        }}
+        style={[styles.defaultTopicContainer, !activeTopicId && styles.activeDefaultTopic]}
       >
-        {/* 默认话题 - 始终显示在第一位，参考web端实现 */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            switchTopic(); // 切换到默认topic (null)
-            setTopicDrawerOpen(false);
-          }}
-          style={[styles.defaultTopicContainer, !activeTopicId && styles.activeDefaultTopic]}
-        >
-          <View style={styles.defaultTopicIcon}>
-            <MessageSquareDashed
-              color={!activeTopicId ? token.colorText : token.colorTextSecondary}
-              size={16}
-            />
-          </View>
-          <View style={styles.defaultTopicContent}>
-            <Text
-              style={[styles.defaultTopicTitle, !activeTopicId && styles.activeDefaultTopicTitle]}
-            >
-              {t('defaultTitle')}
-            </Text>
-          </View>
-          <View style={styles.tempBadgeContainer}>
-            <Text style={styles.tempBadge}>{t('temp')}</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.defaultTopicIcon}>
+          <MessageSquareDashed
+            color={!activeTopicId ? token.colorText : token.colorTextSecondary}
+            size={16}
+          />
+        </View>
+        <View style={styles.defaultTopicContent}>
+          <Text
+            style={[styles.defaultTopicTitle, !activeTopicId && styles.activeDefaultTopicTitle]}
+          >
+            {t('defaultTitle')}
+          </Text>
+        </View>
+        <View style={styles.tempBadgeContainer}>
+          <Text style={styles.tempBadge}>{t('temp')}</Text>
+        </View>
+      </TouchableOpacity>
 
-        {/* 实际的topic列表项 */}
-        {topics?.map((topic) => (
-          <TopicItem key={topic.id} topic={topic} />
-        ))}
-      </ScrollView>
-    </View>
+      {/* 实际的topic列表项 */}
+      {topics?.map((topic) => (
+        <TopicItem key={topic.id} topic={topic} />
+      ))}
+    </ScrollView>
   );
 });
 
