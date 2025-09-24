@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
-import { useStyles } from './style';
 import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
+
+import { useStyles } from './style';
 
 const Preview = memo(() => {
   const { styles } = useStyles();

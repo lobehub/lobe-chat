@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { nanoid } from 'nanoid';
-import { createWithEqualityFn } from 'zustand/traditional';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 
 import { ChatMessage } from '@/types/message';
 import { fetchSSE } from '@/utils/fetchSSE';
 
 import { useOpenAIStore } from '../openai';
-import { shallow } from 'zustand/shallow';
 
 interface ChatState {
   eventSource: { close: () => void } | null;

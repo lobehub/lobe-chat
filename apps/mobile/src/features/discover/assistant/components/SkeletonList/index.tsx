@@ -1,6 +1,6 @@
+import { Search } from 'lucide-react-native';
 import React from 'react';
 import { View } from 'react-native';
-import { Search } from 'lucide-react-native';
 
 import { Skeleton, Space } from '@/components';
 

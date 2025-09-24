@@ -5,7 +5,7 @@ import { Copy, Send, X } from 'lucide-react-native';
 import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
-const useStyles = createStyles((token) => ({
+const useStyles = createStyles(({ token }) => ({
   clearButton: {
     alignItems: 'center',
     justifyContent: 'center',

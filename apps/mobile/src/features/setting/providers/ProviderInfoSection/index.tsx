@@ -1,15 +1,15 @@
+import { ProviderCombine } from '@lobehub/icons-rn';
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
-import { AiProviderDetailItem } from '@/types/aiProvider';
+import { InstantSwitch } from '@/components';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
-import { InstantSwitch } from '@/components';
-import { useTranslation } from 'react-i18next';
+import { useThemeToken } from '@/theme';
+import { AiProviderDetailItem } from '@/types/aiProvider';
 
 import { useStyles } from './style';
-import { ProviderCombine } from '@lobehub/icons-rn';
 
 interface ProviderInfoSectionProps {
   provider: AiProviderDetailItem;

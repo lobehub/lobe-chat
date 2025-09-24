@@ -1,7 +1,7 @@
-import { createStyles } from '@/theme';
 import { CHAT_INPUT_HEIGHT } from '@/const/common';
+import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   container: {
     backgroundColor: token.colorBgContainer,
     borderColor: token.colorBorder,

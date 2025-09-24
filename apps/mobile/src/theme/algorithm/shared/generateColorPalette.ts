@@ -1,7 +1,8 @@
 import { camelCase, capitalize } from 'lodash-es';
-import type { AliasToken } from '../../interface';
+
 import type { ThemeAppearance } from '../../ThemeProvider/types';
 import { ColorScaleItem, colorScales } from '../../color';
+import type { AliasToken } from '../../interface';
 
 export const generateColorPalette = ({
   type,

@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   // 激活的默认话题容器
   activeDefaultTopic: {
     backgroundColor: token.colorPrimaryBg,

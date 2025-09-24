@@ -8,6 +8,7 @@ import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
 
+
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
   const { styles, token } = useStyles();
@@ -148,6 +149,21 @@ export default function ComponentPlaygroundIndex() {
       }
       case 'input': {
         router.push('/playground/components/input');
+
+        break;
+      }
+      case 'flexbox': {
+        router.push('/playground/components/flexbox');
+
+        break;
+      }
+      case 'center': {
+        router.push('/playground/components/center');
+
+        break;
+      }
+      case 'block': {
+        router.push('/playground/components/block');
 
         break;
       }

@@ -7,7 +7,7 @@ const monospaceFontFamily = Platform.select({
   ios: 'Menlo',
 });
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles(({ token }) => ({
   codeContainer: {
     alignSelf: 'stretch',
     backgroundColor: token.colorBgContainer,

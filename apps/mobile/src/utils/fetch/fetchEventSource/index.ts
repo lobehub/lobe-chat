@@ -3,7 +3,8 @@
  * and remove some code
  * Updated to use expo/fetch for Expo SDK 52 ReadableStream support
  */
-import { fetch as expoFetch, type FetchRequestInit } from 'expo/fetch';
+import { type FetchRequestInit, fetch as expoFetch } from 'expo/fetch';
+
 import { EventSourceMessage, getBytes, getLines, getMessages } from './parse';
 
 export const EventStreamContentType = 'text/event-stream';

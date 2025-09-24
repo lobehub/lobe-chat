@@ -77,14 +77,14 @@ export default function NavigationExample() {
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 描述 |
-| --- | --- | --- | --- |
-| `title` | `string` | - | **必需** - 列表项的主标题 |
-| `avatar` | `string \| React.ReactNode` | - | **必需** - 头像，可以是图片 URL、emoji 或 React 组件 |
-| `description` | `string` | - | 描述文本，显示在标题下方 |
-| `extra` | `React.ReactNode` | - | 额外内容，显示在右侧 |
-| `href` | `Href` | - | 路由地址，使用 Expo Router 进行导航 |
-| `onPress` | `() => void` | - | 点击事件回调函数 |
+| 属性          | 类型                        | 默认值 | 描述                                                 |
+| ------------- | --------------------------- | ------ | ---------------------------------------------------- |
+| `title`       | `string`                    | -      | **必需** - 列表项的主标题                            |
+| `avatar`      | `string \| React.ReactNode` | -      | **必需** - 头像，可以是图片 URL、emoji 或 React 组件 |
+| `description` | `string`                    | -      | 描述文本，显示在标题下方                             |
+| `extra`       | `React.ReactNode`           | -      | 额外内容，显示在右侧                                 |
+| `href`        | `Href`                      | -      | 路由地址，使用 Expo Router 进行导航                  |
+| `onPress`     | `() => void`                | -      | 点击事件回调函数                                     |
 
 ### 头像类型说明
 
@@ -386,7 +386,7 @@ export default function OptimizedList({ data }) {
 - 合理使用 memo 优化重渲染
 
 ```jsx
-import { useCallback, memo } from 'react';
+import { memo, useCallback } from 'react';
 
 const OptimizedListItem = memo(({ item, onPress }) => {
   const handlePress = useCallback(() => {
@@ -441,7 +441,8 @@ const OptimizedListItem = memo(({ item, onPress }) => {
 ### 单元测试示例
 
 ```jsx
-import { render, fireEvent } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
+
 import ListItem from '../index';
 
 describe('ListItem', () => {
