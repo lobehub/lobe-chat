@@ -1,14 +1,15 @@
-import {
-  BasicDemo,
-  CustomAlgorithmDemo,
-  CustomTokenDemo,
-  CustomTokenAndAlgorithmDemo,
-  MultipleAlgorithmsDemo,
-} from '@/theme/ThemeProvider/demos';
-import { useStyles } from './style';
 import { PageContainer } from '@/components';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 import README from '@/theme/ThemeProvider/README';
+import {
+  BasicDemo,
+  CustomAlgorithmDemo,
+  CustomTokenAndAlgorithmDemo,
+  CustomTokenDemo,
+  MultipleAlgorithmsDemo,
+} from '@/theme/ThemeProvider/demos';
+
+import { useStyles } from './style';
 
 const themeProviderDemos: DemoItem[] = [
   {

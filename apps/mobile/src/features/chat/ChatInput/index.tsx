@@ -2,13 +2,13 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
 
-import { Space, Input } from '@/components';
-import { useChat } from '@/hooks/useChat';
-import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
-import ModelSwitch from './components/ModelSwitch';
+import { Input, Space } from '@/components';
 import SenderBtn from '@/features/chat/actions/SenderBtn';
 import ToogleTopic from '@/features/chat/actions/ToogleTopic';
+import { useChat } from '@/hooks/useChat';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
+import ModelSwitch from './components/ModelSwitch';
 import { useStyles } from './style';
 
 interface ChatInputProps {

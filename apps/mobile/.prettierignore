@@ -57,6 +57,11 @@ Dockerfile*
 *.png
 *.jpg
 
+
 # misc
 # add other ignore file below
 ./src/icons/MaterialFileTypeIcon/icon-map.json
+*.ico
+*.backup
+*.mdc
+*.ttf

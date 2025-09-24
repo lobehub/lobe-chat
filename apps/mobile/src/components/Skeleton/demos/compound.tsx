@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
 import { Skeleton } from '@/components';
+import { useThemeToken } from '@/theme';
 
 const CompoundDemo: React.FC = () => {
   const token = useThemeToken();

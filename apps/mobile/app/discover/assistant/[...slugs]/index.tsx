@@ -1,16 +1,17 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { BotMessageSquare } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert, ScrollView, Text, View } from 'react-native';
 
+import { Button, Icon, Markdown, PageContainer, Tag } from '@/components';
 import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
-import { Tag, Button, Markdown, Icon, PageContainer } from '@/components';
-import { useStyles } from './styles';
 import { useDiscoverStore } from '@/store/discover';
-import { useSessionStore } from '@/store/session';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+
+import { useStyles } from './styles';
 
 const AssistantDetail = () => {
   const { slugs } = useLocalSearchParams<{ slugs: string[] }>();

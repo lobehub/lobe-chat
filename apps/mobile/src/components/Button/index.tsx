@@ -1,20 +1,21 @@
+import { LoaderCircle } from 'lucide-react-native';
 import React from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  TouchableOpacityProps,
-  TextStyle,
-  ViewStyle,
-  StyleProp,
-  View,
   Animated,
   Easing,
+  StyleProp,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
 } from 'react-native';
-import { LoaderCircle } from 'lucide-react-native';
+
+import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
 
 import { useStyles } from './style';
-import { ButtonType, ButtonSize, ButtonShape, ButtonVariant, ButtonColor } from './type';
-import { FONT_SIZE_SMALL, FONT_SIZE_LARGE, FONT_SIZE_STANDARD } from '@/const/common';
+import { ButtonColor, ButtonShape, ButtonSize, ButtonType, ButtonVariant } from './type';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;

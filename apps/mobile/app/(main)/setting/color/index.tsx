@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { PageContainer, ColorSwatches } from '@/components';
+
+import { ColorSwatches, PageContainer } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import {
   NeutralColors,
