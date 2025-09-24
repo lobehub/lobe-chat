@@ -128,14 +128,14 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
     const {
       agentConfig: processedAgentConfig,
       chatConfig: processedChatConfig,
-      files: processedFiles,
-      knowledgeBases: processedKnowledgeBases,
+      // files: processedFiles,
+      // knowledgeBases: processedKnowledgeBases,
       meta: processedMeta,
       model: processedModel,
       plugins: processedPlugins,
       provider: processedProvider,
       systemRole: processedSystemRole,
-      ttsConfig: processedTtsConfig,
+      // ttsConfig: processedTtsConfig,
     } = getProcessedData();
     const renderAvatar = (avatar: string | undefined) => {
       if (!avatar || avatar === '未设置') return '未设置';
@@ -317,7 +317,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
           />
 
           {/* 语音服务 */}
-          <ProDescriptions
+          {/* <ProDescriptions
             bordered
             column={2}
             columns={[
@@ -338,7 +338,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
             }}
             size="small"
             title="语音服务"
-          />
+          /> */}
 
           {/* 插件设置 */}
           <ProDescriptions
@@ -368,7 +368,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
           />
 
           {/* 知识库 */}
-          <ProDescriptions
+          {/* <ProDescriptions
             bordered
             column={1}
             columns={[
@@ -407,7 +407,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
             }}
             size="small"
             title={`知识库设置 (知识库: ${processedKnowledgeBases?.length || 0}个, 文件: ${processedFiles?.length || 0}个)`}
-          />
+          /> */}
         </Flexbox>
       </div>
     );

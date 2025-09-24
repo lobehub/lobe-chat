@@ -121,22 +121,23 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
               topP: agentConfig?.params?.top_p,
             },
             description: meta?.description,
+            // TODO: Files and Knowledge bases temporarily disabled
             // Files
-            files:
-              files?.map((file) => ({
-                enabled: file.enabled,
-                id: file.id,
-                name: file.name,
-                type: file.type,
-              })) || [],
+            // files:
+            //   files?.map((file) => ({
+            //     enabled: file.enabled,
+            //     id: file.id,
+            //     name: file.name,
+            //     type: file.type,
+            //   })) || [],
 
             // Knowledge bases
-            knowledgeBases:
-              knowledgeBases?.map((kb) => ({
-                enabled: kb.enabled,
-                id: kb.id,
-                name: kb.name,
-              })) || [],
+            // knowledgeBases:
+            //   knowledgeBases?.map((kb) => ({
+            //     enabled: kb.enabled,
+            //     id: kb.id,
+            //     name: kb.name,
+            //   })) || [],
 
             // Language
             locale: language,
@@ -156,11 +157,12 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
               })) || [],
             // System role and description
             systemRole: systemRole || '你是一个有用的助手。',
+            // TODO: TTS configuration temporarily disabled
             // TTS configuration
-            tts: {
-              ttsService: ttsConfig?.ttsService,
-              voice: ttsConfig?.voice,
-            },
+            // tts: {
+            //   ttsService: ttsConfig?.ttsService,
+            //   voice: ttsConfig?.voice,
+            // },
           },
           defaultInputModes: ['text'],
           defaultOutputModes: ['text'],
@@ -198,10 +200,10 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
       <>
         <ModalForm<FormValues>
           modalProps={{
-            bodyStyle: { maxHeight: '60vh', overflow: 'auto' },
+            bodyStyle: { height: '70vh', overflow: 'auto' },
             destroyOnClose: true,
             onCancel,
-            width: 1200,
+            style: { minWidth: 750 },
           }}
           onFinish={handleSubmit}
           open={open}
@@ -214,6 +216,7 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
             },
           }}
           title="发布新版本"
+          width="80vw"
         >
           {/* 变更日志输入 */}
           <div style={{ marginBottom: 24 }}>

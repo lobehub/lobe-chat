@@ -106,22 +106,23 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
 
           description: meta?.description,
 
+          // TODO: Files and Knowledge bases temporarily disabled
           // Files
-          files:
-            files?.map((file) => ({
-              enabled: file.enabled,
-              id: file.id,
-              name: file.name,
-              type: file.type,
-            })) || [],
+          // files:
+          //   files?.map((file) => ({
+          //     enabled: file.enabled,
+          //     id: file.id,
+          //     name: file.name,
+          //     type: file.type,
+          //   })) || [],
 
           // Knowledge bases
-          knowledgeBases:
-            knowledgeBases?.map((kb) => ({
-              enabled: kb.enabled,
-              id: kb.id,
-              name: kb.name,
-            })) || [],
+          // knowledgeBases:
+          //   knowledgeBases?.map((kb) => ({
+          //     enabled: kb.enabled,
+          //     id: kb.id,
+          //     name: kb.name,
+          //   })) || [],
 
           // Language
           locale: language,
@@ -143,11 +144,12 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
 
           // System role and description
           systemRole: systemRole,
+          // TODO: TTS configuration temporarily disabled
           // TTS configuration
-          tts: {
-            ttsService: ttsConfig?.ttsService,
-            voice: ttsConfig?.voice,
-          },
+          // tts: {
+          //   ttsService: ttsConfig?.ttsService,
+          //   voice: ttsConfig?.voice,
+          // },
         },
         defaultInputModes: ['text'],
         defaultOutputModes: ['text'],
@@ -210,9 +212,10 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
     <>
       <ModalForm<FormValues>
         modalProps={{
-          bodyStyle: { maxHeight: '60vh', overflow: 'auto' },
+          bodyStyle: { height: '70vh', overflow: 'auto' },
           destroyOnClose: true,
           onCancel,
+          style: { minWidth: 750 },
         }}
         onFinish={handleSubmit}
         open={open}
@@ -225,7 +228,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
           },
         }}
         title={t('submitAgentModal.tooltips')}
-        width={800}
+        width="80vw"
       >
         <ProFormText
           extra="标识符将作为助手的唯一标识，建议使用小写字母、数字和连字符"

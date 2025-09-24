@@ -54,7 +54,7 @@ const UploadAgentVersionButton = memo<{ modal?: boolean }>(({ modal }) => {
     } else {
       return {
         icon: LogIn,
-        text: '发布新版本(未登录)',
+        text: '发布新版本',
         title: '发布新版本到助手市场',
       };
     }
