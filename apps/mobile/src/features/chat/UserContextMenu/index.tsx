@@ -10,18 +10,16 @@ import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
 
-interface ToolTipActionsProps {
+interface UserContextMenuProps {
   children: React.ReactNode;
   message: ChatMessage;
 }
 
-const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) => {
+const UserContextMenu: React.FC<UserContextMenuProps> = ({ message, children }) => {
   const { t } = useTranslation(['chat', 'common']);
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
   const { styles } = useStyles();
-
-  const isAssistant = message.role === 'assistant';
 
   // 复制消息内容
   const handleCopy = useCallback(async () => {
@@ -60,10 +58,6 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
     ]);
   }, [deleteMessage, message.id, t]);
 
-  const regenerateLabel = isAssistant
-    ? t('actions.retry', { ns: 'common' })
-    : t('actions.regenerate', { ns: 'common' });
-
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger asChild>
@@ -80,7 +74,7 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
           />
         </ContextMenu.Item>
         <ContextMenu.Item key={`${message.id}-regenerate`} onSelect={handleRegenerate}>
-          <ContextMenu.ItemTitle>{regenerateLabel}</ContextMenu.ItemTitle>
+          <ContextMenu.ItemTitle>{t('actions.regenerate', { ns: 'common' })}</ContextMenu.ItemTitle>
           <ContextMenu.ItemIcon
             ios={{
               name: 'arrow.clockwise',
@@ -102,4 +96,4 @@ const ToolTipActions: React.FC<ToolTipActionsProps> = ({ message, children }) =>
   );
 };
 
-export default ToolTipActions;
+export default UserContextMenu;

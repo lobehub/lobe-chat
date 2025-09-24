@@ -6,7 +6,7 @@ import { ChatMessage } from '@/types/message';
 
 import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
-import ToolTipActions from '../ToolTipActions';
+import UserContextMenu from '../UserContextMenu';
 import ErrorContent from './ErrorContent';
 import { useStyles } from './style';
 import { useSettingStore } from '@/store/setting';
@@ -60,11 +60,11 @@ const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
       ) : (
         <View style={styles.userMessageContainer}>
           <View style={styles.userContentContainer}>
-            <ToolTipActions message={message}>
+            <UserContextMenu message={message}>
               <View style={[styles.bubble, styles.userBubble, hasError && styles.errorBubble]}>
                 {content}
               </View>
-            </ToolTipActions>
+            </UserContextMenu>
           </View>
         </View>
       )}
