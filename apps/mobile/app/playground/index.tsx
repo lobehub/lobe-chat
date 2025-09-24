@@ -3,11 +3,11 @@ import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { Tag, Input, PageContainer, CapsuleTabs, CapsuleTabItem } from '@/components';
+import { CapsuleTabItem, CapsuleTabs, Input, PageContainer, Tag } from '@/components';
+
+import { useStyles } from './styles';
 import { ComponentItem } from './type';
 import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
-import { useStyles } from './styles';
-
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();

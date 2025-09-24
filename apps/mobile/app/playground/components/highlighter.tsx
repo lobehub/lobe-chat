@@ -1,9 +1,6 @@
-import { PageContainer } from '@/components';
-import { useStyles } from './style';
-
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@/components';
 import {
   BasicHighlighterDemo,
   CompactHighlighterDemo,
@@ -11,6 +8,9 @@ import {
   LanguagesHighlighterDemo,
 } from '@/components/Highlighter/demos';
 import README from '@/components/Highlighter/readme';
+import ComponentPlayground, { DemoItem } from '@/components/Playground';
+
+import { useStyles } from './style';
 
 const demos: DemoItem[] = [
   { component: <BasicHighlighterDemo />, key: 'basic', title: '基础高亮' },

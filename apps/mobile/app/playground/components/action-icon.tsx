@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 import {
   BasicDemo,
   ColorsDemo,
@@ -11,6 +10,7 @@ import {
   VariantsDemo,
 } from '@/components/ActionIcon/demos';
 import README from '@/components/ActionIcon/readme';
+import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 import { useStyles } from './style';
 

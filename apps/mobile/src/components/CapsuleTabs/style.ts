@@ -1,5 +1,6 @@
-import { createStyles, type AliasToken } from '@/theme';
+import { type AliasToken, createStyles } from '@/theme';
 import { AggregationColor, isBright } from '@/utils/color';
+
 import { CapsuleTabsSize } from './type';
 
 const getSizeStyles = (
@@ -43,38 +44,40 @@ const getSizeStyles = (
   return sizeMap[size];
 };
 
-export const useStyles = createStyles(({token}, size: 'large' | 'middle' | 'small' = 'middle') => {
-  const activeTabColor = token.colorPrimary;
-  const solidTextColor = isBright(new AggregationColor(activeTabColor), '#fff') ? '#000' : '#fff';
-  const sizeStyles = getSizeStyles(token, size);
+export const useStyles = createStyles(
+  ({ token }, size: 'large' | 'middle' | 'small' = 'middle') => {
+    const activeTabColor = token.colorPrimary;
+    const solidTextColor = isBright(new AggregationColor(activeTabColor), '#fff') ? '#000' : '#fff';
+    const sizeStyles = getSizeStyles(token, size);
 
-  return {
-    container: {
-      flexDirection: 'row',
-    },
-    tab: {
-      alignItems: 'center',
-      backgroundColor: token.colorBgContainer,
-      borderRadius: sizeStyles.borderRadius,
-      marginRight: token.marginXS,
-      paddingHorizontal: sizeStyles.paddingHorizontal,
-      paddingVertical: sizeStyles.paddingVertical,
-    },
-    tabActive: {
-      backgroundColor: activeTabColor,
-    },
-    tabContent: {
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
-    tabText: {
-      color: token.colorText,
-      fontSize: sizeStyles.fontSize,
-      lineHeight: sizeStyles.fontSize,
-      textTransform: 'capitalize',
-    },
-    tabTextActive: {
-      color: solidTextColor,
-    },
-  };
-});
+    return {
+      container: {
+        flexDirection: 'row',
+      },
+      tab: {
+        alignItems: 'center',
+        backgroundColor: token.colorBgContainer,
+        borderRadius: sizeStyles.borderRadius,
+        marginRight: token.marginXS,
+        paddingHorizontal: sizeStyles.paddingHorizontal,
+        paddingVertical: sizeStyles.paddingVertical,
+      },
+      tabActive: {
+        backgroundColor: activeTabColor,
+      },
+      tabContent: {
+        alignItems: 'center',
+        flexDirection: 'row',
+      },
+      tabText: {
+        color: token.colorText,
+        fontSize: sizeStyles.fontSize,
+        lineHeight: sizeStyles.fontSize,
+        textTransform: 'capitalize',
+      },
+      tabTextActive: {
+        color: solidTextColor,
+      },
+    };
+  },
+);
