@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Button from '@/components/Button';
-import Highlighter from '../index';
+import { Button, Highlighter } from '@/components';
 
 /**
  * 多语言支持演示

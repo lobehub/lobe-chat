@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CheckCircle, XCircle } from 'lucide-react-native';
 
-import TextInput from '../index';
+import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
@@ -123,18 +123,18 @@ const PasswordDemo = () => {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>基础密码输入</Text>
       <Text style={styles.description}>支持密码显示/隐藏切换，点击眼睛图标</Text>
-      <TextInput.Password placeholder="请输入密码" />
-      <TextInput.Password placeholder="请再次输入密码" />
+      <Input.Password placeholder="请输入密码" />
+      <Input.Password placeholder="请再次输入密码" />
 
       <Text style={styles.sectionTitle}>不同场景的密码框</Text>
-      <TextInput.Password placeholder="当前密码" />
-      <TextInput.Password placeholder="新密码" />
-      <TextInput.Password placeholder="确认新密码" />
+      <Input.Password placeholder="当前密码" />
+      <Input.Password placeholder="新密码" />
+      <Input.Password placeholder="确认新密码" />
 
       <Text style={styles.sectionTitle}>登录表单示例</Text>
       <View style={styles.loginForm}>
-        <TextInput onChangeText={setUsername} placeholder="用户名或邮箱" value={username} />
-        <TextInput.Password onChangeText={setPassword} placeholder="密码" value={password} />
+        <Input onChangeText={setUsername} placeholder="用户名或邮箱" value={username} />
+        <Input.Password onChangeText={setPassword} placeholder="密码" value={password} />
 
         <TouchableOpacity style={styles.loginButton}>
           <Text style={styles.loginButtonText}>登录</Text>
@@ -144,7 +144,7 @@ const PasswordDemo = () => {
       <Text style={styles.sectionTitle}>密码强度检测</Text>
       <Text style={styles.description}>实时检测密码强度和验证规则</Text>
 
-      <TextInput.Password onChangeText={setPassword} placeholder="设置新密码" value={password} />
+      <Input.Password onChangeText={setPassword} placeholder="设置新密码" value={password} />
 
       {password && (
         <View style={styles.strengthIndicator}>
@@ -155,7 +155,7 @@ const PasswordDemo = () => {
         </View>
       )}
 
-      <TextInput.Password
+      <Input.Password
         onChangeText={setConfirmPassword}
         placeholder="确认密码"
         value={confirmPassword}

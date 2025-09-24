@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { Tag } from '../index';
+import { Tag } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles((token) => ({
