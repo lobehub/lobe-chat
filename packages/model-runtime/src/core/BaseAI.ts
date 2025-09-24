@@ -22,10 +22,7 @@ import {
 export interface LobeRuntimeAI {
   baseURL?: string;
   chat?(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
-  generateObject?(
-    payload: GenerateObjectPayload,
-    options?: GenerateObjectOptions,
-  ): Promise<Response>;
+  generateObject?(payload: GenerateObjectPayload, options?: GenerateObjectOptions): Promise<any>;
 
   embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
@@ -53,7 +50,7 @@ export abstract class LobeOpenAICompatibleRuntime {
   abstract generateObject(
     payload: GenerateObjectPayload,
     options?: GenerateObjectOptions,
-  ): Promise<Response>;
+  ): Promise<Record<string, any>>;
 
   abstract models(): Promise<AIBaseModelCard[]>;
 
