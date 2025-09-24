@@ -53,7 +53,82 @@
           "resizeMode": "contain"
         }
       ],
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Hack-Regular.ttf",
+            "./assets/fonts/Hack-Bold.ttf",
+            "./assets/fonts/Hack-Italic.ttf",
+            "./assets/fonts/Hack-BoldItalic.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Regular.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Bold.ttf",
+            "./assets/fonts/HarmonyOS_Sans_SC_Regular.ttf",
+            "./assets/fonts/HarmonyOS_Sans_SC_Medium.ttf",
+            "./assets/fonts/HarmonyOS_Sans_SC_Bold.ttf"
+          ],
+          "android": [
+            {
+              "fontFamily": "Hack",
+              "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/Hack-Regular.ttf",
+                  "weight": 400
+                },
+                {
+                  "path": "./assets/fonts/Hack-Bold.ttf",
+                  "weight": 700
+                },
+                {
+                  "path": "./assets/fonts/Hack-Italic.ttf",
+                  "weight": 400,
+                  "style": "italic"
+                },
+                {
+                  "path": "./assets/fonts/Hack-BoldItalic.ttf",
+                  "weight": 700,
+                  "style": "italic"
+                }
+              ]
+            },
+            {
+              "fontFamily": "HarmonyOS-Sans",
+              "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_Regular.ttf",
+                  "weight": 400
+                },
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
+                  "weight": 500
+                },
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_Bold.ttf",
+                  "weight": 700
+                }
+              ]
+            },
+            {
+              "fontFamily": "HarmonyOS-Sans-SC",
+              "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_SC_Regular.ttf",
+                  "weight": 400
+                },
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_SC_Medium.ttf",
+                  "weight": 500
+                },
+                {
+                  "path": "./assets/fonts/HarmonyOS_Sans_SC_Bold.ttf",
+                  "weight": 700
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "expo-secure-store",
       "expo-localization"
     ],
