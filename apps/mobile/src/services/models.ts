@@ -1,5 +1,6 @@
+import { ChatModelCard } from '@lobechat/types';
+
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { ChatModelCard } from '@/types/llm';
 import { getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithAuth } from './_auth/header';

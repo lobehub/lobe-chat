@@ -1,5 +1,6 @@
+import { AIChatModelCard, AIImageModelCard } from 'model-bank';
+
 import { ModelParamsSchema } from '@/libs/standard-parameters';
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const googleChatModels: AIChatModelCard[] = [
   {

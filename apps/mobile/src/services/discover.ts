@@ -1,13 +1,13 @@
-import type { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
-import i18n from 'i18next';
-
-import { trpcClient } from '@/services/_auth/trpc';
 import {
   AssistantListResponse,
   AssistantQueryParams,
   DiscoverAssistantDetail,
   IdentifiersResponse,
-} from '@/types/discover';
+} from '@lobechat/types';
+import type { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
+import i18n from 'i18next';
+
+import { trpcClient } from '@/services/_auth/trpc';
 
 class DiscoverService {
   private _isRetrying = false;

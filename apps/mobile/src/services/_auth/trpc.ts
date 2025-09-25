@@ -2,7 +2,7 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
 
-import { OFFICIAL_URL } from '@/const/url';
+import { OFFICIAL_URL } from '@/_const/url';
 import { authExpired } from '@/features/Error/AuthExpired';
 
 // Local type reference to server router

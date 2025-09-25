@@ -1,10 +1,10 @@
+import { ChatMessage } from '@lobechat/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { nanoid } from 'nanoid';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-import { ChatMessage } from '@/types/message';
 import { fetchSSE } from '@/utils/fetchSSE';
 
 import { useOpenAIStore } from '../openai';

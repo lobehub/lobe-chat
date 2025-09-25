@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://docs.together.ai/docs/chat-models
 // ref: https://www.together.ai/pricing

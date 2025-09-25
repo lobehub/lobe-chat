@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 
-import { useThemedScreenOptions } from '@/const/navigation';
+import { useThemedScreenOptions } from '@/_const/navigation';
 
 export default function RoutesLayout() {
   const themedScreenOptions = useThemedScreenOptions();

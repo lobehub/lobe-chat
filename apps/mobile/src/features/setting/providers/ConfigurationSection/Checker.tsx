@@ -1,4 +1,4 @@
-import { TraceNameMap } from '@lobechat/types';
+import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
 import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
 import React, { ReactNode, memo, useCallback, useMemo, useState } from 'react';
@@ -19,7 +19,6 @@ import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useThemeToken } from '@/theme';
-import { ChatMessageError } from '@/types/message';
 
 import { useStyles } from './style';
 

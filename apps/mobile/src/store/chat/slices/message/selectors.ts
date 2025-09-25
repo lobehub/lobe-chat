@@ -1,12 +1,13 @@
-import { DEFAULT_USER_AVATAR } from '@/const/meta';
-import { INBOX_SESSION_ID } from '@/const/session';
+import { ChatFileItem, ChatMessage } from '@lobechat/types';
+
+import { DEFAULT_USER_AVATAR } from '@/_const/meta';
+import { INBOX_SESSION_ID } from '@/_const/session';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { ChatFileItem, ChatMessage } from '@/types/message';
 
 import { chatHelpers } from '../../helpers';
 import type { ChatStoreState } from '../../initialState';

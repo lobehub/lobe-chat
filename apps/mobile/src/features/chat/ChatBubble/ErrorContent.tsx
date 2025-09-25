@@ -1,3 +1,4 @@
+import { ChatMessageError } from '@lobechat/types';
 import { AlertTriangle } from 'lucide-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -5,7 +6,6 @@ import { Text, View } from 'react-native';
 
 import { useProviderName } from '@/hooks/useProviderName';
 import { useThemeToken } from '@/theme';
-import { ChatMessageError } from '@/types/message';
 
 interface ErrorContentProps {
   error: ChatMessageError;

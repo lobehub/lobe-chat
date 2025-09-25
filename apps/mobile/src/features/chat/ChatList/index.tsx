@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -11,13 +12,12 @@ import {
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
 
-import { LOADING_FLAT } from '@/const/message';
+import { LOADING_FLAT } from '@/_const/message';
 import AutoScroll from '@/features/chat/AutoScroll';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { ChatMessage } from '@/types/message';
 
 import ChatBubble from '../ChatBubble';
 import MessageSkeletonList from '../MessageSkeletonList';

@@ -1,4 +1,4 @@
-import { UserSyncSettings } from '@/types/user/settings';
+import { UserSyncSettings } from '@lobechat/types';
 
 export const DEFAULT_SYNC_CONFIG: UserSyncSettings = {
   webrtc: { enabled: false },

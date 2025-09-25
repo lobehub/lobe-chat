@@ -1,16 +1,21 @@
-import isEqual from 'fast-deep-equal';
-import { produce } from 'immer';
-
 import {
   ChatMessage,
   ChatMessageExtra,
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
-} from '@/types/message';
+} from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
+
 import { merge } from '@/utils/merge';
 
 interface UpdateMessages {
+  type: 'updateMessages';
+  value: ChatMessage[];
+}
+
+interface UpdateMessage {
   id: string;
   type: 'updateMessage';
   value: Partial<ChatMessage>;
@@ -72,6 +77,7 @@ interface UpdateMessageExtra {
 
 export type MessageDispatch =
   | CreateMessage
+  | UpdateMessage
   | UpdateMessages
   | UpdatePluginState
   | UpdateMessageExtra
@@ -194,6 +200,11 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         draftState.push({ ...value, createdAt: Date.now(), id, meta: {}, updatedAt: Date.now() });
       });
     }
+
+    case 'updateMessages': {
+      return payload.value;
+    }
+
     case 'deleteMessage': {
       return produce(state, (draft) => {
         const { id } = payload;
