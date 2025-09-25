@@ -8,8 +8,7 @@ import { useAgentOwnershipCheck } from '@/hooks/useAgentOwnershipCheck';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import SubmitAgentButton from '../SubmitAgentButton';
-import UploadAgentVersionButton from '../UploadAgentVersionButton';
+import MarketPublishButton from './MarketPublishButton';
 
 interface SmartAgentActionButtonProps {
   modal?: boolean;
@@ -23,7 +22,7 @@ const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => 
   const { t } = useTranslation('setting');
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
   console.log('meta', meta);
-  const { isOwnAgent, error } = useAgentOwnershipCheck(meta?.marketIdentifier);
+  const { isOwnAgent } = useAgentOwnershipCheck(meta?.marketIdentifier);
 
   const buttonType = useMemo(() => {
     if (!meta?.marketIdentifier) {
@@ -45,19 +44,13 @@ const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => 
     return 'submit';
   }, [meta?.marketIdentifier, isOwnAgent]);
 
-  console.log('[SmartAgentActionButton] Button type:', buttonType, {
-    error,
-    isOwnAgent,
-    marketIdentifier: meta?.marketIdentifier,
-  });
-
   switch (buttonType) {
     case 'upload': {
-      return <UploadAgentVersionButton modal={modal} />;
+      return <MarketPublishButton action="upload" modal={modal} />;
     }
 
     case 'submit': {
-      return <SubmitAgentButton modal={modal} />;
+      return <MarketPublishButton action="submit" modal={modal} />;
     }
 
     default: {

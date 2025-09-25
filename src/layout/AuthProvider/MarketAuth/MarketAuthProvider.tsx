@@ -9,6 +9,7 @@ const MarketAuthContext = createContext<MarketAuthContextType | null>(null);
 
 interface MarketAuthProviderProps {
   children: ReactNode;
+  isDesktop: boolean;
 }
 
 /**
@@ -97,7 +98,7 @@ const refreshToken = async (): Promise<boolean> => {
 /**
  * Market 授权上下文提供者
  */
-export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
+export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderProps) => {
   const [session, setSession] = useState<MarketAuthSession | null>(null);
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
   const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
@@ -106,13 +107,9 @@ export const MarketAuthProvider = ({ children }: MarketAuthProviderProps) => {
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log(
-        'process.env.NEXT_PUBLIC_MARKET_BASE_URL',
-        process.env.NEXT_PUBLIC_MARKET_BASE_URL,
-      );
       const oidcConfig: OIDCConfig = {
         baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787',
-        clientId: 'lobehub-desktop-web',
+        clientId: isDesktop ? 'lobehub-desktop' : 'lobechat-com',
         redirectUri: `${window.location.origin}/market-auth-callback`,
         scope: 'openid profile email',
       };

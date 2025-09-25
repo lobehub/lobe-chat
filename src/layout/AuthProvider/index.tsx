@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 
+import { isDesktop } from '@/const/version';
 import { authEnv } from '@/envs/auth';
 
 import Clerk from './Clerk';
@@ -21,7 +22,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   // 将 MarketAuthProvider 包装在内部 AuthProvider 之外
   return (
     <InnerAuthProvider>
-      <MarketAuthProvider>{children}</MarketAuthProvider>
+      <MarketAuthProvider isDesktop={isDesktop}>{children}</MarketAuthProvider>
     </InnerAuthProvider>
   );
 };
