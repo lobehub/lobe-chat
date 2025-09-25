@@ -5,10 +5,62 @@ import { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      vision: true,
+      reasoning: true,
+    },
+    config: {
+      deploymentName: 'qwen3-vl-plus',
+    },
+    contextWindowTokens: 262_144,
+    description:
+      '通义千问VL是具有视觉（图像）理解能力的文本生成模型，不仅能进行OCR（图片文字识别），还能进一步总结和推理，例如从商品照片中提取属性，根据习题图进行解题等。',
+    displayName: 'Qwen3 VL Plus',
+    id: 'qwen3-vl-plus',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 1,
+              '[32_000, 128_000]': 1.5,
+              '[128_000, infinity]': 3,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 10,
+              '[32_000, 128_000]': 15,
+              '[128_000, infinity]': 30,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-09-23',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek-V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
+    description: 'DeepSeek V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
     displayName: 'DeepSeek V3.1',
     id: 'deepseek-v3.1',
     maxOutput: 65_536,
@@ -139,9 +191,9 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen3-coder-plus',
+      deploymentName: 'qwen3-coder-plus', // 其支持上下文缓存
     },
-    contextWindowTokens: 1_048_576,
+    contextWindowTokens: 1_000_000,
     description:
       '通义千问代码模型。最新的 Qwen3-Coder 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
     displayName: 'Qwen3 Coder Plus',
@@ -151,9 +203,48 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 6 * 0.2, strategy: 'fixed', unit: 'millionTokens' }, // tokens 32K ~ 128K
-        { name: 'textInput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 24, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 0.8,
+              '[32_000, 128_000]': 1.2,
+              '[128_000, 256_000]': 2,
+              '[256_000, infinity]': 4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput_cacheRead',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 4,
+              '[32_000, 128_000]': 6,
+              '[128_000, 256_000]': 10,
+              '[256_000, infinity]': 20,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]': 16,
+              '[32_000, 128_000]': 24,
+              '[128_000, 256_000]': 40,
+              '[256_000, infinity]': 200,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2025-07-22',
@@ -738,17 +829,16 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen3-max-preview',
+      deploymentName: 'qwen3-max', // 其支持上下文缓存
     },
     contextWindowTokens: 262_144,
     description:
-      '通义千问3系列Max模型Preview版本，相较2.5系列整体通用能力有大幅度提升，中英文通用文本理解能力、复杂指令遵循能力、主观开放任务能力、多语言能力、工具调用能力均显著增强；模型知识幻觉更少。',
-    displayName: 'Qwen3 Max Preview',
+      '通义千问3系列Max模型，相较2.5系列整体通用能力有大幅度提升，中英文通用文本理解能力、复杂指令遵循能力、主观开放任务能力、多语言能力、工具调用能力均显著增强；模型知识幻觉更少。最新的qwen3-max模型：相较qwen3-max-preview版本，在智能体编程与工具调用方向进行了专项升级。本次发布的正式版模型达到领域SOTA水平，适配场景更加复杂的智能体需求。',
+    displayName: 'Qwen3 Max',
     enabled: true,
-    id: 'qwen3-max-preview',
-    maxOutput: 32_768,
+    id: 'qwen3-max',
+    maxOutput: 65_536,
     organization: 'Qwen',
-    /* eslint-disable sort-keys-fix/sort-keys-fix */
     pricing: {
       currency: 'CNY',
       units: [
@@ -793,8 +883,7 @@ const qwenChatModels: AIChatModelCard[] = [
         },
       ],
     },
-    /* eslint-enable sort-keys-fix/sort-keys-fix */
-    releasedAt: '2025-09-05',
+    releasedAt: '2025-09-23',
     settings: {
       searchImpl: 'params',
     },

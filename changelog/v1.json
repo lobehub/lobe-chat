@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Enhanced Nvidia NIM chat experience, OpenAI models in AiHubMix use Responses API."
+      ]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.11"
+  },
+  {
+    "children": {
       "fixes": ["Macos desktop sign."]
     },
     "date": "2025-09-24",

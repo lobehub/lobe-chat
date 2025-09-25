@@ -78,7 +78,7 @@ export const getProviderAuthPayload = (
   }
 };
 
-const createAuthTokenWithPayload = async (payload = {}) => {
+const createAuthTokenWithPayload = (payload = {}) => {
   const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
   const userId = userProfileSelectors.userId(useUserStore.getState());
 
@@ -107,6 +107,11 @@ export const createPayloadWithKeyVaults = (provider: string) => {
   return getProviderAuthPayload(provider, keyVaults);
 };
 
+export const createXorKeyVaultsPayload = (provider: string) => {
+  const payload = createPayloadWithKeyVaults(provider);
+  return obfuscatePayloadWithXOR(payload);
+};
+
 // eslint-disable-next-line no-undef
 export const createHeaderWithAuth = async (params?: AuthParams): Promise<HeadersInit> => {
   let payload = params?.payload || {};
@@ -115,7 +120,7 @@ export const createHeaderWithAuth = async (params?: AuthParams): Promise<Headers
     payload = { ...payload, ...createPayloadWithKeyVaults(params?.provider) };
   }
 
-  const token = await createAuthTokenWithPayload(payload);
+  const token = createAuthTokenWithPayload(payload);
 
   // eslint-disable-next-line no-undef
   return { ...params?.headers, [LOBE_CHAT_AUTH_HEADER]: token };
