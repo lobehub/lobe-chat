@@ -73,7 +73,10 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
       const { endpoint } = model;
       const endpointModel = endpoint?.model;
 
-      const displayName = model.slug?.toLowerCase().includes('deepseek')
+      const slugHasDeepseek = model.slug?.toLowerCase().includes('deepseek');
+      const shortNameHasDeepseek = model.short_name?.toLowerCase().includes('deepseek');
+
+      const displayName = slugHasDeepseek && !shortNameHasDeepseek
         ? (model.name ?? model.slug)
         : (model.short_name ?? model.name ?? model.slug);
 
