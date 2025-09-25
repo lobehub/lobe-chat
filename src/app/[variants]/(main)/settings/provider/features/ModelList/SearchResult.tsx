@@ -1,28 +1,62 @@
 'use client';
 
-import { ActionIcon, Button, Text } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
-import { ChevronDown, ToggleRightIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { ActionIcon, Text } from '@lobehub/ui';
+import { ToggleRightIcon } from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Virtuoso } from 'react-virtuoso';
+import { useShallow } from 'zustand/react/shallow';
 
-import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useAiInfraStore } from '@/store/aiInfra';
 
 import ModelItem from './ModelItem';
 
 const SearchResult = memo(() => {
   const { t } = useTranslation('modelProvider');
-
-  const searchKeyword = useAiInfraStore((s) => s.modelSearchKeyword);
+  const { aiProviderModelList, searchKeyword } = useAiInfraStore(
+    useShallow((s) => ({
+      aiProviderModelList: s.aiProviderModelList,
+      searchKeyword: s.modelSearchKeyword,
+    })),
+  );
   const batchToggleAiModels = useAiInfraStore((s) => s.batchToggleAiModels);
+  const isMobile = useIsMobile();
 
-  const filteredModels = useAiInfraStore(aiModelSelectors.filteredAiProviderModelList, isEqual);
+  const normalizedKeyword = useMemo(
+    () => (searchKeyword ? searchKeyword.trim().toLowerCase() : ''),
+    [searchKeyword],
+  );
+
+  const filteredModels = useMemo(() => {
+    if (!normalizedKeyword) return aiProviderModelList;
+
+    return aiProviderModelList.filter((model) => {
+      const id = model.id.toLowerCase();
+      const name = model.displayName?.toLowerCase() ?? '';
+
+      return id.includes(normalizedKeyword) || name.includes(normalizedKeyword);
+    });
+  }, [aiProviderModelList, normalizedKeyword]);
+
   const [batchLoading, setBatchLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
 
-  // 初始仅渲染前几条搜索结果，缓解卡顿
-  const displayModels = showMore ? filteredModels : filteredModels.slice(0, 15);
+  const itemHeight = isMobile ? 92 : 72;
+  const itemGap = 1;
+  const maxVisibleCount = isMobile ? 8 : 12;
+  const filteredLength = filteredModels.length;
+  const visibleCount = Math.min(filteredLength || 1, maxVisibleCount);
+  const virtualListHeight = visibleCount * (itemHeight + itemGap) - itemGap;
+
+  const renderVirtualItem = useCallback(
+    (index: number, item: (typeof filteredModels)[number]) => (
+      <div style={{ paddingBottom: itemGap }}>
+        <ModelItem {...item} />
+      </div>
+    ),
+    [itemGap],
+  );
 
   const isEmpty = filteredModels.length === 0;
   return (
@@ -57,14 +91,17 @@ const SearchResult = memo(() => {
         </Flexbox>
       ) : (
         <Flexbox gap={4}>
-          {displayModels.map((item) => (
-            <ModelItem {...item} key={`${item.id}-${item.enabled}`} />
-          ))}
-          {!showMore && filteredModels.length > 10 && (
-            <Button block icon={ChevronDown} onClick={() => setShowMore(true)} size={'small'}>
-              {t('providerModels.list.disabledActions.showMore')}
-            </Button>
-          )}
+          <div style={{ height: Math.min(virtualListHeight, isMobile ? 480 : 560) }}>
+            <Virtuoso
+              computeItemKey={(_, item) => item.id}
+              data={filteredModels}
+              defaultItemHeight={itemHeight + itemGap}
+              fixedItemHeight={itemHeight + itemGap}
+              increaseViewportBy={{ bottom: itemHeight * 6, top: itemHeight * 6 }}
+              itemContent={renderVirtualItem}
+              overscan={itemHeight * 8}
+            />
+          </div>
         </Flexbox>
       )}
     </>
