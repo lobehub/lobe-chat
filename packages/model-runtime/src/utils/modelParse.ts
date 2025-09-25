@@ -26,10 +26,20 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
+  inclusionai: {
+    functionCallKeywords: ['ling-'],
+    reasoningKeywords: ['ring-'],
+    visionKeywords: ['ming-'],
+  },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
     visionKeywords: ['llava'],
+  },
+  longcat: {
+    functionCallKeywords: ['longcat'],
+    reasoningKeywords: ['thinking'],
+    visionKeywords: [],
   },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
@@ -68,7 +78,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   xai: {
     functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast'],
+    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast', '!non-reasoning'],
     visionKeywords: ['vision', 'grok-4'],
   },
   zeroone: {
@@ -87,7 +97,9 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
+  inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
+  longcat: ['longcat'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],

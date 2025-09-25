@@ -18,6 +18,8 @@ import {
   ChatCompletionTool,
   ChatMethodOptions,
   ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../../types';
@@ -31,6 +33,7 @@ import { StreamingResponse } from '../../utils/response';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
+import { createGoogleGenerateObject } from './generateObject';
 
 const log = debug('model-runtime:google');
 
@@ -272,6 +275,21 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     return createGoogleImage(this.client, this.provider, payload);
+  }
+
+  /**
+   * Generate structured output using Google Gemini API
+   * @see https://ai.google.dev/gemini-api/docs/structured-output
+   */
+  async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+    // Convert OpenAI messages to Google format
+    const contents = await this.buildGoogleMessages(payload.messages);
+
+    return createGoogleGenerateObject(
+      this.client,
+      { contents, model: payload.model, schema: payload.schema },
+      options,
+    );
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
