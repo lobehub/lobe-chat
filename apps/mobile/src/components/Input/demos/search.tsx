@@ -43,23 +43,6 @@ const useStyles = createStyles(({ token }) => ({
 const SearchDemo = () => {
   const { styles } = useStyles();
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [recentSearches] = React.useState(['用户管理', 'React Native', '组件库', '移动开发']);
-
-  // 模拟搜索结果
-  const searchResults = React.useMemo(() => {
-    if (!searchQuery.trim()) return [];
-
-    const mockData = [
-      '用户管理系统',
-      'React Native 开发指南',
-      '组件库设计原则',
-      '移动开发最佳实践',
-      'TypeScript 类型定义',
-      'UI 组件设计',
-    ];
-
-    return mockData.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [searchQuery]);
 
   return (
     <View style={styles.container}>
@@ -72,31 +55,6 @@ const SearchDemo = () => {
       <Input.Search placeholder="搜索文档..." />
       <Input.Search placeholder="搜索设置..." />
       <Input.Search placeholder="全局搜索..." />
-
-      {searchQuery ? (
-        <>
-          <Text style={styles.sectionTitle}>搜索结果</Text>
-          {searchResults.length > 0 ? (
-            searchResults.map((result, index) => (
-              <View key={index} style={styles.searchResult}>
-                <Text style={styles.searchResultText}>{result}</Text>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.noResults}>没有找到相关结果</Text>
-          )}
-        </>
-      ) : (
-        <>
-          <Text style={styles.sectionTitle}>最近搜索</Text>
-          <Text style={styles.description}>输入内容开始搜索</Text>
-          {recentSearches.map((search, index) => (
-            <View key={index} style={styles.searchResult}>
-              <Text style={styles.searchResultText}>{search}</Text>
-            </View>
-          ))}
-        </>
-      )}
     </View>
   );
 };
