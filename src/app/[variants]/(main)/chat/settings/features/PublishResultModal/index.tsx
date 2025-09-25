@@ -1,86 +1,61 @@
 'use client';
 
-import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 interface PublishResultModalProps {
   identifier?: string;
-  isSuccess: boolean;
   onCancel: () => void;
   open: boolean;
 }
 
-const PublishResultModal = memo<PublishResultModalProps>(
-  ({ identifier, isSuccess, onCancel, open }) => {
-    const router = useRouter();
+const PublishResultModal = memo<PublishResultModalProps>(({ identifier, onCancel, open }) => {
+  const router = useRouter();
 
-    const handleGoToMarket = () => {
-      if (identifier) {
-        router.push(`/discover/assistant/${identifier}`);
-      }
-      onCancel();
-    };
+  const handleGoToMarket = () => {
+    if (identifier) {
+      router.push(`/discover/assistant/${identifier}`);
+    }
+    onCancel();
+  };
 
-    const successContent = (
-      <div style={{ padding: '20px 0', textAlign: 'center' }}>
-        <CheckCircleOutlined
-          style={{
-            color: '#52c41a',
-            display: 'block',
-            fontSize: '48px',
-            marginBottom: '16px',
-          }}
-        />
-        <div style={{ fontSize: '16px', marginBottom: '24px' }}>
-          助手发布成功，点击「去市场」查看你发布的助手
-        </div>
-        <Space>
-          <Button onClick={onCancel}>取消</Button>
-          <Button onClick={handleGoToMarket} type="primary">
-            去查看
-          </Button>
-        </Space>
+  const successContent = (
+    <div style={{ padding: '20px 0', textAlign: 'center' }}>
+      <CheckCircleOutlined
+        style={{
+          color: '#52c41a',
+          display: 'block',
+          fontSize: '48px',
+          marginBottom: '16px',
+        }}
+      />
+      <div style={{ fontSize: '16px', marginBottom: '24px' }}>
+        助手已经提交审核，审核通过后会自动上架，点击「去市场」查看你发布的助手
       </div>
-    );
+      <Space>
+        <Button onClick={onCancel}>取消</Button>
+        <Button onClick={handleGoToMarket} type="primary">
+          去查看
+        </Button>
+      </Space>
+    </div>
+  );
 
-    const warningContent = (
-      <div style={{ padding: '20px 0', textAlign: 'center' }}>
-        <ExclamationCircleOutlined
-          style={{
-            color: '#faad14',
-            display: 'block',
-            fontSize: '48px',
-            marginBottom: '16px',
-          }}
-        />
-        <div style={{ fontSize: '16px', marginBottom: '24px' }}>
-          助手创建/发布成功，但是创建/更新的助手中包含有危险、反动等信息，请等待人工审核后上架
-        </div>
-        <Space>
-          <Button onClick={onCancel}>取消</Button>
-          <Button onClick={handleGoToMarket} type="primary">
-            去查看
-          </Button>
-        </Space>
-      </div>
-    );
-
-    return (
-      <Modal
-        centered
-        closable={false}
-        footer={null}
-        onCancel={onCancel}
-        open={open}
-        title={null}
-        width={480}
-      >
-        {isSuccess ? successContent : warningContent}
-      </Modal>
-    );
-  },
-);
+  return (
+    <Modal
+      centered
+      closable={false}
+      footer={null}
+      onCancel={onCancel}
+      open={open}
+      title={null}
+      width={480}
+    >
+      {successContent}
+    </Modal>
+  );
+});
 
 export default PublishResultModal;

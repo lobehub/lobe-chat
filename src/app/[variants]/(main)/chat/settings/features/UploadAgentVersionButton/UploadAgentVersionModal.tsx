@@ -60,10 +60,7 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
 
     // 发布结果状态
     const [showResultModal, setShowResultModal] = useState(false);
-    const [publishResult, setPublishResult] = useState<{
-      identifier?: string;
-      isSuccess: boolean;
-    }>({ isSuccess: false });
+    const [publishResult, setPublishResult] = useState<{ identifier?: string }>({});
 
     const fetchRemoteAgentData = async () => {
       if (!meta?.marketIdentifier || !marketSession?.accessToken) return;
@@ -176,12 +173,9 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
         const versionResult = await marketApiService.createAgentVersion(versionData);
         console.log('Version created:', versionResult);
 
-        const { safetyCheck } = versionResult;
-
         // 显示发布结果模态框
         setPublishResult({
           identifier: meta.marketIdentifier,
-          isSuccess: safetyCheck === 'Safe',
         });
         setShowResultModal(true);
 
@@ -273,7 +267,6 @@ const UploadAgentVersionModal = memo<UploadAgentVersionModalProps>(
 
         <PublishResultModal
           identifier={publishResult.identifier}
-          isSuccess={publishResult.isSuccess}
           onCancel={() => setShowResultModal(false)}
           open={showResultModal}
         />

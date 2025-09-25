@@ -29,10 +29,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
 
   // 发布结果状态
   const [showResultModal, setShowResultModal] = useState(false);
-  const [publishResult, setPublishResult] = useState<{
-    identifier?: string;
-    isSuccess: boolean;
-  }>({ isSuccess: false });
+  const [publishResult, setPublishResult] = useState<{ identifier?: string }>({});
 
   // Market auth
   const { session: marketSession, isAuthenticated } = useMarketAuth();
@@ -189,12 +186,9 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
         marketIdentifier: values.identifier,
       });
 
-      const { safetyCheck } = versionResult;
-
       // 显示发布结果模态框
       setPublishResult({
         identifier: values.identifier,
-        isSuccess: safetyCheck === 'Safe',
       });
       setShowResultModal(true);
 
@@ -271,7 +265,6 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
 
       <PublishResultModal
         identifier={publishResult.identifier}
-        isSuccess={publishResult.isSuccess}
         onCancel={() => setShowResultModal(false)}
         open={showResultModal}
       />
