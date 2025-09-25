@@ -7,7 +7,7 @@ const packageJSON = require('./package.json');
 
 const channel = process.env.UPDATE_CHANNEL;
 const arch = os.arch();
-const hasAppleCertificate = Boolean(process.env.APPLE_CERTIFICATE_BASE64);
+const hasAppleCertificate = Boolean(process.env.CSC_LINK);
 
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 console.log(`🏗️ Building for architecture: ${arch}`);
@@ -15,11 +15,11 @@ console.log(`🏗️ Building for architecture: ${arch}`);
 const isNightly = channel === 'nightly';
 const isBeta = packageJSON.name.includes('beta');
 
-// https://www.electron.build/code-signing-mac?utm_source=openai#how-to-disable-code-signing-during-the-build-process-on-macos
+// https://www.electron.build/code-signing-mac#how-to-disable-code-signing-during-the-build-process-on-macos
 if (!hasAppleCertificate) {
   // Disable auto discovery to keep electron-builder from searching unavailable signing identities
   process.env.CSC_IDENTITY_AUTO_DISCOVERY = 'false';
-  console.log('⚠️ Apple certificate not found, macOS artifacts will be unsigned.');
+  console.log('⚠️ Apple certificate link not found, macOS artifacts will be unsigned.');
 }
 
 // 根据版本类型确定协议 scheme

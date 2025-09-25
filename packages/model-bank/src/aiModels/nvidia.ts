@@ -4,11 +4,27 @@ const nvidiaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
+    displayName: 'DeepSeek V3.1',
+    enabled: true,
+    id: 'deepseek-ai/deepseek-v3.1',
+    maxOutput: 16_384,
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     contextWindowTokens: 128_000,
     description: '先进的 LLM，擅长推理、数学、常识和函数调用。',
     displayName: 'Llama 3.3 70B Instruct',
-    enabled: true,
     id: 'meta/llama-3.3-70b-instruct',
     type: 'chat',
   },
@@ -33,7 +49,6 @@ const nvidiaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: '尖端的视觉-语言模型，擅长从图像中进行高质量推理。',
     displayName: 'Llama 3.2 11B Vision Instruct',
-    enabled: true,
     id: 'meta/llama-3.2-11b-vision-instruct',
     type: 'chat',
   },
@@ -121,7 +136,6 @@ const nvidiaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: '最先进的高效 LLM，擅长推理、数学和编程。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-ai/deepseek-r1',
     type: 'chat',
   },
@@ -132,7 +146,6 @@ const nvidiaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: '面向中文和英文的 LLM，针对语言、编程、数学、推理等领域。',
     displayName: 'Qwen2.5 7B Instruct',
-    enabled: true,
     id: 'qwen/qwen2.5-7b-instruct',
     type: 'chat',
   },
