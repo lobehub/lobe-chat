@@ -1,10 +1,10 @@
 const BLOCK_README = `# Block 块容器组件
 
-基于 FlexBox 的灵活容器组件，支持多种样式变体、阴影效果和玻璃效果，使用 class-variance-authority 进行样式管理。
+基于 Flexbox 的灵活容器组件，支持多种样式变体、阴影效果和玻璃效果，使用 class-variance-authority 进行样式管理。
 
 ## 功能特性
 
-- ✅ 基于 FlexBox 的灵活布局
+- ✅ 基于 Flexbox 的灵活布局
 - ✅ 多种样式变体（filled、outlined、borderless）
 - ✅ 支持阴影和玻璃效果
 - ✅ 可点击状态支持
@@ -51,11 +51,11 @@ import Block from '@/components/Block';
 </Block>
 
 // 组合效果
-<Block 
-  variant="filled" 
-  shadow 
-  glass 
-  clickable 
+<Block
+  variant="filled"
+  shadow
+  glass
+  clickable
   onPress={() => console.log('clicked')}
 >
   <Text>组合效果 Block</Text>
@@ -76,7 +76,7 @@ import Block from '@/components/Block';
 | style     | \`StyleProp<ViewStyle>\`             | -           | 自定义样式                     |
 | onPress   | \`() => void\`                       | -           | 点击回调（仅在 clickable 时） |
 
-> Block 组件继承了 [FlexBox](./flexbox) 的所有属性，支持完整的 Flexbox 布局功能。
+> Block 组件继承了 [Flexbox](./flexbox) 的所有属性，支持完整的 Flexbox 布局功能。
 
 ## 样式变体
 
@@ -147,7 +147,7 @@ export const useBlockVariants = (styles) =>
     variants: {
       variant: {
         filled: styles.filled,
-        outlined: styles.outlined, 
+        outlined: styles.outlined,
         borderless: styles.borderless,
       },
       clickable: {
@@ -193,9 +193,9 @@ const variantStyles = blockVariants({ variant, clickable });
 
 ### 交互按钮
 \`\`\`tsx
-<Block 
-  clickable 
-  variant="outlined" 
+<Block
+  clickable
+  variant="outlined"
   onPress={() => handleAction()}
   style={{ padding: 12 }}
 >
