@@ -1,14 +1,14 @@
 import isEqual from 'fast-deep-equal';
-import useSWR, { SWRResponse, mutate } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
-
-import { aiModelService } from '@/services/aiModel';
 import {
   AiModelSortMap,
   AiProviderModelListItem,
   CreateAiModelParams,
   ToggleAiModelEnableParams,
-} from '@/types/aiModel';
+} from 'model-bank';
+import useSWR, { SWRResponse, mutate } from 'swr';
+import { StateCreator } from 'zustand/vanilla';
+
+import { aiModelService } from '@/services/aiModel';
 
 import type { AiInfraStore } from '../../store';
 

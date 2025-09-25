@@ -1,4 +1,4 @@
-import { LobeAgentSession } from '@/types/session';
+import { LobeAgentSession } from '@lobechat/types';
 
 export interface SessionState {
   /**

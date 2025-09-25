@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from 'model-bank';
 
 // https://developer.qiniu.com/aitokenapi
 

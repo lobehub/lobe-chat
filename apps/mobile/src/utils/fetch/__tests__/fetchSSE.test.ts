@@ -1,7 +1,7 @@
+import { ChatMessageError } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { ChatMessageError } from '@/types/message';
+import { MESSAGE_CANCEL_FLAT } from '@/_const/message';
 import { sleep } from '@/utils/sleep';
 
 import { FetchEventSourceInit } from '../fetchEventSource';

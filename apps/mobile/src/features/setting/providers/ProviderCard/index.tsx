@@ -1,3 +1,4 @@
+import { AiProviderListItem } from '@lobechat/types';
 import { ProviderCombine } from '@lobehub/icons-rn';
 import { useRouter } from 'expo-router';
 import React, { memo } from 'react';
@@ -7,7 +8,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { InstantSwitch } from '@/components';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { useThemeToken } from '@/theme';
-import { AiProviderListItem } from '@/types/aiProvider';
 
 import { useStyles } from './style';
 

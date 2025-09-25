@@ -1,5 +1,6 @@
+import { AiProviderRuntimeConfig } from '@lobechat/types';
+
 import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
-import { AiProviderRuntimeConfig } from '@/types/aiProvider';
 
 import { AIProviderStoreState } from '../../initialState';
 

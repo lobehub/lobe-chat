@@ -1,6 +1,6 @@
-import { PRESET_ASPECT_RATIOS } from '@/const/image';
+import { AIImageModelCard, PRESET_ASPECT_RATIOS } from 'model-bank';
+
 import { ModelParamsSchema } from '@/libs/standard-parameters';
-import { AIImageModelCard } from '@/types/aiModel';
 
 // https://docs.bfl.ai/api-reference/tasks/edit-or-create-an-image-with-flux-kontext-pro
 // official support 21:9 ~ 9:21 (ratio 0.43 ~ 2.33)

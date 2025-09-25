@@ -1,5 +1,6 @@
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { DiscoverAssistantItem } from '@/types/discover';
+import { DiscoverAssistantItem } from '@lobechat/types';
+
+import { DEFAULT_AGENT_CONFIG } from '@/_const/settings';
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
 
@@ -9,10 +10,4 @@ export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantItem> = {
   createdAt: DEFAULT_CREATED_AT,
   homepage: '',
   identifier: '',
-  schemaVersion: 1,
-  socialData: {
-    conversations: 0,
-    likes: 0,
-    users: 0,
-  },
 };

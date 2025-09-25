@@ -1,18 +1,21 @@
+import {
+  ChatImageItem,
+  ChatMessage,
+  TracePayload,
+  TraceTagMap,
+  UserMessageContentPart,
+} from '@lobechat/types';
+import type { ChatStreamPayload, OpenAIChatMessage } from '@lobechat/types';
 import { merge } from 'lodash-es';
 
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { TracePayload } from '@/const/trace';
-import { ModelProvider } from '@/libs/model-runtime/types/type';
+import { DEFAULT_AGENT_CONFIG } from '@/_const/settings';
+import { ModelProvider } from '@/libs/_model-runtime/types/type';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { ChatImageItem, ChatMessage } from '@/types/message';
-import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
-import { UserMessageContentPart } from '@/types/openai/chat';
-import { TraceTagMap } from '@/types/trace';
 import { FetchSSEOptions, fetchSSE, standardizeAnimationStyle } from '@/utils/fetch';
 import { createTraceHeader } from '@/utils/trace';
 

@@ -1,4 +1,3 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
@@ -6,7 +5,9 @@ import {
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-} from '@/types/aiModel';
+} from 'model-bank';
+
+import { ModelParamsSchema } from '@/libs/standard-parameters';
 
 export const gptImage1ParamsSchema: ModelParamsSchema = {
   imageUrls: { default: [] },

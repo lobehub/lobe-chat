@@ -1,4 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import {
+  EvalDatasetRecord,
+  EvalEvaluationStatus,
+  InsertEvalDatasetRecord,
+  RAGEvalDataSetItem,
+  insertEvalDatasetRecordSchema,
+  insertEvalDatasetsSchema,
+  insertEvalEvaluationSchema,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import JSONL from 'jsonl-parse-stringify';
@@ -17,15 +26,6 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createAsyncCaller } from '@/server/routers/async';
 import { FileService } from '@/server/services/file';
-import {
-  EvalDatasetRecord,
-  EvalEvaluationStatus,
-  InsertEvalDatasetRecord,
-  RAGEvalDataSetItem,
-  insertEvalDatasetRecordSchema,
-  insertEvalDatasetsSchema,
-  insertEvalEvaluationSchema,
-} from '@/types/eval';
 
 const ragEvalProcedure = authedProcedure
   .use(serverDatabase)

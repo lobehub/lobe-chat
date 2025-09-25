@@ -1,11 +1,11 @@
+import { DiscoverAssistantItem } from '@lobechat/types';
 import { cloneDeep, merge } from 'lodash-es';
 import urlJoin from 'url-join';
 
-import { DEFAULT_DISCOVER_ASSISTANT_ITEM } from '@/const/discover';
-import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
-import { DEFAULT_AGENT_INDEX } from '@/const/meta';
+import { DEFAULT_DISCOVER_ASSISTANT_ITEM } from '@/_const/discover';
+import { DEFAULT_LANG, isLocaleNotSupport } from '@/_const/locale';
+import { DEFAULT_AGENT_INDEX } from '@/_const/meta';
 import { Locales, normalizeLocale } from '@/i18n/resource';
-import { DiscoverAssistantItem } from '@/types/discover';
 import { apiLogger } from '@/utils/logger';
 
 export class AssistantService {

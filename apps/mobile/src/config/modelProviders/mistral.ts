@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://docs.mistral.ai/getting-started/models/
 // ref: https://docs.mistral.ai/capabilities/function_calling/

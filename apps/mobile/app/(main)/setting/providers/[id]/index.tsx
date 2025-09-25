@@ -1,8 +1,10 @@
+import { AiProviderDetailItem } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { RefreshCcw } from 'lucide-react-native';
+import { AiProviderModelListItem } from 'model-bank';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native';
@@ -22,8 +24,6 @@ import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSectio
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { useThemeToken } from '@/theme';
-import { AiProviderModelListItem } from '@/types/aiModel';
-import { AiProviderDetailItem } from '@/types/aiProvider';
 
 import { useStyles } from './styles';
 

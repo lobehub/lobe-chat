@@ -1,3 +1,4 @@
+import { EnabledProviderWithModels } from '@lobechat/types';
 import { useRouter } from 'expo-router';
 import { ArrowRight, BoltIcon, X } from 'lucide-react-native';
 import React, { memo, useCallback, useMemo } from 'react';
@@ -9,7 +10,6 @@ import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useThemeToken } from '@/theme';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';
