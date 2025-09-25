@@ -9,6 +9,7 @@ import {
   text,
   uniqueIndex,
   uuid,
+  varchar,
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema } from 'drizzle-zod';
 
@@ -33,7 +34,7 @@ export const messages = pgTable(
       .$defaultFn(() => idGenerator('messages'))
       .primaryKey(),
 
-    role: text('role', { enum: ['user', 'system', 'assistant', 'tool'] }).notNull(),
+    role: varchar('role', { length: 255 }).notNull(),
     content: text('content'),
     reasoning: jsonb('reasoning').$type<ModelReasoning>(),
     search: jsonb('search').$type<GroundingSearch>(),

@@ -819,7 +819,7 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 </details>
 
 Copyright © 2025 [LobeHub][profile-link]. <br />
-This project is [Apache 2.0](./LICENSE) licensed.
+This project is [LobeHub Community License](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
