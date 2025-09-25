@@ -209,7 +209,7 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     description: '基于 Flexbox 的弹性布局容器，提供简洁的 API 来控制子元素排列',
     hasDemos: true,
     hasReadme: true,
-    name: 'FlexBox',
+    name: 'Flexbox',
     path: 'flexbox',
     tags: ['flexbox', 'layout', 'container', 'alignment'],
   },
@@ -224,7 +224,7 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
   },
   {
     category: 'layout',
-    description: '基于 FlexBox 的灵活容器组件，支持多种样式变体、阴影和玻璃效果，使用 CVA 管理样式',
+    description: '基于 Flexbox 的灵活容器组件，支持多种样式变体、阴影和玻璃效果，使用 CVA 管理样式',
     hasDemos: true,
     hasReadme: true,
     name: 'Block',
