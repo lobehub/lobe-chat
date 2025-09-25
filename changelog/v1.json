@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-09-25",
+    "version": "1.132.13"
+  },
+  {
+    "children": {
+      "fixes": ["Slove setting proxy page with style error."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.12"
+  },
+  {
     "children": {
       "improvements": [
         "Enhanced Nvidia NIM chat experience, OpenAI models in AiHubMix use Responses API."
