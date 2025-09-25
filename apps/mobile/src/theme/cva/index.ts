@@ -1,43 +1,49 @@
-import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 type StyleObject = ViewStyle | TextStyle | ImageStyle;
 
-// 基础配置类型
-export interface VariantConfig<T extends Record<string, any> = Record<string, any>> {
+// 变体定义：每个变体键下是一个值到样式的映射
+export type VariantDefinitions = Record<string, Record<string, StyleProp<any> | null>>;
+
+// 由变体定义推导的 props：
+// - 允许使用各变体的值键（例如 'filled' | 'outlined'）
+// - 同时放宽为 boolean/number，便于布尔型变体直接传 true/false
+export type VariantProps<TVariants extends VariantDefinitions> = {
+  [K in keyof TVariants]?: keyof TVariants[K] | boolean | number;
+};
+
+// 基础配置类型（从 variants 的键推导 compoundVariants 和 defaultVariants 的键）
+export interface VariantConfig<TVariants extends VariantDefinitions = VariantDefinitions> {
   compoundVariants?: Array<
-    Partial<T> & {
-      style: StyleObject | StyleObject[];
+    Partial<{ [K in keyof TVariants]: keyof TVariants[K] | boolean | number }> & {
+      style: StyleProp<any>;
     }
   >;
-  defaultVariants?: Partial<T>;
-  variants?: {
-    [key in keyof T]?: {
-      [value: string]: StyleObject | StyleObject[] | null;
-    };
-  };
+  defaultVariants?: Partial<{ [K in keyof TVariants]: keyof TVariants[K] | boolean | number }>;
+
+  variants?: TVariants;
 }
 
-// CVA 函数类型
-export interface CVAFunction<T extends Record<string, any> = Record<string, any>> {
-  (props?: Partial<T>): StyleObject[];
-  config: VariantConfig<T>;
+export interface CVAFunction<TProps extends Record<string, unknown> = Record<string, unknown>> {
+  (props?: Partial<TProps>): StyleProp<any>;
+  config: VariantConfig<any>;
 }
 
-/**
- * 创建一个 React Native 版本的 Class Variance Authority
- * @param baseStyle 基础样式
- * @param config 变体配置
- * @returns 样式函数
- */
-export function cva<T extends Record<string, any> = Record<string, any>>(
-  baseStyle: StyleObject | StyleObject[] = {},
-  config: VariantConfig<T> = {},
-): CVAFunction<T> {
-  const { variants = {}, compoundVariants = [], defaultVariants = {} } = config;
+export function cva<TVariants extends VariantDefinitions>(
+  baseStyle: StyleProp<any>,
+  config?: VariantConfig<TVariants>,
+): CVAFunction<VariantProps<TVariants>> {
+  const {
+    variants = {} as TVariants,
+    compoundVariants = [],
+    defaultVariants = {} as Partial<{
+      [K in keyof TVariants]: keyof TVariants[K] | boolean | number;
+    }>,
+  } = (config ?? {}) as VariantConfig<TVariants>;
 
-  const variantFunction = (props: Partial<T> = {}) => {
+  const variantFunction = (props: Partial<VariantProps<TVariants>> = {}) => {
     // 合并默认值和传入的 props
-    const mergedProps = { ...defaultVariants, ...props };
+    const mergedProps: Record<string, unknown> = { ...defaultVariants, ...props };
 
     // 开始构建样式数组
     const styles: StyleObject[] = [];
@@ -50,27 +56,36 @@ export function cva<T extends Record<string, any> = Record<string, any>>(
     }
 
     // 添加变体样式
-    Object.entries(variants as Record<string, any>).forEach(([variantKey, variantValues]) => {
-      const propValue = mergedProps[variantKey as keyof T];
-      if (propValue !== undefined && variantValues) {
-        const variantStyle = variantValues[String(propValue)];
-        if (variantStyle) {
-          if (Array.isArray(variantStyle)) {
-            styles.push(...variantStyle);
-          } else {
-            styles.push(variantStyle);
+    Object.entries(variants as Record<string, Record<string, StyleProp<any> | null>>).forEach(
+      ([variantKey, variantValues]) => {
+        const propValue = mergedProps[variantKey];
+        if (propValue !== undefined && variantValues) {
+          const variantStyle = variantValues[String(propValue)];
+          if (variantStyle) {
+            if (Array.isArray(variantStyle)) {
+              styles.push(...variantStyle);
+            } else {
+              styles.push(variantStyle);
+            }
           }
         }
-      }
-    });
+      },
+    );
 
     // 添加复合变体样式
-    compoundVariants.forEach((compound) => {
-      const { style: compoundStyle, ...conditions } = compound;
+    (
+      compoundVariants as Array<
+        Partial<Record<string, string | number | boolean>> & { style: StyleProp<any> }
+      >
+    ).forEach((compound) => {
+      const { style: compoundStyle, ...conditions } = compound as {
+        [k: string]: unknown;
+        style?: StyleProp<any>;
+      };
 
       // 检查是否所有条件都匹配
       const isMatch = Object.entries(conditions).every(([key, value]) => {
-        return mergedProps[key as keyof T] === value;
+        return mergedProps[key] === value;
       });
 
       if (isMatch && compoundStyle) {
@@ -86,7 +101,7 @@ export function cva<T extends Record<string, any> = Record<string, any>>(
   };
 
   // 添加配置到函数上，方便调试和扩展
-  variantFunction.config = config;
+  variantFunction.config = (config ?? {}) as VariantConfig<TVariants>;
 
   return variantFunction;
 }
@@ -96,52 +111,6 @@ export function cva<T extends Record<string, any> = Record<string, any>>(
  * @param styles 样式数组
  * @returns 合并后的样式对象
  */
-export function mergeStyles(
-  ...styles: (StyleObject | StyleObject[] | undefined | null)[]
-): StyleObject {
-  const merged: StyleObject = {};
-
-  styles.forEach((style) => {
-    if (!style) return;
-
-    if (Array.isArray(style)) {
-      style.forEach((s) => {
-        if (s) {
-          Object.assign(merged, s);
-        }
-      });
-    } else {
-      Object.assign(merged, style);
-    }
-  });
-
-  return merged;
-}
-
-/**
- * 条件样式工具函数
- * @param condition 条件
- * @param trueStyle 条件为真时的样式
- * @param falseStyle 条件为假时的样式
- * @returns 样式对象或 null
- */
-export function conditionalStyle(
-  condition: boolean,
-  trueStyle: StyleObject,
-  falseStyle: StyleObject | null = null,
-): StyleObject | null {
-  return condition ? trueStyle : falseStyle;
-}
-
-/**
- * 创建响应式变体（基于不同的尺寸）
- * @param variants 尺寸变体对象
- * @param currentSize 当前尺寸
- * @returns 对应尺寸的样式
- */
-export function responsiveVariant<T extends string>(
-  variants: Record<T, StyleObject>,
-  currentSize: T,
-): StyleObject | null {
-  return variants[currentSize] || null;
+export function mergeStyles(...styles: StyleProp<any>[]): StyleProp<any>[] {
+  return styles;
 }
