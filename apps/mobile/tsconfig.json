@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -29,7 +29,6 @@
     "**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ",.expo/types/**/*.ts",
     "expo-env.d.ts",
     "global.d.ts",
     ".expo/types/**/*.ts"
