@@ -1,7 +1,6 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Header } from '@/components';
+import { PageContainer } from '@/components';
 import {
   basic as BasicDemo,
   cva as CVADemo,
@@ -14,8 +13,6 @@ import {
 import README from '@/components/Block/readme';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <ClickableDemo />, key: 'clickable', title: '可点击状态' },
@@ -27,11 +24,9 @@ const demos: DemoItem[] = [
 ];
 
 export default function BlockPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
-      <Header showBack title="Block 块容器" />
+    <PageContainer showBack title="Block 块容器">
       <ComponentPlayground demos={demos} readmeContent={README} />
-    </SafeAreaView>
+    </PageContainer>
   );
 }

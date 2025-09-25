@@ -10,8 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { useStyles } from '../style';
 import { InputVariant } from '../type';
+import { useStyles } from './style';
 
 export interface TextAreaProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
   autoSize?: boolean | { maxRows?: number; minRows?: number };
