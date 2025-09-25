@@ -5,7 +5,7 @@
 // Simple unit tests focusing on testable parts without complex EventSource mocking
 describe('fetchSSE utilities', () => {
   // Mock the settings constant
-  jest.mock('@/const/settings', () => ({
+  jest.mock('@/_const/settings', () => ({
     DEFAULT_MODEL: 'gpt-3.5-turbo',
   }));
 

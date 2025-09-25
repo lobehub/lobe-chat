@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { AVATAR_SIZE_LARGE } from '@/_const/common';
 import { Avatar } from '@/components';
 import GitHubAvatar from '@/components/GithubAvatar';
-import { AVATAR_SIZE_LARGE } from '@/const/common';
 
 import { useStyles } from './styles';
 

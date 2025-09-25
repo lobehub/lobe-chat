@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LobeAgentSession } from '@/types/session';
+import { LobeAgentSession } from '@lobechat/types';
 
 export interface ISessionService {
   getGroupedSessions: () => Promise<{

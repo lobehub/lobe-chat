@@ -1,9 +1,10 @@
+import { ModelSearchImplement } from '@lobechat/types';
+import { AiModelSourceEnum } from 'model-bank';
+
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiModelSourceEnum } from '@/types/aiModel';
 
 const aiProviderChatModelListIds = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.type === 'chat').map((item) => item.id);
-
 // List
 const enabledAiProviderModelList = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.enabled);
@@ -45,60 +46,75 @@ const getEnabledModelById = (id: string, provider: string) => (s: AIProviderStor
 
 const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
-  return model?.abilities?.functionCall;
-};
 
-const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
-  const model = getEnabledModelById(id, provider)(s);
-  return model?.abilities?.vision;
+  return model?.abilities?.functionCall || false;
 };
 
 const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
+
   return model?.abilities?.files;
+};
+
+const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.vision || false;
 };
 
 const isModelSupportReasoning = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
-  return model?.abilities?.reasoning;
-};
 
-const modelContextWindowTokens = (id: string, provider: string) => (s: AIProviderStoreState) => {
-  const model = getEnabledModelById(id, provider)(s);
-  return model?.contextWindowTokens;
+  return model?.abilities?.reasoning;
 };
 
 const isModelHasContextWindowToken =
   (id: string, provider: string) => (s: AIProviderStoreState) => {
-    const tokens = modelContextWindowTokens(id, provider)(s);
-    return typeof tokens === 'number' && tokens > 0;
+    const model = getEnabledModelById(id, provider)(s);
+
+    return typeof model?.contextWindowTokens === 'number';
   };
+
+const modelContextWindowTokens = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.contextWindowTokens;
+};
 
 const modelExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
+
   return model?.settings?.extendParams;
 };
 
 const isModelHasExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const controls = modelExtendParams(id, provider)(s);
+
   return !!controls && controls.length > 0;
 };
 
-// Simplified search implementations for RN
 const modelBuiltinSearchImpl = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
-  return model?.abilities?.search;
+
+  return model?.settings?.searchImpl;
 };
 
 const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
+
   return !!searchImpl;
 };
 
 const isModelHasBuiltinSearchConfig =
   (id: string, provider: string) => (s: AIProviderStoreState) => {
     const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
-    return !!searchImpl;
+
+    return (
+      !!searchImpl &&
+      [ModelSearchImplement.Tool, ModelSearchImplement.Params].includes(
+        searchImpl as ModelSearchImplement,
+      )
+    );
   };
 
 export const aiModelSelectors = {

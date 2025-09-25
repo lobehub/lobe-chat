@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://platform.openai.com/docs/deprecations
 const OpenAI: ModelProviderCard = {

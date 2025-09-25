@@ -1,6 +1,18 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-// Disable the auto sort key eslint rule to make the code more logic and readable
-import { ChatErrorType, TraceEventType } from '@lobechat/types';
+import {
+  ChatErrorType,
+  ChatImageItem,
+  ChatMessage,
+  ChatMessageError,
+  ChatMessagePluginError,
+  CreateMessageParams,
+  GroundingSearch,
+  MessageMetadata,
+  MessageToolCall,
+  ModelReasoning,
+  TraceEventPayloads,
+  TraceEventType,
+  UpdateMessageRAGParams,
+} from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -9,19 +21,7 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatMessagePluginError,
-  CreateMessageParams,
-  MessageMetadata,
-  MessageToolCall,
-  ModelReasoning,
-} from '@/types/message';
-import { ChatImageItem } from '@/types/message/image';
-import { GroundingSearch } from '@/types/search';
-import { TraceEventPayloads } from '@/types/trace';
-import { Action } from '@/utils/storeDebug';
+import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import type { ChatStoreState } from '../../initialState';
@@ -29,73 +29,29 @@ import { chatSelectors } from '../../selectors';
 import { toggleBooleanList } from '../../utils';
 import { MessageDispatch, messagesReducer } from './reducer';
 
+const n = setNamespace('m');
+
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
 export interface ChatMessageAction {
   // create
   addAIMessage: () => Promise<void>;
+  addUserMessage: (params: { fileList?: string[]; message: string }) => Promise<void>;
+  clearAllMessages: () => Promise<void>;
   // delete
   /**
    * clear message on the active session
    */
   clearMessage: () => Promise<void>;
+  copyMessage: (id: string, content: string) => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
   deleteToolMessage: (id: string) => Promise<void>;
-  clearAllMessages: () => Promise<void>;
-  // update
-  updateInputMessage: (message: string) => void;
-  modifyMessageContent: (id: string, content: string) => Promise<void>;
-  toggleMessageEditing: (id: string, editing: boolean) => void;
-  // query
-  useFetchMessages: (
-    enable: boolean,
-    sessionId: string,
-    topicId?: string,
-  ) => SWRResponse<ChatMessage[]>;
-  copyMessage: (id: string, content: string) => Promise<void>;
-  refreshMessages: () => Promise<void>;
-
-  // =========  ↓ Internal Method ↓  ========== //
-  // ========================================== //
-  // ========================================== //
-
-  /**
-   * update message at the frontend
-   * this method will not update messages to database
-   */
-  internal_dispatchMessage: (payload: MessageDispatch) => void;
-
-  /**
-   * update the message content with optimistic update
-   * a method used by other action
-   */
-  internal_updateMessageContent: (
-    id: string,
-    content: string,
-    extra?: {
-      toolCalls?: MessageToolCall[];
-      reasoning?: ModelReasoning;
-      search?: GroundingSearch;
-      metadata?: MessageMetadata;
-      imageList?: ChatImageItem[];
-      model?: string;
-      provider?: string;
-    },
-  ) => Promise<void>;
-  /**
-   * update the message error with optimistic update
-   */
-  internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
-  internal_updateMessagePluginError: (
-    id: string,
-    error: ChatMessagePluginError | null,
-  ) => Promise<void>;
   /**
    * create a message with optimistic update
    */
   internal_createMessage: (
     params: CreateMessageParams,
-    context?: { tempMessageId?: string; skipRefresh?: boolean },
+    context?: { skipRefresh?: boolean; tempMessageId?: string },
   ) => Promise<string | undefined>;
   /**
    * create a temp message for optimistic update
@@ -106,17 +62,15 @@ export interface ChatMessageAction {
    * delete the message content with optimistic update
    */
   internal_deleteMessage: (id: string) => Promise<void>;
-
-  internal_fetchMessages: () => Promise<void>;
-  internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
-
   /**
-   * method to toggle message create loading state
-   * the AI message status is creating -> generating
-   * other message role like user and tool , only this method need to be called
+   * update message at the frontend
+   * this method will not update messages to database
    */
-  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
-
+  internal_dispatchMessage: (
+    payload: MessageDispatch,
+    context?: { sessionId: string; topicId?: string | null },
+  ) => void;
+  internal_fetchMessages: () => Promise<void>;
   /**
    * helper to toggle the loading state of the array,used by these three toggleXXXLoading
    */
@@ -126,6 +80,59 @@ export interface ChatMessageAction {
     id?: string,
     action?: Action,
   ) => AbortController | undefined;
+  /**
+   * method to toggle message create loading state
+   * the AI message status is creating -> generating
+   * other message role like user and tool , only this method need to be called
+   */
+  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
+
+  internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
+
+  /**
+   * update the message content with optimistic update
+   * a method used by other action
+   */
+  internal_updateMessageContent: (
+    id: string,
+    content: string,
+    extra?: {
+      imageList?: ChatImageItem[];
+      metadata?: MessageMetadata;
+      model?: string;
+      provider?: string;
+      reasoning?: ModelReasoning;
+      search?: GroundingSearch;
+      toolCalls?: MessageToolCall[];
+    },
+  ) => Promise<void>;
+  /**
+   * update the message error with optimistic update
+   */
+  internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  internal_updateMessagePluginError: (
+    id: string,
+    error: ChatMessagePluginError | null,
+  ) => Promise<void>;
+  // =========  ↓ Internal Method ↓  ========== //
+  // ========================================== //
+  // ========================================== //
+  internal_updateMessageRAG: (id: string, input: UpdateMessageRAGParams) => Promise<void>;
+  modifyMessageContent: (id: string, content: string) => Promise<void>;
+  refreshMessages: () => Promise<void>;
+
+  replaceMessages: (messages: ChatMessage[]) => void;
+  toggleMessageEditing: (id: string, editing: boolean) => void;
+
+  // update
+  updateInputMessage: (message: string) => void;
+
+  // query
+  useFetchMessages: (
+    enable: boolean,
+    sessionId: string,
+    topicId?: string,
+  ) => SWRResponse<ChatMessage[]>;
 }
 
 export const chatMessage: StateCreator<
@@ -134,6 +141,66 @@ export const chatMessage: StateCreator<
   [],
   ChatMessageAction
 > = (set, get) => ({
+  addAIMessage: async () => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
+      get();
+    if (!activeId) return;
+
+    await internal_createMessage({
+      content: inputMessage,
+      role: 'assistant',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
+
+  addUserMessage: async ({ message, fileList }) => {
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    if (!activeId) return;
+
+    await internal_createMessage({
+      content: message,
+      files: fileList,
+      role: 'user',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
+
+  clearAllMessages: async () => {
+    const { refreshMessages } = get();
+    await messageService.removeAllMessages();
+    await refreshMessages();
+  },
+
+  clearMessage: async () => {
+    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
+
+    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
+
+    if (activeTopicId) {
+      await topicService.removeTopic(activeTopicId);
+    }
+    await refreshTopic();
+    await refreshMessages();
+
+    // after remove topic , go back to default topic
+    switchTopic();
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  copyMessage: async (id, content) => {
+    // await copyToClipboard(content);
+
+    get().internal_traceMessage(id, { eventType: TraceEventType.CopyMessage });
+  },
+
   deleteMessage: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
@@ -152,7 +219,7 @@ export const chatMessage: StateCreator<
       ids = ids.concat(toolMessageIds);
     }
 
-    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    get().internal_dispatchMessage({ ids, type: 'deleteMessages' });
     await messageService.removeMessages(ids);
     await get().refreshMessages();
   },
@@ -173,152 +240,6 @@ export const chatMessage: StateCreator<
     //   // 2. remove the tool item in the assistant tools
     //   removeToolInAssistantMessage(),
     // ]);
-  },
-
-  clearMessage: async () => {
-    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
-
-    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
-
-    if (activeTopicId) {
-      await topicService.removeTopic(activeTopicId);
-    }
-    await refreshTopic();
-    await refreshMessages();
-
-    // after remove topic , go back to default topic
-    switchTopic();
-  },
-  clearAllMessages: async () => {
-    const { refreshMessages } = get();
-    await messageService.removeAllMessages();
-    await refreshMessages();
-  },
-  addAIMessage: async () => {
-    const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
-      get();
-    if (!activeId) return;
-
-    await internal_createMessage({
-      content: inputMessage,
-      role: 'assistant',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-    });
-
-    updateInputMessage('');
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  copyMessage: async (id, content) => {
-    // await copyToClipboard(content);
-
-    get().internal_traceMessage(id, { eventType: TraceEventType.CopyMessage });
-  },
-  toggleMessageEditing: (id, editing) => {
-    set(
-      { messageEditingIds: toggleBooleanList(get().messageEditingIds, id, editing) },
-      false,
-      'toggleMessageEditing',
-    );
-  },
-
-  updateInputMessage: (message) => {
-    if (isEqual(message, get().inputMessage)) return;
-
-    set({ inputMessage: message }, false);
-  },
-  modifyMessageContent: async (id, content) => {
-    // tracing the diff of update
-    // due to message content will change, so we need send trace before update,or will get wrong data
-    get().internal_traceMessage(id, {
-      eventType: TraceEventType.ModifyMessage,
-      nextContent: content,
-    });
-
-    await get().internal_updateMessageContent(id, content);
-  },
-  useFetchMessages: (enable, sessionId, activeTopicId) =>
-    useSWR<ChatMessage[]>(
-      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
-      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
-        messageService.getMessages(sessionId, topicId),
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        onSuccess: (messages, key) => {
-          const nextMap = {
-            ...get().messagesMap,
-            [messageMapKey(sessionId, activeTopicId)]: messages,
-          };
-          // no need to update map if the messages have been init and the map is the same
-          if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
-
-          set({ messagesInit: true, messagesMap: nextMap }, false);
-        },
-      },
-    ),
-  refreshMessages: async () => {
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
-  },
-
-  // the internal process method of the AI message
-  internal_dispatchMessage: (payload) => {
-    const { activeId } = get();
-
-    if (!activeId) return;
-
-    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
-
-    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
-
-    if (isEqual(nextMap, get().messagesMap)) return;
-
-    set({ messagesMap: nextMap }, false, { type: `dispatchMessage/${payload.type}`, payload });
-  },
-
-  internal_updateMessageError: async (id, error) => {
-    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    await messageService.updateMessage(id, { error });
-    await get().refreshMessages();
-  },
-
-  internal_updateMessagePluginError: async (id, error) => {
-    await messageService.updateMessagePluginError(id, error);
-    await get().refreshMessages();
-  },
-
-  internal_updateMessageContent: async (id, content, extra) => {
-    const { internal_dispatchMessage, refreshMessages } = get();
-
-    // Due to the async update method and refresh need about 100ms
-    // we need to update the message content at the frontend to avoid the update flick
-    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    if (extra?.toolCalls) {
-      // internal_dispatchMessage({
-      //   id,
-      //   type: 'updateMessage',
-      //   value: { tools: internal_transformToolCalls(extra?.toolCalls) },
-      // });
-    } else {
-      internal_dispatchMessage({
-        id,
-        type: 'updateMessage',
-        value: { content },
-      });
-    }
-
-    await messageService.updateMessage(id, {
-      content,
-      // tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
-      tools: undefined, //临时方案，无工具调用
-      reasoning: extra?.reasoning,
-      search: extra?.search,
-      metadata: extra?.metadata,
-      model: extra?.model,
-      provider: extra?.provider,
-      imageList: extra?.imageList,
-    });
-    await refreshMessages();
   },
 
   internal_createMessage: async (message, context) => {
@@ -351,10 +272,42 @@ export const chatMessage: StateCreator<
         id: tempId,
         type: 'updateMessage',
         value: {
-          error: { type: ChatErrorType.CreateMessageError, message: (e as Error).message, body: e },
+          error: { body: e, message: (e as Error).message, type: ChatErrorType.CreateMessageError },
         },
       });
     }
+  },
+
+  internal_createTmpMessage: (message) => {
+    const { internal_dispatchMessage } = get();
+
+    // use optimistic update to avoid the slow waiting
+    const tempId = 'tmp_' + nanoid();
+    internal_dispatchMessage({ id: tempId, type: 'createMessage', value: message });
+
+    return tempId;
+  },
+
+  internal_deleteMessage: async (id: string) => {
+    get().internal_dispatchMessage({ id, type: 'deleteMessage' });
+    await messageService.removeMessage(id);
+    await get().refreshMessages();
+  },
+
+  // the internal process method of the AI message
+  internal_dispatchMessage: (payload, context) => {
+    const activeId = typeof context !== 'undefined' ? context.sessionId : get().activeId;
+    const topicId = typeof context !== 'undefined' ? context.topicId : get().activeTopicId;
+
+    const messagesKey = messageMapKey(activeId, topicId);
+
+    const messages = messagesReducer(chatSelectors.getBaseChatsByKey(messagesKey)(get()), payload);
+
+    const nextMap = { ...get().messagesMap, [messagesKey]: messages };
+
+    if (isEqual(nextMap, get().messagesMap)) return;
+
+    set({ messagesMap: nextMap }, false, { payload, type: `dispatchMessage/${payload.type}` });
   },
 
   internal_fetchMessages: async () => {
@@ -363,50 +316,13 @@ export const chatMessage: StateCreator<
     // no need to update map if the messages have been init and the map is the same
     if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
 
-    set({ messagesInit: true, messagesMap: nextMap }, false);
-  },
-  internal_createTmpMessage: (message) => {
-    const { internal_dispatchMessage } = get();
-
-    // use optimistic update to avoid the slow waiting
-    const tempId = 'tmp_' + nanoid();
-    internal_dispatchMessage({ type: 'createMessage', id: tempId, value: message });
-
-    return tempId;
-  },
-  internal_deleteMessage: async (id: string) => {
-    get().internal_dispatchMessage({ type: 'deleteMessage', id });
-    await messageService.removeMessage(id);
-    await get().refreshMessages();
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  internal_traceMessage: async (id, payload) => {
-    // tracing the diff of update
-    const message = chatSelectors.getMessageById(id)(get());
-    if (!message) return;
-
-    const traceId = message?.traceId;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const observationId = message?.observationId;
-
-    if (traceId && message?.role === 'assistant') {
-      // traceService
-      //   .traceEvent({ traceId, observationId, content: message.content, ...payload })
-      //   .catch();
-    }
-  },
-
-  // ----- Loading ------- //
-  internal_toggleMessageLoading: (loading, id) => {
     set(
-      {
-        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
-      },
+      { messagesInit: true, messagesMap: nextMap },
       false,
-      `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
+      n('internal_fetchMessages', { messages }),
     );
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   internal_toggleLoadingArrays: (key, loading, id, action) => {
     const abortControllerKey = `${key}AbortController`;
     if (loading) {
@@ -439,4 +355,156 @@ export const chatMessage: StateCreator<
       // window.removeEventListener('beforeunload', preventLeavingFn);
     }
   },
+
+  // ----- Loading ------- //
+  internal_toggleMessageLoading: (loading, id) => {
+    set(
+      {
+        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
+      },
+      false,
+      `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
+    );
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  internal_traceMessage: async (id, payload) => {
+    // tracing the diff of update
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const traceId = message?.traceId;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const observationId = message?.observationId;
+
+    if (traceId && message?.role === 'assistant') {
+      // traceService
+      //   .traceEvent({ traceId, observationId, content: message.content, ...payload })
+      //   .catch();
+    }
+  },
+
+  internal_updateMessageContent: async (id, content, extra) => {
+    const { internal_dispatchMessage, refreshMessages } = get();
+
+    // Due to the async update method and refresh need about 100ms
+    // we need to update the message content at the frontend to avoid the update flick
+    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
+    if (extra?.toolCalls) {
+      // internal_dispatchMessage({
+      //   id,
+      //   type: 'updateMessage',
+      //   value: { tools: internal_transformToolCalls(extra?.toolCalls) },
+      // });
+    } else {
+      internal_dispatchMessage({
+        id,
+        type: 'updateMessage',
+        value: { content },
+      });
+    }
+
+    await messageService.updateMessage(id, {
+      content,
+
+      imageList: extra?.imageList,
+
+      metadata: extra?.metadata,
+
+      model: extra?.model,
+
+      provider: extra?.provider,
+
+      //临时方案，无工具调用
+      reasoning: extra?.reasoning,
+
+      search: extra?.search,
+      // tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+      tools: undefined,
+    });
+    await refreshMessages();
+  },
+
+  internal_updateMessageError: async (id, error) => {
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
+    await messageService.updateMessage(id, { error });
+    await get().refreshMessages();
+  },
+
+  internal_updateMessagePluginError: async (id, error) => {
+    await messageService.updateMessagePluginError(id, error);
+    await get().refreshMessages();
+  },
+
+  internal_updateMessageRAG: async (id, data) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessageRAG(id, data);
+    await refreshMessages();
+  },
+
+  modifyMessageContent: async (id, content) => {
+    // tracing the diff of update
+    // due to message content will change, so we need send trace before update,or will get wrong data
+    get().internal_traceMessage(id, {
+      eventType: TraceEventType.ModifyMessage,
+      nextContent: content,
+    });
+
+    await get().internal_updateMessageContent(id, content);
+  },
+
+  refreshMessages: async () => {
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
+  },
+
+  replaceMessages: (messages) => {
+    set(
+      {
+        messagesMap: {
+          ...get().messagesMap,
+          [messageMapKey(get().activeId, get().activeTopicId)]: messages,
+        },
+      },
+      false,
+      'replaceMessages',
+    );
+  },
+
+  toggleMessageEditing: (id, editing) => {
+    set(
+      { messageEditingIds: toggleBooleanList(get().messageEditingIds, id, editing) },
+      false,
+      'toggleMessageEditing',
+    );
+  },
+
+  updateInputMessage: (message) => {
+    if (isEqual(message, get().inputMessage)) return;
+
+    set({ inputMessage: message }, false, n('updateInputMessage', message));
+  },
+
+  useFetchMessages: (enable, sessionId, activeTopicId) =>
+    useSWR<ChatMessage[]>(
+      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
+      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
+        messageService.getMessages(sessionId, topicId),
+      {
+        onSuccess: (messages, key) => {
+          const nextMap = {
+            ...get().messagesMap,
+            [messageMapKey(sessionId, activeTopicId)]: messages,
+          };
+          // no need to update map if the messages have been init and the map is the same
+          if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
+
+          set(
+            { messagesInit: true, messagesMap: nextMap },
+            false,
+            n('useFetchMessages', { messages, queryKey: key }),
+          );
+        },
+      },
+    ),
 });

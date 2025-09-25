@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://developer.qiniu.com/aitokenapi
 const Qiniu: ModelProviderCard = {

@@ -1,8 +1,8 @@
+import { ChatMessage } from '@lobechat/types';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
 import { Markdown } from '@/components';
-import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
 

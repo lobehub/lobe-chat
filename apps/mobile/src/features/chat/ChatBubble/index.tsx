@@ -1,14 +1,16 @@
+import { ChatMessage } from '@lobechat/types';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
+
 import { Markdown } from '@/components';
-import { ChatMessage } from '@/types/message';
+import { useSettingStore } from '@/store/setting';
+
+import AssistantMenu from '../AssistantMenu';
 import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
 import UserContextMenu from '../UserContextMenu';
 import ErrorContent from './ErrorContent';
 import { useStyles } from './style';
-import { useSettingStore } from '@/store/setting';
-import AssistantMenu from '../AssistantMenu';
 
 interface ChatBubbleProps {
   isLoading?: boolean;

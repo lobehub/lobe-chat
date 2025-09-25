@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/message';
+import { ChatMessage } from '@lobechat/types';
 
 const chatMessage = (message: ChatMessage) => {
   return `<${message.role}>${message.content}</${message.role}>`;

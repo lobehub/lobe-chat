@@ -1,8 +1,7 @@
+import { ChatTopic, GroupedTopic, TimeGroupId } from '@lobechat/types';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
-
-import { ChatTopic, GroupedTopic, TimeGroupId } from '@/types/topic';
 
 // 初始化 dayjs 插件
 dayjs.extend(isToday);
