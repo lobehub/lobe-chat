@@ -1,4 +1,4 @@
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from 'model-bank';
 
 // https://docs.x.ai/docs/models
 const xaiChatModels: AIChatModelCard[] = [

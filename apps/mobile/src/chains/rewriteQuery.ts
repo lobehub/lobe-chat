@@ -1,5 +1,6 @@
-import { DEFAULT_REWRITE_QUERY } from '@/const/settings';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@lobechat/types';
+
+import { DEFAULT_REWRITE_QUERY } from '@/_const/settings';
 
 export const chainRewriteQuery = (
   query: string,

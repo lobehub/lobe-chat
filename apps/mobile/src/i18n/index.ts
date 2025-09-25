@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { DEFAULT_LANG } from '@/const/locale';
+import { DEFAULT_LANG } from '@/_const/locale';
 import { isDev } from '@/utils/env';
 
 import { getSupportedLocales, loadLocaleResources } from './generatedConfig';

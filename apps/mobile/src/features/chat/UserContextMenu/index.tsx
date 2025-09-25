@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,6 @@ import * as ContextMenu from 'zeego/context-menu';
 
 import { useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
-import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
 

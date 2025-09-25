@@ -1,5 +1,5 @@
-import { ChatMessage } from '@/types/message';
-import { OpenAIChatMessage } from '@/types/openai/chat';
+import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+
 import { encodeAsync } from '@/utils/tokenizer';
 
 export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>

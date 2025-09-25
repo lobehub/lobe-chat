@@ -1,4 +1,4 @@
-import { CustomSessionGroup, LobeSessionGroups } from '@/types/session';
+import { CustomSessionGroup, LobeSessionGroups } from '@lobechat/types';
 
 export interface SessionGroupState {
   activeGroupId?: string;

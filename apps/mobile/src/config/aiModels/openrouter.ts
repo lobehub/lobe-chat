@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from 'model-bank';
 
 // https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [

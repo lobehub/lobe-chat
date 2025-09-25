@@ -1,4 +1,4 @@
-import { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@lobechat/types';
 
 import Ai21Provider from './ai21';
 import Ai302Provider from './ai302';

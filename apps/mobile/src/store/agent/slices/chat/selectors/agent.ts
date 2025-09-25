@@ -1,13 +1,13 @@
-import { INBOX_SESSION_ID } from '@/const/session';
+import { KnowledgeItem, KnowledgeType, LobeAgentConfig, LobeAgentTTSConfig } from '@lobechat/types';
+
+import { INBOX_SESSION_ID } from '@/_const/session';
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
-} from '@/const/settings';
+} from '@/_const/settings';
 import { AgentStoreState } from '@/store/agent/initialState';
-import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
-import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;

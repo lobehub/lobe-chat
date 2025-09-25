@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
 import ColorSwatches from '@/components/ColorSwatches';
 import Slider from '@/components/Slider';
-import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/const/common';
 import {
   NeutralColors,
   PrimaryColors,

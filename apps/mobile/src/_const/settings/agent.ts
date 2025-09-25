@@ -7,7 +7,7 @@ import {
   LobeAgentConfig,
   LobeAgentTTSConfig,
   WorkingModel,
-} from '@/types/agent';
+} from '@lobechat/types';
 
 /**
  * 默认模型和提供商

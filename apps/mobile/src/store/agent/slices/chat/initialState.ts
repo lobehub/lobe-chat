@@ -1,7 +1,7 @@
+import { LobeAgentConfig } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings/agent';
-import { LobeAgentConfig } from '@/types/agent';
+import { DEFAULT_AGENT_CONFIG } from '@/_const/settings/agent';
 
 /**
  * Agent 设置实例类型 (移动端简化版)

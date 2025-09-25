@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 const HuggingFace: ModelProviderCard = {
   apiKeyUrl: 'https://huggingface.co/settings/tokens',

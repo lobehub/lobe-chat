@@ -1,6 +1,5 @@
+import { LobeAgentSession, LobeSessions } from '@lobechat/types';
 import { produce } from 'immer';
-
-import { LobeAgentSession, LobeSessions } from '@/types/session';
 
 interface AddSession {
   session: LobeAgentSession;

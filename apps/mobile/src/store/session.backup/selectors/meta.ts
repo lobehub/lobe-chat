@@ -1,3 +1,5 @@
+import { MetaData } from '@lobechat/types';
+
 import {
   DEFAULT_AGENT_TITLE,
   DEFAULT_AUTHOR,
@@ -6,8 +8,7 @@ import {
   DEFAULT_INBOX_AVATAR,
   DEFAULT_INBOX_DESCRIPTION,
   DEFAULT_INBOX_TITLE,
-} from '@/const/meta';
-import { MetaData } from '@/types/meta';
+} from '@/_const/meta';
 import { merge } from '@/utils/merge';
 
 import { SessionStore } from '../index';

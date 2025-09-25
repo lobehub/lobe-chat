@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 /**
  * @see https://docs.bfl.ai/
