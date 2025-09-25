@@ -1,69 +1,10 @@
 'use client';
 
-import { SiDiscord, SiGithub, SiMedium, SiX } from '@icons-pack/react-simple-icons';
-import { ActionIcon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
-
-import { SOCIAL_URL } from '@/const/branding';
-import { GITHUB } from '@/const/url';
-
-const useStyles = createStyles(({ css, token }) => {
-  return {
-    icon: css`
-      svg {
-        fill: ${token.colorTextDescription};
-      }
-
-      &:hover {
-        svg {
-          fill: ${token.colorText};
-        }
-      }
-    `,
-  };
-});
 
 const Follow = memo(() => {
-  // Hidden for imoogleAI branding - social media links removed from UI
+  // Hide social media links for imoogleAI branding
   return null;
-  
-  // Original social media links code preserved but commented out
-  /*
-  const { styles } = useStyles();
-  const { t } = useTranslation('common');
-  return (
-    <Flexbox gap={8} horizontal>
-      <Link href={GITHUB} rel="noreferrer" target={'_blank'}>
-        <ActionIcon
-          className={styles.icon}
-          icon={SiGithub as any}
-          title={t('follow', { name: 'GitHub' })}
-        />
-      </Link>
-      <Link href={SOCIAL_URL.x} rel="noreferrer" target={'_blank'}>
-        <ActionIcon className={styles.icon} icon={SiX as any} title={t('follow', { name: 'X' })} />
-      </Link>
-      <Link href={SOCIAL_URL.discord} rel="noreferrer" target={'_blank'}>
-        <ActionIcon
-          className={styles.icon}
-          icon={SiDiscord as any}
-          title={t('follow', { name: 'Discord' })}
-        />
-      </Link>
-      <Link href={SOCIAL_URL.medium} rel="noreferrer" target={'_blank'}>
-        <ActionIcon
-          className={styles.icon}
-          icon={SiMedium as any}
-          title={t('follow', { name: 'Medium' })}
-        />
-      </Link>
-    </Flexbox>
-  );
-  */
 });
 
 Follow.displayName = 'Follow';
