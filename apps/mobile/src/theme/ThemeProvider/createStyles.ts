@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 import { AliasToken } from '../interface';
@@ -10,6 +10,7 @@ export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyl
 
 // 样式创建函数的参数类型
 interface StyleCreatorParams {
+  cx: (...styles: any[]) => any;
   isDarkMode: boolean;
   stylish: LobeStylish;
   token: AliasToken;
@@ -57,11 +58,28 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
       return StyleSheet.create(rawStyles);
     }, [token, stylish, isDarkMode, theme, ...customParams]);
 
-    return {
-      styles,
-      stylish,
-      theme,
-      token,
-    };
+    const cx = useCallback((...styles) => {
+      return Object.values(styles).reduce((acc, style) => {
+        if (style) {
+          if (Array.isArray(style)) {
+            acc.push(...style);
+          } else {
+            acc.push(style);
+          }
+        }
+        return acc;
+      }, []);
+    });
+
+    return useMemo(
+      () => ({
+        cx,
+        styles,
+        stylish,
+        theme,
+        token,
+      }),
+      [cx, styles, stylish, theme, token],
+    );
   };
 };
