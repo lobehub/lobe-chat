@@ -37,7 +37,7 @@ CRAWLER_IMPLS="native,search1api"
 | `firecrawl`   | [Firecrawl](https://firecrawl.dev/) 无头浏览器 API，适合现代网站抓取。          | `FIRECRAWL_API_KEY`        |
 | `jina`        | 使用 [Jina AI](https://jina.ai/) 的爬虫服务，支持快速提取摘要信息。                 | `JINA_READER_API_KEY`      |
 | `native`      | 内置通用爬虫，适用于标准网页结构。                                                |                            |
-| `search1api`  | 利用 [Search1API](https://www.search1api.com) 提供的页面抓取能力，适合结构化内容提取。 | `SEARCH1API_CRAWL_API_KEY` |
+| `search1api`  | 利用 [Search1API](https://www.search1api.com) 提供的页面抓取能力，适合结构化内容提取。 | `SEARCH1API_API_KEY` `SEARCH1API_CRAWL_API_KEY` `SEARCH1API_SEARCH_API_KEY` |
 | `tavily`      | 使用 [Tavily](https://www.tavily.com/) 的网页抓取与摘要 API。               | `TAVILY_API_KEY`           |
 
 > 💡 设置多个爬虫可提升成功率，系统将根据优先级尝试不同爬虫。
@@ -64,7 +64,7 @@ SEARCH_PROVIDERS="searxng"
 | `google`     | 使用 [Google Programmable Search Engine](https://programmablesearchengine.google.com/)。 | `GOOGLE_PSE_API_KEY` `GOOGLE_PSE_ENGINE_ID` |
 | `jina`       | 使用 [Jina AI](https://jina.ai/) 提供的语义搜索服务。                                             | `JINA_READER_API_KEY`                       |
 | `kagi`       | [Kagi](https://kagi.com/) 提供的高级搜索 API，需订阅 Key。                                        | `KAGI_API_KEY`                              |
-| `search1api` | 使用 [Search1API](https://www.search1api.com) 聚合搜索能力。                                   | `SEARCH1API_CRAWL_API_KEY`                  |
+| `search1api` | 使用 [Search1API](https://www.search1api.com) 聚合搜索能力。                                   | `SEARCH1API_API_KEY` `SEARCH1API_CRAWL_API_KEY` `SEARCH1API_SEARCH_API_KEY` |
 | `searxng`    | 使用自托管或公共 [SearXNG](https://searx.space/) 实例。                                          | `SEARXNG_URL`                               |
 | `tavily`     | [Tavily](https://www.tavily.com/)，快速网页摘要与答案返回。                                        | `TAVILY_API_KEY`                            |
 
