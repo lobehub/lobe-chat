@@ -1,5 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+
+import { mergeStyles } from '@/theme';
 
 import { AliasToken } from '../interface';
 import { type LobeStylish, generateStylish } from '../stylish';
@@ -10,7 +12,7 @@ export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyl
 
 // 样式创建函数的参数类型
 interface StyleCreatorParams {
-  cx: (...styles: any[]) => any;
+  cx: typeof mergeStyles;
   isDarkMode: boolean;
   stylish: LobeStylish;
   token: AliasToken;
@@ -40,13 +42,14 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
 
     // 生成 stylish 对象
     const stylish = useMemo(() => {
-      return generateStylish(token, isDarkMode);
+      return generateStylish(token);
     }, [token, isDarkMode]);
 
     // 使用 useMemo 缓存样式对象，避免重新渲染
     const styles = useMemo(() => {
       // 传递对象参数，包含所有必要的属性
       const params: StyleCreatorParams = {
+        cx: mergeStyles,
         isDarkMode,
         stylish,
         token,
@@ -58,28 +61,15 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
       return StyleSheet.create(rawStyles);
     }, [token, stylish, isDarkMode, theme, ...customParams]);
 
-    const cx = useCallback((...styles) => {
-      return Object.values(styles).reduce((acc, style) => {
-        if (style) {
-          if (Array.isArray(style)) {
-            acc.push(...style);
-          } else {
-            acc.push(style);
-          }
-        }
-        return acc;
-      }, []);
-    });
-
     return useMemo(
       () => ({
-        cx,
+        cx: mergeStyles,
         styles,
         stylish,
         theme,
         token,
       }),
-      [cx, styles, stylish, theme, token],
+      [styles, stylish, theme, token],
     );
   };
 };

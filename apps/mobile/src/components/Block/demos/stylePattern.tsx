@@ -25,7 +25,7 @@ const useExampleStyles = () => {
       borderRadius: token.borderRadiusLG,
     },
     secondary: {
-      backgroundColor: token.colorBgSecondary,
+      backgroundColor: token.colorBgContainerSecondary,
     },
     small: {
       fontSize: 12,
