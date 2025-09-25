@@ -1,17 +1,16 @@
+import { KnowledgeItem, LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
-import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { INBOX_SESSION_ID } from '@/const/session';
+import { MESSAGE_CANCEL_FLAT } from '@/_const/message';
+import { INBOX_SESSION_ID } from '@/_const/session';
 import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
-import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
-import { KnowledgeItem } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
 import { AgentStore } from '../../store';

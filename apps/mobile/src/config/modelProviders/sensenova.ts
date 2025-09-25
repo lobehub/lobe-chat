@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref https://platform.sensenova.cn/pricing
 // ref https://platform.sensenova.cn/release?path=/release-202409.md

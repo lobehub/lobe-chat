@@ -1,7 +1,7 @@
+import { EnabledProviderWithModels } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 
 import { useAiInfraStore } from '@/store/aiInfra';
-import { EnabledProviderWithModels } from '@/types/aiModel';
 
 /**
  * 获取可用的聊天模型列表

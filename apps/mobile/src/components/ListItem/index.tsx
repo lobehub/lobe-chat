@@ -2,8 +2,8 @@ import { Href, Link } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
 import { Avatar } from '@/components';
-import { AVATAR_SIZE_MEDIUM } from '@/const/common';
 
 import { useStyles } from './style';
 

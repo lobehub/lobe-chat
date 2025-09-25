@@ -1,4 +1,4 @@
-import { HEADER_HEIGHT } from '@/const/common';
+import { HEADER_HEIGHT } from '@/_const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({

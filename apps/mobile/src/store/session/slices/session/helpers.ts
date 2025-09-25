@@ -1,9 +1,8 @@
+import { LobeAgentSession, LobeSessions, MetaData } from '@lobechat/types';
 import { t } from 'i18next';
 
-import { DEFAULT_AVATAR } from '@/const/meta';
-import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
-import { MetaData } from '@/types/meta';
-import { LobeAgentSession, LobeSessions } from '@/types/session';
+import { DEFAULT_AVATAR } from '@/_const/meta';
+import { DEFAULT_AGENT_LOBE_SESSION } from '@/_const/session';
 
 export const getSessionPinned = (session: LobeAgentSession) => session.pinned;
 

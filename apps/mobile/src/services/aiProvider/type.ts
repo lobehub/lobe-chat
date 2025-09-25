@@ -4,7 +4,7 @@ import {
   AiProviderSortMap,
   CreateAiProviderParams,
   UpdateAiProviderConfigParams,
-} from '@/types/aiProvider';
+} from '@lobechat/types';
 
 export interface IAiProviderService {
   createAiProvider: (params: CreateAiProviderParams) => Promise<any>;

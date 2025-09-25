@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://ai.360.cn/platform/docs/overview
 const Ai360: ModelProviderCard = {

@@ -1,4 +1,4 @@
-import { ChatTopic } from '@/types/topic';
+import { ChatTopic } from '@lobechat/types';
 
 export interface ChatTopicState {
   // TODO: need to add the null to the type

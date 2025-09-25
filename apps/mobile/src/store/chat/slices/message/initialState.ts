@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/message';
+import { ChatMessage } from '@lobechat/types';
 
 export interface ChatMessageState {
   /**

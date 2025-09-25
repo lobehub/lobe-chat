@@ -1,9 +1,9 @@
 import { ModelIcon } from '@lobehub/icons-rn';
+import { AIChatModelCard } from 'model-bank';
 import React, { memo } from 'react';
 import { Text, View } from 'react-native';
 
 import { ModelInfoTags } from '@/components';
-import { AIChatModelCard } from '@/types/aiModel';
 
 import { useStyles } from './styles';
 
