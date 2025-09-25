@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.14"
+  },
+  {
     "children": {},
     "date": "2025-09-25",
     "version": "1.132.13"
