@@ -1,5 +1,5 @@
 ## Set global build ENV
-ARG NODEJS_VERSION="22"
+ARG NODEJS_VERSION="24"
 
 ## Base image for all building stages
 FROM node:${NODEJS_VERSION}-slim AS base
