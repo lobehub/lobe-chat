@@ -10,6 +10,7 @@ import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
+import type { ImageStore } from '@/store/image/store';
 
 import CfgSliderInput from './components/CfgSliderInput';
 import DimensionControlGroup from './components/DimensionControlGroup';
@@ -27,7 +28,7 @@ interface ConfigItemLayoutProps {
   label?: string;
 }
 
-const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
+const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }: ConfigItemLayoutProps) => {
   return (
     <Flexbox gap={8}>
       {label && <Text weight={500}>{label}</Text>}
@@ -49,13 +50,19 @@ const ConfigPanel = memo(() => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
-  const isInit = useImageStore((s) => s.isInit);
+  const isInit = useImageStore((s: ImageStore) => s.isInit);
+  const currentModel = useImageStore(imageGenerationConfigSelectors.model);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
   const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
   const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
   const isSupportCfg = useImageStore(isSupportedParamSelector('cfg'));
   const isSupportImageUrls = useImageStore(isSupportedParamSelector('imageUrls'));
+
+  // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
+  const isSeededitModel = currentModel === 'doubao-seededit-3-0-i2i-250628';
+  const shouldShowImageNum = !isSeededitModel;
+  const shouldShowSize = isSupportSize && !isSeededitModel; // 隐藏 seededit 模型的 size 选项
 
   const { showDimensionControl } = useDimensionControl();
 
@@ -153,7 +160,7 @@ const ConfigPanel = memo(() => {
         </ConfigItemLayout>
       )}
 
-      {isSupportSize && (
+      {shouldShowSize && (
         <ConfigItemLayout label={t('config.size.label')}>
           <SizeSelect />
         </ConfigItemLayout>
@@ -179,11 +186,13 @@ const ConfigPanel = memo(() => {
         </ConfigItemLayout>
       )}
 
-      <Flexbox padding="12px 0" style={stickyStyles}>
-        <ConfigItemLayout label={t('config.imageNum.label')}>
-          <ImageNum />
-        </ConfigItemLayout>
-      </Flexbox>
+      {shouldShowImageNum && (
+        <Flexbox padding="12px 0" style={stickyStyles}>
+          <ConfigItemLayout label={t('config.imageNum.label')}>
+            <ImageNum />
+          </ConfigItemLayout>
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

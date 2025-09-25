@@ -1,11 +1,11 @@
-import createDebug from 'debug';
+import debug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
 
 import { CreateImageOptions } from '../../core/openaiCompatibleFactory';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 
-const log = createDebug('lobe-image:volcengine');
+const log = debug('lobe-image:volcengine');
 
 /**
  * Volcengine image generation implementation
@@ -16,103 +16,127 @@ export async function createVolcengineImage(
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
+  log('Creating image with Volcengine model: %s and params: %O', model, params);
 
-  log('Creating image with Volcengine API - model: %s, params: %O', model, params);
+  // 映射参数名称，将 imageUrl 映射为 image
+  const userInput: Record<string, any> = { ...params };
 
-  // Create OpenAI client with Volcengine configuration
-  const client = new OpenAI({
-    apiKey: options.apiKey,
-    baseURL: options.baseURL || 'https://ark.cn-beijing.volces.com/api/v3',
-  });
-
-  // Parameter mapping: imageUrls/imageUrl -> image, cfg -> guidance_scale
-  const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
-    ['imageUrls', 'image'],
-    ['imageUrl', 'image'],
-    ['cfg', 'guidance_scale'],
-  ]);
-
-  const userInput: Record<string, any> = Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [
-      paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
-      value,
-    ]),
-  );
-
-  // Volcengine supports direct URL or base64, no need to convert to File objects
-  // Check if there is image input
-  const hasImageInput =
-    userInput.image !== null &&
-    userInput.image !== undefined &&
-    (Array.isArray(userInput.image) ? userInput.image.length > 0 : true);
-
-  if (hasImageInput) {
-    log('Image input detected: %O', userInput.image);
-  } else {
-    delete userInput.image;
+  // 处理图片参数 - Volcengine API 需要直接的 URL 字符串
+  if (userInput.imageUrl) {
+    userInput.image = userInput.imageUrl;
+    delete userInput.imageUrl;
   }
 
-  // Build request options
-  const requestOptions = {
-    model,
-    watermark: false, // Default to no watermark
-    ...userInput,
+  // 如果有 imageUrls 数组，取第一个作为 image 参数
+  if (userInput.imageUrls && Array.isArray(userInput.imageUrls) && userInput.imageUrls.length > 0) {
+    userInput.image = userInput.imageUrls[0];
+    delete userInput.imageUrls;
+  }
+
+  // 将通用的 cfg 参数映射到 Volcengine 的 guidance_scale
+  if (userInput.cfg !== undefined && userInput.guidance_scale === undefined) {
+    userInput.guidance_scale = userInput.cfg;
+    delete userInput.cfg;
+  }
+
+  // Check if the model supports guidance_scale parameter
+  // Seedream 4.0 models do not support guidance_scale
+  const isSeedream4Model = model.includes('seedream-4') || model === 'doubao-seedream-4-0-250828';
+  if (isSeedream4Model && userInput.guidance_scale !== undefined) {
+    log('Removing guidance_scale parameter for Seedream 4.0 model: %s', model);
+    delete userInput.guidance_scale;
+  }
+
+  // 设置模型专有的默认参数（按照用户要求的默认值）
+  const defaultParams: Record<string, any> = {
+    response_format: 'url',
+    size: 'adaptive',
+    watermark: false,
   };
 
-  log('Volcengine API options: %O', requestOptions);
-
-  // Call Volcengine image generation API
-  const response = await client.images.generate(requestOptions as any);
-
-  log('Volcengine API response: %O', response);
-
-  // Validate response data
-  if (!response || !response.data || !Array.isArray(response.data) || response.data.length === 0) {
-    log('Invalid response: missing data array');
-    throw new Error('Invalid response: missing or empty data array');
+  // Only add guidance_scale default for models that support it
+  if (!isSeedream4Model) {
+    defaultParams.guidance_scale = 10;
   }
 
-  const imageData = response.data[0];
-  if (!imageData) {
-    log('Invalid response: first data item is null/undefined');
-    throw new Error('Invalid response: first data item is null or undefined');
+  // 对于 doubao-seededit 模型，确保有图片输入
+  if (model.includes('seededit') && !userInput.image) {
+    throw new Error('SeedEdit model requires an input image. Please upload an image first.');
   }
 
-  let imageUrl: string;
-  let width: number | undefined;
-  let height: number | undefined;
-
-  // Handle base64 format response
-  if (imageData.b64_json) {
-    const mimeType = 'image/jpeg'; // Volcengine defaults to JPEG format
-    imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
-    log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
-  }
-  // Handle URL format response
-  else if (imageData.url) {
-    imageUrl = imageData.url;
-    log('Using direct image URL: %s', imageUrl);
-  }
-  // If neither format exists, throw error
-  else {
-    log('Invalid response: missing both b64_json and url fields');
-    throw new Error('Invalid response: missing both b64_json and url fields');
+  // 如果 width/height 存在而 size 未设置，则将其映射为 Ark 的 size 字段
+  if (
+    userInput.width &&
+    userInput.height &&
+    !userInput.size &&
+    Number.isFinite(userInput.width) &&
+    Number.isFinite(userInput.height)
+  ) {
+    userInput.size = `${userInput.width}x${userInput.height}`;
+    delete userInput.width;
+    delete userInput.height;
   }
 
-  // Extract size information (Volcengine specific)
-  const volcengineImageData = imageData as any;
-  if (volcengineImageData.size) {
-    const sizeMatch = volcengineImageData.size.match(/^(\d+)x(\d+)$/);
-    if (sizeMatch) {
-      width = parseInt(sizeMatch[1], 10);
-      height = parseInt(sizeMatch[2], 10);
-      log('Extracted image dimensions: %dx%d', width, height);
+  // 针对 doubao-seededit-3-0-i2i-250628 模型的特殊处理
+  let finalUserInput = { ...userInput };
+  if (model === 'doubao-seededit-3-0-i2i-250628') {
+    // 移除不支持的参数，但保留 size（该模型需要 size 参数）
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { width, height, n, ...allowedParams } = finalUserInput;
+    finalUserInput = allowedParams;
+    // 强制设置 size 参数为 adaptive（该模型仅支持此值）
+    finalUserInput.size = 'adaptive';
+  }
+
+  // 构建请求参数
+  const requestBody: Record<string, any> = {
+    model,
+    prompt: finalUserInput.prompt || '',
+    ...defaultParams,
+    ...finalUserInput,
+  };
+
+  // 移除空值
+  Object.keys(requestBody).forEach((key) => {
+    if (requestBody[key] === undefined || requestBody[key] === null) {
+      delete requestBody[key];
     }
+  });
+
+  log('Final request body: %O', requestBody);
+
+  // 发送请求到 Volcengine API
+  const response = await fetch(`${options.baseURL}/images/generations`, {
+    body: JSON.stringify(requestBody),
+    headers: {
+      'Authorization': `Bearer ${options.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    log('Volcengine API error: %s %s', response.status, errorText);
+    throw new Error(`Volcengine API error: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  log('Volcengine API response: %O', result);
+
+  // 检查响应格式
+  if (!result.data || !Array.isArray(result.data) || result.data.length === 0) {
+    throw new Error('Invalid response from Volcengine API: missing or empty data array');
+  }
+
+  const imageData = result.data[0];
+  if (!imageData.url) {
+    throw new Error('Invalid response from Volcengine API: missing image URL');
   }
 
   return {
-    height,
-    imageUrl,
-    width,
+    height: imageData.height,
+    imageUrl: imageData.url,
+    width: imageData.width,
   };
 }

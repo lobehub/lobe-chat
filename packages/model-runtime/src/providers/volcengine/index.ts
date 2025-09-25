@@ -1,7 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
+import volcengineAllModels from 'model-bank/volcengine';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
+
 import { createVolcengineImage } from './createImage';
 
 const THINKING_MODELS = [
@@ -27,8 +29,8 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
         model,
         ...(THINKING_MODELS.some((keyword) => model.toLowerCase().includes(keyword))
           ? {
-              thinking: { type: thinking?.type },
-            }
+            thinking: { type: thinking?.type },
+          }
           : {}),
       } as any;
     },
@@ -37,9 +39,9 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_VOLCENGINE_CHAT_COMPLETION === '1',
   },
-  models: async ({ client }) => {
-    const modelsPage = (await client.models.list()) as any;
-    const modelList: VolcengineModelCard[] = modelsPage.data;
+  models: async () => {
+    // Ark v3 并未提供 OpenAI 兼容的 /models 列表接口，直接使用本地配置
+    const modelList: VolcengineModelCard[] = volcengineAllModels.map((m) => ({ id: m.id }));
 
     return processModelList(modelList, MODEL_LIST_CONFIGS.volcengine, 'volcengine');
   },

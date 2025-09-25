@@ -1,6 +1,7 @@
-import { DOMParser } from '@xmldom/xmldom';
+import { DOMParser as XmlDomParser } from '@xmldom/xmldom';
 import concat from 'concat-stream';
 import { Buffer } from 'node:buffer';
+import { Readable } from 'node:stream';
 import yauzl from 'yauzl';
 
 // Define basic error messages
@@ -15,7 +16,8 @@ const ERRORMSG = {
  * @returns {XMLDocument}
  */
 export const parseString = (xml: string) => {
-  const parser = new DOMParser();
+  // Use xmldom's DOMParser for consistent behavior across environments
+  const parser = new XmlDomParser();
   return parser.parseFromString(xml, 'text/xml') as unknown as XMLDocument;
 };
 
@@ -50,7 +52,7 @@ export function extractFiles(
 
         // Use the filter function to determine if the file should be extracted
         if (filterFn(entry.fileName)) {
-          zipfile.openReadStream(entry, (err, readStream) => {
+          zipfile.openReadStream(entry, (err: Error | null, readStream?: Readable) => {
             if (err) {
               zipfile.close(); // Ensure zipfile is closed on error
               return reject(err);
@@ -62,7 +64,7 @@ export function extractFiles(
 
             // Use concat-stream to collect the data into a single Buffer
             readStream.pipe(
-              concat((data) => {
+              concat((data: Buffer) => {
                 extractedFiles.push({
                   content: data.toString('utf8'),
                   path: entry.fileName, // Specify encoding
@@ -70,7 +72,7 @@ export function extractFiles(
                 zipfile.readEntry(); // Continue reading entries
               }),
             );
-            readStream.on('error', (streamErr) => {
+            readStream.on('error', (streamErr: Error) => {
               zipfile.close();
               reject(streamErr);
             });
@@ -85,7 +87,7 @@ export function extractFiles(
         zipfile.close(); // Close the zipfile when done reading entries
       });
 
-      zipfile.on('error', (err) => {
+      zipfile.on('error', (err: Error) => {
         zipfile.close();
         reject(err);
       });
@@ -94,13 +96,13 @@ export function extractFiles(
     // Determine whether the input is a buffer or file path
     if (Buffer.isBuffer(zipInput)) {
       // Process ZIP from Buffer
-      yauzl.fromBuffer(zipInput, { lazyEntries: true }, (err, zipfile) => {
+      yauzl.fromBuffer(zipInput, { lazyEntries: true }, (err: Error | null, zipfile?: yauzl.ZipFile) => {
         if (err || !zipfile) return reject(err || new Error('Failed to open zip from buffer'));
         processZipfile(zipfile);
       });
     } else if (typeof zipInput === 'string') {
       // Process ZIP from File Path
-      yauzl.open(zipInput, { lazyEntries: true }, (err, zipfile) => {
+      yauzl.open(zipInput, { lazyEntries: true }, (err: Error | null, zipfile?: yauzl.ZipFile) => {
         if (err || !zipfile)
           return reject(err || new Error(`Failed to open zip file: ${zipInput}`));
         processZipfile(zipfile);
