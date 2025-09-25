@@ -2,10 +2,9 @@ import { primaryColors } from './color';
 import type { PresetColorType, SeedToken } from './interface';
 
 // 字体定义
-const FONT_EN = `"HarmonyOS-Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
-const FONT_CN = `"HarmonyOS-Sans-SC", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif`;
-const FONT_EMOJI = `"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"`;
-const FONT_CODE = `"Hack", "SF Mono", "Menlo", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace`;
+const FONT_EN = `HarmonyOS-Sans`;
+const FONT_CN = `HarmonyOS-Sans-SC`;
+const FONT_CODE = `Hack`;
 
 // 优先使用系统默认字体，但在 React Native 中使用自定义字体
 const FONT_SYSTEM = 'System';
@@ -45,8 +44,8 @@ const seedToken: SeedToken = {
 
   controlHeight: 32,
   // 优先使用系统默认字体
-  fontFamily: [FONT_SYSTEM, FONT_EN, FONT_CN, FONT_EMOJI].join(','),
-  fontFamilyCode: [FONT_CODE, FONT_CN, FONT_SYSTEM, FONT_EMOJI].join(','),
+  fontFamily: [FONT_EN, FONT_CN, FONT_SYSTEM].join(','),
+  fontFamilyCode: FONT_CODE,
 
   fontSize: 14,
 
