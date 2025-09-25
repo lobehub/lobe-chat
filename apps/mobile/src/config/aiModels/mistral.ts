@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from 'model-bank';
 
 // https://docs.mistral.ai/getting-started/models/models_overview/
 // https://mistral.ai/products/la-plateforme#pricing

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://modelscope.cn/docs/model-service/API-Inference/intro
 const ModelScope: ModelProviderCard = {

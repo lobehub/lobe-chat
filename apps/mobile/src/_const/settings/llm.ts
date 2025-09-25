@@ -1,4 +1,4 @@
-import { ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider } from '@/libs/_model-runtime';
 
 export const DEFAULT_MODEL = 'gpt-4o-mini';
 

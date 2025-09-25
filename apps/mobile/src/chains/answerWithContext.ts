@@ -1,4 +1,4 @@
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@lobechat/types';
 
 export const chainAnswerWithContext = ({
   context,
