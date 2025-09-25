@@ -12,6 +12,8 @@ export const ORG_NAME = 'LobeHub';
 export const BRANDING_URL = {
   help: undefined,
   privacy: undefined,
+  subscription: undefined,
+  support: undefined,
   terms: undefined,
 };
 
@@ -27,3 +29,7 @@ export const BRANDING_EMAIL = {
   business: 'hello@lobehub.com',
   support: 'support@lobehub.com',
 };
+
+export const BRANDING_PROVIDER = 'lobehub';
+
+export const COPYRIGHT = `© ${new Date().getFullYear()} ${ORG_NAME}`;

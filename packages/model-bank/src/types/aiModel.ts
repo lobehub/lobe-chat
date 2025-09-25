@@ -133,8 +133,8 @@ export type PricingUnitName =
 
   // Image-based pricing units
   | 'imageGeneration' // for image generation models
-  | 'imageInput'
-  | 'imageInput_cacheRead'
+  | 'imageInput' // eg: gpt-image-1
+  | 'imageInput_cacheRead' // eg: gpt-image-1
   | 'imageOutput';
 
 export type PricingUnitType =

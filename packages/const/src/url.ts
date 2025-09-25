@@ -1,11 +1,12 @@
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
+import { BRANDING_EMAIL, BRANDING_URL } from './branding';
 import { INBOX_SESSION_ID } from './session';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const UTM_SOURCE = 'chat_preview';
+export const UTM_SOURCE = 'chat_community';
 
 export const OFFICIAL_URL = 'https://lobechat.com';
 export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com';
@@ -62,6 +63,7 @@ export const LOBE_URL_IMPORT_NAME = 'settings';
 export const RELEASES_URL = urlJoin(GITHUB, 'releases');
 
 export const mailTo = (email: string) => `mailto:${email}`;
+export const SUPPORT_URL = BRANDING_URL.support ?? `mailto:${BRANDING_EMAIL.support}`;
 
 export const AES_GCM_URL = 'https://datatracker.ietf.org/doc/html/draft-ietf-avt-srtp-aes-gcm-01';
 export const BASE_PROVIDER_DOC_URL = 'https://lobehub.com/docs/usage/providers';

@@ -453,7 +453,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           headers: options?.headers,
           signal: options?.signal,
         });
-
         return mp3.arrayBuffer();
       } catch (error) {
         throw this.handleError(error);
