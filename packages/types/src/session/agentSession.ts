@@ -1,7 +1,5 @@
-import type { AgentItem } from '@/database/schemas/agent';
-import type { NewChatGroupAgent } from '@/database/schemas/chatGroup';
-
-import { LobeAgentConfig } from '../agent';
+import { AgentItem, LobeAgentConfig } from '../agent';
+import { NewChatGroupAgent } from '../chatGroup';
 import { MetaData } from '../meta';
 
 export enum LobeSessionType {
