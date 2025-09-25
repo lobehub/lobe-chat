@@ -1,48 +1,60 @@
 import { Platform } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { AliasToken, createStyles } from '@/theme';
+
+import { InputSize, InputVariant } from './type';
 
 interface UseStylesProps {
-  multiline?: boolean;
-  size?: 'large' | 'middle' | 'small';
-  variant?: 'filled' | 'borderless' | 'outlined';
+  size?: InputSize;
+  variant?: InputVariant;
 }
 
-export const useStyles = createStyles(
-  ({ token }, { multiline = false, variant = 'filled', size = 'middle' }: UseStylesProps) => {
-    const getSizeStyles = () => {
-      switch (size) {
-        case 'small': {
-          return {
-            controlHeight: token.controlHeightSM,
-            fontHeight: token.fontHeight,
-            fontSize: token.fontSize,
-            paddingHorizontal: token.paddingXS,
-            paddingVertical: 0,
-          };
-        }
-        case 'large': {
-          return {
-            controlHeight: token.controlHeightLG,
-            fontHeight: token.fontHeightLG,
-            fontSize: token.fontSizeLG,
-            paddingHorizontal: token.paddingSM,
-            paddingVertical: token.paddingXS,
-          };
-        }
-        default: {
-          return {
-            controlHeight: token.controlHeight,
-            fontHeight: token.fontHeight,
-            fontSize: token.fontSize,
-            paddingHorizontal: token.paddingSM,
-            paddingVertical: token.paddingXXS,
-          };
-        }
-      }
-    };
+interface InputSizeStyles {
+  controlHeight: number;
+  fontHeight: number;
+  fontSize: number;
+  paddingHorizontal: number;
+  paddingVertical: number;
+}
 
-    const sizeStyles = getSizeStyles();
+export const getInputSizeStyles = (
+  token: AliasToken,
+  size: InputSize = 'middle',
+): InputSizeStyles => {
+  switch (size) {
+    case 'small': {
+      return {
+        controlHeight: token.controlHeightSM,
+        fontHeight: token.fontHeight,
+        fontSize: token.fontSize,
+        paddingHorizontal: token.paddingXS,
+        paddingVertical: 0,
+      };
+    }
+    case 'large': {
+      return {
+        controlHeight: token.controlHeightLG,
+        fontHeight: token.fontHeightLG,
+        fontSize: token.fontSizeLG,
+        paddingHorizontal: token.paddingSM,
+        paddingVertical: token.paddingXS,
+      };
+    }
+    default: {
+      return {
+        controlHeight: token.controlHeight,
+        fontHeight: token.fontHeight,
+        fontSize: token.fontSize,
+        paddingHorizontal: token.paddingSM,
+        paddingVertical: token.paddingXXS,
+      };
+    }
+  }
+};
+
+export const useStyles = createStyles(
+  ({ token }, { variant = 'filled', size = 'middle' }: UseStylesProps) => {
+    const sizeStyles = getInputSizeStyles(token, size);
 
     return {
       container: {
@@ -53,7 +65,7 @@ export const useStyles = createStyles(
         borderWidth: variant === 'outlined' ? token.lineWidth : 0,
         display: 'flex',
         flexDirection: 'row',
-        height: multiline ? undefined : sizeStyles.controlHeight,
+        height: sizeStyles.controlHeight,
         paddingHorizontal: sizeStyles.paddingHorizontal,
         paddingVertical: sizeStyles.paddingVertical,
       },
@@ -62,9 +74,9 @@ export const useStyles = createStyles(
         flex: 1,
         fontFamily: token.fontFamily,
         fontSize: sizeStyles.fontSize,
-        height: multiline ? undefined : sizeStyles.fontHeight,
+        height: sizeStyles.fontHeight,
         // 不要设置 lineHeight
-        textAlignVertical: multiline ? 'top' : 'center',
+        textAlignVertical: 'center',
         ...(Platform.OS === 'android' && {
           // 不要影响 IOS 配置
           includeFontPadding: false,
