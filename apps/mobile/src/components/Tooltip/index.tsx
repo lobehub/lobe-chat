@@ -3,7 +3,6 @@ import React, { ReactNode, useCallback, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
-  GestureResponderEvent,
   LayoutChangeEvent,
   LayoutRectangle,
   StyleProp,
@@ -13,6 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { useTheme, useThemeToken } from '@/theme';
 
@@ -146,6 +146,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       useNativeDriver: true,
     }).start(() => {
       toggleVisible(false);
+      setPressPosition(null);
     });
   }, [toggleVisible, fadeAnim]);
 
@@ -158,19 +159,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
       }
     }
   }, [trigger, visible, showTooltip, hideTooltip]);
-
-  const handleChildLongPress = useCallback(
-    (event: GestureResponderEvent) => {
-      if (trigger === 'longPress') {
-        const { pageX, pageY } = event.nativeEvent;
-        childRef.current?.measure(() => {
-          setPressPosition({ x: pageX, y: pageY });
-          showTooltip();
-        });
-      }
-    },
-    [trigger, showTooltip],
-  );
 
   // 计算最佳位置
   const calculatePosition = useCallback(
@@ -612,19 +600,42 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   if (trigger === 'click') {
     triggerProps.onPress = handleChildPress;
-  } else if (trigger === 'longPress') {
-    triggerProps.onLongPress = handleChildLongPress;
   }
 
   const clonedChild = React.isValidElement(children)
     ? React.cloneElement(children as React.ReactElement<any>, triggerProps)
     : children;
 
+  const longPressGesture = React.useMemo(
+    () =>
+      Gesture.LongPress()
+        .enabled(trigger === 'longPress')
+        .runOnJS(true)
+        .onStart((event) => {
+          setPressPosition({ x: event.absoluteX, y: event.absoluteY });
+          showTooltip();
+        })
+        .onFinalize((_event, success) => {
+          if (!success) {
+            setPressPosition(null);
+          }
+        }),
+    [showTooltip, trigger],
+  );
+
+  const childElement = (
+    <View collapsable={false} ref={childRef}>
+      {clonedChild}
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <View collapsable={false} ref={childRef}>
-        {clonedChild}
-      </View>
+      {trigger === 'longPress' ? (
+        <GestureDetector gesture={longPressGesture}>{childElement}</GestureDetector>
+      ) : (
+        childElement
+      )}
       {renderTooltip()}
     </View>
   );

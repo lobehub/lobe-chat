@@ -4,7 +4,6 @@ import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   StyleProp,
-  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -12,21 +11,23 @@ import {
 
 import { useThemeToken } from '@/theme';
 
+import TextArea from './TextArea';
 import { useStyles } from './style';
+import { InputSize, InputVariant } from './type';
+
+export type { TextAreaProps } from './TextArea';
 
 export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
-  contentStyle?: StyleProp<TextStyle>;
   prefix?: React.ReactNode;
-  size?: 'large' | 'middle' | 'small';
+  size?: InputSize;
   style?: StyleProp<ViewStyle>;
   suffix?: React.ReactNode;
-  variant?: 'filled' | 'borderless' | 'outlined';
+  variant?: InputVariant;
 }
 
 const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
   const {
     style,
-    contentStyle,
     placeholderTextColor,
     underlineColorAndroid,
     prefix,
@@ -35,8 +36,7 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
     size = 'middle',
     ...rest
   } = props;
-  const multiline = false;
-  const { styles, token } = useStyles({ multiline, size, variant });
+  const { styles, token } = useStyles({ size, variant });
 
   return (
     <View style={[styles.container, style]}>
@@ -45,54 +45,10 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="default"
-        multiline={multiline}
         ref={ref}
         {...rest}
         placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
-        style={[styles.input, contentStyle]}
-        underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
-      />
-      {suffix && <View style={styles.suffixContainer}>{suffix}</View>}
-    </View>
-  );
-});
-
-export interface TextAreaProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
-  contentStyle?: StyleProp<TextStyle>;
-  prefix?: React.ReactNode;
-  size?: 'large' | 'middle' | 'small';
-  style?: StyleProp<ViewStyle>;
-  suffix?: React.ReactNode;
-  variant?: 'filled' | 'borderless' | 'outlined';
-}
-
-const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
-  const {
-    style,
-    contentStyle,
-    placeholderTextColor,
-    underlineColorAndroid,
-    prefix,
-    suffix,
-    variant = 'filled',
-    size = 'middle',
-    ...rest
-  } = props;
-  const multiline = true;
-  const { styles, token } = useStyles({ multiline, size, variant });
-
-  return (
-    <View style={[styles.container, style]}>
-      {prefix && <View style={styles.prefixContainer}>{prefix}</View>}
-      <RNTextInput
-        autoCapitalize="none"
-        autoCorrect={false}
-        keyboardType="default"
-        multiline={multiline}
-        ref={ref}
-        {...rest}
-        placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
-        style={[styles.input, contentStyle]}
+        style={[styles.input]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
       />
       {suffix && <View style={styles.suffixContainer}>{suffix}</View>}

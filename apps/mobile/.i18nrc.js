@@ -25,6 +25,7 @@ module.exports = defineConfig({
   ],
   temperature: 0,
   saveImmediately: true,
+  // chatgpt-4o-latest 和 gpt-chat 翻译效果更好
   modelName: 'gpt-4.1-mini',
   experimental: {
     jsonMode: true,
