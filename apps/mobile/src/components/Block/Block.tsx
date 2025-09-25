@@ -1,23 +1,14 @@
 import React, { memo, useMemo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { cva } from '@/theme';
 
-import FlexBox from '../FlexBox';
+import Flexbox from '../Flexbox';
 import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
-  ({
-    variant = 'filled',
-    shadow = false,
-    glass = false,
-    clickable = false,
-    children,
-    style,
-    onPress,
-    ...rest
-  }) => {
+  ({ variant = 'filled', shadow, glass, clickable, children, style, onPress, ...rest }) => {
     const { cx, styles } = useStyles();
 
     const variants = useMemo(
@@ -41,9 +32,6 @@ const Block = memo<BlockProps>(
             },
           ],
           defaultVariants: {
-            clickable: false,
-            glass: false,
-            shadow: false,
             variant: 'filled',
           },
           variants: {
@@ -69,7 +57,6 @@ const Block = memo<BlockProps>(
       [styles],
     );
 
-    // 如果是可点击的，使用 TouchableOpacity
     if (clickable && onPress) {
       return (
         <TouchableOpacity
@@ -77,16 +64,16 @@ const Block = memo<BlockProps>(
           onPress={onPress}
           style={cx(variants({ clickable, glass, shadow, variant }), style)}
         >
-          <FlexBox {...rest}>{children}</FlexBox>
+          <Flexbox {...rest}>{children}</Flexbox>
         </TouchableOpacity>
       );
     }
 
     // 否则使用普通的 View
     return (
-      <View style={cx(variants({ clickable, glass, shadow, variant }), style)}>
-        <FlexBox {...rest}>{children}</FlexBox>
-      </View>
+      <Flexbox style={cx(variants({ clickable, glass, shadow, variant }), style)} {...rest}>
+        {children}
+      </Flexbox>
     );
   },
 );
