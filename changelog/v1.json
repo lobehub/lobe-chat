@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-25",
+    "version": "1.132.13"
+  },
+  {
     "children": {
       "fixes": ["Slove setting proxy page with style error."]
     },
