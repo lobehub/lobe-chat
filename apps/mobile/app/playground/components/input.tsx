@@ -25,7 +25,7 @@ const demos: DemoItem[] = [
   { component: <PasswordDemo />, key: 'password', title: '密码输入框' },
   { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
   { component: <VariantDemo />, key: 'variant', title: '外观变体' },
-  { component: <TextAreaDemo />, key: 'textarea', title: '多行文本' },
+  { component: <TextAreaDemo />, key: 'textarea', title: '多行文本（autoSize）' },
   { component: <SizesDemo />, key: 'sizes', title: '尺寸大小' },
 ];
 

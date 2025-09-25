@@ -5,8 +5,6 @@ import { BasicDemo, ClickableDemo, LayoutDemo } from '@/components/Block/demos';
 import README from '@/components/Block/readme';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <ClickableDemo />, key: 'clickable', title: '可点击状态' },
@@ -14,9 +12,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function BlockPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Block 组件">
+    <PageContainer showBack title="Block 块容器">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );
