@@ -43,8 +43,8 @@ export const SearchBarSkeleton = () => {
         backgroundColor: token.colorFillTertiary,
         borderRadius: token.borderRadiusLG,
         height: 40,
-        marginBottom: token.margin,
-        marginHorizontal: token.margin,
+        marginHorizontal: token.marginXS,
+        marginVertical: token.marginXS,
       }}
     />
   );
