@@ -9,7 +9,7 @@ import { configService } from '@/services/config';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
-import SubmitAgentButton from './SubmitAgentButton';
+import SmartAgentActionButton from './SmartAgentActionButton';
 
 export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ modal }) => {
   const { t } = useTranslation('setting');
@@ -46,7 +46,7 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
 
   return (
     <>
-      <SubmitAgentButton modal={modal} />
+      <SmartAgentActionButton modal={modal} />
       {!isServerMode && (
         <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
           {modal ? (

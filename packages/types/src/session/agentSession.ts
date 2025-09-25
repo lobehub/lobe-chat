@@ -16,6 +16,8 @@ export interface LobeAgentSession {
   createdAt: Date;
   group?: SessionGroupId;
   id: string;
+  /** Market agent identifier for published agents */
+  marketIdentifier?: string;
   meta: MetaData;
   model: string;
   pinned?: boolean;

@@ -72,7 +72,7 @@ The project follows a well-organized monorepo structure:
 **Important Notes**:
 
 - Wrap file paths in single quotes to avoid shell expansion
-- Never run `bun run test` - this runs all tests and takes ~10 minutes
+- Never run `bun run test` - this runs all tests and takes \~10 minutes
 - If a test fails twice, stop and ask for help
 - Always add tests for new code
 

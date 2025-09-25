@@ -11,6 +11,7 @@ import { TocProvider } from '../../features/Toc/useToc';
 import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
 import Header from './features/Header';
+import StatusPage from './features/StatusPage';
 import Loading from './loading';
 
 interface ClientProps {
@@ -24,6 +25,12 @@ const Client = memo<ClientProps>(({ identifier, mobile }) => {
 
   if (isLoading) return <Loading />;
   if (!data) return notFound();
+
+  // 检查助手状态
+  const status = (data as any)?.status;
+  if (status === 'unpublished' || status === 'archived' || status === 'deprecated') {
+    return <StatusPage status={status} />;
+  }
 
   return (
     <TocProvider>

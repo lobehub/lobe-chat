@@ -25,7 +25,6 @@ import { genToolCallingName } from '@/utils/toolCall';
 
 import { isCanUseFC, isCanUseVideo, isCanUseVision } from './helper';
 
-
 interface ContextEngineeringContext {
   enableHistoryCount?: boolean;
   historyCount?: number;
