@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://learn.microsoft.com/azure/ai-services/openai/concepts/models
 const Azure: ModelProviderCard = {

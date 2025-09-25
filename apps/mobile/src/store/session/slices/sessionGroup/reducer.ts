@@ -1,4 +1,4 @@
-import { SessionGroupItem } from '@/types/session';
+import { SessionGroupItem } from '@lobechat/types';
 
 export type AddSessionGroupAction = { item: SessionGroupItem; type: 'addSessionGroupItem' };
 export type DeleteSessionGroupAction = { id: string; type: 'deleteSessionGroupItem' };

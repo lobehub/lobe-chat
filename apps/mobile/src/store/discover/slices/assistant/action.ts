@@ -1,3 +1,9 @@
+import {
+  AssistantListResponse,
+  AssistantQueryParams,
+  DiscoverAssistantDetail,
+  IdentifiersResponse,
+} from '@lobechat/types';
 import type { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
 import i18n from 'i18next';
 import useSWR, { type SWRResponse } from 'swr';
@@ -5,12 +11,6 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
-import {
-  AssistantListResponse,
-  AssistantQueryParams,
-  DiscoverAssistantDetail,
-  IdentifiersResponse,
-} from '@/types/discover';
 
 export interface AssistantAction {
   useAssistantCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;

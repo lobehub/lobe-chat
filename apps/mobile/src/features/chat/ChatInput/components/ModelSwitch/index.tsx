@@ -2,7 +2,7 @@ import { ModelIcon } from '@lobehub/icons-rn';
 import React, { memo, useCallback, useState } from 'react';
 import { TouchableOpacity, ViewStyle } from 'react-native';
 
-import { ICON_SIZE_LARGE } from '@/const/common';
+import { ICON_SIZE_LARGE } from '@/_const/common';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 
 import ModelSelectModal from './ModelSelectModal';

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref :https://developers.upstage.ai/docs/getting-started/models
 const Upstage: ModelProviderCard = {

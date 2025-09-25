@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://novita.ai/model-api/product/llm-api
 const Novita: ModelProviderCard = {

@@ -1,4 +1,4 @@
-import { ICON_SIZE_SMALL } from '@/const/common';
+import { ICON_SIZE_SMALL } from '@/_const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({

@@ -1,10 +1,3 @@
-import { uniqBy } from 'lodash-es';
-import useSWR, { SWRResponse, mutate } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
-
-import { aiProviderService } from '@/services/aiProvider';
-import { AiInfraStore } from '@/store/aiInfra/store';
-import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -15,7 +8,14 @@ import {
   EnabledProvider,
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
-} from '@/types/aiProvider';
+} from '@lobechat/types';
+import { uniqBy } from 'lodash-es';
+import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from 'model-bank';
+import useSWR, { SWRResponse, mutate } from 'swr';
+import { StateCreator } from 'zustand/vanilla';
+
+import { aiProviderService } from '@/services/aiProvider';
+import { AiInfraStore } from '@/store/aiInfra/store';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 /**

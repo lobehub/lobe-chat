@@ -1,7 +1,7 @@
 import { ReactNode, isValidElement, memo, useState } from 'react';
 import { Image, StyleProp, Text, View, ViewStyle } from 'react-native';
 
-import { DEFAULT_AVATAR } from '@/const/meta';
+import { DEFAULT_AVATAR } from '@/_const/meta';
 import { isEmoji } from '@/utils/common';
 
 import FluentEmoji from '../FluentEmoji';

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 const TencentCloud: ModelProviderCard = {
   chatModels: [],

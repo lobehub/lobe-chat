@@ -1,4 +1,4 @@
-import { INBOX_SESSION_ID } from '@/const/session';
+import { INBOX_SESSION_ID } from '@/_const/session';
 import { trpcClient } from '@/services/_auth/trpc';
 import { ITopicService } from '@/services/topic/type';
 

@@ -1,5 +1,6 @@
+import { ChatStreamPayload } from '@lobechat/types';
+
 import i18n from '@/i18n';
-import { ChatStreamPayload } from '@/types/openai/chat';
 
 export const chainSummaryGenerationTitle = (
   prompts: string[],
