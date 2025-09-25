@@ -32,7 +32,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
         onSubmitEditing={handleSubmit}
         placeholder={t('placeholder', { ns: 'chat' })}
         scrollEnabled={true}
-        size="large"
         spellCheck={false}
         style={styles.input}
         textBreakStrategy="highQuality"

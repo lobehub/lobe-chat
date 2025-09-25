@@ -1,8 +1,8 @@
 import { CheckCircle, XCircle } from 'lucide-react-native';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Input } from '@/components';
+import { Button, Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({
@@ -14,19 +14,6 @@ const useStyles = createStyles(({ token }) => ({
     color: token.colorTextSecondary,
     fontSize: token.fontSizeSM,
     marginBottom: token.marginSM,
-  },
-  loginButton: {
-    alignItems: 'center',
-    backgroundColor: token.colorPrimary,
-    borderRadius: token.borderRadius,
-    justifyContent: 'center',
-    marginTop: token.marginSM,
-    paddingVertical: token.paddingMD,
-  },
-  loginButtonText: {
-    color: token.colorBgContainer,
-    fontSize: token.fontSize,
-    fontWeight: '600',
   },
   loginForm: {
     backgroundColor: token.colorFillTertiary,
@@ -136,9 +123,9 @@ const PasswordDemo = () => {
         <Input onChangeText={setUsername} placeholder="用户名或邮箱" value={username} />
         <Input.Password onChangeText={setPassword} placeholder="密码" value={password} />
 
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>登录</Text>
-        </TouchableOpacity>
+        <Button block type="primary">
+          登录
+        </Button>
       </View>
 
       <Text style={styles.sectionTitle}>密码强度检测</Text>
