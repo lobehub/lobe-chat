@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.132.13](https://github.com/lobehub/lobe-chat/compare/v1.132.12...v1.132.13)
+
+<sup>Released on **2025-09-25**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.132.12](https://github.com/lobehub/lobe-chat/compare/v1.132.11...v1.132.12)
+
+<sup>Released on **2025-09-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Slove setting proxy page with style error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Slove setting proxy page with style error, closes [#9417](https://github.com/lobehub/lobe-chat/issues/9417) ([6d3e5d1](https://github.com/lobehub/lobe-chat/commit/6d3e5d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.132.11](https://github.com/lobehub/lobe-chat/compare/v1.132.10...v1.132.11)
 
 <sup>Released on **2025-09-24**</sup>
