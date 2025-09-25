@@ -14,10 +14,10 @@ export const useModelListVirtualConfig = (
 ) => {
   const isMobile = useIsMobile();
   const itemGap = customItemGap ?? 0;
-  const itemHeight = isMobile ? 92 : 66;
+  const itemHeight = isMobile ? 92 : 68;
   const maxVisibleCount = isMobile ? 8 : 12;
   const visibleCount = Math.min(length || 1, maxVisibleCount);
-  const maxHeight = isMobile ? 480 : 560;
+  const maxHeight = isMobile ? 480 : 650;
   const listHeight = visibleCount * (itemHeight + itemGap) - itemGap;
   const virtualListHeight = Math.min(listHeight, maxHeight);
 
@@ -25,7 +25,7 @@ export const useModelListVirtualConfig = (
     () => ({ bottom: itemHeight * 6, top: itemHeight * 6 }),
     [itemHeight],
   );
-  const overscan = useMemo(() => itemHeight * 6, [itemHeight]);
+  //   const overscan = useMemo(() => itemHeight * 6, [itemHeight]);
   const itemSize = itemHeight + itemGap;
 
   return {
@@ -33,7 +33,7 @@ export const useModelListVirtualConfig = (
     itemGap,
     itemHeight,
     itemSize,
-    overscan,
+    overscan: 0,
     virtualListHeight,
   };
 };
