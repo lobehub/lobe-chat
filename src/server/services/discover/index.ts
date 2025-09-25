@@ -275,6 +275,7 @@ export class DiscoverService {
       }
 
       const data = await response.json();
+      console.log('data', data);
 
       // Transform database format to DiscoverAssistantDetail format
       const assistant = {
@@ -284,22 +285,23 @@ export class DiscoverService {
 
         // Add detail-specific fields
         config: data.config || {},
-
         createdAt: data.createdAt,
-
         description: data.description,
+        examples: data.examples || [],
         homepage: data.homepage || `https://lobehub.com/discover/assistant/${data.identifier}`,
         identifier: data.identifier,
-
         knowledgeCount: data.config?.knowledgeBases?.lenght,
 
         // This might need to be added to the API
-        pluginCount: data.config?.plugins?.length,
+pluginCount: data.config?.plugins?.length,
 
+        
         readme: data.documentationUrl || '',
 
         schemaVersion: 1,
+
         status: data?.status,
+        summary: data.summary || '',
         systemRole: data.config?.systemRole || '',
         // Use author from API or fallback
         tags: data.config?.tags || [],

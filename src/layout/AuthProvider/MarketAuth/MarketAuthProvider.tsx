@@ -135,6 +135,13 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
           if (parsedSession.expiresAt > Date.now()) {
             console.log('[MarketAuth] Session restored from storage');
 
+            console.log('parsedSession', parsedSession);
+            console.log('parsedSession.userInfo', parsedSession.userInfo);
+            console.log(
+              "sessionStorage.getItem('market_user_info')",
+              sessionStorage.getItem('market_user_info'),
+            );
+
             // 如果 session 中没有 userInfo，尝试从单独的存储中获取
             if (!parsedSession.userInfo) {
               const userInfoData = sessionStorage.getItem('market_user_info');
@@ -144,6 +151,8 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
                 } catch (error) {
                   console.error('[MarketAuth] Failed to parse stored user info:', error);
                 }
+              } else {
+                setShouldReauthorize(true);
               }
             }
 
@@ -243,6 +252,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 获取当前用户信息
    */
   const getCurrentUserInfo = (): MarketUserInfo | null => {
+    console.log('getCurrentUserInfo-session', session, session?.userInfo);
     if (session?.userInfo) {
       return session.userInfo;
     }
@@ -291,6 +301,8 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
           // 获取用户信息
           const userInfo = await fetchUserInfo(tokenResponse.access_token);
+
+          console.log('userInfo', userInfo);
 
           // 创建会话对象
           const newSession: MarketAuthSession = {
