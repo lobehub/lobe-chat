@@ -2,7 +2,7 @@ import type { TextStyle, ViewStyle } from 'react-native';
 
 import type { AliasToken } from '../interface';
 
-interface LobeStylish {
+export interface LobeStylish {
   // 激活状态
   active: ViewStyle;
   // 玻璃效果（半透明背景）
@@ -35,7 +35,7 @@ interface LobeStylish {
   variantOutlinedWithoutHover: ViewStyle;
 }
 
-export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeStylish => {
+export const generateStylish = (token: AliasToken): LobeStylish => {
   return {
     active: {
       backgroundColor: token.colorFillSecondary,
@@ -62,11 +62,7 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
     },
 
     shadow: {
-      elevation: 3,
-      shadowColor: isDarkMode ? token.colorBgLayout : token.colorBorderSecondary,
-      shadowOffset: { height: 2, width: 0 },
-      shadowOpacity: isDarkMode ? 0.3 : 0.1,
-      shadowRadius: 4, // Android 阴影
+      elevation: 2,
     },
 
     variantBorderless: {
@@ -120,7 +116,3 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
     },
   };
 };
-
-// 导出类型和函数
-export type { LobeStylish };
-export { generateStylish };
