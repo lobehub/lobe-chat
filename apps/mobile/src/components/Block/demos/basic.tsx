@@ -24,7 +24,7 @@ const BasicDemo = () => {
       </Block>
 
       <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>带阴影的 Block</Text>
-      <Block shadow style={{ marginBottom: 16, padding: 16 }}>
+      <Block shadow style={{ marginBottom: 16, padding: 16 }} variant="outlined">
         <Text>这是一个带阴影的 Block</Text>
       </Block>
 
