@@ -1,4 +1,4 @@
-const FLEXBOX_README = `# FlexBox 弹性布局组件
+const FLEXBOX_README = `# Flexbox 弹性布局组件
 
 基于 React Native Flexbox 布局的容器组件，提供了简洁的 API 来控制子元素的排列和对齐方式。
 
@@ -15,40 +15,40 @@ const FLEXBOX_README = `# FlexBox 弹性布局组件
 ## 基础使用
 
 \`\`\`tsx
-import FlexBox from '@/components/FlexBox';
+import Flexbox from '@/components/Flexbox';
 
 // 水平排列
-<FlexBox direction="row" justify="center" align="center">
+<Flexbox direction="row" justify="center" align="center">
   <Component1 />
   <Component2 />
   <Component3 />
-</FlexBox>
+</Flexbox>
 
 // 垂直排列
-<FlexBox direction="column" justify="space-between">
+<Flexbox direction="column" justify="space-between">
   <Component1 />
   <Component2 />
   <Component3 />
-</FlexBox>
+</Flexbox>
 
 // 自动换行
-<FlexBox direction="row" wrap="wrap" justify="space-around">
+<Flexbox direction="row" wrap="wrap" justify="space-around">
   <Component1 />
   <Component2 />
   <Component3 />
   <Component4 />
-</FlexBox>
+</Flexbox>
 
 // 填充模式
-<FlexBox block direction="row" justify="center">
+<Flexbox block direction="row" justify="center">
   <Component1 />
   <Component2 />
-</FlexBox>
+</Flexbox>
 \`\`\`
 
 ## API
 
-### FlexBoxProps
+### FlexboxProps
 
 | 属性      | 类型                   | 默认值         | 说明               |
 | --------- | ---------------------- | -------------- | ------------------ |
@@ -66,12 +66,12 @@ import FlexBox from '@/components/FlexBox';
 
 \`\`\`tsx
 type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse';
-type JustifyContent = 
-  | 'flex-start' 
-  | 'flex-end' 
-  | 'center' 
-  | 'space-between' 
-  | 'space-around' 
+type JustifyContent =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
   | 'space-evenly';
 type AlignItems = 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
 type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
