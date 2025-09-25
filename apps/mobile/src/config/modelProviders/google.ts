@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref: https://ai.google.dev/gemini-api/docs/models/gemini
 const Google: ModelProviderCard = {

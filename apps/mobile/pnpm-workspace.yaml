@@ -1,2 +1,7 @@
 packages:
   - '.'
+  - '../../packages/const'
+  - '../../packages/types'
+  - '../../packages/utils'
+  - '../../packages/model-bank'
+  - '../../packages/web-crawler'

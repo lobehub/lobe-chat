@@ -1,6 +1,5 @@
+import { MessageToolCall, MessageToolCallChunk, MessageToolCallSchema } from '@lobechat/types';
 import { produce } from 'immer';
-
-import { MessageToolCall, MessageToolCallChunk, MessageToolCallSchema } from '@/types/message';
 
 export const parseToolCalls = (origin: MessageToolCall[], value: MessageToolCallChunk[]) =>
   produce(origin, (draft) => {

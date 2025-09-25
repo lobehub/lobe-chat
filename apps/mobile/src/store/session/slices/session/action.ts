@@ -1,24 +1,22 @@
-import isEqual from 'fast-deep-equal';
-import { t } from 'i18next';
-import useSWR, { SWRResponse, mutate } from 'swr';
-import type { PartialDeep } from 'type-fest';
-import { StateCreator } from 'zustand/vanilla';
-
-// import { message } from '@/components/AntdStaticMethods'; // TODO: RN端暂未实现此功能 - Toast消息组件
-import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
-import { sessionService } from '@/services/session';
-import { SessionStore } from '@/store/session';
-// import { settingsSelectors } from '@/store/user/selectors';
-import { MetaData } from '@/types/meta';
 import {
   ChatSessionList,
   LobeAgentSession,
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
+  MetaData,
   UpdateSessionParams,
-} from '@/types/session';
+} from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
+import { t } from 'i18next';
+import useSWR, { SWRResponse, mutate } from 'swr';
+import type { PartialDeep } from 'type-fest';
+import { StateCreator } from 'zustand/vanilla';
+
+import { MESSAGE_CANCEL_FLAT } from '@/_const/message';
+import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/_const/session';
+import { sessionService } from '@/services/session';
+import { SessionStore } from '@/store/session';
 import { merge } from '@/utils/merge';
 
 import { SessionDispatch, sessionsReducer } from './reducers';

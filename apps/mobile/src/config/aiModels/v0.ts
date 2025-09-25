@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from 'model-bank';
 
 const v0ChatModels: AIChatModelCard[] = [
   {

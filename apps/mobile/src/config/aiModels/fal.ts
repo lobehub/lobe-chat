@@ -1,5 +1,6 @@
+import { AIImageModelCard } from 'model-bank';
+
 import { ModelParamsSchema } from '@/libs/standard-parameters';
-import { AIImageModelCard } from '@/types/aiModel';
 
 export const fluxSchnellParamsSchema: ModelParamsSchema = {
   height: { default: 1024, max: 1536, min: 512, step: 1 },

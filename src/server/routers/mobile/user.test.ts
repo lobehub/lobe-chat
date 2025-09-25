@@ -6,8 +6,8 @@ import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { serverDB } from '@/database/server';
-import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
 
 import { userRouter } from './user';
@@ -24,10 +24,10 @@ vi.mock('@/database/server', () => ({
 vi.mock('@/database/models/message');
 vi.mock('@/database/models/session');
 vi.mock('@/database/models/user');
-vi.mock('@/libs/next-auth/adapter');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
 vi.mock('@/server/modules/S3');
 vi.mock('@/server/services/user');
+vi.mock('@/server/services/nextAuthUser');
 vi.mock('@/const/auth', () => ({
   enableClerk: true,
 }));
@@ -221,7 +221,7 @@ describe('userRouter', () => {
         type: 'oauth',
       };
 
-      vi.mocked(LobeNextAuthDbAdapter).mockReturnValue({
+      vi.mocked(NextAuthUserService).mockReturnValue({
         getAccount: vi.fn().mockResolvedValue(mockAccount),
         unlinkAccount: vi.fn().mockResolvedValue(undefined),
       } as any);
@@ -237,7 +237,7 @@ describe('userRouter', () => {
         providerAccountId: '123',
       };
 
-      vi.mocked(LobeNextAuthDbAdapter).mockReturnValue({
+      vi.mocked(NextAuthUserService).mockReturnValue({
         getAccount: vi.fn().mockResolvedValue(null),
         unlinkAccount: vi.fn(),
       } as any);
@@ -245,19 +245,6 @@ describe('userRouter', () => {
       await expect(
         userRouter.createCaller({ ...mockCtx }).unlinkSSOProvider(mockInput),
       ).rejects.toThrow('The account does not exist');
-    });
-
-    it('should throw error if adapter methods are not implemented', async () => {
-      const mockInput = {
-        provider: 'google',
-        providerAccountId: '123',
-      };
-
-      vi.mocked(LobeNextAuthDbAdapter).mockReturnValue({} as any);
-
-      await expect(
-        userRouter.createCaller({ ...mockCtx }).unlinkSSOProvider(mockInput),
-      ).rejects.toThrow('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented');
     });
   });
 

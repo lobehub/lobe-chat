@@ -6,14 +6,14 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStoreState, initialState } from './initialState';
 import { ChatMessageAction, chatMessage } from './slices/message/action';
-import { AIGenerateAction, generateAIChat } from './slices/aiChat/actions';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 import { devtools } from '@csark0812/zustand-expo-devtools';
 import { ChatThreadAction, chatThreadMessage } from './slices/thread/action';
+import { chatAiChat, ChatAIChatAction } from '@/store/chat/slices/aiChat/actions';
 
 export interface ChatStoreAction
   extends ChatMessageAction,
-    AIGenerateAction,
+    ChatAIChatAction,
     ChatTopicAction,
     ChatThreadAction {}
 
@@ -24,8 +24,8 @@ export type ChatStore = ChatStoreAction & ChatStoreState;
 const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...params) => ({
   ...initialState,
   ...chatMessage(...params),
+  ...chatAiChat(...params),
   ...chatThreadMessage(...params),
-  ...generateAIChat(...params),
   ...chatTopic(...params),
 
   // cloud

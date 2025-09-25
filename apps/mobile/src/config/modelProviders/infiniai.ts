@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // https://cloud.infini-ai.com/genstudio/model
 // All models are currently free

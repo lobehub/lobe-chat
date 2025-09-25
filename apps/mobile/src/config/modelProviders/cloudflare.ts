@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref https://developers.cloudflare.com/workers-ai/models/#text-generation
 // api https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility

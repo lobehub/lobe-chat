@@ -17,8 +17,6 @@
     "baseUrl": ".",
     "types": ["vitest/globals", "node"],
     "paths": {
-      "@/types/*": ["../../packages/types/src/*"],
-      "@/const/*": ["./src/const/*", "../../packages/const/src/*"],
       "@/test/*": ["./test/*"],
       "@/*": ["./src/*"]
     }

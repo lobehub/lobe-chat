@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu
 const BaiduWenxin: ModelProviderCard = {
