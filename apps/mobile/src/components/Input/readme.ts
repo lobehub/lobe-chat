@@ -12,7 +12,7 @@ const INPUT_README = `# Input组件
 - ✅ **TypeScript** - 完整的TypeScript类型支持
 - ✅ **主题适配** - 自动适配明暗主题
 - ✅ **平台优化** - 针对Android和iOS的样式优化
-- ✅ **文本域支持** - 提供 TextArea 专用多行输入
+- ✅ **文本域支持** - 提供支持 autoSize 的 TextArea 多行输入
 
 ## 基本用法
 
@@ -104,19 +104,25 @@ import { TouchableOpacity } from 'react-native';
 <Input
   placeholder="自定义样式"
   style={{ backgroundColor: 'red' }}
-  contentStyle={{ fontSize: 18 }}
 />
 \`\`\`
 
 ### 8. 多行文本输入
 
 \`\`\`jsx
-<Input.TextArea placeholder="请输入详细描述" numberOfLines={4} />
+<Input.TextArea autoSize placeholder="请输入详细描述" />
 
 <Input.TextArea
-  placeholder="支持自定义高度"
-  style={{ minHeight: 160 }}
+  autoSize={{ minRows: 2, maxRows: 6 }}
+  placeholder="支持 autoSize 范围配置"
   variant="outlined"
+/>
+
+<Input.TextArea
+  autoSize
+  contentStyle={{ fontFamily: 'Menlo' }}
+  placeholder="支持内容样式定制"
+  style={{ backgroundColor: '#F7F8FA' }}
 />
 \`\`\`
 
@@ -127,23 +133,21 @@ import { TouchableOpacity } from 'react-native';
 | 属性 | 类型 | 描述 |
 |------|------|------|
 | \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
+| \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
 | \`size\` | \`'large' | 'middle' | 'small'\` | 尺寸大小（默认 middle） |
 | \`prefix\` | \`React.ReactNode\` | 前缀内容 |
 | \`suffix\` | \`React.ReactNode\` | 后缀内容 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
-| \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
 | ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性（不包含 multiline） |
 
 ### TextAreaProps
 
 | 属性 | 类型 | 描述 |
 |------|------|------|
-| \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
-| \`size\` | \`'large' | 'middle' | 'small'\` | 尺寸大小（默认 middle） |
-| \`prefix\` | \`React.ReactNode\` | 前缀内容 |
-| \`suffix\` | \`React.ReactNode\` | 后缀内容 |
+| \`autoSize\` | \`boolean | { minRows?: number; maxRows?: number }\` | 控制高度自适应行为 |
+| \`contentStyle\` | \`StyleProp<TextStyle>\` | 文本样式 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
-| \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
+| \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
 | ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性（默认启用 multiline） |
 
 ### 复合组件
