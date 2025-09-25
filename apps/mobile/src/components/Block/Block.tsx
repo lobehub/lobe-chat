@@ -1,8 +1,10 @@
 import React, { memo, useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
+import { cva } from '@/theme';
+
 import FlexBox from '../FlexBox';
-import { useBlockVariants, useStyles } from './style';
+import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
@@ -16,21 +18,65 @@ const Block = memo<BlockProps>(
     onPress,
     ...rest
   }) => {
-    const { styles } = useStyles();
-    const blockVariants = useBlockVariants(styles);
+    const { cx, styles } = useStyles();
 
-    // 生成样式数组
-    const variantStyles = blockVariants({ clickable, glass, shadow, variant });
-
-    // 合并自定义样式
-    const combinedStyles = useMemo(() => {
-      return style ? [...variantStyles, style] : variantStyles;
-    }, [variantStyles, style]);
+    const variants = useMemo(
+      () =>
+        cva(styles.root, {
+          compoundVariants: [
+            {
+              clickable: true,
+              style: styles.clickableBorderless,
+              variant: 'borderless',
+            },
+            {
+              clickable: true,
+              style: styles.clickableFilled,
+              variant: 'filled',
+            },
+            {
+              clickable: true,
+              style: styles.clickableOutlined,
+              variant: 'outlined',
+            },
+          ],
+          defaultVariants: {
+            clickable: false,
+            glass: false,
+            shadow: false,
+            variant: 'filled',
+          },
+          variants: {
+            clickable: {
+              false: null,
+              true: styles.clickableRoot,
+            },
+            glass: {
+              false: null,
+              true: styles.glass,
+            },
+            shadow: {
+              false: null,
+              true: styles.shadow,
+            },
+            variant: {
+              borderless: styles.borderless,
+              filled: styles.filled,
+              outlined: styles.outlined,
+            },
+          },
+        }),
+      [styles],
+    );
 
     // 如果是可点击的，使用 TouchableOpacity
     if (clickable && onPress) {
       return (
-        <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={combinedStyles as any}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={onPress}
+          style={cx(variants({ clickable, glass, shadow, variant }), style)}
+        >
           <FlexBox {...rest}>{children}</FlexBox>
         </TouchableOpacity>
       );
@@ -38,7 +84,7 @@ const Block = memo<BlockProps>(
 
     // 否则使用普通的 View
     return (
-      <View style={combinedStyles as any}>
+      <View style={cx(variants({ clickable, glass, shadow, variant }), style)}>
         <FlexBox {...rest}>{children}</FlexBox>
       </View>
     );
