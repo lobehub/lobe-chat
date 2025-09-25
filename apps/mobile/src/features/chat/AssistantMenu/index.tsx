@@ -100,9 +100,7 @@ const AssistantMenu: React.FC<AssistantMenuProps> = ({ message, children }) => {
       trigger="longPress"
       visible={tooltipVisible}
     >
-      <TouchableOpacity activeOpacity={1} style={styles.touchableWrapper}>
-        {children}
-      </TouchableOpacity>
+      <View style={styles.touchableWrapper}>{children}</View>
     </Tooltip>
   );
 };
