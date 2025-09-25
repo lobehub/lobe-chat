@@ -1,14 +1,15 @@
-import { Button, Text } from '@lobehub/ui';
+import { Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { ChevronDown } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Virtuoso } from 'react-virtuoso';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 
 import ModelItem from './ModelItem';
+import { useModelListVirtualConfig } from './useModelListVirtualConfig';
 
 interface DisabledModelsProps {
   activeTab: string;
@@ -17,7 +18,6 @@ interface DisabledModelsProps {
 const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
   const { t } = useTranslation('modelProvider');
 
-  const [showMore, setShowMore] = useState(false);
   const disabledModels = useAiInfraStore(aiModelSelectors.disabledAiProviderModelList, isEqual);
 
   // Filter models based on active tab
@@ -26,7 +26,18 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
     return disabledModels.filter((model) => model.type === activeTab);
   }, [disabledModels, activeTab]);
 
-  const displayModels = showMore ? filteredDisabledModels : filteredDisabledModels.slice(0, 10);
+  const filteredLength = filteredDisabledModels.length;
+  const { increaseViewportBy, itemGap, itemSize, overscan, virtualListHeight } =
+    useModelListVirtualConfig(filteredLength);
+
+  const renderVirtualItem = useCallback(
+    (_index: number, item: (typeof filteredDisabledModels)[number]) => (
+      <div style={{ paddingBottom: itemGap }}>
+        <ModelItem {...item} />
+      </div>
+    ),
+    [itemGap],
+  );
 
   return (
     filteredDisabledModels.length > 0 && (
@@ -34,21 +45,17 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
         <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
           {t('providerModels.list.disabled')}
         </Text>
-        {displayModels.map((item) => (
-          <ModelItem {...item} key={item.id} />
-        ))}
-        {!showMore && filteredDisabledModels.length > 10 && (
-          <Button
-            block
-            icon={ChevronDown}
-            onClick={() => {
-              setShowMore(true);
-            }}
-            size={'small'}
-          >
-            {t('providerModels.list.disabledActions.showMore')}
-          </Button>
-        )}
+        <div style={{ height: virtualListHeight }}>
+          <Virtuoso
+            computeItemKey={(_, item) => item.id}
+            data={filteredDisabledModels}
+            defaultItemHeight={itemSize}
+            fixedItemHeight={itemSize}
+            increaseViewportBy={increaseViewportBy}
+            itemContent={renderVirtualItem}
+            overscan={overscan}
+          />
+        </div>
       </Flexbox>
     )
   );

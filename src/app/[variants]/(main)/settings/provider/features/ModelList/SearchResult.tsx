@@ -8,10 +8,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 import { useShallow } from 'zustand/react/shallow';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAiInfraStore } from '@/store/aiInfra';
 
 import ModelItem from './ModelItem';
+import { useModelListVirtualConfig } from './useModelListVirtualConfig';
 
 const SearchResult = memo(() => {
   const { t } = useTranslation('modelProvider');
@@ -22,7 +22,6 @@ const SearchResult = memo(() => {
     })),
   );
   const batchToggleAiModels = useAiInfraStore((s) => s.batchToggleAiModels);
-  const isMobile = useIsMobile();
 
   const normalizedKeyword = useMemo(
     () => (searchKeyword ? searchKeyword.trim().toLowerCase() : ''),
@@ -42,12 +41,10 @@ const SearchResult = memo(() => {
 
   const [batchLoading, setBatchLoading] = useState(false);
 
-  const itemHeight = isMobile ? 92 : 72;
-  const itemGap = 1;
-  const maxVisibleCount = isMobile ? 8 : 12;
   const filteredLength = filteredModels.length;
-  const visibleCount = Math.min(filteredLength || 1, maxVisibleCount);
-  const virtualListHeight = visibleCount * (itemHeight + itemGap) - itemGap;
+
+  const { increaseViewportBy, itemGap, itemSize, overscan, virtualListHeight } =
+    useModelListVirtualConfig(filteredLength);
 
   const renderVirtualItem = useCallback(
     (index: number, item: (typeof filteredModels)[number]) => (
@@ -91,15 +88,15 @@ const SearchResult = memo(() => {
         </Flexbox>
       ) : (
         <Flexbox gap={4}>
-          <div style={{ height: Math.min(virtualListHeight, isMobile ? 480 : 560) }}>
+          <div style={{ height: virtualListHeight }}>
             <Virtuoso
               computeItemKey={(_, item) => item.id}
               data={filteredModels}
-              defaultItemHeight={itemHeight + itemGap}
-              fixedItemHeight={itemHeight + itemGap}
-              increaseViewportBy={{ bottom: itemHeight * 6, top: itemHeight * 6 }}
+              defaultItemHeight={itemSize}
+              fixedItemHeight={itemSize}
+              increaseViewportBy={increaseViewportBy}
               itemContent={renderVirtualItem}
-              overscan={itemHeight * 8}
+              overscan={overscan}
             />
           </div>
         </Flexbox>
