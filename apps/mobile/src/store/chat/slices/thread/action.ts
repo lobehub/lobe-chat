@@ -1,13 +1,18 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface, @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import {
+  ChatMessage,
+  CreateMessageParams,
+  SendThreadMessageParams,
+  ThreadItem,
+  ThreadType,
+} from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { threadSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
-import { ChatMessage, CreateMessageParams, SendThreadMessageParams } from '@/types/message';
-import { ThreadItem, ThreadType } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ThreadDispatch, threadReducer } from './reducer';

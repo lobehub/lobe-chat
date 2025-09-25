@@ -1,6 +1,6 @@
 import * as Localization from 'expo-localization';
 
-import { DEFAULT_LANG } from '@/const/locale';
+import { DEFAULT_LANG } from '@/_const/locale';
 
 import resources from './default';
 import { getSupportedLocales } from './generatedConfig';

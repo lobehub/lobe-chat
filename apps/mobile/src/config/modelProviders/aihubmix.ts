@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 const AiHubMix: ModelProviderCard = {
   apiKeyUrl: 'https://lobe.li/9mZhb4T',

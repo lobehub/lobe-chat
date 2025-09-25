@@ -1,3 +1,4 @@
+import { AssistantCategory } from '@lobechat/types';
 import { useDebounce } from 'ahooks';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import {
 } from '@/features/discover/assistant/components/SkeletonList';
 import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useDiscoverStore } from '@/store/discover';
-import { AssistantCategory } from '@/types/discover';
 
 import { useStyles } from './styles';
 

@@ -1,19 +1,19 @@
 /* eslint-disable typescript-sort-keys/interface */
-import type { PartialDeep } from 'type-fest';
-
-import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
-import { MetaData } from '@/types/meta';
-import { BatchTaskResult } from '@/types/service';
 import {
   ChatSessionList,
+  LobeAgentChatConfig,
+  LobeAgentConfig,
   LobeAgentSession,
   LobeSessionType,
   LobeSessions,
+  MetaData,
   SessionGroupItem,
   SessionGroups,
   SessionRankItem,
   UpdateSessionParams,
-} from '@/types/session';
+} from '@lobechat/types';
+import { BatchTaskResult } from '@lobechat/types/src/service';
+import type { PartialDeep } from 'type-fest';
 
 export interface ISessionService {
   hasSessions(): Promise<boolean>;

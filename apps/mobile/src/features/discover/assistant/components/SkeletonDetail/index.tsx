@@ -1,8 +1,8 @@
 import React from 'react';
 import { DimensionValue, View } from 'react-native';
 
+import { AVATAR_SIZE_LARGE, ICON_SIZE } from '@/_const/common';
 import { Skeleton } from '@/components';
-import { AVATAR_SIZE_LARGE, ICON_SIZE } from '@/const/common';
 
 import { useStyles } from './styles';
 

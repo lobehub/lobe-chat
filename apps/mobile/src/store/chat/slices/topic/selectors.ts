@@ -1,6 +1,6 @@
+import { ChatTopic, ChatTopicSummary, GroupedTopic } from '@lobechat/types';
 import { t } from 'i18next';
 
-import { ChatTopic, ChatTopicSummary, GroupedTopic } from '@/types/topic';
 import { groupTopicsByTime } from '@/utils/client/topic';
 
 import { ChatStoreState } from '../../initialState';

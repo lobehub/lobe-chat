@@ -1,3 +1,4 @@
+import { AiProviderListItem } from '@lobechat/types';
 import { FlashList } from '@shopify/flash-list';
 import isEqual from 'fast-deep-equal';
 import React, { useCallback, useMemo } from 'react';
@@ -9,7 +10,6 @@ import ProviderCard from '@/features/setting/providers/ProviderCard';
 import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
-import { AiProviderListItem } from '@/types/aiProvider';
 
 import { useStyles } from './styles';
 

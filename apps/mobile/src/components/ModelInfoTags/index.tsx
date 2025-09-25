@@ -1,9 +1,9 @@
 import { Atom, Eye, Globe, Image, Paperclip, ToyBrick } from 'lucide-react-native';
+import { ModelAbilities } from 'model-bank';
 import React, { memo } from 'react';
 import { View } from 'react-native';
 
 import { Tag } from '@/components/Tag';
-import { ModelAbilities } from '@/types/aiModel';
 
 import { useStyles } from './styles';
 

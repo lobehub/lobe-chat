@@ -1,7 +1,7 @@
-import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
+import { CustomSessionGroup, LobeAgentSession, LobeSessions, MetaData } from '@lobechat/types';
+
+import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/_const/session';
 import { sessionHelpers } from '@/store/session/slices/session/helpers';
-import { MetaData } from '@/types/meta';
-import { CustomSessionGroup, LobeAgentSession, LobeSessions } from '@/types/session';
 
 import { SessionStore } from '../../../store';
 

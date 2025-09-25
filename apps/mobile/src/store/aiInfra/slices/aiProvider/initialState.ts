@@ -1,11 +1,11 @@
-import { EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
   AiProviderRuntimeConfig,
   EnabledProvider,
   EnabledProviderWithModels,
-} from '@/types/aiProvider';
+} from '@lobechat/types';
+import { EnabledAiModel } from 'model-bank';
 
 export interface AIProviderState {
   activeAiProvider?: string;

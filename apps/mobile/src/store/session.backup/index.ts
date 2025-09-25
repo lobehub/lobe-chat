@@ -1,10 +1,10 @@
+import { LobeAgentSession } from '@lobechat/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
 import sessionService from '@/services/session';
-import { LobeAgentSession } from '@/types/session';
 
 /**
  * 会话 Store 接口定义

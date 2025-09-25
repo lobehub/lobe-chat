@@ -1,13 +1,21 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { TraceEventType, TraceNameMap } from '@lobechat/types';
+import {
+  ChatImageItem,
+  ChatMessage,
+  CreateMessageParams,
+  MessageSemanticSearchChunk,
+  SendMessageParams,
+  TraceEventType,
+  TraceNameMap,
+} from '@lobechat/types';
 import { produce } from 'immer';
 import Mustache from 'mustache';
 import { StateCreator } from 'zustand/vanilla';
 
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/_const/message';
 import Toast from '@/components/Toast';
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 // import { isDesktop, isServerMode } from '@/const/version';
 // import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
@@ -23,9 +31,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 // import { getFileStoreState } from '@/store/file/store';
 import { useSessionStore } from '@/store/session';
 // import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
-import { ChatImageItem } from '@/types/message/image';
-import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
@@ -33,39 +38,25 @@ import { chatSelectors, topicSelectors } from '../../../selectors';
 const n = setNamespace('ai');
 
 interface ProcessMessageParams {
-  traceId?: string;
-  isWelcomeQuestion?: boolean;
+  inPortalThread?: boolean;
   inSearchWorkflow?: boolean;
+  isWelcomeQuestion?: boolean;
   /**
    * the RAG query content, should be embedding and used in the semantic search
    */
   ragQuery?: string;
   threadId?: string;
-  inPortalThread?: boolean;
+  traceId?: string;
 }
 
 export interface AIGenerateAction {
   /**
-   * Sends a new message to the AI chat system
-   */
-  sendMessage: (params: SendMessageParams) => Promise<void>;
-  /**
-   * Regenerates a specific message in the chat
-   */
-  regenerateMessage: (id: string) => Promise<void>;
-  /**
    * Deletes an existing message and generates a new one in its place
    */
   delAndRegenerateMessage: (id: string) => Promise<void>;
-  /**
-   * Interrupts the ongoing ai message generation process
-   */
-  stopGenerateMessage: () => void;
-
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
-
   /**
    * Executes the core processing logic for AI messages
    * including preprocessing and postprocessing steps
@@ -79,14 +70,14 @@ export interface AIGenerateAction {
    * Retrieves an AI-generated chat message from the backend service
    */
   internal_fetchAIChatMessage: (input: {
-    messages: ChatMessage[];
     messageId: string;
-    params?: ProcessMessageParams;
+    messages: ChatMessage[];
     model: string;
+    params?: ProcessMessageParams;
     provider: string;
   }) => Promise<{
-    isFunctionCall: boolean;
     content: string;
+    isFunctionCall: boolean;
     traceId?: string;
   }>;
   /**
@@ -95,12 +86,13 @@ export interface AIGenerateAction {
   internal_resendMessage: (
     id: string,
     params?: {
-      traceId?: string;
+      inPortalThread?: boolean;
       messages?: ChatMessage[];
       threadId?: string;
-      inPortalThread?: boolean;
+      traceId?: string;
     },
   ) => Promise<void>;
+
   /**
    * Toggles the loading state for AI message generation, managing the UI feedback
    */
@@ -109,15 +101,6 @@ export interface AIGenerateAction {
     id?: string,
     action?: Action,
   ) => AbortController | undefined;
-  internal_toggleMessageInToolsCalling: (
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => AbortController | undefined;
-  /**
-   * Controls the streaming state of tool calling processes, updating the UI accordingly
-   */
-  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
   /**
    * Toggles the loading state for AI message reasoning, managing the UI feedback
    */
@@ -126,8 +109,29 @@ export interface AIGenerateAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
-
+  internal_toggleMessageInToolsCalling: (
+    loading: boolean,
+    id?: string,
+    action?: Action,
+  ) => AbortController | undefined;
   internal_toggleSearchWorkflow: (loading: boolean, id?: string) => void;
+  /**
+   * Controls the streaming state of tool calling processes, updating the UI accordingly
+   */
+  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
+  /**
+   * Regenerates a specific message in the chat
+   */
+  regenerateMessage: (id: string) => Promise<void>;
+  /**
+   * Sends a new message to the AI chat system
+   */
+  sendMessage: (params: SendMessageParams) => Promise<void>;
+
+  /**
+   * Interrupts the ongoing ai message generation process
+   */
+  stopGenerateMessage: () => void;
 }
 
 export const generateAIChat: StateCreator<
@@ -144,165 +148,6 @@ export const generateAIChat: StateCreator<
     // trace the delete and regenerate message
     get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
-  regenerateMessage: async (id) => {
-    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
-    await get().internal_resendMessage(id, { traceId });
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
-  },
-
-  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
-    if (!activeId) return;
-
-    const fileIdList = files?.map((f) => f.id);
-
-    const hasFile = !!fileIdList && fileIdList.length > 0;
-
-    // if message is empty or no files, then stop
-    if (!message && !hasFile) return;
-
-    set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
-
-    const newMessage: CreateMessageParams = {
-      content: message,
-      // if message has attached with files, then add files to message and the agent
-      files: fileIdList,
-      role: 'user',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: activeThreadId,
-    };
-
-    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
-    let tempMessageId: string | undefined = undefined;
-    let newTopicId: string | undefined = undefined;
-
-    // it should be the default topic, then
-    // if autoCreateTopic is enabled, check to whether we need to create a topic
-    if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
-      // check activeTopic and then auto create topic
-      const chats = chatSelectors.activeBaseChats(get());
-
-      // we will add two messages (user and assistant), so the finial length should +2
-      const featureLength = chats.length + 2;
-
-      // if there is no activeTopicId and the feature length is greater than the threshold
-      // then create a new topic and active it
-      if (!activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
-        // we need to create a temp message for optimistic update
-        tempMessageId = get().internal_createTmpMessage(newMessage);
-        get().internal_toggleMessageLoading(true, tempMessageId);
-
-        const topicId = await get().createTopic();
-
-        if (topicId) {
-          newTopicId = topicId;
-          newMessage.topicId = topicId;
-
-          // we need to copy the messages to the new topic or the message will disappear
-          const mapKey = chatSelectors.currentChatKey(get());
-          const newMaps = {
-            ...get().messagesMap,
-            [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
-          };
-          set({ messagesMap: newMaps }, false, n('moveMessagesToNewTopic'));
-
-          // make the topic loading
-          get().internal_updateTopicLoading(topicId, true);
-        }
-      }
-    }
-    //  update assistant update to make it rerank
-    useSessionStore.getState().triggerSessionUpdate(get().activeId);
-
-    const id = await get().internal_createMessage(newMessage, {
-      tempMessageId,
-      skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
-    });
-
-    if (!id) {
-      set({ isCreatingMessage: false }, false, n('creatingMessage/start'));
-      if (!!newTopicId) get().internal_updateTopicLoading(newTopicId, false);
-      return;
-    }
-
-    if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
-
-    // switch to the new topic if create the new topic
-    if (!!newTopicId) {
-      await get().switchTopic(newTopicId, true);
-      await get().internal_fetchMessages();
-
-      // delete previous messages
-      // remove the temp message map
-      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
-      set({ messagesMap: newMaps }, false, 'internal_copyMessages');
-    }
-
-    // if only add user message, then stop
-    if (onlyAddUserMessage) {
-      set({ isCreatingMessage: false }, false, 'creatingMessage/start');
-      return;
-    }
-
-    // Get the current messages to generate AI response
-    const messages = chatSelectors.activeBaseChats(get());
-    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
-
-    await internal_coreProcessMessage(messages, id, {
-      isWelcomeQuestion,
-      // ragQuery: get().internal_shouldUseRAG() ? message : undefined, TODO neew align with web
-      ragQuery: undefined,
-      threadId: activeThreadId,
-    });
-
-    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
-
-    const summaryTitle = async () => {
-      // if autoCreateTopic is false, then stop
-      if (!agentConfig.enableAutoCreateTopic) return;
-
-      // check activeTopic and then auto update topic title
-      if (newTopicId) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, newTopicId))(get());
-        await get().summaryTopicTitle(newTopicId, chats);
-        return;
-      }
-
-      if (!activeTopicId) return;
-      const topic = topicSelectors.getTopicById(activeTopicId)(get());
-
-      if (topic && !topic.title) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
-        await get().summaryTopicTitle(topic.id, chats);
-      }
-    };
-
-    // if there is relative files, then add files to agent
-    // only available in server mode
-    const addFilesToAgent = async () => {
-      // if (userFiles.length === 0 || !isServerMode) return; TODO need align with web
-      if (userFiles.length === 0) return;
-
-      await useAgentStore.getState().addFilesToAgent(userFiles, false);
-    };
-
-    await Promise.all([summaryTitle(), addFilesToAgent()]);
-  },
-  stopGenerateMessage: () => {
-    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
-
-    if (!chatLoadingIdsAbortController) return;
-
-    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
-
-    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
-  },
-
   // the internal process method of the AI message
   internal_coreProcessMessage: async (originalMessages, userMessageId, params) => {
     // const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages, activeTopicId } = get(); TODO need align with web
@@ -350,17 +195,20 @@ export const generateAIChat: StateCreator<
 
     // 2. Add an empty message to place the AI response
     const assistantMessage: CreateMessageParams = {
-      role: 'assistant',
       content: LOADING_FLAT,
+      fileChunks,
       fromModel: model,
       fromProvider: provider,
 
       parentId: userMessageId,
-      sessionId: get().activeId,
-      topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
-      threadId: params?.threadId,
-      fileChunks,
       ragQueryId,
+
+      role: 'assistant',
+
+      sessionId: get().activeId,
+      // if there is activeTopicId，then add it to topicId
+      threadId: params?.threadId,
+      topicId: activeTopicId,
     };
 
     const assistantId = await get().internal_createMessage(assistantMessage);
@@ -468,10 +316,10 @@ export const generateAIChat: StateCreator<
 
     // 4. fetch the AI response
     const { isFunctionCall, content } = await internal_fetchAIChatMessage({
-      messages,
       messageId: assistantId,
-      params,
+      messages,
       model,
+      params,
       provider: provider!,
     });
 
@@ -520,6 +368,7 @@ export const generateAIChat: StateCreator<
     //   await get().internal_summaryHistory(historyMessages);
     // }
   },
+
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
       internal_toggleChatLoading,
@@ -548,9 +397,9 @@ export const generateAIChat: StateCreator<
     const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(getAgentStoreState());
 
     let preprocessMsgs = chatHelpers.getSlicedMessages(messages, {
-      includeNewUserMessage: true,
       enableHistoryCount,
       historyCount,
+      includeNewUserMessage: true,
     });
 
     // 2. replace inputMessage template
@@ -602,20 +451,7 @@ export const generateAIChat: StateCreator<
       : undefined;
     await chatService.createAssistantMessageStream({
       abortController,
-      params: {
-        messages: preprocessMsgs,
-        model,
-        provider,
-        ...agentConfig.params,
-        plugins: agentConfig.plugins,
-      },
       historySummary: historySummary?.content,
-      trace: {
-        traceId: params?.traceId,
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
-        traceName: TraceNameMap.Conversation,
-      },
       isWelcomeQuestion: params?.isWelcomeQuestion,
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error);
@@ -665,11 +501,11 @@ export const generateAIChat: StateCreator<
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
-          toolCalls: parsedToolCalls,
-          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
-          search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,
           metadata: speed ? { ...usage, ...speed } : usage,
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
+          toolCalls: parsedToolCalls,
         });
       },
       onMessageHandle: async (chunk) => {
@@ -701,7 +537,7 @@ export const generateAIChat: StateCreator<
               id: messageId,
               type: 'updateMessage',
               value: {
-                imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+                imageList: chunk.images.map((i) => ({ alt: i.id, id: i.id, url: i.data })),
               },
             });
             // const image = chunk.image;
@@ -779,11 +615,24 @@ export const generateAIChat: StateCreator<
           // isFunctionCall = true;
         }
       },
+      params: {
+        messages: preprocessMsgs,
+        model,
+        provider,
+        ...agentConfig.params,
+        plugins: agentConfig.plugins,
+      },
+      trace: {
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+        traceId: params?.traceId,
+        traceName: TraceNameMap.Conversation,
+      },
     });
 
     internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
 
-    return { isFunctionCall, traceId: msgTraceId, content: output };
+    return { content: output, isFunctionCall, traceId: msgTraceId };
   },
 
   internal_resendMessage: async (
@@ -827,11 +676,12 @@ export const generateAIChat: StateCreator<
     const threadId = outThreadId ?? activeThreadId;
 
     await internal_coreProcessMessage(contextMessages, latestMsg.id, {
-      traceId,
+      inPortalThread,
+
       // ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
       ragQuery: undefined,
       threadId,
-      inPortalThread,
+      traceId,
     });
   },
 
@@ -839,11 +689,17 @@ export const generateAIChat: StateCreator<
   internal_toggleChatLoading: (loading, id, action) => {
     return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
   },
+
+  internal_toggleChatReasoning: (loading, id, action) => {
+    return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
+  },
+
   internal_toggleMessageInToolsCalling: (loading, id) => {
     return get().internal_toggleLoadingArrays('messageInToolsCallingIds', loading, id);
   },
-  internal_toggleChatReasoning: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
+
+  internal_toggleSearchWorkflow: (loading, id) => {
+    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
   },
   internal_toggleToolCallingStreaming: (id, streaming) => {
     set(
@@ -861,8 +717,175 @@ export const generateAIChat: StateCreator<
       `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
+  regenerateMessage: async (id) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    await get().internal_resendMessage(id, { traceId });
 
-  internal_toggleSearchWorkflow: (loading, id) => {
-    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
+    // trace the delete and regenerate message
+    get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
+  },
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+    const {
+      internal_coreProcessMessage,
+      activeTopicId,
+      activeId,
+      activeThreadId,
+      sendMessageInServer,
+    } = get();
+    if (!activeId) return;
+
+    const fileIdList = files?.map((f) => f.id);
+
+    const hasFile = !!fileIdList && fileIdList.length > 0;
+
+    // if message is empty or no files, then stop
+    if (!message && !hasFile) return;
+
+    // router to server mode send message
+    //RN always in server mode
+    const isServerMode = true;
+    if (isServerMode)
+      return sendMessageInServer({ files, isWelcomeQuestion, message, onlyAddUserMessage });
+
+    set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
+
+    const newMessage: CreateMessageParams = {
+      content: message,
+      // if message has attached with files, then add files to message and the agent
+      files: fileIdList,
+      role: 'user',
+      sessionId: activeId,
+
+      threadId: activeThreadId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    };
+
+    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+
+    let tempMessageId: string | undefined = undefined;
+    let newTopicId: string | undefined = undefined;
+
+    // it should be the default topic, then
+    // if autoCreateTopic is enabled, check to whether we need to create a topic
+    if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
+      // check activeTopic and then auto create topic
+      const chats = chatSelectors.activeBaseChats(get());
+
+      // we will add two messages (user and assistant), so the finial length should +2
+      const featureLength = chats.length + 2;
+
+      // if there is no activeTopicId and the feature length is greater than the threshold
+      // then create a new topic and active it
+      if (!activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
+        // we need to create a temp message for optimistic update
+        tempMessageId = get().internal_createTmpMessage(newMessage);
+        get().internal_toggleMessageLoading(true, tempMessageId);
+
+        const topicId = await get().createTopic();
+
+        if (topicId) {
+          newTopicId = topicId;
+          newMessage.topicId = topicId;
+
+          // we need to copy the messages to the new topic or the message will disappear
+          const mapKey = chatSelectors.currentChatKey(get());
+          const newMaps = {
+            ...get().messagesMap,
+            [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
+          };
+          set({ messagesMap: newMaps }, false, n('moveMessagesToNewTopic'));
+
+          // make the topic loading
+          get().internal_updateTopicLoading(topicId, true);
+        }
+      }
+    }
+    //  update assistant update to make it rerank
+    useSessionStore.getState().triggerSessionUpdate(get().activeId);
+
+    const id = await get().internal_createMessage(newMessage, {
+      skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
+      tempMessageId,
+    });
+
+    if (!id) {
+      set({ isCreatingMessage: false }, false, n('creatingMessage/start'));
+      if (!!newTopicId) get().internal_updateTopicLoading(newTopicId, false);
+      return;
+    }
+
+    if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
+
+    // switch to the new topic if create the new topic
+    if (!!newTopicId) {
+      await get().switchTopic(newTopicId, true);
+      await get().internal_fetchMessages();
+
+      // delete previous messages
+      // remove the temp message map
+      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
+      set({ messagesMap: newMaps }, false, 'internal_copyMessages');
+    }
+
+    // if only add user message, then stop
+    if (onlyAddUserMessage) {
+      set({ isCreatingMessage: false }, false, 'creatingMessage/start');
+      return;
+    }
+
+    // Get the current messages to generate AI response
+    const messages = chatSelectors.activeBaseChats(get());
+    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+
+    await internal_coreProcessMessage(messages, id, {
+      isWelcomeQuestion,
+      // ragQuery: get().internal_shouldUseRAG() ? message : undefined, TODO neew align with web
+      ragQuery: undefined,
+      threadId: activeThreadId,
+    });
+
+    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
+
+    const summaryTitle = async () => {
+      // if autoCreateTopic is false, then stop
+      if (!agentConfig.enableAutoCreateTopic) return;
+
+      // check activeTopic and then auto update topic title
+      if (newTopicId) {
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, newTopicId))(get());
+        await get().summaryTopicTitle(newTopicId, chats);
+        return;
+      }
+
+      if (!activeTopicId) return;
+      const topic = topicSelectors.getTopicById(activeTopicId)(get());
+
+      if (topic && !topic.title) {
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
+        await get().summaryTopicTitle(topic.id, chats);
+      }
+    };
+
+    // if there is relative files, then add files to agent
+    // only available in server mode
+    const addFilesToAgent = async () => {
+      // if (userFiles.length === 0 || !isServerMode) return; TODO need align with web
+      if (userFiles.length === 0) return;
+
+      await useAgentStore.getState().addFilesToAgent(userFiles, false);
+    };
+
+    await Promise.all([summaryTitle(), addFilesToAgent()]);
+  },
+
+  stopGenerateMessage: () => {
+    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
+
+    if (!chatLoadingIdsAbortController) return;
+
+    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
+
+    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
 });

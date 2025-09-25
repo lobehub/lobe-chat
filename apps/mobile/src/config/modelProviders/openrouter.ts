@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@lobechat/types';
 
 // ref :https://openrouter.ai/docs#models
 const OpenRouter: ModelProviderCard = {

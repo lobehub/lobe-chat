@@ -1,5 +1,6 @@
-import { DEFAULT_MODEL } from '@/const/settings';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@lobechat/types';
+
+import { DEFAULT_MODEL } from '@/_const/settings';
 
 export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload> => {
   return {

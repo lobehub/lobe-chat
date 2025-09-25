@@ -1,4 +1,4 @@
-import { LOGO_SIZE } from '@/const/common';
+import { LOGO_SIZE } from '@/_const/common';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({

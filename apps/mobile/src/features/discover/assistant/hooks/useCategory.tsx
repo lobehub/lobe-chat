@@ -1,3 +1,4 @@
+import { AssistantCategory } from '@lobechat/types';
 import {
   BadgeDollarSign,
   Briefcase,
@@ -17,8 +18,6 @@ import {
 } from 'lucide-react-native';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { AssistantCategory } from '@/types/discover';
 
 const CATEGORY_CONFIG = [
   {

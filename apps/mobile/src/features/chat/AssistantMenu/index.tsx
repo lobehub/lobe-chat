@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import * as Clipboard from 'expo-clipboard';
 import { Copy, LucideIcon, RefreshCw, Trash2 } from 'lucide-react-native';
 import React from 'react';
@@ -8,7 +9,6 @@ import { Tooltip, useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { useThemeToken } from '@/theme';
-import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
 

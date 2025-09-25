@@ -1,5 +1,6 @@
+import { ChatStreamPayload, OpenAIChatMessage } from '@lobechat/types';
+
 import i18n from '@/i18n';
-import { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 
 export const chainSummaryTitle = (messages: OpenAIChatMessage[]): Partial<ChatStreamPayload> => {
   const lang = i18n.language;

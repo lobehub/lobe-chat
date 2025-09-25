@@ -1,21 +1,22 @@
-import { FetchRequestInit, fetch } from 'expo/fetch';
-
-import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { parseToolCalls } from '@/libs/model-runtime';
-import { ChatErrorType } from '@/types/fetch';
-import { ResponseAnimation, ResponseAnimationStyle } from '@/types/llm';
 import {
+  ChatErrorType,
+  ChatImageChunk,
   ChatMessageError,
+  GroundingSearch,
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
   ModelSpeed,
   ModelTokensUsage,
-} from '@/types/message';
-import { ChatImageChunk } from '@/types/message/image';
-import { GroundingSearch } from '@/types/search';
+  ResponseAnimation,
+  ResponseAnimationStyle,
+} from '@lobechat/types';
+import { FetchRequestInit, fetch } from 'expo/fetch';
+
+import { MESSAGE_CANCEL_FLAT } from '@/_const/message';
+import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/_const/trace';
+import { parseToolCalls } from '@/libs/_model-runtime';
 import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';

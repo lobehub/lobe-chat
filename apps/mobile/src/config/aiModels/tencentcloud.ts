@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from 'model-bank';
 
 // https://cloud.tencent.com/document/product/1772/115969
 const tencentCloudChatModels: AIChatModelCard[] = [

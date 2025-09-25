@@ -1,3 +1,4 @@
+import { ChatTopic } from '@lobechat/types';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -5,7 +6,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { ChatTopic } from '@/types/topic';
 
 import { useStyles } from './style';
 
