@@ -1,6 +1,4 @@
-import { createStyles, cva } from '@/theme';
-
-import type { BlockVariantProps } from './type';
+import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token, stylish }) => ({
   // 使用 stylish 预定义的变体样式
@@ -27,50 +25,3 @@ export const useStyles = createStyles(({ token, stylish }) => ({
   // 阴影效果
   shadow: stylish.shadow,
 }));
-
-// CVA 变体定义
-export const useBlockVariants = (styles: ReturnType<typeof useStyles>['styles']) =>
-  cva<BlockVariantProps>(styles.root, {
-    compoundVariants: [
-      {
-        clickable: true,
-        style: styles.clickableBorderless,
-        variant: 'borderless',
-      },
-      {
-        clickable: true,
-        style: styles.clickableFilled,
-        variant: 'filled',
-      },
-      {
-        clickable: true,
-        style: styles.clickableOutlined,
-        variant: 'outlined',
-      },
-    ],
-    defaultVariants: {
-      clickable: false,
-      glass: false,
-      shadow: false,
-      variant: 'filled',
-    },
-    variants: {
-      clickable: {
-        false: null,
-        true: styles.clickableRoot,
-      },
-      glass: {
-        false: null,
-        true: styles.glass,
-      },
-      shadow: {
-        false: null,
-        true: styles.shadow,
-      },
-      variant: {
-        borderless: styles.borderless,
-        filled: styles.filled,
-        outlined: styles.outlined,
-      },
-    },
-  });

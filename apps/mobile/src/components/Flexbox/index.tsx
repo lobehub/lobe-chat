@@ -1,9 +1,17 @@
 import React, { ReactNode, memo } from 'react';
 import { DimensionValue, View, ViewProps } from 'react-native';
 
-import { AlignItems, FlexWrap, JustifyContent } from '@/components/Flexbox';
+export type JustifyContent =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+export type AlignItems = 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
+export type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
-export interface CenterProps extends ViewProps {
+export interface FlexboxProps extends ViewProps {
   align?: AlignItems;
   children?: ReactNode;
   flex?: number | undefined;
@@ -18,11 +26,11 @@ export interface CenterProps extends ViewProps {
   wrap?: FlexWrap;
 }
 
-const Center = memo<CenterProps>(
+const Flexbox = memo<FlexboxProps>(
   ({
     horizontal,
-    justify = 'center',
-    align = 'center',
+    justify = 'flex-start',
+    align = 'stretch',
     wrap = 'nowrap',
     flex,
     children,
@@ -62,6 +70,6 @@ const Center = memo<CenterProps>(
   },
 );
 
-Center.displayName = 'Center';
+Flexbox.displayName = 'Flexbox';
 
-export default Center;
+export default Flexbox;
