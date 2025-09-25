@@ -1,9 +1,9 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings/llm';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@lobechat/const';
 import {
   LobeChatGroupChatConfig,
   LobeChatGroupFullConfig,
   LobeChatGroupMetaConfig,
-} from '@/types/chatGroup';
+} from '@lobechat/types';
 
 export const DEFAULT_CHAT_GROUP_CHAT_CONFIG: LobeChatGroupChatConfig = {
   allowDM: true,
