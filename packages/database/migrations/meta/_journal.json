@@ -236,7 +236,14 @@
       "idx": 33,
       "version": "7",
       "when": 1758012348218,
-      "tag": "0033_modern_mercury",
+      "tag": "0033_add_table_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1758825944181,
+      "tag": "0034_fix_chat_group",
       "breakpoints": true
     }
   ],

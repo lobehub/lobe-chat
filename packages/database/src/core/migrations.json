@@ -615,5 +615,15 @@
     "bps": true,
     "folderMillis": 1758012348218,
     "hash": "ce04ef4cde2db479d28ff08dced8383052c5052c904bab8343b5493fa10b0679"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" ALTER COLUMN \"role\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"chat_groups\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
+      "\nALTER TABLE \"chat_groups\" ADD CONSTRAINT \"chat_groups_group_id_session_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"session_groups\"(\"id\") ON DELETE set null ON UPDATE no action;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1758825944181,
+    "hash": "b3475e2449efef400446e763952fd8b86ad9f97ac2b93ad636ec528125c87795"
   }
 ]
