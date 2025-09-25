@@ -5,14 +5,11 @@ import { BasicDemo } from '@/components/Flexbox/demos';
 import README from '@/components/Flexbox/readme';
 import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 
 export default function FlexboxPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Center 居中组件">
+    <PageContainer showBack title="FlexBox 弹性布局">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );
