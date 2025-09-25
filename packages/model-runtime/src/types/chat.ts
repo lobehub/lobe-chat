@@ -33,17 +33,8 @@ export type UserMessageContentPart =
   | UserMessageContentPartThinking;
 
 export interface OpenAIChatMessage {
-  /**
-   * @title 内容
-   * @description 消息内容
-   */
   content: string | UserMessageContentPart[];
-
   name?: string;
-  /**
-   * 角色
-   * @description 消息发送者的角色
-   */
   role: LLMRoleType;
   tool_call_id?: string;
   tool_calls?: MessageToolCall[];

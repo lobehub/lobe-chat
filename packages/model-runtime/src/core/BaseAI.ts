@@ -4,21 +4,25 @@ import OpenAI from 'openai';
 import {
   ChatMethodOptions,
   ChatStreamPayload,
+  CreateImagePayload,
+  CreateImageResponse,
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   ModelRequestOptions,
   PullModelParams,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../types';
-import { CreateImagePayload, CreateImageResponse } from '../types/image';
 
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {
   baseURL?: string;
   chat?(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
+  generateObject?(payload: GenerateObjectPayload, options?: GenerateObjectOptions): Promise<any>;
 
   embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
@@ -43,6 +47,10 @@ export abstract class LobeOpenAICompatibleRuntime {
 
   abstract chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
   abstract createImage(payload: CreateImagePayload): Promise<CreateImageResponse>;
+  abstract generateObject(
+    payload: GenerateObjectPayload,
+    options?: GenerateObjectOptions,
+  ): Promise<Record<string, any>>;
 
   abstract models(): Promise<AIBaseModelCard[]>;
 

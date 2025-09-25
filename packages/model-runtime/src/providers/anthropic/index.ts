@@ -3,7 +3,13 @@ import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { AnthropicStream } from '../../core/streams';
-import { type ChatCompletionErrorPayload, ChatMethodOptions, ChatStreamPayload } from '../../types';
+import {
+  type ChatCompletionErrorPayload,
+  ChatMethodOptions,
+  ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
+} from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';
@@ -11,6 +17,7 @@ import { debugStream } from '../../utils/debugStream';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 import { StreamingResponse } from '../../utils/response';
+import { createAnthropicGenerateObject } from './generateObject';
 import { handleAnthropicError } from './handleAnthropicError';
 
 export interface AnthropicModelCard {
@@ -98,6 +105,14 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
           headers: options?.headers,
         },
       );
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+    try {
+      return await createAnthropicGenerateObject(this.client, payload, options);
     } catch (error) {
       throw this.handleError(error);
     }

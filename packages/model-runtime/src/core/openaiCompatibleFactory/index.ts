@@ -15,6 +15,8 @@ import {
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
@@ -89,6 +91,15 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       data: OpenAI.ChatCompletion,
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
+    /**
+     * If true, route chat requests to Responses API path directly
+     */
+    useResponse?: boolean;
+    /**
+     * Allow only some models to use Responses API by simple matching.
+     * If any string appears in model id or RegExp matches, Responses API is used.
+     */
+    useResponseModels?: Array<string | RegExp>;
   };
   constructorOptions?: ConstructorOptions<T>;
   createImage?: (
@@ -172,16 +183,42 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now();
+        
+        // 工厂级 Responses API 路由控制（支持实例覆盖）
+        const modelId = (payload as any).model as string | undefined;
+        const shouldUseResponses = (() => {
+          const instanceChat = ((this._options as any).chatCompletion || {}) as {
+            useResponse?: boolean;
+            useResponseModels?: Array<string | RegExp>;
+          };
+          const flagUseResponse =
+            instanceChat.useResponse ?? (chatCompletion ? chatCompletion.useResponse : undefined);
+          const flagUseResponseModels =
+            instanceChat.useResponseModels ?? chatCompletion?.useResponseModels;
+
+          if (!chatCompletion && !instanceChat) return false;
+          if (flagUseResponse) return true;
+          if (!modelId || !flagUseResponseModels?.length) return false;
+          return flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
+          );
+        })();
+
+        let processedPayload: any = payload;
+        if (shouldUseResponses) {
+          processedPayload = { ...payload, apiMode: 'responses' } as any;
+        }
+        
+        // 再进行工厂级处理
         const postPayload = chatCompletion?.handlePayload
-          ? chatCompletion.handlePayload(payload, this._options)
+          ? chatCompletion.handlePayload(processedPayload, this._options)
           : ({
-              ...payload,
-              stream: payload.stream ?? true,
+              ...processedPayload,
+              stream: processedPayload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
-        // new openai Response API
         if ((postPayload as any).apiMode === 'responses') {
-          return this.handleResponseAPIMode(payload, options);
+          return this.handleResponseAPIMode(processedPayload, options);
         }
 
         const messages = await convertOpenAIMessages(postPayload.messages);
@@ -195,7 +232,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         };
 
         if (customClient?.createChatCompletionStream) {
-          response = customClient.createChatCompletionStream(this.client, payload, this) as any;
+          response = customClient.createChatCompletionStream(this.client, processedPayload, this) as any;
         } else {
           const finalPayload = {
             ...postPayload,
@@ -337,6 +374,48 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       return await postProcessModelList(resultModels, (modelId) =>
         getModelPropertyWithFallback<AiModelType>(modelId, 'type'),
       );
+    }
+
+    async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+      const { messages, schema, model, responseApi } = payload;
+
+      if (responseApi) {
+        const res = await this.client!.responses.create(
+          {
+            input: messages,
+            model,
+            text: { format: { strict: true, type: 'json_schema', ...schema } },
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const text = res.output_text;
+        try {
+          return JSON.parse(text);
+        } catch {
+          console.error('parse json error:', text);
+          return undefined;
+        }
+      }
+
+      const res = await this.client.chat.completions.create(
+        {
+          messages,
+          model,
+          response_format: { json_schema: schema, type: 'json_schema' },
+          user: options?.user,
+        },
+        { headers: options?.headers, signal: options?.signal },
+      );
+      const text = res.choices[0].message.content!;
+
+      try {
+        return JSON.parse(text);
+      } catch {
+        console.error('parse json error:', text);
+        return undefined;
+      }
     }
 
     async embeddings(
