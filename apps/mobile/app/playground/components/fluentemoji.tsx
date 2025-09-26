@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import { BasicDemo, ComparisonDemo, SizesDemo, TypeDemo } from '@lobehub/ui-rn/FluentEmoji/demos';
+import README from '@lobehub/ui-rn/FluentEmoji/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import { BasicDemo, ComparisonDemo, SizesDemo, TypeDemo } from '@/components/FluentEmoji/demos';
-import README from '@/components/FluentEmoji/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 import { useStyles } from './style';
 

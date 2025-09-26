@@ -1,8 +1,8 @@
+import { ButtonSize } from '@lobehub/ui-rn';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
-import { ButtonSize } from '@/components';
 import { useThemeToken } from '@/theme';
 
 interface StopLoadingIconProps {

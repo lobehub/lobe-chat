@@ -16,7 +16,7 @@ const BLOCK_README = `# Block 块容器组件
 ## 基础使用
 
 \`\`\`tsx
-import Block from '@/components/Block';
+import { Block } from '@lobehub/ui-rn';
 
 // 基础用法
 <Block>

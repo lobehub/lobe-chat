@@ -15,7 +15,7 @@ const FLEXBOX_README = `# Flexbox 弹性布局组件
 ## 基础使用
 
 \`\`\`tsx
-import Flexbox from '@/components/Flexbox';
+import { Flexbox } from '@lobehub/ui-rn';
 
 // 水平排列
 <Flexbox direction="row" justify="center" align="center">

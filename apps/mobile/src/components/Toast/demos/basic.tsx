@@ -1,7 +1,7 @@
+import { Button, useToast } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
 
 export default function BasicDemo() {

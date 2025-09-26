@@ -1,7 +1,6 @@
+import { Icon, Space } from '@lobehub/ui-rn';
 import { Flame, Palette, Sparkles } from 'lucide-react-native';
 import React from 'react';
-
-import { Icon, Space } from '@/components';
 
 const ColorsDemo = () => {
   return (

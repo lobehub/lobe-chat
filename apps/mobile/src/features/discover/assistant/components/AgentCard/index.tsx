@@ -1,14 +1,11 @@
 import { DiscoverAssistantItem } from '@lobechat/types';
+import { Avatar, GitHubAvatar, Space, Tag } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
-import Avatar from '@/components/Avatar';
-import GitHubAvatar from '@/components/GithubAvatar';
-import Space from '@/components/Space';
-import Tag from '@/components/Tag';
 
 import { useStyles } from './style';
 

@@ -1,3 +1,4 @@
+import { ActionIcon, PageContainer, Space } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { CompassIcon, Sparkles } from 'lucide-react-native';
@@ -5,7 +6,6 @@ import React from 'react';
 import { Text } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
-import { ActionIcon, PageContainer, Space } from '@/components';
 import { useGlobalStore } from '@/store/global';
 import { isDev } from '@/utils/env';
 

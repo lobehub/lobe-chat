@@ -1,8 +1,8 @@
+import { PageContainer, Toast } from '@lobehub/ui-rn';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
-import { PageContainer, Toast } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
 import { useTheme } from '@/theme';

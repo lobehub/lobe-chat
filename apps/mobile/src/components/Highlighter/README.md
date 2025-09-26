@@ -18,7 +18,7 @@
 ## 快速开始
 
 ```tsx
-import Highlighter from '@/components/Highlighter';
+import { Highlighter } from '@lobehub/ui-rn';
 
 // 基础用法
 <Highlighter code="console.log('Hello World');" lang="javascript" />;
