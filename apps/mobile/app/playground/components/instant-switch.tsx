@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import { BasicDemo, SizesDemo, StatesDemo } from '@lobehub/ui-rn/InstantSwitch/demos';
+import README from '@lobehub/ui-rn/InstantSwitch/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import { BasicDemo, SizesDemo, StatesDemo } from '@/components/InstantSwitch/demos';
-import README from '@/components/InstantSwitch/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 import { useStyles } from './style';
 

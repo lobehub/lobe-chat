@@ -1,7 +1,6 @@
+import { Switch } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-
-import { Switch } from '@/components';
 
 const BasicDemo: React.FC = () => {
   const [checked, setChecked] = useState(false);

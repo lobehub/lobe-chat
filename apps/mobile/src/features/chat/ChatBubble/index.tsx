@@ -1,8 +1,8 @@
 import { ChatMessage } from '@lobechat/types';
+import { Markdown } from '@lobehub/ui-rn';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
-import { Markdown } from '@/components';
 import { useSettingStore } from '@/store/setting';
 
 import AssistantMenu from '../AssistantMenu';

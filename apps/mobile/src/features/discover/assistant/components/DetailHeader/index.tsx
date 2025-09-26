@@ -1,10 +1,9 @@
+import { Avatar, GitHubAvatar } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
 import React from 'react';
 import { Text, View } from 'react-native';
 
 import { AVATAR_SIZE_LARGE } from '@/_const/common';
-import { Avatar } from '@/components';
-import GitHubAvatar from '@/components/GithubAvatar';
 
 import { useStyles } from './styles';
 

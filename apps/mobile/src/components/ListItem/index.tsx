@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
-import { Avatar } from '@/components';
+import Avatar from '@/components/Avatar';
 
 import { useStyles } from './style';
 

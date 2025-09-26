@@ -2,8 +2,8 @@ import { Moon, Sun } from 'lucide-react-native';
 import React, { memo, useCallback, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
-import { PageContainer } from '@/components';
-import CapsuleTabs, { CapsuleTabItem } from '@/components/CapsuleTabs';
+import CapsuleTabs, { type CapsuleTabItem } from '@/components/CapsuleTabs';
+import PageContainer from '@/components/PageContainer';
 import {
   NeutralColors,
   PrimaryColors,

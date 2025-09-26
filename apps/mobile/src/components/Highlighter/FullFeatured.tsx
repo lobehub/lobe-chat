@@ -1,9 +1,8 @@
+import { Icon } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
-
-import { Icon } from '@/components';
 
 import { LanguageSelect } from './components/LanguageSelect';
 import { TokenDisplay } from './components/TokenDisplay';

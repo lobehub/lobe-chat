@@ -31,7 +31,6 @@ const TokenJson: React.FC<TokenJsonProps> = memo(({ token, title }) => {
           lang="json"
           showLanguage={true}
           style={styles.highlighter}
-          type="default"
         />
       </View>
     </View>

@@ -14,25 +14,25 @@ const README = `# Avatar 头像组件
 ## 基础使用
 
 \`\`\`tsx
-import Avatar from '@/components/Avatar';
+import { Avatar } from '@lobehub/ui-rn';
 
 // 基础用法
-<Avatar 
-  avatar="https://github.com/lobehub.png" 
-  alt="LobeHub" 
+<Avatar
+  avatar="https://github.com/lobehub.png"
+  alt="LobeHub"
 />
 
 // 自定义尺寸
-<Avatar 
-  avatar="https://github.com/lobehub.png" 
-  alt="LobeHub" 
+<Avatar
+  avatar="https://github.com/lobehub.png"
+  alt="LobeHub"
   size={48}
 />
 
 // 添加边框
-<Avatar 
-  avatar="https://github.com/lobehub.png" 
-  alt="LobeHub" 
+<Avatar
+  avatar="https://github.com/lobehub.png"
+  alt="LobeHub"
   size={48}
   borderColor="#1677ff"
   borderWidth={2}

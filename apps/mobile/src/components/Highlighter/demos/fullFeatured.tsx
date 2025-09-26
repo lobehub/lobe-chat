@@ -1,7 +1,7 @@
+import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Highlighter } from '@/components';
 import { useThemeToken } from '@/theme';
 
 /**
@@ -22,9 +22,9 @@ interface CounterProps {
   onValueChange?: (value: number) => void;
 }
 
-const Counter: React.FC<CounterProps> = ({ 
-  initialValue = 0, 
-  onValueChange 
+const Counter: React.FC<CounterProps> = ({
+  initialValue = 0,
+  onValueChange
 }) => {
   const [count, setCount] = useState(initialValue);
 
@@ -81,7 +81,7 @@ yarn install
 # iOS
 npx react-native run-ios
 
-# Android  
+# Android
 npx react-native run-android
 \`\`\`
 

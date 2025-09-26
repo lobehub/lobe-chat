@@ -1,7 +1,6 @@
+import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { ZoomIn, ZoomOut } from 'lucide-react-native';
 import React from 'react';
-
-import { ActionIcon, Space } from '@/components';
 
 const SizesDemo = () => {
   return (

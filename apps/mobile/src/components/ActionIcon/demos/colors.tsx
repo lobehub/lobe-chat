@@ -1,7 +1,6 @@
+import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { Flame, Palette, Star } from 'lucide-react-native';
 import React from 'react';
-
-import { ActionIcon, Space } from '@/components';
 
 const ColorsDemo = () => {
   return (

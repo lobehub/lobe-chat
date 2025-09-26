@@ -1,9 +1,9 @@
+import { Button } from '@lobehub/ui-rn';
 import { Link, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, Text, View } from 'react-native';
 
-import Button from '@/components/Button';
 import { setLoginMounted } from '@/navigation/loginState';
 import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';

@@ -1,7 +1,7 @@
+import { Markdown } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
 
-import { Markdown } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import { createStyles } from '@/theme';
 

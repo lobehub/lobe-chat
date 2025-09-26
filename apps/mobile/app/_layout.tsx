@@ -1,5 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
+import { ToastProvider } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack, useRouter } from 'expo-router';
@@ -12,7 +13,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
-import { ToastProvider } from '@/components';
 import i18n from '@/i18n';
 import { I18nReadyGate } from '@/i18n/ReadyGate';
 import { safeReplaceLogin } from '@/navigation/safeLogin';

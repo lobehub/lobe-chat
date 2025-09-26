@@ -1,7 +1,7 @@
+import { Button } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
 
-import { Button } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({
