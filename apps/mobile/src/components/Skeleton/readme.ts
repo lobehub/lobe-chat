@@ -17,7 +17,7 @@ React Native版本的骨架屏组件，参考Ant Design设计，用于页面加�
 ## 基础使用
 
 \`\`\`tsx
-import Skeleton from '@/components/Skeleton';
+import { Skeleton } from '@lobehub/ui-rn';
 
 // 基础用法
 <Skeleton />
@@ -40,10 +40,10 @@ import Skeleton from '@/components/Skeleton';
 <Skeleton paragraph={{ rows: 5 }} />
 
 // 自定义每行宽度
-<Skeleton 
-  paragraph={{ 
-    width: ['100%', '90%', '75%', '50%'] 
-  }} 
+<Skeleton
+  paragraph={{
+    width: ['100%', '90%', '75%', '50%']
+  }}
 />
 
 // 使用复合组件

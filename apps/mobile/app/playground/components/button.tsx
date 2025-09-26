@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
+import { PageContainer } from '@lobehub/ui-rn';
 import {
   BasicDemo,
   BlockDemo,
@@ -11,9 +9,10 @@ import {
   ShapeDemo,
   SizesDemo,
   VariantColorDemo,
-} from '@/components/Button/demos';
-import README from '@/components/Button/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+} from '@lobehub/ui-rn/Button/demos';
+import README from '@lobehub/ui-rn/Button/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import React from 'react';
 
 import { useStyles } from './style';
 

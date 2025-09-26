@@ -1,7 +1,7 @@
+import { Button, Toast } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Toast } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const showSuccess = () => {

@@ -14,7 +14,7 @@ const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件
 ## 基础使用
 
 \`\`\`tsx
-import FluentEmoji from '@/components/FluentEmoji';
+import { FluentEmoji } from '@lobehub/ui-rn';
 
 // 基础用法
 <FluentEmoji emoji="😊" size={40} />
@@ -46,7 +46,7 @@ import FluentEmoji from '@/components/FluentEmoji';
 FluentEmoji 组件提供了微软 Fluent 设计体系的 3D 表情符号，相比传统的平面表情符号，具有：
 
 - 更丰富的视觉层次
-- 更现代的设计风格  
+- 更现代的设计风格
 - 更好的用户体验
 - 跨平台的一致性
 

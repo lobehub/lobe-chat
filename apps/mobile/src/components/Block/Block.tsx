@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import { TouchableOpacity } from 'react-native';
 
 import { cva } from '@/theme';
 
@@ -57,21 +56,12 @@ const Block = memo<BlockProps>(
       [styles],
     );
 
-    if (clickable && onPress) {
-      return (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={onPress}
-          style={cx(variants({ clickable, glass, shadow, variant }), style)}
-        >
-          <Flexbox {...rest}>{children}</Flexbox>
-        </TouchableOpacity>
-      );
-    }
-
-    // 否则使用普通的 View
     return (
-      <Flexbox style={cx(variants({ clickable, glass, shadow, variant }), style)} {...rest}>
+      <Flexbox
+        onPress={onPress}
+        style={cx(variants({ clickable, glass, shadow, variant }), style)}
+        {...rest}
+      >
         {children}
       </Flexbox>
     );

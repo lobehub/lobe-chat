@@ -1,14 +1,13 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
+import { PageContainer } from '@lobehub/ui-rn';
 import {
   BasicHighlighterDemo,
   CompactHighlighterDemo,
   FullFeaturedHighlighterDemo,
   LanguagesHighlighterDemo,
-} from '@/components/Highlighter/demos';
-import README from '@/components/Highlighter/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+} from '@lobehub/ui-rn/Highlighter/demos';
+import README from '@lobehub/ui-rn/Highlighter/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import React from 'react';
 
 import { useStyles } from './style';
 

@@ -1,3 +1,4 @@
+import { ActionIcon, Avatar, PageContainer, Space } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
@@ -5,7 +6,6 @@ import { Text, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { AVATAR_SIZE } from '@/_const/common';
-import { ActionIcon, Avatar, PageContainer, Space } from '@/components';
 import Hydration from '@/features/Hydration';
 import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';

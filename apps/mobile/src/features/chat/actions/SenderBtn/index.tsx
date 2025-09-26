@@ -1,6 +1,6 @@
+import { Button } from '@lobehub/ui-rn';
 import { ArrowUp } from 'lucide-react-native';
 
-import { Button } from '@/components';
 import { useChat } from '@/hooks/useChat';
 
 import StopLoadingButton from './StopLoadingButton';

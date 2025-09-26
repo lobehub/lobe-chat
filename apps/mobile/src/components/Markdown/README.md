@@ -29,7 +29,7 @@ npx expo install expo-av
 ## 基本用法
 
 ```jsx
-import MarkdownRender from '@/components/Markdown';
+import { Markdown } from '@lobehub/ui-rn';
 
 export default function App() {
   const markdownContent = `
@@ -56,7 +56,7 @@ $$
 $$
   `;
 
-  return <MarkdownRender>{markdownContent}</MarkdownRender>;
+  return <Markdown>{markdownContent}</Markdown>;
 }
 ```
 

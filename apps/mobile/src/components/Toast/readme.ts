@@ -20,7 +20,7 @@ const TOAST_README = `# Toast组件
 ### 1. 设置ToastProvider
 
 \`\`\`jsx
-import { ToastProvider } from '@/components/Toast/ToastProvider';
+import { ToastProvider } from '@lobehub/ui-rn';
 
 export default function App() {
   return (
@@ -35,7 +35,7 @@ export default function App() {
 ### 2. 使用useToast Hook
 
 \`\`\`jsx
-import { useToast } from '@/components/Toast/ToastProvider';
+import { useToast } from '@lobehub/ui-rn';
 
 export default function MyComponent() {
   const toast = useToast();

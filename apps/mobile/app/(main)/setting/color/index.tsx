@@ -1,8 +1,8 @@
+import { ColorSwatches, PageContainer } from '@lobehub/ui-rn';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { ColorSwatches, PageContainer } from '@/components';
 import { useSettingStore } from '@/store/setting';
 import {
   NeutralColors,

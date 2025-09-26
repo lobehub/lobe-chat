@@ -1,7 +1,5 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import {
   AnimatedDemo,
   AvatarDemo,
@@ -9,8 +7,9 @@ import {
   ComplexDemo,
   CompoundDemo,
   ParagraphDemo,
-} from '@/components/Skeleton/demos';
-import README from '@/components/Skeleton/readme';
+} from '@lobehub/ui-rn/Skeleton/demos';
+import README from '@lobehub/ui-rn/Skeleton/readme';
+import React from 'react';
 
 import { useStyles } from './style';
 

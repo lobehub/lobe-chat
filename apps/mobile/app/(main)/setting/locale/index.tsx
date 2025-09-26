@@ -1,8 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
-import { PageContainer } from '@/components';
 import { useLocale } from '@/hooks/useLocale';
 import { LANGUAGE_OPTIONS, LocaleMode } from '@/i18n/resource';
 
