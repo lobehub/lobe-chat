@@ -1,5 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`htmlToMarkdown > should transform shortpage.html to markdown 1`] = `
+{
+  "content": "NexusAI 
+
+Sign In  Get Started 
+
+#  Transform Your Business with AI Intelligence 
+
+ Start Free Trial  Watch Demo 
+
+98% Accuracy",
+  "description": undefined,
+  "length": 149,
+  "title": "NexusAI - Intelligent Automation Platform",
+}
+`;
+
 exports[`htmlToMarkdown > should transform terms.html to markdown 1`] = `
 {
   "content": " Lasted Updated at

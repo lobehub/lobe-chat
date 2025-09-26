@@ -57,7 +57,12 @@ export const htmlToMarkdown = (
 
   const nodeHtmlMarkdown = new NodeHtmlMarkdown({}, customTranslators);
 
-  const content = nodeHtmlMarkdown.translate(htmlNode);
+  let content = nodeHtmlMarkdown.translate(htmlNode);
+
+  // Fallback to original HTML if too short
+  if (content.length < 100) {
+    content = nodeHtmlMarkdown.translate(html);
+  }
 
   const result = {
     author: parsedContent?.byline,
