@@ -253,7 +253,7 @@
     "react-i18next": "^15.7.3",
     "react-layout-kit": "^2.0.0",
     "react-lazy-load": "^4.0.1",
-    "react-pdf": "^9.2.1",
+    "react-pdf": "^10.0.0",
     "react-rnd": "^10.5.2",
     "react-scan": "^0.4.3",
     "react-virtuoso": "^4.14.0",
