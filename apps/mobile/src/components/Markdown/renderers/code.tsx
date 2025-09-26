@@ -1,7 +1,6 @@
+import { Highlighter } from '@lobehub/ui-rn';
 import { Code } from 'mdast';
 import { ReactNode } from 'react';
-
-import Highlighter from '@/components/Highlighter';
 
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';

@@ -18,7 +18,7 @@ const CAPSULETABS_README = `# CapsuleTabs 组件
 \`\`\`tsx
 import { Briefcase, Home } from 'lucide-react-native';
 
-import { CapsuleTabs, CapsuleTabItem } from '@/components/CapsuleTabs';
+import { CapsuleTabs, CapsuleTabItem } from '@lobehub/ui-rn';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All', icon: Home },

@@ -1,7 +1,7 @@
+import { Avatar } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { Avatar } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const ErrorDemo = () => {

@@ -18,12 +18,12 @@ const HIGHLIGHTER_README = `# Highlighter 组件
 ## 快速开始
 
 \`\`\`tsx
-import Highlighter from '@/components/Highlighter';
+import { Highlighter } from '@lobehub/ui-rn';
 
 // 基础用法
-<Highlighter 
-  code="console.log('Hello World');" 
-  lang="javascript" 
+<Highlighter
+  code="console.log('Hello World');"
+  lang="javascript"
 />
 \`\`\`
 
@@ -85,15 +85,15 @@ import Highlighter from '@/components/Highlighter';
 ### 2. 优化用户体验
 \`\`\`tsx
 // 长代码默认收起，让用户主动展开
-<Highlighter 
+<Highlighter
   defalutExpand={false}
   fullFeatured
   fileName="长文件名.js"
 />
 
 // 提供语言切换，方便调试
-<Highlighter 
-  allowChangeLanguage 
+<Highlighter
+  allowChangeLanguage
   fullFeatured
 />
 \`\`\``;

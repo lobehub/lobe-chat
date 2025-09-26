@@ -1,7 +1,6 @@
+import { Button, Space } from '@lobehub/ui-rn';
 import { ArrowUp, Plus, Search } from 'lucide-react-native';
 import React from 'react';
-
-import { Button, Space } from '@/components';
 
 const ShapeDemo = () => {
   return (

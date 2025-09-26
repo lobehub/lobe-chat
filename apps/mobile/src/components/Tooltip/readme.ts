@@ -6,7 +6,7 @@ const TOOLTIP_README = `# Tooltip 组件
 
 - ✅ 12种位置选择 (top, bottom, left, right 及其变体)
 - ✅ 智能位置计算和自动调整
-- ✅ 多种触发方式 (点击、长按、受控)  
+- ✅ 多种触发方式 (点击、长按、受控)
 - ✅ 流畅的动画效果
 - ✅ 自定义样式和内容
 - ✅ 箭头指向支持
@@ -16,7 +16,7 @@ const TOOLTIP_README = `# Tooltip 组件
 ## 基础使用
 
 \`\`\`tsx
-import { Tooltip } from '@/components/Tooltip';
+import { Tooltip } from '@lobehub/ui-rn';
 
 // 基础用法
 <Tooltip title="这是一个提示信息">
@@ -44,9 +44,9 @@ import { Tooltip } from '@/components/Tooltip';
 支持12种位置：
 
 \`\`\`tsx
-type TooltipPlacement = 
+type TooltipPlacement =
   | 'top' | 'topLeft' | 'topRight'
-  | 'bottom' | 'bottomLeft' | 'bottomRight' 
+  | 'bottom' | 'bottomLeft' | 'bottomRight'
   | 'left' | 'leftTop' | 'leftBottom'
   | 'right' | 'rightTop' | 'rightBottom';
 \`\`\`

@@ -1,8 +1,8 @@
+import { Button, Input } from '@lobehub/ui-rn';
 import { CheckCircle, XCircle } from 'lucide-react-native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { Button, Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({

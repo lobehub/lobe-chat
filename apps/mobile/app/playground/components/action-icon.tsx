@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
+import { PageContainer } from '@lobehub/ui-rn';
 import {
   BasicDemo,
   ColorsDemo,
@@ -8,9 +6,10 @@ import {
   LoadingDemo,
   SizesDemo,
   VariantsDemo,
-} from '@/components/ActionIcon/demos';
-import README from '@/components/ActionIcon/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+} from '@lobehub/ui-rn/ActionIcon/demos';
+import README from '@lobehub/ui-rn/ActionIcon/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import React from 'react';
 
 import { useStyles } from './style';
 

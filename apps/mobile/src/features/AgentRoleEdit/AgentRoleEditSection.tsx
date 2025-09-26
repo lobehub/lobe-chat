@@ -1,9 +1,9 @@
+import { Button, Markdown } from '@lobehub/ui-rn';
 import { Edit3 } from 'lucide-react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TextInput, View } from 'react-native';
 
-import { Button, Markdown } from '@/components';
 import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';

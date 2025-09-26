@@ -1,8 +1,8 @@
+import { Input, Space } from '@lobehub/ui-rn';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ViewStyle } from 'react-native';
 
-import { Input, Space } from '@/components';
 import SenderBtn from '@/features/chat/actions/SenderBtn';
 import ToogleTopic from '@/features/chat/actions/ToogleTopic';
 import { useChat } from '@/hooks/useChat';

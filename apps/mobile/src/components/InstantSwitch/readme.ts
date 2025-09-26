@@ -18,7 +18,7 @@ React Native版本的即时开关组件，支持异步切换操作，参考web�
 ## 基础使用
 
 \`\`\`tsx
-import InstantSwitch from '@/components/InstantSwitch';
+import { InstantSwitch } from '@lobehub/ui-rn';
 
 // 基础用法
 <InstantSwitch
@@ -35,7 +35,7 @@ import InstantSwitch from '@/components/InstantSwitch';
   onChange={handleChange}
   trackColor={{
     false: '#ff6b6b',
-    true: '#51cf66',    
+    true: '#51cf66',
   }}
   thumbColor="#ffffff"
   loadingColor="#339af0"

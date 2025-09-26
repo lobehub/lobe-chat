@@ -14,13 +14,13 @@ const TAG_README = `# Tag 标签组件
 ## 基础使用
 
 \`\`\`tsx
-import Tag from '@/components/Tag';
+import { Tag } from '@lobehub/ui-rn';
 
 // 基础用法
 <Tag>React</Tag>
 
 // 自定义样式
-<Tag 
+<Tag
   style={{ backgroundColor: '#f0f2f5' }}
   textStyle={{ color: '#1890ff' }}
 >

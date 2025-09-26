@@ -18,7 +18,7 @@ const MARKDOWN_README = `# Markdown组件
 ## 基本用法
 
 \`\`\`jsx
-import MarkdownRender from '@/components/Markdown';
+import { Markdown } from '@lobehub/ui-rn';
 
 export default function App() {
   const markdownContent = \`
@@ -43,7 +43,7 @@ $$\\\\int_{-\\\\infty}^{\\\\infty} e^{-x^2} dx = \\\\sqrt{\\\\pi}$$
   \`;
 
   return (
-    <MarkdownRender content={markdownContent} />
+    <Markdown content={markdownContent} />
   );
 }
 \`\`\`
