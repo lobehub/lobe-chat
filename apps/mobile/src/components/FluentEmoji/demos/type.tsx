@@ -2,12 +2,12 @@ import { FluentEmoji } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { type EmojiType } from '../utils';
 
 const TypeDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const emojiTypes: { label: string; type: EmojiType }[] = [
     { label: '3D', type: '3d' },

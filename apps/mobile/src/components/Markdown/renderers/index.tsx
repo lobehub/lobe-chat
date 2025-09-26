@@ -59,4 +59,4 @@ export const defaultRenderers: Renderers = {
   YamlRenderer,
 };
 
-export { RendererArgs, Renderers, RenderFunc } from './renderers';
+export type { RendererArgs, Renderers, RenderFunc } from './renderers';

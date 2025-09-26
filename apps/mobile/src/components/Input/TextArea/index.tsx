@@ -31,10 +31,10 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
     ...rest
   } = props;
 
-  const { styles, token } = useStyles({ variant });
+  const { styles, theme } = useStyles({ variant });
   const rowHeight = React.useMemo(() => {
-    return Math.max(1, Math.max(token.fontHeight, token.fontSize));
-  }, [token.fontHeight, token.fontSize]);
+    return Math.max(1, Math.max(theme.fontHeight, theme.fontSize));
+  }, [theme.fontHeight, theme.fontSize]);
 
   const autoSizeEnabled = autoSize === true || typeof autoSize === 'object';
   const autoSizeConfig = autoSizeEnabled && typeof autoSize === 'object' ? autoSize : undefined;
@@ -112,7 +112,7 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
         ref={ref}
         {...rest}
         onContentSizeChange={handleContentSizeChange}
-        placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
+        placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
         scrollEnabled={resolvedScrollEnabled}
         style={[styles.input, autoSizeStyle]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}

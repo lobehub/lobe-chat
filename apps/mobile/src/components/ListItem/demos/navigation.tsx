@@ -115,37 +115,10 @@ export default function NavigationDemo() {
         <Text style={styles.sectionTitle}>路由导航</Text>
         <Text style={styles.sectionDesc}>使用href属性进行页面导航，与Expo Router集成</Text>
         <View style={styles.section}>
-          <ListItem
-            avatar="👤"
-            description="查看和编辑个人信息"
-            extra=">"
-            href="/components/tooltip"
-            title="用户资料"
-          />
-
-          <ListItem
-            avatar="⚙️"
-            description="应用程序配置选项"
-            extra=">"
-            href="/components/toast"
-            title="设置中心"
-          />
-
-          <ListItem
-            avatar="ℹ️"
-            description="版本信息和帮助文档"
-            extra=">"
-            href="/components/markdown"
-            title="关于应用"
-          />
-
-          <ListItem
-            avatar="💬"
-            description="提交意见和建议"
-            extra=">"
-            href="/components/highlighter"
-            title="反馈建议"
-          />
+          <ListItem avatar="👤" description="查看和编辑个人信息" extra=">" title="用户资料" />
+          <ListItem avatar="⚙️" description="应用程序配置选项" extra=">" title="设置中心" />
+          <ListItem avatar="ℹ️" description="版本信息和帮助文档" extra=">" title="关于应用" />
+          <ListItem avatar="💬" description="提交意见和建议" extra=">" title="反馈建议" />
         </View>
 
         <Text style={styles.sectionTitle}>交互响应</Text>

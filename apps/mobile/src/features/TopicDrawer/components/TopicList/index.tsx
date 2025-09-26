@@ -9,7 +9,7 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import TopicItem from '../TopicItem';
 import { useStyles } from './style';
@@ -21,7 +21,7 @@ import { useStyles } from './style';
 const TopicList = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('topic');
-  const token = useThemeToken();
+  const token = useTheme();
 
   // 获取当前会话的topics - 参考web端实现
   useFetchTopics();

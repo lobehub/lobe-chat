@@ -10,7 +10,7 @@ import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './u
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -136,7 +136,7 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
-      case 'theme-token': {
+      case 'theme-theme': {
         router.push('/playground/components/theme-token');
 
         break;
@@ -202,7 +202,7 @@ export default function ComponentPlaygroundIndex() {
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.categoryText}>{component.category}</Text>
-        <ChevronRight color={token.colorTextTertiary} size={20} />
+        <ChevronRight color={theme.colorTextTertiary} size={20} />
       </View>
     </TouchableOpacity>
   );

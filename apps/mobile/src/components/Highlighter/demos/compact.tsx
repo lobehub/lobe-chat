@@ -2,14 +2,14 @@ import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 /**
  * 紧凑型显示演示
  * 展示适合内联和小空间的紧凑型代码高亮
  */
 export const CompactHighlighterDemo: React.FC = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const examples = [
     {
@@ -145,7 +145,6 @@ export const CompactHighlighterDemo: React.FC = () => {
                   fullFeatured
                   lang={item.lang}
                   showLanguage={false}
-                  type="compact"
                 />
               </View>
             ))}
@@ -163,7 +162,6 @@ export const CompactHighlighterDemo: React.FC = () => {
             fileName="example.js"
             fullFeatured
             lang="javascript"
-            type="default"
           />
         </View>
 
@@ -175,7 +173,6 @@ export const CompactHighlighterDemo: React.FC = () => {
             fullFeatured
             lang="javascript"
             showLanguage={false}
-            type="compact"
           />
         </View>
       </View>

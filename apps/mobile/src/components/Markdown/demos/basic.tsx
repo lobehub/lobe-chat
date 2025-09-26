@@ -2,12 +2,12 @@ import { Markdown } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { content } from './data';
 
 const BasicDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const styles = StyleSheet.create({
     container: {

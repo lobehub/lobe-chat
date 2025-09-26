@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -11,7 +11,7 @@ interface LoadingDotsProps {
 }
 
 const LoadingDots: React.FC<LoadingDotsProps> = ({ size = 8, color }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const dotColor = color || token.colorTextSecondary;
   const { styles } = useStyles(size, dotColor);
 

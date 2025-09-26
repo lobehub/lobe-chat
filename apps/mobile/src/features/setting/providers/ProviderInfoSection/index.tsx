@@ -7,7 +7,7 @@ import { Text, View } from 'react-native';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -17,7 +17,7 @@ interface ProviderInfoSectionProps {
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
   const { t } = useTranslation(['setting']);
 
   // Store hooks

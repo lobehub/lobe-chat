@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 interface StopLoadingIconProps {
   color?: string;
@@ -20,7 +20,7 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
 }) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
-  const token = useThemeToken();
+  const token = useTheme();
   const iconColor = color || token.colorText;
 
   const realSize =

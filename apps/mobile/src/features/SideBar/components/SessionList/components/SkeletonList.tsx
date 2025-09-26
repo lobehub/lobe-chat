@@ -2,11 +2,11 @@ import { Skeleton } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 // SessionItem Skeleton Component
 const SessionItemSkeleton = () => {
-  const token = useThemeToken();
+  const token = useTheme();
   return (
     <View
       style={{
@@ -35,7 +35,7 @@ const SessionItemSkeleton = () => {
 
 // Search Bar Skeleton Component
 export const SearchBarSkeleton = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View
@@ -52,7 +52,7 @@ export const SearchBarSkeleton = () => {
 
 // Session List Skeleton (for multiple items)
 export const SessionListSkeleton = ({ count = 5 }: { count?: number }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   return (
     <View style={{ flex: 1 }}>
       {/* Search bar skeleton */}
