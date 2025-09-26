@@ -602,6 +602,58 @@ describe('modelParse', () => {
         expect(glm.vision).toBe(true);
       });
 
+      it('should restrict known extendParams to OpenAI when provider is not aihubmix or newapi', async () => {
+        const mockModule = await import('model-bank');
+        mockModule.LOBE_DEFAULT_MODEL_LIST.push(
+          {
+            id: 'gpt-openai-extend-restricted',
+            displayName: 'OpenAI Extend Restricted',
+            settings: {
+              extendParams: ['openaiParam'],
+            },
+          } as any,
+          {
+            id: 'gemini-extend-restricted',
+            displayName: 'Gemini Extend Restricted',
+            settings: {
+              extendParams: ['thinkingBudget', 'urlContext'],
+            },
+          } as any,
+        );
+
+        const modelList = [
+          { id: 'gpt-openai-extend-restricted' },
+          { id: 'gemini-extend-restricted' },
+        ];
+
+        const result = await processMultiProviderModelList(modelList, 'vercelaigateway');
+
+        const openaiModel = result.find((m) => m.id === 'gpt-openai-extend-restricted');
+        const googleModel = result.find((m) => m.id === 'gemini-extend-restricted');
+
+        expect(openaiModel?.settings?.extendParams).toEqual(['openaiParam']);
+        expect(googleModel?.settings).toBeUndefined();
+      });
+
+      it('should allow known extendParams for non-OpenAI providers when provider is aihubmix', async () => {
+        const mockModule = await import('model-bank');
+        mockModule.LOBE_DEFAULT_MODEL_LIST.push({
+          id: 'gemini-extend-aihubmix',
+          displayName: 'Gemini Extend Aihubmix',
+          settings: {
+            extendParams: ['thinkingBudget', 'urlContext'],
+          },
+        } as any);
+
+        const modelList = [{ id: 'gemini-extend-aihubmix' }];
+
+        const result = await processMultiProviderModelList(modelList, 'aihubmix');
+
+        const googleModel = result.find((m) => m.id === 'gemini-extend-aihubmix');
+
+        expect(googleModel?.settings?.extendParams).toEqual(['thinkingBudget', 'urlContext']);
+      });
+
       it('should correctly handle models with excluded keywords in different providers', async () => {
         // OpenAI excludes 'audio', other providers don't have excluded keywords
         const modelList = [

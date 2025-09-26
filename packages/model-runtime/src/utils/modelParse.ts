@@ -294,8 +294,14 @@ const processDisplayName = (displayName: string): string => {
 const mergeExtendParams = (
   modelExtendParams?: ReadonlyArray<ExtendParamsType>,
   knownExtendParams?: ReadonlyArray<ExtendParamsType>,
+  options?: { includeKnownExtendParams?: boolean },
 ): ExtendParamsType[] | undefined => {
-  const combined = [...(knownExtendParams ?? []), ...(modelExtendParams ?? [])];
+  const includeKnown = options?.includeKnownExtendParams ?? true;
+
+  const combined = [
+    ...(includeKnown ? (knownExtendParams ?? []) : []),
+    ...(modelExtendParams ?? []),
+  ];
 
   if (combined.length === 0) return undefined;
 
@@ -305,6 +311,7 @@ const mergeExtendParams = (
 const mergeSettings = (
   modelSettings?: AiModelSettings,
   knownSettings?: AiModelSettings,
+  options?: { includeKnownExtendParams?: boolean },
 ): AiModelSettings | undefined => {
   if (!modelSettings && !knownSettings) return undefined;
 
@@ -318,7 +325,11 @@ const mergeSettings = (
     Object.assign(merged, modelSettings);
   }
 
-  const extendParams = mergeExtendParams(modelSettings?.extendParams, knownSettings?.extendParams);
+  const extendParams = mergeExtendParams(
+    modelSettings?.extendParams,
+    knownSettings?.extendParams,
+    options,
+  );
   if (extendParams) {
     merged.extendParams = extendParams;
   } else {
@@ -349,6 +360,7 @@ const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any,
+  options?: { includeKnownExtendParams?: boolean },
 ): ChatModelCard | undefined => {
   const {
     functionCallKeywords = [],
@@ -378,7 +390,7 @@ const processModelCard = (
     return undefined;
   }
 
-  const mergedSettings = mergeSettings(model.settings, knownModel?.settings);
+  const mergedSettings = mergeSettings(model.settings, knownModel?.settings, options);
 
   const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
     if (!pricing || typeof pricing !== 'object') return undefined;
@@ -514,13 +526,18 @@ export const processMultiProviderModelList = async (
         );
       }
 
+      const includeKnownExtendParams =
+        providerid === 'aihubmix' || providerid === 'newapi' || detectedProvider === 'openai';
+
       // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
       let providerLocalModelConfig = null;
       if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
         providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
       }
 
-      const processedModel = processModelCard(model, config, knownModel);
+      const processedModel = processModelCard(model, config, knownModel, {
+        includeKnownExtendParams,
+      });
 
       // 如果找到了本地配置中的模型，使用其 enabled 状态
       if (
