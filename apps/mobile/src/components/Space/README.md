@@ -17,7 +17,7 @@
 ### 基础用法
 
 ```jsx
-import { Space, Text } from '@/components';
+import { Space, Text } from '@lobehub/ui-rn';
 
 export default () => (
   <Space>
@@ -31,7 +31,7 @@ export default () => (
 ### 垂直间距
 
 ```jsx
-import { Space, Text } from '@/components';
+import { Space, Text } from '@lobehub/ui-rn';
 
 export default () => (
   <Space direction="vertical">
@@ -47,7 +47,7 @@ export default () => (
 支持 `small`、`middle`、`large` 和自定义尺寸。
 
 ```jsx
-import { Space, Text } from '@/components';
+import { Space, Text } from '@lobehub/ui-rn';
 
 export default () => (
   <>
@@ -119,7 +119,7 @@ export default () => (
 在元素之间设置分隔符。
 
 ```jsx
-import { Space, Text } from '@/components';
+import { Space, Text } from '@lobehub/ui-rn';
 
 export default () => (
   <Space split={<Text>|</Text>}>

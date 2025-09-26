@@ -1,10 +1,10 @@
 import { AiProviderDetailItem } from '@lobechat/types';
 import { ProviderCombine } from '@lobehub/icons-rn';
+import { InstantSwitch } from '@lobehub/ui-rn';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { InstantSwitch } from '@/components';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 import { useThemeToken } from '@/theme';

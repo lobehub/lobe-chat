@@ -16,7 +16,7 @@ React Native版本的按钮组件，参考Ant Design设计，支持多种类型�
 ## 基础使用
 
 \`\`\`tsx
-import Button from '@/components/Button';
+import { Button } from '@lobehub/ui-rn';
 
 // 基础用法
 <Button onPress={() => console.log('clicked')}>

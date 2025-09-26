@@ -1,7 +1,6 @@
+import { Button, Highlighter } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-import { Button, Highlighter } from '@/components';
 
 /**
  * 多语言支持演示

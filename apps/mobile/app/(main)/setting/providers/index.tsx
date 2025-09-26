@@ -1,11 +1,11 @@
 import { AiProviderListItem } from '@lobechat/types';
+import { PageContainer } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import isEqual from 'fast-deep-equal';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { PageContainer } from '@/components';
 import ProviderCard from '@/features/setting/providers/ProviderCard';
 import ProviderListSkeleton from '@/features/setting/providers/ProviderListSkeleton';
 import { useAiInfraStore } from '@/store/aiInfra';

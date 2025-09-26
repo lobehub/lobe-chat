@@ -1,8 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
-import { PageContainer } from '@/components';
 import { useSettingStore } from '@/store/setting';
 
 import { SettingGroup, SettingItem } from '../(components)';

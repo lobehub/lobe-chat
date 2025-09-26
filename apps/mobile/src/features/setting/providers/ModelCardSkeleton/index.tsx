@@ -1,7 +1,6 @@
+import { Skeleton } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
-
-import Skeleton from '@/components/Skeleton';
 
 import { useStyles } from './style';
 

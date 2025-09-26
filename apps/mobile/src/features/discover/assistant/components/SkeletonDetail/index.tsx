@@ -1,8 +1,8 @@
+import { Skeleton } from '@lobehub/ui-rn';
 import React from 'react';
 import { DimensionValue, View } from 'react-native';
 
 import { AVATAR_SIZE_LARGE, ICON_SIZE } from '@/_const/common';
-import { Skeleton } from '@/components';
 
 import { useStyles } from './styles';
 

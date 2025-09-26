@@ -16,7 +16,7 @@ const SPACE_README = `# Space 间距组件
 ## 基础使用
 
 \`\`\`tsx
-import Space from '@/components/Space';
+import { Space } from '@lobehub/ui-rn';
 
 // 基础用法
 <Space>

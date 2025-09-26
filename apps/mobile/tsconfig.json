@@ -18,7 +18,9 @@
     "types": ["vitest/globals", "node"],
     "paths": {
       "@/test/*": ["./test/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@lobehub/ui-rn": ["./src/components"],
+      "@lobehub/ui-rn/*": ["./src/components/*"]
     }
   },
   "exclude": ["node_modules", "scripts/**", "tmp", "temp", ".temp"],

@@ -15,7 +15,7 @@ const ACTION_ICON_README = `# ActionIcon 操作图标组件
 ## 基础使用
 
 \`\`\`tsx
-import { ActionIcon } from '@/components';
+import { ActionIcon } from '@lobehub/ui-rn';
 import { MoreHorizontal } from 'lucide-react-native';
 
 <ActionIcon icon={MoreHorizontal} onPress={() => console.log('more')} />;

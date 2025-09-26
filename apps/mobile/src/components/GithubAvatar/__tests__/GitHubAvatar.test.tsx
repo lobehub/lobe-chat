@@ -6,7 +6,7 @@ import GitHubAvatar from '../index';
 
 jest.mock('url-join', () => jest.fn((baseUrl: string, path: string) => `${baseUrl}/${path}`));
 
-jest.mock('@/components/Avatar', () => {
+jest.mock('@lobehub/ui-rn/Avatar', () => {
   const MockAvatar = ({ avatar, size, alt }: { avatar: string; size: number; alt: string }) => (
     <div data-testid="avatar" data-avatar={avatar} data-size={size} data-alt={alt}>
       Avatar
