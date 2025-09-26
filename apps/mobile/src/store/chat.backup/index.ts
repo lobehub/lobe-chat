@@ -211,7 +211,7 @@ export const useChatStore = createWithEqualityFn<ChatState & ChatActions>()(
                 '请求失败，请检查网络或API Key配置',
               );
             },
-            onMessage: (text) => {
+            onMessage: (text: any) => {
               get().updateMessage(sessionId, assistantMessageId, text);
             },
             proxy,

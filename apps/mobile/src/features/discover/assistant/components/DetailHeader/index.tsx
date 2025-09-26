@@ -15,14 +15,14 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader: React.FC<DetailHeaderProps> = ({ avatar, title, author, createdAt }) => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   return (
     <View style={styles.headerContainer}>
       <Avatar
         alt={title}
         avatar={avatar || '🤖'}
-        backgroundColor={token.colorBgContainer}
+        backgroundColor={theme.colorBgContainer}
         size={AVATAR_SIZE_LARGE}
       />
       <View style={styles.headerContent}>

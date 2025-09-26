@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { useChatStore } from '@/store/chat';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -20,7 +20,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message, style }) => {
   const { t } = useTranslation(['chat', 'common']);
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const token = useThemeToken();
+  const token = useTheme();
   const { styles } = useStyles();
   const [isCopied, setIsCopied] = React.useState(false);
 

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { Switch as RNSwitch, SwitchProps } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 export type ThemedSwitchProps = SwitchProps;
 
 const ThemedSwitch: React.FC<ThemedSwitchProps> = ({ thumbColor, trackColor, ...rest }) => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const finalThumbColor = thumbColor ?? token.colorTextLightSolid;
   const finalTrackColor =

@@ -12,7 +12,7 @@ const useStyles = createStyles(({ token }) => ({
 }));
 
 const TextAreaDemo = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   return (
     <View style={styles.container}>
@@ -31,10 +31,9 @@ const TextAreaDemo = () => {
       />
       <Input.TextArea
         autoSize={{ minRows: 3 }}
-        contentStyle={{ fontFamily: token.fontFamilyCode }}
         defaultValue="可以通过 style 与 contentStyle 自定义外观，例如用于代码片段或结构化文本场景。"
         placeholder="支持内容样式定制"
-        style={{ backgroundColor: token.colorFillTertiary }}
+        style={{ backgroundColor: theme.colorFillTertiary }}
       />
     </View>
   );

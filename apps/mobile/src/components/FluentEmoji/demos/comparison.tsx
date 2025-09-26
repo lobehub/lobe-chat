@@ -2,10 +2,10 @@ import { FluentEmoji } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const ComparisonDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ padding: 16 }}>

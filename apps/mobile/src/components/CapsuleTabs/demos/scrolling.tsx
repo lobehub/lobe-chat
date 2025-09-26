@@ -2,7 +2,7 @@ import { CapsuleTabItem, CapsuleTabs } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },
@@ -19,7 +19,7 @@ const items: CapsuleTabItem[] = [
 
 export const ScrollingDemo: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState('all');
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ padding: 16 }}>

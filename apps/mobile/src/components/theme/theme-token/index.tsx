@@ -11,7 +11,7 @@ import {
   darkAlgorithm,
   lightAlgorithm,
   useTheme,
-  useThemeToken,
+  useThemeMode,
 } from '@/theme';
 
 import ThemeControls from './(components)/ThemeControls';
@@ -41,8 +41,8 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
     onPrimaryColorChange,
     onToggleTheme,
   }) => {
-    const { theme } = useTheme();
-    const token = useThemeToken();
+    const { isDarkMode } = useThemeMode();
+    const token = useTheme();
     const { styles } = useStyles();
     const [viewMode, setViewMode] = useState<'table' | 'json'>('table');
 
@@ -61,7 +61,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
       <PageContainer
         extra={
           <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
-            {theme.isDark ? (
+            {isDarkMode ? (
               <Sun color={token.colorText} size={20} />
             ) : (
               <Moon color={token.colorText} size={20} />
