@@ -2,7 +2,7 @@ import { Block, Flexbox } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text } from 'react-native';
 
-const BasicDemo = () => {
+export default () => {
   return (
     <Flexbox gap={16}>
       <Block padding={16}>
@@ -20,5 +20,3 @@ const BasicDemo = () => {
     </Flexbox>
   );
 };
-
-export default BasicDemo;

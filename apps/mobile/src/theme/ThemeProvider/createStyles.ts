@@ -41,7 +41,7 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
 
     // 生成 stylish 对象
     const stylish = useMemo(() => {
-      return generateStylish(theme);
+      return generateStylish(theme, isDarkMode);
     }, [theme, isDarkMode]);
 
     // 使用 useMemo 缓存样式对象，避免重新渲染
