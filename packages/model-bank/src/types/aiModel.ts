@@ -36,6 +36,10 @@ export interface ModelAbilities {
    */
   imageOutput?: boolean;
   /**
+   * whether model supports group orchestration
+   */
+  orchestration?: boolean;
+  /**
    * whether model supports reasoning
    */
   reasoning?: boolean;

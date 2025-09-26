@@ -9,8 +9,7 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
-    description:
-      'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
+    description: 'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
     displayName: 'GPT-5 Codex',
     id: 'gpt-5-codex',
     maxOutput: 128_000,
@@ -31,6 +30,7 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      orchestration: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -59,6 +59,7 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      orchestration: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -110,6 +111,7 @@ const aihubmixModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      orchestration: true,
       reasoning: true,
       vision: true,
     },
@@ -357,8 +359,7 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 2_000_000,
-    description:
-      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    description: '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
     displayName: 'Grok 4 Fast (Non-Reasoning)',
     id: 'grok-4-fast-non-reasoning',
     pricing: {
@@ -381,8 +382,7 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 2_000_000,
-    description:
-      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    description: '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
     displayName: 'Grok 4 Fast',
     id: 'grok-4-fast-reasoning',
     pricing: {
@@ -462,6 +462,7 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      orchestration: true,
       reasoning: true,
       search: true,
       vision: true,

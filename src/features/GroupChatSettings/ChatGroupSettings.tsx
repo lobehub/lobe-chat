@@ -68,7 +68,7 @@ const ChatGroupSettings = memo(() => {
       ...(enableSupervisor
         ? [
             {
-              children: <ModelSelect />,
+              children: <ModelSelect requiredAbilities={['orchestration']} />,
               desc: t('settingGroupChat.model.desc'),
               label: t('settingGroupChat.model.title'),
               name: '_modelConfig',
