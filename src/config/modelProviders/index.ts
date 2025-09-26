@@ -37,6 +37,7 @@ import NewAPIProvider from './newapi';
 import NovitaProvider from './novita';
 import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
+import OllamaCloudProvider from './ollamacloud';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
@@ -184,6 +185,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
+  OllamaCloudProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -233,6 +235,7 @@ export { default as NewAPIProviderCard } from './newapi';
 export { default as NovitaProviderCard } from './novita';
 export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';
+export { default as OllamaCloudProviderCard } from './ollamacloud';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
