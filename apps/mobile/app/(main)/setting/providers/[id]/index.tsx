@@ -23,7 +23,7 @@ import ConfigurationSection from '@/features/setting/providers/ConfigurationSect
 import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './styles';
 
@@ -93,7 +93,7 @@ const ProviderDetailPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { styles } = useStyles();
   const { t } = useTranslation(['setting']);
-  const token = useThemeToken();
+  const token = useTheme();
   const toast = useToast();
 
   // Models相关状态（从ModelsSection移过来）

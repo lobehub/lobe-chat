@@ -2,7 +2,7 @@ import type { ThemedToken } from '@shikijs/core';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useThemeMode } from '@/theme';
 
 import { useTokenize } from '../../hooks/useTokenize';
 import { useStyles } from './style';
@@ -22,8 +22,8 @@ function generateTokenKey(lineIndex: number, tokenIndex: number, token: ThemedTo
 }
 
 export function TokenDisplay({ code, lang }: TokenDisplayProps) {
-  const { theme } = useTheme();
-  const { tokens, error } = useTokenize(code, lang, theme.isDark ? 'dark' : 'light');
+  const { isDarkMode } = useThemeMode();
+  const { tokens, error } = useTokenize(code, lang, isDarkMode ? 'dark' : 'light');
   const { styles } = useStyles();
 
   return error ? (

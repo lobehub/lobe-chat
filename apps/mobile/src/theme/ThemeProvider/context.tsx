@@ -42,7 +42,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
     if (isNested && customTheme) {
       // 如果自定义主题没有指定算法，则继承父级的模式
       if (!customTheme.algorithm) {
-        return parentContext.theme.isDark ? 'dark' : 'light';
+        return parentContext?.isDarkMode ? 'dark' : 'light';
       }
       // 如果自定义主题指定了算法，则根据算法判断
       const algorithm = Array.isArray(customTheme.algorithm)
@@ -93,7 +93,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
       algorithm: customTheme.algorithm || (isDark ? darkAlgorithm : lightAlgorithm),
       token: {
         // 继承父级的 token 作为基础
-        ...parentContext.theme.token,
+        ...parentContext?.token,
         // 子 ThemeProvider 的自定义 token 覆盖
         ...customTheme.token,
       },
@@ -117,22 +117,22 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: c
   const themeToken = getDesignToken(mergedThemeConfig);
 
   const theme: Theme = {
-    isDark,
-    mode: isNested && customTheme ? (isDark ? 'dark' : 'light') : themeMode,
+    isDarkMode: isDark,
+    themeMode: isNested && customTheme ? (isDark ? 'dark' : 'light') : themeMode,
     token: themeToken,
   };
 
   const contextValue: ThemeContextValue = {
     setThemeMode: setThemeModeHandler,
-    theme,
     toggleTheme,
+    ...theme,
   };
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
 // 使用主题的 Hook
-export const useTheme = (): ThemeContextValue => {
+export const useThemeMode = (): ThemeContextValue => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
@@ -141,7 +141,7 @@ export const useTheme = (): ThemeContextValue => {
 };
 
 // 获取主题 token 的便捷 Hook
-export const useThemeToken = () => {
-  const { theme } = useTheme();
-  return theme.token;
+export const useTheme = () => {
+  const { token } = useThemeMode();
+  return token;
 };

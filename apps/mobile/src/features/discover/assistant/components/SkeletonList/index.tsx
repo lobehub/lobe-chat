@@ -8,7 +8,7 @@ import { useStyles } from './styles';
 const CARD_TAG_WIDTHS = [64, 88, 72];
 
 const AgentCardSkeleton = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   return (
     <View style={styles.card}>
@@ -18,8 +18,8 @@ const AgentCardSkeleton = () => {
             <View style={styles.titleSkeletonWrapper}>
               <Skeleton.Title animated style={styles.titleSkeleton} width="65%" />
             </View>
-            <Space align="center" direction="horizontal" size={token.marginXXS}>
-              <Skeleton.Avatar animated shape="circle" size={token.controlHeightSM} />
+            <Space align="center" direction="horizontal" size={theme.marginXXS}>
+              <Skeleton.Avatar animated shape="circle" size={theme.controlHeightSM} />
               <Skeleton.Paragraph animated rows={1} width={120} />
             </Space>
           </View>
@@ -40,11 +40,11 @@ const AgentCardSkeleton = () => {
 };
 
 export const SearchBarSkeleton = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   return (
     <View style={styles.searchBar}>
-      <Search color={token.colorTextPlaceholder} size={token.fontSizeLG} />
+      <Search color={theme.colorTextPlaceholder} size={theme.fontSizeLG} />
     </View>
   );
 };

@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';
@@ -32,7 +32,7 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
   const { t } = useTranslation();
   const enabledModels = useEnabledChatModels();
   const { isLoading: infraLoading, hasError: infraError } = useAiInfraInit();
-  const token = useThemeToken();
+  const token = useTheme();
   const router = useRouter();
   const { styles } = useStyles();
 

@@ -1,11 +1,11 @@
-import { ActionIcon, useThemeToken } from '@lobehub/ui-rn';
+import { ActionIcon, useTheme } from '@lobehub/ui-rn';
 import { MessageSquarePlus } from 'lucide-react-native';
 
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 
 const NewChatBtn = () => {
   const switchTopic = useSwitchTopic();
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <ActionIcon

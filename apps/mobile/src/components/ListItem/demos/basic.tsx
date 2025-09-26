@@ -2,7 +2,7 @@ import { ListItem } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const handlePress = (title: string) => {
   console.log(`点击了: ${title}`);
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 });
 
 export default function BasicDemo() {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <ScrollView

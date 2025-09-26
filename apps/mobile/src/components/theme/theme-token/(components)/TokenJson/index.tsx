@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { Text, View } from 'react-native';
 
 import Highlighter from '@/components/Highlighter';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -12,13 +11,12 @@ export interface TokenJsonProps {
 }
 
 const TokenJson: React.FC<TokenJsonProps> = memo(({ token, title }) => {
-  const { theme } = useTheme();
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.token.colorBgElevated }]}>
-      <Text style={[styles.title, { color: theme.token.colorText }]}>{title}</Text>
-      <Text style={[styles.subtitle, { color: theme.token.colorTextSecondary }]}>
+    <View style={[styles.container, { backgroundColor: theme.colorBgElevated }]}>
+      <Text style={[styles.title, { color: theme.colorText }]}>{title}</Text>
+      <Text style={[styles.subtitle, { color: theme.colorTextSecondary }]}>
         {Object.keys(token).length} tokens
       </Text>
 

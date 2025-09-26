@@ -59,7 +59,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
   onCopy,
 }) => {
   const [expanded, setExpanded] = useState(defalutExpand);
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const [copied, setCopied] = useState(false);
   const [language, setLanguage] = useState(lang);
 
@@ -103,7 +103,7 @@ const FullFeatured: React.FC<FullFeaturedProps> = ({
           {copyable && (
             <Pressable onPress={handleCopy} style={styles.copyButton}>
               {copied ? (
-                <Icon color={token.colorSuccess} icon={Check} size="small" />
+                <Icon color={theme.colorSuccess} icon={Check} size="small" />
               ) : (
                 <Icon icon={Copy} size="small" />
               )}

@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const styles = StyleSheet.create({
   demoContainer: {
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 const TriggerDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={[styles.demoContainer, { backgroundColor: token.colorBgLayout }]}>
