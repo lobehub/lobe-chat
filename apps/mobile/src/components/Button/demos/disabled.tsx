@@ -1,8 +1,7 @@
+import { Button, Space } from '@lobehub/ui-rn';
 import { Link } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
-
-import { Button, Space } from '@/components';
 
 const DisabledDemo = () => {
   return (

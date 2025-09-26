@@ -34,7 +34,7 @@ npm install react-native-vector-icons
 首先需要在应用的根组件中包装 ToastProvider：
 
 ```jsx
-import { ToastProvider } from '@/components/Toast/ToastProvider';
+import { ToastProvider } from '@lobehub/ui-rn';
 
 export default function App() {
   return (
@@ -51,7 +51,7 @@ export default function App() {
 在组件中使用 Toast：
 
 ```jsx
-import { useToast } from '@/components/Toast/ToastProvider';
+import { useToast } from '@lobehub/ui-rn';
 
 export default function MyComponent() {
   const toast = useToast();
@@ -144,7 +144,7 @@ type ToastType = 'success' | 'error' | 'info' | 'loading';
 ### 基础用法
 
 ```jsx
-import { useToast } from '@/components/Toast/ToastProvider';
+import { useToast } from '@lobehub/ui-rn';
 
 function BasicExample() {
   const toast = useToast();

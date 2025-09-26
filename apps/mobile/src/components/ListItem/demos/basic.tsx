@@ -1,7 +1,7 @@
+import { ListItem } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { ListItem } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const handlePress = (title: string) => {

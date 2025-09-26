@@ -1,7 +1,6 @@
 import { SessionGroupItem } from '@lobechat/types';
 import { StateCreator } from 'zustand/vanilla';
 
-// import { message } from '@/components/AntdStaticMethods'; // TODO: RN端暂未实现此功能 - Toast消息组件
 import { sessionService } from '@/services/session';
 import { SessionStore } from '@/store/session';
 

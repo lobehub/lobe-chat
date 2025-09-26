@@ -13,7 +13,7 @@ const README = `# ThemeProvider
 ## 基础用法
 
 \`\`\`tsx
-import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeProvider } from '@lobehub/ui-rn';
 
 function App() {
   return (
@@ -44,7 +44,7 @@ function App() {
 ### 自定义算法
 
 \`\`\`tsx
-import { darkAlgorithm } from '@/components/ThemeProvider';
+import { darkAlgorithm } from '@lobehub/ui-rn';
 
 <ThemeProvider
   theme={{
@@ -58,7 +58,7 @@ import { darkAlgorithm } from '@/components/ThemeProvider';
 ### 组合配置
 
 \`\`\`tsx
-import { darkAlgorithm, compactAlgorithm } from '@/components/ThemeProvider';
+import { darkAlgorithm, compactAlgorithm } from '@lobehub/ui-rn';
 
 <ThemeProvider
   theme={{
@@ -78,7 +78,7 @@ import { darkAlgorithm, compactAlgorithm } from '@/components/ThemeProvider';
 ### useThemeToken Hook
 
 \`\`\`tsx
-import { useThemeToken } from '@/components/ThemeProvider';
+import { useThemeToken } from '@lobehub/ui-rn';
 
 function MyComponent() {
   const token = useThemeToken();
@@ -107,7 +107,7 @@ function MyComponent() {
 ### useTheme Hook
 
 \`\`\`tsx
-import { useTheme } from '@/components/ThemeProvider';
+import { useTheme } from '@lobehub/ui-rn';
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();

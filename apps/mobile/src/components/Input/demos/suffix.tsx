@@ -1,8 +1,8 @@
+import { Input } from '@lobehub/ui-rn';
 import { Copy, Send, X } from 'lucide-react-native';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { Input } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({

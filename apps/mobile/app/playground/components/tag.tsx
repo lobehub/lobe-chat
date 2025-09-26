@@ -1,9 +1,14 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import {
+  BasicDemo,
+  BorderDemo,
+  ColorsDemo,
+  PresetDemo,
+  UseCaseDemo,
+} from '@lobehub/ui-rn/Tag/demos';
+import README from '@lobehub/ui-rn/Tag/readme';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
-import { BasicDemo, BorderDemo, ColorsDemo, PresetDemo, UseCaseDemo } from '@/components/Tag/demos';
-import README from '@/components/Tag/readme';
 
 import { useStyles } from './style';
 

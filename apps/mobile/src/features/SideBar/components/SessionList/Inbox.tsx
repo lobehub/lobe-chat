@@ -1,8 +1,8 @@
+import { ListItem } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/_const/meta';
 import { INBOX_SESSION_ID } from '@/_const/session';
-import { ListItem } from '@/components';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 

@@ -1,10 +1,10 @@
+import { Avatar, Icon } from '@lobehub/ui-rn';
 import { Link } from 'expo-router';
 import { Settings2 } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE } from '@/_const/common';
 import { DEFAULT_USER_AVATAR } from '@/_const/meta';
-import { Avatar, Icon } from '@/components';
 import { useAuth } from '@/store/user';
 
 import { useStyles } from './styles';

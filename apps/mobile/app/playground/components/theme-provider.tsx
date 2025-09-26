@@ -1,5 +1,6 @@
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+
 import README from '@/theme/ThemeProvider/README';
 import {
   BasicDemo,

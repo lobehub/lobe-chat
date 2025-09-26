@@ -1,5 +1,6 @@
 import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
+import { Button } from '@lobehub/ui-rn';
 import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
 import React, { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,6 @@ import {
   View,
 } from 'react-native';
 
-import { Button } from '@/components';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
