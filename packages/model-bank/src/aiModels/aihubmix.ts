@@ -30,9 +30,9 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      orchestration: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -59,9 +59,9 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      orchestration: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -111,8 +111,8 @@ const aihubmixModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      orchestration: true,
       reasoning: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -462,9 +462,9 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      orchestration: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -499,6 +499,7 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -532,6 +533,7 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -784,6 +786,7 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
@@ -812,6 +815,7 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,

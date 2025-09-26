@@ -10,9 +10,9 @@ const googleChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      orchestration: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       video: true,
       vision: true,
     },
