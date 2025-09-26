@@ -311,7 +311,7 @@ const mergeExtendParams = (
 const mergeSettings = (
   modelSettings?: AiModelSettings,
   knownSettings?: AiModelSettings,
-  options?: { includeKnownExtendParams?: boolean },
+  options?: { includeKnownExtendParams?: boolean; includeSearchSettings?: boolean },
 ): AiModelSettings | undefined => {
   if (!modelSettings && !knownSettings) return undefined;
 
@@ -336,17 +336,24 @@ const mergeSettings = (
     delete merged.extendParams;
   }
 
-  const searchImpl = modelSettings?.searchImpl ?? knownSettings?.searchImpl;
-  if (searchImpl) {
-    merged.searchImpl = searchImpl;
+  const includeSearchSettings = options?.includeSearchSettings ?? true;
+
+  if (includeSearchSettings) {
+    const searchImpl = modelSettings?.searchImpl ?? knownSettings?.searchImpl;
+    if (searchImpl) {
+      merged.searchImpl = searchImpl;
+    } else {
+      delete merged.searchImpl;
+    }
+
+    const searchProvider = modelSettings?.searchProvider ?? knownSettings?.searchProvider;
+    if (searchProvider) {
+      merged.searchProvider = searchProvider;
+    } else {
+      delete merged.searchProvider;
+    }
   } else {
     delete merged.searchImpl;
-  }
-
-  const searchProvider = modelSettings?.searchProvider ?? knownSettings?.searchProvider;
-  if (searchProvider) {
-    merged.searchProvider = searchProvider;
-  } else {
     delete merged.searchProvider;
   }
 
@@ -360,7 +367,7 @@ const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any,
-  options?: { includeKnownExtendParams?: boolean },
+  options?: { includeKnownExtendParams?: boolean; includeSearchSettings?: boolean },
 ): ChatModelCard | undefined => {
   const {
     functionCallKeywords = [],
@@ -528,6 +535,7 @@ export const processMultiProviderModelList = async (
 
       const includeKnownExtendParams =
         providerid === 'aihubmix' || providerid === 'newapi' || detectedProvider === 'openai';
+      const includeSearchSettings = providerid === 'aihubmix' || providerid === 'newapi';
 
       // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
       let providerLocalModelConfig = null;
@@ -537,7 +545,31 @@ export const processMultiProviderModelList = async (
 
       const processedModel = processModelCard(model, config, knownModel, {
         includeKnownExtendParams,
+        includeSearchSettings,
       });
+
+      if (processedModel && includeSearchSettings && providerLocalModelConfig?.settings) {
+        const localSettings = providerLocalModelConfig.settings as AiModelSettings | undefined;
+        const searchImpl = localSettings?.searchImpl;
+        const searchProvider = localSettings?.searchProvider;
+
+        if (searchImpl || searchProvider) {
+          const updatedSettings: AiModelSettings = processedModel.settings
+            ? { ...processedModel.settings }
+            : ({} as AiModelSettings);
+
+          if (searchImpl) {
+            updatedSettings.searchImpl = searchImpl;
+          }
+
+          if (searchProvider) {
+            updatedSettings.searchProvider = searchProvider;
+          }
+
+          processedModel.settings =
+            Object.keys(updatedSettings).length > 0 ? updatedSettings : undefined;
+        }
+      }
 
       // 如果找到了本地配置中的模型，使用其 enabled 状态
       if (

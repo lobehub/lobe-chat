@@ -654,6 +654,87 @@ describe('modelParse', () => {
         expect(googleModel?.settings?.extendParams).toEqual(['thinkingBudget', 'urlContext']);
       });
 
+      it('should omit search settings when provider is neither aihubmix nor newapi', async () => {
+        const mockModule = await import('model-bank');
+        const initialLength = mockModule.LOBE_DEFAULT_MODEL_LIST.length;
+        mockModule.LOBE_DEFAULT_MODEL_LIST.push({
+          id: 'search-settings-model',
+          displayName: 'Search Settings Model',
+          settings: {
+            searchImpl: 'params',
+            searchProvider: 'builtin',
+          },
+        } as any);
+
+        try {
+          const result = await processMultiProviderModelList(
+            [{ id: 'search-settings-model' }],
+            'vercelaigateway',
+          );
+
+          const model = result.find((m) => m.id === 'search-settings-model');
+
+          expect(model?.settings?.searchImpl).toBeUndefined();
+          expect(model?.settings?.searchProvider).toBeUndefined();
+        } finally {
+          mockModule.LOBE_DEFAULT_MODEL_LIST.splice(initialLength);
+        }
+      });
+
+      it('should include search settings when provider is aihubmix', async () => {
+        const mockModule = await import('model-bank');
+        const initialLength = mockModule.LOBE_DEFAULT_MODEL_LIST.length;
+        mockModule.LOBE_DEFAULT_MODEL_LIST.push({
+          id: 'search-settings-aihubmix',
+          displayName: 'Search Settings Aihubmix',
+          settings: {
+            searchImpl: 'params',
+            searchProvider: 'builtin',
+          },
+        } as any);
+
+        try {
+          const result = await processMultiProviderModelList(
+            [{ id: 'search-settings-aihubmix' }],
+            'aihubmix',
+          );
+
+          const model = result.find((m) => m.id === 'search-settings-aihubmix');
+
+          expect(model?.settings?.searchImpl).toBe('params');
+          expect(model?.settings?.searchProvider).toBe('builtin');
+        } finally {
+          mockModule.LOBE_DEFAULT_MODEL_LIST.splice(initialLength);
+        }
+      });
+
+      it('should include search settings when provider is newapi', async () => {
+        const mockModule = await import('model-bank');
+        const initialLength = mockModule.LOBE_DEFAULT_MODEL_LIST.length;
+        mockModule.LOBE_DEFAULT_MODEL_LIST.push({
+          id: 'search-settings-newapi',
+          displayName: 'Search Settings NewAPI',
+          settings: {
+            searchImpl: 'params',
+            searchProvider: 'builtin',
+          },
+        } as any);
+
+        try {
+          const result = await processMultiProviderModelList(
+            [{ id: 'search-settings-newapi' }],
+            'newapi',
+          );
+
+          const model = result.find((m) => m.id === 'search-settings-newapi');
+
+          expect(model?.settings?.searchImpl).toBe('params');
+          expect(model?.settings?.searchProvider).toBe('builtin');
+        } finally {
+          mockModule.LOBE_DEFAULT_MODEL_LIST.splice(initialLength);
+        }
+      });
+
       it('should correctly handle models with excluded keywords in different providers', async () => {
         // OpenAI excludes 'audio', other providers don't have excluded keywords
         const modelList = [
