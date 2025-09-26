@@ -1,7 +1,7 @@
+import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Highlighter } from '@/components';
 import { useThemeToken } from '@/theme';
 
 /**
@@ -47,8 +47,8 @@ const createUser = (data: Partial<User>): User => {
   flex-direction: column;
   padding: 16px;
   background: linear-gradient(
-    135deg, 
-    #667eea 0%, 
+    135deg,
+    #667eea 0%,
     #764ba2 100%
   );
   border-radius: 12px;

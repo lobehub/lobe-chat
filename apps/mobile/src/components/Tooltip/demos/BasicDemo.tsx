@@ -1,7 +1,7 @@
+import { Button, Tooltip } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Tooltip } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const BasicDemo = () => {

@@ -1,7 +1,7 @@
+import { Button, Skeleton } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { Button, Skeleton } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const AnimatedDemo: React.FC = () => {

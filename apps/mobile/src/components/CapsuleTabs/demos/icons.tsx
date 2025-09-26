@@ -1,8 +1,8 @@
+import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@lobehub/ui-rn';
 import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const items: CapsuleTabItem[] = [

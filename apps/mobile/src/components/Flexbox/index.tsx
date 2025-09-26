@@ -1,5 +1,12 @@
 import React, { ReactNode, memo } from 'react';
-import { DimensionValue, View, ViewProps } from 'react-native';
+import {
+  DimensionValue,
+  Pressable,
+  PressableProps,
+  StyleProp,
+  View,
+  ViewProps,
+} from 'react-native';
 
 export type JustifyContent =
   | 'flex-start'
@@ -19,6 +26,7 @@ export interface FlexboxProps extends ViewProps {
   height?: DimensionValue | undefined;
   horizontal?: boolean;
   justify?: JustifyContent;
+  onPress?: PressableProps['onPress'];
   padding?: DimensionValue | undefined;
   paddingBlock?: DimensionValue | undefined;
   paddingInline?: DimensionValue | undefined;
@@ -41,29 +49,36 @@ const Flexbox = memo<FlexboxProps>(
     padding,
     paddingBlock,
     paddingInline,
+    onPress,
     ...rest
   }) => {
+    const styles: StyleProp<any> = [
+      {
+        alignItems: align,
+        display: 'flex',
+        flex: flex,
+        flexDirection: horizontal ? 'row' : 'column',
+        flexWrap: wrap,
+        gap: gap,
+        height: height,
+        justifyContent: justify,
+        padding: padding,
+        paddingBlock: paddingBlock,
+        paddingInline: paddingInline,
+        width: width,
+      },
+      style,
+    ];
+
+    if (onPress) {
+      return (
+        <Pressable onPress={onPress} style={styles} {...rest}>
+          {children}
+        </Pressable>
+      );
+    }
     return (
-      <View
-        style={[
-          {
-            alignItems: align,
-            display: 'flex',
-            flex: flex,
-            flexDirection: horizontal ? 'row' : 'column',
-            flexWrap: wrap,
-            gap: gap,
-            height: height,
-            justifyContent: justify,
-            padding: padding,
-            paddingBlock: paddingBlock,
-            paddingInline: paddingInline,
-            width: width,
-          },
-          style,
-        ]}
-        {...rest}
-      >
+      <View style={styles} {...rest}>
         {children}
       </View>
     );

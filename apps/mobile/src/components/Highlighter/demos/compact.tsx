@@ -1,7 +1,7 @@
+import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Highlighter } from '@/components';
 import { useThemeToken } from '@/theme';
 
 /**

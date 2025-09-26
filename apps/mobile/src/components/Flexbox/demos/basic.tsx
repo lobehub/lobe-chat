@@ -1,7 +1,6 @@
+import { Center, Flexbox } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text } from 'react-native';
-
-import { Center, Flexbox } from '@/components';
 
 const BasicDemo = () => {
   return (

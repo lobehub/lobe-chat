@@ -18,7 +18,7 @@ React Native 版本的滑动输入条组件，支持自定义范围、步长和�
 ## 基础使用
 
 \`\`\`tsx
-import Slider from '@/components/Slider';
+import { Slider } from '@lobehub/ui-rn';
 
 // 基础用法
 <Slider
@@ -72,7 +72,7 @@ import Slider from '@/components/Slider';
   max={100}
   marks={{
     0: '0%',
-    25: '25%', 
+    25: '25%',
     50: '50%',
     75: '75%',
     100: '100%'

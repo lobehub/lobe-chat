@@ -31,7 +31,7 @@ npm install react-native-fast-image # 可选，用于更好的图片性能
 ### 简单列表项
 
 ```jsx
-import ListItem from '@/components/ListItem';
+import { ListItem } from '@lobehub/ui-rn';
 
 export default function BasicExample() {
   return (
@@ -48,7 +48,7 @@ export default function BasicExample() {
 ### 网络图片头像
 
 ```jsx
-import ListItem from '@/components/ListItem';
+import { ListItem } from '@lobehub/ui-rn';
 
 export default function ImageAvatarExample() {
   return (
@@ -66,7 +66,7 @@ export default function ImageAvatarExample() {
 ### 路由导航
 
 ```jsx
-import ListItem from '@/components/ListItem';
+import { ListItem } from '@lobehub/ui-rn';
 
 export default function NavigationExample() {
   return <ListItem title="设置" avatar="⚙️" description="应用程序设置" href="/settings" />;

@@ -1,7 +1,6 @@
+import { Block, Flexbox } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
-
-import Block from '../index';
+import { Alert, Text } from 'react-native';
 
 const ClickableDemo = () => {
   const [clickCount, setClickCount] = useState(0);
@@ -12,9 +11,8 @@ const ClickableDemo = () => {
   };
 
   return (
-    <View style={{ padding: 16 }}>
+    <Flexbox gap={16}>
       <Text style={{ fontSize: 18, marginBottom: 16 }}>可点击的 Block</Text>
-
       <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Clickable Filled Block</Text>
       <Block
         clickable
@@ -36,29 +34,17 @@ const ClickableDemo = () => {
       </Block>
 
       <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Clickable Borderless Block</Text>
-      <Block
-        clickable
-        onPress={() => handlePress('Borderless')}
-        style={{ marginBottom: 16, padding: 16 }}
-        variant="borderless"
-      >
+      <Block clickable onPress={() => handlePress('Borderless')} padding={16} variant="borderless">
         <Text>点击我！(Borderless)</Text>
       </Block>
 
       <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>组合效果</Text>
-      <Block
-        clickable
-        glass
-        onPress={() => handlePress('组合')}
-        shadow
-        style={{ marginBottom: 16, padding: 16 }}
-        variant="filled"
-      >
+      <Block clickable onPress={() => handlePress('组合')} padding={16} shadow variant="filled">
         <Text>点击我！(组合效果：clickable + shadow + glass)</Text>
       </Block>
 
       <Text style={{ color: '#666', fontSize: 12 }}>总点击次数: {clickCount}</Text>
-    </View>
+    </Flexbox>
   );
 };
 
