@@ -7,31 +7,31 @@ import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
-  ({ variant = 'filled', shadow, glass, clickable, children, style, onPress, ...rest }) => {
-    const { cx, styles } = useStyles();
+  ({ variant = 'filled', shadow, glass, children, style, onPress, ...rest }) => {
+    const { styles } = useStyles();
 
     const variants = useMemo(
       () =>
         cva(styles.root, {
           compoundVariants: [
             {
-              shadow: true,
-              style: {},
+              hovered: true,
+              style: styles.borderlessHover,
               variant: 'borderless',
             },
             {
-              clickable: true,
-              style: styles.clickableBorderless,
+              hovered: true,
+              style: styles.outlinedHover,
+              variant: 'outlined',
+            },
+            {
+              pressed: true,
+              style: styles.borderlessHover,
               variant: 'borderless',
             },
             {
-              clickable: true,
-              style: styles.clickableFilled,
-              variant: 'filled',
-            },
-            {
-              clickable: true,
-              style: styles.clickableOutlined,
+              pressed: true,
+              style: styles.outlinedActive,
               variant: 'outlined',
             },
           ],
@@ -39,13 +39,17 @@ const Block = memo<BlockProps>(
             variant: 'filled',
           },
           variants: {
-            clickable: {
-              false: null,
-              true: styles.clickableRoot,
-            },
             glass: {
               false: null,
               true: styles.glass,
+            },
+            hovered: {
+              false: null,
+              true: styles.filledHover,
+            },
+            pressed: {
+              false: null,
+              true: styles.filledActive,
             },
             shadow: {
               false: null,
@@ -64,7 +68,10 @@ const Block = memo<BlockProps>(
     return (
       <Flexbox
         onPress={onPress}
-        style={cx(variants({ clickable, glass, shadow, variant }), style)}
+        style={({ hovered, pressed }) => [
+          variants({ glass, hovered, pressed, shadow, variant }),
+          style,
+        ]}
         {...rest}
       >
         {children}
