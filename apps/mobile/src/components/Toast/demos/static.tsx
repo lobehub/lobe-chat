@@ -2,7 +2,7 @@ import { Button, Toast } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const showSuccess = () => {
   Toast.success('操作成功');
@@ -21,7 +21,7 @@ const showLoading = () => {
 };
 
 export default function StaticDemo() {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const styles = StyleSheet.create({
     buttonGroup: {

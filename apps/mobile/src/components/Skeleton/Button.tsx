@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -26,7 +26,7 @@ const SkeletonButton: React.FC<SkeletonButtonProps> = ({
   style,
 }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
   const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

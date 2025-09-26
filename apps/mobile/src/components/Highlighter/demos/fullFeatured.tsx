@@ -2,14 +2,14 @@ import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 /**
  * 完整功能模式演示
  * 展示所有可用的高级功能
  */
 export const FullFeaturedHighlighterDemo: React.FC = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const examples = [
     {

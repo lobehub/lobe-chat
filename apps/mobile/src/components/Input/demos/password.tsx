@@ -65,7 +65,7 @@ const useStyles = createStyles(({ token }) => ({
 }));
 
 const PasswordDemo = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
@@ -153,9 +153,9 @@ const PasswordDemo = () => {
           {validations.map((validation, index) => (
             <View key={index} style={styles.validationItem}>
               {validation.valid ? (
-                <CheckCircle color={token.colorSuccess} size={16} />
+                <CheckCircle color={theme.colorSuccess} size={16} />
               ) : (
-                <XCircle color={token.colorError} size={16} />
+                <XCircle color={theme.colorError} size={16} />
               )}
               <Text
                 style={[

@@ -2,10 +2,10 @@ import { FluentEmoji } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const SizesDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const sizes = [24, 32, 48, 64];
 

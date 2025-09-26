@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import { useTheme, useThemeToken } from '@/theme';
+import { useTheme, useThemeMode } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -91,8 +91,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
   textStyle,
   zIndex = 1000,
 }) => {
-  const token = useThemeToken();
-  useTheme();
+  const token = useTheme();
+  useThemeMode();
   const { styles } = useStyles();
 
   const [internalVisible, setInternalVisible] = useState(false);

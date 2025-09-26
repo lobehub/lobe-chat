@@ -2,7 +2,7 @@ import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@lobehub
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const items: CapsuleTabItem[] = [
   { key: 'overview', label: 'Overview' },
@@ -22,7 +22,7 @@ const SizesDemo: React.FC = () => {
     middle: items[0].key,
     small: items[0].key,
   });
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ gap: 16, padding: 16 }}>
