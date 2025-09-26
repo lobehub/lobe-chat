@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
+
+import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
+import ExtendParamsSelect from './ExtendParamsSelect';
 
 interface ModelConfigFormProps {
   idEditable?: boolean;
@@ -77,6 +79,13 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
             name={'contextWindowTokens'}
           >
             <MaxTokenSlider />
+          </Form.Item>
+          <Form.Item
+            extra={t('providerModels.item.modelConfig.extendParams.extra')}
+            label={t('providerModels.item.modelConfig.extendParams.title')}
+            name={['settings', 'extendParams']}
+          >
+            <ExtendParamsSelect />
           </Form.Item>
           <Form.Item
             extra={t('providerModels.item.modelConfig.functionCall.extra')}
