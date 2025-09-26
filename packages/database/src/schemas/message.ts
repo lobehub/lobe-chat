@@ -94,7 +94,7 @@ export const messagePlugins = pgTable(
 
     toolCallId: text('tool_call_id'),
     type: text('type', {
-      enum: ['default', 'markdown', 'standalone', 'builtin'],
+      enum: ['default', 'markdown', 'standalone', 'builtin', 'mcp-ui'],
     }).default('default'),
 
     apiName: text('api_name'),

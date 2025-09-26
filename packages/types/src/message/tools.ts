@@ -76,3 +76,12 @@ export interface ChatMessagePluginError {
   message: string;
   type: IPluginErrorType;
 }
+
+/**
+ * MCP UI Resource Types
+ */
+export interface McpUIResource {
+  content: string;
+  metadata?: Record<string, any>;
+  type: 'html' | 'url' | 'iframe';
+}

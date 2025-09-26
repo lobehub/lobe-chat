@@ -4,6 +4,7 @@ import { LobeBuiltinTool } from '@/types/tool';
 import { ArtifactsManifest } from './artifacts';
 import { DalleManifest } from './dalle';
 import { LocalSystemManifest } from './local-system';
+import { McpUIManifest } from './mcp-ui';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
@@ -21,6 +22,12 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: !isDesktop,
     identifier: LocalSystemManifest.identifier,
     manifest: LocalSystemManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: McpUIManifest.identifier,
+    manifest: McpUIManifest,
     type: 'builtin',
   },
   {
