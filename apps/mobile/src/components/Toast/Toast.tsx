@@ -3,7 +3,7 @@ import React from 'react';
 import { Animated, Text, TouchableOpacity } from 'react-native';
 
 import Icon from '@/components/Icon';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -19,7 +19,7 @@ export interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const { styles } = useStyles();
 
   const getIcon = () => {

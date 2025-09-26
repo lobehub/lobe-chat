@@ -26,7 +26,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     ...rest
   }) => {
     const [activeColor, setActiveColor] = useState(value || defaultValue);
-    const { styles, token } = useStyles({ gap, shape, size });
+    const { styles, theme } = useStyles({ gap, shape, size });
 
     // 处理颜色选择
     const handleColorSelect = (color: string | undefined) => {
@@ -37,7 +37,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     // 计算可读的对比色（用于选中图标）
     const getContrastColor = (bgColor: string) => {
       if (isTransparent(bgColor)) {
-        return token.colorText;
+        return theme.colorText;
       }
       // 简单的对比色计算，实际项目中可以使用更复杂的算法
       return '#ffffff';
@@ -50,7 +50,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     return (
       <View style={[styles.container, style]} {...rest}>
         {colors.map((colorItem, index) => {
-          const color = colorItem.color || token.colorPrimary;
+          const color = colorItem.color || theme.colorPrimary;
           const isActive = (!activeColor && !colorItem.color) || color === activeColor;
           const isColorTransparent = isTransparent(color);
 
@@ -75,7 +75,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
               {isColorTransparent && (
                 <View style={{ bottom: 0, left: 0, position: 'absolute', right: 0, top: 0 }}>
                   <ConicGradientPattern
-                    fillColor={token.colorFillSecondary}
+                    fillColor={theme.colorFillSecondary}
                     height={size}
                     width={size}
                   />

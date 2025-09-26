@@ -3,7 +3,7 @@ import type { TooltipPlacement } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const placements: TooltipPlacement[] = [
   'topLeft',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 });
 
 const PositionDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={[styles.demoContainer, { backgroundColor: token.colorBgLayout }]}>

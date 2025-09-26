@@ -2,10 +2,10 @@ import { Button, useToast } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 export default function BasicDemo() {
-  const token = useThemeToken();
+  const token = useTheme();
   const toast = useToast();
 
   const showSuccess = () => {

@@ -4,7 +4,7 @@ import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { ICON_SIZE } from '@/_const/common';
 import Icon, { type IconProps as BaseIconProps, type IconSize } from '@/components/Icon';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { calcSize, getBaseStyle, getVariantStyle } from './style';
 
@@ -32,7 +32,7 @@ const ActionIcon: React.FC<ActionIconProps> = memo(
     spin,
     ...rest
   }) => {
-    const token = useThemeToken();
+    const token = useTheme();
     const { blockSize, borderRadius, innerIconSize } = useMemo(() => calcSize(size), [size]);
 
     const baseStyle: ViewStyle = getBaseStyle(blockSize, borderRadius, disabled);

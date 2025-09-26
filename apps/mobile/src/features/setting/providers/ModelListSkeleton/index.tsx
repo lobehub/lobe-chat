@@ -1,14 +1,14 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import ModelCardSkeleton from '../ModelCardSkeleton';
 import { useStyles } from './style';
 
 const ModelListSkeleton: React.FC = () => {
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={styles.container}>

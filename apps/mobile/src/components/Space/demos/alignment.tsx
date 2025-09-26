@@ -2,7 +2,7 @@ import { Space } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const DemoItem = ({
   children,
@@ -11,7 +11,7 @@ const DemoItem = ({
   children: React.ReactNode;
   size?: 'small' | 'normal' | 'large';
 }) => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   const getHeight = () => {
     switch (size) {
@@ -43,7 +43,7 @@ const DemoItem = ({
 };
 
 export const AlignmentDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ padding: 16 }}>

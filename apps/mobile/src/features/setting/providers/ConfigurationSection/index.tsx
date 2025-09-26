@@ -20,7 +20,7 @@ const isValidUrl = (url: string) => {
 };
 
 const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const { t } = useTranslation('setting');
 
   // Store hooks
@@ -170,7 +170,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
             />
             {isChecking && (
               <View style={styles.loadingIndicator}>
-                <ActivityIndicator color={token.colorTextSecondary} size="small" />
+                <ActivityIndicator color={theme.colorTextSecondary} size="small" />
               </View>
             )}
           </View>
@@ -211,7 +211,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
       {isServerMode && (
         <View style={styles.aesGcmContainer}>
           <View style={styles.aesGcmContent}>
-            <Lock color={token.colorTextQuaternary} size={token.fontSize} />
+            <Lock color={theme.colorTextQuaternary} size={theme.fontSize} />
             <Text style={styles.aesGcmText}>
               <Trans i18nKey="providerModels.config.aesGcm" ns="setting">
                 您的秘钥与代理地址等将使用

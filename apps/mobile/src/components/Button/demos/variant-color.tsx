@@ -2,9 +2,7 @@ import { Button, Space } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
 
-import type { ButtonColor } from '../style';
-
-const colors: ButtonColor[] = ['default', 'primary', 'danger', 'magenta', 'purple', 'cyan'];
+const colors: any[] = ['default', 'primary', 'danger', 'magenta', 'purple', 'cyan'];
 
 const VariantColorDemo = () => {
   return (

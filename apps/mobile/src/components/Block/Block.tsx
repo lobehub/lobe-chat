@@ -15,6 +15,11 @@ const Block = memo<BlockProps>(
         cva(styles.root, {
           compoundVariants: [
             {
+              shadow: true,
+              style: {},
+              variant: 'borderless',
+            },
+            {
               clickable: true,
               style: styles.clickableBorderless,
               variant: 'borderless',

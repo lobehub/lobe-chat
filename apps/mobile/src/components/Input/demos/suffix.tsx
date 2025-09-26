@@ -30,7 +30,7 @@ const useStyles = createStyles(({ token }) => ({
 }));
 
 const SuffixDemo = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const [inputValue, setInputValue] = React.useState('');
 
   return (
@@ -46,7 +46,7 @@ const SuffixDemo = () => {
         placeholder="输入消息"
         suffix={
           <TouchableOpacity style={styles.suffixButton}>
-            <Send color={token.colorText} size={16} />
+            <Send color={theme.colorText} size={16} />
           </TouchableOpacity>
         }
       />
@@ -56,7 +56,7 @@ const SuffixDemo = () => {
         defaultValue="可复制的内容"
         suffix={
           <TouchableOpacity style={styles.clearButton}>
-            <Copy color={token.colorTextSecondary} size={16} />
+            <Copy color={theme.colorTextSecondary} size={16} />
           </TouchableOpacity>
         }
       />
@@ -68,7 +68,7 @@ const SuffixDemo = () => {
         suffix={
           inputValue ? (
             <TouchableOpacity onPress={() => setInputValue('')} style={styles.clearButton}>
-              <X color={token.colorTextSecondary} size={16} />
+              <X color={theme.colorTextSecondary} size={16} />
             </TouchableOpacity>
           ) : null
         }

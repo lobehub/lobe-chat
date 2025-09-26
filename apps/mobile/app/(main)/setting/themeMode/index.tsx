@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useTheme as useAppTheme } from '@/theme';
+import { useThemeMode as useAppTheme } from '@/theme';
 
 import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from '../styles';
@@ -11,9 +11,9 @@ import { useStyles } from '../styles';
 export default function ThemeModeSettingScreen() {
   const { t } = useTranslation(['setting']);
   const { styles } = useStyles();
-  const { theme, setThemeMode } = useAppTheme();
+  const { themeMode, setThemeMode } = useAppTheme();
 
-  const isFollowSystem = theme.mode === 'auto';
+  const isFollowSystem = themeMode === 'auto';
 
   return (
     <PageContainer
@@ -33,13 +33,13 @@ export default function ThemeModeSettingScreen() {
         {!isFollowSystem && (
           <SettingGroup>
             <SettingItem
-              isSelected={theme.mode === 'light'}
+              isSelected={themeMode === 'light'}
               onPress={() => setThemeMode('light')}
               showCheckmark
               title={t('themeMode.light', { ns: 'setting' })}
             />
             <SettingItem
-              isSelected={theme.mode === 'dark'}
+              isSelected={themeMode === 'dark'}
               onPress={() => setThemeMode('dark')}
               showCheckmark
               title={t('themeMode.dark', { ns: 'setting' })}
