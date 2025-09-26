@@ -13,7 +13,7 @@ const ICON_README = `# Icon 图标组件
 ## 基础使用
 
 \`\`\`tsx
-import { Icon } from '@/components';
+import { Icon } from '@lobehub/ui-rn';
 import { Star } from 'lucide-react-native';
 
 <Icon icon={Star} />;

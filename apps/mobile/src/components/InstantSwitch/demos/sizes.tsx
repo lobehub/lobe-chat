@@ -1,7 +1,7 @@
+import { InstantSwitch } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { InstantSwitch } from '@/components';
 import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { Input } from '@/components';
+import Input from '@/components/Input';
 
 import { useStyles } from './style';
 

@@ -1,6 +1,6 @@
+import { ListItem } from '@lobehub/ui-rn';
 import { useMemo } from 'react';
 
-import { ListItem } from '@/components';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';

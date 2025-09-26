@@ -3,8 +3,7 @@ import React, { memo, useMemo } from 'react';
 import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { ICON_SIZE } from '@/_const/common';
-import Icon from '@/components/Icon';
-import type { IconProps as BaseIconProps, IconSize } from '@/components/Icon';
+import Icon, { type IconProps as BaseIconProps, type IconSize } from '@/components/Icon';
 import { useThemeToken } from '@/theme';
 
 import { calcSize, getBaseStyle, getVariantStyle } from './style';

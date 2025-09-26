@@ -10,12 +10,12 @@ import {
   TraceEventType,
   TraceNameMap,
 } from '@lobechat/types';
+import { Toast } from '@lobehub/ui-rn';
 import { produce } from 'immer';
 import Mustache from 'mustache';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/_const/message';
-import Toast from '@/components/Toast';
 // import { isDesktop, isServerMode } from '@/const/version';
 // import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';

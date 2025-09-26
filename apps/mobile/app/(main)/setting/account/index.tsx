@@ -1,11 +1,9 @@
+import { Avatar, Button, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
-import { PageContainer } from '@/components';
-import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
 

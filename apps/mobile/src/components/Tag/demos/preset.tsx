@@ -1,7 +1,6 @@
+import { Tag } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
-
-import { Tag } from '@/components';
 
 const PresetDemo = () => {
   return (

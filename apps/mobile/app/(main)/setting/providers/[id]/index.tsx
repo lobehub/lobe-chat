@@ -1,5 +1,14 @@
 import { AiProviderDetailItem } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
+import {
+  Button,
+  Input,
+  InstantSwitch,
+  ModelInfoTags,
+  PageContainer,
+  Tag,
+  useToast,
+} from '@lobehub/ui-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
@@ -9,15 +18,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native';
 
-import {
-  Button,
-  Input,
-  InstantSwitch,
-  ModelInfoTags,
-  PageContainer,
-  Tag,
-  useToast,
-} from '@/components';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import ConfigurationSection from '@/features/setting/providers/ConfigurationSection';
 import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';

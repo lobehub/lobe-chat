@@ -1,15 +1,14 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import {
   AdvancedDemo,
   AlignmentDemo,
   BasicDemo,
   DirectionsDemo,
   SizesDemo,
-} from '@/components/Space/demos';
-import README from '@/components/Space/readme';
+} from '@lobehub/ui-rn/Space/demos';
+import README from '@lobehub/ui-rn/Space/readme';
+import React from 'react';
 
 import { useStyles } from './style';
 

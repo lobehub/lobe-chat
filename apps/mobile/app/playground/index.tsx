@@ -1,9 +1,8 @@
+import { CapsuleTabItem, CapsuleTabs, Input, PageContainer, Tag } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-
-import { CapsuleTabItem, CapsuleTabs, Input, PageContainer, Tag } from '@/components';
 
 import { useStyles } from './styles';
 import { ComponentItem } from './type';

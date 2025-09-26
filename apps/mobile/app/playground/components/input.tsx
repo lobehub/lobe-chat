@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
+import { PageContainer } from '@lobehub/ui-rn';
 import {
   BasicDemo,
   CompoundDemo,
@@ -11,9 +9,10 @@ import {
   SuffixDemo,
   TextAreaDemo,
   VariantDemo,
-} from '@/components/Input/demos';
-import README from '@/components/Input/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+} from '@lobehub/ui-rn/Input/demos';
+import README from '@lobehub/ui-rn/Input/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import React from 'react';
 
 import { useStyles } from './style';
 

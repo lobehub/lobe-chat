@@ -15,7 +15,7 @@ const CENTER_README = `# Center 居中组件
 ## 基础使用
 
 \`\`\`tsx
-import Center from '@/components/Center';
+import { Center } from '@lobehub/ui-rn';
 
 // 完全居中
 <Center>

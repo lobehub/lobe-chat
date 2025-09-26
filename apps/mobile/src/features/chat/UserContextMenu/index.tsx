@@ -1,11 +1,11 @@
 import { ChatMessage } from '@lobechat/types';
+import { useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
-import { useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
 
 import { useStyles } from './style';

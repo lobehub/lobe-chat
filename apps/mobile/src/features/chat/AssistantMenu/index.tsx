@@ -1,11 +1,11 @@
 import { ChatMessage } from '@lobechat/types';
+import { Tooltip, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import { Copy, LucideIcon, RefreshCw, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
-import { Tooltip, useToast } from '@/components';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { useThemeToken } from '@/theme';
