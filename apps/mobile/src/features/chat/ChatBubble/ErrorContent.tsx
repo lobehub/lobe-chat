@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
 import { useProviderName } from '@/hooks/useProviderName';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 interface ErrorContentProps {
   error: ChatMessageError;
 }
 
 const ErrorContent: React.FC<ErrorContentProps> = ({ error }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const { t } = useTranslation('error');
   const providerName = useProviderName(error.body?.provider);
 

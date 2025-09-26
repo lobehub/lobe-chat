@@ -3,7 +3,7 @@ import { ProviderIcon } from '@lobehub/icons-rn';
 import React, { memo } from 'react';
 import { Image, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './styles';
 
@@ -20,7 +20,7 @@ interface ProviderItemRenderProps {
  */
 const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name, source, logo }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={styles.container}>

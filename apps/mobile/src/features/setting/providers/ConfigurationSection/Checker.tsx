@@ -18,7 +18,7 @@ import {
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -81,7 +81,7 @@ const ModelItem = memo<{
 // Error component for detailed error display
 const ErrorDisplay = memo<{ error: ChatMessageError }>(({ error }) => {
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
   const { t } = useTranslation('error');
   const [showDetails, setShowDetails] = useState(false);
   const providerName = useProviderName(error.body?.provider);
@@ -120,7 +120,7 @@ const ErrorDisplay = memo<{ error: ChatMessageError }>(({ error }) => {
 const Checker = memo<CheckerProps>(
   ({ model, provider, checkErrorRender: CheckErrorRender, onBeforeCheck, onAfterCheck }) => {
     const { styles } = useStyles();
-    const token = useThemeToken();
+    const token = useTheme();
     const { t } = useTranslation(['setting']);
 
     // Store hooks

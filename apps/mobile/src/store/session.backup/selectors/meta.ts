@@ -35,11 +35,11 @@ const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s).title;
 const currentAgentDescription = (s: SessionStore) => currentAgentMeta(s).description;
 const currentAgentAvatar = (s: SessionStore) => currentAgentMeta(s).avatar;
 const currentAgentBackgroundColor = (s: SessionStore) => currentAgentMeta(s).backgroundColor;
-const currentAgentAuthor = (s: SessionStore) => currentAgentMeta(s).author;
+const currentAgentAuthor = () => DEFAULT_AUTHOR;
 
 const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
 const getTitle = (s: MetaData) => s.title || DEFAULT_AGENT_TITLE;
-const getAuthor = (s: MetaData) => s.author || DEFAULT_AUTHOR;
+const getAuthor = DEFAULT_AUTHOR;
 // New session do not show 'noDescription'
 export const getDescription = (s: MetaData) => s.description;
 

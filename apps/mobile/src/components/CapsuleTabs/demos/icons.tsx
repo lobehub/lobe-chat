@@ -3,7 +3,7 @@ import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const items: CapsuleTabItem[] = [
   { icon: Home, key: 'home', label: '首页' },
@@ -24,7 +24,7 @@ const SizesDemo: React.FC = () => {
     middle: items[0].key,
     small: items[0].key,
   });
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ gap: 16, padding: 16 }}>

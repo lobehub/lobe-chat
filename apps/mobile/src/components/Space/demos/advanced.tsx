@@ -2,10 +2,10 @@ import { Space } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const DemoItem = ({ children }: { children: React.ReactNode }) => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View
@@ -21,7 +21,7 @@ const DemoItem = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const AdvancedDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View style={{ padding: 16 }}>

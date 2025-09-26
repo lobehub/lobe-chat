@@ -18,7 +18,7 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 import { useStyles } from './style';
 
 export default function ChatWithDrawer() {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
@@ -47,7 +47,7 @@ export default function ChatWithDrawer() {
         <KeyboardAvoidingView
           behavior="padding"
           enabled
-          keyboardVerticalOffset={token.marginXS}
+          keyboardVerticalOffset={theme.marginXS}
           style={{ flex: 1 }}
         >
           <ChatList />
