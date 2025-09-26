@@ -245,6 +245,13 @@
       "when": 1758825944181,
       "tag": "0034_fix_chat_group",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1758265517922,
+      "tag": "0034_giant_callisto",
+      "breakpoints": true
     }
   ],
   "version": "6"

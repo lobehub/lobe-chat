@@ -1,6 +1,7 @@
 import { createStyles } from 'antd-style';
 import React, { memo, useMemo } from 'react';
 
+import OrchestratorThinkingTag from '@/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatList/ChatItem/OrchestratorThinking';
 import { ChatItem } from '@/features/Conversation';
 import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
@@ -66,23 +67,28 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const actionBar = useMemo(() => <ActionsBar id={id} index={index} />, [id]);
 
+  const isLatestItem = historyLength === index + 1;
+
   return (
-    <ChatItem
-      actionBar={actionBar}
-      className={showThread ? cx(styles.line, styles[placement]) : ''}
-      enableHistoryDivider={enableHistoryDivider}
-      endRender={
-        showThread && (
-          <Thread
-            id={id}
-            placement={placement}
-            style={{ marginTop: displayMode === 'docs' ? 12 : undefined }}
-          />
-        )
-      }
-      id={id}
-      index={index}
-    />
+    <>
+      <ChatItem
+        actionBar={actionBar}
+        className={showThread ? cx(styles.line, styles[placement]) : ''}
+        enableHistoryDivider={enableHistoryDivider}
+        endRender={
+          showThread && (
+            <Thread
+              id={id}
+              placement={placement}
+              style={{ marginTop: displayMode === 'docs' ? 12 : undefined }}
+            />
+          )
+        }
+        id={id}
+        index={index}
+      />
+      {isLatestItem && <OrchestratorThinkingTag />}
+    </>
   );
 });
 

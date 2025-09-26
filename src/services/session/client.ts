@@ -2,6 +2,7 @@ import { AgentItem, LobeAgentConfig } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
+import { ChatGroupModel } from '@/database/models/chatGroup';
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { BaseClientService } from '@/services/baseClientService';
@@ -15,6 +16,10 @@ export class ClientService extends BaseClientService implements ISessionService 
 
   private get sessionGroupModel(): SessionGroupModel {
     return new SessionGroupModel(clientDB as any, this.userId);
+  }
+
+  private get chatGroupModel(): ChatGroupModel {
+    return new ChatGroupModel(clientDB as any, this.userId);
   }
 
   hasSessions: ISessionService['hasSessions'] = async () => {
@@ -48,7 +53,24 @@ export class ClientService extends BaseClientService implements ISessionService 
   };
 
   getGroupedSessions: ISessionService['getGroupedSessions'] = async () => {
-    return this.sessionModel.queryWithGroups();
+    const { sessions, sessionGroups } = await this.sessionModel.queryWithGroups();
+    const chatGroups = await this.chatGroupModel.queryWithMemberDetails();
+
+    const groupSessions = chatGroups.map((group) => {
+      const { title, description, avatar, backgroundColor, groupId, ...rest } = group;
+      return {
+        ...rest,
+        group: groupId, // Map groupId to group for consistent API
+        meta: { avatar, backgroundColor, description, title },
+        type: 'group' as const,
+      };
+    });
+
+    const allSessions = [...sessions, ...groupSessions].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+
+    return { sessionGroups, sessions: allSessions };
   };
 
   getSessionConfig: ISessionService['getSessionConfig'] = async (id) => {

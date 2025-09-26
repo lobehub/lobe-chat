@@ -4,6 +4,8 @@ import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/slices/thread/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import { InPortalThreadContext } from '../components/ChatItem/InPortalThreadContext';
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
@@ -15,6 +17,9 @@ export const UserActionsBar: RenderAction = memo(({ onActionClick, id }) => {
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
   ]);
+
+  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+
   const { regenerate, edit, copy, divider, del, branching } = useChatListActionsBar({ hasThread });
   const { translate, tts } = useCustomActions();
 
@@ -23,15 +28,28 @@ export const UserActionsBar: RenderAction = memo(({ onActionClick, id }) => {
 
   const items = useMemo(
     () =>
-      [regenerate, edit, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[],
-    [inThread],
+      [isGroupSession ? null : regenerate, edit, inThread || isGroupSession ? null : branching].filter(
+        Boolean,
+      ) as ActionIconGroupItemType[],
+    [inThread, isGroupSession],
   );
+
+  const menuItems = [
+    edit,
+    copy,
+    divider,
+    tts,
+    translate,
+    divider,
+    ...(isGroupSession ? [] : [regenerate]),
+    del,
+  ];
 
   return (
     <ActionIconGroup
       items={items}
       menu={{
-        items: [edit, copy, divider, tts, translate, divider, regenerate, del],
+        items: menuItems,
       }}
       onActionClick={onActionClick}
     />
