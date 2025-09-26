@@ -3,11 +3,11 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 export default function AdvancedDemo() {
   const toast = useToast();
-  const token = useThemeToken();
+  const token = useTheme();
   const [autoHide, setAutoHide] = useState(true);
   const [longMessages, setLongMessages] = useState(false);
 

@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react-native';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import supportedLanguageIds, { getLanguageDisplayName } from '../../hooks/supportedLanguages';
 import { useStyles } from './style';
@@ -14,7 +14,7 @@ interface LanguageSelectProps {
 }
 
 export const LanguageSelect: React.FC<LanguageSelectProps> = ({ value, onSelect }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const { styles } = useStyles();
 

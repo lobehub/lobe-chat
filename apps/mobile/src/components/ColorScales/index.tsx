@@ -21,7 +21,7 @@ export interface ColorScalesProps {
 }
 
 const ColorScales = memo<ColorScalesProps>(({ name, scale, midHighLight }) => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
 
   // 创建颜色级别数组（跳过 0 和 12）
   const colorIndexes = Array.from({ length: scale.light.length })
@@ -62,7 +62,7 @@ const ColorScales = memo<ColorScalesProps>(({ name, scale, midHighLight }) => {
                   style={[
                     styles.indexText,
                     {
-                      color: isMidHighlight ? token.colorPrimary : token.colorTextSecondary,
+                      color: isMidHighlight ? theme.colorPrimary : theme.colorTextSecondary,
                       fontWeight: isMidHighlight ? '700' : '400',
                     },
                   ]}

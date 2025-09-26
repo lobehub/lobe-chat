@@ -8,7 +8,7 @@ import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -22,7 +22,7 @@ const AssistantMenu: React.FC<AssistantMenuProps> = ({ message, children }) => {
   const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const token = useThemeToken();
+  const token = useTheme();
   const { styles } = useStyles();
   const [tooltipVisible, setTooltipVisible] = React.useState(false);
 

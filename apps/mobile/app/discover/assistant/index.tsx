@@ -19,7 +19,7 @@ import { useStyles } from './styles';
 const INITIAL_PAGE_SIZE = 21;
 
 const AssistantList = () => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const { t } = useTranslation(['common', 'discover']);
   const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -122,10 +122,10 @@ const AssistantList = () => {
 
     return (
       <View style={{ alignItems: 'center', padding: 20 }}>
-        <ActivityIndicator color={token.colorPrimary} size="small" />
+        <ActivityIndicator color={theme.colorPrimary} size="small" />
       </View>
     );
-  }, [hasMoreData, token.colorPrimary]);
+  }, [hasMoreData, theme.colorPrimary]);
 
   if (error) {
     return (

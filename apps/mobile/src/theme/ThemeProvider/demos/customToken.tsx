@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { ThemeProvider, useThemeToken } from '../index';
+import { ThemeProvider, useTheme } from '../index';
 
 // 示例组件，使用主题 token
 const ExampleComponent = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <View

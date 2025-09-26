@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const styles = StyleSheet.create({
   colorRow: {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 });
 
 const AdvancedDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
   const [visible, setVisible] = useState(false);
 
   return (

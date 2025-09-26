@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -73,7 +73,7 @@ const Space = ({
   children,
   style,
 }: SpaceProps) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const { styles } = useStyles();
 
   // 将 children 转换为数组

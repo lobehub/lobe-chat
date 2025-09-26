@@ -1,4 +1,4 @@
-import type { FlexboxProps } from '../Flexbox';
+import type { FlexboxProps } from '@/components/Flexbox';
 
 export interface BlockProps extends FlexboxProps {
   clickable?: boolean;

@@ -2,7 +2,7 @@ import { Button, useToast } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const styles = StyleSheet.create({
   buttonGroup: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
 export default function TypesDemo() {
   const toast = useToast();
-  const token = useThemeToken();
+  const token = useTheme();
 
   const showSuccess = () => {
     toast.success('成功：操作已完成');

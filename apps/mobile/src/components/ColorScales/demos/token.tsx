@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const TokenDemo = () => {
-  const token = useThemeToken();
+  const token = useTheme();
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }} style={{ flex: 1 }}>

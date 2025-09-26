@@ -7,14 +7,14 @@ import { Text, TextInput, View } from 'react-native';
 import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './sectionStyles';
 
 export const AgentRoleEditSection: React.FC = () => {
   const { t } = useTranslation();
   const { styles } = useStyles();
-  const token = useThemeToken();
+  const token = useTheme();
 
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);

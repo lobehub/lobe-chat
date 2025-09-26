@@ -19,7 +19,7 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { TRPCProvider, trpcClient } from '@/services/_auth/trpc';
 import { useAuth, useUserStore } from '@/store/user';
-import { ThemeProvider, useTheme, useThemeToken } from '@/theme';
+import { ThemeProvider, useTheme, useThemeMode } from '@/theme';
 import { authLogger } from '@/utils/logger';
 
 import '../polyfills';
@@ -141,21 +141,21 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 };
 
 function ThemedSystemBars() {
-  const { theme } = useTheme();
-  const token = useThemeToken();
+  const { isDarkMode } = useThemeMode();
+  const token = useTheme();
 
   useEffect(() => {
     if (Platform.OS !== 'android') return;
 
     NavigationBar.setBackgroundColorAsync(token.colorBgLayout).catch(() => {});
-    NavigationBar.setButtonStyleAsync(theme.isDark ? 'light' : 'dark').catch(() => {});
-  }, [theme.isDark, token.colorBgLayout]);
+    NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').catch(() => {});
+  }, [isDarkMode, token.colorBgLayout]);
 
   return (
     <StatusBar
       animated
       backgroundColor={token.colorBgLayout}
-      style={theme.isDark ? 'light' : 'dark'}
+      style={isDarkMode ? 'light' : 'dark'}
     />
   );
 }

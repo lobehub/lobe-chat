@@ -31,7 +31,7 @@ const InstantSwitch = memo<InstantSwitchProps>(
     trackColor,
     trackStyle,
   }) => {
-    const { styles, token } = useStyles({ disabled, size });
+    const { styles, theme } = useStyles({ disabled, size });
 
     // 本地状态管理
     const [localEnabled, setLocalEnabled] = useState(enabled);
@@ -83,19 +83,19 @@ const InstantSwitch = memo<InstantSwitchProps>(
       if (trackColor) return trackColor;
 
       return {
-        false: token.colorBgContainerDisabled,
-        true: token.colorPrimary,
+        false: theme.colorBgContainerDisabled,
+        true: theme.colorPrimary,
       };
     };
 
     const getThumbColor = () => {
       if (thumbColor) return thumbColor;
-      return token.colorTextLightSolid;
+      return theme.colorTextLightSolid;
     };
 
     const getLoadingColor = () => {
       if (loadingColor) return loadingColor;
-      return token.colorPrimary;
+      return theme.colorPrimary;
     };
 
     return (
