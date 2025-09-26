@@ -33,14 +33,16 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
       const { model, reasoning_effort, verbosity, ...rest } = payload;
 
       const providerOptions: any = {};
-      if (reasoning_effort) {
+      if (reasoning_effort || verbosity) {
         providerOptions.openai = {
-          reasoningEffort: reasoning_effort,
-          reasoningSummary: 'auto',
+          ...(reasoning_effort && {
+            reasoningEffort: reasoning_effort,
+            reasoningSummary: 'auto',
+          }),
+          ...(verbosity && {
+            textVerbosity: verbosity,
+          }),
         };
-      }
-      if (verbosity) {
-        providerOptions.openai.textVerbosity = verbosity;
       }
 
       return {
