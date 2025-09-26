@@ -2,7 +2,7 @@ import { Block, Flexbox } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text } from 'react-native';
 
-const LayoutDemo = () => {
+export default () => {
   return (
     <Flexbox gap={16}>
       <Text style={{ fontSize: 18, marginBottom: 16 }}>Block 布局示例</Text>
@@ -50,5 +50,3 @@ const LayoutDemo = () => {
     </Flexbox>
   );
 };
-
-export default LayoutDemo;
