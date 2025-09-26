@@ -6,14 +6,14 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import RootSiblings from 'react-native-root-siblings';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const LoadingContainer: FC<{
   cancel: () => void;
 }> = ({ cancel }) => {
   // eslint-disable-next-line no-undef
   const cancelTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const token = useThemeToken();
+  const token = useTheme();
 
   const [showCancelButton, setShowCancelButton] = useState(false);
   useEffect(() => {

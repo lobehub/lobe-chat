@@ -8,14 +8,13 @@ export type ThemeMode = 'light' | 'dark' | 'auto';
 
 // ======================================================================
 export interface Theme {
-  isDark: boolean;
-  mode: ThemeMode;
+  isDarkMode: boolean;
+  themeMode: ThemeMode;
   token: AliasToken;
 }
 
-export interface ThemeContextValue {
+export interface ThemeContextValue extends Theme {
   setThemeMode: (mode: ThemeMode) => void;
-  theme: Theme;
   toggleTheme: () => void;
 }
 

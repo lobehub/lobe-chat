@@ -5,7 +5,7 @@ import { mergeStyles } from '@/theme';
 
 import { AliasToken } from '../interface';
 import { type LobeStylish, generateStylish } from '../stylish';
-import { useTheme, useThemeToken } from './context';
+import { useTheme, useThemeMode } from './context';
 
 // 定义样式类型
 export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
@@ -36,14 +36,13 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
 ) => {
   // 返回一个hook函数，自动推断参数类型
   return (...customParams: P) => {
-    const token = useThemeToken();
-    const { theme } = useTheme();
-    const isDarkMode = theme.isDark;
+    const theme = useTheme();
+    const { isDarkMode } = useThemeMode();
 
     // 生成 stylish 对象
     const stylish = useMemo(() => {
-      return generateStylish(token);
-    }, [token, isDarkMode]);
+      return generateStylish(theme);
+    }, [theme, isDarkMode]);
 
     // 使用 useMemo 缓存样式对象，避免重新渲染
     const styles = useMemo(() => {
@@ -52,14 +51,14 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
         cx: mergeStyles,
         isDarkMode,
         stylish,
-        token,
+        token: theme,
       };
 
       const rawStyles = creator(params, ...customParams);
 
       // StyleSheet.create 会自动保留样式对象的类型
       return StyleSheet.create(rawStyles);
-    }, [token, stylish, isDarkMode, theme, ...customParams]);
+    }, [theme, stylish, isDarkMode, ...customParams]);
 
     return useMemo(
       () => ({
@@ -67,9 +66,8 @@ export const createStyles = <T extends NamedStyles<T> | NamedStyles<any>, P exte
         styles,
         stylish,
         theme,
-        token,
       }),
-      [styles, stylish, theme, token],
+      [styles, stylish, theme],
     );
   };
 };

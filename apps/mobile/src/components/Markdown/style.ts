@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useTheme, useThemeToken } from '@/theme';
+import { useTheme, useThemeMode } from '@/theme';
 
 import type { RemarkStyles } from './context';
 
@@ -12,8 +12,8 @@ export type RemarkStyleOptions = {
 };
 
 export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
-  const token = useThemeToken();
-  const { theme } = useTheme();
+  const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
 
   const heading = useCallback(() => {
     return (level: number) => {
@@ -21,17 +21,17 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       const multiple = mapping[level] ?? 0;
       const size = options.fontSize * (1 + multiple * options.headerMultiple);
       return {
-        color: token.colorTextHeading,
+        color: theme.colorTextHeading,
         fontSize: size,
-        fontWeight: token.fontWeightStrong,
+        fontWeight: theme.fontWeightStrong,
         lineHeight: 1.25 * size,
         marginVertical: options.fontSize * options.marginMultiple * 0.4,
       } as const;
     };
-  }, [options.fontSize, options.headerMultiple, options.marginMultiple, token]);
+  }, [options.fontSize, options.headerMultiple, options.marginMultiple, theme]);
 
   const tdth = {
-    color: token.colorText,
+    color: theme.colorText,
     fontSize: options.fontSize,
     minWidth: 120,
     paddingHorizontal: options.fontSize,
@@ -43,17 +43,17 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     blockQuote: {
-      borderLeftColor: token.colorBorder,
+      borderLeftColor: theme.colorBorder,
       borderLeftWidth: 4,
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
       paddingHorizontal: options.fontSize,
     },
-    blockQuoteColor: token.colorTextTertiary,
-    borderColor: token.colorBorder,
+    blockQuoteColor: theme.colorTextTertiary,
+    borderColor: theme.colorBorder,
     break: {},
     container: { flex: 1 },
     delete: {
-      color: token.colorTextDescription,
+      color: theme.colorTextDescription,
       textDecorationLine: 'line-through',
     },
     emphasis: {
@@ -67,23 +67,23 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     heading: heading(),
     image: {
-      borderColor: token.colorBorder,
-      borderRadius: token.borderRadius,
+      borderColor: theme.colorBorder,
+      borderRadius: theme.borderRadius,
       borderWidth: 1,
       marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     inlineCode: {
-      backgroundColor: token.colorFillSecondary,
-      color: token.colorText,
-      fontFamily: token.fontFamilyCode,
+      backgroundColor: theme.colorFillSecondary,
+      color: theme.colorText,
+      fontFamily: theme.fontFamilyCode,
       fontSize: options.fontSize * 0.875,
     },
     link: {
-      color: token.colorLink,
+      color: theme.colorLink,
       textDecorationLine: 'none',
     },
     linkReference: {
-      color: token.colorLink,
+      color: theme.colorLink,
       textDecorationLine: 'none',
     },
     list: {
@@ -92,43 +92,43 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     listItem: {
       flex: 1,
     },
-    listMarkerColor: theme.isDark ? token.cyan9A : token.cyan11A,
+    listMarkerColor: isDarkMode ? theme.cyan9A : theme.cyan11A,
     paragraph: {
-      color: token.colorText,
+      color: theme.colorText,
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
       marginVertical: options.fontSize * options.marginMultiple * 0.16,
     },
     strong: {
-      color: token.colorTextHeading,
-      fontWeight: token.fontWeightStrong,
+      color: theme.colorTextHeading,
+      fontWeight: theme.fontWeightStrong,
     },
     table: {
-      backgroundColor: token.colorFillQuaternary,
-      borderColor: token.colorBorder,
-      borderRadius: token.borderRadius,
+      backgroundColor: theme.colorFillQuaternary,
+      borderColor: theme.colorBorder,
+      borderRadius: theme.borderRadius,
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
     },
     td: tdth,
     text: {
       fontSize: options.fontSize,
       // 从 父节点继承,否则一些样式带不下来
-      // color: token.colorText
+      // color: theme.colorText
     },
-    textColor: token.colorText,
+    textColor: theme.colorText,
     th: tdth,
     thead: {
-      backgroundColor: token.colorFillQuaternary,
+      backgroundColor: theme.colorFillQuaternary,
     },
     thematicBreak: {
-      borderColor: token.colorBorder,
+      borderColor: theme.colorBorder,
       borderStyle: 'dashed',
       borderWidth: 0.5,
       marginVertical: options.fontSize * options.marginMultiple * 0.75,
       width: '100%',
     },
     tr: {
-      borderColor: token.colorBorder,
+      borderColor: theme.colorBorder,
     },
   };
 };

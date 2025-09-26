@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import TextArea from './TextArea';
 import { useStyles } from './style';
@@ -36,7 +36,7 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
     size = 'middle',
     ...rest
   } = props;
-  const { styles, token } = useStyles({ size, variant });
+  const { styles, theme } = useStyles({ size, variant });
 
   return (
     <View style={[styles.container, style]}>
@@ -47,7 +47,7 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
         keyboardType="default"
         ref={ref}
         {...rest}
-        placeholderTextColor={placeholderTextColor ?? token.colorTextPlaceholder}
+        placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
         style={[styles.input]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
       />
@@ -57,15 +57,15 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
 });
 
 const InputSearch = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
-  const token = useThemeToken();
+  const theme = useTheme();
   const size = props.size ?? 'middle';
-  const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
+  const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
 
   return (
     <Input
       ref={ref}
       {...props}
-      prefix={<Search color={token.colorTextPlaceholder} size={iconSize} />}
+      prefix={<Search color={theme.colorTextPlaceholder} size={iconSize} />}
       returnKeyType="search"
     />
   );
@@ -73,10 +73,10 @@ const InputSearch = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
 
 const InputPassword = React.forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 'secureTextEntry'>>(
   (props, ref) => {
-    const token = useThemeToken();
+    const theme = useTheme();
     const [isSecure, setIsSecure] = React.useState(true);
     const size = props.size ?? 'middle';
-    const iconSize = size === 'large' ? token.fontSizeLG : token.fontSize;
+    const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
 
     const toggleSecureEntry = () => {
       setIsSecure(!isSecure);
@@ -90,9 +90,9 @@ const InputPassword = React.forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 
         suffix={
           <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
             {isSecure ? (
-              <EyeOff color={token.colorTextPlaceholder} size={iconSize} />
+              <EyeOff color={theme.colorTextPlaceholder} size={iconSize} />
             ) : (
-              <Eye color={token.colorTextPlaceholder} size={iconSize} />
+              <Eye color={theme.colorTextPlaceholder} size={iconSize} />
             )}
           </TouchableOpacity>
         }

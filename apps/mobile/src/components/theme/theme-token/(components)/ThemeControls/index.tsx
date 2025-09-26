@@ -10,7 +10,7 @@ import {
   findCustomThemeName,
   neutralColors,
   primaryColors,
-  useThemeToken,
+  useTheme,
 } from '@/theme';
 
 import { useStyles } from './style';
@@ -33,7 +33,7 @@ const ThemeControls: React.FC<ThemeControlsProps> = ({
   onPrimaryColorChange,
   primaryColor,
 }) => {
-  const token = useThemeToken();
+  const token = useTheme();
   const { styles } = useStyles();
 
   // 预设主色
