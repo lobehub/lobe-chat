@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Resolve qwen-image-edit imageUrls conversion issue."]
+    },
+    "date": "2025-09-26",
+    "version": "1.132.16"
+  },
+  {
+    "children": {
       "fixes": ["Add proxyUrl configuration for NEW API provider."]
     },
     "date": "2025-09-25",
