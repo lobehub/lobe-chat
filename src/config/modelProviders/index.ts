@@ -126,6 +126,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   { ...AzureProvider, chatModels: [] },
   AzureAIProvider,
   OllamaProvider,
+  OllamaCloudProvider,
   VLLMProvider,
   XinferenceProvider,
   AnthropicProvider,
@@ -185,7 +186,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
-  OllamaCloudProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
