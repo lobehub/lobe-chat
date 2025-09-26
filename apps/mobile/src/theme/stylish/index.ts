@@ -3,48 +3,34 @@ import type { TextStyle, ViewStyle } from 'react-native';
 import type { AliasToken } from '../interface';
 
 export interface LobeStylish {
-  // 激活状态
   active: ViewStyle;
-  // 玻璃效果（半透明背景）
   blur: ViewStyle;
-  // 强玻璃效果
   blurStrong: ViewStyle;
-  // 禁用状态
   disabled: ViewStyle;
-  // 重置链接颜色
   resetLinkColor: TextStyle;
-  // 阴影效果
   shadow: ViewStyle;
-  // 无边框变体
   variantBorderless: ViewStyle;
-  // 危险无边框变体
+  variantBorderlessActive: ViewStyle;
   variantBorderlessDanger: ViewStyle;
-  // 无边框变体（无悬停）
-  variantBorderlessWithoutHover: ViewStyle;
-  // 填充变体
+  variantBorderlessHover: ViewStyle;
   variantFilled: ViewStyle;
-  // 危险填充变体
+  variantFilledActive: ViewStyle;
   variantFilledDanger: ViewStyle;
-  // 填充变体（无悬停）
-  variantFilledWithoutHover: ViewStyle;
-  // 轮廓变体
+  variantFilledHover: ViewStyle;
   variantOutlined: ViewStyle;
-  // 危险轮廓变体
+  variantOutlinedActive: ViewStyle;
   variantOutlinedDanger: ViewStyle;
-  // 轮廓变体（无悬停）
-  variantOutlinedWithoutHover: ViewStyle;
+  variantOutlinedHover: ViewStyle;
 }
 
-export const generateStylish = (token: AliasToken): LobeStylish => {
+export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeStylish => {
   return {
     active: {
       backgroundColor: token.colorFillSecondary,
-      // RN 中可以通过 pressedStyle 等方式实现悬停效果
     },
 
     blur: {
       backgroundColor: `${token.colorBgContainer}CC`, // 80% 透明度
-      // 注意：RN 不支持 backdrop-filter，可以考虑使用 BlurView 组件
     },
 
     blurStrong: {
@@ -53,7 +39,6 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
 
     disabled: {
       opacity: 0.5,
-      // RN 中禁用状态通过 disabled 属性控制
     },
 
     resetLinkColor: {
@@ -68,17 +53,20 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
     variantBorderless: {
       backgroundColor: 'transparent',
       borderWidth: 0,
-      // 可点击时的背景色变化需要通过组件状态控制
+    },
+
+    variantBorderlessActive: {
+      backgroundColor: isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary,
+      borderWidth: 0,
     },
 
     variantBorderlessDanger: {
       backgroundColor: 'transparent',
       borderWidth: 0,
-      // 危险状态的颜色变化
     },
 
-    variantBorderlessWithoutHover: {
-      backgroundColor: 'transparent',
+    variantBorderlessHover: {
+      backgroundColor: token.colorFillTertiary,
       borderWidth: 0,
     },
 
@@ -87,19 +75,28 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
       borderWidth: 0,
     },
 
+    variantFilledActive: {
+      backgroundColor: isDarkMode ? token.colorFillTertiary : token.colorFill,
+    },
+
     variantFilledDanger: {
       backgroundColor: token.colorErrorFillTertiary,
       borderWidth: 0,
     },
 
-    variantFilledWithoutHover: {
-      backgroundColor: token.colorFillTertiary,
-      borderWidth: 0,
+    variantFilledHover: {
+      backgroundColor: token.colorFillSecondary,
     },
 
     variantOutlined: {
       backgroundColor: token.colorBgContainer,
       borderColor: token.colorBorderSecondary,
+      borderWidth: 1,
+    },
+
+    variantOutlinedActive: {
+      backgroundColor: token.colorBgContainer,
+      borderColor: token.colorBorder,
       borderWidth: 1,
     },
 
@@ -109,9 +106,9 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
       borderWidth: 1,
     },
 
-    variantOutlinedWithoutHover: {
+    variantOutlinedHover: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorderSecondary,
+      borderColor: token.colorBorder,
       borderWidth: 1,
     },
   };
