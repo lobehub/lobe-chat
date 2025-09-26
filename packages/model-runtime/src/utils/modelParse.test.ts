@@ -94,6 +94,16 @@ const mockDefaultModelList: (Partial<ChatModelCard> & { id: string })[] = [
     enabled: false,
     id: 'model-known-disabled',
   },
+  {
+    displayName: 'Known Model With Settings',
+    enabled: true,
+    id: 'model-known-settings',
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+      searchProvider: 'builtin',
+    },
+  },
 ];
 
 // Mock the import
@@ -289,6 +299,36 @@ describe('modelParse', () => {
         expect(result.find((m) => m.id === 'gpt-4')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'model-known-disabled')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'unknown-model-for-enabled-test')!.enabled).toBe(false);
+      });
+
+      it('should include settings from known model when remote data does not provide them', async () => {
+        const modelList = [{ id: 'model-known-settings' }];
+        const result = await processModelList(modelList, config);
+
+        const settings = result[0].settings;
+        expect(settings).toBeDefined();
+        expect(settings?.extendParams).toEqual(['enableReasoning']);
+        expect(settings?.searchImpl).toBe('params');
+        expect(settings?.searchProvider).toBe('builtin');
+      });
+
+      it('should merge extendParams from known and remote models while preserving uniqueness', async () => {
+        const modelList = [
+          {
+            id: 'model-known-settings',
+            settings: {
+              extendParams: ['reasoningBudgetToken', 'enableReasoning'],
+              searchImpl: 'tool',
+            },
+          },
+        ];
+
+        const result = await processModelList(modelList, config);
+        const settings = result[0].settings;
+
+        expect(settings?.extendParams).toEqual(['enableReasoning', 'reasoningBudgetToken']);
+        expect(settings?.searchImpl).toBe('tool');
+        expect(settings?.searchProvider).toBe('builtin');
       });
     });
   });

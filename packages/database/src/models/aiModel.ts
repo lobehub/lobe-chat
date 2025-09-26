@@ -69,6 +69,7 @@ export class AiModelModel {
         parameters: aiModels.parameters,
         pricing: aiModels.pricing,
         releasedAt: aiModels.releasedAt,
+        settings: aiModels.settings,
         source: aiModels.source,
         type: aiModels.type,
       })
@@ -95,6 +96,7 @@ export class AiModelModel {
         id: aiModels.id,
         parameters: aiModels.parameters,
         providerId: aiModels.providerId,
+        settings: aiModels.settings,
         sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,

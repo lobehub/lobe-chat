@@ -245,6 +245,13 @@
       "when": 1758825944181,
       "tag": "0034_fix_chat_group",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1762060800000,
+      "tag": "0035_add_ai_model_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

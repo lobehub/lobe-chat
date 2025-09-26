@@ -1,5 +1,6 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { AIBaseModelCard } from 'model-bank';
+import type { AiModelSettings, ExtendParamsType } from 'model-bank';
 
 import type { ModelProviderKey } from '../types';
 
@@ -290,6 +291,57 @@ const processDisplayName = (displayName: string): string => {
   return displayName;
 };
 
+const mergeExtendParams = (
+  modelExtendParams?: ReadonlyArray<ExtendParamsType>,
+  knownExtendParams?: ReadonlyArray<ExtendParamsType>,
+): ExtendParamsType[] | undefined => {
+  const combined = [...(knownExtendParams ?? []), ...(modelExtendParams ?? [])];
+
+  if (combined.length === 0) return undefined;
+
+  return Array.from(new Set(combined));
+};
+
+const mergeSettings = (
+  modelSettings?: AiModelSettings,
+  knownSettings?: AiModelSettings,
+): AiModelSettings | undefined => {
+  if (!modelSettings && !knownSettings) return undefined;
+
+  const merged: AiModelSettings = {};
+
+  if (knownSettings) {
+    Object.assign(merged, knownSettings);
+  }
+
+  if (modelSettings) {
+    Object.assign(merged, modelSettings);
+  }
+
+  const extendParams = mergeExtendParams(modelSettings?.extendParams, knownSettings?.extendParams);
+  if (extendParams) {
+    merged.extendParams = extendParams;
+  } else {
+    delete merged.extendParams;
+  }
+
+  const searchImpl = modelSettings?.searchImpl ?? knownSettings?.searchImpl;
+  if (searchImpl) {
+    merged.searchImpl = searchImpl;
+  } else {
+    delete merged.searchImpl;
+  }
+
+  const searchProvider = modelSettings?.searchProvider ?? knownSettings?.searchProvider;
+  if (searchProvider) {
+    merged.searchProvider = searchProvider;
+  } else {
+    delete merged.searchProvider;
+  }
+
+  return Object.keys(merged).length > 0 ? merged : undefined;
+};
+
 /**
  * 处理模型卡片的通用逻辑
  */
@@ -315,9 +367,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
@@ -325,6 +377,8 @@ const processModelCard = (
   if (modelType === 'image' && !model.parameters && !knownModel?.parameters) {
     return undefined;
   }
+
+  const mergedSettings = mergeSettings(model.settings, knownModel?.settings);
 
   const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
     if (!pricing || typeof pricing !== 'object') return undefined;
@@ -377,6 +431,7 @@ const processModelCard = (
     ...(modelType === 'image' && {
       parameters: model.parameters ?? knownModel?.parameters,
     }),
+    ...(mergedSettings ? { settings: mergedSettings } : {}),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??
