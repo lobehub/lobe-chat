@@ -62,7 +62,7 @@ const isProviderFetchOnClient = (provider: string) => (s: AIProviderStoreState) 
   const config = providerConfigById(provider)(s);
 
   // If the provider already disable browser request in model config, force on Server.
-  if (isProviderDisableBrowserRequest()) return false;
+  if (isProviderDisableBrowserRequest(provider)) return false;
 
   // If the provider in the whitelist, follow the user settings
   if (providerWhitelist.has(provider) && typeof config?.fetchOnClient !== 'undefined')

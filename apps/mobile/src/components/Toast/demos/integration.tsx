@@ -2,11 +2,11 @@ import { Button, useToast } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 export default function IntegrationDemo() {
   const toast = useToast();
-  const token = useThemeToken();
+  const token = useTheme();
   const [formData, setFormData] = useState({
     email: '',
     password: '',

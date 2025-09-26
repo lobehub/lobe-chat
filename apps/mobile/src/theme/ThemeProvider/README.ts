@@ -75,7 +75,7 @@ import { darkAlgorithm, compactAlgorithm } from '@lobehub/ui-rn';
 
 ## 使用主题
 
-### useThemeToken Hook
+### useTheme Hook
 
 \`\`\`tsx
 import { useThemeToken } from '@lobehub/ui-rn';
@@ -104,7 +104,7 @@ function MyComponent() {
 }
 \`\`\`
 
-### useTheme Hook
+### useThemeMode Hook
 
 \`\`\`tsx
 import { useTheme } from '@lobehub/ui-rn';

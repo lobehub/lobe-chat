@@ -2,12 +2,12 @@ import { Button, Skeleton } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 const AnimatedDemo: React.FC = () => {
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [customColors, setCustomColors] = useState(false);
-  const token = useThemeToken();
+  const token = useTheme();
 
   const toggleAnimation = () => {
     setAnimationEnabled(!animationEnabled);

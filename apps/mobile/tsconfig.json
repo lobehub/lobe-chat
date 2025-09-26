@@ -23,7 +23,17 @@
       "@lobehub/ui-rn/*": ["./src/components/*"]
     }
   },
-  "exclude": ["node_modules", "scripts/**", "tmp", "temp", ".temp"],
+  "exclude": [
+    "node_modules",
+    "scripts/**",
+    "tmp",
+    "temp",
+    ".temp",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.backup/**",
+    "test"
+  ],
   "extends": "expo/tsconfig.base",
   "include": [
     "**/*.d.ts",

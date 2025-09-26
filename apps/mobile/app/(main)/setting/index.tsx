@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
-import { useTheme } from '@/theme';
+import { useThemeMode } from '@/theme';
 
 import { version } from '../../../package.json';
 import { SettingGroup, SettingItem } from './(components)';
@@ -14,17 +14,17 @@ import { useStyles } from './styles';
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
   const { getLocaleDisplayName } = useLocale();
-  const { theme } = useTheme();
+  const { themeMode } = useThemeMode();
   const { developerMode, setDeveloperMode } = useSettingStore();
 
   const [tapCount, setTapCount] = useState(0);
   const tapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getThemeModeDisplayName = () => {
-    if (theme.mode === 'auto') {
+    if (themeMode === 'auto') {
       return t('themeMode.auto', { ns: 'setting' });
     }
-    return t(`themeMode.${theme.mode}`, { ns: 'setting' });
+    return t(`themeMode.${themeMode}`, { ns: 'setting' });
   };
 
   const handleVersionTap = () => {

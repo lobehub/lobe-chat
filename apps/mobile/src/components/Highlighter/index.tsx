@@ -51,7 +51,7 @@ const Highlighter: React.FC<HighlighterProps> = ({
   style,
   onCopy,
 }) => {
-  const { styles, token } = useStyles();
+  const { styles, theme } = useStyles();
   const [copied, setCopied] = useState(false);
   const language = lang.toLowerCase();
   const matchedLanguage = supportedLanguageIds.includes(language) ? language : FALLBACK_LANG;
@@ -88,9 +88,9 @@ const Highlighter: React.FC<HighlighterProps> = ({
       {copyable && (
         <Pressable onPress={handleCopy} style={styles.simpleCopyButton}>
           {copied ? (
-            <Icon color={token.colorSuccess} icon={Check} size="small" />
+            <Icon color={theme.colorSuccess} icon={Check} size="small" />
           ) : (
-            <Icon color={token.colorText} icon={Copy} size="small" />
+            <Icon color={theme.colorText} icon={Copy} size="small" />
           )}
         </Pressable>
       )}

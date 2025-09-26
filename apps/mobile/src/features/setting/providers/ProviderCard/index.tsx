@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useAiInfraStore } from '@/store/aiInfra';
-import { useThemeToken } from '@/theme';
+import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 
@@ -19,7 +19,7 @@ const ProviderCard = memo<ProviderCardProps>(({ provider }) => {
   const { t } = useTranslation('providers');
   const { styles } = useStyles();
   const router = useRouter();
-  const token = useThemeToken();
+  const token = useTheme();
   const { description, id, enabled, source } = provider;
 
   // 获取store中的方法
