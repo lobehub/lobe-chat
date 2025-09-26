@@ -15,7 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "types": ["vitest/globals", "node"],
+    "types": ["jest", "node"],
     "paths": {
       "@/test/*": ["./test/*"],
       "@/*": ["./src/*"],
@@ -29,18 +29,10 @@
     "tmp",
     "temp",
     ".temp",
-    "**/*.test.ts",
-    "**/*.test.tsx",
     "**/*.backup/**",
-    "test"
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
   "extends": "expo/tsconfig.base",
-  "include": [
-    "**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "expo-env.d.ts",
-    "global.d.ts",
-    ".expo/types/**/*.ts"
-  ]
+  "include": ["src/**/*", "app/**/*", "expo-env.d.ts", "global.d.ts", ".expo/types/**/*.ts"]
 }
