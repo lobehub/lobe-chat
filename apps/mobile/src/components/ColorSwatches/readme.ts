@@ -16,7 +16,7 @@ React Native版本的颜色选择器组件，基于 LobeUI 的 ColorSwatches 组
 ## 基础使用
 
 \`\`\`tsx
-import { ColorSwatches } from '@/components';
+import { ColorSwatches } from '@lobehub/ui-rn';
 
 // 基础用法
 <ColorSwatches

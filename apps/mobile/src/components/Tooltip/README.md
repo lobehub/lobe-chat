@@ -16,7 +16,7 @@
 ## 基础使用
 
 ```tsx
-import { Tooltip } from '@/components/Tooltip';
+import { Tooltip } from '@lobehub/ui-rn';
 
 // 基础用法
 <Tooltip title="这是一个提示信息">

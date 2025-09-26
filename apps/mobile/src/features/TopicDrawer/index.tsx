@@ -1,10 +1,10 @@
+import { PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
-import { PageContainer } from '@/components';
 import { useGlobalStore } from '@/store/global';
 
 import TopicList from './components/TopicList';

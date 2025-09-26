@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@lobehub/ui-rn/Tooltip/demos';
+import README from '@lobehub/ui-rn/Tooltip/readme';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
-import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@/components/Tooltip/demos';
-import README from '@/components/Tooltip/readme';
 
 import { useStyles } from './style';
 

@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import { BasicDemo } from '@lobehub/ui-rn/Flexbox/demos';
+import README from '@lobehub/ui-rn/Flexbox/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import { BasicDemo } from '@/components/Flexbox/demos';
-import README from '@/components/Flexbox/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 const demos: DemoItem[] = [{ component: <BasicDemo />, key: 'basic', title: '基础用法' }];
 

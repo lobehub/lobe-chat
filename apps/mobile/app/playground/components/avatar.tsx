@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import { BasicDemo, BordersDemo, ErrorDemo, SizesDemo } from '@lobehub/ui-rn/Avatar/demos';
+import README from '@lobehub/ui-rn/Avatar/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import { BasicDemo, BordersDemo, ErrorDemo, SizesDemo } from '@/components/Avatar/demos';
-import README from '@/components/Avatar/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 import { useStyles } from './style';
 

@@ -19,7 +19,7 @@ const INPUT_README = `# Input组件
 ### 1. 基础输入框
 
 \`\`\`jsx
-import Input from '@/components/Input';
+import { Input } from '@lobehub/ui-rn';
 
 <Input placeholder="请输入内容" />
 <Input defaultValue="预设值" />
@@ -30,8 +30,8 @@ import Input from '@/components/Input';
 \`\`\`jsx
 import { Text } from 'react-native';
 
-<Input 
-  placeholder="请输入用户名" 
+<Input
+  placeholder="请输入用户名"
   prefix={<Text>@</Text>}
 />
 \`\`\`
@@ -41,13 +41,13 @@ import { Text } from 'react-native';
 \`\`\`jsx
 import { TouchableOpacity } from 'react-native';
 
-<Input 
-  placeholder="输入邮箱前缀" 
+<Input
+  placeholder="输入邮箱前缀"
   suffix={<Text>@gmail.com</Text>}
 />
 
-<Input 
-  placeholder="输入消息" 
+<Input
+  placeholder="输入消息"
   suffix={<TouchableOpacity><SendIcon /></TouchableOpacity>}
 />
 \`\`\`
@@ -155,10 +155,10 @@ import { TouchableOpacity } from 'react-native';
 #### Input.Search
 搜索输入框，自动添加搜索图标前缀，returnKeyType设为search
 
-#### Input.Password  
+#### Input.Password
 密码输入框，自动添加眼睛图标后缀，支持切换显示/隐藏密码
 
-#### Input.TextArea  
+#### Input.TextArea
 多行文本输入框，默认开启 \`multiline\`，适合长文本场景
 
 ## 设计原则

@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import { AdvancedDemo, BasicDemo } from '@lobehub/ui-rn/ColorSwatches/demos';
+import README from '@lobehub/ui-rn/ColorSwatches/readme';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import { AdvancedDemo, BasicDemo } from '@/components/ColorSwatches/demos';
-import README from '@/components/ColorSwatches/readme';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
 
 import { useStyles } from './style';
 

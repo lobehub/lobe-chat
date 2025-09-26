@@ -1,11 +1,10 @@
+import { Block, Flexbox } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
-
-import Block from '../index';
+import { Text } from 'react-native';
 
 const BasicDemo = () => {
   return (
-    <View style={{ padding: 16 }}>
+    <Flexbox gap={16}>
       <Text style={{ fontSize: 18, marginBottom: 16 }}>Block 基础用法</Text>
 
       <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Filled 变体（默认）</Text>
@@ -32,7 +31,7 @@ const BasicDemo = () => {
       <Block glass style={{ marginBottom: 16, padding: 16 }}>
         <Text>这是一个玻璃效果的 Block</Text>
       </Block>
-    </View>
+    </Flexbox>
   );
 };
 

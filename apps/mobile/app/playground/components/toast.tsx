@@ -1,15 +1,14 @@
-import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import {
   AdvancedDemo,
   BasicDemo,
   IntegrationDemo,
   StaticDemo,
   TypesDemo,
-} from '@/components/Toast/demos';
-import README from '@/components/Toast/readme';
+} from '@lobehub/ui-rn/Toast/demos';
+import README from '@lobehub/ui-rn/Toast/readme';
+import React from 'react';
 
 import { useStyles } from './style';
 

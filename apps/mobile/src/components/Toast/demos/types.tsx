@@ -1,7 +1,7 @@
+import { Button, useToast } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Button, useToast } from '@/components';
 import { useThemeToken } from '@/theme';
 
 const styles = StyleSheet.create({

@@ -1,9 +1,8 @@
+import { PageContainer } from '@lobehub/ui-rn';
+import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
+import { BasicDemo } from '@lobehub/ui-rn/Switch/demos';
+import README from '@lobehub/ui-rn/Switch/readme';
 import React from 'react';
-
-import { PageContainer } from '@/components';
-import ComponentPlayground, { DemoItem } from '@/components/Playground';
-import { BasicDemo } from '@/components/Switch/demos';
-import README from '@/components/Switch/readme';
 
 import { useStyles } from './style';
 

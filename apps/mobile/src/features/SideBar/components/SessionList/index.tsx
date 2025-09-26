@@ -1,9 +1,9 @@
+import { Input, Toast } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
-import { Input, Toast } from '@/components';
 import { loading } from '@/libs/loading';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';

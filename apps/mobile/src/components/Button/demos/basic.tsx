@@ -1,6 +1,5 @@
+import { Button, Space } from '@lobehub/ui-rn';
 import React from 'react';
-
-import { Button, Space } from '@/components';
 
 const BasicDemo = () => {
   return (
