@@ -287,9 +287,6 @@
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 is een hybride groot taalmodel uitgebracht door DeepSeek AI, met belangrijke upgrades ten opzichte van eerdere modellen. Een belangrijke innovatie is de integratie van een 'denkenmodus' en een 'niet-denkenmodus', die gebruikers flexibel kunnen wisselen via aanpasbare chattemplates om aan verschillende taakvereisten te voldoen. Dankzij speciale post-training optimalisaties is de prestatie bij toolaanroepen en agenttaken aanzienlijk verbeterd, waardoor het beter externe zoektools ondersteunt en complexe meerstaps taken kan uitvoeren. Het model is gebaseerd op DeepSeek-V3.1-Base en uitgebreid met een tweefasige lange-tekst uitbreidingsmethode, wat de hoeveelheid trainingsdata sterk vergroot en betere prestaties levert bij het verwerken van lange documenten en uitgebreide code. Als open source model toont DeepSeek-V3.1 vergelijkbare capaciteiten als toonaangevende gesloten modellen in benchmarks voor codering, wiskunde en redeneren. Dankzij de hybride expertarchitectuur (MoE) behoudt het een enorme modelcapaciteit terwijl de redeneerkosten effectief worden verlaagd."
   },
-  "Pro/moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 is een MoE-architectuurbasis model met krachtige codeer- en agentcapaciteiten, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model andere toonaangevende open-source modellen."
-  },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
   },
@@ -379,6 +376,12 @@
   },
   "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
     "description": "Qwen3-Coder-480B-A35B-Instruct is uitgebracht door Alibaba en beschikt tot nu toe over de meest geavanceerde agentische mogelijkheden van alle codemodellen. Het is een Mixture-of-Experts (MoE)-model met 480 miljard totale parameters en 35 miljard actieve parameters, dat een balans vindt tussen efficiëntie en prestaties. Het model ondersteunt van nature een contextlengte van 256K (ongeveer 260.000) tokens en kan via extrapolatiemethoden zoals YaRN worden opgeschaald tot 1 miljoen tokens, waardoor het omvangrijke codebases en complexe programmeertaken aankan. Qwen3-Coder is ontworpen voor agentachtige codeerworkflows: het kan niet alleen code genereren, maar ook autonoom interacteren met ontwikkeltools en -omgevingen om complexe programmeerproblemen op te lossen. In diverse benchmarks voor codering en agenttaken behaalt dit model topresultaten onder open-source modellen en zijn de prestaties vergelijkbaar met toonaangevende modellen zoals Claude Sonnet 4."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Instruct": {
+    "description": "Qwen3-Next-80B-A3B-Instruct is een volgende generatie basis model uitgebracht door het Tongyi Qianwen-team van Alibaba. Het is gebaseerd op de geheel nieuwe Qwen3-Next architectuur en is ontworpen voor ultieme trainings- en inferentie-efficiëntie. Dit model maakt gebruik van een innovatieve hybride aandachtmechanisme (Gated DeltaNet en Gated Attention), een hoog-sparsity Mixture of Experts (MoE) structuur en diverse optimalisaties voor trainingsstabiliteit. Als een sparsity model met in totaal 80 miljard parameters, activeert het tijdens inferentie slechts ongeveer 3 miljard parameters, wat de rekenkosten aanzienlijk verlaagt. Bij het verwerken van lange contexttaken van meer dan 32K tokens is de inferentiedoorvoer meer dan 10 keer hoger dan die van het Qwen3-32B model. Dit model is een instructie-fijngestemde versie, speciaal ontworpen voor algemene taken en ondersteunt geen Thinking-modus."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Thinking": {
+    "description": "Qwen3-Next-80B-A3B-Thinking is een volgende generatie basis model uitgebracht door het Tongyi Qianwen-team van Alibaba, speciaal ontworpen voor complexe redeneertaken. Het is gebaseerd op de innovatieve Qwen3-Next architectuur, die een hybride aandachtmechanisme (Gated DeltaNet en Gated Attention) en een hoog-sparsity Mixture of Experts (MoE) structuur combineert, met als doel ultieme trainings- en inferentie-efficiëntie te bereiken. Als een sparsity model met in totaal 80 miljard parameters, activeert het tijdens inferentie slechts ongeveer 3 miljard parameters, wat de rekenkosten aanzienlijk verlaagt. Bij het verwerken van lange contexttaken van meer dan 32K tokens is de doorvoer meer dan 10 keer hoger dan die van het Qwen3-32B model. Deze \"Thinking\" versie is geoptimaliseerd voor het uitvoeren van wiskundige bewijzen, code synthese, logische analyse en planning, en geeft standaard de redeneerprocessen gestructureerd weer in de vorm van een \"denk-keten\". Qua prestaties overtreft het niet alleen modellen met hogere kosten zoals Qwen3-32B-Thinking, maar presteert het ook beter dan Gemini-2.5-Flash-Thinking in meerdere benchmarktests."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat 128k context ondersteunt. In vergelijking met de huidige beste open-source modellen, overtreft Qwen2-72B op het gebied van natuurlijke taalbegrip, kennis, code, wiskunde en meertaligheid aanzienlijk de huidige toonaangevende modellen."
@@ -809,9 +812,6 @@
   "codex-mini-latest": {
     "description": "codex-mini-latest is een fijn afgestemde versie van o4-mini, speciaal ontworpen voor Codex CLI. Voor direct gebruik via de API raden we aan te beginnen met gpt-4.1."
   },
-  "cognitivecomputations/dolphin-mixtral-8x22b": {
-    "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
-  },
   "cogview-4": {
     "description": "CogView-4 is het eerste open-source tekst-naar-beeldmodel van Zhipu dat Chinese karakters ondersteunt. Het biedt een algehele verbetering in semantisch begrip, beeldgeneratiekwaliteit en de mogelijkheid om zowel Chinese als Engelse teksten te genereren. Het ondersteunt tweetalige invoer van willekeurige lengte in het Chinees en Engels en kan afbeeldingen genereren met elke resolutie binnen het opgegeven bereik."
   },
@@ -926,6 +926,9 @@
   "deepseek-ai/deepseek-r1": {
     "description": "Geavanceerd efficiënt LLM, gespecialiseerd in redeneren, wiskunde en programmeren."
   },
+  "deepseek-ai/deepseek-v3.1": {
+    "description": "DeepSeek V3.1: een volgende generatie redeneermodel dat verbeterde complexe redeneer- en ketendenkvaardigheden biedt, geschikt voor taken die diepgaande analyse vereisen."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 is een hybride expert (MoE) visueel taalmodel dat is ontwikkeld op basis van DeepSeekMoE-27B, met een MoE-architectuur met spaarzame activatie, die uitstekende prestaties levert met slechts 4,5 miljard geactiveerde parameters. Dit model presteert uitstekend in verschillende taken, waaronder visuele vraag-antwoord, optische tekenherkenning, document/tabel/grafiekbegrip en visuele positionering."
   },
@@ -1006,6 +1009,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 is het nieuwe hybride redeneermodel van DeepSeek, dat twee redeneermodi ondersteunt: denken en niet-denken. Het is efficiënter in denken dan DeepSeek-R1-0528. Dankzij post-training optimalisatie is het gebruik van agenttools en de prestaties bij agenttaken aanzienlijk verbeterd. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 64k tokens."
+  },
+  "deepseek-v3.1:671b": {
+    "description": "DeepSeek V3.1: een volgende generatie redeneermodel dat verbeterde complexe redeneer- en ketendenkvaardigheden biedt, geschikt voor taken die diepgaande analyse vereisen."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 is een expert gemengd model met 685B parameters, de nieuwste iteratie van de vlaggenschip chatmodelreeks van het DeepSeek-team.\n\nHet is een opvolger van het [DeepSeek V3](/deepseek/deepseek-chat-v3) model en presteert uitstekend in verschillende taken."
@@ -1626,7 +1632,7 @@
     "description": "ChatGPT-4o is een dynamisch model dat in real-time wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip en generatiemogelijkheden, geschikt voor grootschalige toepassingen zoals klantenservice, onderwijs en technische ondersteuning."
   },
   "gpt-4o-audio-preview": {
-    "description": "GPT-4o Audio model, ondersteunt audio-invoer en -uitvoer."
+    "description": "GPT-4o Audio Preview model, ondersteunt audio-invoer en -uitvoer."
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
@@ -1667,23 +1673,32 @@
   "gpt-5-chat-latest": {
     "description": "Het GPT-5-model gebruikt in ChatGPT. Combineert krachtige taalbegrip en generatie, geschikt voor interactieve dialoogtoepassingen."
   },
+  "gpt-5-codex": {
+    "description": "GPT-5 Codex is een GPT-5 versie geoptimaliseerd voor agent-gebaseerde codeertaken in Codex of vergelijkbare omgevingen."
+  },
   "gpt-5-mini": {
     "description": "Een snellere en kostenefficiëntere versie van GPT-5, geschikt voor duidelijk gedefinieerde taken. Biedt snellere reactietijden met behoud van hoge outputkwaliteit."
   },
   "gpt-5-nano": {
     "description": "De snelste en meest kostenefficiënte versie van GPT-5. Uitstekend geschikt voor toepassingen die snelle reacties en kostenbewustzijn vereisen."
   },
+  "gpt-audio": {
+    "description": "GPT Audio is een universeel chatmodel gericht op audio-invoer en -uitvoer, ondersteund in de Chat Completions API met audio I/O."
+  },
   "gpt-image-1": {
     "description": "ChatGPT native multimodaal afbeeldingsgeneratiemodel"
-  },
-  "gpt-oss": {
-    "description": "GPT-OSS 20B is een open-source groot taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en geschikt is voor gebruik op high-end consumentengpu's of Apple Silicon Macs. Dit model presteert uitstekend bij dialooggeneratie, code schrijven en redeneertaken, en ondersteunt functieverzoeken en het gebruik van tools."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4-gekwantificeerd Transformer-structuur, behoudt sterke prestaties zelfs bij beperkte middelen."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is een groot open-source taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en als vlaggenschipmodel fungeert. Het vereist een multi-gpu- of high-performance workstation-omgeving en levert uitstekende prestaties bij complexe redenering, codegeneratie en meertalige verwerking, met ondersteuning voor geavanceerde functieverzoeken en toolintegratie."
+  },
+  "gpt-oss:20b": {
+    "description": "GPT-OSS 20B is een open-source groot taalmodel uitgebracht door OpenAI, gebruikmakend van MXFP4-kwantisatietechnologie, geschikt voor high-end consumenten GPU's of Apple Silicon Macs. Dit model presteert uitstekend in dialooggeneratie, code schrijven en redeneertaken, en ondersteunt functieaanroepen en het gebruik van tools."
+  },
+  "gpt-realtime": {
+    "description": "Universeel realtime model dat realtime tekst- en audio-invoer en -uitvoer ondersteunt, evenals beeldinvoer."
   },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
@@ -1711,6 +1726,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 van xAI, met krachtige redeneervaardigheden."
+  },
+  "grok-4-fast-non-reasoning": {
+    "description": "We zijn verheugd Grok 4 Fast te introduceren, onze nieuwste vooruitgang in kosteneffectieve redeneermodellen."
+  },
+  "grok-4-fast-reasoning": {
+    "description": "We zijn verheugd Grok 4 Fast te introduceren, onze nieuwste vooruitgang in kosteneffectieve redeneermodellen."
   },
   "grok-code-fast-1": {
     "description": "We zijn verheugd om grok-code-fast-1 te introduceren, een snel en kostenefficiënt inferentiemodel dat uitblinkt in agentcodering."
@@ -1847,8 +1868,14 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small is ideaal voor codegeneratie, debugging en refactoring taken met minimale latentie."
   },
+  "inclusionAI/Ling-flash-2.0": {
+    "description": "Ling-flash-2.0 is het derde model in de Ling 2.0 architectuurserie uitgebracht door het Bailing-team van Ant Group. Het is een Mixture of Experts (MoE) model met in totaal 100 miljard parameters, maar activeert slechts 6,1 miljard parameters per token (waarvan 4,8 miljard niet-embedding). Als een lichtgewicht configuratie toont Ling-flash-2.0 in meerdere gezaghebbende evaluaties prestaties die vergelijkbaar zijn met of beter dan 40 miljard dense modellen en grotere MoE modellen. Dit model is ontworpen om via ultieme architectuurontwerpen en trainingsstrategieën een efficiënte weg te verkennen binnen de consensus dat grote modellen gelijkstaan aan veel parameters."
+  },
   "inclusionAI/Ling-mini-2.0": {
-    "description": "Ling-mini-2.0 is een klein, hoogwaardig groot taalmodel gebaseerd op de MoE-architectuur. Het heeft in totaal 16 miljard parameters, maar activeert slechts 1,4 miljard per token (non-embedding 789 miljoen), wat zorgt voor een extreem hoge generatie snelheid. Dankzij het efficiënte MoE-ontwerp en grootschalige, hoogwaardige trainingsdata levert Ling-mini-2.0, ondanks slechts 1,4 miljard geactiveerde parameters, toch topprestaties die vergelijkbaar zijn met dense LLM's onder de 10 miljard en grotere MoE-modellen in downstream taken."
+    "description": "Ling-mini-2.0 is een klein maar hoogpresterend groot taalmodel gebaseerd op de MoE-architectuur. Het heeft 16 miljard totale parameters, maar activeert slechts 1,4 miljard per token (789 miljoen niet-embedding), wat een zeer hoge generatie snelheid mogelijk maakt. Dankzij het efficiënte MoE-ontwerp en grootschalige hoogwaardige trainingsdata levert Ling-mini-2.0, ondanks de beperkte geactiveerde parameters, topprestaties die vergelijkbaar zijn met dense LLM's onder 10 miljard en grotere MoE modellen in downstream taken."
+  },
+  "inclusionAI/Ring-flash-2.0": {
+    "description": "Ring-flash-2.0 is een diep geoptimaliseerd hoogpresterend denkmodel gebaseerd op Ling-flash-2.0-base. Het gebruikt een Mixture of Experts (MoE) architectuur met in totaal 100 miljard parameters, maar activeert slechts 6,1 miljard parameters per inferentie. Dit model lost met het unieke icepop-algoritme de instabiliteitsproblemen van grote MoE modellen tijdens reinforcement learning (RL) training op, waardoor de complexe redeneercapaciteit continu verbetert bij langdurige training. Ring-flash-2.0 behaalde significante doorbraken in uitdagende benchmarks zoals wiskundewedstrijden, codegeneratie en logische redenering. Het presteert niet alleen beter dan top dense modellen onder 40 miljard parameters, maar kan ook concurreren met grotere open-source MoE modellen en gesloten hoogpresterende denkmodellen. Hoewel het model zich richt op complexe redenering, presteert het ook uitstekend in creatieve schrijfopdrachten. Dankzij het efficiënte architectuurontwerp biedt Ring-flash-2.0 krachtige prestaties met hoge inferentiesnelheid, wat de implementatiekosten in scenario's met hoge gelijktijdigheid aanzienlijk verlaagt."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
@@ -2357,9 +2384,6 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B is een open source code groot model, geoptimaliseerd door grootschalige versterkte leerprocessen, dat robuuste en direct inzetbare patches kan genereren. Dit model behaalde een nieuwe recordscore van 60,4% op SWE-bench Verified en vestigde daarmee een nieuw hoogtepunt voor open source modellen bij geautomatiseerde software engineering taken zoals defectherstel en code review."
   },
-  "moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 is een MoE-architectuurbasis model met krachtige codeer- en agentcapaciteiten, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model andere toonaangevende open-source modellen."
-  },
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
   },
@@ -2807,14 +2831,20 @@
   "qwen3-coder-plus": {
     "description": "Tongyi Qianwen codeermodel. De nieuwste Qwen3-Coder-serie is gebaseerd op Qwen3 en is een codegeneratiemodel met krachtige Coding Agent-capaciteiten, bedreven in het aanroepen van tools en interactie met omgevingen, in staat tot autonoom programmeren, met uitstekende codeervaardigheden en tevens algemene capaciteiten."
   },
-  "qwen3-max-preview": {
-    "description": "Previewversie van het Qwen 3 Max-model uit de Tongyi Qianwen 3-serie, met aanzienlijke verbeteringen ten opzichte van de 2.5-serie in algemene capaciteiten, tweetalig tekstbegrip (Chinees en Engels), complexe instructienaleving, subjectieve open taken, meertalige vaardigheden en toolaanroepen; het model vertoont minder kennisillusies."
+  "qwen3-coder:480b": {
+    "description": "Een hoogpresterend lang-context model van Alibaba, gericht op agent- en codeertaken."
+  },
+  "qwen3-max": {
+    "description": "De Tongyi Qianwen 3-serie Max modellen bieden een aanzienlijke verbetering ten opzichte van de 2.5-serie in algemene capaciteiten, waaronder meertalige tekstbegrip in het Chinees en Engels, complexe instructienaleving, open subjectieve taken, meertalige ondersteuning en tool-integratie; het model vertoont minder kennishallucinaties. De nieuwste qwen3-max modellen zijn, vergeleken met de qwen3-max-preview versie, speciaal geüpgraded op het gebied van agent programmering en tool-integratie. De officiële release van dit model bereikt SOTA-niveau in het domein en is geschikt voor complexere agentbehoeften."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Een nieuwe generatie open-source model zonder denkmodus gebaseerd op Qwen3, met verbeterde Chinese tekstbegrip, versterkte logische redeneervaardigheden en betere prestaties bij tekstgeneratietaken vergeleken met de vorige versie (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
   },
   "qwen3-next-80b-a3b-thinking": {
     "description": "Een nieuwe generatie open-source model met denkmodus gebaseerd op Qwen3, met verbeterde instructienaleving en meer beknopte samenvattende antwoorden vergeleken met de vorige versie (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
+  },
+  "qwen3-vl-plus": {
+    "description": "Tongyi Qianwen VL is een tekstgeneratiemodel met visuele (beeld) begripscapaciteiten. Het kan niet alleen OCR (tekstherkenning in afbeeldingen) uitvoeren, maar ook samenvatten en redeneren, bijvoorbeeld het extraheren van attributen uit productfoto's en het oplossen van problemen op basis van oefenplaatjes."
   },
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."

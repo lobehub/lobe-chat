@@ -287,9 +287,6 @@
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1, DeepSeek AI tarafından yayımlanan hibrit modlu büyük dil modelidir ve selef modellerine kıyasla birçok önemli yükseltme içermektedir. Modelin en büyük yeniliği, \"Düşünme Modu\" (Thinking Mode) ve \"Düşünmeme Modu\" (Non-thinking Mode) özelliklerini bir arada sunmasıdır; kullanıcılar sohbet şablonlarını ayarlayarak farklı görev ihtiyaçlarına esnek şekilde uyum sağlayabilirler. Özel post-training optimizasyonları sayesinde V3.1, araç çağrıları ve Agent görevlerinde performansını önemli ölçüde artırmış, dış arama araçlarını destekleme ve çok adımlı karmaşık görevleri yerine getirme kapasitesini geliştirmiştir. Model, DeepSeek-V3.1-Base üzerine post-training uygulanarak, iki aşamalı uzun metin genişletme yöntemiyle eğitim veri miktarını büyük ölçüde artırmış ve uzun belgeler ile uzun kod parçalarını işleme yeteneğini geliştirmiştir. Açık kaynaklı bir model olarak DeepSeek-V3.1, kodlama, matematik ve çıkarım gibi birçok kıyaslama testinde en iyi kapalı kaynak modellerle rekabet eden performans sergilemekte ve MoE (Mixture of Experts) mimarisi sayesinde büyük model kapasitesini korurken çıkarım maliyetlerini etkin şekilde düşürmektedir."
   },
-  "Pro/moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
-  },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
   },
@@ -379,6 +376,12 @@
   },
   "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
     "description": "Qwen3-Coder-480B-A35B-Instruct, Alibaba tarafından yayımlanan ve şimdiye kadar en gelişmiş ajan (Agentic) yeteneklerine sahip kod modelidir. Bu model, toplam 480 milyar parametre ve 35 milyar aktifleşen parametreye sahip bir Mixture-of-Experts (MoE, karışık uzman) modelidir ve verimlilik ile performans arasında bir denge sağlar. Model, yerel olarak 256K (yaklaşık 260.000) token bağlam uzunluğunu destekler ve YaRN gibi dışa genelleme yöntemleriyle 1.000.000 token seviyesine kadar genişletilebilerek büyük ölçekli kod tabanları ve karmaşık programlama görevleriyle başa çıkabilir. Qwen3-Coder, ajan tabanlı kodlama iş akışları için tasarlanmış olup yalnızca kod üretmez; aynı zamanda geliştirme araçları ve ortamlarla bağımsız şekilde etkileşime girerek karmaşık programlama problemlerini çözer. Birçok kodlama ve ajan görevindeki kıyaslama testlerinde bu model, açık kaynak modeller arasında en üst düzey performansı göstermiş ve performansı Claude Sonnet 4 gibi önde gelen modellerle kıyaslanabilir düzeydedir."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Instruct": {
+    "description": "Qwen3-Next-80B-A3B-Instruct, Alibaba Tongyi Qianwen ekibi tarafından yayınlanan yeni nesil temel modeldir. Tamamen yeni Qwen3-Next mimarisi üzerine kurulmuş olup, en üst düzey eğitim ve çıkarım verimliliğini hedeflemektedir. Model, yenilikçi hibrit dikkat mekanizması (Gated DeltaNet ve Gated Attention), yüksek seyrekli hibrit uzman (MoE) yapısı ve çeşitli eğitim stabilitesi optimizasyonları kullanmaktadır. 80 milyar toplam parametreye sahip seyrek bir model olarak, çıkarım sırasında yalnızca yaklaşık 3 milyar parametreyi aktive ederek hesaplama maliyetlerini önemli ölçüde düşürür ve 32K token’dan uzun bağlam görevlerinde çıkarım verimliliği Qwen3-32B modeline kıyasla 10 kat daha fazladır. Bu model, genel görevler için tasarlanmış talimat ince ayarlı bir versiyondur ve Düşünme (Thinking) modunu desteklemez. Performans açısından, Tongyi Qianwen’in amiral gemisi modeli Qwen3-235B ile bazı kıyaslama testlerinde eşdeğer performans sergiler ve özellikle uzun bağlam görevlerinde belirgin avantajlar gösterir."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Thinking": {
+    "description": "Qwen3-Next-80B-A3B-Thinking, Alibaba Tongyi Qianwen ekibi tarafından karmaşık çıkarım görevleri için tasarlanmış yeni nesil temel modeldir. Yenilikçi Qwen3-Next mimarisi üzerine kurulmuş olup, hibrit dikkat mekanizması (Gated DeltaNet ve Gated Attention) ve yüksek seyrekli hibrit uzman (MoE) yapısını birleştirerek en üst düzey eğitim ve çıkarım verimliliğini hedefler. 80 milyar toplam parametreye sahip seyrek bir model olarak, çıkarım sırasında yalnızca yaklaşık 3 milyar parametreyi aktive ederek hesaplama maliyetlerini önemli ölçüde düşürür ve 32K token’dan uzun bağlam görevlerinde çıkarım verimliliği Qwen3-32B modeline kıyasla 10 kat daha fazladır. Bu “Thinking” versiyonu, matematiksel ispatlar, kod sentezi, mantıksal analiz ve planlama gibi zorlu çok adımlı görevler için optimize edilmiştir ve çıkarım sürecini varsayılan olarak yapılandırılmış “düşünce zinciri” biçiminde sunar. Performans açısından, yalnızca daha maliyetli modeller olan Qwen3-32B-Thinking’i değil, aynı zamanda Gemini-2.5-Flash-Thinking’i de birçok kıyaslama testinde geride bırakır."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2, Qwen modelinin en yeni serisidir ve 128k bağlamı destekler. Mevcut en iyi açık kaynak modellerle karşılaştırıldığında, Qwen2-72B doğal dil anlama, bilgi, kod, matematik ve çok dilli yetenekler açısından mevcut lider modelleri önemli ölçüde aşmaktadır."
@@ -809,9 +812,6 @@
   "codex-mini-latest": {
     "description": "codex-mini-latest, Codex CLI için özel olarak ince ayarlanmış o4-mini versiyonudur. API üzerinden doğrudan kullanım için, gpt-4.1'den başlamanızı öneririz."
   },
-  "cognitivecomputations/dolphin-mixtral-8x22b": {
-    "description": "Dolphin Mixtral 8x22B, talimat takibi, diyalog ve programlama için tasarlanmış bir modeldir."
-  },
   "cogview-4": {
     "description": "CogView-4, Zhipu'nun Çince karakter üretimini destekleyen ilk açık kaynaklı metinden görsele modelidir. Anlam anlayışı, görüntü üretim kalitesi ve Çince-İngilizce metin üretme yeteneklerinde kapsamlı iyileştirmeler sunar. Her uzunlukta Çince ve İngilizce çift dilli girişi destekler ve verilen aralıkta herhangi bir çözünürlükte görüntü oluşturabilir."
   },
@@ -926,6 +926,9 @@
   "deepseek-ai/deepseek-r1": {
     "description": "En son teknolojiye sahip verimli LLM, akıl yürütme, matematik ve programlama konularında uzmandır."
   },
+  "deepseek-ai/deepseek-v3.1": {
+    "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2, DeepSeekMoE-27B tabanlı bir karma uzman (MoE) görsel dil modelidir. Seyrek etkinleştirilen MoE mimarisini kullanarak yalnızca 4.5B parametreyi etkinleştirerek olağanüstü performans sergilemektedir. Bu model, görsel soru yanıtlama, optik karakter tanıma, belge/tablolar/grafikler anlama ve görsel konumlandırma gibi birçok görevde mükemmel sonuçlar elde etmektedir."
   },
@@ -1006,6 +1009,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1, DeepSeek'in tamamen yeni hibrit çıkarım modeli olup, düşünme ve düşünmeme olmak üzere iki çıkarım modunu destekler ve DeepSeek-R1-0528'e kıyasla düşünme verimliliği daha yüksektir. Post-Training optimizasyonu sayesinde, Agent araç kullanımı ve akıllı görev performansı önemli ölçüde artırılmıştır. 128k bağlam penceresini destekler ve çıktı uzunluğu maksimum 64k token'a kadar çıkabilir."
+  },
+  "deepseek-v3.1:671b": {
+    "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
@@ -1626,7 +1632,7 @@
     "description": "ChatGPT-4o, güncel en son sürümü korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Müşteri hizmetleri, eğitim ve teknik destek gibi büyük ölçekli uygulama senaryoları için güçlü dil anlama ve üretme yeteneklerini bir araya getirir."
   },
   "gpt-4o-audio-preview": {
-    "description": "GPT-4o Ses modeli, sesli giriş ve çıkış desteği sunar."
+    "description": "Ses giriş ve çıkışını destekleyen GPT-4o Ses Önizleme modeli"
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra tanıttığı en yeni modeldir. Görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde yer almaktadır."
@@ -1667,23 +1673,32 @@
   "gpt-5-chat-latest": {
     "description": "ChatGPT'de kullanılan GPT-5 modeli. Güçlü dil anlama ve üretme yeteneklerini birleştirerek diyalog tabanlı etkileşim uygulamaları için uygundur."
   },
+  "gpt-5-codex": {
+    "description": "GPT-5 Codex, Codex veya benzeri ortamlardaki ajan kodlama görevleri için optimize edilmiş GPT-5 versiyonudur."
+  },
   "gpt-5-mini": {
     "description": "Daha hızlı ve ekonomik GPT-5 versiyonu, belirgin tanımlı görevler için uygundur. Yüksek kaliteli çıktıyı korurken daha hızlı yanıt sağlar."
   },
   "gpt-5-nano": {
     "description": "En hızlı ve en ekonomik GPT-5 versiyonu. Hızlı yanıt gerektiren ve maliyet duyarlı uygulamalar için idealdir."
   },
+  "gpt-audio": {
+    "description": "GPT Audio, ses giriş ve çıkışına yönelik genel sohbet modelidir ve Chat Completions API’de ses I/O kullanımını destekler."
+  },
   "gpt-image-1": {
     "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
-  },
-  "gpt-oss": {
-    "description": "GPT-OSS 20B, OpenAI tarafından yayımlanan açık kaynaklı büyük dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Yüksek performanslı tüketici sınıfı GPU'lar veya Apple Silicon Mac üzerinde çalışmaya uygundur. Bu model, diyalog üretimi, kod yazımı ve çıkarım görevlerinde üstün performans sergiler ve fonksiyon çağrıları ile araç kullanımını destekler."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 kuantize edilmiş Transformer yapısı, sınırlı kaynaklarda bile güçlü performans sağlar."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B, OpenAI tarafından yayımlanan büyük ölçekli açık kaynak dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Amiral gemisi model olarak çoklu GPU veya yüksek performanslı iş istasyonu ortamlarında çalıştırılması gerekmektedir. Karmaşık çıkarım, kod üretimi ve çok dilli işleme konularında üstün performans sunar ve gelişmiş fonksiyon çağrıları ile araç entegrasyonunu destekler."
+  },
+  "gpt-oss:20b": {
+    "description": "GPT-OSS 20B, OpenAI tarafından yayınlanan açık kaynaklı büyük dil modelidir. MXFP4 kuantizasyon teknolojisi kullanır ve üst düzey tüketici sınıfı GPU’lar veya Apple Silicon Mac üzerinde çalışmaya uygundur. Model, diyalog üretimi, kod yazımı ve çıkarım görevlerinde üstün performans sergiler, fonksiyon çağrısı ve araç kullanımını destekler."
+  },
+  "gpt-realtime": {
+    "description": "Metin ve sesin gerçek zamanlı giriş ve çıkışını destekleyen genel amaçlı gerçek zamanlı model, ayrıca görüntü girişini de destekler."
   },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
@@ -1711,6 +1726,12 @@
   },
   "grok-4-0709": {
     "description": "xAI'nin Grok 4 modeli, güçlü akıl yürütme yeteneklerine sahiptir."
+  },
+  "grok-4-fast-non-reasoning": {
+    "description": "Maliyet-etkin çıkarım modellerinde en son gelişmemiz olan Grok 4 Fast’i sunmaktan mutluluk duyuyoruz."
+  },
+  "grok-4-fast-reasoning": {
+    "description": "Maliyet-etkin çıkarım modellerinde en son gelişmemiz olan Grok 4 Fast’i sunmaktan mutluluk duyuyoruz."
   },
   "grok-code-fast-1": {
     "description": "Hızlı ve ekonomik bir çıkarım modeli olan grok-code-fast-1'i sunmaktan mutluluk duyuyoruz; ajan kodlamasında mükemmel performans sergiler."
@@ -1847,8 +1868,14 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small, kod üretimi, hata ayıklama ve yeniden yapılandırma görevleri için ideal olup, minimum gecikme sunar."
   },
+  "inclusionAI/Ling-flash-2.0": {
+    "description": "Ling-flash-2.0, Ant Group Bailing ekibi tarafından yayınlanan Ling 2.0 mimari serisinin üçüncü modelidir. Bu, hibrit uzman (MoE) modeli olup toplam parametre sayısı 100 milyara ulaşırken, her token için yalnızca 6.1 milyar parametre aktive eder (embedding dışı 4.8 milyar). Hafif yapılandırmaya sahip bu model, birçok otoriter değerlendirmede 40 milyar seviyesindeki yoğun (Dense) modeller ve daha büyük ölçekli MoE modelleriyle rekabet eden hatta onları aşan performans sergiler. Model, \"büyük model büyük parametre demektir\" anlayışı altında yüksek verimlilik yollarını keşfetmek için üstün mimari tasarım ve eğitim stratejileriyle geliştirilmiştir."
+  },
   "inclusionAI/Ling-mini-2.0": {
-    "description": "Ling-mini-2.0, MoE mimarisi temelinde geliştirilmiş, küçük boyutlu yüksek performanslı büyük bir dil modelidir. Toplamda 16 milyar parametreye sahiptir, ancak her token için yalnızca 1.4 milyar (embedding dışı 789M) aktif hale gelir, bu da son derece yüksek üretim hızını mümkün kılar. Verimli MoE tasarımı ve büyük ölçekli yüksek kaliteli eğitim verileri sayesinde, aktif parametre sayısı sadece 1.4 milyar olmasına rağmen, Ling-mini-2.0, alt görevlerde 10 milyar altı yoğun LLM'ler ve daha büyük ölçekli MoE modelleriyle rekabet edebilecek üst düzey performans sergiler."
+    "description": "Ling-mini-2.0, MoE mimarisi temelinde küçük boyutlu yüksek performanslı büyük dil modelidir. Toplam 16 milyar parametreye sahip olup, her token için yalnızca 1.4 milyar parametre aktive eder (embedding dışı 789 milyon), böylece çok yüksek üretim hızı sağlar. Verimli MoE tasarımı ve büyük ölçekli yüksek kaliteli eğitim verileri sayesinde, aktive edilen parametre sayısı sadece 1.4 milyar olmasına rağmen, Ling-mini-2.0 altındaki 10 milyar yoğun LLM ve daha büyük ölçekli MoE modelleriyle kıyaslanabilir üst düzey performans gösterir."
+  },
+  "inclusionAI/Ring-flash-2.0": {
+    "description": "Ring-flash-2.0, Ling-flash-2.0-base üzerine derinlemesine optimize edilmiş yüksek performanslı düşünme modelidir. Hibrit uzman (MoE) mimarisi kullanır, toplam parametre sayısı 100 milyardır ancak her çıkarımda yalnızca 6.1 milyar parametre aktive edilir. Model, özgün icepop algoritması ile MoE büyük modellerin pekiştirmeli öğrenme (RL) eğitimindeki kararsızlık sorununu çözerek karmaşık çıkarım yeteneğini uzun dönemli eğitimlerde sürekli artırır. Ring-flash-2.0, matematik yarışmaları, kod üretimi ve mantıksal çıkarım gibi zorlu kıyaslama testlerinde önemli atılımlar yapmış, performansı 40 milyar parametre altındaki en iyi yoğun modelleri aşmakla kalmayıp, daha büyük ölçekli açık kaynak MoE modelleri ve kapalı kaynak yüksek performanslı düşünme modelleriyle rekabet edebilir. Model karmaşık çıkarıma odaklanmasına rağmen yaratıcı yazma gibi görevlerde de başarılıdır. Ayrıca, yüksek verimli mimari tasarımı sayesinde güçlü performans sunarken yüksek hızda çıkarım yapar ve yüksek eşzamanlılık senaryolarında düşünme modeli dağıtım maliyetlerini önemli ölçüde azaltır."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
@@ -2357,9 +2384,6 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B, büyük ölçekli pekiştirmeli öğrenme ile optimize edilmiş açık kaynaklı bir kod modeli olup, sağlam ve doğrudan üretime uygun yamalar üretebilir. Bu model, SWE-bench Verified üzerinde %60,4 ile yeni bir rekor kırarak, açık kaynak modeller arasında hata düzeltme, kod incelemesi gibi otomatik yazılım mühendisliği görevlerinde en yüksek puanı elde etmiştir."
   },
-  "moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
-  },
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
   },
@@ -2807,14 +2831,20 @@
   "qwen3-coder-plus": {
     "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
   },
-  "qwen3-max-preview": {
-    "description": "Tongyi Qianwen 3 serisi Max modelinin önizleme sürümüdür. 2.5 serisine kıyasla genel yeteneklerde büyük gelişmeler göstermiştir; Çince ve İngilizce genel metin anlama, karmaşık talimat uyumu, öznel açık görevler, çok dilli yetenekler ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi yanılgıları daha azdır."
+  "qwen3-coder:480b": {
+    "description": "Alibaba tarafından ajan ve kodlama görevleri için optimize edilmiş yüksek performanslı uzun bağlam modelidir."
+  },
+  "qwen3-max": {
+    "description": "Tongyi Qianwen 3 serisi Max modeli, 2.5 serisine kıyasla genel yeteneklerde büyük gelişme göstermiştir; hem Çince hem İngilizce metin anlama, karmaşık talimat takibi, öznel açık görevler, çoklu dil yetenekleri ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi halüsinasyonları azalmıştır. En yeni qwen3-max modeli, qwen3-max-preview versiyonuna göre akıllı ajan programlama ve araç çağrısı alanlarında özel yükseltmeler içermektedir. Bu resmi sürüm modeli, alanında SOTA seviyesine ulaşmış olup, daha karmaşık ajan ihtiyaçlarına uyarlanmıştır."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 tabanlı yeni nesil düşünmeden çalışan açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Instruct-2507) kıyasla Çince metin anlama yeteneği daha iyi, mantıksal çıkarım yeteneği geliştirilmiş ve metin üretimi görevlerinde daha başarılıdır."
   },
   "qwen3-next-80b-a3b-thinking": {
     "description": "Qwen3 tabanlı yeni nesil düşünme modlu açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Thinking-2507) kıyasla komutlara uyum yeteneği artırılmış ve modelin özetleyici yanıtları daha özlü hale getirilmiştir."
+  },
+  "qwen3-vl-plus": {
+    "description": "Tongyi Qianwen VL, görsel (resim) anlama yeteneğine sahip metin üretim modelidir. Sadece OCR (resim metni tanıma) yapmakla kalmaz, aynı zamanda ürün fotoğraflarından özellik çıkarma, alıştırma resimlerinden problem çözme gibi özetleme ve çıkarım yapabilir."
   },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."

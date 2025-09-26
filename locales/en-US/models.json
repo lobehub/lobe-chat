@@ -287,9 +287,6 @@
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 is a hybrid large language model released by DeepSeek AI, featuring multiple significant upgrades over its predecessor. A key innovation of this model is the integration of both \"Thinking Mode\" and \"Non-thinking Mode,\" allowing users to flexibly switch between modes by adjusting chat templates to suit different task requirements. Through dedicated post-training optimization, V3.1 significantly enhances performance in tool invocation and Agent tasks, better supporting external search tools and executing complex multi-step tasks. Based on DeepSeek-V3.1-Base, it employs a two-stage long-text extension method to greatly increase training data volume, improving its handling of long documents and extensive code. As an open-source model, DeepSeek-V3.1 demonstrates capabilities comparable to top closed-source models across benchmarks in coding, mathematics, and reasoning. Its Mixture of Experts (MoE) architecture maintains a massive model capacity while effectively reducing inference costs."
   },
-  "Pro/moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
-  },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is the latest and most powerful version of Kimi K2. It is a top-tier Mixture of Experts (MoE) language model with a total of 1 trillion parameters and 32 billion activated parameters. Key features of this model include enhanced agent coding intelligence, demonstrating significant performance improvements in public benchmark tests and real-world agent coding tasks; and an improved frontend coding experience, with advancements in both aesthetics and practicality for frontend programming."
   },
@@ -379,6 +376,12 @@
   },
   "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
     "description": "Qwen3-Coder-480B-A35B-Instruct, released by Alibaba, is the most agentic code model to date. It is a mixture-of-experts (MoE) model with 480 billion total parameters and 35 billion active parameters, striking a balance between efficiency and performance. The model natively supports a 256K (~260k) token context window and can be extended to 1,000,000 tokens through extrapolation methods such as YaRN, enabling it to handle large codebases and complex programming tasks. Qwen3-Coder is designed for agent-style coding workflows: it not only generates code but can autonomously interact with development tools and environments to solve complex programming problems. On multiple benchmarks for coding and agent tasks, this model achieves top-tier results among open-source models, with performance comparable to leading models like Claude Sonnet 4."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Instruct": {
+    "description": "Qwen3-Next-80B-A3B-Instruct is the next-generation foundational model released by Alibaba's Tongyi Qianwen team. It is based on the brand-new Qwen3-Next architecture, designed to achieve ultimate training and inference efficiency. The model employs an innovative hybrid attention mechanism (Gated DeltaNet and Gated Attention), a highly sparse mixture-of-experts (MoE) structure, and multiple training stability optimizations. As a sparse model with a total of 80 billion parameters, it activates only about 3 billion parameters during inference, significantly reducing computational costs. When handling long-context tasks exceeding 32K tokens, its inference throughput is more than 10 times higher than the Qwen3-32B model. This model is an instruction-tuned version designed for general tasks and does not support the Thinking mode. In terms of performance, it is comparable to Tongyi Qianwen's flagship Qwen3-235B model on some benchmarks, especially demonstrating clear advantages in ultra-long context tasks."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Thinking": {
+    "description": "Qwen3-Next-80B-A3B-Thinking is the next-generation foundational model released by Alibaba's Tongyi Qianwen team, specifically designed for complex reasoning tasks. It is based on the innovative Qwen3-Next architecture, which integrates a hybrid attention mechanism (Gated DeltaNet and Gated Attention) and a highly sparse mixture-of-experts (MoE) structure, aiming for ultimate training and inference efficiency. As a sparse model with a total of 80 billion parameters, it activates only about 3 billion parameters during inference, greatly reducing computational costs. When processing long-context tasks exceeding 32K tokens, its throughput is more than 10 times higher than the Qwen3-32B model. This \"Thinking\" version is optimized for executing challenging multi-step tasks such as mathematical proofs, code synthesis, logical analysis, and planning, and by default outputs the reasoning process in a structured \"chain-of-thought\" format. In terms of performance, it not only surpasses higher-cost models like Qwen3-32B-Thinking but also outperforms Gemini-2.5-Flash-Thinking on multiple benchmarks."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
@@ -809,9 +812,6 @@
   "codex-mini-latest": {
     "description": "codex-mini-latest is a fine-tuned version of o4-mini, specifically designed for Codex CLI. For direct API usage, we recommend starting with gpt-4.1."
   },
-  "cognitivecomputations/dolphin-mixtral-8x22b": {
-    "description": "Dolphin Mixtral 8x22B is a model designed for instruction following, dialogue, and programming."
-  },
   "cogview-4": {
     "description": "CogView-4 is Zhipu's first open-source text-to-image model supporting Chinese character generation. It offers comprehensive improvements in semantic understanding, image generation quality, and bilingual Chinese-English text generation capabilities. It supports bilingual input of any length and can generate images at any resolution within a specified range."
   },
@@ -926,6 +926,9 @@
   "deepseek-ai/deepseek-r1": {
     "description": "A state-of-the-art efficient LLM skilled in reasoning, mathematics, and programming."
   },
+  "deepseek-ai/deepseek-v3.1": {
+    "description": "DeepSeek V3.1: The next-generation reasoning model that enhances complex reasoning and chain-of-thought capabilities, suitable for tasks requiring in-depth analysis."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 is a mixture of experts (MoE) visual language model developed based on DeepSeekMoE-27B, employing a sparsely activated MoE architecture that achieves outstanding performance while activating only 4.5 billion parameters. This model excels in various tasks, including visual question answering, optical character recognition, document/table/chart understanding, and visual localization."
   },
@@ -1006,6 +1009,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting two reasoning modes: thinking and non-thinking. It offers higher thinking efficiency compared to DeepSeek-R1-0528. With post-training optimization, the use of Agent tools and agent task performance have been significantly enhanced. It supports a 128k context window and an output length of up to 64k tokens."
+  },
+  "deepseek-v3.1:671b": {
+    "description": "DeepSeek V3.1: The next-generation reasoning model that enhances complex reasoning and chain-of-thought capabilities, suitable for tasks requiring in-depth analysis."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
@@ -1626,7 +1632,7 @@
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to maintain the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications including customer service, education, and technical support."
   },
   "gpt-4o-audio-preview": {
-    "description": "GPT-4o Audio model, supporting audio input and output."
+    "description": "GPT-4o Audio Preview model, supporting audio input and output."
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI after GPT-4 Omni, supporting both image and text input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models, costing over 60% less than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
@@ -1667,23 +1673,32 @@
   "gpt-5-chat-latest": {
     "description": "The GPT-5 model used in ChatGPT. Combines powerful language understanding and generation capabilities, ideal for conversational interaction applications."
   },
+  "gpt-5-codex": {
+    "description": "GPT-5 Codex is a GPT-5 variant optimized for agent coding tasks in Codex or similar environments."
+  },
   "gpt-5-mini": {
     "description": "A faster, more cost-effective version of GPT-5, suitable for well-defined tasks. Provides quicker response times while maintaining high-quality output."
   },
   "gpt-5-nano": {
     "description": "The fastest and most cost-efficient version of GPT-5. Perfectly suited for applications requiring rapid responses and cost sensitivity."
   },
+  "gpt-audio": {
+    "description": "GPT Audio is a general-purpose chat model designed for audio input and output, supporting audio I/O in the Chat Completions API."
+  },
   "gpt-image-1": {
     "description": "ChatGPT native multimodal image generation model."
-  },
-  "gpt-oss": {
-    "description": "GPT-OSS 20B is an open-source large language model released by OpenAI, utilizing MXFP4 quantization technology. It is suitable for running on high-end consumer GPUs or Apple Silicon Macs. This model excels in dialogue generation, code writing, and reasoning tasks, supporting function calls and tool usage."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 quantized Transformer architecture, delivering strong performance even under resource constraints."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is a large open-source language model released by OpenAI, employing MXFP4 quantization technology as a flagship model. It requires multi-GPU or high-performance workstation environments to operate and delivers outstanding performance in complex reasoning, code generation, and multilingual processing, supporting advanced function calls and tool integration."
+  },
+  "gpt-oss:20b": {
+    "description": "GPT-OSS 20B is an open-source large language model released by OpenAI, utilizing MXFP4 quantization technology, suitable for running on high-end consumer GPUs or Apple Silicon Macs. This model excels in dialogue generation, code writing, and reasoning tasks, supporting function calls and tool usage."
+  },
+  "gpt-realtime": {
+    "description": "A general-purpose real-time model supporting real-time text and audio input/output, as well as image input."
   },
   "grok-2-1212": {
     "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
@@ -1711,6 +1726,12 @@
   },
   "grok-4-0709": {
     "description": "xAI's Grok 4, featuring strong reasoning capabilities."
+  },
+  "grok-4-fast-non-reasoning": {
+    "description": "We are excited to release Grok 4 Fast, our latest advancement in cost-effective reasoning models."
+  },
+  "grok-4-fast-reasoning": {
+    "description": "We are excited to release Grok 4 Fast, our latest advancement in cost-effective reasoning models."
   },
   "grok-code-fast-1": {
     "description": "We are excited to introduce grok-code-fast-1, a fast and cost-effective inference model that excels in agent coding."
@@ -1847,8 +1868,14 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small is ideal for code generation, debugging, and refactoring tasks, offering minimal latency."
   },
+  "inclusionAI/Ling-flash-2.0": {
+    "description": "Ling-flash-2.0 is the third model in the Ling 2.0 architecture series released by Ant Group's Bailing team. It is a mixture-of-experts (MoE) model with a total of 100 billion parameters, but activates only 6.1 billion parameters per token (4.8 billion non-embedding). As a lightweight configuration model, Ling-flash-2.0 demonstrates performance comparable to or surpassing 40-billion-parameter dense models and larger MoE models across multiple authoritative benchmarks. The model aims to explore efficient pathways under the consensus that \"large models equal large parameters\" through extreme architectural design and training strategies."
+  },
   "inclusionAI/Ling-mini-2.0": {
-    "description": "Ling-mini-2.0 is a compact, high-performance large language model based on the MoE architecture. It has 16 billion total parameters, but only activates 1.4 billion per token (non-embedding 789 million), enabling extremely fast generation speeds. Thanks to its efficient MoE design and large-scale, high-quality training data, Ling-mini-2.0 delivers top-tier performance on downstream tasks comparable to dense LLMs under 10 billion parameters and even larger MoE models, despite having only 1.4 billion activated parameters."
+    "description": "Ling-mini-2.0 is a small-sized, high-performance large language model based on the MoE architecture. It has 16 billion total parameters but activates only 1.4 billion per token (789 million non-embedding), achieving extremely high generation speed. Thanks to the efficient MoE design and large-scale high-quality training data, despite activating only 1.4 billion parameters, Ling-mini-2.0 still delivers top-tier performance comparable to dense LLMs under 10 billion parameters and larger MoE models on downstream tasks."
+  },
+  "inclusionAI/Ring-flash-2.0": {
+    "description": "Ring-flash-2.0 is a high-performance reasoning model deeply optimized based on Ling-flash-2.0-base. It employs a mixture-of-experts (MoE) architecture with a total of 100 billion parameters but activates only 6.1 billion parameters per inference. The model uses the proprietary icepop algorithm to solve the instability issues of MoE large models during reinforcement learning (RL) training, enabling continuous improvement of complex reasoning capabilities over long training cycles. Ring-flash-2.0 has achieved significant breakthroughs in challenging benchmarks such as math competitions, code generation, and logical reasoning. Its performance not only surpasses top dense models under 40 billion parameters but also rivals larger open-source MoE models and closed-source high-performance reasoning models. Although focused on complex reasoning, it also performs well in creative writing tasks. Additionally, thanks to its efficient architecture, Ring-flash-2.0 delivers strong performance with high-speed inference, significantly reducing deployment costs for reasoning models in high-concurrency scenarios."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
@@ -2357,9 +2384,6 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B is an open-source large code model optimized through extensive reinforcement learning, capable of producing robust, production-ready patches. This model achieved a new high score of 60.4% on SWE-bench Verified, setting a record for open-source models in automated software engineering tasks such as defect repair and code review."
   },
-  "moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 is a MoE architecture base model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
-  },
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is the latest and most powerful version of Kimi K2. It is a top-tier Mixture of Experts (MoE) language model with a total of 1 trillion parameters and 32 billion activated parameters. Key features of this model include enhanced agent coding intelligence, demonstrating significant performance improvements in public benchmark tests and real-world agent coding tasks; and an improved frontend coding experience, with advancements in both aesthetics and practicality for frontend programming."
   },
@@ -2807,14 +2831,20 @@
   "qwen3-coder-plus": {
     "description": "Tongyi Qianwen code model. The latest Qwen3-Coder series models are code generation models based on Qwen3, equipped with powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding skills alongside general capabilities."
   },
-  "qwen3-max-preview": {
-    "description": "The Qwen 3 series Max model preview version shows a significant overall improvement compared to the 2.5 series in general capabilities, including Chinese and English text understanding, complex instruction adherence, subjective open tasks, multilingual capabilities, and tool invocation. The model also exhibits fewer knowledge hallucinations."
+  "qwen3-coder:480b": {
+    "description": "Alibaba's high-performance long-context model tailored for agent and coding tasks."
+  },
+  "qwen3-max": {
+    "description": "Tongyi Qianwen 3 series Max model, which shows significant overall improvements compared to the 2.5 series, including enhanced bilingual (Chinese and English) text understanding, complex instruction following, subjective open-domain task capabilities, multilingual support, and tool invocation abilities; the model also exhibits fewer hallucinations. The latest qwen3-max model features specialized upgrades in agent programming and tool invocation compared to the qwen3-max-preview version. The officially released model achieves state-of-the-art performance in its domain and is adapted to more complex agent scenarios."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "A new generation of non-thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Instruct-2507), it offers better Chinese text comprehension, enhanced logical reasoning abilities, and improved performance in text generation tasks."
   },
   "qwen3-next-80b-a3b-thinking": {
     "description": "A new generation of thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Thinking-2507), it features improved instruction-following capabilities and more concise model-generated summaries."
+  },
+  "qwen3-vl-plus": {
+    "description": "Tongyi Qianwen VL is a text generation model with visual (image) understanding capabilities. It can perform OCR (image text recognition) and further summarize and reason, such as extracting attributes from product photos or solving problems based on exercise images."
   },
   "qwq": {
     "description": "QwQ is an experimental research model focused on improving AI reasoning capabilities."

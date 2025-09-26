@@ -1,6 +1,9 @@
 import { GenerateContentConfig, GoogleGenAI, Type as SchemaType } from '@google/genai';
+import Debug from 'debug';
 
 import { GenerateObjectOptions } from '../../types';
+
+const debug = Debug('mode-runtime:google:generateObject');
 
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
@@ -107,8 +110,18 @@ export const createGoogleGenerateObject = async (
 ) => {
   const { schema, contents, model } = payload;
 
+  debug('createGoogleGenerateObject started', {
+    contentsLength: contents.length,
+    hasSchema: !!schema,
+    model,
+  });
+
   // Convert OpenAI schema to Google schema format
   const responseSchema = convertOpenAISchemaToGoogleSchema(schema);
+  debug('Schema conversion completed', {
+    convertedSchema: responseSchema,
+    originalSchema: schema,
+  });
 
   const config: GenerateContentConfig = {
     abortSignal: options?.signal,
@@ -135,18 +148,30 @@ export const createGoogleGenerateObject = async (
     ],
   };
 
+  debug('Config prepared', {
+    hasAbortSignal: !!config.abortSignal,
+    hasSafetySettings: !!config.safetySettings,
+    model,
+    responseMimeType: config.responseMimeType,
+  });
+
   const response = await client.models.generateContent({
     config,
     contents,
     model,
   });
 
+  debug('API response received', { hasText: !!response.text, textLength: response.text?.length });
+
   const text = response.text;
 
   try {
-    return JSON.parse(text!);
+    const result = JSON.parse(text!);
+    debug('JSON parsing successful', result);
+    return result;
   } catch {
     console.error('parse json error:', text);
+
     return undefined;
   }
 };
