@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { BotMessageSquare } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
 
 import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
@@ -59,15 +59,20 @@ const AssistantDetail = () => {
     setIsAdding(true);
     try {
       // 添加到会话列表
-      const session = await createSession({
-        config,
-        meta,
-      });
+      const session = await createSession(
+        {
+          config,
+          meta,
+        },
+        false,
+      );
       toggleDrawer();
-      // 导航到会话页面
-      router.replace({
-        params: { session: session },
-        pathname: '/chat',
+      InteractionManager.runAfterInteractions(() => {
+        // 导航到会话页面
+        router.replace({
+          params: { session: session },
+          pathname: '/chat',
+        });
       });
     } catch (err) {
       console.error(t('assistant.detail.addFailed', { ns: 'discover' }), err);
@@ -166,14 +171,6 @@ const AssistantDetail = () => {
             >
               {t('assistant.detail.addAndChat', { ns: 'discover' })}
             </Button>
-
-            {/* <Button
-              type="default"
-              size="large"
-              onPress={handleShare}
-            >
-              <Icon icon={Share2} size="small" color={token.colorText} />
-            </Button> */}
           </View>
 
           {/* 系统提示区域 */}
