@@ -10,6 +10,8 @@ export const ChatErrorType = {
   SubscriptionPlanLimit: 'SubscriptionPlanLimit', // 订阅用户超限
   SubscriptionKeyMismatch: 'SubscriptionKeyMismatch', // 订阅 key 不匹配
 
+  SupervisorDecisionFailed: 'SupervisorDecisionFailed', // 主持人决策失败
+
   InvalidUserKey: 'InvalidUserKey', // is not valid User key
   CreateMessageError: 'CreateMessageError',
   /**

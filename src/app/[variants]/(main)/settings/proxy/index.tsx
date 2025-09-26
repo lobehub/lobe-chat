@@ -3,9 +3,8 @@
 import ProxyForm from './features/ProxyForm';
 
 const ProxySettings = () => {
-
   return (
-    <div>
+    <div style={{ maxWidth: '1024px', width: '100%' }}>
       <ProxyForm />
     </div>
   );

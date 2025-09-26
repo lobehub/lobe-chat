@@ -4,6 +4,7 @@ export * from './aiProvider';
 export * from './artifact';
 export * from './asyncTask';
 export * from './auth';
+export * from './chatGroup';
 export * from './chunk';
 export * from './clientDB';
 export * from './discover';

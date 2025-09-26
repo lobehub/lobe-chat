@@ -183,7 +183,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now();
-        
+
         // 工厂级 Responses API 路由控制（支持实例覆盖）
         const modelId = (payload as any).model as string | undefined;
         const shouldUseResponses = (() => {
@@ -208,7 +208,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         if (shouldUseResponses) {
           processedPayload = { ...payload, apiMode: 'responses' } as any;
         }
-        
+
         // 再进行工厂级处理
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(processedPayload, this._options)
@@ -232,7 +232,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         };
 
         if (customClient?.createChatCompletionStream) {
-          response = customClient.createChatCompletionStream(this.client, processedPayload, this) as any;
+          response = customClient.createChatCompletionStream(
+            this.client,
+            processedPayload,
+            this,
+          ) as any;
         } else {
           const finalPayload = {
             ...postPayload,

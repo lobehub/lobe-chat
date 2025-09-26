@@ -287,9 +287,6 @@
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 é um modelo de linguagem grande em modo híbrido lançado pela DeepSeek AI, que traz várias melhorias importantes em relação à geração anterior. Uma inovação chave do modelo é a integração dos modos “Pensamento” (Thinking Mode) e “Não Pensamento” (Non-thinking Mode), permitindo que o usuário alterne flexivelmente entre eles ajustando o template de conversa para atender diferentes demandas. Com otimizações pós-treinamento específicas, o V3.1 apresenta desempenho significativamente melhorado em chamadas de ferramentas e tarefas Agent, suportando melhor ferramentas de busca externas e execução de tarefas complexas em múltiplas etapas. Baseado no DeepSeek-V3.1-Base, o modelo foi treinado adicionalmente com um método de expansão de texto longo em duas fases, aumentando substancialmente o volume de dados de treinamento, o que melhora seu desempenho no processamento de documentos longos e códigos extensos. Como modelo open source, o DeepSeek-V3.1 demonstra capacidades comparáveis a modelos fechados de ponta em benchmarks de codificação, matemática e raciocínio, e graças à sua arquitetura de especialistas mistos (MoE), mantém uma enorme capacidade de modelo enquanto reduz efetivamente os custos de inferência."
   },
-  "Pro/moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 é um modelo base com arquitetura MoE e capacidades avançadas de código e agente, com 1 trilhão de parâmetros totais e 32 bilhões ativados. Em testes de desempenho em raciocínio geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
-  },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 é a versão mais recente e poderosa do Kimi K2. Trata-se de um modelo de linguagem de especialistas mistos (MoE) de ponta, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. As principais características deste modelo incluem: inteligência aprimorada para codificação de agentes, demonstrando melhorias significativas em testes de referência públicos e em tarefas reais de codificação de agentes; experiência de codificação front-end melhorada, com avanços tanto na estética quanto na funcionalidade da programação front-end."
   },
@@ -379,6 +376,12 @@
   },
   "Qwen/Qwen3-Coder-480B-A35B-Instruct": {
     "description": "Qwen3-Coder-480B-A35B-Instruct é o modelo de código com maior capacidade agentic (de atuação autônoma) publicado pela Alibaba até o momento. É um modelo de especialistas mistos (MoE) com 480 bilhões de parâmetros totais e 35 bilhões de parâmetros ativados, que alcança um equilíbrio entre eficiência e desempenho. O modelo oferece suporte nativo a um comprimento de contexto de 256K (aproximadamente 260 mil) tokens e pode ser estendido até 1 milhão de tokens por meio de métodos de extrapolação como YaRN, permitindo lidar com grandes bases de código e tarefas de programação complexas. O Qwen3-Coder foi projetado para fluxos de trabalho de codificação baseados em agentes: além de gerar código, ele pode interagir de forma autônoma com ferramentas e ambientes de desenvolvimento para resolver problemas de programação complexos. Em diversos benchmarks de tarefas de codificação e de agentes, este modelo alcançou desempenho de ponta entre os modelos de código aberto, comparável a modelos líderes como o Claude Sonnet 4."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Instruct": {
+    "description": "Qwen3-Next-80B-A3B-Instruct é o modelo base de próxima geração lançado pela equipe Tongyi Qianwen da Alibaba. Baseado na nova arquitetura Qwen3-Next, visa alcançar eficiência máxima em treinamento e inferência. O modelo adota um mecanismo inovador de atenção híbrida (Gated DeltaNet e Gated Attention), uma estrutura de especialistas mistos altamente esparsos (MoE) e várias otimizações para estabilidade no treinamento. Como um modelo esparso com 80 bilhões de parâmetros totais, ativa apenas cerca de 3 bilhões de parâmetros durante a inferência, reduzindo significativamente o custo computacional. Em tarefas de contexto longo com mais de 32 mil tokens, sua taxa de inferência é mais de 10 vezes superior ao modelo Qwen3-32B. Esta versão é ajustada por instrução para tarefas gerais e não suporta o modo de cadeia de pensamento (Thinking). Em desempenho, é comparável ao modelo principal Tongyi Qianwen Qwen3-235B em alguns benchmarks, destacando-se especialmente em tarefas de contexto ultra longo."
+  },
+  "Qwen/Qwen3-Next-80B-A3B-Thinking": {
+    "description": "Qwen3-Next-80B-A3B-Thinking é o modelo base de próxima geração lançado pela equipe Tongyi Qianwen da Alibaba, projetado para tarefas complexas de raciocínio. Baseado na inovadora arquitetura Qwen3-Next, que integra mecanismos híbridos de atenção (Gated DeltaNet e Gated Attention) e uma estrutura de especialistas mistos altamente esparsos (MoE), busca máxima eficiência em treinamento e inferência. Como um modelo esparso com 80 bilhões de parâmetros totais, ativa apenas cerca de 3 bilhões durante a inferência, reduzindo significativamente o custo computacional. Em tarefas de contexto longo com mais de 32 mil tokens, sua taxa de inferência é mais de 10 vezes superior ao modelo Qwen3-32B. Esta versão “Thinking” é otimizada para executar tarefas complexas de múltiplas etapas, como provas matemáticas, síntese de código, análise lógica e planejamento, e por padrão produz o processo de raciocínio em forma estruturada de “cadeia de pensamento”. Em desempenho, supera modelos mais custosos como o Qwen3-32B-Thinking e também apresenta melhor desempenho que o Gemini-2.5-Flash-Thinking em vários benchmarks."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 é a mais recente série do modelo Qwen, suportando 128k de contexto. Em comparação com os melhores modelos de código aberto atuais, o Qwen2-72B supera significativamente os modelos líderes em várias capacidades, incluindo compreensão de linguagem natural, conhecimento, código, matemática e multilinguismo."
@@ -809,9 +812,6 @@
   "codex-mini-latest": {
     "description": "codex-mini-latest é uma versão ajustada do o4-mini, especialmente para Codex CLI. Para uso direto via API, recomendamos começar pelo gpt-4.1."
   },
-  "cognitivecomputations/dolphin-mixtral-8x22b": {
-    "description": "Dolphin Mixtral 8x22B é um modelo projetado para seguir instruções, diálogos e programação."
-  },
   "cogview-4": {
     "description": "CogView-4 é o primeiro modelo de geração de imagens a partir de texto open source da Zhipu que suporta a geração de caracteres chineses. Ele apresenta melhorias abrangentes em compreensão semântica, qualidade de geração de imagens e capacidade de geração de textos em chinês e inglês, suportando entradas bilíngues de qualquer comprimento e podendo gerar imagens em qualquer resolução dentro do intervalo especificado."
   },
@@ -926,6 +926,9 @@
   "deepseek-ai/deepseek-r1": {
     "description": "LLM avançado e eficiente, especializado em raciocínio, matemática e programação."
   },
+  "deepseek-ai/deepseek-v3.1": {
+    "description": "DeepSeek V3.1: modelo de inferência de próxima geração, aprimorado para raciocínio complexo e pensamento em cadeia, ideal para tarefas que exigem análise profunda."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 é um modelo de linguagem visual baseado no DeepSeekMoE-27B, desenvolvido como um especialista misto (MoE), utilizando uma arquitetura de MoE com ativação esparsa, alcançando desempenho excepcional com apenas 4,5 bilhões de parâmetros ativados. Este modelo se destaca em várias tarefas, incluindo perguntas visuais, reconhecimento óptico de caracteres, compreensão de documentos/tabelas/gráficos e localização visual."
   },
@@ -1006,6 +1009,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 é o novo modelo híbrido de raciocínio lançado pela DeepSeek, suportando dois modos de raciocínio: com e sem pensamento, com eficiência de pensamento superior ao DeepSeek-R1-0528. Após otimização pós-treinamento, o uso de ferramentas Agent e o desempenho em tarefas inteligentes foram significativamente aprimorados. Suporta janela de contexto de 128k e comprimento máximo de saída de 64k tokens."
+  },
+  "deepseek-v3.1:671b": {
+    "description": "DeepSeek V3.1: modelo de inferência de próxima geração, aprimorado para raciocínio complexo e pensamento em cadeia, ideal para tarefas que exigem análise profunda."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "O DeepSeek V3 é um modelo misto especializado com 685B de parâmetros, sendo a mais recente iteração da série de modelos de chat da equipe DeepSeek.\n\nEle herda o modelo [DeepSeek V3](/deepseek/deepseek-chat-v3) e se destaca em várias tarefas."
@@ -1626,7 +1632,7 @@
     "description": "ChatGPT-4o é um modelo dinâmico, atualizado em tempo real para manter a versão mais atualizada. Combina uma poderosa compreensão e capacidade de geração de linguagem, adequado para cenários de aplicação em larga escala, incluindo atendimento ao cliente, educação e suporte técnico."
   },
   "gpt-4o-audio-preview": {
-    "description": "Modelo de áudio GPT-4o, suporta entrada e saída de áudio."
+    "description": "Modelo GPT-4o Audio Preview, com suporte para entrada e saída de áudio."
   },
   "gpt-4o-mini": {
     "description": "O GPT-4o mini é o mais recente modelo lançado pela OpenAI após o GPT-4 Omni, suportando entrada de texto e imagem e gerando texto como saída. Como seu modelo compacto mais avançado, ele é muito mais acessível do que outros modelos de ponta recentes, custando mais de 60% menos que o GPT-3.5 Turbo. Ele mantém uma inteligência de ponta, ao mesmo tempo que oferece um custo-benefício significativo. O GPT-4o mini obteve uma pontuação de 82% no teste MMLU e atualmente está classificado acima do GPT-4 em preferências de chat."
@@ -1667,23 +1673,32 @@
   "gpt-5-chat-latest": {
     "description": "Modelo GPT-5 usado no ChatGPT. Combina forte compreensão e geração de linguagem, ideal para aplicações de interação conversacional."
   },
+  "gpt-5-codex": {
+    "description": "GPT-5 Codex é uma versão do GPT-5 otimizada para tarefas de codificação de agentes em ambientes Codex ou similares."
+  },
   "gpt-5-mini": {
     "description": "Versão mais rápida e econômica do GPT-5, adequada para tarefas bem definidas. Oferece respostas mais rápidas mantendo alta qualidade de saída."
   },
   "gpt-5-nano": {
     "description": "Versão mais rápida e econômica do GPT-5. Muito adequada para cenários que exigem respostas rápidas e sensibilidade a custos."
   },
+  "gpt-audio": {
+    "description": "GPT Audio é um modelo de chat universal voltado para entrada e saída de áudio, suportando uso de áudio I/O na API de Chat Completions."
+  },
   "gpt-image-1": {
     "description": "Modelo nativo multimodal de geração de imagens do ChatGPT"
-  },
-  "gpt-oss": {
-    "description": "GPT-OSS 20B é um modelo de linguagem grande de código aberto lançado pela OpenAI, que utiliza a tecnologia de quantização MXFP4, adequado para execução em GPUs de consumo avançado ou Macs com Apple Silicon. Este modelo apresenta excelente desempenho em geração de diálogos, escrita de código e tarefas de raciocínio, suportando chamadas de funções e uso de ferramentas."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4: estrutura Transformer quantificada, mantendo desempenho robusto mesmo em recursos limitados."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B é um modelo de linguagem grande de código aberto lançado pela OpenAI, utilizando a tecnologia de quantização MXFP4, sendo um modelo de ponta. Requer múltiplas GPUs ou estações de trabalho de alto desempenho para execução, oferecendo desempenho excepcional em raciocínio complexo, geração de código e processamento multilíngue, com suporte a chamadas avançadas de funções e integração de ferramentas."
+  },
+  "gpt-oss:20b": {
+    "description": "GPT-OSS 20B é um modelo de linguagem grande open source lançado pela OpenAI, utilizando quantização MXFP4, adequado para execução em GPUs de consumo avançado ou Macs com Apple Silicon. O modelo apresenta excelente desempenho em geração de diálogo, codificação e tarefas de inferência, suportando chamadas de função e uso de ferramentas."
+  },
+  "gpt-realtime": {
+    "description": "Modelo universal em tempo real, suportando entrada e saída de texto e áudio, além de entrada de imagem."
   },
   "grok-2-1212": {
     "description": "Este modelo apresenta melhorias em precisão, conformidade com instruções e capacidade multilíngue."
@@ -1711,6 +1726,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 da xAI, com forte capacidade de raciocínio."
+  },
+  "grok-4-fast-non-reasoning": {
+    "description": "Temos o prazer de lançar o Grok 4 Fast, nosso avanço mais recente em modelos de inferência com custo-benefício."
+  },
+  "grok-4-fast-reasoning": {
+    "description": "Temos o prazer de lançar o Grok 4 Fast, nosso avanço mais recente em modelos de inferência com custo-benefício."
   },
   "grok-code-fast-1": {
     "description": "Temos o prazer de apresentar o grok-code-fast-1, um modelo de inferência rápido e econômico, que se destaca na codificação de agentes."
@@ -1847,8 +1868,14 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small é a escolha ideal para tarefas de geração, depuração e refatoração de código, com latência mínima."
   },
+  "inclusionAI/Ling-flash-2.0": {
+    "description": "Ling-flash-2.0 é o terceiro modelo da série Ling 2.0, lançado pela equipe Bailing do Ant Group. É um modelo de especialistas mistos (MoE) com 100 bilhões de parâmetros totais, mas ativa apenas 6,1 bilhões por token (4,8 bilhões excluindo embeddings). Como uma configuração leve, Ling-flash-2.0 demonstra desempenho comparável ou superior a modelos densos de 40 bilhões e modelos MoE de maior escala em várias avaliações autoritativas. O modelo busca explorar caminhos eficientes sob o consenso de que “modelos grandes equivalem a muitos parâmetros” por meio de design arquitetônico e estratégias de treinamento extremas."
+  },
   "inclusionAI/Ling-mini-2.0": {
-    "description": "Ling-mini-2.0 é um modelo de linguagem grande de alto desempenho e pequeno porte baseado na arquitetura MoE. Ele possui 16 bilhões de parâmetros totais, mas ativa apenas 1,4 bilhão por token (789 milhões não-embedding), alcançando assim uma velocidade de geração extremamente alta. Graças ao design eficiente do MoE e a um grande volume de dados de treinamento de alta qualidade, apesar de ativar apenas 1,4 bilhão de parâmetros, o Ling-mini-2.0 ainda apresenta desempenho de ponta em tarefas downstream, comparável a modelos dense LLM abaixo de 10 bilhões e a modelos MoE de maior escala."
+    "description": "Ling-mini-2.0 é um modelo de linguagem grande de alto desempenho e pequeno porte baseado na arquitetura MoE. Possui 16 bilhões de parâmetros totais, mas ativa apenas 1,4 bilhão por token (789 milhões excluindo embeddings), alcançando alta velocidade de geração. Graças ao design eficiente do MoE e a grandes volumes de dados de treinamento de alta qualidade, Ling-mini-2.0 apresenta desempenho de ponta em tarefas downstream, comparável a modelos densos abaixo de 10 bilhões e modelos MoE de maior escala."
+  },
+  "inclusionAI/Ring-flash-2.0": {
+    "description": "Ring-flash-2.0 é um modelo de pensamento de alto desempenho profundamente otimizado a partir do Ling-flash-2.0-base. Utiliza arquitetura de especialistas mistos (MoE) com 100 bilhões de parâmetros totais, mas ativa apenas 6,1 bilhões por inferência. O modelo resolve a instabilidade do treinamento por reforço (RL) em grandes modelos MoE com o algoritmo inovador icepop, permitindo melhoria contínua do raciocínio complexo em treinamentos longos. Ring-flash-2.0 alcançou avanços significativos em competições matemáticas, geração de código e raciocínio lógico, superando modelos densos de até 40 bilhões de parâmetros e rivalizando com modelos MoE open source maiores e modelos de pensamento proprietários de alto desempenho. Embora focado em raciocínio complexo, também se destaca em tarefas criativas. Além disso, graças ao design eficiente, oferece alta velocidade de inferência e reduz significativamente o custo de implantação em cenários de alta concorrência."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferece soluções de diálogo inteligente em múltiplos cenários."
@@ -2357,9 +2384,6 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B é um modelo de código aberto de grande porte, otimizado por meio de aprendizado reforçado em larga escala, capaz de gerar patches robustos e prontos para produção. Este modelo alcançou uma nova pontuação máxima de 60,4% no SWE-bench Verified, estabelecendo um recorde entre modelos de código aberto em tarefas automatizadas de engenharia de software, como correção de defeitos e revisão de código."
   },
-  "moonshotai/Kimi-K2-Instruct": {
-    "description": "Kimi K2 é um modelo base com arquitetura MoE e capacidades avançadas de código e agente, com 1 trilhão de parâmetros totais e 32 bilhões ativados. Em testes de desempenho em raciocínio geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
-  },
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 é a versão mais recente e poderosa do Kimi K2. Trata-se de um modelo de linguagem de especialistas mistos (MoE) de ponta, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. As principais características deste modelo incluem: inteligência aprimorada para codificação de agentes, demonstrando melhorias significativas em testes de referência públicos e em tarefas reais de codificação de agentes; experiência de codificação front-end melhorada, com avanços tanto na estética quanto na funcionalidade da programação front-end."
   },
@@ -2807,14 +2831,20 @@
   "qwen3-coder-plus": {
     "description": "Modelo de código Tongyi Qianwen. A mais recente série de modelos Qwen3-Coder é baseada no Qwen3 para geração de código, com forte capacidade de agente de codificação, especializada em chamadas de ferramentas e interação com o ambiente, capaz de programação autônoma, combinando excelente habilidade de codificação com capacidades gerais."
   },
-  "qwen3-max-preview": {
-    "description": "Versão Preview do modelo Max da série Qwen 3, com melhorias significativas em relação à série 2.5 em capacidades gerais, compreensão de texto em chinês e inglês, conformidade com instruções complexas, tarefas subjetivas abertas, multilinguismo e chamadas de ferramentas; o modelo apresenta menos alucinações de conhecimento."
+  "qwen3-coder:480b": {
+    "description": "Modelo de contexto longo de alto desempenho da Alibaba, voltado para tarefas de agentes e codificação."
+  },
+  "qwen3-max": {
+    "description": "A série Max do Tongyi Qianwen 3 apresenta melhorias significativas em relação à série 2.5 na capacidade geral, compreensão de texto em chinês e inglês, seguimento de instruções complexas, tarefas abertas subjetivas, multilinguismo e chamadas de ferramentas; o modelo apresenta menos alucinações de conhecimento. A versão mais recente do qwen3-max, em comparação com a prévia, recebeu atualizações específicas para programação de agentes e chamadas de ferramentas. O modelo oficial lançado atinge o estado da arte no domínio, adaptando-se a demandas mais complexas de agentes."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Modelo open source de nova geração no modo não reflexivo baseado no Qwen3, que apresenta melhor compreensão de texto em chinês, capacidades aprimoradas de raciocínio lógico e desempenho superior em tarefas de geração de texto em comparação com a versão anterior (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
   },
   "qwen3-next-80b-a3b-thinking": {
     "description": "Modelo open source de nova geração no modo reflexivo baseado no Qwen3, que oferece melhor conformidade com instruções e respostas mais concisas em resumos, em comparação com a versão anterior (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
+  },
+  "qwen3-vl-plus": {
+    "description": "Tongyi Qianwen VL é um modelo gerador de texto com capacidade de compreensão visual (imagens), capaz não só de realizar OCR (reconhecimento de texto em imagens), mas também de resumir e inferir, como extrair atributos de fotos de produtos e resolver problemas a partir de imagens de exercícios."
   },
   "qwq": {
     "description": "QwQ é um modelo de pesquisa experimental, focado em melhorar a capacidade de raciocínio da IA."

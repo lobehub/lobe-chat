@@ -35,9 +35,11 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ProviderItem = memo<AiProviderListItem & {
-  onClick: (id: string) => void
-}>(
+interface ProviderItemProps extends AiProviderListItem {
+  onClick: (id: string) => void;
+}
+
+const ProviderItem = memo<ProviderItemProps>(
   ({ id, name, source, enabled, logo, onClick = () => {} }) => {
     const { styles, cx } = useStyles();
     const searchParams = useSearchParams();

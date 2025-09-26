@@ -1,6 +1,39 @@
 [
   {
     "children": {
+      "fixes": ["Resolve qwen-image-edit imageUrls conversion issue."]
+    },
+    "date": "2025-09-26",
+    "version": "1.132.16"
+  },
+  {
+    "children": {
+      "fixes": ["Add proxyUrl configuration for NEW API provider."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.14"
+  },
+  {
+    "children": {},
+    "date": "2025-09-25",
+    "version": "1.132.13"
+  },
+  {
+    "children": {
+      "fixes": ["Slove setting proxy page with style error."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.12"
+  },
+  {
+    "children": {
       "improvements": [
         "Enhanced Nvidia NIM chat experience, OpenAI models in AiHubMix use Responses API."
       ]
