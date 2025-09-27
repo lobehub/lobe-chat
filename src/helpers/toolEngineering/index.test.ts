@@ -43,8 +43,7 @@ vi.mock('@/store/tool/selectors', () => ({
   },
 }));
 
-vi.mock('./helper', () => ({
-  getSearchConfig: vi.fn(),
+vi.mock('../isCanUseFC', () => ({
   isCanUseFC: () => true,
 }));
 
@@ -113,12 +112,12 @@ describe('toolEngineering', () => {
   describe('Migration functions', () => {
     describe('getEnabledTools', () => {
       it('should return empty array when no tool IDs provided', () => {
-        const result = getEnabledTools();
+        const result = getEnabledTools([], 'gpt-4', 'openai');
         expect(result).toEqual([]);
       });
 
       it('should return tools for valid tool IDs', () => {
-        const result = getEnabledTools(['search']);
+        const result = getEnabledTools(['search'], 'gpt-4', 'openai');
         expect(result).toHaveLength(1);
         expect(result[0]).toHaveProperty('type', 'function');
         expect(result[0].function).toHaveProperty('name', 'search____search____builtin');
@@ -131,10 +130,9 @@ describe('toolEngineering', () => {
       });
 
       it('should return empty array for non-existent tools', () => {
-        const result = getEnabledTools(['non-existent-tool']);
+        const result = getEnabledTools(['non-existent-tool'], 'gpt-4', 'openai');
         expect(result).toEqual([]);
       });
     });
-
   });
 });

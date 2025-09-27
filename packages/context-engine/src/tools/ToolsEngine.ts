@@ -105,7 +105,7 @@ export class ToolsEngine {
     return {
       enabledToolIds: enabledManifests.map((m) => m.identifier),
       filteredTools: filteredPlugins,
-      tools,
+      tools: tools.length > 0 ? tools : undefined,
     };
   }
 

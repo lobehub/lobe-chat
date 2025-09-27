@@ -92,7 +92,7 @@ export interface ToolsGenerationResult {
     reason: 'not_found' | 'disabled' | 'incompatible';
   }>;
   /** Generated tools array */
-  tools: UniformTool[];
+  tools?: UniformTool[];
 }
 
 export interface UniformFunctions {

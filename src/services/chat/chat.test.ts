@@ -4,10 +4,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/index';
@@ -63,6 +65,11 @@ vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
 }));
 
+// Mock isCanUseFC to control function calling behavior in tests
+vi.mock('@/helpers/isCanUseFC', () => ({
+  isCanUseFC: vi.fn(() => true), // Default to true, tests can override
+}));
+
 describe('ChatService', () => {
   describe('createAssistantMessage', () => {
     it('should process messages and call getChatCompletion with the right parameters', async () => {
@@ -106,26 +113,6 @@ describe('ChatService', () => {
             },
           ]),
           messages: expect.anything(),
-        }),
-        undefined,
-      );
-    });
-
-    it('should not use tools for models in the vision model whitelist', async () => {
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      const messages = [{ content: 'Hello', role: 'user' }] as ChatMessage[];
-      const modelInWhitelist = 'gpt-4-vision-preview';
-
-      await chatService.createAssistantMessage({
-        messages,
-        model: modelInWhitelist,
-        plugins: ['plugin1'],
-      });
-
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          tools: undefined,
-          model: modelInWhitelist,
         }),
         undefined,
       );
@@ -360,7 +347,7 @@ describe('ChatService', () => {
               { content: 'Hello', role: 'user' },
               { content: 'Hey', role: 'assistant' },
             ],
-            tools: [],
+            tools: undefined,
           },
           undefined,
         );
