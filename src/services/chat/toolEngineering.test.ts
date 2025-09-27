@@ -92,5 +92,21 @@ describe('toolEngineering', () => {
 
       expect(result).toBeUndefined();
     });
+
+    it('should return detailed result with correct field names', () => {
+      const toolsEngine = createToolsEngine();
+      const result = toolsEngine.generateToolsDetailed({
+        toolIds: ['search'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toHaveProperty('enabledToolIds');
+      expect(result).toHaveProperty('filteredTools');
+      expect(result).toHaveProperty('tools');
+      expect(result.enabledToolIds).toEqual(['search']);
+      expect(result.filteredTools).toEqual([]);
+      expect(result.tools).toHaveLength(1);
+    });
   });
 });

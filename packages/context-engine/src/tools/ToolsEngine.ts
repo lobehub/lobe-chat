@@ -103,8 +103,8 @@ export class ToolsEngine {
     );
 
     return {
-      enabledPluginIds: enabledManifests.map((m) => m.identifier),
-      filteredPlugins,
+      enabledToolIds: enabledManifests.map((m) => m.identifier),
+      filteredTools: filteredPlugins,
       tools,
     };
   }
@@ -135,13 +135,13 @@ export class ToolsEngine {
   ): {
     enabledManifests: LobeChatPluginManifest[];
     filteredPlugins: Array<{
-      pluginId: string;
+      id: string;
       reason: 'not_found' | 'disabled' | 'incompatible';
     }>;
   } {
     const enabledManifests: LobeChatPluginManifest[] = [];
     const filteredPlugins: Array<{
-      pluginId: string;
+      id: string;
       reason: 'not_found' | 'disabled' | 'incompatible';
     }> = [];
 
@@ -152,7 +152,7 @@ export class ToolsEngine {
 
       if (!manifest) {
         log('Plugin not found: %s', pluginId);
-        filteredPlugins.push({ pluginId, reason: 'not_found' });
+        filteredPlugins.push({ id: pluginId, reason: 'not_found' });
         continue;
       }
 
@@ -172,7 +172,7 @@ export class ToolsEngine {
         enabledManifests.push(manifest);
       } else {
         log('Plugin disabled: %s', pluginId);
-        filteredPlugins.push({ pluginId, reason: 'disabled' });
+        filteredPlugins.push({ id: pluginId, reason: 'disabled' });
       }
     }
 

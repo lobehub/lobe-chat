@@ -84,11 +84,11 @@ export interface ToolsEngineOptions {
  * Tools generation result
  */
 export interface ToolsGenerationResult {
-  /** List of enabled plugin IDs */
-  enabledPluginIds: string[];
+  /** List of enabled tool IDs */
+  enabledToolIds: string[];
   /** Filtered plugins and their reasons */
-  filteredPlugins: Array<{
-    pluginId: string;
+  filteredTools: Array<{
+    id: string;
     reason: 'not_found' | 'disabled' | 'incompatible';
   }>;
   /** Generated tools array */

@@ -355,10 +355,12 @@ describe('ChatService', () => {
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
+            enabledSearch: undefined,
             messages: [
               { content: 'Hello', role: 'user' },
               { content: 'Hey', role: 'assistant' },
             ],
+            tools: [],
           },
           undefined,
         );

@@ -82,19 +82,14 @@ class ChatService {
       params,
     );
 
-    // =================== 1. preprocess tools =================== //
-
-    const pluginIds = [...(enabledPlugins || [])];
-
-    // Create search-aware enableChecker for this request
     const searchConfig = getSearchConfig(payload.model, payload.provider!);
 
-    // Add WebBrowsingManifest if search should potentially be enabled
-    if (searchConfig.enabledSearch) {
-      pluginIds.push(WebBrowsingManifest.identifier);
-    }
+    // =================== 1. preprocess tools =================== //
+
+    const pluginIds = [...(enabledPlugins || []), WebBrowsingManifest.identifier];
 
     const toolsEngine = createToolsEngine({
+      // Create search-aware enableChecker for this request
       enableChecker: ({ pluginId }) => {
         // For WebBrowsingManifest, apply search logic
         if (pluginId === WebBrowsingManifest.identifier) {
@@ -106,7 +101,7 @@ class ChatService {
       },
     });
 
-    const { tools, enabledPluginIds } = toolsEngine.generateToolsDetailed({
+    const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
       model: payload.model,
       provider: payload.provider!,
       toolIds: pluginIds,
@@ -131,7 +126,7 @@ class ChatService {
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
-      tools: enabledPluginIds,
+      tools: enabledToolIds,
     });
 
     // ============  3. process extend params   ============ //

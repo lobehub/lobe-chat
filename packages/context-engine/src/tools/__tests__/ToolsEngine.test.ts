@@ -200,8 +200,8 @@ describe('ToolsEngine', () => {
       });
 
       expect(result.tools).toHaveLength(1);
-      expect(result.enabledPluginIds).toEqual(['lobe-web-browsing']);
-      expect(result.filteredPlugins).toEqual([
+      expect(result.enabledToolIds).toEqual(['lobe-web-browsing']);
+      expect(result.filteredTools).toEqual([
         { pluginId: 'dalle', reason: 'disabled' },
         { pluginId: 'non-existent', reason: 'not_found' },
       ]);
@@ -624,8 +624,8 @@ describe('ToolsEngine', () => {
         });
 
         expect(result.tools).toHaveLength(1);
-        expect(result.enabledPluginIds).toEqual(['plugin-1']);
-        expect(result.filteredPlugins).toEqual([
+        expect(result.enabledToolIds).toEqual(['plugin-1']);
+        expect(result.filteredTools).toEqual([
           { pluginId: 'plugin-2', reason: 'disabled' },
           { pluginId: 'non-existent', reason: 'not_found' },
         ]);
