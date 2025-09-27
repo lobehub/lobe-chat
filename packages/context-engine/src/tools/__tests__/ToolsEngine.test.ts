@@ -79,7 +79,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-3.5-turbo',
         provider: 'openai',
       });
@@ -96,7 +96,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -119,7 +119,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -152,7 +152,7 @@ describe('ToolsEngine', () => {
 
       const context = { isSearchEnabled: true };
       engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-4',
         provider: 'openai',
         context,
@@ -175,7 +175,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing', 'non-existent'],
+        toolIds: ['lobe-web-browsing', 'non-existent'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -194,7 +194,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateToolsDetailed({
-        pluginIds: ['lobe-web-browsing', 'dalle', 'non-existent'],
+        toolIds: ['lobe-web-browsing', 'dalle', 'non-existent'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -256,7 +256,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -272,7 +272,7 @@ describe('ToolsEngine', () => {
       });
 
       const result = engine.generateTools({
-        pluginIds: ['lobe-web-browsing'],
+        toolIds: ['lobe-web-browsing'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -375,7 +375,7 @@ describe('ToolsEngine', () => {
       it('should return correct tools array for multiple plugins', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['plugin-1', 'plugin-2'],
+          toolIds: ['plugin-1', 'plugin-2'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -403,7 +403,7 @@ describe('ToolsEngine', () => {
       it('should handle standalone plugin type correctly', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['plugin-4'],
+          toolIds: ['plugin-4'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -423,7 +423,7 @@ describe('ToolsEngine', () => {
       it('should handle builtin plugin type correctly', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['builtin-1'],
+          toolIds: ['builtin-1'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -443,7 +443,7 @@ describe('ToolsEngine', () => {
       it('should return empty array when no plugins match', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: [],
+          toolIds: [],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -454,7 +454,7 @@ describe('ToolsEngine', () => {
       it('should handle non-existent plugins gracefully', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['non-existent-plugin'],
+          toolIds: ['non-existent-plugin'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -467,7 +467,7 @@ describe('ToolsEngine', () => {
       it('should return MD5 hash for long API names', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['long-long-plugin-with-id'],
+          toolIds: ['long-long-plugin-with-id'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -492,7 +492,7 @@ describe('ToolsEngine', () => {
       it('should not include URL field in function parameters', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['plugin-3'],
+          toolIds: ['plugin-3'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -518,7 +518,7 @@ describe('ToolsEngine', () => {
       it('should preserve all other API properties correctly', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
-          pluginIds: ['plugin-3'],
+          toolIds: ['plugin-3'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -541,7 +541,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['plugin-1'],
+          toolIds: ['plugin-1'],
           model: 'gpt-3.5-turbo',
           provider: 'openai',
         });
@@ -557,7 +557,7 @@ describe('ToolsEngine', () => {
 
         // Should work with GPT-4
         const result1 = engine.generateTools({
-          pluginIds: ['plugin-1'],
+          toolIds: ['plugin-1'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -566,7 +566,7 @@ describe('ToolsEngine', () => {
 
         // Should not work with GPT-3.5
         const result2 = engine.generateTools({
-          pluginIds: ['plugin-1'],
+          toolIds: ['plugin-1'],
           model: 'gpt-3.5-turbo',
           provider: 'openai',
         });
@@ -583,7 +583,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['plugin-1', 'plugin-2'],
+          toolIds: ['plugin-1', 'plugin-2'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -600,7 +600,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['plugin-1', 'plugin-2'],
+          toolIds: ['plugin-1', 'plugin-2'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -618,7 +618,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateToolsDetailed({
-          pluginIds: ['plugin-1', 'plugin-2', 'non-existent'],
+          toolIds: ['plugin-1', 'plugin-2', 'non-existent'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -681,7 +681,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['plugin-1', 'plugin-2'],
+          toolIds: ['plugin-1', 'plugin-2'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -714,7 +714,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['standalone-plugin'],
+          toolIds: ['standalone-plugin'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -732,7 +732,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateToolsDetailed({
-          pluginIds: ['plugin-1', 'plugin-2', 'non-existent'],
+          toolIds: ['plugin-1', 'plugin-2', 'non-existent'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -764,7 +764,7 @@ describe('ToolsEngine', () => {
 
         // Should work with GPT-4
         const result1 = engine.generateTools({
-          pluginIds: ['plugin-1'],
+          toolIds: ['plugin-1'],
           model: 'gpt-4',
           provider: 'openai',
         });
@@ -772,7 +772,7 @@ describe('ToolsEngine', () => {
 
         // Should not work with older models
         const result2 = engine.generateTools({
-          pluginIds: ['plugin-1'],
+          toolIds: ['plugin-1'],
           model: 'gpt-3.5-turbo',
           provider: 'openai',
         });
@@ -799,7 +799,7 @@ describe('ToolsEngine', () => {
         });
 
         const result = engine.generateTools({
-          pluginIds: ['plugin-1', 'plugin-2'],
+          toolIds: ['plugin-1', 'plugin-2'],
           model: 'gpt-4',
           provider: 'openai',
         });

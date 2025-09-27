@@ -29,4 +29,13 @@ export {
 } from './processors';
 
 // Tools Engine
+export type {
+  FunctionCallChecker,
+  GenerateToolsParams,
+  PluginEnableChecker,
+  ToolNameGenerator,
+  ToolsEngineOptions,
+  ToolsGenerationContext,
+  ToolsGenerationResult,
+} from './tools';
 export { filterValidManifests, ToolsEngine, validateManifest } from './tools';

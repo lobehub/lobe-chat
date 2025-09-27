@@ -55,10 +55,10 @@ export interface GenerateToolsParams {
   context?: ToolsGenerationContext;
   /** Model name */
   model: string;
-  /** List of plugin IDs to enable */
-  pluginIds?: string[];
   /** Provider name */
   provider: string;
+  /** List of tool IDs to enable */
+  toolIds?: string[];
 }
 
 /**

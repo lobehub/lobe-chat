@@ -43,9 +43,9 @@ export class ToolsEngine {
    * @returns Processed tools array, or undefined if tools should not be enabled
    */
   generateTools(params: GenerateToolsParams): UniformTool[] | undefined {
-    const { pluginIds = [], model, provider, context } = params;
+    const { toolIds = [], model, provider, context } = params;
 
-    log('Generating tools for model=%s, provider=%s, pluginIds=%o', model, provider, pluginIds);
+    log('Generating tools for model=%s, provider=%s, pluginIds=%o', model, provider, toolIds);
 
     // 1. Check if model supports Function Calling
     if (!this.checkFunctionCallSupport(model, provider)) {
@@ -54,7 +54,7 @@ export class ToolsEngine {
     }
 
     // 2. Filter and validate plugins
-    const { enabledManifests } = this.filterEnabledPlugins(pluginIds, model, provider, context);
+    const { enabledManifests } = this.filterEnabledPlugins(toolIds, model, provider, context);
 
     // 3. If no tools available, return undefined
     if (enabledManifests.length === 0) {
@@ -75,18 +75,18 @@ export class ToolsEngine {
    * @returns Detailed tools generation result
    */
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
-    const { pluginIds = [], model, provider, context } = params;
+    const { toolIds = [], model, provider, context } = params;
 
     log(
       'Generating detailed tools for model=%s, provider=%s, pluginIds=%o',
       model,
       provider,
-      pluginIds,
+      toolIds,
     );
 
     // Filter and validate plugins
     const { enabledManifests, filteredPlugins } = this.filterEnabledPlugins(
-      pluginIds,
+      toolIds,
       model,
       provider,
       context,
