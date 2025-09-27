@@ -20,6 +20,8 @@ import type { GlobalStore } from '../store';
 const n = setNamespace('g');
 
 export interface GlobalGeneralAction {
+  openSessionInNewWindow: (sessionId: string) => Promise<void>;
+  openTopicInNewWindow: (sessionId: string, topicId: string) => Promise<void>;
   switchLocale: (locale: LocaleMode) => void;
   switchThemeMode: (themeMode: ThemeMode, params?: { skipBroadcast?: boolean }) => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
@@ -33,6 +35,50 @@ export const generalActionSlice: StateCreator<
   [],
   GlobalGeneralAction
 > = (set, get) => ({
+  openSessionInNewWindow: async (sessionId: string) => {
+    if (!isDesktop) return;
+
+    try {
+      const { dispatch } = await import('@lobechat/electron-client-ipc');
+
+      const url = `/chat?session=${sessionId}&mode=single`;
+
+      const result = await dispatch('createMultiInstanceWindow', {
+        path: url,
+        templateId: 'chatSingle',
+        uniqueId: `chat_${sessionId}`,
+      });
+
+      if (!result.success) {
+        console.error('Failed to open session in new window:', result.error);
+      }
+    } catch (error) {
+      console.error('Error opening session in new window:', error);
+    }
+  },
+
+  openTopicInNewWindow: async (sessionId: string, topicId: string) => {
+    if (!isDesktop) return;
+
+    try {
+      const { dispatch } = await import('@lobechat/electron-client-ipc');
+
+      const url = `/chat?session=${sessionId}&topic=${topicId}&mode=single`;
+
+      const result = await dispatch('createMultiInstanceWindow', {
+        path: url,
+        templateId: 'chatSingle',
+        uniqueId: `chat_${sessionId}_${topicId}`,
+      });
+
+      if (!result.success) {
+        console.error('Failed to open topic in new window:', result.error);
+      }
+    } catch (error) {
+      console.error('Error opening topic in new window:', error);
+    }
+  },
+
   switchLocale: (locale) => {
     get().updateSystemStatus({ language: locale });
 

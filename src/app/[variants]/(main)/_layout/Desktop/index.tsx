@@ -48,7 +48,9 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
           <DesktopLayoutContainer>{children}</DesktopLayoutContainer>
         ) : (
           <>
-            <SideBar />
+            <Suspense>
+              <SideBar />
+            </Suspense>
             {children}
           </>
         )}

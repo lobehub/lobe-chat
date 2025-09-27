@@ -1,7 +1,7 @@
 import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
 import { extractSubPath, findMatchingRoute } from '~common/routes';
 
-import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
+import { AppBrowsersIdentifiers, BrowsersIdentifiers, WindowTemplateIdentifiers } from '@/appBrowsers';
 import { IpcClientEventSender } from '@/types/ipcClientEvent';
 
 import { ControllerModule, ipcClientEvent, shortcut } from './index';
@@ -96,6 +96,77 @@ export default class BrowserWindowsCtr extends ControllerModule {
         intercepted: false,
         path,
         source,
+      };
+    }
+  }
+
+  /**
+   * Create a new multi-instance window
+   */
+  @ipcClientEvent('createMultiInstanceWindow')
+  async createMultiInstanceWindow(params: {
+    templateId: WindowTemplateIdentifiers;
+    path: string;
+    uniqueId?: string;
+  }) {
+    try {
+      console.log('[BrowserWindowsCtr] Creating multi-instance window:', params);
+
+      const result = this.app.browserManager.createMultiInstanceWindow(
+        params.templateId,
+        params.path,
+        params.uniqueId,
+      );
+
+      // Show the window
+      result.browser.show();
+
+      return {
+        success: true,
+        windowId: result.identifier,
+      };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to create multi-instance window:', error);
+      return {
+        error: error.message,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get all windows by template
+   */
+  @ipcClientEvent('getWindowsByTemplate')
+  async getWindowsByTemplate(templateId: string) {
+    try {
+      const windowIds = this.app.browserManager.getWindowsByTemplate(templateId);
+      return {
+        success: true,
+        windowIds,
+      };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to get windows by template:', error);
+      return {
+        error: error.message,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Close all windows by template
+   */
+  @ipcClientEvent('closeWindowsByTemplate')
+  async closeWindowsByTemplate(templateId: string) {
+    try {
+      this.app.browserManager.closeWindowsByTemplate(templateId);
+      return { success: true };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to close windows by template:', error);
+      return {
+        error: error.message,
+        success: false,
       };
     }
   }
