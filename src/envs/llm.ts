@@ -71,6 +71,8 @@ export const getLLMConfig = () => {
       WENXIN_API_KEY: z.string().optional(),
 
       ENABLED_OLLAMA: z.boolean(),
+      ENABLED_OLLAMA_CLOUD: z.boolean(),
+      OLLAMA_CLOUD_API_KEY: z.string().optional(),
 
       ENABLED_VLLM: z.boolean(),
       VLLM_API_KEY: z.string().optional(),
@@ -267,6 +269,8 @@ export const getLLMConfig = () => {
       WENXIN_API_KEY: process.env.WENXIN_API_KEY,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
+      ENABLED_OLLAMA_CLOUD: !!process.env.OLLAMA_CLOUD_API_KEY,
+      OLLAMA_CLOUD_API_KEY: process.env.OLLAMA_CLOUD_API_KEY,
 
       ENABLED_VLLM: !!process.env.VLLM_API_KEY,
       VLLM_API_KEY: process.env.VLLM_API_KEY,
