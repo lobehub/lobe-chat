@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix input empty group name."]
+    },
+    "date": "2025-09-27",
+    "version": "1.132.17"
+  },
+  {
+    "children": {
       "fixes": ["Resolve qwen-image-edit imageUrls conversion issue."]
     },
     "date": "2025-09-26",

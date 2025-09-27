@@ -37,6 +37,7 @@ export enum ModelProvider {
   Novita = 'novita',
   Nvidia = 'nvidia',
   Ollama = 'ollama',
+  OllamaCloud = 'ollamacloud',
   OpenAI = 'openai',
   OpenRouter = 'openrouter',
   PPIO = 'ppio',
