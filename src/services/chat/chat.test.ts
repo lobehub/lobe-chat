@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import * as isCanUseFCModule from '@/helpers/isCanUseFC';
+import * as toolEngineeringModule from '@/helpers/toolEngineering';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
@@ -859,16 +860,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -902,16 +911,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -939,16 +956,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
