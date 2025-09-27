@@ -312,7 +312,7 @@ export default {
         inputTokens: '输入 ${{amount}}/M',
         outputTokens: '输出 ${{amount}}/M',
       },
-      releasedAt: '发布于{{releasedAt}}',
+      releasedAt: '发布于 {{releasedAt}}',
     },
     list: {
       addNew: '添加模型',

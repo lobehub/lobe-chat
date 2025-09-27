@@ -5,9 +5,8 @@ const openrouterChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 2_000_000,
     description:
-      '根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。',
-    displayName: 'Auto (best for prompt)',
-    enabled: true,
+      '根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 405B Instruct、Claude 3.5 Sonnet 或 GPT-4o 等模型。',
+    displayName: 'Auto Router',
     id: 'openrouter/auto',
     type: 'chat',
   },
@@ -146,17 +145,6 @@ const openrouterChatModels: AIChatModelCard[] = [
     contextWindowTokens: 40_960,
     description:
       'Qwen3-32B 是 Qwen3 系列中一个密集的 328 亿参数因果语言模型，针对复杂推理和高效对话进行了优化。它支持在用于数学、编码和逻辑推理等任务的“思考”模式与用于更快、通用对话的“非思考”模式之间无缝切换。该模型在指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务中表现出强大的性能。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
-    displayName: 'Qwen3 32B (Free)',
-    id: 'qwen/qwen3-32b:free',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 40_960,
-    description:
-      'Qwen3-32B 是 Qwen3 系列中一个密集的 328 亿参数因果语言模型，针对复杂推理和高效对话进行了优化。它支持在用于数学、编码和逻辑推理等任务的“思考”模式与用于更快、通用对话的“非思考”模式之间无缝切换。该模型在指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务中表现出强大的性能。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
     displayName: 'Qwen3 32B',
     id: 'qwen/qwen3-32b',
     pricing: {
@@ -239,17 +227,6 @@ const openrouterChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_000,
-    description:
-      'GLM-4-32B-0414 是一个 32B 双语（中英）开放权重语言模型，针对代码生成、函数调用和代理式任务进行了优化。它在 15T 高质量和重推理数据上进行了预训练，并使用人类偏好对齐、拒绝采样和强化学习进一步完善。该模型在复杂推理、工件生成和结构化输出任务方面表现出色，在多个基准测试中达到了与 GPT-4o 和 DeepSeek-V3-0324 相当的性能。',
-    displayName: 'GLM 4 32B (Free)',
-    id: 'thudm/glm-4-32b:free',
     type: 'chat',
   },
   {
@@ -997,20 +974,6 @@ const openrouterChatModels: AIChatModelCard[] = [
       'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.3 70B Instruct (Free)',
     id: 'meta-llama/llama-3.3-70b-instruct:free',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description: 'Qwen2 是全新的大型语言模型系列，具有更强的理解和生成能力。',
-    displayName: 'Qwen2 7B (Free)',
-    id: 'qwen/qwen-2-7b-instruct:free',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_072,
-    description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
-    displayName: 'Llama 3.1 8B (Free)',
-    id: 'meta-llama/llama-3.1-8b-instruct:free',
     type: 'chat',
   },
   {
