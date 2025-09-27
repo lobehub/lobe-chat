@@ -202,8 +202,8 @@ describe('ToolsEngine', () => {
       expect(result.tools).toHaveLength(1);
       expect(result.enabledToolIds).toEqual(['lobe-web-browsing']);
       expect(result.filteredTools).toEqual([
-        { pluginId: 'dalle', reason: 'disabled' },
-        { pluginId: 'non-existent', reason: 'not_found' },
+        { id: 'dalle', reason: 'disabled' },
+        { id: 'non-existent', reason: 'not_found' },
       ]);
     });
   });
@@ -626,8 +626,8 @@ describe('ToolsEngine', () => {
         expect(result.tools).toHaveLength(1);
         expect(result.enabledToolIds).toEqual(['plugin-1']);
         expect(result.filteredTools).toEqual([
-          { pluginId: 'plugin-2', reason: 'disabled' },
-          { pluginId: 'non-existent', reason: 'not_found' },
+          { id: 'plugin-2', reason: 'disabled' },
+          { id: 'non-existent', reason: 'not_found' },
         ]);
       });
     });
@@ -748,10 +748,10 @@ describe('ToolsEngine', () => {
               },
             },
           ],
-          enabledPluginIds: ['plugin-1'],
-          filteredPlugins: [
-            { pluginId: 'plugin-2', reason: 'disabled' },
-            { pluginId: 'non-existent', reason: 'not_found' },
+          enabledToolIds: ['plugin-1'],
+          filteredTools: [
+            { id: 'plugin-2', reason: 'disabled' },
+            { id: 'non-existent', reason: 'not_found' },
           ],
         });
       });
