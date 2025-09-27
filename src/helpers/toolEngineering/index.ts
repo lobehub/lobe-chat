@@ -3,12 +3,13 @@
  */
 import { ToolsEngine } from '@lobechat/context-engine';
 import type { PluginEnableChecker } from '@lobechat/context-engine';
+import { ChatCompletionTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import { isCanUseFC } from './helper';
+import { isCanUseFC } from '../isCanUseFC';
 
 /**
  * Tools engine configuration options
@@ -44,4 +45,29 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
     functionCallChecker: isCanUseFC,
     manifestSchemas: allManifests,
   });
+};
+
+/**
+ * Migration function to replace toolSelectors.enabledSchema
+ * Provides the same functionality using ToolsEngine with enhanced capabilities
+ *
+ * @param toolIds - Array of tool IDs to generate tools for
+ * @param model - Model name for function calling compatibility check (optional)
+ * @param provider - Provider name for function calling compatibility check (optional)
+ * @returns Array of ChatCompletionTool objects
+ */
+export const getEnabledTools = (
+  toolIds: string[] = [],
+  model: string,
+  provider: string,
+): ChatCompletionTool[] => {
+  const toolsEngine = createToolsEngine();
+
+  return (
+    toolsEngine.generateTools({
+      model: model, // Use provided model or fallback
+      provider: provider, // Use provided provider or fallback
+      toolIds,
+    }) || []
+  );
 };

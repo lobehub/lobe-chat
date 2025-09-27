@@ -1,7 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createToolsEngine } from './toolEngineering';
+import { createToolsEngine, getEnabledTools } from './index';
 
 // Mock the store and helper dependencies
 vi.mock('@/store/tool', () => ({
@@ -108,5 +108,33 @@ describe('toolEngineering', () => {
       expect(result.filteredTools).toEqual([]);
       expect(result.tools).toHaveLength(1);
     });
+  });
+
+  describe('Migration functions', () => {
+    describe('getEnabledTools', () => {
+      it('should return empty array when no tool IDs provided', () => {
+        const result = getEnabledTools();
+        expect(result).toEqual([]);
+      });
+
+      it('should return tools for valid tool IDs', () => {
+        const result = getEnabledTools(['search']);
+        expect(result).toHaveLength(1);
+        expect(result[0]).toHaveProperty('type', 'function');
+        expect(result[0].function).toHaveProperty('name', 'search____search____builtin');
+      });
+
+      it('should use provided model and provider', () => {
+        const result = getEnabledTools(['search'], 'gpt-3.5-turbo', 'anthropic');
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+      });
+
+      it('should return empty array for non-existent tools', () => {
+        const result = getEnabledTools(['non-existent-tool']);
+        expect(result).toEqual([]);
+      });
+    });
+
   });
 });

@@ -7,6 +7,8 @@ import { ModelProvider } from 'model-bank';
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
+import { getSearchConfig } from '@/helpers/getSearchConfig';
+import { createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -37,8 +39,7 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, getSearchConfig, isEnableFetchOnClient } from './helper';
-import { createToolsEngine } from './toolEngineering';
+import { findDeploymentName, isEnableFetchOnClient } from './helper';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
