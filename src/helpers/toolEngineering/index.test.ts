@@ -1,7 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createToolsEngine, getEnabledTools } from './index';
+import { createChatToolsEngine, createToolsEngine, getEnabledTools } from './index';
 
 // Mock the store and helper dependencies
 vi.mock('@/store/tool', () => ({
@@ -33,6 +33,32 @@ vi.mock('@/store/tool', () => ({
         } as unknown as LobeChatPluginManifest,
         type: 'builtin' as const,
       },
+      {
+        identifier: 'lobe-web-browsing',
+        manifest: {
+          api: [
+            {
+              description:
+                'a search service. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results',
+              name: 'search',
+              parameters: {
+                properties: {
+                  query: { description: 'The search query', type: 'string' },
+                },
+                required: ['query'],
+                type: 'object',
+              },
+            },
+          ],
+          identifier: 'lobe-web-browsing',
+          meta: {
+            title: 'Web Browsing',
+            avatar: '🌐',
+          },
+          type: 'builtin',
+        } as unknown as LobeChatPluginManifest,
+        type: 'builtin' as const,
+      },
     ],
   }),
 }));
@@ -47,10 +73,10 @@ vi.mock('../isCanUseFC', () => ({
   isCanUseFC: () => true,
 }));
 
-vi.mock('@/tools/web-browsing', () => ({
-  WebBrowsingManifest: {
-    identifier: 'web-browsing-tool',
-  },
+vi.mock('@/helpers/getSearchConfig', () => ({
+  getSearchConfig: () => ({
+    useApplicationBuiltinSearchTool: true,
+  }),
 }));
 
 describe('toolEngineering', () => {
@@ -106,6 +132,39 @@ describe('toolEngineering', () => {
       expect(result.enabledToolIds).toEqual(['search']);
       expect(result.filteredTools).toEqual([]);
       expect(result.tools).toHaveLength(1);
+    });
+  });
+
+  describe('createChatToolsEngine', () => {
+    it('should include web browsing tool as default when no tools are provided', () => {
+      const toolsEngine = createChatToolsEngine({
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const result = toolsEngine.generateToolsDetailed({
+        toolIds: [], // No explicitly enabled tools
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result.enabledToolIds).toContain('lobe-web-browsing');
+    });
+
+    it('should include web browsing tool alongside user-provided tools', () => {
+      const toolsEngine = createChatToolsEngine({
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const result = toolsEngine.generateToolsDetailed({
+        toolIds: ['search'], // User explicitly enables search tool
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result.enabledToolIds).toEqual(['search', 'lobe-web-browsing']);
+      expect(result.enabledToolIds).toHaveLength(2);
     });
   });
 
