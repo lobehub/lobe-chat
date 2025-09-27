@@ -8,6 +8,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { message } from '@/components/AntdStaticMethods';
+import { useTokenCount } from '@/hooks/useTokenCount';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { marketApiService } from '@/services/marketApi';
 import { useAgentStore } from '@/store/agent';
@@ -73,7 +74,6 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
 
     useEffect(() => {
       if (!isUpload) return;
-
       const marketIdentifier = meta?.marketIdentifier;
       const accessToken = marketSession?.accessToken;
       if (!open || !isAuthenticated || !accessToken || !marketIdentifier) return;
@@ -86,6 +86,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           marketApiService.setAccessToken(accessToken);
           const data = await marketApiService.getAgentDetail(marketIdentifier);
           if (!cancelled) {
+            console.log('data', data);
             setRemoteAgentData(data);
           }
         } catch (error) {
@@ -107,79 +108,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
       };
     }, [isAuthenticated, isUpload, marketSession?.accessToken, meta?.marketIdentifier, open]);
 
-    const buildVersionPayload = useCallback(
-      (identifier: string, changelog: string) => ({
-        // TODO a2aProtocolVersion setup later
-        // a2aProtocolVersion: '',
-        avatar: meta?.avatar,
-        changelog,
-        config: {
-          chatConfig: {
-            displayMode: chatConfig?.displayMode,
-            enableHistoryCount: chatConfig?.enableHistoryCount,
-            historyCount: chatConfig?.historyCount,
-            maxTokens: agentConfig?.params?.max_tokens,
-            searchMode: chatConfig?.searchMode,
-            temperature: agentConfig?.params?.temperature,
-            topP: agentConfig?.params?.top_p,
-          },
-          description: meta?.description,
-          locale: language,
-          model: {
-            model,
-            parameters: agentConfig?.params,
-            provider,
-          },
-          plugins:
-            plugins?.map((plugin) => ({
-              enabled: true,
-              identifier: plugin,
-              settings: {},
-            })) || [],
-          systemRole: systemRole || '',
-        },
-        description: meta?.description || '',
-        identifier,
-        name: meta?.title || '',
-        setAsCurrent: true,
-        summary: meta?.description || systemRole?.slice(0, 100),
-        tags: meta?.tags,
-      }),
-      [
-        agentConfig?.params,
-        chatConfig?.displayMode,
-        chatConfig?.enableHistoryCount,
-        chatConfig?.historyCount,
-        chatConfig?.searchMode,
-        language,
-        meta?.avatar,
-        meta?.description,
-        meta?.tags,
-        meta?.title,
-        model,
-        plugins,
-        provider,
-        systemRole,
-      ],
-    );
-
-    const ensureAgentExists = useCallback(
-      async (identifier: string) => {
-        try {
-          await marketApiService.getAgentDetail(identifier);
-        } catch {
-          const agentCreateData = {
-            identifier,
-            name: meta?.title || '',
-            status: 'published' as const,
-            visibility: 'public' as const,
-          };
-
-          await marketApiService.createAgent(agentCreateData);
-        }
-      },
-      [meta?.title],
-    );
+    const tokenUsage = useTokenCount(systemRole);
 
     const handleSubmit = useCallback(
       async (values: MarketPublishFormValues) => {
@@ -207,34 +136,63 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
               return false;
             }
 
-            await ensureAgentExists(identifier);
+            try {
+              await marketApiService.getAgentDetail(identifier);
+            } catch {
+              const createPayload: Record<string, unknown> = {
+                identifier,
+                name: meta?.title || '',
+              };
+              await marketApiService.createAgent(createPayload as any);
+            }
           } else if (!identifier) {
             message.error({ content: '当前助手还没有市场标识符', key: messageKey });
             return false;
           }
 
-          const versionPayload = buildVersionPayload(identifier, changelog);
+          const versionPayload = {
+            avatar: meta?.avatar,
+            changelog,
+            config: {
+              chatConfig: {
+                displayMode: chatConfig?.displayMode,
+                enableHistoryCount: chatConfig?.enableHistoryCount,
+                historyCount: chatConfig?.historyCount,
+                maxTokens: agentConfig?.params?.max_tokens,
+                searchMode: chatConfig?.searchMode,
+                temperature: agentConfig?.params?.temperature,
+                topP: agentConfig?.params?.top_p,
+              },
+              description: meta?.description,
+              locale: language,
+              model: {
+                model,
+                parameters: agentConfig?.params,
+                provider,
+              },
+              plugins:
+                plugins?.map((plugin) => ({
+                  enabled: true,
+                  identifier: plugin,
+                  settings: {},
+                })) || [],
+              systemRole: systemRole,
+            },
+            description: meta?.description || '',
+            identifier: identifier,
+            name: meta?.title || '',
+            tags: meta?.tags,
+            tokenUsage: tokenUsage,
+          };
 
           try {
             await marketApiService.createAgentVersion(versionPayload);
           } catch (versionError) {
-            console.error('Version creation failed:', versionError);
-            if (
-              versionError instanceof Error &&
-              versionError.message.includes('duplicate key value violates unique constraint')
-            ) {
-              message.error({
-                content: '该助手标识符已存在版本，请尝试使用不同的标识符或联系管理员',
-                key: messageKey,
-              });
-            } else {
-              const errorMessage =
-                versionError instanceof Error ? versionError.message : '未知错误';
-              message.error({
-                content: `版本创建失败: ${errorMessage}`,
-                key: messageKey,
-              });
-            }
+            const errorMessage = versionError instanceof Error ? versionError.message : '未知错误';
+            message.error({
+              content: `版本创建失败: ${errorMessage}`,
+              key: messageKey,
+            });
             return false;
           }
 
@@ -256,15 +214,28 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         }
       },
       [
-        buildVersionPayload,
-        ensureAgentExists,
+        agentConfig?.params,
+        chatConfig?.displayMode,
+        chatConfig?.enableHistoryCount,
+        chatConfig?.historyCount,
+        chatConfig?.searchMode,
         isAuthenticated,
         isSubmit,
+        language,
+        meta?.avatar,
+        meta?.description,
         meta?.marketIdentifier,
+        meta?.tags,
+        meta?.title,
         marketSession?.accessToken,
         messageKey,
         loadingMessage,
+        model,
         onSuccess,
+        plugins,
+        provider,
+        systemRole,
+        tokenUsage,
         updateSessionMeta,
       ],
     );
@@ -326,12 +297,8 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
                       <Spin size="large" />
                       <div style={{ marginTop: '16px' }}>正在加载远程数据...</div>
                     </div>
-                  ) : remoteAgentData ? (
-                    <AgentInfoDescription isRemote={true} meta={remoteAgentData} />
                   ) : (
-                    <div style={{ color: '#999', padding: '40px', textAlign: 'center' }}>
-                      暂无远程数据
-                    </div>
+                    <AgentInfoDescription isRemote={true} meta={remoteAgentData || {}} />
                   )}
                 </div>
               </Col>

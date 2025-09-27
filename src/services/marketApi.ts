@@ -49,6 +49,7 @@ export class MarketApiService {
     isFeatured?: boolean;
     name: string;
     status?: 'published' | 'unpublished' | 'archived' | 'deprecated';
+    tokenUsage?: number;
     visibility?: 'public' | 'private' | 'internal';
   }) {
     return this.makeRequest('/api/v1/agents/create', {

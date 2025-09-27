@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Tokens from '@/features/AgentSetting/AgentPrompt/TokenTag';
+
 interface AgentData {
   avatar?: string;
   description?: string;
@@ -114,7 +116,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
           avatar: remoteData.avatar,
           description: remoteData.description,
           name: remoteData.name,
-          tags: remoteData.category ? [remoteData.category] : undefined,
+          tags: remoteData.tags ? [remoteData.tags] : undefined,
           title: remoteData.name,
         },
         model: config.model?.model,
@@ -128,14 +130,11 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
     const {
       agentConfig: processedAgentConfig,
       chatConfig: processedChatConfig,
-      // files: processedFiles,
-      // knowledgeBases: processedKnowledgeBases,
       meta: processedMeta,
       model: processedModel,
       plugins: processedPlugins,
       provider: processedProvider,
       systemRole: processedSystemRole,
-      // ttsConfig: processedTtsConfig,
     } = getProcessedData();
     const renderAvatar = (avatar: string | undefined) => {
       if (!avatar || avatar === '未设置') return '未设置';
@@ -234,7 +233,12 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
               systemRole: processedSystemRole || '未设置',
             }}
             size="small"
-            title="角色设定"
+            title={
+              <Flexbox align={'center'} gap={8} horizontal>
+                <span>角色设定</span>
+                <Tokens style={{ marginTop: 0 }} value={processedSystemRole || ''} />
+              </Flexbox>
+            }
           />
 
           {/* 模型设置 */}
@@ -316,31 +320,6 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
             title="聊天偏好"
           />
 
-          {/* 语音服务 */}
-          {/* <ProDescriptions
-            bordered
-            column={2}
-            columns={[
-              {
-                dataIndex: 'ttsService',
-                key: 'ttsService',
-                title: 'TTS服务',
-              },
-              {
-                dataIndex: 'voice',
-                key: 'voice',
-                title: '语音设置',
-              },
-            ]}
-            dataSource={{
-              ttsService: processedTtsConfig?.ttsService || '未设置',
-              voice: JSON.stringify(processedTtsConfig?.voice) || '未设置',
-            }}
-            size="small"
-            title="语音服务"
-          /> */}
-
-          {/* 插件设置 */}
           <ProDescriptions
             bordered
             column={1}
@@ -366,48 +345,6 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
             size="small"
             title={`插件设置 (${processedPlugins?.length || 0}个)`}
           />
-
-          {/* 知识库 */}
-          {/* <ProDescriptions
-            bordered
-            column={1}
-            columns={[
-              {
-                dataIndex: 'knowledgeBases',
-                key: 'knowledgeBases',
-                render: (_: any, record: any) => {
-                  const kbList = record.knowledgeBases;
-                  if (!kbList?.length) return '未配置知识库';
-                  return kbList.map((kb: any, index: number) => (
-                    <Tag color={kb.enabled ? 'blue' : 'default'} key={index}>
-                      {kb.name} {kb.enabled ? '(已启用)' : '(已禁用)'}
-                    </Tag>
-                  ));
-                },
-                title: '知识库',
-              },
-              {
-                dataIndex: 'files',
-                key: 'files',
-                render: (_: any, record: any) => {
-                  const fileList = record.files;
-                  if (!fileList?.length) return '未上传文件';
-                  return fileList.map((file: any, index: number) => (
-                    <Tag color={file.enabled ? 'orange' : 'default'} key={index}>
-                      {file.name} ({file.type}) {file.enabled ? '(已启用)' : '(已禁用)'}
-                    </Tag>
-                  ));
-                },
-                title: '文件',
-              },
-            ]}
-            dataSource={{
-              files: processedFiles?.length ? processedFiles : [],
-              knowledgeBases: processedKnowledgeBases?.length ? processedKnowledgeBases : [],
-            }}
-            size="small"
-            title={`知识库设置 (知识库: ${processedKnowledgeBases?.length || 0}个, 文件: ${processedFiles?.length || 0}个)`}
-          /> */}
         </Flexbox>
       </div>
     );
