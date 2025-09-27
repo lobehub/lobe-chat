@@ -1,3 +1,4 @@
+import AgentMode from './AgentMode';
 import Clear from './Clear';
 import History from './History';
 import Knowledge from './Knowledge';
@@ -12,6 +13,7 @@ import Typo from './Typo';
 import Upload from './Upload';
 
 export const actionMap = {
+  agentMode: AgentMode,
   clear: Clear,
   fileUpload: Upload,
   history: History,
