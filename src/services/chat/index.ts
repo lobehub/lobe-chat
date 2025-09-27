@@ -8,7 +8,7 @@ import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
-import { createToolsEngine } from '@/helpers/toolEngineering';
+import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -89,17 +89,9 @@ class ChatService {
 
     const pluginIds = [...(enabledPlugins || []), WebBrowsingManifest.identifier];
 
-    const toolsEngine = createToolsEngine({
-      // Create search-aware enableChecker for this request
-      enableChecker: ({ pluginId }) => {
-        // For WebBrowsingManifest, apply search logic
-        if (pluginId === WebBrowsingManifest.identifier) {
-          return searchConfig.useApplicationBuiltinSearchTool;
-        }
-
-        // For all other plugins, enable by default
-        return true;
-      },
+    const toolsEngine = createChatToolsEngine({
+      model: payload.model,
+      provider: payload.provider!,
     });
 
     const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({

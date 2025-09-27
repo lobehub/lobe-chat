@@ -3,11 +3,13 @@
  */
 import { ToolsEngine } from '@lobechat/context-engine';
 import type { PluginEnableChecker } from '@lobechat/context-engine';
-import { ChatCompletionTool } from '@lobechat/types';
+import { ChatCompletionTool, WorkingModel } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
+import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import { isCanUseFC } from '../isCanUseFC';
 
@@ -47,8 +49,22 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   });
 };
 
+export const createChatToolsEngine = (workingModel: WorkingModel) =>
+  createToolsEngine({
+    // Create search-aware enableChecker for this request
+    enableChecker: ({ pluginId }) => {
+      // For WebBrowsingManifest, apply search logic
+      if (pluginId === WebBrowsingManifest.identifier) {
+        const searchConfig = getSearchConfig(workingModel.model, workingModel.provider);
+        return searchConfig.useApplicationBuiltinSearchTool;
+      }
+
+      // For all other plugins, enable by default
+      return true;
+    },
+  });
+
 /**
- * Migration function to replace toolSelectors.enabledSchema
  * Provides the same functionality using ToolsEngine with enhanced capabilities
  *
  * @param toolIds - Array of tool IDs to generate tools for

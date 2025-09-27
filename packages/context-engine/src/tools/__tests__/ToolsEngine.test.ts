@@ -489,6 +489,7 @@ describe('ToolsEngine', () => {
     });
 
     describe('parameter handling and filtering', () => {
+      // fix https://github.com/lobehub/lobe-chat/issues/2036
       it('should not include URL field in function parameters', () => {
         const engine = createTestEngine();
         const result = engine.generateTools({
