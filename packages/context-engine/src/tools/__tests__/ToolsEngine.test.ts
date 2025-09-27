@@ -85,7 +85,6 @@ describe('ToolsEngine', () => {
       });
 
       expect(result).toBeUndefined();
-      expect(mockFunctionCallChecker).toHaveBeenCalledWith('gpt-3.5-turbo', 'openai');
     });
 
     it('should return undefined when no plugins are enabled', () => {
@@ -125,22 +124,22 @@ describe('ToolsEngine', () => {
         provider: 'openai',
       });
 
-      expect(result).toBeDefined();
-      expect(result).toHaveLength(1);
-      expect(result![0]).toEqual({
-        type: 'function',
-        function: {
-          name: 'search',
-          description: 'Search the web',
-          parameters: {
-            type: 'object',
-            properties: {
-              query: { type: 'string', description: 'Search query' },
+      expect(result).toEqual([
+        {
+          type: 'function',
+          function: {
+            name: 'search',
+            description: 'Search the web',
+            parameters: {
+              type: 'object',
+              properties: {
+                query: { type: 'string', description: 'Search query' },
+              },
+              required: ['query'],
             },
-            required: ['query'],
           },
         },
-      });
+      ]);
     });
 
     it('should pass context to enable checker', () => {

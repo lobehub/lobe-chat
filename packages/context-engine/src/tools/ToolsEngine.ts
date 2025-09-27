@@ -1,3 +1,5 @@
+import debug from 'debug';
+
 import {
   FunctionCallChecker,
   GenerateToolsParams,
@@ -9,8 +11,10 @@ import {
   UniformTool,
 } from './types';
 
+const log = debug('context-engine:tools-engine');
+
 /**
- * 工具引擎 - 统一处理工具数组的构造和转换
+ * Tools Engine - Unified processing of tools array construction and transformation
  */
 export class ToolsEngine {
   private manifestSchemas: Map<string, LobeChatPluginManifest>;
@@ -18,48 +22,66 @@ export class ToolsEngine {
   private functionCallChecker?: FunctionCallChecker;
 
   constructor(options: ToolsEngineOptions) {
-    // 将 manifest schemas 转换为 Map 以提高查找性能
+    log('Initializing ToolsEngine with %d manifest schemas', options.manifestSchemas.length);
+
+    // Convert manifest schemas to Map for improved lookup performance
     this.manifestSchemas = new Map(
       options.manifestSchemas.map((schema) => [schema.identifier, schema]),
     );
     this.enableChecker = options.enableChecker;
     this.functionCallChecker = options.functionCallChecker;
+
+    log('ToolsEngine initialized with plugins: %o', Array.from(this.manifestSchemas.keys()));
   }
 
   /**
-   * 生成工具数组
-   * @param params 工具生成参数
-   * @returns 处理后的工具数组，如果不应启用工具则返回 undefined
+   * Generate tools array
+   * @param params Tools generation parameters
+   * @returns Processed tools array, or undefined if tools should not be enabled
    */
   generateTools(params: GenerateToolsParams): UniformTool[] | undefined {
     const { pluginIds, model, provider, context } = params;
 
-    // 1. 检查模型是否支持 Function Calling
+    log('Generating tools for model=%s, provider=%s, pluginIds=%o', model, provider, pluginIds);
+
+    // 1. Check if model supports Function Calling
     if (!this.checkFunctionCallSupport(model, provider)) {
+      log('Function calling not supported for model=%s, provider=%s', model, provider);
       return undefined;
     }
 
-    // 2. 过滤和验证插件
+    // 2. Filter and validate plugins
     const { enabledManifests } = this.filterEnabledPlugins(pluginIds, model, provider, context);
 
-    // 3. 如果没有可用工具，返回 undefined
+    // 3. If no tools available, return undefined
     if (enabledManifests.length === 0) {
+      log('No enabled manifests found, returning undefined');
       return undefined;
     }
 
-    // 4. 转换为 UniformTool 格式
-    return this.convertManifestsToTools(enabledManifests);
+    // 4. Convert to UniformTool format
+    const tools = this.convertManifestsToTools(enabledManifests);
+    log('Generated %d tools from %d manifests', tools.length, enabledManifests.length);
+
+    return tools;
   }
 
   /**
-   * 生成工具数组（详细版本）
-   * @param params 工具生成参数
-   * @returns 详细的工具生成结果
+   * Generate tools array (detailed version)
+   * @param params Tools generation parameters
+   * @returns Detailed tools generation result
    */
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
     const { pluginIds, model, provider, context } = params;
 
-    // 过滤和验证插件
+    log(
+      'Generating detailed tools for model=%s, provider=%s, pluginIds=%o',
+      model,
+      provider,
+      pluginIds,
+    );
+
+    // Filter and validate plugins
     const { enabledManifests, filteredPlugins } = this.filterEnabledPlugins(
       pluginIds,
       model,
@@ -67,8 +89,15 @@ export class ToolsEngine {
       context,
     );
 
-    // 转换为 UniformTool 格式
+    // Convert to UniformTool format
     const tools = this.convertManifestsToTools(enabledManifests);
+
+    log(
+      'Generated detailed result: enabled=%d, filtered=%d, tools=%d',
+      enabledManifests.length,
+      filteredPlugins.length,
+      tools.length,
+    );
 
     return {
       enabledPluginIds: enabledManifests.map((m) => m.identifier),
@@ -78,19 +107,22 @@ export class ToolsEngine {
   }
 
   /**
-   * 检查模型是否支持 Function Calling
+   * Check if model supports Function Calling
    */
   private checkFunctionCallSupport(model: string, provider: string): boolean {
     if (this.functionCallChecker) {
-      return this.functionCallChecker(model, provider);
+      const result = this.functionCallChecker(model, provider);
+      log('Function calling check result for %s/%s: %s', model, provider, result);
+      return result;
     }
 
-    // 默认假设支持 Function Calling
+    // Default to assuming Function Calling is supported
+    log('No function calling checker provided, defaulting to true');
     return true;
   }
 
   /**
-   * 过滤启用的插件
+   * Filter enabled plugins
    */
   private filterEnabledPlugins(
     pluginIds: string[],
@@ -110,15 +142,18 @@ export class ToolsEngine {
       reason: 'not_found' | 'disabled' | 'incompatible';
     }> = [];
 
+    log('Filtering plugins: %o', pluginIds);
+
     for (const pluginId of pluginIds) {
       const manifest = this.manifestSchemas.get(pluginId);
 
       if (!manifest) {
+        log('Plugin not found: %s', pluginId);
         filteredPlugins.push({ pluginId, reason: 'not_found' });
         continue;
       }
 
-      // 使用注入的检查函数或默认检查逻辑
+      // Use injected checker function or default check logic
       const isEnabled = this.enableChecker
         ? this.enableChecker({
             context,
@@ -130,29 +165,38 @@ export class ToolsEngine {
         : this.defaultEnabledCheck();
 
       if (isEnabled) {
+        log('Plugin enabled: %s', pluginId);
         enabledManifests.push(manifest);
       } else {
+        log('Plugin disabled: %s', pluginId);
         filteredPlugins.push({ pluginId, reason: 'disabled' });
       }
     }
 
+    log(
+      'Filtering complete: enabled=%d, filtered=%d',
+      enabledManifests.length,
+      filteredPlugins.length,
+    );
     return { enabledManifests, filteredPlugins };
   }
 
   /**
-   * 默认的启用检查逻辑
+   * Default enabled check logic
    */
   private defaultEnabledCheck(): boolean {
-    // 默认启用所有工具
+    // Default to enabling all tools
     return true;
   }
 
   /**
-   * 将 manifest 转换为 UniformTool 数组
+   * Convert manifests to UniformTool array
    */
   private convertManifestsToTools(manifests: LobeChatPluginManifest[]): UniformTool[] {
-    // 使用简化的转换逻辑，避免依赖外部包
-    return manifests.flatMap((manifest) =>
+    log('Converting %d manifests to tools', manifests.length);
+
+    // Use simplified conversion logic to avoid external package dependencies
+    const tools = manifests.flatMap((manifest) =>
       manifest.api.map((api) => ({
         function: {
           description: api.description,
@@ -162,6 +206,9 @@ export class ToolsEngine {
         type: 'function' as const,
       })),
     );
+
+    log('Converted to %d tools', tools.length);
+    return tools;
   }
 
   /**

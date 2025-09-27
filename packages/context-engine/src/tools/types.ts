@@ -14,21 +14,21 @@ export interface LobeChatPluginManifest {
 }
 
 /**
- * 工具生成上下文
+ * Tools generation context
  */
 export interface ToolsGenerationContext {
-  /** 其他扩展上下文 */
+  /** Additional extension context */
   [key: string]: any;
-  /** 是否允许图像生成 */
+  /** Whether image generation is allowed */
   allowImageGeneration?: boolean;
-  /** 环境信息 */
+  /** Environment information */
   environment?: 'desktop' | 'web';
-  /** 搜索是否启用 */
+  /** Whether search is enabled */
   isSearchEnabled?: boolean;
 }
 
 /**
- * 插件启用检查函数
+ * Plugin enable checker function
  */
 export type PluginEnableChecker = (params: {
   context?: ToolsGenerationContext;
@@ -39,48 +39,48 @@ export type PluginEnableChecker = (params: {
 }) => boolean;
 
 /**
- * Function Calling 支持检查函数
+ * Function calling support checker function
  */
 export type FunctionCallChecker = (model: string, provider: string) => boolean;
 
 /**
- * 工具生成参数
+ * Tools generation parameters
  */
 export interface GenerateToolsParams {
-  /** 额外的上下文信息 */
+  /** Additional context information */
   context?: ToolsGenerationContext;
-  /** 模型名称 */
+  /** Model name */
   model: string;
-  /** 要启用的插件 ID 列表 */
+  /** List of plugin IDs to enable */
   pluginIds: string[];
-  /** 提供商名称 */
+  /** Provider name */
   provider: string;
 }
 
 /**
- * ToolsEngine 配置选项
+ * ToolsEngine configuration options
  */
 export interface ToolsEngineOptions {
-  /** 可选的插件启用检查函数 */
+  /** Optional plugin enable checker function */
   enableChecker?: PluginEnableChecker;
-  /** 可选的 Function Calling 支持检查函数 */
+  /** Optional function calling support checker function */
   functionCallChecker?: FunctionCallChecker;
-  /** 静态注入的 manifest schemas */
+  /** Statically injected manifest schemas */
   manifestSchemas: LobeChatPluginManifest[];
 }
 
 /**
- * 工具生成结果
+ * Tools generation result
  */
 export interface ToolsGenerationResult {
-  /** 启用的插件 ID 列表 */
+  /** List of enabled plugin IDs */
   enabledPluginIds: string[];
-  /** 被过滤掉的插件及原因 */
+  /** Filtered plugins and their reasons */
   filteredPlugins: Array<{
     pluginId: string;
     reason: 'not_found' | 'disabled' | 'incompatible';
   }>;
-  /** 生成的工具数组 */
+  /** Generated tools array */
   tools: UniformTool[];
 }
 
