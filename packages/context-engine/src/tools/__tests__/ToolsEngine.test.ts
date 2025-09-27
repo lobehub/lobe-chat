@@ -128,7 +128,7 @@ describe('ToolsEngine', () => {
         {
           type: 'function',
           function: {
-            name: 'search',
+            name: 'lobe-web-browsing____search____builtin',
             description: 'Search the web',
             parameters: {
               type: 'object',

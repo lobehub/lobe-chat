@@ -10,6 +10,7 @@ import {
   ToolsGenerationResult,
   UniformTool,
 } from './types';
+import { generateToolName } from './utils';
 
 const log = debug('context-engine:tools-engine');
 
@@ -20,8 +21,10 @@ export class ToolsEngine {
   private manifestSchemas: Map<string, LobeChatPluginManifest>;
   private enableChecker?: PluginEnableChecker;
   private functionCallChecker?: FunctionCallChecker;
+  private options: ToolsEngineOptions;
 
   constructor(options: ToolsEngineOptions) {
+    this.options = options;
     log('Initializing ToolsEngine with %d manifest schemas', options.manifestSchemas.length);
 
     // Convert manifest schemas to Map for improved lookup performance
@@ -212,14 +215,17 @@ export class ToolsEngine {
   }
 
   /**
-   * 生成工具调用名称
+   * Generate tool calling name
+   * Uses external generator if provided, otherwise uses default logic from utils
    */
   private generateToolName(identifier: string, apiName: string, type?: string): string {
-    // 简化的工具名称生成逻辑
-    if (type === 'builtin') {
-      return apiName;
+    // If external name generator is provided, use it
+    if (this.options.generateToolName) {
+      return this.options.generateToolName(identifier, apiName, type);
     }
-    return `${identifier}____${apiName}`;
+
+    // Use default tool name generation logic from utils
+    return generateToolName(identifier, apiName, type);
   }
 
   /**

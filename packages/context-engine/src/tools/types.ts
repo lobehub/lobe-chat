@@ -58,6 +58,11 @@ export interface GenerateToolsParams {
 }
 
 /**
+ * Tool name generator function
+ */
+export type ToolNameGenerator = (identifier: string, apiName: string, type?: string) => string;
+
+/**
  * ToolsEngine configuration options
  */
 export interface ToolsEngineOptions {
@@ -65,6 +70,8 @@ export interface ToolsEngineOptions {
   enableChecker?: PluginEnableChecker;
   /** Optional function calling support checker function */
   functionCallChecker?: FunctionCallChecker;
+  /** Optional tool name generator function */
+  generateToolName?: ToolNameGenerator;
   /** Statically injected manifest schemas */
   manifestSchemas: LobeChatPluginManifest[];
 }

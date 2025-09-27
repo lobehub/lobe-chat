@@ -13,7 +13,7 @@ import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/s
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
-import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import {
   preferenceSelectors,
@@ -21,7 +21,6 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { WorkingModel } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -38,7 +37,8 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, isCanUseFC, isEnableFetchOnClient } from './helper';
+import { findDeploymentName, isEnableFetchOnClient } from './helper';
+import { createToolsEngine, generateTools } from './toolEngineering';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -127,9 +127,11 @@ class ChatService {
     });
 
     // ============  2. preprocess tools   ============ //
+    const toolsEngine = createToolsEngine();
 
-    const tools = this.prepareTools(pluginIds, {
+    const tools = toolsEngine.generateTools({
       model: payload.model,
+      pluginIds,
       provider: payload.provider!,
     });
 
@@ -421,7 +423,7 @@ class ChatService {
         provider: params.provider!,
         tools: params.plugins,
       });
-      const tools = this.prepareTools(params.plugins || [], {
+      const tools = generateTools(params.plugins || [], {
         model: params.model!,
         provider: params.provider!,
       });
@@ -483,20 +485,6 @@ class ChatService {
     const data = params.payload as ChatStreamPayload;
 
     return agentRuntime.chat(data, { signal: params.signal });
-  };
-
-  private prepareTools = (pluginIds: string[], { model, provider }: WorkingModel) => {
-    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
-
-    // check this model can use function call
-    const canUseFC = isCanUseFC(model, provider!);
-
-    // the rule that model can use tools:
-    // 1. tools is not empty
-    // 2. model can use function call
-    const shouldUseTools = filterTools.length > 0 && canUseFC;
-
-    return shouldUseTools ? filterTools : undefined;
   };
 }
 

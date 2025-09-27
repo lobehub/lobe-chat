@@ -6,10 +6,11 @@ export type {
   FunctionCallChecker,
   GenerateToolsParams,
   PluginEnableChecker,
+  ToolNameGenerator,
   ToolsEngineOptions,
   ToolsGenerationContext,
   ToolsGenerationResult,
 } from './types';
 
 // Utility functions
-export { filterValidManifests, validateManifest } from './utils';
+export { filterValidManifests, generateToolName, validateManifest } from './utils';
