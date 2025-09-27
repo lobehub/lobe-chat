@@ -16,7 +16,6 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
@@ -63,7 +62,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
     const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
       model,
       provider,
-      toolIds: [...pluginIds, WebBrowsingManifest.identifier],
+      toolIds: pluginIds,
     });
     const schemaNumber = tools?.map((i) => JSON.stringify(i)).join('') || '';
 

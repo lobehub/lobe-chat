@@ -19,6 +19,8 @@ import { isCanUseFC } from '../isCanUseFC';
 export interface ToolsEngineConfig {
   /** Additional manifests to include beyond the standard ones */
   additionalManifests?: LobeChatPluginManifest[];
+  /** Default tool IDs that will always be added to the end of the tools list */
+  defaultToolIds?: string[];
   /** Custom enable checker for plugins */
   enableChecker?: PluginEnableChecker;
 }
@@ -27,7 +29,7 @@ export interface ToolsEngineConfig {
  * Initialize ToolsEngine with current manifest schemas and configurable options
  */
 export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine => {
-  const { enableChecker, additionalManifests = [] } = config;
+  const { enableChecker, additionalManifests = [], defaultToolIds } = config;
 
   const toolStoreState = getToolStoreState();
 
@@ -43,6 +45,7 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   const allManifests = [...pluginManifests, ...builtinManifests, ...additionalManifests];
 
   return new ToolsEngine({
+    defaultToolIds,
     enableChecker,
     functionCallChecker: isCanUseFC,
     manifestSchemas: allManifests,
@@ -51,6 +54,8 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
 
 export const createChatToolsEngine = (workingModel: WorkingModel) =>
   createToolsEngine({
+    // Add WebBrowsingManifest as default tool
+    defaultToolIds: [WebBrowsingManifest.identifier],
     // Create search-aware enableChecker for this request
     enableChecker: ({ pluginId }) => {
       // For WebBrowsingManifest, apply search logic

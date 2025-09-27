@@ -22,7 +22,6 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -87,7 +86,7 @@ class ChatService {
 
     // =================== 1. preprocess tools =================== //
 
-    const pluginIds = [...(enabledPlugins || []), WebBrowsingManifest.identifier];
+    const pluginIds = [...(enabledPlugins || [])];
 
     const toolsEngine = createChatToolsEngine({
       model: payload.model,

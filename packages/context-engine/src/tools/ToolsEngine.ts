@@ -21,11 +21,17 @@ export class ToolsEngine {
   private manifestSchemas: Map<string, LobeChatPluginManifest>;
   private enableChecker?: PluginEnableChecker;
   private functionCallChecker?: FunctionCallChecker;
+  private defaultToolIds: string[];
   private options: ToolsEngineOptions;
 
   constructor(options: ToolsEngineOptions) {
     this.options = options;
-    log('Initializing ToolsEngine with %d manifest schemas', options.manifestSchemas.length);
+    this.defaultToolIds = options.defaultToolIds || [];
+    log(
+      'Initializing ToolsEngine with %d manifest schemas and %d default tools',
+      options.manifestSchemas.length,
+      this.defaultToolIds.length,
+    );
 
     // Convert manifest schemas to Map for improved lookup performance
     this.manifestSchemas = new Map(
@@ -34,7 +40,11 @@ export class ToolsEngine {
     this.enableChecker = options.enableChecker;
     this.functionCallChecker = options.functionCallChecker;
 
-    log('ToolsEngine initialized with plugins: %o', Array.from(this.manifestSchemas.keys()));
+    log(
+      'ToolsEngine initialized with plugins: %o, default tools: %o',
+      Array.from(this.manifestSchemas.keys()),
+      this.defaultToolIds,
+    );
   }
 
   /**
@@ -45,7 +55,16 @@ export class ToolsEngine {
   generateTools(params: GenerateToolsParams): UniformTool[] | undefined {
     const { toolIds = [], model, provider, context } = params;
 
-    log('Generating tools for model=%s, provider=%s, pluginIds=%o', model, provider, toolIds);
+    // Merge user-provided tool IDs with default tool IDs
+    const allToolIds = [...toolIds, ...this.defaultToolIds];
+
+    log(
+      'Generating tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',
+      model,
+      provider,
+      allToolIds,
+      this.defaultToolIds.length,
+    );
 
     // 1. Check if model supports Function Calling
     if (!this.checkFunctionCallSupport(model, provider)) {
@@ -54,7 +73,7 @@ export class ToolsEngine {
     }
 
     // 2. Filter and validate plugins
-    const { enabledManifests } = this.filterEnabledPlugins(toolIds, model, provider, context);
+    const { enabledManifests } = this.filterEnabledPlugins(allToolIds, model, provider, context);
 
     // 3. If no tools available, return undefined
     if (enabledManifests.length === 0) {
@@ -77,16 +96,20 @@ export class ToolsEngine {
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
     const { toolIds = [], model, provider, context } = params;
 
+    // Merge user-provided tool IDs with default tool IDs
+    const allToolIds = [...toolIds, ...this.defaultToolIds];
+
     log(
-      'Generating detailed tools for model=%s, provider=%s, pluginIds=%o',
+      'Generating detailed tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',
       model,
       provider,
-      toolIds,
+      allToolIds,
+      this.defaultToolIds.length,
     );
 
     // Filter and validate plugins
     const { enabledManifests, filteredPlugins } = this.filterEnabledPlugins(
-      toolIds,
+      allToolIds,
       model,
       provider,
       context,

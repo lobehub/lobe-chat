@@ -70,6 +70,8 @@ export type ToolNameGenerator = (identifier: string, apiName: string, type?: str
  * ToolsEngine configuration options
  */
 export interface ToolsEngineOptions {
+  /** Default tool IDs that will always be added to the end of the tools list */
+  defaultToolIds?: string[];
   /** Optional plugin enable checker function */
   enableChecker?: PluginEnableChecker;
   /** Optional function calling support checker function */
