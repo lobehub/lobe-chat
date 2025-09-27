@@ -12,7 +12,6 @@ import { genServerLLMConfig } from './_deprecated';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
-import { ollamacloud } from 'packages/model-bank/src';
 
 export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
