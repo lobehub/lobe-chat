@@ -1,21 +1,31 @@
+/**
+ * Tools Engineering - Unified tools processing using ToolsEngine
+ */
 import { ToolsEngine } from '@lobechat/context-engine';
+import type { PluginEnableChecker } from '@lobechat/context-engine';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { WorkingModel } from '@/types/agent';
-import { ChatCompletionTool } from '@/types/openai/chat';
 
 import { isCanUseFC } from './helper';
 
 /**
- * Tools Engineering - Unified tools processing using ToolsEngine
+ * Tools engine configuration options
  */
+export interface ToolsEngineConfig {
+  /** Additional manifests to include beyond the standard ones */
+  additionalManifests?: LobeChatPluginManifest[];
+  /** Custom enable checker for plugins */
+  enableChecker?: PluginEnableChecker;
+}
 
 /**
- * Initialize ToolsEngine with current manifest schemas
+ * Initialize ToolsEngine with current manifest schemas and configurable options
  */
-export const createToolsEngine = (): ToolsEngine => {
+export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine => {
+  const { enableChecker, additionalManifests = [] } = config;
+
   const toolStoreState = getToolStoreState();
 
   // Get all available plugin manifests
@@ -27,20 +37,11 @@ export const createToolsEngine = (): ToolsEngine => {
   );
 
   // Combine all manifests
-  const allManifests = [...pluginManifests, ...builtinManifests];
+  const allManifests = [...pluginManifests, ...builtinManifests, ...additionalManifests];
 
-  return new ToolsEngine({ functionCallChecker: isCanUseFC, manifestSchemas: allManifests });
-};
-
-/**
- * Generate tools array for chat completion
- * Replaces ChatService.prepareTools method
- */
-export const generateTools = (
-  pluginIds: string[],
-  { model, provider }: WorkingModel,
-): ChatCompletionTool[] | undefined => {
-  const toolsEngine = createToolsEngine();
-
-  return toolsEngine.generateTools({ model, pluginIds, provider: provider! });
+  return new ToolsEngine({
+    enableChecker,
+    functionCallChecker: isCanUseFC,
+    manifestSchemas: allManifests,
+  });
 };

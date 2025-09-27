@@ -1,7 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { generateTools } from './toolEngineering';
+import { createToolsEngine } from './toolEngineering';
 
 // Mock the store and helper dependencies
 vi.mock('@/store/tool', () => ({
@@ -44,13 +44,22 @@ vi.mock('@/store/tool/selectors', () => ({
 }));
 
 vi.mock('./helper', () => ({
+  getSearchConfig: vi.fn(),
   isCanUseFC: () => true,
 }));
 
+vi.mock('@/tools/web-browsing', () => ({
+  WebBrowsingManifest: {
+    identifier: 'web-browsing-tool',
+  },
+}));
+
 describe('toolEngineering', () => {
-  describe('generateTools', () => {
+  describe('createToolsEngine', () => {
     it('should generate tools array for enabled plugins', () => {
-      const result = generateTools(['search'], {
+      const toolsEngine = createToolsEngine();
+      const result = toolsEngine.generateTools({
+        toolIds: ['search'],
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -74,7 +83,9 @@ describe('toolEngineering', () => {
     });
 
     it('should return undefined when no plugins match', () => {
-      const result = generateTools(['non-existent'], {
+      const toolsEngine = createToolsEngine();
+      const result = toolsEngine.generateTools({
+        toolIds: ['non-existent'],
         model: 'gpt-4',
         provider: 'openai',
       });

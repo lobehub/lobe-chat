@@ -37,8 +37,8 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, isEnableFetchOnClient } from './helper';
-import { createToolsEngine, generateTools } from './toolEngineering';
+import { findDeploymentName, getSearchConfig, isEnableFetchOnClient } from './helper';
+import { createToolsEngine } from './toolEngineering';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -82,33 +82,41 @@ class ChatService {
       params,
     );
 
-    // =================== 0. process search =================== //
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-    const aiInfraStoreState = getAiInfraStoreState();
-    const enabledSearch = chatConfig.searchMode !== 'off';
-    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(
-      payload.provider!,
-    )(aiInfraStoreState);
-    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
-      payload.model,
-      payload.provider!,
-    )(aiInfraStoreState);
-
-    const useModelSearch =
-      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
-
-    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
+    // =================== 1. preprocess tools =================== //
 
     const pluginIds = [...(enabledPlugins || [])];
 
-    if (useApplicationBuiltinSearchTool) {
+    // Create search-aware enableChecker for this request
+    const searchConfig = getSearchConfig(payload.model, payload.provider!);
+
+    // Add WebBrowsingManifest if search should potentially be enabled
+    if (searchConfig.enabledSearch) {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess messages   ============ //
+    const toolsEngine = createToolsEngine({
+      enableChecker: ({ pluginId }) => {
+        // For WebBrowsingManifest, apply search logic
+        if (pluginId === WebBrowsingManifest.identifier) {
+          return searchConfig.useApplicationBuiltinSearchTool;
+        }
+
+        // For all other plugins, enable by default
+        return true;
+      },
+    });
+
+    const { tools, enabledPluginIds } = toolsEngine.generateToolsDetailed({
+      model: payload.model,
+      provider: payload.provider!,
+      toolIds: pluginIds,
+    });
+
+    // ============  2. preprocess messages   ============ //
 
     const agentStoreState = getAgentStoreState();
     const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
 
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
@@ -123,21 +131,13 @@ class ChatService {
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
-      tools: pluginIds,
-    });
-
-    // ============  2. preprocess tools   ============ //
-    const toolsEngine = createToolsEngine();
-
-    const tools = toolsEngine.generateTools({
-      model: payload.model,
-      pluginIds,
-      provider: payload.provider!,
+      tools: enabledPluginIds,
     });
 
     // ============  3. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
+    const aiInfraStoreState = getAiInfraStoreState();
 
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
@@ -211,7 +211,7 @@ class ChatService {
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
+        enabledSearch: searchConfig.enabledSearch && searchConfig.useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
@@ -423,9 +423,12 @@ class ChatService {
         provider: params.provider!,
         tools: params.plugins,
       });
-      const tools = generateTools(params.plugins || [], {
+      // Use simple tools engine without complex search logic
+      const toolsEngine = createToolsEngine();
+      const tools = toolsEngine.generateTools({
         model: params.model!,
         provider: params.provider!,
+        toolIds: params.plugins,
       });
 
       // remove plugins
