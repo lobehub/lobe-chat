@@ -25,6 +25,10 @@ export interface ToolsGenerationContext {
   environment?: 'desktop' | 'web';
   /** Whether search is enabled */
   isSearchEnabled?: boolean;
+  /** Model name for context-aware plugin filtering */
+  model?: string;
+  /** Provider name for context-aware plugin filtering */
+  provider?: string;
 }
 
 /**
@@ -52,7 +56,7 @@ export interface GenerateToolsParams {
   /** Model name */
   model: string;
   /** List of plugin IDs to enable */
-  pluginIds: string[];
+  pluginIds?: string[];
   /** Provider name */
   provider: string;
 }

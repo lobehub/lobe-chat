@@ -43,7 +43,7 @@ export class ToolsEngine {
    * @returns Processed tools array, or undefined if tools should not be enabled
    */
   generateTools(params: GenerateToolsParams): UniformTool[] | undefined {
-    const { pluginIds, model, provider, context } = params;
+    const { pluginIds = [], model, provider, context } = params;
 
     log('Generating tools for model=%s, provider=%s, pluginIds=%o', model, provider, pluginIds);
 
@@ -75,7 +75,7 @@ export class ToolsEngine {
    * @returns Detailed tools generation result
    */
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
-    const { pluginIds, model, provider, context } = params;
+    const { pluginIds = [], model, provider, context } = params;
 
     log(
       'Generating detailed tools for model=%s, provider=%s, pluginIds=%o',
