@@ -1,4 +1,4 @@
-import { minimax as minimaxChatModels , ModelProvider } from 'model-bank';
+import { ModelProvider, minimax as minimaxChatModels } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { createMiniMaxImage } from './createImage';
