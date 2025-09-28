@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Ollama 提供的模型广泛涵盖代码生成、数学运算、多语种处理和对话互动等领域，支持企业级和本地化部署的多样化需求。"
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud 提供官方托管的推理服务，开箱即用地访问 Ollama 模型库，并支持 OpenAI 兼容接口。"
+  },
   "openai": {
     "description": "OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。"
   },

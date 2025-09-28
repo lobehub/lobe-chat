@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 là một mô hình nền tảng kiến trúc MoE với khả năng xử lý mã và Agent rất mạnh, tổng số tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra chuẩn về hiệu năng ở các hạng mục chính như suy luận kiến thức tổng quát, lập trình, toán học và Agent, mô hình K2 cho hiệu năng vượt trội so với các mô hình mã nguồn mở phổ biến khác."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 là mô hình ngôn ngữ chuyên gia hỗn hợp quy mô lớn (MoE) do AI Mặt Trăng Tối phát triển, với tổng cộng 1 nghìn tỷ tham số và 32 tỷ tham số kích hoạt mỗi lần truyền tiến. Nó được tối ưu hóa cho khả năng đại lý, bao gồm sử dụng công cụ nâng cao, suy luận và tổng hợp mã."
+  },
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
   },

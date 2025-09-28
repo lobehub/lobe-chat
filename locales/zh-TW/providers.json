@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Ollama 提供的模型廣泛涵蓋代碼生成、數學運算、多語種處理和對話互動等領域，支持企業級和本地化部署的多樣化需求。"
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud 提供官方託管的推理服務，開箱即用地存取 Ollama 模型庫，並支援 OpenAI 相容介面。"
+  },
   "openai": {
     "description": "OpenAI 是全球領先的人工智慧研究機構，其開發的模型如 GPT 系列推動了自然語言處理的前沿。OpenAI 致力於透過創新和高效的 AI 解決方案改變多個行業。他們的產品具有顯著的性能和經濟性，廣泛用於研究、商業和創新應用。"
   },
