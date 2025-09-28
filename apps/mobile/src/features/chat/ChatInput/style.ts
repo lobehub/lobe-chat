@@ -29,7 +29,6 @@ export const useStyles = createStyles(({ token }) => ({
     gap: token.marginXS,
   },
   input: {
-    alignItems: 'flex-start',
     flexGrow: 1,
   },
   leftActions: {
