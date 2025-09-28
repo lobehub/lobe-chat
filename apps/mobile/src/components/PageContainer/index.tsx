@@ -36,9 +36,15 @@ const PageContainer: React.FC<PageContainerProps> = ({
             <ActionIcon icon={ChevronLeft} onPress={() => router.back()} />
           ) : null}
         </View>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
-          {title}
-        </Text>
+        <View style={styles.title}>
+          {typeof title === 'string' ? (
+            <Text ellipsizeMode="tail" numberOfLines={1} style={styles.titleText}>
+              {title}
+            </Text>
+          ) : (
+            title
+          )}
+        </View>
         <View style={styles.extra}>{extra}</View>
       </View>
       {children}
