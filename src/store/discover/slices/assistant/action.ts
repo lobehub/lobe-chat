@@ -16,6 +16,7 @@ export interface AssistantAction {
   useAssistantCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;
   useAssistantDetail: (params: {
     identifier: string;
+    version?: string;
   }) => SWRResponse<DiscoverAssistantDetail | undefined>;
   useAssistantIdentifiers: () => SWRResponse<IdentifiersResponse>;
   useAssistantList: (params?: AssistantQueryParams) => SWRResponse<AssistantListResponse>;
@@ -41,7 +42,7 @@ export const createAssistantSlice: StateCreator<
   useAssistantDetail: (params) => {
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
-      ['assistant-details', locale, params.identifier].filter(Boolean).join('-'),
+      ['assistant-details', locale, params.identifier, params.version].filter(Boolean).join('-'),
       async () => discoverService.getAssistantDetail(params),
       {
         revalidateOnFocus: false,

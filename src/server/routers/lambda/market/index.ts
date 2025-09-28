@@ -48,6 +48,7 @@ export const marketRouter = router({
       z.object({
         identifier: z.string(),
         locale: z.string().optional(),
+        version: z.string().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {

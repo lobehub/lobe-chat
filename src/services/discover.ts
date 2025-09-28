@@ -41,6 +41,7 @@ class DiscoverService {
   getAssistantDetail = async (params: {
     identifier: string;
     locale?: string;
+    version?: string;
   }): Promise<DiscoverAssistantDetail | undefined> => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getAssistantDetail.query({

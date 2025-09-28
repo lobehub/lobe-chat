@@ -42,6 +42,21 @@ export default {
         openingQuestions: '开场问题',
         title: '助手设定',
       },
+      version: {
+        empty: '暂无历史版本',
+        status: {
+          archived: '已归档',
+          deprecated: '已废弃',
+          unpublished: '审核中',
+        },
+        table: {
+          isLatest: '最新版本',
+          isValidated: '已验证',
+          publishAt: '发布日期',
+          version: '版本号',
+        },
+        title: '版本历史',
+      },
     },
     list: '助手列表',
     more: '更多',

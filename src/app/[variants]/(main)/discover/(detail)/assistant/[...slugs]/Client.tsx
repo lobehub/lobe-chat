@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { withSuspense } from '@/components/withSuspense';
+import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 
 import { TocProvider } from '../../features/Toc/useToc';
@@ -20,8 +21,9 @@ interface ClientProps {
 }
 
 const Client = memo<ClientProps>(({ identifier, mobile }) => {
+  const { version } = useQuery() as { version?: string };
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
-  const { data, isLoading } = useAssistantDetail({ identifier });
+  const { data, isLoading } = useAssistantDetail({ identifier, version });
 
   if (isLoading) return <Loading />;
   if (!data) return notFound();

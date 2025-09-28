@@ -245,15 +245,17 @@ export class DiscoverService {
   getAssistantDetail = async (params: {
     identifier: string;
     locale?: string;
+    version?: string;
   }): Promise<DiscoverAssistantDetail | undefined> => {
     log('getAssistantDetail: params=%O', params);
-    const { locale, identifier } = params;
+    const { locale, identifier, version } = params;
     const normalizedLocale = normalizeLocale(locale);
 
     try {
       // Call the database API detail endpoint
       const queryParams = new URLSearchParams();
       if (normalizedLocale) queryParams.set('locale', normalizedLocale);
+      if (version) queryParams.set('version', version);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/detail/${identifier}?${queryParams}`,
@@ -286,20 +288,16 @@ export class DiscoverService {
         // Add detail-specific fields
         config: data.config || {},
         createdAt: data.createdAt,
+        currentVersion: data.version,
         description: data.description,
         examples: data.examples || [],
         homepage: data.homepage || `https://lobehub.com/discover/assistant/${data.identifier}`,
         identifier: data.identifier,
         knowledgeCount: data.config?.knowledgeBases?.lenght,
-
         // This might need to be added to the API
-pluginCount: data.config?.plugins?.length,
-
-        
+        pluginCount: data.config?.plugins?.length,
         readme: data.documentationUrl || '',
-
         schemaVersion: 1,
-
         status: data?.status,
         summary: data.summary || '',
         systemRole: data.config?.systemRole || '',
@@ -307,6 +305,7 @@ pluginCount: data.config?.plugins?.length,
         tags: data.config?.tags || [],
         title: data.name,
         tokenUsage: data.tokenUsage || 0,
+        versions: data.versions || [],
       };
 
       // Get related assistants

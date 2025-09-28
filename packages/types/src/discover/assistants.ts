@@ -35,6 +35,7 @@ export enum AssistantNavKey {
   Overview = 'overview',
   Related = 'related',
   SystemRole = 'systemRole',
+  Version = 'version'
 }
 
 export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, MetaData {
@@ -68,7 +69,17 @@ export interface AssistantListResponse {
 }
 
 export interface DiscoverAssistantDetail extends DiscoverAssistantItem {
+  currentVersion?: string;
   examples?: FewShots;
   related: DiscoverAssistantItem[];
   summary?: string;
+  versions?: DiscoverAssistantVersion[];
+}
+
+export interface DiscoverAssistantVersion {
+  createdAt?: string;
+  isLatest?: boolean;
+  isValidated?: boolean;
+  status?: 'published' | 'unpublished' | 'archived' | 'deprecated';
+  version: string;
 }
