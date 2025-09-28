@@ -1,5 +1,6 @@
 import { Icon } from '@lobehub/ui-rn';
 import { ArrowDown } from 'lucide-react-native';
+import React, { memo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { useStyles } from './style';
@@ -9,7 +10,7 @@ interface ScrollToBottomProps {
   visible: boolean;
 }
 
-export default function ScrollToBottom({ onScrollToBottom, visible }: ScrollToBottomProps) {
+const ScrollToBottom = ({ onScrollToBottom, visible }: ScrollToBottomProps) => {
   const { styles } = useStyles();
 
   if (!visible) return null;
@@ -25,4 +26,6 @@ export default function ScrollToBottom({ onScrollToBottom, visible }: ScrollToBo
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default memo(ScrollToBottom);
