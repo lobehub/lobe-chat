@@ -12,6 +12,7 @@ import {
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
 } from '@/types/user/settings';
+import clientApiKeyManager from '@/utils/client/apiKeyManager';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
 export const getProviderAuthPayload = (
@@ -49,7 +50,7 @@ export const getProviderAuthPayload = (
 
     case ModelProvider.Azure: {
       return {
-        apiKey: keyVaults.apiKey,
+        apiKey: clientApiKeyManager.pick(keyVaults.apiKey),
 
         apiVersion: keyVaults.apiVersion,
         /** @deprecated */
@@ -64,7 +65,7 @@ export const getProviderAuthPayload = (
 
     case ModelProvider.Cloudflare: {
       return {
-        apiKey: keyVaults?.apiKey,
+        apiKey: clientApiKeyManager.pick(keyVaults?.apiKey),
 
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
         /** @deprecated */
@@ -73,7 +74,7 @@ export const getProviderAuthPayload = (
     }
 
     default: {
-      return { apiKey: keyVaults?.apiKey, baseURL: keyVaults?.baseURL };
+      return { apiKey: clientApiKeyManager.pick(keyVaults?.apiKey), baseURL: keyVaults?.baseURL };
     }
   }
 };
