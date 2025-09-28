@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 es un modelo base con arquitectura MoE que ofrece potentes capacidades para código y agentes, con 1T parámetros totales y 32B parámetros activados. En las pruebas de referencia en categorías principales como razonamiento de conocimiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera al de otros modelos de código abierto más extendidos."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 es un modelo de lenguaje de expertos mixtos a gran escala (MoE) desarrollado por la IA del lado oscuro de la luna, con un total de un billón de parámetros y 32 mil millones de parámetros activados por cada pasada hacia adelante. Está optimizado para capacidades de agente, incluyendo el uso avanzado de herramientas, razonamiento y síntesis de código."
+  },
   "kimi-latest": {
     "description": "El producto asistente inteligente Kimi utiliza el último modelo grande de Kimi, que puede incluir características que aún no están estables. Soporta la comprensión de imágenes y seleccionará automáticamente el modelo de facturación de 8k/32k/128k según la longitud del contexto de la solicitud."
   },

@@ -7,21 +7,21 @@ import { ModelProvider } from 'model-bank';
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
+import { getSearchConfig } from '@/helpers/getSearchConfig';
+import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
-import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import {
   preferenceSelectors,
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { WorkingModel } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -38,7 +38,7 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, isCanUseFC, isEnableFetchOnClient } from './helper';
+import { findDeploymentName, isEnableFetchOnClient } from './helper';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -82,33 +82,28 @@ class ChatService {
       params,
     );
 
-    // =================== 0. process search =================== //
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-    const aiInfraStoreState = getAiInfraStoreState();
-    const enabledSearch = chatConfig.searchMode !== 'off';
-    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(
-      payload.provider!,
-    )(aiInfraStoreState);
-    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
-      payload.model,
-      payload.provider!,
-    )(aiInfraStoreState);
+    const searchConfig = getSearchConfig(payload.model, payload.provider!);
 
-    const useModelSearch =
-      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
-
-    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
+    // =================== 1. preprocess tools =================== //
 
     const pluginIds = [...(enabledPlugins || [])];
 
-    if (useApplicationBuiltinSearchTool) {
-      pluginIds.push(WebBrowsingManifest.identifier);
-    }
+    const toolsEngine = createChatToolsEngine({
+      model: payload.model,
+      provider: payload.provider!,
+    });
 
-    // ============  1. preprocess messages   ============ //
+    const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model: payload.model,
+      provider: payload.provider!,
+      toolIds: pluginIds,
+    });
+
+    // ============  2. preprocess messages   ============ //
 
     const agentStoreState = getAgentStoreState();
     const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
 
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
@@ -123,19 +118,13 @@ class ChatService {
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
-      tools: pluginIds,
-    });
-
-    // ============  2. preprocess tools   ============ //
-
-    const tools = this.prepareTools(pluginIds, {
-      model: payload.model,
-      provider: payload.provider!,
+      tools: enabledToolIds,
     });
 
     // ============  3. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
+    const aiInfraStoreState = getAiInfraStoreState();
 
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
@@ -209,7 +198,7 @@ class ChatService {
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
+        enabledSearch: searchConfig.enabledSearch && searchConfig.useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
@@ -421,9 +410,12 @@ class ChatService {
         provider: params.provider!,
         tools: params.plugins,
       });
-      const tools = this.prepareTools(params.plugins || [], {
+      // Use simple tools engine without complex search logic
+      const toolsEngine = createToolsEngine();
+      const tools = toolsEngine.generateTools({
         model: params.model!,
         provider: params.provider!,
+        toolIds: params.plugins,
       });
 
       // remove plugins
@@ -483,20 +475,6 @@ class ChatService {
     const data = params.payload as ChatStreamPayload;
 
     return agentRuntime.chat(data, { signal: params.signal });
-  };
-
-  private prepareTools = (pluginIds: string[], { model, provider }: WorkingModel) => {
-    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
-
-    // check this model can use function call
-    const canUseFC = isCanUseFC(model, provider!);
-
-    // the rule that model can use tools:
-    // 1. tools is not empty
-    // 2. model can use function call
-    const shouldUseTools = filterTools.length > 0 && canUseFC;
-
-    return shouldUseTools ? filterTools : undefined;
   };
 }
 

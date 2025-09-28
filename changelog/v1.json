@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Refactor tools-engine and fix search token count."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-28",
+    "version": "1.132.18"
+  },
+  {
+    "children": {
       "fixes": ["Fix input empty group name."]
     },
     "date": "2025-09-27",

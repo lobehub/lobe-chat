@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 é um modelo base com arquitetura MoE que oferece capacidades avançadas para programação e agentes, com 1T de parâmetros totais e 32B de parâmetros ativados. Em testes de benchmark nas principais categorias — raciocínio de conhecimento geral, programação, matemática e agentes — o desempenho do modelo K2 supera outros modelos de código aberto mais populares."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 é um modelo de linguagem de especialistas híbridos em larga escala (MoE) desenvolvido pela AI do Lado Escuro da Lua, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados por passagem. Ele é otimizado para capacidades de agente, incluindo uso avançado de ferramentas, raciocínio e síntese de código."
+  },
   "kimi-latest": {
     "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
   },

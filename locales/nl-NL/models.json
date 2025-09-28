@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 is een basismodel met een MoE-architectuur dat beschikt over zeer sterke codeer- en agentcapaciteiten. Het heeft in totaal 1T parameters en 32B actieve parameters. In benchmarktests op belangrijke categorieën zoals algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model de prestaties van andere gangbare open-sourcemodellen."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 is een grootschalig gemengd expertsysteem (MoE) taalmodel ontwikkeld door Moon's Dark Side AI, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters per voorwaartse doorgang. Het is geoptimaliseerd voor agentcapaciteiten, waaronder geavanceerd gebruik van tools, redeneren en code-synthese."
+  },
   "kimi-latest": {
     "description": "Kimi slimme assistent product maakt gebruik van het nieuwste Kimi grote model, dat mogelijk nog niet stabiele functies bevat. Ondersteunt beeldbegrip en kiest automatisch het 8k/32k/128k model als factureringsmodel op basis van de lengte van de context van het verzoek."
   },
