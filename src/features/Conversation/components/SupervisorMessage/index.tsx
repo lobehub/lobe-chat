@@ -1,10 +1,14 @@
 'use client';
 
-import { memo } from 'react';
+import { Button, Text } from '@lobehub/ui';
+import { LucideRefreshCw } from 'lucide-react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import ChatItem from '@/components/ChatItem/ChatItem';
 import { DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
+import { useChatStore } from '@/store/chat';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 
@@ -47,6 +51,7 @@ export interface SupervisorMessageProps {
 
 const SupervisorMessage = memo<SupervisorMessageProps>(({ message }) => {
   const { t } = useTranslation('chat');
+  const triggerSupervisorDecision = useChatStore((s) => s.internal_triggerSupervisorDecision);
 
   // Try to parse the message content as JSON for todo data
   let todoData: TodoData | null = null;
@@ -68,17 +73,39 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ message }) => {
     }
   }
 
-  const errorMessage =
+  const errorText =
     message.error?.type === ChatErrorType.SupervisorDecisionFailed
       ? t('supervisor.decisionFailed', { ns: 'error' })
       : message.error?.message;
 
-  const errorProps = errorMessage
-    ? {
-        message: errorMessage,
-        type: 'error' as const,
-      }
-    : undefined;
+  // Retry action for supervisor decision failure
+  const handleRetry = useCallback(() => {
+    if (!message.groupId) return;
+    triggerSupervisorDecision(message.groupId, undefined, true);
+  }, [message.groupId, triggerSupervisorDecision]);
+
+  const errorContentNode = errorText ? (
+    <Flexbox
+      gap={8}
+      style={{
+        background: '#fff',
+        border: '1px solid rgba(0,0,0,0.08)',
+        borderRadius: 8,
+        padding: 12,
+        width: '100%',
+      }}
+    >
+      <div style={{ fontWeight: 600, lineHeight: 1.4 }}>
+        {t('groupSidebar.members.orchestrator')}
+      </div>
+      <Text>{errorText}</Text>
+      {message.role === 'supervisor' && message.groupId && (
+        <Button icon={LucideRefreshCw} onClick={handleRetry} type={'primary'}>
+          {t('retry', { ns: 'common' })}
+        </Button>
+      )}
+    </Flexbox>
+  ) : undefined;
 
   // Render todo message with dedicated component
   if (isTodoMessage && todoData) {
@@ -100,20 +127,22 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ message }) => {
   }
 
   // Render regular supervisor message
+  const renderErrorMessage = message.error ? () => errorContentNode : undefined;
+
   return (
     <ChatItem
       avatar={{
         avatar: DEFAULT_SUPERVISOR_AVATAR,
         title: t('groupSidebar.members.orchestrator'),
       }}
-      error={isTodoMessage ? undefined : errorProps}
       loading={false}
-      message={message.content}
+      message={message.error ? undefined : message.content}
       placement="left"
       primary={false}
+      renderMessage={renderErrorMessage}
       showTitle={true}
       time={message.updatedAt || message.createdAt}
-      variant={isTodoMessage ? 'docs' : 'bubble'}
+      variant={isTodoMessage || message.error ? 'docs' : 'bubble'}
     />
   );
 });
