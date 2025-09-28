@@ -1,3 +1,4 @@
+export * from './client/apiKeyPicker';
 export * from './client/cookie';
 export * from './detectChinese';
 export * from './format';

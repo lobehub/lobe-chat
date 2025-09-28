@@ -13,6 +13,7 @@ import {
   OpenAICompatibleKeyVault,
 } from '@/types/user/settings';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
+import { pickApiKey } from '@lobechat/utils';
 
 export const getProviderAuthPayload = (
   provider: string,
@@ -49,7 +50,7 @@ export const getProviderAuthPayload = (
 
     case ModelProvider.Azure: {
       return {
-        apiKey: keyVaults.apiKey,
+        apiKey: pickApiKey(keyVaults.apiKey),
 
         apiVersion: keyVaults.apiVersion,
         /** @deprecated */
@@ -64,7 +65,7 @@ export const getProviderAuthPayload = (
 
     case ModelProvider.Cloudflare: {
       return {
-        apiKey: keyVaults?.apiKey,
+        apiKey: pickApiKey(keyVaults?.apiKey),
 
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
         /** @deprecated */
@@ -73,7 +74,7 @@ export const getProviderAuthPayload = (
     }
 
     default: {
-      return { apiKey: keyVaults?.apiKey, baseURL: keyVaults?.baseURL };
+      return { apiKey: pickApiKey(keyVaults?.apiKey), baseURL: keyVaults?.baseURL };
     }
   }
 };

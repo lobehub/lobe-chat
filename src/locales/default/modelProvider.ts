@@ -219,6 +219,7 @@ export default {
       apiKey: {
         desc: '请填写你的 {{name}} API Key',
         descWithUrl: '请填写你的 {{name}} API Key，<3>点此获取</3>',
+        multipleKeysDesc: '支持多个 API Key，使用英文逗号分隔，系统将随机选择使用',
         placeholder: '{{name}} API Key',
         title: 'API Key',
       },

@@ -30,6 +30,7 @@ import {
   AiProviderSourceEnum,
   AiProviderSourceType,
 } from '@/types/aiProvider';
+import { hasMultipleApiKeys } from '@lobechat/utils';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import Checker, { CheckErrorRender } from './Checker';
@@ -209,20 +210,38 @@ const ProviderConfig = memo<ProviderConfigProps>(
                 }
               />
             ),
-            desc: apiKeyUrl ? (
-              <Trans
-                i18nKey="providerModels.config.apiKey.descWithUrl"
-                ns={'modelProvider'}
-                value={{ name }}
-              >
-                请填写你的 {{ name }} API Key,
-                <Link href={apiKeyUrl} target={'_blank'}>
-                  点此获取
-                </Link>
-              </Trans>
-            ) : (
-              t(`providerModels.config.apiKey.desc`, { name })
-            ),
+            desc: (() => {
+              const currentApiKey = data?.keyVaults?.apiKey || '';
+              const hasMultipleKeys = hasMultipleApiKeys(currentApiKey);
+              
+              const baseDesc = apiKeyUrl ? (
+                <Trans
+                  i18nKey="providerModels.config.apiKey.descWithUrl"
+                  ns={'modelProvider'}
+                  value={{ name }}
+                >
+                  请填写你的 {{ name }} API Key,
+                  <Link href={apiKeyUrl} target={'_blank'}>
+                    点此获取
+                  </Link>
+                </Trans>
+              ) : (
+                t(`providerModels.config.apiKey.desc`, { name })
+              );
+              
+              if (hasMultipleKeys) {
+                return (
+                  <div>
+                    <div>{baseDesc}</div>
+                    <div style={{ marginTop: 4, fontSize: '12px', color: theme.colorTextSecondary }}>
+                      {t('providerModels.config.apiKey.multipleKeysDesc')}
+                    </div>
+                  </div>
+                );
+              }
+              
+              return baseDesc;
+            })(),
             label: t(`providerModels.config.apiKey.title`),
             name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
           },
