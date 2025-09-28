@@ -360,6 +360,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx": "^3.1.1",
     "remark-parse": "^11.0.0",
+    "require-in-the-middle": "^7.5.2",
     "semantic-release": "^21.1.2",
     "serwist": "^9.2.1",
     "stylelint": "^15.11.0",
