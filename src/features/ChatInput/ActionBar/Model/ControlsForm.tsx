@@ -14,6 +14,7 @@ import ContextCachingSwitch from './ContextCachingSwitch';
 import GPT5ReasoningEffortSlider from './GPT5ReasoningEffortSlider';
 import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
+import SearchContextSizeSlider from './SearchContextSizeSlider';
 import TextVerbositySlider from './TextVerbositySlider';
 import ThinkingBudgetSlider from './ThinkingBudgetSlider';
 import ThinkingSlider from './ThinkingSlider';
@@ -126,6 +127,17 @@ const ControlsForm = memo(() => {
       layout: 'horizontal',
       minWidth: undefined,
       name: 'textVerbosity',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <SearchContextSizeSlider />,
+      desc: 'search_context_size',
+      label: t('extendParams.searchContextSize.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'searchContextSize',
       style: {
         paddingBottom: 0,
       },

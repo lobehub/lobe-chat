@@ -9,7 +9,7 @@ export const LobePerplexityAI = createOpenAICompatibleRuntime({
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
       // Set a default frequency penalty value greater than 0
-      const { presence_penalty, frequency_penalty, stream = true, temperature, ...res } = payload;
+      const { presence_penalty, frequency_penalty, stream = true, temperature, searchContextSize, ...res } = payload;
 
       let param;
 
@@ -27,6 +27,11 @@ export const LobePerplexityAI = createOpenAICompatibleRuntime({
         ...param,
         stream,
         temperature: temperature >= 2 ? undefined : temperature,
+        ...(searchContextSize && {
+          web_search_options: {
+            search_context_size: searchContextSize,
+          },
+        }),
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },

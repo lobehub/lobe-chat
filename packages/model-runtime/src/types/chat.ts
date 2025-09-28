@@ -86,6 +86,7 @@ export interface ChatStreamPayload {
   };
   reasoning_effort?: 'minimal' | 'low' | 'medium' | 'high';
   responseMode?: 'stream' | 'json';
+  searchContextSize?: 'low' | 'medium' | 'high';
   /**
    * @title 是否开启流式请求
    * @default true

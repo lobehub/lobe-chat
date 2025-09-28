@@ -59,6 +59,7 @@ export interface LobeAgentChatConfig {
 
   searchMode?: SearchMode;
   searchFCModel?: WorkingModel;
+  searchContextSize?: 'low' | 'medium' | 'high';
   urlContext?: boolean;
   useModelBuiltinSearch?: boolean;
 }
@@ -83,5 +84,6 @@ export const AgentChatConfigSchema = z.object({
     })
     .optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
+  searchContextSize: z.enum(['low', 'medium', 'high']).optional(),
   textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
 });
