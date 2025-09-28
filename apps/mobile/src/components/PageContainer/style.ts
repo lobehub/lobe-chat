@@ -9,6 +9,7 @@ export const useStyles = createStyles(({ token }) => ({
   extra: {
     alignItems: 'flex-end',
     justifyContent: 'center',
+    zIndex: 2,
   },
   header: {
     alignItems: 'center',
@@ -16,12 +17,22 @@ export const useStyles = createStyles(({ token }) => ({
     height: HEADER_HEIGHT,
     justifyContent: 'space-between',
     paddingHorizontal: token.paddingXS,
+    position: 'relative',
   },
   left: {
     alignItems: 'flex-start',
     justifyContent: 'center',
+    zIndex: 2,
   },
   title: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    zIndex: 1,
+  },
+  titleText: {
     color: token.colorTextHeading,
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
