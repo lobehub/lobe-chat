@@ -1,6 +1,5 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref: https://ai.google.dev/gemini-api/docs/models/gemini
 const Google: ModelProviderCard = {
   chatModels: [
     {
@@ -68,17 +67,6 @@ const Google: ModelProviderCard = {
       id: 'gemini-2.0-flash-thinking-exp-01-21',
       maxOutput: 65_536,
       releasedAt: '2025-01-21',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 40_959,
-      description:
-        'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
-      displayName: 'LearnLM 1.5 Pro Experimental',
-      functionCall: true,
-      id: 'learnlm-1.5-pro-experimental',
-      maxOutput: 8192,
-      releasedAt: '2024-11-19',
       vision: true,
     },
   ],

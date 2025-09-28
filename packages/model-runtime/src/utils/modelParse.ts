@@ -23,7 +23,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   google: {
     functionCallKeywords: ['gemini'],
-    reasoningKeywords: ['thinking', '-2.5-'],
+    reasoningKeywords: ['thinking', '-2.5-', 'robotics'],
     visionKeywords: ['gemini', 'learnlm'],
   },
   inclusionai: {
