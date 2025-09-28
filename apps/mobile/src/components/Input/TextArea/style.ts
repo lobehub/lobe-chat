@@ -18,6 +18,7 @@ export const useStyles = createStyles(({ token }, { variant = 'filled' }: UseSty
     },
     input: {
       color: token.colorText,
+      flex: 1,
       fontFamily: token.fontFamily,
       fontSize: token.fontSize,
       minHeight: token.fontHeight,
