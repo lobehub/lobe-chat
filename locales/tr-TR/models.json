@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2, son derece güçlü kod yazma ve Agent yeteneklerine sahip MoE mimarisine dayanan bir temel modeldir; toplam parametre sayısı 1T, aktif (etkin) parametre sayısı 32B. Genel bilgi çıkarımı, programlama, matematik ve Agent gibi ana kategorilerde yapılan karşılaştırmalı performans testlerinde K2 modelinin performansı diğer önde gelen açık kaynak modellerinin üzerindedir."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2, Ay'ın Karanlık Yüzü AI tarafından geliştirilen, toplamda 1 trilyon parametreye ve her ileri geçişte 32 milyar aktif parametreye sahip büyük ölçekli bir Karışık Uzman (MoE) dil modelidir. Gelişmiş araç kullanımı, muhakeme ve kod sentezi dahil olmak üzere ajan yetenekleri için optimize edilmiştir."
+  },
   "kimi-latest": {
     "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
   },
