@@ -1,6 +1,6 @@
 import { Form } from '@lobehub/ui';
 import type { FormItemProps } from '@lobehub/ui';
-import { Form as AntdForm, Switch, Grid } from 'antd';
+import { Form as AntdForm, Grid, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -132,7 +132,7 @@ const ControlsForm = memo(() => {
     },
     {
       children: <ThinkingBudgetSlider />,
-      label: t('extendParams.reasoningBudgetToken.title'),
+      label: t('extendParams.thinkingBudget.title'),
       layout: 'vertical',
       minWidth: 470,
       name: 'thinkingBudget',
