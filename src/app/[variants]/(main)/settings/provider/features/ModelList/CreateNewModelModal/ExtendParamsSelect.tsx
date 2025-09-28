@@ -133,7 +133,7 @@ const PreviewContent = ({
             {parameterTag ? <Tag color={'cyan'}>{parameterTag}</Tag> : null}
           </Flexbox>
           {desc ? (
-            <Typography.Text style={{ whiteSpace: 'normal' }} type={'secondary'}>
+            <Typography.Text style={{ fontSize: 12, whiteSpace: 'normal' }} type={'secondary'}>
               {desc}
             </Typography.Text>
           ) : null}
@@ -168,12 +168,32 @@ const ExtendParamsSelect = memo<ExtendParamsSelectProps>(({ value, onChange }) =
   );
 
   const descOverrides: Partial<Record<ExtendParamsType, ReactNode>> = {
-    disableContextCaching: (
-      <Trans i18nKey={'extendParams.disableContextCaching.desc'} ns={'chat'}>
-        单条对话生成成本最高可降低 90%，响应速度提升 4 倍。开启后将自动禁用历史记录限制
-      </Trans>
-    ),
-    enableReasoning: <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'} />,
+    disableContextCaching: (() => {
+      const original = tChat('extendParams.disableContextCaching.desc', { defaultValue: '' });
+
+      const sanitized = original.replace(/（<\d>.*?<\/\d>）/u, '');
+
+      return (
+        sanitized || (
+          <Trans i18nKey={'extendParams.disableContextCaching.desc'} ns={'chat'}>
+            单条对话生成成本最高可降低 90%，响应速度提升 4 倍。开启后将自动禁用历史消息数限制
+          </Trans>
+        )
+      );
+    })(),
+    enableReasoning: (() => {
+      const original = tChat('extendParams.enableReasoning.desc', { defaultValue: '' });
+
+      const sanitized = original.replace(/（<\d>.*?<\/\d>）/u, '');
+
+      return (
+        sanitized || (
+          <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'}>
+            基于 Claude Thinking 机制限制，开启后将自动禁用历史消息数限制
+          </Trans>
+        )
+      );
+    })(),
   };
 
   const previewFallback = String(
