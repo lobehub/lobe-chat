@@ -862,24 +862,6 @@ const openrouterChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 1_008_192,
-    description: 'Gemini 1.5 Flash 提供了优化后的多模态处理能力，适用多种复杂任务场景。',
-    displayName: 'Gemini 1.5 Flash',
-    id: 'google/gemini-flash-1.5',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
     contextWindowTokens: 1_048_576 + 8192,
     description:
       'Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。',
@@ -894,24 +876,6 @@ const openrouterChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-02-05',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 2_008_192,
-    description: 'Gemini 1.5 Pro 结合最新优化技术，带来更高效的多模态数据处理能力。',
-    displayName: 'Gemini 1.5 Pro',
-    id: 'google/gemini-pro-1.5',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
     type: 'chat',
   },
   {
@@ -981,20 +945,6 @@ const openrouterChatModels: AIChatModelCard[] = [
     description: 'Gemma 2 是Google轻量化的开源文本模型系列。',
     displayName: 'Gemma 2 9B (Free)',
     id: 'google/gemma-2-9b-it:free',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 8192,
-    description:
-      'Gemini 2.0 Flash Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。',
-    displayName: 'Gemini 2.0 Flash Experimental (Free)',
-    id: 'google/gemini-2.0-flash-exp:free',
-    maxOutput: 8192,
-    releasedAt: '2024-12-11',
     type: 'chat',
   },
 ];
