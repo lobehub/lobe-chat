@@ -110,6 +110,9 @@
   "ollama": {
     "description": "De modellen van Ollama bestrijken een breed scala aan gebieden, waaronder codegeneratie, wiskundige berekeningen, meertalige verwerking en interactieve dialogen, en voldoen aan de diverse behoeften van bedrijfs- en lokale implementaties."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud biedt officieel beheerde inferentiediensten, waarmee u direct toegang krijgt tot de Ollama-modelbibliotheek en ondersteuning voor OpenAI-compatibele interfaces."
+  },
   "openai": {
     "description": "OpenAI is 's werelds toonaangevende onderzoeksinstituut op het gebied van kunstmatige intelligentie, wiens ontwikkelde modellen zoals de GPT-serie de grenzen van natuurlijke taalverwerking verleggen. OpenAI streeft ernaar verschillende industrieën te transformeren door middel van innovatieve en efficiënte AI-oplossingen. Hun producten bieden opmerkelijke prestaties en kosteneffectiviteit, en worden op grote schaal gebruikt in onderzoek, commercie en innovatieve toepassingen."
   },

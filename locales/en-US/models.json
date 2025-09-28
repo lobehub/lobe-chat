@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "Kimi-K2 is a Mixture-of-Experts (MoE) foundation model with exceptional coding and agent capabilities, featuring 1T total parameters and 32B activated parameters. In benchmark evaluations across core categories — general knowledge reasoning, programming, mathematics, and agent tasks — the K2 model outperforms other leading open-source models."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 is a large-scale Mixture of Experts (MoE) language model developed by Moon's Dark Side AI, featuring a total of 1 trillion parameters and 32 billion activated parameters per forward pass. It is optimized for agent capabilities, including advanced tool usage, reasoning, and code synthesis."
+  },
   "kimi-latest": {
     "description": "The Kimi Smart Assistant product uses the latest Kimi large model, which may include features that are not yet stable. It supports image understanding and will automatically select the 8k/32k/128k model as the billing model based on the length of the request context."
   },

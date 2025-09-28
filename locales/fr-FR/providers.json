@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Les modèles proposés par Ollama couvrent largement des domaines tels que la génération de code, les calculs mathématiques, le traitement multilingue et les interactions conversationnelles, répondant à des besoins diversifiés pour le déploiement en entreprise et la localisation."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud offre un service d'inférence hébergé officiellement, permettant un accès prêt à l'emploi à la bibliothèque de modèles Ollama, avec prise en charge d'une interface compatible OpenAI."
+  },
   "openai": {
     "description": "OpenAI est un institut de recherche en intelligence artificielle de premier plan au monde, dont les modèles, tels que la série GPT, font progresser les frontières du traitement du langage naturel. OpenAI s'engage à transformer plusieurs secteurs grâce à des solutions IA innovantes et efficaces. Leurs produits offrent des performances et une rentabilité remarquables, largement utilisés dans la recherche, le commerce et les applications innovantes."
   },
