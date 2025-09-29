@@ -284,7 +284,7 @@
     "yaml": "^2.8.1",
     "zod": "^3.25.76",
     "zustand": "5.0.4",
-    "zustand-utils": "^2.1.0"
+    "zustand-utils": "^2.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
