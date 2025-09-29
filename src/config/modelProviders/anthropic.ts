@@ -30,6 +30,18 @@ const Anthropic: ModelProviderCard = {
     {
       contextWindowTokens: 200_000,
       description:
+        'Claude Sonnet 4.5 是 Anthropic 最新的高性能模型，在智能、速度和性能之间实现了最佳平衡，特别适合复杂的推理任务和高级分析。',
+      displayName: 'Claude Sonnet 4.5',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-sonnet-4-5-20250929',
+      maxOutput: 64_000,
+      releasedAt: '2025-09-29',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description:
         'Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
       displayName: 'Claude 3.7 Sonnet',
       enabled: true,
