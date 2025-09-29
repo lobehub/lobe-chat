@@ -70,20 +70,31 @@ const formatSupervisorTodoContent = (todos: SupervisorTodoItem[]): string => {
  * Extract mentioned agent IDs from message content
  * Looks for <mention id="agentId">Name</mention> tags
  */
-const extractMentionsFromContent = (content: string): string[] => {
+const extractMentionsFromContent = (
+  content: string,
+  groupMembers?: GroupMemberInfo[],
+): string[] => {
   const mentionRegex = /<mention id="([^"]+)"[^>]*>.*?<\/mention>/g;
-  const mentions: string[] = [];
+  const mentions = new Set<string>();
   let match;
 
   while ((match = mentionRegex.exec(content)) !== null) {
     const mentionId = match[1];
-    // Exclude ALL_MEMBERS as it's not a specific agent
-    if (mentionId && mentionId !== 'ALL_MEMBERS') {
-      mentions.push(mentionId);
+    if (!mentionId) continue;
+
+    if (mentionId === 'ALL_MEMBERS') {
+      if (groupMembers?.length) {
+        groupMembers.forEach((member) => {
+          if (member.id) mentions.add(member.id);
+        });
+      }
+      continue;
     }
+
+    mentions.add(mentionId);
   }
 
-  return [...new Set(mentions)]; // Remove duplicates
+  return [...mentions];
 };
 
 /**
@@ -279,8 +290,8 @@ export const chatAiGroupChat: StateCreator<
 
         // If supervisor is disabled, check for direct mentions and trigger them directly
         if (!groupConfig?.enableSupervisor) {
-          const mentionedAgentIds = extractMentionsFromContent(message);
           const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+          const mentionedAgentIds = extractMentionsFromContent(message, agents);
 
           if (mentionedAgentIds.length > 0) {
             // Validate that mentioned agents exist in the group
