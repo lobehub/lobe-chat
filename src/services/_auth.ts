@@ -3,6 +3,7 @@ import { ModelProvider } from 'model-bank';
 
 import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
+import { ApiKeyManager } from '@/server/modules/ModelRuntime/apiKeyManager';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
@@ -48,8 +49,12 @@ export const getProviderAuthPayload = (
     }
 
     case ModelProvider.Azure: {
+      // Use ApiKeyManager to pick a single key from comma-separated keys
+      const apiKeyManager = new ApiKeyManager();
+      const selectedApiKey = apiKeyManager.pick(keyVaults.apiKey || '');
+      
       return {
-        apiKey: keyVaults.apiKey,
+        apiKey: selectedApiKey,
 
         apiVersion: keyVaults.apiVersion,
         /** @deprecated */
@@ -63,8 +68,12 @@ export const getProviderAuthPayload = (
     }
 
     case ModelProvider.Cloudflare: {
+      // Use ApiKeyManager to pick a single key from comma-separated keys
+      const apiKeyManager = new ApiKeyManager();
+      const selectedApiKey = apiKeyManager.pick(keyVaults?.apiKey || '');
+      
       return {
-        apiKey: keyVaults?.apiKey,
+        apiKey: selectedApiKey,
 
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
         /** @deprecated */
@@ -73,7 +82,11 @@ export const getProviderAuthPayload = (
     }
 
     default: {
-      return { apiKey: keyVaults?.apiKey, baseURL: keyVaults?.baseURL };
+      // Use ApiKeyManager to pick a single key from comma-separated keys
+      const apiKeyManager = new ApiKeyManager();
+      const selectedApiKey = apiKeyManager.pick(keyVaults?.apiKey || '');
+      
+      return { apiKey: selectedApiKey, baseURL: keyVaults?.baseURL };
     }
   }
 };
