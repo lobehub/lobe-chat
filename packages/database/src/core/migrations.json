@@ -626,5 +626,11 @@
     "bps": true,
     "folderMillis": 1758825944181,
     "hash": "1ba9b1f74ea13348da98d6fcdad7867ab4316ed565bf75d84d160c526cdac14b"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN \"virtual\" boolean DEFAULT false;"],
+    "bps": true,
+    "folderMillis": 1759116400580,
+    "hash": "2a871f2be87f008c899c9b789d4f38421360af0d5e1678c7715afcad3b3630e9"
   }
 ]
