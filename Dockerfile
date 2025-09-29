@@ -1,5 +1,5 @@
 ## Set global build ENV
-ARG NODEJS_VERSION="22"
+ARG NODEJS_VERSION="24"
 
 ## Base image for all building stages
 FROM node:${NODEJS_VERSION}-slim AS base
@@ -126,7 +126,7 @@ ENV NODE_ENV="production" \
     NODE_OPTIONS="--dns-result-order=ipv4first --use-openssl-ca" \
     NODE_EXTRA_CA_CERTS="" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
-    SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
+    SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 
 # Make the middleware rewrite through local as default
 # refs: https://github.com/lobehub/lobe-chat/issues/5876

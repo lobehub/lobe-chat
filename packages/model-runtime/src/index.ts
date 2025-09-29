@@ -19,6 +19,7 @@ export { LobeMoonshotAI } from './providers/moonshot';
 export { LobeNebiusAI } from './providers/nebius';
 export { LobeNewAPIAI } from './providers/newapi';
 export { LobeOllamaAI } from './providers/ollama';
+export { LobeOllamaCloudAI } from './providers/ollamacloud';
 export { LobeOpenAI } from './providers/openai';
 export { LobeOpenRouterAI } from './providers/openrouter';
 export { LobePerplexityAI } from './providers/perplexity';

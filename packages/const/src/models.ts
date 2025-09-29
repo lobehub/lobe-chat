@@ -41,6 +41,9 @@ export const responsesAPIModels = new Set([
  * models support context caching
  */
 export const contextCachingModels = new Set([
+  'claude-sonnet-4-5-latest',
+  'claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   'claude-opus-4-latest',
   'claude-opus-4-20250514',
   'claude-sonnet-4-latest',
@@ -59,6 +62,9 @@ export const thinkingWithToolClaudeModels = new Set([
   'claude-opus-4-20250514',
   'claude-sonnet-4-latest',
   'claude-sonnet-4-20250514',
+  'claude-sonnet-4-5-latest',
+  'claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   'claude-3-7-sonnet-latest',
   'claude-3-7-sonnet-20250219',
 ]);

@@ -6,15 +6,6 @@ import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra/selectors
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { modelConfigSelectors, modelProviderSelectors } from '@/store/user/selectors';
 
-export const isCanUseFC = (model: string, provider: string): boolean => {
-  // TODO: remove isDeprecatedEdition condition in V2.0
-  if (isDeprecatedEdition) {
-    return modelProviderSelectors.isModelEnabledFunctionCall(model)(getUserStoreState());
-  }
-
-  return aiModelSelectors.isModelSupportToolUse(model, provider)(getAiInfraStoreState()) || false;
-};
-
 export const isCanUseVision = (model: string, provider: string): boolean => {
   // TODO: remove isDeprecatedEdition condition in V2.0
   if (isDeprecatedEdition) {

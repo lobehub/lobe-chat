@@ -10,7 +10,6 @@ const ollamaChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
     displayName: 'DeepSeek V3.1',
-    enabled: true,
     id: 'deepseek-v3.1:671b',
     type: 'chat',
   },
@@ -23,7 +22,6 @@ const ollamaChatModels: AIChatModelCard[] = [
     description:
       'GPT-OSS 20B 是 OpenAI 发布的开源大语言模型，采用 MXFP4 量化技术，适合在高端消费级GPU或Apple Silicon Mac上运行。该模型在对话生成、代码编写和推理任务方面表现出色，支持函数调用和工具使用。',
     displayName: 'GPT-OSS 20B',
-    enabled: true,
     id: 'gpt-oss:20b',
     releasedAt: '2025-08-05',
     type: 'chat',

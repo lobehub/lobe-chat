@@ -23,6 +23,7 @@ import {
   MoonshotProviderCard,
   NovitaProviderCard,
   NvidiaProviderCard,
+  OllamaCloudProviderCard,
   OpenRouterProviderCard,
   PPIOProviderCard,
   PerplexityProviderCard,
@@ -116,6 +117,7 @@ export const useProviderList = (): ProviderItem[] => {
       InfiniAIProviderCard,
       AkashChatProviderCard,
       Ai302ProviderCard,
+      OllamaCloudProviderCard,
     ],
     [
       AzureProvider,

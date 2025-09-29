@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Die von Ollama angebotenen Modelle decken ein breites Spektrum ab, darunter Code-Generierung, mathematische Berechnungen, mehrsprachige Verarbeitung und dialogbasierte Interaktionen, und unterstützen die vielfältigen Anforderungen an unternehmensgerechte und lokal angepasste Bereitstellungen."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud bietet offiziell gehostete Inferenzdienste, mit sofortigem Zugriff auf die Ollama-Modellbibliothek und Unterstützung für OpenAI-kompatible Schnittstellen."
+  },
   "openai": {
     "description": "OpenAI ist eine weltweit führende Forschungsinstitution im Bereich der künstlichen Intelligenz, deren entwickelte Modelle wie die GPT-Serie die Grenzen der Verarbeitung natürlicher Sprache vorantreiben. OpenAI setzt sich dafür ein, durch innovative und effiziente KI-Lösungen verschiedene Branchen zu transformieren. Ihre Produkte zeichnen sich durch herausragende Leistung und Wirtschaftlichkeit aus und finden breite Anwendung in Forschung, Wirtschaft und innovativen Anwendungen."
   },

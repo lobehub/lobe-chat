@@ -1,7 +1,6 @@
-import { LobeAgentConfig } from '../agent';
+import { AgentItem, LobeAgentConfig } from '../agent';
+import { NewChatGroupAgent } from '../chatGroup';
 import { MetaData } from '../meta';
-
-export type SessionGroupId = 'default' | 'pinned' | string;
 
 export enum LobeSessionType {
   Agent = 'agent',
@@ -9,18 +8,38 @@ export enum LobeSessionType {
 }
 
 /**
- * Lobe Agent
+ * Extended group member that includes both relation data and agent details
+ */
+export type GroupMemberWithAgent = NewChatGroupAgent & AgentItem;
+
+/**
+ * Lobe Agent Session
  */
 export interface LobeAgentSession {
   config: LobeAgentConfig;
   createdAt: Date;
-  group?: SessionGroupId;
+  group?: string;
   id: string;
   meta: MetaData;
   model: string;
   pinned?: boolean;
   tags?: string[];
   type: LobeSessionType.Agent;
+  updatedAt: Date;
+}
+
+/**
+ * Group chat (not confuse with session group)
+ */
+export interface LobeGroupSession {
+  createdAt: Date;
+  group?: string;
+  id: string; // Start with 'cg_'
+  members?: GroupMemberWithAgent[];
+  meta: MetaData;
+  pinned?: boolean;
+  tags?: string[];
+  type: LobeSessionType.Group;
   updatedAt: Date;
 }
 
