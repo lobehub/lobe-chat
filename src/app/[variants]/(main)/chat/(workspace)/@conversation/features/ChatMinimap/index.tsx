@@ -4,7 +4,7 @@ import { Icon } from '@lobehub/ui';
 import { Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { memo, useCallback, useMemo, useSyncExternalStore } from 'react';
+import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import {
@@ -16,8 +16,8 @@ import {
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-const MIN_WIDTH = 8;
-const MAX_WIDTH = 24;
+const MIN_WIDTH = 12;
+const MAX_WIDTH = 28;
 const MAX_CONTENT_LENGTH = 320;
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -32,8 +32,9 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
     padding: 0;
     width: 28px;
-
+    opacity: 0;
     transform: translateX(8px);
+    transition: opacity 0.2s ease;
 
     &:hover {
       color: ${token.colorText};
@@ -44,11 +45,14 @@ const useStyles = createStyles(({ css, token }) => ({
       outline: none;
     }
   `,
+  arrowVisible: css`
+    opacity: 1;
+  `,
   container: css`
     pointer-events: none;
     inset-block-start: 16px;
     inset-block-end: 120px;
-    inset-inline-end: 9px;
+    inset-inline-end: 16px;
     position: absolute;
     width: 32px;
     z-index: 1;
@@ -101,6 +105,10 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: space-between;
     margin: 0 auto;
     pointer-events: auto;
+
+    &:hover .arrow {
+      opacity: 1;
+    }
   `,
 }));
 
@@ -123,6 +131,7 @@ const getPreviewText = (content: string | undefined) => {
 
 const ChatMinimap = () => {
   const { styles, cx } = useStyles();
+  const [isHovered, setIsHovered] = useState(false);
   const virtuosoRef = useSyncExternalStore(
     subscribeVirtuosoGlobalRef,
     getVirtuosoGlobalRef,
@@ -198,11 +207,16 @@ const ChatMinimap = () => {
 
   return (
     <Flexbox align={'center'} className={styles.container} justify={'center'}>
-      <Flexbox className={styles.rail} role={'group'}>
+      <Flexbox
+        className={styles.rail}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        role={'group'}
+      >
         <Tooltip mouseEnterDelay={0.1} placement={'left'} title={'Previous message'}>
           <button
             aria-label={'Jump to previous message'}
-            className={styles.arrow}
+            className={cx(styles.arrow, isHovered && styles.arrowVisible)}
             onClick={() => handleStep('prev')}
             type={'button'}
           >
@@ -234,7 +248,7 @@ const ChatMinimap = () => {
         <Tooltip mouseEnterDelay={0.1} placement={'left'} title={'Next message'}>
           <button
             aria-label={'Jump to next message'}
-            className={styles.arrow}
+            className={cx(styles.arrow, isHovered && styles.arrowVisible)}
             onClick={() => handleStep('next')}
             type={'button'}
           >
