@@ -5,10 +5,13 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "dependencies": {
     "node-fetch": "^3.3.2",
     "request-filtering-agent": "^3"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
