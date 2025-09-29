@@ -628,9 +628,9 @@
     "hash": "1ba9b1f74ea13348da98d6fcdad7867ab4316ed565bf75d84d160c526cdac14b"
   },
   {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN \"virtual\" boolean DEFAULT false;"],
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"virtual\" boolean DEFAULT false;"],
     "bps": true,
     "folderMillis": 1759116400580,
-    "hash": "2a871f2be87f008c899c9b789d4f38421360af0d5e1678c7715afcad3b3630e9"
+    "hash": "433ddae88e785f2db734e49a4c115eee93e60afe389f7919d66e5ba9aa159a37"
   }
 ]
