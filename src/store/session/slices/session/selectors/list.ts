@@ -46,6 +46,9 @@ const isCurrentSessionGroupSession = (s: SessionStore) => {
 
 const currentGroupAgents = (s: SessionStore) => {
   const session = currentSession(s) as LobeGroupSession;
+
+  if (session.type !== 'group') return [];
+
   return session.members || [];
 };
 

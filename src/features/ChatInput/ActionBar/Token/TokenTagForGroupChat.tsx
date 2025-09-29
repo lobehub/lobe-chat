@@ -72,6 +72,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
     return Array.from(pluginSet);
   }, [groupAgents]);
 
+  //@ts-ignore
   const pluginIds = allGroupPlugins.map((plugin) => plugin.id);
 
   const toolsString = useToolStore((s) => {

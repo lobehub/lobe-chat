@@ -88,6 +88,7 @@ export default {
       triggerOrchestrator: '开始群聊',
     },
     tabs: {
+      host: '主持人',
       members: '成员',
       role: '设定',
     },
