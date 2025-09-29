@@ -1,5 +1,5 @@
 import { Input, Toast } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
@@ -25,12 +25,16 @@ export default function SideBar() {
   const { isAuthenticated } = useAuth();
   const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
-  const filteredSessions =
-    sessions?.filter(
+  const filteredSessions = useMemo(() => {
+    if (!sessions) return [];
+    const keyword = searchText.toLowerCase();
+
+    return sessions.filter(
       (session) =>
-        session.meta.title?.toLowerCase().includes(searchText.toLowerCase()) ||
-        session.meta.description?.toLowerCase().includes(searchText.toLowerCase()),
-    ) || [];
+        session.meta.title?.toLowerCase().includes(keyword) ||
+        session.meta.description?.toLowerCase().includes(keyword),
+    );
+  }, [searchText, sessions]);
 
   if (isLoading) {
     return (

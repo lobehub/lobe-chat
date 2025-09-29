@@ -128,6 +128,8 @@ const ProviderList = () => {
   // FlashList的keyExtractor
   const keyExtractor = useCallback((item: ProviderFlashListItem) => item.id, []);
 
+  const renderSeparator = useCallback(() => <View style={styles.separator} />, [styles.separator]);
+
   // Loading状态
   if (isLoading) {
     return (
@@ -152,7 +154,7 @@ const ProviderList = () => {
     <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
       <View style={styles.container}>
         <FlashList
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ItemSeparatorComponent={renderSeparator}
           data={flashListData}
           drawDistance={400}
           getItemType={(item) => item.type}
