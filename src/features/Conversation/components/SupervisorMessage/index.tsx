@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { LucideRefreshCw } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +52,7 @@ export interface SupervisorMessageProps {
 
 const SupervisorMessage = memo<SupervisorMessageProps>(({ message }) => {
   const { t } = useTranslation('chat');
+  const theme = useTheme();
   const triggerSupervisorDecision = useChatStore((s) => s.internal_triggerSupervisorDecision);
 
   // Try to parse the message content as JSON for todo data
@@ -88,16 +90,14 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ message }) => {
     <Flexbox
       gap={8}
       style={{
-        background: '#fff',
-        border: '1px solid rgba(0,0,0,0.08)',
+        background: theme.colorBgContainer,
+        border: `1px solid ${theme.colorBorderSecondary}`,
         borderRadius: 8,
+        marginBottom: 12,
+        maxWidth: '400px',
         padding: 12,
-        width: '100%',
       }}
     >
-      <div style={{ fontWeight: 600, lineHeight: 1.4 }}>
-        {t('groupSidebar.members.orchestrator')}
-      </div>
       <Text>{errorText}</Text>
       {message.role === 'supervisor' && message.groupId && (
         <Button icon={LucideRefreshCw} onClick={handleRetry} type={'primary'}>

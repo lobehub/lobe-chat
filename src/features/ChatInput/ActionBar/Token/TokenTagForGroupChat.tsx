@@ -7,6 +7,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { createChatToolsEngine } from '@/helpers/toolEngineering';
 import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
@@ -71,12 +72,19 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
     return Array.from(pluginSet);
   }, [groupAgents]);
 
+  const pluginIds = allGroupPlugins.map((plugin) => plugin.id);
+
   const toolsString = useToolStore((s) => {
-    const pluginSystemRoles = toolSelectors.enabledSystemRoles(allGroupPlugins)(s);
-    const schemaNumber = toolSelectors
-      .enabledSchema(allGroupPlugins)(s)
-      .map((i) => JSON.stringify(i))
-      .join('');
+    const toolsEngine = createChatToolsEngine({ model, provider });
+
+    const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model,
+      provider,
+      toolIds: pluginIds,
+    });
+    const schemaNumber = tools?.map((i) => JSON.stringify(i)).join('') || '';
+
+    const pluginSystemRoles = toolSelectors.enabledSystemRoles(enabledToolIds)(s);
 
     return pluginSystemRoles + schemaNumber;
   });
@@ -152,8 +160,8 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
           .filter((agent) => agent.id)
           .map((agent) => ({ id: agent.id!, title: agent.title })),
         conversationHistory,
-        todoList: supervisorTodos,
         systemPrompt: groupConfig.systemPrompt,
+        todoList: supervisorTodos,
         userName: realUserName,
       });
     } catch (error) {
