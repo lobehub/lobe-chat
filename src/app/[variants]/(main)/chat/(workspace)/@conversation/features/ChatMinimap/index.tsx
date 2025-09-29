@@ -5,6 +5,7 @@ import { Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import {
@@ -16,28 +17,31 @@ import {
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-const MIN_WIDTH = 12;
-const MAX_WIDTH = 28;
+const MIN_WIDTH = 16;
+const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
+const MIN_MESSAGES = 6;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
     align-items: center;
     border: none;
+    border-radius: 6px;
     background: none;
     color: ${token.colorTextTertiary};
     cursor: pointer;
     display: flex;
-    height: 28px;
+    height: 24px;
     justify-content: center;
     padding: 0;
-    width: 28px;
+    width: 24px;
     opacity: 0;
-    transform: translateX(8px);
+    transform: translateX(4px);
     transition: opacity 0.2s ease;
 
     &:hover {
       color: ${token.colorText};
+      background: ${token.colorFill};
     }
 
     &:focus-visible {
@@ -65,7 +69,7 @@ const useStyles = createStyles(({ css, token }) => ({
     flex-shrink: 0;
     height: 12px;
     min-width: ${MIN_WIDTH}px;
-    padding: 4px 2px;
+    padding: 4px 4px;
     transition:
       transform 0.2s ease,
       background-color 0.2s ease,
@@ -130,6 +134,7 @@ const getPreviewText = (content: string | undefined) => {
 };
 
 const ChatMinimap = () => {
+  const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
   const [isHovered, setIsHovered] = useState(false);
   const virtuosoRef = useSyncExternalStore(
@@ -142,7 +147,9 @@ const ChatMinimap = () => {
     getVirtuosoViewportRange,
     () => null,
   );
-  const messages = useChatStore(chatSelectors.mainDisplayChats);
+  const messages = useChatStore(chatSelectors.mainDisplayChats).filter(
+    (message) => message.role === 'user' || message.role === 'assistant',
+  );
 
   const theme = useTheme();
 
@@ -159,6 +166,8 @@ const ChatMinimap = () => {
 
   const activeIndex = useMemo(() => {
     if (!viewportRange) return null;
+
+    console.log('viewportRange', viewportRange);
 
     const index = Math.min(viewportRange.endIndex, Math.max(messages.length - 1, 0));
 
@@ -203,7 +212,7 @@ const ChatMinimap = () => {
     [activeIndex, messages.length, virtuosoRef],
   );
 
-  if (messages.length <= 4) return null;
+  if (messages.length <= MIN_MESSAGES) return null;
 
   return (
     <Flexbox align={'center'} className={styles.container} justify={'center'}>
@@ -213,9 +222,9 @@ const ChatMinimap = () => {
         onMouseLeave={() => setIsHovered(false)}
         role={'group'}
       >
-        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={'Previous message'}>
+        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={t('minimap.previousMessage')}>
           <button
-            aria-label={'Jump to previous message'}
+            aria-label={t('minimap.previousMessage')}
             className={cx(styles.arrow, isHovered && styles.arrowVisible)}
             onClick={() => handleStep('prev')}
             type={'button'}
@@ -245,9 +254,9 @@ const ChatMinimap = () => {
             </Tooltip>
           );
         })}
-        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={'Next message'}>
+        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={t('minimap.nextMessage')}>
           <button
-            aria-label={'Jump to next message'}
+            aria-label={t('minimap.nextMessageAriaLabel')}
             className={cx(styles.arrow, isHovered && styles.arrowVisible)}
             onClick={() => handleStep('next')}
             type={'button'}

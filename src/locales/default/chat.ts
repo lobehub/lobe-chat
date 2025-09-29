@@ -154,6 +154,12 @@ export default {
       total: '总计消耗',
     },
   },
+  minimap: {
+    nextMessage: '跳转至下一条消息',
+    nextMessageAriaLabel: '跳转至下一条消息',
+    previousMessage: '跳转至上一条消息',
+    previousMessageAriaLabel: '跳转至上一条消息',
+  },
   newAgent: '新建助手',
   pin: '置顶',
   pinOff: '取消置顶',
