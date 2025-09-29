@@ -293,9 +293,15 @@ export const chatAiGroupChat: StateCreator<
           const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
           const mentionedAgentIds = extractMentionsFromContent(message, agents);
 
-          if (mentionedAgentIds.length > 0) {
+          const candidateAgentIds = new Set(mentionedAgentIds);
+
+          if (targetMemberId && agents?.some((agent) => agent.id === targetMemberId)) {
+            candidateAgentIds.add(targetMemberId);
+          }
+
+          if (candidateAgentIds.size > 0) {
             // Validate that mentioned agents exist in the group
-            const validMentionedAgents = mentionedAgentIds.filter((agentId) =>
+            const validMentionedAgents = [...candidateAgentIds].filter((agentId) =>
               agents?.some((agent) => agent.id === agentId),
             );
 
@@ -306,7 +312,10 @@ export const chatAiGroupChat: StateCreator<
               const { internal_executeAgentResponses } = get();
               const decisions = validMentionedAgents.map((agentId) => ({
                 id: agentId,
-                target: targetMemberId || undefined, // Pass through the target if it's a DM
+                target:
+                  targetMemberId && agentId === targetMemberId
+                    ? 'user'
+                    : undefined,
               }));
 
               await internal_executeAgentResponses(groupId, decisions);
@@ -314,7 +323,13 @@ export const chatAiGroupChat: StateCreator<
               console.log('Supervisor disabled, mentioned agents not found in group');
             }
           } else {
-            console.log('Supervisor disabled and no mentions found, no agent responses triggered');
+            if (targetMemberId) {
+              console.log(
+                'Supervisor disabled and DM target not found in group, no agent responses triggered',
+              );
+            } else {
+              console.log('Supervisor disabled and no mentions found, no agent responses triggered');
+            }
           }
         } else {
           internal_triggerSupervisorDecisionDebounced(groupId);
