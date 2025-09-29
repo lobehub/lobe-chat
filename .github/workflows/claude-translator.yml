@@ -41,68 +41,69 @@ jobs:
           # Warning: Permissions should have been controlled by workflow permission.
           # Now `contents: read` is safe for files, but we could make a fine-grained token to control it.
           # See: https://github.com/anthropics/claude-code-action/blob/main/docs/security.md
-          github_token: ${{ secrets.TOKEN_GITHUB_WRITE }}
+          github_token: ${{ secrets.GH_TOKEN }}
           allowed_non_write_users: "*"
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: "--allowed-tools Bash(gh issue:*),Bash(gh api:repos/*/issues:*),Bash(gh api:repos/*/pulls/*/reviews/*),Bash(gh api:repos/*/pulls/comments/*)"
           prompt: |
-            你是一个多语言翻译助手。你需要响应 GitHub Webhooks 中的以下四种事件：
+            You are a multilingual translation assistant. You need to respond to the following four types of GitHub Webhook events:
 
             - issues
             - issue_comment
             - pull_request_review
             - pull_request_review_comment
 
-            请完成以下任务：
+            Please complete the following tasks:
 
-            1. 获取当前事件的完整信息。
+            1. Retrieve complete information for the current event.
 
-               - 如果当前事件是 issues，就获取该 issues 的信息。
-               - 如果当前事件是 issue_comment，就获取该 comment 的信息。
-               - 如果当前事件是 pull_request_review，就获取该 review 的信息。
-               - 如果当前事件是 pull_request_review_comment，就获取该 comment 的信息。
+               - If the current event is 'issues', get the issue information.
+               - If the current event is 'issue_comment', get the comment information.
+               - If the current event is 'pull_request_review', get the review information.
+               - If the current event is 'pull_request_review_comment', get the comment information.
 
-            2. 智能检测内容。
+            2. Intelligently detect content.
 
-                - 如果获取到的信息是已经遵循格式要求翻译过的内容，则检查翻译内容和原始内容是否匹配。若不匹配，则重新翻译一次令其匹配，并遵循格式要求；
-                - 如果获取到的信息是未翻译过的内容，检查其内容语言。若不是英文，则翻译成英文；
-                - 如果获取到的信息是部分翻译为英文的内容，则将其翻译为英文；
-                - 如果获取到的信息包含了对已翻译内容的引用，则将引用内容清理为仅含英文的内容。引用的内容不能够包含"This xxx was translated by Claude"和"Original Content`等内容。
-                - 如果获取到的信息包含了其他类型的引用，即对非 Claude 翻译的内容的引用，则直接照原样引用，不进行翻译。
-                - 如果获取到的信息是通过邮件回复的内容，则在翻译时应当将邮件内容的引用放到最后。在原始内容和翻译内容中只需要回复的内容本身，不要包含对邮件内容的引用。
-                - 如果获取到的信息本身不需要任何处理，则跳过任务。
+                - If the retrieved information is already translated content following the format requirements, check if the translation matches the original content. If not, retranslate to match and follow the format requirements.
+                - If the retrieved information is untranslated content, check its language. If not in English, translate to English.
+                - If the retrieved information is partially translated to English, translate it completely to English.
+                - If the retrieved information contains references to already translated content, clean the referenced content to contain only English. Referenced content should not include "This xxx was translated by Claude" and "Original Content" etc.
+                - If the retrieved information contains other types of references (i.e., references to non-Claude translated content), keep them as-is without translation.
+                - If the retrieved information is email reply content, place email content references at the end during translation. Include only the reply content itself in both original and translated content, without email content references.
+                - If the retrieved information doesn't need any processing, skip the task.
 
-            3. 格式要求：
+            3. Format requirements:
 
-               - 标题：英文翻译（如果非英文）
-               - 内容格式：
+               - Title: English translation (if non-English)
+               - Content format:
                  > [!NOTE]
                  > This issue/comment/review was translated by Claude.
 
-                 [翻译内容]
+                 [Translated content]
 
                  ---
                  <details>
                  <summary>Original Content</summary>
-                 [原始内容]
+                 [Original content]
                  </details>
 
-            4. 使用gh工具更新：
+            4. Update using gh tool:
 
-               - 根据环境信息中的Event类型选择正确的命令：
-                 - 如果 Event 是 'issues': gh issue edit [ISSUE_NUMBER] --title "[英文标题]" --body "[翻译内容 + 原始内容]"
-                 - 如果 Event 是 'issue_comment': gh api -X PATCH /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }} -f body="[翻译内容 + 原始内容]"
-                 - 如果 Event 是 'pull_request_review': gh api -X PUT /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews/${{ github.event.review.id }} -f body="[翻译内容]"
-                 - 如果 Event 是 'pull_request_review_comment': gh api -X PATCH /repos/${{ github.repository }}/pulls/comments/${{ github.event.comment.id }} -f body="[翻译内容 + 原始内容]"
+               - Choose the correct command based on the Event type in environment information:
+                 - If Event is 'issues': gh issue edit [ISSUE_NUMBER] --title "[English title]" --body "[Translated content + Original content]"
+                 - If Event is 'issue_comment': gh api -X PATCH /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }} -f body="[Translated content + Original content]"
+                 - If Event is 'pull_request_review': gh api -X PUT /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews/${{ github.event.review.id }} -f body="[Translated content]"
+                 - If Event is 'pull_request_review_comment': gh api -X PATCH /repos/${{ github.repository }}/pulls/comments/${{ github.event.comment.id }} -f body="[Translated content + Original content]"
 
-            环境信息：
+            <environment_context>
             - Event: ${{ github.event_name }}
             - Issue Number: ${{ github.event.issue.number }}
             - Repository: ${{ github.repository }}
             - (Review) Comment ID: ${{ github.event.comment.id || 'N/A' }}
             - Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}
             - Review ID: ${{ github.event.review.id || 'N/A' }}
+            </environment_context>
 
 
-            使用以下命令获取完整信息：
+            Use the following command to get complete information:
             gh issue view ${{ github.event.issue.number }} --json title,body,comments
