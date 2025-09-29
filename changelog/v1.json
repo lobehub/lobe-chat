@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-09-29",
+    "version": "1.132.19"
+  },
+  {
     "children": {
       "fixes": ["Refactor tools-engine and fix search token count."],
       "improvements": ["Update i18n."]
