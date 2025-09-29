@@ -13,8 +13,8 @@ const ChatHydration = memo(() => {
   // two-way bindings the topic params to chat store
   const [topic, setTopic] = useQueryState('topic', { history: 'replace', throttleMs: 500 });
   const [thread, setThread] = useQueryState('thread', { history: 'replace', throttleMs: 500 });
-  useStoreUpdater('activeTopicId', topic);
-  useStoreUpdater('activeThreadId', thread);
+  useStoreUpdater('activeTopicId', topic!);
+  useStoreUpdater('activeThreadId', thread!);
 
   useLayoutEffect(() => {
     const unsubscribeTopic = useChatStore.subscribe(
