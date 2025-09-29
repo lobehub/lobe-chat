@@ -13,7 +13,10 @@ export class ClientApiKeyManager {
     let store = this._cache.get(apiKeys);
 
     if (!store) {
-      const keys = apiKeys.split(',').filter((_) => !!_.trim());
+      const keys = apiKeys
+        .split(',')
+        .map((_) => _.trim())
+        .filter((_) => !!_);
 
       store = { index: 0, keyLen: keys.length, keys } as KeyStore;
       this._cache.set(apiKeys, store);
