@@ -2,8 +2,7 @@ name: "Lock Stale Issues"
 
 on:
   schedule:
-    # 8am Pacific = 1pm UTC (2pm UTC during DST)
-    - cron: "0 14 * * *"
+    - cron: "0 1 * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,7 +17,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Lock closed issues after 7 days of inactivity
         uses: actions/github-script@v7
         with:
