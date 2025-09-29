@@ -252,6 +252,13 @@
       "when": 1759116400580,
       "tag": "0035_add_virtual",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1759142612862,
+      "tag": "0036_sticky_spiral",
+      "breakpoints": true
     }
   ],
   "version": "6"
