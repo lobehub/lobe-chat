@@ -1,6 +1,8 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { SparkAIStream, transformSparkResponseToStream } from '../../core/streams';
-import { ChatStreamPayload, ModelProvider } from '../../types';
+import { ChatStreamPayload } from '../../types';
 
 export const LobeSparkAI = createOpenAICompatibleRuntime({
   baseURL: 'https://spark-api-open.xf-yun.com/v1',

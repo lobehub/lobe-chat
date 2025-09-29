@@ -42,7 +42,7 @@ describe('useOpenChatSettings', () => {
     vi.mocked(useSessionStore).mockReturnValue(INBOX_SESSION_ID);
     const { result } = renderHook(() => useOpenChatSettings());
 
-    expect(result.current()).toBe('/settings/agent'); // Assuming openSettings returns a function
+    expect(result.current()).toBe('/settings?active=agent'); // Assuming openSettings returns a function
   });
 
   it('should handle mobile route for chat settings', () => {

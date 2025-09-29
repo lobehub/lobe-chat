@@ -1,4 +1,5 @@
 import debug from 'debug';
+import { ModelProvider } from 'model-bank';
 import OpenAI, { AzureOpenAI } from 'openai';
 import type { Stream } from 'openai/streaming';
 
@@ -12,7 +13,6 @@ import {
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
-  ModelProvider,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';

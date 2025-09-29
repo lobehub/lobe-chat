@@ -1,5 +1,5 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { ModelProviderCard, UserModelProviderConfig } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import * as ProviderCards from '@/config/modelProviders';
 

@@ -114,6 +114,7 @@
       "reasoning": "Bu model derin düşünmeyi destekler",
       "search": "Bu model çevrimiçi aramayı destekler",
       "tokens": "Bu model tek bir oturumda en fazla {{tokens}} Token destekler",
+      "video": "Bu model video tanımayı destekler",
       "vision": "Bu model görüntü tanımıyı destekler"
     },
     "removed": "Bu model listeden çıkarıldı, seçiminizi kaldırırsanız otomatik olarak kaldırılacaktır"

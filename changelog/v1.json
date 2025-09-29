@@ -1,5 +1,110 @@
 [
   {
+    "children": {},
+    "date": "2025-09-29",
+    "version": "1.132.19"
+  },
+  {
+    "children": {
+      "fixes": ["Refactor tools-engine and fix search token count."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-28",
+    "version": "1.132.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix input empty group name."]
+    },
+    "date": "2025-09-27",
+    "version": "1.132.17"
+  },
+  {
+    "children": {
+      "fixes": ["Resolve qwen-image-edit imageUrls conversion issue."]
+    },
+    "date": "2025-09-26",
+    "version": "1.132.16"
+  },
+  {
+    "children": {
+      "fixes": ["Add proxyUrl configuration for NEW API provider."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.14"
+  },
+  {
+    "children": {},
+    "date": "2025-09-25",
+    "version": "1.132.13"
+  },
+  {
+    "children": {
+      "fixes": ["Slove setting proxy page with style error."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.12"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Enhanced Nvidia NIM chat experience, OpenAI models in AiHubMix use Responses API."
+      ]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.11"
+  },
+  {
+    "children": {
+      "fixes": ["Macos desktop sign."]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.10"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.9"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor all @/types in model runtime to @lobechat/types."]
+    },
+    "date": "2025-09-23",
+    "version": "1.132.8"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.7"
+  },
+  {
+    "children": {},
+    "date": "2025-09-23",
+    "version": "1.132.6"
+  },
+  {
+    "children": {
+      "improvements": ["Move the ModelProvider to model-bank."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.5"
+  },
+  {
+    "children": {
+      "improvements": ["Enable thinkingBudget control for Vertex Gemini 2.5 models, update i18n."]
+    },
+    "date": "2025-09-22",
+    "version": "1.132.4"
+  },
+  {
     "children": {
       "improvements": ["Added AUTH_MICROSOFT_ENTRA_ID_BASE_URL routing."]
     },

@@ -1,13 +1,18 @@
 /**
  * @see https://github.com/lobehub/lobe-chat/discussions/6563
  */
+import type { ChatModelCard } from '@lobechat/types';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import type { ChatModelCard } from '@/types/llm';
-
 import { LobeOpenAI } from '../../providers/openai';
-import { CreateImagePayload, CreateImageResponse, ILobeAgentRuntimeErrorType } from '../../types';
+import {
+  CreateImagePayload,
+  CreateImageResponse,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
+  ILobeAgentRuntimeErrorType,
+} from '../../types';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
@@ -197,6 +202,11 @@ export const createRouterRuntime = ({
 
         throw e;
       }
+    }
+
+    async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+      const runtime = await this.getRuntimeByModel(payload.model);
+      return runtime.generateObject!(payload, options);
     }
 
     async createImage(payload: CreateImagePayload) {

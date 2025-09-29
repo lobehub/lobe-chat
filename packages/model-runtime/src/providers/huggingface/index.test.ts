@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { ModelProvider } from '@lobechat/model-runtime';
+import { ModelProvider } from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeHuggingFaceAI } from './index';

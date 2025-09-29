@@ -1,6 +1,5 @@
+import type { TracePayload } from '@lobechat/types';
 import { ClientOptions } from 'openai';
-
-import type { TracePayload } from '@/types/index';
 
 import { LobeBedrockAIParams } from '../providers/bedrock';
 import { LobeCloudflareParams } from '../providers/cloudflare';
@@ -11,6 +10,7 @@ import {
   ChatStreamPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  GenerateObjectPayload,
   ModelRequestOptions,
   PullModelParams,
   TextToImagePayload,
@@ -65,6 +65,10 @@ export class ModelRuntime {
     return this._runtime.chat!(payload, options);
   }
 
+  async generateObject(payload: GenerateObjectPayload) {
+    return this._runtime.generateObject!(payload);
+  }
+
   async textToImage(payload: TextToImagePayload) {
     return this._runtime.textToImage?.(payload);
   }
@@ -103,7 +107,7 @@ export class ModelRuntime {
    * - `src/app/api/chat/agentRuntime.ts: initAgentRuntimeWithUserPayload` on server
    * - `src/services/chat.ts: initializeWithClientStore` on client
    */
-  static async initializeWithProvider(
+  static initializeWithProvider(
     provider: string,
     params: Partial<
       ClientOptions &

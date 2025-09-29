@@ -21,6 +21,7 @@ const standaloneConfig: NextConfig = {
 
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
+  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
   compiler: {
     emotion: true,
   },
@@ -244,11 +245,11 @@ const nextConfig: NextConfig = {
       permanent: true,
       source: '/discover/providers',
     },
-    {
-      destination: '/settings/common',
-      permanent: true,
-      source: '/settings',
-    },
+    // {
+    //   destination: '/settings/common',
+    //   permanent: true,
+    //   source: '/settings',
+    // },
     {
       destination: '/chat',
       permanent: true,

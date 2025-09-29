@@ -16,10 +16,10 @@ import {
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
-  ModelProvider,
   ModelRuntime,
 } from '@lobechat/model-runtime';
 import { merge } from 'lodash-es';
+import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 

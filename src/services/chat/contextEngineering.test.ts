@@ -1,6 +1,8 @@
 import { ChatMessage } from '@lobechat/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import * as isCanUseFCModule from '@/helpers/isCanUseFC';
+
 import { contextEngineering } from './contextEngineering';
 import * as helpers from './helper';
 
@@ -360,7 +362,7 @@ describe('contextEngineering', () => {
 
   it('should not include tool_calls for assistant message if model does not support tools', async () => {
     // Mock isCanUseFC to return false
-    vi.spyOn(helpers, 'isCanUseFC').mockReturnValue(false);
+    vi.spyOn(isCanUseFCModule, 'isCanUseFC').mockReturnValue(false);
 
     const messages: ChatMessage[] = [
       {

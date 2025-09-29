@@ -1,6 +1,7 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { QwenAIStream } from '../../core/streams';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { createQwenImage } from './createImage';
 
@@ -31,18 +32,18 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
         ...rest,
         ...(model.includes('-thinking')
           ? {
-              enable_thinking: true,
+            enable_thinking: true,
+            thinking_budget:
+              thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
+          }
+          : ['qwen3', 'qwen-turbo', 'qwen-plus', 'deepseek-v3.1'].some((keyword) =>
+            model.toLowerCase().includes(keyword),
+          )
+            ? {
+              enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
               thinking_budget:
                 thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
             }
-          : ['qwen3', 'qwen-turbo', 'qwen-plus', 'deepseek-v3.1'].some((keyword) =>
-                model.toLowerCase().includes(keyword),
-              )
-            ? {
-                enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
-                thinking_budget:
-                  thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
-              }
             : {}),
         frequency_penalty: undefined,
         model,
@@ -58,11 +59,11 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
             : undefined,
         ...(model.startsWith('qvq') || model.startsWith('qwen-vl')
           ? {
-              top_p: top_p !== undefined && top_p > 0 && top_p <= 1 ? top_p : undefined,
-            }
+            top_p: top_p !== undefined && top_p > 0 && top_p <= 1 ? top_p : undefined,
+          }
           : {
-              top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
-            }),
+            top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
+          }),
         ...(enabledSearch && {
           enable_search: enabledSearch,
           search_options: {

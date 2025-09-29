@@ -10,6 +10,33 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
+      'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
+    displayName: 'GPT-5 Codex',
+    id: 'gpt-5-codex',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-09-15',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
       '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
     displayName: 'GPT-5',
     enabled: true,
@@ -320,6 +347,53 @@ const aihubmixModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    displayName: 'Grok 4 Fast (Non-Reasoning)',
+    id: 'grok-4-fast-non-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-09',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    displayName: 'Grok 4 Fast',
+    id: 'grok-4-fast-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-09',
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -709,7 +783,6 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。',
     displayName: 'Gemini 2.5 Flash',
-    enabled: true,
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {

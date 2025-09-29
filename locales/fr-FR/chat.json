@@ -281,6 +281,7 @@
       "actionFiletip": "Télécharger un fichier",
       "actionTooltip": "Télécharger",
       "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser",
+      "fileNotSupported": "Le mode navigateur ne prend pas en charge le téléchargement de fichiers, seules les images sont autorisées",
       "visionNotSupported": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser"
     },
     "preview": {
@@ -289,6 +290,9 @@
         "pending": "Préparation du téléchargement...",
         "processing": "Traitement du fichier..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "La taille du fichier vidéo ne peut pas dépasser 20 Mo, la taille actuelle est de {{actualSize}}"
     }
   },
   "zenMode": "Mode de concentration"

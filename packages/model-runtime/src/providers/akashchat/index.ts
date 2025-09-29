@@ -1,10 +1,9 @@
+import { ModelProvider } from 'model-bank';
+
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { ModelProvider } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
-const THINKING_MODELS = [
-  'DeepSeek-V3-1',
-];
+const THINKING_MODELS = ['DeepSeek-V3-1'];
 
 export interface AkashChatModelCard {
   id: string;
@@ -24,11 +23,10 @@ export const LobeAkashChatAI = createOpenAICompatibleRuntime({
         allowed_openai_params: ['reasoning_effort'],
         cache: { 'no-cache': true },
         model,
-        stream: true,
-        ...(THINKING_MODELS.some((keyword) => model.includes(keyword))
+        ...(THINKING_MODELS.some((keyword) => model === keyword)
           ? {
-              chat_template_kwargs: { thinking: thinkingFlag },
-            }
+            chat_template_kwargs: { thinking: thinkingFlag },
+          }
           : {}),
       } as any;
     },

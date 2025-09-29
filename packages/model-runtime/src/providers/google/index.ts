@@ -9,14 +9,17 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
+import debug from 'debug';
 
-import { LOBE_ERROR_KEY } from '../../core/streams/google-ai';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../../core/streams';
+import { LOBE_ERROR_KEY } from '../../core/streams/google';
 import {
   ChatCompletionTool,
   ChatMethodOptions,
   ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../../types';
@@ -30,7 +33,7 @@ import { StreamingResponse } from '../../utils/response';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
-import debug from 'debug';
+import { createGoogleGenerateObject } from './generateObject';
 
 const log = debug('model-runtime:google');
 
@@ -136,35 +139,38 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const { model, thinkingBudget } = payload;
 
+      // https://ai.google.dev/gemini-api/docs/thinking#set-budget
+      const resolvedThinkingBudget = (() => {
+        if (thinkingBudget !== undefined && thinkingBudget !== null) {
+          if (model.includes('-2.5-flash-lite')) {
+            if (thinkingBudget === 0 || thinkingBudget === -1) {
+              return thinkingBudget;
+            }
+            return Math.max(512, Math.min(thinkingBudget, 24_576));
+          } else if (model.includes('-2.5-flash')) {
+            return Math.min(thinkingBudget, 24_576);
+          } else if (model.includes('-2.5-pro')) {
+            return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
+          }
+          return Math.min(thinkingBudget, 24_576);
+        }
+
+        if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
+          return -1;
+        } else if (model.includes('-2.5-flash-lite')) {
+          return 0;
+        }
+        return undefined;
+      })();
+
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
-          !!thinkingBudget ||
-          (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
+          (!!thinkingBudget ||
+            (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
+          resolvedThinkingBudget !== 0
             ? true
             : undefined,
-        // https://ai.google.dev/gemini-api/docs/thinking#set-budget
-        thinkingBudget: (() => {
-          if (thinkingBudget !== undefined && thinkingBudget !== null) {
-            if (model.includes('-2.5-flash-lite')) {
-              if (thinkingBudget === 0 || thinkingBudget === -1) {
-                return thinkingBudget;
-              }
-              return Math.max(512, Math.min(thinkingBudget, 24_576));
-            } else if (model.includes('-2.5-flash')) {
-              return Math.min(thinkingBudget, 24_576);
-            } else if (model.includes('-2.5-pro')) {
-              return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
-            }
-            return Math.min(thinkingBudget, 24_576);
-          }
-
-          if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
-            return -1;
-          } else if (model.includes('-2.5-flash-lite')) {
-            return 0;
-          }
-          return undefined;
-        })(),
+        thinkingBudget: resolvedThinkingBudget,
       };
 
       const contents = await this.buildGoogleMessages(payload.messages);
@@ -269,6 +275,21 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     return createGoogleImage(this.client, this.provider, payload);
+  }
+
+  /**
+   * Generate structured output using Google Gemini API
+   * @see https://ai.google.dev/gemini-api/docs/structured-output
+   */
+  async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+    // Convert OpenAI messages to Google format
+    const contents = await this.buildGoogleMessages(payload.messages);
+
+    return createGoogleGenerateObject(
+      this.client,
+      { contents, model: payload.model, schema: payload.schema },
+      options,
+    );
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {

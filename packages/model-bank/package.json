@@ -42,6 +42,7 @@
     "./novita": "./src/aiModels/novita.ts",
     "./nvidia": "./src/aiModels/nvidia.ts",
     "./ollama": "./src/aiModels/ollama.ts",
+    "./ollamacloud": "./src/aiModels/ollamacloud.ts",
     "./openai": "./src/aiModels/openai.ts",
     "./openrouter": "./src/aiModels/openrouter.ts",
     "./perplexity": "./src/aiModels/perplexity.ts",
