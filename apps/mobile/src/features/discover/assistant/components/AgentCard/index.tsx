@@ -2,7 +2,7 @@ import { DiscoverAssistantItem } from '@lobechat/types';
 import { Avatar, GitHubAvatar, Space, Tag } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
@@ -13,19 +13,19 @@ interface AgentCardProps {
   item: DiscoverAssistantItem;
 }
 
-export const AgentCard = ({ item }: AgentCardProps) => {
+const AgentCardComponent = ({ item }: AgentCardProps) => {
   const { styles } = useStyles();
+  const { identifier } = item;
+
+  const handlePress = useCallback(() => {
+    router.push({
+      params: { slugs: [identifier] },
+      pathname: '/discover/assistant/[...slugs]',
+    });
+  }, [identifier]);
 
   return (
-    <Pressable
-      onPress={() =>
-        router.push({
-          params: { slugs: [item.identifier] },
-          pathname: '/discover/assistant/[...slugs]',
-        })
-      }
-      style={styles.cardLink}
-    >
+    <Pressable onPress={handlePress} style={styles.cardLink}>
       <View style={styles.card}>
         <View style={styles.cardContent}>
           <View style={styles.headerContainer}>
@@ -60,5 +60,10 @@ export const AgentCard = ({ item }: AgentCardProps) => {
     </Pressable>
   );
 };
+
+const AgentCard = memo(AgentCardComponent);
+AgentCard.displayName = 'AgentCard';
+
+export { AgentCard };
 
 export default AgentCard;

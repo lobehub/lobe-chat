@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 import BackBottom from './BackBottom';
 
@@ -7,7 +7,11 @@ interface AutoScrollProps {
   onScrollToBottom: (type: 'auto' | 'click') => void;
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, onScrollToBottom }) => {
-  return <BackBottom onScrollToBottom={() => onScrollToBottom?.('click')} visible={!atBottom} />;
+  const handlePress = useCallback(() => {
+    onScrollToBottom?.('click');
+  }, [onScrollToBottom]);
+
+  return <BackBottom onScrollToBottom={handlePress} visible={!atBottom} />;
 });
 
 export default AutoScroll;
