@@ -30,8 +30,12 @@ type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
-// Opus 4.1 models that don't allow both temperature and top_p parameters
-const opus41Models = new Set(['claude-opus-4-1', 'claude-opus-4-1-20250805']);
+// models after Opus 4.1 that don't allow both temperature and top_p parameters
+const modelsWithTempAndTopPConflict = new Set([
+  'claude-opus-4-1',
+  'claude-opus-4-1-20250805',
+  'claude-sonnet-4-5-20250929',
+]);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
@@ -204,7 +208,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     }
 
     // For Opus 4.1 models, we can only set either temperature OR top_p, not both
-    const isOpus41Model = opus41Models.has(model);
+    const isTempAndTopPConflict = modelsWithTempAndTopPConflict.has(model);
     const shouldSetTemperature = payload.temperature !== undefined;
 
     return {
@@ -215,7 +219,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       model,
       system: systemPrompts,
       // For Opus 4.1 models: prefer temperature over top_p if both are provided
-      temperature: isOpus41Model
+      temperature: isTempAndTopPConflict
         ? shouldSetTemperature
           ? temperature / 2
           : undefined
@@ -224,7 +228,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
           : undefined,
       tools: postTools,
       // For Opus 4.1 models: only set top_p if temperature is not set
-      top_p: isOpus41Model ? (shouldSetTemperature ? undefined : top_p) : top_p,
+      top_p: isTempAndTopPConflict ? (shouldSetTemperature ? undefined : top_p) : top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
 
