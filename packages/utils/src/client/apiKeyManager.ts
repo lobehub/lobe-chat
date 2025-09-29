@@ -35,4 +35,4 @@ export class ClientApiKeyManager {
   }
 }
 
-export default new ClientApiKeyManager();
+export const clientApiKeyManager = new ClientApiKeyManager();

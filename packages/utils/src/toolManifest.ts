@@ -3,7 +3,8 @@ import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plug
 import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-import { genToolCallingName } from '@/utils/toolCall';
+
+import { genToolCallingName } from './toolCall';
 
 const fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
   // 2. 发送请求

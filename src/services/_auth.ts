@@ -1,18 +1,17 @@
-import { ClientSecretPayload } from '@lobechat/types';
-import { ModelProvider } from 'model-bank';
-
-import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { isDeprecatedEdition } from '@/const/version';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useUserStore } from '@/store/user';
-import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { LOBE_CHAT_AUTH_HEADER, isDeprecatedEdition } from '@lobechat/const';
 import {
   AWSBedrockKeyVault,
   AzureOpenAIKeyVault,
+  ClientSecretPayload,
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
-} from '@/types/user/settings';
-import clientApiKeyManager from '@/utils/client/apiKeyManager';
+} from '@lobechat/types';
+import { clientApiKeyManager } from '@lobechat/utils/client';
+import { ModelProvider } from 'model-bank';
+
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { useUserStore } from '@/store/user';
+import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
 export const getProviderAuthPayload = (
