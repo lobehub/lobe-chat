@@ -1,4 +1,4 @@
-import { AssistantCategory } from '@lobechat/types';
+import { AssistantCategory, DiscoverAssistantItem } from '@lobechat/types';
 import { CapsuleTabs, Input, PageContainer } from '@lobehub/ui-rn';
 import { useDebounce } from 'ahooks';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -25,7 +25,7 @@ const AssistantList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>(AssistantCategory.All);
   const [currentPage, setCurrentPage] = useState(1);
-  const [allItems, setAllItems] = useState<any[]>([]);
+  const [allItems, setAllItems] = useState<DiscoverAssistantItem[]>([]);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const categories = useCategory();
@@ -127,6 +127,26 @@ const AssistantList = () => {
     );
   }, [hasMoreData, theme.colorPrimary]);
 
+  const renderEmptyComponent = useCallback(
+    () => (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>
+          {finalSearchQuery
+            ? t('assistant.noMatch', { ns: 'common' })
+            : t('assistant.noData', { ns: 'common' })}
+        </Text>
+      </View>
+    ),
+    [finalSearchQuery],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: DiscoverAssistantItem }) => <AgentCard item={item} />,
+    [],
+  );
+
+  const keyExtractor = useCallback((item: DiscoverAssistantItem) => item.identifier, []);
+
   if (error) {
     return (
       <SafeAreaView style={styles.errorContainer}>
@@ -162,22 +182,14 @@ const AssistantList = () => {
         <AssistantListSkeleton />
       ) : (
         <FlatList
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>
-                {finalSearchQuery
-                  ? t('assistant.noMatch', { ns: 'common' })
-                  : t('assistant.noData', { ns: 'common' })}
-              </Text>
-            </View>
-          )}
+          ListEmptyComponent={renderEmptyComponent}
           ListFooterComponent={renderFooter}
           contentContainerStyle={styles.listContainer}
           data={allItems}
-          keyExtractor={(item) => item.identifier}
+          keyExtractor={keyExtractor}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
-          renderItem={({ item }) => <AgentCard item={item} />}
+          renderItem={renderItem}
         />
       )}
     </PageContainer>
