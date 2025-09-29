@@ -153,6 +153,7 @@
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/observability-otel": "workspace:*",
     "@lobechat/prompts": "workspace:*",
+    "@lobechat/python-interpreter": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.0",

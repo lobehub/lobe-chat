@@ -18,6 +18,7 @@ jobs:
           - web-crawler
           - electron-server-ipc
           - utils
+          - python-interpreter
           - context-engine
           - agent-runtime
 
