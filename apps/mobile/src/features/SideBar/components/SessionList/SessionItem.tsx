@@ -1,5 +1,5 @@
 import { ListItem } from '@lobehub/ui-rn';
-import { useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
@@ -9,7 +9,7 @@ interface SessionItemProps {
   id: string;
 }
 
-const SessionItem = ({ id }: SessionItemProps) => {
+const SessionItemComponent = ({ id }: SessionItemProps) => {
   const session = useSessionStore((s) => sessionSelectors.getSessionById(id)(s));
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
@@ -25,10 +25,10 @@ const SessionItem = ({ id }: SessionItemProps) => {
     };
   }, [session.meta]);
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     // 使用 useSwitchSession hook，它会自动处理路由导航和抽屉关闭
     switchSession(id);
-  };
+  }, [id, switchSession]);
 
   return (
     <ListItem
@@ -40,5 +40,8 @@ const SessionItem = ({ id }: SessionItemProps) => {
     />
   );
 };
+
+const SessionItem = memo(SessionItemComponent);
+SessionItem.displayName = 'SessionItem';
 
 export default SessionItem;
