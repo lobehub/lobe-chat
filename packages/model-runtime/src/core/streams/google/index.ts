@@ -128,36 +128,67 @@ const transformGoogleGenerativeAIStream = (
   const text = chunk.text;
 
   if (candidate) {
-    // 首先检查是否为 reasoning 内容 (thought: true)
+    // 分离思考内容和普通文本内容
+    let reasoningText = '';
+    let normalText = '';
+
     if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
       for (const part of candidate.content.parts) {
-        if (part && part.text && part.thought === true) {
-          return { data: part.text, id: context.id, type: 'reasoning' };
+        if (part && part.text) {
+          if (part.thought === true) {
+            reasoningText += part.text;
+          } else {
+            normalText += part.text;
+          }
         }
       }
+    }
+
+    // 如果只有思考内容，直接返回 reasoning chunk
+    if (reasoningText && !normalText && !candidate.groundingMetadata && !candidate.finishReason) {
+      return { data: reasoningText, id: context.id, type: 'reasoning' };
+    }
+
+    // 处理包含多种内容的情况（思考、普通文本、grounding、finish等）
+    const chunks: StreamProtocolChunk[] = [];
+
+    // 添加思考内容
+    if (reasoningText) {
+      chunks.push({ data: reasoningText, id: context.id, type: 'reasoning' });
+    }
+
+    // 添加普通文本
+    if (normalText || (text && !reasoningText)) {
+      chunks.push({ data: normalText || text, id: context.id, type: 'text' });
     }
 
     // return the grounding
     const { groundingChunks, webSearchQueries } = candidate.groundingMetadata ?? {};
     if (groundingChunks) {
-      return [
-        { data: text, id: context.id, type: 'text' },
-        {
-          data: {
-            citations: groundingChunks?.map((chunk) => ({
-              // google 返回的 uri 是经过 google 自己处理过的 url，因此无法展现真实的 favicon
-              // 需要使用 title 作为替换
-              favicon: chunk.web?.title,
-              title: chunk.web?.title,
-              url: chunk.web?.uri,
-            })),
-            searchQueries: webSearchQueries,
-          } as GroundingSearch,
-          id: context.id,
-          type: 'grounding',
-        },
-        ...usageChunks,
-      ];
+      chunks.push({
+        data: {
+          citations: groundingChunks?.map((chunk) => ({
+            // google 返回的 uri 是经过 google 自己处理过的 url，因此无法展现真实的 favicon
+            // 需要使用 title 作为替换
+            favicon: chunk.web?.title,
+            title: chunk.web?.title,
+            url: chunk.web?.uri,
+          })),
+          searchQueries: webSearchQueries,
+        } as GroundingSearch,
+        id: context.id,
+        type: 'grounding',
+      });
+    }
+
+    // 添加 usage 和 stop chunks
+    if (usageChunks.length > 0) {
+      chunks.push(...usageChunks);
+    }
+
+    // 如果收集到了内容，返回所有 chunks
+    if (chunks.length > 0) {
+      return chunks;
     }
 
     // Check for image data before handling finishReason
