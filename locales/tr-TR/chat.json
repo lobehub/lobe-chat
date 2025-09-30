@@ -150,6 +150,11 @@
       "total": "Toplam tüketim"
     }
   },
+  "minimap": {
+    "jumpToMessage": "{{index}} numaralı mesaja atla",
+    "nextMessage": "Sonraki mesaj",
+    "previousMessage": "Önceki mesaj"
+  },
   "newAgent": "Yeni Asistan",
   "pin": "Pin",
   "pinOff": "Unpin",

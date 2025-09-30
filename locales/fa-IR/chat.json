@@ -150,6 +150,11 @@
       "total": "مجموع مصرف"
     }
   },
+  "minimap": {
+    "jumpToMessage": "رفتن به پیام شماره {{index}}",
+    "nextMessage": "پیام بعدی",
+    "previousMessage": "پیام قبلی"
+  },
   "newAgent": "دستیار جدید",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",

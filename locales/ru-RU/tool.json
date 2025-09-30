@@ -1,7 +1,7 @@
 {
   "codeInterpreter": {
     "error": "Ошибка выполнения",
-    "executing": "Выполняется...",
+    "executing": "Выполнение...",
     "files": "Файлы:",
     "output": "Вывод:",
     "returnValue": "Возвращаемое значение:"

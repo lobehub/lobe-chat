@@ -150,6 +150,11 @@
       "total": "Totaal verbruik"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Ga naar bericht {{index}}",
+    "nextMessage": "Volgend bericht",
+    "previousMessage": "Vorig bericht"
+  },
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
