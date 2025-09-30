@@ -4,20 +4,12 @@ globs:
 alwaysApply: true
 ---
 
-# 📋 Available Rules Index
+# Available project rules index
 
-The following rules are available via `read_file` from the `.cursor/rules/` directory:
-
-## General
-
-- `project-introduce.mdc` – Project description and tech stack
-- `cursor-rules.mdc` – Cursor rules authoring and optimization guide
-- `code-review.mdc` – How to code review
+All following rules are saved under `.cursor/rules/` directory:
 
 ## Backend
 
-- `backend-architecture.mdc` – Backend layer architecture and design guidelines
-- `define-database-model.mdc` – Database model definition guidelines
 - `drizzle-schema-style-guide.mdc` – Style guide for defining Drizzle ORM schemas
 
 ## Frontend
@@ -42,7 +34,6 @@ The following rules are available via `read_file` from the `.cursor/rules/` dire
 
 ## Debugging
 
-- `debug.mdc` – General debugging guide
 - `debug-usage.mdc` – Using the debug package and namespace conventions
 
 ## Testing
