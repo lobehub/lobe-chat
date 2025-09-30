@@ -2,7 +2,16 @@
 
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { MouseEventHandler, ReactNode, memo, use, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  MouseEventHandler,
+  ReactNode,
+  memo,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -231,7 +240,7 @@ const Item = memo<ChatListItemProps>(
 
       const root = element.closest('[data-virtuoso-scroller]');
       const thresholds = [0, 0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 1];
-      const options: IntersectionObserverInit = { threshold: thresholds };
+      const options: any = { threshold: thresholds };
 
       if (root instanceof Element) options.root = root;
 
@@ -306,8 +315,8 @@ const Item = memo<ChatListItemProps>(
         <InPortalThreadContext.Provider value={inPortalThread}>
           {enableHistoryDivider && <History />}
           <Flexbox
-            data-index={index}
             className={cx(styles.message, className, isMessageLoading && styles.loading)}
+            data-index={index}
             onContextMenu={onContextMenu}
             ref={containerRef}
           >
