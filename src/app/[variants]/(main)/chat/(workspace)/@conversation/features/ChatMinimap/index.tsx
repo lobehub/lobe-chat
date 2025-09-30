@@ -171,8 +171,6 @@ const ChatMinimap = () => {
   );
   const messages = useChatStore(chatSelectors.mainDisplayChats);
 
-  console.log('activeIndex', activeIndex);
-
   const theme = useTheme();
 
   const indicators = useMemo<MinimapIndicator[]>(() => {
@@ -214,7 +212,7 @@ const ChatMinimap = () => {
         behavior: 'smooth',
         index: virtIndex,
         // The current index detection will be off by 1, so we need to add 1 here
-        offset: 2,
+        offset: 6,
       });
     },
     [virtuosoRef],
@@ -270,9 +268,8 @@ const ChatMinimap = () => {
       ref.scrollToIndex({
         align: 'start',
         behavior: 'smooth',
-        // We still dont know why we need to add 1 here
-        // but it works
-        index: targetIndicator.virtuosoIndex + 1,
+        index: targetIndicator.virtuosoIndex,
+        offset: 6,
       });
     },
     [activeIndex, activeIndicatorPosition, indicators, virtuosoRef],
