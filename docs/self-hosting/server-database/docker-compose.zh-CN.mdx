@@ -425,6 +425,50 @@ lobe-chat      | [auth][error] TypeError: fetch failed
 
 为了完善你的 LobeChat 服务，你可以根据你的需求进行以下拓展配置。
 
+### 配置自动同步更新脚本
+
+以下是参考[自动同步更新 - LobeChat](https://lobehub.com/zh/docs/self-hosting/advanced/upstream-sync)文档更改的自动更新LobeChat版本的脚本。
+请将其保存到与上文创建的环境 `lobe-chat-db` 文件夹中。
+
+```bash
+#!/bin/bash
+# auto-update-lobe-chat.sh
+
+# 设置代理（可选）
+# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# 设置工作目录，请按照自己的需求修改
+cd /root/lobe-chat-db
+
+# 拉取最新的镜像
+docker-compose pull
+
+# 检查是否有更新
+if docker-compose pull | grep -q "Image is up to date"; then
+  echo "All images are up to date."
+  echo "Current Version: $(docker inspect lobehub/lobe-chat-database:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+  exit 0
+fi
+
+echo "Detected lobe-chat update"
+
+# 停止并删除旧的容器，然后启动新的容器
+docker-compose down
+docker-compose up -d
+
+# 打印更新时间和版本
+echo "Update time: $(date)"
+echo "New Version: $(docker inspect lobehub/lobe-chat-database:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# 清理旧的镜像
+docker image prune -f
+
+echo "Update completed and old images removed."
+```
+
+Crontab请参考[自动同步更新 - LobeChat](https://lobehub.com/zh/docs/self-hosting/advanced/upstream-sync)文档 配置 Crontab 自动执行脚本 小节配置。
+
+
 ### 使用 MinIO 存储 Casdoor 头像
 
 允许用户在 Casdoor 中更换头像
