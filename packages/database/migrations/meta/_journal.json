@@ -249,8 +249,15 @@
     {
       "idx": 35,
       "version": "7",
+      "when": 1759116400580,
+      "tag": "0035_add_virtual",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
       "when": 1762060800000,
-      "tag": "0035_add_ai_model_settings",
+      "tag": "0036_add_ai_model_settings",
       "breakpoints": true
     }
   ],
