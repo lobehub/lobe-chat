@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "描述你想要生成的內容"
     },
+    "quality": {
+      "label": "圖片品質",
+      "options": {
+        "hd": "高清",
+        "standard": "標準"
+      }
+    },
     "seed": {
       "label": "種子",
       "random": "隨機種子"
