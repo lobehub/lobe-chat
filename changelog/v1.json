@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-30",
+    "version": "1.133.1"
+  },
+  {
+    "children": {
       "features": ["Add builtin Python plugin, add Claude Sonnet 4.5 model to AI chat models."]
     },
     "date": "2025-09-29",
