@@ -1,6 +1,11 @@
 import { CHAT_MODEL_IMAGE_GENERATION_PARAMS, ModelParamsSchema } from '../standard-parameters';
 import { AIChatModelCard, AIImageModelCard } from '../types';
 
+/**
+ * gemini implicit caching not extra cost
+ * https://openrouter.ai/docs/features/prompt-caching#implicit-caching
+ */
+
 const googleChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -233,6 +238,7 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],

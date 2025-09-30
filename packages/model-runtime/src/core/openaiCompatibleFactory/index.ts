@@ -27,6 +27,7 @@ import { AgentRuntimeError } from '../../utils/createError';
 import { debugResponse, debugStream } from '../../utils/debugStream';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';
 import { getModelPropertyWithFallback } from '../../utils/getFallbackModelProperty';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { handleOpenAIError } from '../../utils/handleOpenAIError';
 import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../../utils/openaiHelpers';
 import { postProcessModelList } from '../../utils/postProcessModelList';
@@ -228,7 +229,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         const streamOptions: OpenAIStreamOptions = {
           bizErrorTypeTransformer: chatCompletion?.handleStreamBizErrorType,
           callbacks: options?.callback,
-          provider: this.id,
+          payload: {
+            model: payload.model,
+            pricing: await getModelPricing(payload.model, this.id),
+            provider: this.id,
+          },
         };
 
         if (customClient?.createChatCompletionStream) {
@@ -276,7 +281,10 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
                   callbacks: streamOptions.callbacks,
                   inputStartAt,
                 })
-              : OpenAIStream(prod, { ...streamOptions, inputStartAt }),
+              : OpenAIStream(prod, {
+                  ...streamOptions,
+                  inputStartAt,
+                }),
             {
               headers: options?.headers,
             },
@@ -320,7 +328,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
 
       // Use the new createOpenAICompatibleImage function
-      return createOpenAICompatibleImage(this.client, payload, provider);
+      return createOpenAICompatibleImage(this.client, payload, this.id);
     }
 
     async models() {
@@ -453,7 +461,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           headers: options?.headers,
           signal: options?.signal,
         });
-
         return mp3.arrayBuffer();
       } catch (error) {
         throw this.handleError(error);
@@ -585,7 +592,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       const streamOptions: OpenAIStreamOptions = {
         bizErrorTypeTransformer: chatCompletion?.handleStreamBizErrorType,
         callbacks: options?.callback,
-        provider: this.id,
+        payload: {
+          model: payload.model,
+          pricing: await getModelPricing(payload.model, this.id),
+          provider: this.id,
+        },
       };
 
       if (isStreaming) {

@@ -6,7 +6,7 @@ import {
 import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
-import { convertUsage } from '../../utils/usageConverter';
+import { convertOpenAIUsage } from '../usageConverters';
 import {
   StreamContext,
   StreamProtocolChunk,
@@ -24,7 +24,7 @@ export const transformQwenStream = (
   streamContext?: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   if (Array.isArray(chunk.choices) && chunk.choices.length === 0 && chunk.usage) {
-    const usage = convertUsage({
+    const usage = convertOpenAIUsage({
       ...chunk.usage,
       completion_tokens_details: chunk.usage.completion_tokens_details || {},
       prompt_tokens_details: chunk.usage.prompt_tokens_details || {},
