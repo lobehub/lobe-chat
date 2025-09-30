@@ -680,6 +680,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 在 Sonnet 3.7 的行業領先能力基礎上進行了顯著改進，在編碼方面表現出色，在 SWE-bench 上達到了最先進的 72.7%。該模型在性能和效率之間取得了平衡，適用於內部和外部用例，並透過增強的可控性實現對實現的更大控制。"
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5 是 Anthropic 迄今為止最智能的模型。"
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B 是一款 720 億參數、激活 160 億參的稀疏大型語言模型，它基於分組混合專家（MoGE）架構，它在專家選擇階段對專家進行分組，並約束 token 在每個組內激活等量專家，從而實現專家負載均衡，顯著提升模型在昇騰平台的部署效率。"
   },
@@ -772,6 +775,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Claude Sonnet 4 思考模型可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。"
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5 是 Anthropic 迄今為止最智能的模型。"
   },
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"

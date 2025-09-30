@@ -680,6 +680,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 mejora significativamente las capacidades líderes de Sonnet 3.7, destacándose en codificación con un rendimiento de vanguardia del 72.7% en SWE-bench. El modelo equilibra rendimiento y eficiencia, adecuado para casos de uso internos y externos, y ofrece mayor control mediante una mejor capacidad de control."
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5 es el modelo más inteligente de Anthropic hasta la fecha."
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B es un modelo de lenguaje grande disperso con 72 mil millones de parámetros y 16 mil millones de parámetros activados. Está basado en la arquitectura de expertos mixtos agrupados (MoGE), que agrupa expertos durante la selección y restringe la activación de un número igual de expertos por grupo para cada token, logrando un balance de carga entre expertos y mejorando significativamente la eficiencia de despliegue en la plataforma Ascend."
   },
@@ -772,6 +775,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Modelo de pensamiento Claude Sonnet 4 que puede generar respuestas casi instantáneas o un pensamiento prolongado paso a paso, permitiendo a los usuarios ver claramente estos procesos."
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5 es el modelo más inteligente de Anthropic hasta la fecha."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 es un potente asistente de programación AI, que admite preguntas y respuestas inteligentes y autocompletado de código en varios lenguajes de programación, mejorando la eficiencia del desarrollo."
