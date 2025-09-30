@@ -111,7 +111,12 @@ describe('ChatMinimap', () => {
 
     fireEvent.click(screen.getByLabelText('Jump to message 1'));
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ align: 'center', behavior: 'smooth', index: 0 });
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      align: 'start',
+      behavior: 'smooth',
+      index: 0,
+      offset: 64,
+    });
   });
 
   it('should show message preview in tooltip', () => {
@@ -147,7 +152,7 @@ describe('ChatMinimap', () => {
 
     act(() => {
       setVirtuosoGlobalRef(virtuosoRef);
-      upsertVirtuosoVisibleItem(7, { bottom: 600, ratio: 1 });
+      upsertVirtuosoVisibleItem(7, { bottom: 600, ratio: 1, top: 100 });
     });
 
     render(<ChatMinimap />);
@@ -164,12 +169,22 @@ describe('ChatMinimap', () => {
 
     fireEvent.click(prevButton);
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ align: 'center', behavior: 'smooth', index: 6 });
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      align: 'start',
+      behavior: 'smooth',
+      index: 6,
+      offset: 64,
+    });
 
     scrollIntoView.mockClear();
 
     fireEvent.click(nextButton);
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ align: 'center', behavior: 'smooth', index: 8 });
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      align: 'start',
+      behavior: 'smooth',
+      index: 8,
+      offset: 64,
+    });
   });
 });

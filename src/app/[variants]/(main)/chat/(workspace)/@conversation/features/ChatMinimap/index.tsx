@@ -21,6 +21,7 @@ const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
 const MIN_MESSAGES = 6;
+const SCROLL_TOP_OFFSET = 24;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -148,6 +149,13 @@ const getPreviewText = (content: string | undefined) => {
   return normalized.slice(0, 100) + (normalized.length > 100 ? '…' : '');
 };
 
+interface MinimapIndicator {
+  id: string;
+  preview: string;
+  virtuosoIndex: number;
+  width: number;
+}
+
 const ChatMinimap = () => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
@@ -162,29 +170,46 @@ const ChatMinimap = () => {
     getVirtuosoActiveIndex,
     () => null,
   );
-  const messages = useChatStore(chatSelectors.mainDisplayChats).filter(
-    (message) => message.role === 'user' || message.role === 'assistant',
-  );
+  const messages = useChatStore(chatSelectors.mainDisplayChats);
 
   const theme = useTheme();
 
-  const indicators = useMemo(
-    () =>
-      messages.map((message, index) => ({
+  const indicators = useMemo<MinimapIndicator[]>(() => {
+    return messages.reduce<MinimapIndicator[]>((acc, message, virtuosoIndex) => {
+      if (message.role !== 'user' && message.role !== 'assistant') return acc;
+
+      acc.push({
         id: message.id,
-        index,
         preview: getPreviewText(message.content),
+        virtuosoIndex,
         width: getIndicatorWidth(message.content),
-      })),
-    [messages],
-  );
+      });
+
+      return acc;
+    }, []);
+  }, [messages]);
+
+  const indicatorIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    indicators.forEach(({ virtuosoIndex }, position) => {
+      map.set(virtuosoIndex, position);
+    });
+    return map;
+  }, [indicators]);
+
+  const activeIndicatorPosition = useMemo(() => {
+    if (activeIndex === null) return null;
+
+    return indicatorIndexMap.get(activeIndex) ?? null;
+  }, [activeIndex, indicatorIndexMap]);
 
   const handleJump = useCallback(
-    (index: number) => {
+    (virtIndex: number) => {
       virtuosoRef?.current?.scrollIntoView({
-        align: 'center',
+        align: 'start',
         behavior: 'smooth',
-        index,
+        index: virtIndex,
+        offset: SCROLL_TOP_OFFSET,
       });
     },
     [virtuosoRef],
@@ -193,31 +218,56 @@ const ChatMinimap = () => {
   const handleStep = useCallback(
     (direction: 'prev' | 'next') => {
       const ref = virtuosoRef?.current;
-      if (!ref) return;
+      if (!ref || indicators.length === 0) return;
 
-      const baseIndex = (() => {
-        if (activeIndex !== null) return activeIndex;
+      let basePosition: number;
 
-        return direction === 'prev' ? 0 : Math.max(messages.length - 1, 0);
-      })();
+      if (activeIndicatorPosition !== null) {
+        basePosition = activeIndicatorPosition;
+      } else if (activeIndex !== null) {
+        if (direction === 'prev') {
+          let matched = -1;
+          for (let pos = indicators.length - 1; pos >= 0; pos -= 1) {
+            if (indicators[pos].virtuosoIndex <= activeIndex) {
+              matched = pos;
+              break;
+            }
+          }
+          basePosition = matched === -1 ? indicators.length : matched;
+        } else {
+          let matched = indicators.length;
+          for (const [pos, indicator] of indicators.entries()) {
+            if (indicator.virtuosoIndex >= activeIndex) {
+              matched = pos;
+              break;
+            }
+          }
+          basePosition = matched === indicators.length ? -1 : matched;
+        }
+      } else {
+        basePosition = direction === 'prev' ? indicators.length : -1;
+      }
+
       const delta = direction === 'prev' ? -1 : 1;
-      const targetIndex = Math.min(
-        Math.max(baseIndex + delta, 0),
-        Math.max(messages.length - 1, 0),
+      const targetPosition = Math.min(
+        Math.max(basePosition + delta, 0),
+        Math.max(indicators.length - 1, 0),
       );
 
-      if (targetIndex === baseIndex) return;
+      const targetIndicator = indicators[targetPosition];
+      if (!targetIndicator) return;
 
       ref.scrollIntoView({
-        align: 'center',
+        align: 'start',
         behavior: 'smooth',
-        index: targetIndex,
+        index: targetIndicator.virtuosoIndex,
+        offset: SCROLL_TOP_OFFSET,
       });
     },
-    [activeIndex, messages.length, virtuosoRef],
+    [activeIndex, activeIndicatorPosition, indicators, virtuosoRef],
   );
 
-  if (messages.length <= MIN_MESSAGES) return null;
+  if (indicators.length <= MIN_MESSAGES) return null;
 
   return (
     <Flexbox align={'center'} className={styles.container} justify={'center'}>
@@ -237,16 +287,16 @@ const ChatMinimap = () => {
             <Icon color={theme.colorTextTertiary} icon={ChevronUp} size={16} />
           </button>
         </Tooltip>
-        {indicators.map(({ id, index, width, preview }) => {
-          const isActive = activeIndex === index;
+        {indicators.map(({ id, width, preview, virtuosoIndex }, position) => {
+          const isActive = activeIndicatorPosition === position;
 
           return (
             <Tooltip key={id} mouseEnterDelay={0.1} placement={'left'} title={preview || undefined}>
               <button
                 aria-current={isActive ? 'true' : undefined}
-                aria-label={`Jump to message ${index + 1}`}
+                aria-label={`Jump to message ${position + 1}`}
                 className={styles.indicator}
-                onClick={() => handleJump(index)}
+                onClick={() => handleJump(virtuosoIndex)}
                 style={{
                   width,
                 }}

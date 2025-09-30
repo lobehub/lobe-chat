@@ -8,7 +8,7 @@ type VirtuosoRef = RefObject<VirtuosoHandle | null> | null;
 let currentVirtuosoRef: VirtuosoRef = null;
 const refListeners = new Set<() => void>();
 
-const visibleItems = new Map<number, { bottom: number; ratio: number }>();
+const visibleItems = new Map<number, { bottom: number; ratio: number; top: number }>();
 let currentActiveIndex: number | null = null;
 const activeIndexListeners = new Set<() => void>();
 
@@ -26,17 +26,17 @@ const recalculateActiveIndex = () => {
   }
 
   let candidate: number | null = null;
-  let maxBottom = -Infinity;
+  let minTop = Infinity;
   let maxRatio = -Infinity;
 
-  visibleItems.forEach(({ bottom, ratio }, index) => {
+  visibleItems.forEach(({ top, ratio }, index) => {
     const shouldUpdate =
-      bottom > maxBottom ||
-      (bottom === maxBottom && (ratio > maxRatio || (ratio === maxRatio && index > (candidate ?? -Infinity))));
+      top < minTop ||
+      (top === minTop && (ratio > maxRatio || (ratio === maxRatio && index < (candidate ?? Infinity))));
 
     if (shouldUpdate) {
       candidate = index;
-      maxBottom = bottom;
+      minTop = top;
       maxRatio = ratio;
     }
   });
@@ -59,7 +59,10 @@ export const subscribeVirtuosoGlobalRef = (listener: () => void) => {
   };
 };
 
-export const upsertVirtuosoVisibleItem = (index: number, metrics: { bottom: number; ratio: number }) => {
+export const upsertVirtuosoVisibleItem = (
+  index: number,
+  metrics: { bottom: number; ratio: number; top: number },
+) => {
   visibleItems.set(index, metrics);
   recalculateActiveIndex();
 };

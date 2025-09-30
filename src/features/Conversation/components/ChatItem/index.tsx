@@ -249,9 +249,12 @@ const Item = memo<ChatListItemProps>(
           if (entry.target !== element) return;
 
           if (entry.isIntersecting) {
+            const { bottom, top } = entry.intersectionRect;
+
             upsertVirtuosoVisibleItem(index, {
-              bottom: entry.intersectionRect.bottom,
+              bottom,
               ratio: entry.intersectionRatio,
+              top,
             });
           } else {
             removeVirtuosoVisibleItem(index);
