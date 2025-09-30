@@ -93,7 +93,7 @@ const UNIT_QUANTITY_RESOLVERS: Partial<Record<PricingUnitName, UnitQuantityResol
   imageGeneration: () => undefined,
 
   audioInput: (usage) => usage.inputAudioTokens,
-  // TODO: 待 ModelTokensUsage 包含这个数据再支持
+  // TODO: Support this when ModelTokensUsage includes this data
   audioInput_cacheRead: () => undefined,
   audioOutput: (usage) => usage.outputAudioTokens,
 };
@@ -101,13 +101,13 @@ const UNIT_QUANTITY_RESOLVERS: Partial<Record<PricingUnitName, UnitQuantityResol
 const creditsToUSD = (credits: number) => credits / CREDITS_PER_DOLLAR;
 
 /**
- * 直接返回原始 credits，可在最终汇总时统一向上取整。
+ * Returns raw credits, which will be rounded up uniformly at the final aggregation stage.
  */
 const computeFixedCredits = (unit: FixedPricingUnit, quantity: number) => quantity * unit.rate;
 
 /**
- * google provider 是超过阈值后整个 input 和 output 都使用新价格计算， 不是分段计算
- * TODO: 确实有部分 provider 很奇葩分段计算的， 例如智普
+ * Google provider uses new pricing for entire input and output when exceeding threshold, not tiered calculation
+ * TODO: Some providers do use tiered calculation, such as Zhipu
  */
 const computeTieredCredits = (
   unit: TieredPricingUnit,
@@ -119,7 +119,7 @@ const computeTieredCredits = (
   const tiers = unit.tiers ?? [];
   if (tiers.length === 0) return { credits: 0, segments };
 
-  // google 等 provider 是超过阈值后整体按新价格计费
+  // Google and other providers charge the entire quantity at the new rate when exceeding threshold
   const matchedTier =
     tiers.find((tier) => {
       const limit = tier.upTo === 'infinity' ? Number.POSITIVE_INFINITY : tier.upTo;
@@ -209,8 +209,8 @@ const resolveQuantity = (unit: PricingUnit, usage: ModelTokensUsage) => {
 };
 
 /**
- * 1. 分项保留原始 credits（可能为小数）
- * 2. 统一在 totals 阶段向上取整，防止漏计成本
+ * 1. Keep raw credits for each item (may be decimal)
+ * 2. Round up uniformly at the totals stage to prevent cost undercounting
  */
 export const computeChatCost = (
   pricing: Pricing | undefined,
@@ -279,7 +279,7 @@ export const computeChatCost = (
 
   const rawTotalCredits = breakdown.reduce((sum, item) => sum + item.credits, 0);
   const totalCredits = Math.ceil(rawTotalCredits);
-  // !: totalCredits 已统一向上取整到整数 credit，除以 CREDITS_PER_DOLLAR 后天然只保留 6 位小数，无需额外处理
+  // !: totalCredits has been uniformly rounded up to integer credits, divided by CREDITS_PER_DOLLAR naturally retains only 6 decimal places, no additional processing needed
   const totalCost = creditsToUSD(totalCredits);
 
   log(`computeChatPricing breakdown: ${JSON.stringify(breakdown, null, 2)}`);

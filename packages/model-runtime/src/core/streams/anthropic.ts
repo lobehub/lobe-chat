@@ -238,7 +238,7 @@ export const AnthropicStream = (
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
-  const transformWithPayload = (chunk: Anthropic.MessageStreamEvent, ctx: StreamContext) =>
+  const transformWithPayload: typeof transformAnthropicStream = (chunk, ctx) =>
     transformAnthropicStream(chunk, ctx, payload);
 
   return readableStream

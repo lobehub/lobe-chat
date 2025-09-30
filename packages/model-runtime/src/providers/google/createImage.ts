@@ -150,12 +150,9 @@ async function generateImageByChatModel(
   });
 
   const imageResponse = extractImageFromResponse(response);
-
   if (response.usageMetadata) {
     const pricing = await getModelPricing(model, provider);
     imageResponse.modelUsage = convertGoogleAIUsage(response.usageMetadata, pricing);
-
-    console.log('xxxxxxxxxxxxxxxxx', imageResponse.modelUsage);
   }
 
   return imageResponse;

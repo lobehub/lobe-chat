@@ -129,13 +129,13 @@ export const createRouterRuntime = ({
   ...params
 }: CreateRouterRuntimeOptions) => {
   return class UniformRuntime implements LobeRuntimeAI {
-    public options: ClientOptions & Record<string, any>;
+    public _options: ClientOptions & Record<string, any>;
     private _routers: Routers;
     private _params: any;
     private _id: string;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
-      this.options = {
+      this._options = {
         ...options,
         apiKey: options.apiKey?.trim() || DEFAULT_API_LEY,
         baseURL: options.baseURL?.trim(),
@@ -154,7 +154,7 @@ export const createRouterRuntime = ({
       // 动态获取 routers，支持传入 model
       const resolvedRouters =
         typeof this._routers === 'function'
-          ? await this._routers(this.options, { model })
+          ? await this._routers(this._options, { model })
           : this._routers;
 
       if (resolvedRouters.length === 0) {
@@ -163,7 +163,7 @@ export const createRouterRuntime = ({
 
       return resolvedRouters.map((router) => {
         const providerAI = router.runtime ?? baseRuntimeMap[router.apiType] ?? LobeOpenAI;
-        const finalOptions = { ...this._params, ...this.options, ...router.options };
+        const finalOptions = { ...this._params, ...this._options, ...router.options };
         const runtime: LobeRuntimeAI = new providerAI({ ...finalOptions, id: this._id });
 
         return {
@@ -195,7 +195,7 @@ export const createRouterRuntime = ({
         return await runtime.chat!(payload, options);
       } catch (e) {
         if (params.chatCompletion?.handleError) {
-          const error = params.chatCompletion.handleError(e, this.options);
+          const error = params.chatCompletion.handleError(e, this._options);
 
           if (error) {
             throw error;

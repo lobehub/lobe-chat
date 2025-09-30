@@ -13,11 +13,7 @@ export const withUsageCost = (
   if (!pricing) return usage;
 
   const pricingResult = computeChatCost(pricing, usage, options);
-  if (!pricingResult || pricingResult.totalCost <= 0) return usage;
-
-  if ('cost' in usage && usage.cost === pricingResult.totalCost) {
-    return usage;
-  }
+  if (!pricingResult) return usage;
 
   return { ...usage, cost: pricingResult.totalCost };
 };

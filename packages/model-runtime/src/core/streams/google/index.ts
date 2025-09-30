@@ -194,7 +194,7 @@ export const GoogleGenerativeAIStream = (
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
-  const transformWithPayload = (chunk: GenerateContentResponse, ctx: StreamContext) =>
+  const transformWithPayload: typeof transformGoogleGenerativeAIStream = (chunk, ctx) =>
     transformGoogleGenerativeAIStream(chunk, ctx, payload);
 
   return rawStream

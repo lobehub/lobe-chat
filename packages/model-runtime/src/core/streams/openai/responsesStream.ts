@@ -207,22 +207,9 @@ export const OpenAIResponsesStream = (
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
-  const transformWithPayload = (
-    chunk:
-      | OpenAI.Responses.ResponseStreamEvent
-      | {
-          annotation: {
-            end_index: number;
-            start_index: number;
-            title: string;
-            type: 'url_citation';
-            url: string;
-          };
-          item_id: string;
-          type: 'response.output_text.annotation.added';
-        },
-    streamContext: StreamContext,
-  ) => transformOpenAIStream(chunk, streamContext, payload);
+  // use closure to pass payload to transformOpenAIStream
+  const transformWithPayload: typeof transformOpenAIStream = (chunk, streamContext) =>
+    transformOpenAIStream(chunk, streamContext, payload);
 
   return (
     readableStream

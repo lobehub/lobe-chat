@@ -134,7 +134,7 @@ export const VertexAIStream = (
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
-  const transformWithPayload = (chunk: GenerateContentResponse, ctx: StreamContext) =>
+  const transformWithPayload: typeof transformVertexAIStream = (chunk, ctx) =>
     transformVertexAIStream(chunk, ctx, payload);
 
   return rawStream
