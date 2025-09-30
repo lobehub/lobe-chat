@@ -535,9 +535,42 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'Sonnet 4.5 是世界上最好的代理、编码和计算机使用模型。它也是我们在长时间运行任务中最准确、最详细的模型，具有增强的编码、金融和网络安全领域知识。',
+    displayName: 'Claude Sonnet 4.5',
+    enabled: true,
+    id: 'claude-sonnet-4-5-20250929',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '1h': 6, '5m': 3.75 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'Claude Sonnet 4 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
     displayName: 'Claude Sonnet 4',
-    enabled: true,
     id: 'claude-sonnet-4-20250514',
     maxOutput: 64_000,
     pricing: {
