@@ -16,12 +16,12 @@ import {
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
-import { genToolCallingName } from '@lobechat/utils';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { genToolCallingName } from '@/utils/toolCall';
 
 import { isCanUseVideo, isCanUseVision } from './helper';
 
