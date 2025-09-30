@@ -19,6 +19,15 @@ export class AiModelModel {
     this.db = db;
   }
 
+  /**
+   * Helper method to validate if array is empty and return early if needed
+   * @param array - Array to validate
+   * @returns true if array is empty, false otherwise
+   */
+  private isEmptyArray(array: unknown[]): boolean {
+    return array.length === 0;
+  }
+
   create = async (params: NewAiModelItem) => {
     const [result] = await this.db
       .insert(aiModels)
@@ -133,7 +142,7 @@ export class AiModelModel {
 
   batchUpdateAiModels = async (providerId: string, models: AiProviderModelListItem[]) => {
     // Early return if models array is empty to prevent database insertion error
-    if (models.length === 0) {
+    if (this.isEmptyArray(models)) {
       return [];
     }
 
@@ -156,7 +165,7 @@ export class AiModelModel {
 
   batchToggleAiModels = async (providerId: string, models: string[], enabled: boolean) => {
     // Early return if models array is empty to prevent database insertion error
-    if (models.length === 0) {
+    if (this.isEmptyArray(models)) {
       return;
     }
 
@@ -217,7 +226,7 @@ export class AiModelModel {
 
   updateModelsOrder = async (providerId: string, sortMap: AiModelSortMap[]) => {
     // Early return if sortMap array is empty
-    if (sortMap.length === 0) {
+    if (this.isEmptyArray(sortMap)) {
       return;
     }
 
