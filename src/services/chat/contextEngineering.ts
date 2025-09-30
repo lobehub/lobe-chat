@@ -18,13 +18,13 @@ import { historySummaryPrompt } from '@lobechat/prompts';
 import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
 
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { VARIABLE_GENERATORS } from '@/utils/client/parserPlaceholder';
 import { genToolCallingName } from '@/utils/toolCall';
 
-import { isCanUseFC, isCanUseVideo, isCanUseVision } from './helper';
-
+import { isCanUseVideo, isCanUseVision } from './helper';
 
 interface ContextEngineeringContext {
   enableHistoryCount?: boolean;

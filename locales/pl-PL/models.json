@@ -1916,6 +1916,9 @@
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 to bazowy model z architekturą MoE, dysponujący wyjątkowymi możliwościami w zakresie kodowania i agentów, z łączną liczbą parametrów 1T oraz 32B parametrów aktywacyjnych. W standardowych testach wydajności (benchmarkach) dla głównych kategorii takich jak wnioskowanie z wiedzy ogólnej, programowanie, matematyka i agenty, model K2 przewyższa inne popularne otwarte modele."
   },
+  "kimi-k2:1t": {
+    "description": "Kimi K2 to duży, hybrydowy model ekspertowy (MoE) języka opracowany przez AI z Ciemnej Strony Księżyca, posiadający 1 bilion parametrów ogółem oraz 32 miliardy aktywowanych parametrów na pojedyncze przejście w przód. Model jest zoptymalizowany pod kątem zdolności agentowych, w tym zaawansowanego korzystania z narzędzi, wnioskowania i syntezy kodu."
+  },
   "kimi-latest": {
     "description": "Produkt Kimi Smart Assistant korzysta z najnowszego modelu Kimi, który może zawierać cechy jeszcze niestabilne. Obsługuje zrozumienie obrazów i automatycznie wybiera model 8k/32k/128k jako model rozliczeniowy w zależności od długości kontekstu żądania."
   },

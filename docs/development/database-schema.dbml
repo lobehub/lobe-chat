@@ -16,6 +16,7 @@ table agents {
   provider text
   system_role text
   tts jsonb
+  virtual boolean [default: false]
   opening_message text
   opening_questions text[] [default: `[]`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]

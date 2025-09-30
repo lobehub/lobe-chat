@@ -35,7 +35,7 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
             onCancel?.(e);
           }}
           onOk={async (e: MouseEvent<HTMLButtonElement>) => {
-            if (input.length === 0 || input.length > 20)
+            if (input.length === 0 || input.length > 20 || input.trim() === '')
               return message.warning(t('sessionGroup.tooLong'));
 
             setLoading(true);
