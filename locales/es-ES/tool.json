@@ -4,7 +4,7 @@
     "executing": "Ejecutando...",
     "files": "Archivos:",
     "output": "Salida:",
-    "returnValue": "Valor de retorno:"
+    "returnValue": "Valor devuelto:"
   },
   "dalle": {
     "autoGenerate": "Auto-generar",

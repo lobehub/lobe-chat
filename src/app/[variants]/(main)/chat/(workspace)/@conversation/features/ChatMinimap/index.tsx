@@ -261,11 +261,7 @@ const ChatMinimap = () => {
         targetPosition = direction === 'prev' ? indicators.length - 1 : 0;
       }
 
-      console.log('> targetPosition', targetPosition);
-
       const targetIndicator = indicators[targetPosition];
-
-      console.log('> targetIndicator', targetIndicator);
 
       if (!targetIndicator) return;
 
@@ -276,8 +272,6 @@ const ChatMinimap = () => {
         // but it works
         index: targetIndicator.virtuosoIndex + 1,
       });
-
-      console.log('> activeIndicatorPosition', activeIndicatorPosition);
     },
     [activeIndex, activeIndicatorPosition, indicators, virtuosoRef],
   );
@@ -309,7 +303,7 @@ const ChatMinimap = () => {
             <Tooltip key={id} mouseEnterDelay={0.1} placement={'left'} title={preview || undefined}>
               <button
                 aria-current={isActive ? 'true' : undefined}
-                aria-label={`Jump to message ${position + 1}`}
+                aria-label={t('minimap.jumpToMessage', { index: position + 1 })}
                 className={styles.indicator}
                 onClick={() => handleJump(virtuosoIndex)}
                 style={{
@@ -326,7 +320,7 @@ const ChatMinimap = () => {
         })}
         <Tooltip mouseEnterDelay={0.1} placement={'left'} title={t('minimap.nextMessage')}>
           <button
-            aria-label={t('minimap.nextMessageAriaLabel')}
+            aria-label={t('minimap.nextMessage')}
             className={cx(styles.arrow, isHovered && styles.arrowVisible)}
             onClick={() => handleStep('next')}
             type={'button'}

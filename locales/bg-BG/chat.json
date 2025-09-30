@@ -150,6 +150,11 @@
       "total": "Общо разходи"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Отиди до съобщение № {{index}}",
+    "nextMessage": "Следващо съобщение",
+    "previousMessage": "Предишно съобщение"
+  },
   "newAgent": "Нов агент",
   "pin": "Закачи",
   "pinOff": "Откачи",

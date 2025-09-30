@@ -155,10 +155,9 @@ export default {
     },
   },
   minimap: {
-    nextMessage: '跳转至下一条消息',
-    nextMessageAriaLabel: '跳转至下一条消息',
-    previousMessage: '跳转至上一条消息',
-    previousMessageAriaLabel: '跳转至上一条消息',
+    jumpToMessage: '跳转至第 {{index}} 条消息',
+    nextMessage: '下一条消息',
+    previousMessage: '上一条消息',
   },
   newAgent: '新建助手',
   pin: '置顶',
