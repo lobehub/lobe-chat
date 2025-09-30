@@ -356,7 +356,7 @@ const AgentModal = memo(() => {
         if (cleanedRest.params) {
           const cleanedParams = { ...cleanedRest.params };
           (Object.keys(cleanedParams) as Array<keyof typeof cleanedParams>).forEach((key) => {
-            // 使用 null 作为删除标记（JSON 可以序列化 null，而 undefined 会被忽略）
+            // 使用 null 作为禁用标记（JSON 可以序列化 null，而 undefined 会被忽略）
             if (cleanedParams[key] === undefined) {
               cleanedParams[key] = null as any;
             }

@@ -230,9 +230,9 @@ const Controls = memo<ControlsProps>(({ setUpdating }) => {
 
       if (newValue === undefined) {
         // 显式删除该属性，而不是设置为 undefined
-        // 这样可以确保该属性在 JSON 序列化后真正被删除
+        // 这样可以确保 Form 表单状态同步
         delete currentParams[key];
-        // 设置为 null 作为删除标记（JSON 可以序列化 null）
+        // 使用 null 作为禁用标记（数据库会保留 null，前端据此判断复选框状态）
         currentParams[key] = null as any;
       } else {
         currentParams[key] = newValue;

@@ -1,4 +1,5 @@
 import { and, eq, inArray } from 'drizzle-orm';
+import { LLMParams } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -907,7 +908,7 @@ describe('SessionModel', () => {
       expect(updatedAgent[0].params).not.toHaveProperty('temperature');
     });
 
-    it('should properly delete params when value is null', async () => {
+    it('should mark params as null when value is null', async () => {
       // Create test session with agent having params
       const sessionId = 'test-session-delete-params-null';
       const agentId = 'test-agent-delete-params-null';
@@ -939,14 +940,14 @@ describe('SessionModel', () => {
         });
       });
 
-      // Update config with temperature set to null (delete it)
+      // Update config with temperature set to null (mark it as disabled)
       await sessionModel.updateConfig(sessionId, {
         params: {
           temperature: null,
         } as any,
       });
 
-      // Verify temperature was deleted while other params remain
+      // Verify temperature is marked as null while other params remain untouched
       const updatedAgent = await serverDB
         .select()
         .from(agents)
@@ -956,8 +957,9 @@ describe('SessionModel', () => {
         top_p: 1,
         presence_penalty: 0,
         frequency_penalty: 0,
+        temperature: null,
       });
-      expect(updatedAgent[0].params).not.toHaveProperty('temperature');
+      expect((updatedAgent[0].params as LLMParams)?.temperature).toBeNull();
     });
 
     it('should throw error if session has no associated agent', async () => {

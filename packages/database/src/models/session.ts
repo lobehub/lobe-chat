@@ -413,20 +413,23 @@ export class SessionModel {
       );
     }
 
-    // 先处理要删除的参数（undefined 或 null 值）
+    // 先处理参数字段：undefined 表示删除，null 表示禁用标记
     const existingParams = session.agent.params ?? {};
     const updatedParams: Record<string, any> = { ...existingParams };
 
     if (data.params) {
       const incomingParams = data.params as Record<string, any>;
       Object.keys(incomingParams).forEach((key) => {
-        // 如果传入 undefined 或 null，从现有参数中删除
-        if (incomingParams[key] === undefined || incomingParams[key] === null) {
+        const incomingValue = incomingParams[key];
+
+        // undefined 代表显式删除该字段
+        if (incomingValue === undefined) {
           delete updatedParams[key];
-        } else {
-          // 否则更新/添加该参数
-          updatedParams[key] = incomingParams[key];
+          return;
         }
+
+        // 其余值（包括 null）都直接覆盖，null 表示在前端禁用该参数
+        updatedParams[key] = incomingValue;
       });
     }
 
@@ -442,7 +445,7 @@ export class SessionModel {
     if (mergedValue.params) {
       const params = mergedValue.params as Record<string, any>;
       Object.keys(params).forEach((key) => {
-        if (params[key] === undefined || params[key] === null) {
+        if (params[key] === undefined) {
           delete params[key];
         }
       });
