@@ -18,7 +18,7 @@ const ChatConversation = async (props: DynamicLayoutProps) => {
       <ChatInput mobile={isMobile} />
       <ChatHydration />
       <ThreadHydration />
-      <ChatMinimap />
+      {!isMobile && <ChatMinimap />}
     </>
   );
 };

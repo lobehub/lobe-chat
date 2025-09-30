@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import {
-  getVirtuosoGlobalRef,
   getVirtuosoActiveIndex,
-  subscribeVirtuosoGlobalRef,
+  getVirtuosoGlobalRef,
   subscribeVirtuosoActiveIndex,
+  subscribeVirtuosoGlobalRef,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -24,19 +24,25 @@ const MIN_MESSAGES = 6;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
+    cursor: pointer;
+
+    transform: translateX(4px);
+
+    display: flex;
     align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    padding: 0;
     border: none;
     border-radius: 6px;
-    background: none;
+
     color: ${token.colorTextTertiary};
-    cursor: pointer;
-    display: flex;
-    height: 24px;
-    justify-content: center;
-    padding: 0;
-    width: 24px;
+
     opacity: 0;
-    transform: translateX(4px);
+    background: none;
+
     transition: opacity 0.2s ease;
 
     &:hover {
@@ -45,8 +51,8 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
       outline: none;
+      box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
     }
   `,
   arrowVisible: css`
@@ -54,61 +60,70 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   container: css`
     pointer-events: none;
-    inset-block-start: 16px;
-    inset-block-end: 120px;
-    inset-inline-end: 16px;
+
     position: absolute;
-    width: 32px;
     z-index: 1;
+    inset-block: 16px 120px;
+    inset-inline-end: 8px;
+
+    width: 32px;
   `,
   indicator: css`
-    background: none;
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    min-width: ${MIN_WIDTH}px;
+    height: 12px;
+    padding-block: 4px;
+    padding-inline: 4px;
     border: none;
     border-radius: 3px;
-    cursor: pointer;
-    flex-shrink: 0;
-    height: 12px;
-    min-width: ${MIN_WIDTH}px;
-    padding: 4px 4px;
+
+    background: none;
+
     transition:
       transform 0.2s ease,
       background-color 0.2s ease,
       box-shadow 0.2s ease;
 
     &:hover {
-      background: ${token.colorFill};
       transform: scaleX(1.05);
+      background: ${token.colorFill};
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
       outline: none;
+      box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
     }
   `,
   indicatorActive: css`
+    transform: scaleX(1.1);
     background: ${token.colorPrimary};
     box-shadow: 0 0 0 1px ${token.colorPrimaryHover};
-    transform: scaleX(1.1);
   `,
   indicatorContent: css`
-    background: ${token.colorFillSecondary};
-    border-radius: 3px;
-    height: 100%;
     width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background: ${token.colorFillSecondary};
   `,
   indicatorContentActive: css`
     background: ${token.colorPrimary};
   `,
   rail: css`
-    align-items: end;
+    pointer-events: auto;
+
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    gap: 0;
+    align-items: end;
+    justify-content: space-between;
+
     width: 100%;
     height: fit-content;
-    justify-content: space-between;
-    margin: 0 auto;
-    pointer-events: auto;
+    margin-block: 0;
+    margin-inline: auto;
 
     &:hover .arrow {
       opacity: 1;
