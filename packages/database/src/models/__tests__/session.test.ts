@@ -854,6 +854,112 @@ describe('SessionModel', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should properly delete params when value is undefined', async () => {
+      // Create test session with agent having params
+      const sessionId = 'test-session-delete-params';
+      const agentId = 'test-agent-delete-params';
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId,
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Test Agent',
+          params: {
+            temperature: 0.7,
+            top_p: 1,
+            presence_penalty: 0,
+            frequency_penalty: 0,
+          },
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId,
+        });
+      });
+
+      // Update config with temperature set to undefined (delete it)
+      await sessionModel.updateConfig(sessionId, {
+        params: {
+          temperature: undefined,
+        },
+      });
+
+      // Verify temperature was deleted while other params remain
+      const updatedAgent = await serverDB
+        .select()
+        .from(agents)
+        .where(and(eq(agents.id, agentId), eq(agents.userId, userId)));
+
+      expect(updatedAgent[0].params).toMatchObject({
+        top_p: 1,
+        presence_penalty: 0,
+        frequency_penalty: 0,
+      });
+      expect(updatedAgent[0].params).not.toHaveProperty('temperature');
+    });
+
+    it('should properly delete params when value is null', async () => {
+      // Create test session with agent having params
+      const sessionId = 'test-session-delete-params-null';
+      const agentId = 'test-agent-delete-params-null';
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId,
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Test Agent',
+          params: {
+            temperature: 0.7,
+            top_p: 1,
+            presence_penalty: 0,
+            frequency_penalty: 0,
+          },
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId,
+        });
+      });
+
+      // Update config with temperature set to null (delete it)
+      await sessionModel.updateConfig(sessionId, {
+        params: {
+          temperature: null,
+        } as any,
+      });
+
+      // Verify temperature was deleted while other params remain
+      const updatedAgent = await serverDB
+        .select()
+        .from(agents)
+        .where(and(eq(agents.id, agentId), eq(agents.userId, userId)));
+
+      expect(updatedAgent[0].params).toMatchObject({
+        top_p: 1,
+        presence_penalty: 0,
+        frequency_penalty: 0,
+      });
+      expect(updatedAgent[0].params).not.toHaveProperty('temperature');
+    });
+
     it('should throw error if session has no associated agent', async () => {
       // Create session without agent
       const sessionId = 'session-no-agent';

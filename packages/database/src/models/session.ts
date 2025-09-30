@@ -413,7 +413,44 @@ export class SessionModel {
       );
     }
 
-    const mergedValue = merge(session.agent, data);
+    // 先处理要删除的参数（undefined 或 null 值）
+    const existingParams = session.agent.params ?? {};
+    const updatedParams: Record<string, any> = { ...existingParams };
+
+    if (data.params) {
+      const incomingParams = data.params as Record<string, any>;
+      Object.keys(incomingParams).forEach((key) => {
+        // 如果传入 undefined 或 null，从现有参数中删除
+        if (incomingParams[key] === undefined || incomingParams[key] === null) {
+          delete updatedParams[key];
+        } else {
+          // 否则更新/添加该参数
+          updatedParams[key] = incomingParams[key];
+        }
+      });
+    }
+
+    // 构建要合并的数据，排除 params（单独处理）
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { params: _params, ...restData } = data;
+    const mergedValue = merge(session.agent, restData);
+
+    // 应用处理后的参数
+    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
+
+    // 最终清理：确保没有 undefined 或 null 值进入数据库
+    if (mergedValue.params) {
+      const params = mergedValue.params as Record<string, any>;
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined || params[key] === null) {
+          delete params[key];
+        }
+      });
+      if (Object.keys(params).length === 0) {
+        mergedValue.params = undefined;
+      }
+    }
+
     return this.db
       .update(agents)
       .set(mergedValue)
