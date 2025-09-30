@@ -209,10 +209,12 @@ const ChatMinimap = () => {
 
   const handleJump = useCallback(
     (virtIndex: number) => {
-      virtuosoRef?.current?.scrollIntoView({
+      virtuosoRef?.current?.scrollToIndex({
         align: 'start',
         behavior: 'smooth',
         index: virtIndex,
+        // The current index detection will be off by 1, so we need to add 1 here
+        offset: 2,
       });
     },
     [virtuosoRef],
