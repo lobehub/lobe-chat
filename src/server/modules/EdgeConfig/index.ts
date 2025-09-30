@@ -2,7 +2,7 @@ import { EdgeConfigClient, createClient } from '@vercel/edge-config';
 
 import { appEnv } from '@/envs/app';
 
-import { EdgeConfigData } from './types';
+import type { EdgeConfigData } from './types';
 
 export class EdgeConfig {
   get client(): EdgeConfigClient {
