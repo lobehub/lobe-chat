@@ -131,13 +131,14 @@ describe('computeChatPricing', () => {
 
   describe('Google', () => {
     it('computes tiered pricing with reasoning tokens for large context conversation', () => {
-      const pricing = lobehubChatModels.find(
+      const pricing = googleChatModels.find(
         (model: { id: string }) => model.id === 'gemini-2.5-pro',
       )?.pricing;
       expect(pricing).toBeDefined();
 
       const usage: ModelTokensUsage = {
         inputCachedTokens: 253_891,
+        inputCacheMissTokens: 4_275, // totalInputTokens - inputCachedTokens = 258_166 - 253_891
         inputTextTokens: 258_166,
         outputReasoningTokens: 1_601,
         outputTextTokens: 1_462,
@@ -205,7 +206,7 @@ describe('computeChatPricing', () => {
     });
 
     it('handles multi-modal image generation for Nano Banana', () => {
-      const pricing = lobehubChatModels.find(
+      const pricing = googleChatModels.find(
         (model: { id: string }) => model.id === 'gemini-2.5-flash-image-preview',
       )?.pricing;
       expect(pricing).toBeDefined();
@@ -247,7 +248,7 @@ describe('computeChatPricing', () => {
     });
 
     it('handles large context conversation with cache cross-tier pricing for Gemini 2.5 Pro', () => {
-      const pricing = lobehubChatModels.find(
+      const pricing = googleChatModels.find(
         (model: { id: string }) => model.id === 'gemini-2.5-pro',
       )?.pricing;
       expect(pricing).toBeDefined();
@@ -405,8 +406,8 @@ describe('computeChatPricing', () => {
     });
 
     it('handles complex scenario with all cache types for Claude Sonnet 4 Latest', () => {
-      const pricing = lobehubChatModels.find(
-        (model: { id: string }) => model.id === 'claude-sonnet-4-latest',
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-sonnet-4-20250514',
       )?.pricing;
       expect(pricing).toBeDefined();
 
@@ -419,7 +420,7 @@ describe('computeChatPricing', () => {
         totalTokens: 7569,
       };
 
-      const result = computeChatCost(pricing, usage);
+      const result = computeChatCost(pricing, usage, { lookupParams: { ttl: '5m' } });
       expect(result).toBeDefined();
       expect(result?.issues).toHaveLength(0);
 

@@ -422,7 +422,7 @@ export const createTokenSpeedCalculator = (
         data: {
           duration: now - outputStartAt,
           latency: now - inputStartAt,
-          tps: (outputTokens / elapsed) * 1000,
+          tps: elapsed === 0 ? undefined : (outputTokens / elapsed) * 1000,
           ttft: outputStartAt - inputStartAt,
         } as ModelSpeed,
         id: TOKEN_SPEED_CHUNK_ID,

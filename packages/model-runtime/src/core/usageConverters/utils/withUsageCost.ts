@@ -10,11 +10,9 @@ export const withUsageCost = (
   pricing?: Pricing,
   options?: ComputeChatCostOptions,
 ): ModelUsage => {
-  console.log('pricing: %O', pricing);
   if (!pricing) return usage;
 
   const pricingResult = computeChatCost(pricing, usage, options);
-  console.log('pricingResult: %O', pricingResult);
   if (!pricingResult || pricingResult.totalCost <= 0) return usage;
 
   if ('cost' in usage && usage.cost === pricingResult.totalCost) {

@@ -68,9 +68,8 @@ const UNIT_QUANTITY_RESOLVERS: Partial<Record<PricingUnitName, UnitQuantityResol
   textInput_cacheWrite: (usage) => usage.inputWriteCacheTokens,
   // reasoning tokens cost within output tokens
   textOutput: (usage) => {
-    const outputTextTokens = usage.outputTextTokens;
-    const totalOutputTokens = usage.totalOutputTokens;
-    const reasoningTokens = usage.outputReasoningTokens ?? 0;
+    const { outputTextTokens, totalOutputTokens, outputReasoningTokens = 0 } = usage;
+    const reasoningTokens = outputReasoningTokens;
 
     if (typeof outputTextTokens === 'number') {
       return outputTextTokens + reasoningTokens;
