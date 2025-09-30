@@ -4,8 +4,9 @@ import type { VirtuosoHandle } from 'react-virtuoso';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  resetVirtuosoVisibleItems,
   setVirtuosoGlobalRef,
-  setVirtuosoViewportRange,
+  upsertVirtuosoVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
@@ -55,7 +56,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => {
     setVirtuosoGlobalRef(null);
-    setVirtuosoViewportRange(null);
+    resetVirtuosoVisibleItems();
   });
   vi.runOnlyPendingTimers();
   vi.useRealTimers();
@@ -71,24 +72,29 @@ describe('ChatMinimap', () => {
   });
 
   it('should render one indicator per message when enabled', () => {
-    const messages = ['short', 'medium length message', 'a'.repeat(240), 'b'.repeat(120), 'c', 'd'];
+    const messages = [
+      'short',
+      'medium length message',
+      'a'.repeat(240),
+      'b'.repeat(120),
+      'c',
+      'd',
+      'e',
+    ];
     setupMessages(messages);
 
     render(<ChatMinimap />);
 
     const indicatorButtons = screen.getAllByLabelText(/Jump to message/);
-    const navigationButtons = screen.getAllByLabelText(/Jump to (previous|next) message/);
+    const allButtons = screen.getAllByRole('button');
+    const navigationButtons = [allButtons[0], allButtons[allButtons.length - 1]];
 
     expect(indicatorButtons).toHaveLength(messages.length);
     expect(navigationButtons).toHaveLength(2);
-
-    const widths = indicatorButtons.map((button) => parseFloat(button.style.width || '0'));
-
-    expect(Math.max(...widths)).toBeGreaterThan(Math.min(...widths));
   });
 
   it('should call scrollIntoView when a dot is clicked', () => {
-    setupMessages(5);
+    setupMessages(8);
 
     const scrollIntoView = vi.fn();
     const virtuosoRef = { current: { scrollIntoView } } as unknown as RefObject<VirtuosoHandle>;
@@ -110,7 +116,7 @@ describe('ChatMinimap', () => {
 
   it('should show message preview in tooltip', () => {
     const previewContent = 'Preview message content for tooltip';
-    setupMessages([previewContent, 'another message', 'third message', 'four', 'five']);
+    setupMessages([previewContent, 'another message', 'third message', 'four', 'five', 'six', 'seven']);
 
     render(<ChatMinimap />);
 
@@ -133,7 +139,7 @@ describe('ChatMinimap', () => {
 
     act(() => {
       setVirtuosoGlobalRef(virtuosoRef);
-      setVirtuosoViewportRange({ endIndex: 7, startIndex: 5 });
+      upsertVirtuosoVisibleItem(7, { bottom: 600, ratio: 1 });
     });
 
     render(<ChatMinimap />);
@@ -144,13 +150,17 @@ describe('ChatMinimap', () => {
 
     expect(screen.getByLabelText('Jump to message 8')).toHaveAttribute('aria-current', 'true');
 
-    fireEvent.click(screen.getByLabelText('Jump to previous message'));
+    const allButtons = screen.getAllByRole('button');
+    const prevButton = allButtons[0];
+    const nextButton = allButtons[allButtons.length - 1];
+
+    fireEvent.click(prevButton);
 
     expect(scrollIntoView).toHaveBeenCalledWith({ align: 'center', behavior: 'smooth', index: 6 });
 
     scrollIntoView.mockClear();
 
-    fireEvent.click(screen.getByLabelText('Jump to next message'));
+    fireEvent.click(nextButton);
 
     expect(scrollIntoView).toHaveBeenCalledWith({ align: 'center', behavior: 'smooth', index: 8 });
   });

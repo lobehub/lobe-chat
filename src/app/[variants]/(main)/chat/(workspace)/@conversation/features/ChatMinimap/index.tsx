@@ -10,9 +10,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import {
   getVirtuosoGlobalRef,
-  getVirtuosoViewportRange,
+  getVirtuosoActiveIndex,
   subscribeVirtuosoGlobalRef,
-  subscribeVirtuosoViewportRange,
+  subscribeVirtuosoActiveIndex,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -142,9 +142,9 @@ const ChatMinimap = () => {
     getVirtuosoGlobalRef,
     () => null,
   );
-  const viewportRange = useSyncExternalStore(
-    subscribeVirtuosoViewportRange,
-    getVirtuosoViewportRange,
+  const activeIndex = useSyncExternalStore(
+    subscribeVirtuosoActiveIndex,
+    getVirtuosoActiveIndex,
     () => null,
   );
   const messages = useChatStore(chatSelectors.mainDisplayChats).filter(
@@ -163,16 +163,6 @@ const ChatMinimap = () => {
       })),
     [messages],
   );
-
-  const activeIndex = useMemo(() => {
-    if (!viewportRange) return null;
-
-    console.log('viewportRange', viewportRange);
-
-    const index = Math.min(viewportRange.endIndex, Math.max(messages.length - 1, 0));
-
-    return Number.isFinite(index) ? index : null;
-  }, [messages.length, viewportRange]);
 
   const handleJump = useCallback(
     (index: number) => {

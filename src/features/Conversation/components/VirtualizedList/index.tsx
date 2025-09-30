@@ -10,11 +10,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
-import {
-  VirtuosoContext,
-  setVirtuosoGlobalRef,
-  setVirtuosoViewportRange,
-} from './VirtuosoContext';
+import { VirtuosoContext, resetVirtuosoVisibleItems, setVirtuosoGlobalRef } from './VirtuosoContext';
 
 interface VirtualizedListProps {
   dataSource: string[];
@@ -71,7 +67,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
 
   useEffect(() => {
     return () => {
-      setVirtuosoViewportRange(null);
+      resetVirtuosoVisibleItems();
     };
   }, []);
 
@@ -96,7 +92,6 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
         initialTopMostItemIndex={dataSource?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}
-        rangeChanged={setVirtuosoViewportRange}
         ref={virtuosoRef}
       />
       <WideScreenContainer
