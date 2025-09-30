@@ -38,13 +38,13 @@ const setupMessages = (input: number | string[]) => {
       {
         ...initialState,
         activeId: sessionId,
-        activeTopicId: null,
+        activeTopicId: undefined,
         messagesInit: true,
         messagesMap: {
           [key]: messages,
         },
       },
-      true,
+      false,
     );
   });
 };
@@ -116,7 +116,15 @@ describe('ChatMinimap', () => {
 
   it('should show message preview in tooltip', () => {
     const previewContent = 'Preview message content for tooltip';
-    setupMessages([previewContent, 'another message', 'third message', 'four', 'five', 'six', 'seven']);
+    setupMessages([
+      previewContent,
+      'another message',
+      'third message',
+      'four',
+      'five',
+      'six',
+      'seven',
+    ]);
 
     render(<ChatMinimap />);
 
@@ -135,7 +143,7 @@ describe('ChatMinimap', () => {
     setupMessages(10);
 
     const scrollIntoView = vi.fn();
-    const virtuosoRef = ({ current: { scrollIntoView } } as unknown as RefObject<VirtuosoHandle>);
+    const virtuosoRef = { current: { scrollIntoView } } as unknown as RefObject<VirtuosoHandle>;
 
     act(() => {
       setVirtuosoGlobalRef(virtuosoRef);
