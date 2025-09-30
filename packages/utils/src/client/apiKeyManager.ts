@@ -26,7 +26,7 @@ export class ClientApiKeyManager {
   }
 
   pick(apiKeys: string = '') {
-    if (!apiKeys) return '';
+    if (!apiKeys) return undefined;
 
     const store = this.getKeyStore(apiKeys);
     let index = 0;

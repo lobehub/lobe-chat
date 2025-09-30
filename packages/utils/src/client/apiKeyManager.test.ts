@@ -5,8 +5,8 @@ import { ClientApiKeyManager } from './apiKeyManager';
 describe('ClientApiKeyManager', () => {
   it('should return empty string for empty input', () => {
     const manager = new ClientApiKeyManager();
-    expect(manager.pick('')).toBe('');
-    expect(manager.pick()).toBe('');
+    expect(manager.pick('')).toBeUndefined();
+    expect(manager.pick()).toBeUndefined();
   });
 
   it('should return the single key when only one key is provided', () => {
