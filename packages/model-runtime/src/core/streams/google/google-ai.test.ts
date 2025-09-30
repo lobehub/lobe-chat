@@ -938,4 +938,105 @@ describe('GoogleGenerativeAIStream', () => {
       `data: ${JSON.stringify(errorPayload)}\n\n`,
     ]);
   });
+
+  it('should handle thought and text in the same chunk', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: {
+              parts: [
+                { text: '**Thinking about it**\n', thought: true },
+                { text: 'Here is the answer.' },
+              ],
+              role: 'model',
+            },
+            index: 0,
+          },
+        ],
+        text: '**Thinking about it**\nHere is the answer.',
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 20,
+          totalTokenCount: 30,
+        },
+      },
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: ' More text.' }], role: 'model' },
+            finishReason: 'STOP',
+            index: 0,
+          },
+        ],
+        text: ' More text.',
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 25,
+          totalTokenCount: 35,
+        },
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+        controller.close();
+      },
+    });
+
+    const onThinkingMock = vi.fn();
+    const onThinkingStopMock = vi.fn();
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream, {
+      callbacks: {
+        onThinking: onThinkingMock,
+        onThinkingStop: onThinkingStopMock,
+      },
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chat_1',
+        'event: reasoning',
+        'data: "**Thinking about it**\\n"\n',
+
+        'id: chat_1',
+        'event: text',
+        'data: "Here is the answer."\n',
+
+        'id: chat_1',
+        'event: reasoning_stop',
+        'data: null\n',
+
+        'id: chat_1',
+        'event: text',
+        'data: " More text."\n',
+
+        'id: chat_1',
+        'event: stop',
+        'data: "STOP"\n',
+
+        'id: chat_1',
+        'event: usage',
+        `data: {"outputImageTokens":0,"outputTextTokens":25,"totalInputTokens":10,"totalOutputTokens":25,"totalTokens":35}\n`,
+      ].map((i) => i + '\n'),
+    );
+
+    expect(onThinkingMock).toHaveBeenCalledOnce();
+    expect(onThinkingMock).toHaveBeenCalledWith('**Thinking about it**\n');
+    expect(onThinkingStopMock).toHaveBeenCalledOnce();
+  });
 });

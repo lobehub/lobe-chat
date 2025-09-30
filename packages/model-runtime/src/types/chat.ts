@@ -191,6 +191,7 @@ export interface ChatStreamCallbacks {
   /** `onText`: Called for each text chunk. */
   onText?: (content: string) => Promise<void> | void;
   onThinking?: (content: string) => Promise<void> | void;
+  onThinkingStop?: () => Promise<void> | void;
   onToolsCalling?: (data: {
     chunk: MessageToolCallChunk[];
     toolsCalling: MessageToolCall[];

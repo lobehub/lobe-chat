@@ -128,44 +128,38 @@ const transformGoogleGenerativeAIStream = (
   const text = chunk.text;
 
   if (candidate) {
-    // 分离思考内容和普通文本内容
-    let reasoningText = '';
-    let normalText = '';
+    const resultChunks: StreamProtocolChunk[] = [];
 
+    // 首先检查是否为 reasoning 内容 (thought: true)
     if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
+      let hasThought = false;
+      let hasText = false;
+
       for (const part of candidate.content.parts) {
-        if (part && part.text) {
-          if (part.thought === true) {
-            reasoningText += part.text;
-          } else {
-            normalText += part.text;
-          }
+        if (part.thought && part.text) {
+          resultChunks.push({ data: part.text, id: context.id, type: 'reasoning' });
+          hasThought = true;
+        } else if (part.text) {
+          resultChunks.push({ data: part.text, id: context.id, type: 'text' });
+          hasText = true;
         }
+      }
+
+      // 如果同时存在 thought 和 text，发送思考结束信号
+      if (hasThought && hasText) {
+        resultChunks.push({ data: null, id: context.id, type: 'reasoning_stop' });
       }
     }
 
-    // 如果只有思考内容，直接返回 reasoning chunk
-    if (reasoningText && !normalText && !candidate.groundingMetadata && !candidate.finishReason) {
-      return { data: reasoningText, id: context.id, type: 'reasoning' };
-    }
-
-    // 处理包含多种内容的情况（思考、普通文本、grounding、finish等）
-    const chunks: StreamProtocolChunk[] = [];
-
-    // 添加思考内容
-    if (reasoningText) {
-      chunks.push({ data: reasoningText, id: context.id, type: 'reasoning' });
-    }
-
-    // 添加普通文本
-    if (normalText || (text && !reasoningText)) {
-      chunks.push({ data: normalText || text, id: context.id, type: 'text' });
-    }
-
-    // return the grounding
+    // 检查并添加 grounding 信息
     const { groundingChunks, webSearchQueries } = candidate.groundingMetadata ?? {};
     if (groundingChunks) {
-      chunks.push({
+      // 如果还没有添加文本内容，添加顶层的 text
+      if (resultChunks.length === 0 && text) {
+        resultChunks.push({ data: text, id: context.id, type: 'text' });
+      }
+
+      resultChunks.push({
         data: {
           citations: groundingChunks?.map((chunk) => ({
             // google 返回的 uri 是经过 google 自己处理过的 url，因此无法展现真实的 favicon
@@ -181,14 +175,9 @@ const transformGoogleGenerativeAIStream = (
       });
     }
 
-    // 添加 usage 和 stop chunks
-    if (usageChunks.length > 0) {
-      chunks.push(...usageChunks);
-    }
-
-    // 如果收集到了内容，返回所有 chunks
-    if (chunks.length > 0) {
-      return chunks;
+    // 如果有收集到的内容，返回它们加上 usage 信息
+    if (resultChunks.length > 0) {
+      return [...resultChunks, ...usageChunks];
     }
 
     // Check for image data before handling finishReason
