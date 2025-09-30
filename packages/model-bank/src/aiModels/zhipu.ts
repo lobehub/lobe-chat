@@ -17,6 +17,50 @@ const zhipuChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'glm-4.6',
     maxOutput: 128_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]_[0, 200]': 0.4,
+              '[0, 32_000]_[200, infinity]': 0.6,
+              '[32_000, 200_000]': 0.8,
+            },
+            pricingParams: ['textInput', 'textOutput'],
+          },
+          name: 'textInput_cacheRead',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]_[0, 200]': 2,
+              '[0, 32_000]_[200, infinity]': 3,
+              '[32_000, 200_000]': 4,
+            },
+            pricingParams: ['textInput', 'textOutput'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 32_000]_[0, 200]': 8,
+              '[0, 32_000]_[200, infinity]': 14,
+              '[32_000, 200_000]': 16,
+            },
+            pricingParams: ['textInput', 'textOutput'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -380,7 +424,6 @@ const zhipuChatModels: AIChatModelCard[] = [
     description:
       'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
     displayName: 'GLM-4.1V-Thinking-Flash',
-    enabled: true,
     id: 'glm-4.1v-thinking-flash',
     maxOutput: 16_384,
     pricing: {
