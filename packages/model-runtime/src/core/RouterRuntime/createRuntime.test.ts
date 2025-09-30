@@ -518,7 +518,7 @@ describe('createRouterRuntime', () => {
           apiKey: 'test-key',
           baseURL: 'https://yourapi.cn',
         }),
-        { model: 'gpt-4' },
+        'gpt-4',
       );
     });
 

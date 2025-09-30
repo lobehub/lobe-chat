@@ -15,6 +15,7 @@ import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthrop
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 import { StreamingResponse } from '../../utils/response';
 import { createAnthropicGenerateObject } from './generateObject';
@@ -38,6 +39,44 @@ const modelsWithTempAndTopPConflict = new Set([
 ]);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
+const DEFAULT_CACHE_TTL = '5m' as const;
+
+type CacheTTL = Anthropic.Messages.CacheControlEphemeral['ttl'];
+
+/**
+ * Resolves cache TTL from Anthropic payload or request settings
+ * Returns the first valid TTL found in system messages or content blocks
+ */
+const resolveCacheTTL = (
+  requestPayload: ChatStreamPayload,
+  anthropicPayload: Anthropic.MessageCreateParams,
+): CacheTTL | undefined => {
+  // Check system messages for cache TTL
+  if (Array.isArray(anthropicPayload.system)) {
+    for (const block of anthropicPayload.system) {
+      const ttl = block.cache_control?.ttl;
+      if (ttl) return ttl;
+    }
+  }
+
+  // Check message content blocks for cache TTL
+  for (const message of anthropicPayload.messages ?? []) {
+    if (!Array.isArray(message.content)) continue;
+
+    for (const block of message.content) {
+      // Message content blocks might have cache_control property
+      const ttl = ('cache_control' in block && block.cache_control?.ttl) as CacheTTL | undefined;
+      if (ttl) return ttl;
+    }
+  }
+
+  // Use default TTL if context caching is enabled
+  if (requestPayload.enabledContextCaching) {
+    return DEFAULT_CACHE_TTL;
+  }
+
+  return undefined;
+};
 
 interface AnthropicAIParams extends ClientOptions {
   id?: string;
@@ -103,8 +142,16 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
+      const pricing = await getModelPricing(payload.model, this.id);
+      const cacheTTL = resolveCacheTTL(payload, anthropicPayload);
+      const pricingOptions = cacheTTL ? { lookupParams: { ttl: cacheTTL } } : undefined;
+
       return StreamingResponse(
-        AnthropicStream(prod, { callbacks: options?.callback, inputStartAt }),
+        AnthropicStream(prod, {
+          callbacks: options?.callback,
+          inputStartAt,
+          payload: { model: payload.model, pricing, pricingOptions, provider: this.id },
+        }),
         {
           headers: options?.headers,
         },
