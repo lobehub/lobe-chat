@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add minimap to chat list for quick navigation."]
+    },
+    "date": "2025-09-30",
+    "version": "1.133.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-09-30",
