@@ -32,7 +32,8 @@ const recalculateActiveIndex = () => {
   visibleItems.forEach(({ top, ratio }, index) => {
     const shouldUpdate =
       top < minTop ||
-      (top === minTop && (ratio > maxRatio || (ratio === maxRatio && index < (candidate ?? Infinity))));
+      (top === minTop &&
+        (ratio > maxRatio || (ratio === maxRatio && index < (candidate ?? Infinity))));
 
     if (shouldUpdate) {
       candidate = index;

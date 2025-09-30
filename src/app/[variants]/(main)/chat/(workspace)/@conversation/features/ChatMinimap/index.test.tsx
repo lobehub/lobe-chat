@@ -115,7 +115,6 @@ describe('ChatMinimap', () => {
       align: 'start',
       behavior: 'smooth',
       index: 0,
-      offset: 64,
     });
   });
 
@@ -173,7 +172,6 @@ describe('ChatMinimap', () => {
       align: 'start',
       behavior: 'smooth',
       index: 6,
-      offset: 64,
     });
 
     scrollIntoView.mockClear();
@@ -184,7 +182,6 @@ describe('ChatMinimap', () => {
       align: 'start',
       behavior: 'smooth',
       index: 8,
-      offset: 64,
     });
   });
 });

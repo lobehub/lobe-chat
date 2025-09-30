@@ -21,7 +21,6 @@ const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
 const MIN_MESSAGES = 6;
-const SCROLL_TOP_OFFSET = 24;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -172,6 +171,8 @@ const ChatMinimap = () => {
   );
   const messages = useChatStore(chatSelectors.mainDisplayChats);
 
+  console.log('activeIndex', activeIndex);
+
   const theme = useTheme();
 
   const indicators = useMemo<MinimapIndicator[]>(() => {
@@ -200,6 +201,9 @@ const ChatMinimap = () => {
   const activeIndicatorPosition = useMemo(() => {
     if (activeIndex === null) return null;
 
+    console.log('> activeIndex', activeIndex);
+    console.log('> indicatorIndexMap', indicatorIndexMap);
+
     return indicatorIndexMap.get(activeIndex) ?? null;
   }, [activeIndex, indicatorIndexMap]);
 
@@ -209,7 +213,6 @@ const ChatMinimap = () => {
         align: 'start',
         behavior: 'smooth',
         index: virtIndex,
-        offset: SCROLL_TOP_OFFSET,
       });
     },
     [virtuosoRef],
@@ -220,49 +223,61 @@ const ChatMinimap = () => {
       const ref = virtuosoRef?.current;
       if (!ref || indicators.length === 0) return;
 
-      let basePosition: number;
+      let targetPosition: number;
 
       if (activeIndicatorPosition !== null) {
-        basePosition = activeIndicatorPosition;
+        console.log('activeIndicatorPosition', activeIndicatorPosition);
+        // We're on an indicator, move to prev/next
+        const delta = direction === 'prev' ? -1 : 1;
+        targetPosition = Math.min(
+          Math.max(activeIndicatorPosition + delta, 0),
+          Math.max(indicators.length - 1, 0),
+        );
       } else if (activeIndex !== null) {
+        // We're not on an indicator, find the nearest one in the direction
         if (direction === 'prev') {
           let matched = -1;
           for (let pos = indicators.length - 1; pos >= 0; pos -= 1) {
-            if (indicators[pos].virtuosoIndex <= activeIndex) {
+            if (indicators[pos].virtuosoIndex < activeIndex) {
               matched = pos;
               break;
             }
           }
-          basePosition = matched === -1 ? indicators.length : matched;
+          targetPosition = matched === -1 ? 0 : matched;
         } else {
-          let matched = indicators.length;
+          console.log('activeIndex', activeIndex);
+          console.log('indicators', indicators);
+          let matched = indicators.length - 1;
           for (const [pos, indicator] of indicators.entries()) {
-            if (indicator.virtuosoIndex >= activeIndex) {
+            if (indicator.virtuosoIndex > activeIndex) {
               matched = pos;
               break;
             }
           }
-          basePosition = matched === indicators.length ? -1 : matched;
+          targetPosition = matched;
         }
       } else {
-        basePosition = direction === 'prev' ? indicators.length : -1;
+        // No active index, go to first/last
+        targetPosition = direction === 'prev' ? indicators.length - 1 : 0;
       }
 
-      const delta = direction === 'prev' ? -1 : 1;
-      const targetPosition = Math.min(
-        Math.max(basePosition + delta, 0),
-        Math.max(indicators.length - 1, 0),
-      );
+      console.log('> targetPosition', targetPosition);
 
       const targetIndicator = indicators[targetPosition];
+
+      console.log('> targetIndicator', targetIndicator);
+
       if (!targetIndicator) return;
 
-      ref.scrollIntoView({
+      ref.scrollToIndex({
         align: 'start',
         behavior: 'smooth',
-        index: targetIndicator.virtuosoIndex,
-        offset: SCROLL_TOP_OFFSET,
+        // We still dont know why we need to add 1 here
+        // but it works
+        index: targetIndicator.virtuosoIndex + 1,
       });
+
+      console.log('> activeIndicatorPosition', activeIndicatorPosition);
     },
     [activeIndex, activeIndicatorPosition, indicators, virtuosoRef],
   );
