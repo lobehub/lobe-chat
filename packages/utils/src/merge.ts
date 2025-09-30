@@ -12,7 +12,7 @@ export const merge: typeof _merge = <T = object>(target: T, source: T) =>
 
 type MergeableItem = {
   [key: string]: any;
-  id: string;
+  id?: string;
 };
 
 /**
@@ -21,21 +21,32 @@ type MergeableItem = {
  * @param userItems User-defined items with higher priority
  */
 export const mergeArrayById = <T extends MergeableItem>(defaultItems: T[], userItems: T[]): T[] => {
-  // Create a map of default items for faster lookup
-  const defaultItemsMap = new Map(defaultItems.map((item) => [item.id, item]));
+  const ensuredDefaultItems = defaultItems.filter((item): item is T & Required<Pick<T, 'id'>> =>
+    Boolean(item?.id),
+  );
 
-  // 使用 Map 存储合并结果，这样重复 ID 的后项会自然覆盖前项
-  const mergedItemsMap = new Map<string, T>();
+  const defaultItemsMap = new Map(ensuredDefaultItems.map((item) => [item.id, item]));
+  const defaultIndexMap = new Map(ensuredDefaultItems.map((item, index) => [item.id, index]));
 
-  // Process user items with default metadata
+  const invalidUserItems: T[] = [];
+  const customUserItems = new Map<string, T>();
+  const mergedDefaultItems = defaultItems.map((item) => ({ ...item }) as T);
+
   userItems.forEach((userItem) => {
-    const defaultItem = defaultItemsMap.get(userItem.id);
-    if (!defaultItem) {
-      mergedItemsMap.set(userItem.id, userItem);
+    const userId = userItem?.id;
+
+    if (!userId) {
+      invalidUserItems.push(userItem);
       return;
     }
 
-    const mergedItem: T = { ...defaultItem };
+    const defaultItem = defaultItemsMap.get(userId);
+    if (!defaultItem) {
+      customUserItems.set(userId, userItem);
+      return;
+    }
+
+    const mergedItem = { ...defaultItem } as T;
     Object.entries(userItem).forEach(([key, value]) => {
       if (value !== null && value !== undefined && !(typeof value === 'object' && isEmpty(value))) {
         // @ts-expect-error
@@ -48,15 +59,9 @@ export const mergeArrayById = <T extends MergeableItem>(defaultItems: T[], userI
       }
     });
 
-    mergedItemsMap.set(userItem.id, mergedItem);
+    const index = defaultIndexMap.get(userId);
+    if (typeof index === 'number') mergedDefaultItems[index] = mergedItem;
   });
 
-  // 添加只在默认配置中存在的项
-  defaultItems.forEach((item) => {
-    if (!mergedItemsMap.has(item.id)) {
-      mergedItemsMap.set(item.id, item);
-    }
-  });
-
-  return Array.from(mergedItemsMap.values());
+  return [...invalidUserItems, ...customUserItems.values(), ...mergedDefaultItems];
 };
