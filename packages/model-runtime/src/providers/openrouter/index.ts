@@ -75,7 +75,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
 
       const inputModalities = endpointModel?.input_modalities || model.input_modalities;
 
-      let displayName = model.slug?.toLowerCase().includes('deepseek')
+      let displayName = model.slug?.toLowerCase().includes('deepseek') && !model.short_name?.toLowerCase().includes('deepseek')
         ? (model.name ?? model.slug)
         : (model.short_name ?? model.name ?? model.slug);
 
