@@ -50,6 +50,7 @@ export enum ProfileTabs {
   Profile = 'profile',
   Security = 'security',
   Stats = 'stats',
+  Usage = 'usage',
 }
 
 export interface SystemStatus {
