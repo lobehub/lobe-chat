@@ -20,6 +20,7 @@ import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { convertImageUrlToFile, convertOpenAIMessages } from '../../utils/openaiHelpers';
 import { StreamingResponse } from '../../utils/response';
+import { sanitizeError } from '../../utils/sanitizeError';
 
 const azureImageLogger = debug('lobe-image:azure');
 export class LobeAzureOpenAI implements LobeRuntimeAI {
@@ -253,9 +254,12 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       ? AgentRuntimeErrorType.ProviderBizError
       : AgentRuntimeErrorType.AgentRuntimeError;
 
+    // Sanitize error to remove sensitive information like API keys from headers
+    const sanitizedError = sanitizeError(error);
+
     throw AgentRuntimeError.chat({
       endpoint: this.maskSensitiveUrl(this.baseURL),
-      error,
+      error: sanitizedError,
       errorType,
       provider: ModelProvider.Azure,
     });
