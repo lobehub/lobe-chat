@@ -13,104 +13,104 @@ import { usageService } from '@/services/usage';
 import { UsageLog } from '@/types/usage/usageRecord';
 
 import Welcome from '../stats/features/Welcome';
-import UsageTrends from './features/UsageTrends';
 import UsageCards from './features/UsageCards';
 import UsageTable from './features/UsageTable';
+import UsageTrends from './features/UsageTrends';
 
 export interface UsageChartProps {
-    data?: UsageLog[];
-    groupBy?: GroupBy;
-    inShare?: boolean;
-    isLoading?: boolean;
-    mobile?: boolean;
-    dateStrings?: string;
+  data?: UsageLog[];
+  dateStrings?: string;
+  groupBy?: GroupBy;
+  inShare?: boolean;
+  isLoading?: boolean;
+  mobile?: boolean;
 }
 
 export enum GroupBy {
-    Model = 'model',
-    Provider = 'provider',
+  Model = 'model',
+  Provider = 'provider',
 }
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-    const { i18n } = useTranslation();
-    dayjs.locale(i18n.language);
+  const { t, i18n } = useTranslation('auth');
+  dayjs.locale(i18n.language);
 
-    const [groupBy, setGroupBy] = useState<GroupBy>(GroupBy.Model);
-    const [dateRange, setDateRange] = useState<dayjs.Dayjs>(dayjs(new Date()));
-    const [dateStrings, setDateStrings] = useState<string>();
+  const [groupBy, setGroupBy] = useState<GroupBy>(GroupBy.Model);
+  const [dateRange, setDateRange] = useState<dayjs.Dayjs>(dayjs(new Date()));
+  const [dateStrings, setDateStrings] = useState<string>();
 
-    const { data, isLoading, mutate } = useClientDataSWR('usage-stat', async () =>
-        usageService.findAndGroupByDay(dateStrings),
-    );
+  const { data, isLoading, mutate } = useClientDataSWR('usage-stat', async () =>
+    usageService.findAndGroupByDay(dateStrings),
+  );
 
-    useEffect(() => {
-        if (dateStrings) {
-            mutate();
-        }
-    }, [dateStrings]);
+  useEffect(() => {
+    if (dateStrings) {
+      mutate();
+    }
+  }, [dateStrings]);
 
-    const handleDateChange: DatePickerProps['onChange'] = (dates, dateStrings) => {
-        setDateRange(dates);
-        if (typeof dateStrings === 'string') {
-            setDateStrings(dateStrings);
-        }
-    };
+  const handleDateChange: DatePickerProps['onChange'] = (dates, dateStrings) => {
+    setDateRange(dates);
+    if (typeof dateStrings === 'string') {
+      setDateStrings(dateStrings);
+    }
+  };
 
-    console.log('data', data);
+  console.log('data', data);
 
-    return (
-        <Flexbox gap={mobile ? 0 : 24}>
-            <Flexbox>
-                <Row>
-                    <Col span={16}>
-                        {mobile ? (
-                            <Welcome mobile />
-                        ) : (
-                            <Flexbox align={'flex-start'} gap={16} horizontal justify={'space-between'}>
-                                <Welcome />
-                            </Flexbox>
-                        )}
-                    </Col>
-                    <Col span={8}>
-                        <Flexbox gap={16} horizontal>
-                            <Segmented
-                                onChange={(v) => setGroupBy(v as GroupBy)}
-                                options={[
-                                    {
-                                        icon: <Icon icon={Codesandbox} />,
-                                        label: 'Model',
-                                        value: GroupBy.Model,
-                                    },
-                                    {
-                                        icon: <Icon icon={Brain} />,
-                                        label: 'Provider',
-                                        value: GroupBy.Provider,
-                                    },
-                                ]}
-                                value={groupBy}
-                            />
-                            <DatePicker onChange={handleDateChange} picker="month" value={dateRange} />
-                        </Flexbox>
-                    </Col>
-                </Row>
+  return (
+    <Flexbox gap={mobile ? 0 : 24}>
+      <Flexbox>
+        <Row>
+          <Col span={16}>
+            {mobile ? (
+              <Welcome mobile />
+            ) : (
+              <Flexbox align={'flex-start'} gap={16} horizontal justify={'space-between'}>
+                <Welcome />
+              </Flexbox>
+            )}
+          </Col>
+          <Col span={8}>
+            <Flexbox gap={16} horizontal>
+              <Segmented
+                onChange={(v) => setGroupBy(v as GroupBy)}
+                options={[
+                  {
+                    icon: <Icon icon={Codesandbox} />,
+                    label: t('usage.welcome.model'),
+                    value: GroupBy.Model,
+                  },
+                  {
+                    icon: <Icon icon={Brain} />,
+                    label: t('usage.welcome.provider'),
+                    value: GroupBy.Provider,
+                  },
+                ]}
+                value={groupBy}
+              />
+              <DatePicker onChange={handleDateChange} picker="month" value={dateRange} />
             </Flexbox>
-            <Flexbox>
-                <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />
-            </Flexbox>
-            <Flexbox>
-                <Row gutter={[16, 16]}>
-                    <Col span={24}>
-                        <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />
-                    </Col>
-                </Row>
-            </Flexbox>
-            <Row>
-                <Col span={24}>
-                    <UsageTable dateStrings={dateStrings} />
-                </Col>
-            </Row>
-        </Flexbox>
-    );
+          </Col>
+        </Row>
+      </Flexbox>
+      <Flexbox>
+        <UsageCards data={data} groupBy={groupBy} isLoading={isLoading} />
+      </Flexbox>
+      <Flexbox>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <UsageTrends data={data} groupBy={groupBy} isLoading={isLoading} />
+          </Col>
+        </Row>
+      </Flexbox>
+      <Row>
+        <Col span={24}>
+          <UsageTable dateStrings={dateStrings} />
+        </Col>
+      </Row>
+    </Flexbox>
+  );
 });
 
 export default Client;
