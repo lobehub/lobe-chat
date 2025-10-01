@@ -76,7 +76,6 @@ jobs:
 
                - Title: English translation (if non-English)
                - Content format:
-                 > [!NOTE]
                  > This issue/comment/review was translated by Claude.
 
                  [Translated content]
