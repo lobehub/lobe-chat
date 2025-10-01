@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.133.4](https://github.com/lobehub/lobe-chat/compare/v1.133.3...v1.133.4)
+
+<sup>Released on **2025-10-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: OllamaCloud error.
+
+#### 💄 Styles
+
+- **misc**: Fix chat minimap overflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: OllamaCloud error, closes [#9481](https://github.com/lobehub/lobe-chat/issues/9481) ([55c45a5](https://github.com/lobehub/lobe-chat/commit/55c45a5))
+
+#### Styles
+
+- **misc**: Fix chat minimap overflow, closes [#9507](https://github.com/lobehub/lobe-chat/issues/9507) ([d835c33](https://github.com/lobehub/lobe-chat/commit/d835c33))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.133.3](https://github.com/lobehub/lobe-chat/compare/v1.133.2...v1.133.3)
 
 <sup>Released on **2025-10-01**</sup>
