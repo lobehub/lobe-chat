@@ -150,6 +150,11 @@
       "total": "Gesamter Verbrauch"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Zur Nachricht Nr. {{index}} springen",
+    "nextMessage": "Nächste Nachricht",
+    "previousMessage": "Vorherige Nachricht"
+  },
   "newAgent": "Neuer Assistent",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",

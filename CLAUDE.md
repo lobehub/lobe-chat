@@ -72,29 +72,4 @@ Some useful rules of this project. Read them when needed.
 
 ### 📋 Complete Rule Files
 
-**Core Development**
-
-- `backend-architecture.mdc` - Three-layer architecture, data flow
-- `react-component.mdc` - antd-style, Lobe UI usage
-- `drizzle-schema-style-guide.mdc` - Schema naming, patterns
-- `define-database-model.mdc` - Model templates, CRUD patterns
-- `i18n.mdc` - Internationalization workflow
-
-**State & UI**
-
-- `zustand-slice-organization.mdc` - Store organization
-- `zustand-action-patterns.mdc` - Action patterns
-- `packages/react-layout-kit.mdc` - flex layout components usage
-
-**Testing & Quality**
-
-- `testing-guide/testing-guide.mdc` - Test strategy, mock patterns
-- `code-review.mdc` - Review process and standards
-
-**Desktop (Electron)**
-
-- `desktop-feature-implementation.mdc` - Main/renderer process patterns
-- `desktop-local-tools-implement.mdc` - Tool integration workflow
-- `desktop-menu-configuration.mdc` - App menu, context menu, tray menu
-- `desktop-window-management.mdc` - Window creation, state management, multi-window
-- `desktop-controller-tests.mdc` - Controller unit testing guide
+Some useful project rules are listed in @.cursor/rules/rules-index.mdc

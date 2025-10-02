@@ -30,8 +30,8 @@ const novitaChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.98, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.95, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

@@ -680,6 +680,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4, Sonnet 3.7'nin sektör lideri yetenekleri üzerine önemli geliştirmeler yapmış olup, kodlama alanında mükemmel performans sergiler ve SWE-bench'te en ileri %72.7 skoruna ulaşır. Model, performans ve verimlilik arasında denge sağlar, hem dahili hem de harici kullanım durumları için uygundur ve geliştirilmiş kontrol edilebilirlik ile uygulama üzerinde daha fazla hakimiyet sunar."
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5, Anthropic'in şimdiye kadarki en akıllı modelidir."
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B, 72 milyar parametreli ve 16 milyar parametre aktive eden seyrek büyük bir dil modelidir. Bu model, grup tabanlı uzman karışımı (MoGE) mimarisine dayanır; uzman seçim aşamasında uzmanları gruplar halinde düzenler ve her grupta token başına eşit sayıda uzmanı aktive ederek uzman yük dengesini sağlar. Bu sayede Ascend platformunda modelin dağıtım verimliliği önemli ölçüde artırılmıştır."
   },
@@ -772,6 +775,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Claude Sonnet 4 düşünme modeli, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir."
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5, Anthropic'in şimdiye kadarki en akıllı modelidir."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4, çeşitli programlama dillerinde akıllı soru-cevap ve kod tamamlama desteği sunan güçlü bir AI programlama asistanıdır, geliştirme verimliliğini artırır."
