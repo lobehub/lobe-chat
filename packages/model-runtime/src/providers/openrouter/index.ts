@@ -73,11 +73,18 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
       const { endpoint } = model;
       const endpointModel = endpoint?.model;
 
-      const displayName = model.slug?.toLowerCase().includes('deepseek')
+      const inputModalities = endpointModel?.input_modalities || model.input_modalities;
+
+      let displayName = model.slug?.toLowerCase().includes('deepseek') && !model.short_name?.toLowerCase().includes('deepseek')
         ? (model.name ?? model.slug)
         : (model.short_name ?? model.name ?? model.slug);
 
-      const inputModalities = endpointModel?.input_modalities || model.input_modalities;
+      const inputPrice = formatPrice(endpoint?.pricing?.prompt);
+      const outputPrice = formatPrice(endpoint?.pricing?.completion);
+      const isFree = (inputPrice === 0 || outputPrice === 0) && !displayName.endsWith('(free)');
+      if (isFree) {
+        displayName += ' (free)';
+      }
 
       return {
         contextWindowTokens: endpoint?.context_length || model.context_length,
@@ -90,8 +97,8 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
             ? endpoint.max_completion_tokens
             : undefined,
         pricing: {
-          input: formatPrice(endpoint?.pricing?.prompt),
-          output: formatPrice(endpoint?.pricing?.completion),
+          input: inputPrice,
+          output: outputPrice,
         },
         reasoning: endpoint?.supports_reasoning || false,
         releasedAt: new Date(model.created_at).toISOString().split('T')[0],

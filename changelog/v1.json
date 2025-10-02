@@ -1,6 +1,22 @@
 [
   {
     "children": {
+      "fixes": ["OllamaCloud error."],
+      "improvements": ["Fix chat minimap overflow."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor a ssrf-safe-fetch module."],
+      "fixes": ["Fix frontend random API key config not work."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.3"
+  },
+  {
+    "children": {
       "improvements": ["Add minimap to chat list for quick navigation."]
     },
     "date": "2025-09-30",
