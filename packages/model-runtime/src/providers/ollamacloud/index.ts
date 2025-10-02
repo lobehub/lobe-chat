@@ -4,7 +4,7 @@ import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactor
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export const LobeOllamaCloudAI = createOpenAICompatibleRuntime({
-  baseURL: 'https://api.ollama.com/v1',
+  baseURL: 'https://ollama.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { model, ...rest } = payload;

@@ -4,8 +4,9 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../../types';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../types/error';
-import { convertUsage } from '../../../utils/usageConverter';
+import { convertOpenAIUsage } from '../../usageConverters';
 import {
+  ChatPayloadForTransformStream,
   FIRST_CHUNK_ERROR_KEY,
   StreamContext,
   StreamProtocolChunk,
@@ -44,7 +45,7 @@ const processMarkdownBase64Images = (text: string): { cleanedText: string; urls:
 const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   streamContext: StreamContext,
-  provider?: string,
+  payload?: ChatPayloadForTransformStream,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
   if (FIRST_CHUNK_ERROR_KEY in chunk) {
@@ -75,7 +76,7 @@ const transformOpenAIStream = (
     if (!Array.isArray(chunk.choices) || chunk.choices.length === 0) {
       if (chunk.usage) {
         const usage = chunk.usage;
-        return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+        return { data: convertOpenAIUsage(usage, payload), id: chunk.id, type: 'usage' };
       }
 
       return { data: chunk, id: chunk.id, type: 'data' };
@@ -232,7 +233,7 @@ const transformOpenAIStream = (
 
       if (chunk.usage) {
         const usage = chunk.usage;
-        return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+        return { data: convertOpenAIUsage(usage, payload), id: chunk.id, type: 'usage' };
       }
 
       // xAI Live Search 功能返回引用源
@@ -312,7 +313,7 @@ const transformOpenAIStream = (
         // 如果 content 是空字符串但 chunk 带有 usage，则优先返回 usage（例如 Gemini image-preview 最终会在单独的 chunk 中返回 usage）
         if (content === '' && chunk.usage) {
           const usage = chunk.usage;
-          return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+          return { data: convertOpenAIUsage(usage, payload), id: chunk.id, type: 'usage' };
         }
 
         // 判断是否有 citations 内容，更新 returnedCitation 状态
@@ -387,7 +388,7 @@ const transformOpenAIStream = (
     // litellm 的返回结果中，存在 delta 为空，但是有 usage 的情况
     if (chunk.usage) {
       const usage = chunk.usage;
-      return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
+      return { data: convertOpenAIUsage(usage, payload), id: chunk.id, type: 'usage' };
     }
 
     // 其余情况下，返回 delta 和 index
@@ -426,23 +427,25 @@ export interface OpenAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
   enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
-  provider?: string;
+  payload?: ChatPayloadForTransformStream;
 }
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   {
     callbacks,
-    provider,
     bizErrorTypeTransformer,
+    payload,
     inputStartAt,
     enableStreaming = true,
   }: OpenAIStreamOptions = {},
 ) => {
-  const streamStack: StreamContext = { id: '' };
+  const streamStack: StreamContext = {
+    id: '',
+  };
 
   const transformWithProvider = (chunk: OpenAI.ChatCompletionChunk, streamContext: StreamContext) =>
-    transformOpenAIStream(chunk, streamContext, provider);
+    transformOpenAIStream(chunk, streamContext, payload);
 
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
@@ -452,7 +455,7 @@ export const OpenAIStream = (
       // 1. handle the first error if exist
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
-      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
+      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, payload?.provider))
       .pipeThrough(
         createTokenSpeedCalculator(transformWithProvider, {
           enableStreaming: enableStreaming,

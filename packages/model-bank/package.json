@@ -68,7 +68,8 @@
     "./xai": "./src/aiModels/xai.ts",
     "./xinference": "./src/aiModels/xinference.ts",
     "./zeroone": "./src/aiModels/zeroone.ts",
-    "./zhipu": "./src/aiModels/zhipu.ts"
+    "./zhipu": "./src/aiModels/zhipu.ts",
+    "./types": "./src/types/index.ts"
   },
   "scripts": {
     "test": "vitest",

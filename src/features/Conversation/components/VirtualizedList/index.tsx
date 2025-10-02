@@ -10,7 +10,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
-import { VirtuosoContext } from './VirtuosoContext';
+import { VirtuosoContext, resetVirtuosoVisibleItems, setVirtuosoGlobalRef } from './VirtuosoContext';
 
 interface VirtualizedListProps {
   dataSource: string[];
@@ -56,6 +56,20 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
   useEffect(() => {
     scrollToBottom();
   }, [id]);
+
+  useEffect(() => {
+    setVirtuosoGlobalRef(virtuosoRef);
+
+    return () => {
+      setVirtuosoGlobalRef(null);
+    };
+  }, [virtuosoRef]);
+
+  useEffect(() => {
+    return () => {
+      resetVirtuosoVisibleItems();
+    };
+  }, []);
 
   // overscan should be 3 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;

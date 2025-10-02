@@ -1,10 +1,20 @@
-import { ChatCitationItem, ModelSpeed, ModelTokensUsage } from '@lobechat/types';
+import type { Pricing } from 'model-bank';
+
+import { ChatCitationItem, ModelSpeed, ModelUsage } from '@/types/message';
 
 import { parseToolCalls } from '../../helpers';
 import { ChatStreamCallbacks } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { nanoid } from '../../utils/uuid';
+import type { ComputeChatCostOptions } from '../usageConverters/utils/computeChatCost';
+
+export type ChatPayloadForTransformStream = {
+  model?: string;
+  pricing?: Pricing;
+  pricingOptions?: ComputeChatCostOptions;
+  provider?: string;
+};
 
 /**
  * context in the stream to save temporarily data
@@ -50,7 +60,7 @@ export interface StreamContext {
     name: string;
   };
   toolIndex?: number;
-  usage?: ModelTokensUsage;
+  usage?: ModelUsage;
 }
 
 export interface StreamProtocolChunk {
@@ -208,7 +218,8 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
   const textEncoder = new TextEncoder();
   let aggregatedText = '';
   let aggregatedThinking: string | undefined = undefined;
-  let usage: ModelTokensUsage | undefined;
+  let usage: ModelUsage | undefined;
+  let speed: ModelSpeed | undefined;
   let grounding: any;
   let toolsCalling: any;
 
@@ -219,6 +230,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
     async flush(): Promise<void> {
       const data = {
         grounding,
+        speed,
         text: aggregatedText,
         thinking: aggregatedThinking,
         toolsCalling,
@@ -273,6 +285,11 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
           case 'usage': {
             usage = data;
             await callbacks.onUsage?.(data);
+            break;
+          }
+
+          case 'speed': {
+            speed = data;
             break;
           }
 
@@ -399,11 +416,13 @@ export const createTokenSpeedCalculator = (
         (outputThinking ?? false)
           ? totalOutputTokens
           : Math.max(0, totalOutputTokens - reasoningTokens);
+      const now = Date.now();
+      const elapsed = now - (enableStreaming ? outputStartAt : inputStartAt);
       result.push({
         data: {
-          // 非流式计算 tps 从发出请求开始算
-          tps:
-            (outputTokens / (Date.now() - (enableStreaming ? outputStartAt : inputStartAt))) * 1000,
+          duration: now - outputStartAt,
+          latency: now - inputStartAt,
+          tps: elapsed === 0 ? undefined : (outputTokens / elapsed) * 1000,
           ttft: outputStartAt - inputStartAt,
         } as ModelSpeed,
         id: TOKEN_SPEED_CHUNK_ID,

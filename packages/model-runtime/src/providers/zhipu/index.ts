@@ -108,7 +108,9 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
       return OpenAIStream(preprocessedStream, {
         callbacks,
         inputStartAt,
-        provider: 'zhipu',
+        payload: {
+          provider: 'zhipu',
+        },
       });
     },
   },

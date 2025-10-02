@@ -27,6 +27,7 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
 import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { StreamingResponse } from '../../utils/response';
@@ -244,8 +245,14 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       }
 
       // Convert the response into a friendly text-stream
+      const pricing = await getModelPricing(model, this.provider);
+
       const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
+      const stream = Stream(prod, {
+        callbacks: options?.callback,
+        inputStartAt,
+        payload: { model, pricing, provider: this.provider },
+      });
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
