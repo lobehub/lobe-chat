@@ -12,6 +12,7 @@ export { LobeBedrockAI } from './providers/bedrock';
 export { LobeBflAI } from './providers/bfl';
 export { LobeCometAPIAI } from './providers/cometapi';
 export { LobeDeepSeekAI } from './providers/deepseek';
+export { LobeFeatherlessAI } from './providers/featherlessai';
 export { LobeGoogleAI } from './providers/google';
 export { LobeGroq } from './providers/groq';
 export { LobeMinimaxAI } from './providers/minimax';

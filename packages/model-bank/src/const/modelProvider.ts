@@ -15,6 +15,7 @@ export enum ModelProvider {
   CometAPI = 'cometapi',
   DeepSeek = 'deepseek',
   Fal = 'fal',
+  FeatherlessAI = 'featherlessai',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
   Github = 'github',
