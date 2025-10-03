@@ -1,4 +1,4 @@
-import { ModelParamsSchema } from '../standard-parameters';
+import { CHAT_MODEL_IMAGE_GENERATION_PARAMS, ModelParamsSchema } from '../standard-parameters';
 import { AIChatModelCard, AIImageModelCard } from '../types';
 
 /**
@@ -233,6 +233,28 @@ const googleChatModels: AIChatModelCard[] = [
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     displayName: 'Nano Banana',
     enabled: true,
+    id: 'gemini-2.5-flash-image',
+    maxOutput: 8192,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_768 + 8192,
+    description:
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    displayName: 'Nano Banana (Preview)',
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
@@ -672,7 +694,7 @@ const nanoBananaParameters: ModelParamsSchema = {
 const googleImageModels: AIImageModelCard[] = [
   {
     displayName: 'Nano Banana',
-    id: 'gemini-2.5-flash-image-preview:image',
+    id: 'gemini-2.5-flash-image:image',
     enabled: true,
     type: 'image',
     description:
@@ -683,7 +705,23 @@ const googleImageModels: AIImageModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'imageOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+  },
+  {
+    displayName: 'Nano Banana (Preview)',
+    id: 'gemini-2.5-flash-image-preview:image',
+    type: 'image',
+    description:
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    releasedAt: '2025-08-26',
+    parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
   },
