@@ -64,8 +64,6 @@ export interface StreamProtocolChunk {
     | 'tool_calls'
     // Model Thinking
     | 'reasoning'
-    // Model Thinking Stop
-    | 'reasoning_stop'
     // use for reasoning signature, maybe only anthropic
     | 'reasoning_signature'
     // flagged reasoning signature
@@ -253,8 +251,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
 
         const data = safeParseJSON(content) as any;
 
-        // Allow null data for reasoning_stop event
-        if (!data && currentType !== 'reasoning_stop') return;
+        if (!data) return;
 
         switch (currentType) {
           case 'text': {
@@ -270,10 +267,6 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
 
             aggregatedThinking += data;
             await callbacks.onThinking?.(data);
-            break;
-          }
-          case 'reasoning_stop': {
-            await callbacks.onThinkingStop?.();
             break;
           }
 
