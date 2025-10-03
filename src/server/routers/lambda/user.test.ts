@@ -126,6 +126,21 @@ describe('userRouter', () => {
       });
     });
 
+    it('should return user state (PWA installer disabled)', async () => {
+      const mockFeatureFlags = {
+        pwa_app_banner: false,
+      };
+
+      const parserModule = await import('@/config/featureFlags/utils/parser');
+      vi.spyOn(parserModule, 'parseFeatureFlag').mockReturnValue(mockFeatureFlags as any);
+
+      const result = await userRouter.createCaller({ ...mockCtx }).getUserState();
+
+      expect(result).toMatchObject({
+        canEnablePWAGuide: false,
+      });
+    });
+
     it('should create new user when user not found (clerk enabled)', async () => {
       const mockClerkUser = {
         id: mockUserId,
