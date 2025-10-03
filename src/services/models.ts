@@ -42,6 +42,8 @@ export class ModelsService {
       headers: { 'Content-Type': 'application/json' },
       provider,
     });
+
+    const runtimeProvider = resolveRuntimeProvider(provider);
     try {
       /**
        * Use browser agent runtime
@@ -50,12 +52,12 @@ export class ModelsService {
       if (enableFetchOnClient) {
         const agentRuntime = await initializeWithClientStore({
           provider,
-          runtimeProvider: resolveRuntimeProvider(provider),
+          runtimeProvider,
         });
         return agentRuntime.models();
       }
 
-      const res = await fetch(API_ENDPOINTS.models(provider), { headers });
+      const res = await fetch(API_ENDPOINTS.models(runtimeProvider), { headers });
       if (!res.ok) return;
 
       return res.json();
@@ -81,6 +83,7 @@ export class ModelsService {
         provider,
       });
 
+      const runtimeProvider = resolveRuntimeProvider(provider);
       const enableFetchOnClient = isEnableFetchOnClient(provider);
 
       console.log('enableFetchOnClient：', enableFetchOnClient);
@@ -88,11 +91,11 @@ export class ModelsService {
       if (enableFetchOnClient) {
         const agentRuntime = await initializeWithClientStore({
           provider,
-          runtimeProvider: resolveRuntimeProvider(provider),
+          runtimeProvider,
         });
         res = (await agentRuntime.pullModel({ model }, { signal }))!;
       } else {
-        res = await fetch(API_ENDPOINTS.modelPull(provider), {
+        res = await fetch(API_ENDPOINTS.modelPull(runtimeProvider), {
           body: JSON.stringify({ model }),
           headers,
           method: 'POST',
