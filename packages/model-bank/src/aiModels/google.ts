@@ -1,4 +1,4 @@
-import { CHAT_MODEL_IMAGE_GENERATION_PARAMS, ModelParamsSchema } from '../standard-parameters';
+import { ModelParamsSchema } from '../standard-parameters';
 import { AIChatModelCard, AIImageModelCard } from '../types';
 
 /**
@@ -644,6 +644,30 @@ const imagenBaseParameters: ModelParamsSchema = {
   prompt: { default: '' },
 };
 
+const NANO_BANANA_ASPECT_RATIOS = [
+  '1:1', // 1024x1024
+  '2:3', // 832x1248
+  '3:2', // 1248x832
+  '3:4', // 864x1184
+  '4:3', // 1184x864
+  '4:5', // 896x1152
+  '5:4', // 1152x896
+  '9:16', // 768x1344
+  '16:9', // 1344x768
+  '21:9', // 1536x672
+];
+
+const nanoBananaParameters: ModelParamsSchema = {
+  aspectRatio: {
+    default: '1:1',
+    enum: NANO_BANANA_ASPECT_RATIOS,
+  },
+  imageUrls: {
+    default: [],
+  },
+  prompt: { default: '' },
+};
+
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 const googleImageModels: AIImageModelCard[] = [
   {
@@ -654,7 +678,7 @@ const googleImageModels: AIImageModelCard[] = [
     description:
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     releasedAt: '2025-08-26',
-    parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
+    parameters: nanoBananaParameters,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
