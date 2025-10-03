@@ -211,16 +211,19 @@ describe('AiModelModel', () => {
         id: 'model1',
         providerId: 'openai',
         enabled: true,
+        type: 'image',
       });
 
       await aiProviderModel.toggleModelEnabled({
         id: model.id,
         providerId: 'openai',
         enabled: false,
+        type: 'image',
       });
 
       const updatedModel = await aiProviderModel.findById(model.id);
       expect(updatedModel?.enabled).toBe(false);
+      expect(updatedModel?.type).toBe('image');
     });
   });
 

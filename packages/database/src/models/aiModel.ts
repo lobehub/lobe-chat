@@ -122,11 +122,27 @@ export class AiModelModel {
   };
 
   toggleModelEnabled = async (value: ToggleAiModelEnableParams) => {
+    const now = new Date();
+    const insertValues = {
+      ...value,
+      updatedAt: now,
+      userId: this.userId,
+    } as typeof aiModels.$inferInsert;
+
+    if (value.type) insertValues.type = value.type;
+
+    const updateValues: Partial<typeof aiModels.$inferInsert> = {
+      enabled: value.enabled,
+      updatedAt: now,
+    };
+
+    if (value.type) updateValues.type = value.type;
+
     return this.db
       .insert(aiModels)
-      .values({ ...value, updatedAt: new Date(), userId: this.userId })
+      .values(insertValues)
       .onConflictDoUpdate({
-        set: { enabled: value.enabled, updatedAt: new Date() },
+        set: updateValues,
         target: [aiModels.id, aiModels.providerId, aiModels.userId],
       });
   };
