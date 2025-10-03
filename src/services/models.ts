@@ -8,6 +8,7 @@ import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
 import { initializeWithClientStore } from './chat/clientModelRuntime';
+import { resolveRuntimeProvider } from './chat/helper';
 
 const isEnableFetchOnClient = (provider: string) => {
   // TODO: remove this condition in V2.0
@@ -47,7 +48,10 @@ export class ModelsService {
        */
       const enableFetchOnClient = isEnableFetchOnClient(provider);
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider: resolveRuntimeProvider(provider),
+        });
         return agentRuntime.models();
       }
 
@@ -82,7 +86,10 @@ export class ModelsService {
       console.log('enableFetchOnClient：', enableFetchOnClient);
       let res: Response;
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider: resolveRuntimeProvider(provider),
+        });
         res = (await agentRuntime.pullModel({ model }, { signal }))!;
       } else {
         res = await fetch(API_ENDPOINTS.modelPull(provider), {
