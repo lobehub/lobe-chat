@@ -14,6 +14,8 @@ import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
+import { resolveRuntimeProvider } from './chat/helper';
+
 export const getProviderAuthPayload = (
   provider: string,
   keyVaults: OpenAICompatibleKeyVault &
@@ -104,7 +106,12 @@ export const createPayloadWithKeyVaults = (provider: string) => {
     keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
   }
 
-  return getProviderAuthPayload(provider, keyVaults);
+  const runtimeProvider = resolveRuntimeProvider(provider);
+
+  return {
+    ...getProviderAuthPayload(runtimeProvider, keyVaults as any),
+    runtimeProvider,
+  };
 };
 
 export const createXorKeyVaultsPayload = (provider: string) => {

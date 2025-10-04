@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: Ein Inferenzmodell der nächsten Generation, das komplexe Schlussfolgerungen und verknüpfte Denkfähigkeiten verbessert und sich für Aufgaben eignet, die tiefgehende Analysen erfordern."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp führt einen sparsamen Aufmerksamkeitsmechanismus ein, um die Effizienz beim Training und der Inferenz bei der Verarbeitung langer Texte zu verbessern. Der Preis liegt unter dem von deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 ist ein Experten-Mischmodell mit 685B Parametern und die neueste Iteration der Flaggschiff-Chatmodellreihe des DeepSeek-Teams.\n\nEs erbt das [DeepSeek V3](/deepseek/deepseek-chat-v3) Modell und zeigt hervorragende Leistungen in verschiedenen Aufgaben."
   },
@@ -1443,7 +1446,7 @@
     "description": "Die GLM-4.1V-Thinking-Serie ist das leistungsstärkste visuelle Modell unter den bekannten 10-Milliarden-Parameter-VLMs und integriert SOTA-Leistungen auf diesem Niveau in verschiedenen visuellen Sprachaufgaben, darunter Videoverstehen, Bildfragen, Fachaufgaben, OCR-Texterkennung, Dokumenten- und Diagramminterpretation, GUI-Agenten, Frontend-Web-Coding und Grounding. In vielen Aufgaben übertrifft es sogar das Qwen2.5-VL-72B mit achtmal so vielen Parametern. Durch fortschrittliche Verstärkungslernverfahren beherrscht das Modell die Chain-of-Thought-Schlussfolgerung, was die Genauigkeit und Detailtiefe der Antworten deutlich verbessert und in Bezug auf Endergebnis und Erklärbarkeit traditionelle Nicht-Thinking-Modelle übertrifft."
   },
   "glm-4.5": {
-    "description": "Das neueste Flaggschiff-Modell von Zhipu, unterstützt den Denkmoduswechsel und erreicht eine umfassende Leistungsfähigkeit auf SOTA-Niveau für Open-Source-Modelle mit einer Kontextlänge von bis zu 128K."
+    "description": "Das Flaggschiff-Modell von Zhipu unterstützt den Wechsel zwischen Denkmodi und erreicht eine umfassende Leistungsfähigkeit auf dem Niveau der besten Open-Source-Modelle. Die Kontextlänge beträgt bis zu 128K."
   },
   "glm-4.5-air": {
     "description": "Die leichtgewichtige Version von GLM-4.5, die Leistung und Kosten-Nutzen-Verhältnis ausbalanciert und flexibel zwischen hybriden Denkmodellen wechseln kann."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Das neue visuelle Inferenzmodell der nächsten Generation von Zhipu, basierend auf der MOE-Architektur, verfügt über 106B Gesamtparameter und 12B aktivierte Parameter und erzielt in verschiedenen Benchmarks State-of-the-Art‑Ergebnisse (SOTA) unter weltweit vergleichbaren Open‑Source‑multimodalen Modellen. Es deckt gängige Aufgaben wie Bild-, Video- und Dokumentenverständnis sowie GUI‑Aufgaben ab."
+  },
+  "glm-4.6": {
+    "description": "Das neueste Flaggschiff-Modell von Zhipu, GLM-4.6 (355B), übertrifft die Vorgängergeneration in fortgeschrittener Codierung, Langtextverarbeitung, Inferenz und Agentenfähigkeiten umfassend. Besonders in der Programmierfähigkeit ist es mit Claude Sonnet 4 vergleichbar und gilt als eines der besten Coding-Modelle im Inland."
   },
   "glm-4v": {
     "description": "GLM-4V bietet starke Fähigkeiten zur Bildverständnis und -schlussfolgerung und unterstützt eine Vielzahl visueller Aufgaben."

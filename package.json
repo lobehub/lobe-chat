@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.133.4",
+  "version": "1.133.5",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -290,7 +290,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@edge-runtime/vm": "^5.0.0",
-    "@huggingface/tasks": "^0.15.9",
+    "@huggingface/tasks": "^0.19.0",
     "@lobechat/types": "workspace:*",
     "@lobehub/i18n-cli": "^1.25.1",
     "@lobehub/lint": "^1.26.2",

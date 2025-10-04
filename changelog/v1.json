@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Custom provider fails when client requests are enabled."],
+      "improvements": ["Optimized extendParams UI, update i18n."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.5"
+  },
+  {
+    "children": {
       "fixes": ["OllamaCloud error."],
       "improvements": ["Fix chat minimap overflow."]
     },

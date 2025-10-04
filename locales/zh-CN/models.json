@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。"
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp 引入稀疏注意力机制，旨在提升处理长文本时的训练与推理效率，价格低于 deepseek-v3.1。"
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。"
   },
@@ -1443,7 +1446,7 @@
     "description": "GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。"
   },
   "glm-4.5": {
-    "description": "智谱最新旗舰模型，支持思考模式切换，综合能力达到开源模型的 SOTA 水平，上下文长度可达128K。"
+    "description": "智谱旗舰模型，支持思考模式切换，综合能力达到开源模型的 SOTA 水平，上下文长度可达128K。"
   },
   "glm-4.5-air": {
     "description": "GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。"
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "智谱新一代基于 MOE 架构的视觉推理模型，以106B的总参数量和12B激活参数量，在各类基准测试中达到全球同级别开源多模态模型 SOTA，涵盖图像、视频、文档理解及 GUI 任务等常见任务。"
+  },
+  "glm-4.6": {
+    "description": "智谱最新旗舰模型 GLM-4.6 (355B) 在高级编码、长文本处理、推理与智能体能力上全面超越前代，尤其在编程能力上对齐 Claude Sonnet 4，成为国内顶尖的 Coding 模型。"
   },
   "glm-4v": {
     "description": "GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。"
