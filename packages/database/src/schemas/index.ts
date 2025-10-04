@@ -7,6 +7,7 @@ export * from './document';
 export * from './file';
 export * from './generation';
 export * from './message';
+export * from './messageGroup';
 export * from './nextauth';
 export * from './oidc';
 export * from './rag';

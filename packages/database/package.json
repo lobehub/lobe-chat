@@ -18,7 +18,7 @@
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "dayjs": "^1.11.18",
-    "drizzle-orm": "^0.44.4",
+    "drizzle-orm": "^0.44.5",
     "nanoid": "^5.1.5",
     "pg": "^8.16.3",
     "random-words": "^2.0.1",

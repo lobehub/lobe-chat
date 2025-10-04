@@ -21,6 +21,7 @@ import { timestamps } from './_helpers';
 import { agents } from './agent';
 import { chatGroups } from './chatGroup';
 import { files } from './file';
+import { messageGroups } from './messageGroup';
 import { chunks, embeddings } from './rag';
 import { sessions } from './session';
 import { threads, topics } from './topic';
@@ -69,6 +70,12 @@ export const messages = pgTable(
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
     // targetId can be an agent ID, "user", or null - no FK constraint
     targetId: text('target_id'),
+
+    // used for multi-model parallel
+    messageGroupId: varchar('message_group_id', { length: 255 }).references(
+      () => messageGroups.id,
+      { onDelete: 'cascade' },
+    ),
     ...timestamps,
   },
   (table) => [
