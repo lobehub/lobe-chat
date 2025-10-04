@@ -10,7 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { AiModelSourceEnum, AiProviderModelListItem } from '../../../../../../../../packages/model-bank/src/types/aiModel';
 import { formatPriceByCurrency } from '@/utils/format';
 import {
   getAudioInputUnitRate,
@@ -18,6 +17,10 @@ import {
   getTextOutputUnitRate,
 } from '@/utils/pricing';
 
+import {
+  AiModelSourceEnum,
+  AiProviderModelListItem,
+} from '../../../../../../../../packages/model-bank/src/types/aiModel';
 import ModelConfigModal from './ModelConfigModal';
 import { ProviderSettingsContext } from './ProviderSettingsContext';
 
@@ -243,7 +246,7 @@ const ModelItem = memo<ModelItemProps>(
             loading={isModelLoading}
             onChange={async (e) => {
               setChecked(e);
-              await toggleModelEnabled({ enabled: e, id, source });
+              await toggleModelEnabled({ enabled: e, id, source, type });
             }}
             size={'small'}
           />
@@ -334,7 +337,7 @@ const ModelItem = memo<ModelItemProps>(
             loading={isModelLoading}
             onChange={async (e) => {
               setChecked(e);
-              await toggleModelEnabled({ enabled: e, id, source });
+              await toggleModelEnabled({ enabled: e, id, source, type });
             }}
             size={'small'}
           />

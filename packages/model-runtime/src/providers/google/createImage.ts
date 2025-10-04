@@ -1,4 +1,4 @@
-import { Content, GoogleGenAI, Part } from '@google/genai';
+import { Content, GenerateContentConfig, GoogleGenAI, Part } from '@google/genai';
 
 import { convertGoogleAIUsage } from '../../core/usageConverters/google-ai';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
@@ -141,10 +141,19 @@ async function generateImageByChatModel(
     },
   ];
 
+  const config: GenerateContentConfig = {
+    responseModalities: ['Image'],
+    ...(params.aspectRatio
+      ? {
+          imageConfig: {
+            aspectRatio: params.aspectRatio,
+          },
+        }
+      : {}),
+  };
+
   const response = await client.models.generateContent({
-    config: {
-      responseModalities: ['Image'],
-    },
+    config,
     contents,
     model: actualModel,
   });
