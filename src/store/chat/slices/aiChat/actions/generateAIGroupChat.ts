@@ -291,7 +291,11 @@ export const chatAiGroupChat: StateCreator<
         // If supervisor is disabled, check for direct mentions and trigger them directly
         if (!groupConfig?.enableSupervisor) {
           const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
-          const mentionedAgentIds = extractMentionsFromContent(message, agents);
+          const mentionableGroupAgents: GroupMemberInfo[] = agents.map((agent) => ({
+            id: agent.id,
+            title: agent.title ?? agent.id,
+          }));
+          const mentionedAgentIds = extractMentionsFromContent(message, mentionableGroupAgents);
 
           const candidateAgentIds = new Set(mentionedAgentIds);
 
@@ -312,10 +316,7 @@ export const chatAiGroupChat: StateCreator<
               const { internal_executeAgentResponses } = get();
               const decisions = validMentionedAgents.map((agentId) => ({
                 id: agentId,
-                target:
-                  targetMemberId && agentId === targetMemberId
-                    ? 'user'
-                    : undefined,
+                target: targetMemberId && agentId === targetMemberId ? 'user' : undefined,
               }));
 
               await internal_executeAgentResponses(groupId, decisions);
@@ -328,7 +329,9 @@ export const chatAiGroupChat: StateCreator<
                 'Supervisor disabled and DM target not found in group, no agent responses triggered',
               );
             } else {
-              console.log('Supervisor disabled and no mentions found, no agent responses triggered');
+              console.log(
+                'Supervisor disabled and no mentions found, no agent responses triggered',
+              );
             }
           }
         } else {
