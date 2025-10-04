@@ -1,6 +1,5 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref: https://ai.google.dev/gemini-api/docs/models/gemini
 const Google: ModelProviderCard = {
   chatModels: [
     {
@@ -68,67 +67,6 @@ const Google: ModelProviderCard = {
       id: 'gemini-2.0-flash-thinking-exp-01-21',
       maxOutput: 65_536,
       releasedAt: '2025-01-21',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 40_959,
-      description:
-        'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
-      displayName: 'LearnLM 1.5 Pro Experimental',
-      functionCall: true,
-      id: 'learnlm-1.5-pro-experimental',
-      maxOutput: 8192,
-      releasedAt: '2024-11-19',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 1_008_192,
-      description: 'Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。',
-      displayName: 'Gemini 1.5 Flash 002',
-      functionCall: true,
-      id: 'gemini-1.5-flash-002',
-      maxOutput: 8192,
-      releasedAt: '2024-09-25',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 1_008_192,
-      description: 'Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。',
-      displayName: 'Gemini 1.5 Flash 001',
-      functionCall: true,
-      id: 'gemini-1.5-flash-001',
-      maxOutput: 8192,
-      vision: true,
-    },
-    {
-      contextWindowTokens: 2_008_192,
-      description:
-        'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
-      displayName: 'Gemini 1.5 Pro 002',
-      functionCall: true,
-      id: 'gemini-1.5-pro-002',
-      maxOutput: 8192,
-      releasedAt: '2024-09-24',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 2_008_192,
-      description: 'Gemini 1.5 Pro 001 是可扩展的多模态AI解决方案，支持广泛的复杂任务。',
-      displayName: 'Gemini 1.5 Pro 001',
-      functionCall: true,
-      id: 'gemini-1.5-pro-001',
-      maxOutput: 8192,
-      releasedAt: '2024-02-15',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 1_008_192,
-      description: 'Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。',
-      displayName: 'Gemini 1.5 Flash 8B',
-      functionCall: true,
-      id: 'gemini-1.5-flash-8b',
-      maxOutput: 8192,
-      releasedAt: '2024-10-03',
       vision: true,
     },
   ],

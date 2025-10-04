@@ -60,16 +60,6 @@ const modelscopeChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek V3是DeepSeek第三代模型的最新版本，具有强大的推理和对话能力。',
-    displayName: 'DeepSeek V3',
-    id: 'deepseek-ai/DeepSeek-V3',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
     description: 'Qwen3 235B A22B是通义千问3代超大规模模型，提供顶级的AI能力。',
     displayName: 'Qwen3 235B A22B',
     id: 'Qwen/Qwen3-235B-A22B',
