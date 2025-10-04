@@ -3,7 +3,7 @@
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 
-import { ChatItemProps, ChatItem as ChatItemRaw } from '@/components/ChatItem';
+import { ChatItemProps, ChatItem as ChatItemRaw } from '@/features/ChatItem/ChatItem';
 import { isDesktop } from '@/const/version';
 import { useElectronStore } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';

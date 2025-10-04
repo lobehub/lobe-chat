@@ -95,7 +95,7 @@ const Item = memo<ChatListItemProps>(
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
-    const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
+    const item = useChatStore(chatSelectors.getDisplayMessageById(id), isEqual);
     const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);
 
     const [

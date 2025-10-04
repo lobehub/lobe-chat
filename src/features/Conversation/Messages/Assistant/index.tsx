@@ -2,6 +2,7 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
+import { AssistantBlock } from '@/features/Conversation/Messages/Assistant/Block';
 import ImageFileListViewer from '@/features/Conversation/Messages/User/ImageFileListViewer';
 import VideoFileListViewer from '@/features/Conversation/Messages/User/VideoFileListViewer';
 import { useChatStore } from '@/store/chat';
@@ -19,7 +20,7 @@ export const AssistantMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, tools, content, chunksList, search, imageList, videoList, ...props }) => {
+>(({ id, tools, content, chunksList, search, imageList, videoList, children, ...props }) => {
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
@@ -40,6 +41,17 @@ export const AssistantMessage = memo<
     (!props.reasoning && isReasoning);
 
   const showFileChunks = !!chunksList && chunksList.length > 0;
+
+  console.log(id, children);
+
+  if (children && children?.length > 0)
+    return (
+      <Flexbox gap={8}>
+        {children.map((item) => (
+          <AssistantBlock key={item.id} {...item} editableContent={props.editableContent} />
+        ))}
+      </Flexbox>
+    );
 
   return editing ? (
     <DefaultMessage

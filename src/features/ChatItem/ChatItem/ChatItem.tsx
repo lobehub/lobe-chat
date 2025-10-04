@@ -61,36 +61,9 @@ const ChatItem = memo<ChatItemProps>(
     // 在 ChatItem 组件中添加
     const contentRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [layoutMode, setLayoutMode] = useState<'horizontal' | 'vertical'>(
-      variant === 'bubble' ? 'horizontal' : 'vertical',
+    const [layoutMode] = useState<'horizontal' | 'vertical'>(
+      placement === 'right' ? 'horizontal' : 'vertical',
     );
-
-    // 使用 ResizeObserver 监控内容和容器尺寸
-    useEffect(() => {
-      if (variant === 'docs') {
-        setLayoutMode('vertical');
-        return;
-      }
-
-      if (!contentRef.current || !containerRef.current) return;
-
-      const observer = new ResizeObserver(() => {
-        if (!contentRef.current || !containerRef.current) return;
-
-        const containerWidth = containerRef.current.clientWidth;
-        const contentWidth = contentRef.current.scrollWidth; // 使用scrollWidth获取实际内容宽度
-
-        // 预留给Actions的最小空间 (根据实际Actions大小调整)
-
-        // 只有当内容宽度 + Actions最小宽度 > 容器宽度时才切换布局
-        setLayoutMode(contentWidth + actionsWrapWidth > containerWidth ? 'vertical' : 'horizontal');
-      });
-
-      observer.observe(contentRef.current);
-      observer.observe(containerRef.current);
-
-      return () => observer.disconnect();
-    }, [variant, actionsWrapWidth]);
 
     return (
       <Flexbox
