@@ -1,9 +1,6 @@
-import { mapFeatureFlagsEnvToState } from '@/config/featureFlags';
-
 import { ServerConfigStore } from './store';
 
-export const featureFlagsSelectors = (s: ServerConfigStore) =>
-  mapFeatureFlagsEnvToState(s.featureFlags);
+export const featureFlagsSelectors = (s: ServerConfigStore) => s.featureFlags;
 
 export const serverConfigSelectors = {
   enableUploadFileToServer: (s: ServerConfigStore) => s.serverConfig.enableUploadFileToServer,

@@ -12,6 +12,7 @@ const googleChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       video: true,
       vision: true,
     },

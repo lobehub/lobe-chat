@@ -44,6 +44,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports structured output
+   */
+  structuredOutput?: boolean;
+  /**
    * whether model supports video
    */
   video?: boolean;

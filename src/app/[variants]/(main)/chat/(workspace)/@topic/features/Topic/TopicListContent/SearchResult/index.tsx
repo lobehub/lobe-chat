@@ -11,7 +11,7 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { ChatTopic } from '@/types/topic';
 
-import { SkeletonList } from '../../SkeletonList';
+import { SkeletonList } from '../../../SkeletonList';
 import TopicItem from '../TopicItem';
 
 const SearchResult = memo(() => {

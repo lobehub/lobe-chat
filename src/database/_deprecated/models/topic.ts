@@ -13,9 +13,9 @@ export interface CreateTopicParams {
 }
 
 export interface QueryTopicParams {
+  containerId?: string | null; // sessionId or groupId
   current?: number;
   pageSize?: number;
-  sessionId: string;
 }
 
 class _TopicModel extends BaseModel {
@@ -25,11 +25,17 @@ class _TopicModel extends BaseModel {
 
   // **************** Query *************** //
 
-  async query({ pageSize = 9999, current = 0, sessionId }: QueryTopicParams): Promise<ChatTopic[]> {
+  async query({
+    pageSize = 9999,
+    current = 0,
+    containerId,
+  }: QueryTopicParams): Promise<ChatTopic[]> {
     const offset = current * pageSize;
 
     // get all topics
-    const allTopics = await this.table.where('sessionId').equals(sessionId).toArray();
+    const allTopics = containerId
+      ? await this.table.where('sessionId').equals(containerId).toArray()
+      : await this.table.toArray();
 
     // 将所有主题按星标消息优先，时间倒序进行排序
     const sortedTopics = allTopics.sort((a, b) => {
