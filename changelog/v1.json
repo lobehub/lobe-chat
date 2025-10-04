@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["type not preserved when model is disabled or sorted."],
+      "improvements": ["Nano banana support aspect_ratio."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.6"
+  },
+  {
+    "children": {
       "fixes": ["Custom provider fails when client requests are enabled."],
       "improvements": ["Optimized extendParams UI, update i18n."]
     },
