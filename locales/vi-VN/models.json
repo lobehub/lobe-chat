@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: Mô hình suy luận thế hệ tiếp theo, nâng cao khả năng suy luận phức tạp và tư duy chuỗi, phù hợp cho các tác vụ cần phân tích sâu."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp giới thiệu cơ chế chú ý thưa thớt, nhằm nâng cao hiệu quả đào tạo và suy luận khi xử lý văn bản dài, với giá thấp hơn deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 là một mô hình hỗn hợp chuyên gia với 685B tham số, là phiên bản mới nhất trong dòng mô hình trò chuyện flagship của đội ngũ DeepSeek.\n\nNó kế thừa mô hình [DeepSeek V3](/deepseek/deepseek-chat-v3) và thể hiện xuất sắc trong nhiều nhiệm vụ."
   },
@@ -1443,7 +1446,7 @@
     "description": "Dòng mô hình GLM-4.1V-Thinking là mô hình VLM cấp 10 tỷ tham số mạnh nhất hiện biết, tích hợp các nhiệm vụ ngôn ngữ thị giác SOTA cùng cấp, bao gồm hiểu video, hỏi đáp hình ảnh, giải bài tập chuyên ngành, nhận dạng ký tự quang học (OCR), phân tích tài liệu và biểu đồ, tác nhân GUI, lập trình giao diện web frontend, định vị (Grounding) và nhiều nhiệm vụ khác, với khả năng vượt trội so với Qwen2.5-VL-72B có tham số gấp 8 lần. Thông qua công nghệ học tăng cường tiên tiến, mô hình nắm vững phương pháp suy luận chuỗi tư duy để nâng cao độ chính xác và sự phong phú của câu trả lời, vượt trội rõ rệt so với các mô hình truyền thống không có tính năng thinking về hiệu quả cuối cùng và khả năng giải thích."
   },
   "glm-4.5": {
-    "description": "Mô hình hàng đầu mới nhất của Zhipu, hỗ trợ chuyển đổi chế độ suy nghĩ, đạt trình độ SOTA trong các mô hình mã nguồn mở, với độ dài ngữ cảnh lên đến 128K."
+    "description": "Mô hình chủ lực của Zhipu, hỗ trợ chuyển đổi chế độ suy nghĩ, năng lực tổng hợp đạt mức SOTA của các mô hình mã nguồn mở, độ dài ngữ cảnh lên đến 128K."
   },
   "glm-4.5-air": {
     "description": "Phiên bản nhẹ của GLM-4.5, cân bằng giữa hiệu suất và chi phí, có thể linh hoạt chuyển đổi mô hình suy nghĩ hỗn hợp."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Mô hình suy luận thị giác thế hệ mới của Zhipu dựa trên kiến trúc MOE, với tổng số tham số 106B và 12B tham số kích hoạt, đạt SOTA trong số các mô hình đa phương thức mã nguồn mở cùng cấp trên toàn cầu trên nhiều bộ đánh giá, bao gồm các nhiệm vụ phổ biến như hiểu ảnh, video, tài liệu và giao diện người dùng (GUI)."
+  },
+  "glm-4.6": {
+    "description": "Mô hình chủ lực mới nhất của Zhipu GLM-4.6 (355B) vượt trội toàn diện so với thế hệ trước về mã hóa nâng cao, xử lý văn bản dài, suy luận và khả năng tác nhân, đặc biệt về năng lực lập trình đã đạt chuẩn Claude Sonnet 4, trở thành mô hình Coding hàng đầu trong nước."
   },
   "glm-4v": {
     "description": "GLM-4V cung cấp khả năng hiểu và suy luận hình ảnh mạnh mẽ, hỗ trợ nhiều nhiệm vụ hình ảnh."

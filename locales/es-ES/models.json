@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: modelo de inferencia de próxima generación que mejora las capacidades de razonamiento complejo y pensamiento en cadena, ideal para tareas que requieren análisis profundo."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduce el mecanismo de atención dispersa, con el objetivo de mejorar la eficiencia en el entrenamiento y la inferencia al procesar textos largos, con un precio inferior al de deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 es un modelo experto de mezcla de 685B parámetros, la última iteración de la serie de modelos de chat insignia del equipo de DeepSeek.\n\nHereda el modelo [DeepSeek V3](/deepseek/deepseek-chat-v3) y se desempeña excepcionalmente en diversas tareas."
   },
@@ -1443,7 +1446,7 @@
     "description": "La serie GLM-4.1V-Thinking es el modelo visual más potente conocido en la categoría de VLMs de 10 mil millones de parámetros, integrando tareas de lenguaje visual de última generación (SOTA) en su nivel, incluyendo comprensión de video, preguntas sobre imágenes, resolución de problemas académicos, reconocimiento OCR, interpretación de documentos y gráficos, agentes GUI, codificación web frontend, grounding, entre otros. En muchas tareas, supera incluso a modelos con 8 veces más parámetros como Qwen2.5-VL-72B. Gracias a técnicas avanzadas de aprendizaje reforzado, el modelo domina el razonamiento mediante cadenas de pensamiento para mejorar la precisión y riqueza de las respuestas, superando significativamente a los modelos tradicionales sin pensamiento en términos de resultados y explicabilidad."
   },
   "glm-4.5": {
-    "description": "El último modelo insignia de Zhipu, soporta modo de pensamiento, con capacidades integrales que alcanzan el nivel SOTA de modelos de código abierto y una longitud de contexto de hasta 128K."
+    "description": "Modelo insignia de Zhipu, que soporta el cambio de modo de pensamiento, con una capacidad integral que alcanza el nivel SOTA de los modelos de código abierto, y una longitud de contexto de hasta 128K."
   },
   "glm-4.5-air": {
     "description": "Versión ligera de GLM-4.5 que equilibra rendimiento y costo, con capacidad flexible para cambiar entre modelos de pensamiento híbrido."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "La nueva generación del modelo de razonamiento visual de Zhipu, basada en la arquitectura MOE, cuenta con 106B de parámetros totales y 12B de parámetros de activación; alcanza el estado del arte (SOTA) entre los modelos multimodales de código abierto de la misma categoría a nivel mundial en diversas pruebas de referencia, y cubre tareas comunes como comprensión de imágenes, vídeo, documentos y tareas de interfaz gráfica de usuario (GUI)."
+  },
+  "glm-4.6": {
+    "description": "El último modelo insignia de Zhipu, GLM-4.6 (355B), supera ampliamente a la generación anterior en codificación avanzada, procesamiento de textos largos, inferencia y capacidades de agentes inteligentes, especialmente en habilidades de programación alineadas con Claude Sonnet 4, convirtiéndose en el modelo de codificación líder en China."
   },
   "glm-4v": {
     "description": "GLM-4V proporciona una poderosa capacidad de comprensión e inferencia de imágenes, soportando diversas tareas visuales."

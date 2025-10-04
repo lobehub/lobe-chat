@@ -181,7 +181,6 @@ export const createRouterRuntime = ({
       for (const runtimeItem of runtimes) {
         const models = runtimeItem.models || [];
         if (models.includes(model)) {
-          console.log(`get runtime ${runtimeItem.id} ${model}`);
           return runtimeItem.runtime;
         }
       }

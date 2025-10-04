@@ -6,7 +6,7 @@ import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { isDeprecatedEdition, isDesktop } from '@/const/version';
+import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
@@ -38,7 +38,7 @@ import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
 import { initializeWithClientStore } from './clientModelRuntime';
 import { contextEngineering } from './contextEngineering';
-import { findDeploymentName, isEnableFetchOnClient } from './helper';
+import { findDeploymentName, isEnableFetchOnClient, resolveRuntimeProvider } from './helper';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -273,6 +273,8 @@ class ChatService {
     if (payload.top_p === null) payload.top_p = undefined;
     if (payload.presence_penalty === null) payload.presence_penalty = undefined;
     if (payload.frequency_penalty === null) payload.frequency_penalty = undefined;
+    
+    const sdkType = resolveRuntimeProvider(provider);
 
     /**
      * Use browser agent runtime
@@ -293,7 +295,7 @@ class ChatService {
        */
       fetcher = async () => {
         try {
-          return await this.fetchOnClient({ payload, provider, signal });
+          return await this.fetchOnClient({ payload, provider, runtimeProvider: sdkType, signal });
         } catch (e) {
           const {
             errorType = ChatErrorType.BadRequest,
@@ -319,17 +321,6 @@ class ChatService {
 
     const { DEFAULT_MODEL_PROVIDER_LIST } = await import('@/config/modelProviders');
     const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
-
-    let sdkType = provider;
-    const isBuiltin = Object.values(ModelProvider).includes(provider as any);
-
-    // TODO: remove `!isDeprecatedEdition` condition in V2.0
-    if (!isDeprecatedEdition && !isBuiltin) {
-      const providerConfig =
-        aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
-
-      sdkType = providerConfig?.settings.sdkType || 'openai';
-    }
 
     const userPreferTransitionMode =
       userGeneralSettingsSelectors.transitionMode(getUserStoreState());
@@ -467,6 +458,7 @@ class ChatService {
   private fetchOnClient = async (params: {
     payload: Partial<ChatStreamPayload>;
     provider: string;
+    runtimeProvider: string;
     signal?: AbortSignal;
   }) => {
     /**
@@ -477,7 +469,11 @@ class ChatService {
       throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
     }
 
-    const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
+    const agentRuntime = await initializeWithClientStore({
+      payload: params.payload,
+      provider: params.provider,
+      runtimeProvider: params.runtimeProvider,
+    });
     const data = params.payload as ChatStreamPayload;
 
     return agentRuntime.chat(data, { signal: params.signal });

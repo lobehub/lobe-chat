@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: modello di inferenza di nuova generazione che migliora le capacità di ragionamento complesso e di pensiero a catena, adatto a compiti che richiedono analisi approfondite."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduce un meccanismo di attenzione sparsa, progettato per migliorare l'efficienza di addestramento e inferenza nel trattamento di testi lunghi, con un costo inferiore rispetto a deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 è un modello misto esperto con 685B di parametri, l'ultima iterazione della serie di modelli di chat di punta del team DeepSeek.\n\nEredita il modello [DeepSeek V3](/deepseek/deepseek-chat-v3) e si comporta eccezionalmente in vari compiti."
   },
@@ -1443,7 +1446,7 @@
     "description": "La serie GLM-4.1V-Thinking è attualmente il modello visivo più performante tra i modelli VLM di livello 10 miliardi di parametri noti, integrando le migliori prestazioni SOTA nelle attività di linguaggio visivo di pari livello, tra cui comprensione video, domande sulle immagini, risoluzione di problemi disciplinari, riconoscimento OCR, interpretazione di documenti e grafici, agent GUI, coding front-end web, grounding e altro. Le capacità in molteplici compiti superano persino il modello Qwen2.5-VL-72B con 8 volte più parametri. Grazie a tecniche avanzate di apprendimento rinforzato, il modello padroneggia il ragionamento tramite catena di pensiero per migliorare accuratezza e ricchezza delle risposte, superando significativamente i modelli tradizionali non-thinking in termini di risultati finali e interpretabilità."
   },
   "glm-4.5": {
-    "description": "Ultimo modello di punta di Zhipu, supporta la modalità di pensiero commutabile, con capacità complessive al livello SOTA dei modelli open source e una lunghezza di contesto fino a 128K."
+    "description": "Modello di punta di Zhipu, supporta la modalità di pensiero alternata, con capacità complessive che raggiungono il livello SOTA dei modelli open source, e una lunghezza del contesto fino a 128K."
   },
   "glm-4.5-air": {
     "description": "Versione leggera di GLM-4.5, bilancia prestazioni e rapporto qualità-prezzo, con capacità di commutazione flessibile tra modelli di pensiero ibridi."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Una nuova generazione di modello di ragionamento visivo basato sull'architettura MOE, con 106 miliardi di parametri totali e 12 miliardi di parametri di attivazione, che raggiunge lo SOTA tra i modelli multimodali open source della stessa fascia a livello globale in vari benchmark, coprendo attività comuni come la comprensione di immagini, video, documenti e compiti GUI."
+  },
+  "glm-4.6": {
+    "description": "Il più recente modello di punta di Zhipu, GLM-4.6 (355B), supera completamente la generazione precedente in codifica avanzata, gestione di testi lunghi, inferenza e capacità agenti, allineandosi in particolare con Claude Sonnet 4 nelle capacità di programmazione, diventando il modello di coding di punta in Cina."
   },
   "glm-4v": {
     "description": "GLM-4V offre potenti capacità di comprensione e ragionamento visivo, supportando vari compiti visivi."
