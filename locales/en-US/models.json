@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: The next-generation reasoning model that enhances complex reasoning and chain-of-thought capabilities, suitable for tasks requiring in-depth analysis."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduces a sparse attention mechanism designed to enhance training and inference efficiency when processing long texts, priced lower than deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
   },
@@ -1443,7 +1446,7 @@
     "description": "The GLM-4.1V-Thinking series represents the most powerful vision-language models known at the 10B parameter scale, integrating state-of-the-art capabilities across various vision-language tasks such as video understanding, image question answering, academic problem solving, OCR text recognition, document and chart interpretation, GUI agents, front-end web coding, and grounding. Its performance in many tasks even surpasses that of Qwen2.5-VL-72B, which has over eight times the parameters. Leveraging advanced reinforcement learning techniques, the model masters Chain-of-Thought reasoning to improve answer accuracy and richness, significantly outperforming traditional non-thinking models in final results and interpretability."
   },
   "glm-4.5": {
-    "description": "Zhipu's latest flagship model supports thinking mode switching, achieving state-of-the-art comprehensive capabilities among open-source models, with a context length of up to 128K."
+    "description": "Zhipu's flagship model supports thinking mode switching, with comprehensive capabilities reaching the state-of-the-art level among open-source models, and a context length of up to 128K."
   },
   "glm-4.5-air": {
     "description": "A lightweight version of GLM-4.5 balancing performance and cost-effectiveness, capable of flexibly switching hybrid thinking models."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Zhipu's next-generation visual reasoning model is built on a Mixture-of-Experts (MoE) architecture. With 106B total parameters and 12B activated parameters, it achieves state-of-the-art performance among open-source multimodal models of similar scale across various benchmarks, supporting common tasks such as image, video, document understanding, and GUI-related tasks."
+  },
+  "glm-4.6": {
+    "description": "Zhipu's latest flagship model GLM-4.6 (355B) surpasses its predecessor comprehensively in advanced encoding, long text processing, reasoning, and agent capabilities, especially aligning with Claude Sonnet 4 in programming skills, making it a top-tier coding model in China."
   },
   "glm-4v": {
     "description": "GLM-4V provides strong image understanding and reasoning capabilities, supporting various visual tasks."

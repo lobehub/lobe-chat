@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: kolejna generacja modelu inferencyjnego, poprawiająca zdolności do złożonego wnioskowania i łańcuchowego myślenia, odpowiednia do zadań wymagających dogłębnej analizy."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp wprowadza mechanizm rzadkiej uwagi, mający na celu poprawę efektywności treningu i wnioskowania podczas przetwarzania długich tekstów, przy cenie niższej niż deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 to model mieszany z 685B parametrami, będący najnowszą iteracją flagowej serii modeli czatu zespołu DeepSeek.\n\nDziedziczy po modelu [DeepSeek V3](/deepseek/deepseek-chat-v3) i wykazuje doskonałe wyniki w różnych zadaniach."
   },
@@ -1443,7 +1446,7 @@
     "description": "Seria modeli GLM-4.1V-Thinking to najsilniejsze znane modele wizualno-językowe (VLM) na poziomie 10 miliardów parametrów, integrujące najnowocześniejsze zadania wizualno-językowe na tym poziomie, w tym rozumienie wideo, pytania i odpowiedzi na obrazach, rozwiązywanie problemów naukowych, rozpoznawanie tekstu OCR, interpretację dokumentów i wykresów, agenta GUI, kodowanie front-endowe stron internetowych, grounding i inne. Wiele z tych zadań przewyższa możliwości modelu Qwen2.5-VL-72B, który ma ponad 8 razy więcej parametrów. Dzięki zaawansowanym technikom uczenia ze wzmocnieniem model opanował rozumowanie łańcuchowe, co znacząco poprawia dokładność i bogactwo odpowiedzi, przewyższając tradycyjne modele bez mechanizmu thinking pod względem końcowych rezultatów i interpretowalności."
   },
   "glm-4.5": {
-    "description": "Najnowszy flagowy model Zhizhu, wspierający tryb myślenia, osiągający poziom SOTA wśród otwartych modeli pod względem wszechstronnych zdolności, z długością kontekstu do 128K tokenów."
+    "description": "Flagowy model Zhipu, wspierający tryb myślenia, osiągający poziom SOTA wśród modeli open source pod względem zdolności ogólnych, z długością kontekstu do 128K."
   },
   "glm-4.5-air": {
     "description": "Lżejsza wersja GLM-4.5, łącząca wydajność i opłacalność, z możliwością elastycznego przełączania hybrydowego trybu myślenia."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Nowa generacja modelu do wnioskowania wizualnego firmy Zhipu oparta na architekturze MOE. Przy łącznej liczbie parametrów 106B i 12B parametrów aktywacji osiąga wyniki SOTA wśród otwartoźródłowych modeli multimodalnych o porównywalnej skali na różnych benchmarkach, obejmując typowe zadania związane z analizą obrazów, wideo, rozumieniem dokumentów oraz zadaniami GUI."
+  },
+  "glm-4.6": {
+    "description": "Najnowszy flagowy model Zhipu GLM-4.6 (355B) przewyższa poprzednie generacje pod względem zaawansowanego kodowania, przetwarzania długich tekstów, wnioskowania i zdolności agentów, szczególnie wyrównując się z Claude Sonnet 4 w zakresie programowania, stając się czołowym modelem kodowania w kraju."
   },
   "glm-4v": {
     "description": "GLM-4V oferuje potężne zdolności rozumienia i wnioskowania obrazów, obsługując różne zadania wizualne."
