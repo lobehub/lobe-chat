@@ -1,6 +1,9 @@
 import { EdgeConfigClient, createClient } from '@vercel/edge-config';
+import createDebug from 'debug';
 
 import { appEnv } from '@/envs/app';
+
+const debug = createDebug('lobe-server:edge-config');
 
 const EdgeConfigKeys = {
   /**
@@ -30,11 +33,8 @@ export class EdgeConfig {
    */
   static isEnabled() {
     const isEnabled = !!appEnv.VERCEL_EDGE_CONFIG;
-    console.log(
-      '[EdgeConfig] VERCEL_EDGE_CONFIG env var:',
-      appEnv.VERCEL_EDGE_CONFIG ? 'SET' : 'NOT SET',
-    );
-    console.log('[EdgeConfig] EdgeConfig enabled:', isEnabled);
+    debug('VERCEL_EDGE_CONFIG env var: %s', appEnv.VERCEL_EDGE_CONFIG ? 'SET' : 'NOT SET');
+    debug('EdgeConfig enabled: %s', isEnabled);
     return isEnabled;
   }
 
@@ -58,7 +58,7 @@ export class EdgeConfig {
 
   getFeatureFlags = async () => {
     const featureFlags = await this.client.get(EdgeConfigKeys.FeatureFlags);
-    console.log('[EdgeConfig] Feature flags retrieved:', featureFlags);
+    debug('Feature flags retrieved: %O', featureFlags);
     return featureFlags as Record<string, boolean | string[]> | undefined;
   };
 }
