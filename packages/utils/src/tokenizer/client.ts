@@ -2,7 +2,11 @@ let worker: Worker | null = null;
 
 const getWorker = () => {
   if (!worker && typeof Worker !== 'undefined') {
-    worker = new Worker(new URL('tokenizer.worker.ts', import.meta.url));
+    let workerURL = new URL('tokenizer.worker.ts', import.meta.url);
+    if (typeof location !== 'undefined' && workerURL.origin !== location.origin) {
+      workerURL = new URL(workerURL.pathname, location.origin);
+    }
+    worker = new Worker(workerURL);
   }
   return worker;
 };
