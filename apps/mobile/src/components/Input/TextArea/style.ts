@@ -20,7 +20,7 @@ export const useStyles = createStyles(({ token }, { variant = 'filled' }: UseSty
       color: token.colorText,
       flex: 1,
       fontFamily: token.fontFamily,
-      fontSize: token.fontSize,
+      fontSize: token.fontSizeLG,
       minHeight: token.fontHeight,
       textAlignVertical: 'top',
       ...(Platform.OS === 'android' && {
