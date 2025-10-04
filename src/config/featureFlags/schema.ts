@@ -58,13 +58,12 @@ export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 export const evaluateFeatureFlag = (
   flagValue: boolean | string[] | undefined,
   userId?: string,
-): boolean => {
-  if (flagValue === undefined) return false;
+): boolean | undefined => {
   if (typeof flagValue === 'boolean') return flagValue;
+
   if (Array.isArray(flagValue)) {
     return userId ? flagValue.includes(userId) : false;
   }
-  return false;
 };
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
