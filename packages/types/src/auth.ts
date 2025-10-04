@@ -16,6 +16,8 @@ export interface ClientSecretPayload {
    */
   baseURL?: string;
 
+  runtimeProvider?: string;
+
   azureApiVersion?: string;
 
   awsAccessKeyId?: string;
