@@ -80,8 +80,9 @@ const Header = memo(() => {
         const sessionId = await createSession(
           {
             config: {
-              systemRole: member.systemRole,
               plugins: member.plugins,
+              systemRole: member.systemRole,
+              virtual: true,
             },
             meta: {
               avatar: member.avatar,

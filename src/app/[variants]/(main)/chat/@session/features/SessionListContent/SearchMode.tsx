@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
-import { LobeSessions } from '@/types/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
 
 import SkeletonList from '../SkeletonList';
 import SessionList from './List';
@@ -18,10 +18,17 @@ const SearchMode = memo(() => {
 
   const { data, isLoading } = useSearchSessions(sessionSearchKeywords);
 
-  // Filter out group sessions on mobile
   const filteredData = useMemo(() => {
-    if (!isMobile || !data) return data;
-    return data.filter((session: LobeSessions[0]) => session.type !== 'group');
+    if (!data) return data;
+
+    if (isMobile) {
+      return data.filter((session: LobeSessions[0]) => session.type !== LobeSessionType.Group);
+    }
+
+    return data.filter(
+      (session: LobeSessions[0]) =>
+        session.type !== LobeSessionType.Agent || !(session as LobeAgentSession).config?.virtual,
+    );
   }, [data, isMobile]);
 
   return isLoading ? (

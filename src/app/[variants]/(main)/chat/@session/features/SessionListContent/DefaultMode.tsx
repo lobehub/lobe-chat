@@ -10,7 +10,12 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { LobeSessions, SessionDefaultGroup } from '@/types/session';
+import {
+  LobeAgentSession,
+  LobeSessionType,
+  LobeSessions,
+  SessionDefaultGroup,
+} from '@/types/session';
 
 import CollapseGroup from './CollapseGroup';
 import Actions from './CollapseGroup/Actions';
@@ -34,17 +39,26 @@ const DefaultMode = memo(() => {
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
   const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
 
-  // Filter out group sessions on mobile
-  const filterSessionsForMobile = (sessions: LobeSessions): LobeSessions => {
-    if (!isMobile) return sessions;
-    return sessions.filter((session) => session.type !== 'group');
+  const shouldHideSession = (session: LobeSessions[0]) =>
+    !isMobile &&
+    session.type === LobeSessionType.Agent &&
+    Boolean((session as LobeAgentSession).config?.virtual);
+
+  const filterSessionsForView = (sessions: LobeSessions): LobeSessions => {
+    const filteredForDevice = isMobile
+      ? sessions.filter((session) => session.type !== LobeSessionType.Group)
+      : sessions;
+
+    if (isMobile) return filteredForDevice;
+
+    return filteredForDevice.filter((session) => !shouldHideSession(session));
   };
 
-  const filteredDefaultSessions = filterSessionsForMobile(defaultSessions);
-  const filteredPinnedSessions = filterSessionsForMobile(pinnedSessions);
+  const filteredDefaultSessions = filterSessionsForView(defaultSessions);
+  const filteredPinnedSessions = filterSessionsForView(pinnedSessions);
   const filteredCustomSessionGroups = customSessionGroups?.map((group) => ({
     ...group,
-    children: filterSessionsForMobile(group.children),
+    children: filterSessionsForView(group.children),
   }));
 
   const [sessionGroupKeys, updateSystemStatus] = useGlobalStore((s) => [

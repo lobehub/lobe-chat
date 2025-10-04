@@ -2,7 +2,20 @@ import { EdgeConfigClient, createClient } from '@vercel/edge-config';
 
 import { appEnv } from '@/envs/app';
 
-import type { EdgeConfigData } from './types';
+const EdgeConfigKeys = {
+  /**
+   * Assistant whitelist
+   */
+  AssistantBlacklist: 'assistant_blacklist',
+  /**
+   * Assistant whitelist
+   */
+  AssistantWhitelist: 'assistant_whitelist',
+  /**
+   * Feature flags configuration
+   */
+  FeatureFlags: 'feature_flags',
+};
 
 export class EdgeConfig {
   get client(): EdgeConfigClient {
