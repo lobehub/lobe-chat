@@ -408,22 +408,22 @@ export const createTokenSpeedCalculator = (
     }
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
-      const totalOutputTokens =
-        chunk.data?.totalOutputTokens ??
-        (chunk.data?.outputTextTokens ?? 0) + (chunk.data?.outputImageTokens ?? 0);
-      const reasoningTokens = chunk.data?.outputReasoningTokens ?? 0;
-      const outputTokens =
-        (outputThinking ?? false)
-          ? totalOutputTokens
-          : Math.max(0, totalOutputTokens - reasoningTokens);
+      // TPS should always include all generated tokens (including reasoning tokens)
+      // because it measures generation speed, not just visible content
+      const outputTokens = chunk.data?.totalOutputTokens ?? 0;
       const now = Date.now();
       const elapsed = now - (enableStreaming ? outputStartAt : inputStartAt);
+      const duration = now - outputStartAt;
+      const latency = now - inputStartAt;
+      const ttft = outputStartAt - inputStartAt;
+      const tps = elapsed === 0 ? undefined : (outputTokens / elapsed) * 1000;
+
       result.push({
         data: {
-          duration: now - outputStartAt,
-          latency: now - inputStartAt,
-          tps: elapsed === 0 ? undefined : (outputTokens / elapsed) * 1000,
-          ttft: outputStartAt - inputStartAt,
+          duration,
+          latency,
+          tps,
+          ttft,
         } as ModelSpeed,
         id: TOKEN_SPEED_CHUNK_ID,
         type: 'speed',
