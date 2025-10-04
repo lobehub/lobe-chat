@@ -1,6 +1,7 @@
 import { ActionIcon, Avatar, PageContainer, Space } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -30,7 +31,7 @@ export default function ChatWithDrawer() {
 
   const displayTitle = isInbox ? t('inbox.title', { ns: 'chat' }) : title;
 
-  const renderContent = () => {
+  const renderContent = useCallback(() => {
     return (
       <PageContainer
         extra={<ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />}
@@ -55,7 +56,7 @@ export default function ChatWithDrawer() {
         </KeyboardAvoidingView>
       </PageContainer>
     );
-  };
+  }, [displayTitle]);
 
   return (
     <View style={styles.root}>
