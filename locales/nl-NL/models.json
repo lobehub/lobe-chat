@@ -1019,6 +1019,9 @@
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: een volgende generatie redeneermodel dat verbeterde complexe redeneer- en ketendenkvaardigheden biedt, geschikt voor taken die diepgaande analyse vereisen."
   },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduceert een sparse attentie mechanisme, gericht op het verbeteren van de trainings- en inferentie-efficiëntie bij het verwerken van lange teksten, met een prijs lager dan deepseek-v3.1."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 is een expert gemengd model met 685B parameters, de nieuwste iteratie van de vlaggenschip chatmodelreeks van het DeepSeek-team.\n\nHet is een opvolger van het [DeepSeek V3](/deepseek/deepseek-chat-v3) model en presteert uitstekend in verschillende taken."
   },
@@ -1443,7 +1446,7 @@
     "description": "De GLM-4.1V-Thinking serie modellen zijn momenteel de krachtigste visuele modellen binnen de bekende 10 miljard parameter VLM's. Ze integreren state-of-the-art visuele-taaltaakprestaties op hetzelfde niveau, waaronder videoverwerking, beeldvraag-antwoordsystemen, vakinhoudelijke probleemoplossing, OCR-tekstherkenning, document- en grafiekanalyse, GUI-agenten, frontend webcodering en grounding. De capaciteiten van meerdere taken overtreffen zelfs die van Qwen2.5-VL-72B met acht keer zoveel parameters. Door geavanceerde versterkend leren technologie beheerst het model chain-of-thought redenering om de nauwkeurigheid en rijkdom van antwoorden te verbeteren, wat resulteert in aanzienlijk betere eindresultaten en interpretatie dan traditionele niet-thinking modellen."
   },
   "glm-4.5": {
-    "description": "Het nieuwste vlaggenschipmodel van Zhizhu, ondersteunt schakeling tussen denkmodi, met een algehele prestatie die het SOTA-niveau van open-source modellen bereikt, en een contextlengte tot 128K."
+    "description": "Het vlaggenschipmodel van Zhipu, ondersteunt het schakelen tussen denkwijzen, met een algehele capaciteit die het SOTA-niveau van open source modellen bereikt, en een contextlengte tot 128K."
   },
   "glm-4.5-air": {
     "description": "Een lichtgewicht versie van GLM-4.5, die zowel prestaties als kosteneffectiviteit combineert en flexibel kan schakelen tussen hybride denkmodellen."
@@ -1459,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Zhipu's nieuwe generatie visueel redeneermodel, gebaseerd op een MOE-architectuur, beschikt over in totaal 106 miljard parameters en 12 miljard activatieparameters, en behaalt op diverse benchmarks state-of-the-art (SOTA)-prestaties onder open-source multimodale modellen van vergelijkbaar internationaal niveau. Het dekt veelvoorkomende taken zoals beeld-, video- en documentbegrip en GUI-taken."
+  },
+  "glm-4.6": {
+    "description": "Het nieuwste vlaggenschipmodel van Zhipu, GLM-4.6 (355B), overtreft de vorige generatie op het gebied van geavanceerde codering, lange tekstverwerking, inferentie en agentcapaciteiten, en is vooral op programmeervaardigheden afgestemd op Claude Sonnet 4, waarmee het het toonaangevende coderingsmodel in China is."
   },
   "glm-4v": {
     "description": "GLM-4V biedt krachtige beeldbegrip- en redeneercapaciteiten, ondersteunt verschillende visuele taken."
