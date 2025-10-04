@@ -15,6 +15,7 @@ import { default as cohere } from './cohere';
 import { default as cometapi } from './cometapi';
 import { default as deepseek } from './deepseek';
 import { default as fal } from './fal';
+import { default as featherlessai } from './featherlessai';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
 import { default as github } from './github';
@@ -100,6 +101,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   cometapi,
   deepseek,
   fal,
+  featherlessai,
   fireworksai,
   giteeai,
   github,
@@ -166,6 +168,7 @@ export { default as cohere } from './cohere';
 export { default as cometapi } from './cometapi';
 export { default as deepseek } from './deepseek';
 export { default as fal, fluxSchnellParamsSchema } from './fal';
+export { default as featherlessai } from './featherlessai';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
 export { default as github } from './github';
