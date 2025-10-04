@@ -21,11 +21,11 @@ import { timestamps } from './_helpers';
 import { agents } from './agent';
 import { chatGroups } from './chatGroup';
 import { files } from './file';
+import { messageGroups } from './messageGroup';
 import { chunks, embeddings } from './rag';
 import { sessions } from './session';
 import { threads, topics } from './topic';
 import { users } from './user';
-import { messageGroups } from './messageGroup';
 
 // @ts-ignore
 export const messages = pgTable(
@@ -72,7 +72,10 @@ export const messages = pgTable(
     targetId: text('target_id'),
 
     // used for multi-model parallel
-    messageGroupId: text('message_group_id').references(() => messageGroups.id, { onDelete: 'cascade' }),
+    messageGroupId: varchar('message_group_id', { length: 255 }).references(
+      () => messageGroups.id,
+      { onDelete: 'cascade' },
+    ),
     ...timestamps,
   },
   (table) => [

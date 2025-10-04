@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
@@ -17,7 +17,7 @@ import { users } from './user';
 export const messageGroups = pgTable(
   'message_groups',
   {
-    id: text('id')
+    id: varchar('id', { length: 255 })
       .primaryKey()
       .$defaultFn(() => idGenerator('messageGroups'))
       .notNull(),
@@ -30,7 +30,7 @@ export const messageGroups = pgTable(
 
     // 支持嵌套结构
     // @ts-ignore
-    parentGroupId: text('parent_group_id').references(() => messageGroups.id, {
+    parentGroupId: varchar('parent_group_id', { length: 255 }).references(() => messageGroups.id, {
       onDelete: 'cascade',
     }),
 
