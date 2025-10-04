@@ -1,4 +1,6 @@
 name: Publish Docker Pglite Image
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
