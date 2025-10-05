@@ -4,18 +4,81 @@ The directory structure of LobeChat is as follows:
 
 ```bash
 src
-├── app        # Main logic and state management related code for the application
-├── components # Reusable UI components
-├── config     # Application configuration files, including client-side and server-side environment variables
-├── const      # Used to define constants, such as action types, route names, etc.
-├── features   # Function modules related to business functions, such as agent settings, plugin development pop-ups, etc.
-├── hooks      # Custom utility hooks reused throughout the application
-├── layout     # Application layout components, such as navigation bars, sidebars, etc.
-├── locales    # Internationalization language files
-├── services   # Encapsulated backend service interfaces, such as HTTP requests
-├── store      # Zustand store for state management
-├── types      # TypeScript type definition files
-└── utils      # Common utility functions
+├── app                 # Main application routing and pages (Next.js 15 App Router)
+│   ├── (backend)       # Backend API routes and server-side logic
+│   ├── [variants]      # Dynamic route variants for different UI layouts
+│   ├── desktop         # Desktop-specific routes and pages
+│   └── ...             # Other app router files (manifest, robots, sitemap, etc.)
+├── components          # Reusable UI components
+│   ├── Analytics       # Analytics and tracking components
+│   ├── ChatItem        # Chat-related UI components
+│   ├── Error           # Error handling and display components
+│   ├── Loading         # Loading states and indicators
+│   ├── client          # Client-side only components
+│   └── server          # Server-side components
+├── config              # Application configuration files
+│   ├── featureFlags    # Feature flag configurations
+│   └── modelProviders  # AI model provider configurations
+├── const               # Application constants and enums
+├── database            # Database-related legacy code (deprecated)
+├── envs                # Environment variable definitions and validation
+├── features            # Feature-specific UI modules and business logic
+│   ├── AgentInfo       # Agent information and settings
+│   ├── ChatInput       # Chat input functionality
+│   ├── FileManager     # File management features
+│   ├── ModelSelect     # AI model selection
+│   └── PluginStore     # Plugin marketplace
+├── helpers             # Utility helpers and tool engineering functions
+├── hooks               # Custom React hooks for reusable logic
+│   ├── useGreeting     # Greeting and welcome logic
+│   └── useHotkeys      # Keyboard shortcut handling
+├── instrumentation.ts  # Application monitoring and telemetry setup
+├── layout              # Layout providers and global app structure
+│   ├── AuthProvider    # Authentication providers (Clerk, NextAuth, NoAuth)
+│   └── GlobalProvider  # Global state and theme providers
+├── libs                # Third-party integrations and external services
+│   ├── analytics       # Analytics service integrations
+│   ├── clerk-auth      # Clerk authentication setup
+│   ├── langchain       # LangChain integration
+│   ├── mcp             # Model Context Protocol implementation
+│   ├── next-auth       # NextAuth.js configuration
+│   ├── oidc-provider   # OIDC provider implementation
+│   └── traces          # Tracing and observability
+├── locales             # Internationalization (i18n) files and utilities
+├── middleware.ts       # Next.js middleware for request processing
+├── migrations          # Data migration scripts and version control
+│   ├── FromV0ToV1      # Migration from version 0 to 1
+│   ├── FromV1ToV2      # Migration from version 1 to 2
+│   └── ...             # Other version migrations
+├── server              # Server-side business logic and services
+│   ├── modules         # Reusable server modules (no database access)
+│   ├── routers         # tRPC routers for different runtime environments
+│   ├── services        # Server services with database access
+│   └── utils           # Server-side utilities
+├── services            # Client-side service layer for API communication
+│   ├── aiModel         # AI model management services
+│   ├── chat            # Chat functionality services
+│   ├── electron        # Electron app-specific services
+│   ├── file            # File handling services
+│   ├── message         # Message management services
+│   └── user            # User management services
+├── store               # Zustand stores for client-side state management
+│   ├── agent           # Agent-related state
+│   ├── chat            # Chat state and messages
+│   ├── electron        # Desktop app state
+│   ├── global          # Global application state
+│   └── user            # User preferences and settings
+├── styles              # Global styles and theme configurations
+├── tools               # Built-in tools and their implementations
+│   ├── artifacts       # Code artifacts and generation
+│   ├── code-interpreter # Code execution and interpretation
+│   ├── dalle           # DALL-E image generation integration
+│   ├── local-system    # Local system access tools
+│   └── web-browsing    # Web browsing capabilities
+├── types               # TypeScript type definitions
+└── utils               # Common utility functions
+    ├── client          # Client-side utilities
+    └── server          # Server-side utilities
 ```
 
 ## app

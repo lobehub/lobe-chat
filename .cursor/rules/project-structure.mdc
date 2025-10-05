@@ -42,6 +42,7 @@ lobe-chat/
 ├── src/
 │   ├── app/
 │   │   ├── (backend)/
+│   │   │   ├── _deprecated/
 │   │   │   ├── api/
 │   │   │   │   ├── auth/
 │   │   │   │   └── webhooks/
@@ -52,42 +53,173 @@ lobe-chat/
 │   │   │       ├── chat/
 │   │   │       └── tts/
 │   │   ├── [variants]/
+│   │   │   ├── (auth)/
 │   │   │   ├── (main)/
 │   │   │   │   ├── chat/
 │   │   │   │   └── settings/
 │   │   │   └── @modal/
-│   │   └── manifest.ts
+│   │   ├── desktop/
+│   │   ├── oauth/
+│   │   ├── loading/
+│   │   ├── manifest.ts
+│   │   ├── robots.tsx
+│   │   ├── sitemap.tsx
+│   │   └── sw.ts
 │   ├── components/
+│   │   ├── Analytics/
+│   │   ├── ChatItem/
+│   │   ├── Error/
+│   │   ├── Loading/
+│   │   ├── client/
+│   │   ├── server/
+│   │   └── ...
 │   ├── config/
+│   │   ├── featureFlags/
+│   │   └── modelProviders/
+│   ├── const/
+│   ├── database/
+│   │   └── _deprecated/
+│   ├── envs/
+│   │   ├── __tests__/
+│   │   ├── analytics.ts
+│   │   ├── app.ts
+│   │   ├── auth.ts
+│   │   └── ...
 │   ├── features/
-│   │   └── ChatInput/
+│   │   ├── AgentInfo/
+│   │   ├── ChatInput/
+│   │   ├── FileManager/
+│   │   ├── ModelSelect/
+│   │   ├── PluginStore/
+│   │   └── ...
+│   ├── helpers/
+│   │   └── toolEngineering/
 │   ├── hooks/
+│   │   ├── useActiveTabKey.ts
+│   │   ├── useGreeting/
+│   │   ├── useHotkeys/
+│   │   └── ...
+│   ├── instrumentation.ts
+│   ├── instrumentation.node.ts
 │   ├── layout/
 │   │   ├── AuthProvider/
+│   │   │   ├── Clerk/
+│   │   │   ├── NextAuth/
+│   │   │   └── NoAuth/
 │   │   └── GlobalProvider/
 │   ├── libs/
-│   │   └── oidc-provider/
+│   │   ├── analytics/
+│   │   ├── clerk-auth/
+│   │   ├── langchain/
+│   │   ├── mcp/
+│   │   ├── next-auth/
+│   │   ├── oidc-provider/
+│   │   ├── swr/
+│   │   ├── traces/
+│   │   ├── trpc/
+│   │   └── unstructured/
 │   ├── locales/
-│   │   └── default/
+│   │   ├── default/
+│   │   ├── create.ts
+│   │   ├── resources.ts
+│   │   └── resources.test.ts
+│   ├── middleware.ts
+│   ├── migrations/
+│   │   ├── FromV0ToV1.ts
+│   │   ├── FromV1ToV2/
+│   │   ├── FromV2ToV3/
+│   │   ├── FromV3ToV4/
+│   │   ├── FromV4ToV5/
+│   │   ├── FromV5ToV6/
+│   │   ├── FromV6ToV7/
+│   │   ├── VersionController.ts
+│   │   └── index.ts
 │   ├── server/
+│   │   ├── featureFlags/
+│   │   ├── globalConfig/
 │   │   ├── modules/
+│   │   │   ├── AssistantStore/
+│   │   │   ├── ContentChunk/
+│   │   │   ├── EdgeConfig/
+│   │   │   ├── ElectronIPCClient/
+│   │   │   ├── KeyVaultsEncrypt/
+│   │   │   ├── ModelRuntime/
+│   │   │   ├── PluginStore/
+│   │   │   └── S3/
 │   │   ├── routers/
 │   │   │   ├── async/
 │   │   │   ├── desktop/
 │   │   │   ├── edge/
-│   │   │   └── lambda/
-│   │   └── services/
+│   │   │   ├── lambda/
+│   │   │   └── tools/
+│   │   ├── services/
+│   │   │   ├── agent/
+│   │   │   ├── aiChat/
+│   │   │   ├── changelog/
+│   │   │   ├── discover/
+│   │   │   ├── file/
+│   │   │   ├── generation/
+│   │   │   ├── mcp/
+│   │   │   ├── nextAuthUser/
+│   │   │   ├── oidc/
+│   │   │   ├── search/
+│   │   │   └── user/
+│   │   └── utils/
 │   ├── services/
+│   │   ├── __tests__/
+│   │   ├── aiModel/
+│   │   ├── aiProvider/
+│   │   ├── baseClientService/
+│   │   ├── chat/
+│   │   ├── electron/
+│   │   ├── export/
+│   │   ├── file/
+│   │   ├── import/
+│   │   ├── message/
+│   │   ├── plugin/
+│   │   ├── session/
+│   │   ├── tableViewer/
+│   │   ├── thread/
+│   │   ├── topic/
 │   │   ├── user/
-│   │   │   ├── client.ts
-│   │   │   └── server.ts
-│   │   └── message/
+│   │   └── ...
 │   ├── store/
 │   │   ├── agent/
+│   │   ├── aiInfra/
 │   │   ├── chat/
+│   │   ├── discover/
+│   │   ├── electron/
+│   │   ├── file/
+│   │   ├── global/
+│   │   ├── image/
+│   │   ├── knowledgeBase/
+│   │   ├── middleware/
+│   │   ├── serverConfig/
+│   │   ├── session/
+│   │   ├── tool/
 │   │   └── user/
 │   ├── styles/
+│   ├── tools/
+│   │   ├── artifacts/
+│   │   ├── code-interpreter/
+│   │   ├── dalle/
+│   │   ├── local-system/
+│   │   ├── web-browsing/
+│   │   ├── index.ts
+│   │   ├── portals.ts
+│   │   └── renders.ts
+│   ├── types/
+│   │   ├── global.d.ts
+│   │   ├── i18next.d.ts
+│   │   ├── locale.ts
+│   │   ├── next-auth.d.ts
+│   │   ├── next.ts
+│   │   └── worker.d.ts
 │   └── utils/
+│       ├── client/
+│       ├── server/
+│       ├── errorResponse.ts
+│       └── locale.ts
 └── package.json
 ```
 
