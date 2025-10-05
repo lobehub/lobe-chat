@@ -6,6 +6,42 @@ const Google: ModelProviderCard = {
     {
       contextWindowTokens: 1_048_576 + 65_536,
       description:
+        'Gemini 2.5 Pro 是 Google 最先进的多模态模型，能够对代码、数学和STEM领域的复杂问题进行推理，支持音频、图像、视频、文本和PDF输入。',
+      displayName: 'Gemini 2.5 Pro',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-2.5-pro',
+      maxOutput: 65_536,
+      releasedAt: '2025-06-01',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 1_048_576 + 65_536,
+      description:
+        'Gemini 2.5 Flash 是最佳的大规模处理模型，针对低延迟、高容量任务进行了优化，支持文本、图像、视频和音频输入。',
+      displayName: 'Gemini 2.5 Flash',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-2.5-flash',
+      maxOutput: 65_536,
+      releasedAt: '2025-06-01',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 1_048_576 + 65_536,
+      description:
+        'Gemini 2.5 Flash-Lite 针对成本效益和低延迟进行了优化，支持文本、图像、视频、音频和PDF输入。',
+      displayName: 'Gemini 2.5 Flash-Lite',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-2.5-flash-lite',
+      maxOutput: 65_536,
+      releasedAt: '2025-07-01',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 1_048_576 + 65_536,
+      description:
         'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
       displayName: 'Gemini 2.5 Pro Experimental 03-25',
       enabled: true,
