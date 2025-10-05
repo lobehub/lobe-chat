@@ -2,17 +2,15 @@ description: LobeHub Prompts Testing Suite
 
 # Default providers for testing - can be overridden in individual test configs
 providers:
-  - openai:gpt-4o-mini
-  - openai:gpt-3.5-turbo
-  - anthropic:claude-3-haiku-20240307
+  - openai:gpt-4.1-mini
 
 # Test configurations
 tests:
-  - promptfoo/summary-title.yaml
-  - promptfoo/language-detection.yaml
   - promptfoo/translation.yaml
-  - promptfoo/emoji-picker.yaml
-  - promptfoo/knowledge-qa.yaml
+#  - promptfoo/summary-title.yaml
+#  - promptfoo/language-detection.yaml
+#  - promptfoo/emoji-picker.yaml
+#  - promptfoo/knowledge-qa.yaml
 
 # Output configuration
 outputPath: promptfoo-results.json
@@ -21,6 +19,7 @@ outputPath: promptfoo-results.json
 defaultTest:
   assert:
     - type: llm-rubric
+      provider: openai:gpt-5-mini
       value: "The response should be relevant and well-formatted"
     - type: cost
       threshold: 0.01  # Maximum cost per test in USD

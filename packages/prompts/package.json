@@ -8,7 +8,7 @@
     "promptfoo:view": "promptfoo view",
     "test": "vitest",
     "test:coverage": "vitest --coverage --silent='passed-only'",
-    "test:prompts": "bunx promptfoo eval",
+    "test:prompts": "promptfoo eval",
     "test:prompts:ci": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --no-cache --output-path results/ci-results.json",
     "test:prompts:summary": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --output-path results/summary.json",
     "test:prompts:watch": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --watch"
@@ -17,9 +17,7 @@
     "@lobechat/types": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.17.2",
-    "promptfoo": "^0.117.11",
-    "ts-node": "^10.9.2",
+    "promptfoo": "^0.118.11",
     "tsx": "^4.20.4"
   }
 }
