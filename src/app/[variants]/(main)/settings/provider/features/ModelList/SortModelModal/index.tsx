@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra';
-import { AiProviderModelListItem } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 
+import { AiProviderModelListItem } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 import ListItem from './ListItem';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -76,6 +76,7 @@ const SortModelModal = memo<SortModelModalProps>(({ open, onCancel, defaultItems
             const sortMap = items.map((item, index) => ({
               id: item.id,
               sort: index,
+              type: item.type,
             }));
 
             setLoading(true);
