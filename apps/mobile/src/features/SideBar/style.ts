@@ -1,3 +1,4 @@
+import { DRAWER_WIDTH } from '@/_const/theme';
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({
@@ -9,7 +10,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   drawerStyle: {
     backgroundColor: token.colorBgLayout,
-    width: '80%',
+    width: DRAWER_WIDTH,
   },
   header: {
     alignItems: 'center',
