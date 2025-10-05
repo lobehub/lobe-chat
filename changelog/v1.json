@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.1"
+  },
+  {
+    "children": {
       "features": ["Support double-click to open multi agent window on the desktop."]
     },
     "date": "2025-10-04",
