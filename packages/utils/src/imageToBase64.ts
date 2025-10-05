@@ -45,7 +45,7 @@ export const imageUrlToBase64 = async (
     // Environment-aware fetch: use SSRF-safe fetch on server, regular fetch on client
     if (typeof window === 'undefined') {
       // Server environment: use SSRF-safe fetch
-      const { ssrfSafeFetch } = await import('./server/ssrfSafeFetch');
+      const { ssrfSafeFetch } = await import('ssrf-safe-fetch');
       res = await ssrfSafeFetch(imageUrl);
     } else {
       // Client environment: use regular fetch (browser has CORS protection)
