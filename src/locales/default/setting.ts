@@ -286,6 +286,10 @@ export default {
     },
   },
   settingCommon: {
+    disableMarkdownRender: {
+      desc: '禁用输入消息的 Markdown 渲染，以纯文本形式显示',
+      title: '禁用 Markdown 渲染',
+    },
     lang: {
       autoMode: '跟随系统',
       title: '语言',

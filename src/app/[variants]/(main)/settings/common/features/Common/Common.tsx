@@ -2,7 +2,7 @@
 
 import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '@lobehub/ui';
 import { Select } from '@lobehub/ui';
-import { Segmented, Skeleton } from 'antd';
+import { Segmented, Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Ban, Gauge, Loader2Icon, Monitor, Moon, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -108,7 +108,12 @@ const Common = memo(() => {
         minWidth: undefined,
         name: 'animationMode',
       },
-
+      {
+        children: <Switch />,
+        desc: t('settingCommon.disableMarkdownRender.desc'),
+        label: t('settingCommon.disableMarkdownRender.title'),
+        name: 'disableMarkdownRender',
+      },
       {
         children: (
           <InputPassword
