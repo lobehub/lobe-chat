@@ -632,5 +632,15 @@
     "bps": true,
     "folderMillis": 1759116400580,
     "hash": "433ddae88e785f2db734e49a4c115eee93e60afe389f7919d66e5ba9aa159a37"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"ai_models\" ADD COLUMN IF NOT EXISTS \"settings\" jsonb DEFAULT '{}'::jsonb;",
+      "\nUPDATE \"ai_models\"\nSET \"settings\" = '{}'::jsonb\nWHERE \"settings\" IS NULL;",
+      "\nALTER TABLE \"ai_models\"\nALTER COLUMN \"settings\" SET DEFAULT '{}'::jsonb;"
+    ],
+    "bps": true,
+    "folderMillis": 1762060800000,
+    "hash": "e87a004725b42fa799901f81ca77c808fefbad1fcd92a40570e8ba9f83722df7"
   }
 ]
