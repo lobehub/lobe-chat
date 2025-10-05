@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "생성하고 싶은 내용을 설명하세요"
     },
+    "quality": {
+      "label": "이미지 품질",
+      "options": {
+        "hd": "고화질",
+        "standard": "표준"
+      }
+    },
     "seed": {
       "label": "시드",
       "random": "무작위 시드"

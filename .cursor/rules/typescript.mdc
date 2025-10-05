@@ -10,61 +10,11 @@ alwaysApply: false
 
 - avoid explicit type annotations when TypeScript can infer types.
 - avoid implicitly `any` variables; explicitly type when necessary (e.g., `let a: number` instead of `let a`).
-- use the most accurate type possible (e.g., prefer `Record<PropertyKey, unknown>` over `object`).
+- use the most accurate type possible (e.g., prefer `Record<PropertyKey, unknown>` over `object` and `any`).
 - prefer `interface` over `type` for object shapes (e.g., React component props). Keep `type` for unions, intersections, and utility types.
 - prefer `as const satisfies XyzInterface` over plain `as const` when suitable.
-- prefer `@ts-expect-error` over `@ts-ignore`
-- prefer `Record<string, any>` over `any`
-
-- **Avoid unnecessary null checks**: Before adding `xxx !== null`, `?.`, `??`, or `!.`, read the type definition to confirm the necessary. **Example:**
-
-  ```typescript
-  // ❌ Wrong: budget.spend and budget.maxBudget is number, not number | null
-  if (budget.spend !== null && budget.maxBudget !== null && budget.spend >= budget.maxBudget) {
-    // ...
-  }
-
-  // ✅ Right
-  if (budget.spend >= budget.maxBudget) {
-    // ...
-  }
-  ```
-
-- **Avoid redundant runtime checks**: Don't add runtime validation for conditions already guaranteed by types or previous checks. Trust the type system and calling contract. **Example:**
-
-  ```typescript
-  // ❌ Wrong: Adding impossible-to-fail checks
-  const due = await db.query.budgets.findMany({
-    where: and(isNotNull(budgets.budgetDuration)), // Already filtered non-null
-  });
-  const result = due.map(b => {
-    const nextReset = computeNextResetAt(b.budgetResetAt!, b.budgetDuration!);
-    if (!nextReset) { // This check is impossible to fail
-      throw new Error(`Unexpected null nextResetAt`);
-    }
-    return nextReset;
-  });
-
-  // ✅ Right: Trust the contract
-  const due = await db.query.budgets.findMany({
-    where: and(isNotNull(budgets.budgetDuration)),
-  });
-  const result = due.map(b => computeNextResetAt(b.budgetResetAt!, b.budgetDuration!));
-  ```
-
-- **Avoid meaningless null/undefined parameters**: Don't accept null/undefined for parameters that have no business meaning when null. Design strict function contracts. **Example:**
-
-  ```typescript
-  // ❌ Wrong: Function accepts meaningless null input
-  function computeNextResetAt(currentResetAt: Date, durationStr: string | null): Date | null {
-    if (!durationStr) return null; // Why accept null if it just returns null?
-  }
-
-  // ✅ Right: Strict contract, clear responsibility
-  function computeNextResetAt(currentResetAt: Date, durationStr: string): Date {
-    // Function has single clear purpose, caller ensures valid input
-  }
-  ```
+- prefer `@ts-expect-error` over `@ts-ignore` over `as any`
+- Avoid meaningless null/undefined parameters; design strict function contracts.
 
 ## Imports and Modules
 

@@ -150,6 +150,11 @@
       "total": "Total consommé"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Aller au message n° {{index}}",
+    "nextMessage": "Message suivant",
+    "previousMessage": "Message précédent"
+  },
   "newAgent": "Nouvel agent",
   "pin": "Épingler",
   "pinOff": "Désépingler",

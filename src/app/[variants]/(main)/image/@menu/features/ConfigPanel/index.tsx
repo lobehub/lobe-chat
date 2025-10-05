@@ -18,6 +18,7 @@ import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
 import ModelSelect from './components/ModelSelect';
+import QualitySelect from './components/QualitySelect';
 import SeedNumberInput from './components/SeedNumberInput';
 import SizeSelect from './components/SizeSelect';
 import StepsSliderInput from './components/StepsSliderInput';
@@ -52,6 +53,7 @@ const ConfigPanel = memo(() => {
   const isInit = useImageStore((s) => s.isInit);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
+  const isSupportQuality = useImageStore(isSupportedParamSelector('quality'));
   const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
   const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
   const isSupportCfg = useImageStore(isSupportedParamSelector('cfg'));
@@ -75,6 +77,7 @@ const ConfigPanel = memo(() => {
     checkScrollable,
     isSupportImageUrl,
     isSupportSize,
+    isSupportQuality,
     isSupportSeed,
     isSupportSteps,
     isSupportCfg,
@@ -156,6 +159,12 @@ const ConfigPanel = memo(() => {
       {isSupportSize && (
         <ConfigItemLayout label={t('config.size.label')}>
           <SizeSelect />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportQuality && (
+        <ConfigItemLayout label={t('config.quality.label')}>
+          <QualitySelect />
         </ConfigItemLayout>
       )}
 

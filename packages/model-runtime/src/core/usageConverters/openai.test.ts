@@ -1,7 +1,8 @@
+import type { Pricing } from 'model-bank';
 import OpenAI from 'openai';
 import { describe, expect, it } from 'vitest';
 
-import { convertResponseUsage, convertUsage } from './usageConverter';
+import { convertOpenAIImageUsage, convertOpenAIResponseUsage, convertOpenAIUsage } from './openai';
 
 describe('convertUsage', () => {
   it('should convert basic OpenAI usage data correctly', () => {
@@ -13,7 +14,7 @@ describe('convertUsage', () => {
     };
 
     // Act
-    const result = convertUsage(openaiUsage);
+    const result = convertOpenAIUsage(openaiUsage);
 
     // Assert
     expect(result).toEqual({
@@ -35,7 +36,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(pplxUsage);
+    const result = convertOpenAIUsage(pplxUsage);
 
     // Assert
     expect(result).toEqual({
@@ -59,7 +60,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithCache);
+    const result = convertOpenAIUsage(usageWithCache);
 
     // Assert
     expect(result).toEqual({
@@ -85,7 +86,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithTokenDetails);
+    const result = convertOpenAIUsage(usageWithTokenDetails);
 
     // Assert
     expect(result).toEqual({
@@ -111,7 +112,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithAudioInput);
+    const result = convertOpenAIUsage(usageWithAudioInput);
 
     // Assert
     expect(result).toEqual({
@@ -137,7 +138,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithOutputDetails);
+    const result = convertOpenAIUsage(usageWithOutputDetails);
 
     // Assert
     expect(result).toEqual({
@@ -164,7 +165,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithPredictions);
+    const result = convertOpenAIUsage(usageWithPredictions);
 
     // Assert
     expect(result).toEqual({
@@ -198,7 +199,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(complexUsage);
+    const result = convertOpenAIUsage(complexUsage);
 
     // Assert
     expect(result).toEqual({
@@ -231,7 +232,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithZeros);
+    const result = convertOpenAIUsage(usageWithZeros);
 
     // Assert
     expect(result).toEqual({
@@ -266,7 +267,9 @@ describe('convertUsage', () => {
     };
 
     // Act
-    const xaiResult = convertUsage(xaiUsage, 'xai');
+    const xaiResult = convertOpenAIUsage(xaiUsage, {
+      provider: 'xai',
+    });
 
     // Assert
     expect(xaiResult).toMatchObject({
@@ -278,7 +281,7 @@ describe('convertUsage', () => {
     });
 
     // 测试其他 provider（默认行为）
-    const defaultResult = convertUsage(xaiUsage);
+    const defaultResult = convertOpenAIUsage(xaiUsage);
 
     // 默认行为: outputTextTokens 应该是 completion_tokens - reasoning_tokens - audio_tokens = 66 - 381 - 0 = -315
     expect(defaultResult.outputTextTokens).toBe(-315);
@@ -304,7 +307,7 @@ describe('convertUsage', () => {
     } as OpenAI.Completions.CompletionUsage;
 
     // Act
-    const result = convertUsage(usageWithImage);
+    const result = convertOpenAIUsage(usageWithImage);
 
     // Assert
     expect(result).toEqual({
@@ -334,7 +337,7 @@ describe('convertUsage', () => {
     } as OpenAI.Responses.ResponseUsage;
 
     // Act
-    const result = convertResponseUsage(responseUsage);
+    const result = convertOpenAIResponseUsage(responseUsage);
 
     // Assert
     expect(result).toEqual({
@@ -346,6 +349,81 @@ describe('convertUsage', () => {
       outputReasoningTokens: 30,
       outputTextTokens: 170, // 200 - 30
       totalTokens: 300,
+    });
+  });
+
+  it('should enrich completion usage with pricing cost when pricing is provided', () => {
+    const pricing: Pricing = {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    };
+
+    const usage: OpenAI.Completions.CompletionUsage = {
+      completion_tokens: 500_000,
+      prompt_tokens: 1_000_000,
+      total_tokens: 1_500_000,
+    };
+
+    const result = convertOpenAIUsage(usage, { pricing });
+
+    expect(result.cost).toBeCloseTo(2, 10);
+  });
+
+  it('should enrich response usage with pricing cost when pricing is provided', () => {
+    const pricing: Pricing = {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    };
+
+    const responseUsage = {
+      input_tokens: 1_000_000,
+      output_tokens: 1_000_000,
+      total_tokens: 2_000_000,
+    } as OpenAI.Responses.ResponseUsage;
+
+    const result = convertOpenAIResponseUsage(responseUsage, { pricing });
+
+    expect(result.cost).toBeCloseTo(2, 10);
+  });
+});
+
+describe('convertOpenAIImageUsage', () => {
+  it('should convert gpt-image-1 usage data correctly', () => {
+    // Arrange - Based on actual gpt-image-1 logs
+    const gptImage1Usage: OpenAI.Images.ImagesResponse.Usage = {
+      input_tokens: 14,
+      input_tokens_details: {
+        text_tokens: 14,
+        image_tokens: 0,
+      },
+      output_tokens: 4160,
+      total_tokens: 4174,
+    };
+
+    const pricing: Pricing = {
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    };
+
+    // Act
+    const result = convertOpenAIImageUsage(gptImage1Usage, pricing);
+
+    // Assert
+    expect(result).toEqual({
+      inputTextTokens: 14,
+      inputImageTokens: 0,
+      outputImageTokens: 4160,
+      totalInputTokens: 14,
+      totalOutputTokens: 4160,
+      totalTokens: 4174,
+      cost: 0.16647, // Based on pricing: 14 * 5/1M + 0 * 10/1M + 4160 * 40/1M = 0.00007 + 0 + 0.1664 = 0.16647
     });
   });
 });

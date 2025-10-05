@@ -1,7 +1,9 @@
-import { Content, GoogleGenAI, Part } from '@google/genai';
+import { Content, GenerateContentConfig, GoogleGenAI, Part } from '@google/genai';
 
+import { convertGoogleAIUsage } from '../../core/usageConverters/google-ai';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
 import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
@@ -101,6 +103,7 @@ async function generateByImageModel(
 async function generateImageByChatModel(
   client: GoogleGenAI,
   payload: CreateImagePayload,
+  provider: string,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
   const actualModel = model.replace(':image', '');
@@ -138,15 +141,30 @@ async function generateImageByChatModel(
     },
   ];
 
+  const config: GenerateContentConfig = {
+    responseModalities: ['Image'],
+    ...(params.aspectRatio
+      ? {
+          imageConfig: {
+            aspectRatio: params.aspectRatio,
+          },
+        }
+      : {}),
+  };
+
   const response = await client.models.generateContent({
-    config: {
-      responseModalities: ['Image'],
-    },
+    config,
     contents,
     model: actualModel,
   });
 
-  return extractImageFromResponse(response);
+  const imageResponse = extractImageFromResponse(response);
+  if (response.usageMetadata) {
+    const pricing = await getModelPricing(model, provider);
+    imageResponse.modelUsage = convertGoogleAIUsage(response.usageMetadata, pricing);
+  }
+
+  return imageResponse;
 }
 
 /**
@@ -162,7 +180,7 @@ export async function createGoogleImage(
 
     // Handle Gemini 2.5 Flash Image models that use generateContent
     if (model.endsWith(':image')) {
-      return await generateImageByChatModel(client, payload);
+      return await generateImageByChatModel(client, payload, provider);
     }
 
     // Handle traditional Imagen models that use generateImages

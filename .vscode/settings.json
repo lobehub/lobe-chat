@@ -11,6 +11,7 @@
     { "rule": "prettier/prettier", "severity": "off" },
     { "rule": "react/jsx-sort-props", "severity": "off" },
     { "rule": "sort-keys-fix/sort-keys-fix", "severity": "off" },
+    { "rule": "simple-import-sort/exports", "severity": "off" },
     { "rule": "typescript-sort-keys/interface", "severity": "off" }
   ],
   "eslint.validate": [
@@ -81,7 +82,7 @@
 
     "**/src/config/modelProviders/*.ts": "${filename} • provider",
     "**/packages/model-bank/src/aiModels/*.ts": "${filename} • model",
-    "**/packages/model-runtime/src/*/index.ts": "${dirname} • runtime",
+    "**/packages/model-runtime/src/providers/*/index.ts": "${dirname} • runtime",
 
     "**/src/server/services/*/index.ts": "${dirname} • server/service",
     "**/src/server/routers/lambda/*.ts": "${filename} • lambda",

@@ -10,7 +10,7 @@ import {
   MessageToolCallSchema,
   ModelReasoning,
   ModelSpeed,
-  ModelTokensUsage,
+  ModelUsage,
   ResponseAnimation,
   ResponseAnimationStyle,
 } from '@lobechat/types';
@@ -32,13 +32,13 @@ export type OnFinishHandler = (
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
-    usage?: ModelTokensUsage;
+    usage?: ModelUsage;
   },
 ) => Promise<void>;
 
 export interface MessageUsageChunk {
   type: 'usage';
-  usage: ModelTokensUsage;
+  usage: ModelUsage;
 }
 
 export interface MessageSpeedChunk {
@@ -379,7 +379,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let grounding: GroundingSearch | undefined = undefined;
-  let usage: ModelTokensUsage | undefined = undefined;
+  let usage: ModelUsage | undefined = undefined;
   let images: ChatImageChunk[] = [];
   let speed: ModelSpeed | undefined = undefined;
 

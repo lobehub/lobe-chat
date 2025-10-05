@@ -12,15 +12,18 @@ export const AiModelSourceEnum = {
 
 export type AiModelSourceType = (typeof AiModelSourceEnum)[keyof typeof AiModelSourceEnum];
 
-export type AiModelType =
-  | 'chat'
-  | 'embedding'
-  | 'tts'
-  | 'stt'
-  | 'image'
-  | 'text2video'
-  | 'text2music'
-  | 'realtime';
+export const AiModelTypeSchema = z.enum([
+  'chat',
+  'embedding',
+  'tts',
+  'stt',
+  'image',
+  'text2video',
+  'text2music',
+  'realtime',
+] as const);
+
+export type AiModelType = z.infer<typeof AiModelTypeSchema>;
 
 export interface ModelAbilities {
   /**
@@ -373,6 +376,7 @@ export const ToggleAiModelEnableSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   source: z.enum(['builtin', 'custom', 'remote']).optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;

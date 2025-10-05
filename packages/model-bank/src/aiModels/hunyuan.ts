@@ -355,6 +355,30 @@ const hunyuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 44_000,
     description:
+      '预训练底座数据质量升级。优化 posttrain 阶段训练策略，持续提升 Agent、英语小语种、指令遵循、代码和理科能力。',
+    displayName: 'Hunyuan TurboS 20250926',
+    id: 'hunyuan-turbos-20250926',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-26',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 44_000,
+    description:
       '预训练底座升级，写作、阅读理解能力提升，较大幅度提升代码和理科能力，复杂指令遵循等持续提升。',
     displayName: 'Hunyuan TurboS 20250604',
     id: 'hunyuan-turbos-20250604',
@@ -485,18 +509,18 @@ const hunyuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 40_000,
     description:
-      '混元最新版t1-vision多模态理解深度思考模型，支持多模态原生长思维链，相比上一代默认版本模型全面提升。',
-    displayName: 'Hunyuan T1 Vision 20250619',
-    id: 'hunyuan-t1-vision-20250619',
-    maxOutput: 24_000,
+      '混元多模态理解深度思考模型，支持多模态原生长思维链，擅长处理各种图片推理场景，在理科难题上相比快思考模型全面提升。',
+    displayName: 'Hunyuan T1 Vision 20250916',
+    id: 'hunyuan-t1-vision-20250916',
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-06-19',
+    releasedAt: '2025-09-16',
     type: 'chat',
   },
   {
@@ -504,20 +528,20 @@ const hunyuanChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 40_000,
     description:
-      '混元多模态理解深度思考模型，支持多模态原生长思维链，擅长处理各种图片推理场景，在理科难题上相比快思考模型全面提升。',
-    displayName: 'Hunyuan T1 Vision',
-    id: 'hunyuan-t1-vision',
-    maxOutput: 24_000,
+      '混元最新版t1-vision多模态理解深度思考模型，支持多模态原生长思维链，相比上一代默认版本模型全面提升。',
+    displayName: 'Hunyuan T1 Vision 20250619',
+    id: 'hunyuan-t1-vision-20250619',
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-05-16',
+    releasedAt: '2025-06-19',
     type: 'chat',
   },
   {

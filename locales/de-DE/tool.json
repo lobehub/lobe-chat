@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "Ausführungsfehler",
+    "executing": "Wird ausgeführt...",
+    "files": "Dateien:",
+    "output": "Ausgabe:",
+    "returnValue": "Rückgabewert:"
+  },
   "dalle": {
     "autoGenerate": "Automatisch generieren",
     "downloading": "Die von DallE3 generierten Bildlinks sind nur 1 Stunde lang gültig. Das Bild wird lokal zwischengespeichert...",

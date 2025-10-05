@@ -680,6 +680,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4, Sonnet 3.7'nin sektör lideri yetenekleri üzerine önemli geliştirmeler yapmış olup, kodlama alanında mükemmel performans sergiler ve SWE-bench'te en ileri %72.7 skoruna ulaşır. Model, performans ve verimlilik arasında denge sağlar, hem dahili hem de harici kullanım durumları için uygundur ve geliştirilmiş kontrol edilebilirlik ile uygulama üzerinde daha fazla hakimiyet sunar."
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5, Anthropic'in şimdiye kadarki en akıllı modelidir."
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B, 72 milyar parametreli ve 16 milyar parametre aktive eden seyrek büyük bir dil modelidir. Bu model, grup tabanlı uzman karışımı (MoGE) mimarisine dayanır; uzman seçim aşamasında uzmanları gruplar halinde düzenler ve her grupta token başına eşit sayıda uzmanı aktive ederek uzman yük dengesini sağlar. Bu sayede Ascend platformunda modelin dağıtım verimliliği önemli ölçüde artırılmıştır."
   },
@@ -772,6 +775,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Claude Sonnet 4 düşünme modeli, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir."
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5, Anthropic'in şimdiye kadarki en akıllı modelidir."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4, çeşitli programlama dillerinde akıllı soru-cevap ve kod tamamlama desteği sunan güçlü bir AI programlama asistanıdır, geliştirme verimliliğini artırır."
@@ -1012,6 +1018,9 @@
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
+  },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp seyrek dikkat mekanizması getirir, uzun metinlerin işlenmesinde eğitim ve çıkarım verimliliğini artırmayı amaçlar, fiyatı deepseek-v3.1'den daha düşüktür."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
@@ -1437,7 +1446,7 @@
     "description": "GLM-4.1V-Thinking serisi modeller, bilinen 10 milyar parametre seviyesindeki VLM modelleri arasında en güçlü görsel modellerdir. Aynı seviyedeki SOTA görsel dil görevlerini birleştirir; video anlama, görsel soru-cevap, akademik problem çözme, OCR metin tanıma, belge ve grafik yorumlama, GUI ajanı, ön uç web kodlama, grounding gibi birçok görevde 8 kat daha büyük parametreli Qwen2.5-VL-72B modelini bile aşan performans gösterir. Önde gelen pekiştirmeli öğrenme teknikleri sayesinde, düşünce zinciri akıl yürütme yoluyla cevapların doğruluğu ve zenginliği artırılmıştır; nihai sonuçlar ve açıklanabilirlik açısından geleneksel düşünce zinciri olmayan modellerin çok ötesindedir."
   },
   "glm-4.5": {
-    "description": "Zhipu'nun en yeni amiral gemisi modeli, düşünme modu geçişini destekler ve genel yetenekleri açık kaynak modeller arasında SOTA seviyesine ulaşmıştır; bağlam uzunluğu 128K'ya kadar çıkabilir."
+    "description": "Zhipu'nun amiral gemisi modeli, düşünme modu geçişini destekler, kapsamlı yetenekleri açık kaynak modellerin SOTA seviyesine ulaşır, bağlam uzunluğu 128K'ya kadar çıkabilir."
   },
   "glm-4.5-air": {
     "description": "GLM-4.5'in hafif versiyonu olup performans ve maliyet etkinliğini dengeler; hibrit düşünme modeli olarak esnek geçiş sağlar."
@@ -1453,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "Zhipu'nun MOE mimarisine dayanan yeni nesil görsel akıl yürütme modeli; 106B toplam parametreye ve 12B aktif parametreye sahip olup çeşitli kıyaslama testlerinde aynı seviyedeki açık kaynaklı çok modlu modeller arasında dünya çapında SOTA'ya ulaşır; görüntü, video, belge anlama ve GUI görevleri gibi yaygın görevleri kapsar."
+  },
+  "glm-4.6": {
+    "description": "Zhipu'nun en yeni amiral gemisi modeli GLM-4.6 (355B), gelişmiş kodlama, uzun metin işleme, çıkarım ve ajan yeteneklerinde önceki nesli tamamen aşar, özellikle programlama yeteneklerinde Claude Sonnet 4 ile hizalanarak ülkenin en iyi Kodlama modeli olur."
   },
   "glm-4v": {
     "description": "GLM-4V, güçlü görüntü anlama ve akıl yürütme yetenekleri sunar, çeşitli görsel görevleri destekler."

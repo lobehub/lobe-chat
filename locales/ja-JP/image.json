@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "生成したい内容を記述してください"
     },
+    "quality": {
+      "label": "画像品質",
+      "options": {
+        "hd": "高精細",
+        "standard": "標準"
+      }
+    },
     "seed": {
       "label": "シード",
       "random": "ランダムシード"

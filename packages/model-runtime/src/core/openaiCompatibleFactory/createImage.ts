@@ -3,9 +3,11 @@ import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
 
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { convertImageUrlToFile } from '../../utils/openaiHelpers';
 import { parseDataUri } from '../../utils/uriParser';
+import { convertOpenAIImageUsage } from '../usageConverters/openai';
 
 const log = createDebug('lobe-image:openai-compatible');
 
@@ -15,6 +17,7 @@ const log = createDebug('lobe-image:openai-compatible');
 async function generateByImageMode(
   client: OpenAI,
   payload: CreateImagePayload,
+  provider: string,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
 
@@ -112,8 +115,15 @@ async function generateByImageMode(
     throw new Error('Invalid image response: missing both b64_json and url fields');
   }
 
+  log('provider: %s', provider);
+
   return {
     imageUrl,
+    ...(img.usage
+      ? {
+          modelUsage: convertOpenAIImageUsage(img.usage, await getModelPricing(model, provider)),
+        }
+      : {}),
   };
 }
 
@@ -218,7 +228,7 @@ async function generateByChatModel(
 export async function createOpenAICompatibleImage(
   client: OpenAI,
   payload: CreateImagePayload,
-  _provider: string, // eslint-disable-line @typescript-eslint/no-unused-vars
+  provider: string, // eslint-disable-line @typescript-eslint/no-unused-vars
 ): Promise<CreateImageResponse> {
   try {
     const { model } = payload;
@@ -229,7 +239,7 @@ export async function createOpenAICompatibleImage(
     }
 
     // Default to traditional images API
-    return await generateByImageMode(client, payload);
+    return await generateByImageMode(client, payload, provider);
   } catch (error) {
     const err = error as Error;
     log('Error in createImage: %O', err);

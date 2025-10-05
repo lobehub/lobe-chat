@@ -2,15 +2,26 @@ import { ModelRuntime } from '@lobechat/model-runtime';
 
 import { createPayloadWithKeyVaults } from '../_auth';
 
+export interface InitializeWithClientStoreOptions {
+  payload?: any;
+  provider: string;
+  runtimeProvider?: string;
+}
+
 /**
  * Initializes the AgentRuntime with the client store.
- * @param provider - The provider name.
- * @param payload - Init options
+ * @param options.provider - Provider identifier used to resolve key vaults.
+ * @param options.runtimeProvider - Actual runtime implementation key (defaults to provider).
+ * @param options.payload - Additional initialization payload.
  * @returns The initialized AgentRuntime instance
  *
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
-export const initializeWithClientStore = (provider: string, payload?: any) => {
+export const initializeWithClientStore = ({
+  provider,
+  runtimeProvider,
+  payload,
+}: InitializeWithClientStoreOptions) => {
   /**
    * Since #5267, we map parameters for client-fetch in function `getProviderAuthPayload`
    * which called by `createPayloadWithKeyVaults` below.
@@ -26,7 +37,7 @@ export const initializeWithClientStore = (provider: string, payload?: any) => {
    * Configuration override order:
    * payload -> providerAuthPayload -> commonOptions
    */
-  return ModelRuntime.initializeWithProvider(provider, {
+  return ModelRuntime.initializeWithProvider(runtimeProvider ?? provider, {
     ...commonOptions,
     ...providerAuthPayload,
     ...payload,

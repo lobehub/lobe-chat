@@ -150,6 +150,11 @@
       "total": "Tổng tiêu thụ"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Chuyển đến tin nhắn thứ {{index}}",
+    "nextMessage": "Tin nhắn tiếp theo",
+    "previousMessage": "Tin nhắn trước"
+  },
   "newAgent": "Tạo trợ lý mới",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",

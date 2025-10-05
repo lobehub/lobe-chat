@@ -87,6 +87,19 @@ describe('initModelRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
 
+    it('Custom provider should use runtimeProvider to init', async () => {
+      const jwtPayload: ClientSecretPayload = {
+        apiKey: 'user-azure-key',
+        azureApiVersion: '2024-06-01',
+        baseURL: 'user-azure-endpoint',
+        runtimeProvider: ModelProvider.Azure,
+      };
+      const runtime = await initModelRuntimeWithUserPayload('custom-provider', jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
+      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
+    });
+
     it('ZhiPu AI provider: with apikey', async () => {
       const jwtPayload: ClientSecretPayload = { apiKey: 'zhipu.user-key' };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.ZhiPu, jwtPayload);

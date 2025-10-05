@@ -4,41 +4,35 @@ alwaysApply: true
 
 ## Project Description
 
-You are developing an open-source, modern-design AI chat framework: lobe chat.
+You are developing an open-source, modern-design AI chat framework: lobehub(previous lobe-chat).
 
-Emoji logo: 🤯
+support platforms:
+
+- web desktop/mobile
+- desktop(electron)
+- mobile app(react native). coming soon
+
+logo emoji: 🤯
 
 ## Project Technologies Stack
 
 read [package.json](mdc:package.json) to know all npm packages you can use.
 
-The project uses the following technologies:
-
-- pnpm as package manager
-- Next.js 15 for frontend and backend, using app router instead of pages router
-- react 19, using hooks, functional components, react server components
-- TypeScript programming language
-- antd, `@lobehub/ui` for component framework
+- Next.js 15
+- react 19
+- TypeScript
+- `@lobehub/ui`, antd for component framework
 - antd-style for css-in-js framework
-- react-layout-kit for flex layout
-- react-i18next for i18n
 - lucide-react, `@ant-design/icons` for icons
-- `@lobehub/icons` for AI provider/model logo icon
-- `@formkit/auto-animate` for react list animation
-- zustand for global state management
-- nuqs for type-safe search params state manager
-- SWR for react data fetch
+- react-layout-kit for flex layout component
+- react-i18next for i18n
+- zustand for state management
+- nuqs for search params management
+- SWR for data fetch
 - aHooks for react hooks library
-- dayjs for date and time library
+- dayjs for time library
 - lodash-es for utility library
-- fast-deep-equal for deep comparison of JavaScript objects
-- zod for data validation
 - TRPC for type safe backend
 - PGLite for client DB and PostgreSQL for backend DB
 - Drizzle ORM
-- Vitest for testing, testing-library for react component test
-- Prettier for code formatting
-- ESLint for code linting
-- Cursor AI for code editing and AI coding assistance
-
-Note: All tools and libraries used are the latest versions. The application only needs to be compatible with the latest browsers;
+- Vitest for testing

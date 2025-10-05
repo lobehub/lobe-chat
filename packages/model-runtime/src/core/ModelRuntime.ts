@@ -41,7 +41,7 @@ export class ModelRuntime {
    *
    * @example - Use without trace
    * ```ts
-   * const agentRuntime = await initializeWithClientStore(provider, payload);
+   * const agentRuntime = await initializeWithClientStore({ provider, payload });
    * const data = payload as ChatStreamPayload;
    * return await agentRuntime.chat(data);
    * ```

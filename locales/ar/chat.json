@@ -150,6 +150,11 @@
       "total": "الإجمالي المستهلك"
     }
   },
+  "minimap": {
+    "jumpToMessage": "الانتقال إلى الرسالة رقم {{index}}",
+    "nextMessage": "الرسالة التالية",
+    "previousMessage": "الرسالة السابقة"
+  },
   "newAgent": "مساعد جديد",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",

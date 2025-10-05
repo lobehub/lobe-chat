@@ -150,6 +150,11 @@
       "total": "총 소모"
     }
   },
+  "minimap": {
+    "jumpToMessage": "{{index}}번째 메시지로 이동",
+    "nextMessage": "다음 메시지",
+    "previousMessage": "이전 메시지"
+  },
   "newAgent": "새 도우미",
   "pin": "고정",
   "pinOff": "고정 해제",

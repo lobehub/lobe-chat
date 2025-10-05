@@ -1,16 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref :https://open.bigmodel.cn/dev/howuse/model
-// api https://open.bigmodel.cn/dev/api#language
-// ref :https://open.bigmodel.cn/modelcenter/square
 const ZhiPu: ModelProviderCard = {
   chatModels: [
-    {
-      contextWindowTokens: 16_384,
-      description: 'GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
-      displayName: 'GLM-Zero-Preview',
-      id: 'glm-zero-preview',
-    },
     {
       contextWindowTokens: 128_000,
       description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且免费。',
@@ -49,14 +40,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-airx',
-    },
-    {
-      contextWindowTokens: 128_000,
-      description:
-        'GLM-4-AllTools 是一个多功能智能体模型，优化以支持复杂指令规划与工具调用，如网络浏览、代码解释和文本生成，适用于多任务执行。',
-      displayName: 'GLM-4-AllTools',
-      functionCall: true,
-      id: 'glm-4-alltools',
     },
     {
       contextWindowTokens: 128_000,
@@ -115,9 +98,9 @@ const ZhiPu: ModelProviderCard = {
     },
     {
       contextWindowTokens: 4096,
-      description: 'CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
-      displayName: 'CharGLM-3',
-      id: 'charglm-3',
+      description: 'CharGLM-4 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
+      displayName: 'CharGLM-4',
+      id: 'charglm-4',
     },
     {
       contextWindowTokens: 8192,
@@ -126,7 +109,7 @@ const ZhiPu: ModelProviderCard = {
       id: 'emohaa',
     },
   ],
-  checkModel: 'glm-4-flash-250414',
+  checkModel: 'glm-4.5-flash',
   description:
     '智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。',
   id: 'zhipu',

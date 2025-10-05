@@ -1,5 +1,6 @@
+import { ModelSpeed, ModelTokensUsage, ModelUsage } from '@/types/message';
+
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
-import { ModelTokensUsage } from './usage';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
@@ -171,12 +172,13 @@ export interface ChatCompletionTool {
   type: 'function';
 }
 
-interface OnFinishData {
+export interface OnFinishData {
   grounding?: any;
+  speed?: ModelSpeed;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
-  usage?: ModelTokensUsage;
+  usage?: ModelUsage;
 }
 
 export interface ChatStreamCallbacks {

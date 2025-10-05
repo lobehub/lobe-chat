@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "Fout bij uitvoering",
+    "executing": "Bezig met uitvoeren...",
+    "files": "Bestanden:",
+    "output": "Uitvoer:",
+    "returnValue": "Retourwaarde:"
+  },
   "dalle": {
     "autoGenerate": "Automatisch genereren",
     "downloading": "De link naar de afbeelding gegenereerd door DallE3 is slechts 1 uur geldig. De afbeelding wordt lokaal in de cache opgeslagen...",

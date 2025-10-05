@@ -22,10 +22,10 @@ export const getServerFeatureFlagsValue = () => {
   return merge(DEFAULT_FEATURE_FLAGS, flags);
 };
 
-export const serverFeatureFlags = () => {
+export const serverFeatureFlags = (userId?: string) => {
   const serverConfig = getServerFeatureFlagsValue();
 
-  return mapFeatureFlagsEnvToState(serverConfig);
+  return mapFeatureFlagsEnvToState(serverConfig, userId);
 };
 
 export * from './schema';

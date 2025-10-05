@@ -76,12 +76,11 @@ jobs:
 
                - Title: English translation (if non-English)
                - Content format:
-                 > [!NOTE]
-                 > This issue/comment/review was translated by Claude.
-
                  [Translated content]
 
                  ---
+                 > This issue/comment/review was translated by Claude.
+
                  <details>
                  <summary>Original Content</summary>
                  [Original content]

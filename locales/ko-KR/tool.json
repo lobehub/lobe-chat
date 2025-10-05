@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "실행 오류",
+    "executing": "실행 중...",
+    "files": "파일:",
+    "output": "출력:",
+    "returnValue": "반환 값:"
+  },
   "dalle": {
     "autoGenerate": "자동 생성",
     "downloading": "DallE3로 생성된 이미지 링크는 1시간 동안 유효하며, 로컬에 이미지를 캐시하는 중입니다...",

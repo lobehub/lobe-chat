@@ -150,6 +150,11 @@
       "total": "總計消耗"
     }
   },
+  "minimap": {
+    "jumpToMessage": "跳轉至第 {{index}} 條訊息",
+    "nextMessage": "下一條訊息",
+    "previousMessage": "上一條訊息"
+  },
   "newAgent": "新建助手",
   "pin": "置頂",
   "pinOff": "取消置頂",

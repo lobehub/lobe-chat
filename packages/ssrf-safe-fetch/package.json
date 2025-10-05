@@ -1,0 +1,17 @@
+{
+  "name": "ssrf-safe-fetch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "request-filtering-agent": "^3"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

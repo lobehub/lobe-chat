@@ -680,6 +680,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 améliore significativement les capacités de Sonnet 3.7, excelle en codage avec un score de pointe de 72,7 % sur SWE-bench. Ce modèle équilibre performance et efficacité, adapté aux cas d'usage internes et externes, avec un contrôle accru grâce à une meilleure contrôlabilité."
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5 est le modèle le plus intelligent d'Anthropic à ce jour."
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B est un grand modèle de langage sparse à 72 milliards de paramètres, avec 16 milliards de paramètres activés. Il repose sur une architecture Mixture of Experts groupée (MoGE), qui regroupe les experts lors de la sélection et contraint chaque token à activer un nombre égal d'experts dans chaque groupe, assurant ainsi un équilibre de charge entre les experts et améliorant considérablement l'efficacité de déploiement sur la plateforme Ascend."
   },
@@ -772,6 +775,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Le modèle de réflexion Claude Sonnet 4 produit des réponses quasi instantanées ou des raisonnements prolongés étape par étape, clairement visibles par l'utilisateur."
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5 est le modèle le plus intelligent d'Anthropic à ce jour."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -1012,6 +1018,9 @@
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1 : modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
+  },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduit un mécanisme d'attention parcimonieuse, visant à améliorer l'efficacité de l'entraînement et de l'inférence lors du traitement de longs textes, à un prix inférieur à celui de deepseek-v3.1."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
@@ -1437,7 +1446,7 @@
     "description": "La série GLM-4.1V-Thinking est actuellement le modèle visuel le plus performant connu dans la catégorie des VLM de 10 milliards de paramètres. Elle intègre les meilleures performances SOTA dans diverses tâches de langage visuel, incluant la compréhension vidéo, les questions-réponses sur images, la résolution de problèmes disciplinaires, la reconnaissance OCR, l'interprétation de documents et graphiques, les agents GUI, le codage web frontal, le grounding, etc. Ses capacités surpassent même celles du Qwen2.5-VL-72B, qui possède plus de huit fois plus de paramètres. Grâce à des techniques avancées d'apprentissage par renforcement, le modèle maîtrise le raisonnement par chaîne de pensée, améliorant la précision et la richesse des réponses, surpassant nettement les modèles traditionnels sans mécanisme de pensée en termes de résultats finaux et d'explicabilité."
   },
   "glm-4.5": {
-    "description": "Le dernier modèle phare de Zhipu, supportant le mode réflexion, avec des capacités globales atteignant le niveau SOTA des modèles open source, et une longueur de contexte allant jusqu'à 128K tokens."
+    "description": "Modèle phare de Zhipu, supportant le changement de mode de réflexion, avec des capacités globales atteignant le niveau SOTA des modèles open source, et une longueur de contexte pouvant atteindre 128K."
   },
   "glm-4.5-air": {
     "description": "Version allégée de GLM-4.5, équilibrant performance et rapport qualité-prix, avec une commutation flexible entre modèles de réflexion hybrides."
@@ -1453,6 +1462,9 @@
   },
   "glm-4.5v": {
     "description": "La nouvelle génération de modèle d'inférence visuelle de Zhipu, basée sur l'architecture MOE (Mixture-of-Experts), avec un total de 106 milliards de paramètres et 12 milliards de paramètres d'activation, atteint l'état de l'art (SOTA) parmi les modèles multimodaux open source de même niveau au niveau mondial sur divers benchmarks, couvrant les tâches courantes telles que la compréhension d'images, de vidéos, de documents et d'interfaces graphiques (GUI)."
+  },
+  "glm-4.6": {
+    "description": "Le dernier modèle phare de Zhipu, GLM-4.6 (355B), surpasse entièrement la génération précédente en codage avancé, traitement de longs textes, inférence et capacités d'agent intelligent, notamment en alignant ses compétences en programmation avec Claude Sonnet 4, devenant ainsi le modèle de codage de pointe en Chine."
   },
   "glm-4v": {
     "description": "GLM-4V offre de puissantes capacités de compréhension et de raisonnement d'image, prenant en charge diverses tâches visuelles."

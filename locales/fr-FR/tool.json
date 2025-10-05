@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "Erreur d'exécution",
+    "executing": "Exécution en cours...",
+    "files": "Fichiers :",
+    "output": "Sortie :",
+    "returnValue": "Valeur de retour :"
+  },
   "dalle": {
     "autoGenerate": "Auto-générer",
     "downloading": "Les liens d'image générés par DallE3 ne sont valides que pendant 1 heure. Le téléchargement de l'image est en cours...",

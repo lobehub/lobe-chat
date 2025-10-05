@@ -150,6 +150,11 @@
       "total": "总计消耗"
     }
   },
+  "minimap": {
+    "jumpToMessage": "跳转至第 {{index}} 条消息",
+    "nextMessage": "下一条消息",
+    "previousMessage": "上一条消息"
+  },
   "newAgent": "新建助手",
   "pin": "置顶",
   "pinOff": "取消置顶",

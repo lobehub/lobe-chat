@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "Opisz, co chcesz wygenerować"
     },
+    "quality": {
+      "label": "Jakość obrazu",
+      "options": {
+        "hd": "Wysoka rozdzielczość",
+        "standard": "Standardowa"
+      }
+    },
     "seed": {
       "label": "Ziarno",
       "random": "Losowy seed"

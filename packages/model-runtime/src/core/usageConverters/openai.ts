@@ -1,10 +1,17 @@
-import { ModelTokensUsage } from '@lobechat/types';
+import { ModelTokensUsage, ModelUsage } from '@lobechat/types';
+import debug from 'debug';
+import { Pricing } from 'model-bank';
 import OpenAI from 'openai';
 
-export const convertUsage = (
+import { ChatPayloadForTransformStream } from '../streams/protocol';
+import { withUsageCost } from './utils/withUsageCost';
+
+const log = debug('lobe-cost:convertOpenAIUsage');
+
+export const convertOpenAIUsage = (
   usage: OpenAI.Completions.CompletionUsage,
-  provider?: string,
-): ModelTokensUsage => {
+  payload?: ChatPayloadForTransformStream,
+): ModelUsage => {
   // 目前只有 pplx 才有 citation_tokens
   const inputTextTokens = usage.prompt_tokens || 0;
   const inputCitationTokens = (usage as any).citation_tokens || 0;
@@ -23,11 +30,11 @@ export const convertUsage = (
 
   // XAI 的 completion_tokens 不包含 reasoning_tokens，需要特殊处理
   const outputTextTokens =
-    provider === 'xai'
+    payload?.provider === 'xai'
       ? totalOutputTokens - outputAudioTokens
       : totalOutputTokens - outputReasoning - outputAudioTokens - outputImageTokens;
   const totalOutputTokensNormalized =
-    provider === 'xai' ? totalOutputTokens + outputReasoning : totalOutputTokens;
+    payload?.provider === 'xai' ? totalOutputTokens + outputReasoning : totalOutputTokens;
 
   const totalTokens = inputCitationTokens + usage.total_tokens;
 
@@ -57,10 +64,15 @@ export const convertUsage = (
     }
   });
 
-  return finalData;
+  log('convertOpenAIUsage data(completion-api): %O', finalData);
+
+  return withUsageCost(finalData as ModelUsage, payload?.pricing);
 };
 
-export const convertResponseUsage = (usage: OpenAI.Responses.ResponseUsage): ModelTokensUsage => {
+export const convertOpenAIResponseUsage = (
+  usage: OpenAI.Responses.ResponseUsage,
+  payload?: ChatPayloadForTransformStream,
+): ModelUsage => {
   // 1. Extract and default primary values
   const totalInputTokens = usage.input_tokens || 0;
   const inputCachedTokens = usage.input_tokens_details?.cached_tokens || 0;
@@ -101,7 +113,7 @@ export const convertResponseUsage = (usage: OpenAI.Responses.ResponseUsage): Mod
   } satisfies ModelTokensUsage; // This helps ensure all keys of ModelTokensUsage are considered
 
   // 4. Filter out zero/falsy values, as done in the reference implementation
-  const finalData: Partial<ModelTokensUsage> = {}; // Use Partial for type safety during construction
+  const finalData: Partial<ModelUsage> = {}; // Use Partial for type safety during construction
   Object.entries(data).forEach(([key, value]) => {
     if (
       value !== undefined &&
@@ -114,9 +126,27 @@ export const convertResponseUsage = (usage: OpenAI.Responses.ResponseUsage): Mod
     ) {
       // @ts-ignore - We are building an object that will conform to ModelTokensUsage
       // by selectively adding properties.
-      finalData[key as keyof ModelTokensUsage] = value as number;
+      finalData[key as keyof ModelUsage] = value as number;
     }
   });
 
-  return finalData as ModelTokensUsage; // Cast because we've built it to match
+  log('convertOpenAIResponseUsage data(response-api): %O', finalData);
+
+  return withUsageCost(finalData as ModelUsage, payload?.pricing); // Cast because we've built it to match
+};
+
+export const convertOpenAIImageUsage = (
+  usage: OpenAI.Images.ImagesResponse.Usage,
+  pricing?: Pricing,
+): ModelUsage => {
+  const data: ModelTokensUsage = {
+    inputImageTokens: usage.input_tokens_details.image_tokens,
+    inputTextTokens: usage.input_tokens_details.text_tokens,
+    outputImageTokens: usage.output_tokens,
+    totalInputTokens: usage.input_tokens,
+    totalOutputTokens: usage.output_tokens,
+    totalTokens: usage.total_tokens,
+  };
+
+  return withUsageCost(data as ModelUsage, pricing);
 };

@@ -2,6 +2,10 @@
   "name": "@lobechat/const",
   "version": "1.0.0",
   "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./currency": "./src/currency.ts"
+  },
   "main": "./src/index.ts",
   "dependencies": {
     "model-bank": "workspace:*",

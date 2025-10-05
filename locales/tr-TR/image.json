@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "Oluşturmak istediğiniz içeriği tanımlayın"
     },
+    "quality": {
+      "label": "Görüntü Kalitesi",
+      "options": {
+        "hd": "Yüksek Çözünürlük",
+        "standard": "Standart"
+      }
+    },
     "seed": {
       "label": "Tohum",
       "random": "Rastgele Tohum"

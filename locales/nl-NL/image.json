@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "Beschrijf wat je wilt genereren"
     },
+    "quality": {
+      "label": "Beeldkwaliteit",
+      "options": {
+        "hd": "Hoge resolutie",
+        "standard": "Standaard"
+      }
+    },
     "seed": {
       "label": "Zaad",
       "random": "Willekeurige zaad"

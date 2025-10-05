@@ -3,8 +3,9 @@ import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
 import { AgentRuntimeErrorType } from '../../../types/error';
-import { convertResponseUsage } from '../../../utils/usageConverter';
+import { convertOpenAIResponseUsage } from '../../usageConverters';
 import {
+  ChatPayloadForTransformStream,
   FIRST_CHUNK_ERROR_KEY,
   StreamContext,
   StreamProtocolChunk,
@@ -33,6 +34,7 @@ const transformOpenAIStream = (
         type: 'response.output_text.annotation.added';
       },
   streamContext: StreamContext,
+  payload?: ChatPayloadForTransformStream,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
   if (FIRST_CHUNK_ERROR_KEY in chunk) {
@@ -155,7 +157,7 @@ const transformOpenAIStream = (
       case 'response.completed': {
         if (chunk.response.usage) {
           return {
-            data: convertResponseUsage(chunk.response.usage),
+            data: convertOpenAIResponseUsage(chunk.response.usage, payload),
             id: chunk.response.id,
             type: 'usage',
           };
@@ -194,10 +196,10 @@ export const OpenAIResponsesStream = (
   stream: Stream<OpenAI.Responses.ResponseStreamEvent> | ReadableStream,
   {
     callbacks,
-    provider,
     bizErrorTypeTransformer,
     inputStartAt,
     enableStreaming = true,
+    payload,
   }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
@@ -205,14 +207,18 @@ export const OpenAIResponsesStream = (
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
+  // use closure to pass payload to transformOpenAIStream
+  const transformWithPayload: typeof transformOpenAIStream = (chunk, streamContext) =>
+    transformOpenAIStream(chunk, streamContext, payload);
+
   return (
     readableStream
       // 1. handle the first error if exist
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
-      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
+      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, payload?.provider))
       .pipeThrough(
-        createTokenSpeedCalculator(transformOpenAIStream, {
+        createTokenSpeedCalculator(transformWithPayload, {
           enableStreaming: enableStreaming,
           inputStartAt,
           streamStack,

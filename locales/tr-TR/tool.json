@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "Yürütme hatası",
+    "executing": "Yürütülüyor...",
+    "files": "Dosyalar:",
+    "output": "Çıktı:",
+    "returnValue": "Dönüş değeri:"
+  },
   "dalle": {
     "autoGenerate": "Otomatik Oluştur",
     "downloading": "DallE3 tarafından oluşturulan resim bağlantıları sadece 1 saat geçerlidir, resim yerel olarak önbelleğe alınıyor...",

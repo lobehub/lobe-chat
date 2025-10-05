@@ -128,8 +128,10 @@ export const initModelRuntimeWithUserPayload = (
   payload: ClientSecretPayload,
   params: any = {},
 ) => {
-  return ModelRuntime.initializeWithProvider(provider, {
-    ...getParamsFromPayload(provider, payload),
+  const runtimeProvider = payload.runtimeProvider ?? provider;
+
+  return ModelRuntime.initializeWithProvider(runtimeProvider, {
+    ...getParamsFromPayload(runtimeProvider, payload),
     ...params,
   });
 };

@@ -30,8 +30,8 @@ const novitaChatModels: AIChatModelCard[] = [
     maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.98, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.95, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -105,9 +105,25 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 163_840,
+    displayName: 'Deepseek V3.2 Exp',
+    enabled: true,
+    id: 'deepseek/deepseek-v3.2-exp',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.41, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 131_072,
     displayName: 'DeepSeek V3.1 Terminus',
-    enabled: true,
     id: 'deepseek/deepseek-v3.1-terminus',
     maxOutput: 65_536,
     pricing: {
@@ -501,7 +517,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout 17B Instruct',
-    enabled: true,
     id: 'meta-llama/llama-4-scout-17b-16e-instruct',
     pricing: {
       units: [
@@ -518,7 +533,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576,
     displayName: 'Llama 4 Maverick 17B Instruct',
-    enabled: true,
     id: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
     pricing: {
       units: [
