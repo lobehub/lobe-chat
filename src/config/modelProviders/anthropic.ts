@@ -59,7 +59,7 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-7-sonnet-20250219',
       maxOutput: 64_000,
-      releasedAt: '2025-02-19',
+      releasedAt: '2025-02-24',
     },
     {
       contextWindowTokens: 200_000,
@@ -70,7 +70,7 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-haiku-20241022',
       maxOutput: 8192,
-      releasedAt: '2024-10-22',
+      releasedAt: '2024-11-05',
     },
     {
       contextWindowTokens: 200_000,
