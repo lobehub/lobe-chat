@@ -33,7 +33,7 @@ export class AiModelModel {
       .insert(aiModels)
       .values({
         ...params,
-        enabled: true, // enabled by default
+        enabled: params.enabled ?? true, // enabled by default, but respect explicit value
         source: AiModelSourceEnum.Custom,
         userId: this.userId,
       })
