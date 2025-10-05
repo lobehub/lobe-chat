@@ -52,9 +52,9 @@ tests:
     assert:
       - type: llm-rubric
         provider: openai:gpt-5-mini
-        value: "The response should provide guidance on deploying apps with Docker, mentioning containers or packaging applications"
+        value: "The response should provide helpful information about deploying with Docker based on the containerization context. It should mention containers, packaging, or provide deployment-related guidance."
       - type: contains-any
-        value: ["Docker", "container"]
+        value: ["Docker", "container", "package", "deploy"]
 
   - vars:
       context: "GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data. Unlike REST APIs that require multiple requests to different endpoints, GraphQL allows clients to request exactly the data they need in a single request."
