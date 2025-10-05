@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Type not preserved when model is sorted."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.3"
+  },
+  {
+    "children": {
       "improvements": ["Allow switching model type."]
     },
     "date": "2025-10-05",
