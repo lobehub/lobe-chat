@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support double-click to open multi agent window on the desktop."]
+    },
+    "date": "2025-10-04",
+    "version": "1.134.0"
+  },
+  {
+    "children": {
       "fixes": ["type not preserved when model is disabled or sorted."],
       "improvements": ["Nano banana support aspect_ratio."]
     },
