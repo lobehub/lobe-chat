@@ -1,5 +1,5 @@
 // TypeScript prompt wrapper that uses actual chain implementation
-import { chainTranslate } from '../../src';
+import { chainTranslate } from '@lobechat/prompts';
 
 interface PromptVars {
   content: string;

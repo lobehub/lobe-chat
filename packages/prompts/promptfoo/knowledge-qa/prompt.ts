@@ -1,5 +1,5 @@
 // TypeScript prompt wrapper that uses actual chain implementation
-import { chainAnswerWithContext } from '../../src/chains/answerWithContext';
+import { chainAnswerWithContext } from '@lobechat/prompts';
 
 interface PromptVars {
   context: string | string[];

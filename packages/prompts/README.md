@@ -53,11 +53,24 @@ pnpm promptfoo:view
 
 Tests are organized by prompt type in the `promptfoo/` directory:
 
-- `summary-title.yaml` - Tests conversation title generation
-- `language-detection.yaml` - Tests language detection accuracy
-- `translation.yaml` - Tests translation quality between languages
-- `emoji-picker.yaml` - Tests emoji selection for different contexts
-- `knowledge-qa.yaml` - Tests Q\&A with knowledge base context
+```
+promptfoo/
+├── summary-title/
+│   ├── eval.yaml      # Test configuration
+│   └── prompt.ts      # Prompt wrapper
+├── translation/
+│   ├── eval.yaml
+│   └── prompt.ts
+├── language-detection/
+│   ├── eval.yaml
+│   └── prompt.ts
+├── emoji-picker/
+│   ├── eval.yaml
+│   └── prompt.ts
+└── knowledge-qa/
+    ├── eval.yaml
+    └── prompt.ts
+```
 
 Each test configuration includes:
 
@@ -166,4 +179,46 @@ promptfoo/
 3. **Edge Cases**: Include tests for edge cases and error conditions
 4. **Performance**: Monitor cost and response time in tests
 5. **Consistency**: Use consistent assertion patterns across tests
-6. **Prompt Optimization**: Use test results to iteratively improve prompts
+6. **Prompt Optimization**: Use test results to iteratively improve prompts (see CLAUDE.md for optimization workflow)
+
+## Prompt Optimization Workflow
+
+This package follows an iterative prompt optimization process using promptfoo test results:
+
+### Example: Translation Prompt Optimization
+
+**Initial State**: 85% pass rate with issues:
+
+- Claude models added explanatory text ("以下是翻译...")
+- GPT models over-translated technical terms (`API_KEY_12345` → `API 密钥_12345`)
+
+**Optimization Process**:
+
+1. **Identify Failures**: Run tests and analyze specific failure patterns
+2. **Update Prompts**: Modify prompt rules based on failure analysis
+   - Added: "Output ONLY the translated text, no explanations"
+   - Added: "Preserve technical terms, code identifiers, API keys exactly as they appear"
+3. **Re-run Tests**: Validate improvements across all models
+4. **Iterate**: Repeat until 100% pass rate achieved
+
+**Final Result**: 100% pass rate (14/14 tests) across GPT-5-mini, Claude-3.5-Haiku, and Gemini-Flash
+
+### Example: Knowledge Q\&A Optimization
+
+**Initial State**: 71.43% pass rate with context handling issues
+
+**Optimization Journey**:
+
+- **Round 1** (80.95%): Clarified context relevance checking
+- **Round 2** (90.48%): Distinguished between "no context" vs "irrelevant context"
+- **Round 3** (92.86%): Added explicit rules for partial context
+- **Round 4** (96.43%): Emphasized supplementing with general knowledge
+- **Final** (100%): Added concrete example and MUST/SHOULD directives
+
+**Key Learning**: When context is topic-relevant but information-limited, models should:
+
+- Use context as foundation
+- Supplement with general knowledge
+- Provide practical, actionable guidance
+
+See `CLAUDE.md` for detailed prompt engineering guidelines.

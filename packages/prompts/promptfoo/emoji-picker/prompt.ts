@@ -1,5 +1,5 @@
 // TypeScript prompt wrapper that uses actual chain implementation
-import { chainPickEmoji } from '../../src/chains/pickEmoji';
+import { chainPickEmoji } from '@lobechat/prompts';
 
 interface PromptVars {
   content: string;
