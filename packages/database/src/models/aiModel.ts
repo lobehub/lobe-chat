@@ -19,12 +19,21 @@ export class AiModelModel {
     this.db = db;
   }
 
+  /**
+   * Helper method to validate if array is empty and return early if needed
+   * @param array - Array to validate
+   * @returns true if array is empty, false otherwise
+   */
+  private isEmptyArray(array: unknown[]): boolean {
+    return array.length === 0;
+  }
+
   create = async (params: NewAiModelItem) => {
     const [result] = await this.db
       .insert(aiModels)
       .values({
         ...params,
-        enabled: true, // enabled by default
+        enabled: params.enabled ?? true, // enabled by default, but respect explicit value
         source: AiModelSourceEnum.Custom,
         userId: this.userId,
       })
@@ -148,6 +157,11 @@ export class AiModelModel {
   };
 
   batchUpdateAiModels = async (providerId: string, models: AiProviderModelListItem[]) => {
+    // Early return if models array is empty to prevent database insertion error
+    if (this.isEmptyArray(models)) {
+      return [];
+    }
+
     const records = models.map(({ id, ...model }) => ({
       ...model,
       id,
@@ -166,6 +180,11 @@ export class AiModelModel {
   };
 
   batchToggleAiModels = async (providerId: string, models: string[], enabled: boolean) => {
+    // Early return if models array is empty to prevent database insertion error
+    if (this.isEmptyArray(models)) {
+      return;
+    }
+
     return this.db.transaction(async (trx) => {
       // 1. insert models that are not in the db
       const insertedRecords = await trx
@@ -222,6 +241,11 @@ export class AiModelModel {
   }
 
   updateModelsOrder = async (providerId: string, sortMap: AiModelSortMap[]) => {
+    // Early return if sortMap array is empty
+    if (this.isEmptyArray(sortMap)) {
+      return;
+    }
+
     await this.db.transaction(async (tx) => {
       const updates = sortMap.map(({ id, sort, type }) => {
         const now = new Date();

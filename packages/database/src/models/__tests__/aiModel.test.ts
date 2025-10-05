@@ -254,6 +254,15 @@ describe('AiModelModel', () => {
       expect(allModels.find((m) => m.id === 'existing-model')?.displayName).toBe('Old Name');
       expect(allModels.find((m) => m.id === 'new-model')?.displayName).toBe('New Model');
     });
+
+    it('should return empty array when models array is empty', async () => {
+      const result = await aiProviderModel.batchUpdateAiModels('openai', []);
+      expect(result).toEqual([]);
+
+      // Verify no models were created
+      const allModels = await aiProviderModel.query();
+      expect(allModels).toHaveLength(0);
+    });
   });
 
   describe('batchToggleAiModels', () => {
@@ -273,6 +282,23 @@ describe('AiModelModel', () => {
 
       const models = await aiProviderModel.query();
       expect(models.every((m) => m.enabled)).toBe(true);
+    });
+
+    it('should return early when models array is empty', async () => {
+      // Create an initial model to verify it's not affected
+      await aiProviderModel.create({
+        id: 'model1',
+        providerId: 'openai',
+        enabled: false,
+      });
+
+      const result = await aiProviderModel.batchToggleAiModels('openai', [], true);
+      expect(result).toBeUndefined();
+
+      // Verify existing models were not affected
+      const models = await aiProviderModel.query();
+      expect(models).toHaveLength(1);
+      expect(models[0].enabled).toBe(false);
     });
   });
 
@@ -323,6 +349,23 @@ describe('AiModelModel', () => {
 
       const model = await aiProviderModel.findById('image-model');
       expect(model?.type).toBe('image');
+    });
+
+    it('should return early when sortMap array is empty', async () => {
+      // Create an initial model to verify it's not affected
+      await aiProviderModel.create({
+        id: 'model1',
+        providerId: 'openai',
+        sort: 1,
+      });
+
+      const result = await aiProviderModel.updateModelsOrder('openai', []);
+      expect(result).toBeUndefined();
+
+      // Verify existing models were not affected (check by querying the created model directly)
+      const models = await aiProviderModel.getModelListByProviderId('openai');
+      expect(models).toHaveLength(1);
+      expect(models[0].id).toBe('model1');
     });
   });
 });
