@@ -74,7 +74,7 @@ Tests directly use the actual prompt chain functions from `src/chains/`. The Typ
 description: Test description
 providers:
   - openai:gpt-4o-mini
-  - openai:gpt-3.5-turbo
+  - anthropic:claude-3-5-haiku-latest
 prompts:
   - file://prompts/summary-title.ts # Imports and uses src/chains/summaryTitle.ts
 tests:
@@ -84,8 +84,11 @@ tests:
     assert:
       - type: llm-rubric
         value: 'Expected behavior description'
+        provider: openai:gpt-4o # Specify grader model for LLM rubric
       - type: contains
         value: 'expected text'
+      - type: not-contains
+        value: 'unwanted text'
 ```
 
 ### Adding New Tests
@@ -163,3 +166,4 @@ promptfoo/
 3. **Edge Cases**: Include tests for edge cases and error conditions
 4. **Performance**: Monitor cost and response time in tests
 5. **Consistency**: Use consistent assertion patterns across tests
+6. **Prompt Optimization**: Use test results to iteratively improve prompts
