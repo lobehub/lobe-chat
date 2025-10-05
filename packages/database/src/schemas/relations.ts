@@ -322,10 +322,6 @@ export const messageGroupsRelations = relations(messageGroups, ({ many, one }) =
     fields: [messageGroups.topicId],
     references: [topics.id],
   }),
-  userMessage: one(messages, {
-    fields: [messageGroups.userMessageId],
-    references: [messages.id],
-  }),
   parentGroup: one(messageGroups, {
     fields: [messageGroups.parentGroupId],
     references: [messageGroups.id],
