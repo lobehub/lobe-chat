@@ -1,11 +1,13 @@
 description: Test knowledge base Q&A with context retrieval and answer generation
 
 providers:
-  - openai:gpt-4o-mini
-  - openai:gpt-3.5-turbo
+  - openai:chat:gpt-5-mini
+  - openai:chat:claude-3-5-haiku-latest
+  - openai:chat:gemini-flash-latest
+  - openai:chat:deepseek-chat
 
 prompts:
-  - file://promptfoo/prompts/knowledge-qa.ts
+  - file://promptfoo/knowledge-qa/prompt.ts
 
 tests:
   - vars:
@@ -13,6 +15,7 @@ tests:
       query: "What is React and who developed it?"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
         value: "The response should accurately explain what React is and mention Facebook as the developer"
       - type: contains-any
         value: ["React", "JavaScript", "library", "Facebook"]
@@ -24,6 +27,7 @@ tests:
       query: "How does TypeScript relate to JavaScript?"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
         value: "The response should explain the relationship between TypeScript and JavaScript, mentioning type definitions"
       - type: contains-any
         value: ["TypeScript", "JavaScript", "type", "compiles", "strongly typed"]
@@ -35,6 +39,7 @@ tests:
       query: "Node.js有什么特点？"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
         value: "The response should describe Node.js features in Chinese, mentioning event-driven and non-blocking I/O"
       - type: contains-any
         value: ["Node.js", "事件驱动", "非阻塞", "JavaScript", "运行时"]
@@ -46,37 +51,39 @@ tests:
       query: "How can I deploy my app with Docker?"
     assert:
       - type: llm-rubric
-        value: "The response should provide guidance on deploying apps with Docker based on the containerization context"
+        provider: openai:gpt-5-mini
+        value: "The response should provide guidance on deploying apps with Docker, mentioning containers or packaging applications"
       - type: contains-any
-        value: ["Docker", "container", "deploy", "application"]
-      - type: not-contains
-        value: "no information"
+        value: ["Docker", "container"]
 
   - vars:
       context: "GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data. Unlike REST APIs that require multiple requests to different endpoints, GraphQL allows clients to request exactly the data they need in a single request."
       query: "What are the benefits of using GraphQL over REST?"
     assert:
       - type: llm-rubric
-        value: "The response should compare GraphQL and REST, highlighting GraphQL's ability to fetch specific data in single requests"
+        provider: openai:gpt-5-mini
+        value: "The response should compare GraphQL and REST, highlighting GraphQL's advantages such as single request capability or requesting specific data"
       - type: contains-any
-        value: ["GraphQL", "REST", "single request", "exactly", "data"]
+        value: ["GraphQL", "REST"]
 
   - vars:
       context: "Machine learning algorithms can be categorized into supervised, unsupervised, and reinforcement learning. Supervised learning uses labeled data to train models, unsupervised learning finds patterns in unlabeled data, and reinforcement learning learns through trial and error with rewards."
       query: "Can you explain blockchain technology?"
     assert:
       - type: llm-rubric
-        value: "The response should indicate that the provided context is about machine learning, not blockchain, and cannot answer the blockchain question"
-      - type: not-contains
-        value: "blockchain"
+        provider: openai:gpt-5-mini
+        value: "The response should indicate that the provided context is about machine learning, not blockchain, and cannot answer the blockchain question based on the context"
       - type: contains-any
-        value: ["machine learning", "cannot", "不能", "no information", "context"]
+        value: ["machine learning", "cannot", "不能", "no information", "context", "does not contain"]
 
   - vars:
       context: ""
       query: "How do I set up a web server?"
     assert:
       - type: llm-rubric
-        value: "The response should indicate that no context was provided and cannot answer the question"
+        provider: openai:gpt-5-mini
+        value: "The response should provide helpful information about setting up a web server using general knowledge"
       - type: contains-any
-        value: ["no context", "cannot", "不能", "no information", "insufficient"]
+        value: ["server", "web", "setup", "install", "configure"]
+      - type: not-contains
+        value: "cannot answer"

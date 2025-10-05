@@ -4,6 +4,7 @@ providers:
   - openai:chat:gpt-5-mini
   - openai:chat:claude-3-5-haiku-latest
   - openai:chat:gemini-flash-latest
+  - openai:chat:deepseek-chat
 
 prompts:
   - file://promptfoo/language-detection/prompt.ts

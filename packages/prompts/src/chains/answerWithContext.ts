@@ -1,33 +1,49 @@
 import { ChatStreamPayload } from '@lobechat/types';
 
+interface AnswerWithContext {
+  context: string[];
+  knowledge: string[];
+  question: string;
+}
 export const chainAnswerWithContext = ({
   context,
   knowledge,
   question,
-}: {
-  context: string[];
-  knowledge: string[];
-  question: string;
-}): Partial<ChatStreamPayload> => ({
-  messages: [
-    {
-      content: `You are also a helpful assistant good answering questions related to ${knowledge.join('/')}. And you'll be provided with a question and several passages that might be relevant. And currently your task is to provide answer based on the question and passages.
+}: AnswerWithContext): Partial<ChatStreamPayload> => {
+  const filteredContext = context.filter((c) => c.trim());
+  const hasContext = filteredContext.length > 0;
 
-Note that passages might not be relevant to the question, please only use the passages that are relevant. Or if there is no relevant passage, please answer using your knowledge.
+  return {
+    messages: [
+      {
+        content: hasContext
+          ? `You are a helpful assistant specialized in ${knowledge.join('/')}. Your task is to answer questions based on the provided context passages.
 
-Answer should use the same original language as the question and follow markdown syntax.
+IMPORTANT RULES:
+- Prioritize information from the provided context passages
+- If the context is about a different topic than the question, clearly state "The provided context does not contain information about this topic" and do NOT use your general knowledge
+- If the context contains relevant information, use it to answer
+- Answer in the same language as the question
+- Use markdown formatting for better readability
 
-The provided passages as context:
+The provided context passages:
 
-<Context>
-${context.join('\n')}
-</Context>
+<context>
+${filteredContext.join('\n')}
+</context>
 
-The question to answer is:
+Question to answer:
 
-${question}
-`,
-      role: 'user',
-    },
-  ],
-});
+${question}`
+          : `You are a helpful assistant specialized in ${knowledge.join('/')}. Please answer the following question using your knowledge.
+
+Answer in the same language as the question and use markdown formatting for better readability.
+
+Question to answer:
+
+${question}`,
+        role: 'user',
+      },
+    ],
+  };
+};
