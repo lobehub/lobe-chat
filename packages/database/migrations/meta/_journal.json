@@ -252,6 +252,13 @@
       "when": 1759116400580,
       "tag": "0035_add_virtual",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1759666151079,
+      "tag": "0036_add_group_messages",
+      "breakpoints": true
     }
   ],
   "version": "6"
