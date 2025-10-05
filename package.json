@@ -379,7 +379,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@vercel/speed-insights"
+      "@vercel/speed-insights",
+      "better-sqlite3"
     ],
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
