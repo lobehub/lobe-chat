@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add promptfoo to improve prompts quality."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.4"
+  },
+  {
+    "children": {
       "fixes": ["Type not preserved when model is sorted."]
     },
     "date": "2025-10-05",
