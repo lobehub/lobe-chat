@@ -131,11 +131,27 @@ export class AiModelModel {
   };
 
   toggleModelEnabled = async (value: ToggleAiModelEnableParams) => {
+    const now = new Date();
+    const insertValues = {
+      ...value,
+      updatedAt: now,
+      userId: this.userId,
+    } as typeof aiModels.$inferInsert;
+
+    if (value.type) insertValues.type = value.type;
+
+    const updateValues: Partial<typeof aiModels.$inferInsert> = {
+      enabled: value.enabled,
+      updatedAt: now,
+    };
+
+    if (value.type) updateValues.type = value.type;
+
     return this.db
       .insert(aiModels)
-      .values({ ...value, updatedAt: new Date(), userId: this.userId })
+      .values(insertValues)
       .onConflictDoUpdate({
-        set: { enabled: value.enabled, updatedAt: new Date() },
+        set: updateValues,
         target: [aiModels.id, aiModels.providerId, aiModels.userId],
       });
   };
@@ -231,20 +247,32 @@ export class AiModelModel {
     }
 
     await this.db.transaction(async (tx) => {
-      const updates = sortMap.map(({ id, sort }) => {
+      const updates = sortMap.map(({ id, sort, type }) => {
+        const now = new Date();
+        const insertValues: typeof aiModels.$inferInsert = {
+          enabled: true,
+          id,
+          providerId,
+          sort,
+          // source: isBuiltin ? 'builtin' : 'custom',
+          updatedAt: now,
+          userId: this.userId,
+        };
+
+        if (type) insertValues.type = type;
+
+        const updateValues: Partial<typeof aiModels.$inferInsert> = {
+          sort,
+          updatedAt: now,
+        };
+
+        if (type) updateValues.type = type;
+
         return tx
           .insert(aiModels)
-          .values({
-            enabled: true,
-            id,
-            providerId,
-            sort,
-            // source: isBuiltin ? 'builtin' : 'custom',
-            updatedAt: new Date(),
-            userId: this.userId,
-          })
+          .values(insertValues)
           .onConflictDoUpdate({
-            set: { sort, updatedAt: new Date() },
+            set: updateValues,
             target: [aiModels.id, aiModels.userId, aiModels.providerId],
           });
       });

@@ -211,16 +211,19 @@ describe('AiModelModel', () => {
         id: 'model1',
         providerId: 'openai',
         enabled: true,
+        type: 'image',
       });
 
       await aiProviderModel.toggleModelEnabled({
         id: model.id,
         providerId: 'openai',
         enabled: false,
+        type: 'image',
       });
 
       const updatedModel = await aiProviderModel.findById(model.id);
       expect(updatedModel?.enabled).toBe(false);
+      expect(updatedModel?.type).toBe('image');
     });
   });
 
@@ -337,6 +340,15 @@ describe('AiModelModel', () => {
       const models = await aiProviderModel.getModelListByProviderId('openai');
       expect(models[0].id).toBe('model2');
       expect(models[1].id).toBe('model1');
+    });
+
+    it('should preserve model type when inserting order records', async () => {
+      const sortMap = [{ id: 'image-model', sort: 0, type: 'image' as const }];
+
+      await aiProviderModel.updateModelsOrder('openai', sortMap);
+
+      const model = await aiProviderModel.findById('image-model');
+      expect(model?.type).toBe('image');
     });
 
     it('should return early when sortMap array is empty', async () => {

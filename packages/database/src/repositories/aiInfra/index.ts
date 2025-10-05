@@ -128,7 +128,7 @@ export class AiInfraRepos {
               providerId: provider.id,
               settings: item.settings,
               sort: user.sort || undefined,
-              type: item.type,
+              type: user.type || item.type,
             };
           })
           .filter((item) => (filterEnabled ? item.enabled : true));

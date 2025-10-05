@@ -1,6 +1,73 @@
 [
   {
     "children": {
+      "improvements": ["Add promptfoo to improve prompts quality."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.4"
+  },
+  {
+    "children": {
+      "fixes": ["Type not preserved when model is sorted."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.3"
+  },
+  {
+    "children": {
+      "improvements": ["Allow switching model type."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.1"
+  },
+  {
+    "children": {
+      "features": ["Support double-click to open multi agent window on the desktop."]
+    },
+    "date": "2025-10-04",
+    "version": "1.134.0"
+  },
+  {
+    "children": {
+      "fixes": ["type not preserved when model is disabled or sorted."],
+      "improvements": ["Nano banana support aspect_ratio."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.6"
+  },
+  {
+    "children": {
+      "fixes": ["Custom provider fails when client requests are enabled."],
+      "improvements": ["Optimized extendParams UI, update i18n."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.5"
+  },
+  {
+    "children": {
+      "fixes": ["OllamaCloud error."],
+      "improvements": ["Fix chat minimap overflow."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor a ssrf-safe-fetch module."],
+      "fixes": ["Fix frontend random API key config not work."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.3"
+  },
+  {
+    "children": {
       "improvements": ["Add minimap to chat list for quick navigation."]
     },
     "date": "2025-09-30",
