@@ -55,9 +55,9 @@ export const imageUrlToBase64 = async (
     if (!res.ok) {
       throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
     }
+    const blob = await res.blob();
 
-    const arrayBuffer = await res.arrayBuffer();
-    const contentType = res.headers.get('content-type') || 'application/octet-stream';
+    const arrayBuffer = await blob.arrayBuffer();
 
     const base64 =
       typeof btoa === 'function'
@@ -69,7 +69,7 @@ export const imageUrlToBase64 = async (
           )
         : Buffer.from(arrayBuffer).toString('base64');
 
-    return { base64, mimeType: contentType };
+    return { base64, mimeType: blob.type };
   } catch (error) {
     console.error('Error converting image to base64:', error);
     throw error;
