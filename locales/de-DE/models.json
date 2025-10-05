@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - Denkmodus; DeepSeek-V3.1 ist ein neu eingeführtes hybrides Inferenzmodell von DeepSeek, das zwei Inferenzmodi unterstützt: Denk- und Nicht-Denkmodus, mit höherer Denkeffizienz im Vergleich zu DeepSeek-R1-0528. Durch Post-Training-Optimierung wurde die Leistung bei Agenten-Werkzeugnutzung und Agentenaufgaben deutlich verbessert."
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 ist das neueste universelle Großmodell von DeepSeek, das eine hybride Inferenzarchitektur unterstützt und über stärkere Agentenfähigkeiten verfügt."
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "DeepSeek V3.2 Denkmodus. Bevor die endgültige Antwort ausgegeben wird, gibt das Modell zunächst eine Gedankenkette aus, um die Genauigkeit der finalen Antwort zu verbessern."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite bietet extrem schnelle Reaktionszeiten und ein hervorragendes Preis-Leistungs-Verhältnis, um Kunden in verschiedenen Szenarien flexiblere Optionen zu bieten. Unterstützt Inferenz und Feintuning mit einem Kontextfenster von 128k."
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 ist ein hybrides großes Sprachmodell, das von DeepSeek AI veröffentlicht wurde und auf dem Vorgängermodell in vielerlei Hinsicht bedeutende Verbesserungen aufweist. Eine wesentliche Innovation dieses Modells ist die Integration des „Denkmodus“ und des „Nicht-Denkmodus“ in einem System, wobei Nutzer durch Anpassung der Chat-Vorlagen flexibel zwischen den Modi wechseln können, um unterschiedlichen Aufgabenanforderungen gerecht zu werden. Durch spezielles Post-Training wurde die Leistung von V3.1 bei Tool-Aufrufen und Agentenaufgaben deutlich gesteigert, was eine bessere Unterstützung externer Suchwerkzeuge und die Ausführung komplexer mehrstufiger Aufgaben ermöglicht. Das Modell basiert auf DeepSeek-V3.1-Base und wurde durch eine zweistufige Langtext-Erweiterungsmethode nachtrainiert, wodurch das Trainingsdatenvolumen erheblich erhöht wurde und es sich besonders bei der Verarbeitung langer Dokumente und umfangreicher Codes bewährt. Als Open-Source-Modell zeigt DeepSeek-V3.1 in Benchmarks zu Codierung, Mathematik und logischem Denken Fähigkeiten, die mit führenden Closed-Source-Modellen vergleichbar sind. Gleichzeitig senkt seine hybride Expertenarchitektur (MoE) die Inferenzkosten bei gleichzeitiger Beibehaltung einer enormen Modellkapazität."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus ist eine aktualisierte Version des V3.1-Modells von DeepSeek, positioniert als hybrides Agenten-Großsprachmodell. Dieses Update konzentriert sich darauf, auf Nutzerfeedback basierende Probleme zu beheben und die Stabilität zu verbessern, während die ursprünglichen Modellfähigkeiten erhalten bleiben. Es verbessert deutlich die Sprachkonsistenz und reduziert das Vermischen von Chinesisch und Englisch sowie das Auftreten ungewöhnlicher Zeichen. Das Modell integriert den „Denkmodus“ (Thinking Mode) und den „Nicht-Denkmodus“ (Non-thinking Mode), zwischen denen Nutzer flexibel über Chatvorlagen wechseln können, um unterschiedlichen Aufgaben gerecht zu werden. Als wichtige Optimierung verbessert V3.1-Terminus die Leistung des Code-Agenten und des Such-Agenten, wodurch diese bei Werkzeugaufrufen und der Ausführung mehrstufiger komplexer Aufgaben zuverlässiger sind."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 ist die neueste und leistungsstärkste Version von Kimi K2. Es handelt sich um ein erstklassiges Mixture-of-Experts (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern. Die Hauptmerkmale dieses Modells umfassen: verbesserte Agenten-Codierungsintelligenz, die in öffentlichen Benchmark-Tests und realen Agenten-Codierungsaufgaben eine signifikante Leistungssteigerung zeigt; verbesserte Frontend-Codierungserfahrung mit Fortschritten in Ästhetik und Praktikabilität der Frontend-Programmierung."
@@ -926,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 ist ein hybrides großes Sprachmodell, das von DeepSeek AI veröffentlicht wurde und auf dem Vorgängermodell in vielerlei Hinsicht bedeutende Verbesserungen aufweist. Eine wesentliche Innovation dieses Modells ist die Integration des „Denkmodus“ und des „Nicht-Denkmodus“ in einem System, wobei Nutzer durch Anpassung der Chat-Vorlagen flexibel zwischen den Modi wechseln können, um unterschiedlichen Aufgabenanforderungen gerecht zu werden. Durch spezielles Post-Training wurde die Leistung von V3.1 bei Tool-Aufrufen und Agentenaufgaben deutlich gesteigert, was eine bessere Unterstützung externer Suchwerkzeuge und die Ausführung komplexer mehrstufiger Aufgaben ermöglicht. Das Modell basiert auf DeepSeek-V3.1-Base und wurde durch eine zweistufige Langtext-Erweiterungsmethode nachtrainiert, wodurch das Trainingsdatenvolumen erheblich erhöht wurde und es sich besonders bei der Verarbeitung langer Dokumente und umfangreicher Codes bewährt. Als Open-Source-Modell zeigt DeepSeek-V3.1 in Benchmarks zu Codierung, Mathematik und logischem Denken Fähigkeiten, die mit führenden Closed-Source-Modellen vergleichbar sind. Gleichzeitig senkt seine hybride Expertenarchitektur (MoE) die Inferenzkosten bei gleichzeitiger Beibehaltung einer enormen Modellkapazität."
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus ist eine aktualisierte Version des V3.1-Modells von DeepSeek, positioniert als hybrides Agenten-Großsprachmodell. Dieses Update konzentriert sich darauf, auf Nutzerfeedback basierende Probleme zu beheben und die Stabilität zu verbessern, während die ursprünglichen Modellfähigkeiten erhalten bleiben. Es verbessert deutlich die Sprachkonsistenz und reduziert das Vermischen von Chinesisch und Englisch sowie das Auftreten ungewöhnlicher Zeichen. Das Modell integriert den „Denkmodus“ (Thinking Mode) und den „Nicht-Denkmodus“ (Non-thinking Mode), zwischen denen Nutzer flexibel über Chatvorlagen wechseln können, um unterschiedlichen Aufgaben gerecht zu werden. Als wichtige Optimierung verbessert V3.1-Terminus die Leistung des Code-Agenten und des Such-Agenten, wodurch diese bei Werkzeugaufrufen und der Ausführung mehrstufiger komplexer Aufgaben zuverlässiger sind."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B ist ein fortschrittliches Modell, das für komplexe Dialoge trainiert wurde."
   },
@@ -999,7 +1011,7 @@
     "description": "DeepSeek R1 Vollversion mit 671B Parametern, die Echtzeit-Online-Suche unterstützt und über verbesserte Verständnis- und Generierungsfähigkeiten verfügt."
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 Denkmodus. Bevor die endgültige Antwort ausgegeben wird, generiert das Modell eine Kette von Überlegungen, um die Genauigkeit der finalen Antwort zu verbessern."
+    "description": "DeepSeek V3.2 Denkmodus. Bevor die endgültige Antwort ausgegeben wird, gibt das Modell zunächst eine Gedankenkette aus, um die Genauigkeit der finalen Antwort zu verbessern."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 ist ein effizientes Mixture-of-Experts-Sprachmodell, das für wirtschaftliche Verarbeitungsanforderungen geeignet ist."
@@ -1352,10 +1364,16 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash ist Googles kosteneffizientestes Modell und bietet umfassende Funktionen."
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana ist Googles neuestes, schnellstes und effizientestes natives multimodales Modell, das es Ihnen ermöglicht, Bilder durch Dialog zu generieren und zu bearbeiten."
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana ist Googles neuestes, schnellstes und effizientestes natives multimodales Modell, das es Ihnen ermöglicht, Bilder durch Dialog zu generieren und zu bearbeiten."
   },
   "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana ist Googles neuestes, schnellstes und effizientestes natives multimodales Modell, das es Ihnen ermöglicht, Bilder durch Dialog zu generieren und zu bearbeiten."
+  },
+  "gemini-2.5-flash-image:image": {
     "description": "Nano Banana ist Googles neuestes, schnellstes und effizientestes natives multimodales Modell, das es Ihnen ermöglicht, Bilder durch Dialog zu generieren und zu bearbeiten."
   },
   "gemini-2.5-flash-lite": {
@@ -1364,11 +1382,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview ist Googles kleinstes und kosteneffizientestes Modell, speziell für den großflächigen Einsatz konzipiert."
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "Vorschauversion (25. September 2025) von Gemini 2.5 Flash-Lite"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview ist das kosteneffizienteste Modell von Google und bietet umfassende Funktionen."
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview ist Googles kosteneffizientestes Modell mit umfassenden Funktionen."
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "Vorschauversion (25. September 2025) von Gemini 2.5 Flash"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro ist Googles fortschrittlichstes Denkmodell, das komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer lösen kann und große Datensätze, Codebasen und Dokumente mit langem Kontext analysiert."
@@ -1381,6 +1405,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer lösen kann und große Datensätze, Codebasen und Dokumente mit langem Kontext analysiert."
+  },
+  "gemini-flash-latest": {
+    "description": "Neueste Version von Gemini Flash"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Neueste Version von Gemini Flash-Lite"
+  },
+  "gemini-pro-latest": {
+    "description": "Neueste Version von Gemini Pro"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B eignet sich für die Verarbeitung von mittelgroßen Aufgaben und bietet ein gutes Kosten-Nutzen-Verhältnis."
@@ -1811,11 +1844,11 @@
   "hunyuan-t1-latest": {
     "description": "Erhebliche Verbesserung der Fähigkeiten des Hauptmodells im langsamen Denkmodus bei anspruchsvoller Mathematik, komplexen Schlussfolgerungen, anspruchsvollem Code, Befolgung von Anweisungen und Textkreation."
   },
-  "hunyuan-t1-vision": {
-    "description": "Hunyuan ist ein multimodales Verständnis- und Tiefdenkmodell, das native multimodale lange Denkprozesse unterstützt. Es ist spezialisiert auf verschiedene Bildinferenzszenarien und zeigt im Vergleich zu Schnelldenkmodellen umfassende Verbesserungen bei naturwissenschaftlichen Problemen."
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "Die neueste Version des hunyuan t1-vision multimodalen tiefen Denkmodells unterstützt native multimodale Chain-of-Thought-Mechanismen und bietet im Vergleich zur vorherigen Standardversion umfassende Verbesserungen."
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "Hunyuan multimodales Verständnis- und Tiefdenkmodell, unterstützt native multimodale lange Gedankenketten, ist spezialisiert auf verschiedene Bildinferenzszenarien und verbessert sich im Vergleich zum Schnelldenkmodell umfassend bei naturwissenschaftlichen Problemen."
   },
   "hunyuan-turbo": {
     "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
@@ -1837,6 +1870,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "Upgrade der vortrainierten Basis, verbessert Schreib- und Leseverständnisfähigkeiten, steigert deutlich die Programmier- und naturwissenschaftlichen Kompetenzen und verbessert kontinuierlich die Befolgung komplexer Anweisungen."
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "Qualitätsverbesserung der Pretraining-Basisdaten. Optimierung der Trainingsstrategie in der Posttrain-Phase, kontinuierliche Verbesserung der Agenten-, Englisch- und kleinen Sprachfähigkeiten, Befolgung von Anweisungen, Code- und naturwissenschaftlichen Fähigkeiten."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS ist die neueste Version des Hunyuan-Flaggschiffmodells, das über verbesserte Denkfähigkeiten und ein besseres Nutzungserlebnis verfügt."
@@ -3145,6 +3181,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V ist das neueste visuell-sprachliche Modell (VLM), das von Zhipu AI veröffentlicht wurde. Das Modell basiert auf dem Flaggschiff-Textmodell GLM-4.5-Air mit insgesamt 106 Milliarden Parametern und 12 Milliarden Aktivierungsparametern und verwendet eine Mixture-of-Experts-(MoE)-Architektur. Es zielt darauf ab, bei geringeren Inferenzkosten herausragende Leistung zu erzielen. Technisch setzt es die Entwicklungslinie von GLM-4.1V-Thinking fort und führt Innovationen wie die dreidimensionale Rotations-Positionskodierung (3D-RoPE) ein, wodurch die Wahrnehmung und das Schließen über dreidimensionale Raumbeziehungen deutlich verbessert werden. Durch Optimierungen in den Phasen des Pre-Trainings, der überwachten Feinabstimmung und des Reinforcement Learnings ist das Modell in der Lage, verschiedene visuelle Inhalte wie Bilder, Videos und lange Dokumente zu verarbeiten; in 41 öffentlichen multimodalen Benchmarks erreichte es Spitzenwerte unter frei verfügbaren Modellen derselben Klasse. Zudem wurde ein \"Denkmodus\"-Schalter hinzugefügt, der es Nutzern erlaubt, flexibel zwischen schneller Reaktion und tiefgehendem Schlussfolgern zu wählen, um Effizienz und Ergebnisqualität auszubalancieren."
+  },
+  "zai-org/GLM-4.6": {
+    "description": "Im Vergleich zu GLM-4.5 bringt GLM-4.6 mehrere wichtige Verbesserungen. Das Kontextfenster wurde von 128K auf 200K Tokens erweitert, wodurch das Modell komplexere Agentenaufgaben bewältigen kann. Das Modell erzielte höhere Werte in Code-Benchmark-Tests und zeigte in Anwendungen wie Claude Code, Cline, Roo Code und Kilo Code eine stärkere Leistung in realen Szenarien, einschließlich verbesserter Generierung visuell ansprechender Frontend-Seiten. GLM-4.6 zeigt eine deutliche Steigerung der Inferenzleistung und unterstützt die Nutzung von Werkzeugen während der Inferenz, was zu einer stärkeren Gesamtkapazität führt. Es zeigt bessere Leistungen bei der Werkzeugnutzung und suchbasierten Agenten und lässt sich effektiver in Agentenframeworks integrieren. Im Bereich des Schreibens entspricht das Modell stilistisch und in der Lesbarkeit stärker menschlichen Präferenzen und verhält sich in Rollenspielszenarien natürlicher."
   },
   "zai/glm-4.5": {
     "description": "Die GLM-4.5 Modellreihe sind speziell für Agenten entwickelte Basismodelle. Das Flaggschiff GLM-4.5 integriert 355 Milliarden Gesamtparameter (32 Milliarden aktiv) und vereint Inferenz-, Codierungs- und Agentenfähigkeiten zur Lösung komplexer Anwendungsanforderungen. Als hybrides Inferenzsystem bietet es zwei Betriebsmodi."

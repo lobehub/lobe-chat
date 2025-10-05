@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - chế độ suy nghĩ; DeepSeek-V3.1 là mô hình suy luận lai mới của DeepSeek, hỗ trợ hai chế độ suy luận là suy nghĩ và không suy nghĩ, hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Qua tối ưu hậu huấn luyện, hiệu suất sử dụng công cụ Agent và các tác vụ tác nhân được cải thiện đáng kể."
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 là mô hình lớn chung mới nhất của DeepSeek, hỗ trợ kiến trúc suy luận hỗn hợp và có khả năng Agent mạnh mẽ hơn."
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "Chế độ suy nghĩ của DeepSeek V3.2. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite sở hữu tốc độ phản hồi tối ưu, hiệu quả chi phí tốt hơn, cung cấp lựa chọn linh hoạt hơn cho các kịch bản khác nhau của khách hàng. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 128k."
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 là mô hình ngôn ngữ lớn chế độ hỗn hợp do DeepSeek AI phát hành, với nhiều nâng cấp quan trọng dựa trên phiên bản trước. Một đổi mới lớn của mô hình là tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode) trong cùng một mô hình, người dùng có thể linh hoạt chuyển đổi bằng cách điều chỉnh mẫu trò chuyện để phù hợp với các yêu cầu nhiệm vụ khác nhau. Qua tối ưu hóa sau huấn luyện chuyên biệt, V3.1 đã cải thiện đáng kể hiệu suất trong việc gọi công cụ và nhiệm vụ Agent, hỗ trợ tốt hơn cho các công cụ tìm kiếm bên ngoài và thực hiện các nhiệm vụ phức tạp nhiều bước. Mô hình được huấn luyện tiếp dựa trên DeepSeek-V3.1-Base, sử dụng phương pháp mở rộng văn bản dài hai giai đoạn, tăng đáng kể lượng dữ liệu huấn luyện, giúp cải thiện khả năng xử lý tài liệu dài và mã nguồn dài. Là một mô hình mã nguồn mở, DeepSeek-V3.1 thể hiện năng lực tương đương với các mô hình đóng hàng đầu trong các bài kiểm tra chuẩn về mã hóa, toán học và suy luận, đồng thời với kiến trúc chuyên gia hỗn hợp (MoE), nó duy trì dung lượng mô hình lớn trong khi giảm chi phí suy luận hiệu quả."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus là phiên bản cập nhật của mô hình V3.1 do DeepSeek phát hành, được định vị là mô hình ngôn ngữ lớn với trí tuệ hỗn hợp. Bản cập nhật này tập trung sửa các vấn đề phản hồi từ người dùng và nâng cao độ ổn định trong khi vẫn giữ nguyên khả năng của mô hình. Nó cải thiện đáng kể tính nhất quán ngôn ngữ, giảm thiểu việc sử dụng lẫn lộn tiếng Trung và tiếng Anh cũng như các ký tự bất thường. Mô hình tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode), người dùng có thể linh hoạt chuyển đổi qua các mẫu trò chuyện để phù hợp với các nhiệm vụ khác nhau. Một tối ưu quan trọng là V3.1-Terminus tăng cường hiệu suất của Agent mã (Code Agent) và Agent tìm kiếm (Search Agent), giúp chúng đáng tin cậy hơn trong việc gọi công cụ và thực hiện các nhiệm vụ phức tạp nhiều bước."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 là phiên bản mới nhất và mạnh mẽ nhất của Kimi K2. Đây là một mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) hàng đầu với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt. Các đặc điểm chính của mô hình bao gồm: tăng cường trí tuệ mã hóa tác nhân, thể hiện sự cải thiện đáng kể trong các bài kiểm tra chuẩn công khai và các nhiệm vụ mã hóa tác nhân trong thế giới thực; cải tiến trải nghiệm mã hóa giao diện người dùng, nâng cao cả về tính thẩm mỹ và tính thực tiễn trong lập trình giao diện."
@@ -926,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 là mô hình ngôn ngữ lớn chế độ hỗn hợp do DeepSeek AI phát hành, với nhiều nâng cấp quan trọng dựa trên phiên bản trước. Một đổi mới lớn của mô hình là tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode) trong cùng một mô hình, người dùng có thể linh hoạt chuyển đổi bằng cách điều chỉnh mẫu trò chuyện để phù hợp với các yêu cầu nhiệm vụ khác nhau. Qua tối ưu hóa sau huấn luyện chuyên biệt, V3.1 đã cải thiện đáng kể hiệu suất trong việc gọi công cụ và nhiệm vụ Agent, hỗ trợ tốt hơn cho các công cụ tìm kiếm bên ngoài và thực hiện các nhiệm vụ phức tạp nhiều bước. Mô hình được huấn luyện tiếp dựa trên DeepSeek-V3.1-Base, sử dụng phương pháp mở rộng văn bản dài hai giai đoạn, tăng đáng kể lượng dữ liệu huấn luyện, giúp cải thiện khả năng xử lý tài liệu dài và mã nguồn dài. Là một mô hình mã nguồn mở, DeepSeek-V3.1 thể hiện năng lực tương đương với các mô hình đóng hàng đầu trong các bài kiểm tra chuẩn về mã hóa, toán học và suy luận, đồng thời với kiến trúc chuyên gia hỗn hợp (MoE), nó duy trì dung lượng mô hình lớn trong khi giảm chi phí suy luận hiệu quả."
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus là phiên bản cập nhật của mô hình V3.1 do DeepSeek phát hành, được định vị là mô hình ngôn ngữ lớn với trí tuệ hỗn hợp. Bản cập nhật này tập trung sửa các vấn đề phản hồi từ người dùng và nâng cao độ ổn định trong khi vẫn giữ nguyên khả năng của mô hình. Nó cải thiện đáng kể tính nhất quán ngôn ngữ, giảm thiểu việc sử dụng lẫn lộn tiếng Trung và tiếng Anh cũng như các ký tự bất thường. Mô hình tích hợp \"Chế độ suy nghĩ\" (Thinking Mode) và \"Chế độ không suy nghĩ\" (Non-thinking Mode), người dùng có thể linh hoạt chuyển đổi qua các mẫu trò chuyện để phù hợp với các nhiệm vụ khác nhau. Một tối ưu quan trọng là V3.1-Terminus tăng cường hiệu suất của Agent mã (Code Agent) và Agent tìm kiếm (Search Agent), giúp chúng đáng tin cậy hơn trong việc gọi công cụ và thực hiện các nhiệm vụ phức tạp nhiều bước."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B là mô hình tiên tiến được huấn luyện cho các cuộc đối thoại phức tạp."
   },
@@ -999,7 +1011,7 @@
     "description": "DeepSeek R1 phiên bản đầy đủ, có 671B tham số, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, có khả năng hiểu và tạo ra mạnh mẽ hơn."
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 Chế độ suy nghĩ. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối cùng."
+    "description": "Chế độ suy nghĩ của DeepSeek V3.2. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 là mô hình ngôn ngữ Mixture-of-Experts hiệu quả, phù hợp cho các nhu cầu xử lý tiết kiệm."
@@ -1352,10 +1364,16 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
   },
   "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
+  },
+  "gemini-2.5-flash-image:image": {
     "description": "Nano Banana là mô hình đa phương thức nguyên bản mới nhất, nhanh nhất và hiệu quả nhất của Google, cho phép bạn tạo và chỉnh sửa hình ảnh thông qua đối thoại."
   },
   "gemini-2.5-flash-lite": {
@@ -1364,11 +1382,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho sử dụng quy mô lớn."
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "Phiên bản xem trước (25 tháng 9 năm 2025) của Gemini 2.5 Flash-Lite"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp các tính năng toàn diện."
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "Phiên bản xem trước (25 tháng 9 năm 2025) của Gemini 2.5 Flash"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
@@ -1381,6 +1405,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích dữ liệu lớn, kho mã và tài liệu với ngữ cảnh dài."
+  },
+  "gemini-flash-latest": {
+    "description": "Phiên bản mới nhất của Gemini Flash"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Phiên bản mới nhất của Gemini Flash-Lite"
+  },
+  "gemini-pro-latest": {
+    "description": "Phiên bản mới nhất của Gemini Pro"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -1811,11 +1844,11 @@
   "hunyuan-t1-latest": {
     "description": "Nâng cao đáng kể năng lực của mô hình chính và mô hình suy nghĩ chậm trong các lĩnh vực toán học khó, suy luận phức tạp, mã hóa khó, tuân thủ chỉ thị và chất lượng sáng tạo văn bản."
   },
-  "hunyuan-t1-vision": {
-    "description": "Mô hình suy nghĩ sâu đa phương thức Hunyuan, hỗ trợ chuỗi suy nghĩ dài nguyên bản đa phương thức, xuất sắc trong các tình huống suy luận hình ảnh đa dạng, cải thiện toàn diện so với mô hình suy nghĩ nhanh trong các bài toán khoa học tự nhiên."
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "Phiên bản mới nhất của Hunyuan t1-vision là mô hình suy nghĩ sâu đa phương thức, hỗ trợ chuỗi tư duy dài nguyên bản đa phương thức, cải thiện toàn diện so với phiên bản mặc định thế hệ trước."
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "Mô hình suy nghĩ sâu đa phương thức Hunyuan, hỗ trợ chuỗi suy nghĩ dài nguyên bản đa phương thức, chuyên xử lý các tình huống suy luận hình ảnh, cải thiện toàn diện so với mô hình suy nghĩ nhanh trong các bài toán khoa học tự nhiên."
   },
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
@@ -1837,6 +1870,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "Nâng cấp nền tảng tiền huấn luyện, cải thiện khả năng viết và đọc hiểu, tăng cường đáng kể năng lực lập trình và khoa học tự nhiên, tiếp tục nâng cao khả năng tuân thủ các chỉ dẫn phức tạp."
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "Nâng cấp chất lượng dữ liệu nền tiền huấn luyện. Tối ưu chiến lược huấn luyện giai đoạn posttrain, liên tục nâng cao khả năng Agent, tiếng Anh và các ngôn ngữ nhỏ, tuân thủ chỉ thị, mã hóa và năng lực khoa học tự nhiên."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS là phiên bản mới nhất của mô hình lớn hỗn hợp Hunyuan, có khả năng tư duy mạnh mẽ hơn và trải nghiệm tốt hơn."
@@ -3145,6 +3181,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V là thế hệ mô hình ngôn ngữ thị giác (VLM) mới nhất được phát hành bởi Zhipu AI. Mô hình này được xây dựng trên cơ sở mô hình văn bản chủ lực GLM-4.5-Air với tổng 106 tỷ tham số và 12 tỷ tham số kích hoạt, sử dụng kiến trúc chuyên gia hỗn hợp (Mixture of Experts - MoE), nhằm đạt hiệu năng xuất sắc với chi phí suy luận thấp hơn. Về mặt kỹ thuật, GLM-4.5V tiếp nối hướng phát triển của GLM-4.1V-Thinking và giới thiệu các đổi mới như mã hóa vị trí xoay ba chiều (3D-RoPE), đáng kể nâng cao khả năng nhận thức và suy luận về các mối quan hệ trong không gian 3D. Thông qua tối ưu hóa ở các giai đoạn tiền huấn luyện, tinh chỉnh có giám sát và học tăng cường, mô hình có khả năng xử lý nhiều dạng nội dung thị giác như hình ảnh, video và tài liệu dài, và đã đạt vị trí hàng đầu trong số các mô hình mã nguồn mở cùng cấp trên 41 bộ đánh giá đa phương thức công khai. Ngoài ra, mô hình còn bổ sung công tắc “chế độ tư duy”, cho phép người dùng linh hoạt lựa chọn giữa phản hồi nhanh và suy luận sâu để cân bằng hiệu quả và chất lượng."
+  },
+  "zai-org/GLM-4.6": {
+    "description": "So với GLM-4.5, GLM-4.6 mang đến nhiều cải tiến quan trọng. Cửa sổ ngữ cảnh được mở rộng từ 128K lên 200K token, giúp mô hình xử lý các nhiệm vụ Agent phức tạp hơn. Mô hình đạt điểm cao hơn trong các bài kiểm tra chuẩn về mã và thể hiện hiệu suất thực tế mạnh mẽ hơn trong các ứng dụng như Claude Code, Cline, Roo Code và Kilo Code, bao gồm cải tiến trong việc tạo giao diện frontend với hiệu ứng hình ảnh tinh tế. GLM-4.6 cải thiện rõ rệt hiệu suất suy luận và hỗ trợ sử dụng công cụ trong quá trình suy luận, mang lại năng lực tổng hợp mạnh mẽ hơn. Mô hình thể hiện sức mạnh hơn trong việc sử dụng công cụ và Agent dựa trên tìm kiếm, đồng thời tích hợp hiệu quả hơn vào khung Agent. Về mặt viết lách, mô hình phù hợp hơn với sở thích về phong cách và khả năng đọc hiểu của con người, và thể hiện tự nhiên hơn trong các tình huống nhập vai."
   },
   "zai/glm-4.5": {
     "description": "Dòng mô hình GLM-4.5 được thiết kế đặc biệt cho các tác nhân thông minh. Mô hình hàng đầu GLM-4.5 tích hợp 355 tỷ tham số tổng (32 tỷ tham số kích hoạt), hợp nhất khả năng suy luận, mã hóa và đại lý để giải quyết các yêu cầu ứng dụng phức tạp. Là hệ thống suy luận hỗn hợp, nó cung cấp hai chế độ hoạt động."
