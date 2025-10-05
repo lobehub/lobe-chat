@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-Düşünme modu; DeepSeek-V3.1, DeepSeek tarafından yeni sunulan hibrit akıl yürütme modelidir ve düşünme ile düşünmeme olmak üzere iki akıl yürütme modunu destekler. DeepSeek-R1-0528 modeline kıyasla düşünme verimliliği daha yüksektir. Sonrası eğitim optimizasyonları sayesinde, ajan araç kullanımı ve akıllı ajan görevlerinde performans önemli ölçüde artmıştır."
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2, DeepSeek'in en yeni genel modeli olup, hibrit çıkarım mimarisini destekler ve daha güçlü Agent yeteneklerine sahiptir."
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "DeepSeek V3.2 Düşünme Modu. Nihai cevabı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1, DeepSeek AI tarafından yayımlanan hibrit modlu büyük dil modelidir ve selef modellerine kıyasla birçok önemli yükseltme içermektedir. Modelin en büyük yeniliği, \"Düşünme Modu\" (Thinking Mode) ve \"Düşünmeme Modu\" (Non-thinking Mode) özelliklerini bir arada sunmasıdır; kullanıcılar sohbet şablonlarını ayarlayarak farklı görev ihtiyaçlarına esnek şekilde uyum sağlayabilirler. Özel post-training optimizasyonları sayesinde V3.1, araç çağrıları ve Agent görevlerinde performansını önemli ölçüde artırmış, dış arama araçlarını destekleme ve çok adımlı karmaşık görevleri yerine getirme kapasitesini geliştirmiştir. Model, DeepSeek-V3.1-Base üzerine post-training uygulanarak, iki aşamalı uzun metin genişletme yöntemiyle eğitim veri miktarını büyük ölçüde artırmış ve uzun belgeler ile uzun kod parçalarını işleme yeteneğini geliştirmiştir. Açık kaynaklı bir model olarak DeepSeek-V3.1, kodlama, matematik ve çıkarım gibi birçok kıyaslama testinde en iyi kapalı kaynak modellerle rekabet eden performans sergilemekte ve MoE (Mixture of Experts) mimarisi sayesinde büyük model kapasitesini korurken çıkarım maliyetlerini etkin şekilde düşürmektedir."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından yayınlanan V3.1 modelinin güncellenmiş versiyonudur ve hibrit ajan büyük dil modeli olarak konumlandırılmıştır. Bu güncelleme, modelin mevcut yeteneklerini koruyarak kullanıcı geri bildirimlerine dayalı sorunları düzeltmeye ve kararlılığı artırmaya odaklanmıştır. Dil tutarlılığını önemli ölçüde iyileştirmiş, Çince ve İngilizce karışımı ile anormal karakterlerin görünümünü azaltmıştır. Model, farklı görevler için sohbet şablonları aracılığıyla esnek geçiş yapılabilen “Düşünme Modu” ve “Düşünmeme Modu”nu entegre etmiştir. Önemli bir iyileştirme olarak, V3.1-Terminus, kod ajanı (Code Agent) ve arama ajanı (Search Agent) performansını artırarak araç çağrıları ve çok adımlı karmaşık görevlerin yürütülmesinde daha güvenilir hale getirmiştir."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
@@ -926,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1, DeepSeek AI tarafından yayımlanan hibrit modlu büyük dil modelidir ve selef modellerine kıyasla birçok önemli yükseltme içermektedir. Modelin en büyük yeniliği, \"Düşünme Modu\" (Thinking Mode) ve \"Düşünmeme Modu\" (Non-thinking Mode) özelliklerini bir arada sunmasıdır; kullanıcılar sohbet şablonlarını ayarlayarak farklı görev ihtiyaçlarına esnek şekilde uyum sağlayabilirler. Özel post-training optimizasyonları sayesinde V3.1, araç çağrıları ve Agent görevlerinde performansını önemli ölçüde artırmış, dış arama araçlarını destekleme ve çok adımlı karmaşık görevleri yerine getirme kapasitesini geliştirmiştir. Model, DeepSeek-V3.1-Base üzerine post-training uygulanarak, iki aşamalı uzun metin genişletme yöntemiyle eğitim veri miktarını büyük ölçüde artırmış ve uzun belgeler ile uzun kod parçalarını işleme yeteneğini geliştirmiştir. Açık kaynaklı bir model olarak DeepSeek-V3.1, kodlama, matematik ve çıkarım gibi birçok kıyaslama testinde en iyi kapalı kaynak modellerle rekabet eden performans sergilemekte ve MoE (Mixture of Experts) mimarisi sayesinde büyük model kapasitesini korurken çıkarım maliyetlerini etkin şekilde düşürmektedir."
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından yayınlanan V3.1 modelinin güncellenmiş versiyonudur ve hibrit ajan büyük dil modeli olarak konumlandırılmıştır. Bu güncelleme, modelin mevcut yeteneklerini koruyarak kullanıcı geri bildirimlerine dayalı sorunları düzeltmeye ve kararlılığı artırmaya odaklanmıştır. Dil tutarlılığını önemli ölçüde iyileştirmiş, Çince ve İngilizce karışımı ile anormal karakterlerin görünümünü azaltmıştır. Model, farklı görevler için sohbet şablonları aracılığıyla esnek geçiş yapılabilen “Düşünme Modu” ve “Düşünmeme Modu”nu entegre etmiştir. Önemli bir iyileştirme olarak, V3.1-Terminus, kod ajanı (Code Agent) ve arama ajanı (Search Agent) performansını artırarak araç çağrıları ve çok adımlı karmaşık görevlerin yürütülmesinde daha güvenilir hale getirmiştir."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
   },
@@ -999,7 +1011,7 @@
     "description": "DeepSeek R1 tam sürümü, 671B parametreye sahip olup, gerçek zamanlı çevrimiçi arama desteği ile daha güçlü anlama ve üretim yeteneklerine sahiptir."
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 Düşünme Modu. Nihai cevabı vermeden önce model, nihai yanıtın doğruluğunu artırmak için bir düşünce zinciri çıktısı üretir."
+    "description": "DeepSeek V3.2 Düşünme Modu. Nihai cevabı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2, ekonomik ve verimli işleme ihtiyaçları için uygun, etkili bir Mixture-of-Experts dil modelidir."
@@ -1352,10 +1364,16 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; diyalog yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; diyalog yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
   },
   "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; diyalog yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
+  },
+  "gemini-2.5-flash-image:image": {
     "description": "Nano Banana, Google'ın en yeni, en hızlı ve en verimli yerel çok modlu modelidir; diyalog yoluyla görüntü oluşturmanıza ve düzenlemenize olanak tanır."
   },
   "gemini-2.5-flash-lite": {
@@ -1364,11 +1382,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Önizlemesi, Google'ın en küçük ve en yüksek maliyet-performans modelidir ve büyük ölçekli kullanım için tasarlanmıştır."
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "Gemini 2.5 Flash-Lite'ın önizleme sürümü (25 Eylül 2025)"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "Gemini 2.5 Flash'ın önizleme sürümü (25 Eylül 2025)"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro, Google'ın en gelişmiş düşünce modelidir; kodlama, matematik ve STEM alanlarındaki karmaşık problemleri çıkarım yapabilir ve uzun bağlam kullanarak büyük veri setleri, kod tabanları ve belgeleri analiz edebilir."
@@ -1381,6 +1405,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Önizlemesi, Google'ın en gelişmiş düşünce modelidir; kodlama, matematik ve STEM alanlarındaki karmaşık problemleri çözebilir ve uzun bağlam kullanarak büyük veri setleri, kod kütüphaneleri ve belgeleri analiz edebilir."
+  },
+  "gemini-flash-latest": {
+    "description": "Gemini Flash'ın en son sürümü"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Gemini Flash-Lite'ın en son sürümü"
+  },
+  "gemini-pro-latest": {
+    "description": "Gemini Pro'nun en son sürümü"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -1811,11 +1844,11 @@
   "hunyuan-t1-latest": {
     "description": "Ana modelin yavaş düşünme modelinin yüksek zorlukta matematik, karmaşık akıl yürütme, zor kodlama, talimat uyumu ve metin oluşturma kalitesi gibi yeteneklerinde büyük gelişmeler sağlar."
   },
-  "hunyuan-t1-vision": {
-    "description": "Hunyuan çok modlu anlayış derin düşünme modeli, çok modlu doğal uzun düşünce zincirini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileşme sağlar."
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "Hunyuan'ın en yeni t1-vision çok modlu anlama derin düşünme modeli, çok modlu doğal düşünce zincirini destekler ve önceki nesil varsayılan modele kıyasla kapsamlı iyileştirmeler sunar."
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "Hunyuan çok modlu anlama derin düşünme modeli, çok modlu doğal uzun düşünce zincirlerini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileştirmeler sunar."
   },
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
@@ -1837,6 +1870,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "Ön eğitim tabanı yükseltildi; yazma ve okuduğunu anlama yetenekleri geliştirildi; kodlama ve fen bilimleri yeteneklerinde önemli iyileştirmeler sağlandı; karmaşık talimatlara uyum gibi alanlarda sürekli gelişme devam ediyor."
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "Ön eğitim tabanı veri kalitesi yükseltmesi. Post-train aşaması eğitim stratejisi optimize edilerek Agent, İngilizce dışı küçük diller, talimat uyumu, kodlama ve fen bilimleri yetenekleri sürekli geliştirilmiştir."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS, daha güçlü düşünme yeteneği ve daha iyi deneyim sunan en son sürümüdür."
@@ -3145,6 +3181,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V, Zhipu AI（智谱 AI） tarafından yayımlanan en son nesil görsel-dil modeli (VLM)'dir. Bu model, 106 milyar toplam parametre ve 12 milyar aktivasyon parametresine sahip amiral gemisi metin modeli GLM-4.5-Air üzerine inşa edilmiş olup, karma uzman (Mixture-of-Experts, MoE) mimarisini kullanır ve daha düşük çıkarım maliyetiyle üstün performans sağlamayı hedefler. GLM-4.5V teknik olarak GLM-4.1V-Thinking hattını sürdürürken üç boyutlu döndürmeli pozisyon kodlaması (3D-RoPE) gibi yenilikleri de getirerek üç boyutlu uzaysal ilişkilerin algılanması ve çıkarımı yeteneğini önemli ölçüde güçlendirir. Ön eğitme, denetimli ince ayar ve pekiştirmeli öğrenme aşamalarında yapılan optimizasyonlar sayesinde model; görüntü, video ve uzun belgeler gibi çeşitli görsel içerikleri işleyebilir ve 41 açık çok modlu kıyaslama testinde aynı seviyedeki açık kaynak modeller arasında en üst düzey performansa ulaşmıştır. Ayrıca modele eklenen \"düşünme modu\" anahtarı, kullanıcıların hızlı yanıt ile derin çıkarım arasında esnekçe tercih yaparak verim ile etki arasında denge kurmasına olanak tanır."
+  },
+  "zai-org/GLM-4.6": {
+    "description": "GLM-4.5'e kıyasla GLM-4.6 birçok önemli iyileştirme getirmiştir. Bağlam penceresi 128K'dan 200K token'a genişletilerek modelin daha karmaşık ajan görevlerini işlemesi sağlanmıştır. Model, kod bazlı testlerde daha yüksek puanlar almış ve Claude Code, Cline, Roo Code ve Kilo Code gibi uygulamalarda gerçek dünya performansını artırmıştır; özellikle görsel açıdan zengin ön yüz sayfaları oluşturma konusunda gelişmeler kaydetmiştir. GLM-4.6 çıkarım performansında belirgin artış göstermiş ve çıkarım sırasında araç kullanımını destekleyerek daha güçlü bir bütünsel yetenek sunmuştur. Araç kullanımı ve arama tabanlı ajanlarda daha iyi performans sergilemiş ve ajan çerçevelerine daha etkili entegrasyon sağlamıştır. Yazımda ise model, stil ve okunabilirlik açısından insan tercihleriyle daha uyumlu olup rol yapma senaryolarında daha doğal davranmaktadır."
   },
   "zai/glm-4.5": {
     "description": "GLM-4.5 serisi modeller, ajanlar için özel olarak tasarlanmış temel modellerdir. Amiral gemisi GLM-4.5, 355 milyar toplam parametre (32 milyar aktif) içerir ve karma çıkarım, kodlama ve ajan yeteneklerini birleştirerek karmaşık uygulama ihtiyaçlarını karşılar. Karma çıkarım sistemi olarak çift modlu çalışma sunar."

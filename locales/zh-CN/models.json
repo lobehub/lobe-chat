@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。"
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 是 DeepSeek 最新发布的通用大模型，支持混合推理架构，具备更强的 Agent 能力。"
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "DeepSeek V3.2 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。"
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。"
@@ -926,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。"
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。"
   },
@@ -999,7 +1011,7 @@
     "description": "DeepSeek R1 满血版，拥有 671B 参数，支持实时联网搜索，具有更强大的理解和生成能力。"
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+    "description": "DeepSeek V3.2 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 是高效的 Mixture-of-Experts 语言模型，适用于经济高效的处理需求。"
@@ -1352,10 +1364,16 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。"
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
   },
   "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
+  },
+  "gemini-2.5-flash-image:image": {
     "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。"
   },
   "gemini-2.5-flash-lite": {
@@ -1364,11 +1382,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。"
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "Preview release (September 25th, 2025) of Gemini 2.5 Flash-Lite"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
@@ -1381,6 +1405,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
+  },
+  "gemini-flash-latest": {
+    "description": "Latest release of Gemini Flash"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Latest release of Gemini Flash-Lite"
+  },
+  "gemini-pro-latest": {
+    "description": "Latest release of Gemini Pro"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"
@@ -1811,11 +1844,11 @@
   "hunyuan-t1-latest": {
     "description": "大幅提升主模型慢思考模型的高难数学、复杂推理、高难代码、指令遵循、文本创作质量等能力。"
   },
-  "hunyuan-t1-vision": {
-    "description": "混元多模态理解深度思考模型，支持多模态原生长思维链，擅长处理各种图片推理场景，在理科难题上相比快思考模型全面提升。"
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "混元最新版t1-vision多模态理解深度思考模型，支持多模态原生长思维链，相比上一代默认版本模型全面提升。"
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "混元多模态理解深度思考模型，支持多模态原生长思维链，擅长处理各种图片推理场景，在理科难题上相比快思考模型全面提升。"
   },
   "hunyuan-turbo": {
     "description": "混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。"
@@ -1837,6 +1870,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "预训练底座升级，写作、阅读理解能力提升，较大幅度提升代码和理科能力，复杂指令遵循等持续提升。"
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "预训练底座数据质量升级。优化 posttrain 阶段训练策略，持续提升 Agent、英语小语种、指令遵循、代码和理科能力。"
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。"
@@ -3145,6 +3181,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V 是由智谱 AI（Zhipu AI）发布的最新一代视觉语言模型（VLM）该模型基于拥有 106B 总参数和 12B 激活参数的旗舰文本模型 GLM-4.5-Air 构建，采用了混合专家（MoE）架构，旨在以更低的推理成本实现卓越性能 GLM-4.5V 在技术上延续了 GLM-4.1V-Thinking 的路线，并引入了三维旋转位置编码（3D-RoPE）等创新，显著增强了对三维空间关系的感知与推理能力。通过在预训练、监督微调和强化学习阶段的优化，该模型具备了处理图像、视频、长文档等多种视觉内容的能力，在 41 个公开的多模态基准测试中达到了同级别开源模型的顶尖水平此外，模型还新增了“思考模式”开关，允许用户在快速响应和深度推理之间灵活选择，以平衡效率与效果。"
+  },
+  "zai-org/GLM-4.6": {
+    "description": "与 GLM-4.5 相比，GLM-4.6 带来了多项关键改进。其上下文窗口从 128K 扩展到 200K tokens，使模型能够处理更复杂的智能体任务。模型在代码基准测试中取得了更高的分数，并在 Claude Code、Cline、Roo Code 和 Kilo Code 等应用中展现了更强的真实世界性能，包括在生成视觉效果精致的前端页面方面有所改进。GLM-4.6 在推理性能上表现出明显提升，并支持在推理过程中使用工具，从而带来了更强的综合能力。它在工具使用和基于搜索的智能体方面表现更强，并且能更有效地集成到智能体框架中。在写作方面，该模型在风格和可读性上更符合人类偏好，并在角色扮演场景中表现得更自然。"
   },
   "zai/glm-4.5": {
     "description": "GLM-4.5 系列模型是专门为智能体设计的基础模型。旗舰 GLM-4.5 集成了 3550 亿总参数（320 亿活跃），统一了推理、编码和代理能力以解决复杂的应用需求。作为混合推理系统，它提供双重操作模式。"
