@@ -315,5 +315,14 @@ describe('AiModelModel', () => {
       expect(models[0].id).toBe('model2');
       expect(models[1].id).toBe('model1');
     });
+
+    it('should preserve model type when inserting order records', async () => {
+      const sortMap = [{ id: 'image-model', sort: 0, type: 'image' as const }];
+
+      await aiProviderModel.updateModelsOrder('openai', sortMap);
+
+      const model = await aiProviderModel.findById('image-model');
+      expect(model?.type).toBe('image');
+    });
   });
 });

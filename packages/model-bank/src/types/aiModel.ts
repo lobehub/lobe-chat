@@ -371,6 +371,7 @@ export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
 export interface AiModelSortMap {
   id: string;
   sort: number;
+  type?: AiModelType;
 }
 
 export const ToggleAiModelEnableSchema = z.object({

@@ -75,9 +75,10 @@ const getThinkingModelCategory = (model?: string): ThinkingModelCategory => {
   const normalized = model.toLowerCase();
 
   if (normalized.includes('robotics-er-1.5-preview')) return 'robotics';
-  if (normalized.includes('-2.5-flash-lite')) return 'flashLite';
-  if (normalized.includes('-2.5-flash')) return 'flash';
-  if (normalized.includes('-2.5-pro')) return 'pro';
+  if (normalized.includes('-2.5-flash-lite') || normalized.includes('flash-lite-latest'))
+    return 'flashLite';
+  if (normalized.includes('-2.5-flash') || normalized.includes('flash-latest')) return 'flash';
+  if (normalized.includes('-2.5-pro') || normalized.includes('pro-latest')) return 'pro';
 
   return 'other';
 };

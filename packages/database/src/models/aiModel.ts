@@ -223,20 +223,32 @@ export class AiModelModel {
 
   updateModelsOrder = async (providerId: string, sortMap: AiModelSortMap[]) => {
     await this.db.transaction(async (tx) => {
-      const updates = sortMap.map(({ id, sort }) => {
+      const updates = sortMap.map(({ id, sort, type }) => {
+        const now = new Date();
+        const insertValues: typeof aiModels.$inferInsert = {
+          enabled: true,
+          id,
+          providerId,
+          sort,
+          // source: isBuiltin ? 'builtin' : 'custom',
+          updatedAt: now,
+          userId: this.userId,
+        };
+
+        if (type) insertValues.type = type;
+
+        const updateValues: Partial<typeof aiModels.$inferInsert> = {
+          sort,
+          updatedAt: now,
+        };
+
+        if (type) updateValues.type = type;
+
         return tx
           .insert(aiModels)
-          .values({
-            enabled: true,
-            id,
-            providerId,
-            sort,
-            // source: isBuiltin ? 'builtin' : 'custom',
-            updatedAt: new Date(),
-            userId: this.userId,
-          })
+          .values(insertValues)
           .onConflictDoUpdate({
-            set: { sort, updatedAt: new Date() },
+            set: updateValues,
             target: [aiModels.id, aiModels.userId, aiModels.providerId],
           });
       });
