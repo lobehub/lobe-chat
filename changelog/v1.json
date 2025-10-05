@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-05",
+    "version": "1.134.5"
+  },
+  {
     "children": {
       "improvements": ["Add promptfoo to improve prompts quality."]
     },
