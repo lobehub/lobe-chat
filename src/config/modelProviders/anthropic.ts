@@ -5,13 +5,25 @@ const Anthropic: ModelProviderCard = {
     {
       contextWindowTokens: 200_000,
       description:
-        'Claude 4 Opus 是 Anthropic 最强大的下一代模型，具有卓越的推理能力和创造力，适用于最复杂的任务和高级分析。',
-      displayName: 'Claude 4 Opus',
+        'Claude 4.5 Sonnet 是 Anthropic 最新一代的高性能模型，在保持快速响应的同时提供卓越的推理能力和创造力。',
+      displayName: 'Claude 4.5 Sonnet',
       enabled: true,
       functionCall: true,
-      id: 'claude-opus-4-20250514',
+      id: 'claude-sonnet-4-5-20250929',
+      maxOutput: 64_000,
+      releasedAt: '2025-09-29',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description:
+        'Claude 4.1 Opus 是 Anthropic 最新版本的旗舰模型，在推理能力、创造力和复杂任务处理方面达到新高度。',
+      displayName: 'Claude 4.1 Opus',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-opus-4-1-20250805',
       maxOutput: 32_000,
-      releasedAt: '2025-05-14',
+      releasedAt: '2025-08-05',
       vision: true,
     },
     {
@@ -35,7 +47,7 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-7-sonnet-20250219',
       maxOutput: 64_000,
-      releasedAt: '2025-02-24',
+      releasedAt: '2025-02-19',
     },
     {
       contextWindowTokens: 200_000,
@@ -46,7 +58,7 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-haiku-20241022',
       maxOutput: 8192,
-      releasedAt: '2024-11-05',
+      releasedAt: '2024-10-22',
     },
     {
       contextWindowTokens: 200_000,
@@ -97,7 +109,7 @@ const Anthropic: ModelProviderCard = {
   ],
   checkModel: 'claude-3-haiku-20240307',
   description:
-    'Anthropic 是一家专注于人工智能研究和开发的公司，提供了一系列先进的语言模型，如 Claude 3.5 Sonnet、Claude 3 Sonnet、Claude 3 Opus 和 Claude 3 Haiku。这些模型在智能、速度和成本之间取得了理想的平衡，适用于从企业级工作负载到快速响应的各种应用场景。Claude 3.5 Sonnet 作为其最新模型，在多项评估中表现优异，同时保持了较高的性价比。',
+    'Anthropic 是一家专注于人工智能研究和开发的公司，提供了最先进的 Claude 模型系列，包括 Claude 4.5 Sonnet、Claude 4.1 Opus、Claude 4 系列以及 Claude 3.7 Sonnet 等。这些模型在智能、速度和成本之间取得了理想的平衡，适用于从企业级工作负载到快速响应的各种应用场景。最新的 Claude 4.5 Sonnet 在多项评估中表现优异，同时支持 1M 上下文窗口，为复杂任务提供卓越性能。',
   enabled: true,
   id: 'anthropic',
   modelList: { showModelFetcher: true },
