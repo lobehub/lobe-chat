@@ -10,6 +10,7 @@ export { LobeAzureAI } from './providers/azureai';
 export { LobeAzureOpenAI } from './providers/azureOpenai';
 export { LobeBedrockAI } from './providers/bedrock';
 export { LobeBflAI } from './providers/bfl';
+export { LobeCerebrasAI } from './providers/cerebras';
 export { LobeCometAPIAI } from './providers/cometapi';
 export { LobeDeepSeekAI } from './providers/deepseek';
 export { LobeGoogleAI } from './providers/google';
