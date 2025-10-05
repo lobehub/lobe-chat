@@ -7,6 +7,42 @@ const OpenAI: ModelProviderCard = {
     {
       contextWindowTokens: 400_000,
       description:
+        'GPT-5 是 OpenAI 最智能、最快速、最实用的模型，具有内置思考能力。它在数学、编程、多模态理解等方面达到了新的技术高度，统一了高级推理、多模态输入和任务执行。',
+      displayName: 'GPT-5',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5',
+      maxOutput: 128_000,
+      pricing: {
+        units: [
+          { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      },
+      releasedAt: '2025-08-07',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 400_000,
+      description:
+        'GPT-5 Chat 是 ChatGPT 对应的 API 版本，提供快速响应和优化的对话体验。自动路由选择最优模式，适合交互式应用。',
+      displayName: 'GPT-5 Chat',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-chat-latest',
+      maxOutput: 128_000,
+      pricing: {
+        units: [
+          { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      },
+      releasedAt: '2025-08-07',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 400_000,
+      description:
         '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
       displayName: 'GPT-5 mini',
       enabled: true,
