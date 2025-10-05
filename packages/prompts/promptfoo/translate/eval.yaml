@@ -6,7 +6,7 @@ providers:
   - openai:gemini-flash-latest
 
 prompts:
-  - file://promptfoo/prompts/translation.ts
+  - file://promptfoo/translate/prompt.ts
 
 tests:
   - vars:

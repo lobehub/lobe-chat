@@ -1,11 +1,12 @@
 description: Test summary title generation for different conversation types
 
 providers:
-  - openai:gpt-4o-mini
-  - openai:gpt-3.5-turbo
+  - openai:gpt-5-mini
+  - openai:claude-3-5-haiku-latest
+  - openai:gemini-flash-latest
 
 prompts:
-  - file://promptfoo/prompts/summary-title.ts
+  - file://promptfoo/summary-title/prompt.ts
 
 tests:
   - vars:
@@ -21,6 +22,7 @@ tests:
       locale: "en-US"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
         value: "The response should be a concise title (10 words or less) that summarizes the conversation about Node.js installation"
       - type: regex
         value: "^.{1,50}$"  # Title should be between 1-50 characters
@@ -40,6 +42,7 @@ tests:
       locale: "zh-CN"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
         value: "The response should be a Chinese title summarizing the conversation about fried rice cooking"
       - type: regex
         value: "^.{1,30}$"  # Chinese titles can be shorter
@@ -59,6 +62,8 @@ tests:
       locale: "en-US"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
+
         value: "The response should be a title about Python debugging or error resolution"
       - type: contains-any
         value: ["Python", "debug", "error", "AttributeError", "code"]
@@ -72,6 +77,8 @@ tests:
       locale: "es-ES"
     assert:
       - type: llm-rubric
+        provider: openai:gpt-5-mini
+
         value: "The response should be a Spanish title about weather inquiry"
       - type: regex
         value: "^.{1,50}$"

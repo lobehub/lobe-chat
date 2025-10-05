@@ -6,8 +6,8 @@ providers:
 
 # Test configurations
 tests:
-  - promptfoo/translation.yaml
-#  - promptfoo/summary-title.yaml
+  - promptfoo/translate/eval.yaml
+  - promptfoo/summary-title/eval.yaml
 #  - promptfoo/language-detection.yaml
 #  - promptfoo/emoji-picker.yaml
 #  - promptfoo/knowledge-qa.yaml

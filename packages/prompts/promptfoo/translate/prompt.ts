@@ -1,18 +1,17 @@
 // TypeScript prompt wrapper that uses actual chain implementation
-import type { OpenAIChatMessage } from '@lobechat/types';
-
-import { chainSummaryTitle } from '../../src/chains/summaryTitle';
+import { chainTranslate } from '../../src';
 
 interface PromptVars {
-  locale: string;
-  messages: OpenAIChatMessage[];
+  content: string;
+  from: string;
+  to: string;
 }
 
 export default function generatePrompt({ vars }: { vars: PromptVars }) {
-  const { messages, locale } = vars;
+  const { content, to } = vars;
 
   // Use the actual chain function from src
-  const result = chainSummaryTitle(messages, locale);
+  const result = chainTranslate(content, to);
 
   // Return messages array as expected by promptfoo
   return result.messages || [];
