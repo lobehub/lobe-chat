@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Allow switching model type."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-05",
