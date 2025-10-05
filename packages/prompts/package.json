@@ -11,7 +11,8 @@
     "test:prompts": "promptfoo eval",
     "test:prompts:ci": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --no-cache --output-path results/ci-results.json",
     "test:prompts:summary": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --output-path results/summary.json",
-    "test:prompts:watch": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --watch"
+    "test:prompts:watch": "NODE_OPTIONS=\"--import=tsx/esm\" promptfoo eval --watch",
+    "test:update": "vitest -u"
   },
   "dependencies": {
     "@lobechat/types": "workspace:*"
