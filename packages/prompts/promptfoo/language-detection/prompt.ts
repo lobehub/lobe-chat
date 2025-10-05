@@ -2,14 +2,14 @@
 import { chainLangDetect } from '../../src/chains/langDetect';
 
 interface PromptVars {
-  text: string;
+  content: string;
 }
 
 export default function generatePrompt({ vars }: { vars: PromptVars }) {
-  const { text } = vars;
+  const { content } = vars;
 
   // Use the actual chain function from src
-  const result = chainLangDetect(text);
+  const result = chainLangDetect(content);
 
   // Return messages array as expected by promptfoo
   return result.messages || [];

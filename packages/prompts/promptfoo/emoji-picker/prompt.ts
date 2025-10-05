@@ -1,17 +1,12 @@
 // TypeScript prompt wrapper that uses actual chain implementation
-import type { OpenAIChatMessage } from '@lobechat/types';
-
 import { chainPickEmoji } from '../../src/chains/pickEmoji';
 
 interface PromptVars {
-  messages: OpenAIChatMessage[];
+  content: string;
 }
 
 export default function generatePrompt({ vars }: { vars: PromptVars }) {
-  const { messages } = vars;
-
-  // Convert messages to content string for emoji selection
-  const content = messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n');
+  const { content } = vars;
 
   // Use the actual chain function from src
   const result = chainPickEmoji(content);

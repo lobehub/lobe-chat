@@ -1,0 +1,64 @@
+description: Test emoji selection for different conversation topics and contexts
+
+providers:
+  - openai:gpt-5-mini
+  - openai:claude-3-5-haiku-latest
+  - openai:gemini-flash-latest
+
+prompts:
+  - file://promptfoo/emoji-picker/prompt.ts
+
+tests:
+  - vars:
+      content: "I just got a promotion at work! I'm so excited!"
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select a positive, celebratory emoji appropriate for work success (e.g., 🎉, 🎊, ⭐, 💼, 🚀)"
+      - type: not-contains
+        value: "explanation"
+
+  - vars:
+      content: "My dog passed away yesterday. I'm really sad."
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select a sympathetic, sad emoji appropriate for loss and grief (e.g., 😢, 😭, 💔, 😔)"
+      - type: not-contains
+        value: "explanation"
+
+  - vars:
+      content: "Can you help me with this math problem?"
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select an emoji related to learning, thinking, or mathematics (e.g., 🤔, 📚, ✏️, 🧮, 🔢)"
+      - type: not-contains
+        value: "explanation"
+
+  - vars:
+      content: "I'm going on vacation to Hawaii next week!"
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select an emoji related to vacation, travel, or tropical themes (e.g., 🌺, 🏖️, ✈️, 🌴, ☀️)"
+      - type: not-contains
+        value: "explanation"
+
+  - vars:
+      content: "I'm learning to cook Italian food"
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select an emoji related to cooking or Italian food (e.g., 🍝, 🍕, 👨‍🍳, 🍽️)"
+      - type: not-contains
+        value: "explanation"
+
+  - vars:
+      content: "Technical documentation about API endpoints"
+    assert:
+      - type: llm-rubric
+        provider: openai:gpt-5-mini
+        value: "Should select an emoji related to technology, development, or documentation (e.g., 💻, 📖, ⚙️, 🔧, 📝)"
+      - type: not-contains
+        value: "explanation"
