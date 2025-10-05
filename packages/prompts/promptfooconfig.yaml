@@ -1,16 +1,12 @@
 description: LobeHub Prompts Testing Suite
 
-# Default providers for testing - can be overridden in individual test configs
-providers:
-  - openai:gpt-4.1-mini
-
-# Test configurations
-tests:
+# Test configurations - run all prompt tests
+testPaths:
   - promptfoo/translate/eval.yaml
   - promptfoo/summary-title/eval.yaml
-#  - promptfoo/language-detection.yaml
-#  - promptfoo/emoji-picker.yaml
-#  - promptfoo/knowledge-qa.yaml
+  - promptfoo/language-detection/eval.yaml
+  - promptfoo/emoji-picker/eval.yaml
+  - promptfoo/knowledge-qa/eval.yaml
 
 # Output configuration
 outputPath: promptfoo-results.json

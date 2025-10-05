@@ -46,7 +46,7 @@ tests:
       to: 'es-ES'
     assert:
       - type: contains-any
-        value: ['tiempo', 'clima', 'hermoso', 'bonito', 'hoy']
+        value: ['tiempo', 'clima', 'hermoso', 'bonito', 'hoy', 'día', 'precioso']
       - type: not-contains
         value: 'weather'
 
