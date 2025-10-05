@@ -26,6 +26,7 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { processMarkdownForCopy } from '@/utils/processMarkdownForCopy';
 import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -236,7 +237,8 @@ export const chatMessage: StateCreator<
     updateInputMessage('');
   },
   copyMessage: async (id, content) => {
-    await copyToClipboard(content);
+    const processedContent = processMarkdownForCopy(content);
+    await copyToClipboard(processedContent);
 
     get().internal_traceMessage(id, { eventType: TraceEventType.CopyMessage });
   },
