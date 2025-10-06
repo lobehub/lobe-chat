@@ -56,8 +56,6 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     }
   };
 
-  console.log('data', data);
-
   return (
     <Flexbox gap={mobile ? 0 : 24}>
       <Flexbox>
