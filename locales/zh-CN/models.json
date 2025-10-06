@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] 是一个具有120亿参数的图像生成模型，专注于快速生成高质量图像。"
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "一个强大的原生多模态图像生成模型"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Google 提供的高质量的图像生成模型"
   },

@@ -12,7 +12,7 @@ const useStyles = createStyles(({ css, token }) => {
     container: css`
       position: relative;
       margin-block: 2px;
-      padding-inline: 8px 16px;
+      padding-inline: 12px 16px;
       border-radius: ${token.borderRadius}px;
     `,
     mobile: css`
@@ -40,7 +40,7 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
           avatar={avatar}
           background={avatarBackground}
           shape="circle"
-          size={40}
+          size={32}
         />
       ),
       [isHovering, avatar, avatarBackground],

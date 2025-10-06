@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] 是一個具有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "一個強大的原生多模態圖像生成模型"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Google 提供的高品質圖像生成模型"
   },

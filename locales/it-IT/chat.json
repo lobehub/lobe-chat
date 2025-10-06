@@ -3,8 +3,8 @@
     "title": "Modelli"
   },
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
-  "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
-  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
+  "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, come posso aiutarti?",
+  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, come posso aiutarti?",
   "agents": "Assistente",
   "artifact": {
     "generating": "Generazione in corso",

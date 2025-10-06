@@ -116,14 +116,7 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
         </Flexbox>
       )}
       {args.length > 100 ? (
-        <Highlighter
-          language={'json'}
-          showLanguage={false}
-          style={{ padding: 8 }}
-          variant={'borderless'}
-        >
-          {JSON.stringify(displayArgs, null, 2)}
-        </Highlighter>
+        <pre style={{ padding: 8 }}>{JSON.stringify(displayArgs, null, 2)}</pre>
       ) : (
         Object.entries(displayArgs).map(([key, value]) => {
           return (

@@ -3,8 +3,8 @@
     "title": "Модель"
   },
   "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете сразу начать со мной разговор или перейти в [настройки помощника]({{url}}), чтобы дополнить мою информацию.",
-  "agentDefaultMessageWithSystemRole": "Привет, я **{{name}}**, {{systemRole}}. Давай начнем разговор!",
-  "agentDefaultMessageWithoutEdit": "Привет, я **{{name}}**, давай начнём разговор!",
+  "agentDefaultMessageWithSystemRole": "Здравствуйте, я **{{name}}**, чем могу помочь?",
+  "agentDefaultMessageWithoutEdit": "Здравствуйте, я **{{name}}**, чем могу помочь?",
   "agents": "Ассистент",
   "artifact": {
     "generating": "Генерация",

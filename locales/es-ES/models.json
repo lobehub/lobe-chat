@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] es un modelo generador de imágenes con 12 mil millones de parámetros, enfocado en la generación rápida de imágenes de alta calidad."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Un potente modelo nativo de generación de imágenes multimodales"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Modelo de generación de imágenes de alta calidad proporcionado por Google."
   },

@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] は120億パラメータを持つ画像生成モデルで、高速に高品質な画像生成に特化しています。"
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "強力なネイティブマルチモーダル画像生成モデル"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Google 提供の高品質な画像生成モデルです。"
   },

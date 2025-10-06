@@ -1,5 +1,24 @@
 [
   {
+    "children": {},
+    "date": "2025-10-06",
+    "version": "1.135.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve styles and fix tools calling condition."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.1"
+  },
+  {
+    "children": {
+      "features": ["Huanyuan text-to-image 3."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.0"
+  },
+  {
     "children": {
       "improvements": ["Update i18n."]
     },

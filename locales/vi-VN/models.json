@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] là mô hình tạo ảnh với 12 tỷ tham số, tập trung vào việc tạo ảnh chất lượng cao nhanh chóng."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Một mô hình tạo hình ảnh đa phương thức gốc mạnh mẽ"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Mô hình tạo ảnh chất lượng cao do Google cung cấp."
   },

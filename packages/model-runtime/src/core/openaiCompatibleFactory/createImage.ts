@@ -1,3 +1,4 @@
+import { cleanObject } from '@lobechat/utils/object';
 import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 import OpenAI from 'openai';
@@ -34,24 +35,25 @@ async function generateByImageMode(
       value,
     ]),
   );
+  // unify image input to array
+  if (typeof userInput.image === 'string' && userInput.image.trim() !== '') {
+    userInput.image = [userInput.image];
+  }
 
   // https://platform.openai.com/docs/api-reference/images/createEdit
   const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
+  log('isImageEdit: %O, userInput.image: %O', isImageEdit, userInput.image);
   // If there are imageUrls parameters, convert them to File objects
   if (isImageEdit) {
-    log('Converting imageUrls to File objects: %O', userInput.image);
     try {
       // Convert all image URLs to File objects
       const imageFiles = await Promise.all(
         userInput.image.map((url: string) => convertImageUrlToFile(url)),
       );
 
-      log('Successfully converted %d images to File objects', imageFiles.length);
-
       // According to official docs, if there are multiple images, pass an array; if only one, pass a single File
       userInput.image = imageFiles.length === 1 ? imageFiles[0] : imageFiles;
     } catch (error) {
-      log('Error converting imageUrls to File objects: %O', error);
       throw new Error(`Failed to convert image URLs to File objects: ${error}`);
     }
   } else {
@@ -68,11 +70,11 @@ async function generateByImageMode(
     ...(isImageEdit ? { input_fidelity: 'high' } : {}),
   };
 
-  const options = {
+  const options = cleanObject({
     model,
     ...defaultInput,
     ...userInput,
-  };
+  });
 
   log('options: %O', options);
 
@@ -83,13 +85,11 @@ async function generateByImageMode(
 
   // Check the integrity of response data
   if (!img || !img.data || !Array.isArray(img.data) || img.data.length === 0) {
-    log('Invalid image response: missing data array');
     throw new Error('Invalid image response: missing or empty data array');
   }
 
   const imageData = img.data[0];
   if (!imageData) {
-    log('Invalid image response: first data item is null/undefined');
     throw new Error('Invalid image response: first data item is null or undefined');
   }
 
@@ -111,11 +111,8 @@ async function generateByImageMode(
   }
   // If neither format exists, throw error
   else {
-    log('Invalid image response: missing both b64_json and url fields');
     throw new Error('Invalid image response: missing both b64_json and url fields');
   }
-
-  log('provider: %s', provider);
 
   return {
     imageUrl,
@@ -180,7 +177,6 @@ async function generateByChatModel(
       });
       log('Successfully processed image URL for chat input');
     } catch (error) {
-      log('Error processing image URL: %O', error);
       throw new Error(`Failed to process image URL: ${error}`);
     }
   }
@@ -218,7 +214,6 @@ async function generateByChatModel(
   }
 
   // If no images found, throw error
-  log('No images found in chat completion response');
   throw new Error('No image generated in chat completion response');
 }
 
@@ -228,21 +223,15 @@ async function generateByChatModel(
 export async function createOpenAICompatibleImage(
   client: OpenAI,
   payload: CreateImagePayload,
-  provider: string, // eslint-disable-line @typescript-eslint/no-unused-vars
+  provider: string,
 ): Promise<CreateImageResponse> {
-  try {
-    const { model } = payload;
+  const { model } = payload;
 
-    // Check if it's a chat model for image generation (via :image suffix)
-    if (model.endsWith(':image')) {
-      return await generateByChatModel(client, payload);
-    }
-
-    // Default to traditional images API
-    return await generateByImageMode(client, payload, provider);
-  } catch (error) {
-    const err = error as Error;
-    log('Error in createImage: %O', err);
-    throw err;
+  // Check if it's a chat model for image generation (via :image suffix)
+  if (model.endsWith(':image')) {
+    return await generateByChatModel(client, payload);
   }
+
+  // Default to traditional images API
+  return await generateByImageMode(client, payload, provider);
 }
