@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.135.0](https://github.com/lobehub/lobe-chat/compare/v1.134.7...v1.135.0)
+
+<sup>Released on **2025-10-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Huanyuan text-to-image 3.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Huanyuan text-to-image 3, closes [#9589](https://github.com/lobehub/lobe-chat/issues/9589) ([1dd0e5e](https://github.com/lobehub/lobe-chat/commit/1dd0e5e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.134.7](https://github.com/lobehub/lobe-chat/compare/v1.134.6...v1.134.7)
 
 <sup>Released on **2025-10-06**</sup>
