@@ -61,6 +61,7 @@ export interface ModelTokensUsage {
   rejectedPredictionTokens?: number;
 
   // Total tokens
+  // TODO: make all following fields required
   totalInputTokens?: number;
   totalOutputTokens?: number;
   totalTokens?: number;

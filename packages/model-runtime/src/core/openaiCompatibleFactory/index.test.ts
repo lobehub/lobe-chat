@@ -296,6 +296,8 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
 
       it('should transform non-streaming response to stream correctly', async () => {
+        vi.useFakeTimers();
+
         const mockResponse = {
           id: 'a',
           object: 'chat.completion',
@@ -319,12 +321,17 @@ describe('LobeOpenAICompatibleFactory', () => {
           mockResponse as any,
         );
 
-        const result = await instance.chat({
+        const chatPromise = instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'mistralai/mistral-7b-instruct:free',
           temperature: 0,
           stream: false,
         });
+
+        // Advance time to simulate processing delay
+        vi.advanceTimersByTime(10);
+
+        const result = await chatPromise;
 
         const decoder = new TextDecoder();
         const reader = result.body!.getReader();
@@ -345,16 +352,20 @@ describe('LobeOpenAICompatibleFactory', () => {
           'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
           'id: output_speed\n',
           'event: speed\n',
-          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft 测试结果不一样
+          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
           'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
 
         expect((await reader.read()).done).toBe(true);
+
+        vi.useRealTimers();
       });
 
       it('should transform non-streaming response to stream correctly with reasoning content', async () => {
+        vi.useFakeTimers();
+
         const mockResponse = {
           id: 'a',
           object: 'chat.completion',
@@ -382,12 +393,17 @@ describe('LobeOpenAICompatibleFactory', () => {
           mockResponse as any,
         );
 
-        const result = await instance.chat({
+        const chatPromise = instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'deepseek/deepseek-reasoner',
           temperature: 0,
           stream: false,
         });
+
+        // Advance time to simulate processing delay
+        vi.advanceTimersByTime(10);
+
+        const result = await chatPromise;
 
         const decoder = new TextDecoder();
         const reader = result.body!.getReader();
@@ -411,13 +427,15 @@ describe('LobeOpenAICompatibleFactory', () => {
           'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
           'id: output_speed\n',
           'event: speed\n',
-          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft 测试结果不一样
+          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
           'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
 
         expect((await reader.read()).done).toBe(true);
+
+        vi.useRealTimers();
       });
     });
 
@@ -974,7 +992,11 @@ describe('LobeOpenAICompatibleFactory', () => {
           .spyOn(inst['client'].responses, 'create')
           .mockResolvedValue({ tee: () => [prod, debug] } as any);
 
-        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'any-model', temperature: 0 });
+        await inst.chat({
+          messages: [{ content: 'hi', role: 'user' }],
+          model: 'any-model',
+          temperature: 0,
+        });
 
         expect(mockResponsesCreate).toHaveBeenCalled();
       });
@@ -990,20 +1012,38 @@ describe('LobeOpenAICompatibleFactory', () => {
         const inst = new LobeMockProviderUseResponseModels({ apiKey: 'test' });
         const spy = vi.spyOn(inst['client'].responses, 'create');
         // Prevent hanging by mocking normal chat completion stream
-        vi.spyOn(inst['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+        vi.spyOn(inst['client'].chat.completions, 'create').mockResolvedValue(
+          new ReadableStream() as any,
+        );
 
         // First invocation: model contains the string
-        spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
-        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'prefix-special-model-suffix', temperature: 0 });
+        spy.mockResolvedValueOnce({
+          tee: () => [new ReadableStream(), new ReadableStream()],
+        } as any);
+        await inst.chat({
+          messages: [{ content: 'hi', role: 'user' }],
+          model: 'prefix-special-model-suffix',
+          temperature: 0,
+        });
         expect(spy).toHaveBeenCalledTimes(1);
 
         // Second invocation: model matches the RegExp
-        spy.mockResolvedValueOnce({ tee: () => [new ReadableStream(), new ReadableStream()] } as any);
-        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'special-xyz', temperature: 0 });
+        spy.mockResolvedValueOnce({
+          tee: () => [new ReadableStream(), new ReadableStream()],
+        } as any);
+        await inst.chat({
+          messages: [{ content: 'hi', role: 'user' }],
+          model: 'special-xyz',
+          temperature: 0,
+        });
         expect(spy).toHaveBeenCalledTimes(2);
 
         // Third invocation: model does not match any useResponseModels patterns
-        await inst.chat({ messages: [{ content: 'hi', role: 'user' }], model: 'unrelated-model', temperature: 0 });
+        await inst.chat({
+          messages: [{ content: 'hi', role: 'user' }],
+          model: 'unrelated-model',
+          temperature: 0,
+        });
         expect(spy).toHaveBeenCalledTimes(2); // Ensure no additional calls were made
       });
     });
