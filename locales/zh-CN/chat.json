@@ -3,8 +3,8 @@
     "title": "模型"
   },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。",
-  "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！",
-  "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，让我们开始对话吧！",
+  "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，有什么我可以帮忙的吗？",
+  "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，有什么我可以帮忙的吗？",
   "agents": "助手",
   "artifact": {
     "generating": "生成中",
