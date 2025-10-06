@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Huanyuan text-to-image 3."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.0"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-06",
