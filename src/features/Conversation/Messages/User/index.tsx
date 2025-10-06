@@ -1,14 +1,13 @@
+import { DEFAULT_USER_AVATAR } from '@lobechat/const';
 import { ChatMessage } from '@lobechat/types';
 import type { ActionIconGroupEvent } from '@lobehub/ui';
 import { App } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useSearchParams } from 'next/navigation';
-import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo, useRef } from 'react';
+import { MouseEventHandler, ReactNode, memo, use, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import Actions from '@/features/ChatItem/ChatItem/components/Actions';
 import Avatar from '@/features/ChatItem/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/ChatItem/components/BorderSpacing';
@@ -18,26 +17,17 @@ import { useStyles } from '@/features/ChatItem/ChatItem/style';
 import { UserBelowMessage } from '@/features/Conversation/Messages/User/BelowMessage';
 import { UserMessageContent } from '@/features/Conversation/Messages/User/MessageContent';
 import { InPortalThreadContext } from '@/features/Conversation/components/ChatItem/InPortalThreadContext';
-import { markdownElements } from '@/features/Conversation/components/MarkdownElements';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/slices/message/selectors';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { UserActionsBar } from './Actions';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
-
-const isHtmlCode = (content: string, language: string) => {
-  return (
-    language === 'html' ||
-    (language === '' && content.includes('<html>')) ||
-    (language === '' && content.includes('<!DOCTYPE html>'))
-  );
-};
 
 interface UserMessageProps extends ChatMessage {
   disableEditing?: boolean;
@@ -97,42 +87,6 @@ const UserMessage = memo<UserMessageProps>((props) => {
     title,
     variant,
   });
-
-  const components = useMemo(
-    () =>
-      Object.fromEntries(
-        markdownElements.map((element) => {
-          const Component = element.Component;
-
-          return [element.tag, (props: any) => <Component {...props} id={id} />];
-        }),
-      ),
-    [id],
-  );
-
-  const markdownProps = useMemo(
-    () => ({
-      componentProps: {
-        highlight: {
-          actionsRender: ({ content, actionIconSize, language, originalNode }: any) => {
-            const showHtmlPreview = isHtmlCode(content, language);
-
-            return (
-              <>
-                {showHtmlPreview && <HtmlPreviewAction content={content} size={actionIconSize} />}
-                {originalNode}
-              </>
-            );
-          },
-        },
-      },
-      components,
-      customRender: (dom: ReactNode, { text }: { text: string }) => {
-        return <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />;
-      },
-    }),
-    [components, displayMode],
-  );
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
@@ -260,7 +214,13 @@ const UserMessage = memo<UserMessageProps>((props) => {
           <Flexbox ref={contentRef} width={'100%'}>
             <MessageContent
               editing={editing}
-              markdownProps={markdownProps}
+              markdownProps={{
+                customRender: (dom: ReactNode, { text }: { text: string }) => {
+                  return (
+                    <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
+                  );
+                },
+              }}
               message={content}
               messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
               onChange={(value) => {
