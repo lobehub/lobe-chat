@@ -360,14 +360,9 @@ describe('OpenAIStream', () => {
     }
 
     expect(chunks).toEqual(
-      [
-        'id: 1',
-        'event: text',
-        `data: "Hello"\n`,
-        'id: 1',
-        'event: data',
-        `data: {"id":"1"}\n`,
-      ].map((i) => `${i}\n`),
+      ['id: 1', 'event: text', `data: "Hello"\n`, 'id: 1', 'event: data', `data: {"id":"1"}\n`].map(
+        (i) => `${i}\n`,
+      ),
     );
   });
 
@@ -413,7 +408,9 @@ describe('OpenAIStream', () => {
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
       bizErrorTypeTransformer: () => AgentRuntimeErrorType.PermissionDenied,
-      provider: 'grok',
+      payload: {
+        provider: 'grok',
+      },
     });
 
     const decoder = new TextDecoder();

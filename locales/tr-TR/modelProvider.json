@@ -294,6 +294,21 @@
           "title": "Maksimum bağlam penceresi",
           "unlimited": "Sınırsız"
         },
+        "type": {
+          "extra": "Farklı model türleri, farklı kullanım senaryoları ve yeteneklere sahiptir",
+          "options": {
+            "chat": "Sohbet",
+            "embedding": "Vektörleştirme",
+            "image": "Görüntü oluşturma",
+            "realtime": "Gerçek zamanlı sohbet",
+            "stt": "Ses metne dönüştürme",
+            "text2music": "Metinden müziğe",
+            "text2video": "Metinden videoya",
+            "tts": "Ses sentezi"
+          },
+          "placeholder": "Lütfen model türünü seçin",
+          "title": "Model Türü"
+        },
         "vision": {
           "extra": "Bu yapılandırma yalnızca uygulamadaki resim yükleme yapılandırmasını açacaktır, tanıma desteği tamamen modele bağlıdır, lütfen bu modelin görsel tanıma yeteneğini test edin.",
           "title": "Görsel Tanımayı Destekle"

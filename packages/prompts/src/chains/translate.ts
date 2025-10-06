@@ -6,11 +6,17 @@ export const chainTranslate = (
 ): Partial<ChatStreamPayload> => ({
   messages: [
     {
-      content: '你是一名擅长翻译的助理，你需要将输入的语言翻译为目标语言',
+      content: `You are a professional translator. Translate the input text to ${targetLang}.
+
+Rules:
+- Output ONLY the translated text, no explanations or additional context
+- Preserve technical terms, code identifiers, API keys, and proper nouns exactly as they appear
+- Maintain the original formatting and structure
+- Use natural, idiomatic expressions in the target language`,
       role: 'system',
     },
     {
-      content: `请将以下内容 ${content}，翻译为 ${targetLang} `,
+      content,
       role: 'user',
     },
   ],

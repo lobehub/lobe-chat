@@ -632,5 +632,20 @@
     "bps": true,
     "folderMillis": 1759116400580,
     "hash": "433ddae88e785f2db734e49a4c115eee93e60afe389f7919d66e5ba9aa159a37"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"message_groups\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"topic_id\" text,\n\t\"user_id\" text NOT NULL,\n\t\"parent_group_id\" varchar(255),\n\t\"parent_message_id\" text,\n\t\"title\" varchar(255),\n\t\"description\" text,\n\t\"client_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"message_group_id\" varchar(255);",
+      "\nALTER TABLE \"message_groups\" ADD CONSTRAINT \"message_groups_topic_id_topics_id_fk\" FOREIGN KEY (\"topic_id\") REFERENCES \"public\".\"topics\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"message_groups\" ADD CONSTRAINT \"message_groups_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"message_groups\" ADD CONSTRAINT \"message_groups_parent_group_id_message_groups_id_fk\" FOREIGN KEY (\"parent_group_id\") REFERENCES \"public\".\"message_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"message_groups\" ADD CONSTRAINT \"message_groups_parent_message_id_messages_id_fk\" FOREIGN KEY (\"parent_message_id\") REFERENCES \"public\".\"messages\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_groups_client_id_user_id_unique\" ON \"message_groups\" USING btree (\"client_id\",\"user_id\");",
+      "\nALTER TABLE \"messages\" ADD CONSTRAINT \"messages_message_group_id_message_groups_id_fk\" FOREIGN KEY (\"message_group_id\") REFERENCES \"public\".\"message_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1759666151079,
+    "hash": "3a787841eede425d972f2a00cf2f7f8d0b27b391c46ed525c6dceaa79d58d887"
   }
 ]

@@ -150,6 +150,11 @@
       "total": "合計消費"
     }
   },
+  "minimap": {
+    "jumpToMessage": "メッセージ {{index}} へジャンプ",
+    "nextMessage": "次のメッセージ",
+    "previousMessage": "前のメッセージ"
+  },
   "newAgent": "新しいエージェント",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",

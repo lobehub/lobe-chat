@@ -42,7 +42,7 @@ export type ChatMessage = {
 
 ```ts
 // src/store/chatStore.ts
-import create from 'zustand';
+import { create } from 'zustand';
 
 type ChatState = {
   messages: ChatMessage[];

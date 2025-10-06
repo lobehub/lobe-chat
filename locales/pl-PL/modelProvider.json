@@ -294,6 +294,21 @@
           "title": "Maksymalne okno kontekstu",
           "unlimited": "Bez ograniczeń"
         },
+        "type": {
+          "extra": "Różne typy modeli mają różne scenariusze użycia i możliwości",
+          "options": {
+            "chat": "Czat",
+            "embedding": "Wektoryzacja",
+            "image": "Generowanie obrazów",
+            "realtime": "Czat w czasie rzeczywistym",
+            "stt": "Rozpoznawanie mowy",
+            "text2music": "Tekst na muzykę",
+            "text2video": "Tekst na wideo",
+            "tts": "Synteza mowy"
+          },
+          "placeholder": "Wybierz typ modelu",
+          "title": "Typ modelu"
+        },
         "vision": {
           "extra": "Ta konfiguracja włączy tylko możliwość przesyłania obrazów w aplikacji, czy model obsługuje rozpoznawanie zależy od samego modelu, proszę samodzielnie przetestować dostępność rozpoznawania wizualnego tego modelu.",
           "title": "Wsparcie dla rozpoznawania wizualnego"

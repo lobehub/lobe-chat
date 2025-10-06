@@ -150,6 +150,11 @@
       "total": "Total Consumption"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Jump to message {{index}}",
+    "nextMessage": "Next message",
+    "previousMessage": "Previous message"
+  },
   "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",
