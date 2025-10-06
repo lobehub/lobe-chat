@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] هو نموذج توليد صور يحتوي على 12 مليار معلمة، يركز على توليد صور عالية الجودة بسرعة."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "نموذج قوي لتوليد الصور متعددة الوسائط الأصلية"
+  },
   "fal-ai/imagen4/preview": {
     "description": "نموذج توليد صور عالي الجودة مقدم من جوجل."
   },

@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] ist ein bildgenerierendes Modell mit 12 Milliarden Parametern, das sich auf die schnelle Erzeugung hochwertiger Bilder konzentriert."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Ein leistungsstarkes natives multimodales Bildgenerierungsmodell"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Hochwertiges Bildgenerierungsmodell von Google."
   },

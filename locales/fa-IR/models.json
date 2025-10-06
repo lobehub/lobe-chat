@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] یک مدل تولید تصویر با 12 میلیارد پارامتر است که بر تولید سریع تصاویر با کیفیت بالا تمرکز دارد."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "یک مدل قدرتمند بومی تولید تصویر چندوجهی"
+  },
   "fal-ai/imagen4/preview": {
     "description": "مدل تولید تصویر با کیفیت بالا ارائه شده توسط گوگل"
   },

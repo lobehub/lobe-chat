@@ -80,7 +80,7 @@ const falImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: '一个强大的原生多模态模型用于图像生成',
+    description: '一个强大的原生多模态图像生成模型',
     displayName: 'HunyuanImage 3.0',
     enabled: true,
     id: 'fal-ai/hunyuan-image/v3',

@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 이미지 생성 모델로, 빠른 고품질 이미지 생성을 중점으로 합니다."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "강력한 네이티브 멀티모달 이미지 생성 모델"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Google에서 제공하는 고품질 이미지 생성 모델입니다."
   },
