@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.135.1](https://github.com/lobehub/lobe-chat/compare/v1.135.0...v1.135.1)
+
+<sup>Released on **2025-10-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve styles and fix tools calling condition.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve styles and fix tools calling condition, closes [#9591](https://github.com/lobehub/lobe-chat/issues/9591) ([1695f2f](https://github.com/lobehub/lobe-chat/commit/1695f2f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.135.0](https://github.com/lobehub/lobe-chat/compare/v1.134.7...v1.135.0)
 
 <sup>Released on **2025-10-06**</sup>
