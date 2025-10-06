@@ -294,6 +294,21 @@
           "title": "Máximo de ventana de contexto",
           "unlimited": "Sin límite"
         },
+        "type": {
+          "extra": "Diferentes tipos de modelos tienen escenarios de uso y capacidades diferenciadas",
+          "options": {
+            "chat": "Chat",
+            "embedding": "Vectorización",
+            "image": "Generación de imágenes",
+            "realtime": "Chat en tiempo real",
+            "stt": "Reconocimiento de voz a texto",
+            "text2music": "Texto a música",
+            "text2video": "Texto a video",
+            "tts": "Síntesis de voz"
+          },
+          "placeholder": "Por favor, seleccione el tipo de modelo",
+          "title": "Tipo de modelo"
+        },
         "vision": {
           "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en la aplicación, si se admite el reconocimiento depende completamente del modelo en sí, prueba la disponibilidad de la capacidad de reconocimiento visual de este modelo.",
           "title": "Soporte para reconocimiento visual"
