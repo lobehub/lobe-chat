@@ -1,7 +1,7 @@
 'use client';
 
 import { useResponsive } from 'antd-style';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Actions from './components/Actions';
@@ -37,14 +37,12 @@ const ChatItem = memo<ChatItemProps>(
     onEditingChange,
     messageExtra,
     renderMessage,
-    text,
     errorMessage,
     onDoubleClick,
     fontSize,
     aboveMessage,
     belowMessage,
     markdownProps,
-    actionsWrapWidth = 54,
     ...rest
   }) => {
     const { mobile } = useResponsive();
@@ -129,7 +127,6 @@ const ChatItem = memo<ChatItemProps>(
                   placement={placement}
                   primary={primary}
                   renderMessage={renderMessage}
-                  text={text}
                   variant={variant}
                 />
               )}

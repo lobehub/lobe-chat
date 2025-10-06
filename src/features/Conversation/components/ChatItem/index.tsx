@@ -33,12 +33,7 @@ import { ChatMessage } from '@/types/message';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
-import {
-  markdownCustomRenders,
-  renderBelowMessages,
-  renderMessages,
-  useAvatarsClick,
-} from '../../Messages';
+import { MESSAGES, renderBelowMessages, renderMessages, useAvatarsClick } from '../../Messages';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
 import { InPortalThreadContext } from './InPortalThreadContext';
@@ -156,19 +151,6 @@ const Item = memo<ChatListItemProps>(
       [item?.role],
     );
 
-    const markdownCustomRender = useCallback(
-      (dom: ReactNode, { text }: { text: string }) => {
-        if (!item?.role) return dom;
-        let RenderFunction;
-
-        if (renderMessagesExtra?.[item.role]) RenderFunction = markdownCustomRenders[item.role];
-        if (!RenderFunction) return dom;
-
-        return <RenderFunction displayMode={type} dom={dom} id={id} text={text} />;
-      },
-      [item?.role, type],
-    );
-
     const error = useErrorContent(item?.error);
 
     // remove line breaks in artifact tag to make the ast transform easier
@@ -213,7 +195,6 @@ const Item = memo<ChatListItemProps>(
           },
         },
         components,
-        customRender: markdownCustomRender,
         enableCustomFootnotes: item?.role === 'assistant',
         rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
         remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
@@ -226,7 +207,7 @@ const Item = memo<ChatListItemProps>(
               // if the citations's url and title are all the same, we should not show the citations
               item?.search?.citations.every((item) => item.title !== item.url),
       }),
-      [animated, components, markdownCustomRender, item?.role, item?.search],
+      [animated, components, item?.role, item?.search],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);
@@ -313,6 +294,11 @@ const Item = memo<ChatListItemProps>(
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
 
+    if (item?.role === 'user') {
+      const UserMessage = MESSAGES.user;
+      return <UserMessage {...item} index={index} />;
+    }
+
     return (
       item && (
         <InPortalThreadContext.Provider value={inPortalThread}>
@@ -338,8 +324,7 @@ const Item = memo<ChatListItemProps>(
               onChange={onChange}
               onDoubleClick={onDoubleClick}
               onEditingChange={onEditingChange}
-              placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
-              primary={item.role === 'user'}
+              placement={'left'}
               renderMessage={renderMessage}
               text={text}
               time={item.updatedAt || item.createdAt}

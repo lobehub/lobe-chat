@@ -1,7 +1,8 @@
 import { MarkdownProps } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { useResponsive } from 'antd-style';
-import { type ReactNode, memo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useStyles } from '../style';
@@ -19,7 +20,6 @@ export interface MessageContentProps {
   placement?: ChatItemProps['placement'];
   primary?: ChatItemProps['primary'];
   renderMessage?: ChatItemProps['renderMessage'];
-  text?: ChatItemProps['text'];
   variant?: ChatItemProps['variant'];
 }
 
@@ -28,7 +28,6 @@ const MessageContent = memo<MessageContentProps>(
     editing,
     onChange,
     onEditingChange,
-    text,
     message,
     placement,
     messageExtra,
@@ -39,8 +38,17 @@ const MessageContent = memo<MessageContentProps>(
     fontSize,
     markdownProps,
   }) => {
+    const { t } = useTranslation('common');
     const { cx, styles } = useStyles({ editing, placement, primary, variant });
     const { mobile } = useResponsive();
+    const text = useMemo(
+      () => ({
+        cancel: t('cancel'),
+        confirm: t('ok'),
+        edit: t('edit'),
+      }),
+      [],
+    );
 
     const content = (
       <EditableMessage

@@ -1,16 +1,21 @@
 import { ActionIconGroup } from '@lobehub/ui';
 import { ActionIconGroupItemType } from '@lobehub/ui/es/ActionIconGroup';
+import { ActionIconGroupEvent } from '@lobehub/ui/es/ActionIconGroup/type';
 import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/slices/thread/selectors';
 
-import { InPortalThreadContext } from '../components/ChatItem/InPortalThreadContext';
-import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
-import { RenderAction } from '../types';
-import { useCustomActions } from './customAction';
+import { useCustomActions } from '../../Actions/customAction';
+import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
+import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
 
-export const UserActionsBar: RenderAction = memo(({ onActionClick, id }) => {
+interface UserActionsProps {
+  id: string;
+  onActionClick?: (action: ActionIconGroupEvent) => void;
+}
+
+export const UserActionsBar = memo<UserActionsProps>(({ onActionClick, id }) => {
   const [isThreadMode, hasThread] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
