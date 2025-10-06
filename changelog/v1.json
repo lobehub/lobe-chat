@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-06",
+    "version": "1.135.2"
+  },
+  {
     "children": {
       "improvements": ["Improve styles and fix tools calling condition."]
     },
