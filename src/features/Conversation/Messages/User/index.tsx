@@ -50,7 +50,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
   const { mobile } = useResponsive();
   const title = useUserStore(userProfileSelectors.displayUserName);
   const avatar = useUserStore(userProfileSelectors.userAvatar) || DEFAULT_USER_AVATAR;
-  const [displayMode] = useAgentStore((s) => [agentChatConfigSelectors.displayMode(s)]);
+  const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
   const [
     editing,
     generating,
@@ -151,14 +151,11 @@ const UserMessage = memo<UserMessageProps>((props) => {
 
   const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     (e) => {
-      if (!disableEditing) return;
-      if (id === 'default' || error) return;
+      if (disableEditing || id === 'default' || error || !e.altKey) return;
 
-      if (e.altKey) {
-        toggleMessageEditing(id, true);
+      toggleMessageEditing(id, true);
 
-        virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
-      }
+      virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
     },
     [role, disableEditing, error],
   );
