@@ -3,8 +3,8 @@
     "title": "Model"
   },
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
-  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
-  "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
+  "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**. How can I assist you today?",
+  "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. How can I assist you today?",
   "agents": "Assistants",
   "artifact": {
     "generating": "Generating",
