@@ -4,7 +4,7 @@ import type { ActionIconGroupEvent } from '@lobehub/ui';
 import { App } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useSearchParams } from 'next/navigation';
-import { ReactNode, memo, use, useCallback, useRef } from 'react';
+import { ReactNode, memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -94,10 +94,6 @@ const UserMessage = memo<UserMessageProps>((props) => {
   const topic = searchParams.get('topic');
 
   const { message } = App.useApp();
-
-  // 在 ChatItem 组件中添加
-  const contentRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // remove line breaks in artifact tag to make the ast transform easier
 
@@ -189,7 +185,6 @@ const UserMessage = memo<UserMessageProps>((props) => {
       <Flexbox
         align={placement === 'left' ? 'flex-start' : 'flex-end'}
         className={styles.messageContainer}
-        ref={containerRef}
       >
         <Title
           avatar={{ avatar, title }}
@@ -203,7 +198,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
           direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
           gap={8}
         >
-          <Flexbox ref={contentRef} width={'100%'}>
+          <Flexbox width={'100%'}>
             <MessageContent
               editing={editing}
               markdownProps={{
