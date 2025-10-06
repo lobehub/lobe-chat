@@ -4,9 +4,8 @@ import { ActionIconGroupEvent } from '@lobehub/ui/es/ActionIconGroup/type';
 import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/slices/thread/selectors';
+import { threadSelectors } from '@/store/chat/selectors';
 
-import { useCustomActions } from '../../Actions/customAction';
 import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
 
@@ -20,8 +19,9 @@ export const UserActionsBar = memo<UserActionsProps>(({ onActionClick, id }) => 
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
   ]);
-  const { regenerate, edit, copy, divider, del, branching } = useChatListActionsBar({ hasThread });
-  const { translate, tts } = useCustomActions();
+  const { regenerate, edit, copy, divider, del, branching, tts, translate } = useChatListActionsBar(
+    { hasThread },
+  );
 
   const inPortalThread = useContext(InPortalThreadContext);
   const inThread = isThreadMode || inPortalThread;

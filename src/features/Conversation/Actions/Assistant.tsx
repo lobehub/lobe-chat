@@ -9,7 +9,6 @@ import { InPortalThreadContext } from '../components/ChatItem/InPortalThreadCont
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 import { ErrorActionsBar } from './Error';
-import { useCustomActions } from './customAction';
 
 export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, tools, id }) => {
   const [isThreadMode, hasThread] = useChatStore((s) => [
@@ -27,9 +26,10 @@ export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, t
     branching,
     // export: exportPDF,
     share,
+    tts,
+    translate,
   } = useChatListActionsBar({ hasThread });
 
-  const { translate, tts } = useCustomActions();
   const hasTools = !!tools;
 
   const inPortalThread = useContext(InPortalThreadContext);

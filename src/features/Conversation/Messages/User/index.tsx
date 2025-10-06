@@ -4,7 +4,7 @@ import type { ActionIconGroupEvent } from '@lobehub/ui';
 import { App } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useSearchParams } from 'next/navigation';
-import { MouseEventHandler, ReactNode, memo, use, useCallback, useRef } from 'react';
+import { ReactNode, memo, use, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,10 +14,6 @@ import BorderSpacing from '@/features/ChatItem/ChatItem/components/BorderSpacing
 import MessageContent from '@/features/ChatItem/ChatItem/components/MessageContent';
 import Title from '@/features/ChatItem/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/ChatItem/style';
-import { UserBelowMessage } from '@/features/Conversation/Messages/User/BelowMessage';
-import { UserMessageContent } from '@/features/Conversation/Messages/User/MessageContent';
-import { InPortalThreadContext } from '@/features/Conversation/components/ChatItem/InPortalThreadContext';
-import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -25,9 +21,14 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
+import { VirtuosoContext } from '../../components/VirtualizedList/VirtuosoContext';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { UserActionsBar } from './Actions';
+import { UserBelowMessage } from './BelowMessage';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
+import { UserMessageContent } from './MessageContent';
 
 interface UserMessageProps extends ChatMessage {
   disableEditing?: boolean;
@@ -103,16 +104,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
   const virtuosoRef = use(VirtuosoContext);
   const inPortalThread = use(InPortalThreadContext);
 
-  const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    (e) => {
-      if (disableEditing || id === 'default' || error || !e.altKey) return;
-
-      toggleMessageEditing(id, true);
-
-      virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
-    },
-    [role, disableEditing, error],
-  );
+  const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
 
   const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
