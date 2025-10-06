@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] is een beeldgeneratiemodel met 12 miljard parameters, gericht op het snel genereren van hoogwaardige beelden."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Een krachtig native multimodaal beeldgeneratiemodel"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Hoogwaardig beeldgeneratiemodel aangeboden door Google."
   },

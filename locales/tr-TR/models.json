@@ -1253,6 +1253,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir görüntü oluşturma modelidir ve hızlı yüksek kaliteli görüntü üretimine odaklanır."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Güçlü bir yerel çok modlu görüntü oluşturma modeli"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Google tarafından sunulan yüksek kaliteli görüntü oluşturma modeli."
   },

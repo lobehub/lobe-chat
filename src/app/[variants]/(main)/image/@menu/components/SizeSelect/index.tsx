@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Grid, GridProps, Text } from '@lobehub/ui';
+import { Block, Grid, GridProps, Select, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo } from 'react';
 import { Center } from 'react-layout-kit';
@@ -13,6 +13,19 @@ export interface SizeSelectProps extends Omit<GridProps, 'children' | 'onChange'
   value?: 'auto' | string;
 }
 
+/**
+ * Check if a size value can be parsed as valid aspect ratio
+ */
+const canParseAsRatio = (value: string): boolean => {
+  if (value === 'auto') return true;
+
+  const parts = value.split('x');
+  if (parts.length !== 2) return false;
+
+  const [width, height] = parts.map(Number);
+  return !isNaN(width) && !isNaN(height) && width > 0 && height > 0;
+};
+
 const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultValue, ...rest }) => {
   const theme = useTheme();
   const [active, setActive] = useMergeState('auto', {
@@ -20,6 +33,16 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
     onChange,
     value,
   });
+
+  // Check if all options can be parsed as valid ratios
+  const hasInvalidRatio = options?.some((item) => !canParseAsRatio(item.value));
+
+  // If any option cannot be parsed as ratio, fallback to regular Select
+  if (hasInvalidRatio) {
+    return (
+      <Select onChange={onChange} options={options} style={{ width: '100%' }} value={active} />
+    );
+  }
   return (
     <Block padding={4} variant={'filled'} {...rest}>
       <Grid gap={4} maxItemWidth={72} rows={16}>

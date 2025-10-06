@@ -80,6 +80,34 @@ const falImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
+    description: '一个强大的原生多模态图像生成模型',
+    displayName: 'HunyuanImage 3.0',
+    enabled: true,
+    id: 'fal-ai/hunyuan-image/v3',
+    parameters: {
+      cfg: { default: 7.5, max: 20, min: 1, step: 0.1 },
+      prompt: { default: '' },
+      seed: { default: null },
+      size: {
+        default: 'square_hd',
+        enum: [
+          'square_hd',
+          'square',
+          'portrait_4_3',
+          'portrait_16_9',
+          'landscape_4_3',
+          'landscape_16_9',
+        ],
+      },
+      steps: { default: 28, max: 50, min: 1, step: 1 },
+    },
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.1, strategy: 'fixed', unit: 'megapixel' }],
+    },
+    releasedAt: '2025-09-28',
+    type: 'image',
+  },
+  {
     description: '专注于图像编辑任务的FLUX.1模型，支持文本和图像输入。',
     displayName: 'FLUX.1 Kontext [dev]',
     enabled: true,
