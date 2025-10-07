@@ -39,10 +39,10 @@ const ChatItem = memo<ChatItemProps>(
     renderMessage,
     errorMessage,
     onDoubleClick,
-    fontSize,
     aboveMessage,
     belowMessage,
     markdownProps,
+    id,
     ...rest
   }) => {
     const { mobile } = useResponsive();
@@ -110,7 +110,7 @@ const ChatItem = memo<ChatItemProps>(
               ) : (
                 <MessageContent
                   editing={editing}
-                  fontSize={fontSize}
+                  id={id!}
                   markdownProps={markdownProps}
                   message={message}
                   messageExtra={

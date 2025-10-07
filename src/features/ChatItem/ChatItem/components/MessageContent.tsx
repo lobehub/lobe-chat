@@ -5,12 +5,16 @@ import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors';
+
 import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface MessageContentProps {
   editing?: ChatItemProps['editing'];
-  fontSize?: number;
+  id: string;
   markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
   message?: ReactNode;
   messageExtra?: ChatItemProps['messageExtra'];
@@ -26,8 +30,7 @@ export interface MessageContentProps {
 const MessageContent = memo<MessageContentProps>(
   ({
     editing,
-    onChange,
-    onEditingChange,
+    id,
     message,
     placement,
     messageExtra,
@@ -35,11 +38,11 @@ const MessageContent = memo<MessageContentProps>(
     variant,
     primary,
     onDoubleClick,
-    fontSize,
     markdownProps,
   }) => {
     const { t } = useTranslation('common');
     const { cx, styles } = useStyles({ editing, placement, primary, variant });
+    const fontSize = useUserStore(settingsSelectors.currentFontSize);
     const { mobile } = useResponsive();
     const text = useMemo(
       () => ({
@@ -49,6 +52,15 @@ const MessageContent = memo<MessageContentProps>(
       }),
       [],
     );
+
+    const [toggleMessageEditing, updateMessageContent] = useChatStore((s) => [
+      s.toggleMessageEditing,
+      s.modifyMessageContent,
+    ]);
+    const onChange = (value: string) => {
+      updateMessageContent(id, value);
+    };
+    const onEditingChange = (edit: boolean) => toggleMessageEditing(id, edit);
 
     const content = (
       <EditableMessage

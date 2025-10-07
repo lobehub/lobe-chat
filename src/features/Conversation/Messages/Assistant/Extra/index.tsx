@@ -2,17 +2,23 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
+import ExtraContainer from '@/features/Conversation/components/Extras/ExtraContainer';
+import TTS from '@/features/Conversation/components/Extras/TTS';
+import Translate from '@/features/Conversation/components/Extras/Translate';
+import Usage from '@/features/Conversation/components/Extras/Usage';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { ChatMessage } from '@/types/message';
+import { type MessageMetadata } from '@/types/message';
 
-import { RenderMessageExtra } from '../types';
-import ExtraContainer from './ExtraContainer';
-import TTS from './TTS';
-import Translate from './Translate';
-import Usage from './Usage';
+interface AssistantMessageExtraProps {
+  content: string;
+  extra?: any;
+  id: string;
+  metadata?: MessageMetadata | null;
+  tools?: any[];
+}
 
-export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
+export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
   ({ extra, id, content, metadata, tools }) => {
     const loading = useChatStore(chatSelectors.isMessageGenerating(id));
 

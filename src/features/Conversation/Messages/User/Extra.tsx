@@ -1,11 +1,10 @@
 import { memo } from 'react';
 
+import ExtraContainer from '@/features/Conversation/components/Extras/ExtraContainer';
+import TTS from '@/features/Conversation/components/Extras/TTS';
+import Translate from '@/features/Conversation/components/Extras/Translate';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-
-import ExtraContainer from '../../Extras/ExtraContainer';
-import TTS from '../../Extras/TTS';
-import Translate from '../../Extras/Translate';
 
 interface UserMessageExtraProps {
   content: string;

@@ -4,8 +4,6 @@ import { FC, ReactNode } from 'react';
 import { LLMRoleType } from '@/types/llm';
 import { ChatMessage } from '@/types/message';
 
-import { type ActionsBarProps } from '../components/ChatItem/ActionsBar';
-
 export type RenderRole = LLMRoleType | 'default' | 'history' | string;
 export type RenderMessage = FC<ChatMessage & { editableContent: ReactNode }>;
 export type RenderBelowMessage = FC<ChatMessage>;
@@ -16,8 +14,6 @@ export type MarkdownCustomRender = (props: {
   id: string;
   text: string;
 }) => ReactNode;
-
-export type RenderAction = FC<ActionsBarProps & ChatMessage>;
 
 export type RenderItem = FC<{ key: string } & ChatMessage & ListItemProps>;
 

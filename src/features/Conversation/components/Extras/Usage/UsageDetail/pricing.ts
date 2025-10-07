@@ -1,11 +1,12 @@
+import { ModelPriceCurrency, Pricing } from 'model-bank';
+
 import {
   formatPriceByCurrency,
   getCachedTextInputUnitRate,
   getTextInputUnitRate,
   getTextOutputUnitRate,
   getWriteCacheInputUnitRate,
-} from '@lobechat/utils';
-import { ModelPriceCurrency, Pricing } from 'model-bank';
+} from '@/utils/index';
 
 export const getPrice = (pricing: Pricing) => {
   const inputRate = getTextInputUnitRate(pricing);

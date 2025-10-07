@@ -1,16 +1,17 @@
+import { getCachedTextInputUnitRate, getWriteCacheInputUnitRate } from '@lobechat/utils';
 import { ModelIcon } from '@lobehub/icons';
 import { Icon, Segmented, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowDownToDot, ArrowUpFromDot, BookUp2Icon, CircleFadingArrowUp } from 'lucide-react';
+import { LobeDefaultAiModelListItem } from 'model-bank';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { getPrice } from '@/features/Conversation/Extras/Usage/UsageDetail/pricing';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { LobeDefaultAiModelListItem } from '../../../../../../packages/model-bank/src/types/aiModel';
-import { getCachedTextInputUnitRate, getWriteCacheInputUnitRate } from '@/utils/pricing';
+
+import { getPrice } from './pricing';
 
 export const useStyles = createStyles(({ css, token }) => {
   return {

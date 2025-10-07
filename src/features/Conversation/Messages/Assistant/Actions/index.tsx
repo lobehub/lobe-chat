@@ -1,43 +1,57 @@
-import { ActionIconGroup, type ActionIconGroupEvent, type ActionIconGroupProps } from '@lobehub/ui';
+import { ActionIconGroup, type ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { App } from 'antd';
-import isEqual from 'fast-deep-equal';
 import { useSearchParams } from 'next/navigation';
-import { memo, use, useCallback, useState } from 'react';
+import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
-import { MessageRoleType } from '@/types/message';
+import { threadSelectors } from '@/store/chat/selectors';
+import { ChatMessage } from '@/types/message';
 
-import { renderActions } from '../../Actions';
-import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
-import ShareMessageModal from './ShareMessageModal';
+import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
+import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
+import { ErrorActionsBar } from './Error';
 
-export type ActionsBarProps = ActionIconGroupProps;
-
-const ActionsBar = memo<ActionsBarProps>((props) => {
-  const { regenerate, edit, copy, divider, del } = useChatListActionsBar();
-
-  return (
-    <ActionIconGroup
-      items={[regenerate, edit]}
-      menu={{
-        items: [edit, copy, regenerate, divider, del],
-      }}
-      {...props}
-    />
-  );
-});
-
-interface ActionsProps {
+interface AssistantActionsProps {
+  data: ChatMessage;
   id: string;
-  inPortalThread?: boolean;
   index: number;
 }
+export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
+  const { error, tools } = data;
+  const [isThreadMode, hasThread] = useChatStore((s) => [
+    !!s.activeThreadId,
+    threadSelectors.hasThreadBySourceMsgId(id)(s),
+  ]);
+  const [showShareModal, setShareModal] = useState(false);
 
-const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
-  const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
+  const {
+    regenerate,
+    edit,
+    delAndRegenerate,
+    copy,
+    divider,
+    del,
+    branching,
+    // export: exportPDF,
+    share,
+    tts,
+    translate,
+  } = useChatListActionsBar({ hasThread });
+
+  const hasTools = !!tools;
+
+  const inPortalThread = useContext(InPortalThreadContext);
+  const inThread = isThreadMode || inPortalThread;
+
+  const items = useMemo(() => {
+    if (hasTools) return [delAndRegenerate, copy];
+
+    return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[];
+  }, [inThread, hasTools]);
+
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
@@ -67,9 +81,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
 
-  const [showShareModal, setShareModal] = useState(false);
-
-  const handleActionClick = useCallback(
+  const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
       switch (action.key) {
         case 'edit': {
@@ -78,11 +90,11 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
           virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       }
-      if (!item) return;
+      if (!data) return;
 
       switch (action.key) {
         case 'copy': {
-          await copyMessage(id, item.content);
+          await copyMessage(id, data.content);
           message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
           break;
         }
@@ -106,7 +118,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
           } else regenerateMessage(id);
 
           // if this message is an error message, we need to delete it
-          if (item.error) deleteMessage(id);
+          if (data.error) deleteMessage(id);
           break;
         }
 
@@ -136,28 +148,45 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
       }
 
       if (action.keyPath.at(-1) === 'translate') {
-        // click the menu item with translate item, the result is:
+        // click the menu data with translate data, the result is:
         // key: 'en-US'
         // keyPath: ['en-US','translate']
         const lang = action.keyPath[0];
         translateMessage(id, lang);
       }
     },
-    [item],
+    [data],
   );
 
-  const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
-
-  if (!item) return null;
+  if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
   return (
     <>
-      <RenderFunction {...item} onActionClick={handleActionClick} />
+      <ActionIconGroup
+        items={items}
+        menu={{
+          items: [
+            edit,
+            copy,
+            divider,
+            tts,
+            translate,
+            divider,
+            share,
+            // exportPDF,
+            divider,
+            regenerate,
+            delAndRegenerate,
+            del,
+          ],
+        }}
+        onActionClick={onActionClick}
+      />
       {/*{showModal && (*/}
-      {/*  <ExportPreview content={item.content} onClose={() => setModal(false)} open={showModal} />*/}
+      {/*  <ExportPreview content={data.content} onClose={() => setModal(false)} open={showModal} />*/}
       {/*)}*/}
       <ShareMessageModal
-        message={item}
+        message={data!}
         onCancel={() => {
           setShareModal(false);
         }}
@@ -166,5 +195,3 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
     </>
   );
 });
-
-export default Actions;

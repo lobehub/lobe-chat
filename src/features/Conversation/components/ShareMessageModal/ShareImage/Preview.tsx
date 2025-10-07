@@ -5,7 +5,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
 import { ChatItem } from '@/features/Conversation';
 import PluginTag from '@/features/PluginTag';
@@ -15,6 +14,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
+import pkg from '../../../../../../package.json';
 import { useContainerStyles } from '../style';
 import { useStyles } from './style';
 import { FieldType } from './type';

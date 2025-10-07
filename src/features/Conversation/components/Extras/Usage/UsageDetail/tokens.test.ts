@@ -1,8 +1,7 @@
+import { ModelUsage } from '@lobechat/types';
+import { LobeDefaultAiModelListItem } from 'model-bank';
 import { describe, expect, it } from 'vitest';
 
-import { ModelUsage } from '@/types/message';
-
-import { LobeDefaultAiModelListItem } from '../../../../../../packages/model-bank/src/types/aiModel';
 import { getDetailsToken } from './tokens';
 
 describe('getDetailsToken', () => {

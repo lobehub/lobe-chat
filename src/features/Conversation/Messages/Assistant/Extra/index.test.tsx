@@ -5,7 +5,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { AssistantMessageExtra } from './Assistant';
+import { AssistantMessageExtra } from './index';
 
 // Mock TTS and Translate components
 vi.mock('./TTS', () => ({
