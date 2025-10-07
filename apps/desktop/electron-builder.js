@@ -48,7 +48,9 @@ const getIconFileName = () => {
 const config = {
   /**
    * AfterPack hook to copy pre-generated Liquid Glass Assets.car for macOS 26+
-   * Reference: https://github.com/electron/packager/pull/1806
+   * @see https://github.com/electron-userland/electron-builder/issues/9254
+   * @see https://github.com/MultiboxLabs/flow-browser/pull/159
+   * @see https://github.com/electron/packager/pull/1806
    */
   afterPack: async (context) => {
     // Only process macOS builds
@@ -120,8 +122,6 @@ const config = {
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
-      // Support for Liquid Glass icons on macOS 26+
-      // Reference: https://github.com/electron-userland/electron-builder/issues/9254
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
