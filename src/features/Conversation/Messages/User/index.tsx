@@ -3,11 +3,11 @@ import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Avatar from '@/features/ChatItem/ChatItem/components/Avatar';
-import BorderSpacing from '@/features/ChatItem/ChatItem/components/BorderSpacing';
-import MessageContent from '@/features/ChatItem/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/ChatItem/components/Title';
-import { useStyles } from '@/features/ChatItem/ChatItem/style';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
+import { useStyles } from '@/features/ChatItem/style';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';

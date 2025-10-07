@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/slices/settings/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
@@ -42,7 +42,7 @@ const MessageContent = memo<MessageContentProps>(
   }) => {
     const { t } = useTranslation('common');
     const { cx, styles } = useStyles({ editing, placement, primary, variant });
-    const fontSize = useUserStore(settingsSelectors.currentFontSize);
+    const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const { mobile } = useResponsive();
     const text = useMemo(
       () => ({

@@ -2,7 +2,6 @@ import {
   DEFAULT_AGENT,
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AGENT_META,
-  DEFAULT_COMMON_SETTINGS,
   DEFAULT_HOTKEY_CONFIG,
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
@@ -44,11 +43,7 @@ const currentSystemAgent = (s: UserStore) =>
 const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
   merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
 
-const currentFontSize = (s: UserStore) =>
-  merge(DEFAULT_COMMON_SETTINGS, currentSettings(s).general).fontSize;
-
 export const settingsSelectors = {
-  currentFontSize,
   currentSettings,
   currentSystemAgent,
   currentTTS,

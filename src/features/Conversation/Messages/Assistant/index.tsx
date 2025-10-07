@@ -7,12 +7,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { LOADING_FLAT } from '@/const/message';
-import Avatar from '@/features/ChatItem/ChatItem/components/Avatar';
-import BorderSpacing from '@/features/ChatItem/ChatItem/components/BorderSpacing';
-import ErrorContent from '@/features/ChatItem/ChatItem/components/ErrorContent';
-import MessageContent from '@/features/ChatItem/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/ChatItem/components/Title';
-import { useStyles } from '@/features/ChatItem/ChatItem/style';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import ErrorContent from '@/features/ChatItem/components/ErrorContent';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
+import { useStyles } from '@/features/ChatItem/style';
 import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
 import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { AssistantActionsBar } from '@/features/Conversation/Messages/Assistant/Actions';
@@ -70,7 +70,9 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
   const variant = type === 'chat' ? 'bubble' : 'docs';
 
-  const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);
+  const { transitionMode, highlighterTheme, mermaidTheme } = useUserStore(
+    userGeneralSettingsSelectors.config,
+  );
 
   const [generating, isInRAGFlow, editing] = useChatStore((s) => [
     chatSelectors.isMessageGenerating(id)(s),
@@ -129,7 +131,9 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
               </>
             );
           },
+          theme: highlighterTheme,
         },
+        mermaid: { theme: mermaidTheme },
       },
       components,
       enableCustomFootnotes: true,
@@ -142,7 +146,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
         // if the citations's url and title are all the same, we should not show the citations
         search?.citations.every((item) => item.title !== item.url),
     }),
-    [animated, components, role, search],
+    [animated, components, role, search, highlighterTheme, mermaidTheme],
   );
 
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
