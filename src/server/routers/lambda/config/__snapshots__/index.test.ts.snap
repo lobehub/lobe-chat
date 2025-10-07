@@ -96,16 +96,17 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_
 {
   "enabled": false,
   "enabledModels": [
-    "meta-llama/llama-3.1-8b-instruct:free",
+    "deepseek/deepseek-r1:free",
     "google/gemma-2-9b-it:free",
   ],
   "serverModelCards": [
     {
-      "contextWindowTokens": 32768,
-      "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。",
-      "displayName": "Llama 3.1 8B (Free)",
+      "contextWindowTokens": 163840,
+      "description": "DeepSeek-R1",
+      "displayName": "DeepSeek R1 (Free)",
       "enabled": true,
-      "id": "meta-llama/llama-3.1-8b-instruct:free",
+      "id": "deepseek/deepseek-r1:free",
+      "releasedAt": "2025-01-20",
     },
     {
       "contextWindowTokens": 8192,
