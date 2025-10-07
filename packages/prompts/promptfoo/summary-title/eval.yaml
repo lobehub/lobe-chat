@@ -83,3 +83,12 @@ tests:
         value: "The response should be a Spanish title about weather inquiry"
       - type: regex
         value: "^.{1,50}$"
+
+  - vars:
+      messages:
+        - role: "user"
+          content: "你知道 litellm 吗？"
+      locale: "zh-CN"
+    assert:
+      - type: regex
+        value: "^.{1,20}$"  # Chinese titles can be shorter

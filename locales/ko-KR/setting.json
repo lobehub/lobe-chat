@@ -1,64 +1,64 @@
 {
   "about": {
-    "title": "소개"
+    "title": "정보"
   },
   "agentTab": {
-    "chat": "채팅 환경",
+    "chat": "채팅 환경설정",
     "meta": "도우미 정보",
     "modal": "모델 설정",
-    "opening": "오프닝 설정",
+    "opening": "시작 설정",
     "plugin": "플러그인 설정",
-    "prompt": "역할 설정",
+    "prompt": "역할 프롬프트",
     "tts": "음성 서비스"
   },
   "analytics": {
     "telemetry": {
-      "desc": "{{appName}}의 전반적인 사용자 경험을 개선하는 데 도움을 주기 위해 원격 측정 데이터를 전송하도록 선택할 수 있습니다.",
+      "desc": "{{appName}}의 전반적인 사용자 경험을 개선할 수 있도록 익명 사용 데이터를 전송하는 데 동의해 주세요",
       "title": "익명 사용 데이터 전송"
     },
-    "title": "분석"
+    "title": "데이터 통계"
   },
   "danger": {
     "clear": {
-      "action": "모두 지우기",
-      "confirm": "모든 채팅 데이터를 지우시겠습니까?",
-      "desc": "보조, 파일, 메시지, 플러그인 등 모든 세션 데이터가 지워집니다",
-      "success": "모든 세션 메시지가 지워졌습니다",
-      "title": "모든 세션 메시지 지우기"
+      "action": "즉시 삭제",
+      "confirm": "모든 채팅 데이터를 삭제하시겠습니까?",
+      "desc": "도우미, 파일, 메시지, 플러그인 등 모든 세션 데이터를 삭제합니다",
+      "success": "모든 세션 메시지가 삭제되었습니다",
+      "title": "모든 세션 메시지 삭제"
     },
     "reset": {
-      "action": "모두 재설정",
-      "confirm": "모든 설정을 재설정하시겠습니까?",
+      "action": "즉시 초기화",
+      "confirm": "모든 설정을 초기화하시겠습니까?",
       "currentVersion": "현재 버전",
-      "desc": "모든 설정을 기본값으로 재설정합니다",
-      "success": "모든 설정이 재설정되었습니다",
-      "title": "모든 설정 재설정"
+      "desc": "모든 설정을 기본값으로 초기화합니다",
+      "success": "모든 설정이 초기화되었습니다",
+      "title": "모든 설정 초기화"
     }
   },
   "header": {
-    "desc": "설정 및 모델 설정.",
+    "desc": "환경설정 및 모델 설정",
     "global": "전역 설정",
     "session": "세션 설정",
-    "sessionDesc": "캐릭터 설정 및 세션 환경 설정.",
+    "sessionDesc": "역할 프롬프트 및 세션 환경설정",
     "sessionWithName": "세션 설정 · {{name}}",
     "title": "설정"
   },
   "hotkey": {
     "conflicts": "기존 단축키와 충돌",
     "errors": {
-      "CONFLICT": "단축키 충돌: 해당 단축키는 이미 다른 기능에서 사용 중입니다",
-      "INVALID_FORMAT": "단축키 형식이 올바르지 않습니다: 올바른 형식(예: CommandOrControl+E)을 사용하세요",
-      "INVALID_ID": "유효하지 않은 단축키 ID입니다",
-      "NO_MODIFIER": "단축키에는 반드시 수정 키(Ctrl, Alt, Shift 등)가 포함되어야 합니다",
-      "SYSTEM_OCCUPIED": "단축키가 시스템 또는 다른 애플리케이션에서 사용 중입니다",
+      "CONFLICT": "단축키 충돌: 해당 단축키는 다른 기능에 사용 중입니다",
+      "INVALID_FORMAT": "잘못된 단축키 형식: 올바른 형식을 사용하세요 (예: CommandOrControl+E)",
+      "INVALID_ID": "잘못된 단축키 ID",
+      "NO_MODIFIER": "단축키에는 반드시 Ctrl, Alt, Shift 등의 수정 키가 포함되어야 합니다",
+      "SYSTEM_OCCUPIED": "해당 단축키는 시스템 또는 다른 앱에서 사용 중입니다",
       "UNKNOWN": "업데이트 실패: 알 수 없는 오류"
     },
     "group": {
       "conversation": "대화",
-      "desktop": "데스크톱",
+      "desktop": "데스크탑",
       "essential": "기본"
     },
-    "invalidCombination": "단축키는 최소한 하나의 수정 키(Ctrl, Alt, Shift)와 하나의 일반 키를 포함해야 합니다",
+    "invalidCombination": "단축키는 최소한 하나의 수정 키(Ctrl, Alt, Shift)와 일반 키를 포함해야 합니다",
     "record": "단축키를 녹음하려면 키를 누르세요",
     "reset": "기본 단축키로 재설정",
     "title": "단축키",
@@ -66,89 +66,89 @@
     "updateSuccess": "단축키가 성공적으로 업데이트되었습니다"
   },
   "llm": {
-    "aesGcm": "귀하의 키 및 프록시 주소는 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
+    "aesGcm": "<1>AES-GCM</1> 암호화 알고리즘을 사용하여 API 키 및 프록시 주소 등을 암호화합니다",
     "apiKey": {
-      "desc": "당신의 {{name}} API 키를 입력해주세요",
+      "desc": "{{name}} API 키를 입력하세요",
       "placeholder": "{{name}} API 키",
       "title": "API 키"
     },
     "checker": {
       "button": "확인",
-      "desc": "API Key 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
-      "pass": "확인 통과",
-      "title": "연결성 확인"
+      "desc": "API 키 및 프록시 주소가 올바른지 테스트합니다",
+      "pass": "검사 통과",
+      "title": "연결 상태 확인"
     },
     "customModelCards": {
-      "addNew": "{{id}} 모델을 생성하고 추가합니다",
+      "addNew": "{{id}} 모델 생성 및 추가",
       "config": "모델 구성",
-      "confirmDelete": "사용자 정의 모델을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 작업하세요.",
+      "confirmDelete": "이 사용자 정의 모델을 삭제하려고 합니다. 삭제 후 복구할 수 없습니다. 신중히 진행하세요.",
       "modelConfig": {
         "azureDeployName": {
-          "extra": "Azure OpenAI에서 실제 요청하는 필드",
-          "placeholder": "Azure에서 모델 배포 이름을 입력하세요",
+          "extra": "Azure OpenAI에서 실제 요청에 사용되는 필드",
+          "placeholder": "Azure에 배포된 모델 이름을 입력하세요",
           "title": "모델 배포 이름"
         },
         "displayName": {
-          "placeholder": "ChatGPT, GPT-4 등과 같은 모델의 표시 이름을 입력하세요",
+          "placeholder": "모델 표시 이름을 입력하세요 (예: ChatGPT, GPT-4 등)",
           "title": "모델 표시 이름"
         },
         "files": {
-          "extra": "현재 파일 업로드 구현은 단순한 해킹 방법으로, 개인적인 시도에만 해당됩니다. 전체 파일 업로드 기능은 추후 구현을 기다려 주시기 바랍니다.",
+          "extra": "현재 파일 업로드는 임시 해킹 방식으로 구현되어 있으며, 실험적 기능입니다. 정식 기능은 추후 제공 예정입니다.",
           "title": "파일 업로드 지원"
         },
         "functionCall": {
-          "extra": "이 설정은 애플리케이션 내에서 함수 호출 기능만 활성화합니다. 함수 호출 지원 여부는 모델 자체에 따라 다르므로, 해당 모델의 함수 호출 가능성을 직접 테스트해 보시기 바랍니다.",
+          "extra": "이 설정은 앱 내 함수 호출 기능만 활성화합니다. 함수 호출 지원 여부는 모델에 따라 다르므로 직접 테스트하세요.",
           "title": "함수 호출 지원"
         },
         "id": {
-          "extra": "모델을 식별하는 데 사용될 것입니다",
-          "placeholder": "gpt-4-turbo-preview 또는 claude-2.1과 같은 모델 ID를 입력하세요",
+          "extra": "모델 태그로 표시됩니다",
+          "placeholder": "모델 ID를 입력하세요 (예: gpt-4-turbo-preview 또는 claude-2.1)",
           "title": "모델 ID"
         },
-        "modalTitle": "사용자 정의 모델 구성",
+        "modalTitle": "사용자 정의 모델 설정",
         "tokens": {
           "title": "최대 토큰 수"
         },
         "vision": {
-          "extra": "이 설정은 애플리케이션 내에서 이미지 업로드 기능만 활성화합니다. 인식 지원 여부는 모델 자체에 따라 다르므로, 해당 모델의 시각 인식 가능성을 직접 테스트해 보시기 바랍니다.",
+          "extra": "이 설정은 앱 내 이미지 업로드 기능만 활성화합니다. 시각 인식 지원 여부는 모델에 따라 다르므로 직접 테스트하세요.",
           "title": "시각 인식 지원"
         }
       }
     },
     "fetchOnClient": {
-      "desc": "브라우저에서 직접 세션 요청을 시작하는 클라이언트 요청 모드는 응답 속도를 향상시킬 수 있습니다",
+      "desc": "클라이언트 요청 모드는 브라우저에서 직접 세션 요청을 보내 응답 속도를 향상시킵니다",
       "title": "클라이언트 요청 모드 사용"
     },
     "fetcher": {
-      "clear": "가져온 모델 지우기",
+      "clear": "가져온 모델 삭제",
       "fetch": "모델 목록 가져오기",
       "fetching": "모델 목록을 가져오는 중...",
       "latestTime": "마지막 업데이트 시간: {{time}}",
-      "noLatestTime": "목록을 아직 가져오지 않았습니다"
+      "noLatestTime": "아직 목록을 가져오지 않았습니다"
     },
-    "helpDoc": "구성 안내",
+    "helpDoc": "설정 가이드",
     "modelList": {
-      "desc": "대화에서 표시할 모델을 선택하세요. 선택한 모델은 모델 목록에 표시됩니다",
-      "placeholder": "모델을 선택하세요",
+      "desc": "세션에서 표시할 모델을 선택하세요. 선택한 모델은 모델 목록에 표시됩니다.",
+      "placeholder": "목록에서 모델을 선택하세요",
       "title": "모델 목록",
-      "total": "총 {{count}} 개 모델 사용 가능"
+      "total": "총 {{count}}개의 모델 사용 가능"
     },
     "proxyUrl": {
-      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
+      "desc": "기본 주소 외에는 http(s)://를 포함해야 합니다",
       "title": "API 프록시 주소"
     },
-    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요"
+    "waitingForMore": "더 많은 모델이 <1>도입 예정</1>입니다. 기대해 주세요."
   },
   "plugin": {
     "addMCPPlugin": "MCP 플러그인 추가",
-    "addTooltip": "플러그인 추가",
-    "clearDeprecated": "사용되지 않는 플러그인 제거",
-    "empty": "설치된 플러그인이 없습니다. <1>플러그인 스토어</1>에서 새로운 플러그인을 찾아보세요.",
+    "addTooltip": "사용자 정의 플러그인",
+    "clearDeprecated": "유효하지 않은 플러그인 제거",
+    "empty": "설치된 플러그인이 없습니다. <1>플러그인 스토어</1>에서 탐색해 보세요.",
     "installStatus": {
-      "deprecated": "설치 해제됨"
+      "deprecated": "제거됨"
     },
     "settings": {
-      "hint": "설명에 따라 아래 구성을 입력하십시오",
+      "hint": "설명에 따라 아래 설정을 입력하세요",
       "title": "{{id}} 플러그인 설정",
       "tooltip": "플러그인 설정"
     },
@@ -156,13 +156,13 @@
   },
   "settingAgent": {
     "avatar": {
-      "title": "아바타"
+      "title": "도우미 아바타"
     },
     "backgroundColor": {
-      "title": "배경색"
+      "title": "아바타 배경색"
     },
     "description": {
-      "desc": "당신의 도우미를 간단히 소개합니다. 역할 설정으로 사용되지 않습니다.",
+      "desc": "도우미에 대한 간단한 설명입니다. 역할 프롬프트로 사용되지 않습니다.",
       "placeholder": "도우미 설명을 입력하세요",
       "title": "도우미 설명"
     },
@@ -171,12 +171,12 @@
       "title": "이름"
     },
     "prompt": {
-      "placeholder": "역할 프롬프트 단어를 입력하세요",
-      "title": "역할 설정"
+      "placeholder": "역할 프롬프트를 입력하세요",
+      "title": "역할 프롬프트"
     },
     "submit": "도우미 정보 업데이트",
     "tag": {
-      "desc": "도우미 태그는 도우미 마켓에서 표시됩니다.",
+      "desc": "도우미 마켓에 표시될 태그입니다",
       "placeholder": "태그를 입력하세요",
       "title": "태그"
     },
@@ -184,22 +184,22 @@
   },
   "settingAppearance": {
     "animationMode": {
-      "agile": "민첩함",
-      "desc": "애플리케이션의 동작 반응 애니메이션 속도를 선택하세요",
-      "disabled": "끄기",
+      "agile": "민첩",
+      "desc": "앱의 반응 애니메이션 속도를 선택하세요",
+      "disabled": "비활성화",
       "elegant": "우아함",
       "title": "반응 애니메이션"
     },
     "neutralColor": {
-      "desc": "다양한 색조의 그레이스케일 사용자 정의",
+      "desc": "다양한 색상 경향의 회색조 사용자 정의",
       "title": "중립 색상"
     },
     "noAnimation": {
-      "desc": "애플리케이션 내 모든 애니메이션 효과를 비활성화합니다",
+      "desc": "앱의 모든 애니메이션 효과를 비활성화합니다",
       "title": "애니메이션 없음 모드"
     },
     "preview": {
-      "title": "팔레트"
+      "title": "색상 팔레트"
     },
     "primaryColor": {
       "desc": "테마 색상 사용자 정의",
