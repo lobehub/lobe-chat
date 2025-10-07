@@ -4,8 +4,8 @@ import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactor
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { OpenRouterModelCard, OpenRouterReasoning } from './type';
 
-const formatPrice = (price: string) => {
-  if (price === '-1') return undefined;
+const formatPrice = (price?: string) => {
+  if (price === undefined || price === '-1') return undefined;
   return Number((Number(price) * 1e6).toPrecision(5));
 };
 
