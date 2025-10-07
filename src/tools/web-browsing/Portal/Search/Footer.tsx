@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 const Footer = () => {
   const [messageId, isAIGenerating, triggerAIMessage, saveSearchResult] = useChatStore((s) => [
     chatPortalSelectors.toolMessageId(s),
-    chatSelectors.isAIGenerating(s),
+    messageStateSelectors.isAIGenerating(s),
     s.triggerAIMessage,
     s.saveSearchResult,
   ]);

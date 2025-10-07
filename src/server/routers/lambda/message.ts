@@ -1,4 +1,9 @@
-import { BatchTaskResult, UIChatMessage, UpdateMessageRAGParamsSchema } from '@lobechat/types';
+import {
+  BatchTaskResult,
+  UIChatMessage,
+  UpdateMessageParamsSchema,
+  UpdateMessageRAGParamsSchema,
+} from '@lobechat/types';
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
@@ -180,11 +185,17 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: z.object({}).passthrough().partial(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        value: UpdateMessageParamsSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.update(input.id, input.value);
+      return ctx.messageModel.update(input.id, input.value as any, {
+        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+        sessionId: input.sessionId,
+        topicId: input.topicId,
+      });
     }),
 
   updateMessagePlugin: messageProcedure

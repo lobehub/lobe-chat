@@ -102,7 +102,7 @@ export class ClientService implements IMessageService {
   }
 
   // @ts-ignore
-  async updateMessage(id: string, message: Partial<DB_Message>) {
+  async updateMessage(id: string, message: Partial<DB_Message>): Promise<any> {
     return MessageModel.update(id, message);
   }
 

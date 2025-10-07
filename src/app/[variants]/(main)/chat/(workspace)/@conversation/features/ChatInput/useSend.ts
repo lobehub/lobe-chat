@@ -5,7 +5,12 @@ import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { getChatStoreState, useChatStore } from '@/store/chat';
-import { aiChatSelectors, chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import {
+  aiChatSelectors,
+  chatSelectors,
+  messageStateSelectors,
+  topicSelectors,
+} from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { mentionSelectors, useMentionStore } from '@/store/mention';
 import { useSessionStore } from '@/store/session';
@@ -38,8 +43,8 @@ export const useSend = () => {
     s.addAIMessage,
     s.stopGenerateMessage,
     s.cancelSendMessageInServer,
-    chatSelectors.isAIGenerating(s),
-    chatSelectors.isSendButtonDisabledByMessage(s),
+    messageStateSelectors.isAIGenerating(s),
+    messageStateSelectors.isSendButtonDisabledByMessage(s),
     aiChatSelectors.isCurrentSendMessageLoading(s),
   ]);
   const { analytics } = useAnalytics();
@@ -68,7 +73,7 @@ export const useSend = () => {
       return;
     }
 
-    if (chatSelectors.isAIGenerating(store)) return;
+    if (messageStateSelectors.isAIGenerating(store)) return;
 
     const inputMessage = store.inputMessage;
     // 发送时再取一次最新的文件列表，防止闭包拿到旧值
@@ -127,7 +132,7 @@ export const useSend = () => {
 
   const stop = () => {
     const store = getChatStoreState();
-    const generating = chatSelectors.isAIGenerating(store);
+    const generating = messageStateSelectors.isAIGenerating(store);
 
     if (generating) {
       stopGenerateMessage();
@@ -165,8 +170,8 @@ export const useSendGroupMessage = () => {
     s.sendGroupMessage,
     s.updateInputMessage,
     s.stopGenerateMessage,
-    chatSelectors.isSendButtonDisabledByMessage(s),
-    chatSelectors.isCreatingMessage(s),
+    messageStateSelectors.isSendButtonDisabledByMessage(s),
+    messageStateSelectors.isCreatingMessage(s),
   ]);
 
   const isSupervisorThinking = useChatStore((s) =>
@@ -205,7 +210,7 @@ export const useSendGroupMessage = () => {
 
       if (
         chatSelectors.isSupervisorLoading(store.activeId)(store) ||
-        chatSelectors.isCreatingMessage(store)
+        messageStateSelectors.isCreatingMessage(store)
       )
         return;
 
@@ -287,8 +292,8 @@ export const useSendGroupMessage = () => {
 
   const stop = useCallback(() => {
     const store = getChatStoreState();
-    const isAgentGenerating = chatSelectors.isAIGenerating(store);
-    const isCreating = chatSelectors.isCreatingMessage(store);
+    const isAgentGenerating = messageStateSelectors.isAIGenerating(store);
+    const isCreating = messageStateSelectors.isCreatingMessage(store);
 
     if (isAgentGenerating) {
       stopGenerateMessage();
