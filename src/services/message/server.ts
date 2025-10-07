@@ -3,6 +3,8 @@ import { ChatTranslate, UIChatMessage } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 import { IMessageService } from './type';
 
@@ -22,19 +24,27 @@ export class ServerService implements IMessageService {
   };
 
   getMessages: IMessageService['getMessages'] = async (sessionId, topicId, groupId) => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
+      useGroup,
     });
 
     return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
+      useGroup,
     });
     return data as unknown as UIChatMessage[];
   };

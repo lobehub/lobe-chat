@@ -487,7 +487,7 @@ export const generateAIChat: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          await messageService.updateMessage(messageId, {
+          messageService.updateMessage(messageId, {
             traceId,
             observationId: observationId ?? undefined,
           });
