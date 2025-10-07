@@ -1,103 +1,103 @@
 {
-  "about": "소개",
+  "about": "정보",
   "advanceSettings": "고급 설정",
   "alert": {
     "cloud": {
-      "action": "무료 체험",
-      "desc": "우리는 모든 등록 사용자에게 {{credit}}의 무료 계산 포인트를 제공합니다. 복잡한 설정이 필요 없이 즉시 사용할 수 있으며, 무제한 대화 기록 및 전역 클라우드 동기화를 지원합니다. 더 많은 고급 기능을 함께 탐험해 보세요.",
-      "descOnMobile": "모든 등록 사용자에게 {{credit}}의 무료 계산 포인트를 제공하며, 복잡한 설정 없이 즉시 사용할 수 있습니다.",
-      "title": "환영합니다 {{name}}"
+      "action": "지금 체험하기",
+      "desc": "모든 등록 사용자에게 {{credit}} 크레딧의 무료 계산 포인트를 제공합니다. 복잡한 설정 없이 바로 사용 가능하며, 글로벌 클라우드 동기화 및 고급 네트워크 쿼리를 지원합니다. 더 많은 고급 기능을 지금 탐색해보세요.",
+      "descOnMobile": "모든 등록 사용자에게 {{credit}} 크레딧의 무료 계산 포인트를 제공합니다. 복잡한 설정 없이 바로 사용 가능합니다.",
+      "title": "{{name}} 베타 테스트 시작"
     }
   },
   "appLoading": {
     "appIdle": "시작 준비 중",
-    "appInitializing": "앱을 초기화하는 중...",
-    "failed": "죄송합니다. 애플리케이션 초기화에 실패했습니다. 상세 정보를 확인하여 문제를 해결해 주세요.",
+    "appInitializing": "애플리케이션 시작 중...",
+    "failed": "죄송합니다. 애플리케이션 초기화에 실패했습니다. 자세한 내용을 확인하여 문제를 해결하세요.",
     "finished": "데이터베이스 초기화 완료",
-    "goToChat": "대화 페이지 로딩 중...",
+    "goToChat": "채팅 페이지 로딩 중...",
     "initAuth": "인증 서비스 초기화 중...",
     "initUser": "사용자 상태 초기화 중...",
     "initializing": "PGlite 데이터베이스 초기화 중...",
     "loadingDependencies": "의존성 초기화 중...",
-    "loadingWasm": "WASM 모듈 로드 중...",
-    "migrating": "데이터베이스 테이블 마이그레이션 중...",
+    "loadingWasm": "WASM 모듈 로딩 중...",
+    "migrating": "데이터 테이블 마이그레이션 실행 중...",
     "ready": "데이터베이스 준비 완료",
     "showDetail": "자세히 보기"
   },
-  "autoGenerate": "자동 생성",
-  "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
-  "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
+  "autoGenerate": "자동 완성",
+  "autoGenerateTooltip": "역할 설정을 기반으로 도우미 설명 자동 완성",
+  "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 역할 설정을 먼저 입력하세요",
   "back": "뒤로",
   "batchDelete": "일괄 삭제",
   "blog": "제품 블로그",
-  "branching": "하위 주제 만들기",
-  "branchingDisable": "「하위 주제」 기능은 서버 버전에서만 사용할 수 있습니다. 이 기능이 필요하시면 서버 배포 모드로 전환하거나 LobeChat Cloud를 사용하세요.",
-  "branchingRequiresSavedTopic": "현재 주제가 저장되지 않았습니다. 저장한 후에 하위 주제 기능을 사용할 수 있습니다.",
+  "branching": "하위 주제 생성",
+  "branchingDisable": "현재 모드에서는 '하위 주제' 기능을 사용할 수 없습니다. 이 기능을 사용하려면 Postgres/Pglite DB 모드로 전환하거나 LobeChat Cloud를 이용하세요.",
+  "branchingRequiresSavedTopic": "현재 주제가 저장되지 않았습니다. 저장 후 하위 주제 기능을 사용할 수 있습니다.",
   "cancel": "취소",
-  "changelog": "변경 로그",
+  "changelog": "업데이트 로그",
   "clientDB": {
     "autoInit": {
       "title": "PGlite 데이터베이스 초기화"
     },
     "error": {
-      "desc": "죄송합니다. Pglite 데이터베이스 초기화 과정에서 예외가 발생했습니다. 버튼을 클릭하여 다시 시도해 주십시오. 여러 번 시도한 후에도 여전히 문제가 발생하면 <1>문제를 제출</1>해 주십시오. 저희가 즉시 문제를 해결해 드리겠습니다.",
-      "detail": "오류 원인: [[[{{type}}]]] {{message}}，상세 내용은 다음과 같습니다：",
+      "desc": "죄송합니다. PGlite 데이터베이스 초기화 중 오류가 발생했습니다. 오른쪽 버튼을 클릭하여 다시 시도하세요. SQL 운영 경험이 있다면 아래의 자가 해결 버튼을 클릭하여 직접 해결할 수 있습니다. 여러 번 시도해도 문제가 반복되면 왼쪽 하단의 문제 피드백을 통해 알려주세요. 신속히 도와드리겠습니다.",
+      "detail": "오류 원인: [{{type}}] {{message}}, 상세 내용은 다음과 같습니다:",
       "detailTitle": "오류 원인",
       "report": "문제 피드백",
-      "retry": "재시도",
-      "selfSolve": "자체 해결",
+      "retry": "다시 시도",
+      "selfSolve": "자가 해결",
       "title": "데이터베이스 초기화 실패"
     },
     "initing": {
-      "error": "오류가 발생했습니다. 재시도해 주세요.",
+      "error": "데이터베이스 초기화 오류, 자세히 보기 클릭",
       "idle": "초기화 대기 중...",
       "initializing": "초기화 중...",
-      "loadingDependencies": "의존성 로드 중...",
-      "loadingWasmModule": "WASM 모듈 로드 중...",
-      "migrating": "데이터베이스 마이그레이션 실행 중...",
+      "loadingDependencies": "의존성 로딩 중...",
+      "loadingWasmModule": "WASM 모듈 로딩 중...",
+      "migrating": "데이터 테이블 마이그레이션 중...",
       "ready": "데이터베이스 준비 완료"
     },
     "modal": {
-      "desc": "PGlite 클라이언트 데이터베이스를 활성화하여 브라우저에서 채팅 데이터를 영구 저장하고 지식베이스 등 고급 기능을 사용하세요.",
-      "enable": "즉시 활성화",
+      "desc": "차세대 클라이언트 데이터베이스를 지금 활성화하세요. 브라우저에 채팅 데이터를 영구 저장하고 지식베이스 등 고급 기능을 사용할 수 있습니다.",
+      "enable": "지금 활성화",
       "features": {
         "knowledgeBase": {
-          "desc": "개인 지식 기반을 구축하고, 당신의 도우미와 쉽게 지식 기반 대화를 시작하세요(곧 출시 예정)",
-          "title": "지식 기반 대화 지원, 두 번째 뇌를 열다"
+          "desc": "개인 지식베이스를 구축하고 도우미와 쉽게 지식 기반 대화를 시작하세요 (곧 출시 예정)",
+          "title": "지식 기반 대화 지원, 제2의 두뇌 시작"
         },
         "localFirst": {
-          "desc": "채팅 데이터는 완전히 브라우저에 저장되며, 당신의 데이터는 항상 당신의 손에 있습니다.",
+          "desc": "채팅 데이터는 브라우저에만 저장되며, 데이터는 항상 당신의 통제 하에 있습니다.",
           "title": "로컬 우선, 프라이버시 최우선"
         },
         "pglite": {
-          "desc": "PGlite를 기반으로 구축되어, AI 네이티브 고급 기능(벡터 검색)을 원활하게 지원합니다.",
-          "title": "차세대 클라이언트 저장 아키텍처"
+          "desc": "PGlite 기반으로 구축되어 AI Native 고급 기능(벡터 검색)을 기본 지원합니다.",
+          "title": "차세대 클라이언트 저장소 아키텍처"
         }
       },
       "init": {
-        "desc": "데이터베이스를 초기화 중입니다. 네트워크 차이에 따라 5~30초가 소요될 수 있습니다.",
+        "desc": "데이터베이스 초기화 중입니다. 네트워크 상태에 따라 5~30초 정도 소요될 수 있습니다.",
         "title": "PGlite 데이터베이스 초기화 중"
       },
       "title": "클라이언트 데이터베이스 활성화"
     },
     "ready": {
-      "button": "즉시 사용",
-      "desc": "즉시 사용하고 싶습니다.",
+      "button": "지금 사용하기",
+      "desc": "지금 사용해보세요",
       "title": "PGlite 데이터베이스 준비 완료"
     },
     "solve": {
       "backup": {
         "backup": "백업",
         "backupSuccess": "백업 성공",
-        "desc": "현재 데이터베이스의 중요한 데이터를 내보냅니다",
-        "export": "모든 데이터 내보내기",
+        "desc": "현재 데이터베이스의 핵심 데이터를 내보냅니다",
+        "export": "전체 데이터 내보내기",
         "exportDesc": "내보낸 데이터는 JSON 형식으로 저장되며, 이후 복원 또는 분석에 사용할 수 있습니다.",
         "reset": {
           "alert": "경고",
-          "alertDesc": "다음 작업은 데이터 손실을 초래할 수 있습니다. 중요한 데이터를 백업한 후 계속 진행하십시오.",
-          "button": "데이터베이스 완전 초기화(모든 데이터 삭제)",
+          "alertDesc": "다음 작업은 데이터 손실을 초래할 수 있습니다. 중요한 데이터를 백업한 후 진행하세요.",
+          "button": "데이터베이스 완전 초기화 (모든 데이터 삭제)",
           "confirm": {
-            "desc": "이 작업은 모든 데이터를 삭제하며 복구할 수 없습니다. 계속 진행하시겠습니까?",
+            "desc": "이 작업은 모든 데이터를 삭제하며 되돌릴 수 없습니다. 계속하시겠습니까?",
             "title": "데이터베이스 초기화 확인"
           },
           "desc": "복구할 수 없는 경우 데이터베이스를 초기화합니다",
@@ -117,8 +117,8 @@
         "desc": "마이그레이션 상태 수동 관리",
         "runSQL": "사용자 정의 실행",
         "sql": {
-          "clear": "비우기",
-          "desc": "사용자 정의 SQL 문을 실행하여 데이터베이스 문제를 수정합니다",
+          "clear": "지우기",
+          "desc": "사용자 정의 SQL 문을 실행하여 데이터베이스 문제를 해결합니다",
           "markFinished": "완료로 표시",
           "placeholder": "SQL 문 입력...",
           "result": "실행 결과",
@@ -135,91 +135,91 @@
     }
   },
   "close": "닫기",
-  "contact": "연락처",
+  "contact": "문의하기",
   "copy": "복사",
   "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
   "dataStatistics": {
     "messages": "메시지",
-    "sessions": "세션",
-    "today": "오늘",
+    "sessions": "도우미",
+    "today": "오늘 추가됨",
     "topics": "주제"
   },
-  "defaultAgent": "기본 에이전트",
-  "defaultSession": "기본 세션",
+  "defaultAgent": "사용자 정의 도우미",
+  "defaultSession": "사용자 정의 도우미",
   "delete": "삭제",
   "document": "사용 설명서",
   "download": "다운로드",
-  "duplicate": "복제품 만들기",
+  "duplicate": "복사본 만들기",
   "edit": "편집",
-  "export": "내보내기",
+  "export": "설정 내보내기",
   "exportType": {
-    "agent": "에이전트 설정 내보내기",
-    "agentWithMessage": "에이전트 및 메시지 내보내기",
-    "all": "전역 설정 및 모든 에이전트 데이터 내보내기",
-    "allAgent": "모든 에이전트 설정 내보내기",
-    "allAgentWithMessage": "모든 에이전트 및 메시지 내보내기",
-    "globalSetting": "전역 설정 내보내기"
+    "agent": "도우미 설정 내보내기",
+    "agentWithMessage": "도우미 및 메시지 내보내기",
+    "all": "전체 설정 및 모든 도우미 데이터 내보내기",
+    "allAgent": "모든 도우미 설정 내보내기",
+    "allAgentWithMessage": "모든 도우미 및 메시지 내보내기",
+    "globalSetting": "전체 설정 내보내기"
   },
   "feedback": "피드백 및 제안",
-  "follow": "{{name}}에서 우리를 팔로우하세요",
+  "follow": "{{name}}에서 팔로우하기",
   "footer": {
     "action": {
-      "feedback": "소중한 의견 공유",
+      "feedback": "소중한 의견을 공유해주세요",
       "star": "GitHub에서 별표 추가"
     },
     "and": "및",
     "feedback": {
       "action": "피드백 공유",
-      "desc": "귀하의 모든 아이디어와 제안은 저희에게 귀중합니다. 귀하의 의견을 알고 싶어 합니다! 제품 기능 및 사용 경험 피드백을 제공하여 LobeChat을 더 나아지게 하는 데 도움을 주십시오.",
+      "desc": "여러분의 모든 생각과 제안은 저희에게 매우 소중합니다. 여러분의 의견을 듣고 싶습니다! 제품 기능 및 사용 경험에 대한 피드백을 통해 {{appName}}을 더 나은 서비스로 만들어주세요.",
       "title": "GitHub에서 소중한 피드백 공유"
     },
     "later": "나중에",
     "star": {
-      "action": "별표 표시",
-      "desc": "만약 당신이 우리 제품을 좋아하고 우리를 지원하고 싶다면, GitHub에서 우리에게 별표를 주실 수 있을까요? 이 작은 행동은 우리에게 큰 의미가 있으며, 지속적으로 특별한 경험을 제공할 수 있도록 우리를 격려할 수 있습니다.",
-      "title": "GitHub에서 우리에게 별표 표시"
+      "action": "별표 추가",
+      "desc": "저희 제품이 마음에 드셨다면 GitHub에서 별표를 눌러주세요. 이 작은 행동이 저희에게 큰 힘이 됩니다!",
+      "title": "GitHub에서 별표 추가"
     },
-    "title": "우리 제품을 좋아하십니까?"
+    "title": "저희 제품이 마음에 드시나요?"
   },
-  "fullscreen": "전체 화면",
+  "fullscreen": "전체 화면 모드",
   "geminiImageChineseWarning": {
-    "content": "Nano Banana는 중국어 사용 시 이미지 생성에 실패할 가능성이 있습니다. 더 나은 결과를 위해 영어 사용을 권장합니다.",
+    "content": "Nano Banana는 중국어 입력 시 이미지 생성 실패 확률이 있습니다. 더 나은 결과를 위해 영어 사용을 권장합니다.",
     "continueGenerate": "계속 생성",
     "continueSend": "계속 전송",
-    "doNotShowAgain": "다시 표시하지 않음",
-    "title": "중국어 입력 안내"
+    "doNotShowAgain": "다시 표시하지 않기",
+    "title": "중국어 입력 알림"
   },
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importData": "데이터 가져오기",
   "importModal": {
     "error": {
-      "desc": "데이터 가져오기 중에 문제가 발생했습니다. 다시 시도하거나 <1>문제 제출</1>을 클릭하여 문제를 보고하면 우리가 즉시 도와드리겠습니다.",
+      "desc": "죄송합니다. 데이터 가져오기 중 오류가 발생했습니다. 다시 시도하거나 <1>문제 제출</1>을 통해 알려주세요. 신속히 도와드리겠습니다.",
       "title": "데이터 가져오기 실패"
     },
     "finish": {
       "onlySettings": "시스템 설정 가져오기 성공",
       "start": "시작하기",
-      "subTitle": "데이터 가져오기 완료, 소요 시간 {{duration}} 초. 가져오기 세부 정보는 다음과 같습니다:",
+      "subTitle": "데이터 가져오기 완료, 소요 시간 {{duration}}초. 세부 내역은 다음과 같습니다:",
       "title": "데이터 가져오기 완료"
     },
-    "loading": "데이터 가져오는 중입니다. 잠시 기다려주세요...",
+    "loading": "데이터 가져오는 중입니다. 잠시만 기다려주세요...",
     "preparing": "데이터 가져오기 모듈 준비 중...",
     "result": {
       "added": "가져오기 성공",
       "errors": "가져오기 오류",
       "messages": "메시지",
-      "sessionGroups": "세션 그룹",
-      "sessions": "에이전트",
-      "skips": "중복 건너뛰기",
+      "sessionGroups": "그룹",
+      "sessions": "도우미",
+      "skips": "중복 건너뜀",
       "topics": "주제",
       "type": "데이터 유형",
       "update": "기록 업데이트"
     },
     "title": "데이터 가져오기",
     "uploading": {
-      "desc": "현재 파일이 크기 때문에 업로드 중입니다...",
+      "desc": "파일이 커서 업로드 중입니다...",
       "restTime": "남은 시간",
       "speed": "업로드 속도"
     }
@@ -228,14 +228,14 @@
     "confirmImport": "가져오기 확인",
     "tables": {
       "count": "기록 수",
-      "name": "표 이름"
+      "name": "테이블 이름"
     },
     "title": "데이터 가져오기 미리보기",
-    "totalRecords": "총 {{count}} 개의 기록이 가져와집니다",
-    "totalTables": "{{count}} 개의 표"
+    "totalRecords": "총 {{count}}개의 기록이 가져와집니다",
+    "totalTables": "{{count}}개의 테이블"
   },
-  "information": "커뮤니티 및 정보",
-  "installPWA": "브라우저 앱 설치",
+  "information": "커뮤니티 및 소식",
+  "installPWA": "브라우저 앱(PWA) 설치",
   "lang": {
     "ar": "아랍어",
     "bg-BG": "불가리아어",
@@ -259,7 +259,7 @@
     "nl-NL": "네덜란드어",
     "no-NO": "노르웨이어",
     "pl-PL": "폴란드어",
-    "pt-BR": "포르투갈어",
+    "pt-BR": "브라질 포르투갈어",
     "pt-PT": "포르투갈어",
     "ro-RO": "루마니아어",
     "ru-RU": "러시아어",
@@ -270,29 +270,29 @@
     "tr-TR": "터키어",
     "uk-UA": "우크라이나어",
     "vi-VN": "베트남어",
-    "zh": "중국어",
-    "zh-CN": "중국어(간체)",
-    "zh-TW": "중국어(번체)"
+    "zh": "중국어 간체",
+    "zh-CN": "중국어 간체",
+    "zh-TW": "중국어 번체"
   },
-  "layoutInitializing": "레이아웃을 불러오는 중...",
+  "layoutInitializing": "레이아웃 로딩 중...",
   "legal": "법적 고지",
   "loading": "로딩 중...",
   "mail": {
-    "business": "비즈니스 협력",
+    "business": "비즈니스 제휴",
     "support": "이메일 지원"
   },
   "oauth": "SSO 로그인",
-  "officialSite": "공식 사이트",
+  "officialSite": "공식 웹사이트",
   "ok": "확인",
   "password": "비밀번호",
-  "pin": "고정",
+  "pin": "상단 고정",
   "pinOff": "고정 해제",
-  "privacy": "개인정보 보호 정책",
-  "regenerate": "재생성",
-  "releaseNotes": "버전 세부정보",
-  "rename": "이름 바꾸기",
-  "reset": "재설정",
-  "retry": "재시도",
+  "privacy": "개인정보 보호정책",
+  "regenerate": "다시 생성",
+  "releaseNotes": "버전 정보",
+  "rename": "이름 변경",
+  "reset": "초기화",
+  "retry": "다시 시도",
   "run": "실행",
   "save": "저장",
   "send": "보내기",
@@ -301,11 +301,11 @@
   "stop": "중지",
   "sync": {
     "actions": {
-      "settings": "동기화 설정",
-      "sync": "즉시 동기화"
+      "settings": "설정 동기화",
+      "sync": "지금 동기화"
     },
     "awareness": {
-      "current": "현재 장치"
+      "current": "현재 기기"
     },
     "channel": "채널",
     "disabled": {
@@ -313,63 +313,63 @@
         "enable": "클라우드 동기화 활성화",
         "settings": "동기화 설정 구성"
       },
-      "desc": "현재 세션 데이터는 이 브라우저에만 저장됩니다. 여러 장치 간에 데이터를 동기화해야 하는 경우 클라우드 동기화를 구성하고 활성화하세요.",
-      "title": "데이터 동기화가 비활성화됨"
+      "desc": "현재 세션 데이터는 이 브라우저에만 저장됩니다. 여러 기기 간 동기화를 원하시면 클라우드 동기화를 설정하고 활성화하세요.",
+      "title": "데이터 동기화 비활성화됨"
     },
     "enabled": {
       "title": "데이터 동기화"
     },
     "status": {
       "connecting": "연결 중",
-      "disabled": "동기화가 비활성화됨",
-      "ready": "연결됨",
-      "synced": "동기화됨",
+      "disabled": "동기화 비활성화됨",
+      "ready": "연결 완료",
+      "synced": "동기화 완료",
       "syncing": "동기화 중",
       "unconnected": "연결 실패"
     },
     "title": "동기화 상태",
     "unconnected": {
-      "tip": "시그널 서버 연결 실패로 인해 피어 투 피어 통신 채널을 설정할 수 없습니다. 네트워크를 확인한 후 다시 시도하세요."
+      "tip": "시그널링 서버 연결 실패로 P2P 통신 채널을 생성할 수 없습니다. 네트워크를 확인한 후 다시 시도하세요."
     }
   },
   "tab": {
     "aiImage": "AI 그림",
     "chat": "채팅",
-    "discover": "발견하기",
+    "discover": "탐색",
     "files": "파일",
-    "me": "나",
+    "me": "내 정보",
     "setting": "설정"
   },
   "telemetry": {
     "allow": "허용",
     "deny": "거부",
-    "desc": "우리는 익명으로 당신의 사용 정보를 수집하여 LobeChat을 개선하고 더 나은 제품 경험을 제공하기를 희망합니다. \"설정\" - \"정보\"에서 언제든지 비활성화할 수 있습니다.",
-    "learnMore": "더 알아보기",
-    "title": "LobeChat을 더 나아지게 하는 데 도와주세요"
+    "desc": "{{appName}}을 개선하고 더 나은 제품 경험을 제공하기 위해 익명 사용 정보를 수집하고자 합니다. 설정 > 정보에서 언제든지 비활성화할 수 있습니다.",
+    "learnMore": "자세히 알아보기",
+    "title": "{{appName}} 개선에 도움을 주세요"
   },
   "temp": "임시",
-  "terms": "이용 약관",
+  "terms": "서비스 약관",
   "update": "업데이트",
-  "updateAgent": "에이전트 정보 업데이트",
+  "updateAgent": "도우미 정보 업데이트",
   "upgradeVersion": {
     "action": "업그레이드",
-    "hasNew": "사용 가능한 업데이트가 있습니다",
+    "hasNew": "업데이트 가능",
     "newVersion": "새 버전 사용 가능: {{version}}"
   },
   "userPanel": {
     "anonymousNickName": "익명 사용자",
-    "billing": "결제 관리",
-    "cloud": "체험 {{name}}",
+    "billing": "청구 관리",
+    "cloud": "{{name}} 체험하기",
     "community": "커뮤니티 버전",
-    "data": "데이터 저장",
+    "data": "데이터 저장소",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",
     "docs": "사용 설명서",
     "email": "이메일 지원",
     "feedback": "피드백 및 제안",
     "help": "도움말 센터",
-    "moveGuide": "설정 버튼을 여기로 이동했습니다",
-    "plans": "요금제",
+    "moveGuide": "설정 버튼이 이곳으로 이동했어요",
+    "plans": "구독 플랜",
     "profile": "계정 관리",
     "setting": "앱 설정",
     "usages": "사용량 통계"
