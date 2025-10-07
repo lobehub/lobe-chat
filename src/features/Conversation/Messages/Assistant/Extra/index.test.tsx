@@ -1,28 +1,27 @@
 import { render, screen } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { useChatStore } from '@/store/chat';
 import { ChatMessage } from '@/types/message';
 
 import { AssistantMessageExtra } from './index';
 
+vi.mock('zustand/traditional');
+
 // Mock TTS and Translate components
-vi.mock('./TTS', () => ({
+vi.mock('@/features/Conversation/components/Extras/TTS', () => ({
   default: vi.fn(() => <div>TTS Component</div>),
 }));
-vi.mock('./Translate', () => ({
+vi.mock('@/features/Conversation/components/Extras/Translate', () => ({
   default: vi.fn(() => <div>Translate Component</div>),
 }));
-
-// Mock dependencies
-vi.mock('@/store/agent', () => ({
-  useAgentStore: vi.fn(),
+vi.mock('@/features/Conversation/components/Extras/Usage', () => ({
+  default: vi.fn(() => <div>Usage Component</div>),
 }));
-vi.mock('@/store/agent/selectors', () => ({
-  agentSelectors: {
-    currentAgentModel: vi.fn(),
-  },
+
+// Mock store
+vi.mock('@/store/chat', () => ({
+  useChatStore: vi.fn(),
 }));
 
 const mockData: ChatMessage = {
@@ -36,37 +35,38 @@ const mockData: ChatMessage = {
 
 describe('AssistantMessageExtra', () => {
   beforeEach(() => {
-    // Set default mock return values
-    (useAgentStore as unknown as Mock).mockImplementation(() => ({
-      chatLoadingId: null,
-    }));
-    (agentSelectors.currentAgentModel as Mock).mockReturnValue('defaultModel');
+    // Mock useChatStore to return false for loading state
+    (useChatStore as unknown as Mock).mockReturnValue(false);
   });
 
   it('should not render content if extra is undefined', async () => {
     render(<AssistantMessageExtra {...mockData} />);
-    expect(screen.queryByText('defaultModel')).toBeNull();
+    expect(screen.queryByText('Usage Component')).toBeNull();
     expect(screen.queryByText('TTS Component')).toBeNull();
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
   it('should not render content if extra is defined but does not contain fromModel, tts, or translate', async () => {
-    render(<AssistantMessageExtra {...mockData} />);
-    expect(screen.queryByText('defaultModel')).toBeNull();
+    render(<AssistantMessageExtra {...mockData} extra={{}} />);
+    expect(screen.queryByText('Usage Component')).toBeNull();
     expect(screen.queryByText('TTS Component')).toBeNull();
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should render Tag component if extra.fromModel exists and does not match the current model', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ fromModel: 'otherModel' }} />);
+  it('should render Usage component if extra.fromModel exists', async () => {
+    render(
+      <AssistantMessageExtra
+        {...mockData}
+        extra={{ fromModel: 'gpt-4', fromProvider: 'openai' }}
+      />,
+    );
 
-    expect(screen.getByText('otherModel')).toBeInTheDocument();
+    expect(screen.getByText('Usage Component')).toBeInTheDocument();
   });
 
-  it('should render TTS component if extra.fromModel and extra.tts coexist', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ fromModel: 'otherModel', tts: {} }} />);
+  it('should render TTS component if extra.tts exists', async () => {
+    render(<AssistantMessageExtra {...mockData} extra={{ tts: {} }} />);
 
-    expect(screen.getByText('otherModel')).toBeInTheDocument();
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
   });
 
@@ -75,10 +75,15 @@ describe('AssistantMessageExtra', () => {
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });
 
-  it('should receive the correct loading attribute if loading is true for TTS and Translate components', async () => {
-    (useAgentStore as unknown as Mock).mockImplementation(() => ({
-      chatLoadingId: 'test-id',
-    }));
+  it('should render both TTS and Translate components when both exist in extra', async () => {
+    render(<AssistantMessageExtra {...mockData} extra={{ translate: { to: 'abc' }, tts: {} }} />);
+    expect(screen.getByText('TTS Component')).toBeInTheDocument();
+    expect(screen.getByText('Translate Component')).toBeInTheDocument();
+  });
+
+  it('should pass loading state to TTS and Translate components', async () => {
+    (useChatStore as unknown as Mock).mockReturnValue(true);
+
     render(<AssistantMessageExtra {...mockData} extra={{ translate: { to: 'abc' }, tts: {} }} />);
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
