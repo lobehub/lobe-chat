@@ -1,6 +1,8 @@
 interface ModelPricing {
   completion: string;
   image: string;
+  input_cache_read: string;
+  input_cache_write: string;
   prompt: string;
   request: string;
 }

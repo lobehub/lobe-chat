@@ -81,6 +81,9 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
 
       const inputPrice = formatPrice(endpoint?.pricing?.prompt);
       const outputPrice = formatPrice(endpoint?.pricing?.completion);
+      const cachedInputPrice = formatPrice(endpoint?.pricing?.input_cache_read);
+      const writeCacheInputPrice = formatPrice(endpoint?.pricing?.input_cache_write);
+
       const isFree = (inputPrice === 0 || outputPrice === 0) && !displayName.endsWith('(free)');
       if (isFree) {
         displayName += ' (free)';
@@ -98,6 +101,8 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
             : undefined,
         pricing: {
           input: inputPrice,
+          cachedInput: cachedInputPrice,
+          writeCacheInput: writeCacheInputPrice,
           output: outputPrice,
         },
         reasoning: endpoint?.supports_reasoning || false,
