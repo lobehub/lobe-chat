@@ -1,5 +1,5 @@
 {
-  "desc": "파일 및 지식 베이스 관리",
+  "desc": "파일과 지식베이스를 관리하세요",
   "detail": {
     "basic": {
       "createdAt": "생성 시간",
@@ -12,16 +12,16 @@
     "data": {
       "chunkCount": "청크 수",
       "embedding": {
-        "default": "벡터화되지 않음",
+        "default": "아직 벡터화되지 않음",
         "error": "실패",
-        "pending": "시작 대기 중",
+        "pending": "대기 중",
         "processing": "처리 중",
-        "success": "완료"
+        "success": "완료됨"
       },
-      "embeddingStatus": "벡터화"
+      "embeddingStatus": "벡터화 상태"
     }
   },
-  "empty": "업로드된 파일/폴더가 없습니다.",
+  "empty": "업로드된 파일/폴더가 없습니다",
   "header": {
     "actions": {
       "newFolder": "새 폴더 만들기",
@@ -32,39 +32,39 @@
   },
   "knowledgeBase": {
     "list": {
-      "confirmRemoveKnowledgeBase": "해당 지식 베이스를 삭제하면 파일은 삭제되지 않고 모든 파일로 이동됩니다. 지식 베이스 삭제 후에는 복구할 수 없으니 신중하게 작업하세요.",
-      "empty": "지식 베이스 생성을 시작하려면 <1>+</1>를 클릭하세요."
+      "confirmRemoveKnowledgeBase": "이 지식베이스를 삭제하려고 합니다. 포함된 파일은 삭제되지 않으며 전체 파일로 이동됩니다. 삭제된 지식베이스는 복구할 수 없으니 신중히 진행해 주세요.",
+      "empty": "<1>+</1>를 클릭하여 지식베이스를 생성하세요"
     },
-    "new": "새 지식 베이스 만들기",
-    "title": "지식 베이스"
+    "new": "새 지식베이스",
+    "title": "지식베이스"
   },
-  "networkError": "지식베이스를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요.",
+  "networkError": "지식베이스를 불러오지 못했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요",
   "notSupportGuide": {
-    "desc": "현재 배포된 인스턴스는 클라이언트 데이터베이스 모드로, 파일 관리 기능을 사용할 수 없습니다. <1>서버 데이터베이스 배포 모드</1>로 전환하거나 직접 <3>LobeChat Cloud</3>를 사용하세요.",
+    "desc": "현재 배포 인스턴스는 클라이언트 데이터베이스 모드로, 파일 관리 기능을 사용할 수 없습니다. <1>서버 데이터베이스 배포 모드</1>로 전환하거나 <3>LobeChat Cloud</3>를 이용해 주세요",
     "features": {
       "allKind": {
-        "desc": "Word, PPT, Excel, PDF, TXT 등 일반 문서 형식과 JS, Python 등 주요 코드 파일을 포함한 다양한 파일 형식을 지원합니다.",
-        "title": "다양한 파일 형식 분석"
+        "desc": "Word, PPT, Excel, PDF, TXT 등 일반 문서 형식과 JS, Python 등 주요 코드 파일을 포함한 다양한 파일 형식을 지원합니다",
+        "title": "다양한 파일 형식 지원"
       },
       "embeddings": {
-        "desc": "고성능 벡터 모델을 사용하여 텍스트 청크를 벡터화하여 파일 내용의 의미 기반 검색을 구현합니다.",
-        "title": "벡터 의미화"
+        "desc": "고성능 벡터 모델을 사용하여 텍스트를 청크 단위로 벡터화하고, 파일 내용을 의미 기반으로 검색할 수 있습니다",
+        "title": "의미 기반 벡터화"
       },
       "repos": {
-        "desc": "지식 베이스를 생성하고 다양한 유형의 파일을 추가하여 나만의 분야 지식을 구축할 수 있습니다.",
-        "title": "지식 베이스"
+        "desc": "지식베이스를 생성하고 다양한 형식의 파일을 추가하여 나만의 전문 지식을 구축할 수 있습니다",
+        "title": "지식베이스 구축"
       }
     },
-    "title": "현재 배포 모드는 파일 관리를 지원하지 않습니다."
+    "title": "현재 배포 모드에서는 파일 관리 기능을 지원하지 않습니다"
   },
   "preview": {
     "downloadFile": "파일 다운로드",
-    "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기가 필요하신 경우, <1>저희에게 피드백을 주시기 바랍니다</1>."
+    "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기 기능이 필요하시면 <1>의견을 보내주세요</1>"
   },
   "searchFilePlaceholder": "파일 검색",
   "tab": {
-    "all": "모든 파일",
-    "audios": "음성",
+    "all": "전체 파일",
+    "audios": "오디오",
     "documents": "문서",
     "images": "이미지",
     "videos": "비디오",
@@ -79,19 +79,19 @@
       "collapse": "접기",
       "item": {
         "done": "업로드 완료",
-        "error": "업로드 실패, 다시 시도하세요.",
+        "error": "업로드 실패, 다시 시도해 주세요",
         "pending": "업로드 준비 중...",
         "processing": "파일 처리 중...",
         "restTime": "남은 시간 {{time}}"
       }
     },
-    "totalCount": "총 {{count}} 항목",
+    "totalCount": "총 {{count}}개 항목",
     "uploadStatus": {
       "error": "업로드 오류",
       "pending": "업로드 대기 중",
       "processing": "업로드 중",
       "success": "업로드 완료",
-      "uploading": "업로드 진행 중"
+      "uploading": "업로드 중"
     }
   }
 }
