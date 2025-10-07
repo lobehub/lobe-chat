@@ -639,7 +639,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'GPT-4o Audio Preview 模型，支持音频输入输出',
     displayName: 'GPT-4o Audio Preview',
-    id: 'gpt-4o-audio-preview', // deprecated on 2025-10-10
+    id: 'gpt-4o-audio-preview',
     maxOutput: 16_384,
     pricing: {
       units: [
