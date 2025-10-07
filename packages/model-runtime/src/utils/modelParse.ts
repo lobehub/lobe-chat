@@ -326,13 +326,25 @@ const processModelCard = (
     return undefined;
   }
 
-  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
+  const formatPricing = (pricing?: {
+    cachedInput?: number;
+    input?: number;
+    output?: number;
+    units?: any[];
+    writeCacheInput?: number;
+  }) => {
     if (!pricing || typeof pricing !== 'object') return undefined;
     if (Array.isArray(pricing.units)) {
       return { units: pricing.units };
     }
-    const { input, output } = pricing;
-    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
+    const { input, output, cachedInput, writeCacheInput } = pricing;
+    if (
+      typeof input !== 'number' &&
+      typeof output !== 'number' &&
+      typeof cachedInput !== 'number' &&
+      typeof writeCacheInput !== 'number'
+    )
+      return undefined;
 
     const units = [];
     if (typeof input === 'number') {
@@ -347,6 +359,22 @@ const processModelCard = (
       units.push({
         name: 'textOutput' as const,
         rate: output,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof cachedInput === 'number') {
+      units.push({
+        name: 'textInput_cacheRead' as const,
+        rate: cachedInput,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof writeCacheInput === 'number') {
+      units.push({
+        name: 'textInput_cacheWrite' as const,
+        rate: writeCacheInput,
         strategy: 'fixed' as const,
         unit: 'millionTokens' as const,
       });

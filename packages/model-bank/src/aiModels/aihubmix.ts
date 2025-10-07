@@ -9,6 +9,31 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
+    description: 'GPT-5 pro 使用更多计算来更深入地思考，并持续提供更好的答案。',
+    displayName: 'GPT-5 pro',
+    id: 'gpt-5-pro',
+    maxOutput: 272_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    settings: {
+      extendParams: ['textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
     description:
       'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
     displayName: 'GPT-5 Codex',

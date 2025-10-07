@@ -81,23 +81,27 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
 
       const openaiTools = enabledSearch
         ? [
-            ...(tools || []),
-            {
-              type: 'web_search',
-              ...(oaiSearchContextSize && {
-                search_context_size: oaiSearchContextSize,
-              }),
-            },
-          ]
+          ...(tools || []),
+          {
+            type: 'web_search',
+            ...(oaiSearchContextSize && {
+              search_context_size: oaiSearchContextSize,
+            }),
+          },
+        ]
         : tools;
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
+        const reasoning = payload.reasoning
+          ? { ...payload.reasoning, summary: 'auto' }
+          : { summary: 'auto' };
+        if (model.startsWith('gpt-5-pro')) {
+          reasoning.effort = 'high';
+        }
         return pruneReasoningPayload({
           ...rest,
           model,
-          reasoning: payload.reasoning
-            ? { ...payload.reasoning, summary: 'auto' }
-            : { summary: 'auto' },
+          reasoning,
           ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           stream: payload.stream ?? true,
           tools: openaiTools as any,
