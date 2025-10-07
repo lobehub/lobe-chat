@@ -121,9 +121,11 @@ const UserMessage = memo<UserMessageProps>((props) => {
             />
           </Flexbox>
 
-          <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-            <UserActionsBar data={props} id={id} index={index} />
-          </Flexbox>
+          {!disableEditing && (
+            <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+              <UserActionsBar data={props} id={id} index={index} />
+            </Flexbox>
+          )}
         </Flexbox>
         <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
       </Flexbox>

@@ -121,20 +121,7 @@ const Item = memo<ChatListItemProps>(
         }
 
         case 'assistant': {
-          return (
-            <>
-              {enableHistoryDivider && <History />}
-              <Flexbox
-                className={cx(styles.message, className, isMessageLoading && styles.loading)}
-                data-index={index}
-                onContextMenu={onContextMenu}
-                ref={containerRef}
-              >
-                <AssistantMessage {...item} disableEditing={disableEditing} index={index} />
-                {endRender}
-              </Flexbox>
-            </>
-          );
+          return <AssistantMessage {...item} disableEditing={disableEditing} index={index} />;
         }
       }
 
@@ -145,7 +132,16 @@ const Item = memo<ChatListItemProps>(
 
     return (
       <InPortalThreadContext.Provider value={inPortalThread}>
-        {renderContent}
+        {enableHistoryDivider && <History />}
+        <Flexbox
+          className={cx(styles.message, className, isMessageLoading && styles.loading)}
+          data-index={index}
+          onContextMenu={onContextMenu}
+          ref={containerRef}
+        >
+          {renderContent}
+          {endRender}
+        </Flexbox>
       </InPortalThreadContext.Provider>
     );
   },
