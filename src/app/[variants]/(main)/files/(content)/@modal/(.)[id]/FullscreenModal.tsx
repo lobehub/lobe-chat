@@ -66,7 +66,7 @@ const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
       <ConfigProvider theme={{ token: { motion: false } }}>
         <Modal
           className={styles.modal}
-          classNames={{ body: styles.body, content: styles.content, header: styles.header }}
+          classNames={{ body: styles.body, container: styles.content, header: styles.header }}
           footer={false}
           onCancel={() => {
             router.back();
