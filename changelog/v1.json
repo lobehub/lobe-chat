@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Improve Korean translate."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.3"
+  },
+  {
     "children": {},
     "date": "2025-10-06",
     "version": "1.135.2"

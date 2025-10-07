@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.135.3](https://github.com/lobehub/lobe-chat/compare/v1.135.2...v1.135.3)
+
+<sup>Released on **2025-10-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve Korean translate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve Korean translate, closes [#9597](https://github.com/lobehub/lobe-chat/issues/9597) ([319fbfb](https://github.com/lobehub/lobe-chat/commit/319fbfb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.135.2](https://github.com/lobehub/lobe-chat/compare/v1.135.1...v1.135.2)
 
 <sup>Released on **2025-10-06**</sup>

@@ -1,104 +1,104 @@
 {
   "azure": {
     "azureApiVersion": {
-      "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따릅니다. [최신 버전 확인](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "desc": "Azure의 API 버전으로, YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 참조하세요.",
       "fetch": "목록 가져오기",
       "title": "Azure API 버전"
     },
-    "empty": "모델 ID를 입력하여 첫 번째 모델을 추가하세요.",
+    "empty": "모델 ID를 입력하여 첫 번째 모델을 추가하세요",
     "endpoint": {
-      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다.",
+      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다",
       "placeholder": "https://docs-test-001.openai.azure.com",
       "title": "Azure API 주소"
     },
-    "modelListPlaceholder": "배포한 OpenAI 모델을 선택하거나 추가하세요.",
+    "modelListPlaceholder": "배포한 OpenAI 모델을 선택하거나 추가하세요",
     "title": "Azure OpenAI",
     "token": {
-      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다.",
-      "placeholder": "Azure API 키",
-      "title": "API 키"
+      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
     }
   },
   "azureai": {
     "azureApiVersion": {
-      "desc": "Azure API 버전, YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 참조하세요.",
+      "desc": "Azure의 API 버전으로, YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 참조하세요.",
       "fetch": "목록 가져오기",
       "title": "Azure API 버전"
     },
     "endpoint": {
-      "desc": "Azure AI 프로젝트 개요에서 Azure AI 모델 추론 엔드포인트를 찾습니다.",
+      "desc": "Azure AI 프로젝트 개요에서 Azure AI 모델 추론 엔드포인트를 찾을 수 있습니다",
       "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
       "title": "Azure AI 엔드포인트"
     },
     "title": "Azure OpenAI",
     "token": {
-      "desc": "Azure AI 프로젝트 개요에서 API 키를 찾습니다.",
+      "desc": "Azure AI 프로젝트 개요에서 API 키를 찾을 수 있습니다",
       "placeholder": "Azure 키",
       "title": "키"
     }
   },
   "bedrock": {
     "accessKeyId": {
-      "desc": "AWS 액세스 키 ID를 입력하세요.",
-      "placeholder": "AWS 액세스 키 ID",
-      "title": "AWS 액세스 키 ID"
+      "desc": "AWS Access Key Id를 입력하세요",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
     },
     "checker": {
-      "desc": "AccessKeyId / SecretAccessKey를 올바르게 입력했는지 테스트합니다."
+      "desc": "AccessKeyId / SecretAccessKey가 올바르게 입력되었는지 테스트합니다"
     },
     "region": {
-      "desc": "AWS 지역을 입력하세요.",
-      "placeholder": "AWS 지역",
-      "title": "AWS 지역"
+      "desc": "AWS Region을 입력하세요",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "secretAccessKey": {
-      "desc": "AWS 비밀 액세스 키를 입력하세요.",
-      "placeholder": "AWS 비밀 액세스 키",
-      "title": "AWS 비밀 액세스 키"
+      "desc": "AWS Secret Access Key를 입력하세요",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "AWS SSO/STS를 사용 중이라면 AWS 세션 토큰을 입력하세요.",
-      "placeholder": "AWS 세션 토큰",
-      "title": "AWS 세션 토큰 (선택 사항)"
+      "desc": "AWS SSO/STS를 사용하는 경우 AWS Session Token을 입력하세요",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (선택 사항)"
     },
     "title": "Bedrock",
     "unlock": {
-      "customRegion": "사용자 정의 서비스 지역",
-      "customSessionToken": "사용자 정의 세션 토큰",
-      "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
-      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey를 입력하면 생성이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
-      "title": "사용자 정의 Bedrock 인증 정보 사용"
+      "customRegion": "사용자 지정 서비스 지역",
+      "customSessionToken": "사용자 지정 Session Token",
+      "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 인증 구성을 저장하지 않습니다",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey를 입력하면 이미지 생성을 시작할 수 있습니다. 애플리케이션은 인증 구성을 저장하지 않습니다",
+      "title": "사용자 지정 Bedrock 인증 정보 사용"
     }
   },
   "cloudflare": {
     "apiKey": {
-      "desc": "Cloudflare API Key 를 작성해 주세요.",
+      "desc": "Cloudflare API Key를 입력하세요",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
     },
     "baseURLOrAccountID": {
-      "desc": "클라우드 플레어 계정 ID 또는 사용자 지정 API 주소 입력",
-      "placeholder": "클라우드 플레어 계정 ID / 사용자 지정 API 주소",
-      "title": "클라우드 플레어 계정 ID / API 주소"
+      "desc": "Cloudflare 계정 ID 또는 사용자 지정 API 주소를 입력하세요",
+      "placeholder": "Cloudflare Account ID / custom API URL",
+      "title": "Cloudflare 계정 ID / API 주소"
     }
   },
   "createNewAiProvider": {
     "apiKey": {
-      "placeholder": "API 키를 입력하세요",
-      "title": "API 키"
+      "placeholder": "API Key를 입력하세요",
+      "title": "API Key"
     },
     "basicTitle": "기본 정보",
     "configTitle": "설정 정보",
     "confirm": "새로 만들기",
-    "createSuccess": "생성이 성공적으로 완료되었습니다",
+    "createSuccess": "성공적으로 생성됨",
     "description": {
       "placeholder": "서비스 제공자 소개 (선택 사항)",
       "title": "서비스 제공자 소개"
     },
     "id": {
-      "desc": "서비스 제공자의 고유 식별자로, 생성 후에는 수정할 수 없습니다.",
-      "format": "숫자, 소문자, 하이픈(-), 및 언더스코어(_)만 포함할 수 있습니다.",
-      "placeholder": "소문자로 입력하세요, 예: openai, 생성 후 수정할 수 없습니다",
+      "desc": "서비스 제공자의 고유 식별자로, 생성 후 수정할 수 없습니다",
+      "format": "숫자, 소문자, 하이픈(-), 밑줄(_)만 사용할 수 있습니다",
+      "placeholder": "예: openai, gemini 등",
       "required": "서비스 제공자 ID를 입력하세요",
       "title": "서비스 제공자 ID"
     },
@@ -120,38 +120,38 @@
       "required": "SDK 유형을 선택하세요",
       "title": "요청 형식"
     },
-    "title": "사용자 정의 AI 서비스 제공자 생성"
+    "title": "사용자 지정 AI 서비스 제공자 생성"
   },
   "github": {
     "personalAccessToken": {
-      "desc": "당신의 Github PAT를 입력하세요. [여기](https://github.com/settings/tokens)를 클릭하여 생성하세요.",
+      "desc": "Github PAT를 입력하세요. [여기](https://github.com/settings/tokens)를 클릭하여 생성할 수 있습니다",
       "placeholder": "ghp_xxxxxx",
-      "title": "GitHub PAT"
+      "title": "Github PAT"
     }
   },
   "huggingface": {
     "accessToken": {
-      "desc": "당신의 HuggingFace 토큰을 입력하세요. [여기](https://huggingface.co/settings/tokens)를 클릭하여 생성하세요.",
+      "desc": "HuggingFace Token을 입력하세요. [여기](https://huggingface.co/settings/tokens)를 클릭하여 생성할 수 있습니다",
       "placeholder": "hf_xxxxxxxxx",
-      "title": "HuggingFace 토큰"
+      "title": "HuggingFace Token"
     }
   },
   "list": {
     "title": {
-      "disabled": "서비스 제공자가 비활성화되었습니다",
-      "enabled": "서비스 제공자가 활성화되었습니다"
+      "disabled": "비활성화된 서비스 제공자",
+      "enabled": "활성화된 서비스 제공자"
     }
   },
   "menu": {
-    "addCustomProvider": "사용자 정의 서비스 제공자 추가",
-    "all": "모두",
+    "addCustomProvider": "사용자 지정 서비스 제공자 추가",
+    "all": "전체",
     "list": {
       "disabled": "비활성화됨",
       "enabled": "활성화됨"
     },
-    "notFound": "검색 결과를 찾을 수 없습니다",
+    "notFound": "검색 결과가 없습니다",
     "searchProviders": "서비스 제공자 검색...",
-    "sort": "사용자 정의 정렬"
+    "sort": "사용자 지정 정렬"
   },
   "newapi": {
     "apiKey": {
@@ -161,7 +161,7 @@
       "title": "API 키"
     },
     "apiUrl": {
-      "desc": "New API 서비스의 API 주소, 대부분 /v1을 포함해야 합니다",
+      "desc": "New API 서비스의 API 주소입니다. 대부분의 경우 /v1을 포함하지 마세요",
       "title": "API 주소"
     },
     "enabled": {
@@ -178,29 +178,29 @@
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",
-      "title": "연결성 검사"
+      "title": "연결 확인"
     },
     "customModelName": {
-      "desc": "사용자 정의 모델을 추가하려면 쉼표(,)로 구분하여 여러 모델을 입력하세요",
-      "placeholder": "비쿠나,야마,코델라마,야마2:13b-텍스트",
-      "title": "사용자 정의 모델 이름"
+      "desc": "사용자 지정 모델을 추가하세요. 여러 모델은 쉼표(,)로 구분합니다",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "사용자 지정 모델 이름"
     },
     "download": {
-      "desc": "Ollama가 모델을 다운로드하고 있습니다. 이 페이지를 닫지 마세요. 다시 다운로드할 경우 중단된 지점에서 계속됩니다.",
-      "failed": "모델 다운로드에 실패했습니다. 네트워크 또는 Ollama 설정을 확인한 후 다시 시도해 주세요.",
+      "desc": "Ollama가 모델을 다운로드 중입니다. 이 페이지를 닫지 마세요. 재다운로드 시 중단된 지점부터 이어집니다",
+      "failed": "모델 다운로드 실패. 네트워크 또는 Ollama 설정을 확인한 후 다시 시도하세요",
       "remainingTime": "남은 시간",
       "speed": "다운로드 속도",
       "title": "모델 {{model}} 다운로드 중"
     },
     "endpoint": {
-      "desc": "http(s)://를 포함해야 하며, 로컬에서 추가로 지정하지 않은 경우 비워둘 수 있습니다.",
-      "title": "인터페이스 프록시 주소"
+      "desc": "http(s)://를 포함해야 하며, 로컬에서 별도 지정하지 않은 경우 비워둘 수 있습니다",
+      "title": "Ollama 서비스 주소"
     },
     "title": "Ollama",
     "unlock": {
       "cancel": "다운로드 취소",
       "confirm": "다운로드",
-      "description": "Ollama 모델 태그를 입력하여 세션을 계속 진행하세요.",
+      "description": "Ollama 모델 태그를 입력하면 세션을 계속할 수 있습니다",
       "downloaded": "{{completed}} / {{total}}",
       "starting": "다운로드 시작 중...",
       "title": "지정된 Ollama 모델 다운로드"
@@ -212,151 +212,151 @@
       "title": "일괄 선택"
     },
     "config": {
-      "aesGcm": "귀하의 비밀 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
+      "aesGcm": "귀하의 비밀 키 및 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘으로 암호화됩니다",
       "apiKey": {
-        "desc": "{{name}} API 키를 입력하세요",
-        "descWithUrl": "{{name}} API 키를 입력하세요. <3>여기를 클릭하여 받기</3>",
-        "placeholder": "{{name}} API 키",
-        "title": "API 키"
+        "desc": "{{name}} API Key를 입력해 주세요",
+        "descWithUrl": "{{name}} API Key를 입력해 주세요, <3>여기에서 받기</3>",
+        "placeholder": "{{name}} API Key",
+        "title": "API Key"
       },
       "baseURL": {
         "desc": "http(s)://를 포함해야 합니다",
-        "invalid": "유효한 URL을 입력하세요",
+        "invalid": "유효한 URL을 입력해 주세요",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API 프록시 주소"
       },
       "checker": {
-        "button": "검사",
-        "desc": "API 키와 프록시 주소가 올바르게 입력되었는지 테스트합니다",
+        "button": "확인",
+        "desc": "API Key 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
         "pass": "검사 통과",
-        "title": "연결성 검사"
+        "title": "연결 상태 확인"
       },
       "fetchOnClient": {
-        "desc": "클라이언트 요청 모드는 브라우저에서 직접 세션 요청을 시작하여 응답 속도를 높일 수 있습니다",
+        "desc": "클라이언트 요청 모드는 브라우저에서 직접 세션 요청을 시작하여 응답 속도를 향상시킵니다",
         "title": "클라이언트 요청 모드 사용"
       },
       "helpDoc": "설정 가이드",
       "responsesApi": {
-        "desc": "OpenAI의 최신 요청 형식 규격을 사용하여 사고 연결 등 고급 기능을 활성화합니다",
+        "desc": "OpenAI의 차세대 요청 형식 규격을 사용하여 Chain of Thought 등 고급 기능을 활성화합니다",
         "title": "Responses API 규격 사용"
       },
-      "waitingForMore": "더 많은 모델이 <1>계획 중</1>입니다. 기대해 주세요"
+      "waitingForMore": "더 많은 모델이 <1>도입 예정</1>입니다. 기대해 주세요"
     },
     "createNew": {
       "title": "사용자 정의 AI 모델 생성"
     },
     "item": {
-      "config": "모델 구성",
+      "config": "모델 설정",
       "customModelCards": {
         "addNew": "{{id}} 모델 생성 및 추가",
-        "confirmDelete": "해당 사용자 정의 모델을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행하세요."
+        "confirmDelete": "이 사용자 정의 모델을 삭제하려고 합니다. 삭제 후 복구할 수 없으니 신중히 진행해 주세요."
       },
       "delete": {
-        "confirm": "모델 {{displayName}}를 삭제하시겠습니까?",
-        "success": "삭제 성공",
+        "confirm": "모델 {{displayName}}을(를) 삭제하시겠습니까?",
+        "success": "삭제 완료",
         "title": "모델 삭제"
       },
       "modelConfig": {
         "azureDeployName": {
-          "extra": "Azure OpenAI에서 실제 요청되는 필드",
-          "placeholder": "Azure에서 모델 배포 이름을 입력하세요",
+          "extra": "Azure OpenAI에서 실제 요청에 사용되는 필드입니다",
+          "placeholder": "Azure에서의 모델 배포 이름을 입력해 주세요",
           "title": "모델 배포 이름"
         },
         "deployName": {
-          "extra": "요청을 보낼 때 이 필드가 모델 ID로 사용됩니다.",
-          "placeholder": "모델 실제 배포 이름 또는 ID를 입력하세요.",
+          "extra": "요청 시 이 필드가 모델 ID로 사용됩니다",
+          "placeholder": "모델의 실제 배포 이름 또는 ID를 입력해 주세요",
           "title": "모델 배포 이름"
         },
         "displayName": {
-          "placeholder": "모델의 표시 이름을 입력하세요, 예: ChatGPT, GPT-4 등",
+          "placeholder": "예: ChatGPT, GPT-4 등 모델의 표시 이름을 입력해 주세요",
           "title": "모델 표시 이름"
         },
         "files": {
-          "extra": "현재 파일 업로드 구현은 단지 하나의 해킹 방법일 뿐이며, 스스로 시도하는 것만 가능합니다. 완전한 파일 업로드 기능은 후속 구현을 기다려 주세요.",
+          "extra": "현재 파일 업로드는 임시 방식으로 구현되어 있으며, 실험적으로만 사용 가능합니다. 정식 파일 업로드 기능은 추후 제공될 예정입니다",
           "title": "파일 업로드 지원"
         },
         "functionCall": {
-          "extra": "이 설정은 모델이 도구를 사용할 수 있는 기능을 활성화하며, 이를 통해 모델에 도구형 플러그인을 추가할 수 있습니다. 그러나 실제 도구 사용 지원 여부는 모델 자체에 따라 다르므로 사용 가능성을 직접 테스트해 보시기 바랍니다.",
+          "extra": "이 설정은 모델의 도구 사용 기능만 활성화합니다. 실제 도구 사용 가능 여부는 모델에 따라 다르므로 직접 테스트해 주세요",
           "title": "도구 사용 지원"
         },
         "id": {
-          "extra": "생성 후 수정할 수 없으며, AI 호출 시 모델 ID로 사용됩니다.",
-          "placeholder": "모델 ID를 입력하세요, 예: gpt-4o 또는 claude-3.5-sonnet",
+          "extra": "생성 후 수정할 수 없으며, AI 호출 시 모델 ID로 사용됩니다",
+          "placeholder": "예: gpt-4o 또는 claude-3.5-sonnet 등 모델 ID를 입력해 주세요",
           "title": "모델 ID"
         },
-        "modalTitle": "사용자 정의 모델 구성",
+        "modalTitle": "사용자 정의 모델 설정",
         "reasoning": {
-          "extra": "이 설정은 모델의 심층 사고 능력만을 활성화합니다. 구체적인 효과는 모델 자체에 따라 다르므로, 해당 모델이 사용 가능한 심층 사고 능력을 갖추고 있는지 직접 테스트해 보시기 바랍니다.",
+          "extra": "이 설정은 모델의 심층 사고 기능만 활성화합니다. 실제 효과는 모델에 따라 다르므로 직접 테스트해 주세요",
           "title": "심층 사고 지원"
         },
         "tokens": {
-          "extra": "모델이 지원하는 최대 토큰 수 설정",
-          "title": "최대 컨텍스트 창",
+          "extra": "모델이 지원하는 최대 토큰 수를 설정합니다",
+          "title": "최대 컨텍스트 길이",
           "unlimited": "제한 없음"
         },
         "type": {
-          "extra": "다양한 모델 유형은 차별화된 사용 시나리오와 기능을 제공합니다",
+          "extra": "모델 유형에 따라 사용 시나리오와 기능이 다릅니다",
           "options": {
             "chat": "대화",
-            "embedding": "벡터화",
+            "embedding": "임베딩",
             "image": "이미지 생성",
             "realtime": "실시간 대화",
-            "stt": "음성 인식",
-            "text2music": "텍스트에서 음악으로",
-            "text2video": "텍스트에서 비디오로",
-            "tts": "음성 합성"
+            "stt": "음성 → 텍스트",
+            "text2music": "텍스트 → 음악",
+            "text2video": "텍스트 → 비디오",
+            "tts": "텍스트 → 음성"
           },
-          "placeholder": "모델 유형을 선택하세요",
+          "placeholder": "모델 유형을 선택해 주세요",
           "title": "모델 유형"
         },
         "vision": {
-          "extra": "이 설정은 애플리케이션 내에서 이미지 업로드 기능만 활성화합니다. 인식 지원 여부는 모델 자체에 따라 다르므로, 해당 모델의 시각 인식 가능성을 스스로 테스트하세요.",
+          "extra": "이 설정은 애플리케이션 내 이미지 업로드 기능만 활성화합니다. 실제 인식 가능 여부는 모델에 따라 다르므로 직접 테스트해 주세요",
           "title": "시각 인식 지원"
         }
       },
       "pricing": {
         "image": "${{amount}}/이미지",
-        "inputCharts": "${{amount}}/M 문자",
+        "inputCharts": "${{amount}}/백만 문자",
         "inputMinutes": "${{amount}}/분",
-        "inputTokens": "입력 ${{amount}}/M",
-        "outputTokens": "출력 ${{amount}}/M"
+        "inputTokens": "입력 ${{amount}}/백만",
+        "outputTokens": "출력 ${{amount}}/백만"
       },
-      "releasedAt": "발행일 {{releasedAt}}"
+      "releasedAt": "{{releasedAt}}에 출시됨"
     },
     "list": {
       "addNew": "모델 추가",
-      "disabled": "비활성화",
+      "disabled": "비활성화됨",
       "disabledActions": {
         "showMore": "모두 보기"
       },
       "empty": {
-        "desc": "사용할 수 있는 모델이 없습니다. 사용자 정의 모델을 생성하거나 모델을 가져온 후 시작하세요.",
-        "title": "사용 가능한 모델이 없습니다."
+        "desc": "사용자 정의 모델을 생성하거나 모델을 가져온 후 사용을 시작해 보세요",
+        "title": "사용 가능한 모델이 없습니다"
       },
-      "enabled": "활성화",
+      "enabled": "활성화됨",
       "enabledActions": {
         "disableAll": "모두 비활성화",
         "enableAll": "모두 활성화",
         "sort": "사용자 정의 모델 정렬"
       },
-      "enabledEmpty": "활성화된 모델이 없습니다. 아래 목록에서 원하는 모델을 활성화하세요~",
+      "enabledEmpty": "활성화된 모델이 없습니다. 아래 목록에서 원하는 모델을 활성화해 보세요~",
       "fetcher": {
         "clear": "가져온 모델 지우기",
         "fetch": "모델 목록 가져오기",
         "fetching": "모델 목록을 가져오는 중...",
         "latestTime": "마지막 업데이트 시간: {{time}}",
-        "noLatestTime": "아직 목록을 가져오지 않았습니다."
+        "noLatestTime": "아직 목록을 가져오지 않았습니다"
       },
       "noModelsInCategory": "이 카테고리에는 활성화된 모델이 없습니다",
       "resetAll": {
-        "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 현재 모델 목록은 기본 상태로 돌아갑니다.",
-        "success": "초기화 성공",
+        "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 모델 목록이 기본 상태로 돌아갑니다",
+        "success": "초기화 완료",
         "title": "모든 수정 초기화"
       },
       "search": "모델 검색...",
-      "searchResult": "{{count}} 개의 모델이 검색되었습니다",
+      "searchResult": "{{count}}개의 모델 검색됨",
       "title": "모델 목록",
-      "total": "사용 가능한 모델 총 {{count}} 개"
+      "total": "총 {{count}}개의 모델 사용 가능"
     },
     "searchNotFound": "검색 결과를 찾을 수 없습니다",
     "tabs": {
@@ -364,35 +364,35 @@
       "chat": "대화",
       "embedding": "임베딩",
       "image": "이미지",
-      "stt": "음성 인식",
-      "tts": "음성 합성"
+      "stt": "ASR",
+      "tts": "TTS"
     }
   },
   "sortModal": {
-    "success": "정렬 업데이트 성공",
-    "title": "사용자 정의 정렬",
+    "success": "정렬이 성공적으로 업데이트되었습니다",
+    "title": "사용자 지정 정렬",
     "update": "업데이트"
   },
   "updateAiProvider": {
-    "confirmDelete": "해당 AI 서비스 제공자를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 확인하시겠습니까?",
+    "confirmDelete": "이 AI 서비스 제공자를 삭제하려고 합니다. 삭제 후 복구할 수 없습니다. 삭제하시겠습니까?",
     "deleteSuccess": "삭제 성공",
     "tooltip": "서비스 제공자 기본 설정 업데이트",
     "updateSuccess": "업데이트 성공"
   },
   "updateCustomAiProvider": {
-    "title": "사용자 정의 AI 서비스 제공자 구성 업데이트"
+    "title": "사용자 지정 AI 서비스 제공자 설정 업데이트"
   },
   "vertexai": {
     "apiKey": {
-      "desc": "당신의 Vertex AI 키를 입력하세요",
+      "desc": "Vertex AI 키를 입력하세요",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI 키"
     }
   },
   "zeroone": {
-    "title": "01.AI Zero One All Things"
+    "title": "01.AI 영일만물"
   },
   "zhipu": {
-    "title": "지푸"
+    "title": "Zhipu 지푸"
   }
 }
