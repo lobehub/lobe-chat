@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1: kolejna generacja modelu inferencyjnego, poprawiająca zdolności do złożonego wnioskowania i łańcuchowego myślenia, odpowiednia do zadań wymagających dogłębnej analizy."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1: Nowej generacji model wnioskowania, który poprawia zdolność do złożonego rozumowania i myślenia łańcuchowego, idealny do zadań wymagających dogłębnej analizy."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 to model wizualno-językowy oparty na DeepSeekMoE-27B, wykorzystujący architekturę MoE z rzadką aktywacją, osiągający doskonałe wyniki przy aktywacji jedynie 4,5 miliarda parametrów. Model ten wyróżnia się w wielu zadaniach, takich jak wizualne pytania i odpowiedzi, optyczne rozpoznawanie znaków, zrozumienie dokumentów/tabel/wykresów oraz lokalizacja wizualna."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "Najszybsza i najbardziej ekonomiczna wersja GPT-5. Doskonała do zastosowań wymagających szybkiej odpowiedzi i wrażliwych na koszty."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro wykorzystuje większą moc obliczeniową do głębszego rozumowania i konsekwentnie dostarcza lepsze odpowiedzi."
+  },
   "gpt-audio": {
     "description": "GPT Audio to uniwersalny model konwersacyjny obsługujący wejście i wyjście audio, dostępny w API Chat Completions z obsługą audio I/O."
   },
   "gpt-image-1": {
     "description": "Natywny multimodalny model generowania obrazów ChatGPT."
+  },
+  "gpt-image-1-mini": {
+    "description": "Tańsza wersja GPT Image 1, natywnie obsługuje wejścia tekstowe i graficzne oraz generuje obrazy jako wyjście."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4: skwantowany model Transformer, który zachowuje wysoką wydajność nawet przy ograniczonych zasobach."

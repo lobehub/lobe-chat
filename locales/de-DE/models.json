@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1: Ein Inferenzmodell der nächsten Generation, das komplexe Schlussfolgerungen und verknüpfte Denkfähigkeiten verbessert und sich für Aufgaben eignet, die tiefgehende Analysen erfordern."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1: Das nächste Generation von Inferenzmodellen mit verbesserter Fähigkeit zum komplexen Schlussfolgern und vernetztem Denken – ideal für Aufgaben, die tiefgehende Analysen erfordern."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 ist ein hybrides Expertenmodell (MoE) für visuelle Sprache, das auf DeepSeekMoE-27B basiert und eine spärliche Aktivierung der MoE-Architektur verwendet, um außergewöhnliche Leistungen bei der Aktivierung von nur 4,5 Milliarden Parametern zu erzielen. Dieses Modell zeigt hervorragende Leistungen in mehreren Aufgaben, darunter visuelle Fragenbeantwortung, optische Zeichenerkennung, Dokument-/Tabellen-/Diagrammverständnis und visuelle Lokalisierung."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "Die schnellste und kostengünstigste Version von GPT-5. Besonders geeignet für Anwendungen, die schnelle Reaktionen und Kostenbewusstsein erfordern."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 Pro nutzt mehr Rechenleistung für tiefgreifendere Überlegungen und liefert kontinuierlich bessere Antworten."
+  },
   "gpt-audio": {
     "description": "GPT Audio ist ein universelles Chatmodell für Audioeingabe und -ausgabe, das Audio-I/O in der Chat Completions API unterstützt."
   },
   "gpt-image-1": {
     "description": "ChatGPT natives multimodales Bildgenerierungsmodell"
+  },
+  "gpt-image-1-mini": {
+    "description": "Kostengünstigere Version von GPT Image 1 mit nativer Unterstützung für Text- und Bildeingaben sowie Bildausgaben."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 quantisierte Transformer-Struktur, die auch bei begrenzten Ressourcen starke Leistung beibehält."

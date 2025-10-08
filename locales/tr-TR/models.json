@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1: Yeni nesil akıl yürütme modeli, karmaşık mantıksal çıkarımlar ve zincirleme düşünme yeteneklerini geliştirir, derinlemesine analiz gerektiren görevler için idealdir."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2, DeepSeekMoE-27B tabanlı bir karma uzman (MoE) görsel dil modelidir. Seyrek etkinleştirilen MoE mimarisini kullanarak yalnızca 4.5B parametreyi etkinleştirerek olağanüstü performans sergilemektedir. Bu model, görsel soru yanıtlama, optik karakter tanıma, belge/tablolar/grafikler anlama ve görsel konumlandırma gibi birçok görevde mükemmel sonuçlar elde etmektedir."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "En hızlı ve en ekonomik GPT-5 versiyonu. Hızlı yanıt gerektiren ve maliyet duyarlı uygulamalar için idealdir."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro, daha derin düşünme için daha fazla hesaplama gücü kullanır ve sürekli olarak daha iyi yanıtlar sunar."
+  },
   "gpt-audio": {
     "description": "GPT Audio, ses giriş ve çıkışına yönelik genel sohbet modelidir ve Chat Completions API’de ses I/O kullanımını destekler."
   },
   "gpt-image-1": {
     "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
+  },
+  "gpt-image-1-mini": {
+    "description": "Daha düşük maliyetli bir GPT Image 1 sürümüdür, metin ve görsel girdilerini doğal olarak destekler ve görsel çıktılar üretebilir."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 kuantize edilmiş Transformer yapısı, sınırlı kaynaklarda bile güçlü performans sağlar."

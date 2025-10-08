@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-08",
+    "version": "1.135.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add GPT-5 pro model."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.4"
+  },
+  {
+    "children": {
       "improvements": ["Improve Korean translate."]
     },
     "date": "2025-10-07",
