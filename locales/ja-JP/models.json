@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1：次世代推論モデルで、複雑な推論と連鎖的思考能力を向上させ、深い分析を必要とするタスクに適しています。"
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1：次世代の推論モデルで、複雑な推論や連鎖的思考能力が向上しており、深い分析を必要とするタスクに最適です。"
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2は、DeepSeekMoE-27Bに基づいて開発された混合専門家（MoE）視覚言語モデルであり、スパースアクティベーションのMoEアーキテクチャを採用し、わずか4.5Bパラメータを活性化することで卓越した性能を実現しています。このモデルは、視覚的質問応答、光学文字認識、文書/表/グラフ理解、視覚的定位などの複数のタスクで優れたパフォーマンスを発揮します。"
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "最も高速かつコスト効率の高いGPT-5のバージョン。迅速な応答が求められ、コストに敏感なアプリケーションに非常に適しています。"
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro は、より多くの計算資源を活用して深く思考し、常により優れた回答を提供します。"
+  },
   "gpt-audio": {
     "description": "GPT Audioは音声の入出力に対応した汎用チャットモデルで、Chat Completions APIでの音声I/O利用をサポートしています。"
   },
   "gpt-image-1": {
     "description": "ChatGPT ネイティブのマルチモーダル画像生成モデル"
+  },
+  "gpt-image-1-mini": {
+    "description": "コストを抑えた GPT Image 1 のバージョンで、テキストと画像の入力をネイティブにサポートし、画像出力を生成します。"
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4量子化Transformer構造で、リソース制限下でも高い性能を維持します。"

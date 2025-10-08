@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1: Mô hình suy luận thế hệ tiếp theo, nâng cao khả năng suy luận phức tạp và tư duy chuỗi, phù hợp cho các tác vụ cần phân tích sâu."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1: Mô hình suy luận thế hệ mới, nâng cao khả năng suy luận phức tạp và tư duy chuỗi, phù hợp với các nhiệm vụ cần phân tích chuyên sâu."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 là một mô hình ngôn ngữ hình ảnh hỗn hợp chuyên gia (MoE) được phát triển dựa trên DeepSeekMoE-27B, sử dụng kiến trúc MoE với kích hoạt thưa, đạt được hiệu suất xuất sắc chỉ với 4.5B tham số được kích hoạt. Mô hình này thể hiện xuất sắc trong nhiều nhiệm vụ như hỏi đáp hình ảnh, nhận diện ký tự quang học, hiểu tài liệu/bảng/biểu đồ và định vị hình ảnh."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "Phiên bản GPT-5 nhanh nhất và tiết kiệm chi phí nhất. Rất phù hợp cho các ứng dụng cần phản hồi nhanh và nhạy cảm về chi phí."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu sắc hơn và liên tục cung cấp các câu trả lời tốt hơn."
+  },
   "gpt-audio": {
     "description": "GPT Audio là mô hình trò chuyện chung hỗ trợ đầu vào và đầu ra âm thanh, có thể sử dụng âm thanh I/O trong API Chat Completions."
   },
   "gpt-image-1": {
     "description": "Mô hình tạo hình ảnh đa phương thức nguyên bản của ChatGPT"
+  },
+  "gpt-image-1-mini": {
+    "description": "Phiên bản tiết kiệm chi phí hơn của GPT Image 1, hỗ trợ gốc đầu vào văn bản và hình ảnh, đồng thời tạo đầu ra hình ảnh."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4: Cấu trúc Transformer được lượng tử hóa, duy trì hiệu suất mạnh mẽ ngay cả khi tài nguyên hạn chế."

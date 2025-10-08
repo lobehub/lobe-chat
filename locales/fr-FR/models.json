@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1 : modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1 : un modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de pensée en chaîne, idéal pour les tâches nécessitant une analyse approfondie."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 est un modèle de langage visuel à experts mixtes (MoE) développé sur la base de DeepSeekMoE-27B, utilisant une architecture MoE à activation sparse, réalisant des performances exceptionnelles tout en n'activant que 4,5 milliards de paramètres. Ce modèle excelle dans plusieurs tâches telles que la question-réponse visuelle, la reconnaissance optique de caractères, la compréhension de documents/tableaux/graphes et le positionnement visuel."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "Version la plus rapide et la plus économique de GPT-5. Parfaitement adaptée aux scénarios nécessitant une réponse rapide et sensibles aux coûts."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 Pro utilise davantage de puissance de calcul pour approfondir sa réflexion et fournir des réponses toujours plus pertinentes."
+  },
   "gpt-audio": {
     "description": "GPT Audio est un modèle de chat universel orienté vers l'entrée et la sortie audio, supportant l'utilisation d'entrées/sorties audio dans l'API Chat Completions."
   },
   "gpt-image-1": {
     "description": "Modèle natif multimodal de génération d'images de ChatGPT."
+  },
+  "gpt-image-1-mini": {
+    "description": "Une version plus économique de GPT Image 1, prenant en charge nativement les entrées texte et image, et générant des sorties visuelles."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 : architecture Transformer quantifiée, offrant des performances solides même en ressources limitées."

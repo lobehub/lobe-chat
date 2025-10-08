@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了複雜推理與鏈路思考能力，適合需要深入分析的任務。"
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1：新一代推理模型，強化了複雜推理與鏈式思考能力，適用於需要深入分析的任務。"
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 是一個基於 DeepSeekMoE-27B 開發的混合專家（MoE）視覺語言模型，採用稀疏激活的 MoE 架構，在僅激活 4.5B 參數的情況下實現了卓越性能。該模型在視覺問答、光學字符識別、文檔/表格/圖表理解和視覺定位等多個任務中表現優異。"
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "最快、最經濟高效的 GPT-5 版本。非常適合需要快速回應且成本敏感的應用場景。"
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro 運用更多運算資源進行更深入的思考，持續提供更優質的答案。"
+  },
   "gpt-audio": {
     "description": "GPT Audio 是面向音訊輸入輸出的通用聊天模型，支援在 Chat Completions API 中使用音訊 I/O。"
   },
   "gpt-image-1": {
     "description": "ChatGPT 原生多模態圖片生成模型"
+  },
+  "gpt-image-1-mini": {
+    "description": "成本更低的 GPT Image 1 版本，原生支援文字與圖像輸入，並可產生圖像輸出。"
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 量化的 Transformer 結構，在資源受限時仍能保持強勁性能。"
