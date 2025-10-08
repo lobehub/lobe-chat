@@ -947,6 +947,9 @@
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1: een volgende generatie redeneermodel dat verbeterde complexe redeneer- en ketendenkvaardigheden biedt, geschikt voor taken die diepgaande analyse vereisen."
   },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1: de volgende generatie redeneermodel, met verbeterde capaciteiten voor complexe redenering en ketendenken, ideaal voor taken die diepgaande analyse vereisen."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 is een hybride expert (MoE) visueel taalmodel dat is ontwikkeld op basis van DeepSeekMoE-27B, met een MoE-architectuur met spaarzame activatie, die uitstekende prestaties levert met slechts 4,5 miljard geactiveerde parameters. Dit model presteert uitstekend in verschillende taken, waaronder visuele vraag-antwoord, optische tekenherkenning, document/tabel/grafiekbegrip en visuele positionering."
   },
@@ -1730,11 +1733,17 @@
   "gpt-5-nano": {
     "description": "De snelste en meest kostenefficiënte versie van GPT-5. Uitstekend geschikt voor toepassingen die snelle reacties en kostenbewustzijn vereisen."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro gebruikt meer rekenkracht om dieper na te denken en levert consequent betere antwoorden."
+  },
   "gpt-audio": {
     "description": "GPT Audio is een universeel chatmodel gericht op audio-invoer en -uitvoer, ondersteund in de Chat Completions API met audio I/O."
   },
   "gpt-image-1": {
     "description": "ChatGPT native multimodaal afbeeldingsgeneratiemodel"
+  },
+  "gpt-image-1-mini": {
+    "description": "Een kostenefficiëntere versie van GPT Image 1, met native ondersteuning voor tekst- en afbeeldingsinvoer en het genereren van afbeeldingsuitvoer."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4-gekwantificeerd Transformer-structuur, behoudt sterke prestaties zelfs bij beperkte middelen."
