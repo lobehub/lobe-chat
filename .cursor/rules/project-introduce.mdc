@@ -6,17 +6,15 @@ alwaysApply: true
 
 You are developing an open-source, modern-design AI chat framework: lobehub(previous lobe-chat).
 
-support platforms:
+Supported platforms:
 
 - web desktop/mobile
 - desktop(electron)
-- mobile app(react native). coming soon
+- mobile app(react native), coming soon
 
 logo emoji: 🤯
 
 ## Project Technologies Stack
-
-read [package.json](mdc:package.json) to know all npm packages you can use.
 
 - Next.js 15
 - react 19
@@ -33,6 +31,6 @@ read [package.json](mdc:package.json) to know all npm packages you can use.
 - dayjs for time library
 - lodash-es for utility library
 - TRPC for type safe backend
-- PGLite for client DB and PostgreSQL for backend DB
+- PGLite for client DB and Neon PostgreSQL for backend DB
 - Drizzle ORM
 - Vitest for testing
