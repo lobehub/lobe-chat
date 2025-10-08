@@ -31,28 +31,18 @@ This repository adopts a monorepo structure.
 
 see @.cursor/rules/typescript.mdc
 
-### Modify Code Rules
-
-- **Code Language**:
-  - For files with existing Chinese comments: Continue using Chinese to maintain consistency
-  - For new files or files without Chinese comments: MUST use American English.
-    - eg: new react tsx file and new test file
-- Conservative for existing code, modern approaches for new features
-
 ### Testing
 
-Testing work follows the Rule-Aware Task Execution system above.
-
-- **Required Rule**: `testing-guide/testing-guide.mdc`
+- **Required Rule**: read `@.cursor/rules/testing-guide/testing-guide.mdc` before writing tests
 - **Command**:
   - web: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`
   - packages(eg: database): `cd packages/database && bunx vitest run --silent='passed-only' '[file-path-pattern]'`
 
 **Important**:
 
-- wrapped the file path in single quotes to avoid shell expansion
+- wrap the file path in single quotes to avoid shell expansion
 - Never run `bun run test` etc to run tests, this will run all tests and cost about 10mins
-- If try to fix the same test twice, but still failed, stop and ask for help.
+- If trying to fix the same test twice, but still failed, stop and ask for help.
 
 ### Typecheck
 
@@ -61,15 +51,9 @@ Testing work follows the Rule-Aware Task Execution system above.
 ### i18n
 
 - **Keys**: Add to `src/locales/default/namespace.ts`
-- **Dev**: Translate `locales/zh-CN/namespace.json` locale file only for preview
+- **Dev**: Translate `locales/zh-CN/namespace.json` and `locales/en-US/namespace.json` locales file only for dev preview
 - DON'T run `pnpm i18n`, let CI auto handle it
 
 ## Rules Index
-
-Some useful rules of this project. Read them when needed.
-
-**IMPORTANT**: All rule files referenced in this document are located in the `.cursor/rules/` directory. Throughout this document, rule files are referenced by their filename only for brevity.
-
-### 📋 Complete Rule Files
 
 Some useful project rules are listed in @.cursor/rules/rules-index.mdc
