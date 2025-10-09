@@ -3,9 +3,10 @@ import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { CompassIcon, Sparkles } from 'lucide-react-native';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
+import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
 import { isDev } from '@/utils/env';
 
@@ -15,13 +16,17 @@ import { useStyles } from './style';
 
 export default function SideBar({ children }: { children: React.ReactNode }) {
   const { styles } = useStyles();
+  const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
 
   return (
     <Drawer
       drawerPosition="left"
-      drawerStyle={styles.drawerStyle}
+      drawerStyle={[
+        styles.drawerStyle,
+        { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
+      ]}
       drawerType="slide"
       hideStatusBarOnOpen={false}
       onClose={() => {
