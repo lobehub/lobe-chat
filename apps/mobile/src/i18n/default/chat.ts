@@ -31,7 +31,7 @@ export default {
     createFirst: '创建您的第一个聊天会话',
     empty: '暂无会话',
     search: {
-      placeholder: '搜索助手',
+      placeholder: '搜索助手...',
     },
     title: '随便聊聊',
   },
