@@ -13,40 +13,52 @@ import { addToKeepWarmTool } from './follow-up/addToKeepWarm';
 const followUpManifest = {
   api: [],
   identifier: addToFollowUpTool.name,
-  meta: { description: addToFollowUpTool.description },
+  meta: {
+    description: addToFollowUpTool.description,
+    avatar: '📝',
+    title: 'Add to Follow Up',
+  },
   systemRole: 'follow_up',
-  type: 'builtin',
+  type: 'builtin' as const,
 };
 const dontFollowUpManifest = {
   api: [],
   identifier: addToDontFollowUpTool.name,
-  meta: { description: addToDontFollowUpTool.description },
+  meta: {
+    description: addToDontFollowUpTool.description,
+    avatar: '🚫',
+    title: 'Add to Don\'t Follow Up',
+  },
   systemRole: 'dont_follow_up',
-  type: 'builtin',
+  type: 'builtin' as const,
 };
 const keepWarmManifest = {
   api: [],
   identifier: addToKeepWarmTool.name,
-  meta: { description: addToKeepWarmTool.description },
+  meta: {
+    description: addToKeepWarmTool.description,
+    avatar: '🔥',
+    title: 'Add to Keep Warm',
+  },
   systemRole: 'keep_warm',
-  type: 'builtin',
+  type: 'builtin' as const,
 };
 
 export const customTools = [
   {
     identifier: followUpManifest.identifier,
     manifest: followUpManifest,
-    type: 'builtin',
+    type: 'builtin' as const,
   },
   {
     identifier: dontFollowUpManifest.identifier,
     manifest: dontFollowUpManifest,
-    type: 'builtin',
+    type: 'builtin' as const,
   },
   {
     identifier: keepWarmManifest.identifier,
     manifest: keepWarmManifest,
-    type: 'builtin',
+    type: 'builtin' as const,
   },
 ];
 
