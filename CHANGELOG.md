@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.136.0](https://github.com/lobehub/lobe-chat/compare/v1.135.6...v1.136.0)
+
+<sup>Released on **2025-10-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new provider Cerebras.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix standalone plugin rerender issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new provider Cerebras, closes [#9559](https://github.com/lobehub/lobe-chat/issues/9559) ([9cceaad](https://github.com/lobehub/lobe-chat/commit/9cceaad))
+
+#### What's fixed
+
+- **misc**: Fix standalone plugin rerender issue, closes [#9611](https://github.com/lobehub/lobe-chat/issues/9611) [#9396](https://github.com/lobehub/lobe-chat/issues/9396) ([7ab30fc](https://github.com/lobehub/lobe-chat/commit/7ab30fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.135.6](https://github.com/lobehub/lobe-chat/compare/v1.135.5...v1.135.6)
 
 <sup>Released on **2025-10-08**</sup>
