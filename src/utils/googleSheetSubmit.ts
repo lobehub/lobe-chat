@@ -1,4 +1,4 @@
-import { ssrfSafeFetch } from '../../../packages/ssrf-safe-fetch';
+import { ssrfSafeFetch } from '@/packages/ssrf-safe-fetch';
 
 interface CommonData {
   name: string;
@@ -14,13 +14,23 @@ export async function submitToGoogleSheet(
   endpoint: 'follow_up' | 'dont_follow_up' | 'keep_warm',
   data: CommonData
 ) {
-  const url = process.env.GOOGLE_SHEET_WEBHOOK_URL!;
-  const key = process.env.SHEET_API_KEY!;
+  const url = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+  const key = process.env.SHEET_API_KEY;
+  if (!url || !key) {
+    throw new Error('Missing GOOGLE_SHEET_WEBHOOK_URL or SHEET_API_KEY environment variable');
+  }
   const payload = { key, endpoint, ...data };
-
-  return ssrfSafeFetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await ssrfSafeFetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      throw new Error(`Google Sheet submission failed: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    throw new Error(`Google Sheet submission error: ${error}`);
+  }
 }
