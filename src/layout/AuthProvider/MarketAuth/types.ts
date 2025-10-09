@@ -56,9 +56,9 @@ export interface PKCEParams {
 }
 
 export interface TokenResponse {
-  access_token: string;
-  expires_in: number;
-  id_token?: string;
+  accessToken: string;
+  expiresIn: number;
+  idToken?: string;
   scope: string;
-  token_type: string;
+  tokenType: string;
 }

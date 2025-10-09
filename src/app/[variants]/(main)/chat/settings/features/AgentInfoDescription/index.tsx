@@ -1,31 +1,13 @@
 'use client';
 
 import { ProDescriptions } from '@ant-design/pro-components';
+import { AgentItemDetail } from '@lobehub/market-sdk';
 import { Tag } from 'antd';
 import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Tokens from '@/features/AgentSetting/AgentPrompt/TokenTag';
-
-interface AgentData {
-  avatar?: string;
-  description?: string;
-  files?: Array<{
-    enabled?: boolean;
-    id: string;
-    name: string;
-    type: string;
-  }>;
-  knowledgeBases?: Array<{
-    enabled?: boolean;
-    id: string;
-    name: string;
-  }>;
-  name?: string;
-  tags?: string[];
-  title?: string;
-}
 
 interface AgentConfig {
   params?: {
@@ -62,7 +44,11 @@ interface AgentInfoDescriptionProps {
     id: string;
     name: string;
   }>;
-  meta?: AgentData;
+  meta?: AgentItemDetail & {
+    description?: string;
+    name?: string;
+    title?: string;
+  };
   model?: string;
   plugins?: string[];
   provider?: string;
@@ -102,7 +88,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
       }
 
       // 远程数据格式转换
-      const remoteData = meta as any;
+      const remoteData = meta;
       const config = remoteData.config || {};
 
       return {
@@ -113,11 +99,11 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
         files: config.files || [],
         knowledgeBases: config.knowledgeBases || [],
         meta: {
-          avatar: remoteData.avatar,
-          description: remoteData.description,
-          name: remoteData.name,
-          tags: remoteData.tags ? [remoteData.tags] : undefined,
-          title: remoteData.name,
+          avatar: remoteData?.avatar,
+          description: remoteData?.description,
+          name: remoteData?.versionName,
+          tags: remoteData?.tags ? [remoteData.tags] : undefined,
+          title: remoteData?.name,
         },
         model: config.model?.model,
         plugins: config.plugins?.map((p: any) => (typeof p === 'string' ? p : p.identifier)) || [],

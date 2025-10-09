@@ -88,14 +88,7 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
         console.log('agentDetail', agentDetail);
 
         // 对比用户 ID (支持多种字段名)
-        const isOwner =
-          agentDetail.userId === currentAccountId ||
-          agentDetail.clerkId === currentAccountId ||
-          agentDetail.ownerId === currentAccountId ||
-          agentDetail.createdBy === currentAccountId;
-
-        console.log('[useAgentOwnershipCheck] Ownership check result:', isOwner);
-
+        const isOwner = `${agentDetail?.ownerId}` === `${currentAccountId}`;
         // 缓存结果
         agentOwnershipCache.set(marketIdentifier, {
           result: isOwner,
@@ -104,8 +97,6 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
 
         setResult({ isOwnAgent: isOwner });
       } catch (error) {
-        console.error('[useAgentOwnershipCheck] Failed to check agent ownership:', error);
-
         // 错误处理策略：
         // 1. 网络错误 -> 默认显示 SubmitAgentButton（保守策略）
         // 2. 401/403 -> 用户无权限，显示 SubmitAgentButton

@@ -1,6 +1,7 @@
 'use client';
 
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
+import { AgentItemDetail } from '@lobehub/market-sdk';
 import { type ModalProps } from '@lobehub/ui';
 import { Col, Row, Spin } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -33,14 +34,6 @@ interface MarketPublishFormValues {
   identifier?: string;
 }
 
-interface RemoteAgentData {
-  avatar?: string;
-  description: string;
-  identifier: string;
-  name: string;
-  tags?: string[];
-}
-
 const MarketPublishModal = memo<MarketPublishModalProps>(
   ({ action, open, onCancel, onSuccess }) => {
     const { t } = useTranslation('setting');
@@ -62,7 +55,9 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases);
     const files = useAgentStore(agentSelectors.currentAgentFiles);
 
-    const [remoteAgentData, setRemoteAgentData] = useState<RemoteAgentData | null>(null);
+    const [remoteAgentData, setRemoteAgentData] = useState<
+      (AgentItemDetail & { description?: string; name?: string; title?: string }) | null
+    >(null);
     const [loadingRemoteData, setLoadingRemoteData] = useState(false);
     const [showResultModal, setShowResultModal] = useState(false);
     const [publishResult, setPublishResult] = useState<{ identifier?: string }>({});
@@ -298,7 +293,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
                       <div style={{ marginTop: '16px' }}>正在加载远程数据...</div>
                     </div>
                   ) : (
-                    <AgentInfoDescription isRemote={true} meta={remoteAgentData || {}} />
+                    <AgentInfoDescription isRemote={true} meta={remoteAgentData || undefined} />
                   )}
                 </div>
               </Col>

@@ -54,11 +54,7 @@ const removeTokenFromCookie = () => {
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
   try {
-    const userInfoUrl = '/market-oidc/userinfo';
-
-    console.log('[MarketAuth] Fetching user info from:', userInfoUrl, accessToken);
-
-    const response = await fetch(userInfoUrl, {
+    const response = await fetch('/market-oidc/userinfo', {
       body: JSON.stringify({ token: accessToken }),
       headers: {
         'Content-Type': 'application/json',
@@ -214,20 +210,20 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       console.log('[MarketAuth] Token response:', tokenResponse);
 
       // 获取用户信息
-      const userInfo = await fetchUserInfo(tokenResponse.access_token);
+      const userInfo = await fetchUserInfo(tokenResponse.accessToken);
 
       // 创建会话对象
       const newSession: MarketAuthSession = {
-        accessToken: tokenResponse.access_token,
-        expiresAt: Date.now() + tokenResponse.expires_in * 1000,
-        expiresIn: tokenResponse.expires_in,
+        accessToken: tokenResponse.accessToken,
+        expiresAt: Date.now() + tokenResponse.expiresIn * 1000,
+        expiresIn: tokenResponse.expiresIn,
         scope: tokenResponse.scope,
-        tokenType: tokenResponse.token_type as 'Bearer',
+        tokenType: tokenResponse.tokenType as 'Bearer',
         userInfo: userInfo || undefined,
       };
 
       // 存储 token 到 cookie 和 sessionStorage
-      setTokenToCookie(tokenResponse.access_token, tokenResponse.expires_in);
+      setTokenToCookie(tokenResponse.accessToken, tokenResponse.expiresIn);
       sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
 
       // 单独存储用户信息到 sessionStorage 供其他地方使用
@@ -310,22 +306,22 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
           );
 
           // 获取用户信息
-          const userInfo = await fetchUserInfo(tokenResponse.access_token);
+          const userInfo = await fetchUserInfo(tokenResponse.accessToken);
 
           console.log('userInfo', userInfo);
 
           // 创建会话对象
           const newSession: MarketAuthSession = {
-            accessToken: tokenResponse.access_token,
-            expiresAt: Date.now() + tokenResponse.expires_in * 1000,
-            expiresIn: tokenResponse.expires_in,
+            accessToken: tokenResponse.accessToken,
+            expiresAt: Date.now() + tokenResponse.expiresIn * 1000,
+            expiresIn: tokenResponse.expiresIn,
             scope: tokenResponse.scope,
-            tokenType: tokenResponse.token_type as 'Bearer',
+            tokenType: tokenResponse.tokenType as 'Bearer',
             userInfo: userInfo || undefined,
           };
 
           // 存储 token 到 cookie 和 sessionStorage
-          setTokenToCookie(tokenResponse.access_token, tokenResponse.expires_in);
+          setTokenToCookie(tokenResponse.accessToken, tokenResponse.expiresIn);
           sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
 
           // 单独存储用户信息到 sessionStorage 供其他地方使用
