@@ -33,7 +33,9 @@ export const get<Domain>Config = () => {
 export const <domain>Env = get<Domain>Config();
 ```
 
-### 2. Update Type
+### 2. Update Type (Optional)
+
+**Skip this step if the domain field already exists in `GlobalServerConfig`.**
 
 Add to `packages/types/src/serverConfig.ts`:
 
@@ -45,7 +47,19 @@ export interface GlobalServerConfig {
 }
 ```
 
-### 3. Assemble Server Config
+**Prefer reusing existing types** from `packages/types/src/user/settings` with `PartialDeep`:
+
+```typescript
+import { User<Domain>Config } from './user/settings';
+
+export interface GlobalServerConfig {
+  <domain>?: PartialDeep<User<Domain>Config>;
+}
+```
+
+### 3. Assemble Server Config (Optional)
+
+**Skip this step if the domain field already exists in server config.**
 
 In `src/server/globalConfig/index.ts`:
 
@@ -64,14 +78,25 @@ export const getServerGlobalConfig = async () => {
 };
 ```
 
-### 4. Merge to User Store
+If the domain already exists, just add the new field to the existing `cleanObject()`:
+
+```typescript
+<domain>: cleanObject({
+  existingField: <domain>Env.EXISTING_VAR,
+  <settingName>: <domain>Env.YOUR_ENV_VAR, // Add this line
+}),
+```
+
+### 4. Merge to User Store (Optional)
+
+**Skip this step if the domain field already exists in `serverSettings`.**
 
 In `src/store/user/slices/common/action.ts`, add to `serverSettings`:
 
 ```typescript
 const serverSettings: PartialDeep<UserSettings> = {
   defaultAgent: serverConfig.defaultAgent,
-  <domain>: serverConfig.<domain>,
+  <domain>: serverConfig.<domain>, // Add this line
   // ...
 };
 ```
@@ -81,6 +106,34 @@ const serverSettings: PartialDeep<UserSettings> = {
 ```bash
 # <Description> (range/options, default: X)
 # YOUR_ENV_VAR=<example>
+```
+
+### 6. Update Documentation
+
+Update both English and Chinese documentation:
+- `docs/self-hosting/environment-variables/basic.mdx`
+- `docs/self-hosting/environment-variables/basic.zh-CN.mdx`
+
+Add new section or subsection with environment variable details (type, description, default, example, range/constraints).
+
+## Type Reuse
+
+**Prefer reusing existing types** from `packages/types/src/user/settings` instead of defining inline types in `serverConfig.ts`.
+
+```typescript
+// ✅ Good - reuse existing type
+import { UserImageConfig } from './user/settings';
+
+export interface GlobalServerConfig {
+  image?: PartialDeep<UserImageConfig>;
+}
+
+// ❌ Bad - inline type definition
+export interface GlobalServerConfig {
+  image?: {
+    defaultImageNum?: number;
+  };
+}
 ```
 
 ## Example: AI_IMAGE_DEFAULT_IMAGE_NUM
