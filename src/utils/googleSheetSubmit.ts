@@ -1,4 +1,4 @@
-import { ssrfSafeFetch } from '../../../packages/ssrf-safe-fetch';
+import { ssrfSafeFetch } from '@ssrf-safe-fetch';
 
 interface CommonData {
   name: string;
