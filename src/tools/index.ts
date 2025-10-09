@@ -6,8 +6,30 @@ import { CodeInterpreterManifest } from './code-interpreter';
 import { DalleManifest } from './dalle';
 import { LocalSystemManifest } from './local-system';
 import { WebBrowsingManifest } from './web-browsing';
+import { addToFollowUpTool } from './follow-up/addToFollowUp';
+import { addToDontFollowUpTool } from './follow-up/addToDontFollowUp';
+import { addToKeepWarmTool } from './follow-up/addToKeepWarm';
+
+export const customTools = [
+  {
+    identifier: addToFollowUpTool.name,
+    manifest: addToFollowUpTool,
+    type: 'builtin',
+  },
+  {
+    identifier: addToDontFollowUpTool.name,
+    manifest: addToDontFollowUpTool,
+    type: 'builtin',
+  },
+  {
+    identifier: addToKeepWarmTool.name,
+    manifest: addToKeepWarmTool,
+    type: 'builtin',
+  },
+];
 
 export const builtinTools: LobeBuiltinTool[] = [
+  ...customTools,
   {
     identifier: ArtifactsManifest.identifier,
     manifest: ArtifactsManifest,
