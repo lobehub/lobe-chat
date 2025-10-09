@@ -2,9 +2,10 @@ import { PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
+import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
 
 import TopicList from './components/TopicList';
@@ -16,6 +17,7 @@ import { useStyles } from './style';
  */
 const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
   const { styles } = useStyles();
+  const winDim = useWindowDimensions();
   const { t } = useTranslation(['topic']);
 
   const [topicDrawerOpen, setTopicDrawerOpen] = useGlobalStore((s) => [
@@ -26,7 +28,10 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <Drawer
       drawerPosition="right"
-      drawerStyle={styles.drawerStyle}
+      drawerStyle={[
+        styles.drawerStyle,
+        { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
+      ]}
       drawerType="slide"
       hideStatusBarOnOpen={false}
       onClose={() => {
