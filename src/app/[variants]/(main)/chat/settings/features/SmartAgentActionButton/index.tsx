@@ -21,7 +21,6 @@ interface SmartAgentActionButtonProps {
 const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => {
   const { t } = useTranslation('setting');
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  console.log('meta', meta);
   const { isOwnAgent } = useAgentOwnershipCheck(meta?.marketIdentifier);
 
   const buttonType = useMemo(() => {

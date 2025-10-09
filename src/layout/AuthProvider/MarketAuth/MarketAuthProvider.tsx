@@ -54,19 +54,19 @@ const removeTokenFromCookie = () => {
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
-    const cleanBaseUrl = baseUrl.replace(/\/$/, '');
-    const userInfoUrl = `${cleanBaseUrl}/market-oidc/userinfo`;
+    const userInfoUrl = '/market-oidc/userinfo';
 
-    console.log('[MarketAuth] Fetching user info from:', userInfoUrl);
+    console.log('[MarketAuth] Fetching user info from:', userInfoUrl, accessToken);
 
     const response = await fetch(userInfoUrl, {
+      body: JSON.stringify({ token: accessToken }),
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
-      method: 'GET',
+      method: 'POST',
     });
+
+    console.log('[MarketAuth] User info response:', response);
 
     if (!response.ok) {
       console.error(
@@ -107,15 +107,23 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
+      const desktopRedirectUri = new URL('/market-oidc/callback/desktop', baseUrl).toString();
+
+      // 桌面端使用 Market 手动维护的 Web 回调，Web 端使用当前域名
+      const redirectUri = isDesktop
+        ? desktopRedirectUri
+        : `${window.location.origin}/market-auth-callback`;
+
       const oidcConfig: OIDCConfig = {
-        baseUrl: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787',
+        baseUrl,
         clientId: isDesktop ? 'lobehub-desktop' : 'lobechat-com',
-        redirectUri: `${window.location.origin}/market-auth-callback`,
+        redirectUri,
         scope: 'openid profile email',
       };
       setOidcClient(new MarketOIDC(oidcConfig));
     }
-  }, []);
+  }, [isDesktop]);
 
   /**
    * 检查并恢复会话
@@ -195,13 +203,15 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
       // 启动 OIDC 授权流程并获取授权码
       const authResult = await oidcClient.startAuthorization();
-      console.log('[MarketAuth] Authorization successful, exchanging code for token');
+      console.log('[MarketAuth] Authorization successful, exchanging code for token', authResult);
 
       // 用授权码换取访问令牌
       const tokenResponse = await oidcClient.exchangeCodeForToken(
         authResult.code,
         authResult.state,
       );
+
+      console.log('[MarketAuth] Token response:', tokenResponse);
 
       // 获取用户信息
       const userInfo = await fetchUserInfo(tokenResponse.access_token);
