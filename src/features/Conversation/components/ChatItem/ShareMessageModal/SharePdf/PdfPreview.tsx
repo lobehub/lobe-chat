@@ -13,7 +13,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useContainerStyles } from './style';
 
 // Set PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/build/pdf.worker.min.mjs`;
 
 const useStyles = createStyles(({ css }) => ({
   containerWrapper: css`

@@ -1,6 +1,4 @@
 import { marked } from 'marked';
-import fs from 'node:fs';
-import path from 'node:path';
 import PDFDocument from 'pdfkit';
 import { z } from 'zod';
 
@@ -24,17 +22,32 @@ const exportProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
   });
 });
 
-/**
- * 使用 PDFKit 从 Markdown 内容生成 PDF。
- * 真正的服务器端方案：完全不依赖浏览器环境，体积小、速度快、稳定性高。
- * @param markdownContent - 需要转换的 Markdown 字符串。
- * @param title - 文档的标题。
- * @returns 包含生成的 PDF 的 Buffer。
- */
+
+const REGULAR_FONT_URL =
+  'https://cdn.jsdelivr.net/gh/adobe-fonts/source-han-sans@2.004R/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf';
+
+let regularFontCache: Buffer | null = null;
+
+const loadRegularFont = async (): Promise<Buffer> => {
+  if (regularFontCache) return regularFontCache;
+
+  const response = await fetch(REGULAR_FONT_URL);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch font from CDN: ${response.status} ${response.statusText}`);
+  }
+
+  const fontBuffer = Buffer.from(await response.arrayBuffer());
+  regularFontCache = fontBuffer;
+
+  return fontBuffer;
+};
+
 const generatePdfFromMarkdown = async (
   markdownContent: string,
   title?: string,
 ): Promise<Buffer> => {
+  const regularFont = await loadRegularFont();
+
   return new Promise((resolve, reject) => {
     try {
       const tokens = marked.lexer(markdownContent);
@@ -51,9 +64,6 @@ const generatePdfFromMarkdown = async (
       });
 
       const chunks: Buffer[] = [];
-
-      const fontPath = path.join(process.cwd(), 'public', 'fonts');
-      const regularFont = fs.readFileSync(path.join(fontPath, 'SourceHanSansSC-Regular.otf'));
 
       doc.registerFont('Regular', regularFont);
       doc.font('Regular');
