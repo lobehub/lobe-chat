@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-09",
+    "version": "1.136.1"
+  },
+  {
     "children": {
       "features": ["Add new provider Cerebras."],
       "fixes": ["Fix standalone plugin rerender issue."]
