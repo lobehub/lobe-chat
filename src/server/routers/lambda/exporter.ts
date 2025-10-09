@@ -177,7 +177,6 @@ export const exporterRouter = router({
     .mutation(async ({ input }) => {
       const { content, title } = input;
       const pdfBuffer = await generatePdfFromMarkdown(content, title);
-      console.log('pdfBuffer', pdfBuffer);
       return {
         filename: `${title}.pdf`,
         pdf: pdfBuffer.toString('base64'),
