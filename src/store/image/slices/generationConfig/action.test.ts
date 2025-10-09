@@ -8,7 +8,7 @@ import { useImageStore } from '@/store/image';
 
 const { currentImageSettingsMock } = vi.hoisted(() => ({
   currentImageSettingsMock: vi.fn(() => ({
-    defaultImageCount: 4,
+    defaultImageNum: 4,
   })),
 }));
 
@@ -86,7 +86,7 @@ const initialTestState = {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  currentImageSettingsMock.mockReturnValue({ defaultImageCount: 4 });
+  currentImageSettingsMock.mockReturnValue({ defaultImageNum: 4 });
   useImageStore.setState(initialTestState);
 });
 
@@ -496,7 +496,7 @@ describe('GenerationConfigAction', () => {
     });
 
     it('should initialize with remembered model when user is logged in', () => {
-      currentImageSettingsMock.mockReturnValueOnce({ defaultImageCount: 6 });
+      currentImageSettingsMock.mockReturnValueOnce({ defaultImageNum: 6 });
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({

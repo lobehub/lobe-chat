@@ -35,7 +35,7 @@ export const DEFAULT_IMAGE_GENERATION_PARAMETERS: RuntimeImageGenParams =
 export const initialGenerationConfigState: GenerationConfigState = {
   model: DEFAULT_AI_IMAGE_MODEL,
   provider: DEFAULT_AI_IMAGE_PROVIDER,
-  imageNum: DEFAULT_IMAGE_CONFIG.defaultImageCount,
+  imageNum: DEFAULT_IMAGE_CONFIG.defaultImageNum,
   parameters: DEFAULT_IMAGE_GENERATION_PARAMETERS,
   parametersSchema: gptImage1ParamsSchema,
   isAspectRatioLocked: false,

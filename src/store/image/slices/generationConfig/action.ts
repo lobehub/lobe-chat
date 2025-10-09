@@ -329,7 +329,7 @@ export const createGenerationConfigSlice: StateCreator<
   },
 
   initializeImageConfig: (isLogin, lastSelectedImageModel, lastSelectedImageProvider) => {
-    const { defaultImageCount } = settingsSelectors.currentImageSettings(useUserStore.getState());
+    const { defaultImageNum } = settingsSelectors.currentImageSettings(useUserStore.getState());
 
     // If no parameters are passed, get from store (backward compatibility)
     let actualIsLogin = isLogin;
@@ -358,7 +358,7 @@ export const createGenerationConfigSlice: StateCreator<
             parametersSchema,
             isAspectRatioLocked: false,
             activeAspectRatio: initialActiveRatio,
-            imageNum: defaultImageCount,
+            imageNum: defaultImageNum,
             isInit: true,
           },
           false,
@@ -368,7 +368,7 @@ export const createGenerationConfigSlice: StateCreator<
         // If restoration fails, simply mark as initialized to use default configuration
         set(
           {
-            imageNum: defaultImageCount,
+            imageNum: defaultImageNum,
             isInit: true,
           },
           false,
@@ -379,7 +379,7 @@ export const createGenerationConfigSlice: StateCreator<
       // No remembered model, directly mark as initialized (use default values)
       set(
         {
-          imageNum: defaultImageCount,
+          imageNum: defaultImageNum,
           isInit: true,
         },
         false,

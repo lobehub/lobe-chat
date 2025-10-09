@@ -39,7 +39,7 @@ const ImageSettings = memo(() => {
           ),
           desc: t('settingImage.defaultCount.desc'),
           label: t('settingImage.defaultCount.label'),
-          name: 'defaultImageCount',
+          name: 'defaultImageNum',
         },
       ],
       extra: isUpdating ? (
