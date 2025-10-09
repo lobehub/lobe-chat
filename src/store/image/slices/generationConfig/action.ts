@@ -41,6 +41,7 @@ export interface GenerationConfigAction {
   setAspectRatio(aspectRatio: string): void;
 
   // 初始化相关方法
+  _initializeDefaultImageConfig(): void;
   initializeImageConfig(
     isLogin?: boolean,
     lastSelectedImageModel?: string,
@@ -328,32 +329,26 @@ export const createGenerationConfigSlice: StateCreator<
     set((state) => ({ parameters: { ...state.parameters, seed } }), false, `reuseSeed/${seed}`);
   },
 
+  _initializeDefaultImageConfig: () => {
+    const { defaultImageNum } = settingsSelectors.currentImageSettings(useUserStore.getState());
+    set({ imageNum: defaultImageNum, isInit: true }, false, 'initializeImageConfig/default');
+  },
+
   initializeImageConfig: (isLogin, lastSelectedImageModel, lastSelectedImageProvider) => {
+    const { _initializeDefaultImageConfig } = get();
     const { defaultImageNum } = settingsSelectors.currentImageSettings(useUserStore.getState());
 
-    // If no parameters are passed, get from store (backward compatibility)
-    let actualIsLogin = isLogin;
-    let actualLastSelectedImageModel = lastSelectedImageModel;
-    let actualLastSelectedImageProvider = lastSelectedImageProvider;
-
-    if (typeof isLogin === 'undefined') {
-      const globalStatus = useGlobalStore.getState().status;
-      actualIsLogin = authSelectors.isLogin(useUserStore.getState());
-      actualLastSelectedImageModel = globalStatus.lastSelectedImageModel;
-      actualLastSelectedImageProvider = globalStatus.lastSelectedImageProvider;
-    }
-
-    if (actualIsLogin && actualLastSelectedImageModel && actualLastSelectedImageProvider) {
+    if (isLogin && lastSelectedImageModel && lastSelectedImageProvider) {
       try {
         const { defaultValues, parametersSchema, initialActiveRatio } = prepareModelConfigState(
-          actualLastSelectedImageModel,
-          actualLastSelectedImageProvider,
+          lastSelectedImageModel,
+          lastSelectedImageProvider,
         );
 
         set(
           {
-            model: actualLastSelectedImageModel,
-            provider: actualLastSelectedImageProvider,
+            model: lastSelectedImageModel,
+            provider: lastSelectedImageProvider,
             parameters: defaultValues,
             parametersSchema,
             isAspectRatioLocked: false,
@@ -362,29 +357,13 @@ export const createGenerationConfigSlice: StateCreator<
             isInit: true,
           },
           false,
-          `initializeImageConfig/${actualLastSelectedImageModel}/${actualLastSelectedImageProvider}`,
+          `initializeImageConfig/${lastSelectedImageModel}/${lastSelectedImageProvider}`,
         );
       } catch {
-        // If restoration fails, simply mark as initialized to use default configuration
-        set(
-          {
-            imageNum: defaultImageNum,
-            isInit: true,
-          },
-          false,
-          'initializeImageConfig/fallback',
-        );
+        _initializeDefaultImageConfig();
       }
     } else {
-      // No remembered model, directly mark as initialized (use default values)
-      set(
-        {
-          imageNum: defaultImageNum,
-          isInit: true,
-        },
-        false,
-        'initializeImageConfig/default',
-      );
+      _initializeDefaultImageConfig();
     }
   },
 });
