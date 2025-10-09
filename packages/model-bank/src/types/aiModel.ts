@@ -66,6 +66,7 @@ const AiModelAbilitiesSchema = z.object({
   imageOutput: z.boolean().optional(),
   reasoning: z.boolean().optional(),
   search: z.boolean().optional(),
+  video: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 

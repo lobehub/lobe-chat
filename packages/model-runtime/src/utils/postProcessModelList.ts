@@ -48,6 +48,7 @@ export async function postProcessModelList(
         reasoning,       // drop
         search,          // drop
         imageOutput,     // drop
+        video,           // drop
         vision,          // drop
         type: _dropType, // will be overwritten
         parameters: _dropParams, // will be overwritten

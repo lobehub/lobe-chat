@@ -82,6 +82,7 @@ export const createAiModelSlice: StateCreator<
             imageOutput: model.imageOutput,
             reasoning: model.reasoning,
             search: model.search,
+            video: model.video,
             vision: model.vision,
           },
           enabled: model.enabled || false,

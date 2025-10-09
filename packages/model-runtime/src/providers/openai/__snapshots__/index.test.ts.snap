@@ -16,6 +16,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-02-27",
     "search": false,
     "type": "stt",
+    "video": false,
     "vision": false,
   },
   {
@@ -32,6 +33,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-08-21",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -48,6 +50,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-02-28",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -80,6 +83,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-01",
     "search": false,
     "type": "image",
+    "video": false,
     "vision": false,
   },
   {
@@ -96,6 +100,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-05-10",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -112,6 +117,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-03",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -128,6 +134,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-03",
     "search": false,
     "type": "tts",
+    "video": false,
     "vision": false,
   },
   {
@@ -144,6 +151,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-05-30",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -160,6 +168,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-01-22",
     "search": false,
     "type": "embedding",
+    "video": false,
     "vision": false,
   },
   {
@@ -176,6 +185,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-03-26",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -192,6 +202,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-09-07",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -208,6 +219,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-01-23",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -224,6 +236,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-01-23",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -240,6 +253,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-08-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -256,6 +270,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-03-01",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -272,6 +287,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-06-12",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -288,6 +304,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-04-19",
     "search": false,
     "type": "tts",
+    "video": false,
     "vision": false,
   },
   {
@@ -324,6 +341,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-10-31",
     "search": false,
     "type": "image",
+    "video": false,
     "vision": false,
   },
   {
@@ -340,6 +358,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-02",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -356,6 +375,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-02",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -372,6 +392,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-08-21",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -388,6 +409,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-03",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -404,6 +426,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-11-02",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": true,
   },
   {
@@ -420,6 +443,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-01-22",
     "search": false,
     "type": "embedding",
+    "video": false,
     "vision": false,
   },
   {
@@ -436,6 +460,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-06-27",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -452,6 +477,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2022-12-16",
     "search": false,
     "type": "embedding",
+    "video": false,
     "vision": false,
   },
   {
@@ -468,6 +494,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2024-01-23",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -484,6 +511,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "releasedAt": "2023-06-12",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
 ]

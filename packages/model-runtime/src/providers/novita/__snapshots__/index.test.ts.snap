@@ -31,6 +31,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -62,6 +63,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -93,6 +95,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "releasedAt": "2024-07-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -124,6 +127,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "releasedAt": "2024-07-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -155,6 +159,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "releasedAt": "2024-07-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -187,6 +192,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-07-18",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -218,6 +224,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-07-17",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -249,6 +256,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-06-27",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -280,6 +288,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-06-27",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -311,6 +320,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-06-27",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -342,6 +352,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-06-18",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -373,6 +384,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-06-17",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -404,6 +416,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -435,6 +448,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -466,6 +480,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -497,6 +512,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-25",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -528,6 +544,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
   {
@@ -559,6 +576,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "releasedAt": "2024-04-24",
     "search": false,
     "type": "chat",
+    "video": false,
     "vision": false,
   },
 ]

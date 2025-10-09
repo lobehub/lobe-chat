@@ -382,7 +382,7 @@ describe('AiInfraRepos', () => {
       expect(merged?.settings).toBeUndefined();
     });
 
-    it('should set search=true and settings=internal for custom provider when user enables search and builtin has no search/settings', async () => {
+    it('should set search=true and settings=params for custom provider when user enables search and builtin has no search/settings', async () => {
       const mockProviders = [
         { enabled: true, id: 'custom', name: 'Custom Provider', source: 'custom' as const },
       ] as AiProviderListItem[];
@@ -416,8 +416,8 @@ describe('AiInfraRepos', () => {
       const merged = result.find((m) => m.id === 'my-model' && m.providerId === 'custom');
       expect(merged).toBeDefined();
       expect(merged?.abilities).toMatchObject({ search: true });
-      // For custom provider, when user enables search with no builtin settings, default to 'internal'
-      expect(merged?.settings).toEqual({ searchImpl: 'internal' });
+      // For custom provider, when user enables search with no builtin settings, default to 'params'
+      expect(merged?.settings).toEqual({ searchImpl: 'params' });
     });
   });
 
@@ -578,7 +578,7 @@ describe('AiInfraRepos', () => {
       expect(merged.settings).toBeUndefined();
     });
 
-    it('should set search=true and settings=internal for custom provider when user enables search and builtin has no search/settings', async () => {
+    it('should set search=true and settings=params for custom provider when user enables search and builtin has no search/settings', async () => {
       const providerId = 'custom';
 
       // User list: model with search enabled, but no settings
@@ -611,8 +611,8 @@ describe('AiInfraRepos', () => {
       const merged = result.find((m) => m.id === 'my-model') as any;
       expect(merged).toBeDefined();
       expect(merged.abilities).toMatchObject({ search: true });
-      // For custom provider, when user enables search with no builtin settings, default to 'internal'
-      expect(merged.settings).toEqual({ searchImpl: 'internal' });
+      // For custom provider, when user enables search with no builtin settings, default to 'params'
+      expect(merged.settings).toEqual({ searchImpl: 'params' });
     });
   });
 

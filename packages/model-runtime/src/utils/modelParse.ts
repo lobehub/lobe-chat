@@ -9,6 +9,7 @@ export interface ModelProcessorConfig {
   imageOutputKeywords?: readonly string[];
   reasoningKeywords?: readonly string[];
   searchKeywords?: readonly string[];
+  videoKeywords?: readonly string[];
   visionKeywords?: readonly string[];
 }
 
@@ -27,10 +28,12 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
   },
   google: {
+    excludeKeywords: ['tts'],
     functionCallKeywords: ['gemini', '!-image-'],
     imageOutputKeywords: ['-image-'],
     reasoningKeywords: ['thinking', '-2.5-', '!-image-'],
     searchKeywords: ['-search', '!-image-'],
+    videoKeywords: ['-2.5-', '!-image-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
   inclusionai: {
@@ -350,6 +353,7 @@ const processModelCard = (
     excludeKeywords = [],
     searchKeywords = DEFAULT_SEARCH_KEYWORDS,
     imageOutputKeywords = [],
+    videoKeywords = [],
   } = config;
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
@@ -462,6 +466,10 @@ const processModelCard = (
     ...(modelType === 'image' && {
       parameters: model.parameters ?? knownModel?.parameters,
     }),
+    video:
+      model.video ??
+      knownModel?.abilities?.video ??
+      ((isKeywordListMatch(model.id.toLowerCase(), videoKeywords) && !isExcludedModel) || false),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??

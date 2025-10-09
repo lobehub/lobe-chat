@@ -144,6 +144,14 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
             <Checkbox />
           </Form.Item>
           <Form.Item
+            extra={t('providerModels.item.modelConfig.video.extra')}
+            label={t('providerModels.item.modelConfig.video.title')}
+            name={['abilities', 'video']}
+            valuePropName={'checked'}
+          >
+            <Checkbox />
+          </Form.Item>
+          <Form.Item
             extra={t('providerModels.item.modelConfig.type.extra')}
             label={t('providerModels.item.modelConfig.type.title')}
             name={'type'}

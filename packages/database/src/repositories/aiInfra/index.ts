@@ -35,7 +35,7 @@ const PROVIDER_SEARCH_DEFAULTS: Record<
   aihubmix: { searchImpl: 'params' },
   anthropic: { searchImpl: 'params' },
   baichuan: { searchImpl: 'params' },
-  default: { searchImpl: 'internal' },
+  default: { searchImpl: 'params' },
   google: { searchImpl: 'params', searchProvider: 'google' },
   hunyuan: { searchImpl: 'params' },
   jina: { searchImpl: 'internal' },
