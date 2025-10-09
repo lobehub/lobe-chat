@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "features": ["Add new provider Cerebras."],
+      "fixes": ["Fix standalone plugin rerender issue."]
+    },
+    "date": "2025-10-09",
+    "version": "1.136.0"
+  },
+  {
     "children": {},
     "date": "2025-10-08",
     "version": "1.135.6"
