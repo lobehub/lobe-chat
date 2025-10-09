@@ -635,19 +635,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    description: 'Mistral 7B Instruct 是一款兼有速度优化和长上下文支持的高性能行业标准模型。',
-    displayName: 'Mistral 7B Instruct',
-    id: 'mistralai/mistral-7b-instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.029, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.059, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 65_535,
     description: 'WizardLM-2 8x22B 是微软AI最先进的Wizard模型，显示出极其竞争力的表现。',
     displayName: 'WizardLM-2 8x22B',
@@ -830,21 +817,6 @@ const novitaChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'Deepseek R1 Distill Llama 8B',
-    id: 'deepseek/deepseek-r1-distill-llama-8b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
