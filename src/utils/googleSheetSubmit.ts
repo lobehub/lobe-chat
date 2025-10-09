@@ -1,4 +1,4 @@
-import { safeFetch } from "@/packages/ssrf-safe-fetch";
+import { ssrfSafeFetch } from '../../../packages/ssrf-safe-fetch';
 
 interface CommonData {
   name: string;
@@ -18,11 +18,9 @@ export async function submitToGoogleSheet(
   const key = process.env.SHEET_API_KEY!;
   const payload = { key, endpoint, ...data };
 
-  const res = await safeFetch(url, {
+  return ssrfSafeFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-
-  return res;
 }

@@ -10,20 +10,42 @@ import { addToFollowUpTool } from './follow-up/addToFollowUp';
 import { addToDontFollowUpTool } from './follow-up/addToDontFollowUp';
 import { addToKeepWarmTool } from './follow-up/addToKeepWarm';
 
+const followUpManifest = {
+  api: [],
+  identifier: addToFollowUpTool.name,
+  meta: { description: addToFollowUpTool.description },
+  systemRole: 'follow_up',
+  type: 'builtin',
+};
+const dontFollowUpManifest = {
+  api: [],
+  identifier: addToDontFollowUpTool.name,
+  meta: { description: addToDontFollowUpTool.description },
+  systemRole: 'dont_follow_up',
+  type: 'builtin',
+};
+const keepWarmManifest = {
+  api: [],
+  identifier: addToKeepWarmTool.name,
+  meta: { description: addToKeepWarmTool.description },
+  systemRole: 'keep_warm',
+  type: 'builtin',
+};
+
 export const customTools = [
   {
-    identifier: addToFollowUpTool.name,
-    manifest: addToFollowUpTool,
+    identifier: followUpManifest.identifier,
+    manifest: followUpManifest,
     type: 'builtin',
   },
   {
-    identifier: addToDontFollowUpTool.name,
-    manifest: addToDontFollowUpTool,
+    identifier: dontFollowUpManifest.identifier,
+    manifest: dontFollowUpManifest,
     type: 'builtin',
   },
   {
-    identifier: addToKeepWarmTool.name,
-    manifest: addToKeepWarmTool,
+    identifier: keepWarmManifest.identifier,
+    manifest: keepWarmManifest,
     type: 'builtin',
   },
 ];
