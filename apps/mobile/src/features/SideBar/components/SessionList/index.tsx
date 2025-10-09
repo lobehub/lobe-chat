@@ -59,7 +59,7 @@ export default function SideBar() {
       <ScrollView style={styles.sessionList}>
         <Inbox />
         <View style={styles.header}>
-          <Text style={styles.headerText}>{t('defaultList', { ns: 'chat' })}</Text>
+          <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
         </View>
         {filteredSessions.map((session) => (
           <ContextMenu.Root key={session.id}>
