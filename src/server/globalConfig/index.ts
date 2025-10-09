@@ -3,10 +3,12 @@ import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
 import { fileEnv } from '@/envs/file';
+import { imageEnv } from '@/envs/image';
 import { knowledgeEnv } from '@/envs/knowledge';
 import { langfuseEnv } from '@/envs/langfuse';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
+import { cleanObject } from '@/utils/object';
 
 import { genServerLLMConfig } from './_deprecated';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
@@ -61,6 +63,9 @@ export const getServerGlobalConfig = async () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
 
     enabledOAuthSSO: enableNextAuth,
+    image: cleanObject({
+      defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
+    }),
     /**
      * @deprecated
      */

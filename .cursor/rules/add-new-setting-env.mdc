@@ -1,0 +1,122 @@
+---
+description: Guide for adding environment variables to configure user settings
+alwaysApply: false
+---
+
+# Adding Environment Variable for User Settings
+
+Add server-side environment variables to configure default values for user settings.
+
+**Priority**: User Custom > Server Env Var > Hardcoded Default
+
+## Steps
+
+### 1. Define Environment Variable
+
+Create `src/envs/<domain>.ts`:
+
+```typescript
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const get<Domain>Config = () => {
+  return createEnv({
+    server: {
+      YOUR_ENV_VAR: z.coerce.number().min(MIN).max(MAX).optional(),
+    },
+    runtimeEnv: {
+      YOUR_ENV_VAR: process.env.YOUR_ENV_VAR,
+    },
+  });
+};
+
+export const <domain>Env = get<Domain>Config();
+```
+
+### 2. Update Type
+
+Add to `packages/types/src/serverConfig.ts`:
+
+```typescript
+export interface GlobalServerConfig {
+  <domain>?: {
+    <settingName>?: <type>;
+  };
+}
+```
+
+### 3. Assemble Server Config
+
+In `src/server/globalConfig/index.ts`:
+
+```typescript
+import { <domain>Env } from '@/envs/<domain>';
+import { cleanObject } from '@/utils/object';
+
+export const getServerGlobalConfig = async () => {
+  const config: GlobalServerConfig = {
+    // ...
+    <domain>: cleanObject({
+      <settingName>: <domain>Env.YOUR_ENV_VAR,
+    }),
+  };
+  return config;
+};
+```
+
+### 4. Merge to User Store
+
+In `src/store/user/slices/common/action.ts`, add to `serverSettings`:
+
+```typescript
+const serverSettings: PartialDeep<UserSettings> = {
+  defaultAgent: serverConfig.defaultAgent,
+  <domain>: serverConfig.<domain>,
+  // ...
+};
+```
+
+### 5. Update .env.example
+
+```bash
+# <Description> (range/options, default: X)
+# YOUR_ENV_VAR=<example>
+```
+
+## Example: AI_IMAGE_DEFAULT_IMAGE_NUM
+
+```typescript
+// src/envs/image.ts
+export const getImageConfig = () => {
+  return createEnv({
+    server: {
+      AI_IMAGE_DEFAULT_IMAGE_NUM: z.coerce.number().min(1).max(20).optional(),
+    },
+    runtimeEnv: {
+      AI_IMAGE_DEFAULT_IMAGE_NUM: process.env.AI_IMAGE_DEFAULT_IMAGE_NUM,
+    },
+  });
+};
+
+// packages/types/src/serverConfig.ts
+import { UserImageConfig } from './user/settings';
+
+export interface GlobalServerConfig {
+  image?: PartialDeep<UserImageConfig>;
+}
+
+// src/server/globalConfig/index.ts
+image: cleanObject({
+  defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
+}),
+
+// src/store/user/slices/common/action.ts
+const serverSettings: PartialDeep<UserSettings> = {
+  image: serverConfig.image,
+  // ...
+};
+
+// .env.example
+# AI_IMAGE_DEFAULT_IMAGE_NUM=4
+```
+

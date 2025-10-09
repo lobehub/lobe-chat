@@ -37,7 +37,7 @@ export const useFetchAiImageConfig = () => {
   const setImageNum = useImageStore((s) => s.setImageNum);
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   const currentSettings = useUserStore(settingsSelectors.currentSettings);
-  const defaultImageCount = currentSettings.image.defaultImageCount;
+  const defaultImageNum = currentSettings.image.defaultImageNum;
 
   useEffect(() => {
     if (isReadyForInit && isUserStateInit && !isInit) {
@@ -55,7 +55,7 @@ export const useFetchAiImageConfig = () => {
 
   useEffect(() => {
     if (isReadyForInit && isUserStateInit) {
-      setImageNum(defaultImageCount);
+      setImageNum(defaultImageNum);
     }
-  }, [isReadyForInit, isUserStateInit, defaultImageCount, setImageNum]);
+  }, [isReadyForInit, isUserStateInit, defaultImageNum, setImageNum]);
 };

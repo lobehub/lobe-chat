@@ -1,3 +1,3 @@
 export interface UserImageConfig {
-  defaultImageCount: number;
+  defaultImageNum: number;
 }
