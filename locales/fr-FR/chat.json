@@ -3,8 +3,8 @@
     "title": "Modèle"
   },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
-  "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
-  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
+  "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
   "agents": "Assistant",
   "artifact": {
     "generating": "Génération en cours",
@@ -149,6 +149,11 @@
       "title": "Détails de génération",
       "total": "Total consommé"
     }
+  },
+  "minimap": {
+    "jumpToMessage": "Aller au message n° {{index}}",
+    "nextMessage": "Message suivant",
+    "previousMessage": "Message précédent"
   },
   "newAgent": "Nouvel agent",
   "pin": "Épingler",

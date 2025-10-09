@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Ollama'nın sunduğu modeller, kod üretimi, matematiksel işlemler, çok dilli işleme ve diyalog etkileşimi gibi alanları kapsamaktadır. Kurumsal düzeyde ve yerelleştirilmiş dağıtım için çeşitli ihtiyaçları desteklemektedir."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud, resmi olarak barındırılan çıkarım hizmetleri sunar, kutudan çıkar çıkmaz Ollama model kütüphanesine erişim sağlar ve OpenAI uyumlu arayüzleri destekler."
+  },
   "openai": {
     "description": "OpenAI, dünya çapında lider bir yapay zeka araştırma kuruluşudur. Geliştirdiği modeller, GPT serisi gibi, doğal dil işleme alanında öncü adımlar atmaktadır. OpenAI, yenilikçi ve etkili yapay zeka çözümleri ile birçok sektörü dönüştürmeyi hedeflemektedir. Ürünleri, belirgin performans ve maliyet etkinliği ile araştırma, ticaret ve yenilikçi uygulamalarda yaygın olarak kullanılmaktadır."
   },

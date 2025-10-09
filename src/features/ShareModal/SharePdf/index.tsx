@@ -18,6 +18,7 @@ import { FieldType } from '../ShareText/type';
 import { useContainerStyles, useStyles } from '../style';
 import PdfPreview from './PdfPreview';
 import { usePdfGeneration } from './usePdfGeneration';
+import { ChatMessage } from '@/types/message';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   includeTool: true,
@@ -26,12 +27,14 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-const SharePdf = memo(() => {
+const SharePdf = memo((props: {message?: ChatMessage}) => {
   const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
   const { styles: containerStyles } = useContainerStyles();
   const { message } = App.useApp();
+
+  const { message: outerMessage } = props;
   const isMobile = useIsMobile();
 
   const settings: FormItemProps[] = [
@@ -85,7 +88,7 @@ const SharePdf = memo(() => {
       // Generate markdown with current field values
       const currentMarkdownContent = generateMarkdown({
         ...fieldValue,
-        messages,
+        messages: outerMessage ? [outerMessage] : messages,
         systemRole,
         title,
       }).replaceAll('\n\n\n', '\n');

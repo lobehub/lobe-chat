@@ -11,6 +11,7 @@ import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import BflProvider from './bfl';
+import CerebrasProvider from './cerebras';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import CometAPIProvider from './cometapi';
@@ -37,6 +38,7 @@ import NewAPIProvider from './newapi';
 import NovitaProvider from './novita';
 import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
+import OllamaCloudProvider from './ollamacloud';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
@@ -125,6 +127,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   { ...AzureProvider, chatModels: [] },
   AzureAIProvider,
   OllamaProvider,
+  OllamaCloudProvider,
   VLLMProvider,
   XinferenceProvider,
   AnthropicProvider,
@@ -184,6 +187,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
+  CerebrasProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -206,6 +210,7 @@ export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as BflProviderCard } from './bfl';
+export { default as CerebrasProviderCard } from './cerebras';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as CometAPIProviderCard } from './cometapi';
@@ -233,6 +238,7 @@ export { default as NewAPIProviderCard } from './newapi';
 export { default as NovitaProviderCard } from './novita';
 export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';
+export { default as OllamaCloudProviderCard } from './ollamacloud';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';

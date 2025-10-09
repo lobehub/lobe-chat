@@ -294,6 +294,21 @@
           "title": "Maximales Kontextfenster",
           "unlimited": "Unbegrenzt"
         },
+        "type": {
+          "extra": "Verschiedene Modelltypen haben unterschiedliche Anwendungsbereiche und Fähigkeiten",
+          "options": {
+            "chat": "Chat",
+            "embedding": "Vektorisierung",
+            "image": "Bildgenerierung",
+            "realtime": "Echtzeit-Chat",
+            "stt": "Spracherkennung",
+            "text2music": "Text zu Musik",
+            "text2video": "Text zu Video",
+            "tts": "Sprachsynthese"
+          },
+          "placeholder": "Bitte Modelltyp auswählen",
+          "title": "Modelltyp"
+        },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Funktionalität in der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",
           "title": "Visuelle Erkennung unterstützen"

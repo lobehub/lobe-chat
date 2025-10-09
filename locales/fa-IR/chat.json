@@ -3,8 +3,8 @@
     "title": "مدل"
   },
   "agentDefaultMessage": "سلام، من **{{name}}** هستم. می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
-  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
-  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
+  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
+  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
   "agents": "دستیار",
   "artifact": {
     "generating": "در حال تولید",
@@ -149,6 +149,11 @@
       "title": "جزئیات تولید",
       "total": "مجموع مصرف"
     }
+  },
+  "minimap": {
+    "jumpToMessage": "رفتن به پیام شماره {{index}}",
+    "nextMessage": "پیام بعدی",
+    "previousMessage": "پیام قبلی"
   },
   "newAgent": "دستیار جدید",
   "pin": "سنجاق کردن",

@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Mô hình do Ollama cung cấp bao quát rộng rãi các lĩnh vực như tạo mã, tính toán toán học, xử lý đa ngôn ngữ và tương tác đối thoại, hỗ trợ nhu cầu đa dạng cho triển khai doanh nghiệp và địa phương."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud cung cấp dịch vụ suy luận được quản lý chính thức, truy cập ngay lập tức vào thư viện mô hình Ollama và hỗ trợ giao diện tương thích với OpenAI."
+  },
   "openai": {
     "description": "OpenAI là tổ chức nghiên cứu trí tuệ nhân tạo hàng đầu thế giới, với các mô hình như dòng GPT đã thúc đẩy ranh giới của xử lý ngôn ngữ tự nhiên. OpenAI cam kết thay đổi nhiều ngành công nghiệp thông qua các giải pháp AI sáng tạo và hiệu quả. Sản phẩm của họ có hiệu suất và tính kinh tế nổi bật, được sử dụng rộng rãi trong nghiên cứu, thương mại và ứng dụng đổi mới."
   },

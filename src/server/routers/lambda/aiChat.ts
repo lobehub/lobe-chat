@@ -1,12 +1,19 @@
-import { AiSendMessageServerSchema, SendMessageServerResponse } from '@lobechat/types';
+import {
+  AiSendMessageServerSchema,
+  SendMessageServerResponse,
+  StructureOutputSchema,
+} from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 
 import { LOADING_FLAT } from '@/const/message';
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { AiChatService } from '@/server/services/aiChat';
 import { FileService } from '@/server/services/file';
+import { getXorPayload } from '@/utils/server';
 
 const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -22,6 +29,28 @@ const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 });
 
 export const aiChatRouter = router({
+  outputJSON: aiChatProcedure.input(StructureOutputSchema).mutation(async ({ input }) => {
+    let payload: object | undefined;
+
+    try {
+      payload = getXorPayload(input.keyVaultsPayload);
+    } catch (e) {
+      console.warn('user payload parse error', e);
+    }
+
+    if (!payload) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'keyVaultsPayload is not correct' });
+    }
+
+    const modelRuntime = initModelRuntimeWithUserPayload(input.provider, payload);
+
+    return modelRuntime.generateObject({
+      messages: input.messages,
+      model: input.model,
+      schema: input.schema,
+    });
+  }),
+
   sendMessageInServer: aiChatProcedure
     .input(AiSendMessageServerSchema)
     .mutation(async ({ input, ctx }) => {

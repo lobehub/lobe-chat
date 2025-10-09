@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "Describe what you want to generate"
     },
+    "quality": {
+      "label": "Image Quality",
+      "options": {
+        "hd": "High Definition",
+        "standard": "Standard"
+      }
+    },
     "seed": {
       "label": "Seed",
       "random": "Random Seed"

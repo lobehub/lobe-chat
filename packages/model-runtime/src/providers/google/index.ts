@@ -18,6 +18,8 @@ import {
   ChatCompletionTool,
   ChatMethodOptions,
   ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../../types';
@@ -25,12 +27,14 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
 import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { StreamingResponse } from '../../utils/response';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
+import { createGoogleGenerateObject } from './generateObject';
 
 const log = debug('model-runtime:google');
 
@@ -54,6 +58,68 @@ const modelsDisableInstuction = new Set([
   'gemma-3-27b-it',
   'gemma-3n-e4b-it',
 ]);
+
+const PRO_THINKING_MIN = 128;
+const PRO_THINKING_MAX = 32_768;
+const FLASH_THINKING_MAX = 24_576;
+const FLASH_LITE_THINKING_MIN = 512;
+const FLASH_LITE_THINKING_MAX = 24_576;
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+type ThinkingModelCategory = 'pro' | 'flash' | 'flashLite' | 'robotics' | 'other';
+
+const getThinkingModelCategory = (model?: string): ThinkingModelCategory => {
+  if (!model) return 'other';
+
+  const normalized = model.toLowerCase();
+
+  if (normalized.includes('robotics-er-1.5-preview')) return 'robotics';
+  if (normalized.includes('-2.5-flash-lite') || normalized.includes('flash-lite-latest'))
+    return 'flashLite';
+  if (normalized.includes('-2.5-flash') || normalized.includes('flash-latest')) return 'flash';
+  if (normalized.includes('-2.5-pro') || normalized.includes('pro-latest')) return 'pro';
+
+  return 'other';
+};
+
+export const resolveModelThinkingBudget = (
+  model: string,
+  thinkingBudget?: number | null,
+): number | undefined => {
+  const category = getThinkingModelCategory(model);
+  const hasBudget = thinkingBudget !== undefined && thinkingBudget !== null;
+
+  switch (category) {
+    case 'pro': {
+      if (!hasBudget) return -1;
+      if (thinkingBudget === -1) return -1;
+
+      return clamp(thinkingBudget, PRO_THINKING_MIN, PRO_THINKING_MAX);
+    }
+
+    case 'flash': {
+      if (!hasBudget) return -1;
+      if (thinkingBudget === -1 || thinkingBudget === 0) return thinkingBudget;
+
+      return clamp(thinkingBudget, 0, FLASH_THINKING_MAX);
+    }
+
+    case 'flashLite':
+    case 'robotics': {
+      if (!hasBudget) return 0;
+      if (thinkingBudget === -1 || thinkingBudget === 0) return thinkingBudget;
+
+      return clamp(thinkingBudget, FLASH_LITE_THINKING_MIN, FLASH_LITE_THINKING_MAX);
+    }
+
+    default: {
+      if (!hasBudget) return undefined;
+
+      return Math.min(thinkingBudget, FLASH_THINKING_MAX);
+    }
+  }
+};
 
 export interface GoogleModelCard {
   displayName: string;
@@ -137,28 +203,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const { model, thinkingBudget } = payload;
 
       // https://ai.google.dev/gemini-api/docs/thinking#set-budget
-      const resolvedThinkingBudget = (() => {
-        if (thinkingBudget !== undefined && thinkingBudget !== null) {
-          if (model.includes('-2.5-flash-lite')) {
-            if (thinkingBudget === 0 || thinkingBudget === -1) {
-              return thinkingBudget;
-            }
-            return Math.max(512, Math.min(thinkingBudget, 24_576));
-          } else if (model.includes('-2.5-flash')) {
-            return Math.min(thinkingBudget, 24_576);
-          } else if (model.includes('-2.5-pro')) {
-            return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
-          }
-          return Math.min(thinkingBudget, 24_576);
-        }
-
-        if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
-          return -1;
-        } else if (model.includes('-2.5-flash-lite')) {
-          return 0;
-        }
-        return undefined;
-      })();
+      const resolvedThinkingBudget = resolveModelThinkingBudget(model, thinkingBudget);
 
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
@@ -241,8 +286,14 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       }
 
       // Convert the response into a friendly text-stream
+      const pricing = await getModelPricing(model, this.provider);
+
       const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
+      const stream = Stream(prod, {
+        callbacks: options?.callback,
+        inputStartAt,
+        payload: { model, pricing, provider: this.provider },
+      });
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
@@ -272,6 +323,21 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     return createGoogleImage(this.client, this.provider, payload);
+  }
+
+  /**
+   * Generate structured output using Google Gemini API
+   * @see https://ai.google.dev/gemini-api/docs/structured-output
+   */
+  async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+    // Convert OpenAI messages to Google format
+    const contents = await this.buildGoogleMessages(payload.messages);
+
+    return createGoogleGenerateObject(
+      this.client,
+      { contents, model: payload.model, schema: payload.schema },
+      options,
+    );
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {

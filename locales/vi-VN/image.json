@@ -30,6 +30,13 @@
     "prompt": {
       "placeholder": "Mô tả nội dung bạn muốn tạo"
     },
+    "quality": {
+      "label": "Chất lượng hình ảnh",
+      "options": {
+        "hd": "Độ nét cao",
+        "standard": "Tiêu chuẩn"
+      }
+    },
     "seed": {
       "label": "Hạt giống",
       "random": "Hạt giống ngẫu nhiên"

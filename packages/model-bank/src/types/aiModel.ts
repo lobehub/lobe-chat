@@ -12,15 +12,18 @@ export const AiModelSourceEnum = {
 
 export type AiModelSourceType = (typeof AiModelSourceEnum)[keyof typeof AiModelSourceEnum];
 
-export type AiModelType =
-  | 'chat'
-  | 'embedding'
-  | 'tts'
-  | 'stt'
-  | 'image'
-  | 'text2video'
-  | 'text2music'
-  | 'realtime';
+export const AiModelTypeSchema = z.enum([
+  'chat',
+  'embedding',
+  'tts',
+  'stt',
+  'image',
+  'text2video',
+  'text2music',
+  'realtime',
+] as const);
+
+export type AiModelType = z.infer<typeof AiModelTypeSchema>;
 
 export interface ModelAbilities {
   /**
@@ -133,6 +136,8 @@ export type PricingUnitName =
 
   // Image-based pricing units
   | 'imageGeneration' // for image generation models
+  | 'imageInput'
+  | 'imageInput_cacheRead'
   | 'imageOutput';
 
 export type PricingUnitType =
@@ -322,6 +327,7 @@ export const CreateAiModelSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   releasedAt: z.string().optional(),
+  type: AiModelTypeSchema.optional(),
 
   // checkModel: z.string().optional(),
   // homeUrl: z.string().optional(),
@@ -357,6 +363,7 @@ export const UpdateAiModelSchema = z.object({
     .optional(),
   contextWindowTokens: z.number().nullable().optional(),
   displayName: z.string().nullable().optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
@@ -364,6 +371,7 @@ export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
 export interface AiModelSortMap {
   id: string;
   sort: number;
+  type?: AiModelType;
 }
 
 export const ToggleAiModelEnableSchema = z.object({
@@ -371,6 +379,7 @@ export const ToggleAiModelEnableSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   source: z.enum(['builtin', 'custom', 'remote']).optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;

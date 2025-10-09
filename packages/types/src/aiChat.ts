@@ -53,3 +53,19 @@ export interface SendMessageServerResponse {
   topics?: ChatTopic[];
   userMessageId: string;
 }
+
+export const StructureOutputSchema = z.object({
+  keyVaultsPayload: z.string(),
+  messages: z.array(z.any()),
+  model: z.string(),
+  provider: z.string(),
+  schema: z.any(),
+});
+
+export interface StructureOutputParams {
+  keyVaultsPayload: string;
+  messages: ChatMessage[];
+  model: string;
+  provider: string;
+  schema: any;
+}

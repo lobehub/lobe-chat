@@ -299,6 +299,21 @@ export default {
           title: '最大上下文窗口',
           unlimited: '无限制',
         },
+        type: {
+          extra: '不同模型类型拥有差异化的使用场景与能力',
+          options: {
+            chat: '对话',
+            embedding: '向量化',
+            image: '图片生成',
+            realtime: '实时对话',
+            stt: '语音转文本',
+            text2music: '文本转音乐',
+            text2video: '文本转视频',
+            tts: '语音合成',
+          },
+          placeholder: '请选择模型类型',
+          title: '模型类型',
+        },
         vision: {
           extra:
             '此配置将仅开启应用中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性',

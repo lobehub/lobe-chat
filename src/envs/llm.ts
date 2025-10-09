@@ -71,6 +71,8 @@ export const getLLMConfig = () => {
       WENXIN_API_KEY: z.string().optional(),
 
       ENABLED_OLLAMA: z.boolean(),
+      ENABLED_OLLAMA_CLOUD: z.boolean(),
+      OLLAMA_CLOUD_API_KEY: z.string().optional(),
 
       ENABLED_VLLM: z.boolean(),
       VLLM_API_KEY: z.string().optional(),
@@ -196,6 +198,9 @@ export const getLLMConfig = () => {
       ENABLED_NEWAPI: z.boolean(),
       NEWAPI_API_KEY: z.string().optional(),
       NEWAPI_PROXY_URL: z.string().optional(),
+
+      ENABLED_CEREBRAS: z.boolean(),
+      CEREBRAS_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -267,6 +272,8 @@ export const getLLMConfig = () => {
       WENXIN_API_KEY: process.env.WENXIN_API_KEY,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
+      ENABLED_OLLAMA_CLOUD: !!process.env.OLLAMA_CLOUD_API_KEY,
+      OLLAMA_CLOUD_API_KEY: process.env.OLLAMA_CLOUD_API_KEY,
 
       ENABLED_VLLM: !!process.env.VLLM_API_KEY,
       VLLM_API_KEY: process.env.VLLM_API_KEY,
@@ -390,6 +397,9 @@ export const getLLMConfig = () => {
 
       ENABLED_NEBIUS: !!process.env.NEBIUS_API_KEY,
       NEBIUS_API_KEY: process.env.NEBIUS_API_KEY,
+
+      ENABLED_CEREBRAS: !!process.env.CEREBRAS_API_KEY,
+      CEREBRAS_API_KEY: process.env.CEREBRAS_API_KEY,
     },
   });
 };

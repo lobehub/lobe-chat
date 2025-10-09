@@ -110,6 +110,9 @@
   "ollama": {
     "description": "Ollama provides models that cover a wide range of fields, including code generation, mathematical operations, multilingual processing, and conversational interaction, catering to diverse enterprise-level and localized deployment needs."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud offers officially hosted inference services, providing out-of-the-box access to the Ollama model library and supporting OpenAI-compatible interfaces."
+  },
   "openai": {
     "description": "OpenAI is a global leader in artificial intelligence research, with models like the GPT series pushing the frontiers of natural language processing. OpenAI is committed to transforming multiple industries through innovative and efficient AI solutions. Their products demonstrate significant performance and cost-effectiveness, widely used in research, business, and innovative applications."
   },

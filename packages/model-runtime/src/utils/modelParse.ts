@@ -19,17 +19,27 @@ export const MODEL_LIST_CONFIGS = {
   },
   deepseek: {
     functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
-    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1'],
+    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
   },
   google: {
     functionCallKeywords: ['gemini'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
+  inclusionai: {
+    functionCallKeywords: ['ling-'],
+    reasoningKeywords: ['ring-'],
+    visionKeywords: ['ming-'],
+  },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
     visionKeywords: ['llava'],
+  },
+  longcat: {
+    functionCallKeywords: ['longcat'],
+    reasoningKeywords: ['thinking'],
+    visionKeywords: [],
   },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
@@ -68,7 +78,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   xai: {
     functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast'],
+    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast', '!non-reasoning'],
     visionKeywords: ['vision', 'grok-4'],
   },
   zeroone: {
@@ -87,7 +97,9 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
+  inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
+  longcat: ['longcat'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
@@ -314,13 +326,25 @@ const processModelCard = (
     return undefined;
   }
 
-  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
+  const formatPricing = (pricing?: {
+    cachedInput?: number;
+    input?: number;
+    output?: number;
+    units?: any[];
+    writeCacheInput?: number;
+  }) => {
     if (!pricing || typeof pricing !== 'object') return undefined;
     if (Array.isArray(pricing.units)) {
       return { units: pricing.units };
     }
-    const { input, output } = pricing;
-    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
+    const { input, output, cachedInput, writeCacheInput } = pricing;
+    if (
+      typeof input !== 'number' &&
+      typeof output !== 'number' &&
+      typeof cachedInput !== 'number' &&
+      typeof writeCacheInput !== 'number'
+    )
+      return undefined;
 
     const units = [];
     if (typeof input === 'number') {
@@ -335,6 +359,22 @@ const processModelCard = (
       units.push({
         name: 'textOutput' as const,
         rate: output,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof cachedInput === 'number') {
+      units.push({
+        name: 'textInput_cacheRead' as const,
+        rate: cachedInput,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof writeCacheInput === 'number') {
+      units.push({
+        name: 'textInput_cacheWrite' as const,
+        rate: writeCacheInput,
         strategy: 'fixed' as const,
         unit: 'millionTokens' as const,
       });
