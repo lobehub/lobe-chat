@@ -73,7 +73,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     description:
       'Claude Sonnet 4 在 Sonnet 3.7 的行业领先能力基础上进行了显著改进，在编码方面表现出色，在 SWE-bench 上达到了最先进的 72.7%。该模型在性能和效率之间取得了平衡，适用于内部和外部用例，并通过增强的可控性实现对实现的更大控制。',
     displayName: 'Claude Sonnet 4',
-    enabled: true,
     id: 'anthropic/claude-sonnet-4',
     pricing: {
       units: [
@@ -118,7 +117,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     description:
       'OpenAI 的 o3 是最强大的推理模型，在编码、数学、科学和视觉感知方面设立了新的最先进水平。它擅长需要多方面分析的复杂查询，在分析图像、图表和图形方面具有特殊优势。',
     displayName: 'o3',
-    enabled: true,
     id: 'openai/o3',
     pricing: {
       units: [
@@ -448,7 +446,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     description:
       'GLM-4.5 系列模型是专门为智能体设计的基础模型。旗舰 GLM-4.5 集成了 3550 亿总参数（320 亿活跃），统一了推理、编码和代理能力以解决复杂的应用需求。作为混合推理系统，它提供双重操作模式。',
     displayName: 'GLM-4.5',
-    enabled: true,
     id: 'zai/glm-4.5',
     pricing: {
       units: [
