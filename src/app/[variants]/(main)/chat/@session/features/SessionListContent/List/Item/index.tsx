@@ -19,9 +19,10 @@ import Actions from './Actions';
 
 interface SessionItemProps {
   id: string;
+  onDesktopDoubleClick?: () => void;
 }
 
-const SessionItem = memo<SessionItemProps>(({ id }) => {
+const SessionItem = memo<SessionItemProps>(({ id, onDesktopDoubleClick }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
   const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
@@ -51,6 +52,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const handleDoubleClick = () => {
     if (isDesktop) {
+      onDesktopDoubleClick?.();
       openSessionInNewWindow(id);
     }
   };
