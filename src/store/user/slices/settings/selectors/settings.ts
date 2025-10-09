@@ -25,6 +25,8 @@ export const currentLLMSettings = (s: UserStore): UserModelProviderConfig =>
 export const getProviderConfigById = (provider: string) => (s: UserStore) =>
   currentLLMSettings(s)[provider as GlobalLLMProviderKey] as ProviderConfig | undefined;
 
+const currentImageSettings = (s: UserStore) => currentSettings(s).image;
+
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
 const defaultAgent = (s: UserStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
@@ -44,6 +46,7 @@ const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
   merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
 
 export const settingsSelectors = {
+  currentImageSettings,
   currentSettings,
   currentSystemAgent,
   currentTTS,

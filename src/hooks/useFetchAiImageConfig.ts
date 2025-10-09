@@ -6,6 +6,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useImageStore } from '@/store/image';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
 /**
  * Manages image configuration initialization
@@ -33,17 +34,28 @@ export const useFetchAiImageConfig = () => {
 
   const isInit = useImageStore((s) => s.isInit);
   const initializeImageConfig = useImageStore((s) => s.initializeImageConfig);
+  const setImageNum = useImageStore((s) => s.setImageNum);
+  const isUserStateInit = useUserStore((s) => s.isUserStateInit);
+  const currentSettings = useUserStore(settingsSelectors.currentSettings);
+  const defaultImageCount = currentSettings.image.defaultImageCount;
 
   useEffect(() => {
-    if (isReadyForInit && !isInit) {
+    if (isReadyForInit && isUserStateInit && !isInit) {
       initializeImageConfig(isLogin, lastSelectedImageModel, lastSelectedImageProvider);
     }
   }, [
     isReadyForInit,
+    isUserStateInit,
     isInit,
     isLogin,
     lastSelectedImageModel,
     lastSelectedImageProvider,
     initializeImageConfig,
   ]);
+
+  useEffect(() => {
+    if (isReadyForInit && isUserStateInit) {
+      setImageNum(defaultImageCount);
+    }
+  }, [isReadyForInit, isUserStateInit, defaultImageCount, setImageNum]);
 };
