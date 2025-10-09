@@ -12,6 +12,7 @@ import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
 import type { ImageStore } from '../../store';
 import { calculateInitialAspectRatio } from '../../utils/aspectRatio';
@@ -328,6 +329,8 @@ export const createGenerationConfigSlice: StateCreator<
   },
 
   initializeImageConfig: (isLogin, lastSelectedImageModel, lastSelectedImageProvider) => {
+    const { defaultImageCount } = settingsSelectors.currentImageSettings(useUserStore.getState());
+
     // If no parameters are passed, get from store (backward compatibility)
     let actualIsLogin = isLogin;
     let actualLastSelectedImageModel = lastSelectedImageModel;
@@ -355,6 +358,7 @@ export const createGenerationConfigSlice: StateCreator<
             parametersSchema,
             isAspectRatioLocked: false,
             activeAspectRatio: initialActiveRatio,
+            imageNum: defaultImageCount,
             isInit: true,
           },
           false,
@@ -362,11 +366,25 @@ export const createGenerationConfigSlice: StateCreator<
         );
       } catch {
         // If restoration fails, simply mark as initialized to use default configuration
-        set({ isInit: true }, false, 'initializeImageConfig/fallback');
+        set(
+          {
+            imageNum: defaultImageCount,
+            isInit: true,
+          },
+          false,
+          'initializeImageConfig/fallback',
+        );
       }
     } else {
       // No remembered model, directly mark as initialized (use default values)
-      set({ isInit: true }, false, 'initializeImageConfig/default');
+      set(
+        {
+          imageNum: defaultImageCount,
+          isInit: true,
+        },
+        false,
+        'initializeImageConfig/default',
+      );
     }
   },
 });
