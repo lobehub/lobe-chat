@@ -168,6 +168,52 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 163_840,
     description:
+      'DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。',
+    displayName: 'DeepSeek V3.2 Exp',
+    id: 'deepseek-ai/DeepSeek-V3.2-Exp',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。',
+    displayName: 'DeepSeek V3.2 Exp (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.2-Exp',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
       'DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。',
     displayName: 'DeepSeek V3.1 Terminus',
     enabled: true,

@@ -316,21 +316,6 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 120_000,
-    displayName: 'ERNIE 4.5 0.3B',
-    id: 'baidu/ernie-4.5-0.3b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 120_000,
     displayName: 'ERNIE 4.5 21B A3B',
     id: 'baidu/ernie-4.5-21B-a3b',
     pricing: {
