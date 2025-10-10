@@ -5,6 +5,7 @@ const deepseekChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      structuredOutput: true,
     },
     contextWindowTokens: 131_072,
     description:
