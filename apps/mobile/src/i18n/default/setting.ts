@@ -99,7 +99,25 @@ export default {
       success: '已清空认证数据',
       title: '清空认证数据',
     },
+    customServer: {
+      current: '当前服务器地址',
+      description: '配置后，所有请求都会使用该服务器地址。留空则恢复到官方服务器。',
+      hint: '必须以 http:// 或 https:// 开头，应用可能需要重新登录。',
+      invalid: '请输入以 http:// 或 https:// 开头的有效地址',
+      placeholder: 'https://your-server.example.com',
+      reset: '恢复默认',
+      resetSuccess: '已恢复官方服务器地址',
+      save: '保存',
+      title: '自定义服务器地址',
+      updated: '自定义服务器地址已更新',
+    },
     failurePrefix: '操作失败: ',
+    mode: {
+      already: '你已经处于开发者模式',
+      enabled: '开发者模式已开启',
+      remaining: '再点按 {{count}} 次即可开启开发者模式',
+      title: '开发者模式',
+    },
     refreshToken: {
       expire: {
         success: '已使刷新令牌立即过期',
@@ -125,12 +143,6 @@ export default {
       title: '跟随系统',
     },
     title: '语言设置',
-  },
-  mode: {
-    already: '你已经处于开发者模式',
-    enabled: '开发者模式已开启',
-    remaining: '再点按 {{count}} 次即可开启开发者模式',
-    title: '开发者模式',
   },
   openai: 'OpenAI 设置',
   openaiSettings: {

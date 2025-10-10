@@ -2,19 +2,54 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
 
-import { OFFICIAL_URL } from '@/_const/url';
+import { DEFAULT_SERVER_URL, formatServerUrl, getServerUrl } from '@/config/server';
 import { authExpired } from '@/features/Error/AuthExpired';
 
 // Local type reference to server router
 import type { MobileRouter } from '../../../../../src/server/routers/mobile';
 import { createHeaderWithAuth } from './header';
 
-const remoteUrl = process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL;
+const normalizedDefaultBase = formatServerUrl(DEFAULT_SERVER_URL);
+const TRPC_PATH = '/trpc/mobile';
+
+const replaceBaseUrl = (targetUrl: string): string => {
+  const currentBase = getServerUrl();
+
+  if (targetUrl.startsWith(normalizedDefaultBase)) {
+    return `${currentBase}${targetUrl.slice(normalizedDefaultBase.length)}`;
+  }
+
+  return targetUrl;
+};
+
+type FetchRequestInput = string | URL | Request;
+
+const resolveRequestInput = (input: FetchRequestInput): FetchRequestInput => {
+  if (typeof input === 'string') {
+    return replaceBaseUrl(input);
+  }
+
+  if (input instanceof URL) {
+    const updated = replaceBaseUrl(input.toString());
+    return new URL(updated);
+  }
+
+  if (typeof Request !== 'undefined' && input instanceof Request) {
+    const updatedUrl = replaceBaseUrl(input.url);
+
+    if (updatedUrl === input.url) return input;
+
+    return new Request(updatedUrl, input);
+  }
+
+  return input;
+};
 
 const links = [
   httpBatchLink({
     fetch: async (input, init) => {
-      const response = await fetch(input as any, init as any);
+      const resolvedInput = resolveRequestInput(input);
+      const response = await fetch(resolvedInput as any, init as any);
       if (response.ok) return response;
 
       if (response.status === 401) {
@@ -28,7 +63,7 @@ const links = [
     },
     headers: async () => await createHeaderWithAuth(),
     transformer: superjson,
-    url: `${remoteUrl}/trpc/mobile`,
+    url: `${normalizedDefaultBase}${TRPC_PATH}`,
   }),
 ];
 

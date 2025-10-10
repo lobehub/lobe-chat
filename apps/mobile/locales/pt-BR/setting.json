@@ -100,6 +100,12 @@
       "title": "Limpar dados de autenticação"
     },
     "failurePrefix": "Operação falhou: ",
+    "mode": {
+      "already": "Você já está no modo desenvolvedor",
+      "enabled": "Modo desenvolvedor ativado",
+      "remaining": "Toque mais {{count}} vezes para ativar o modo desenvolvedor",
+      "title": "Modo desenvolvedor"
+    },
     "refreshToken": {
       "expire": {
         "success": "Token de atualização expirado imediatamente",
@@ -125,12 +131,6 @@
       "title": "Seguir sistema"
     },
     "title": "Configuração de idioma"
-  },
-  "mode": {
-    "already": "Você já está no modo desenvolvedor",
-    "enabled": "Modo desenvolvedor ativado",
-    "remaining": "Toque mais {{count}} vezes para ativar o modo desenvolvedor",
-    "title": "Modo desenvolvedor"
   },
   "openai": "Configurações OpenAI",
   "openaiSettings": {
