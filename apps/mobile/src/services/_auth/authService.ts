@@ -22,6 +22,11 @@ export class OAuthService implements AuthService {
     authLogger.info('OAuthService initialized', config);
   }
 
+  updateConfig(config: AuthConfig) {
+    this.config = config;
+    authLogger.info('OAuthService config updated', config);
+  }
+
   /**
    * 获取重定向 URI
    */

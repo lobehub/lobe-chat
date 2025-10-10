@@ -2,6 +2,7 @@
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**, je kunt direct met mij beginnen te praten, of ga naar [Assistent-instellingen]({{url}}) om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**, laten we beginnen met praten!",
+  "agentList": "Assistentenlijst",
   "agentRoleEdit": {
     "cancel": "Annuleren",
     "confirm": "Bevestigen",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan daarna niet worden hersteld. Bevestig je actie alstublieft.",
   "copyFailed": "Kopiëren mislukt",
   "defaultAgent": "Aangepaste assistent",
-  "defaultList": "Standaardlijst",
   "deleteMessageConfirm": "Weet je zeker dat je dit bericht wilt verwijderen?",
   "history": "Gespreksgeschiedenis",
   "inbox": {

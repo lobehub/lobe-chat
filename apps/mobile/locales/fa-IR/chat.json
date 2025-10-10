@@ -2,6 +2,7 @@
   "agentDefaultMessage": "سلام، من **{{name}}** هستم، می‌توانید فوراً با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
   "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
   "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
+  "agentList": "فهرست دستیاران",
   "agentRoleEdit": {
     "cancel": "لغو",
     "confirm": "تأیید",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "در حال حذف این دستیار هستید، پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید",
   "copyFailed": "کپی ناموفق بود",
   "defaultAgent": "دستیار سفارشی",
-  "defaultList": "فهرست پیش‌فرض",
   "deleteMessageConfirm": "آیا مطمئن هستید که می‌خواهید این پیام را حذف کنید؟",
   "history": "تاریخچه گفتگو",
   "inbox": {
