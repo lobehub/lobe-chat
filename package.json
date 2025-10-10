@@ -276,7 +276,7 @@
     "tokenx": "^1.0.0",
     "ts-md5": "^2.0.0",
     "ua-parser-js": "^1.0.41",
-    "unstructured-client": "^0.19.0",
+    "unstructured-client": "^0.27.0",
     "url-join": "^5.0.0",
     "use-merge-value": "^1.2.0",
     "uuid": "^11.1.0",
