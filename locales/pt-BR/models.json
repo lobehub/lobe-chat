@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "O GLM-Zero-Preview possui uma poderosa capacidade de raciocínio complexo, destacando-se em áreas como raciocínio lógico, matemática e programação."
   },
+  "glm4.6:355b": {
+    "description": "O mais novo modelo carro-chefe da Zhipu, o GLM-4.6 (355B), supera amplamente sua geração anterior em codificação avançada, processamento de textos longos, raciocínio e capacidades de agentes inteligentes. Em especial, seu desempenho em programação está alinhado ao Claude Sonnet 4, tornando-se o principal modelo de codificação da China."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash oferece funcionalidades de próxima geração e melhorias, incluindo velocidade excepcional, uso integrado de ferramentas, geração multimodal e janela de contexto de 1 milhão de tokens."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Modelo universal em tempo real, suportando entrada e saída de texto e áudio, além de entrada de imagem."
   },
-  "grok-2-1212": {
-    "description": "Este modelo apresenta melhorias em precisão, conformidade com instruções e capacidade multilíngue."
-  },
   "grok-2-image-1212": {
     "description": "Nosso mais recente modelo de geração de imagens pode criar imagens vívidas e realistas a partir de prompts textuais. Apresenta excelente desempenho em marketing, mídias sociais e entretenimento."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "Modelo de nível flagship, especializado em extração de dados, programação e resumo de texto para aplicações empresariais, com profundo conhecimento em finanças, saúde, direito e ciências."
   },
-  "grok-3-fast": {
-    "description": "Modelo de nível flagship, especializado em extração de dados, programação e resumo de texto para aplicações empresariais, com profundo conhecimento em finanças, saúde, direito e ciências."
-  },
   "grok-3-mini": {
-    "description": "Modelo leve que pensa antes de responder. Rápido e inteligente, adequado para tarefas lógicas que não exigem conhecimento profundo de domínio, e capaz de fornecer o rastro original do pensamento."
-  },
-  "grok-3-mini-fast": {
     "description": "Modelo leve que pensa antes de responder. Rápido e inteligente, adequado para tarefas lógicas que não exigem conhecimento profundo de domínio, e capaz de fornecer o rastro original do pensamento."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "A versão mais recente do modelo de pensamento profundo multimodal t1-vision da Hunyuan, que suporta cadeias de pensamento nativas multimodais, com melhorias abrangentes em relação à versão padrão anterior."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Modelo de pensamento profundo multimodal Hunyuan, suportando cadeias de raciocínio nativas multimodais de longo prazo, especializado em diversos cenários de inferência de imagens, com melhorias abrangentes em problemas científicos em comparação ao modelo de pensamento rápido."
+    "description": "A versão mais recente do modelo de visão com raciocínio profundo Hunyuan t1-vision apresenta melhorias abrangentes em tarefas como perguntas e respostas visuais, localização visual, OCR, gráficos, resolução de problemas a partir de fotos e criação baseada em imagens. Houve também uma otimização significativa nas capacidades em inglês e em idiomas menos comuns."
   },
   "hunyuan-turbo": {
     "description": "Versão de pré-visualização do novo modelo de linguagem de próxima geração Hunyuan, utilizando uma nova estrutura de modelo de especialistas mistos (MoE), com eficiência de inferência mais rápida e desempenho superior em comparação ao Hunyuan-Pro."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "O modelo Llama 3.2-Vision com ajuste fino de instruções foi otimizado para reconhecimento visual, raciocínio com imagens, descrição de imagens e respostas a perguntas gerais relacionadas a imagens."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: modelo Llama de médio a grande porte, equilibrando capacidade de raciocínio e desempenho de processamento."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 é o modelo de linguagem de código aberto multilíngue mais avançado da série Llama, oferecendo desempenho comparável ao modelo 405B a um custo extremamente baixo. Baseado na estrutura Transformer, e aprimorado por meio de ajuste fino supervisionado (SFT) e aprendizado por reforço com feedback humano (RLHF) para aumentar a utilidade e a segurança. Sua versão ajustada para instruções é otimizada para diálogos multilíngues, superando muitos modelos de chat de código aberto e fechado em vários benchmarks da indústria. A data limite de conhecimento é dezembro de 2023."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "O modelo Llama 3.3 com ajuste fino de instruções foi otimizado para cenários de diálogo, superando muitos modelos de chat open-source existentes em benchmarks comuns do setor."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: modelo de alto desempenho da série Llama, ideal para raciocínio avançado, resolução de problemas complexos e tarefas baseadas em instruções."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: modelo de alto desempenho da série Llama, adequado para cenários que exigem alta taxa de processamento e baixa latência."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B oferece capacidade de processamento incomparável para complexidade, projetado sob medida para projetos de alta demanda."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 é um modelo líder lançado pela Meta, suportando até 405B de parâmetros, aplicável em diálogos complexos, tradução multilíngue e análise de dados."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: variante compacta e de baixa latência do Llama, ideal para inferência leve e interações em tempo real."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 é um modelo líder lançado pela Meta, suportando até 405B de parâmetros, aplicável em diálogos complexos, tradução multilíngue e análise de dados."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "Modelo de raciocínio visual. Suporta entrada visual e saída em cadeia de pensamento. Versão plus lançada após o modelo qvq-max, com velocidade de raciocínio mais rápida e melhor equilíbrio entre desempenho e custo em comparação ao qvq-max."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: modelo da série Qwen com excelente desempenho em tarefas multilíngues e de codificação, adequado para aplicações de produção em escala média."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: modelo com contexto longo voltado para geração de código e tarefas complexas de programação."
   },
   "qwen-coder-plus": {
     "description": "Modelo de código Tongyi Qianwen."

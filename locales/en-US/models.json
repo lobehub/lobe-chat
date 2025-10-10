@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possesses strong complex reasoning abilities, excelling in logical reasoning, mathematics, programming, and other fields."
   },
+  "glm4.6:355b": {
+    "description": "GLM-4.6 (355B), the latest flagship model from Zhipu, delivers comprehensive improvements over its predecessor in advanced coding, long-text processing, reasoning, and agent capabilities. It is particularly aligned with Claude Sonnet 4 in programming performance, making it one of the top coding models in China."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash offers next-generation features and improvements, including exceptional speed, built-in tool usage, multimodal generation, and a 1 million token context window."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "A general-purpose real-time model supporting real-time text and audio input/output, as well as image input."
   },
-  "grok-2-1212": {
-    "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
-  },
   "grok-2-image-1212": {
     "description": "Our latest image generation model can create vivid and realistic images based on text prompts. It performs excellently in image generation for marketing, social media, and entertainment."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "A flagship model skilled in data extraction, programming, and text summarization for enterprise applications, with deep knowledge in finance, healthcare, law, and science."
   },
-  "grok-3-fast": {
-    "description": "A flagship model skilled in data extraction, programming, and text summarization for enterprise applications, with deep knowledge in finance, healthcare, law, and science."
-  },
   "grok-3-mini": {
-    "description": "A lightweight model that thinks before responding. It runs fast and intelligently, suitable for logical tasks that do not require deep domain knowledge, and can provide raw thought trajectories."
-  },
-  "grok-3-mini-fast": {
     "description": "A lightweight model that thinks before responding. It runs fast and intelligently, suitable for logical tasks that do not require deep domain knowledge, and can provide raw thought trajectories."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "The latest Hunyuan t1-vision multimodal deep thinking model supports native long Chain-of-Thought reasoning across modalities, comprehensively improving over the previous default version."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Hunyuan multimodal deep reasoning model supporting native long chains of thought across modalities, excelling in various image reasoning scenarios and significantly improving performance on science problems compared to fast thinking models."
+    "description": "The latest Hunyuan t1-vision model excels in visual deep reasoning. Compared to the previous version, it offers significant enhancements in general image-text Q&A, visual localization, OCR, chart interpretation, problem-solving from photos, and image-based creative tasks, with notable improvements in English and low-resource language capabilities."
   },
   "hunyuan-turbo": {
     "description": "The preview version of the next-generation Hunyuan large language model, featuring a brand-new mixed expert model (MoE) structure, which offers faster inference efficiency and stronger performance compared to Hunyuan Pro."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "The Llama 3.2-Vision instruction-tuned model is optimized for visual recognition, image reasoning, image captioning, and answering general questions related to images."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: A mid-to-large scale Llama model that balances reasoning power and throughput."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at an extremely low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "The Llama 3.3 instruction-tuned model is optimized for conversational scenarios, outperforming many existing open-source chat models on common industry benchmarks."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: A high-performance model in the Llama series, ideal for advanced reasoning, complex problem-solving, and instruction-following tasks."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: A high-performance Llama model optimized for scenarios requiring high throughput and low latency."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B provides unparalleled complexity handling capabilities, tailored for high-demand projects."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 is a leading model launched by Meta, supporting up to 405B parameters, applicable in complex dialogues, multilingual translation, and data analysis."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: A lightweight, low-latency variant of Llama, well-suited for real-time inference and interactive applications."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 is a leading model launched by Meta, supporting up to 405B parameters, applicable in complex dialogues, multilingual translation, and data analysis."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "A visual reasoning model supporting visual inputs and chain-of-thought outputs. The plus version, succeeding the qvq-max model, offers faster reasoning speed and a more balanced trade-off between performance and cost."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: A strong performer in multilingual and coding tasks, suitable for medium-scale production use."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: A long-context model designed for code generation and complex programming tasks."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen coding model."

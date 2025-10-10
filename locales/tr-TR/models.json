@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
   },
+  "glm4.6:355b": {
+    "description": "Zhipu'nun en yeni amiral gemisi modeli GLM-4.6 (355B), gelişmiş kodlama, uzun metin işleme, akıl yürütme ve yapay zeka ajanı yeteneklerinde seleflerini tamamen geride bırakıyor. Özellikle programlama yetenekleri açısından Claude Sonnet 4 ile aynı seviyeye ulaşarak, Çin'deki en iyi Kodlama modellerinden biri haline gelmiştir."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash, üstün hız, yerleşik araç kullanımı, çok modlu üretim ve 1 milyon token bağlam penceresi dahil olmak üzere yeni nesil özellikler ve geliştirmeler sunar."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Metin ve sesin gerçek zamanlı giriş ve çıkışını destekleyen genel amaçlı gerçek zamanlı model, ayrıca görüntü girişini de destekler."
   },
-  "grok-2-1212": {
-    "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
-  },
   "grok-2-image-1212": {
     "description": "En yeni görüntü oluşturma modelimiz, metin istemlerine dayanarak canlı ve gerçekçi görüntüler oluşturabilir. Pazarlama, sosyal medya ve eğlence gibi alanlarda görüntü üretiminde mükemmel performans sergiler."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "Amiral gemisi model olup, veri çıkarımı, programlama ve metin özetleme gibi kurumsal uygulamalarda uzmandır; finans, sağlık, hukuk ve bilim alanlarında derin bilgiye sahiptir."
   },
-  "grok-3-fast": {
-    "description": "Amiral gemisi model olup, veri çıkarımı, programlama ve metin özetleme gibi kurumsal uygulamalarda uzmandır; finans, sağlık, hukuk ve bilim alanlarında derin bilgiye sahiptir."
-  },
   "grok-3-mini": {
-    "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
-  },
-  "grok-3-mini-fast": {
     "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "Hunyuan'ın en yeni t1-vision çok modlu anlama derin düşünme modeli, çok modlu doğal düşünce zincirini destekler ve önceki nesil varsayılan modele kıyasla kapsamlı iyileştirmeler sunar."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Hunyuan çok modlu anlama derin düşünme modeli, çok modlu doğal uzun düşünce zincirlerini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileştirmeler sunar."
+    "description": "Hunyuan'ın en son sürümü t1-vision, görsel derin düşünme modeli olarak önceki versiyona kıyasla genel görsel-sözel soru-cevap, görsel konumlandırma, OCR, grafik yorumlama, soru çözme ve görsel yaratıcılık gibi görevlerde kapsamlı iyileştirmeler sunar. İngilizce ve az konuşulan dillerdeki performansı da belirgin şekilde geliştirilmiştir."
   },
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Llama 3.2-Vision komut ince ayarlı modeli, görsel tanıma, görüntü çıkarımı, görüntü açıklama ve görüntülerle ilgili genel soruları yanıtlamak için optimize edilmiştir."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: Orta-büyük ölçekli Llama modeli, akıl yürütme yeteneği ile yüksek işlem hacmini dengeler."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile faydalılığını ve güvenliğini artırmıştır. Talimat ayarlı versiyonu, çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 komut ince ayarlı modeli, diyalog senaryoları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında birçok mevcut açık kaynaklı sohbet modelini geride bırakmaktadır."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: Yüksek performanslı Llama serisi modeli; gelişmiş akıl yürütme, karmaşık problem çözme ve komut takibi görevleri için uygundur."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: Yüksek performanslı Llama serisi modeli; yüksek işlem hacmi ve düşük gecikme gerektiren senaryolar için idealdir."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B, eşsiz karmaşıklık işleme yeteneği sunar ve yüksek talepli projeler için özel olarak tasarlanmıştır."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1, Meta tarafından sunulan öncü bir modeldir, 405B parametreye kadar destekler ve karmaşık diyaloglar, çok dilli çeviri ve veri analizi alanlarında kullanılabilir."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: Küçük boyutlu, düşük gecikmeli Llama varyantı; hafif çevrimiçi akıl yürütme ve etkileşimli kullanım senaryoları için uygundur."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1, Meta tarafından sunulan öncü bir modeldir, 405B parametreye kadar destekler ve karmaşık diyaloglar, çok dilli çeviri ve veri analizi alanlarında kullanılabilir."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "Görsel çıkarım modeli. Görsel girişleri ve düşünce zinciri çıktısını destekler; qvq-max modelinin ardından gelen plus versiyonudur. qvq-max modeline kıyasla, qvq-plus serisi modeller daha hızlı çıkarım yapar ve performans ile maliyet arasında daha dengeli bir sonuç sunar."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: Qwen serisi, çok dilli ve kodlama görevlerinde üstün performans gösterir; orta ölçekli üretim kullanımı için uygundur."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: Kod üretimi ve karmaşık programlama görevleri için tasarlanmış uzun bağlamlı bir modeldir."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen kodlama modeli."

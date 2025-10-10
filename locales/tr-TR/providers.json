@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Önde gelen bir ileri düzey yapay zeka araştırma laboratuvarı; yarının görsel altyapısını inşa ediyor."
   },
+  "cerebras": {
+    "description": "Cerebras, özel CS-3 sistemi üzerine kurulu bir yapay zeka çıkarım platformudur. Gerçek zamanlı yanıtlar ve yüksek veri işleme kapasitesiyle dünyanın en hızlı LLM hizmetini sunmayı hedefler. Gecikmeleri ortadan kaldırmak ve gerçek zamanlı kod üretimi ile aracı görevler gibi karmaşık yapay zeka iş akışlarını hızlandırmak için tasarlanmıştır."
+  },
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },

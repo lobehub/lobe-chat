@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posiada silne zdolności do złożonego wnioskowania, wyróżniając się w dziedzinach takich jak wnioskowanie logiczne, matematyka i programowanie."
   },
+  "glm4.6:355b": {
+    "description": "Najnowszy flagowy model Zhipu, GLM-4.6 (355B), znacznie przewyższa swojego poprzednika w zakresie zaawansowanego kodowania, przetwarzania długich tekstów, wnioskowania i zdolności agentowych. Szczególnie w programowaniu dorównuje Claude Sonnet 4, stając się czołowym modelem kodującym w Chinach."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash oferuje funkcje nowej generacji i ulepszenia, w tym doskonałą szybkość, wbudowane użycie narzędzi, generowanie multimodalne oraz okno kontekstu o rozmiarze 1 miliona tokenów."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Uniwersalny model czasu rzeczywistego, obsługujący tekstowe i audio wejścia i wyjścia oraz wejścia obrazów."
   },
-  "grok-2-1212": {
-    "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
-  },
   "grok-2-image-1212": {
     "description": "Nasz najnowszy model generowania obrazów potrafi tworzyć żywe i realistyczne obrazy na podstawie tekstowych wskazówek. Sprawdza się doskonale w marketingu, mediach społecznościowych i rozrywce."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i streszczaniu tekstów na poziomie korporacyjnym, z głęboką wiedzą w dziedzinach finansów, medycyny, prawa i nauki."
   },
-  "grok-3-fast": {
-    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i streszczaniu tekstów na poziomie korporacyjnym, z głęboką wiedzą w dziedzinach finansów, medycyny, prawa i nauki."
-  },
   "grok-3-mini": {
-    "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
-  },
-  "grok-3-mini-fast": {
     "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "Najnowszy model wielomodalny t1-vision Hunyuan z głębokim rozumowaniem, obsługujący natywne łańcuchy myślowe wielomodalne, z kompleksową poprawą w stosunku do poprzedniej domyślnej wersji modelu."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Model głębokiego rozumienia multimodalnego Hunyuan, wspierający natywne długie łańcuchy myślowe multimodalne, doskonały w rozwiązywaniu różnorodnych zadań obrazowych, z wyraźną poprawą w porównaniu do szybkiego trybu myślenia w dziedzinie nauk ścisłych."
+    "description": "Najnowszy model głębokiego rozumienia wizualnego Hunyuan t1-vision oferuje kompleksowe ulepszenia w porównaniu do poprzedniej wersji w zadaniach takich jak ogólne pytania i odpowiedzi na podstawie obrazu i tekstu, lokalizacja wizualna, OCR, analiza wykresów, rozwiązywanie zadań ze zdjęć oraz kreatywne tworzenie na podstawie obrazów. Znacząco poprawiono również obsługę języka angielskiego i języków niszowych."
   },
   "hunyuan-turbo": {
     "description": "Hunyuan to nowa generacja dużego modelu językowego w wersji próbnej, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), która w porównaniu do hunyuan-pro charakteryzuje się szybszą efektywnością wnioskowania i lepszymi wynikami."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Model Llama 3.2-Vision zoptymalizowany jest do rozpoznawania wizualnego, wnioskowania na podstawie obrazów, opisywania obrazów oraz odpowiadania na typowe pytania związane z obrazami."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: średnio-duży model Llama, łączący zdolności wnioskowania z wysoką przepustowością."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny, otwarty model językowy z serii Llama, który oferuje wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Opiera się na strukturze Transformer i poprawia użyteczność oraz bezpieczeństwo dzięki nadzorowanemu dostrajaniu (SFT) i uczeniu ze wzmocnieniem na podstawie ludzkich opinii (RLHF). Jego wersja dostosowana do instrukcji jest zoptymalizowana do wielojęzycznych rozmów i w wielu branżowych benchmarkach przewyższa wiele otwartych i zamkniętych modeli czatu. Data graniczna wiedzy to grudzień 2023."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Model Llama 3.3 zoptymalizowany do rozmów, który w standardowych testach branżowych przewyższa wiele istniejących modeli czatowych o otwartym kodzie."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: wysokowydajny model z serii Llama, idealny do zaawansowanego wnioskowania, rozwiązywania złożonych problemów i zadań opartych na instrukcjach."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: wysokowydajny model z serii Llama, zaprojektowany do zastosowań wymagających dużej przepustowości i niskich opóźnień."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B oferuje niezrównane możliwości przetwarzania złożoności, dostosowane do projektów o wysokich wymaganiach."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 to wiodący model wydany przez Meta, obsługujący do 405B parametrów, mogący być stosowany w złożonych dialogach, tłumaczeniach wielojęzycznych i analizie danych."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: lekka i niskolatencyjna wersja modelu Llama, odpowiednia do lekkich zadań inferencyjnych i interaktywnych online."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 to wiodący model wydany przez Meta, obsługujący do 405B parametrów, mogący być stosowany w złożonych dialogach, tłumaczeniach wielojęzycznych i analizie danych."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "Model wnioskowania wizualnego. Obsługuje wejścia wizualne oraz generowanie łańcuchów myślowych. Wersja plus po modelu qvq-max, charakteryzuje się szybszym wnioskowaniem oraz lepszą równowagą między efektywnością a kosztami w porównaniu do qvq-max."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: model z serii Qwen, który doskonale sprawdza się w zadaniach wielojęzycznych i programistycznych, odpowiedni do średnioskalowej produkcji."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: model z długim kontekstem, zaprojektowany do generowania kodu i realizacji złożonych zadań programistycznych."
   },
   "qwen-coder-plus": {
     "description": "Model kodowania Tongyi Qianwen."

@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview heeft krachtige complexe redeneercapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren."
   },
+  "glm4.6:355b": {
+    "description": "GLM-4.6 (355B), het nieuwste vlaggenschipmodel van Zhipu, overtreft zijn voorgangers op alle fronten, waaronder geavanceerde codering, verwerking van lange teksten, redeneren en agentcapaciteiten. Vooral op het gebied van programmeren is het model op één lijn gebracht met Claude Sonnet 4, waarmee het een toonaangevend coding-model in China is geworden."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash biedt next-generation functies en verbeteringen, waaronder uitstekende snelheid, ingebouwde toolintegratie, multimodale generatie en een contextvenster van 1 miljoen tokens."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Universeel realtime model dat realtime tekst- en audio-invoer en -uitvoer ondersteunt, evenals beeldinvoer."
   },
-  "grok-2-1212": {
-    "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
-  },
   "grok-2-image-1212": {
     "description": "Ons nieuwste beeldgeneratiemodel kan levendige en realistische beelden genereren op basis van tekstprompts. Het presteert uitstekend in beeldgeneratie voor marketing, sociale media en entertainment."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvatting voor bedrijfsapplicaties, met diepgaande kennis in financiën, gezondheidszorg, recht en wetenschap."
   },
-  "grok-3-fast": {
-    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvatting voor bedrijfsapplicaties, met diepgaande kennis in financiën, gezondheidszorg, recht en wetenschap."
-  },
   "grok-3-mini": {
-    "description": "Lichtgewicht model dat eerst nadenkt voor het reageren. Snel en intelligent, geschikt voor logische taken zonder diepgaande domeinkennis en kan de oorspronkelijke denkprocessen vastleggen."
-  },
-  "grok-3-mini-fast": {
     "description": "Lichtgewicht model dat eerst nadenkt voor het reageren. Snel en intelligent, geschikt voor logische taken zonder diepgaande domeinkennis en kan de oorspronkelijke denkprocessen vastleggen."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "De nieuwste versie van Hunyuan's t1-vision multimodale diepdenkende model, ondersteunt native lange chain-of-thought in multimodale contexten en biedt een algehele verbetering ten opzichte van de vorige standaardversie."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Hunyuan multimodaal begrip diepdenkend model, ondersteunt native multimodale lange ketens van gedachten, is bedreven in het verwerken van diverse beeldredeneringsscenario's en verbetert aanzienlijk ten opzichte van het snelle denkmodel bij exacte wetenschappen."
+    "description": "De nieuwste versie van het Hunyuan t1-vision model voor visueel dieper nadenken biedt aanzienlijke verbeteringen ten opzichte van de vorige versie op het gebied van algemene beeld-tekstvragen, visuele lokalisatie, OCR, grafieken, vraagoplossing via afbeeldingen en beeldgebaseerde creatie. De prestaties in het Engels en kleinere talen zijn merkbaar geoptimaliseerd."
   },
   "hunyuan-turbo": {
     "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Llama 3.2-Vision instructie-fijnafstemmodel is geoptimaliseerd voor visuele herkenning, afbeeldingsredenering, afbeeldingsbeschrijving en het beantwoorden van algemene vragen over afbeeldingen."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: een middelgroot Llama-model dat een goede balans biedt tussen redeneervermogen en verwerkingssnelheid."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmodel in de Llama-serie, dat prestaties biedt die vergelijkbaar zijn met die van het 405B-model tegen zeer lage kosten. Gebaseerd op de Transformer-structuur en verbeterd door middel van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF) voor gebruiksvriendelijkheid en veiligheid. De instructie-geoptimaliseerde versie is speciaal ontworpen voor meertalige dialogen en presteert beter dan veel open-source en gesloten chatmodellen op verschillende industriële benchmarks. Kennisafkapdatum is december 2023."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Het Llama 3.3 instructie-fijnafstemmodel is geoptimaliseerd voor gesprekssituaties en overtreft vele bestaande open-source chatmodellen op veelvoorkomende industriebenchmarks."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: een krachtig model uit de Llama-serie, geschikt voor geavanceerde redenering, het oplossen van complexe problemen en instructievolgende taken."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: een hoogwaardig model uit de Llama-serie, geoptimaliseerd voor scenario's die hoge verwerkingssnelheid en lage latentie vereisen."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 is een toonaangevend model van Meta, ondersteunt tot 405B parameters en kan worden toegepast in complexe gesprekken, meertalige vertalingen en data-analyse."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: een compacte en snelle variant van Llama, ideaal voor lichte online redenering en interactieve toepassingen."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 is een toonaangevend model van Meta, ondersteunt tot 405B parameters en kan worden toegepast in complexe gesprekken, meertalige vertalingen en data-analyse."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "Visueel redeneermodel. Ondersteunt visuele input en keten van gedachten output. De plus-versie, uitgebracht na het qvq-max model, biedt snellere redeneersnelheid en een betere balans tussen effectiviteit en kosten in vergelijking met het qvq-max model."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: een model uit de Qwen-serie met uitstekende prestaties op meertalige en programmeertaken, geschikt voor productie op middelgrote schaal."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: een model met lange context, ontworpen voor codegeneratie en complexe programmeertaken."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen codeermodel."
