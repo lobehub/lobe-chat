@@ -26,10 +26,8 @@ const nextConfig: NextConfig = {
     emotion: true,
   },
   compress: isProd,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   experimental: {
+    turbopackFileSystemCacheForDev: true,
     optimizePackageImports: [
       'emoji-mart',
       '@emoji-mart/react',
