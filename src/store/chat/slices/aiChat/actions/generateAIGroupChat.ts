@@ -74,7 +74,7 @@ const extractMentionsFromContent = (
   content: string,
   groupMembers?: GroupMemberInfo[],
 ): string[] => {
-  const mentionRegex = /<mention id="([^"]+)"[^>]*>.*?<\/mention>/g;
+  const mentionRegex = /<mention\s+[^>]*id="([^"]+)"[^>]*\/>/g;
   const mentions = new Set<string>();
   let match;
 
