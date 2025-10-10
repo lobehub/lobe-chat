@@ -22,6 +22,7 @@ import { imageRouter } from './image';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
 import { marketRouter } from './market';
+import { memoryRouter } from './memory';
 import { messageRouter } from './message';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
@@ -53,6 +54,7 @@ export const lambdaRouter = router({
   importer: importerRouter,
   knowledgeBase: knowledgeBaseRouter,
   market: marketRouter,
+  memory: memoryRouter,
   message: messageRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,

@@ -5,13 +5,15 @@ import { ChatStore } from '@/store/chat/store';
 import { ChatDallEAction, dalleSlice } from './dalle';
 import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
 import { LocalFileAction, localFileSlice } from './localFile';
+import { MemoryAction, memorySlice } from './memory';
 import { SearchAction, searchSlice } from './search';
 
 export interface ChatBuiltinToolAction
   extends ChatDallEAction,
     SearchAction,
     LocalFileAction,
-    ChatCodeInterpreterAction {}
+    ChatCodeInterpreterAction,
+    MemoryAction {}
 
 export const chatToolSlice: StateCreator<
   ChatStore,
@@ -23,4 +25,5 @@ export const chatToolSlice: StateCreator<
   ...searchSlice(...params),
   ...localFileSlice(...params),
   ...codeInterpreterSlice(...params),
+  ...memorySlice(...params),
 });
