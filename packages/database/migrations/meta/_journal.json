@@ -266,6 +266,13 @@
       "when": 1760086906862,
       "tag": "0037_add_user_memory",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1760108430562,
+      "tag": "0038_add_image_user_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

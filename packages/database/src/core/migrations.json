@@ -676,5 +676,11 @@
     "bps": true,
     "folderMillis": 1760086906862,
     "hash": "4bdc6505797d7a33b622498c138cfd47f637239f6905e1c484cd01d9d5f21d6b"
+  },
+  {
+    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN \"image\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1760108430562,
+    "hash": "ec1d3730975fe42c9012ca296fb013f8425130a611acfbab8229aa8c811b6d5b"
   }
 ]
