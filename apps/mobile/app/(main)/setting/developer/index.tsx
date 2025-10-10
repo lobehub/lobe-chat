@@ -55,11 +55,7 @@ export default function DeveloperScreen() {
   };
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('developer.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('developer.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem
@@ -71,58 +67,66 @@ export default function DeveloperScreen() {
         </SettingGroup>
 
         {developerMode && (
-          <SettingGroup>
-            <SettingItem
-              onPress={() =>
-                confirmThenExecute(
-                  t('developer.accessToken.expire.title', { ns: 'setting' }),
-                  expireAccessTokenNow,
-                  t('developer.accessToken.expire.success', { ns: 'setting' }),
-                )
-              }
-              title={t('developer.accessToken.expire.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              onPress={() =>
-                confirmThenExecute(
-                  t('developer.refreshToken.expire.title', { ns: 'setting' }),
-                  expireRefreshTokenNow,
-                  t('developer.refreshToken.expire.success', { ns: 'setting' }),
-                )
-              }
-              title={t('developer.refreshToken.expire.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              onPress={() =>
-                confirmThenExecute(
-                  t('developer.accessToken.invalidate.title', { ns: 'setting' }),
-                  invalidateAccessToken,
-                  t('developer.accessToken.invalidate.success', { ns: 'setting' }),
-                )
-              }
-              title={t('developer.accessToken.invalidate.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              onPress={() =>
-                confirmThenExecute(
-                  t('developer.refreshToken.invalidate.title', { ns: 'setting' }),
-                  invalidateRefreshToken,
-                  t('developer.refreshToken.invalidate.success', { ns: 'setting' }),
-                )
-              }
-              title={t('developer.refreshToken.invalidate.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              onPress={() =>
-                confirmThenExecute(
-                  t('developer.clearAuthData.title', { ns: 'setting' }),
-                  clearAuthData,
-                  t('developer.clearAuthData.success', { ns: 'setting' }),
-                )
-              }
-              title={t('developer.clearAuthData.title', { ns: 'setting' })}
-            />
-          </SettingGroup>
+          <>
+            <SettingGroup>
+              <SettingItem
+                href="/setting/developer/custom-server"
+                title={t('developer.customServer.title', { ns: 'setting' })}
+              />
+            </SettingGroup>
+            <SettingGroup>
+              <SettingItem
+                onPress={() =>
+                  confirmThenExecute(
+                    t('developer.accessToken.expire.title', { ns: 'setting' }),
+                    expireAccessTokenNow,
+                    t('developer.accessToken.expire.success', { ns: 'setting' }),
+                  )
+                }
+                title={t('developer.accessToken.expire.title', { ns: 'setting' })}
+              />
+              <SettingItem
+                onPress={() =>
+                  confirmThenExecute(
+                    t('developer.refreshToken.expire.title', { ns: 'setting' }),
+                    expireRefreshTokenNow,
+                    t('developer.refreshToken.expire.success', { ns: 'setting' }),
+                  )
+                }
+                title={t('developer.refreshToken.expire.title', { ns: 'setting' })}
+              />
+              <SettingItem
+                onPress={() =>
+                  confirmThenExecute(
+                    t('developer.accessToken.invalidate.title', { ns: 'setting' }),
+                    invalidateAccessToken,
+                    t('developer.accessToken.invalidate.success', { ns: 'setting' }),
+                  )
+                }
+                title={t('developer.accessToken.invalidate.title', { ns: 'setting' })}
+              />
+              <SettingItem
+                onPress={() =>
+                  confirmThenExecute(
+                    t('developer.refreshToken.invalidate.title', { ns: 'setting' }),
+                    invalidateRefreshToken,
+                    t('developer.refreshToken.invalidate.success', { ns: 'setting' }),
+                  )
+                }
+                title={t('developer.refreshToken.invalidate.title', { ns: 'setting' })}
+              />
+              <SettingItem
+                onPress={() =>
+                  confirmThenExecute(
+                    t('developer.clearAuthData.title', { ns: 'setting' }),
+                    clearAuthData,
+                    t('developer.clearAuthData.success', { ns: 'setting' }),
+                  )
+                }
+                title={t('developer.clearAuthData.title', { ns: 'setting' })}
+              />
+            </SettingGroup>
+          </>
         )}
       </View>
     </PageContainer>

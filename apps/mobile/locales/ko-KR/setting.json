@@ -100,6 +100,12 @@
       "title": "인증 데이터 삭제"
     },
     "failurePrefix": "작업 실패: ",
+    "mode": {
+      "already": "이미 개발자 모드입니다",
+      "enabled": "개발자 모드가 활성화되었습니다",
+      "remaining": "개발자 모드를 활성화하려면 {{count}}번 더 탭하세요",
+      "title": "개발자 모드"
+    },
     "refreshToken": {
       "expire": {
         "success": "리프레시 토큰이 즉시 만료되었습니다",
@@ -125,12 +131,6 @@
       "title": "시스템 따름"
     },
     "title": "언어 설정"
-  },
-  "mode": {
-    "already": "이미 개발자 모드입니다",
-    "enabled": "개발자 모드가 활성화되었습니다",
-    "remaining": "개발자 모드를 활성화하려면 {{count}}번 더 누르세요",
-    "title": "개발자 모드"
   },
   "openai": "OpenAI 설정",
   "openaiSettings": {

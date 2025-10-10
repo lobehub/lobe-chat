@@ -18,7 +18,7 @@ export default function SessionFooter() {
 
   return (
     <Link asChild href="/setting">
-      <TouchableOpacity activeOpacity={1} style={styles.settingsButton}>
+      <TouchableOpacity activeOpacity={1}>
         <View style={[styles.footer]}>
           <View style={styles.userInfo}>
             <Avatar avatar={userAvatar} size={AVATAR_SIZE} title={displayName} />
