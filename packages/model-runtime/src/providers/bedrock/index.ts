@@ -151,6 +151,28 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
+    // Models after Opus 4.1 that don't allow both temperature and top_p parameters
+    const modelsWithTempAndTopPConflict = new Set([
+      'claude-opus-4-1',
+      'claude-opus-4-1-20250805',
+      'claude-opus-4-20250514',
+      'claude-sonnet-4-20250514',
+      'claude-sonnet-4-5-20250929',
+      // Bedrock model IDs for Claude 4+ models
+      'anthropic.claude-opus-4-1-20250805-v1:0',
+      'us.anthropic.claude-opus-4-1-20250805-v1:0',
+      'anthropic.claude-opus-4-20250514-v1:0',
+      'us.anthropic.claude-opus-4-20250514-v1:0',
+      'anthropic.claude-sonnet-4-20250514-v1:0',
+      'us.anthropic.claude-sonnet-4-20250514-v1:0',
+      'anthropic.claude-sonnet-4-5-20250929-v1:0',
+      'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    ]);
+
+    // For models with parameter conflicts: prefer temperature over top_p if both are provided
+    const isTempAndTopPConflict = modelsWithTempAndTopPConflict.has(model);
+    const shouldSetTemperature = payload.temperature !== undefined;
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
@@ -158,9 +180,15 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         max_tokens: max_tokens || 4096,
         messages: await buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
-        temperature: temperature / 2,
+        temperature: isTempAndTopPConflict
+          ? shouldSetTemperature
+            ? temperature / 2
+            : undefined
+          : payload.temperature !== undefined
+            ? temperature / 2
+            : undefined,
         tools: buildAnthropicTools(tools),
-        top_p: top_p,
+        top_p: isTempAndTopPConflict ? (shouldSetTemperature ? undefined : top_p) : top_p,
       }),
       contentType: 'application/json',
       modelId: model,
