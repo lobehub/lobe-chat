@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Laboratorio líder en investigación de inteligencia artificial de vanguardia, construyendo la infraestructura visual del mañana."
   },
+  "cerebras": {
+    "description": "Cerebras es una plataforma de inferencia de IA basada en su sistema especializado CS-3, diseñada para ofrecer el servicio de LLM más rápido del mundo, con respuesta en tiempo real y alto rendimiento. Está especialmente concebida para eliminar la latencia y acelerar flujos de trabajo complejos de IA, como la generación de código en tiempo real y tareas de agentes."
+  },
   "cloudflare": {
     "description": "Ejecuta modelos de aprendizaje automático impulsados por GPU sin servidor en la red global de Cloudflare."
   },

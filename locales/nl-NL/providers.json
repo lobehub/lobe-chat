@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen bouwt."
   },
+  "cerebras": {
+    "description": "Cerebras is een AI-inferentieplatform gebaseerd op het speciale CS-3-systeem, ontworpen om 's werelds snelste, realtime reagerende en hoog-throughput LLM-diensten te leveren. Het is speciaal ontwikkeld om vertragingen te elimineren en complexe AI-workflows te versnellen, zoals realtime codegeneratie en agenttaken."
+  },
   "cloudflare": {
     "description": "Voer machine learning-modellen aan, aangedreven door serverloze GPU's, uit op het wereldwijde netwerk van Cloudflare."
   },
