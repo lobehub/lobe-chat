@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "b9f3be9b-d6d1-4f19-bdfa-b4b54d7230b4",
+  "id": "bbee8573-5df6-48d9-ab88-431e0617d71d",
   "policies": {},
   "prevId": "08e5100c-06ed-4044-8ff4-95eebe42e059",
   "roles": {},
@@ -6772,7 +6772,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
@@ -6784,19 +6784,19 @@
         },
         "memory_category": {
           "name": "memory_category",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "memory_layer": {
           "name": "memory_layer",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "memory_type": {
           "name": "memory_type",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -6832,7 +6832,7 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -6928,7 +6928,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
@@ -6988,7 +6988,7 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -7096,7 +7096,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
@@ -7120,7 +7120,7 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -7325,7 +7325,7 @@
         },
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
@@ -7349,7 +7349,7 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -7437,19 +7437,19 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
         "context_id": {
           "name": "context_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "user_memory_id": {
           "name": "user_memory_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -7485,7 +7485,7 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

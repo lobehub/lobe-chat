@@ -1,15 +1,15 @@
-CREATE TABLE "user_memories" (
-	"id" text PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS "user_memories" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"user_id" text,
-	"memory_category" text,
-	"memory_layer" text,
-	"memory_type" text,
+	"memory_category" varchar(255),
+	"memory_layer" varchar(255),
+	"memory_type" varchar(255),
 	"title" varchar(255),
 	"summary" text,
 	"summary_vector_1024" vector(1024),
 	"details" text,
 	"details_vector_1024" vector(1024),
-	"status" text,
+	"status" varchar(255),
 	"accessed_count" bigint DEFAULT 0,
 	"last_accessed_at" timestamp with time zone NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -17,8 +17,8 @@ CREATE TABLE "user_memories" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "user_memories_contexts" (
-	"id" text PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS "user_memories_contexts" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"user_memory_ids" jsonb,
 	"labels" jsonb,
 	"extracted_labels" jsonb,
@@ -28,7 +28,7 @@ CREATE TABLE "user_memories_contexts" (
 	"title_vector" vector(1024),
 	"description" text,
 	"description_vector" vector(1024),
-	"type" text,
+	"type" varchar(255),
 	"current_status" text,
 	"score_impact" numeric DEFAULT 0,
 	"score_urgency" numeric DEFAULT 0,
@@ -37,12 +37,12 @@ CREATE TABLE "user_memories_contexts" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "user_memories_experiences" (
-	"id" text PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS "user_memories_experiences" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"user_memory_id" text,
 	"labels" jsonb,
 	"extracted_labels" jsonb,
-	"type" text,
+	"type" varchar(255),
 	"situation" text,
 	"situation_vector" vector(1024),
 	"reasoning" text,
@@ -58,33 +58,33 @@ CREATE TABLE "user_memories_experiences" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "user_memories_identities" (
+CREATE TABLE IF NOT EXISTS "user_memories_identities" (
 	"current_focuses" text,
 	"description" text,
 	"description_vector" vector(1024),
 	"experience" text,
 	"extracted_labels" jsonb,
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"labels" jsonb,
 	"relationship" text,
 	"role" text,
-	"type" text,
+	"type" varchar(255),
 	"user_memory_id" text,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "user_memories_preferences" (
-	"id" text PRIMARY KEY NOT NULL,
-	"context_id" text,
-	"user_memory_id" text,
+CREATE TABLE IF NOT EXISTS "user_memories_preferences" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"context_id" varchar(255),
+	"user_memory_id" varchar(255),
 	"labels" jsonb,
 	"extracted_labels" jsonb,
 	"extracted_scopes" jsonb,
 	"conclusion_directives" text,
 	"conclusion_directives_vector" vector(1024),
-	"type" text,
+	"type" varchar(255),
 	"suggestions" text,
 	"score_priority" numeric DEFAULT 0,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,

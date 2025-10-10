@@ -23,7 +23,7 @@ describe('TableViewerRepo', () => {
     it('should return all tables with counts', async () => {
       const result = await repo.getAllTables();
 
-      expect(result.length).toEqual(63);
+      expect(result.length).toEqual(68);
       expect(result[0]).toEqual({ name: 'agents', count: 0, type: 'BASE TABLE' });
     });
 
