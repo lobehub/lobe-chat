@@ -1,16 +1,18 @@
 'use client';
 
-import { Avatar, Input, Text } from '@lobehub/ui';
+import { DEFAULT_AVATAR } from '@lobechat/const';
+import { Avatar, Text } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DEFAULT_AVATAR } from '@/const/meta';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+
+import { MarkdownElementProps } from '../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   mention: css`
@@ -23,7 +25,6 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-inline: 0.25em;
     padding-block: 0.2em;
     padding-inline: 0.4em;
-    border: 1px solid ${token.colorInfoFillTertiary};
     border-radius: 0.25em;
 
     font-size: 0.875em;
@@ -40,10 +41,14 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Render = memo<PropsWithChildren>(({ children }) => {
+interface MentionProps {
+  id: string;
+  name: string;
+}
+const Render = memo<MarkdownElementProps<MentionProps>>(({ children, node }) => {
+  const { id: mentionId } = node?.properties || {};
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
-  const mentionId = String(children);
 
   const currentGroupMembers = useSessionStore(sessionSelectors.currentGroupAgents, isEqual);
 
@@ -82,15 +87,11 @@ const Render = memo<PropsWithChildren>(({ children }) => {
               style={{ flex: 'none' }}
             />
             <Flexbox style={{ overflow: 'hidden' }}>
-              <Text ellipsis fontSize={16} weight={'bold'}>
-                {member.title || children}
-              </Text>
               <Text ellipsis type={'secondary'}>
                 {member.description}
               </Text>
             </Flexbox>
           </Flexbox>
-          <Input placeholder={`私信 @${member.title || children}`} />
         </Flexbox>
       }
       trigger={['click']}

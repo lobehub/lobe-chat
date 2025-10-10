@@ -33,8 +33,6 @@ const ChatItem = memo<ChatItemProps>(
     showTitle,
     time,
     editing,
-    onChange,
-    onEditingChange,
     messageExtra,
     renderMessage,
     errorMessage,
@@ -45,6 +43,7 @@ const ChatItem = memo<ChatItemProps>(
     showAvatar = true,
     titleAddon,
     disabled = false,
+    id,
     ...rest
   }) => {
     const { mobile } = useResponsive();
@@ -122,6 +121,7 @@ const ChatItem = memo<ChatItemProps>(
                 <MessageContent
                   disabled={disabled}
                   editing={editing}
+                  id={id!}
                   markdownProps={markdownProps}
                   message={message}
                   messageExtra={
@@ -132,9 +132,7 @@ const ChatItem = memo<ChatItemProps>(
                       {messageExtra}
                     </>
                   }
-                  onChange={onChange}
                   onDoubleClick={onDoubleClick}
-                  onEditingChange={onEditingChange}
                   placement={placement}
                   primary={primary}
                   renderMessage={renderMessage}

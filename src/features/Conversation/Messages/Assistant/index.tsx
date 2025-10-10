@@ -13,13 +13,6 @@ import ErrorContent from '@/features/ChatItem/components/ErrorContent';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
 import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
-import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
-import { markdownElements } from '@/features/Conversation/MarkdownElements';
-import { AssistantActionsBar } from '@/features/Conversation/Messages/Assistant/Actions';
-import { AssistantMessageExtra } from '@/features/Conversation/Messages/Assistant/Extra';
-import { AssistantMessageContent } from '@/features/Conversation/Messages/Assistant/MessageContent';
-import { useDoubleClickEdit } from '@/features/Conversation/hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
@@ -30,6 +23,14 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+
+import ErrorMessageExtra, { useErrorContent } from '../../Error';
+import { markdownElements } from '../../MarkdownElements';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { normalizeThinkTags, processWithArtifact } from '../../utils';
+import { AssistantActionsBar } from './Actions';
+import { AssistantMessageExtra } from './Extra';
+import { AssistantMessageContent } from './MessageContent';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
@@ -115,6 +116,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
       ),
     [id],
   );
+
   const markdownProps = useMemo(
     () => ({
       animated,
@@ -200,6 +202,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
             ) : (
               <MessageContent
                 editing={editing}
+                id={id}
                 markdownProps={markdownProps}
                 message={message}
                 messageExtra={

@@ -8,6 +8,7 @@ import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
 import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -27,6 +28,16 @@ interface UserMessageProps extends ChatMessage {
   disableEditing?: boolean;
   index: number;
 }
+
+const rehypePlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.rehypePlugin)
+  .filter(Boolean);
+
+const remarkPlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.remarkPlugin)
+  .filter(Boolean);
 
 const UserMessage = memo<UserMessageProps>((props) => {
   const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing } = props;
@@ -67,11 +78,26 @@ const UserMessage = memo<UserMessageProps>((props) => {
     [props],
   );
 
+  const components = useMemo(
+    () =>
+      Object.fromEntries(
+        markdownElements.map((element) => {
+          const Component = element.Component;
+
+          return [element.tag, (props: any) => <Component {...props} id={id} />];
+        }),
+      ),
+    [id],
+  );
+
   const markdownProps = useMemo(
     () => ({
+      components,
       customRender: (dom: ReactNode, { text }: { text: string }) => (
         <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
       ),
+      rehypePlugins,
+      remarkPlugins,
     }),
     [displayMode],
   );
@@ -109,6 +135,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
           <Flexbox flex={1} style={{ minWidth: 0 }}>
             <MessageContent
               editing={editing}
+              id={id}
               markdownProps={markdownProps}
               message={content}
               messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
