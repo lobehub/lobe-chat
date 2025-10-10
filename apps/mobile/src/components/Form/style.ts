@@ -8,31 +8,31 @@ export const useStyles = createStyles(({ token }) => ({
     color: token.colorTextSecondary,
   },
   form: {
-    gap: token.marginMD,
     width: '100%',
   },
   helpMessage: {
     color: token.colorTextDescription,
   },
   itemContainer: {
+    marginBottom: token.marginXL,
     width: '100%',
   },
   label: {
-    color: token.colorTextDescription,
-    fontSize: token.fontSizeSM,
+    color: token.colorText,
+    fontSize: token.fontSize,
   },
   labelRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: token.marginXXS,
-    marginBottom: token.marginSM,
+    paddingBottom: token.paddingXS,
   },
   message: {
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
     marginTop: token.marginXS,
   },
   required: {
     color: token.colorError,
-    fontSize: token.fontSizeSM,
+    fontSize: token.fontSize,
   },
 }));

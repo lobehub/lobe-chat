@@ -171,6 +171,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'card': {
+        router.push('/playground/components/card');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }

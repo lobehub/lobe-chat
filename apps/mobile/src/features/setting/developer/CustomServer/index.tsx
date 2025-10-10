@@ -1,4 +1,4 @@
-import { Button, Input, Toast } from '@lobehub/ui-rn';
+import { Button, Card, Input, Toast } from '@lobehub/ui-rn';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
@@ -51,11 +51,9 @@ const CustomServer = () => {
 
   return (
     <View style={styles.formCard}>
-      <Text style={styles.formLabel}>{t('developer.customServer.current', { ns: 'setting' })}</Text>
-      <Text numberOfLines={2} style={styles.customServerCurrentValue}>
-        {currentServer}
-      </Text>
-
+      <Card title={t('developer.customServer.title', { ns: 'setting' })}>
+        <Text style={styles.customServerCurrentValue}>{currentServer}</Text>
+      </Card>
       <Form form={form} initialValues={{ customServer: customServerUrl ?? '' }}>
         <Form.Item
           extra={t('developer.customServer.hint', { ns: 'setting' })}
@@ -83,17 +81,18 @@ const CustomServer = () => {
             size="large"
           />
         </Form.Item>
+        {/* Action Section */}
+        <Form.Item>
+          <View style={styles.actionSection}>
+            <Button block onPress={applyCustomServer} size="large" type="primary">
+              {t('developer.customServer.save', { ns: 'setting' })}
+            </Button>
+            <Button block onPress={resetCustomServer} size="large" type="default">
+              {t('developer.customServer.reset', { ns: 'setting' })}
+            </Button>
+          </View>
+        </Form.Item>
       </Form>
-
-      {/* Action Section */}
-      <View style={styles.actionSection}>
-        <Button block onPress={applyCustomServer} size="large" type="primary">
-          {t('developer.customServer.save', { ns: 'setting' })}
-        </Button>
-        <Button block onPress={resetCustomServer} size="large" type="default">
-          {t('developer.customServer.reset', { ns: 'setting' })}
-        </Button>
-      </View>
     </View>
   );
 };

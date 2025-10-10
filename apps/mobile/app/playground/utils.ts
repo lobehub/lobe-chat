@@ -240,6 +240,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     path: 'block',
     tags: ['block', 'container', 'cva', 'variant', 'layout'],
   },
+  {
+    category: 'layout',
+    description: '信息卡片容器，内置标题、描述、页眉与页脚插槽，支持封面与多种视觉变体',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Card',
+    path: 'card',
+    tags: ['card', 'container', 'layout', 'block'],
+  },
 ];
 
 /**

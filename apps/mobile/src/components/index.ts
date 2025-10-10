@@ -5,6 +5,8 @@ export { default as Block, type BlockProps } from './Block';
 export { default as Button } from './Button';
 export * from './Button';
 export * from './CapsuleTabs';
+export { default as Card } from './Card';
+export * from './Card';
 export { default as Center, type CenterProps } from './Center';
 export { default as ColorScales } from './ColorScales';
 export { default as ColorSwatches } from './ColorSwatches';
