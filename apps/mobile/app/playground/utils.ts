@@ -178,6 +178,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['input', 'textinput', 'form', 'prefix', 'text'],
   },
   {
+    category: 'form',
+    description: 'Ant Design 风格的表单容器，支持字段校验、必填标记与受控实例',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Form',
+    path: 'form',
+    tags: ['form', 'validation', 'fields', 'layout'],
+  },
+  {
     category: 'display',
     description: '基于 LobeUI 重写的色板展示组件，支持完整的颜色级别、透明色和复制功能',
     hasDemos: true,
@@ -230,6 +239,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     name: 'Block',
     path: 'block',
     tags: ['block', 'container', 'cva', 'variant', 'layout'],
+  },
+  {
+    category: 'layout',
+    description: '信息卡片容器，内置标题、描述、页眉与页脚插槽，支持封面与多种视觉变体',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Card',
+    path: 'card',
+    tags: ['card', 'container', 'layout', 'block'],
   },
 ];
 

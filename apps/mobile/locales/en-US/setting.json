@@ -99,7 +99,25 @@
       "success": "Authentication data cleared",
       "title": "Clear Authentication Data"
     },
+    "customServer": {
+      "current": "Current server address",
+      "description": "Configure a custom server for all requests. Leave empty to restore the official server.",
+      "hint": "Must start with http:// or https://. You may need to log in again after changing it.",
+      "invalid": "Please enter a valid address starting with http:// or https://",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Restore Default",
+      "resetSuccess": "Official server address restored",
+      "save": "Save",
+      "title": "Custom Server Address",
+      "updated": "Custom server address updated"
+    },
     "failurePrefix": "Operation failed: ",
+    "mode": {
+      "already": "You are already in developer mode",
+      "enabled": "Developer mode is enabled",
+      "remaining": "Tap {{count}} more times to enable developer mode",
+      "title": "Developer Mode"
+    },
     "refreshToken": {
       "expire": {
         "success": "Refresh token has been expired immediately",
@@ -125,12 +143,6 @@
       "title": "Follow System"
     },
     "title": "Language Settings"
-  },
-  "mode": {
-    "already": "You are already in Developer Mode",
-    "enabled": "Developer Mode is enabled",
-    "remaining": "Tap {{count}} more times to enable Developer Mode",
-    "title": "Developer Mode"
   },
   "openai": "OpenAI Settings",
   "openaiSettings": {
