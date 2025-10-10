@@ -100,6 +100,12 @@
       "title": "Wyczyszczenie danych uwierzytelniających"
     },
     "failurePrefix": "Operacja nie powiodła się: ",
+    "mode": {
+      "already": "Jesteś już w trybie deweloperskim",
+      "enabled": "Tryb deweloperski został włączony",
+      "remaining": "Naciśnij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
+      "title": "Tryb deweloperski"
+    },
     "refreshToken": {
       "expire": {
         "success": "Token odświeżania wygasł natychmiast",
@@ -125,12 +131,6 @@
       "title": "Dopasuj do systemu"
     },
     "title": "Ustawienia języka"
-  },
-  "mode": {
-    "already": "Jesteś już w trybie deweloperskim",
-    "enabled": "Tryb deweloperski jest włączony",
-    "remaining": "Naciśnij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
-    "title": "Tryb deweloperski"
   },
   "openai": "Ustawienia OpenAI",
   "openaiSettings": {
