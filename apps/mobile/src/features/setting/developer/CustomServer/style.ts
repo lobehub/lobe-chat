@@ -2,17 +2,15 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   actionSection: {
-    gap: token.marginXS,
-    marginTop: token.marginSM,
+    gap: token.marginSM,
   },
   container: {
     padding: token.paddingContentHorizontal,
   },
   customServerCurrentValue: {
     color: token.colorText,
-    fontSize: token.fontSizeLG,
-    fontWeight: '600',
-    marginBottom: token.marginSM,
+    fontSize: token.fontSize,
+    fontWeight: token.fontWeightStrong,
   },
   description: {
     color: token.colorTextSecondary,
@@ -27,9 +25,5 @@ export const useStyles = createStyles(({ token }) => ({
     color: token.colorTextDescription,
     fontSize: token.fontSizeSM,
     marginBottom: token.marginXXS,
-  },
-  safeAreaView: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
   },
 }));

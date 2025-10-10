@@ -543,7 +543,7 @@ export interface FormItemProps {
   getValueFromEvent?: (...args: unknown[]) => FormValue;
   help?: React.ReactNode;
   label?: React.ReactNode;
-  name: string;
+  name?: string;
   requiredMark?: boolean;
   rules?: FormRule[];
   style?: StyleProp<ViewStyle>;
@@ -583,10 +583,13 @@ export const FormItem: React.FC<FormItemProps> = ({
     values,
   } = useFormContext();
 
+  const fieldName = typeof name === 'string' && name.length > 0 ? name : undefined;
+
   React.useEffect(() => {
-    registerField(name, rules);
-    return () => unregisterField(name);
-  }, [name, registerField, unregisterField, rules]);
+    if (!fieldName) return;
+    registerField(fieldName, rules);
+    return () => unregisterField(fieldName);
+  }, [fieldName, registerField, unregisterField, rules]);
 
   const triggers = React.useMemo(() => {
     const list = normalizeValidateTrigger(validateTrigger);
@@ -594,44 +597,48 @@ export const FormItem: React.FC<FormItemProps> = ({
     return list;
   }, [trigger, validateTrigger]);
 
-  const childProps: Record<string, unknown> = {};
   const child = React.Children.only(children);
+  let controlledChild = child;
 
-  const fieldValue = values[name];
-  childProps[valuePropName] =
-    fieldValue === undefined && valuePropName === 'value' ? '' : fieldValue;
+  if (fieldName && React.isValidElement(child)) {
+    const childProps: Record<string, unknown> = {};
+    const fieldValue = values[fieldName];
+    childProps[valuePropName] =
+      fieldValue === undefined && valuePropName === 'value' ? '' : fieldValue;
 
-  if (trigger) {
-    childProps[trigger] = (...args: unknown[]) => {
-      const value = typeof getValueFromEvent === 'function' ? getValueFromEvent(...args) : args[0];
-      void setFieldValue(name, value, {
-        markTouched: true,
-        validate: triggers.includes(trigger),
-      });
+    if (trigger) {
+      childProps[trigger] = (...args: unknown[]) => {
+        const value =
+          typeof getValueFromEvent === 'function' ? getValueFromEvent(...args) : args[0];
+        void setFieldValue(fieldName, value, {
+          markTouched: true,
+          validate: triggers.includes(trigger),
+        });
 
-      const originalTrigger = (child.props as Record<string, unknown>)[trigger];
-      if (typeof originalTrigger === 'function') {
-        (originalTrigger as (...eventArgs: unknown[]) => void)(...args);
-      }
-    };
+        const originalTrigger = (child.props as Record<string, unknown>)[trigger];
+        if (typeof originalTrigger === 'function') {
+          (originalTrigger as (...eventArgs: unknown[]) => void)(...args);
+        }
+      };
+    }
+
+    if (triggers.includes('onBlur')) {
+      childProps.onBlur = (...args: unknown[]) => {
+        markFieldTouched(fieldName, true);
+        void setFieldValue(fieldName, childProps[valuePropName], { validate: true });
+
+        const originalOnBlur = (child.props as Record<string, unknown>).onBlur;
+        if (typeof originalOnBlur === 'function') {
+          (originalOnBlur as (...eventArgs: unknown[]) => void)(...args);
+        }
+      };
+    }
+
+    controlledChild = React.cloneElement(child, childProps);
   }
 
-  if (triggers.includes('onBlur')) {
-    childProps.onBlur = (...args: unknown[]) => {
-      markFieldTouched(name, true);
-      void setFieldValue(name, childProps[valuePropName], { validate: true });
-
-      const originalOnBlur = (child.props as Record<string, unknown>).onBlur;
-      if (typeof originalOnBlur === 'function') {
-        (originalOnBlur as (...eventArgs: unknown[]) => void)(...args);
-      }
-    };
-  }
-
-  const controlledChild = React.cloneElement(child, childProps);
-
-  const error = errors[name];
-  const shouldShowError = !!error && (hasSubmitted || touched[name]);
+  const error = fieldName ? errors[fieldName] : undefined;
+  const shouldShowError = !!(fieldName && error && (hasSubmitted || touched[fieldName]));
   const isRequired = requiredMark ?? rules?.some((rule) => rule.required) ?? false;
   const shouldShowHelp = !!help && !shouldShowError;
   const shouldShowExtra = !!extra;
