@@ -24,7 +24,7 @@ const renderTextLike = (
     return <Text style={[defaultStyle, customStyle]}>{content}</Text>;
   }
 
-  return { content };
+  return content;
 };
 
 const Card = memo<CardProps>(
