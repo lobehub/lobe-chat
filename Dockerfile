@@ -255,7 +255,7 @@ ENV \
     # 302.AI
     AI302_API_KEY="" AI302_MODEL_LIST="" \
     # FAL
-    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    ENABLED_FAL="" FAL_API_KEY="" FAL_MODEL_LIST="" \
     # BFL
     BFL_API_KEY="" BFL_MODEL_LIST="" \
     # Vercel AI Gateway
