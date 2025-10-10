@@ -965,6 +965,127 @@ table users {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+table user_memories {
+  id text [pk, not null]
+  user_id text
+  memory_category text
+  memory_layer text
+  memory_type text
+  title varchar(255)
+  summary text
+  summary_vector_1024 vector(1024)
+  details text
+  details_vector_1024 vector(1024)
+  status text
+  accessed_count bigint [default: 0]
+  last_accessed_at "timestamp with time zone" [not null, default: `now()`]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    summary_vector_1024 [name: 'user_memories_summary_vector_1024_index']
+    details_vector_1024 [name: 'user_memories_details_vector_1024_index']
+  }
+}
+
+table user_memories_contexts {
+  id text [pk, not null]
+  user_memory_ids jsonb
+  labels jsonb
+  extracted_labels jsonb
+  associated_objects jsonb
+  associated_subjects jsonb
+  title text
+  title_vector vector(1024)
+  description text
+  description_vector vector(1024)
+  type text
+  current_status text
+  score_impact numeric [default: 0]
+  score_urgency numeric [default: 0]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    title_vector [name: 'user_memories_contexts_title_vector_index']
+    description_vector [name: 'user_memories_contexts_description_vector_index']
+    type [name: 'user_memories_contexts_type_index']
+  }
+}
+
+table user_memories_experiences {
+  id text [pk, not null]
+  user_memory_id text
+  labels jsonb
+  extracted_labels jsonb
+  type text
+  situation text
+  situation_vector vector(1024)
+  reasoning text
+  possible_outcome text
+  action text
+  action_vector vector(1024)
+  key_learning text
+  key_learning_vector vector(1024)
+  metadata jsonb
+  score_confidence real [default: 0]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    situation_vector [name: 'user_memories_experiences_situation_vector_index']
+    action_vector [name: 'user_memories_experiences_action_vector_index']
+    key_learning_vector [name: 'user_memories_experiences_key_learning_vector_index']
+    type [name: 'user_memories_experiences_type_index']
+  }
+}
+
+table user_memories_identities {
+  current_focuses text
+  description text
+  description_vector vector(1024)
+  experience text
+  extracted_labels jsonb
+  id text [pk, not null]
+  labels jsonb
+  relationship text
+  role text
+  type text
+  user_memory_id text
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    description_vector [name: 'user_memories_identities_description_vector_index']
+    type [name: 'user_memories_identities_type_index']
+  }
+}
+
+table user_memories_preferences {
+  id text [pk, not null]
+  context_id text
+  user_memory_id text
+  labels jsonb
+  extracted_labels jsonb
+  extracted_scopes jsonb
+  conclusion_directives text
+  conclusion_directives_vector vector(1024)
+  type text
+  suggestions text
+  score_priority numeric [default: 0]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    conclusion_directives_vector [name: 'user_memories_preferences_conclusion_directives_vector_index']
+  }
+}
+
 ref: agents_files.file_id > files.id
 
 ref: agents_files.agent_id > agents.id
