@@ -1,7 +1,7 @@
-import { Button, Card, Input, Toast } from '@lobehub/ui-rn';
+import { Button, Input, Toast } from '@lobehub/ui-rn';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Form } from '@/components';
 import { DEFAULT_SERVER_URL, formatServerUrl, isValidServerUrl } from '@/config/server';
@@ -45,55 +45,53 @@ const CustomServer = () => {
 
   const resetCustomServer = async () => {
     setCustomServerUrl(null);
-    await form.setFieldsValue({ customServer: '' }, { markTouched: false, validate: false });
+    await form.setFieldsValue(
+      { customServer: DEFAULT_SERVER_URL },
+      { markTouched: false, validate: false },
+    );
     Toast.success(t('developer.customServer.resetSuccess', { ns: 'setting' }));
   };
 
   return (
-    <View style={styles.formCard}>
-      <Card title={t('developer.customServer.title', { ns: 'setting' })}>
-        <Text style={styles.customServerCurrentValue}>{currentServer}</Text>
-      </Card>
-      <Form form={form} initialValues={{ customServer: customServerUrl ?? '' }}>
-        <Form.Item
-          extra={t('developer.customServer.hint', { ns: 'setting' })}
-          label={t('developer.customServer.title', { ns: 'setting' })}
-          name="customServer"
-          rules={[
-            {
-              validator: (value) => {
-                const input = (value as string | undefined)?.trim();
-                if (!input) return;
-                if (!isValidServerUrl(input)) {
-                  return t('developer.customServer.invalid', { ns: 'setting' });
-                }
-              },
+    <Form form={form} initialValues={{ customServer: currentServer }}>
+      <Form.Item
+        extra={t('developer.customServer.hint', { ns: 'setting' })}
+        label={t('developer.customServer.title', { ns: 'setting' })}
+        name="customServer"
+        rules={[
+          {
+            validator: (value) => {
+              const input = (value as string | undefined)?.trim();
+              if (!input) return;
+              if (!isValidServerUrl(input)) {
+                return t('developer.customServer.invalid', { ns: 'setting' });
+              }
             },
-          ]}
-        >
-          <Input
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="url"
-            onSubmitEditing={applyCustomServer}
-            placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
-            returnKeyType="done"
-            size="large"
-          />
-        </Form.Item>
-        {/* Action Section */}
-        <Form.Item>
-          <View style={styles.actionSection}>
-            <Button block onPress={applyCustomServer} size="large" type="primary">
-              {t('developer.customServer.save', { ns: 'setting' })}
-            </Button>
-            <Button block onPress={resetCustomServer} size="large" type="default">
-              {t('developer.customServer.reset', { ns: 'setting' })}
-            </Button>
-          </View>
-        </Form.Item>
-      </Form>
-    </View>
+          },
+        ]}
+      >
+        <Input
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="url"
+          onSubmitEditing={applyCustomServer}
+          placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
+          returnKeyType="done"
+          size="large"
+        />
+      </Form.Item>
+      {/* Action Section */}
+      <Form.Item>
+        <View style={styles.actionSection}>
+          <Button block onPress={applyCustomServer} size="large" type="primary">
+            {t('developer.customServer.save', { ns: 'setting' })}
+          </Button>
+          <Button block onPress={resetCustomServer} size="large" type="default">
+            {t('developer.customServer.reset', { ns: 'setting' })}
+          </Button>
+        </View>
+      </Form.Item>
+    </Form>
   );
 };
 

@@ -17,10 +17,7 @@ export const useStyles = createStyles(({ token }) => ({
     fontSize: token.fontSizeSM,
     marginBottom: token.marginLG,
   },
-  formCard: {
-    padding: token.paddingMD,
-    width: '100%',
-  },
+
   formLabel: {
     color: token.colorTextDescription,
     fontSize: token.fontSizeSM,
