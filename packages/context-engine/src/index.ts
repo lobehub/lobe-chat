@@ -1,5 +1,5 @@
 // Core types and interfaces
-export type * from './types';
+export * from './types';
 
 // Base classes
 export { BaseProcessor } from './base/BaseProcessor';
@@ -28,5 +28,14 @@ export {
   ToolMessageReorder,
 } from './processors';
 
-// Constants
-export { PipelineError, ProcessorError, ProcessorType } from './types';
+// Tools Engine
+export type {
+  FunctionCallChecker,
+  GenerateToolsParams,
+  PluginEnableChecker,
+  ToolNameGenerator,
+  ToolsEngineOptions,
+  ToolsGenerationContext,
+  ToolsGenerationResult,
+} from './tools';
+export { filterValidManifests, ToolsEngine, validateManifest } from './tools';

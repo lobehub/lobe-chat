@@ -9,6 +9,7 @@ import { LobeAzureAI } from './providers/azureai';
 import { LobeBaichuanAI } from './providers/baichuan';
 import { LobeBedrockAI } from './providers/bedrock';
 import { LobeBflAI } from './providers/bfl';
+import { LobeCerebrasAI } from './providers/cerebras';
 import { LobeCloudflareAI } from './providers/cloudflare';
 import { LobeCohereAI } from './providers/cohere';
 import { LobeCometAPIAI } from './providers/cometapi';
@@ -35,6 +36,7 @@ import { LobeNewAPIAI } from './providers/newapi';
 import { LobeNovitaAI } from './providers/novita';
 import { LobeNvidiaAI } from './providers/nvidia';
 import { LobeOllamaAI } from './providers/ollama';
+import { LobeOllamaCloudAI } from './providers/ollamacloud';
 import { LobeOpenAI } from './providers/openai';
 import { LobeOpenRouterAI } from './providers/openrouter';
 import { LobePerplexityAI } from './providers/perplexity';
@@ -73,6 +75,7 @@ export const providerRuntimeMap = {
   baichuan: LobeBaichuanAI,
   bedrock: LobeBedrockAI,
   bfl: LobeBflAI,
+  cerebras: LobeCerebrasAI,
   cloudflare: LobeCloudflareAI,
   cohere: LobeCohereAI,
   cometapi: LobeCometAPIAI,
@@ -99,6 +102,7 @@ export const providerRuntimeMap = {
   novita: LobeNovitaAI,
   nvidia: LobeNvidiaAI,
   ollama: LobeOllamaAI,
+  ollamacloud: LobeOllamaCloudAI,
   openai: LobeOpenAI,
   openrouter: LobeOpenRouterAI,
   perplexity: LobePerplexityAI,

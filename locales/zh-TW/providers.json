@@ -32,6 +32,9 @@
   "bfl": {
     "description": "領先的前沿人工智慧研究實驗室，打造明日的視覺基礎設施。"
   },
+  "cerebras": {
+    "description": "Cerebras 是一個基於其專用 CS-3 系統的 AI 推理平台，旨在提供全球最快、即時回應、高吞吐量的 LLM 服務，專為消除延遲並加速複雜的 AI 工作流程（如即時程式碼生成與代理任務）而設計。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
   },
@@ -109,6 +112,9 @@
   },
   "ollama": {
     "description": "Ollama 提供的模型廣泛涵蓋代碼生成、數學運算、多語種處理和對話互動等領域，支持企業級和本地化部署的多樣化需求。"
+  },
+  "ollamacloud": {
+    "description": "Ollama Cloud 提供官方託管的推理服務，開箱即用地存取 Ollama 模型庫，並支援 OpenAI 相容介面。"
   },
   "openai": {
     "description": "OpenAI 是全球領先的人工智慧研究機構，其開發的模型如 GPT 系列推動了自然語言處理的前沿。OpenAI 致力於透過創新和高效的 AI 解決方案改變多個行業。他們的產品具有顯著的性能和經濟性，廣泛用於研究、商業和創新應用。"

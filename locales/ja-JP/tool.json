@@ -1,4 +1,11 @@
 {
+  "codeInterpreter": {
+    "error": "実行エラー",
+    "executing": "実行中...",
+    "files": "ファイル：",
+    "output": "出力：",
+    "returnValue": "戻り値："
+  },
   "dalle": {
     "autoGenerate": "自動生成",
     "downloading": "DallE3 で生成された画像リンクは有効期間が1時間しかありません。画像をローカルにキャッシュしています...",

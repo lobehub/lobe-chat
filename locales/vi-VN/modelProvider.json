@@ -294,6 +294,21 @@
           "title": "Cửa sổ ngữ cảnh tối đa",
           "unlimited": "Không giới hạn"
         },
+        "type": {
+          "extra": "Các loại mô hình khác nhau có các kịch bản sử dụng và khả năng khác biệt",
+          "options": {
+            "chat": "Đối thoại",
+            "embedding": "Vector hóa",
+            "image": "Tạo hình ảnh",
+            "realtime": "Đối thoại thời gian thực",
+            "stt": "Chuyển giọng nói thành văn bản",
+            "text2music": "Chuyển văn bản thành nhạc",
+            "text2video": "Chuyển văn bản thành video",
+            "tts": "Tổng hợp giọng nói"
+          },
+          "placeholder": "Vui lòng chọn loại mô hình",
+          "title": "Loại mô hình"
+        },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng nhận diện hình ảnh của mô hình này.",
           "title": "Hỗ trợ nhận diện hình ảnh"

@@ -20,7 +20,6 @@ const useStyles = createStyles(({ css }) => {
 
 const Connection = () => {
   const { styles, theme } = useStyles();
-
   const [isOpen, setIsOpen] = useState(false);
   const [isWaiting, setWaiting] = useState(false);
 

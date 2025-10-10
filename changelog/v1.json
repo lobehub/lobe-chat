@@ -1,5 +1,244 @@
 [
   {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.2"
+  },
+  {
+    "children": {},
+    "date": "2025-10-09",
+    "version": "1.136.1"
+  },
+  {
+    "children": {
+      "features": ["Add new provider Cerebras."],
+      "fixes": ["Fix standalone plugin rerender issue."]
+    },
+    "date": "2025-10-09",
+    "version": "1.136.0"
+  },
+  {
+    "children": {},
+    "date": "2025-10-08",
+    "version": "1.135.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-08",
+    "version": "1.135.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add GPT-5 pro model."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Korean translate."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.3"
+  },
+  {
+    "children": {},
+    "date": "2025-10-06",
+    "version": "1.135.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve styles and fix tools calling condition."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.1"
+  },
+  {
+    "children": {
+      "features": ["Huanyuan text-to-image 3."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-06",
+    "version": "1.134.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-05",
+    "version": "1.134.6"
+  },
+  {
+    "children": {},
+    "date": "2025-10-05",
+    "version": "1.134.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add promptfoo to improve prompts quality."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.4"
+  },
+  {
+    "children": {
+      "fixes": ["Type not preserved when model is sorted."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.3"
+  },
+  {
+    "children": {
+      "improvements": ["Allow switching model type."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.1"
+  },
+  {
+    "children": {
+      "features": ["Support double-click to open multi agent window on the desktop."]
+    },
+    "date": "2025-10-04",
+    "version": "1.134.0"
+  },
+  {
+    "children": {
+      "fixes": ["type not preserved when model is disabled or sorted."],
+      "improvements": ["Nano banana support aspect_ratio."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.6"
+  },
+  {
+    "children": {
+      "fixes": ["Custom provider fails when client requests are enabled."],
+      "improvements": ["Optimized extendParams UI, update i18n."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.5"
+  },
+  {
+    "children": {
+      "fixes": ["OllamaCloud error."],
+      "improvements": ["Fix chat minimap overflow."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor a ssrf-safe-fetch module."],
+      "fixes": ["Fix frontend random API key config not work."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add minimap to chat list for quick navigation."]
+    },
+    "date": "2025-09-30",
+    "version": "1.133.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-30",
+    "version": "1.133.1"
+  },
+  {
+    "children": {
+      "features": ["Add builtin Python plugin, add Claude Sonnet 4.5 model to AI chat models."]
+    },
+    "date": "2025-09-29",
+    "version": "1.133.0"
+  },
+  {
+    "children": {},
+    "date": "2025-09-29",
+    "version": "1.132.19"
+  },
+  {
+    "children": {
+      "fixes": ["Refactor tools-engine and fix search token count."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-28",
+    "version": "1.132.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix input empty group name."]
+    },
+    "date": "2025-09-27",
+    "version": "1.132.17"
+  },
+  {
+    "children": {
+      "fixes": ["Resolve qwen-image-edit imageUrls conversion issue."]
+    },
+    "date": "2025-09-26",
+    "version": "1.132.16"
+  },
+  {
+    "children": {
+      "fixes": ["Add proxyUrl configuration for NEW API provider."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.14"
+  },
+  {
+    "children": {},
+    "date": "2025-09-25",
+    "version": "1.132.13"
+  },
+  {
+    "children": {
+      "fixes": ["Slove setting proxy page with style error."]
+    },
+    "date": "2025-09-25",
+    "version": "1.132.12"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Enhanced Nvidia NIM chat experience, OpenAI models in AiHubMix use Responses API."
+      ]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.11"
+  },
+  {
+    "children": {
+      "fixes": ["Macos desktop sign."]
+    },
+    "date": "2025-09-24",
+    "version": "1.132.10"
+  },
+  {
     "children": {},
     "date": "2025-09-23",
     "version": "1.132.9"

@@ -4,10 +4,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import * as isCanUseFCModule from '@/helpers/isCanUseFC';
+import * as toolEngineeringModule from '@/helpers/toolEngineering';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/index';
@@ -63,6 +66,11 @@ vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
 }));
 
+// Mock isCanUseFC to control function calling behavior in tests
+vi.mock('@/helpers/isCanUseFC', () => ({
+  isCanUseFC: vi.fn(() => true), // Default to true, tests can override
+}));
+
 describe('ChatService', () => {
   describe('createAssistantMessage', () => {
     it('should process messages and call getChatCompletion with the right parameters', async () => {
@@ -106,26 +114,6 @@ describe('ChatService', () => {
             },
           ]),
           messages: expect.anything(),
-        }),
-        undefined,
-      );
-    });
-
-    it('should not use tools for models in the vision model whitelist', async () => {
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      const messages = [{ content: 'Hello', role: 'user' }] as ChatMessage[];
-      const modelInWhitelist = 'gpt-4-vision-preview';
-
-      await chatService.createAssistantMessage({
-        messages,
-        model: modelInWhitelist,
-        plugins: ['plugin1'],
-      });
-
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          tools: undefined,
-          model: modelInWhitelist,
         }),
         undefined,
       );
@@ -355,10 +343,12 @@ describe('ChatService', () => {
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
+            enabledSearch: undefined,
             messages: [
               { content: 'Hello', role: 'user' },
               { content: 'Hey', role: 'assistant' },
             ],
+            tools: undefined,
           },
           undefined,
         );
@@ -870,16 +860,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -913,16 +911,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -950,16 +956,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 

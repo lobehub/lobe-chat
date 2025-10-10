@@ -1,19 +1,20 @@
-import { DEFAULT_AGENT_META } from '@/const/meta';
 import {
   DEFAULT_AGENT,
   DEFAULT_AGENT_CONFIG,
+  DEFAULT_AGENT_META,
   DEFAULT_HOTKEY_CONFIG,
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
-} from '@/const/settings';
-import type { UserStore } from '@/store/user';
-import { HotkeyId } from '@/types/hotkey';
+} from '@lobechat/const';
 import {
   GlobalLLMProviderKey,
+  HotkeyId,
   ProviderConfig,
   UserModelProviderConfig,
   UserSettings,
-} from '@/types/user/settings';
+} from '@lobechat/types';
+
+import type { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 
 export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSettings, s.settings);

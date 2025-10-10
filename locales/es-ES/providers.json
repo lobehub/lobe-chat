@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Laboratorio líder en investigación de inteligencia artificial de vanguardia, construyendo la infraestructura visual del mañana."
   },
+  "cerebras": {
+    "description": "Cerebras es una plataforma de inferencia de IA basada en su sistema especializado CS-3, diseñada para ofrecer el servicio de LLM más rápido del mundo, con respuesta en tiempo real y alto rendimiento. Está especialmente concebida para eliminar la latencia y acelerar flujos de trabajo complejos de IA, como la generación de código en tiempo real y tareas de agentes."
+  },
   "cloudflare": {
     "description": "Ejecuta modelos de aprendizaje automático impulsados por GPU sin servidor en la red global de Cloudflare."
   },
@@ -109,6 +112,9 @@
   },
   "ollama": {
     "description": "Los modelos ofrecidos por Ollama abarcan ampliamente áreas como la generación de código, cálculos matemáticos, procesamiento multilingüe e interacciones conversacionales, apoyando diversas necesidades de implementación empresarial y local."
+  },
+  "ollamacloud": {
+    "description": "Ollama Cloud ofrece un servicio de inferencia alojado oficialmente, acceso inmediato a la biblioteca de modelos de Ollama y soporte para interfaces compatibles con OpenAI."
   },
   "openai": {
     "description": "OpenAI es una de las principales instituciones de investigación en inteligencia artificial a nivel mundial, cuyos modelos, como la serie GPT, están a la vanguardia del procesamiento del lenguaje natural. OpenAI se dedica a transformar múltiples industrias a través de soluciones de IA innovadoras y eficientes. Sus productos ofrecen un rendimiento y una rentabilidad significativos, siendo ampliamente utilizados en investigación, negocios y aplicaciones innovadoras."

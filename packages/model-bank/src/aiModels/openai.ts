@@ -26,6 +26,58 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
+    description: 'GPT-5 pro 使用更多计算来更深入地思考，并持续提供更好的答案。',
+    displayName: 'GPT-5 pro',
+    id: 'gpt-5-pro',
+    maxOutput: 272_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    settings: {
+      extendParams: ['textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description: 'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
+    displayName: 'GPT-5 Codex',
+    id: 'gpt-5-codex',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-09-15',
+    settings: {
+      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
     description:
       '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
     displayName: 'GPT-5',
@@ -51,6 +103,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -100,7 +153,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -469,30 +521,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      //search: true,
-    },
-    contextWindowTokens: 128_000,
-    description: 'GPT-4o mini Audio 模型，支持音频输入输出',
-    displayName: 'GPT-4o mini Audio',
-    id: 'gpt-4o-mini-audio-preview',
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2024-12-17',
-    /*
-    settings: {
-      searchImpl: 'params',
-    },
-    */
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       search: true,
       vision: true,
     },
@@ -586,17 +614,63 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GPT Audio 是面向音频输入输出的通用聊天模型，支持在 Chat Completions API 中使用音频 I/O。',
+    displayName: 'GPT Audio',
+    id: 'gpt-audio',
+    maxOutput: 16_384,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+
+        { name: 'audioInput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 80, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       //search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GPT-4o Audio 模型，支持音频输入输出',
-    displayName: 'GPT-4o Audio',
+    description: 'GPT-4o Audio Preview 模型，支持音频输入输出',
+    displayName: 'GPT-4o Audio Preview',
     id: 'gpt-4o-audio-preview',
     maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2024-12-17',
+    /*
+    settings: {
+      searchImpl: 'params',
+    },
+    */
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      //search: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'GPT-4o mini Audio 模型，支持音频输入输出',
+    displayName: 'GPT-4o mini Audio',
+    id: 'gpt-4o-mini-audio-preview',
+    maxOutput: 16_384,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2024-12-17',
@@ -992,6 +1066,70 @@ export const openaiImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'gpt-image-1',
     parameters: gptImage1ParamsSchema,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              high_1024x1024: 0.167,
+              high_1024x1536: 0.25,
+              high_1536x1024: 0.25,
+              low_1024x1024: 0.011,
+              low_1024x1536: 0.016,
+              low_1536x1024: 0.016,
+              medium_1024x1024: 0.042,
+              medium_1024x1536: 0.063,
+              medium_1536x1024: 0.063,
+            },
+            pricingParams: ['quality', 'size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
+    },
+    resolutions: ['1024x1024', '1024x1536', '1536x1024'],
+    type: 'image',
+  },
+  {
+    description: '成本更低的 GPT Image 1 版本，原生支持文本与图像输入并生成图像输出。',
+    displayName: 'GPT Image 1 Mini',
+    enabled: true,
+    id: 'gpt-image-1-mini',
+    parameters: gptImage1ParamsSchema,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput_cacheRead', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              low_1024x1024: 0.005,
+              low_1024x1536: 0.006,
+              low_1536x1024: 0.006,
+              medium_1024x1024: 0.011,
+              medium_1024x1536: 0.015,
+              medium_1536x1024: 0.015,
+            },
+            pricingParams: ['quality', 'size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    resolutions: ['1024x1024', '1024x1536', '1536x1024'],
     type: 'image',
   },
   {
@@ -1001,6 +1139,10 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'dall-e-3',
     parameters: {
       prompt: { default: '' },
+      quality: {
+        default: 'standard',
+        enum: ['standard', 'hd'],
+      },
       size: {
         default: '1024x1024',
         enum: ['1024x1024', '1792x1024', '1024x1792'],
@@ -1066,6 +1208,33 @@ export const openaiImageModels: AIImageModelCard[] = [
 // GPT-4o 和 GPT-4o-mini 实时模型
 export const openaiRealtimeModels: AIRealtimeModelCard[] = [
   {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_000,
+    description: '通用实时模型，支持文本与音频的实时输入输出，并支持图像输入。',
+    displayName: 'GPT Realtime',
+    id: 'gpt-realtime',
+    maxOutput: 4096,
+    pricing: {
+      units: [
+        { name: 'audioInput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+
+        { name: 'imageInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-28',
+    type: 'realtime',
+  },
+  {
     contextWindowTokens: 16_000,
     description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
     displayName: 'GPT-4o Realtime 241217',
@@ -1107,7 +1276,7 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     contextWindowTokens: 16_000,
     description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
     displayName: 'GPT-4o Realtime 241001',
-    id: 'gpt-4o-realtime-preview-2024-10-01', // deprecated on 2025-09-10
+    id: 'gpt-4o-realtime-preview-2024-10-01', // deprecated on 2025-10-10
     maxOutput: 4096,
     pricing: {
       units: [

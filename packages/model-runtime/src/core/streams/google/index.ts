@@ -1,9 +1,11 @@
 import { GenerateContentResponse } from '@google/genai';
-import { GroundingSearch, ModelTokensUsage } from '@lobechat/types';
+import { GroundingSearch } from '@lobechat/types';
 
 import { ChatStreamCallbacks } from '../../../types';
 import { nanoid } from '../../../utils/uuid';
+import { convertGoogleAIUsage } from '../../usageConverters/google-ai';
 import {
+  ChatPayloadForTransformStream,
   StreamContext,
   StreamProtocolChunk,
   StreamToolCallChunkData,
@@ -28,6 +30,7 @@ const getBlockReasonMessage = (blockReason: string): string => {
 const transformGoogleGenerativeAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
+  payload?: ChatPayloadForTransformStream,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // Handle injected internal error marker to pass through detailed error info
   if ((chunk as any)?.[LOBE_ERROR_KEY]) {
@@ -60,46 +63,15 @@ const transformGoogleGenerativeAIStream = (
 
   // maybe need another structure to add support for multiple choices
   const candidate = chunk.candidates?.[0];
-  const usage = chunk.usageMetadata;
+  const { usageMetadata } = chunk;
   const usageChunks: StreamProtocolChunk[] = [];
-  if (candidate?.finishReason && usage) {
-    // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
-    const reasoningTokens = usage.thoughtsTokenCount;
+  if (candidate?.finishReason && usageMetadata) {
+    usageChunks.push({ data: candidate.finishReason, id: context?.id, type: 'stop' });
 
-    const candidatesDetails = usage.candidatesTokensDetails;
-    const candidatesTotal =
-      usage.candidatesTokenCount ??
-      candidatesDetails?.reduce((s: number, i: any) => s + (i?.tokenCount ?? 0), 0) ??
-      0;
-
-    const outputImageTokens =
-      candidatesDetails?.find((i: any) => i.modality === 'IMAGE')?.tokenCount ?? 0;
-    const outputTextTokens =
-      candidatesDetails?.find((i: any) => i.modality === 'TEXT')?.tokenCount ??
-      Math.max(0, candidatesTotal - outputImageTokens);
-
-    const totalOutputTokens = candidatesTotal + (reasoningTokens ?? 0);
-
-    usageChunks.push(
-      { data: candidate.finishReason, id: context?.id, type: 'stop' },
-      {
-        data: {
-          inputCachedTokens: usage.cachedContentTokenCount,
-          inputImageTokens: usage.promptTokensDetails?.find((i) => i.modality === 'IMAGE')
-            ?.tokenCount,
-          inputTextTokens: usage.promptTokensDetails?.find((i) => i.modality === 'TEXT')
-            ?.tokenCount,
-          outputImageTokens,
-          outputReasoningTokens: reasoningTokens,
-          outputTextTokens,
-          totalInputTokens: usage.promptTokenCount,
-          totalOutputTokens,
-          totalTokens: usage.totalTokenCount,
-        } as ModelTokensUsage,
-        id: context?.id,
-        type: 'usage',
-      },
-    );
+    const convertedUsage = convertGoogleAIUsage(usageMetadata, payload?.pricing);
+    if (convertedUsage) {
+      usageChunks.push({ data: convertedUsage, id: context?.id, type: 'usage' });
+    }
   }
 
   const functionCalls = chunk.functionCalls;
@@ -213,17 +185,21 @@ export interface GoogleAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
   enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
+  payload?: ChatPayloadForTransformStream;
 }
 
 export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<GenerateContentResponse>,
-  { callbacks, inputStartAt, enableStreaming = true }: GoogleAIStreamOptions = {},
+  { callbacks, inputStartAt, enableStreaming = true, payload }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
+  const transformWithPayload: typeof transformGoogleGenerativeAIStream = (chunk, ctx) =>
+    transformGoogleGenerativeAIStream(chunk, ctx, payload);
+
   return rawStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, {
+      createTokenSpeedCalculator(transformWithPayload, {
         enableStreaming: enableStreaming,
         inputStartAt,
         streamStack,

@@ -1,8 +1,10 @@
 interface ModelPricing {
   completion: string;
-  image: string;
+  image?: string;
+  input_cache_read?: string;
+  input_cache_write?: string;
   prompt: string;
-  request: string;
+  request?: string;
 }
 
 export interface OpenRouterModelCard {

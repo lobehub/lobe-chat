@@ -59,7 +59,11 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpand}
       placement={'right'}
+      showHandleWhenCollapsed={false}
       showHandleWideArea={false}
+      styles={{
+        handle: { display: 'none' },
+      }}
     >
       <DraggablePanelContainer
         style={{
