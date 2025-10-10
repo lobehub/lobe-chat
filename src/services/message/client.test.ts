@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
@@ -21,8 +21,6 @@ import {
   MessageItem,
 } from '@/types/message';
 
-import { setupPgliteFetchMock } from '~test-utils';
-
 import { ClientService } from './client';
 
 const userId = 'message-db';
@@ -39,16 +37,6 @@ const mockMessage = {
 } as ChatMessage;
 
 const mockMessages = [mockMessage];
-
-let restoreFetch: (() => void) | undefined;
-
-beforeAll(() => {
-  restoreFetch = setupPgliteFetchMock();
-});
-
-afterAll(() => {
-  restoreFetch?.();
-});
 
 beforeEach(async () => {
   await initializeDB();

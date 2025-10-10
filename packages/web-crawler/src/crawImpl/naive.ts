@@ -1,7 +1,6 @@
 import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 
 import { CrawlImpl, CrawlSuccessResult } from '../type';
-import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 import { NetworkConnectionError, PageNotFoundError, TimeoutError } from '../utils/errorType';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { DEFAULT_TIMEOUT, withTimeout } from '../utils/withTimeout';

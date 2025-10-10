@@ -1,11 +1,9 @@
 import { eq } from 'drizzle-orm';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { sessions, topics, users } from '@/database/schemas';
 import { ChatTopic } from '@/types/topic';
-
-import { setupPgliteFetchMock } from '~test-utils';
 
 import { ClientService } from './client';
 
@@ -20,16 +18,6 @@ const mockTopic = {
 };
 
 const topicService = new ClientService(userId);
-
-let restoreFetch: (() => void) | undefined;
-
-beforeAll(() => {
-  restoreFetch = setupPgliteFetchMock();
-});
-
-afterAll(() => {
-  restoreFetch?.();
-});
 
 beforeEach(async () => {
   await initializeDB();

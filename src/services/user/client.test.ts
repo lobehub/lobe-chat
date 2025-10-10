@@ -1,13 +1,11 @@
 import { eq } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { userSettings, users } from '@/database/schemas';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
-
-import { setupPgliteFetchMock } from '~test-utils';
 
 import { ClientService } from './client';
 
@@ -21,16 +19,6 @@ const mockPreference = {
   useCmdEnterToSend: true,
 } as UserPreference;
 const clientService = new ClientService(mockUser.uuid);
-
-let restoreFetch: (() => void) | undefined;
-
-beforeAll(() => {
-  restoreFetch = setupPgliteFetchMock();
-});
-
-afterAll(() => {
-  restoreFetch?.();
-});
 
 beforeEach(async () => {
   vi.clearAllMocks();

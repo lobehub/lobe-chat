@@ -1,7 +1,5 @@
 import { eq, inArray } from 'drizzle-orm';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { setupPgliteFetchMock } from '~test-utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import mockImportData from '@/database/repositories/dataImporter/deprecated/__tests__/fixtures/messages.json';
@@ -21,16 +19,6 @@ import { ClientService } from './client';
 
 const userId = 'test-user-id';
 const service = new ClientService(userId);
-
-let restoreFetch: (() => void) | undefined;
-
-beforeAll(() => {
-  restoreFetch = setupPgliteFetchMock();
-});
-
-afterAll(() => {
-  restoreFetch?.();
-});
 
 beforeEach(async () => {
   await initializeDB();
