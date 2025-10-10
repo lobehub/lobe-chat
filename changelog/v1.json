@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Add 'gemini-2.5-flash-image' to disabled models Thinking."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.4"
+  },
+  {
+    "children": {
       "improvements": ["Add delete & regenerate hotkeys."]
     },
     "date": "2025-10-10",
