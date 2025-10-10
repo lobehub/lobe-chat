@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react';
 
 import { ChatItem } from '@/features/Conversation';
-import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -30,18 +29,12 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const isParentMessage = index <= threadStartMessageIndex;
 
-  const actionBar = useMemo(
-    () => !isParentMessage && <ActionsBar id={id} inPortalThread index={index} />,
-    [id, isParentMessage],
-  );
-
   const enableHistoryDivider = useAgentStore(
     agentChatConfigSelectors.enableHistoryDivider(historyLength, index),
   );
 
   return (
     <ChatItem
-      actionBar={actionBar}
       disableEditing={isParentMessage}
       enableHistoryDivider={enableHistoryDivider}
       endRender={endRender}

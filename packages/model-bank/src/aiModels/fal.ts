@@ -39,6 +39,24 @@ export const qwenEditParamsSchema: ModelParamsSchema = {
   width: { default: 1328, max: 1536, min: 512, step: 1 },
 };
 
+export const huanyuanImageParamsSchema: ModelParamsSchema = {
+  cfg: { default: 7.5, max: 20, min: 1, step: 0.1 },
+  prompt: { default: '' },
+  seed: { default: null },
+  size: {
+    default: 'square_hd',
+    enum: [
+      'square_hd',
+      'square',
+      'portrait_4_3',
+      'portrait_16_9',
+      'landscape_4_3',
+      'landscape_16_9',
+    ],
+  },
+  steps: { default: 28, max: 50, min: 1, step: 1 },
+};
+
 const falImageModels: AIImageModelCard[] = [
   {
     description:
@@ -77,6 +95,18 @@ const falImageModels: AIImageModelCard[] = [
       units: [{ name: 'imageGeneration', rate: 0.03, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-09-09',
+    type: 'image',
+  },
+  {
+    description: '一个强大的原生多模态图像生成模型',
+    displayName: 'HunyuanImage 3.0',
+    enabled: true,
+    id: 'fal-ai/hunyuan-image/v3',
+    parameters: huanyuanImageParamsSchema,
+    pricing: {
+      units: [{ name: 'imageGeneration', rate: 0.1, strategy: 'fixed', unit: 'megapixel' }],
+    },
+    releasedAt: '2025-09-28',
     type: 'image',
   },
   {
@@ -169,7 +199,7 @@ const falImageModels: AIImageModelCard[] = [
     id: 'fal-ai/qwen-image-edit',
     parameters: qwenEditParamsSchema,
     pricing: {
-      units: [{ name: 'imageGeneration', rate: 0.025, strategy: 'fixed', unit: 'image' }],
+      units: [{ name: 'imageGeneration', rate: 0.03, strategy: 'fixed', unit: 'megapixel' }],
     },
     releasedAt: '2025-08-19',
     type: 'image',

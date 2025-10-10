@@ -3,8 +3,8 @@
     "title": "モデル"
   },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
-  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
-  "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
+  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です。何かお手伝いできることはありますか？",
+  "agentDefaultMessageWithoutEdit": "こんにちは、私は **{{name}}** です。何かお手伝いできることはありますか？",
   "agents": "エージェント",
   "artifact": {
     "generating": "生成中",

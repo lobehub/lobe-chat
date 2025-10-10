@@ -1,6 +1,5 @@
+import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@lobechat/const';
 import { Md5 } from 'ts-md5';
-
-import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 
 // OpenAI GPT function_call name can't be longer than 64 characters
 // So we need to use md5 to shorten the name

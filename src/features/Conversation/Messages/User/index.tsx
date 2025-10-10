@@ -1,34 +1,137 @@
-import { ReactNode, memo } from 'react';
+import { ChatMessage } from '@lobechat/types';
+import { useResponsive } from 'antd-style';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import BubblesLoading from '@/components/BubblesLoading';
-import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/message';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
+import { useStyles } from '@/features/ChatItem/style';
+import { useUserAvatar } from '@/hooks/useUserAvatar';
+import { useAgentStore } from '@/store/agent';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
-import FileListViewer from './FileListViewer';
-import ImageFileListViewer from './ImageFileListViewer';
-import VideoFileListViewer from './VideoFileListViewer';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { UserActionsBar } from './Actions';
+import { UserBelowMessage } from './BelowMessage';
+import { UserMessageExtra } from './Extra';
+import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
+import { UserMessageContent } from './MessageContent';
 
-export const UserMessage = memo<
-  ChatMessage & {
-    editableContent: ReactNode;
-  }
->(({ id, editableContent, content, imageList, videoList, fileList }) => {
-  if (content === LOADING_FLAT) return <BubblesLoading />;
+interface UserMessageProps extends ChatMessage {
+  disableEditing?: boolean;
+  index: number;
+}
+
+const UserMessage = memo<UserMessageProps>((props) => {
+  const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing } = props;
+
+  const { mobile } = useResponsive();
+  const avatar = useUserAvatar();
+  const title = useUserStore(userProfileSelectors.displayUserName);
+
+  const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
+
+  const [editing, generating, isInRAGFlow] = useChatStore((s) => [
+    chatSelectors.isMessageEditing(id)(s),
+    chatSelectors.isMessageGenerating(id)(s),
+    chatSelectors.isMessageInRAGFlow(id)(s),
+  ]);
+
+  const loading = isInRAGFlow || generating;
+
+  const placement = displayMode === 'chat' ? 'right' : 'left';
+  const variant = displayMode === 'chat' ? 'bubble' : 'docs';
+
+  const { styles } = useStyles({
+    editing,
+    placement,
+    primary: true,
+    showTitle: false,
+    time: createdAt,
+    title,
+    variant,
+  });
+
+  const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
+
+  const renderMessage = useCallback(
+    (editableContent: ReactNode) => (
+      <UserMessageContent {...props} editableContent={editableContent} />
+    ),
+    [props],
+  );
+
+  const markdownProps = useMemo(
+    () => ({
+      customRender: (dom: ReactNode, { text }: { text: string }) => (
+        <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
+      ),
+    }),
+    [displayMode],
+  );
 
   return (
-    <Flexbox gap={8} id={id}>
-      {editableContent}
-      {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
-      {videoList && videoList?.length > 0 && <VideoFileListViewer items={videoList} />}
-      {fileList && fileList?.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <FileListViewer items={fileList} />
-        </div>
-      )}
+    <Flexbox
+      className={styles.container}
+      direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+      gap={mobile ? 6 : 12}
+    >
+      <Avatar
+        alt={title}
+        avatar={{ avatar, title }}
+        loading={loading}
+        placement={placement}
+        size={mobile ? 32 : undefined}
+        style={{ marginTop: 6 }}
+      />
+      <Flexbox
+        align={placement === 'left' ? 'flex-start' : 'flex-end'}
+        className={styles.messageContainer}
+      >
+        <Title
+          avatar={{ avatar, title }}
+          placement={placement}
+          showTitle={false}
+          time={createdAt}
+        />
+        <Flexbox
+          align={placement === 'left' ? 'flex-start' : 'flex-end'}
+          className={styles.messageContent}
+          direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+          gap={8}
+        >
+          <Flexbox width={'100%'}>
+            <MessageContent
+              editing={editing}
+              id={id}
+              markdownProps={markdownProps}
+              message={content}
+              messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
+              onDoubleClick={onDoubleClick}
+              placement={placement}
+              primary
+              renderMessage={renderMessage}
+              variant={variant}
+            />
+          </Flexbox>
+
+          {!disableEditing && (
+            <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+              <UserActionsBar data={props} id={id} index={index} />
+            </Flexbox>
+          )}
+        </Flexbox>
+        <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
+      </Flexbox>
+      {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
     </Flexbox>
   );
 });
 
-export * from './BelowMessage';
-export { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
+export default UserMessage;

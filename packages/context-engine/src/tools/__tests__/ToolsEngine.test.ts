@@ -206,6 +206,95 @@ describe('ToolsEngine', () => {
         { id: 'non-existent', reason: 'not_found' },
       ]);
     });
+
+    it('should filter all plugins as incompatible when function calling is not supported', () => {
+      const mockFunctionCallChecker = vi.fn().mockReturnValue(false);
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        functionCallChecker: mockFunctionCallChecker,
+      });
+
+      const result = engine.generateToolsDetailed({
+        toolIds: ['lobe-web-browsing', 'dalle'],
+        model: 'gpt-5-chat-latest',
+        provider: 'openai',
+      });
+
+      expect(mockFunctionCallChecker).toHaveBeenCalledWith('gpt-5-chat-latest', 'openai');
+      expect(result.tools).toBeUndefined();
+      expect(result.enabledToolIds).toEqual([]);
+      expect(result.filteredTools).toEqual([
+        { id: 'lobe-web-browsing', reason: 'incompatible' },
+        { id: 'dalle', reason: 'incompatible' },
+      ]);
+    });
+
+    it('should combine incompatible and not_found reasons when FC is not supported', () => {
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest],
+        functionCallChecker: () => false,
+      });
+
+      const result = engine.generateToolsDetailed({
+        toolIds: ['lobe-web-browsing', 'non-existent', 'dalle'],
+        model: 'gpt-5-chat-latest',
+        provider: 'openai',
+      });
+
+      expect(result.tools).toBeUndefined();
+      expect(result.enabledToolIds).toEqual([]);
+      expect(result.filteredTools).toEqual([
+        { id: 'lobe-web-browsing', reason: 'incompatible' },
+        { id: 'non-existent', reason: 'not_found' },
+        { id: 'dalle', reason: 'not_found' },
+      ]);
+    });
+
+    it('should still call enableChecker when FC is supported', () => {
+      const mockEnableChecker = vi.fn().mockReturnValue(false);
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        enableChecker: mockEnableChecker,
+        functionCallChecker: () => true,
+      });
+
+      const result = engine.generateToolsDetailed({
+        toolIds: ['lobe-web-browsing', 'dalle'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(mockEnableChecker).toHaveBeenCalledTimes(2);
+      expect(result.tools).toBeUndefined();
+      expect(result.enabledToolIds).toEqual([]);
+      expect(result.filteredTools).toEqual([
+        { id: 'lobe-web-browsing', reason: 'disabled' },
+        { id: 'dalle', reason: 'disabled' },
+      ]);
+    });
+
+    it('should not call enableChecker when FC is not supported', () => {
+      const mockEnableChecker = vi.fn().mockReturnValue(true);
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        enableChecker: mockEnableChecker,
+        functionCallChecker: () => false,
+      });
+
+      const result = engine.generateToolsDetailed({
+        toolIds: ['lobe-web-browsing', 'dalle'],
+        model: 'gpt-5-chat-latest',
+        provider: 'openai',
+      });
+
+      expect(mockEnableChecker).not.toHaveBeenCalled();
+      expect(result.tools).toBeUndefined();
+      expect(result.enabledToolIds).toEqual([]);
+      expect(result.filteredTools).toEqual([
+        { id: 'lobe-web-browsing', reason: 'incompatible' },
+        { id: 'dalle', reason: 'incompatible' },
+      ]);
+    });
   });
 
   describe('plugin management', () => {

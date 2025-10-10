@@ -3,8 +3,8 @@
     "title": "Modelen"
   },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
-  "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
-  "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
+  "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
+  "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agents": "Assistent",
   "artifact": {
     "generating": "Genereren",

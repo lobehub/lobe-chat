@@ -45,7 +45,7 @@ jobs:
         run: bun run --filter @lobechat/${{ matrix.package }} test:coverage
 
       - name: Upload ${{ matrix.package }} coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
@@ -80,7 +80,7 @@ jobs:
         run: bun run --filter ${{ matrix.package }} test:coverage
 
       - name: Upload ${{ matrix.package }} coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
@@ -113,7 +113,7 @@ jobs:
         run: bun run test-app:coverage
 
       - name: Upload App Coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/app/lcov.info
@@ -174,7 +174,7 @@ jobs:
           APP_URL: https://home.com
 
       - name: Upload Database coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/database/coverage/lcov.info

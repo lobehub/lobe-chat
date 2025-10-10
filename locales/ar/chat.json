@@ -3,8 +3,8 @@
     "title": "النموذج"
   },
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
-  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
-  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
+  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
+  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agents": "مساعد",
   "artifact": {
     "generating": "جاري الإنشاء",
