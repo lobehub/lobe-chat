@@ -288,7 +288,7 @@
     "zustand-utils": "^2.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
+    "@commitlint/cli": "^20.0.0",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.19.0",
     "@lobechat/types": "workspace:*",
