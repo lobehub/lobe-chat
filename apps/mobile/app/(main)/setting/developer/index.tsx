@@ -55,11 +55,7 @@ export default function DeveloperScreen() {
   };
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('developer.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('developer.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem
