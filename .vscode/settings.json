@@ -1,8 +1,5 @@
 {
-  "cSpell.words": [
-    "hnsw",
-    "timestamptz"
-  ],
+  "cSpell.words": ["hnsw", "lobechat", "timestamptz"],
   "editor.codeActionsOnSave": {
     "source.addMissingImports": "explicit",
     "source.fixAll.eslint": "explicit",
