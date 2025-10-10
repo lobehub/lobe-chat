@@ -100,6 +100,12 @@
       "title": "Cancella dati di autenticazione"
     },
     "failurePrefix": "Operazione fallita: ",
+    "mode": {
+      "already": "Sei già in modalità sviluppatore",
+      "enabled": "La modalità sviluppatore è attivata",
+      "remaining": "Tocca ancora {{count}} volte per attivare la modalità sviluppatore",
+      "title": "Modalità sviluppatore"
+    },
     "refreshToken": {
       "expire": {
         "success": "Il token di aggiornamento è stato immediatamente invalidato",
@@ -125,12 +131,6 @@
       "title": "Segui sistema"
     },
     "title": "Impostazioni lingua"
-  },
-  "mode": {
-    "already": "Sei già in modalità sviluppatore",
-    "enabled": "Modalità sviluppatore attivata",
-    "remaining": "Tocca ancora {{count}} volte per attivare la modalità sviluppatore",
-    "title": "Modalità sviluppatore"
   },
   "openai": "Impostazioni OpenAI",
   "openaiSettings": {

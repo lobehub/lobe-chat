@@ -3,6 +3,7 @@ export default {
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentDefaultMessageWithoutEdit: '你好，我是 **{{name}}**，让我们开始对话吧！',
+  agentList: '助手列表',
   agentRoleEdit: {
     cancel: '取消',
     confirm: '确认',
@@ -15,7 +16,6 @@ export default {
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   copyFailed: '复制失败',
   defaultAgent: '自定义助手',
-  defaultList: '默认列表',
   deleteMessageConfirm: '确定要删除这条消息吗？',
   history: '对话历史',
   inbox: {
@@ -31,7 +31,7 @@ export default {
     createFirst: '创建您的第一个聊天会话',
     empty: '暂无会话',
     search: {
-      placeholder: '搜索会话',
+      placeholder: '搜索助手...',
     },
     title: '随便聊聊',
   },

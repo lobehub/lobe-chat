@@ -2,6 +2,7 @@
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في المحادثة معي فورًا، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لتحديث معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، هيا نبدأ المحادثة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، هيا نبدأ المحادثة!",
+  "agentList": "قائمة المساعدين",
   "agentRoleEdit": {
     "cancel": "إلغاء",
     "confirm": "تأكيد",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد ولن يمكن استعادته بعد الحذف، يرجى تأكيد العملية.",
   "copyFailed": "فشل النسخ",
   "defaultAgent": "مساعد مخصص",
-  "defaultList": "القائمة الافتراضية",
   "deleteMessageConfirm": "هل أنت متأكد من حذف هذه الرسالة؟",
   "history": "سجل المحادثات",
   "inbox": {
