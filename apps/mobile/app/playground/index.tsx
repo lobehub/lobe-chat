@@ -151,6 +151,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'form': {
+        router.push('/playground/components/form');
+
+        break;
+      }
       case 'flexbox': {
         router.push('/playground/components/flexbox');
 

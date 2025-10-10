@@ -10,7 +10,6 @@ import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
 import { isDev } from '@/utils/env';
 
-import NewAgentBtn from '../chat/actions/NewAgentBtn';
 import Footer from './components/Footer';
 import SessionList from './components/SessionList';
 import { useStyles } from './style';
@@ -52,7 +51,6 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
               <Link asChild href="/discover/assistant">
                 <ActionIcon icon={CompassIcon} />
               </Link>
-              <NewAgentBtn />
             </Space>
           }
           left={<Text style={styles.headerTitle}>LobeChat</Text>}

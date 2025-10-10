@@ -1,5 +1,5 @@
-import { OFFICIAL_URL } from '@/_const/url';
 import { AuthConfig } from '@/_types/user';
+import { DEFAULT_SERVER_URL, getServerUrl } from '@/config/server';
 import { isDev } from '@/utils/env';
 
 /**
@@ -13,7 +13,7 @@ export const authConfig: AuthConfig = {
     prompt: 'consent',
   },
   clientId: process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID || 'lobehub-mobile',
-  issuer: process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL,
+  issuer: DEFAULT_SERVER_URL,
   redirectUri: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_URI || 'com.lobehub.app://auth/callback',
   scopes: ['openid', 'profile', 'email', 'offline_access'],
 };
@@ -33,7 +33,14 @@ export const devAuthConfig: AuthConfig = {
  * 获取当前环境的认证配置
  */
 export const getAuthConfig = (): AuthConfig => {
-  return isDev ? devAuthConfig : authConfig;
+  const baseConfig = isDev ? devAuthConfig : authConfig;
+  const issuer = getServerUrl();
+
+  return {
+    ...baseConfig,
+    additionalParameters: { ...baseConfig.additionalParameters },
+    issuer,
+  };
 };
 
 /**
