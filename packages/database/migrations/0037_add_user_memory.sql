@@ -11,7 +11,7 @@ CREATE TABLE "user_memories" (
 	"details_vector_1024" vector(1024),
 	"status" text,
 	"accessed_count" bigint DEFAULT 0,
-	"last_accessed_at" timestamp with time zone now() NOT NULL,
+	"last_accessed_at" timestamp with time zone NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
