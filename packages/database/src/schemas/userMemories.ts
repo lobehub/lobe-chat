@@ -128,7 +128,6 @@ export const userMemoriesPreferences = pgTable(
   ],
 );
 
-// 身份/角色记忆表
 export const userMemoriesIdentities = pgTable(
   'user_memories_identities',
   {
@@ -159,7 +158,6 @@ export const userMemoriesIdentities = pgTable(
   ],
 );
 
-// 经验/体验记忆表
 export const userMemoriesExperiences = pgTable(
   'user_memories_experiences',
   {
@@ -204,7 +202,6 @@ export const userMemoriesExperiences = pgTable(
   ],
 );
 
-// 类型定义
 export type UserMemoryItem = typeof userMemories.$inferSelect;
 export type NewUserMemory = typeof userMemories.$inferInsert;
 
