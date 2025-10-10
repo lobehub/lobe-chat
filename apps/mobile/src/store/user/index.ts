@@ -7,6 +7,7 @@ import type { AuthState, Token, User } from '@/_types/user';
 import { getAuthConfig } from '@/config/auth';
 import { OAuthService } from '@/services/_auth/authService';
 import { TokenStorage } from '@/services/_auth/tokenStorage';
+import { useSettingStore } from '@/store/setting';
 import { authLogger } from '@/utils/logger';
 
 interface UserStore extends AuthState {
@@ -281,6 +282,15 @@ useUserStore.subscribe(
     }
   },
 );
+
+useSettingStore.subscribe((state, previousState) => {
+  if (state.customServerUrl === previousState.customServerUrl) return;
+
+  const { authService } = useUserStore.getState();
+
+  authService.updateConfig(getAuthConfig());
+  authLogger.info('Auth service config refreshed after server URL change');
+});
 
 // 导出 store 的选择器 - 使用 useMemo 稳定返回的对象
 export const useAuth = () => {

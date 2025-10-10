@@ -10,6 +10,8 @@ export { default as ColorScales } from './ColorScales';
 export { default as ColorSwatches } from './ColorSwatches';
 export { default as Flexbox, type FlexboxProps } from './Flexbox';
 export { default as FluentEmoji } from './FluentEmoji';
+export { default as Form } from './Form';
+export * from './Form';
 export { FullWindowOverlay } from './FullWindowOverlay/FullWindowOverlay';
 export { default as GitHubAvatar } from './GithubAvatar';
 export { default as Highlighter } from './Highlighter';
