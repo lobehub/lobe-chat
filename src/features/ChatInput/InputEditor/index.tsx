@@ -12,7 +12,7 @@ import {
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
 import { combineKeys } from '@lobehub/ui';
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
 import { useUserStore } from '@/store/user';
@@ -54,6 +54,32 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       window.removeEventListener('beforeunload', fn);
     };
   }, [state.isEmpty]);
+
+  const enableMarkdown = useUserStore(preferenceSelectors.inputMarkdownRender);
+  const plugins = useMemo(
+    () =>
+      !enableMarkdown
+        ? undefined
+        : [
+            ReactListPlugin,
+            ReactLinkPlugin,
+            ReactCodePlugin,
+            ReactCodeblockPlugin,
+            ReactHRPlugin,
+            ReactTablePlugin,
+            Editor.withProps(ReactMathPlugin, {
+              renderComp: expand
+                ? undefined
+                : (props) => (
+                    <FloatMenu
+                      {...props}
+                      getPopupContainer={() => (slashMenuRef as any)?.current}
+                    />
+                  ),
+            }),
+          ],
+    [enableMarkdown],
+  );
 
   return (
     <Editor
@@ -109,21 +135,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         }
       }}
       placeholder={<Placeholder />}
-      plugins={[
-        ReactListPlugin,
-        ReactLinkPlugin,
-        ReactCodePlugin,
-        ReactCodeblockPlugin,
-        ReactHRPlugin,
-        ReactTablePlugin,
-        Editor.withProps(ReactMathPlugin, {
-          renderComp: expand
-            ? undefined
-            : (props) => (
-                <FloatMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
-              ),
-        }),
-      ]}
+      plugins={plugins}
       slashOption={{
         items: slashItems,
         renderComp: expand
