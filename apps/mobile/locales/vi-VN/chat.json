@@ -2,6 +2,7 @@
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay hoặc đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}, hãy bắt đầu cuộc trò chuyện nhé!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, hãy bắt đầu cuộc trò chuyện nhé!",
+  "agentList": "Danh sách trợ lý",
   "agentRoleEdit": {
     "cancel": "Hủy",
     "confirm": "Xác nhận",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận thao tác của bạn",
   "copyFailed": "Sao chép thất bại",
   "defaultAgent": "Trợ lý tùy chỉnh",
-  "defaultList": "Danh sách mặc định",
   "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
   "history": "Lịch sử trò chuyện",
   "inbox": {

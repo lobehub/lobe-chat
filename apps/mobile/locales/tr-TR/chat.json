@@ -2,6 +2,7 @@
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilir veya [Asistan Ayarları]({{url}}) bölümüne giderek bilgilerimi güncelleyebilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, ben **{{name}}**, {{systemRole}}. Haydi sohbetimize başlayalım!",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Haydi sohbetimize başlayalım!",
+  "agentList": "Asistan Listesi",
   "agentRoleEdit": {
     "cancel": "İptal",
     "confirm": "Onayla",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "Bu asistan silinecek ve geri alınamayacak, lütfen işleminizi onaylayın",
   "copyFailed": "Kopyalama başarısız oldu",
   "defaultAgent": "Özel Asistan",
-  "defaultList": "Varsayılan Liste",
   "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
   "history": "Sohbet Geçmişi",
   "inbox": {

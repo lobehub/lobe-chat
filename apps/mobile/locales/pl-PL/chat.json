@@ -2,6 +2,7 @@
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [Ustawienia asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**, zacznijmy rozmowę!",
+  "agentList": "Lista asystentów",
   "agentRoleEdit": {
     "cancel": "Anuluj",
     "confirm": "Potwierdź",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "Asystent zostanie usunięty i nie będzie można go odzyskać, potwierdź swoją operację",
   "copyFailed": "Kopiowanie nie powiodło się",
   "defaultAgent": "Niestandardowy asystent",
-  "defaultList": "Domyślna lista",
   "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
   "history": "Historia rozmów",
   "inbox": {
