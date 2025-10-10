@@ -5,9 +5,6 @@ import { FlexboxProps } from 'react-layout-kit';
 
 export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange'> {
   aboveMessage?: ReactNode;
-  /**
-   * @description Actions to be displayed in the chat item
-   */
   actions?: ReactNode;
   actionsWrapWidth?: number;
   /**
