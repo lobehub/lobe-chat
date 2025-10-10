@@ -14,7 +14,6 @@ export interface CapsuleTabsProps {
   items: CapsuleTabItem[];
   onSelect: (key: string) => void;
   selectedKey: string;
-  showsHorizontalScrollIndicator?: boolean;
   size?: CapsuleTabsSize;
   style?: StyleProp<ViewStyle>;
 }
