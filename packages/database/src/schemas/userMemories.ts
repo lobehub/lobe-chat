@@ -19,7 +19,7 @@ export const userMemories = pgTable(
   'user_memories',
   {
     id: text('id')
-      .$defaultFn(() => idGenerator('messages'))
+      .$defaultFn(() => idGenerator('memory'))
       .primaryKey(),
 
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
@@ -37,7 +37,7 @@ export const userMemories = pgTable(
     status: text('status'),
 
     accessedCount: bigint('accessed_count', { mode: 'number' }).default(0),
-    lastAccessedAt: timestamptz('last_accessed_at').notNull().defaultNow(),
+    lastAccessedAt: timestamptz('last_accessed_at').notNull(),
 
     ...timestamps,
   },
