@@ -119,7 +119,10 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  createServerConfigStore().setState({ featureFlags: { edit_agent: true } });
+  const store = createServerConfigStore();
+  store.setState((state) => ({
+    featureFlags: { ...state.featureFlags, isAgentEditable: true },
+  }));
 });
 
 describe('chatSelectors', () => {

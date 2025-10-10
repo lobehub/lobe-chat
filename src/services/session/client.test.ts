@@ -1,5 +1,5 @@
 import { eq, not } from 'drizzle-orm';
-import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Mock, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB, initializeDB } from '@/database/client/db';
@@ -15,6 +15,8 @@ import {
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
+import { setupPgliteFetchMock } from '~test-utils';
+
 import { ClientService } from './client';
 
 const userId = 'message-db';
@@ -22,6 +24,16 @@ const sessionService = new ClientService(userId);
 
 const mockSessionId = 'mock-session-id';
 const mockAgentId = 'agent-id';
+
+let restoreFetch: (() => void) | undefined;
+
+beforeAll(() => {
+  restoreFetch = setupPgliteFetchMock();
+});
+
+afterAll(() => {
+  restoreFetch?.();
+});
 
 // Mock data
 beforeEach(async () => {

@@ -1,5 +1,9 @@
+import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 import { PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
+import { vi } from 'vitest';
 
 // 全局的 SWR 配置
 const swrConfig = {
@@ -20,6 +24,16 @@ interface TestServiceOptions {
 }
 
 const builtinSkipProps = new Set(['userId']);
+
+const toResponse = async (bufferPromise: Promise<Buffer>) => {
+  const buffer = await bufferPromise;
+  const length = buffer.byteLength ?? buffer.length ?? 0;
+  return new Response(buffer, {
+    headers: {
+      'Content-Length': length.toString(),
+    },
+  });
+};
 
 export const testService = (ServiceClass: new () => any, options: TestServiceOptions = {}) => {
   const { checkAsync = true, skipMethods = ['userId'], extraChecks } = options;
@@ -54,4 +68,46 @@ export const testService = (ServiceClass: new () => any, options: TestServiceOpt
       });
     });
   });
+};
+
+export const setupPgliteFetchMock = () => {
+  const require = createRequire(import.meta.url);
+  const pgliteEntryPath = require.resolve('@electric-sql/pglite');
+  const pgliteDir = dirname(pgliteEntryPath);
+
+  const readBinary = (filename: string) => readFile(join(pgliteDir, filename));
+
+  const wasmPromise = readBinary('postgres.wasm');
+  const dataPromise = readBinary('postgres.data');
+  const vectorPromise = readBinary('vector.tar.gz');
+
+  const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: any) => {
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.href
+          : (input && (input as Request).url) || '';
+
+    if (typeof url === 'string') {
+      if (url.includes('postgres.wasm')) return toResponse(wasmPromise);
+      if (url.includes('postgres.data')) return toResponse(dataPromise);
+      if (url.includes('vector.tar.gz')) return toResponse(vectorPromise);
+    }
+
+    return new Response(
+      JSON.stringify({
+        mocked: true,
+        url,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      },
+    );
+  });
+
+  return () => {
+    fetchSpy.mockRestore();
+  };
 };

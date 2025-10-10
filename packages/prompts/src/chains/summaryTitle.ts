@@ -1,7 +1,26 @@
+import { ChatMessage } from '@/types/message/chat';
 import { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 
+const isChatMessage = (message: ChatMessage | OpenAIChatMessage): message is ChatMessage =>
+  'createdAt' in message;
+
+const normalizeMessages = (messages: (ChatMessage | OpenAIChatMessage)[]): OpenAIChatMessage[] =>
+  messages.map((message) => {
+    if (isChatMessage(message)) {
+      const role = message.role === 'supervisor' ? 'assistant' : message.role;
+
+      return {
+        content: message.content,
+        role,
+        tool_calls: message.tools,
+      } as OpenAIChatMessage;
+    }
+
+    return message;
+  });
+
 export const chainSummaryTitle = (
-  messages: OpenAIChatMessage[],
+  messages: (ChatMessage | OpenAIChatMessage)[],
   locale: string,
 ): Partial<ChatStreamPayload> => ({
   messages: [

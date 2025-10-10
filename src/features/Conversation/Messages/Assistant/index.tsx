@@ -200,7 +200,6 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
             ) : (
               <MessageContent
                 editing={editing}
-                id={id}
                 markdownProps={markdownProps}
                 message={message}
                 messageExtra={

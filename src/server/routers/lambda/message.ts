@@ -63,7 +63,13 @@ export const messageRouter = router({
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.messageModel.create(input as any);
+      // Ensure group message does not populate sessionId
+      const normalized = { ...input } as any;
+      if (normalized.groupId) {
+        normalized.sessionId = null;
+      }
+
+      const data = await ctx.messageModel.create(normalized as any);
 
       return data.id;
     }),
@@ -93,6 +99,7 @@ export const messageRouter = router({
     .input(
       z.object({
         current: z.number().optional(),
+        groupId: z.string().nullable().optional(),
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
@@ -139,12 +146,28 @@ export const messageRouter = router({
   removeMessagesByAssistant: messageProcedure
     .input(
       z.object({
+        groupId: z.string().nullable().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessagesBySession(input.sessionId, input.topicId);
+      return ctx.messageModel.deleteMessagesBySession(
+        input.sessionId,
+        input.topicId,
+        input.groupId,
+      );
+    }),
+
+  removeMessagesByGroup: messageProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);
     }),
 
   searchMessages: messageProcedure

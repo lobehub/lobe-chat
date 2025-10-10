@@ -4,7 +4,6 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
-  "editor.formatOnSave": true,
   // don't show errors, but fix when save and git pre commit
   "eslint.rules.customizations": [
     { "rule": "import/order", "severity": "off" },
@@ -34,7 +33,7 @@
     // make stylelint work with tsx antd-style css template string
     "typescriptreact"
   ],
-  "vitest.maximumConfigs": 20,
+  "vitest.maximumConfigs": 6,
   "workbench.editor.customLabels.patterns": {
     "**/app/**/[[]*[]]/[[]*[]]/page.tsx": "${dirname(2)}/${dirname(1)}/${dirname} • page component",
     "**/app/**/[[]*[]]/page.tsx": "${dirname(1)}/${dirname} • page component",
@@ -59,9 +58,9 @@
     "**/src/**/route.ts": "${dirname(1)}/${dirname} • route",
     "**/src/**/index.tsx": "${dirname} • component",
 
-    "**/packages/database/src/repositories/*/index.ts": "${dirname} • db repository",
-    "**/packages/database/src/models/*.ts": "${filename} • db model",
-    "**/packages/database/src/schemas/*.ts": "${filename} • db schema",
+    "**/src/database/repositories/*/index.ts": "${dirname} • db repository",
+    "**/src/database/models/*.ts": "${filename} • db model",
+    "**/src/database/schemas/*.ts": "${filename} • db schema",
 
     "**/src/services/*.ts": "${filename} • service",
     "**/src/services/*/client.ts": "${dirname} • client service",

@@ -109,7 +109,6 @@ const UserMessage = memo<UserMessageProps>((props) => {
           <Flexbox flex={1} style={{ minWidth: 0 }}>
             <MessageContent
               editing={editing}
-              id={id}
               markdownProps={markdownProps}
               message={content}
               messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}

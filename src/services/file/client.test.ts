@@ -1,10 +1,12 @@
 import { eq } from 'drizzle-orm';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { files, globalFiles, users } from '@/database/schemas';
 import { clientS3Storage } from '@/services/file/ClientS3';
 import { UploadFileParams } from '@/types/files';
+
+import { setupPgliteFetchMock } from '~test-utils';
 
 import { ClientService } from './client';
 
@@ -18,6 +20,16 @@ const mockFile = {
   size: 1,
   url: '',
 };
+
+let restoreFetch: (() => void) | undefined;
+
+beforeAll(() => {
+  restoreFetch = setupPgliteFetchMock();
+});
+
+afterAll(() => {
+  restoreFetch?.();
+});
 
 beforeEach(async () => {
   await initializeDB();

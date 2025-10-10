@@ -6,7 +6,7 @@ import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { isDesktop } from '@/const/version';
+import { isDeprecatedEdition, isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
@@ -23,8 +23,11 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
-import type { ChatStreamPayload } from '@/types/openai/chat';
-import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
+import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
+import {
+  fetchWithDesktopRemoteRPC,
+  fetchWithInvokeStream,
+} from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import {
   FetchSSEOptions,
@@ -45,6 +48,10 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   messages: ChatMessage[];
 }
 
+type ChatStreamInputParams = Partial<Omit<ChatStreamPayload, 'messages'>> & {
+  messages?: (ChatMessage | OpenAIChatMessage)[];
+};
+
 interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
   onError?: (e: Error, rawError?: any) => void;
@@ -56,7 +63,7 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
   /**
    * 请求对象
    */
-  params: Partial<ChatStreamPayload>;
+  params: ChatStreamInputParams;
   trace?: TracePayload;
 }
 
@@ -338,6 +345,131 @@ class ChatService {
       responseAnimation: mergedResponseAnimation,
       signal,
     });
+  };
+
+  // TODO Currently not working, still using streaming completion
+  getStructuredCompletion = async <T = unknown>(
+    params: Partial<ChatStreamPayload>,
+    options?: FetchOptions,
+  ): Promise<T> => {
+    const { signal } = options ?? {};
+    const mappedTrace = this.mapTrace(options?.trace, TraceTagMap.Chat);
+
+    const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    const providersWithDeploymentName = [
+      ModelProvider.Azure,
+      ModelProvider.Volcengine,
+      ModelProvider.AzureAI,
+      ModelProvider.Qwen,
+    ] as string[];
+
+    if (providersWithDeploymentName.includes(provider)) {
+      model = findDeploymentName(model, provider);
+    }
+
+    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
+      getAiInfraStoreState(),
+    )
+      ? 'responses'
+      : undefined;
+
+    const payload = merge(
+      {
+        model: DEFAULT_AGENT_CONFIG.model,
+        responseMode: 'json',
+        stream: false,
+        ...DEFAULT_AGENT_CONFIG.params,
+      },
+      { ...res, apiMode, model },
+    ) as Partial<ChatStreamPayload>;
+
+    payload.stream = false;
+    payload.responseMode = 'json';
+    delete payload.plugins;
+    delete payload.tools;
+    delete payload.tool_choice;
+
+    const traceHeader = createTraceHeader(mappedTrace);
+
+    const headers = await createHeaderWithAuth({
+      headers: { 'Content-Type': 'application/json', ...traceHeader },
+      provider,
+    });
+
+    let sdkType = provider;
+    const isBuiltin = Object.values(ModelProvider).includes(provider as any);
+
+    if (!isDeprecatedEdition && !isBuiltin) {
+      const providerConfig =
+        aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
+      sdkType = providerConfig?.settings.sdkType || 'openai';
+    }
+
+    const requestInit = {
+      body: JSON.stringify(payload),
+      headers,
+      method: 'POST',
+      signal,
+    };
+
+    const url = API_ENDPOINTS.chat(sdkType);
+
+    const enableClientRuntime = !isDesktop && isEnableFetchOnClient(provider);
+
+    const executeFetch = async () => {
+      if (enableClientRuntime) {
+        try {
+          return await this.fetchOnClient({ payload, provider, runtimeProvider: sdkType, signal });
+        } catch (e) {
+          const {
+            errorType = ChatErrorType.BadRequest,
+            error: errorContent,
+            ...rest
+          } = e as ChatCompletionErrorPayload;
+
+          const error = errorContent || e;
+          console.error(`Route: [${provider}] ${errorType}:`, error);
+
+          return createErrorResponse(errorType, { error, ...rest, provider });
+        }
+      }
+
+      const fetcher = isDesktop ? fetchWithDesktopRemoteRPC : fetch;
+
+      return fetcher(url, requestInit);
+    };
+
+    try {
+      const response = await executeFetch();
+
+      if (!response.ok) {
+        const error = await getMessageError(response);
+        options?.onErrorHandle?.(error);
+
+        throw error;
+      }
+
+      const traceId = getTraceId(response);
+      const data = (await response.json()) as T;
+
+      if (options?.onFinish) {
+        await options.onFinish('', { traceId, type: 'done', usage: (data as any)?.usage });
+      }
+
+      return data;
+    } catch (error) {
+      if (options?.onErrorHandle && !(error as any)?.type) {
+        options.onErrorHandle({
+          message: (error as Error).message,
+          type: ChatErrorType.UnknownChatFetchError,
+        } as any);
+      }
+
+      throw error;
+    }
   };
 
   /**

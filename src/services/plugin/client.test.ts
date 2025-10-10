@@ -1,11 +1,13 @@
 import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { userInstalledPlugins, users } from '@/database/schemas';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
+
+import { setupPgliteFetchMock } from '~test-utils';
 
 import { ClientService } from './client';
 import { InstallPluginParams } from './type';
@@ -14,6 +16,16 @@ import { InstallPluginParams } from './type';
 
 const userId = 'message-db';
 const pluginService = new ClientService(userId);
+
+let restoreFetch: (() => void) | undefined;
+
+beforeAll(() => {
+  restoreFetch = setupPgliteFetchMock();
+});
+
+afterAll(() => {
+  restoreFetch?.();
+});
 
 // Mock data
 beforeEach(async () => {

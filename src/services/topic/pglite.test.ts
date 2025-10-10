@@ -1,9 +1,11 @@
 import { eq } from 'drizzle-orm';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import { sessions, topics, users } from '@/database/schemas';
 import { ChatTopic } from '@/types/topic';
+
+import { setupPgliteFetchMock } from '~test-utils';
 
 import { ClientService } from './client';
 
@@ -18,6 +20,16 @@ const mockTopic = {
 };
 
 const topicService = new ClientService(userId);
+
+let restoreFetch: (() => void) | undefined;
+
+beforeAll(() => {
+  restoreFetch = setupPgliteFetchMock();
+});
+
+afterAll(() => {
+  restoreFetch?.();
+});
 
 beforeEach(async () => {
   await initializeDB();
@@ -64,7 +76,7 @@ describe('TopicService', () => {
     // Example for getTopics
     it('should query topics with given parameters', async () => {
       // Setup
-      const queryParams = { sessionId };
+      const queryParams = { containerId: sessionId };
 
       // Execute
       const data = await topicService.getTopics(queryParams);

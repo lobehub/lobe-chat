@@ -16,6 +16,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import AssistantMessage from './Assistant';
+import SupervisorMessage from './Supervisor';
 import UserMessage from './User';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -122,6 +123,10 @@ const Item = memo<ChatListItemProps>(
 
         case 'assistant': {
           return <AssistantMessage {...item} disableEditing={disableEditing} index={index} />;
+        }
+
+        case 'supervisor': {
+          return <SupervisorMessage {...item} disableEditing={disableEditing} index={index} />;
         }
       }
 
