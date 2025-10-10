@@ -285,8 +285,7 @@ describe('LobeBedrockAI', () => {
               anthropic_version: 'bedrock-2023-05-31',
               max_tokens: 4096,
               messages: [{ content: 'Hello', role: 'user' }],
-              temperature: 0.4, // temperature / 2
-              top_p: undefined, // omitted due to conflict
+              temperature: 0.4, // temperature / 2, top_p omitted due to conflict
             }),
             contentType: 'application/json',
             modelId: 'anthropic.claude-opus-4-1-20250805-v1:0',
@@ -318,8 +317,7 @@ describe('LobeBedrockAI', () => {
               anthropic_version: 'bedrock-2023-05-31',
               max_tokens: 4096,
               messages: [{ content: 'Hello', role: 'user' }],
-              temperature: undefined, // omitted since not provided
-              top_p: 0.9,
+              top_p: 0.9, // temperature omitted since not provided
             }),
             contentType: 'application/json',
             modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
@@ -386,8 +384,7 @@ describe('LobeBedrockAI', () => {
               anthropic_version: 'bedrock-2023-05-31',
               max_tokens: 4096,
               messages: [{ content: 'Hello', role: 'user' }],
-              temperature: 0.3, // temperature / 2
-              top_p: undefined, // omitted due to conflict
+              temperature: 0.3, // temperature / 2, top_p omitted due to conflict
             }),
             contentType: 'application/json',
             modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
@@ -420,8 +417,7 @@ describe('LobeBedrockAI', () => {
               anthropic_version: 'bedrock-2023-05-31',
               max_tokens: 4096,
               messages: [{ content: 'Hello', role: 'user' }],
-              temperature: 0.35, // temperature / 2
-              top_p: undefined, // omitted due to conflict
+              temperature: 0.35, // temperature / 2, top_p omitted due to conflict
             }),
             contentType: 'application/json',
             modelId: 'claude-opus-4-1',
