@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
-    "build": "NODE_OPTIONS='--max-old-space-size=2048' next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
