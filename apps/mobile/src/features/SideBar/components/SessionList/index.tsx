@@ -1,7 +1,7 @@
 import { Input, Toast } from '@lobehub/ui-rn';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
+import { Alert, InteractionManager, ScrollView, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { loading } from '@/libs/loading';
@@ -58,9 +58,10 @@ export default function SideBar() {
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
         <Inbox />
-        <View style={styles.header}>
+        {/* Group 功能现在没上，暂时不需要 */}
+        {/* <View style={styles.header}>
           <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
-        </View>
+        </View> */}
         {filteredSessions.map((session) => (
           <ContextMenu.Root key={session.id}>
             <ContextMenu.Trigger>

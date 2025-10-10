@@ -100,6 +100,12 @@
       "title": "清除認證資料"
     },
     "failurePrefix": "操作失敗：",
+    "mode": {
+      "already": "你已處於開發者模式",
+      "enabled": "開發者模式已啟用",
+      "remaining": "再點按 {{count}} 次即可啟用開發者模式",
+      "title": "開發者模式"
+    },
     "refreshToken": {
       "expire": {
         "success": "已使刷新令牌立即過期",
@@ -125,12 +131,6 @@
       "title": "跟隨系統"
     },
     "title": "語言設定"
-  },
-  "mode": {
-    "already": "你已處於開發者模式",
-    "enabled": "開發者模式已啟用",
-    "remaining": "再點按 {{count}} 次即可啟用開發者模式",
-    "title": "開發者模式"
   },
   "openai": "OpenAI 設定",
   "openaiSettings": {

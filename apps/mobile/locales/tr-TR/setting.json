@@ -100,6 +100,12 @@
       "title": "Kimlik Doğrulama Verilerini Temizle"
     },
     "failurePrefix": "İşlem başarısız: ",
+    "mode": {
+      "already": "Geliştirici modundasınız",
+      "enabled": "Geliştirici modu etkinleştirildi",
+      "remaining": "Geliştirici modunu açmak için {{count}} kez daha dokunun",
+      "title": "Geliştirici Modu"
+    },
     "refreshToken": {
       "expire": {
         "success": "Yenileme belirteci hemen geçersiz kılındı",
@@ -125,12 +131,6 @@
       "title": "Sistemi Takip Et"
     },
     "title": "Dil Ayarları"
-  },
-  "mode": {
-    "already": "Geliştirici modundasınız",
-    "enabled": "Geliştirici modu etkinleştirildi",
-    "remaining": "Geliştirici modunu açmak için {{count}} kez daha dokunun",
-    "title": "Geliştirici Modu"
   },
   "openai": "OpenAI Ayarları",
   "openaiSettings": {
