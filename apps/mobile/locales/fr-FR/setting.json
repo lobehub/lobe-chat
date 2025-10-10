@@ -100,6 +100,12 @@
       "title": "Effacer les données d'authentification"
     },
     "failurePrefix": "Échec de l'opération : ",
+    "mode": {
+      "already": "Vous êtes déjà en mode développeur",
+      "enabled": "Le mode développeur est activé",
+      "remaining": "Appuyez encore {{count}} fois pour activer le mode développeur",
+      "title": "Mode développeur"
+    },
     "refreshToken": {
       "expire": {
         "success": "Le jeton de rafraîchissement a été immédiatement expiré",
@@ -125,12 +131,6 @@
       "title": "Suivre le système"
     },
     "title": "Paramètres de langue"
-  },
-  "mode": {
-    "already": "Vous êtes déjà en mode développeur",
-    "enabled": "Le mode développeur est activé",
-    "remaining": "Appuyez encore {{count}} fois pour activer le mode développeur",
-    "title": "Mode développeur"
   },
   "openai": "Paramètres OpenAI",
   "openaiSettings": {

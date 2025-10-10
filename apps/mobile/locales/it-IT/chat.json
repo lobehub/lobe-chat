@@ -2,6 +2,7 @@
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni Assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo la conversazione!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, iniziamo la conversazione!",
+  "agentList": "Elenco degli assistenti",
   "agentRoleEdit": {
     "cancel": "Annulla",
     "confirm": "Conferma",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente, l'operazione è irreversibile. Confermi?",
   "copyFailed": "Copia non riuscita",
   "defaultAgent": "Assistente personalizzato",
-  "defaultList": "Lista predefinita",
   "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
   "history": "Cronologia conversazioni",
   "inbox": {

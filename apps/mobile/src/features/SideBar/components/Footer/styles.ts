@@ -7,11 +7,8 @@ export const useStyles = createStyles(({ token }) => ({
     backdropFilter: 'saturate(150%) blur(10px)',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingSM,
-  },
-  settingsButton: {
-    padding: token.paddingXXS,
+    paddingHorizontal: token.paddingSM,
+    paddingVertical: token.paddingXS,
   },
   userInfo: {
     alignItems: 'center',

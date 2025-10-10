@@ -1,7 +1,7 @@
 import { Input, Toast } from '@lobehub/ui-rn';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
+import { Alert, InteractionManager, ScrollView, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { loading } from '@/libs/loading';
@@ -25,16 +25,29 @@ export default function SideBar() {
   const { isAuthenticated } = useAuth();
   const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
+  const keyword = searchText.trim().toLowerCase();
+  const inboxTitle = t('inbox.title', { ns: 'chat' });
+  const inboxDescription = t('inbox.desc', { ns: 'chat' });
+
+  const shouldShowInbox = useMemo(() => {
+    if (!keyword) return true;
+
+    return (
+      inboxTitle.toLowerCase().includes(keyword) || inboxDescription.toLowerCase().includes(keyword)
+    );
+  }, [inboxDescription, inboxTitle, keyword]);
+
   const filteredSessions = useMemo(() => {
     if (!sessions) return [];
-    const keyword = searchText.toLowerCase();
+    if (!keyword) return sessions;
 
-    return sessions.filter(
-      (session) =>
-        session.meta.title?.toLowerCase().includes(keyword) ||
-        session.meta.description?.toLowerCase().includes(keyword),
-    );
-  }, [searchText, sessions]);
+    return sessions.filter((session) => {
+      const title = session.meta.title?.toLowerCase() || '';
+      const description = session.meta.description?.toLowerCase() || '';
+
+      return title.includes(keyword) || description.includes(keyword);
+    });
+  }, [keyword, sessions]);
 
   if (isLoading) {
     return (
@@ -57,10 +70,11 @@ export default function SideBar() {
 
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
-        <Inbox />
-        <View style={styles.header}>
-          <Text style={styles.headerText}>{t('defaultList', { ns: 'chat' })}</Text>
-        </View>
+        {shouldShowInbox && <Inbox />}
+        {/* Group 功能现在没上，暂时不需要 */}
+        {/* <View style={styles.header}>
+          <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
+        </View> */}
         {filteredSessions.map((session) => (
           <ContextMenu.Root key={session.id}>
             <ContextMenu.Trigger>
