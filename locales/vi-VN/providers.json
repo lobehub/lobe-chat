@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong dẫn đầu, kiến tạo cơ sở hạ tầng thị giác cho ngày mai."
   },
+  "cerebras": {
+    "description": "Cerebras là một nền tảng suy luận AI dựa trên hệ thống chuyên dụng CS-3, được thiết kế để cung cấp dịch vụ LLM nhanh nhất thế giới, phản hồi theo thời gian thực và thông lượng cao, nhằm loại bỏ độ trễ và tăng tốc các quy trình làm việc AI phức tạp như tạo mã theo thời gian thực và các tác vụ đại lý."
+  },
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },

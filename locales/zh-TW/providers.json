@@ -32,6 +32,9 @@
   "bfl": {
     "description": "領先的前沿人工智慧研究實驗室，打造明日的視覺基礎設施。"
   },
+  "cerebras": {
+    "description": "Cerebras 是一個基於其專用 CS-3 系統的 AI 推理平台，旨在提供全球最快、即時回應、高吞吐量的 LLM 服務，專為消除延遲並加速複雜的 AI 工作流程（如即時程式碼生成與代理任務）而設計。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
   },

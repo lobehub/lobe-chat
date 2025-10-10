@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
   },
+  "glm4.6:355b": {
+    "description": "智譜最新旗艦模型 GLM-4.6 (355B) 在高階編碼、長文本處理、推理與智慧體能力上全面超越前代，特別是在程式設計能力上對齊 Claude Sonnet 4，成為國內頂尖的 Coding 模型。"
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改進的功能，包括卓越的速度、內建工具使用、多模態生成和 100 萬 token 的上下文視窗。"
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "通用即時模型，支援文字與音訊的即時輸入輸出，並支援影像輸入。"
   },
-  "grok-2-1212": {
-    "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
-  },
   "grok-2-image-1212": {
     "description": "我們最新的圖像生成模型可以根據文本提示生成生動逼真的圖像。它在行銷、社交媒體和娛樂等領域的圖像生成方面表現出色。"
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
   },
-  "grok-3-fast": {
-    "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
-  },
   "grok-3-mini": {
-    "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
-  },
-  "grok-3-mini-fast": {
     "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "混元最新版 t1-vision 多模態理解深度思考模型，支持多模態原生長思維鏈，相較上一代預設版本模型全面提升。"
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
+    "description": "混元最新版 t1-vision 視覺深度思考模型，相較於上一版模型在通用圖文問答、視覺定位、OCR、圖表、拍題解題、看圖創作等任務上全面提升，顯著優化了英文與小語種能力。"
   },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Llama 3.2-Vision 指令微調模型針對視覺辨識、圖像推理、圖像描述及回答與圖像相關的常規問題進行了最佳化。"
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B：中大型 Llama 模型，兼顧推理能力與吞吐量。"
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 指令微調模型針對對話場景進行了優化，在常見的行業基準測試中，超越了許多現有的開源聊天模型。"
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick：高效能的 Llama 系列模型，適合高階推理、複雜問題解決與指令跟隨任務。"
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout：高效能的 Llama 系列模型，適用於需高吞吐量與低延遲的場景。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供無與倫比的複雜性處理能力，為高要求項目量身定制。"
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B：小體量、低延遲的 Llama 變體，適合輕量級線上推理與互動場景。"
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "視覺推理模型。支援視覺輸入及思維鏈輸出，繼qvq-max模型後推出的plus版本，相較於qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。"
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B：Qwen 系列在多語言與編碼任務上表現優異，適合中等規模的生產化應用。"
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B：面向程式碼生成與複雜編程任務的長上下文模型。"
   },
   "qwen-coder-plus": {
     "description": "通義千問程式碼模型。"

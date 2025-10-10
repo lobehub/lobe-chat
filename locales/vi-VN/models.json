@@ -1532,6 +1532,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
+  "glm4.6:355b": {
+    "description": "Mô hình hàng đầu mới nhất của Zhipu - GLM-4.6 (355B) vượt trội hoàn toàn so với thế hệ trước về mã hóa nâng cao, xử lý văn bản dài, suy luận và khả năng tác nhân thông minh. Đặc biệt, năng lực lập trình đã đạt đến mức tương đương với Claude Sonnet 4, trở thành mô hình Coding hàng đầu tại Trung Quốc."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash cung cấp các tính năng thế hệ tiếp theo và cải tiến, bao gồm tốc độ vượt trội, sử dụng công cụ tích hợp, tạo đa phương thức và cửa sổ ngữ cảnh 1 triệu token."
   },
@@ -1757,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Mô hình thời gian thực chung, hỗ trợ đầu vào và đầu ra văn bản, âm thanh theo thời gian thực, đồng thời hỗ trợ đầu vào hình ảnh."
   },
-  "grok-2-1212": {
-    "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
-  },
   "grok-2-image-1212": {
     "description": "Mô hình tạo hình ảnh mới nhất của chúng tôi có thể tạo ra hình ảnh sống động và chân thực dựa trên gợi ý văn bản. Nó thể hiện xuất sắc trong các lĩnh vực marketing, mạng xã hội và giải trí."
   },
@@ -1769,13 +1769,7 @@
   "grok-3": {
     "description": "Mô hình chủ lực, xuất sắc trong trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, sở hữu kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
   },
-  "grok-3-fast": {
-    "description": "Mô hình chủ lực, xuất sắc trong trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, sở hữu kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
-  },
   "grok-3-mini": {
-    "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
-  },
-  "grok-3-mini-fast": {
     "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
   },
   "grok-4": {
@@ -1860,7 +1854,7 @@
     "description": "Phiên bản mới nhất của Hunyuan t1-vision là mô hình suy nghĩ sâu đa phương thức, hỗ trợ chuỗi tư duy dài nguyên bản đa phương thức, cải thiện toàn diện so với phiên bản mặc định thế hệ trước."
   },
   "hunyuan-t1-vision-20250916": {
-    "description": "Mô hình suy nghĩ sâu đa phương thức Hunyuan, hỗ trợ chuỗi suy nghĩ dài nguyên bản đa phương thức, chuyên xử lý các tình huống suy luận hình ảnh, cải thiện toàn diện so với mô hình suy nghĩ nhanh trong các bài toán khoa học tự nhiên."
+    "description": "Phiên bản mới nhất của mô hình tư duy thị giác Hunyuan t1-vision đã được nâng cấp toàn diện so với phiên bản trước trong các nhiệm vụ như hỏi đáp hình ảnh, định vị thị giác, OCR, biểu đồ, giải bài tập qua ảnh và sáng tạo từ hình ảnh. Khả năng xử lý tiếng Anh và các ngôn ngữ ít phổ biến cũng được cải thiện rõ rệt."
   },
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
@@ -2021,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Mô hình Llama 3.2-Vision đã được tối ưu hóa để nhận dạng hình ảnh, suy luận hình ảnh, mô tả hình ảnh và trả lời các câu hỏi thông thường liên quan đến hình ảnh."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B: Mô hình Llama cỡ trung, cân bằng giữa khả năng suy luận và hiệu suất xử lý."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương với mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường từ phản hồi của con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn của nó được tối ưu hóa cho đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng kín trong nhiều tiêu chuẩn ngành. Ngày cắt đứt kiến thức là tháng 12 năm 2023."
   },
@@ -2029,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Mô hình Llama 3.3 được tối ưu hóa cho các tình huống đối thoại, và đã vượt qua nhiều mô hình trò chuyện nguồn mở hiện có trong các bài kiểm tra chuẩn ngành phổ biến."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick: Mô hình hiệu suất cao thuộc dòng Llama, phù hợp với các nhiệm vụ suy luận nâng cao, giải quyết vấn đề phức tạp và tuân theo chỉ dẫn."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout: Mô hình hiệu suất cao thuộc dòng Llama, lý tưởng cho các tình huống yêu cầu thông lượng cao và độ trễ thấp."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B cung cấp khả năng xử lý phức tạp vô song, được thiết kế riêng cho các dự án yêu cầu cao."
@@ -2044,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 là mô hình tiên tiến do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho các cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B: Phiên bản Llama nhỏ gọn, độ trễ thấp, phù hợp với các tình huống suy luận trực tuyến nhẹ và tương tác thời gian thực."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 là mô hình tiên tiến do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho các cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
@@ -2641,6 +2647,12 @@
   },
   "qvq-plus": {
     "description": "Mô hình suy luận thị giác. Hỗ trợ đầu vào hình ảnh và đầu ra chuỗi suy nghĩ, phiên bản plus ra mắt sau mô hình qvq-max, với tốc độ suy luận nhanh hơn, hiệu quả và chi phí cân bằng hơn so với qvq-max."
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B: Mô hình dòng Qwen có hiệu suất tốt trong các nhiệm vụ đa ngôn ngữ và lập trình, thích hợp cho các ứng dụng sản xuất quy mô trung bình."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B: Mô hình ngữ cảnh dài dành cho sinh mã và các nhiệm vụ lập trình phức tạp."
   },
   "qwen-coder-plus": {
     "description": "Mô hình mã hóa Tongyi Qianwen."

@@ -32,6 +32,9 @@
   "bfl": {
     "description": "A leading, cutting-edge artificial intelligence research lab building the visual infrastructure of tomorrow."
   },
+  "cerebras": {
+    "description": "Cerebras is an AI inference platform built on its dedicated CS-3 system, designed to deliver the world's fastest, real-time, high-throughput LLM services. It is specifically engineered to eliminate latency and accelerate complex AI workflows such as real-time code generation and agent-based tasks."
+  },
   "cloudflare": {
     "description": "Run serverless GPU-powered machine learning models on Cloudflare's global network."
   },

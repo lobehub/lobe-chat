@@ -1,5 +1,19 @@
 [
   {
+    "children": {
+      "improvements": ["Add delete & regenerate hotkeys."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.2"
+  },
+  {
     "children": {},
     "date": "2025-10-09",
     "version": "1.136.1"
