@@ -1,4 +1,5 @@
 import { CrawlImpl, CrawlSuccessResult } from '../type';
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 import { NetworkConnectionError, PageNotFoundError, TimeoutError } from '../utils/errorType';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { DEFAULT_TIMEOUT, withTimeout } from '../utils/withTimeout';
@@ -37,7 +38,7 @@ export const naive: CrawlImpl = async (url, { filterOptions }) => {
 
   try {
     res = await withTimeout(
-      fetch(url, {
+      ssrfSafeFetch(url, {
         headers: mixinHeaders,
         signal: new AbortController().signal,
       }),
