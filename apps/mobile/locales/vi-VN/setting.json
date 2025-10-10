@@ -100,6 +100,12 @@
       "title": "Xóa dữ liệu xác thực"
     },
     "failurePrefix": "Thao tác thất bại: ",
+    "mode": {
+      "already": "Bạn đã ở chế độ nhà phát triển",
+      "enabled": "Chế độ nhà phát triển đã được bật",
+      "remaining": "Chạm thêm {{count}} lần để bật chế độ nhà phát triển",
+      "title": "Chế độ nhà phát triển"
+    },
     "refreshToken": {
       "expire": {
         "success": "Đã làm cho token làm mới hết hạn ngay lập tức",
@@ -125,12 +131,6 @@
       "title": "Theo hệ thống"
     },
     "title": "Cài đặt ngôn ngữ"
-  },
-  "mode": {
-    "already": "Bạn đã ở chế độ nhà phát triển",
-    "enabled": "Chế độ nhà phát triển đã được bật",
-    "remaining": "Chạm thêm {{count}} lần để bật chế độ nhà phát triển",
-    "title": "Chế độ nhà phát triển"
   },
   "openai": "Cài đặt OpenAI",
   "openaiSettings": {

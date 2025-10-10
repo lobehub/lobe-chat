@@ -70,6 +70,14 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(),
 }));
 
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: jest.fn().mockImplementation(({ children, style }) => {
+    const React = require('react');
+    const { View } = require('react-native');
+    return React.createElement(View, { style }, children);
+  }),
+}));
+
 // Mock React Native modules
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');

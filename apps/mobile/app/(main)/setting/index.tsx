@@ -82,7 +82,7 @@ export default function SettingScreen() {
   }, []);
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title={t('title', { ns: 'setting' })}>
+    <PageContainer showBack title={t('title', { ns: 'setting' })}>
       <ScrollView style={[styles.container]}>
         <SettingGroup>
           <SettingItem

@@ -100,6 +100,12 @@
       "title": "認証データのクリア"
     },
     "failurePrefix": "操作失敗: ",
+    "mode": {
+      "already": "すでに開発者モードです",
+      "enabled": "開発者モードが有効になりました",
+      "remaining": "あと {{count}} 回タップすると開発者モードが有効になります",
+      "title": "開発者モード"
+    },
     "refreshToken": {
       "expire": {
         "success": "リフレッシュ トークンを即時に期限切れにしました",
@@ -125,12 +131,6 @@
       "title": "システムに従う"
     },
     "title": "言語設定"
-  },
-  "mode": {
-    "already": "すでに開発者モードです",
-    "enabled": "開発者モードが有効になりました",
-    "remaining": "あと {{count}} 回タップすると開発者モードが有効になります",
-    "title": "開発者モード"
   },
   "openai": "OpenAI 設定",
   "openaiSettings": {

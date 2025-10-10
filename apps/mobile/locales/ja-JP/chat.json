@@ -2,6 +2,7 @@
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることも、[アシスタント設定]({{url}}) に移動して私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}**、{{systemRole}} です。さあ、会話を始めましょう！",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は **{{name}}** です。さあ、会話を始めましょう！",
+  "agentList": "アシスタントリスト",
   "agentRoleEdit": {
     "cancel": "キャンセル",
     "confirm": "確認",
@@ -14,7 +15,6 @@
   "confirmRemoveSessionItemAlert": "このアシスタントを削除しようとしています。削除すると復元できません。操作を確認してください。",
   "copyFailed": "コピーに失敗しました",
   "defaultAgent": "カスタムアシスタント",
-  "defaultList": "デフォルトリスト",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
   "inbox": {

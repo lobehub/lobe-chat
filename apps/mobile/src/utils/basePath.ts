@@ -1,8 +1,12 @@
-// Mobile端不需要复杂的basePath处理，直接返回原始路径
-import { OFFICIAL_URL } from '@/_const/url';
+import { getServerUrl } from '@/config/server';
 
-const remoteUrl = process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL;
+const ensureLeadingSlash = (path: string): string => {
+  return path.startsWith('/') ? path : `/${path}`;
+};
 
 export const withBasePath = (path: string): string => {
-  return `${remoteUrl}${path}`;
+  const baseUrl = getServerUrl();
+  const normalizedPath = ensureLeadingSlash(path);
+
+  return `${baseUrl}${normalizedPath}`;
 };
