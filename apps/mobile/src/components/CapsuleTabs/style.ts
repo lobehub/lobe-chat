@@ -62,7 +62,7 @@ export const useStyles = createStyles(
         left: 0,
         position: 'absolute',
         top: 0,
-        width: token.paddingXL * 2,
+        width: token.paddingXL,
         zIndex: 1,
       },
       fadeRight: {
@@ -70,7 +70,7 @@ export const useStyles = createStyles(
         position: 'absolute',
         right: 0,
         top: 0,
-        width: token.paddingXL * 2,
+        width: token.paddingXL,
         zIndex: 1,
       },
       scrollView: {

@@ -48,7 +48,7 @@ export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
 
   const animateFade = React.useCallback((fade: Animated.Value, visible: boolean) => {
     Animated.timing(fade, {
-      duration: 200,
+      duration: 50,
       toValue: visible ? 1 : 0,
       useNativeDriver: true,
     }).start();
