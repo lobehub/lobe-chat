@@ -11,4 +11,4 @@ export default {
     },
   },
   title: '实验室',
-} as const;
+};
