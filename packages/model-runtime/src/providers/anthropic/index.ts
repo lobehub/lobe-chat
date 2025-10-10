@@ -268,10 +268,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       // For Opus 4.1 models: prefer temperature over top_p if both are provided
       temperature: isTempAndTopPConflict
         ? shouldSetTemperature
-          ? temperature / 2
+          ? temperature !== undefined ? temperature / 2 : undefined
           : undefined
         : payload.temperature !== undefined
-          ? temperature / 2
+          ? temperature !== undefined ? temperature / 2 : undefined
           : undefined,
       tools: postTools,
       // For Opus 4.1 models: only set top_p if temperature is not set

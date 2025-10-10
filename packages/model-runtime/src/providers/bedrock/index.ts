@@ -182,10 +182,10 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         system: system_message?.content as string,
         temperature: isTempAndTopPConflict
           ? shouldSetTemperature
-            ? temperature / 2
+            ? temperature !== undefined ? temperature / 2 : undefined
             : undefined
           : payload.temperature !== undefined
-            ? temperature / 2
+            ? temperature !== undefined ? temperature / 2 : undefined
             : undefined,
         tools: buildAnthropicTools(tools),
         top_p: isTempAndTopPConflict ? (shouldSetTemperature ? undefined : top_p) : top_p,

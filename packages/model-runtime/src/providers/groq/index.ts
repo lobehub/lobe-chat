@@ -23,7 +23,7 @@ export const LobeGroq = createOpenAICompatibleRuntime({
         ...restPayload,
         stream: payload.stream ?? true,
 
-        temperature: temperature <= 0 ? undefined : temperature,
+        temperature: temperature !== undefined && temperature <= 0 ? undefined : temperature,
       } as any;
     },
   },
