@@ -33,6 +33,7 @@ export const LobeStraicoAI = createOpenAICompatibleRuntime({
       return {
         ...rest,
         model,
+        stream: false,
       } as any;
     },
   },
