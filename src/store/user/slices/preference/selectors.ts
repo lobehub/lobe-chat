@@ -21,8 +21,11 @@ const shouldTriggerFileInKnowledgeBaseTip = (s: UserStore) =>
 const isPreferenceInit = (s: UserStore) => s.isUserStateInit;
 
 export const preferenceSelectors = {
+  enableGroupChat: (s: UserStore) => s.preference.enableGroupChat || false,
   hideSettingsMoveGuide,
   hideSyncAlert,
+  // TODO: 等到 lab 样式搞完再开启
+  inputMarkdownRender: (s: UserStore) => false && !s.preference.disableInputMarkdownRender,
   isPreferenceInit,
   shouldTriggerFileInKnowledgeBaseTip,
   showUploadFileInKnowledgeBaseTip,

@@ -71,7 +71,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -104,7 +104,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -148,7 +148,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i

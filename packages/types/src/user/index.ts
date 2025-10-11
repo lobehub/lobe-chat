@@ -35,6 +35,14 @@ export const UserGuideSchema = z.object({
 export type UserGuide = z.infer<typeof UserGuideSchema>;
 
 export interface UserPreference {
+  /**
+   * disable markdown rendering in chat input editor
+   */
+  disableInputMarkdownRender?: boolean;
+  /**
+   * enable multi-agent group chat mode
+   */
+  enableGroupChat?: boolean;
   guide?: UserGuide;
   hideSyncAlert?: boolean;
   telemetry: boolean | null;
