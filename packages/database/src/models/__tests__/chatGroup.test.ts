@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 
@@ -13,12 +13,24 @@ import {
 } from '../../schemas';
 import { ChatGroupModel } from '../chatGroup';
 import { getTestDB } from './_util';
-
-const serverDB: LobeChatDatabase = await getTestDB();
+import { setupPgliteFetchMock } from '../../../../../tests/utils';
 
 const userId = 'test-user';
 const otherUserId = 'other-user';
-const chatGroupModel = new ChatGroupModel(serverDB, userId);
+let chatGroupModel: ChatGroupModel;
+let serverDB: LobeChatDatabase;
+
+let restoreFetchMock: (() => void) | undefined;
+
+beforeAll(async () => {
+  restoreFetchMock = setupPgliteFetchMock();
+  serverDB = await getTestDB();
+  chatGroupModel = new ChatGroupModel(serverDB, userId);
+});
+
+afterAll(() => {
+  restoreFetchMock?.();
+});
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -197,8 +209,8 @@ describe('ChatGroupModel', () => {
       expect(result?.group.id).toBe('group-with-agents');
       expect(result?.agents).toHaveLength(2);
       // Should be ordered by order field
-      expect(result?.agents[0].id).toBe('agent-1');
-      expect(result?.agents[1].id).toBe('agent-2');
+      expect(result?.agents[0].agentId).toBe('agent-1');
+      expect(result?.agents[1].agentId).toBe('agent-2');
     });
 
     it('should return null for non-existent group', async () => {
@@ -348,7 +360,7 @@ describe('ChatGroupModel', () => {
       expect(result.chatGroupId).toBe('test-group');
       expect(result.agentId).toBe('test-agent');
       expect(result.userId).toBe(userId);
-      expect(result.order).toBe('5');
+      expect(result.order).toBe(5);
       expect(result.role).toBe('moderator');
     });
 
@@ -370,8 +382,8 @@ describe('ChatGroupModel', () => {
 
       const result = await chatGroupModel.addAgentToGroup('test-group-2', 'test-agent-2');
 
-      expect(result.order).toBe('0');
-      expect(result.role).toBe('participant');
+      expect(result.order).toBe(0);
+      expect(result.role).toBe('assistant');
     });
   });
 
@@ -399,10 +411,10 @@ describe('ChatGroupModel', () => {
       ]);
 
       expect(result).toHaveLength(3);
-      expect(result.map((a) => a.id)).toEqual(['agent-1', 'agent-2', 'agent-3']);
+      expect(result.map((a) => a.agentId)).toEqual(['agent-1', 'agent-2', 'agent-3']);
     });
 
-    it('should skip already existing agents', async () => {
+    it('should throw when adding duplicate agents', async () => {
       // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(chatGroups).values({
@@ -424,17 +436,17 @@ describe('ChatGroupModel', () => {
         });
       });
 
-      const result = await chatGroupModel.addAgentsToGroup('existing-agent-group', [
-        'existing-agent',
-        'new-agent',
-      ]);
+      await expect(
+        chatGroupModel.addAgentsToGroup('existing-agent-group', ['existing-agent', 'new-agent']),
+      ).rejects.toThrow();
 
-      // Should only return the new agent
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('new-agent');
+      const groupAgents = await chatGroupModel.getGroupAgents('existing-agent-group');
+
+      expect(groupAgents).toHaveLength(1);
+      expect(groupAgents[0].agentId).toBe('existing-agent');
     });
 
-    it('should return empty array when all agents already exist', async () => {
+    it('should throw when all agents already exist', async () => {
       // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(chatGroups).values({
@@ -456,9 +468,9 @@ describe('ChatGroupModel', () => {
         });
       });
 
-      const result = await chatGroupModel.addAgentsToGroup('all-existing-group', ['existing-only']);
-
-      expect(result).toEqual([]);
+      await expect(
+        chatGroupModel.addAgentsToGroup('all-existing-group', ['existing-only']),
+      ).rejects.toThrow();
     });
 
     it('should throw error for non-existent group', async () => {
@@ -543,7 +555,7 @@ describe('ChatGroupModel', () => {
         role: 'moderator',
       });
 
-      expect(result.order).toBe('5');
+      expect(result.order).toBe(5);
       expect(result.role).toBe('moderator');
       expect(result.updatedAt).toBeInstanceOf(Date);
     });
@@ -661,9 +673,9 @@ describe('ChatGroupModel', () => {
       const result = await chatGroupModel.getGroupAgents('ordered-group');
 
       expect(result).toHaveLength(3);
-      expect(result[0].id).toBe('agent-2'); // order: 1
-      expect(result[1].id).toBe('agent-1'); // order: 2
-      expect(result[2].id).toBe('agent-3'); // order: 3
+      expect(result[0].agentId).toBe('agent-2'); // order: 1
+      expect(result[1].agentId).toBe('agent-1'); // order: 2
+      expect(result[2].agentId).toBe('agent-3'); // order: 3
     });
 
     it('should handle numeric ordering correctly (avoiding lexicographic sorting)', async () => {
@@ -693,9 +705,9 @@ describe('ChatGroupModel', () => {
       expect(result).toHaveLength(3);
       // With integer ordering: 1, 2, 10 (correct)
       // With text ordering it would be: 1, 10, 2 (incorrect lexicographic)
-      expect(result[0].id).toBe('agent-order-1'); // order: 1
-      expect(result[1].id).toBe('agent-order-2'); // order: 2
-      expect(result[2].id).toBe('agent-order-10'); // order: 10
+      expect(result[0].agentId).toBe('agent-order-1'); // order: 1
+      expect(result[1].agentId).toBe('agent-order-2'); // order: 2
+      expect(result[2].agentId).toBe('agent-order-10'); // order: 10
     });
   });
 
@@ -723,7 +735,7 @@ describe('ChatGroupModel', () => {
       const result = await chatGroupModel.getEnabledGroupAgents('enabled-test-group');
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('enabled-agent');
+      expect(result[0].agentId).toBe('enabled-agent');
     });
   });
 
