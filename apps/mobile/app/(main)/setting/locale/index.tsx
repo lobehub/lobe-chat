@@ -31,11 +31,7 @@ export default function LocaleScreen() {
   ];
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('locale.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('locale.title', { ns: 'setting' })}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <SettingGroup>
           {localeOptions.map((option, index) => (

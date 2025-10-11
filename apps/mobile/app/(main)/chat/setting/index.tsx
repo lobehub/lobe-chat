@@ -19,7 +19,7 @@ export default function AgentDetail() {
   const { styles } = useStyles();
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title={t('setting.title', { ns: 'chat' })}>
+    <PageContainer showBack title={t('setting.title', { ns: 'chat' })}>
       <KeyboardAwareScrollView
         bottomOffset={40}
         extraKeyboardSpace={60}

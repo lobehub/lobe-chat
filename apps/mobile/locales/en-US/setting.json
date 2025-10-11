@@ -99,18 +99,6 @@
       "success": "Authentication data cleared",
       "title": "Clear Authentication Data"
     },
-    "customServer": {
-      "current": "Current server address",
-      "description": "Configure a custom server for all requests. Leave empty to restore the official server.",
-      "hint": "Must start with http:// or https://. You may need to log in again after changing it.",
-      "invalid": "Please enter a valid address starting with http:// or https://",
-      "placeholder": "https://your-server.example.com",
-      "reset": "Restore Default",
-      "resetSuccess": "Official server address restored",
-      "save": "Save",
-      "title": "Custom Server Address",
-      "updated": "Custom server address updated"
-    },
     "failurePrefix": "Operation failed: ",
     "mode": {
       "already": "You are already in developer mode",
@@ -127,6 +115,33 @@
         "success": "Invalid refresh token has been written",
         "title": "Invalid Refresh Token"
       }
+    },
+    "selfHostedEntry": {
+      "confirmAction": "Go to login",
+      "confirmDescription": "Enabling this will show the self-hosted setup entry on the login screen and sign you out. Continue to the login screen now?",
+      "confirmResetAction": "Reset and go to login",
+      "confirmResetDescription": "Disabling self-hosted mode will restore the official server address and sign you out. Continue?",
+      "confirmResetTitle": "Disable self-hosted mode",
+      "confirmTitle": "Enable self-hosted login entry",
+      "description": "Control whether the login screen shows the self-hosted instance button",
+      "title": "Show self-hosted login button"
+    },
+    "server": {
+      "confirmDescription": "Changing the server address will log out the current user and require re-login. Do you want to continue?",
+      "confirmTitle": "Confirm Server Switch",
+      "current": "Current Address",
+      "description": "After configuration, all requests will use this server address. Leave blank to revert to the official server.",
+      "group": "Server Configuration",
+      "hint": "Must start with http:// or https://. The app may require re-login.",
+      "invalid": "Please enter a valid address starting with http:// or https://",
+      "notice": "Custom servers will replace the default API endpoint. Please ensure the service is available and compatible with the LobeChat API protocol. Switching may require re-login or app restart.",
+      "noticeTitle": "Please Note Before Switching",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Restore Default",
+      "resetSuccess": "Official server address has been restored",
+      "save": "Save",
+      "title": "Self-Hosted Instance",
+      "updated": "Custom server address has been updated"
     },
     "title": "Developer Options"
   },

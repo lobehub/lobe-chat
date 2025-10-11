@@ -12,7 +12,7 @@ const CustomServerScreen = () => {
   const { styles } = useStyles();
 
   return (
-    <PageContainer showBack title={t('developer.customServer.title', { ns: 'setting' })}>
+    <PageContainer showBack title={t('developer.server.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <CustomServer />
       </View>
