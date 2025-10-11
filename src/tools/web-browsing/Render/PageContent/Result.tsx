@@ -1,7 +1,7 @@
 'use client';
 
 import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
-import { Alert, Highlighter, Icon, Text } from '@lobehub/ui';
+import { Alert, Icon, Text } from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
@@ -51,7 +51,10 @@ const useStyles = createStyles(({ token, css }) => {
     footer: css`
       padding-block: 8px;
       padding-inline: 16px;
+      border-radius: 8px;
+
       text-align: center;
+
       background-color: ${token.colorFillQuaternary};
     `,
     footerText: css`
@@ -91,11 +94,19 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
 
   if ('errorType' in result) {
     return (
-      <Flexbox className={styles.footer} gap={4}>
+      <Flexbox className={styles.footer} gap={8}>
+        <Alert
+          message={
+            <div style={{ textAlign: 'start' }}>{result.errorMessage || result.content}</div>
+          }
+          type={'error'}
+          variant={'borderless'}
+        />
         <div>
           <Descriptions
             classNames={{
               content: styles.footerText,
+              label: styles.footerText,
             }}
             column={1}
             items={[
@@ -107,17 +118,6 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
             size="small"
           />
         </div>
-        <Alert
-          extra={
-            <div style={{ maxWidth: 500, overflowX: 'scroll' }}>
-              <Highlighter language={'json'}>{JSON.stringify(result, null, 2)}</Highlighter>
-            </div>
-          }
-          message={
-            <div style={{ textAlign: 'start' }}>{result.errorMessage || result.content}</div>
-          }
-          type={'error'}
-        />
       </Flexbox>
     );
   }
