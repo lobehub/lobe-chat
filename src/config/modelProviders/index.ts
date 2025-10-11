@@ -42,6 +42,7 @@ import OllamaCloudProvider from './ollamacloud';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
+import PoeProvider from './poe';
 import PPIOProvider from './ppio';
 import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
@@ -89,6 +90,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   TogetherAIProvider.chatModels,
   FireworksAIProvider.chatModels,
   PerplexityProvider.chatModels,
+  PoeProvider.chatModels,
   AnthropicProvider.chatModels,
   HuggingFaceProvider.chatModels,
   XAIProvider.chatModels,
@@ -152,6 +154,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   FireworksAIProvider,
   GroqProvider,
   PerplexityProvider,
+  PoeProvider,
   MistralProvider,
   ModelScopeProvider,
   Ai21Provider,
@@ -242,6 +245,7 @@ export { default as OllamaCloudProviderCard } from './ollamacloud';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
+export { default as PoeProviderCard } from './poe';
 export { default as PPIOProviderCard } from './ppio';
 export { default as QiniuProviderCard } from './qiniu';
 export { default as QwenProviderCard } from './qwen';
