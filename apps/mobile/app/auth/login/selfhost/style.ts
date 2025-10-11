@@ -68,7 +68,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   title: {
     color: token.colorText,
-    fontSize: token.fontSizeHeading1,
+    fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
     marginBottom: token.marginSM,
   },

@@ -116,6 +116,17 @@ export default {
         title: '无效刷新令牌',
       },
     },
+    selfHostedEntry: {
+      confirmAction: '前往登录页',
+      confirmDescription: '启用后将在登录页面展示自托管配置入口，是否退出当前账号并前往登录页？',
+      confirmResetAction: '重置并前往登录',
+      confirmResetDescription:
+        '关闭自部署模式将重置服务器地址为官方实例，并退出当前账号。是否继续？',
+      confirmResetTitle: '关闭自部署模式',
+      confirmTitle: '启用自托管登录入口',
+      description: '控制登录页是否展示自托管实例按钮',
+      title: '开启自部署模式',
+    },
     server: {
       confirmDescription: '修改服务器地址后将会退出当前用户并需要重新登录，是否继续？',
       confirmTitle: '确认切换服务器',
@@ -131,7 +142,7 @@ export default {
       reset: '恢复默认',
       resetSuccess: '已恢复官方服务器地址',
       save: '保存',
-      title: '自定义服务器地址',
+      title: '自部署实例',
       updated: '自定义服务器地址已更新',
     },
     title: '开发者选项',

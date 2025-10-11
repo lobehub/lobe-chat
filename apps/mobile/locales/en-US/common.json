@@ -7,6 +7,7 @@
     "copy": "Copy",
     "delete": "Delete",
     "edit": "Edit",
+    "notNow": "Not Now",
     "regenerate": "Regenerate",
     "retry": "Retry",
     "save": "Save"

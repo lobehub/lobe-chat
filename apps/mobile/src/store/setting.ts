@@ -20,18 +20,19 @@ interface SettingState {
   setFontSize: (size: number) => void;
   setNeutralColor: (color: NeutralColors) => void;
   setPrimaryColor: (color: PrimaryColors) => void;
+  setShowSelfHostedEntry: (enabled: boolean) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
+  showSelfHostedEntry: boolean;
   themeMode: ThemeMode;
 }
 
 export const useSettingStore = createWithEqualityFn<SettingState>()(
   persist(
     (set) => ({
-      
       customServerUrl: null,
 
       // 开发者模式默认只在开发环境开启
-developerMode: isDev,
+      developerMode: isDev,
 
       // 默认字体大小
       fontSize: 14,
@@ -67,9 +68,16 @@ developerMode: isDev,
         set({ primaryColor });
       },
 
+      setShowSelfHostedEntry: (showSelfHostedEntry: boolean) => {
+        set({ showSelfHostedEntry });
+      },
+
       setThemeMode: (themeMode: ThemeMode) => {
         set({ themeMode });
       },
+
+      // 是否显示自托管登录入口, 默认关闭
+      showSelfHostedEntry: false,
 
       themeMode: 'auto',
     }),
