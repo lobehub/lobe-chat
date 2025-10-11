@@ -7,6 +7,7 @@ import type { NextConfig } from 'next';
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
 const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
+const isVercel = process.env.VERCEL === '1';
 // const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 // const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 const shouldUseCSP = process.env.ENABLED_CSP === '1';
@@ -48,6 +49,10 @@ const nextConfig: NextConfig = {
     serverMinification: false,
     webVitalsAttribution: ['CLS', 'LCP'],
     webpackMemoryOptimizations: true,
+    ...(isVercel && {
+      // Disable source maps on Vercel to save memory
+      productionBrowserSourceMaps: false,
+    }),
   },
   async headers() {
     const securityHeaders = [
@@ -278,11 +283,28 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
-  webpack(config) {
+  webpack(config, { isServer }) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
     };
+
+    // Memory optimizations for Vercel
+    if (isVercel) {
+      config.optimization = {
+        ...config.optimization,
+        // Reduce memory usage during build
+minimize: isServer ? false : config.optimization.minimize,
+        
+        moduleIds: 'deterministic',
+      };
+
+      // Limit parallel processing to reduce memory spikes
+      config.parallelism = 1;
+
+      // Disable source maps for Vercel builds
+      config.devtool = false;
+    }
 
     // 开启该插件会导致 pglite 的 fs bundler 被改表
     // if (enableReactScan && !isUsePglite) {

@@ -1,0 +1,44 @@
+# Development files
+.git/
+.github/
+.husky/
+*.log
+*.md
+!README.md
+
+# Tests
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+tests/
+coverage/
+
+# Documentation
+docs/
+*.mdx
+
+# Desktop app
+apps/desktop/
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Scripts (except prebuild)
+scripts/electronWorkflow/
+scripts/cdnWorkflow/
+scripts/changelogWorkflow/
+scripts/docsWorkflow/
+scripts/i18nWorkflow/
+scripts/mdxWorkflow/
+scripts/readmeWorkflow/
+
+# Other
+.cursor/
+.vscode/
+.idea/
+*.sketch
+*.fig
