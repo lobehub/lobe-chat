@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.5"
+  },
+  {
     "children": {
       "fixes": ["Add 'gemini-2.5-flash-image' to disabled models Thinking."]
     },
