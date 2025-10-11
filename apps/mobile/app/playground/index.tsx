@@ -231,6 +231,7 @@ export default function ComponentPlaygroundIndex() {
           size="large"
           style={styles.searchContainer}
           value={searchText}
+          variant="filled"
         />
 
         <View style={styles.filterTabs}>
@@ -238,7 +239,6 @@ export default function ComponentPlaygroundIndex() {
             items={tabItems}
             onSelect={setSelectedCategory}
             selectedKey={selectedCategory}
-            showsHorizontalScrollIndicator={false}
             size="large"
           />
         </View>

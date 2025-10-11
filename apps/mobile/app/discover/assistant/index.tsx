@@ -164,6 +164,7 @@ const AssistantList = () => {
           placeholder={t('assistant.search', { ns: 'common' })}
           size="large"
           style={styles.searchContainer}
+          variant="filled"
         />
 
         {isCategoryLoading ? (

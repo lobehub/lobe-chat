@@ -376,6 +376,7 @@ const ProviderDetailPage = () => {
               <Input.Search
                 onChangeText={setSearchKeyword}
                 placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
+                size="large"
                 style={styles.modelsSearchInput}
                 value={searchKeyword}
                 variant="outlined"
