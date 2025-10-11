@@ -442,7 +442,7 @@ describe('LobeAzureOpenAI', () => {
         .spyOn(instance['client'].images, 'edit')
         .mockResolvedValue({ data: [{ url }] } as any);
 
-      const helpers = await import('../../utils/openaiHelpers');
+      const helpers = await import('../../core/contextBuilders/openai');
       vi.spyOn(helpers, 'convertImageUrlToFile').mockResolvedValue({} as any);
 
       const res = await instance.createImage({
@@ -462,7 +462,7 @@ describe('LobeAzureOpenAI', () => {
         .spyOn(instance['client'].images, 'edit')
         .mockResolvedValue({ data: [{ url }] } as any);
 
-      const helpers = await import('../../utils/openaiHelpers');
+      const helpers = await import('../../core/contextBuilders/openai');
       const spy = vi.spyOn(helpers, 'convertImageUrlToFile').mockResolvedValue({} as any);
 
       await instance.createImage({
