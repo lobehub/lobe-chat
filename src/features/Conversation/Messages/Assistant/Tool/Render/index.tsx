@@ -34,11 +34,7 @@ const Render = memo<RenderProps>(
     const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, toolIndex));
     const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId), isEqual);
 
-    // 如果处于 loading 或者找不到 toolMessage 则展示 Arguments
-    if (loading || !toolMessage)
-      return (
-        <LoadingPlaceholder apiName={apiName} identifier={identifier} requestArgs={requestArgs} />
-      );
+    if (loading || !toolMessage) return null;
 
     if (!!toolMessage) {
       if (toolMessage.error) {
