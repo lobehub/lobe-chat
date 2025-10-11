@@ -1,10 +1,6 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({
-  container: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
   // 空状态
   emptyContainer: {
     alignItems: 'center',

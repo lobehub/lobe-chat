@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Image, Text, View } from 'react-native';
 
 import { setLoginMounted } from '@/navigation/loginState';
+import { useSettingStore } from '@/store/setting';
 import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
 
-import { useStyles } from './styles';
+import { useStyles } from './style';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);
@@ -17,6 +18,10 @@ const LoginPage = () => {
   const router = useRouter();
 
   const { styles } = useStyles();
+  const { setCustomServerUrl, showSelfHostedEntry } = useSettingStore((state) => ({
+    setCustomServerUrl: state.setCustomServerUrl,
+    showSelfHostedEntry: state.showSelfHostedEntry,
+  }));
 
   useEffect(() => {
     setLoginMounted(true);
@@ -25,6 +30,8 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
+      setCustomServerUrl('');
+
       await login();
       // 立即导航到对话页，避免展示 404 页面
       setTimeout(() => router.replace('/chat'), 0);
@@ -33,6 +40,10 @@ const LoginPage = () => {
       const message = t(key, { ns: 'error' });
       Alert.alert(t('error.title', { ns: 'error' }), message);
     }
+  };
+
+  const handleSelfHostedLogin = () => {
+    router.push('/auth/login/selfhost');
   };
 
   return (
@@ -60,6 +71,18 @@ const LoginPage = () => {
         >
           {t('login.button', { appName: 'LobeChat.com', ns: 'auth' })}
         </Button>
+        {showSelfHostedEntry && (
+          <Button
+            block
+            disabled={isLoading}
+            onPress={handleSelfHostedLogin}
+            size="large"
+            style={styles.selfHostedButton}
+            variant="filled"
+          >
+            {t('login.selfHostedButton', { ns: 'auth' })}
+          </Button>
+        )}
       </View>
 
       {/* 安全提示 */}

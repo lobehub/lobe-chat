@@ -132,6 +132,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               name: provider.name || provider.id,
               ns: 'setting',
             })}
+            size="large"
             style={[styles.textInput, isChecking && styles.textInputDisabled]}
             value={apiKey}
             variant="outlined"
@@ -165,6 +166,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
                   proxyUrlConfig.placeholder) ||
                 t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
               }
+              size="large"
               style={[styles.textInput, isChecking && styles.textInputDisabled]}
               value={proxyUrl}
             />

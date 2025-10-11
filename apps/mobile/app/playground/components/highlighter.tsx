@@ -9,8 +9,6 @@ import README from '@lobehub/ui-rn/Highlighter/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicHighlighterDemo />, key: 'basic', title: '基础高亮' },
   { component: <FullFeaturedHighlighterDemo />, key: 'fullFeatured', title: '完整功能' },
@@ -19,9 +17,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function HighlighterPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Highlighter 组件">
+    <PageContainer showBack title="Highlighter 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );
