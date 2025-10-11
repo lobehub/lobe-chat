@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.8"
+  },
+  {
     "children": {
       "fixes": ["Disable rich text in markdown editor."]
     },
