@@ -6,6 +6,7 @@ export type AnimationMode = 'disabled' | 'agile' | 'elegant';
 
 export interface UserGeneralConfig {
   animationMode?: AnimationMode;
+  disableMarkdownRender?: boolean;
   fontSize: number;
   highlighterTheme?: HighlighterProps['theme'];
   mermaidTheme?: MermaidProps['theme'];
