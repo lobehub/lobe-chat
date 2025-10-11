@@ -46,6 +46,7 @@ const MOBILE_AVATAR_SIZE = 32;
 interface AssistantMessageProps extends ChatMessage {
   disableEditing?: boolean;
   index: number;
+  onShare?: () => void;
   showTitle?: boolean;
 }
 const AssistantMessage = memo<AssistantMessageProps>((props) => {
@@ -63,6 +64,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
     extra,
     metadata,
     meta,
+    onShare,
   } = props;
   const avatar = meta;
   const { mobile } = useResponsive();
@@ -230,7 +232,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
           </Flexbox>
           {!disableEditing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-              <AssistantActionsBar data={props} id={id} index={index} />
+              <AssistantActionsBar data={props} id={id} index={index} onShare={onShare} />
             </Flexbox>
           )}
         </Flexbox>

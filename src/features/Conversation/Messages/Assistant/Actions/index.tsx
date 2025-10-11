@@ -1,10 +1,9 @@
 import { ActionIconGroup, type ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { App } from 'antd';
 import { useSearchParams } from 'next/navigation';
-import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
+import { memo, use, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
@@ -18,14 +17,14 @@ interface AssistantActionsProps {
   data: ChatMessage;
   id: string;
   index: number;
+  onShare?: () => void;
 }
-export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
+export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index, onShare }) => {
   const { error, tools } = data;
   const [isThreadMode, hasThread] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
   ]);
-  const [showShareModal, setShareModal] = useState(false);
 
   const {
     regenerate,
@@ -142,7 +141,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         // }
 
         case 'share': {
-          setShareModal(true);
+          onShare?.();
           break;
         }
       }
@@ -155,43 +154,51 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         translateMessage(id, lang);
       }
     },
-    [data],
+    [
+      data,
+      delAndRegenerateMessage,
+      delAndResendThreadMessage,
+      deleteMessage,
+      id,
+      index,
+      inPortalThread,
+      message,
+      openThreadCreator,
+      regenerateMessage,
+      resendThreadMessage,
+      t,
+      toggleMessageEditing,
+      topic,
+      translateMessage,
+      ttsMessage,
+      virtuosoRef,
+      onShare,
+      copyMessage,
+    ],
   );
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
   return (
-    <>
-      <ActionIconGroup
-        items={items}
-        menu={{
-          items: [
-            edit,
-            copy,
-            divider,
-            tts,
-            translate,
-            divider,
-            share,
-            // exportPDF,
-            divider,
-            regenerate,
-            delAndRegenerate,
-            del,
-          ],
-        }}
-        onActionClick={onActionClick}
-      />
-      {/*{showModal && (*/}
-      {/*  <ExportPreview content={data.content} onClose={() => setModal(false)} open={showModal} />*/}
-      {/*)}*/}
-      <ShareMessageModal
-        message={data!}
-        onCancel={() => {
-          setShareModal(false);
-        }}
-        open={showShareModal}
-      />
-    </>
+    <ActionIconGroup
+      items={items}
+      menu={{
+        items: [
+          edit,
+          copy,
+          divider,
+          tts,
+          translate,
+          divider,
+          share,
+          // exportPDF,
+          divider,
+          regenerate,
+          delAndRegenerate,
+          del,
+        ],
+      }}
+      onActionClick={onActionClick}
+    />
   );
 });
