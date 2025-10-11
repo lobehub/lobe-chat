@@ -3,7 +3,7 @@ import { ModelProvider } from 'model-bank';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
-const THINKING_MODELS = ['deepseek-ai/deepseek-v3.1'];
+const THINKING_MODELS = ['deepseek-ai/deepseek-v3.1', 'deepseek-ai/deepseek-v3.1-terminus'];
 
 export interface NvidiaModelCard {
   id: string;
