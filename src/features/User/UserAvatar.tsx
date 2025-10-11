@@ -58,18 +58,17 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
 
     const isSignedIn = useUserStore(authSelectors.isLogin);
     const remoteServerUrl = useElectronStore(electronSyncSelectors.remoteServerUrl);
+    const isSyncActive = useElectronStore(electronSyncSelectors.isSyncActive);
 
-    // Process avatar URL for desktop environment
     const avatarUrl = useMemo(() => {
       if (!isSignedIn || !avatar) return DEFAULT_USER_AVATAR_URL;
 
-      // If in desktop environment and avatar starts with /, prepend the remote server URL
-      if (isDesktop && avatar.startsWith('/') && remoteServerUrl) {
+      if (isDesktop && avatar.startsWith('/') && remoteServerUrl && isSyncActive) {
         return remoteServerUrl + avatar;
       }
 
       return avatar;
-    }, [isSignedIn, avatar, remoteServerUrl]);
+    }, [isSignedIn, avatar, remoteServerUrl, isSyncActive]);
 
     return (
       <Avatar
