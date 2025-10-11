@@ -34,7 +34,8 @@ export const ENGINE_ICON_MAP: Record<string, string> = {
   'google scholar': 'https://icons.duckduckgo.com/ip3/scholar.google.com.ico',
   'npm': 'https://icons.duckduckgo.com/ip3/npmjs.com.ico',
   'qwant': 'https://icons.duckduckgo.com/ip3/www.qwant.com.ico',
+  'sogou wechat': 'https://icons.duckduckgo.com/ip3/weixin.sogou.com.ico',
   'youtube': 'https://icons.duckduckgo.com/ip3/youtube.com.ico',
 };
 
-export const CRAWL_CONTENT_LIMITED_COUNT = 7000;
+export const CRAWL_CONTENT_LIMITED_COUNT = 25_000;
