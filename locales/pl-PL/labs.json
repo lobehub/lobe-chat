@@ -1,0 +1,14 @@
+{
+  "desc": "Tutaj będziemy okresowo aktualizować nowe funkcje, które obecnie testujemy — zapraszamy do wypróbowania!",
+  "features": {
+    "groupChat": {
+      "desc": "Włącz możliwość organizowania czatów grupowych z wieloma agentami.",
+      "title": "Czat grupowy (wielu agentów)"
+    },
+    "inputMarkdown": {
+      "desc": "Renderowanie Markdown (pogrubienie, bloki kodu, tabele itp.) w czasie rzeczywistym w polu wprowadzania.",
+      "title": "Renderowanie Markdown w polu tekstowym"
+    }
+  },
+  "title": "Laboratorium"
+}
