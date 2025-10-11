@@ -33,8 +33,8 @@ const CustomServer = () => {
   const confirmServerSwitch = useCallback(
     (onConfirm: () => void) => {
       RNAlert.alert(
-        t('developer.customServer.confirmTitle', { ns: 'setting' }),
-        t('developer.customServer.confirmDescription', { ns: 'setting' }),
+        t('developer.server.confirmTitle', { ns: 'setting' }),
+        t('developer.server.confirmDescription', { ns: 'setting' }),
         [
           {
             style: 'cancel',
@@ -66,9 +66,7 @@ const CustomServer = () => {
         await logout();
         safeReplaceLogin(router);
 
-        const messageKey = nextValue
-          ? 'developer.customServer.updated'
-          : 'developer.customServer.resetSuccess';
+        const messageKey = nextValue ? 'developer.server.updated' : 'developer.server.resetSuccess';
 
         Toast.success(t(messageKey, { ns: 'setting' }));
       } catch (error) {
@@ -89,7 +87,7 @@ const CustomServer = () => {
 
       if (nextServer === currentServer) {
         Toast.success(
-          t(nextValue ? 'developer.customServer.updated' : 'developer.customServer.resetSuccess', {
+          t(nextValue ? 'developer.server.updated' : 'developer.server.resetSuccess', {
             ns: 'setting',
           }),
         );
@@ -106,7 +104,7 @@ const CustomServer = () => {
 
   const resetCustomServer = async () => {
     if (currentServer === DEFAULT_SERVER_URL) {
-      Toast.success(t('developer.customServer.resetSuccess', { ns: 'setting' }));
+      Toast.success(t('developer.server.resetSuccess', { ns: 'setting' }));
       return;
     }
 
@@ -118,13 +116,13 @@ const CustomServer = () => {
   return (
     <View style={styles.container}>
       <Notice
-        description={t('developer.customServer.notice', { ns: 'setting' })}
-        message={t('developer.customServer.noticeTitle', { ns: 'setting' })}
+        description={t('developer.server.notice', { ns: 'setting' })}
+        message={t('developer.server.noticeTitle', { ns: 'setting' })}
         type="info"
       />
       <Form form={form} initialValues={{ customServer: currentServer }}>
         <Form.Item
-          label={t('developer.customServer.title', { ns: 'setting' })}
+          label={t('developer.server.title', { ns: 'setting' })}
           name="customServer"
           rules={[
             {
@@ -132,7 +130,7 @@ const CustomServer = () => {
                 const input = (value as string | undefined)?.trim();
                 if (!input) return;
                 if (!isValidServerUrl(input)) {
-                  return t('developer.customServer.invalid', { ns: 'setting' });
+                  return t('developer.server.invalid', { ns: 'setting' });
                 }
               },
             },
@@ -143,7 +141,7 @@ const CustomServer = () => {
             autoCorrect={false}
             keyboardType="url"
             onSubmitEditing={applyCustomServer}
-            placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
+            placeholder={t('developer.server.placeholder', { ns: 'setting' })}
             returnKeyType="done"
             size="large"
             variant="outlined"
@@ -153,10 +151,10 @@ const CustomServer = () => {
         <Form.Item>
           <View style={styles.actionSection}>
             <Button block onPress={applyCustomServer} size="large" type="primary">
-              {t('developer.customServer.save', { ns: 'setting' })}
+              {t('developer.server.save', { ns: 'setting' })}
             </Button>
             <Button block onPress={resetCustomServer} size="large" type="default">
-              {t('developer.customServer.reset', { ns: 'setting' })}
+              {t('developer.server.reset', { ns: 'setting' })}
             </Button>
           </View>
         </Form.Item>

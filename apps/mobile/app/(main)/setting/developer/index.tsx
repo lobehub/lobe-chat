@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
+import { DEFAULT_SERVER_URL } from '@/config/server';
 import { useSettingStore } from '@/store/setting';
 
 import { SettingGroup, SettingItem } from '../(components)';
@@ -18,7 +19,8 @@ import {
 export default function DeveloperScreen() {
   const { styles } = useStyles();
   const { t } = useTranslation(['setting']);
-  const { developerMode, setDeveloperMode } = useSettingStore();
+  const { customServerUrl, developerMode, setDeveloperMode } = useSettingStore();
+  const currentServer = customServerUrl ?? DEFAULT_SERVER_URL;
 
   const confirmThenExecute = (
     confirmMessage: string,
@@ -68,10 +70,14 @@ export default function DeveloperScreen() {
 
         {developerMode && (
           <>
-            <SettingGroup>
+            <SettingGroup title={t('developer.server.group', { ns: 'setting' })}>
+              <SettingItem
+                extra={currentServer}
+                title={t('developer.server.current', { ns: 'setting' })}
+              />
               <SettingItem
                 href="/setting/developer/custom-server"
-                title={t('developer.customServer.title', { ns: 'setting' })}
+                title={t('developer.server.title', { ns: 'setting' })}
               />
             </SettingGroup>
             <SettingGroup>
