@@ -116,6 +116,33 @@
         "title": "Ungültiger Refresh-Token"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Zur Anmeldeseite wechseln",
+      "confirmDescription": "Nach der Aktivierung wird auf der Anmeldeseite ein Zugang zur selbstgehosteten Konfiguration angezeigt. Möchten Sie sich abmelden und zur Anmeldeseite wechseln?",
+      "confirmResetAction": "Zurücksetzen und anmelden",
+      "confirmResetDescription": "Das Deaktivieren des Selbsthosting-Modus setzt die Serveradresse auf die offizielle Instanz zurück und meldet den aktuellen Benutzer ab. Möchten Sie fortfahren?",
+      "confirmResetTitle": "Selbsthosting-Modus deaktivieren",
+      "confirmTitle": "Selbstgehosteten Anmeldezugang aktivieren",
+      "description": "Steuert, ob auf der Anmeldeseite eine Schaltfläche für selbstgehostete Instanzen angezeigt wird",
+      "title": "Selbsthosting-Modus aktivieren"
+    },
+    "server": {
+      "confirmDescription": "Nach Änderung der Serveradresse werden Sie abgemeldet und müssen sich erneut anmelden. Möchten Sie fortfahren?",
+      "confirmTitle": "Serverwechsel bestätigen",
+      "current": "Aktuelle Adresse",
+      "description": "Nach der Konfiguration werden alle Anfragen an diese Serveradresse gesendet. Leer lassen, um zum offiziellen Server zurückzukehren.",
+      "group": "Serverkonfiguration",
+      "hint": "Muss mit http:// oder https:// beginnen, möglicherweise ist eine erneute Anmeldung erforderlich.",
+      "invalid": "Bitte geben Sie eine gültige Adresse ein, die mit http:// oder https:// beginnt",
+      "notice": "Ein benutzerdefinierter Server ersetzt die Standard-API-Adresse. Bitte stellen Sie sicher, dass der Dienst verfügbar ist und mit dem LobeChat API-Protokoll kompatibel ist. Nach dem Wechsel ist möglicherweise eine erneute Anmeldung oder ein Neustart der Anwendung erforderlich.",
+      "noticeTitle": "Bitte vor dem Wechsel beachten",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Standard wiederherstellen",
+      "resetSuccess": "Offizielle Serveradresse wurde wiederhergestellt",
+      "save": "Speichern",
+      "title": "Selbstgehostete Instanz",
+      "updated": "Benutzerdefinierte Serveradresse wurde aktualisiert"
+    },
     "title": "Entwickleroptionen"
   },
   "feedback": "Feedback",

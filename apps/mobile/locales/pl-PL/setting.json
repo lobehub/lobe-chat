@@ -116,6 +116,32 @@
         "title": "Unieważnienie tokenu odświeżania"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Przejdź do strony logowania",
+      "confirmDescription": "Po włączeniu na stronie logowania pojawi się opcja konfiguracji własnego hostingu. Czy chcesz wylogować się z obecnego konta i przejść do strony logowania?",
+      "confirmResetAction": "Resetuj i przejdź do logowania",
+      "confirmResetDescription": "Wyłączenie trybu własnego hostingu spowoduje zresetowanie adresu serwera do oficjalnego oraz wylogowanie z konta. Czy kontynuować?",
+      "confirmResetTitle": "Wyłącz tryb własnego hostingu",
+      "confirmTitle": "Włącz własne logowanie",
+      "description": "Kontroluj, czy na stronie logowania ma być widoczny przycisk własnego hostingu",
+      "title": "Włącz tryb własnego hostingu"
+    },
+    "server": {
+      "confirmDescription": "Po zmianie adresu serwera nastąpi wylogowanie i konieczność ponownego zalogowania. Czy kontynuować?",
+      "confirmTitle": "Potwierdź zmianę serwera",
+      "current": "Aktualny adres",
+      "description": "Po konfiguracji wszystkie żądania będą kierowane do tego serwera. Pozostaw puste, aby wrócić do oficjalnego serwera.",
+      "group": "Konfiguracja serwera",
+      "hint": "Adres musi zaczynać się od http:// lub https://. Aplikacja może wymagać ponownego logowania.",
+      "invalid": "Wprowadź poprawny adres zaczynający się od http:// lub https://",
+      "notice": "Niestandardowy serwer zastąpi domyślny adres API. Upewnij się, że serwer jest dostępny i zgodny z protokołem LobeChat API. Po zmianie może być konieczne ponowne logowanie lub restart aplikacji.",
+      "noticeTitle": "Uwaga przed zmianą",
+      "placeholder": "https://twoj-serwer.przyklad.com",
+      "reset": "Przywróć domyślne",
+      "resetSuccess": "Przywrócono oficjalny adres serwera",
+      "save": "Zapisz",
+      "title": "Własny serwer"
+    },
     "title": "Opcje deweloperskie"
   },
   "feedback": "Opinie i sugestie",

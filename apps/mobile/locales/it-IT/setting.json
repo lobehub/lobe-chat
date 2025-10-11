@@ -116,6 +116,33 @@
         "title": "Token di aggiornamento non valido"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Vai alla pagina di accesso",
+      "confirmDescription": "Dopo l'attivazione, verrà mostrata un'opzione per la configurazione self-hosted nella pagina di accesso. Vuoi uscire dall'account attuale e andare alla pagina di accesso?",
+      "confirmResetAction": "Reimposta e accedi",
+      "confirmResetDescription": "Disattivando la modalità self-hosted, l'indirizzo del server verrà reimpostato sull'istanza ufficiale e si uscirà dall'account attuale. Vuoi continuare?",
+      "confirmResetTitle": "Disattiva modalità self-hosted",
+      "confirmTitle": "Abilita accesso self-hosted",
+      "description": "Controlla se mostrare il pulsante per l'istanza self-hosted nella pagina di accesso",
+      "title": "Abilita modalità self-hosted"
+    },
+    "server": {
+      "confirmDescription": "Dopo aver modificato l'indirizzo del server, l'utente corrente verrà disconnesso e sarà necessario effettuare nuovamente l'accesso. Vuoi continuare?",
+      "confirmTitle": "Conferma cambio server",
+      "current": "Indirizzo attuale",
+      "description": "Dopo la configurazione, tutte le richieste utilizzeranno questo indirizzo server. Lascia vuoto per tornare al server ufficiale.",
+      "group": "Configurazione server",
+      "hint": "Deve iniziare con http:// o https://, potrebbe essere necessario effettuare nuovamente l'accesso.",
+      "invalid": "Inserisci un indirizzo valido che inizi con http:// o https://",
+      "notice": "Un server personalizzato sostituirà l'indirizzo dell'interfaccia predefinita. Assicurati che il servizio sia disponibile e compatibile con il protocollo API di LobeChat. Potrebbe essere necessario effettuare nuovamente l'accesso o riavviare l'app dopo il cambio.",
+      "noticeTitle": "Attenzione prima del cambio",
+      "placeholder": "https://tuo-server.esempio.com",
+      "reset": "Ripristina predefinito",
+      "resetSuccess": "Indirizzo del server ufficiale ripristinato",
+      "save": "Salva",
+      "title": "Istanza self-hosted",
+      "updated": "Indirizzo server personalizzato aggiornato"
+    },
     "title": "Opzioni sviluppatore"
   },
   "feedback": "Feedback",

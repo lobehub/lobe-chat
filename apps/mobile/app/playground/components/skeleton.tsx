@@ -11,8 +11,6 @@ import {
 import README from '@lobehub/ui-rn/Skeleton/readme';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <AnimatedDemo />, key: 'animated', title: '动画效果' },
@@ -23,9 +21,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function SkeletonPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Skeleton 组件">
+    <PageContainer showBack title="Skeleton 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

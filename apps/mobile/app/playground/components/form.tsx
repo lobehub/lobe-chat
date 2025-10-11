@@ -5,8 +5,6 @@ import React from 'react';
 
 import README from '@/components/Form/README';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <UseFormDemo />, key: 'use-form', title: '使用 Form.useForm' },
@@ -15,10 +13,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function FormPlaygroundPage() {
-  const { styles } = useStyles();
-
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Form 组件">
+    <PageContainer showBack title="Form 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

@@ -66,6 +66,7 @@ export default function SideBar() {
         size="large"
         style={styles.searchInput}
         value={searchText}
+        variant="filled"
       />
 
       {/* 会话列表 */}
