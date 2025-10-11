@@ -1,10 +1,10 @@
-import { ChatStreamPayload } from '@lobechat/types';
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload> => {
-  return {
-    messages: [
-      {
-        content: `You are a summarization expert. Generate a concise summary from the provided text chunk.
+exports[`chainAbstractChunkText > should generate correct chat payload for chunk text 1`] = `
+{
+  "messages": [
+    {
+      "content": "You are a summarization expert. Generate a concise summary from the provided text chunk.
 
 Rules:
 - Output ONLY the summary text itself, nothing else
@@ -26,13 +26,13 @@ Rules:
 <input>深度学习是机器学习的一个分支...</input>
 <output>深度学习是机器学习的一个分支，使用多层神经网络学习数据表示，在图像识别、自然语言处理等领域取得突破。</output>
 </examples>
-`,
-        role: 'system',
-      },
-      {
-        content: text,
-        role: 'user',
-      },
-    ],
-  };
-};
+",
+      "role": "system",
+    },
+    {
+      "content": "This is a sample chunk of text that needs to be summarized.",
+      "role": "user",
+    },
+  ],
+}
+`;
