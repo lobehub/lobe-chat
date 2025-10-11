@@ -9,10 +9,6 @@ export const useStyles = createStyles(({ token }) => ({
   container: {
     paddingHorizontal: token.padding,
   },
-  safeAreaView: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
   signOutSection: {
     marginTop: token.marginXS,
   },

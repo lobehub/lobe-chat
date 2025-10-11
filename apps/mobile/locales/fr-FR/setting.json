@@ -116,6 +116,33 @@
         "title": "Jeton de rafraîchissement invalide"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Aller à la page de connexion",
+      "confirmDescription": "Une fois activé, une entrée de configuration auto-hébergée sera affichée sur la page de connexion. Voulez-vous vous déconnecter du compte actuel et aller à la page de connexion ?",
+      "confirmResetAction": "Réinitialiser et aller à la connexion",
+      "confirmResetDescription": "Désactiver le mode auto-hébergé réinitialisera l'adresse du serveur à l'instance officielle et déconnectera le compte actuel. Voulez-vous continuer ?",
+      "confirmResetTitle": "Désactiver le mode auto-hébergé",
+      "confirmTitle": "Activer l'entrée de connexion auto-hébergée",
+      "description": "Contrôle l'affichage du bouton d'instance auto-hébergée sur la page de connexion",
+      "title": "Activer le mode auto-hébergé"
+    },
+    "server": {
+      "confirmDescription": "Modifier l'adresse du serveur déconnectera l'utilisateur actuel et nécessitera une nouvelle connexion. Voulez-vous continuer ?",
+      "confirmTitle": "Confirmer le changement de serveur",
+      "current": "Adresse actuelle",
+      "description": "Après configuration, toutes les requêtes utiliseront cette adresse serveur. Laisser vide pour revenir au serveur officiel.",
+      "group": "Configuration du serveur",
+      "hint": "Doit commencer par http:// ou https://, une reconnexion peut être nécessaire.",
+      "invalid": "Veuillez saisir une adresse valide commençant par http:// ou https://",
+      "notice": "Un serveur personnalisé remplacera l'adresse de l'API par défaut. Assurez-vous que le service est disponible et compatible avec le protocole LobeChat API. Un redémarrage ou une reconnexion peut être nécessaire après le changement.",
+      "noticeTitle": "Attention avant de changer",
+      "placeholder": "https://votre-serveur.exemple.com",
+      "reset": "Restaurer par défaut",
+      "resetSuccess": "Adresse du serveur officiel restaurée",
+      "save": "Enregistrer",
+      "title": "Instance auto-hébergée",
+      "updated": "Adresse du serveur personnalisée mise à jour"
+    },
     "title": "Options développeur"
   },
   "feedback": "Retour d'information",

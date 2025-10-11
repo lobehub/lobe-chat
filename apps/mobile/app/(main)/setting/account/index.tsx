@@ -50,11 +50,7 @@ export default function AccountScreen() {
   };
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('account.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('account.title', { ns: 'setting' })}>
       <View style={styles.container}>
         {isAuthenticated && user && (
           <>

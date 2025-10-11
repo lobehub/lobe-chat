@@ -69,7 +69,6 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
           </TouchableOpacity>
         }
         showBack
-        style={styles.safeArea}
         title="主题令牌"
       >
         <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>

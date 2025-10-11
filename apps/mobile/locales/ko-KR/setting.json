@@ -116,6 +116,33 @@
         "title": "무효 리프레시 토큰"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "로그인 페이지로 이동",
+      "confirmDescription": "활성화하면 로그인 페이지에 자체 호스팅 구성 진입점이 표시됩니다. 현재 계정에서 로그아웃하고 로그인 페이지로 이동하시겠습니까?",
+      "confirmResetAction": "재설정 후 로그인",
+      "confirmResetDescription": "자체 배포 모드를 비활성화하면 서버 주소가 공식 인스턴스로 재설정되고 현재 계정에서 로그아웃됩니다. 계속하시겠습니까?",
+      "confirmResetTitle": "자체 배포 모드 비활성화",
+      "confirmTitle": "자체 호스팅 로그인 진입점 활성화",
+      "description": "로그인 페이지에 자체 호스팅 인스턴스 버튼 표시 여부를 제어합니다",
+      "title": "자체 배포 모드 활성화"
+    },
+    "server": {
+      "confirmDescription": "서버 주소를 변경하면 현재 사용자가 로그아웃되고 다시 로그인해야 합니다. 계속하시겠습니까?",
+      "confirmTitle": "서버 전환 확인",
+      "current": "현재 주소",
+      "description": "구성 후 모든 요청이 이 서버 주소를 사용합니다. 비워두면 공식 서버로 복원됩니다.",
+      "group": "서버 구성",
+      "hint": "http:// 또는 https:// 로 시작해야 하며, 앱이 다시 로그인해야 할 수 있습니다.",
+      "invalid": "http:// 또는 https:// 로 시작하는 유효한 주소를 입력하세요",
+      "notice": "사용자 지정 서버는 기본 API 주소를 대체하므로 서비스가 LobeChat API 프로토콜과 호환되는지 확인하세요. 전환 후 다시 로그인하거나 앱을 재시작해야 할 수 있습니다.",
+      "noticeTitle": "전환 전 주의사항",
+      "placeholder": "https://your-server.example.com",
+      "reset": "기본값 복원",
+      "resetSuccess": "공식 서버 주소로 복원되었습니다",
+      "save": "저장",
+      "title": "자체 배포 인스턴스",
+      "updated": "사용자 지정 서버 주소가 업데이트되었습니다"
+    },
     "title": "개발자 옵션"
   },
   "feedback": "피드백",

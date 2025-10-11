@@ -25,6 +25,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['toast', 'notification', 'message'],
   },
   {
+    category: 'feedback',
+    description: 'Ant Design 风格的提示组件，支持状态、图标、关闭与操作按钮',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Alert',
+    path: 'alert',
+    tags: ['alert', 'message', 'feedback', 'notification'],
+  },
+  {
     category: 'display',
     description: '基于 Shiki 的高性能代码高亮组件，支持100+种编程语言',
     hasDemos: true,
