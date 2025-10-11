@@ -201,6 +201,9 @@ export const getLLMConfig = () => {
 
       ENABLED_CEREBRAS: z.boolean(),
       CEREBRAS_API_KEY: z.string().optional(),
+
+      ENABLED_STRAICO: z.boolean(),
+      STRAICO_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -400,6 +403,9 @@ export const getLLMConfig = () => {
 
       ENABLED_CEREBRAS: !!process.env.CEREBRAS_API_KEY,
       CEREBRAS_API_KEY: process.env.CEREBRAS_API_KEY,
+
+      ENABLED_STRAICO: !!process.env.STRAICO_API_KEY,
+      STRAICO_API_KEY: process.env.STRAICO_API_KEY,
     },
   });
 };
