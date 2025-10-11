@@ -1,7 +1,6 @@
 import { AIChatModelCard } from '../types/aiModel';
 
 // https://cloud.infini-ai.com/genstudio/model
-// All models are currently free
 
 const infiniaiChatModels: AIChatModelCard[] = [
   {
@@ -12,6 +11,7 @@ const infiniaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'GLM-4.6 是智谱AI推出的最新大语言模型，具备更强的推理和生成能力。',
     displayName: 'GLM-4.6',
+    enabled: true,
     id: 'glm-4.6',
     maxOutput: 4096,
     pricing: {
@@ -35,6 +35,7 @@ const infiniaiChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3.2-Exp 是深度求索推出的实验性大语言模型，具有更强的推理和生成能力。',
     displayName: 'DeepSeek V3.2 Exp',
+    enabled: true,
     id: 'deepseek-v3.2-exp',
     maxOutput: 65_536,
     pricing: {
