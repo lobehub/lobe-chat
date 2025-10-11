@@ -1,10 +1,10 @@
-import { BuiltinPlaceholderProps } from '@lobechat/types';
+import { BuiltinPlaceholderProps, CrawlSinglePageQuery, SearchQuery } from '@lobechat/types';
 import { Skeleton } from 'antd';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';
-import { SearchQuery } from '@/types/tool/search';
 
+import PageContent from './PageContent';
 import { Search } from './Search';
 
 const Placeholder = memo<BuiltinPlaceholderProps>(({ apiName, args }) => {
@@ -12,6 +12,12 @@ const Placeholder = memo<BuiltinPlaceholderProps>(({ apiName, args }) => {
     case WebBrowsingApiName.search: {
       const { query } = args as SearchQuery;
       return <Search query={query} />;
+    }
+
+    case WebBrowsingApiName.crawlSinglePage: {
+      const { url } = args as CrawlSinglePageQuery;
+
+      return <PageContent url={url} />;
     }
 
     default: {

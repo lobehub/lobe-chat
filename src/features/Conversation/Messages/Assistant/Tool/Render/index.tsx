@@ -1,13 +1,13 @@
+import { LOADING_FLAT } from '@lobechat/const';
 import isEqual from 'fast-deep-equal';
 import { Suspense, memo } from 'react';
 
-import { LOADING_FLAT } from '@/const/message';
-import LoadingPlaceholder from '@/features/Conversation/Messages/Assistant/Tool/Render/LoadingPlaceholder';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
+import LoadingPlaceholder from './LoadingPlaceholder';
 
 interface RenderProps {
   apiName: string;
