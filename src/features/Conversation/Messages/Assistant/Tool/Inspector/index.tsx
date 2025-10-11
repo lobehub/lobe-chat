@@ -1,10 +1,13 @@
 import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff } from 'lucide-react';
+import isEqual from 'fast-deep-equal';
+import { Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 import Debug from './Debug';
@@ -91,9 +94,11 @@ const Inspectors = memo<InspectorProps>(
     hidePluginUI = false,
   }) => {
     const { t } = useTranslation('plugin');
-    const { styles } = useStyles();
+    const { styles, theme } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
+    const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(id), isEqual);
+    const hasError = !!toolMessage?.error;
 
     return (
       <Flexbox className={styles.container} gap={4}>
@@ -116,26 +121,37 @@ const Inspectors = memo<InspectorProps>(
               toolCallId={id}
             />
           </Flexbox>
-          <Flexbox className={styles.actions} horizontal>
-            {showRender && !hidePluginUI && (
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Flexbox className={styles.actions} horizontal>
+              {showRender && !hidePluginUI && (
+                <ActionIcon
+                  icon={showPluginRender ? LogsIcon : LayoutPanelTop}
+                  onClick={() => {
+                    setShowPluginRender(!showPluginRender);
+                  }}
+                  size={'small'}
+                  title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
+                />
+              )}
               <ActionIcon
-                icon={showPluginRender ? LogsIcon : LayoutPanelTop}
+                icon={showDebug ? LucideBugOff : LucideBug}
                 onClick={() => {
-                  setShowPluginRender(!showPluginRender);
+                  setShowDebug(!showDebug);
                 }}
                 size={'small'}
-                title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
+                title={t(showDebug ? 'debug.off' : 'debug.on')}
               />
+              <Settings id={identifier} />
+            </Flexbox>
+            {payload && (
+              <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
+                {hasError ? (
+                  <X color={theme.colorError} size={14} />
+                ) : (
+                  <Check color={theme.colorSuccess} size={14} />
+                )}
+              </Flexbox>
             )}
-            <ActionIcon
-              icon={showDebug ? LucideBugOff : LucideBug}
-              onClick={() => {
-                setShowDebug(!showDebug);
-              }}
-              size={'small'}
-              title={t(showDebug ? 'debug.off' : 'debug.on')}
-            />
-            <Settings id={identifier} />
           </Flexbox>
         </Flexbox>
         {showDebug && <Debug payload={payload} requestArgs={requestArgs} toolCallId={id} />}
