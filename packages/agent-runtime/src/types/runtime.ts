@@ -1,5 +1,5 @@
 import type { AgentEvent } from './event';
-import { AgentInstruction, RuntimeContext } from './instruction';
+import { AgentInstruction, AgentRuntimeContext } from './instruction';
 import { AgentState } from './state';
 
 export type InstructionExecutor = (
@@ -9,7 +9,7 @@ export type InstructionExecutor = (
   events: AgentEvent[];
   newState: AgentState;
   /** Next context to pass to Agent runner (if execution should continue) */
-  nextContext?: RuntimeContext;
+  nextContext?: AgentRuntimeContext;
 }>;
 
 export interface RuntimeConfig {

@@ -26,7 +26,7 @@ export const LobePerplexityAI = createOpenAICompatibleRuntime({
         ...res,
         ...param,
         stream,
-        temperature: temperature >= 2 ? undefined : temperature,
+        temperature: !temperature || temperature >= 2 ? undefined : temperature,
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },

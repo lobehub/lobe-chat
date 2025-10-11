@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 
 import { AgentRuntime } from '../src';
-import type { Agent, AgentState, RuntimeContext } from '../src';
+import type { Agent, AgentRuntimeContext, AgentState } from '../src';
 
 // OpenAI 模型运行时
 async function* openaiRuntime(payload: any) {
@@ -112,7 +112,7 @@ class SimpleAgent implements Agent {
   }
 
   // Agent 决策逻辑 - 基于执行阶段和上下文
-  async runner(context: RuntimeContext, state: AgentState) {
+  async runner(context: AgentRuntimeContext, state: AgentState) {
     console.log(`[${context.phase}] 对话状态: ${this.conversationState}`);
 
     switch (context.phase) {
@@ -257,7 +257,7 @@ async function main() {
   console.log('🤖 AI: ');
 
   // 执行对话循环
-  let nextContext: RuntimeContext | undefined = undefined;
+  let nextContext: AgentRuntimeContext | undefined = undefined;
 
   while (state.status !== 'done' && state.status !== 'error') {
     const result = await runtime.step(state, nextContext);
@@ -300,4 +300,5 @@ async function main() {
   console.log(`\n📊 总共执行了 ${state.stepCount} 个步骤`);
 }
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 main().catch(console.error);

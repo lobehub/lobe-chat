@@ -256,7 +256,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     // For Opus 4.1 models, we can only set either temperature OR top_p, not both
     const isTempAndTopPConflict = modelsWithTempAndTopPConflict.has(model);
-    const shouldSetTemperature = payload.temperature !== undefined;
+    const shouldSetTemperature = temperature !== undefined;
 
     return {
       // claude 3 series model hax max output token of 4096, 3.x series has 8192
@@ -270,7 +270,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         ? shouldSetTemperature
           ? temperature / 2
           : undefined
-        : payload.temperature !== undefined
+        : temperature !== undefined
           ? temperature / 2
           : undefined,
       tools: postTools,

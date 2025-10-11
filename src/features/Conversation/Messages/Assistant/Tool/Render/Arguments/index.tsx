@@ -115,22 +115,18 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
           {actions}
         </Flexbox>
       )}
-      {args.length > 100 ? (
-        <pre style={{ padding: 8 }}>{JSON.stringify(displayArgs, null, 2)}</pre>
-      ) : (
-        Object.entries(displayArgs).map(([key, value]) => {
-          return (
-            <ObjectEntity
-              editable={false}
-              hasMinWidth={hasMinWidth}
-              key={key}
-              objectKey={key}
-              shine={shine}
-              value={value}
-            />
-          );
-        })
-      )}
+      {Object.entries(displayArgs).map(([key, value]) => {
+        return (
+          <ObjectEntity
+            editable={false}
+            hasMinWidth={hasMinWidth}
+            key={key}
+            objectKey={key}
+            shine={shine}
+            value={value}
+          />
+        );
+      })}
     </div>
   );
 });

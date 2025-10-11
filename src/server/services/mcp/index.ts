@@ -21,7 +21,7 @@ const log = debug('lobe-mcp:service');
 
 // Removed MCPConnection interface as it's no longer needed
 
-class MCPService {
+export class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
 
