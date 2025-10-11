@@ -175,8 +175,6 @@ const handleProxy = async (req: NextRequest, context: RouteContext) => {
 
         const response = await market.auth.getUserInfo(token);
         return NextResponse.json(response);
-
-        // return await createProxyResponse(upstreamResponse);
       } catch (error) {
         console.error('[MarketOIDC] Failed to proxy userinfo request:', error);
         return NextResponse.json(

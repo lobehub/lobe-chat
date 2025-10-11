@@ -32,15 +32,15 @@ export const API_ENDPOINTS = {
 
 export const MARKET_OIDC_ENDPOINTS = {
   auth: '/market-oidc/auth',
-  token: '/market-oidc/token',
-  userinfo: '/market-oidc/userinfo',
-  handoff: '/market-oidc/handoff',
+  token: '/market/oidc/token',
+  userinfo: '/market/oidc/userinfo',
+  handoff: '/market/oidc/handoff',
   desktopCallback: '/market-oidc/callback/desktop',
 };
 
 export const MARKET_ENDPOINTS = {
   base: '/market',
-  createAgent: '/market/agents/create',
-  getAgentDetail: (identifier: string) => `/market/agents/${encodeURIComponent(identifier)}`,
-  createAgentVersion: '/market/agents/versions/create',
+  createAgent: '/market/agent/create',
+  getAgentDetail: (identifier: string) => `/market/agent/${encodeURIComponent(identifier)}`,
+  createAgentVersion: '/market/agent/versions/create',
 };
