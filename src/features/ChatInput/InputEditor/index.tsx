@@ -12,6 +12,7 @@ import {
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
 import { combineKeys } from '@lobehub/ui';
+import { css, cx } from 'antd-style';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
@@ -21,6 +22,12 @@ import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 import { useChatInputStore, useStoreApi } from '../store';
 import Placeholder from './Placeholder';
 import { useSlashItems } from './useSlashItems';
+
+const className = cx(css`
+  p {
+    margin-block-end: 0;
+  }
+`);
 
 const InputEditor = memo<{ defaultRows?: number }>(() => {
   const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
@@ -84,8 +91,11 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
   return (
     <Editor
       autoFocus
+      className={className}
       content={''}
       editor={editor}
+      enablePasteMarkdown={enableMarkdown}
+      markdownOption={enableMarkdown}
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
