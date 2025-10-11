@@ -9,10 +9,12 @@ import { RequestFilteringAgentOptions, useAgent as ssrfAgent } from 'request-fil
 export const ssrfSafeFetch = async (url: string, options?: RequestInit): Promise<Response> => {
   try {
     // Configure SSRF protection options
+    const allowPrivateEnv = (process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS || '').toLowerCase();
     const agentOptions: RequestFilteringAgentOptions = {
       allowIPAddressList: process.env.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',') || [],
-      allowMetaIPAddress: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
-      allowPrivateIPAddress: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
+      // Accept '1' or 'true' (case-insensitive) to enable private/meta IP allowance
+      allowMetaIPAddress: allowPrivateEnv === '1' || allowPrivateEnv === 'true',
+      allowPrivateIPAddress: allowPrivateEnv === '1' || allowPrivateEnv === 'true',
       denyIPAddressList: [],
     };
 

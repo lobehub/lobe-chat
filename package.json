@@ -29,8 +29,8 @@
     "packages/*"
   ],
   "scripts": {
-    "prebuild": "tsx scripts/prebuild.mts && npm run lint",
-    "build": "NODE_OPTIONS='--max-old-space-size=6144' next build",
+    "prebuild": "node ./scripts/prebuild-wrapper.mjs",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
