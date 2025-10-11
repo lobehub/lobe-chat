@@ -43,10 +43,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           frequency_penalty: undefined,
           model,
           presence_penalty: undefined,
-          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           stream: payload.stream ?? true,
           temperature: undefined,
           top_p: undefined,
+          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           ...(oaiSearchContextSize && {
             web_search_options: {
               search_context_size: oaiSearchContextSize,
@@ -81,14 +81,14 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
 
       const openaiTools = enabledSearch
         ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-            ...(oaiSearchContextSize && {
-              search_context_size: oaiSearchContextSize,
-            }),
-          },
-        ]
+            ...(tools || []),
+            {
+              type: 'web_search',
+              ...(oaiSearchContextSize && {
+                search_context_size: oaiSearchContextSize,
+              }),
+            },
+          ]
         : tools;
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {

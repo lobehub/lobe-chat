@@ -2,6 +2,7 @@ import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { ChatStreamPayload } from '../../types';
 
 export interface BaichuanModelCard {
@@ -31,11 +32,12 @@ export const LobeBaichuanAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      // Resolve parameters with normalization
+      const resolvedParams = resolveParameters({ temperature }, { normalizeTemperature: true });
+
       return {
         ...rest,
-        // [baichuan] frequency_penalty must be between 1 and 2.
-        frequency_penalty: undefined,
-        temperature: temperature !== undefined ? temperature / 2 : undefined,
+        temperature: resolvedParams.temperature,
         tools: baichuanTools,
       } as any;
     },
