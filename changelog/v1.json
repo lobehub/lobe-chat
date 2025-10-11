@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add more AWS regions, Update infini-ai models."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.12"
+  },
+  {
+    "children": {
       "improvements": [
         "Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities."
       ]
