@@ -365,7 +365,7 @@
     "serwist": "^9.2.1",
     "stylelint": "^15.11.0",
     "tsx": "^4.20.6",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.0.0",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
