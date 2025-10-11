@@ -14,8 +14,6 @@ import README from '@lobehub/ui-rn/Input/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <PrefixDemo />, key: 'prefix', title: '带前缀' },
@@ -29,10 +27,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function InputPlaygroundPage() {
-  const { styles } = useStyles();
-
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Input 组件">
+    <PageContainer showBack title="Input 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

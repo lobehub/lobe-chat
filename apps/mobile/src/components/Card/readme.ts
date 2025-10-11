@@ -42,10 +42,6 @@ export default () => (
 | \`extra\` | \`ReactNode\` | - | 标题右侧的操作区 |
 | \`cover\` | \`ReactNode\` | - | 封面内容，位于卡片顶部并保留圆角 |
 | \`divider\` | \`boolean\` | \`true\` | 控制标题与内容之间分隔线 |
-| \`contentStyle\` | \`StyleProp<ViewStyle>\` | - | 内容区域样式 |
-| \`headerStyle\` | \`StyleProp<ViewStyle>\` | - | 页眉样式 |
-| \`titleStyle\` | \`StyleProp<TextStyle>\` | - | 标题文字样式 |
-| \`coverStyle\` | \`StyleProp<ViewStyle>\` | - | 封面容器样式 |
 
 > 其余属性继承自 [Block](../Block) 组件，包含 \`variant\`、\`shadow\`、\`glass\`、\`onPress\`、\`padding\` 等能力。
 

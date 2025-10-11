@@ -1,19 +1,29 @@
-import { Button, Input, Toast } from '@lobehub/ui-rn';
-import React, { useEffect } from 'react';
+import { sleep } from '@lobechat/utils';
+import { Button, Input, Alert as Notice, Toast } from '@lobehub/ui-rn';
+import { SettingGroup } from 'app/(main)/setting/(components)/SettingGroup';
+import { SettingItem } from 'app/(main)/setting/(components)/SettingItem';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Alert as RNAlert, View } from 'react-native';
 
 import { Form } from '@/components';
 import { DEFAULT_SERVER_URL, formatServerUrl, isValidServerUrl } from '@/config/server';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useSettingStore } from '@/store/setting';
+import { useAuthActions } from '@/store/user';
 
 import { useStyles } from './style';
 
 const CustomServer = () => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation(['setting', 'common']);
   const { styles } = useStyles();
-  const { customServerUrl, setCustomServerUrl } = useSettingStore();
+  const { logout } = useAuthActions();
+  const router = useRouter();
   const [form] = Form.useForm();
+
+  const { customServerUrl, setCustomServerUrl, setShowSelfHostedEntry, showSelfHostedEntry } =
+    useSettingStore();
 
   const currentServer = customServerUrl ?? DEFAULT_SERVER_URL;
 
@@ -24,74 +34,132 @@ const CustomServer = () => {
     );
   }, [customServerUrl, form]);
 
+  const confirmServerSwitch = useCallback(
+    (onConfirm: () => void) => {
+      RNAlert.alert(
+        t('developer.server.confirmTitle', { ns: 'setting' }),
+        t('developer.server.confirmDescription', { ns: 'setting' }),
+        [
+          {
+            style: 'cancel',
+            text: t('actions.cancel', { ns: 'common' }),
+          },
+          {
+            onPress: onConfirm,
+            text: t('actions.confirm', { ns: 'common' }),
+          },
+        ],
+      );
+    },
+    [t],
+  );
+
+  const finalizeCustomServer = useCallback(
+    async (nextValue: string | null, options?: { resetFieldToDefault?: boolean }) => {
+      try {
+        setCustomServerUrl(nextValue);
+
+        if (options?.resetFieldToDefault) {
+          await form.setFieldsValue(
+            { customServer: DEFAULT_SERVER_URL },
+            { markTouched: false, validate: false },
+          );
+        }
+
+        await sleep(500);
+        await logout();
+        safeReplaceLogin(router);
+
+        const messageKey = nextValue ? 'developer.server.updated' : 'developer.server.resetSuccess';
+
+        Toast.success(t(messageKey, { ns: 'setting' }));
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        Toast.error(`${t('developer.failurePrefix', { ns: 'setting' })}${message}`);
+      }
+    },
+    [form, logout, router, setCustomServerUrl, t],
+  );
+
   const applyCustomServer = async () => {
     try {
       const values = await form.validateFields(['customServer']);
       const rawValue = (values.customServer as string | undefined) ?? '';
       const trimmed = rawValue.trim();
+      const nextValue = trimmed ? formatServerUrl(trimmed) : null;
+      const nextServer = nextValue ?? DEFAULT_SERVER_URL;
 
-      if (!trimmed) {
-        setCustomServerUrl(null);
-        Toast.success(t('developer.customServer.resetSuccess', { ns: 'setting' }));
+      if (nextServer === currentServer) {
+        Toast.success(
+          t(nextValue ? 'developer.server.updated' : 'developer.server.resetSuccess', {
+            ns: 'setting',
+          }),
+        );
         return;
       }
 
-      setCustomServerUrl(formatServerUrl(trimmed));
-      Toast.success(t('developer.customServer.updated', { ns: 'setting' }));
+      confirmServerSwitch(() => {
+        void finalizeCustomServer(nextValue);
+      });
     } catch {
       // Validation errors are surfaced via the form.
     }
   };
 
-  const resetCustomServer = async () => {
-    setCustomServerUrl(null);
-    await form.setFieldsValue(
-      { customServer: DEFAULT_SERVER_URL },
-      { markTouched: false, validate: false },
-    );
-    Toast.success(t('developer.customServer.resetSuccess', { ns: 'setting' }));
-  };
-
   return (
-    <Form form={form} initialValues={{ customServer: currentServer }}>
-      <Form.Item
-        extra={t('developer.customServer.hint', { ns: 'setting' })}
-        label={t('developer.customServer.title', { ns: 'setting' })}
-        name="customServer"
-        rules={[
-          {
-            validator: (value) => {
-              const input = (value as string | undefined)?.trim();
-              if (!input) return;
-              if (!isValidServerUrl(input)) {
-                return t('developer.customServer.invalid', { ns: 'setting' });
-              }
-            },
-          },
-        ]}
-      >
-        <Input
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="url"
-          onSubmitEditing={applyCustomServer}
-          placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
-          returnKeyType="done"
-          size="large"
+    <>
+      <SettingGroup>
+        <SettingItem
+          onSwitchChange={setShowSelfHostedEntry}
+          showSwitch
+          switchValue={showSelfHostedEntry}
+          title={t('developer.selfHostedEntry.title', { ns: 'setting' })}
         />
-      </Form.Item>
-      {/* Action Section */}
-      <Form.Item>
-        <View style={styles.actionSection}>
-          <Button block onPress={applyCustomServer} size="large" type="primary">
-            {t('developer.customServer.save', { ns: 'setting' })}
-          </Button>
-          <Button block onPress={resetCustomServer} size="large" type="default">
-            {t('developer.customServer.reset', { ns: 'setting' })}
-          </Button>
-        </View>
-      </Form.Item>
-    </Form>
+      </SettingGroup>
+      <View style={styles.container}>
+        <Notice
+          description={t('developer.server.notice', { ns: 'setting' })}
+          message={t('developer.server.noticeTitle', { ns: 'setting' })}
+          type="info"
+        />
+        <Form form={form} initialValues={{ customServer: currentServer }}>
+          <Form.Item
+            label={t('developer.server.title', { ns: 'setting' })}
+            name="customServer"
+            rules={[
+              {
+                validator: (value) => {
+                  const input = (value as string | undefined)?.trim();
+                  if (!input) return;
+                  if (!isValidServerUrl(input)) {
+                    return t('developer.server.invalid', { ns: 'setting' });
+                  }
+                },
+              },
+            ]}
+          >
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+              onSubmitEditing={applyCustomServer}
+              placeholder={t('developer.server.placeholder', { ns: 'setting' })}
+              returnKeyType="done"
+              size="large"
+              variant="outlined"
+            />
+          </Form.Item>
+          {/* Action Section */}
+          <Form.Item>
+            <View style={styles.actionSection}>
+              <Button block onPress={applyCustomServer} size="large" type="primary">
+                {t('developer.server.save', { ns: 'setting' })}
+              </Button>
+            </View>
+          </Form.Item>
+        </Form>
+      </View>
+    </>
   );
 };
 

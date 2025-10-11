@@ -48,7 +48,7 @@ export default function ThemeSettingScreen() {
   ];
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title={t('color.title', { ns: 'setting' })}>
+    <PageContainer showBack title={t('color.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <Preview />
         <SettingGroup style={{ marginTop: 16 }}>

@@ -120,7 +120,6 @@ import { TouchableOpacity } from 'react-native';
 
 <Input.TextArea
   autoSize
-  contentStyle={{ fontFamily: 'Menlo' }}
   placeholder="支持内容样式定制"
   style={{ backgroundColor: '#F7F8FA' }}
 />
@@ -133,7 +132,6 @@ import { TouchableOpacity } from 'react-native';
 | 属性 | 类型 | 描述 |
 |------|------|------|
 | \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
-| \`contentStyle\` | \`StyleProp<TextStyle>\` | 输入框样式 |
 | \`size\` | \`'large' | 'middle' | 'small'\` | 尺寸大小（默认 middle） |
 | \`prefix\` | \`React.ReactNode\` | 前缀内容 |
 | \`suffix\` | \`React.ReactNode\` | 后缀内容 |
@@ -145,7 +143,6 @@ import { TouchableOpacity } from 'react-native';
 | 属性 | 类型 | 描述 |
 |------|------|------|
 | \`autoSize\` | \`boolean | { minRows?: number; maxRows?: number }\` | 控制高度自适应行为 |
-| \`contentStyle\` | \`StyleProp<TextStyle>\` | 文本样式 |
 | \`style\` | \`StyleProp<ViewStyle>\` | 外层容器样式 |
 | \`variant\` | \`'filled' | 'borderless' | 'outlined'\` | 外观变体（默认 filled） |
 | ...其他 | \`RNTextInputProps\` | React Native TextInput 的所有属性（默认启用 multiline） |

@@ -4,8 +4,6 @@ import README from '@lobehub/ui-rn/FluentEmoji/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
@@ -14,9 +12,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function FluentEmojiPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="FluentEmoji 组件">
+    <PageContainer showBack title="FluentEmoji 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

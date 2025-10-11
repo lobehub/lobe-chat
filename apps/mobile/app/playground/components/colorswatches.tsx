@@ -4,17 +4,14 @@ import README from '@lobehub/ui-rn/ColorSwatches/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础演示' },
   { component: <AdvancedDemo />, key: 'advanced', title: '高级演示' },
 ];
 
 export default function ColorSwatchesPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="ColorSwatches 组件">
+    <PageContainer showBack title="ColorSwatches 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

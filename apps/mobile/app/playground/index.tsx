@@ -46,6 +46,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'alert': {
+        router.push('/playground/components/alert');
+
+        break;
+      }
       case 'toast': {
         router.push('/playground/components/toast');
 
@@ -218,7 +223,7 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Playground">
+    <PageContainer showBack title="Playground">
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}
@@ -226,6 +231,7 @@ export default function ComponentPlaygroundIndex() {
           size="large"
           style={styles.searchContainer}
           value={searchText}
+          variant="filled"
         />
 
         <View style={styles.filterTabs}>
@@ -233,7 +239,6 @@ export default function ComponentPlaygroundIndex() {
             items={tabItems}
             onSelect={setSelectedCategory}
             selectedKey={selectedCategory}
-            showsHorizontalScrollIndicator={false}
             size="large"
           />
         </View>

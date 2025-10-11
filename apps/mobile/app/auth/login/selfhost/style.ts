@@ -4,7 +4,6 @@ import { createStyles } from '@/theme';
 export const useStyles = createStyles(({ token }) => ({
   container: {
     alignItems: 'center',
-    backgroundColor: token.colorBgContainer,
     flex: 1,
     justifyContent: 'space-between',
     padding: token.paddingXL,
@@ -26,9 +25,13 @@ export const useStyles = createStyles(({ token }) => ({
     fontSize: token.fontSize,
     textAlign: 'center',
   },
+  form: {
+    marginBottom: token.marginLG,
+    width: '100%',
+  },
   header: {},
   loginButton: {
-    marginBottom: token.marginXL,
+    marginBottom: token.marginSM,
   },
   logo: {
     height: LOGO_SIZE,
@@ -53,6 +56,10 @@ export const useStyles = createStyles(({ token }) => ({
     lineHeight: token.lineHeightSM,
     textAlign: 'center',
   },
+  selfHostedButton: {
+    marginBottom: token.marginXL,
+    marginTop: token.marginLG,
+  },
   subtitle: {
     color: token.colorTextSecondary,
     fontSize: token.fontSize,
@@ -61,7 +68,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   title: {
     color: token.colorText,
-    fontSize: token.fontSizeHeading1,
+    fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
     marginBottom: token.marginSM,
   },

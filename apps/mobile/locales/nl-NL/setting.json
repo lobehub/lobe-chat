@@ -116,6 +116,33 @@
         "title": "Ongeldig verversingstoken"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Ga naar inlogpagina",
+      "confirmDescription": "Na inschakeling wordt de zelfgehoste configuratie-ingang op de inlogpagina weergegeven. Wilt u uitloggen en naar de inlogpagina gaan?",
+      "confirmResetAction": "Reset en ga naar inloggen",
+      "confirmResetDescription": "Het uitschakelen van de zelfgehoste modus zal het serveradres terugzetten naar de officiële instantie en uitloggen. Wilt u doorgaan?",
+      "confirmResetTitle": "Schakel zelfgehoste modus uit",
+      "confirmTitle": "Schakel zelfgehoste login ingang in",
+      "description": "Beheer of de knop voor zelfgehoste instanties op de inlogpagina wordt weergegeven",
+      "title": "Zelfgehoste modus inschakelen"
+    },
+    "server": {
+      "confirmDescription": "Na het wijzigen van het serveradres wordt u uitgelogd en moet u opnieuw inloggen. Wilt u doorgaan?",
+      "confirmTitle": "Bevestig serverwissel",
+      "current": "Huidig adres",
+      "description": "Na configuratie worden alle verzoeken via dit serveradres gestuurd. Laat leeg om terug te keren naar de officiële server.",
+      "group": "Serverconfiguratie",
+      "hint": "Moet beginnen met http:// of https://, mogelijk is opnieuw inloggen vereist.",
+      "invalid": "Voer een geldig adres in dat begint met http:// of https://",
+      "notice": "Aangepaste servers vervangen het standaard API-adres. Zorg dat de server beschikbaar is en compatibel met het LobeChat API-protocol. Na wisselen kan opnieuw inloggen of herstarten nodig zijn.",
+      "noticeTitle": "Let op voor het wisselen",
+      "placeholder": "https://uw-server.voorbeeld.com",
+      "reset": "Herstel standaard",
+      "resetSuccess": "Officieel serveradres hersteld",
+      "save": "Opslaan",
+      "title": "Zelfgehoste instantie",
+      "updated": "Aangepast serveradres bijgewerkt"
+    },
     "title": "Ontwikkelaarsopties"
   },
   "feedback": "Feedback",

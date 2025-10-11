@@ -116,6 +116,33 @@
         "title": "Token de atualização inválido"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Ir para a página de login",
+      "confirmDescription": "Após ativar, a entrada de configuração self-hosted será exibida na página de login. Deseja sair da conta atual e ir para a página de login?",
+      "confirmResetAction": "Redefinir e ir para login",
+      "confirmResetDescription": "Desativar o modo self-hosted irá redefinir o endereço do servidor para a instância oficial e sair da conta atual. Deseja continuar?",
+      "confirmResetTitle": "Desativar modo self-hosted",
+      "confirmTitle": "Ativar entrada de login self-hosted",
+      "description": "Controla se o botão da instância self-hosted será exibido na página de login",
+      "title": "Ativar modo self-hosted"
+    },
+    "server": {
+      "confirmDescription": "Após alterar o endereço do servidor, o usuário atual será desconectado e será necessário fazer login novamente. Deseja continuar?",
+      "confirmTitle": "Confirmar troca de servidor",
+      "current": "Endereço atual",
+      "description": "Após configuração, todas as requisições usarão este endereço de servidor. Deixe em branco para restaurar o servidor oficial.",
+      "group": "Configuração do servidor",
+      "hint": "Deve começar com http:// ou https://, o aplicativo pode precisar de novo login.",
+      "invalid": "Por favor, insira um endereço válido que comece com http:// ou https://",
+      "notice": "Servidores personalizados substituirão o endereço da API padrão. Certifique-se de que o serviço está disponível e compatível com o protocolo LobeChat API. Pode ser necessário fazer login novamente ou reiniciar o aplicativo após a troca.",
+      "noticeTitle": "Atenção antes de trocar",
+      "placeholder": "https://seu-servidor.exemplo.com",
+      "reset": "Restaurar padrão",
+      "resetSuccess": "Endereço do servidor oficial restaurado",
+      "save": "Salvar",
+      "title": "Instância self-hosted",
+      "updated": "Endereço do servidor personalizado atualizado"
+    },
     "title": "Opções de desenvolvedor"
   },
   "feedback": "Feedback",
