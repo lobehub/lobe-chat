@@ -1,3 +1,4 @@
+import { searchResultsPrompt } from '@lobechat/prompts';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -87,7 +88,7 @@ describe('search actions', () => {
       expect(result.current.searchLoading[messageId]).toBe(false);
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
-        JSON.stringify(expectedContent),
+        searchResultsPrompt(expectedContent),
       );
     });
 
