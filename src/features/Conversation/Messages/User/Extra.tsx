@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import ExtraContainer from '@/features/Conversation/components/Extras/ExtraContainer';
 import TTS from '@/features/Conversation/components/Extras/TTS';
@@ -22,7 +23,7 @@ export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, conten
   if (!showExtra) return;
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <Flexbox gap={8} style={{ marginTop: 8 }}>
       {extra?.tts && (
         <ExtraContainer>
           <TTS content={content} id={id} loading={loading} {...extra?.tts} />
@@ -33,6 +34,6 @@ export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, conten
           <Translate id={id} {...extra?.translate} loading={loading} />
         </ExtraContainer>
       )}
-    </div>
+    </Flexbox>
   );
 });

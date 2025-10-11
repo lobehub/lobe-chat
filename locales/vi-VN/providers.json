@@ -30,7 +30,10 @@
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
   "bfl": {
-    "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong dẫn đầu, kiến tạo cơ sở hạ tầng thị giác cho ngày mai."
+    "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong hàng đầu, kiến tạo hạ tầng thị giác cho ngày mai."
+  },
+  "cerebras": {
+    "description": "Cerebras là một nền tảng suy luận AI dựa trên hệ thống chuyên dụng CS-3, được thiết kế để cung cấp dịch vụ LLM nhanh nhất thế giới, phản hồi theo thời gian thực và thông lượng cao, nhằm loại bỏ độ trễ và tăng tốc các quy trình làm việc AI phức tạp như tạo mã theo thời gian thực và các tác vụ đại lý."
   },
   "cerebras": {
     "description": "Cerebras là một nền tảng suy luận AI dựa trên hệ thống chuyên dụng CS-3, được thiết kế để cung cấp dịch vụ LLM nhanh nhất thế giới, phản hồi theo thời gian thực và thông lượng cao, nhằm loại bỏ độ trễ và tăng tốc các quy trình làm việc AI phức tạp như tạo mã theo thời gian thực và các tác vụ đại lý."

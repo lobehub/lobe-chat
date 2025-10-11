@@ -20,6 +20,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     onSend,
     onMarkdownContentChange,
     sendMenu,
+    mentionItems,
   }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
@@ -27,6 +28,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
     useStoreUpdater('mobile', mobile!);
     useStoreUpdater('sendMenu', sendMenu!);
+    useStoreUpdater('mentionItems', mentionItems);
     useStoreUpdater('leftActions', leftActions!);
     useStoreUpdater('rightActions', rightActions!);
 

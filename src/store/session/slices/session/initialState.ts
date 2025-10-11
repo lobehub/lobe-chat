@@ -1,4 +1,4 @@
-import { LobeAgentSession } from '@/types/session';
+import { LobeSessions } from '@/types/session';
 
 export interface SessionState {
   /**
@@ -6,16 +6,16 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  defaultSessions: LobeAgentSession[];
+  defaultSessions: LobeSessions;
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
-  pinnedSessions: LobeAgentSession[];
+  pinnedSessions: LobeSessions;
   searchKeywords: string;
   sessionSearchKeywords?: string;
   /**
    * it means defaultSessions
    */
-  sessions: LobeAgentSession[];
+  sessions: LobeSessions;
   signalSessionMeta?: AbortController;
 }
 

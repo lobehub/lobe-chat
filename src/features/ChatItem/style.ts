@@ -11,8 +11,10 @@ export const useStyles = createStyles(
       avatarSize,
       editing,
       time,
+      disabled,
     }: {
       avatarSize?: number;
+      disabled?: boolean;
       editing?: boolean;
       placement?: 'left' | 'right';
       primary?: boolean;
@@ -158,9 +160,15 @@ export const useStyles = createStyles(
       message: cx(
         typeStylish,
         css`
+          user-select: ${disabled ? 'none' : 'text'};
+
           position: relative;
+
           overflow: hidden;
+
           max-width: 100%;
+
+          color: ${disabled ? token.colorTextSecondary : 'unset'};
 
           ${responsive.mobile} {
             width: 100%;

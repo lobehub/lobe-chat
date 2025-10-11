@@ -338,6 +338,25 @@ describe('SessionModel', () => {
       // 断言结果
       expect(result.id).toBe(customId);
     });
+
+    it('should create a session associated with a group', async () => {
+      await serverDB.insert(sessionGroups).values({
+        id: 'session-group-1',
+        name: 'Session Group',
+        userId,
+      });
+
+      const result = await sessionModel.create({
+        type: 'agent',
+        config: { model: 'gpt-3.5-turbo' },
+        session: { title: 'Grouped Session', groupId: 'session-group-1' },
+      });
+
+      expect(result.groupId).toBe('session-group-1');
+
+      const fetched = await sessionModel.findByIdOrSlug(result.id);
+      expect(fetched?.group?.id).toBe('session-group-1');
+    });
   });
 
   describe('batchCreate', () => {
