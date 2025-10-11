@@ -1,25 +1,25 @@
 import { OpenAI } from 'openai';
 import { describe, expect, it, vi } from 'vitest';
 
-import { OpenAIChatMessage, UserMessageContentPart } from '../types/chat';
-import { imageUrlToBase64 } from '../utils/imageToBase64';
+import { OpenAIChatMessage, UserMessageContentPart } from '../../types/chat';
+import { imageUrlToBase64 } from '../../utils/imageToBase64';
+import { parseDataUri } from '../../utils/uriParser';
 import {
   buildAnthropicBlock,
   buildAnthropicMessage,
   buildAnthropicMessages,
   buildAnthropicTools,
-} from './anthropicHelpers';
-import { parseDataUri } from './uriParser';
+} from './anthropic';
 
 // Mock the parseDataUri function since it's an implementation detail
-vi.mock('./uriParser', () => ({
+vi.mock('../../utils/uriParser', () => ({
   parseDataUri: vi.fn().mockReturnValue({
     mimeType: 'image/jpeg',
     base64: 'base64EncodedString',
     type: 'base64',
   }),
 }));
-vi.mock('../utils/imageToBase64');
+vi.mock('../../utils/imageToBase64');
 
 describe('anthropicHelpers', () => {
   describe('buildAnthropicBlock', () => {

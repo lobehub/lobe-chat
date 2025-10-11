@@ -1,5 +1,43 @@
 [
   {
+    "children": {
+      "fixes": ["Disable rich text in markdown editor."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.6"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.5"
+  },
+  {
+    "children": {
+      "fixes": ["Add 'gemini-2.5-flash-image' to disabled models Thinking."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add delete & regenerate hotkeys."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.2"
+  },
+  {
     "children": {},
     "date": "2025-10-09",
     "version": "1.136.1"

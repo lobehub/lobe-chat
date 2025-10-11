@@ -258,6 +258,173 @@ describe('LobeBedrockAI', () => {
         delete process.env.DEBUG_BEDROCK_CHAT_COMPLETION;
       });
 
+      describe('Parameter conflict handling for Claude 4+ models', () => {
+        it('should send only temperature for Claude 4+ models when both temperature and top_p are provided', async () => {
+          // Arrange
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          const mockResponse = Promise.resolve(mockStream);
+          (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'anthropic.claude-opus-4-1-20250805-v1:0',
+            temperature: 0.8,
+            top_p: 0.9,
+          });
+
+          // Assert
+          expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+            accept: 'application/json',
+            body: JSON.stringify({
+              anthropic_version: 'bedrock-2023-05-31',
+              max_tokens: 4096,
+              messages: [{ content: 'Hello', role: 'user' }],
+              temperature: 0.4, // temperature / 2, top_p omitted due to conflict
+            }),
+            contentType: 'application/json',
+            modelId: 'anthropic.claude-opus-4-1-20250805-v1:0',
+          });
+        });
+
+        it('should send only top_p for Claude 4+ models when temperature is not provided', async () => {
+          // Arrange
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          const mockResponse = Promise.resolve(mockStream);
+          (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'anthropic.claude-sonnet-4-20250514-v1:0',
+            top_p: 0.9,
+          });
+
+          // Assert
+          expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+            accept: 'application/json',
+            body: JSON.stringify({
+              anthropic_version: 'bedrock-2023-05-31',
+              max_tokens: 4096,
+              messages: [{ content: 'Hello', role: 'user' }],
+              top_p: 0.9, // temperature omitted since not provided
+            }),
+            contentType: 'application/json',
+            modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+          });
+        });
+
+        it('should send both temperature and top_p for non-Claude-4+ models', async () => {
+          // Arrange
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          const mockResponse = Promise.resolve(mockStream);
+          (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+            temperature: 0.8,
+            top_p: 0.9,
+          });
+
+          // Assert
+          expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+            accept: 'application/json',
+            body: JSON.stringify({
+              anthropic_version: 'bedrock-2023-05-31',
+              max_tokens: 4096,
+              messages: [{ content: 'Hello', role: 'user' }],
+              temperature: 0.4, // temperature / 2
+              top_p: 0.9, // both parameters allowed for older models
+            }),
+            contentType: 'application/json',
+            modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+          });
+        });
+
+        it('should handle US region Claude 4+ model IDs correctly', async () => {
+          // Arrange
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          const mockResponse = Promise.resolve(mockStream);
+          (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+            temperature: 0.6,
+            top_p: 0.8,
+          });
+
+          // Assert
+          expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+            accept: 'application/json',
+            body: JSON.stringify({
+              anthropic_version: 'bedrock-2023-05-31',
+              max_tokens: 4096,
+              messages: [{ content: 'Hello', role: 'user' }],
+              temperature: 0.3, // temperature / 2, top_p omitted due to conflict
+            }),
+            contentType: 'application/json',
+            modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+          });
+        });
+
+        it('should handle standard Claude 4+ model IDs (non-Bedrock format)', async () => {
+          // Arrange
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          const mockResponse = Promise.resolve(mockStream);
+          (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'claude-opus-4-1',
+            temperature: 0.7,
+            top_p: 0.95,
+          });
+
+          // Assert
+          expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+            accept: 'application/json',
+            body: JSON.stringify({
+              anthropic_version: 'bedrock-2023-05-31',
+              max_tokens: 4096,
+              messages: [{ content: 'Hello', role: 'user' }],
+              temperature: 0.35, // temperature / 2, top_p omitted due to conflict
+            }),
+            contentType: 'application/json',
+            modelId: 'claude-opus-4-1',
+          });
+        });
+      });
+
       it('should handle errors and throw AgentRuntimeError', async () => {
         // Arrange
         const errorMessage = 'An error occurred';

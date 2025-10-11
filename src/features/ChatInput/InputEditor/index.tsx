@@ -12,7 +12,8 @@ import {
 } from '@lobehub/editor';
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
 import { combineKeys } from '@lobehub/ui';
-import { memo, useEffect, useRef } from 'react';
+import { css, cx } from 'antd-style';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
 import { useUserStore } from '@/store/user';
@@ -21,6 +22,12 @@ import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 import { useChatInputStore, useStoreApi } from '../store';
 import Placeholder from './Placeholder';
 import { useSlashItems } from './useSlashItems';
+
+const className = cx(css`
+  p {
+    margin-block-end: 0;
+  }
+`);
 
 const InputEditor = memo<{ defaultRows?: number }>(() => {
   const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
@@ -55,11 +62,40 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
     };
   }, [state.isEmpty]);
 
+  const enableMarkdown = useUserStore(preferenceSelectors.inputMarkdownRender);
+  const plugins = useMemo(
+    () =>
+      !enableMarkdown
+        ? undefined
+        : [
+            ReactListPlugin,
+            ReactLinkPlugin,
+            ReactCodePlugin,
+            ReactCodeblockPlugin,
+            ReactHRPlugin,
+            ReactTablePlugin,
+            Editor.withProps(ReactMathPlugin, {
+              renderComp: expand
+                ? undefined
+                : (props) => (
+                    <FloatMenu
+                      {...props}
+                      getPopupContainer={() => (slashMenuRef as any)?.current}
+                    />
+                  ),
+            }),
+          ],
+    [enableMarkdown],
+  );
+
   return (
     <Editor
       autoFocus
+      className={className}
       content={''}
       editor={editor}
+      enablePasteMarkdown={enableMarkdown}
+      markdownOption={enableMarkdown}
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
@@ -109,21 +145,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         }
       }}
       placeholder={<Placeholder />}
-      plugins={[
-        ReactListPlugin,
-        ReactLinkPlugin,
-        ReactCodePlugin,
-        ReactCodeblockPlugin,
-        ReactHRPlugin,
-        ReactTablePlugin,
-        Editor.withProps(ReactMathPlugin, {
-          renderComp: expand
-            ? undefined
-            : (props) => (
-                <FloatMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
-              ),
-        }),
-      ]}
+      plugins={plugins}
       slashOption={{
         items: slashItems,
         renderComp: expand

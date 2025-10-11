@@ -1,4 +1,4 @@
-import { desensitizeUrl } from '../utils/desensitizeUrl';
+import { desensitizeUrl } from '../../utils/desensitizeUrl';
 
 class CloudflareStreamTransformer {
   private textDecoder = new TextDecoder();

@@ -56,6 +56,7 @@ const azureChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      structuredOutput: true,
       vision: true,
     },
     config: {

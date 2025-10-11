@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
   },
+  "cerebras": {
+    "description": "Cerebras to platforma do wnioskowania AI oparta na dedykowanym systemie CS-3, zaprojektowana w celu zapewnienia najszybszej na świecie, reakcji w czasie rzeczywistym oraz wysokiej przepustowości usług LLM. Stworzona została, aby eliminować opóźnienia i przyspieszać złożone przepływy pracy AI, takie jak generowanie kodu w czasie rzeczywistym i zadania agentowe."
+  },
   "cloudflare": {
     "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
   },

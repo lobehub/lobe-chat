@@ -45,6 +45,7 @@ const modelsWithModalities = new Set([
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
+  'gemini-2.5-flash-image',
 ]);
 
 const modelsDisableInstuction = new Set([
@@ -52,6 +53,7 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
+  'gemini-2.5-flash-image',
   'gemma-3-1b-it',
   'gemma-3-4b-it',
   'gemma-3-12b-it',

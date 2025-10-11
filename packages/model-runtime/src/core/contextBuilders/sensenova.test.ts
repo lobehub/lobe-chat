@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { convertSenseNovaMessage } from './sensenovaHelpers';
+import { convertSenseNovaMessage } from './sensenova';
 
 describe('convertSenseNovaMessage', () => {
   it('should convert string content to text type array', () => {
