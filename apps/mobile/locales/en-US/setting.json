@@ -100,6 +100,8 @@
       "title": "Clear Authentication Data"
     },
     "customServer": {
+      "confirmDescription": "Updating the server address will sign you out and require you to log in again. Continue?",
+      "confirmTitle": "Confirm Server Switch",
       "current": "Current server address",
       "description": "Configure a custom server for all requests. Leave empty to restore the official server.",
       "hint": "Must start with http:// or https://. You may need to log in again after changing it.",

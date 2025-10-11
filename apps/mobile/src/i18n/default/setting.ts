@@ -100,6 +100,8 @@ export default {
       title: '清空认证数据',
     },
     customServer: {
+      confirmDescription: '修改服务器地址后将会退出当前用户并需要重新登录，是否继续？',
+      confirmTitle: '确认切换服务器',
       current: '当前服务器地址',
       description: '配置后，所有请求都会使用该服务器地址。留空则恢复到官方服务器。',
       hint: '必须以 http:// 或 https:// 开头，应用可能需要重新登录。',
