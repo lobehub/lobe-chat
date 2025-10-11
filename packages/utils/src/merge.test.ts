@@ -141,6 +141,25 @@ describe('mergeArrayById', () => {
       expect(result).toContainEqual({ id: '2', name: 'User 2', value: 300 });
     });
 
+    it('should keep default order when overriding items', () => {
+      const defaultItems = [
+        { id: 'a', name: 'Default A' },
+        { id: 'b', name: 'Default B' },
+        { id: 'c', name: 'Default C' },
+      ];
+
+      const userItems = [
+        { id: 'b', enabled: false, name: 'Default B' },
+        { id: 'c', enabled: true, name: 'Default C' },
+      ];
+
+      const result = mergeArrayById(defaultItems, userItems);
+
+      expect(result.map((item) => item.id)).toEqual(['a', 'b', 'c']);
+      expect(result[1]).toMatchObject({ id: 'b', enabled: false });
+      expect(result[2]).toMatchObject({ id: 'c', enabled: true });
+    });
+
     it('should merge multiple items correctly', () => {
       const defaultItems = [
         { id: '1', name: 'Default 1', value: 100, meta: { key: 'value' } },
