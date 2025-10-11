@@ -2,7 +2,7 @@
 import { ChatCompletionTool, ChatStreamPayload } from '@lobechat/model-runtime';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as anthropicHelpers from '../../utils/anthropicHelpers';
+import * as anthropicHelpers from '../../core/contextBuilders/anthropic';
 import * as debugStreamModule from '../../utils/debugStream';
 import { LobeAnthropicAI } from './index';
 
@@ -785,18 +785,6 @@ describe('LobeAnthropicAI', () => {
         const payload: ChatStreamPayload = {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'claude-3-haiku-20240307',
-          temperature: 0.7,
-        };
-
-        const result = await instance['buildAnthropicPayload'](payload);
-
-        expect(result.max_tokens).toBe(4096);
-      });
-
-      it('should set correct max_tokens based on model for non claude-3 models', async () => {
-        const payload: ChatStreamPayload = {
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'claude-2.1',
           temperature: 0.7,
         };
 

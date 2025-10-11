@@ -2,6 +2,7 @@ import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { AgentRuntimeErrorType } from '../../types/error';
 
 export interface GroqModelCard {
@@ -19,11 +20,17 @@ export const LobeGroq = createOpenAICompatibleRuntime({
     },
     handlePayload: (payload) => {
       const { temperature, ...restPayload } = payload;
+
+      // Groq doesn't support temperature <= 0, set to undefined in that case
+      const resolvedParams = resolveParameters({ temperature }, { normalizeTemperature: false });
+
       return {
         ...restPayload,
         stream: payload.stream ?? true,
-
-        temperature: temperature <= 0 ? undefined : temperature,
+        temperature:
+          resolvedParams.temperature !== undefined && resolvedParams.temperature <= 0
+            ? undefined
+            : resolvedParams.temperature,
       } as any;
     },
   },

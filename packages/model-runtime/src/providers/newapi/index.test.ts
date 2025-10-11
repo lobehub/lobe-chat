@@ -563,7 +563,22 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
 
           if (inputPrice !== undefined) {
             const outputPrice = inputPrice * (pricing.completion_ratio || 1);
-            enhancedModel.pricing = { input: inputPrice, output: outputPrice };
+            enhancedModel.pricing = {
+              units: [
+                {
+                  name: 'textInput',
+                  unit: 'millionTokens',
+                  strategy: 'fixed',
+                  rate: inputPrice,
+                },
+                {
+                  name: 'textOutput',
+                  unit: 'millionTokens',
+                  strategy: 'fixed',
+                  rate: outputPrice,
+                },
+              ],
+            };
           }
         }
 
@@ -582,8 +597,18 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       });
 
       // Verify pricing results
-      expect(enrichedModels[0].pricing).toEqual({ input: 40, output: 120 }); // model_price * 2, input * completion_ratio
-      expect(enrichedModels[1].pricing).toEqual({ input: 10, output: 10 }); // model_ratio * 2, input * 1 (default)
+      expect(enrichedModels[0].pricing).toEqual({
+        units: [
+          { name: 'textInput', unit: 'millionTokens', strategy: 'fixed', rate: 40 },
+          { name: 'textOutput', unit: 'millionTokens', strategy: 'fixed', rate: 120 },
+        ],
+      }); // model_price * 2, input * completion_ratio
+      expect(enrichedModels[1].pricing).toEqual({
+        units: [
+          { name: 'textInput', unit: 'millionTokens', strategy: 'fixed', rate: 10 },
+          { name: 'textOutput', unit: 'millionTokens', strategy: 'fixed', rate: 10 },
+        ],
+      }); // model_ratio * 2, input * 1 (default)
       expect(enrichedModels[2].pricing).toBeUndefined(); // quota_type = 1, skipped
 
       // Verify provider detection

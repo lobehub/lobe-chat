@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
   },
+  "cerebras": {
+    "description": "Cerebras to platforma do wnioskowania AI oparta na dedykowanym systemie CS-3, zaprojektowana w celu zapewnienia najszybszej na świecie, reakcji w czasie rzeczywistym oraz wysokiej przepustowości usług LLM. Stworzona została, aby eliminować opóźnienia i przyspieszać złożone przepływy pracy AI, takie jak generowanie kodu w czasie rzeczywistym i zadania agentowe."
+  },
   "cloudflare": {
     "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
   },
@@ -109,6 +112,9 @@
   },
   "ollama": {
     "description": "Modele oferowane przez Ollama obejmują szeroki zakres zastosowań, w tym generowanie kodu, obliczenia matematyczne, przetwarzanie wielojęzyczne i interakcje konwersacyjne, wspierając różnorodne potrzeby wdrożeń na poziomie przedsiębiorstw i lokalnych."
+  },
+  "ollamacloud": {
+    "description": "Ollama Cloud oferuje oficjalnie hostowaną usługę inferencji, umożliwiającą natychmiastowy dostęp do biblioteki modeli Ollama oraz obsługę interfejsu zgodnego z OpenAI."
   },
   "openai": {
     "description": "OpenAI jest wiodącą na świecie instytucją badawczą w dziedzinie sztucznej inteligencji, której modele, takie jak seria GPT, przesuwają granice przetwarzania języka naturalnego. OpenAI dąży do zmiany wielu branż poprzez innowacyjne i efektywne rozwiązania AI. Ich produkty charakteryzują się znaczną wydajnością i opłacalnością, znajdując szerokie zastosowanie w badaniach, biznesie i innowacyjnych aplikacjach."

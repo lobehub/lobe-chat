@@ -1,10 +1,10 @@
+import { AgentItem, LobeAgentConfig } from '@lobechat/types';
+
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
-import { AgentItem } from '@/database/schemas';
 import { BaseClientService } from '@/services/baseClientService';
-import { LobeAgentConfig } from '@/types/agent';
 
 import { ISessionService } from './type';
 

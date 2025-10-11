@@ -6,6 +6,7 @@ import { Suspense, memo } from 'react';
 
 import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -26,11 +27,12 @@ const Top = () => {
 
 const Nav = memo(() => {
   const theme = useTheme();
+  const isSingleMode = useIsSingleMode()
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    !inZenMode && (
+    !inZenMode && !isSingleMode && (
       <SideNav
         avatar={
           <div className={electronStylish.nodrag}>

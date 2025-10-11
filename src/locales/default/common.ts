@@ -239,6 +239,7 @@ export default {
   },
   information: '社区与资讯',
   installPWA: '安装浏览器应用 (PWA)',
+  labs: '实验室',
   lang: {
     'ar': '阿拉伯语',
     'bg-BG': '保加利亚语',

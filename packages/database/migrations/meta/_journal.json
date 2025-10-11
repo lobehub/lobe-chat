@@ -236,7 +236,35 @@
       "idx": 33,
       "version": "7",
       "when": 1758012348218,
-      "tag": "0033_modern_mercury",
+      "tag": "0033_add_table_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1758825944181,
+      "tag": "0034_fix_chat_group",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1759116400580,
+      "tag": "0035_add_virtual",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1759666151079,
+      "tag": "0036_add_group_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1760086906862,
+      "tag": "0037_add_user_memory",
       "breakpoints": true
     },
     {

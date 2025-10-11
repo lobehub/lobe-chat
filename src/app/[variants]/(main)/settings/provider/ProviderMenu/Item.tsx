@@ -35,13 +35,14 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ProviderItem = memo<
-  AiProviderListItem & {
-    onClick: (id: string) => void;
-  }
->(({ id, name, source, enabled, logo, onClick = () => {} }) => {
-  const { styles, cx } = useStyles();
-  const searchParams = useSearchParams();
+interface ProviderItemProps extends AiProviderListItem {
+  onClick: (id: string) => void;
+}
+
+const ProviderItem = memo<ProviderItemProps>(
+  ({ id, name, source, enabled, logo, onClick = () => {} }) => {
+    const { styles, cx } = useStyles();
+    const searchParams = useSearchParams();
 
   const activeKey = searchParams.get('provider');
 

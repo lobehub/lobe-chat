@@ -5,6 +5,7 @@ import { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import {
   Check,
+  ExternalLink,
   HardDriveDownload,
   ListTree,
   LucideCopy,
@@ -17,8 +18,9 @@ import {
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 import { configService } from '@/services/config';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -40,6 +42,8 @@ interface ActionProps {
 const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
+
+  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
   const sessionCustomGroups = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
   const [pin, removeSession, pinSession, duplicateSession, updateSessionGroup] = useSessionStore(
@@ -82,6 +86,19 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
               duplicateSession(id);
             },
           },
+          ...(isDesktop
+            ? [
+                {
+                  icon: <Icon icon={ExternalLink} />,
+                  key: 'openInNewWindow',
+                  label: '单独打开页面',
+                  onClick: ({ domEvent }: { domEvent: Event }) => {
+                    domEvent.stopPropagation();
+                    openSessionInNewWindow(id);
+                  },
+                },
+              ]
+            : []),
           {
             type: 'divider',
           },
@@ -167,7 +184,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
           },
         ] as ItemType[]
       ).filter(Boolean),
-    [id, pin],
+    [id, pin, openSessionInNewWindow],
   );
 
   return (

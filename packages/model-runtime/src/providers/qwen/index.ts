@@ -1,6 +1,7 @@
 import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { QwenAIStream } from '../../core/streams';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { createQwenImage } from './createImage';
@@ -28,6 +29,20 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
       const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } =
         payload;
 
+      // Resolve parameters with model-specific constraints
+      const resolvedParams = resolveParameters(
+        { presence_penalty, temperature, top_p },
+        {
+          normalizeTemperature: false,
+          presencePenaltyRange: QwenLegacyModels.has(model) ? undefined : { max: 2, min: -2 },
+          temperatureRange: { max: 2, min: 0 },
+          topPRange:
+            model.startsWith('qvq') || model.startsWith('qwen-vl')
+              ? { max: 1, min: 0 }
+              : { max: 1, min: 0 },
+        },
+      );
+
       return {
         ...rest,
         ...(model.includes('-thinking')
@@ -47,30 +62,13 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
             : {}),
         frequency_penalty: undefined,
         model,
-        presence_penalty: QwenLegacyModels.has(model)
-          ? undefined
-          : presence_penalty !== undefined && presence_penalty >= -2 && presence_penalty <= 2
-            ? presence_penalty
-            : undefined,
+        presence_penalty: resolvedParams.presence_penalty,
         stream: true,
-        temperature:
-          temperature !== undefined && temperature >= 0 && temperature < 2
-            ? temperature
-            : undefined,
-        ...(model.startsWith('qvq') || model.startsWith('qwen-vl')
-          ? {
-              top_p: top_p !== undefined && top_p > 0 && top_p <= 1 ? top_p : undefined,
-            }
-          : {
-              top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
-            }),
+        temperature: resolvedParams.temperature,
+        top_p: resolvedParams.top_p,
         ...(enabledSearch && {
           enable_search: enabledSearch,
           search_options: {
-            /*
-            enable_citation: true,
-            enable_source: true,
-            */
             search_strategy: process.env.QWEN_SEARCH_STRATEGY || 'standard', // standard or pro
           },
         }),

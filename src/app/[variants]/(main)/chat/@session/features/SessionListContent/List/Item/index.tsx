@@ -1,12 +1,14 @@
 import { ModelTag } from '@lobehub/icons';
-import { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { isDesktop } from '@/const/version';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -24,27 +26,46 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
   const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
 
+  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [chatSelectors.isAIGenerating(s) && id === s.activeId]);
 
-  const [pin, title, description, avatar, avatarBackground, updateAt, model, group] =
-    useSessionStore((s) => {
-      const session = sessionSelectors.getSessionById(id)(s);
-      const meta = session.meta;
+  const [pin, title, avatar, avatarBackground, updateAt, model, group] = useSessionStore((s) => {
+    const session = sessionSelectors.getSessionById(id)(s);
+    const meta = session.meta;
 
-      return [
-        sessionHelpers.getSessionPinned(session),
-        sessionMetaSelectors.getTitle(meta),
-        sessionMetaSelectors.getDescription(meta),
-        sessionMetaSelectors.getAvatar(meta),
-        meta.backgroundColor,
-        session?.updatedAt,
-        session.model,
-        session?.group,
-      ];
-    });
+    return [
+      sessionHelpers.getSessionPinned(session),
+      sessionMetaSelectors.getTitle(meta),
+      sessionMetaSelectors.getAvatar(meta),
+      meta.backgroundColor,
+      session?.updatedAt,
+      session.model,
+      session?.group,
+      // sessionMetaSelectors.getDescription(meta),
+    ];
+  });
 
   const showModel = model !== defaultModel;
+
+  const handleDoubleClick = () => {
+    if (isDesktop) {
+      openSessionInNewWindow(id);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent) => {
+    // Set drag data to identify the session being dragged
+    e.dataTransfer.setData('text/plain', id);
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    // If drag ends without being dropped in a valid target, open in new window
+    if (isDesktop && e.dataTransfer.dropEffect === 'none') {
+      openSessionInNewWindow(id);
+    }
+  };
 
   const actions = useMemo(
     () => (
@@ -77,9 +98,13 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         avatar={avatar}
         avatarBackground={avatarBackground}
         date={updateAt?.valueOf()}
-        description={description}
+        // description={description}
+        draggable={isDesktop}
         key={id}
         loading={loading}
+        onDoubleClick={handleDoubleClick}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
         pin={pin}
         showAction={open}
         styles={{

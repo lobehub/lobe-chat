@@ -294,6 +294,21 @@
           "title": "Finestra di contesto massima",
           "unlimited": "Illimitato"
         },
+        "type": {
+          "extra": "Diversi tipi di modelli hanno scenari d'uso e capacità differenziate",
+          "options": {
+            "chat": "Conversazione",
+            "embedding": "Vettorializzazione",
+            "image": "Generazione di immagini",
+            "realtime": "Conversazione in tempo reale",
+            "stt": "Trascrizione vocale",
+            "text2music": "Testo in musica",
+            "text2video": "Testo in video",
+            "tts": "Sintesi vocale"
+          },
+          "placeholder": "Seleziona il tipo di modello",
+          "title": "Tipo di modello"
+        },
         "vision": {
           "extra": "Questa configurazione abiliterà solo la configurazione di caricamento immagini nell'app, la disponibilità di riconoscimento dipende interamente dal modello stesso, testare autonomamente la disponibilità di riconoscimento visivo di questo modello.",
           "title": "Supporto per riconoscimento visivo"

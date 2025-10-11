@@ -294,6 +294,21 @@
           "title": "Janela de contexto máxima",
           "unlimited": "Ilimitado"
         },
+        "type": {
+          "extra": "Diferentes tipos de modelos possuem cenários de uso e capacidades diferenciadas",
+          "options": {
+            "chat": "Conversa",
+            "embedding": "Vetorização",
+            "image": "Geração de imagem",
+            "realtime": "Conversa em tempo real",
+            "stt": "Reconhecimento de voz para texto",
+            "text2music": "Texto para música",
+            "text2video": "Texto para vídeo",
+            "tts": "Síntese de voz"
+          },
+          "placeholder": "Por favor, selecione o tipo de modelo",
+          "title": "Tipo de modelo"
+        },
         "vision": {
           "extra": "Esta configuração apenas habilitará a configuração de upload de imagens no aplicativo, se o reconhecimento for suportado depende do modelo em si, teste a capacidade de reconhecimento visual desse modelo.",
           "title": "Suporte a Reconhecimento Visual"

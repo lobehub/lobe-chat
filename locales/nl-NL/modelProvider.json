@@ -294,6 +294,21 @@
           "title": "Maximale contextvenster",
           "unlimited": "Onbeperkt"
         },
+        "type": {
+          "extra": "Verschillende modeltypen hebben verschillende toepassingsscenario's en mogelijkheden",
+          "options": {
+            "chat": "Gesprek",
+            "embedding": "Vectorisatie",
+            "image": "Afbeeldingsgeneratie",
+            "realtime": "Realtime gesprek",
+            "stt": "Spraak naar tekst",
+            "text2music": "Tekst naar muziek",
+            "text2video": "Tekst naar video",
+            "tts": "Spraaksynthese"
+          },
+          "placeholder": "Selecteer een modeltype",
+          "title": "Modeltype"
+        },
         "vision": {
           "extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",
           "title": "Ondersteuning voor visuele herkenning"

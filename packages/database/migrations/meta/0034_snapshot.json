@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "63c6dd55-5dac-4241-a79d-4a3e8e763b95",
+  "id": "3e61048a-32fc-411b-9176-b8f1aeb26322",
   "policies": {},
   "prevId": "943ae678-fb1a-4dbd-b797-cfdf83931092",
   "roles": {},
@@ -923,6 +923,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "pinned": {
           "name": "pinned",
           "type": "boolean",
@@ -983,6 +989,15 @@
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "chat_groups_group_id_session_groups_id_fk": {
+          "name": "chat_groups_group_id_session_groups_id_fk",
+          "tableFrom": "chat_groups",
+          "tableTo": "session_groups",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -2689,7 +2704,7 @@
         },
         "role": {
           "name": "role",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },

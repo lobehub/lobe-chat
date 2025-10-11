@@ -5,6 +5,7 @@ const moonshotChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      structuredOutput: true,
     },
     contextWindowTokens: 262_144,
     description:

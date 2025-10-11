@@ -1,9 +1,12 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
-import { ChatCitationItem, ModelTokensUsage } from '@lobechat/types';
+
+import { ChatCitationItem } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../types';
+import { convertAnthropicUsage } from '../usageConverters';
 import {
+  ChatPayloadForTransformStream,
   StreamContext,
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
@@ -17,31 +20,20 @@ import {
 export const transformAnthropicStream = (
   chunk: Anthropic.MessageStreamEvent,
   context: StreamContext,
+  payload?: ChatPayloadForTransformStream,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
   switch (chunk.type) {
     case 'message_start': {
       context.id = chunk.message.id;
       context.returnedCitationArray = [];
-      let totalInputTokens = chunk.message.usage?.input_tokens;
+      const usage = convertAnthropicUsage(chunk, undefined, payload);
 
-      if (
-        chunk.message.usage?.cache_creation_input_tokens ||
-        chunk.message.usage?.cache_read_input_tokens
-      ) {
-        totalInputTokens =
-          chunk.message.usage?.input_tokens +
-          (chunk.message.usage.cache_creation_input_tokens || 0) +
-          (chunk.message.usage.cache_read_input_tokens || 0);
+      if (usage) {
+        context.usage = usage;
+      } else {
+        delete context.usage;
       }
-
-      context.usage = {
-        inputCacheMissTokens: chunk.message.usage?.input_tokens,
-        inputCachedTokens: chunk.message.usage?.cache_read_input_tokens || undefined,
-        inputWriteCacheTokens: chunk.message.usage?.cache_creation_input_tokens || undefined,
-        totalInputTokens,
-        totalOutputTokens: chunk.message.usage?.output_tokens,
-      };
 
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
     }
@@ -193,26 +185,19 @@ export const transformAnthropicStream = (
     }
 
     case 'message_delta': {
-      const totalOutputTokens =
-        chunk.usage?.output_tokens + (context.usage?.totalOutputTokens || 0);
-      const totalInputTokens = context.usage?.totalInputTokens || 0;
-      const totalTokens = totalInputTokens + totalOutputTokens;
+      const aggregatedUsage = convertAnthropicUsage(chunk, context.usage, payload);
 
-      if (totalTokens > 0) {
+      if (aggregatedUsage) {
+        context.usage = aggregatedUsage;
+      }
+
+      if (aggregatedUsage && (aggregatedUsage.totalTokens ?? 0) > 0) {
         return [
           { data: chunk.delta.stop_reason, id: context.id, type: 'stop' },
-          {
-            data: {
-              ...context.usage,
-              totalInputTokens,
-              totalOutputTokens,
-              totalTokens,
-            } as ModelTokensUsage,
-            id: context.id,
-            type: 'usage',
-          },
+          { data: aggregatedUsage, id: context.id, type: 'usage' },
         ];
       }
+
       return { data: chunk.delta.stop_reason, id: context.id, type: 'stop' };
     }
 
@@ -241,20 +226,24 @@ export interface AnthropicStreamOptions {
   callbacks?: ChatStreamCallbacks;
   enableStreaming?: boolean; // 选择 TPS 计算方式（非流式时传 false）
   inputStartAt?: number;
+  payload?: ChatPayloadForTransformStream;
 }
 
 export const AnthropicStream = (
   stream: Stream<Anthropic.MessageStreamEvent> | ReadableStream,
-  { callbacks, inputStartAt, enableStreaming = true }: AnthropicStreamOptions = {},
+  { callbacks, inputStartAt, enableStreaming = true, payload }: AnthropicStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
+  const transformWithPayload: typeof transformAnthropicStream = (chunk, ctx) =>
+    transformAnthropicStream(chunk, ctx, payload);
+
   return readableStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformAnthropicStream, {
+      createTokenSpeedCalculator(transformWithPayload, {
         enableStreaming: enableStreaming,
         inputStartAt,
         streamStack,
