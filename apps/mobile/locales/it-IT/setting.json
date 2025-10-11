@@ -99,6 +99,20 @@
       "success": "Dati di autenticazione cancellati con successo",
       "title": "Cancella dati di autenticazione"
     },
+    "customServer": {
+      "current": "Indirizzo server corrente",
+      "description": "Dopo la configurazione, tutte le richieste utilizzeranno questo indirizzo server. Lascia vuoto per tornare al server ufficiale.",
+      "hint": "Deve iniziare con http:// o https://, potrebbe essere necessario effettuare nuovamente il login nell'app.",
+      "invalid": "Inserisci un indirizzo valido che inizi con http:// o https://",
+      "notice": "Il server personalizzato sostituirà l'indirizzo dell'interfaccia predefinita. Assicurati che il servizio sia disponibile e compatibile con il protocollo LobeChat API. Potrebbe essere necessario effettuare nuovamente il login o riavviare l'app dopo il cambio.",
+      "noticeTitle": "Attenzione prima di cambiare",
+      "placeholder": "https://tuo-server.esempio.com",
+      "reset": "Ripristina predefinito",
+      "resetSuccess": "Indirizzo server ufficiale ripristinato",
+      "save": "Salva",
+      "title": "Indirizzo server personalizzato",
+      "updated": "Indirizzo server personalizzato aggiornato"
+    },
     "failurePrefix": "Operazione fallita: ",
     "mode": {
       "already": "Sei già in modalità sviluppatore",

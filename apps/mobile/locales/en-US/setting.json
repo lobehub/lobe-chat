@@ -104,6 +104,8 @@
       "description": "Configure a custom server for all requests. Leave empty to restore the official server.",
       "hint": "Must start with http:// or https://. You may need to log in again after changing it.",
       "invalid": "Please enter a valid address starting with http:// or https://",
+      "notice": "Custom servers will replace the default API endpoint. Please ensure the service is available and compatible with the LobeChat API protocol. Switching may require you to log in again or restart the application.",
+      "noticeTitle": "Before switching servers",
       "placeholder": "https://your-server.example.com",
       "reset": "Restore Default",
       "resetSuccess": "Official server address restored",

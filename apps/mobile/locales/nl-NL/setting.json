@@ -99,6 +99,20 @@
       "success": "Authenticatiegegevens zijn gewist",
       "title": "Authenticatiegegevens wissen"
     },
+    "customServer": {
+      "current": "Huidige serveradres",
+      "description": "Na configuratie worden alle verzoeken via dit serveradres verzonden. Laat leeg om terug te keren naar de officiële server.",
+      "hint": "Moet beginnen met http:// of https://, mogelijk is opnieuw inloggen vereist.",
+      "invalid": "Voer een geldig adres in dat begint met http:// of https://",
+      "notice": "Een aangepaste server vervangt het standaard API-adres. Zorg ervoor dat de server beschikbaar is en compatibel met het LobeChat API-protocol. Na wisselen kan opnieuw inloggen of herstarten van de app nodig zijn.",
+      "noticeTitle": "Let op voordat u wisselt",
+      "placeholder": "https://uw-server.voorbeeld.com",
+      "reset": "Standaard herstellen",
+      "resetSuccess": "Officieel serveradres hersteld",
+      "save": "Opslaan",
+      "title": "Aangepast serveradres",
+      "updated": "Aangepast serveradres bijgewerkt"
+    },
     "failurePrefix": "Actie mislukt: ",
     "mode": {
       "already": "Je bevindt je al in de ontwikkelaarsmodus",

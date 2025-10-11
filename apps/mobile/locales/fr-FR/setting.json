@@ -99,6 +99,20 @@
       "success": "Les données d'authentification ont été effacées",
       "title": "Effacer les données d'authentification"
     },
+    "customServer": {
+      "current": "Adresse du serveur actuelle",
+      "description": "Après configuration, toutes les requêtes utiliseront cette adresse serveur. Laisser vide pour revenir au serveur officiel.",
+      "hint": "Doit commencer par http:// ou https://, une reconnexion à l'application peut être nécessaire.",
+      "invalid": "Veuillez saisir une adresse valide commençant par http:// ou https://",
+      "notice": "Le serveur personnalisé remplacera l'adresse de l'interface par défaut. Veuillez vous assurer que le service est disponible et compatible avec le protocole LobeChat API. Un redémarrage ou une reconnexion peut être nécessaire après le changement.",
+      "noticeTitle": "Attention avant de changer",
+      "placeholder": "https://votre-serveur.exemple.com",
+      "reset": "Restaurer par défaut",
+      "resetSuccess": "Adresse du serveur officiel restaurée",
+      "save": "Enregistrer",
+      "title": "Adresse du serveur personnalisée",
+      "updated": "Adresse du serveur personnalisée mise à jour"
+    },
     "failurePrefix": "Échec de l'opération : ",
     "mode": {
       "already": "Vous êtes déjà en mode développeur",

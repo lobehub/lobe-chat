@@ -99,6 +99,20 @@
       "success": "已清除認證資料",
       "title": "清除認證資料"
     },
+    "customServer": {
+      "current": "當前伺服器地址",
+      "description": "配置後，所有請求都會使用該伺服器地址。留空則恢復到官方伺服器。",
+      "hint": "必須以 http:// 或 https:// 開頭，應用可能需要重新登入。",
+      "invalid": "請輸入以 http:// 或 https:// 開頭的有效地址",
+      "notice": "自訂伺服器會替換預設介面地址，請確保服務可用並相容 LobeChat API 協議。切換後可能需要重新登入或重新啟動應用程式",
+      "noticeTitle": "切換前請注意",
+      "placeholder": "https://your-server.example.com",
+      "reset": "恢復預設",
+      "resetSuccess": "已恢復官方伺服器地址",
+      "save": "儲存",
+      "title": "自訂伺服器地址",
+      "updated": "自訂伺服器地址已更新"
+    },
     "failurePrefix": "操作失敗：",
     "mode": {
       "already": "你已處於開發者模式",

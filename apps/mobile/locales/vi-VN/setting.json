@@ -99,6 +99,20 @@
       "success": "Đã xóa dữ liệu xác thực",
       "title": "Xóa dữ liệu xác thực"
     },
+    "customServer": {
+      "current": "Địa chỉ máy chủ hiện tại",
+      "description": "Sau khi cấu hình, tất cả các yêu cầu sẽ sử dụng địa chỉ máy chủ này. Để trống để trở về máy chủ chính thức.",
+      "hint": "Phải bắt đầu bằng http:// hoặc https://, ứng dụng có thể yêu cầu đăng nhập lại.",
+      "invalid": "Vui lòng nhập địa chỉ hợp lệ bắt đầu bằng http:// hoặc https://",
+      "notice": "Máy chủ tùy chỉnh sẽ thay thế địa chỉ giao diện mặc định, vui lòng đảm bảo dịch vụ khả dụng và tương thích với giao thức LobeChat API. Có thể cần đăng nhập lại hoặc khởi động lại ứng dụng sau khi chuyển đổi.",
+      "noticeTitle": "Lưu ý trước khi chuyển đổi",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Khôi phục mặc định",
+      "resetSuccess": "Đã khôi phục địa chỉ máy chủ chính thức",
+      "save": "Lưu",
+      "title": "Địa chỉ máy chủ tùy chỉnh",
+      "updated": "Địa chỉ máy chủ tùy chỉnh đã được cập nhật"
+    },
     "failurePrefix": "Thao tác thất bại: ",
     "mode": {
       "already": "Bạn đã ở chế độ nhà phát triển",

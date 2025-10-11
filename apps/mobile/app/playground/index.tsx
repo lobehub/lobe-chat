@@ -46,6 +46,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'alert': {
+        router.push('/playground/components/alert');
+
+        break;
+      }
       case 'toast': {
         router.push('/playground/components/toast');
 

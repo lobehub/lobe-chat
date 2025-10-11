@@ -99,6 +99,20 @@
       "success": "Datos de autenticación borrados",
       "title": "Borrar datos de autenticación"
     },
+    "customServer": {
+      "current": "Dirección del servidor actual",
+      "description": "Después de configurar, todas las solicitudes usarán esta dirección del servidor. Déjelo vacío para volver al servidor oficial.",
+      "hint": "Debe comenzar con http:// o https://, es posible que la aplicación requiera volver a iniciar sesión.",
+      "invalid": "Por favor, introduzca una dirección válida que comience con http:// o https://",
+      "notice": "El servidor personalizado reemplazará la dirección de la interfaz predeterminada. Asegúrese de que el servicio esté disponible y sea compatible con el protocolo LobeChat API. Es posible que necesite volver a iniciar sesión o reiniciar la aplicación después del cambio.",
+      "noticeTitle": "Atención antes de cambiar",
+      "placeholder": "https://tu-servidor.ejemplo.com",
+      "reset": "Restablecer a predeterminado",
+      "resetSuccess": "Se ha restaurado la dirección del servidor oficial",
+      "save": "Guardar",
+      "title": "Dirección del servidor personalizado",
+      "updated": "La dirección del servidor personalizado ha sido actualizada"
+    },
     "failurePrefix": "Operación fallida: ",
     "mode": {
       "already": "Ya estás en modo desarrollador",

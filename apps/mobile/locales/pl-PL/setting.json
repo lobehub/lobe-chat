@@ -99,6 +99,20 @@
       "success": "Dane uwierzytelniające zostały wyczyszczone",
       "title": "Wyczyszczenie danych uwierzytelniających"
     },
+    "customServer": {
+      "current": "Aktualny adres serwera",
+      "description": "Po skonfigurowaniu wszystkie żądania będą korzystać z tego adresu serwera. Pozostaw puste, aby powrócić do oficjalnego serwera.",
+      "hint": "Musi zaczynać się od http:// lub https://, aplikacja może wymagać ponownego zalogowania.",
+      "invalid": "Proszę wprowadzić poprawny adres zaczynający się od http:// lub https://",
+      "notice": "Niestandardowy serwer zastąpi domyślny adres interfejsu, upewnij się, że usługa jest dostępna i zgodna z protokołem LobeChat API. Po zmianie może być wymagane ponowne zalogowanie lub uruchomienie aplikacji.",
+      "noticeTitle": "Uwaga przed zmianą",
+      "placeholder": "https://twoj-serwer.przyklad.com",
+      "reset": "Przywróć domyślne",
+      "resetSuccess": "Przywrócono oficjalny adres serwera",
+      "save": "Zapisz",
+      "title": "Niestandardowy adres serwera",
+      "updated": "Niestandardowy adres serwera został zaktualizowany"
+    },
     "failurePrefix": "Operacja nie powiodła się: ",
     "mode": {
       "already": "Jesteś już w trybie deweloperskim",

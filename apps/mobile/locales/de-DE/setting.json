@@ -99,6 +99,20 @@
       "success": "Authentifizierungsdaten wurden gelöscht",
       "title": "Authentifizierungsdaten löschen"
     },
+    "customServer": {
+      "current": "Aktuelle Serveradresse",
+      "description": "Nach der Konfiguration werden alle Anfragen diese Serveradresse verwenden. Leer lassen, um zum offiziellen Server zurückzukehren.",
+      "hint": "Muss mit http:// oder https:// beginnen, die Anwendung könnte eine erneute Anmeldung erfordern.",
+      "invalid": "Bitte geben Sie eine gültige Adresse ein, die mit http:// oder https:// beginnt",
+      "notice": "Der benutzerdefinierte Server ersetzt die Standard-API-Adresse. Bitte stellen Sie sicher, dass der Dienst verfügbar ist und mit dem LobeChat API-Protokoll kompatibel ist. Ein Wechsel kann eine erneute Anmeldung oder einen Neustart der Anwendung erfordern.",
+      "noticeTitle": "Bitte vor dem Wechsel beachten",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Standard wiederherstellen",
+      "resetSuccess": "Offizielle Serveradresse wurde wiederhergestellt",
+      "save": "Speichern",
+      "title": "Benutzerdefinierte Serveradresse",
+      "updated": "Benutzerdefinierte Serveradresse wurde aktualisiert"
+    },
     "failurePrefix": "Vorgang fehlgeschlagen: ",
     "mode": {
       "already": "Sie befinden sich bereits im Entwicklermodus",

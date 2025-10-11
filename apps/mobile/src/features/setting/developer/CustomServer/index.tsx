@@ -1,4 +1,4 @@
-import { Button, Input, Toast } from '@lobehub/ui-rn';
+import { Alert, Button, Input, Toast } from '@lobehub/ui-rn';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -53,45 +53,52 @@ const CustomServer = () => {
   };
 
   return (
-    <Form form={form} initialValues={{ customServer: currentServer }}>
-      <Form.Item
-        extra={t('developer.customServer.hint', { ns: 'setting' })}
-        label={t('developer.customServer.title', { ns: 'setting' })}
-        name="customServer"
-        rules={[
-          {
-            validator: (value) => {
-              const input = (value as string | undefined)?.trim();
-              if (!input) return;
-              if (!isValidServerUrl(input)) {
-                return t('developer.customServer.invalid', { ns: 'setting' });
-              }
+    <View style={styles.container}>
+      <Alert
+        description={t('developer.customServer.notice', { ns: 'setting' })}
+        message={t('developer.customServer.noticeTitle', { ns: 'setting' })}
+        type="info"
+      />
+      <Form form={form} initialValues={{ customServer: currentServer }}>
+        <Form.Item
+          label={t('developer.customServer.title', { ns: 'setting' })}
+          name="customServer"
+          rules={[
+            {
+              validator: (value) => {
+                const input = (value as string | undefined)?.trim();
+                if (!input) return;
+                if (!isValidServerUrl(input)) {
+                  return t('developer.customServer.invalid', { ns: 'setting' });
+                }
+              },
             },
-          },
-        ]}
-      >
-        <Input
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="url"
-          onSubmitEditing={applyCustomServer}
-          placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
-          returnKeyType="done"
-          size="large"
-        />
-      </Form.Item>
-      {/* Action Section */}
-      <Form.Item>
-        <View style={styles.actionSection}>
-          <Button block onPress={applyCustomServer} size="large" type="primary">
-            {t('developer.customServer.save', { ns: 'setting' })}
-          </Button>
-          <Button block onPress={resetCustomServer} size="large" type="default">
-            {t('developer.customServer.reset', { ns: 'setting' })}
-          </Button>
-        </View>
-      </Form.Item>
-    </Form>
+          ]}
+        >
+          <Input
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="url"
+            onSubmitEditing={applyCustomServer}
+            placeholder={t('developer.customServer.placeholder', { ns: 'setting' })}
+            returnKeyType="done"
+            size="large"
+            variant="outlined"
+          />
+        </Form.Item>
+        {/* Action Section */}
+        <Form.Item>
+          <View style={styles.actionSection}>
+            <Button block onPress={applyCustomServer} size="large" type="primary">
+              {t('developer.customServer.save', { ns: 'setting' })}
+            </Button>
+            <Button block onPress={resetCustomServer} size="large" type="default">
+              {t('developer.customServer.reset', { ns: 'setting' })}
+            </Button>
+          </View>
+        </Form.Item>
+      </Form>
+    </View>
   );
 };
 

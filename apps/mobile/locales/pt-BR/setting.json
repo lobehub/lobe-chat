@@ -99,6 +99,20 @@
       "success": "Dados de autenticação limpos",
       "title": "Limpar dados de autenticação"
     },
+    "customServer": {
+      "current": "Endereço atual do servidor",
+      "description": "Após a configuração, todas as requisições utilizarão este endereço de servidor. Deixe em branco para retornar ao servidor oficial.",
+      "hint": "Deve começar com http:// ou https://. O aplicativo pode exigir novo login.",
+      "invalid": "Por favor, insira um endereço válido que comece com http:// ou https://",
+      "notice": "O servidor personalizado substituirá o endereço da interface padrão. Certifique-se de que o serviço esteja disponível e compatível com o protocolo LobeChat API. Pode ser necessário fazer login novamente ou reiniciar o aplicativo após a troca.",
+      "noticeTitle": "Atenção antes de trocar",
+      "placeholder": "https://seu-servidor.exemplo.com",
+      "reset": "Restaurar padrão",
+      "resetSuccess": "Endereço do servidor oficial restaurado",
+      "save": "Salvar",
+      "title": "Endereço do servidor personalizado",
+      "updated": "Endereço do servidor personalizado atualizado"
+    },
     "failurePrefix": "Operação falhou: ",
     "mode": {
       "already": "Você já está no modo desenvolvedor",

@@ -99,6 +99,20 @@
       "success": "Kimlik doğrulama verileri temizlendi",
       "title": "Kimlik Doğrulama Verilerini Temizle"
     },
+    "customServer": {
+      "current": "Geçerli sunucu adresi",
+      "description": "Yapılandırıldıktan sonra, tüm istekler bu sunucu adresi üzerinden yapılacaktır. Boş bırakılırsa resmi sunucuya dönülür.",
+      "hint": "http:// veya https:// ile başlamalıdır, uygulama yeniden giriş yapmanızı gerektirebilir.",
+      "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir adres girin",
+      "notice": "Özel sunucu, varsayılan API adresini değiştirecektir. Lütfen hizmetin kullanılabilir ve LobeChat API protokolü ile uyumlu olduğundan emin olun. Değişiklikten sonra yeniden giriş yapmanız veya uygulamayı yeniden başlatmanız gerekebilir.",
+      "noticeTitle": "Değiştirmeden önce dikkat",
+      "placeholder": "https://sunucunuz.ornek.com",
+      "reset": "Varsayılanı geri yükle",
+      "resetSuccess": "Resmi sunucu adresi geri yüklendi",
+      "save": "Kaydet",
+      "title": "Özel sunucu adresi",
+      "updated": "Özel sunucu adresi güncellendi"
+    },
     "failurePrefix": "İşlem başarısız: ",
     "mode": {
       "already": "Geliştirici modundasınız",
