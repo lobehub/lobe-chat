@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Add lab to support disable/enable rich text."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.9"
+  },
+  {
     "children": {},
     "date": "2025-10-11",
     "version": "1.136.8"
