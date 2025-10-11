@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.136.11](https://github.com/lobehub/lobe-chat/compare/v1.136.10...v1.136.11)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities, closes [#9022](https://github.com/lobehub/lobe-chat/issues/9022) ([4e44569](https://github.com/lobehub/lobe-chat/commit/4e44569))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.136.10](https://github.com/lobehub/lobe-chat/compare/v1.136.9...v1.136.10)
 
 <sup>Released on **2025-10-11**</sup>
