@@ -1,3 +1,5 @@
+import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
+
 import { OIDCConfig, PKCEParams, TokenResponse } from './types';
 
 /**
@@ -86,7 +88,9 @@ export class MarketOIDC {
 
     console.log('[MarketOIDC] this.config:', this.config);
 
-    const authUrl = new URL(`${this.config.baseUrl.replace(/\/$/, '')}/market-oidc/auth`);
+    const authUrl = new URL(
+      `${this.config.baseUrl.replace(/\/$/, '')}${MARKET_OIDC_ENDPOINTS.auth}`,
+    );
     authUrl.searchParams.set('client_id', this.config.clientId);
     authUrl.searchParams.set('redirect_uri', this.config.redirectUri);
     authUrl.searchParams.set('response_type', 'code');
@@ -119,7 +123,7 @@ export class MarketOIDC {
       throw new Error('Code verifier not found');
     }
 
-    const tokenUrl = '/market-oidc/token';
+    const tokenUrl = MARKET_OIDC_ENDPOINTS.token;
     const body = new URLSearchParams({
       client_id: this.config.clientId,
       code,
@@ -270,9 +274,9 @@ export class MarketOIDC {
 
     const startTime = Date.now();
 
-    const pollUrl = `/market-oidc/handoff?id=${encodeURIComponent(state)}&client=${encodeURIComponent(
-      MarketOIDC.DESKTOP_HANDOFF_CLIENT,
-    )}`;
+    const pollUrl = `${MARKET_OIDC_ENDPOINTS.handoff}?id=${encodeURIComponent(
+      state,
+    )}&client=${encodeURIComponent(MarketOIDC.DESKTOP_HANDOFF_CLIENT)}`;
 
     console.log('[MarketOIDC] Poll URL:', pollUrl);
 

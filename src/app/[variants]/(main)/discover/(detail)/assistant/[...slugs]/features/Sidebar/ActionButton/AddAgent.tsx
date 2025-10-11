@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionStore } from '@/store/session';
+import type { LobeAgentConfig } from '@/types/agent';
 
 import { useDetailContext } from '../../DetailProvider';
 
@@ -21,8 +22,49 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
+type MarketAgentModel =
+  | LobeAgentConfig['model']
+  | {
+      model: LobeAgentConfig['model'];
+      parameters?: Partial<LobeAgentConfig['params']>;
+      provider?: LobeAgentConfig['provider'];
+    };
+
+type MarketAgentConfig = Partial<Omit<LobeAgentConfig, 'model' | 'params'>> & {
+  model?: MarketAgentModel;
+  params?: Partial<LobeAgentConfig['params']>;
+};
+
+const normalizeMarketAgentConfig = (
+  config?: MarketAgentConfig,
+): Partial<LobeAgentConfig> | undefined => {
+  if (!config) return undefined;
+
+  const { model, params, ...rest } = config;
+  const normalized: Partial<LobeAgentConfig> = { ...rest };
+
+  const modelInfo = model;
+
+  const mergedParams: Partial<LobeAgentConfig['params']> = {};
+  if (typeof modelInfo === 'object' && modelInfo) {
+    Object.assign(mergedParams, modelInfo.parameters ?? {});
+    normalized.provider = normalized.provider ?? modelInfo.provider;
+    normalized.model = modelInfo.model;
+  } else {
+    normalized.model = modelInfo;
+  }
+  Object.assign(mergedParams, params ?? {});
+
+  normalized.params = Object.keys(mergedParams).length > 0 ? mergedParams : undefined;
+
+  normalized.plugins = normalized.plugins ?? [];
+
+  return normalized;
+};
+
 const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { avatar, description, tags, title, config, backgroundColor, identifier } = useDetailContext();
+  const { avatar, description, tags, title, config, backgroundColor, identifier } =
+    useDetailContext();
   const { styles } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
@@ -41,9 +83,8 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   };
 
   const checkDuplicateAgent = () => {
-    console.log("sessions",sessions)
     if (!identifier) return false;
-    return sessions.some(session => session.meta?.marketIdentifier === identifier);
+    return sessions.some((session) => session.meta?.marketIdentifier === identifier);
   };
 
   const showDuplicateConfirmation = (callback: () => void) => {
@@ -60,11 +101,9 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     if (!config) return;
 
     const sessionData = {
-      config,
+      config: normalizeMarketAgentConfig(config),
       meta,
     };
-
-    console.log("sessionData",sessionData)
 
     const session = await createSession(sessionData, isSwitchSession);
     return session;

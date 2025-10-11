@@ -1,20 +1,50 @@
-// Market API service for agent submission
-import { MarketSDK } from '@lobehub/market-sdk';
+import { AgentItemDetail } from '@lobehub/market-sdk';
+
+import { MARKET_ENDPOINTS } from '@/services/_url';
 
 export class MarketApiService {
-  market: MarketSDK;
+  private accessToken?: string;
 
-  constructor() {
-    this.market = new MarketSDK({
-      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787',
+  // eslint-disable-next-line no-undef
+  private async request<T>(endpoint: string, init?: RequestInit): Promise<T> {
+    const headers = new Headers(init?.headers);
+
+    if (init?.body && !headers.has('content-type')) {
+      headers.set('content-type', 'application/json');
+    }
+
+    if (this.accessToken && !headers.has('authorization')) {
+      headers.set('authorization', `Bearer ${this.accessToken}`);
+    }
+
+    const response = await fetch(endpoint, {
+      ...init,
+      credentials: init?.credentials ?? 'same-origin',
+      headers,
     });
+
+    if (!response.ok) {
+      let message = 'Unknown error';
+
+      try {
+        const errorBody = await response.json();
+        message = errorBody?.message ?? message;
+      } catch {
+        message = await response.text();
+      }
+
+      throw new Error(message || 'Market request failed');
+    }
+
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
+    return (await response.json()) as T;
   }
 
   setAccessToken(token: string) {
-    this.market = new MarketSDK({
-      accessToken: token,
-      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://localhost:8787',
-    });
+    this.accessToken = token;
   }
   // Create new agent
   async createAgent(agentData: {
@@ -25,13 +55,18 @@ export class MarketApiService {
     status?: 'published' | 'unpublished' | 'archived' | 'deprecated';
     tokenUsage?: number;
     visibility?: 'public' | 'private' | 'internal';
-  }) {
-    return this.market.agents.createAgent(agentData);
+  }): Promise<AgentItemDetail> {
+    return this.request(MARKET_ENDPOINTS.createAgent, {
+      body: JSON.stringify(agentData),
+      method: 'POST',
+    });
   }
 
   // Get agent detail by identifier
-  async getAgentDetail(identifier: string) {
-    return this.market.agents.getAgentDetail(identifier);
+  async getAgentDetail(identifier: string): Promise<AgentItemDetail> {
+    return this.request(MARKET_ENDPOINTS.getAgentDetail(identifier), {
+      method: 'GET',
+    });
   }
 
   // Check if agent exists (returns true if exists, false if not)
@@ -71,8 +106,18 @@ export class MarketApiService {
     supportsAuthenticatedExtendedCard?: boolean;
     tokenUsage?: number;
     url?: string;
-  }) {
-    return this.market.agents.createAgentVersion(versionData);
+  }): Promise<AgentItemDetail> {
+    const { identifier, ...rest } = versionData;
+    const targetIdentifier = identifier;
+    if (!targetIdentifier) throw new Error('Identifier is required');
+
+    return this.request(MARKET_ENDPOINTS.createAgentVersion, {
+      body: JSON.stringify({
+        identifier: targetIdentifier,
+        ...rest,
+      }),
+      method: 'POST',
+    });
   }
 }
 

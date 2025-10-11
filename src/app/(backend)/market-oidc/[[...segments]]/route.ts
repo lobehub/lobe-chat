@@ -64,14 +64,11 @@ const handleProxy = async (req: NextRequest, context: RouteContext) => {
 
   switch (endpoint) {
     case 'handoff': {
-      if (req.method !== 'GET') {
-        return methodNotAllowed(['GET']);
-      }
       try {
         const id = req.nextUrl.searchParams.get('id');
-
         if (id) {
-          return await market.auth.getOAuthHandoff(id);
+          const handoff = await market.auth.getOAuthHandoff(id);
+          return new NextResponse(JSON.stringify(handoff), { status: 200 });
         } else {
           return NextResponse.json(
             {
@@ -165,9 +162,6 @@ const handleProxy = async (req: NextRequest, context: RouteContext) => {
 
       try {
         const { token } = (await req.json()) as { token?: string };
-
-        console.log('access-token', token);
-
         if (!token) {
           return NextResponse.json(
             {
@@ -180,9 +174,6 @@ const handleProxy = async (req: NextRequest, context: RouteContext) => {
         }
 
         const response = await market.auth.getUserInfo(token);
-
-        console.log('[MarketOIDC] Userinfo response:', response);
-
         return NextResponse.json(response);
 
         // return await createProxyResponse(upstreamResponse);

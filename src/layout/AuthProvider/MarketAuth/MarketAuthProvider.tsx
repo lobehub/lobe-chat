@@ -2,6 +2,8 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
+import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
+
 import { MarketOIDC } from './oidc';
 import { MarketAuthContextType, MarketAuthSession, MarketUserInfo, OIDCConfig } from './types';
 
@@ -54,7 +56,7 @@ const removeTokenFromCookie = () => {
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
   try {
-    const response = await fetch('/market-oidc/userinfo', {
+    const response = await fetch(MARKET_OIDC_ENDPOINTS.userinfo, {
       body: JSON.stringify({ token: accessToken }),
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +106,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
-      const desktopRedirectUri = new URL('/market-oidc/callback/desktop', baseUrl).toString();
+      const desktopRedirectUri = new URL(MARKET_OIDC_ENDPOINTS.desktopCallback, baseUrl).toString();
 
       // 桌面端使用 Market 手动维护的 Web 回调，Web 端使用当前域名
       const redirectUri = isDesktop
