@@ -80,11 +80,6 @@ export const useStyles = createStyles(({ token }) => ({
     marginBottom: token.marginXS,
   },
 
-  safeAreaView: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
-
   // Section样式 - 对标web端
   sectionHeader: {
     backgroundColor: token.colorBgLayout,

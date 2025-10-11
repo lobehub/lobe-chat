@@ -4,8 +4,6 @@ import README from '@lobehub/ui-rn/Alert/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <TypesDemo />, key: 'types', title: '语义类型' },
@@ -14,10 +12,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function AlertPlaygroundPage() {
-  const { styles } = useStyles();
-
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Alert 组件">
+    <PageContainer showBack title="Alert 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

@@ -100,11 +100,7 @@ const AssistantDetail = () => {
 
   if (isLoading) {
     return (
-      <PageContainer
-        showBack
-        style={styles.safeAreaContainer}
-        title={t('assistant.detail.title', { ns: 'discover' })}
-      >
+      <PageContainer showBack title={t('assistant.detail.title', { ns: 'discover' })}>
         <ScrollView style={styles.scrollContainer}>
           <SkeletonDetail />
         </ScrollView>
@@ -132,11 +128,7 @@ const AssistantDetail = () => {
   const systemRoleContent = agent.config.systemRole;
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaContainer}
-      title={t('assistant.detail.title', { ns: 'discover' })}
-    >
+    <PageContainer showBack title={t('assistant.detail.title', { ns: 'discover' })}>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           {/* Header with avatar on left, title/author/date on right */}

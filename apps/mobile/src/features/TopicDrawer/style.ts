@@ -20,7 +20,4 @@ export const useStyles = createStyles(({ token }) => ({
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
   },
-  safeAreaView: {
-    flex: 1,
-  },
 }));

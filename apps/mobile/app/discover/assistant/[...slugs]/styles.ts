@@ -86,11 +86,6 @@ export const useStyles = createStyles(({ token }) => ({
     marginTop: token.margin,
   },
 
-  safeAreaContainer: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
-
   scrollContainer: {
     flex: 1,
   },

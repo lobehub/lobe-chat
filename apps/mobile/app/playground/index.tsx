@@ -223,7 +223,7 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Playground">
+    <PageContainer showBack title="Playground">
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}

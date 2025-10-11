@@ -10,8 +10,6 @@ import {
   MultipleAlgorithmsDemo,
 } from '@/theme/ThemeProvider/demos';
 
-import { useStyles } from './style';
-
 const themeProviderDemos: DemoItem[] = [
   {
     component: <BasicDemo />,
@@ -41,10 +39,8 @@ const themeProviderDemos: DemoItem[] = [
 ];
 
 export default function ThemeProviderPlaygroundPage() {
-  const { styles } = useStyles();
-
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="ThemeProvider 组件">
+    <PageContainer showBack title="ThemeProvider 组件">
       <ComponentPlayground demos={themeProviderDemos} readmeContent={README} />
     </PageContainer>
   );

@@ -16,11 +16,7 @@ export default function ThemeModeSettingScreen() {
   const isFollowSystem = themeMode === 'auto';
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('themeMode.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('themeMode.title', { ns: 'setting' })}>
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem

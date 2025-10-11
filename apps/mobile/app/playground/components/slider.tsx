@@ -4,8 +4,6 @@ import { BasicDemo, ControlledDemo, MarksDemo, RangeDemo } from '@lobehub/ui-rn/
 import README from '@lobehub/ui-rn/Slider/readme';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <RangeDemo />, key: 'range', title: '不同范围' },
@@ -14,9 +12,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function SliderPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Slider 组件">
+    <PageContainer showBack title="Slider 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

@@ -8,7 +8,7 @@ import { setLoginMounted } from '@/navigation/loginState';
 import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
 
-import { useStyles } from './styles';
+import { useStyles } from './style';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);
@@ -35,6 +35,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleSelfHostedLogin = () => {
+    router.push('/auth/login/selfhost');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header} />
@@ -59,6 +63,16 @@ const LoginPage = () => {
           type="primary"
         >
           {t('login.button', { appName: 'LobeChat.com', ns: 'auth' })}
+        </Button>
+        <Button
+          block
+          disabled={isLoading}
+          onPress={handleSelfHostedLogin}
+          size="large"
+          style={styles.selfHostedButton}
+          type="default"
+        >
+          {t('login.selfHostedButton', { ns: 'auth' })}
         </Button>
       </View>
 
