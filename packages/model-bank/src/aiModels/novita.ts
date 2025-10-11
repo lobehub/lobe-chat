@@ -191,8 +191,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-oss-20b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
