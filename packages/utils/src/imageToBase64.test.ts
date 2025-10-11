@@ -71,6 +71,7 @@ describe('imageUrlToBase64', () => {
 
   it('should convert image URL to base64 string', async () => {
     mockFetch.mockResolvedValue({
+      ok: true,
       arrayBuffer: () => Promise.resolve(mockArrayBuffer),
       blob: () => Promise.resolve(new Blob([mockArrayBuffer], { type: 'image/jpg' })),
     });

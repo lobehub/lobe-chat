@@ -40,8 +40,23 @@ export const imageUrlToBase64 = async (
   imageUrl: string,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    const res = await fetch(imageUrl);
+    let res: Response;
+
+    // Environment-aware fetch: use SSRF-safe fetch on server, regular fetch on client
+    if (typeof window === 'undefined') {
+      // Server environment: use SSRF-safe fetch
+      const { ssrfSafeFetch } = await import('ssrf-safe-fetch');
+      res = await ssrfSafeFetch(imageUrl);
+    } else {
+      // Client environment: use regular fetch (browser has CORS protection)
+      res = await fetch(imageUrl);
+    }
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
+    }
     const blob = await res.blob();
+
     const arrayBuffer = await blob.arrayBuffer();
 
     const base64 =
