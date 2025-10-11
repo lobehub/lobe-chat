@@ -8,9 +8,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { lineEllipsis } from '@/styles';
 import { shinyTextStylish } from '@/styles/loading';
 
-const useStyles = createStyles(({ token, css }) => {
+const useStyles = createStyles(({ token, css, cx }) => {
   return {
     cardBody: css`
       padding-block-start: 12px;
@@ -36,7 +37,7 @@ const useStyles = createStyles(({ token, css }) => {
 
       background-color: ${token.colorFillQuaternary};
     `,
-    shining: shinyTextStylish(token),
+    text: cx(lineEllipsis(2), shinyTextStylish(token)),
   };
 });
 
@@ -48,7 +49,7 @@ const LoadingCard = memo<{ url: string }>(({ url }) => {
     <Flexbox className={styles.container}>
       <Flexbox className={styles.cardBody} horizontal justify={'space-between'}>
         <Link href={url} rel={'nofollow'} target={'_blank'}>
-          <div className={styles.shining}>{url}</div>
+          <div className={styles.text}>{url}</div>
         </Link>
         <CopyButton content={url} size={'small'} />
       </Flexbox>
