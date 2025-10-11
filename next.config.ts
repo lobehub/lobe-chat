@@ -49,11 +49,11 @@ const nextConfig: NextConfig = {
     serverMinification: false,
     webVitalsAttribution: ['CLS', 'LCP'],
     webpackMemoryOptimizations: true,
-    ...(isVercel && {
-      // Disable source maps on Vercel to save memory
-      productionBrowserSourceMaps: false,
-    }),
   },
+  // Disable source maps on Vercel to save memory
+  ...(isVercel && {
+    productionBrowserSourceMaps: false,
+  }),
   async headers() {
     const securityHeaders = [
       {
@@ -294,8 +294,8 @@ const nextConfig: NextConfig = {
       config.optimization = {
         ...config.optimization,
         // Reduce memory usage during build
-minimize: isServer ? false : config.optimization.minimize,
-        
+        minimize: isServer ? false : config.optimization.minimize,
+
         moduleIds: 'deterministic',
       };
 

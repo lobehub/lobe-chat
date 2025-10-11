@@ -19,8 +19,9 @@ coverage/
 docs/
 *.mdx
 
-# Desktop app
-apps/desktop/
+# Desktop app (keep package.json for imports)
+apps/desktop/**
+!apps/desktop/package.json
 
 # Docker
 Dockerfile*
