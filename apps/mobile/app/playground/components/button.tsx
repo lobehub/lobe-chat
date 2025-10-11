@@ -14,8 +14,6 @@ import README from '@lobehub/ui-rn/Button/readme';
 import ComponentPlayground, { DemoItem } from '@lobehub/ui-rn/Playground';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <SizesDemo />, key: 'sizes', title: '不同尺寸' },
@@ -29,9 +27,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function ButtonPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Button 组件">
+    <PageContainer showBack title="Button 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

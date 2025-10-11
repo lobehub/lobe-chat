@@ -7,6 +7,7 @@
     "copy": "복사",
     "delete": "삭제",
     "edit": "편집",
+    "notNow": "나중에",
     "regenerate": "다시 생성",
     "retry": "재시도",
     "save": "저장"

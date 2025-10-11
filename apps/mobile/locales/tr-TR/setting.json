@@ -116,6 +116,33 @@
         "title": "Geçersiz Yenileme Belirteci"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Giriş sayfasına git",
+      "confirmDescription": "Etkinleştirildiğinde, giriş sayfasında kendi barındırdığınız yapılandırma girişi gösterilecektir. Mevcut hesaptan çıkış yapıp giriş sayfasına gitmek istiyor musunuz?",
+      "confirmResetAction": "Sıfırla ve giriş yap",
+      "confirmResetDescription": "Kendi barındırma modu kapatıldığında, sunucu adresi resmi örneğe sıfırlanacak ve mevcut hesaptan çıkış yapılacaktır. Devam etmek istiyor musunuz?",
+      "confirmResetTitle": "Kendi Barındırma Modunu Kapat",
+      "confirmTitle": "Kendi Barındırma Girişini Etkinleştir",
+      "description": "Giriş sayfasında kendi barındırdığınız örnek düğmesinin gösterilip gösterilmeyeceğini kontrol edin",
+      "title": "Kendi Barındırma Modunu Aç"
+    },
+    "server": {
+      "confirmDescription": "Sunucu adresi değiştirildikten sonra mevcut kullanıcı çıkış yapacak ve yeniden giriş yapılması gerekecektir, devam etmek istiyor musunuz?",
+      "confirmTitle": "Sunucu Değişikliğini Onayla",
+      "current": "Mevcut adres",
+      "description": "Yapılandırıldıktan sonra, tüm istekler bu sunucu adresini kullanacaktır. Boş bırakılırsa resmi sunucuya geri dönülür.",
+      "group": "Sunucu Yapılandırması",
+      "hint": "http:// veya https:// ile başlamalıdır, uygulama yeniden giriş yapmanızı gerektirebilir.",
+      "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir adres girin",
+      "notice": "Özel sunucu, varsayılan API adresini değiştirecektir. Lütfen hizmetin kullanılabilir ve LobeChat API protokolü ile uyumlu olduğundan emin olun. Değişiklikten sonra yeniden giriş yapmanız veya uygulamayı yeniden başlatmanız gerekebilir.",
+      "noticeTitle": "Değiştirmeden Önce Dikkat",
+      "placeholder": "https://sunucunuz.ornek.com",
+      "reset": "Varsayılanı Geri Yükle",
+      "resetSuccess": "Resmi sunucu adresi geri yüklendi",
+      "save": "Kaydet",
+      "title": "Kendi Barındırma Örneği",
+      "updated": "Özel sunucu adresi güncellendi"
+    },
     "title": "Geliştirici Seçenekleri"
   },
   "feedback": "Geri Bildirim",

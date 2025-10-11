@@ -16,11 +16,7 @@ export default function FontSizeSettingScreen() {
   const { fontSize, setFontSize } = useSettingStore();
 
   return (
-    <PageContainer
-      showBack
-      style={styles.safeAreaView}
-      title={t('fontSize.title', { ns: 'setting' })}
-    >
+    <PageContainer showBack title={t('fontSize.title', { ns: 'setting' })}>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
         style={styles.container}

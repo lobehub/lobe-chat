@@ -133,7 +133,7 @@ const ProviderList = () => {
   // Loading状态
   if (isLoading) {
     return (
-      <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
+      <PageContainer showBack title={t('providers', { ns: 'setting' })}>
         <ProviderListSkeleton />
       </PageContainer>
     );
@@ -142,7 +142,7 @@ const ProviderList = () => {
   // Error状态
   if (error) {
     return (
-      <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
+      <PageContainer showBack title={t('providers', { ns: 'setting' })}>
         <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
           <Text style={styles.label}>{t('aiProviders.list.loadFailed', { ns: 'setting' })}</Text>
         </View>
@@ -151,7 +151,7 @@ const ProviderList = () => {
   }
 
   return (
-    <PageContainer showBack style={styles.safeAreaView} title={t('providers', { ns: 'setting' })}>
+    <PageContainer showBack title={t('providers', { ns: 'setting' })}>
       <View style={styles.container}>
         <FlashList
           ItemSeparatorComponent={renderSeparator}

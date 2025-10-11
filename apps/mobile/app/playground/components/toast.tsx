@@ -10,8 +10,6 @@ import {
 import README from '@lobehub/ui-rn/Toast/readme';
 import React from 'react';
 
-import { useStyles } from './style';
-
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
   { component: <TypesDemo />, key: 'types', title: '类型演示' },
@@ -21,9 +19,8 @@ const demos: DemoItem[] = [
 ];
 
 export default function ToastPlaygroundPage() {
-  const { styles } = useStyles();
   return (
-    <PageContainer showBack style={styles.safeAreaView} title="Toast 组件">
+    <PageContainer showBack title="Toast 组件">
       <ComponentPlayground demos={demos} readmeContent={README} />
     </PageContainer>
   );

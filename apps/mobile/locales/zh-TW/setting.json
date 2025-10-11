@@ -116,6 +116,33 @@
         "title": "無效刷新令牌"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "前往登入頁",
+      "confirmDescription": "啟用後將在登入頁面展示自托管配置入口，是否登出當前帳號並前往登入頁？",
+      "confirmResetAction": "重置並前往登入",
+      "confirmResetDescription": "關閉自部署模式將重置伺服器地址為官方實例，並登出當前帳號。是否繼續？",
+      "confirmResetTitle": "關閉自部署模式",
+      "confirmTitle": "啟用自托管登入入口",
+      "description": "控制登入頁是否展示自托管實例按鈕",
+      "title": "開啟自部署模式"
+    },
+    "server": {
+      "confirmDescription": "修改伺服器地址後將會登出當前使用者並需要重新登入，是否繼續？",
+      "confirmTitle": "確認切換伺服器",
+      "current": "當前地址",
+      "description": "配置後，所有請求都會使用該伺服器地址。留空則恢復到官方伺服器。",
+      "group": "伺服器配置",
+      "hint": "必須以 http:// 或 https:// 開頭，應用可能需要重新登入。",
+      "invalid": "請輸入以 http:// 或 https:// 開頭的有效地址",
+      "notice": "自訂伺服器會替換預設介面地址，請確保服務可用並相容 LobeChat API 協議。切換後可能需要重新登入或重啟應用",
+      "noticeTitle": "切換前請注意",
+      "placeholder": "https://your-server.example.com",
+      "reset": "恢復預設",
+      "resetSuccess": "已恢復官方伺服器地址",
+      "save": "儲存",
+      "title": "自部署實例",
+      "updated": "自訂伺服器地址已更新"
+    },
     "title": "開發者選項"
   },
   "feedback": "意見回饋",

@@ -156,7 +156,7 @@ const AssistantList = () => {
   }
 
   return (
-    <PageContainer showBack style={styles.safeAreaContainer} title={t('title', { ns: 'discover' })}>
+    <PageContainer showBack title={t('title', { ns: 'discover' })}>
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}
@@ -164,6 +164,7 @@ const AssistantList = () => {
           placeholder={t('assistant.search', { ns: 'common' })}
           size="large"
           style={styles.searchContainer}
+          variant="filled"
         />
 
         {isCategoryLoading ? (
