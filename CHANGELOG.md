@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.136.5](https://github.com/lobehub/lobe-chat/compare/v1.136.4...v1.136.5)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **plugin-store**: Fix search functionality for old plugin store.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **plugin-store**: Fix search functionality for old plugin store, closes [#9651](https://github.com/lobehub/lobe-chat/issues/9651) [#9645](https://github.com/lobehub/lobe-chat/issues/9645) ([522fc09](https://github.com/lobehub/lobe-chat/commit/522fc09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.136.4](https://github.com/lobehub/lobe-chat/compare/v1.136.3...v1.136.4)
 
 <sup>Released on **2025-10-10**</sup>
