@@ -31,7 +31,7 @@ const Hero = memo(() => {
   return (
     <div className={styles.container}>
       <Flexbox gap={8}>
-        <div className={styles.title}>👋 {t('title')}</div>
+        <div className={styles.title}>🪄 {t('title')}</div>
         <div className={styles.desc}>{t('desc')}</div>
       </Flexbox>
     </div>

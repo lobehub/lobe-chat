@@ -1,5 +1,5 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
-import { Beaker, Book, Github } from 'lucide-react';
+import { Book, FlaskConical, Github } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,11 +40,11 @@ const BottomActions = memo(() => {
           />
         </Link>
       )}
-      <Link aria-label={t('labs') as any} href={'/labs'}>
+      <Link aria-label={t('labs')} href={'/labs'}>
         <ActionIcon
-          icon={Beaker}
+          icon={FlaskConical}
           size={ICON_SIZE}
-          title={t('labs') as any}
+          title={t('labs')}
           tooltipProps={{ placement: 'right' }}
         />
       </Link>

@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 interface LabCardProps {
   checked: boolean;
   desc: string;
+  loading: boolean;
   meta?: string;
   onChange: (v: boolean) => void;
   title: string;
@@ -21,10 +22,9 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-inline: auto;
     padding: 16px;
     border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
+    border-radius: 12px;
 
     background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadowSecondary};
   `,
   desc: css`
     color: ${token.colorTextSecondary};
@@ -55,7 +55,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const LabCard = memo<PropsWithChildren<LabCardProps>>(
-  ({ title, desc, checked, onChange, meta }) => {
+  ({ title, desc, checked, onChange, meta, loading }) => {
     const { styles } = useStyles();
 
     return (
@@ -68,9 +68,11 @@ const LabCard = memo<PropsWithChildren<LabCardProps>>(
               <div className={styles.desc}>{desc}</div>
               {meta ? <div className={styles.meta}>{meta}</div> : null}
             </Flexbox>
-            <Flexbox align={'flex-end'} height={'100%'} justify={'center'}>
-              <Switch checked={checked} onChange={onChange} />
-            </Flexbox>
+            {!loading && (
+              <Flexbox align={'flex-end'} height={'100%'} justify={'center'} paddingInline={8}>
+                <Switch checked={checked} onChange={onChange} />
+              </Flexbox>
+            )}
           </div>
         </div>
       </div>

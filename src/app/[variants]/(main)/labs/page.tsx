@@ -13,11 +13,14 @@ import LabCard from './components/LabCard';
 const LabsPage = memo(() => {
   const { t } = useTranslation('labs');
 
-  const [inputMarkdownRender, enableGroupChat, updatePreference] = useUserStore((s) => [
-    preferenceSelectors.inputMarkdownRender(s),
-    preferenceSelectors.enableGroupChat(s),
-    s.updatePreference,
-  ]);
+  const [isPreferenceInit, inputMarkdownRender, enableGroupChat, updatePreference] = useUserStore(
+    (s) => [
+      preferenceSelectors.isPreferenceInit(s),
+      preferenceSelectors.inputMarkdownRender(s),
+      preferenceSelectors.enableGroupChat(s),
+      s.updatePreference,
+    ],
+  );
 
   const onToggleMarkdown = useCallback(
     (checked: boolean) => updatePreference({ disableInputMarkdownRender: !checked }),
@@ -35,6 +38,7 @@ const LabsPage = memo(() => {
       <LabCard
         checked={inputMarkdownRender}
         desc={t('features.inputMarkdown.desc')}
+        loading={!isPreferenceInit}
         onChange={onToggleMarkdown}
         title={t('features.inputMarkdown.title')}
       />
@@ -42,6 +46,7 @@ const LabsPage = memo(() => {
       <LabCard
         checked={enableGroupChat}
         desc={t('features.groupChat.desc')}
+        loading={!isPreferenceInit}
         onChange={onToggleGroupChat}
         title={t('features.groupChat.title')}
       />
