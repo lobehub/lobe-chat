@@ -1,4 +1,9 @@
-import { BuiltinPlaceholderProps, CrawlSinglePageQuery, SearchQuery } from '@lobechat/types';
+import {
+  BuiltinPlaceholderProps,
+  CrawlMultiPagesQuery,
+  CrawlSinglePageQuery,
+  SearchQuery,
+} from '@lobechat/types';
 import { Skeleton } from 'antd';
 import { memo } from 'react';
 
@@ -17,7 +22,13 @@ const Placeholder = memo<BuiltinPlaceholderProps>(({ apiName, args }) => {
     case WebBrowsingApiName.crawlSinglePage: {
       const { url } = args as CrawlSinglePageQuery;
 
-      return <PageContent url={url} />;
+      return <PageContent urls={[url]} />;
+    }
+
+    case WebBrowsingApiName.crawlMultiPages: {
+      const { urls } = args as CrawlMultiPagesQuery;
+
+      return <PageContent urls={urls} />;
     }
 
     default: {

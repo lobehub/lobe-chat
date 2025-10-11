@@ -24,6 +24,7 @@ const useStyles = createStyles(({ token, css }) => {
 
       overflow: hidden;
 
+      min-width: 360px;
       max-width: 360px;
       border: 1px solid ${token.colorBorderSecondary};
       border-radius: 12px;
