@@ -1,10 +1,10 @@
 import { ModelProvider } from 'model-bank';
 
 import { responsesAPIModels } from '../../const/models';
+import { pruneReasoningPayload } from '../../core/contextBuilders/openai';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
-import { pruneReasoningPayload } from '../../utils/openaiHelpers';
 
 export interface OpenAIModelCard {
   id: string;

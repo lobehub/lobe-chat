@@ -2,6 +2,7 @@ import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
 import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
 import { AnthropicStream } from '../../core/streams';
 import {
@@ -12,7 +13,6 @@ import {
   GenerateObjectPayload,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
-import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';

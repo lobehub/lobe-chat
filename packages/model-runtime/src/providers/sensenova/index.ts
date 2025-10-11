@@ -1,8 +1,8 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
+import { convertSenseNovaMessage } from '../../core/contextBuilders/sensenova';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
-import { convertSenseNovaMessage } from '../../utils/sensenovaHelpers';
 
 export interface SenseNovaModelCard {
   id: string;

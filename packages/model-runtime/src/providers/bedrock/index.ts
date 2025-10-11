@@ -6,6 +6,7 @@ import {
 import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
 import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
 import {
   AWSBedrockClaudeStream,
@@ -20,7 +21,6 @@ import {
   EmbeddingsPayload,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
-import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { StreamingResponse } from '../../utils/response';

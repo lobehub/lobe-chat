@@ -1,18 +1,18 @@
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { imageUrlToBase64 } from './imageToBase64';
+import { imageUrlToBase64 } from '../../utils/imageToBase64';
+import { parseDataUri } from '../../utils/uriParser';
 import {
   convertImageUrlToFile,
   convertMessageContent,
   convertOpenAIMessages,
   convertOpenAIResponseInputs,
-} from './openaiHelpers';
-import { parseDataUri } from './uriParser';
+} from './openai';
 
 // 模拟依赖
-vi.mock('./imageToBase64');
-vi.mock('./uriParser');
+vi.mock('../../utils/imageToBase64');
+vi.mock('../../utils/uriParser');
 
 describe('convertMessageContent', () => {
   beforeEach(() => {

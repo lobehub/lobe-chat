@@ -11,7 +11,7 @@ import type { Stream } from 'openai/streaming';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../../utils/debugStream';
-import * as openaiHelpers from '../../utils/openaiHelpers';
+import * as openaiHelpers from '../contextBuilders/openai';
 import { createOpenAICompatibleRuntime } from './index';
 
 const sleep = async (ms: number) =>
