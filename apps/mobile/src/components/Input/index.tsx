@@ -32,7 +32,7 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
     underlineColorAndroid,
     prefix,
     suffix,
-    variant = 'filled',
+    variant = 'outlined',
     size = 'middle',
     ...rest
   } = props;

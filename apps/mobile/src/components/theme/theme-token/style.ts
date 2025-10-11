@@ -2,11 +2,6 @@ import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => {
   return {
-    // 页面布局样式
-    safeArea: {
-      backgroundColor: token.colorBgLayout,
-      flex: 1,
-    },
     scrollView: {
       flex: 1,
     },

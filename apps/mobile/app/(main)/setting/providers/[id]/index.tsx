@@ -376,6 +376,7 @@ const ProviderDetailPage = () => {
               <Input.Search
                 onChangeText={setSearchKeyword}
                 placeholder={t('aiProviders.models.searchPlaceholder', { ns: 'setting' })}
+                size="large"
                 style={styles.modelsSearchInput}
                 value={searchKeyword}
                 variant="outlined"
@@ -473,7 +474,7 @@ const ProviderDetailPage = () => {
 
   if (isLoading || isConfigLoading) {
     return (
-      <PageContainer showBack style={styles.container} title={headerTitle}>
+      <PageContainer showBack title={headerTitle}>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>
             {t('aiProviders.detail.loading', { ns: 'setting' })}
@@ -485,7 +486,7 @@ const ProviderDetailPage = () => {
 
   if (error || (!providerDetail && !isLoading && !isConfigLoading)) {
     return (
-      <PageContainer showBack style={styles.container} title={headerTitle}>
+      <PageContainer showBack title={headerTitle}>
         <View style={styles.loadingContainer}>
           <Text style={styles.errorText}>
             {t('aiProviders.detail.loadFailed', { ns: 'setting' })}
@@ -500,7 +501,7 @@ const ProviderDetailPage = () => {
   }
 
   return (
-    <PageContainer showBack style={styles.container} title={headerTitle}>
+    <PageContainer showBack title={headerTitle}>
       <FlashList
         ListFooterComponent={renderFooter}
         contentContainerStyle={styles.scrollContainer}

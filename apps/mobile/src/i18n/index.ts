@@ -5,10 +5,14 @@ import { initReactI18next } from 'react-i18next';
 import { DEFAULT_LANG } from '@/_const/locale';
 import { isDev } from '@/utils/env';
 
-import { getSupportedLocales, loadLocaleResources } from './generatedConfig';
+import {
+  getSupportedLocales,
+  loadLocaleResources as loadGeneratedLocaleResources,
+} from './generatedConfig';
 import { getDetectedLocale } from './resource';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
+const DEV_LOCALE = 'zh-CN';
 
 // 获取用户存储的语言设置
 export const getUserStoredLocale = async (): Promise<string> => {
@@ -46,6 +50,16 @@ const languageDetector = {
     }
   },
   type: 'languageDetector' as const,
+};
+
+const loadLocaleResources = async (lng: string) => {
+  if (isDev && lng === DEV_LOCALE) {
+    const { default: defaultResources } = await import('./default');
+
+    return defaultResources as Record<string, any>;
+  }
+
+  return loadGeneratedLocaleResources(lng);
 };
 
 // 初始化 i18n

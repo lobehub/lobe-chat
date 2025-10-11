@@ -1,9 +1,13 @@
 import { PageContainer } from '@lobehub/ui-rn';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
+import { DEFAULT_SERVER_URL } from '@/config/server';
+import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useSettingStore } from '@/store/setting';
+import { useAuthActions } from '@/store/user';
 
 import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
@@ -17,8 +21,18 @@ import {
 
 export default function DeveloperScreen() {
   const { styles } = useStyles();
-  const { t } = useTranslation(['setting']);
-  const { developerMode, setDeveloperMode } = useSettingStore();
+  const { t } = useTranslation(['setting', 'common', 'error']);
+  const router = useRouter();
+  const { logout } = useAuthActions();
+  const {
+    customServerUrl,
+    developerMode,
+    setDeveloperMode,
+    setCustomServerUrl,
+    setShowSelfHostedEntry,
+    showSelfHostedEntry,
+  } = useSettingStore();
+  const currentServer = customServerUrl ?? DEFAULT_SERVER_URL;
 
   const confirmThenExecute = (
     confirmMessage: string,
@@ -54,6 +68,68 @@ export default function DeveloperScreen() {
     );
   };
 
+  const handleSelfHostedEntryChange = (value: boolean) => {
+    if (!value) {
+      if (currentServer !== DEFAULT_SERVER_URL) {
+        Alert.alert(
+          t('developer.selfHostedEntry.confirmResetTitle', { ns: 'setting' }),
+          t('developer.selfHostedEntry.confirmResetDescription', { ns: 'setting' }),
+          [
+            { style: 'cancel', text: t('actions.cancel', { ns: 'common' }) },
+            {
+              onPress: async () => {
+                setShowSelfHostedEntry(false);
+                setCustomServerUrl(null);
+                try {
+                  await logout();
+                } catch (error) {
+                  const message = error instanceof Error ? error.message : String(error);
+                  Alert.alert(t('error.title', { ns: 'error' }), message);
+                } finally {
+                  safeReplaceLogin(router);
+                }
+              },
+              style: 'destructive',
+              text: t('developer.selfHostedEntry.confirmResetAction', { ns: 'setting' }),
+            },
+          ],
+          { cancelable: true },
+        );
+      } else {
+        setShowSelfHostedEntry(false);
+      }
+
+      return;
+    }
+
+    // Open Anyway
+    setShowSelfHostedEntry(true);
+
+    // help user to relogin
+    Alert.alert(
+      t('developer.selfHostedEntry.confirmTitle', { ns: 'setting' }),
+      t('developer.selfHostedEntry.confirmDescription', { ns: 'setting' }),
+      [
+        { style: 'cancel', text: t('actions.notNow', { ns: 'common' }) },
+        {
+          onPress: async () => {
+            try {
+              await logout();
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              Alert.alert(t('error.title', { ns: 'error' }), message);
+            } finally {
+              safeReplaceLogin(router);
+            }
+          },
+          style: 'default',
+          text: t('developer.selfHostedEntry.confirmAction', { ns: 'setting' }),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   return (
     <PageContainer showBack title={t('developer.title', { ns: 'setting' })}>
       <View style={styles.container}>
@@ -68,11 +144,22 @@ export default function DeveloperScreen() {
 
         {developerMode && (
           <>
-            <SettingGroup>
+            <SettingGroup title={t('developer.server.group', { ns: 'setting' })}>
               <SettingItem
-                href="/setting/developer/custom-server"
-                title={t('developer.customServer.title', { ns: 'setting' })}
+                extra={currentServer}
+                title={t('developer.server.current', { ns: 'setting' })}
               />
+              <SettingItem
+                onSwitchChange={handleSelfHostedEntryChange}
+                showSwitch
+                switchValue={showSelfHostedEntry}
+                title={t('developer.selfHostedEntry.title', { ns: 'setting' })}
+              />
+
+              {/* <SettingItem
+                href="/setting/developer/custom-server"
+                title={t('developer.server.title', { ns: 'setting' })}
+              /> */}
             </SettingGroup>
             <SettingGroup>
               <SettingItem

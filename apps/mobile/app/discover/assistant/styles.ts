@@ -46,10 +46,6 @@ export const useStyles = createStyles(({ token }) => ({
     color: token.colorTextSecondary,
     marginTop: token.margin,
   },
-  safeAreaContainer: {
-    backgroundColor: token.colorBgLayout,
-    flex: 1,
-  },
   searchContainer: {
     marginBottom: token.paddingSM,
     paddingHorizontal: token.paddingSM,

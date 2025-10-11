@@ -116,6 +116,33 @@
         "title": "Token de actualización inválido"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Ir a la página de inicio de sesión",
+      "confirmDescription": "Al habilitar, se mostrará la entrada de configuración de autoalojamiento en la página de inicio de sesión. ¿Desea cerrar la sesión actual e ir a la página de inicio de sesión?",
+      "confirmResetAction": "Restablecer e iniciar sesión",
+      "confirmResetDescription": "Desactivar el modo de autoalojamiento restablecerá la dirección del servidor a la instancia oficial y cerrará la sesión actual. ¿Desea continuar?",
+      "confirmResetTitle": "Desactivar modo de autoalojamiento",
+      "confirmTitle": "Habilitar entrada de inicio de sesión autoalojada",
+      "description": "Controla si se muestra el botón de instancia autoalojada en la página de inicio de sesión",
+      "title": "Activar modo de autoalojamiento"
+    },
+    "server": {
+      "confirmDescription": "Después de cambiar la dirección del servidor, se cerrará la sesión del usuario actual y será necesario iniciar sesión nuevamente. ¿Desea continuar?",
+      "confirmTitle": "Confirmar cambio de servidor",
+      "current": "Dirección actual",
+      "description": "Después de configurar, todas las solicitudes usarán esta dirección de servidor. Dejar vacío para restaurar al servidor oficial.",
+      "group": "Configuración del servidor",
+      "hint": "Debe comenzar con http:// o https://, la aplicación puede requerir volver a iniciar sesión.",
+      "invalid": "Por favor, introduzca una dirección válida que comience con http:// o https://",
+      "notice": "El servidor personalizado reemplazará la dirección de la interfaz predeterminada. Asegúrese de que el servicio esté disponible y sea compatible con el protocolo LobeChat API. Puede ser necesario iniciar sesión nuevamente o reiniciar la aplicación después del cambio.",
+      "noticeTitle": "Atención antes de cambiar",
+      "placeholder": "https://tu-servidor.ejemplo.com",
+      "reset": "Restablecer a predeterminado",
+      "resetSuccess": "Dirección del servidor oficial restaurada",
+      "save": "Guardar",
+      "title": "Instancia autoalojada",
+      "updated": "Dirección del servidor personalizada actualizada"
+    },
     "title": "Opciones de desarrollador"
   },
   "feedback": "Comentarios",

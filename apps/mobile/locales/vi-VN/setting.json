@@ -116,6 +116,33 @@
         "title": "Token làm mới không hợp lệ"
       }
     },
+    "selfHostedEntry": {
+      "confirmAction": "Đi đến trang đăng nhập",
+      "confirmDescription": "Sau khi kích hoạt, mục cấu hình tự lưu trữ sẽ hiển thị trên trang đăng nhập, bạn có muốn đăng xuất tài khoản hiện tại và đi đến trang đăng nhập không?",
+      "confirmResetAction": "Đặt lại và đi đến đăng nhập",
+      "confirmResetDescription": "Tắt chế độ tự triển khai sẽ đặt lại địa chỉ máy chủ về phiên bản chính thức và đăng xuất tài khoản hiện tại. Bạn có muốn tiếp tục không?",
+      "confirmResetTitle": "Tắt chế độ tự triển khai",
+      "confirmTitle": "Kích hoạt mục đăng nhập tự lưu trữ",
+      "description": "Kiểm soát việc hiển thị nút phiên bản tự lưu trữ trên trang đăng nhập",
+      "title": "Bật chế độ tự triển khai"
+    },
+    "server": {
+      "confirmDescription": "Sau khi thay đổi địa chỉ máy chủ, người dùng hiện tại sẽ bị đăng xuất và cần đăng nhập lại, bạn có muốn tiếp tục không?",
+      "confirmTitle": "Xác nhận chuyển đổi máy chủ",
+      "current": "Địa chỉ hiện tại",
+      "description": "Sau khi cấu hình, tất cả các yêu cầu sẽ sử dụng địa chỉ máy chủ này. Để trống để trở về máy chủ chính thức.",
+      "group": "Cấu hình máy chủ",
+      "hint": "Phải bắt đầu bằng http:// hoặc https://, ứng dụng có thể yêu cầu đăng nhập lại.",
+      "invalid": "Vui lòng nhập địa chỉ hợp lệ bắt đầu bằng http:// hoặc https://",
+      "notice": "Máy chủ tùy chỉnh sẽ thay thế địa chỉ giao diện mặc định, vui lòng đảm bảo dịch vụ hoạt động và tương thích với giao thức LobeChat API. Sau khi chuyển đổi có thể cần đăng nhập lại hoặc khởi động lại ứng dụng.",
+      "noticeTitle": "Lưu ý trước khi chuyển đổi",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Khôi phục mặc định",
+      "resetSuccess": "Đã khôi phục địa chỉ máy chủ chính thức",
+      "save": "Lưu",
+      "title": "Phiên bản tự triển khai",
+      "updated": "Địa chỉ máy chủ tùy chỉnh đã được cập nhật"
+    },
     "title": "Tùy chọn nhà phát triển"
   },
   "feedback": "Phản hồi ý kiến",
