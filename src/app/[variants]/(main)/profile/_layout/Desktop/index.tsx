@@ -41,7 +41,10 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           style={{
             paddingBlock: 24,
             paddingInline: 32,
-          }}>{children}</SettingContainer>
+          }}
+        >
+          {children}
+        </SettingContainer>
       </Flexbox>
       <InitClientDB />
     </>

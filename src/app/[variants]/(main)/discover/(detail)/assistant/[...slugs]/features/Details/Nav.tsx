@@ -2,7 +2,7 @@
 
 import { Icon, Tabs, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BookOpenIcon, LayersIcon, ListIcon, SquareUserIcon } from 'lucide-react';
+import { BookOpenIcon, HistoryIcon, LayersIcon, ListIcon, SquareUserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { SOCIAL_URL } from '@/const/branding';
-import { AssistantNavKey, McpNavKey } from '@/types/discover';
+import { AssistantNavKey } from '@/types/discover';
 
 import { useDetailContext } from '../DetailProvider';
 
@@ -77,8 +77,13 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = AssistantNavKey.
             ),
         },
         {
+          icon: <Icon icon={HistoryIcon} size={16} />,
+          key: AssistantNavKey.Version,
+          label: t('assistants.details.version.title'),
+        },
+        {
           icon: <Icon icon={ListIcon} size={16} />,
-          key: McpNavKey.Related,
+          key: AssistantNavKey.Related,
           label: t('assistants.details.related.title'),
         },
       ]}

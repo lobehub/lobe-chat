@@ -1,6 +1,7 @@
 import { Bot, Brain, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+
 import { CellProps } from '@/components/Cell';
 import { isDeprecatedEdition } from '@/const/version';
 import { SettingsTabs } from '@/store/global/initialState';
