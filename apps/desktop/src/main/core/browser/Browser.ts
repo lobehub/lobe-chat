@@ -6,6 +6,7 @@ import {
   nativeTheme,
   screen,
 } from 'electron';
+import * as windowStateKeeper from 'electron-window-state';
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
@@ -45,6 +46,7 @@ export default class Browser {
   identifier: string;
   options: BrowserWindowOpts;
   private readonly windowStateKey: string;
+  private windowState?: windowStateKeeper.State;
 
   get browserWindow() {
     return this.retrieveOrInitialize();
@@ -235,6 +237,12 @@ export default class Browser {
     if (!this._browserWindow.isDestroyed()) this.determineWindowPosition();
 
     this.browserWindow.show();
+    
+    // Apply maximized state if it was previously maximized
+    if (this.windowState?.isMaximized) {
+      logger.debug(`[${this.identifier}] Restoring maximized state when showing window.`);
+      this.browserWindow.maximize();
+    }
   }
 
   private determineWindowPosition() {
@@ -312,14 +320,18 @@ export default class Browser {
 
     const { path, title, width, height, devTools, showOnInit, ...res } = this.options;
 
-    // Load window state
-    const savedState = this.app.storeManager.get(this.windowStateKey as any) as
-      | { height?: number; width?: number }
-      | undefined; // Keep type for now, but only use w/h
+    // Initialize window state keeper for this window
+    this.windowState = windowStateKeeper({
+      file: `${this.identifier}-window-state.json`,
+      defaultWidth: width || 1200,
+      defaultHeight: height || 800,
+      maximize: false, // We'll let the user choose whether to maximize
+    });
+
     logger.info(`Creating new BrowserWindow instance: ${this.identifier}`);
     logger.debug(`[${this.identifier}] Options for new window: ${JSON.stringify(this.options)}`);
     logger.debug(
-      `[${this.identifier}] Saved window state (only size used): ${JSON.stringify(savedState)}`,
+      `[${this.identifier}] Window state from electron-window-state: x=${this.windowState.x}, y=${this.windowState.y}, width=${this.windowState.width}, height=${this.windowState.height}, isMaximized=${this.windowState.isMaximized}`,
     );
 
     const isDarkMode = nativeTheme.shouldUseDarkColors;
@@ -330,7 +342,10 @@ export default class Browser {
       backgroundColor: '#00000000',
       darkTheme: isDarkMode,
       frame: false,
-      height: savedState?.height || height,
+      x: this.windowState.x,
+      y: this.windowState.y,
+      width: this.windowState.width,
+      height: this.windowState.height,
       show: false,
       title,
       vibrancy: 'sidebar',
@@ -339,12 +354,15 @@ export default class Browser {
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
       },
-      width: savedState?.width || width,
       ...this.getPlatformThemeConfig(isDarkMode),
     });
 
     this._browserWindow = browserWindow;
     logger.debug(`[${this.identifier}] BrowserWindow instance created.`);
+
+    // Let electron-window-state manage the window
+    this.windowState.manage(browserWindow);
+    logger.debug(`[${this.identifier}] Window state management attached via electron-window-state.`);
 
     // Initialize theme listener for this window to handle theme changes
     this.setupThemeListener();
@@ -377,6 +395,12 @@ export default class Browser {
       if (showOnInit) {
         logger.debug(`Showing window ${this.identifier} because showOnInit is true.`);
         browserWindow?.show();
+        
+        // Apply maximized state if it was previously maximized
+        if (this.windowState?.isMaximized) {
+          logger.debug(`[${this.identifier}] Restoring maximized state.`);
+          browserWindow?.maximize();
+        }
       } else {
         logger.debug(
           `Window ${this.identifier} not shown on 'ready-to-show' because showOnInit is false.`,
@@ -394,17 +418,8 @@ export default class Browser {
       // If in application quitting process, allow window to be closed
       if (this.app.isQuiting) {
         logger.debug(`[${this.identifier}] App is quitting, allowing window to close naturally.`);
-        // Save state before quitting
-        try {
-          const { width, height } = browserWindow.getBounds(); // Get only width and height
-          const sizeState = { height, width };
-          logger.debug(
-            `[${this.identifier}] Saving window size on quit: ${JSON.stringify(sizeState)}`,
-          );
-          this.app.storeManager.set(this.windowStateKey as any, sizeState); // Save only size
-        } catch (error) {
-          logger.error(`[${this.identifier}] Failed to save window state on quit:`, error);
-        }
+        // electron-window-state automatically saves state, no need for manual saving
+        logger.debug(`[${this.identifier}] Window state will be automatically saved by electron-window-state.`);
         // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
         this.cleanupThemeListener();
@@ -429,18 +444,10 @@ export default class Browser {
       } else {
         // Window is actually closing (not keepAlive)
         logger.debug(
-          `[${this.identifier}] keepAlive is false, allowing window to close. Saving size...`, // Updated log message
+          `[${this.identifier}] keepAlive is false, allowing window to close.`,
         );
-        try {
-          const { width, height } = browserWindow.getBounds(); // Get only width and height
-          const sizeState = { height, width };
-          logger.debug(
-            `[${this.identifier}] Saving window size on close: ${JSON.stringify(sizeState)}`,
-          );
-          this.app.storeManager.set(this.windowStateKey as any, sizeState); // Save only size
-        } catch (error) {
-          logger.error(`[${this.identifier}] Failed to save window state on close:`, error);
-        }
+        // electron-window-state automatically saves state, no need for manual saving
+        logger.debug(`[${this.identifier}] Window state will be automatically saved by electron-window-state.`);
         // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
         this.cleanupThemeListener();
