@@ -1,3 +1,5 @@
+import { escapeXmlAttr, escapeXmlContent } from './xmlEscape';
+
 export interface SearchResultItem {
   content?: string;
   imgSrc?: string;
@@ -6,16 +8,6 @@ export interface SearchResultItem {
   title: string;
   url: string;
 }
-
-const escapeXmlAttr = (text: string): string =>
-  text
-    .replaceAll('&', '&amp;')
-    .replaceAll('"', '&quot;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
-
-const escapeXmlContent = (text: string): string =>
-  text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 /**
  * Convert search results array to compact XML format for token efficiency

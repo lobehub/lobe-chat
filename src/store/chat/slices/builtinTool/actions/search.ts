@@ -1,4 +1,4 @@
-import { searchResultsPrompt } from '@lobechat/prompts';
+import { crawlResultsPrompt, searchResultsPrompt } from '@lobechat/prompts';
 import { StateCreator } from 'zustand/vanilla';
 
 import { searchService } from '@/services/search';
@@ -69,16 +69,19 @@ export const searchSlice: StateCreator<
             },
       );
 
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      // Convert to XML format to save tokens
+      const xmlContent = crawlResultsPrompt(content as any);
+      await internal_updateMessageContent(id, xmlContent);
 
       // if aiSummary is true, then trigger ai message
       return aiSummary;
     } catch (e) {
       const err = e as Error;
       console.error(e);
-      const content = [{ ...err, errorMessage: err.message, errorType: err.name }];
+      const content = [{ errorMessage: err.message, errorType: err.name }];
 
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      const xmlContent = crawlResultsPrompt(content);
+      await internal_updateMessageContent(id, xmlContent);
     }
   },
 
